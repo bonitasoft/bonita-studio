@@ -21,7 +21,7 @@
 		<platform.version>${project.parent.version}</platform.version>
 		<tomcat.version>8.5.40</tomcat.version>
 		<image-overlay-plugin.version>1.1.2</image-overlay-plugin.version>
-		<bonita-project-report-model.version>0.0.1</bonita-project-report-model.version>
+		<bonita-project-report-model.version>0.0.2</bonita-project-report-model.version>
 		<p2MirrorUrl>https://update-site.bonitasoft.com/p2/4.20</p2MirrorUrl>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<tycho.localArtifacts>ignore</tycho.localArtifacts>
