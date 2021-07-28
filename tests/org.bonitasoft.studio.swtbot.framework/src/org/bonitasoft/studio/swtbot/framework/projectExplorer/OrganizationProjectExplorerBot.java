@@ -87,7 +87,7 @@ public class OrganizationProjectExplorerBot extends ProjectExplorerBot {
     }
 
     private SWTBotTreeItem getOrganizationFolderTreeItem() {
-        return getTreeItem(getProjectTreeItem(), "Organization");
+        return getTreeItem(getProjectTreeItem(), "Organizations");
     }
 
     private SWTBotTreeItem getOrganizationTreeItem(String organization) {

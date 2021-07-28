@@ -68,7 +68,7 @@ public class DeployWizardIT {
                 .filter(IRepositoryFileStore::canBeDeleted)
                 .forEach(IRepositoryFileStore::delete);
     }
-    
+
     @Test
     public void should_deploy_a_project_using_wizard() throws Exception {
         BotApplicationWorkbenchWindow botApplicationWorkbenchWindow = new BotApplicationWorkbenchWindow(bot);
@@ -127,7 +127,7 @@ public class DeployWizardIT {
         botDeployDialog.setDefaultUser("helen.kelly");
         assertThat(botDeployDialog.isDeployEnabled()).isTrue();
 
-        botDeployDialog.artifactsTree().getSWTBotWidget().getTreeItem("Organization").getItems()[0].uncheck();
+        botDeployDialog.artifactsTree().getSWTBotWidget().getTreeItem("Organizations").getItems()[0].uncheck();
         assertThat(botDeployDialog.isDefaultUserEnabled()).isTrue();
 
         assertThat(botDeployDialog.artifactsTree().getSWTBotWidget().getAllItems())
@@ -145,8 +145,9 @@ public class DeployWizardIT {
         botDeployDialog = botApplicationWorkbenchWindow.openDeploy();
         assertThat(botDeployDialog.isValidateSelected()).isFalse();
         assertThat(
-                botDeployDialog.artifactsTree().getSWTBotWidget().getTreeItem("Organization").getItems()[0].isChecked())
-                        .isFalse();
+                botDeployDialog.artifactsTree().getSWTBotWidget()
+                        .getTreeItem(org.bonitasoft.studio.identity.i18n.Messages.organizations).getItems()[0].isChecked())
+                                .isFalse();
         assertThat(botDeployDialog.artifactsTree().getSWTBotWidget().getTreeItem("Processes").getNode("Pool")
                 .getNode("1.0  MonDiagramme-1.0.proc").isChecked()).isFalse();
         assertThat(botDeployDialog.artifactsTree().getSWTBotWidget().getTreeItem("Processes").getNode("Pool")

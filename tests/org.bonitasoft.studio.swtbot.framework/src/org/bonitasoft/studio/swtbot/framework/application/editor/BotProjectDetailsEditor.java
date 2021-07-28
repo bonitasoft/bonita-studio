@@ -136,7 +136,7 @@ public class BotProjectDetailsEditor {
 
     public BotApplicationEditor openApplicationFile(String applicationFileName) {
         bot.toolbarButtonWithId(
-                SWTBotConstants.extensionCardId(org.bonitasoft.studio.la.i18n.Messages.application))
+                SWTBotConstants.extensionCardId(org.bonitasoft.studio.la.i18n.Messages.applicationDescriptorCardTitle))
                 .click();
         waitForToolbarButton(SWTBotConstants.openArtifactButtonId(applicationFileName));
         int nbEditorBefore = bot.editors().size();
