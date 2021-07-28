@@ -37,7 +37,6 @@ import org.bonitasoft.studio.ui.viewer.LabelProviderBuilder;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.observable.list.IObservableList;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.jface.databinding.viewers.IViewerObservableValue;
@@ -78,7 +77,8 @@ public class ManageCustomInformationSection {
         this.formPage = formPage;
         this.ctx = ctx;
 
-        IObservableValue<CustomUserInfoDefinitions> definitions = EMFObservables.observeDetailValue(ctx.getValidationRealm(),
+        IObservableValue<CustomUserInfoDefinitions> definitions = EMFObservables.observeDetailValue(
+                ctx.getValidationRealm(),
                 formPage.observeWorkingCopy(), OrganizationPackage.Literals.ORGANIZATION__CUSTOM_USER_INFO_DEFINITIONS);
 
         if (definitions.getValue() == null) {
@@ -90,7 +90,8 @@ public class ManageCustomInformationSection {
 
         Section customInfoSection = formPage.getToolkit().createSection(parent, Section.TWISTIE);
         customInfoSection.setLayout(GridLayoutFactory.fillDefaults().create());
-        customInfoSection.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 200).create());
+        customInfoSection
+                .setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 200).create());
         customInfoSection.setText(Messages.manageCustomInfo);
         customInfoSection.setClient(createCustomInfoComposite(formPage, customInfoSection));
     }
@@ -117,7 +118,8 @@ public class ManageCustomInformationSection {
     private void createViewer(Composite parent) {
         viewer = new TableViewer(parent,
                 SWT.FULL_SELECTION | SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL | SWT.SINGLE);
-        viewer.getTable().setLayoutData(GridDataFactory.fillDefaults().grab(false, true).hint(600, SWT.DEFAULT).create());
+        viewer.getTable()
+                .setLayoutData(GridDataFactory.fillDefaults().grab(false, true).hint(600, SWT.DEFAULT).create());
         viewer.getTable().setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, CUSTOM_INFO_LIST_VIEWER_ID);
         formPage.getToolkit().adapt(viewer.getTable());
         ColumnViewerToolTipSupport.enableFor(viewer);
@@ -169,12 +171,7 @@ public class ManageCustomInformationSection {
                                 .filter(aCustomInfo -> Objects.equals(aCustomInfo.getName(), oldName))
                                 .forEach(aCustomInfo -> aCustomInfo.setName((String) name));
                     }
-                    // TODO necessary since macos Bigsure, should be rmeove in the futur
-                    if (Objects.equals(Platform.OS_MACOSX, Platform.getOS())) {
-                        Display.getDefault().syncExec(() -> {
-                            formPage.redrawCustomInfoTable();
-                        });
-                    }
+                    formPage.refreshCustomInfoTable();
                 })
                 .create());
     }
@@ -208,13 +205,7 @@ public class ManageCustomInformationSection {
                         .removeIf(aCustomInfo -> Objects.equals(aCustomInfo.getName(), customInfoToRemove.getName()));
             }
             input.remove(customInfoToRemove);
-            // TODO necessary since macos Bigsure, should be rmeove in the futur
-            if (Objects.equals(Platform.OS_MACOSX, Platform.getOS())) {
-                Display.getDefault().asyncExec(() -> {
-                    viewer.getTable().redraw();
-                    formPage.redrawCustomInfoTable();
-                });
-            }
+            formPage.refreshCustomInfoTable();
         }
     }
 
