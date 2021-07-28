@@ -12,7 +12,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.application.views.extension.card;
+package org.bonitasoft.studio.application.views.extension.card.zoom;
 
 import java.util.HashMap;
 import java.util.List;
@@ -21,9 +21,7 @@ import java.util.Map;
 import org.apache.maven.model.Dependency;
 import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.application.ui.control.model.dependency.BonitaArtifactDependency;
-import org.bonitasoft.studio.application.views.extension.card.zoom.RestApiZoomControl;
-import org.bonitasoft.studio.application.views.extension.card.zoom.ZoomListener;
-import org.bonitasoft.studio.application.views.extension.card.zoom.Zoomable;
+import org.bonitasoft.studio.application.views.extension.card.ExtensionCard;
 import org.bonitasoft.studio.common.CommandExecutor;
 import org.bonitasoft.studio.common.Strings;
 import org.bonitasoft.studio.pics.Pics;
@@ -32,31 +30,18 @@ import org.bonitasoft.studio.preferences.BonitaThemeConstants;
 import org.bonitasoft.studio.ui.widget.DynamicButtonWidget;
 import org.bonitasoft.studio.ui.widget.DynamicButtonWidget.Builder;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 
-public class RestApiExtensionCard extends ExtensionCard implements Zoomable {
+public class ThemeExtensionCard extends ExtensionCard {
 
-    public static final String DEPLOY_COMMAND = "org.bonitasoft.studio.rest.api.extension.deploy.from.dependency.command";
+    public static final String DEPLOY_COMMAND = "org.bonitasoft.studio.theme.deploy.from.dependency.command";
 
-    private ZoomListener zoomListener;
     private CommandExecutor commandExecutor;
 
-    public RestApiExtensionCard(Composite parent,
+    public ThemeExtensionCard(Composite parent,
             Dependency dep,
             BonitaArtifactDependency bonitaDep) {
         super(parent, dep, bonitaDep);
         commandExecutor = new CommandExecutor();
-    }
-
-    @Override
-    public Control createZoomedControl(Composite parent) {
-        return new RestApiZoomControl(parent, zoomListener, dep, bonitaDep);
-    }
-
-    @Override
-    protected void createTitleComposite(Composite parent) {
-        super.createTitleComposite(parent);
-        addZoomBehavior(titleLabel);
     }
 
     @Override
@@ -85,16 +70,6 @@ public class RestApiExtensionCard extends ExtensionCard implements Zoomable {
                 });
 
         return List.of(builder);
-    }
-
-    @Override
-    public void addZoomListener(ZoomListener listener) {
-        this.zoomListener = listener;
-    }
-
-    @Override
-    public ZoomListener getZoomListener() {
-        return zoomListener;
     }
 
 }
