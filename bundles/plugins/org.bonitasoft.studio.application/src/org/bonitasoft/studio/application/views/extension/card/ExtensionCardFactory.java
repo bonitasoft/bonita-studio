@@ -16,6 +16,7 @@ package org.bonitasoft.studio.application.views.extension.card;
 
 import org.apache.maven.model.Dependency;
 import org.bonitasoft.studio.application.ui.control.model.dependency.BonitaArtifactDependency;
+import org.bonitasoft.studio.application.views.extension.card.zoom.ThemeExtensionCard;
 import org.eclipse.swt.widgets.Composite;
 
 public class ExtensionCardFactory {
@@ -34,6 +35,8 @@ public class ExtensionCardFactory {
                 return new ActorFilterExtensionCard(parent, dep, bonitaDep);
             case REST_API:
                 return new RestApiExtensionCard(parent, dep, bonitaDep);
+            case THEME:
+                return new ThemeExtensionCard(parent, dep, bonitaDep);
             default:
                 return new ExtensionCard(parent, dep, bonitaDep);
         }

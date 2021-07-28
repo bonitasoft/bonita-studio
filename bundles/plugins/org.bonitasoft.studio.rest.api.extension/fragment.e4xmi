@@ -17,6 +17,8 @@
     <elements xsi:type="commands:Handler" xmi:id="_YhJ5sFt1Eem1IowXlZ1N2Q" elementId="org.bonitasoft.studio.theme.deployHandler" contributionURI="bundleclass://org.bonitasoft.studio.rest.api.extension/org.bonitasoft.studio.theme.handler.DeployThemeHandler" command="_WprasFt1Eem1IowXlZ1N2Q"/>
     <elements xsi:type="commands:Handler" xmi:id="_yQmS4NI8EeqTs8GlxYwpfA" elementId="org.bonitasoft.studio.rest.api.extension.updatemavenprojectshandler" contributionURI="bundleclass://org.bonitasoft.studio.rest.api.extension/org.bonitasoft.studio.maven.UpdateMavenProjectsHandler" command="_qQ0Y4NI8EeqTs8GlxYwpfA"/>
     <elements xsi:type="commands:Handler" xmi:id="_pmsOcCWZEeuku6hN8lb9Sw" elementId="org.bonitasoft.studio.rest.api.extension.newJavaClassHandler" contributionURI="bundleclass://org.bonitasoft.studio.rest.api.extension/org.bonitasoft.studio.rest.api.extension.ui.handler.NewJavaClassHandler" command="_tZmfYCWZEeuku6hN8lb9Sw"/>
+    <elements xsi:type="commands:Handler" xmi:id="_dvz7kO-CEeuki-Tdh7kfpQ" elementId="org.bonitasoft.studio.rest.api.extension.deploy.from.dependency.handler" contributionURI="bundleclass://org.bonitasoft.studio.rest.api.extension/org.bonitasoft.studio.rest.api.extension.ui.handler.DeployRestApiExtensionFromDependencyHandler" command="_7nvDAO-BEeuki-Tdh7kfpQ"/>
+    <elements xsi:type="commands:Handler" xmi:id="_Ndr90O-3Eeuki-Tdh7kfpQ" elementId="org.bonitasoft.studio.theme.deploy.from.dependency.handler" contributionURI="bundleclass://org.bonitasoft.studio.rest.api.extension/org.bonitasoft.studio.rest.api.extension.ui.handler.DeployThemeFromDependencyHandler" command="_JvQkQO-3Eeuki-Tdh7kfpQ"/>
   </fragments>
   <fragments xsi:type="fragment:StringModelFragment" xmi:id="_MDSS4GtsEeWUnsGmiq8DQg" featurename="commands" parentElementId="org.eclipse.e4.legacy.ide.application">
     <elements xsi:type="commands:Command" xmi:id="_2OMEUGtqEeWUnsGmiq8DQg" elementId="org.bonitasoft.studio.rest.api.extension.newCommand" commandName="%newAndMore"/>
@@ -40,6 +42,18 @@
     <elements xsi:type="commands:Command" xmi:id="_WprasFt1Eem1IowXlZ1N2Q" elementId="org.bonitasoft.studio.theme.deployCommand" commandName="%deploy"/>
     <elements xsi:type="commands:Command" xmi:id="_qQ0Y4NI8EeqTs8GlxYwpfA" elementId="org.bonitasoft.studio.rest.api.extension.updatemavenprojects.command" commandName="%updateMavenProjects"/>
     <elements xsi:type="commands:Command" xmi:id="_tZmfYCWZEeuku6hN8lb9Sw" elementId="org.bonitasoft.studio.rest.api.extension.newJavaClass" commandName="%javaClass"/>
+    <elements xsi:type="commands:Command" xmi:id="_7nvDAO-BEeuki-Tdh7kfpQ" elementId="org.bonitasoft.studio.rest.api.extension.deploy.from.dependency.command" commandName="Deploy REST API Extension from dependency ">
+      <parameters xmi:id="_KZb8wO-CEeuki-Tdh7kfpQ" elementId="groupId" name="groupId" optional="false"/>
+      <parameters xmi:id="_MnRtUO-CEeuki-Tdh7kfpQ" elementId="artifactId" name="artifactId" optional="false"/>
+      <parameters xmi:id="_M0RngO-CEeuki-Tdh7kfpQ" elementId="version" name="version" optional="false"/>
+      <parameters xmi:id="_M-_pwO-CEeuki-Tdh7kfpQ" elementId="classifier" name="classifier"/>
+    </elements>
+    <elements xsi:type="commands:Command" xmi:id="_JvQkQO-3Eeuki-Tdh7kfpQ" elementId="org.bonitasoft.studio.theme.deploy.from.dependency.command" commandName="Deploy theme from dependency ">
+      <parameters xmi:id="_JvQkQe-3Eeuki-Tdh7kfpQ" elementId="groupId" name="groupId" optional="false"/>
+      <parameters xmi:id="_JvQkQu-3Eeuki-Tdh7kfpQ" elementId="artifactId" name="artifactId" optional="false"/>
+      <parameters xmi:id="_JvQkQ--3Eeuki-Tdh7kfpQ" elementId="version" name="version" optional="false"/>
+      <parameters xmi:id="_JvQkRO-3Eeuki-Tdh7kfpQ" elementId="classifier" name="classifier"/>
+    </elements>
   </fragments>
   <fragments xsi:type="fragment:StringModelFragment" xmi:id="_JOq_EHZVEeW6kO-p0oSgKw" featurename="addons" parentElementId="org.eclipse.e4.legacy.ide.application">
     <elements xsi:type="application:Addon" xmi:id="_xmqtoOpkEemi2fumwpsySA" elementId="org.bonitasoft.studio.rest.api.extension.businessArchive.validator.addon" contributionURI="bundleclass://org.bonitasoft.studio.rest.api.extension/org.bonitasoft.studio.rest.api.extension.core.validation.FormsCustomPermissionsValidator"/>

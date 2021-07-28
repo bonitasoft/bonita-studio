@@ -397,6 +397,7 @@ public class PicsConstants {
     public static String validationDisabled = "preferences/validation_disabled.png";
 
     public static String deploy = "deploy.png";
+    public static String deploy_hot = "deploy_hot.png";
 
     public static String import_artifact = "import.png";
 

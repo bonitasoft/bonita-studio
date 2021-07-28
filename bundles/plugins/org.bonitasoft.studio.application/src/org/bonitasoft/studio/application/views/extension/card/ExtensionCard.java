@@ -16,6 +16,8 @@ package org.bonitasoft.studio.application.views.extension.card;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 import org.apache.maven.artifact.versioning.ComparableVersion;
 import org.apache.maven.model.Dependency;
@@ -136,13 +138,16 @@ public class ExtensionCard extends Composite {
         }
 
         var toolbarComposite = new Composite(mainToolbarComposite, SWT.NONE);
-        toolbarComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(3).create());
+        toolbarComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(getToolbarMazSize()).create());
         toolbarComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).align(SWT.END, SWT.FILL)
                 .span(action != null ? 1 : 2, 1).create());
         toolbarComposite.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, BonitaThemeConstants.CARD_BACKGROUND);
 
         int columnUsed = 0;
-
+        for (DynamicButtonWidget.Builder builder : getToolbarContributions()) {
+            builder.createIn(toolbarComposite);
+            columnUsed++;
+        }
         if (isABonitaExtensionUpdatable()) {
             new DynamicButtonWidget.Builder()
                     .withId(SWTBotConstants.updateToLatestExtensionFromCard(bonitaDep.getArtifactId()))
@@ -157,18 +162,6 @@ public class ExtensionCard extends Composite {
                     .createIn(toolbarComposite);
             columnUsed++;
         } else if (!bonitaDep.isFromMarketplace()) {
-            if (canEditMavenCoordinates(bonitaDep)) {
-                new DynamicButtonWidget.Builder()
-                        .withLabel(Messages.editMavenCoordinates)
-                        .withTooltipText(Messages.editMavenCoordinatesTooltip)
-                        .withImage(Pics.getImage(PicsConstants.edit_simple))
-                        .withHotImage(Pics.getImage(PicsConstants.edit_simple_hot))
-                        .withCssclass(BonitaThemeConstants.CARD_BACKGROUND)
-                        .onClick(e -> updateListeners.stream().forEach(l -> l.updateGav(bonitaDep, dep)))
-                        .createIn(toolbarComposite);
-                columnUsed++;
-            }
-
             new DynamicButtonWidget.Builder()
                     .withId(SWTBotConstants.updateExtensionFromCard(bonitaDep.getArtifactId()))
                     .withLabel(Messages.upgradeExtension)
@@ -188,9 +181,17 @@ public class ExtensionCard extends Composite {
                 .withImage(Pics.getImage(PicsConstants.delete))
                 .withHotImage(Pics.getImage(PicsConstants.delete_hot))
                 .withCssclass(BonitaThemeConstants.CARD_BACKGROUND)
-                .withLayoutData(GridDataFactory.swtDefaults().span(3 - columnUsed, 1).create())
+                .withLayoutData(GridDataFactory.swtDefaults().span(getToolbarMazSize() - columnUsed, 1).create())
                 .onClick(e -> removeListeners.stream().forEach(l -> l.removeExtension(dep)))
                 .createIn(toolbarComposite);
+    }
+
+    protected List<DynamicButtonWidget.Builder> getToolbarContributions() {
+        return Collections.EMPTY_LIST;
+    }
+
+    protected int getToolbarMazSize() {
+        return 2;
     }
 
     protected boolean canEditMavenCoordinates(BonitaArtifactDependency bonitaDep) {
@@ -259,12 +260,28 @@ public class ExtensionCard extends Composite {
         titleLabel.setFont(JFaceResources.getFont(ProjectOverviewEditorPart.BOLD_8_FONT_ID));
         titleLabel.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME, BonitaThemeConstants.TITLE_TEXT_COLOR);
 
-        var gav = new CLabel(titleComposite, SWT.WRAP);
+        var gavComposite = new Composite(titleComposite, SWT.NONE);
+        gavComposite.setLayout(
+                GridLayoutFactory.fillDefaults().numColumns(2).spacing(1, LayoutConstants.getSpacing().y).create());
+        gavComposite.setLayoutData(GridDataFactory.fillDefaults().create());
+        gavComposite.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, BonitaThemeConstants.CARD_BACKGROUND);
+
+        var gav = new CLabel(gavComposite, SWT.WRAP);
         gav.setLayoutData(
                 GridDataFactory.fillDefaults().grab(true, false).indent(5, 0).create());
         gav.setText(String.format("%s:%s:%s", dep.getGroupId(), dep.getArtifactId(), dep.getVersion()));
         gav.setFont(JFaceResources.getFont(ProjectOverviewEditorPart.ITALIC_0_FONT_ID));
         gav.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME, BonitaThemeConstants.GAV_TEXT_COLOR);
+
+        if (!bonitaDep.isFromMarketplace() && canEditMavenCoordinates(bonitaDep)) {
+            new DynamicButtonWidget.Builder()
+                    .withTooltipText(Messages.editMavenCoordinatesTooltip)
+                    .withImage(Pics.getImage(PicsConstants.edit_simple))
+                    .withHotImage(Pics.getImage(PicsConstants.edit_simple_hot))
+                    .withCssclass(BonitaThemeConstants.CARD_BACKGROUND)
+                    .onClick(e -> updateListeners.stream().forEach(l -> l.updateGav(bonitaDep, dep)))
+                    .createIn(gavComposite);
+        }
     }
 
     /**
