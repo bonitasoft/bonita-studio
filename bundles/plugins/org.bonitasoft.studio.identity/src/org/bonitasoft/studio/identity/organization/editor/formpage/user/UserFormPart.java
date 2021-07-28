@@ -104,8 +104,8 @@ public class UserFormPart extends AbstractFormPart {
         userEditionControl.refreshMembershipTable();
     }
 
-    public void redrawCustomInfoTable() {
-        userEditionControl.redrawCustomInfoTable();
+    public void refreshCustomInfoTable() {
+        userEditionControl.refreshCustomInfoTable();
     }
 
 }

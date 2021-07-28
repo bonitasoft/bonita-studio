@@ -107,9 +107,9 @@ public class UserFormPage extends AbstractOrganizationFormPage {
         }
     }
 
-    public void redrawCustomInfoTable() {
+    public void refreshCustomInfoTable() {
         if (userFormPart != null) {
-            userFormPart.redrawCustomInfoTable();
+            userFormPart.refreshCustomInfoTable();
         }
     }
 

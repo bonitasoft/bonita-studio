@@ -337,9 +337,8 @@ public class InformationSection {
                 .createColumnLabelProvider());
     }
 
-    public void redrawCustomInfoTable() {
+    public void refreshCustomInfoTable() {
         customInfoViewer.refresh();
-        customInfoViewer.getTable().redraw();
     }
 
 }
