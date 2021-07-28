@@ -17,6 +17,8 @@ package org.bonitasoft.studio.common.repository.core.maven;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.bonitasoft.studio.common.repository.Messages;
 import org.bonitasoft.studio.common.repository.core.InputStreamSupplier;
@@ -104,10 +106,32 @@ public class FileDependencyLookupOperation implements IRunnableWithProgress {
                 if (result.getStatus() == Status.NOT_FOUND
                         && result.getFile() != null
                         && result.getFile().exists()) {
+                    String name = result.getFile().getName();
+                    var fileExtension = name.toLowerCase().endsWith(".jar") | name.toLowerCase().endsWith(".zip")
+                            ? name.substring(name.length() - 3) : null;
+                    if (fileExtension != null) {
+                        Pattern pattern = Pattern.compile(String.format("^(.+?)-(\\d.*?)\\.%s$", fileExtension));
+                        Matcher matcher = pattern.matcher(name);
+                        if (matcher.find()) {
+                            var artifactId = matcher.group(1);
+                            var version = matcher.group(2);
+                            result.setArtifactId(artifactId);
+                            result.setVersion(version);
+                        }
+                    }
                     result.setStatus(Status.LOCAL);
                 }
             }
         }
+    }
+
+    static String extractVersion(String filename) {
+        Pattern pattern = Pattern.compile("^(.+?)-(\\d.*?)\\.jar$");
+        Matcher matcher = pattern.matcher(filename);
+        if (matcher.find()) {
+            return matcher.group(2);
+        }
+        return null;
     }
 
     public DependencyLookup getResult() {
