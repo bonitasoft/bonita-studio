@@ -19,11 +19,15 @@ import java.io.InputStream;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-import java.util.jar.JarFile;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.zip.ZipFile;
 
 import org.apache.maven.model.Dependency;
+import org.apache.maven.model.Model;
 import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
 import org.bonitasoft.plugin.analyze.report.model.Artifact;
 import org.bonitasoft.plugin.analyze.report.model.CustomPage;
@@ -80,7 +84,7 @@ public class BonitaArtifactDependencyConverter {
             case REST_API:
             case FORM:
             case PAGE:
-                fillCustomPage(bonitaDep);
+                fillCustomPage(dep, bonitaDep);
                 break;
             case CONNECTOR:
             case ACTOR_FILTER:
@@ -97,36 +101,74 @@ public class BonitaArtifactDependencyConverter {
                 ? ((Definition) matchingArtifact).getArtifact().getFile()
                 : ((Implementation) matchingArtifact).getArtifact().getFile();
         if (Paths.get(file).toFile().exists()) {
-            try (JarFile jarFile = new JarFile(file)) {
-                jarFile.stream()
-                        .filter(entry -> entry.getName()
-                                .matches(String.format("META-INF/maven/%s/%s/pom.xml", dep.getGroupId(),
-                                        dep.getArtifactId())))
-                        .map(entry -> {
-                            try (InputStream is = jarFile.getInputStream(entry)) {
-                                return pomReader.read(is);
-                            } catch (IOException | XmlPullParserException e) {
-                                BonitaStudioLog.error(e);
-                                return null;
-                            }
-                        }).findFirst().ifPresent(model -> {
-                            bonitaDep.setName(model.getName());
-                            bonitaDep.setDescription(model.getDescription());
-                        });
-            } catch (IOException e) {
-                BonitaStudioLog.error(e);
-            }
+            setDepInfoFromMavenMetaInf(dep, bonitaDep, file);
         }
         if (Strings.isNullOrEmpty(bonitaDep.getName())) {
             bonitaDep.setName(String.format("%s:%s", dep.getGroupId(), dep.getArtifactId()));
         }
     }
 
-    private void fillCustomPage(BonitaArtifactDependency bonitaDep) {
+    private void setDepInfoFromMavenMetaInf(Dependency dep, BonitaArtifactDependency bonitaDep, String file) {
+        try (ZipFile archiveFile = new ZipFile(file)) {
+            archiveFile.stream()
+                    .filter(entry -> entry.getName()
+                            .matches(String.format("META-INF/maven/%s/%s/pom.xml", dep.getGroupId(),
+                                    dep.getArtifactId())))
+                    .map(entry -> {
+                        try (InputStream is = archiveFile.getInputStream(entry)) {
+                            return pomReader.read(is);
+                        } catch (IOException | XmlPullParserException e) {
+                            BonitaStudioLog.error(e);
+                            return null;
+                        }
+                    }).findFirst().ifPresent(model -> {
+                        bonitaDep.setName(model.getName());
+                        bonitaDep.setDescription(model.getDescription());
+                        if (model.getScm() != null && Strings.hasText(model.getScm().getUrl())) {
+                            bonitaDep.setSCMUrl(resolve(model.getScm().getUrl(), model));
+                        }
+                    });
+        } catch (IOException e) {
+            BonitaStudioLog.error(e);
+        }
+    }
+
+    /**
+     * Replace properties used in the url
+     * This is not a proper maven resolution.
+     */
+    private String resolve(String url, Model model) {
+        Matcher m = Pattern.compile("\\$\\{(.*?)}").matcher(url);
+        Map<String, String> replacements = new HashMap<>();
+        while (m.find()) {
+            String property = m.group(1);
+            if (model.getProperties().containsKey(property)) {
+                replacements.put(property, model.getProperties().getProperty(property));
+            } else if ("project.artifactId".equals(property)) {
+                replacements.put(property, model.getArtifactId());
+            } else if ("project.version".equals(property)) {
+                replacements.put(property, model.getVersion());
+            } else if ("project.groupId".equals(property)) {
+                replacements.put(property, model.getGroupId());
+            }
+        }
+        for (var entry : replacements.entrySet()) {
+            url = url.replace("${" + entry.getKey() + "}", entry.getValue());
+        }
+        return url;
+    }
+
+    private void fillCustomPage(Dependency dep, BonitaArtifactDependency bonitaDep) {
         CustomPage bonitaArtifact = (CustomPage) matchingArtifact;
-        String name = bonitaArtifact.getDisplayName() != null ? bonitaArtifact.getDisplayName() : bonitaArtifact.getName();
+        var file = bonitaArtifact.getArtifact().getFile();
+        String name = bonitaArtifact.getDisplayName() != null ? bonitaArtifact.getDisplayName()
+                : bonitaArtifact.getName();
         bonitaDep.setName(name);
         bonitaDep.setDescription(bonitaArtifact.getDescription());
+        if (Paths.get(file).toFile().exists()) {
+            setDepInfoFromMavenMetaInf(dep, bonitaDep, file);
+        }
+
     }
 
     private ArtifactType findType(Dependency dep) {

@@ -518,4 +518,7 @@ public class PicsConstants {
     public static String switchIcon = "switch.png";
 
     public static String maven = "preferences/maven.png";
+
+    public static String viewSource = "view_source.png";
+    public static String viewSourceHot = "view_source_hot.png";
 }

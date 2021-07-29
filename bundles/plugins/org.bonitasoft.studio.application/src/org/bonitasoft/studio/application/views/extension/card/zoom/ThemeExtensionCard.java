@@ -45,12 +45,8 @@ public class ThemeExtensionCard extends ExtensionCard {
     }
 
     @Override
-    protected int getToolbarMazSize() {
-        return super.getToolbarMazSize() + 1;
-    }
-
-    @Override
     protected List<Builder> getToolbarContributions() {
+        List<Builder> toolbarContributions = super.getToolbarContributions();
         var builder = new DynamicButtonWidget.Builder()
                 .withLabel(Messages.deploy)
                 .withTooltipText(Messages.deploy)
@@ -68,8 +64,8 @@ public class ThemeExtensionCard extends ExtensionCard {
 
                     commandExecutor.executeCommand(DEPLOY_COMMAND, parameters);
                 });
-
-        return List.of(builder);
+        toolbarContributions.add(builder);
+        return toolbarContributions;
     }
 
 }

@@ -380,6 +380,8 @@ public class Messages extends NLS {
     public static String bonitaExtensionTooltip;
     public static String projectElementsTooltip;
     public static String showMore;
+    public static String viewSource;
+    public static String viewSourceTooltip;
 
     static {
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);
