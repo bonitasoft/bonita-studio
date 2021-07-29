@@ -28,7 +28,7 @@ public class GoogleCalendarConnectorDependenciesReplacement extends BonitaJarDep
             "google-calendar-v3-update-event");
 
     public GoogleCalendarConnectorDependenciesReplacement() {
-        super(dependency(CONNECTOR_GROUP_ID, "bonita-connector-google-calendar-v3", "1.1.0"),
+        super(dependency(CONNECTOR_GROUP_ID, "bonita-connector-google-calendar-v3", "1.1.1"),
                 "bonita-connector-google-calendar-v3-1.1.0.jar",
                 "bonita-connector-google-calendar-v3-create-event-impl-1.0.0.jar",
                 "bonita-connector-google-calendar-v3-delete-event-impl-1.0.0.jar",
