@@ -14,9 +14,10 @@
  */
 package org.bonitasoft.studio.application.views.extension.card;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 import org.apache.maven.artifact.versioning.ComparableVersion;
@@ -29,6 +30,7 @@ import org.bonitasoft.studio.application.views.extension.RemoveExtensionListener
 import org.bonitasoft.studio.application.views.extension.UpdateExtensionListener;
 import org.bonitasoft.studio.application.views.extension.card.zoom.Zoomable;
 import org.bonitasoft.studio.application.views.overview.ProjectOverviewEditorPart;
+import org.bonitasoft.studio.common.Strings;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
@@ -38,6 +40,7 @@ import org.bonitasoft.studio.common.repository.store.LocalDependenciesStore;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.preferences.BonitaThemeConstants;
+import org.bonitasoft.studio.preferences.browser.OpenBrowserOperation;
 import org.bonitasoft.studio.ui.widget.DynamicButtonWidget;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -94,6 +97,9 @@ public class ExtensionCard extends Composite {
         createTypeComposite(contentComposite);
         createIcon(contentComposite);
         createDescriptionLabel(contentComposite);
+
+        createViewSourceButton(contentComposite);
+
         createDetailsButton(contentComposite);
 
         var separator = new Label(this, SWT.SEPARATOR | SWT.HORIZONTAL);
@@ -104,6 +110,28 @@ public class ExtensionCard extends Composite {
         createToolbar(this);
     }
 
+    private void createViewSourceButton(Composite parent) {
+        if (Strings.hasText(bonitaDep.getScmUrl())) {
+            try {
+                var url = new URL(bonitaDep.getScmUrl());
+                new DynamicButtonWidget.Builder()
+                        .withLabel(Messages.viewSource)
+                        .withTooltipText(String.format(Messages.viewSourceTooltip, bonitaDep.getScmUrl()))
+                        .withImage(Pics.getImage(PicsConstants.viewSource))
+                        .withHotImage(Pics.getImage(PicsConstants.viewSourceHot))
+                        .withCssclass(BonitaThemeConstants.CARD_BACKGROUND)
+                        .withLayoutData(
+                                GridDataFactory.fillDefaults().align(SWT.BEGINNING, SWT.FILL)
+                                        .create())
+                        .onClick(e -> new OpenBrowserOperation(url).execute())
+                        .createIn(parent);
+            } catch (MalformedURLException e) {
+                BonitaStudioLog
+                        .error(String.format("Failed to parse SCM url %s", bonitaDep.getScmUrl()), e);
+            }
+        }
+    }
+
     private void createDetailsButton(Composite parent) {
         if (this instanceof Zoomable) {
             new DynamicButtonWidget.Builder()
@@ -111,8 +139,10 @@ public class ExtensionCard extends Composite {
                     .withImage(Pics.getImage(PicsConstants.details))
                     .withHotImage(Pics.getImage(PicsConstants.detailsHot))
                     .withCssclass(BonitaThemeConstants.CARD_BACKGROUND)
-                    .withLayoutData(
-                            GridDataFactory.fillDefaults().grab(true, false).span(2, 1).align(SWT.END, SWT.FILL).create())
+                    .withLayoutData(GridDataFactory.fillDefaults()
+                            .span(Strings.hasText(bonitaDep.getScmUrl()) ? 1 : 2, 1)
+                            .align(SWT.END, SWT.FILL)
+                            .create())
                     .onClick(e -> ((Zoomable) this).getZoomListener().zoom(e))
                     .createIn(parent);
         }
@@ -123,7 +153,8 @@ public class ExtensionCard extends Composite {
         mainToolbarComposite.setLayoutData(
                 GridDataFactory.fillDefaults().grab(true, false).create());
         mainToolbarComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
-        mainToolbarComposite.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, BonitaThemeConstants.CARD_BACKGROUND);
+        mainToolbarComposite.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME,
+                BonitaThemeConstants.CARD_BACKGROUND);
 
         var action = ArtifactType.REST_API.equals(bonitaDep.getArtifactType())
                 ? ExtensionActionRegistry.getInstance().getAction(REST_API_EXTENSION_ACTION_ID)
@@ -133,18 +164,20 @@ public class ExtensionCard extends Composite {
             var leftToolbarComposite = new Composite(mainToolbarComposite, SWT.NONE);
             leftToolbarComposite.setLayout(GridLayoutFactory.fillDefaults().create());
             leftToolbarComposite.setLayoutData(GridDataFactory.fillDefaults().align(SWT.BEGINNING, SWT.FILL).create());
-            leftToolbarComposite.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, BonitaThemeConstants.CARD_BACKGROUND);
+            leftToolbarComposite.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME,
+                    BonitaThemeConstants.CARD_BACKGROUND);
             action.fill(leftToolbarComposite);
         }
 
+        var toolbarContributions = getToolbarContributions();
         var toolbarComposite = new Composite(mainToolbarComposite, SWT.NONE);
-        toolbarComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(getToolbarMazSize()).create());
+        toolbarComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(getToolbarMaxSize(toolbarContributions.size())).create());
         toolbarComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).align(SWT.END, SWT.FILL)
                 .span(action != null ? 1 : 2, 1).create());
         toolbarComposite.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, BonitaThemeConstants.CARD_BACKGROUND);
 
         int columnUsed = 0;
-        for (DynamicButtonWidget.Builder builder : getToolbarContributions()) {
+        for (DynamicButtonWidget.Builder builder : toolbarContributions) {
             builder.createIn(toolbarComposite);
             columnUsed++;
         }
@@ -181,17 +214,17 @@ public class ExtensionCard extends Composite {
                 .withImage(Pics.getImage(PicsConstants.delete))
                 .withHotImage(Pics.getImage(PicsConstants.delete_hot))
                 .withCssclass(BonitaThemeConstants.CARD_BACKGROUND)
-                .withLayoutData(GridDataFactory.swtDefaults().span(getToolbarMazSize() - columnUsed, 1).create())
+                .withLayoutData(GridDataFactory.swtDefaults().span(getToolbarMaxSize(toolbarContributions.size()) - columnUsed, 1).create())
                 .onClick(e -> removeListeners.stream().forEach(l -> l.removeExtension(dep)))
                 .createIn(toolbarComposite);
     }
 
     protected List<DynamicButtonWidget.Builder> getToolbarContributions() {
-        return Collections.EMPTY_LIST;
+        return new ArrayList<>();
     }
 
-    protected int getToolbarMazSize() {
-        return 2;
+    private int getToolbarMaxSize(int nbToolbarContributions) {
+        return nbToolbarContributions + 2;
     }
 
     protected boolean canEditMavenCoordinates(BonitaArtifactDependency bonitaDep) {
@@ -254,7 +287,8 @@ public class ExtensionCard extends Composite {
         titleComposite.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, BonitaThemeConstants.CARD_BACKGROUND);
 
         titleLabel = new CLabel(titleComposite, SWT.NONE);
-        titleLabel.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, SWTBotConstants.extensionCardId(bonitaDep.getArtifactId()));
+        titleLabel.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY,
+                SWTBotConstants.extensionCardId(bonitaDep.getArtifactId()));
         titleLabel.setLayoutData(GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).create());
         titleLabel.setText(bonitaDep.getName());
         titleLabel.setFont(JFaceResources.getFont(ProjectOverviewEditorPart.BOLD_8_FONT_ID));

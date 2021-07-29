@@ -244,6 +244,9 @@ public class ExtensionComposite extends Composite {
                     if (bonitaDependency
                             .filter(d -> !Objects.equals(d.getArtifactType(), ArtifactType.OTHER))
                             .isPresent()) {
+                        BonitaArtifactDependency bonitaArtifactDependency = bonitaDependency.get();
+                        BonitaArtifactDependency artifactDependency = bonitaArtifactDependencyConverter.toBonitaArtifactDependency(dep);
+                        bonitaArtifactDependency.setSCMUrl(artifactDependency.getScmUrl());
                         bonitaDependencies.add(new BonitaDependencyTuple(dep, bonitaDependency.get()));
                     } else if (!ProjectDefaultConfiguration.isInternalDependency(dep) && !isBDMDependency(dep)) {
                         BonitaArtifactDependency bonitaDep = bonitaArtifactDependencyConverter

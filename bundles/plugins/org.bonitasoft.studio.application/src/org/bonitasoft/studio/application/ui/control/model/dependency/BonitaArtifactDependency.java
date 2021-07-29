@@ -37,6 +37,7 @@ public class BonitaArtifactDependency implements Comparable {
     private boolean localDependency;
 
     private boolean fromMarketplace = true;
+    private String scmUrl;
 
     public BonitaArtifactDependency() {
     }
@@ -194,4 +195,13 @@ public class BonitaArtifactDependency implements Comparable {
         }
         return 0;
     }
+
+    public void setSCMUrl(String scmUrl) {
+        this.scmUrl = scmUrl;
+    }
+    
+    public String getScmUrl() {
+        return scmUrl;
+    }
+
 }
