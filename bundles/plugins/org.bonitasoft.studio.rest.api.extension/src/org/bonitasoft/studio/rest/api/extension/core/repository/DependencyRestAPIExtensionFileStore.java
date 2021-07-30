@@ -23,6 +23,7 @@ import org.bonitasoft.plugin.analyze.report.model.RestAPIExtension;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.engine.http.HttpClientFactory;
+import org.bonitasoft.studio.maven.ImportProjectException;
 import org.bonitasoft.studio.maven.operation.DeployCustomPageOperation;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.rest.api.extension.RestAPIExtensionActivator;
@@ -75,6 +76,11 @@ public class DependencyRestAPIExtensionFileStore extends RestAPIExtensionFileSto
     @Override
     public Image getIcon() {
         return Pics.getImage("binary.png", RestAPIExtensionActivator.getDefault());
+    }
+    
+    @Override
+    public void importProject() throws ImportProjectException {
+      // Nothing to import
     }
 
     @Override
