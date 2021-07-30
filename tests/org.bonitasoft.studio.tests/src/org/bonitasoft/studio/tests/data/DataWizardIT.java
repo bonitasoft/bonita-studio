@@ -106,8 +106,9 @@ public class DataWizardIT {
                 .next()
                 .next()
                 .finish();
-
-        final BotProcessDiagramPerspective botProcessDiagramPerspective = new BotProcessDiagramPerspective(bot);
+        
+        final BotApplicationWorkbenchWindow workbenchBot = new BotApplicationWorkbenchWindow(bot);
+        BotProcessDiagramPerspective botProcessDiagramPerspective = workbenchBot.open().selectDiagram("ProcessWithData", "1.0").open();
         final BotProcessDiagramPropertiesViewFolder diagramPropertiesPart = botProcessDiagramPerspective
                 .getDiagramPropertiesPart();
         final BotGefProcessDiagramEditor activeProcessDiagramEditor = botProcessDiagramPerspective

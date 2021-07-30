@@ -126,6 +126,8 @@ public final class Messages extends NLS {
     public static String conflicting;
     public static String ourVersion;
     public static String theirVersion;
+    public static String confirmMigratonTitle;
+    public static String confirmMigraton;
 
     private Messages() {
         // Do not instantiate

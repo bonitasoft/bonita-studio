@@ -38,6 +38,8 @@ import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditor;
 import org.bonitasoft.studio.swtbot.framework.SWTBotConnectorTestUtil;
 import org.bonitasoft.studio.swtbot.framework.application.BotApplicationWorkbenchWindow;
+import org.bonitasoft.studio.swtbot.framework.diagram.BotProcessDiagramPerspective;
+import org.bonitasoft.studio.swtbot.framework.diagram.BotProcessDiagramPropertiesViewFolder;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -83,7 +85,10 @@ public class BPMNExportTests {
                 .next()
                 .next()
                 .finish();
-
+        
+        final BotApplicationWorkbenchWindow workbenchBot = new BotApplicationWorkbenchWindow(bot);
+        workbenchBot.open().selectDiagram("TestExportToBPMNDiagram", "1.0").open();
+        
         final MainProcess c = (MainProcess) ((ProcessDiagramEditor) bot.activeEditor().getReference()
                 .getPart(false)).getDiagram().getElement();
         DiagramRepositoryStore dStore = RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);

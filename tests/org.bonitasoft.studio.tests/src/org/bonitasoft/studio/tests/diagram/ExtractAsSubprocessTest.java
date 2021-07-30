@@ -30,6 +30,7 @@ import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.swtbot.framework.SWTBotTestUtil;
 import org.bonitasoft.studio.swtbot.framework.application.BotApplicationWorkbenchWindow;
 import org.bonitasoft.studio.swtbot.framework.conditions.EditorOpenCondition;
+import org.bonitasoft.studio.swtbot.framework.diagram.BotProcessDiagramPerspective;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
@@ -229,6 +230,9 @@ public class ExtractAsSubprocessTest {
                 .next()
                 .next()
                 .finish();
+        
+        final BotApplicationWorkbenchWindow workbenchBot = new BotApplicationWorkbenchWindow(bot);
+        workbenchBot.open().selectDiagram("BoundaryProcess", "1.0").open();
 
         bot.waitUntil(new EditorOpenCondition(store.getChild("BoundaryProcess-1.0.proc", true).getResource()));
         SWTBotTestUtil.waitUntilRootShellIsActive(bot);
