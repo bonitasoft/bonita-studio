@@ -23,6 +23,7 @@ import org.bonitasoft.plugin.analyze.report.model.Theme;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.engine.http.HttpClientFactory;
+import org.bonitasoft.studio.maven.ImportProjectException;
 import org.bonitasoft.studio.maven.operation.DeployCustomPageOperation;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.rest.api.extension.RestAPIExtensionActivator;
@@ -63,6 +64,11 @@ public class DependencyThemeFileStore extends ThemeFileStore {
     @Override
     public String getName() {
         return getArchiveFile().getName();
+    }
+    
+    @Override
+    public void importProject() throws ImportProjectException {
+       // Nothing to import
     }
     
     @Override
