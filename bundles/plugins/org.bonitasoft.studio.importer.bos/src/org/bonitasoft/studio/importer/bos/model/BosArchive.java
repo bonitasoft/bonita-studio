@@ -62,7 +62,6 @@ public class BosArchive {
         FALLBACK_PROPERTIES.put(VERSION, "6.0.0");
     }
 
-    private boolean openAll = false;
     private final File archiveFile;
     private MavenXpp3Reader mavenXpp3Reader = new MavenXpp3Reader();
     private Model mavenProject;
@@ -160,7 +159,7 @@ public class BosArchive {
                         && !file.getFileName().endsWith(".proc")) {
                     return;
                 }
-                file.setToOpen(openAll || resourcesToOpen.contains(file.getFileName()));
+                file.setToOpen(resourcesToOpen.contains(file.getFileName()));
                 file.getParentRepositoryStore().ifPresent(repositoryStore -> {
                     IStatus validationStatus = validateFile(file, repositoryStore);
                     if (isDiagram(file)) {
@@ -367,7 +366,6 @@ public class BosArchive {
         if (toOpen != null) {
             return newHashSet(Splitter.on(",").split(toOpen));
         }
-        openAll = true;
         return Collections.emptySet();
     }
 
