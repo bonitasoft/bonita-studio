@@ -31,6 +31,7 @@ import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.filestore.AbstractFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.team.i18n.Messages;
@@ -127,14 +128,15 @@ public class TeamRepositoryUtil {
                     BonitaStudioLog.info(
                             "Repository switched to " + currentRepo.getName(),
                             TeamPlugin.PLUGIN_ID);
-                    PlatformUtil.openIntro();
+                    PlatformUtil.openDashboardIfNoOtherEditorOpen();
                 }
             };
             workspaceModifyOperation.run(monitor);
             Display.getDefault().asyncExec(
                     () -> {
                         PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().resetPerspective();
-                        PlatformUtil.openIntroIfNoOtherEditorOpen();
+                        PlatformUtil.openDashboardIfNoOtherEditorOpen();
+                        AbstractFileStore.refreshExplorerView();
                     });
         } catch (final InvocationTargetException | InterruptedException e) {
             BonitaStudioLog.error(e);
