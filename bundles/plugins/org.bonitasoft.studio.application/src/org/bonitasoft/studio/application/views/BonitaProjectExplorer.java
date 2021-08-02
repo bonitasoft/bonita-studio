@@ -30,8 +30,6 @@ import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.application.views.provider.UIDArtifactFilters;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
-import org.bonitasoft.studio.pics.Pics;
-import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.NotEnabledException;
@@ -65,7 +63,6 @@ import org.eclipse.swt.dnd.DropTarget;
 import org.eclipse.swt.dnd.DropTargetAdapter;
 import org.eclipse.swt.dnd.DropTargetEvent;
 import org.eclipse.swt.dnd.FileTransfer;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
@@ -93,11 +90,6 @@ public class BonitaProjectExplorer extends CommonNavigator {
     @Override
     protected Object getInitialInput() {
         return repositoryAccessor.getWorkspace().getRoot();
-    }
-
-    @Override
-    public Image getTitleImage() {
-        return Pics.getImage(PicsConstants.coolbar_welcome_24);
     }
 
     public BonitaProjectExplorer() {

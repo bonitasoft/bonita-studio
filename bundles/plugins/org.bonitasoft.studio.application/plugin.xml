@@ -232,7 +232,6 @@
             </separator>
             <command
                   commandId="org.eclipse.ui.window.preferences"
-                  disabledIcon="icons/menuIcons/preferences_disabled.png"
                   icon="icons/menuIcons/preferences.png"
                   style="push">
             </command>
@@ -782,7 +781,7 @@
       <view
             category="org.bonitasoft.studio.application.bonita"
             class="org.bonitasoft.studio.application.views.BonitaProjectExplorer"
-            icon="icons/resource_persp.png"
+            icon="icons/bonitasoft-icon-16-16-transparent.png"
             id="org.bonitasoft.studio.application.project.explorer"
             inject="true"
             name="%projectExplorer"
