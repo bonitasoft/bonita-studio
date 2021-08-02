@@ -19,6 +19,7 @@ import static org.bonitasoft.studio.expression.editor.i18n.Messages.returnType;
 import static org.bonitasoft.studio.identity.i18n.Messages.selectActor;
 import static org.bonitasoft.studio.identity.i18n.Messages.setAsProcessInitiator;
 import static org.bonitasoft.studio.identity.i18n.Messages.useTaskActors;
+import static org.eclipse.swtbot.swt.finder.waits.Conditions.widgetIsEnabled;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -26,6 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.core.IRunnableWithStatus;
 import org.bonitasoft.studio.common.diagram.tools.FiguresHelper;
@@ -43,7 +45,6 @@ import org.bonitasoft.studio.swtbot.framework.expression.BotExpressionEditorDial
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.draw2d.IFigure;
@@ -53,12 +54,10 @@ import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.jface.dialogs.IDialogConstants;
-import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Widget;
 import org.eclipse.swtbot.eclipse.finder.SWTWorkbenchBot;
 import org.eclipse.swtbot.eclipse.finder.matchers.WidgetMatcherFactory;
-import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotEditor;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotView;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
@@ -73,9 +72,9 @@ import org.eclipse.swtbot.swt.finder.keyboard.Keystrokes;
 import org.eclipse.swtbot.swt.finder.matchers.WithId;
 import org.eclipse.swtbot.swt.finder.results.Result;
 import org.eclipse.swtbot.swt.finder.utils.SWTBotPreferences;
+import org.eclipse.swtbot.swt.finder.waits.Conditions;
 import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
 import org.eclipse.swtbot.swt.finder.waits.ICondition;
-import org.eclipse.swtbot.swt.finder.widgets.SWTBotMenu;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTable;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTree;
@@ -102,9 +101,12 @@ public class SWTBotTestUtil implements SWTBotConstants {
         final int nbEditorsBefore = wBot.editors().size();
         wBot.waitUntil(Conditions.waitForWidget(WithId.withId(SWTBOT_ID_MAIN_SHELL)), 40000);
         wBot.waitUntil(Conditions.shellIsActive(wBot.shellWithId(SWTBOT_ID_MAIN_SHELL).getText()), 40000);
-        wBot.waitUntil(Conditions.widgetIsEnabled(wBot.menu("File")), 40000);
-        final SWTBotMenu menu = wBot.menu("File");
-        menu.menu("New diagram").click();
+        wBot.waitUntil(
+                Conditions.widgetIsEnabled(wBot.toolbarDropDownButtonWithId("org.bonitasoft.studio.coolbar.new")),
+                40000);
+        wBot.toolbarDropDownButtonWithId("org.bonitasoft.studio.coolbar.new")
+            .menuItem(Messages.processDiagram)
+            .click();
         wBot.waitUntil(new DefaultCondition() {
 
             @Override
@@ -171,7 +173,7 @@ public class SWTBotTestUtil implements SWTBotConstants {
             try {
                 PlatformUI.getWorkbench().getProgressService().run(true, false, runnable);
             } catch (InvocationTargetException | InterruptedException e) {
-               throw new RuntimeException(e);
+                throw new RuntimeException(e);
             }
         });
         return runnable.getStatus();
@@ -286,7 +288,7 @@ public class SWTBotTestUtil implements SWTBotConstants {
         view.setFocus();
         final SWTBotTree tree = bot.treeWithId(BONITA_OVERVIEW_TREE_ID);
         tree.setFocus();
-        bot.waitUntil(Conditions.widgetIsEnabled(tree.getTreeItem(widgetName)));
+        bot.waitUntil(widgetIsEnabled(tree.getTreeItem(widgetName)));
         tree.select(widgetName);
     }
 
@@ -702,7 +704,7 @@ public class SWTBotTestUtil implements SWTBotConstants {
             } else if (expressionType == ExpressionConstants.CONSTANT_TYPE) {
                 bot.textWithLabel("Condition").setText(condition);
                 bot.sleep(600);
-            }  else {
+            } else {
                 Assert.assertTrue("Error: Expression type " + expressionType + " is not supported.", false);
             }
         }
@@ -968,16 +970,16 @@ public class SWTBotTestUtil implements SWTBotConstants {
         proposalTAble.select(row);
         proposalTAble.pressShortcut(Keystrokes.CR);
         bot.waitUntil(new DefaultCondition() {
-            
+
             @Override
             public boolean test() throws Exception {
-               if(!Conditions.shellCloses(proposalShell).test()){
-                   proposalTAble.pressShortcut(Keystrokes.CR);
-                   return false;
-               }
-               return true;
+                if (!Conditions.shellCloses(proposalShell).test()) {
+                    proposalTAble.pressShortcut(Keystrokes.CR);
+                    return false;
+                }
+                return true;
             }
-            
+
             @Override
             public String getFailureMessage() {
                 return "Failed to select Expression proposal";

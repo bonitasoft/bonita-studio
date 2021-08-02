@@ -53,7 +53,7 @@ public class OrganizationOverviewContribution implements OverviewContribution {
 
     @Override
     public String getName() {
-        return Messages.organizations;
+        return Messages.organizationCardName;
     }
 
     @Override

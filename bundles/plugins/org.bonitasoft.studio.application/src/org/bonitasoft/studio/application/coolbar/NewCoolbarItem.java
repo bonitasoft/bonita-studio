@@ -18,6 +18,7 @@ import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelFileStore;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
 import org.bonitasoft.studio.common.extension.IBonitaContributionItem;
+import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.pics.Pics;
@@ -36,7 +37,6 @@ import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.commands.ICommandImageService;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.handlers.IHandlerService;
 
@@ -45,12 +45,10 @@ public class NewCoolbarItem extends ContributionItem implements IBonitaContribut
     protected static final String NEW_DIAGRAM_CMD_ID = "org.bonitasoft.studio.diagram.command.newDiagram";
     private ICommandService commandService;
     private IHandlerService handlerService;
-    private ICommandImageService imageService;
 
     public NewCoolbarItem() {
         commandService = PlatformUI.getWorkbench().getService(ICommandService.class);
         handlerService = PlatformUI.getWorkbench().getService(IHandlerService.class);
-        imageService = PlatformUI.getWorkbench().getService(ICommandImageService.class);
     }
 
     @Override
@@ -81,7 +79,7 @@ public class NewCoolbarItem extends ContributionItem implements IBonitaContribut
                 final MenuItem menuItem = new MenuItem(menu, SWT.PUSH);
                 try {
                     menuItem.setText(label != null ? label : command.getName());
-                    //                    getCommandImage(commandId).ifPresent(menuItem::setImage);
+                    menuItem.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, command.getName());
                     menuItem.setImage(icon);
                 } catch (NotDefinedException e1) {
                     BonitaStudioLog.error(e1);
@@ -117,6 +115,7 @@ public class NewCoolbarItem extends ContributionItem implements IBonitaContribut
     @Override
     public void fill(final ToolBar toolbar, final int index, final int iconSize) {
         final ToolItem item = new ToolItem(toolbar, SWT.DROP_DOWN);
+        item.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, getId());
         item.setToolTipText(Messages.NewButtonTooltip);
         if (iconSize < 0) {
             item.setImage(Pics.getImage(PicsConstants.coolbar_new_32));
@@ -160,7 +159,7 @@ public class NewCoolbarItem extends ContributionItem implements IBonitaContribut
                     listener.add("org.bonitasoft.studio.la.new.command", Messages.applicationDescriptor,
                             Pics.getImage(PicsConstants.application));
                     listener.addSeparator();
-                    listener.add(NEW_DIAGRAM_CMD_ID, null, Pics.getImage(PicsConstants.diagram));
+                    listener.add(NEW_DIAGRAM_CMD_ID, Messages.processDiagram, Pics.getImage(PicsConstants.diagram));
                     listener.addSeparator();
                     listener.add("org.bonitasoft.studio.designer.command.create.page", Messages.applicationPage,
                             Pics.getImage(PicsConstants.page));

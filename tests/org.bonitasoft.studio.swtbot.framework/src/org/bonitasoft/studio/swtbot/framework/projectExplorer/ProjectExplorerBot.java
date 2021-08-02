@@ -90,7 +90,7 @@ public class ProjectExplorerBot extends BotBase {
     public BotProcessDiagramPerspective newDiagram() {
         SWTBotTreeItem projectTreeItem = getProjectTreeItem();
         bot.waitUntil(contextMenuAvailable(projectTreeItem, "New"));
-        projectTreeItem.contextMenu().menu("New").menu("Diagram").click();
+        projectTreeItem.contextMenu().menu("New").menu(org.bonitasoft.studio.application.i18n.Messages.processDiagram).click();
         return new BotProcessDiagramPerspective(bot);
     }
 

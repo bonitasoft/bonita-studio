@@ -63,7 +63,9 @@ public class DiagramProjectExplorerBot extends ProjectExplorerBot {
         SWTBotShell activeShell = bot.activeShell();
         activeShell.setFocus();
         bot.textWithId("org.bonitasoft.studio.common.diagram.dialog.name.text").setText(newDiagramName);
-        bot.textWithId("org.bonitasoft.studio.common.diagram.dialog.poolName.text").setText(newPoolName);
+        if(newPoolName != null) {
+            bot.textWithId("org.bonitasoft.studio.common.diagram.dialog.poolName.text").setText(newPoolName);
+        }
         bot.button(IDialogConstants.OK_LABEL).click();
         bot.waitUntil(Conditions.shellCloses(activeShell));
     }

@@ -22,6 +22,7 @@ import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.bonitasoft.studio.swtbot.framework.SWTBotTestUtil;
+import org.bonitasoft.studio.swtbot.framework.projectExplorer.ProjectExplorerBot;
 import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -115,15 +116,9 @@ public class TestRenameDiagram {
         final MainProcess diagram = (MainProcess) ((IGraphicalEditPart) gmfEditor.mainEditPart().part())
                 .resolveSemanticElement();
         final String originalName = diagram.getName();
-        bot.menu("File").menu("Rename diagram...").click();
-        bot.waitUntil(Conditions.shellIsActive(org.bonitasoft.studio.common.Messages.openNameAndVersionDialogTitle));
-
-        assertTrue("OK should be enabled", bot.button(IDialogConstants.OK_LABEL).isEnabled());
-
         final String newName = originalName + " renamed" + System.currentTimeMillis();
-        bot.textWithLabel(org.bonitasoft.studio.common.Messages.name, 0).setText(newName);
+        new ProjectExplorerBot(bot).diagram().renameDiagram(originalName, newName, "1.0", null);
 
-        bot.button(IDialogConstants.OK_LABEL).click();
         assertEquals(newName + " (1.0)", bot.activeEditor().getTitle());
         assertFalse("Editor is dirty", bot.activeEditor().isDirty());
     }

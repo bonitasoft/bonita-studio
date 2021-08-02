@@ -79,10 +79,6 @@ public class NewDiagramCommandHandler extends AbstractHandler {
         return diagramFileStore;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.core.commands.AbstractHandler#isEnabled()
-     */
     @Override
     public boolean isEnabled() {
         return true;

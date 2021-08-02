@@ -60,9 +60,7 @@ import org.bonitasoft.studio.tests.diagram.DuplicateCommandTest;
 import org.bonitasoft.studio.tests.diagram.ExtractAsSubprocessTest;
 import org.bonitasoft.studio.tests.diagram.NewRunTest;
 import org.bonitasoft.studio.tests.diagram.TestBoundariesCreation;
-import org.bonitasoft.studio.tests.diagram.TestDeleteDiagrams;
 import org.bonitasoft.studio.tests.diagram.TestMoveBetweenLane;
-import org.bonitasoft.studio.tests.diagram.TestOpenDiagram;
 import org.bonitasoft.studio.tests.diagram.TestRenameDiagram;
 import org.bonitasoft.studio.tests.diagram.TestUndoRedoStackLimit;
 import org.bonitasoft.studio.tests.dialog.OpenNameAndVersionDiagramForDiagramTest;
@@ -109,7 +107,6 @@ import org.junit.runners.Suite;
         ProjectOverviewdIT.class,
         RichTextEditorIT.class,
         DiagramTests.class,
-        TestDeleteDiagrams.class,
         DeleteCommandTest.class,
         DeployWizardIT.class,
         ProjectExplorerDiagramIT.class,
@@ -142,7 +139,6 @@ import org.junit.runners.Suite;
         TestThrowCatchMessage.class,
         TestWebPurchase.class,
         TestUndoRedoStackLimit.class,
-        TestOpenDiagram.class,
         OpenNameAndVersionDiagramForDiagramTest.class,
         ConnectorDefinitionTranslationsTest.class,
         CopyPasteTests.class,

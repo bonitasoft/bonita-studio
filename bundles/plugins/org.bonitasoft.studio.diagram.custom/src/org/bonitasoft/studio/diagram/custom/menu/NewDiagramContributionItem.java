@@ -35,7 +35,7 @@ public class NewDiagramContributionItem extends ContributionItem {
     @Override
     public void fill(Menu parent, int index) {
         MenuItem item = new MenuItem(parent, SWT.NONE, index);
-        item.setText(Messages.newDiagramCommandName);
+        item.setText(Messages.dashboardDiagramName);
         item.addListener(SWT.Selection, e -> commandExecutor.executeCommand(NEW_COMMAND, null));
         item.setEnabled(true);
         item.setImage(Pics.getImage(PicsConstants.diagram));

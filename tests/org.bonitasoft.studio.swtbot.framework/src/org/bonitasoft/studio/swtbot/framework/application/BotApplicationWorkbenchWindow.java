@@ -64,9 +64,11 @@ public class BotApplicationWorkbenchWindow extends AbstractBotMenu {
         final int nbEditorsBefore = bot.editors().size();
         bot.waitUntil(Conditions.waitForWidget(WithId.withId(SWTBotConstants.SWTBOT_ID_MAIN_SHELL)), 40000);
         bot.waitUntil(Conditions.shellIsActive(bot.shellWithId(SWTBotConstants.SWTBOT_ID_MAIN_SHELL).getText()), 40000);
-        bot.waitUntil(Conditions.widgetIsEnabled(bot.menu("File")), 40000);
-        final SWTBotMenu menu = bot.menu("File");
-        menu.menu("New diagram").click();
+        bot.waitUntil(Conditions.widgetIsEnabled(bot.toolbarDropDownButtonWithId("org.bonitasoft.studio.coolbar.new")),
+                40000);
+        bot.toolbarDropDownButtonWithId("org.bonitasoft.studio.coolbar.new")
+                .menuItem(org.bonitasoft.studio.application.i18n.Messages.processDiagram)
+                .click();
         bot.waitUntil(new ICondition() {
 
             @Override
@@ -84,12 +86,6 @@ public class BotApplicationWorkbenchWindow extends AbstractBotMenu {
             }
         }, 30000, 100);
         return new BotProcessDiagramPerspective(bot);
-    }
-
-    public BotOpenDiagramDialog open() {
-        bot.menu("File").menu("Open diagram...").click();
-        bot.waitUntil(Conditions.shellIsActive("Open an existing diagram"));
-        return new BotOpenDiagramDialog(bot);
     }
 
     public BotApplicationWorkbenchWindow save() {
@@ -179,28 +175,32 @@ public class BotApplicationWorkbenchWindow extends AbstractBotMenu {
 
     public OpenApplicationWizardBot openApplication() {
         waitForMainShell(bot);
-        bot.menu("Development").menu(org.bonitasoft.studio.application.i18n.Messages.applicationDescriptor).menu("Open...")
+        bot.menu("Development").menu(org.bonitasoft.studio.application.i18n.Messages.applicationDescriptor)
+                .menu("Open...")
                 .click();
         return new OpenApplicationWizardBot(bot, Messages.openExistingApplication);
     }
 
     public void newApplicationDescriptorFile() {
         waitForMainShell(bot);
-        bot.menu("Development").menu(org.bonitasoft.studio.application.i18n.Messages.applicationDescriptor).menu("New...")
+        bot.menu("Development").menu(org.bonitasoft.studio.application.i18n.Messages.applicationDescriptor)
+                .menu("New...")
                 .click();
         bot.waitUntil(Conditions.waitForEditor(IsInstanceOf.instanceOf(IEditorReference.class)));
     }
 
     public SelectApplicationToDeployWizardBot deployApplicationFile() {
         waitForMainShell(bot);
-        bot.menu("Development").menu(org.bonitasoft.studio.application.i18n.Messages.applicationDescriptor).menu("Deploy...")
+        bot.menu("Development").menu(org.bonitasoft.studio.application.i18n.Messages.applicationDescriptor)
+                .menu("Deploy...")
                 .click();
         return new SelectApplicationToDeployWizardBot(bot, Messages.deployExistingApplication);
     }
 
     public DeleteApplicationWizardBot deleteApplicationDescriptor() {
         waitForMainShell(bot);
-        bot.menu("Development").menu(org.bonitasoft.studio.application.i18n.Messages.applicationDescriptor).menu("Delete...")
+        bot.menu("Development").menu(org.bonitasoft.studio.application.i18n.Messages.applicationDescriptor)
+                .menu("Delete...")
                 .click();
         return new DeleteApplicationWizardBot(bot, Messages.deleteExistingApplication);
     }
@@ -233,7 +233,8 @@ public class BotApplicationWorkbenchWindow extends AbstractBotMenu {
 
     public BotApplicationEditor newApplicationContainer() {
         waitForMainShell(bot);
-        bot.menu("Development").menu(org.bonitasoft.studio.application.i18n.Messages.applicationDescriptor).menu("New...")
+        bot.menu("Development").menu(org.bonitasoft.studio.application.i18n.Messages.applicationDescriptor)
+                .menu("New...")
                 .click();
         bot.waitUntil(Conditions.waitForEditor(IsInstanceOf.instanceOf(IEditorReference.class)));
         return new BotApplicationEditor(bot, bot.activeEditor());

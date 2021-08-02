@@ -53,35 +53,6 @@
                   name="org.bonitasoft.studio.application.deploySeparator"
                   visible="true">
             </separator>
-            <command
-                  commandId="org.bonitasoft.studio.diagram.command.newDiagram"
-                  disabledIcon="icons/menuIcons/new_disabled.png"
-                  hoverIcon="icons/menuIcons/new_hover.png"
-                  icon="icons/menuIcons/new.png"
-                  label="%newProcessAction_Label"
-                  style="push">
-            </command>
-            <command
-                  commandId="org.bonitasoft.studio.diagram.command.openDiagram"
-                  disabledIcon="icons/menuIcons/open_disabled.png"
-                  hoverIcon="icons/menuIcons/open_hover.png"
-                  icon="icons/menuIcons/open.png"
-                  label="%openProcess_label"
-                  style="push">
-            </command>
-            <command
-                  commandId="org.bonitasoft.studio.diagram.command.deleteDiagram"
-                  disabledIcon="icons/menuIcons/open_disabled.png"
-                  hoverIcon="icons/menuIcons/open_hover.png"
-                  icon="icons/menuIcons/open.png"
-                  label="%deleteProcess_label"
-                  style="push">
-            </command>
-            <command
-                  commandId="org.bonitasoft.studio.application.command.rename"
-                  label="%renameLabel"
-                  style="push">
-            </command>
             <menu
                   icon="icons/menuIcons/recently.png"
                   label="%RecentlyModified">
