@@ -44,6 +44,7 @@ import org.bonitasoft.studio.swtbot.framework.diagram.general.data.BotDataProper
 import org.bonitasoft.studio.swtbot.framework.diagram.general.data.BotEditDataDialog;
 import org.bonitasoft.studio.swtbot.framework.draw.BotGefProcessDiagramEditor;
 import org.bonitasoft.studio.swtbot.framework.expression.BotExpressionEditorDialog;
+import org.bonitasoft.studio.swtbot.framework.projectExplorer.ProjectExplorerBot;
 import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.IAdaptable;
@@ -106,13 +107,9 @@ public class DataWizardIT {
                 .next()
                 .next()
                 .finish();
-        
-        final BotApplicationWorkbenchWindow workbenchBot = new BotApplicationWorkbenchWindow(bot);
-        BotProcessDiagramPerspective botProcessDiagramPerspective = workbenchBot.open().selectDiagram("ProcessWithData", "1.0").open();
-        final BotProcessDiagramPropertiesViewFolder diagramPropertiesPart = botProcessDiagramPerspective
-                .getDiagramPropertiesPart();
-        final BotGefProcessDiagramEditor activeProcessDiagramEditor = botProcessDiagramPerspective
-                .activeProcessDiagramEditor();
+
+        var diagramPerspective = new ProjectExplorerBot(bot).diagram().openDiagram("ProcessWithData", "1.0");
+        var activeProcessDiagramEditor = diagramPerspective.activeProcessDiagramEditor();
         final SWTBotGefEditor gmfEditor = activeProcessDiagramEditor.getGmfEditor();
         IGraphicalEditPart part = (IGraphicalEditPart) gmfEditor.mainEditPart().part();
         MainProcess model = (MainProcess) part.resolveSemanticElement();
@@ -120,7 +117,7 @@ public class DataWizardIT {
         gmfEditor.select(pool.getName());
         bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_DATA).show();
         bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_DATA).setFocus();
-        final BotDataPropertySection dataTab = diagramPropertiesPart.selectDataTab().selectPoolDataTab();
+        final BotDataPropertySection dataTab = diagramPerspective.getDiagramPropertiesPart().selectDataTab().selectPoolDataTab();
         dataTab.processDataList().select(1);
         final BotEditDataDialog editDataDialog = dataTab.edit();
         editDataDialog.setName("anewName");
@@ -303,7 +300,8 @@ public class DataWizardIT {
             @Override
             public void run() {
                 try {
-                    new AbstractEMFOperation(TransactionUtil.getEditingDomain(pool), "Prepare Pool with Contract Input") {
+                    new AbstractEMFOperation(TransactionUtil.getEditingDomain(pool),
+                            "Prepare Pool with Contract Input") {
 
                         @Override
                         protected IStatus doExecute(final IProgressMonitor monitor, final IAdaptable info)
@@ -323,7 +321,8 @@ public class DataWizardIT {
             }
         });
 
-        final BotDataPropertySection botDataPropertySection = diagramPerspective.getDiagramPropertiesPart().selectDataTab()
+        final BotDataPropertySection botDataPropertySection = diagramPerspective.getDiagramPropertiesPart()
+                .selectDataTab()
                 .selectPoolDataTab();
         final BotAddDataWizardPage addData = botDataPropertySection.addData();
         addData.setDefaultValueExpression("input1");
@@ -341,7 +340,8 @@ public class DataWizardIT {
             @Override
             public void run() {
                 try {
-                    new AbstractEMFOperation(TransactionUtil.getEditingDomain(task), "Prepare Task with Contract Input") {
+                    new AbstractEMFOperation(TransactionUtil.getEditingDomain(task),
+                            "Prepare Task with Contract Input") {
 
                         @Override
                         protected IStatus doExecute(final IProgressMonitor monitor, final IAdaptable info)
@@ -361,7 +361,8 @@ public class DataWizardIT {
             }
         });
 
-        final BotDataPropertySection botDataPropertySection = diagramPerspective.getDiagramPropertiesPart().selectDataTab()
+        final BotDataPropertySection botDataPropertySection = diagramPerspective.getDiagramPropertiesPart()
+                .selectDataTab()
                 .selectLocalDataTab();
         final BotAddDataWizardPage addData = botDataPropertySection.addData();
         SWTBotShell activeShell = bot.activeShell();
@@ -379,7 +380,8 @@ public class DataWizardIT {
     public void testMaxLengthDescription() {
         final BotApplicationWorkbenchWindow botApplicationWorkbenchWindow = new BotApplicationWorkbenchWindow(bot);
         final BotProcessDiagramPerspective diagramPerspective = botApplicationWorkbenchWindow.createNewDiagram();
-        final BotProcessDiagramPropertiesViewFolder diagramPropertiesPart = diagramPerspective.getDiagramPropertiesPart();
+        final BotProcessDiagramPropertiesViewFolder diagramPropertiesPart = diagramPerspective
+                .getDiagramPropertiesPart();
         bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_DATA).show();
         bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_DATA).setFocus();
         final BotDataPropertySection dataTab = diagramPropertiesPart.selectDataTab().selectPoolDataTab();
@@ -414,7 +416,8 @@ public class DataWizardIT {
         final String dataName1 = "myData_ToTestCreateDataWithExistingId1";
         final BotApplicationWorkbenchWindow botApplicationWorkbenchWindow = new BotApplicationWorkbenchWindow(bot);
         final BotProcessDiagramPerspective diagramPerspective = botApplicationWorkbenchWindow.createNewDiagram();
-        final BotProcessDiagramPropertiesViewFolder diagramPropertiesPart = diagramPerspective.getDiagramPropertiesPart();
+        final BotProcessDiagramPropertiesViewFolder diagramPropertiesPart = diagramPerspective
+                .getDiagramPropertiesPart();
         bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_DATA).show();
         bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_DATA).setFocus();
         final BotDataPropertySection dataTab = diagramPropertiesPart.selectDataTab().selectPoolDataTab();
