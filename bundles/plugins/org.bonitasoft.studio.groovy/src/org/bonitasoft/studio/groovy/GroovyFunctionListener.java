@@ -14,8 +14,8 @@
  */
 package org.bonitasoft.studio.groovy;
 
-import org.bonitasoft.studio.common.repository.IBonitaProjectListener;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
+import org.bonitasoft.studio.common.repository.IBonitaProjectListener;
 import org.bonitasoft.studio.groovy.library.FunctionsRepositoryFactory;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;

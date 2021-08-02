@@ -345,11 +345,16 @@ public abstract class AbstractRepository implements IRepository, IJavaContainer 
                 if (activeWorkbenchWindow != null
                         && activeWorkbenchWindow.getActivePage() != null) {
                     if (!activeWorkbenchWindow.getActivePage().closeAllEditors(false)) {
-                        allEditorClosed.set(false);
+                        allEditorClosed.set(false);;
                         return;
                     }
                 }
                 enableOpenIntroListener();
+                while (activeWorkbenchWindow.getActivePage().getActiveEditor() != null
+                        && !(activeWorkbenchWindow.getActivePage().getActivePart() instanceof ViewIntroAdapterPart)) {
+                    Display.getDefault().readAndDispatch();
+                }
+
             });
         }
         return allEditorClosed.get();

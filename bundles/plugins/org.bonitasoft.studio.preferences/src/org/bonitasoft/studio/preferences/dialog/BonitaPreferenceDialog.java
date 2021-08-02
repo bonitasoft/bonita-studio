@@ -383,6 +383,7 @@ public class BonitaPreferenceDialog extends Dialog {
     protected void configureShell(final Shell newShell) {
         super.configureShell(newShell);
         newShell.setText(Messages.BonitaPreferenceDialog_preferences);
+        newShell.setImage(Pics.getImage(PicsConstants.coolbar_preferences_24));
     }
 
     protected Composite createMenuComposite(final Composite parent) {

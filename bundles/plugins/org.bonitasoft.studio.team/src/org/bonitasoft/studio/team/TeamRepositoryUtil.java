@@ -128,14 +128,13 @@ public class TeamRepositoryUtil {
                     BonitaStudioLog.info(
                             "Repository switched to " + currentRepo.getName(),
                             TeamPlugin.PLUGIN_ID);
-                    PlatformUtil.openDashboardIfNoOtherEditorOpen();
                 }
             };
             workspaceModifyOperation.run(monitor);
             Display.getDefault().asyncExec(
                     () -> {
                         PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().resetPerspective();
-                        PlatformUtil.openDashboardIfNoOtherEditorOpen();
+                        PlatformUtil.openIntroIfNoOtherEditorOpen();
                         AbstractFileStore.refreshExplorerView();
                     });
         } catch (final InvocationTargetException | InterruptedException e) {

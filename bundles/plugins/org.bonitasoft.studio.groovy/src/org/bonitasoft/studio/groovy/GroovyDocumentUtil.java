@@ -138,23 +138,26 @@ public class GroovyDocumentUtil {
     }
 
     public static void refreshUserLibrary(AbstractRepository repository) {
-        try {
-            FunctionsRepositoryFactory.getUserFunctionCatgory().removeAllFunctions();
-            GroovyRepositoryStore store = repository.getRepositoryStore(GroovyRepositoryStore.class);
-            IJavaProject javaProject = repository.getJavaProject();
-            for (IRepositoryFileStore artifact : store.getChildren()) {
-                IType type = javaProject.findType(artifact.getDisplayName().replace("/", "."));
-                if (type != null) {
-                    for (IMethod m : type.getMethods()) {
-                        if (m.getFlags() == (Flags.AccStatic | Flags.AccPublic)) {
-                            FunctionsRepositoryFactory.getUserFunctionCatgory()
-                                    .addFunction(new GroovyFunction(m, FunctionsRepositoryFactory.getUserFunctionCatgory()));
+        if (repository.isLoaded()) {
+            try {
+                FunctionsRepositoryFactory.getUserFunctionCatgory().removeAllFunctions();
+                GroovyRepositoryStore store = repository.getRepositoryStore(GroovyRepositoryStore.class);
+                IJavaProject javaProject = repository.getJavaProject();
+                for (IRepositoryFileStore artifact : store.getChildren()) {
+                    IType type = javaProject.findType(artifact.getDisplayName().replace("/", "."));
+                    if (type != null) {
+                        for (IMethod m : type.getMethods()) {
+                            if (m.getFlags() == (Flags.AccStatic | Flags.AccPublic)) {
+                                FunctionsRepositoryFactory.getUserFunctionCatgory()
+                                        .addFunction(new GroovyFunction(m,
+                                                FunctionsRepositoryFactory.getUserFunctionCatgory()));
+                            }
                         }
                     }
                 }
+            } catch (Exception e) {
+                GroovyPlugin.logError(e);
             }
-        } catch (Exception e) {
-            GroovyPlugin.logError(e);
         }
     }
 

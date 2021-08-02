@@ -3,7 +3,7 @@
 <plugin>
   <extension
          id="product"
-         name="BonitaBPM"
+         name="Bonita Studio"
          point="org.eclipse.core.runtime.products">
       <product
             application="org.bonitasoft.studio.application.application"
