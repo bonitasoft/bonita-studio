@@ -329,4 +329,5 @@ public class Messages extends NLS {
     public static String organizationNotFound;
     public static String editDefinitionMenuLabel;
     public static String editImplementationMenuLabel;
+    public static String organizationCardName;
 }

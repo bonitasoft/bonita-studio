@@ -23,8 +23,7 @@ import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditor;
 import org.bonitasoft.studio.swtbot.framework.SWTBotTestUtil;
-import org.bonitasoft.studio.swtbot.framework.application.BotApplicationWorkbenchWindow;
-import org.bonitasoft.studio.swtbot.framework.application.BotOpenDiagramDialog;
+import org.bonitasoft.studio.swtbot.framework.projectExplorer.ProjectExplorerBot;
 import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.geometry.Point;
@@ -74,9 +73,9 @@ public class CopyPasteTests {
         editor1.saveAndClose();
         waitForcloseAction(editor2);
 
-        final BotOpenDiagramDialog botOpenDiagramDialog = new BotApplicationWorkbenchWindow(bot).open();
-        botOpenDiagramDialog.selectDiagram(diagram1.getName(), diagram1.getVersion()).delete()
-                .selectDiagram(diagram2.getName(), diagram2.getVersion()).open();
+        var explorer = new ProjectExplorerBot(bot);
+        explorer.diagram().deleteDiagram(diagram1.getName(), diagram1.getVersion());
+        explorer.diagram().openDiagram(diagram2.getName(), diagram2.getVersion());
         editor2 = bot.gefEditor(bot.activeEditor().getTitle());
         part = editor2.getEditPart("Step1").parent();
         editor2.drag(part, 100, 100);
