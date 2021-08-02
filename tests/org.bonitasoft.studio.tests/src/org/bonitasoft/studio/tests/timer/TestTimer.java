@@ -27,6 +27,7 @@ import org.bonitasoft.studio.properties.i18n.Messages;
 import org.bonitasoft.studio.swtbot.framework.SWTBotTestUtil;
 import org.bonitasoft.studio.swtbot.framework.application.BotApplicationWorkbenchWindow;
 import org.bonitasoft.studio.swtbot.framework.expression.BotExpressionEditorDialog;
+import org.bonitasoft.studio.swtbot.framework.projectExplorer.ProjectExplorerBot;
 import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.draw2d.geometry.Point;
@@ -68,9 +69,9 @@ public class TestTimer implements SWTBotConstants {
                 .next()
                 .next()
                 .finish();
-        
-        final BotApplicationWorkbenchWindow workbenchBot = new BotApplicationWorkbenchWindow(bot);
-        workbenchBot.open().selectDiagram("TestTimer", "1.0").open();
+
+        var explorer = new ProjectExplorerBot(bot);
+        explorer.diagram().openDiagram("TestTimer", "1.0");
 
         final SWTBotGefEditor gefEditor = bot.gefEditor(bot.activeEditor().getTitle());
         /* Select step on which there is the connector to test */
@@ -94,7 +95,6 @@ public class TestTimer implements SWTBotConstants {
 
     /**
      * Set properties on a "Every Minute" Timer in a new Diagram.
-     *
      */
     @Test
     public void testEditTimerConditionEveryMinute() {
@@ -354,7 +354,7 @@ public class TestTimer implements SWTBotConstants {
         // Set Timer1
         editTimerCondition(gmfEditor, DEFAULT_TIMER_NAME);
         SWTBotShell activeShell = bot.activeShell();
-        
+
         bot.toolbarButtonWithId(SWTBotConstants.SWTBOT_ID_EDITBUTTON, 0).click();
 
         // wait for "Edit Expression" shell
@@ -403,7 +403,7 @@ public class TestTimer implements SWTBotConstants {
 
         // Set Timer1
         editTimerCondition(gmfEditor, DEFAULT_TIMER_NAME);
-        
+
         SWTBotShell activeShell = bot.activeShell();
 
         bot.toolbarButtonWithId(SWTBotConstants.SWTBOT_ID_EDITBUTTON, 0).click();
