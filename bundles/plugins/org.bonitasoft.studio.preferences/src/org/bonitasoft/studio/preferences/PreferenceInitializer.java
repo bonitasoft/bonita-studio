@@ -20,12 +20,14 @@ import java.nio.charset.Charset;
 import java.util.Locale;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.codehaus.groovy.eclipse.core.GroovyCoreActivator;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
 import org.eclipse.core.runtime.preferences.DefaultScope;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.IScopeContext;
+import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.internal.core.IInternalDebugCoreConstants;
 import org.eclipse.debug.internal.ui.DebugUIPlugin;
@@ -39,6 +41,7 @@ import org.eclipse.ui.internal.WorkbenchPlugin;
 import org.eclipse.ui.internal.browser.WebBrowserUIPlugin;
 import org.eclipse.ui.internal.ide.IDEWorkbenchPlugin;
 import org.eclipse.ui.internal.util.PrefUtil;
+import org.osgi.service.prefs.BackingStoreException;
 
 import com.google.common.io.Files;
 
@@ -89,11 +92,25 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer impleme
         } catch (IOException e) {
             BonitaStudioLog.error(e);
         }
+        
+        IEclipsePreferences groovyCorePreferenceStore = getGroovyCorePreferenceStore();
+        groovyCorePreferenceStore.putBoolean(org.eclipse.jdt.groovy.core.Activator.GROOVY_CHECK_FOR_COMPILER_MISMATCH, false);
+        groovyCorePreferenceStore.putBoolean(org.eclipse.jdt.groovy.core.Activator.GROOVY_SCRIPT_FILTERS_ENABLED, false);
+        try {
+            groovyCorePreferenceStore.flush();
+        } catch (BackingStoreException e) {
+           BonitaStudioLog.error(e);
+        }
     }
 
     protected IPreferenceStore getIDEPreferenceStore() {
         return IDEWorkbenchPlugin.getDefault().getPreferenceStore();
     }
+    
+    protected IEclipsePreferences getGroovyCorePreferenceStore() {
+        return InstanceScope.INSTANCE.getNode(org.eclipse.jdt.groovy.core.Activator.PLUGIN_ID);
+    }
+    
 
     protected void initializeWorkbenchPreferences() {
         IScopeContext context = DefaultScope.INSTANCE;

@@ -21,6 +21,7 @@ import static org.mockito.Mockito.verify;
 
 import java.util.Locale;
 
+import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.jdt.ui.PreferenceConstants;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.junit.Test;
@@ -33,6 +34,8 @@ public class PreferenceInitializerTest {
 
     @Mock
     public IPreferenceStore apiPrefStore, webPrefStore, bonitaPrefStore, jdtPrefStore, dslPreferenceStore, workbenchStore, idePreferenceStore;
+    @Mock
+    private IEclipsePreferences groovyPreferences;
 
     @Test
     public void testLegacyModeDeactivatedByDefault() throws Exception {
@@ -65,5 +68,6 @@ public class PreferenceInitializerTest {
         doNothing().when(preferenceInitializer).setUTF8DefaultEncoding();
         doNothing().when(preferenceInitializer).initDefaultDebugPreferences();
         doNothing().when(preferenceInitializer).initializeWorkbenchPreferences();
+        doReturn(groovyPreferences).when(preferenceInitializer).getGroovyCorePreferenceStore();
     }
 }
