@@ -53,6 +53,7 @@ public class TomcatVmArgsBuilder {
         addSystemProperty(args, "btm.root", "\"" + tomcatInstanceLocation + "\"");
         addSystemProperty(args, "wtp.deploy", "\"" + tomcatInstanceLocation + File.separatorChar + "webapps\"");
         addSystemProperty(args, "sysprop.bonita.db.vendor", "h2");
+        addSystemProperty(args, "sysprop.bonita.bdm.db.vendor", "h2");
         addSystemProperty(args, "org.bonitasoft.platform.setup.folder",
                 "\"" + bundleLocation + File.separatorChar + "setup\"");
         addSystemProperty(args, "org.bonitasoft.engine.incident.folder",
