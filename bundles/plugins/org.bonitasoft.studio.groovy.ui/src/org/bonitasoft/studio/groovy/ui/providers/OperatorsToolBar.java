@@ -39,7 +39,7 @@ public class OperatorsToolBar {
                 " < "), groovyScriptExpressionEditor);
         createOperator(toolBar, new ExpressionOperator("\u2264",
                 "Test lesser than or equals: returns true when left operand is lesser than or equals to the right operand,false otherwise.",
-                " =< "), groovyScriptExpressionEditor);
+                " <= "), groovyScriptExpressionEditor);
         separator(toolBar);
         createOperator(toolBar, new ExpressionOperator("And",
                 "Test intersection: returns true when left and right operand are true,false otherwise.", " && "),
