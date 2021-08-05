@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<history:History xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:history="http://www.eclipse.org/emf/edapt/history/0.3">
+  <releases date="2012-12-10T10:31:08.648+0100" label="6.0">
+    <changes xsi:type="history:CompositeChange">
+      <changes xsi:type="history:Create" element="environment.ecore#/">
+        <changes xsi:type="history:Set" element="environment.ecore#/" featureName="name"
+            dataValue="environment"/>
+        <changes xsi:type="history:Set" element="environment.ecore#/" featureName="nsURI"
+            dataValue="http://www.bonitasoft.org/ns/studio/environment"/>
+        <changes xsi:type="history:Set" element="environment.ecore#/" featureName="nsPrefix"
+            dataValue="environment"/>
+      </changes>
+      <changes xsi:type="history:Create" target="environment.ecore#/" referenceName="eClassifiers"
+          element="environment.ecore#//Environment">
+        <changes xsi:type="history:Set" element="environment.ecore#//Environment"
+            featureName="name" dataValue="Environment"/>
+      </changes>
+      <changes xsi:type="history:Create" target="environment.ecore#//Environment"
+          referenceName="eStructuralFeatures" element="environment.ecore#//Environment/name">
+        <changes xsi:type="history:Set" element="environment.ecore#//Environment/name"
+            featureName="name" dataValue="name"/>
+        <changes xsi:type="history:Set" element="environment.ecore#//Environment/name"
+            featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+      </changes>
+      <changes xsi:type="history:Create" target="environment.ecore#//Environment"
+          referenceName="eStructuralFeatures" element="environment.ecore#//Environment/description">
+        <changes xsi:type="history:Set" element="environment.ecore#//Environment/description"
+            featureName="name" dataValue="description"/>
+        <changes xsi:type="history:Set" element="environment.ecore#//Environment/description"
+            featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+      </changes>
+    </changes>
+  </releases>
+  <releases/>
+</history:History>
