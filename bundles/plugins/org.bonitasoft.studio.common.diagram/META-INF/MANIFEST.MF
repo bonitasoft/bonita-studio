@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Diagram Utils
 Bundle-SymbolicName: org.bonitasoft.studio.common.diagram;singleton:=true
-Bundle-Version: 7.13.0.qualifier
+Bundle-Version: 7.13.0.W32
 Bundle-Vendor: BonitaSoft S.A.
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Require-Bundle: org.eclipse.gmf.runtime.lite.svg;bundle-version="1.0.0",
