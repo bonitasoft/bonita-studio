@@ -14,14 +14,13 @@
  */
 package org.bonitasoft.studio.common.repository.core.maven.migration.driver;
 
-import org.apache.maven.artifact.Artifact;
 import org.bonitasoft.studio.common.repository.core.maven.migration.DatabaseDriverDependencyReplacement;
 
 
 public class H2JDBCDriverDependenciesReplacement extends DatabaseDriverDependencyReplacement {
     
     public H2JDBCDriverDependenciesReplacement() {
-        super(dependency("com.h2database", "h2", "1.4.200", Artifact.SCOPE_PROVIDED), "h2-1.3.170.jar");
+        super(dependency("com.h2database", "h2", "1.4.199"), "h2-1.3.170.jar");
     }
     
     @Override
