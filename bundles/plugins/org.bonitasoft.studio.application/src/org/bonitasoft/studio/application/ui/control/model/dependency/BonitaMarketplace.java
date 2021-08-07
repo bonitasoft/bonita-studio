@@ -17,15 +17,11 @@ package org.bonitasoft.studio.application.ui.control.model.dependency;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.io.UncheckedIOException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.channels.Channels;
-import java.nio.channels.FileChannel;
-import java.nio.channels.ReadableByteChannel;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collections;
@@ -57,6 +53,8 @@ import org.restlet.resource.ResourceException;
 
 public class BonitaMarketplace {
 
+    private static final String MARKETPLACE_VERSION_PROPERTY = "marketplace.version";
+
     private static final String BONITA_MARKETPLACE_ARCHIVE_NAME = "bonita-marketplace";
 
     private static final String MARKETPLACE = "marketplace";
@@ -66,13 +64,11 @@ public class BonitaMarketplace {
     private static final String LATEST_RELEASE_URL = RedirectURLBuilder.create("725");
     private static final String ASSET_URL = RedirectURLBuilder.create("726");
     private static final String MARKETPLACE_DESCRIPTOR_NAME = "marketplace.json";
-    private static final String MARKETPLACE_METADATA = "marketplace.version";
+    private static final String MARKETPLACE_METADATA = MARKETPLACE_VERSION_PROPERTY;
 
     public static final String CONNECTOR_TYPE = "Connector";
     public static final String ACTOR_FILTER_TYPE = "Actor filter";
     public static final String DATABASE_DRIVER_TYPE = "Database driver";
-
-   
 
     private List<BonitaArtifactDependency> dependencies;
     private LocalResourceManager manager;
@@ -122,19 +118,22 @@ public class BonitaMarketplace {
             throws IOException {
         Path tmpFile = Files.createTempFile(BONITA_MARKETPLACE_ARCHIVE_NAME, ".zip");
         String assetUrl = RedirectURLBuilder.handleURLRedirection(ASSET_URL);
-        download(createURL(String.format("%s/%s/%s-%s.zip", assetUrl,
+        var url = createURL(String.format("%s/%s/%s-%s.zip", assetUrl,
                 latestVersion,
                 BONITA_MARKETPLACE_ARCHIVE_NAME,
-                latestVersion)),
-                tmpFile,
-                monitor);
-        extract(tmpFile, cacheFolder.toPath());
-        Files.delete(tmpFile);
-        updateMetadata(latestVersion);
+                latestVersion));
+        if (url != null) {
+            download(url,
+                    tmpFile,
+                    monitor);
+            extract(tmpFile, cacheFolder.toPath());
+            Files.delete(tmpFile);
+            updateMetadata(latestVersion);
+        }
     }
 
     private void updateMetadata(String latestVersion) {
-        File metadataFile = getMetadataFile();
+        var metadataFile = getMetadataFile();
         if (metadataFile.exists()) {
             metadataFile.delete();
         }
@@ -143,9 +142,9 @@ public class BonitaMarketplace {
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
-        try (OutputStream os = Files.newOutputStream(metadataFile.toPath())) {
-            Properties p = new Properties();
-            p.setProperty("marketplace.version", latestVersion);
+        try (var os = Files.newOutputStream(metadataFile.toPath())) {
+            var p = new Properties();
+            p.setProperty(MARKETPLACE_VERSION_PROPERTY, latestVersion);
             p.store(os, null);
         } catch (IOException e) {
             throw new UncheckedIOException(e);
@@ -157,12 +156,12 @@ public class BonitaMarketplace {
     }
 
     private String readMetadata() {
-        File metadataFile = getMetadataFile();
+        var metadataFile = getMetadataFile();
         if (metadataFile.exists()) {
-            try (InputStream is = Files.newInputStream(metadataFile.toPath())) {
-                Properties p = new Properties();
+            try (var is = Files.newInputStream(metadataFile.toPath())) {
+                var p = new Properties();
                 p.load(is);
-                return p.getProperty("marketplace.version");
+                return p.getProperty(MARKETPLACE_VERSION_PROPERTY);
             } catch (IOException e) {
                 throw new UncheckedIOException(e);
             }
@@ -185,11 +184,11 @@ public class BonitaMarketplace {
     private void download(URL url, Path target, IProgressMonitor monitor) throws IOException {
         var connection = url.openConnection();
         double completeFileSize = connection.getContentLength();
-        try (ReadableByteChannel readableByteChannel = Channels.newChannel(url.openStream());
-                FileOutputStream fileOutputStream = new FileOutputStream(target.toFile());
-                FileChannel fileChannel = fileOutputStream.getChannel()) {
+        try (var readableByteChannel = Channels.newChannel(url.openStream());
+                var fileOutputStream = new FileOutputStream(target.toFile());
+                var fileChannel = fileOutputStream.getChannel()) {
             long chunkSize = 500;
-            int position = 0;
+            var position = 0;
             monitor.beginTask(Messages.fetchingExtensions, (int) completeFileSize);
             monitor.subTask("Downloading: " + url.toString());
             while (position < completeFileSize) {
@@ -221,7 +220,7 @@ public class BonitaMarketplace {
         if (dependencies == null || dependencies.isEmpty()) {
             var loader = new ArtifactDependencyLoader(
                     new MarketplaceIconLoader(localStore, manager, iconBackground));
-            if (!localStore.toPath().resolve(MARKETPLACE_DESCRIPTOR_NAME).toFile().exists() && synchronizeMarketplace) {
+            if (synchronizeMarketplace) {
                 try {
                     checkStoreContent(monitor);
                 } catch (IOException e) {
