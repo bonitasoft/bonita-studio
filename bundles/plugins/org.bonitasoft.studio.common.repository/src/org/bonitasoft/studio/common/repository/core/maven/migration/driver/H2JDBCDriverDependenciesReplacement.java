@@ -25,7 +25,7 @@ public class H2JDBCDriverDependenciesReplacement extends DatabaseDriverDependenc
     
     @Override
     public String getReplacementJarName() {
-        return "h2-1.4.200.jar";
+        return "h2-1.4.199.jar";
     }
 
 }
