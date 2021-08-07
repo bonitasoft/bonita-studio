@@ -120,7 +120,7 @@ public class BonitaProjectMigrationOperation implements IWorkspaceRunnable {
         if (!Objects.equals(projectMetadata.getName(), projectName)) {
             Model model = mavenProjectHelper.getMavenModel(project);
             model.setName(projectName);
-            mavenProjectHelper.saveModel(project, model);
+            mavenProjectHelper.saveModel(project, model, monitor);
         }
     }
 

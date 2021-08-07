@@ -136,9 +136,9 @@ public class LocalDependenciesStore {
                 }
                 parent = parent.getParent();
             }
+            project.getFolder(NAME).refreshLocal(IResource.DEPTH_INFINITE, new NullProgressMonitor());
         }
-
-        project.getFolder(NAME).refreshLocal(IResource.DEPTH_INFINITE, AbstractRepository.NULL_PROGRESS_MONITOR);
+        
     }
 
     // Use the backup file if exists to revert install

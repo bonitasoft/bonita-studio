@@ -14,38 +14,26 @@
  */
 package org.bonitasoft.studio.common.repository.core.maven.plugin;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Stream;
 
+import org.apache.maven.lifecycle.MavenExecutionPlan;
 import org.apache.maven.model.Plugin;
+import org.apache.maven.project.MavenProject;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.Messages;
 import org.bonitasoft.studio.common.repository.core.maven.model.DefaultPluginVersions;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.debug.core.DebugException;
-import org.eclipse.debug.core.DebugPlugin;
-import org.eclipse.debug.core.ILaunch;
-import org.eclipse.debug.core.ILaunchConfigurationType;
-import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
-import org.eclipse.debug.core.ILaunchManager;
-import org.eclipse.debug.core.model.IProcess;
-import org.eclipse.debug.ui.IDebugUIConstants;
-import org.eclipse.debug.ui.RefreshTab;
-import org.eclipse.jdt.core.IClasspathEntry;
-import org.eclipse.jdt.core.IJavaProject;
-import org.eclipse.jdt.core.JavaCore;
-import org.eclipse.jdt.launching.IJavaLaunchConfigurationConstants;
-import org.eclipse.jdt.launching.JavaRuntime;
-import org.eclipse.m2e.actions.MavenLaunchConstants;
 import org.eclipse.m2e.core.MavenPlugin;
+import org.eclipse.m2e.core.embedder.IMaven;
+import org.eclipse.m2e.core.project.IMavenProjectFacade;
+import org.eclipse.m2e.core.project.MavenUpdateRequest;
 
 public class BonitaProjectPlugin {
 
@@ -57,65 +45,44 @@ public class BonitaProjectPlugin {
         this.project = project;
     }
 
-    public IStatus execute(IProgressMonitor monitor) throws CoreException {
+    public synchronized IStatus execute(IProject project, IProgressMonitor monitor) throws CoreException {
         monitor.beginTask(Messages.analyzeProjectDependencies, IProgressMonitor.UNKNOWN);
-        final ILaunchConfigurationType launchConfigurationType = DebugPlugin.getDefault().getLaunchManager()
-                .getLaunchConfigurationType(MavenLaunchConstants.LAUNCH_CONFIGURATION_TYPE_ID);
-        ILaunchConfigurationWorkingCopy wc = configureAnalyzePluginLaunchConfiguration(launchConfigurationType);
-        final ILaunch launch = wc.launch(ILaunchManager.RUN_MODE,
-                new NullProgressMonitor(),
-                false);
-        final IProcess process = launch.getProcesses()[0];
-        waitForBuildProcessTermination(launch);
-        try {
-            return process.getExitValue() == 0 ? Status.OK_STATUS
-                    : new Status(IStatus.ERROR, getClass(), "An error occured while executing bonita project plugin");
-        } catch (DebugException e) {
-            return new Status(IStatus.ERROR, getClass(), "An error occured while executing bonita project plugin", e);
+
+        IMaven maven = maven();
+
+        MavenProject mavenProject = getMavenProject(project, monitor);
+        if (mavenProject == null) {
+            return new Status(IStatus.ERROR, getClass(),
+                    "An error occured while executing bonita project plugin. Cannot resolve the Maven project.");
         }
+        List<String> goals = List.of(String.format("%s:%s:%s",
+                DefaultPluginVersions.BONITA_PROJECT_MAVEN_PLUGIN_GROUP_ID,
+                DefaultPluginVersions.BONITA_PROJECT_MAVEN_PLUGIN_ARTIFACT_ID,
+                "install"),
+                String.format("%s:%s:%s",
+                        DefaultPluginVersions.BONITA_PROJECT_MAVEN_PLUGIN_GROUP_ID,
+                        DefaultPluginVersions.BONITA_PROJECT_MAVEN_PLUGIN_ARTIFACT_ID,
+                        "analyze"));
+        MavenExecutionPlan executionPlan = maven.calculateExecutionPlan(mavenProject, goals, true, monitor);
+        for (var mojo : executionPlan.getMojoExecutions()) {
+            maven.execute(mavenProject, mojo, monitor);
+        }
+
+        MavenPlugin.getMavenProjectRegistry().refresh(new MavenUpdateRequest(project, false, false), monitor);
+        
+        return Status.OK_STATUS;
     }
 
-    private void waitForBuildProcessTermination(final ILaunch launch) {
-        while (!launch.isTerminated()) {
-            try {
-                Thread.sleep(50);
-            } catch (final InterruptedException e) {
-            }
+    private MavenProject getMavenProject(IProject project, IProgressMonitor monitor) throws CoreException {
+        IMavenProjectFacade projectFacade = MavenPlugin.getMavenProjectRegistry().getProject(project);
+        if (projectFacade == null) {
+            return null;
         }
+        return projectFacade.getMavenProject(monitor);
     }
 
-    private ILaunchConfigurationWorkingCopy configureAnalyzePluginLaunchConfiguration(
-            ILaunchConfigurationType configType)
-            throws CoreException {
-        ILaunchConfigurationWorkingCopy workingCopy = configType.newInstance(null, "Run Bonita Project Maven plugin");
-        workingCopy.setAttribute(MavenLaunchConstants.ATTR_POM_DIR,
-                project.getLocation().toFile().getAbsolutePath());
-        workingCopy.setAttribute(MavenLaunchConstants.ATTR_GOALS,
-                "org.bonitasoft.maven:bonita-project-maven-plugin:install org.bonitasoft.maven:bonita-project-maven-plugin:analyze");
-        workingCopy.setAttribute(IDebugUIConstants.ATTR_PRIVATE, true);
-        workingCopy.setAttribute(RefreshTab.ATTR_REFRESH_SCOPE, "${project}");
-        workingCopy.setAttribute(RefreshTab.ATTR_REFRESH_RECURSIVE, false);
-        workingCopy.setAttribute(DebugPlugin.ATTR_CAPTURE_OUTPUT, false);
-        workingCopy.setAttribute(DebugPlugin.ATTR_CONSOLE_ENCODING, "UTF-8");
-        final IPath path = getJREContainerPath(project);
-        if (path != null) {
-            workingCopy.setAttribute(IJavaLaunchConfigurationConstants.ATTR_JRE_CONTAINER_PATH,
-                    path.toPortableString());
-        }
-        return workingCopy;
-    }
-
-    private IPath getJREContainerPath(final IProject project) throws CoreException {
-        if (project != null && project.hasNature(JavaCore.NATURE_ID)) {
-            final IJavaProject javaProject = JavaCore.create(project);
-            return Stream.of(javaProject.getRawClasspath())
-                    .filter(entry -> JavaRuntime.JRE_CONTAINER.equals(entry.getPath().segment(0)))
-                    .findFirst()
-                    .map(IClasspathEntry::getPath)
-                    .orElse(null);
-
-        }
-        return null;
+    IMaven maven() {
+        return MavenPlugin.getMaven();
     }
 
     public String getReportPath() throws CoreException {

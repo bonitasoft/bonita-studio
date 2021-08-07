@@ -129,6 +129,9 @@ public final class Messages extends NLS {
     public static String confirmMigratonTitle;
     public static String confirmMigraton;
 
+    public static String incompatibleTransitiveDependencyErrorMessage;
+    public static String incompatibleDependencyErrorMessage;
+
     private Messages() {
         // Do not instantiate
     }

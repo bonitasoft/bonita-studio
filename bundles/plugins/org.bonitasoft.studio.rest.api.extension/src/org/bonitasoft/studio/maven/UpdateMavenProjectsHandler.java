@@ -25,19 +25,22 @@ public class UpdateMavenProjectsHandler {
 
     @Execute
     public void execute(RepositoryAccessor repositoryAccessor) {
-        final RestAPIExtensionRepositoryStore repositoryStore = repositoryAccessor
-                .getRepositoryStore(RestAPIExtensionRepositoryStore.class);
-        final List<IProject> projects = new ArrayList<>();
-        for (final RestAPIExtensionFileStore fStore : repositoryStore.getChildren()) {
-            IProject project = fStore.getProject();
-            if (project.exists()) {
-                projects.add(project);
+        if (repositoryAccessor.hasActiveRepository() && repositoryAccessor.getCurrentRepository().isLoaded()) {
+            final RestAPIExtensionRepositoryStore repositoryStore = repositoryAccessor
+                    .getRepositoryStore(RestAPIExtensionRepositoryStore.class);
+            final List<IProject> projects = new ArrayList<>();
+            for (final RestAPIExtensionFileStore fStore : repositoryStore.getChildren()) {
+                IProject project = fStore.getProject();
+                if (project.exists()) {
+                    projects.add(project);
+                }
             }
+            new UpdateMavenProjectJob(projects.toArray(new IProject[projects.size()]),
+                    UpdateMavenProjectConfiguration.IS_OFFLINE,
+                    UpdateMavenProjectConfiguration.FORCE_UPDATE_DEPENDENCIES,
+                    UpdateMavenProjectConfiguration.UPDATE_CONFIGURATION, UpdateMavenProjectConfiguration.CLEAN_PROJECT,
+                    UpdateMavenProjectConfiguration.REFRESH_FROM_LOCAL).schedule();
         }
-        new UpdateMavenProjectJob(projects.toArray(new IProject[projects.size()]),
-                UpdateMavenProjectConfiguration.IS_OFFLINE, UpdateMavenProjectConfiguration.FORCE_UPDATE_DEPENDENCIES,
-                UpdateMavenProjectConfiguration.UPDATE_CONFIGURATION, UpdateMavenProjectConfiguration.CLEAN_PROJECT,
-                UpdateMavenProjectConfiguration.REFRESH_FROM_LOCAL).schedule();
     }
 
 }

@@ -121,7 +121,7 @@ public class CreateBonitaProjectOperation implements IWorkspaceRunnable {
             throw new CoreException(
                     new Status(IStatus.ERROR, CreateBonitaProjectOperation.class, "Failed to create pom.xml file.", e));
         }
-        mavenProjectHelper.saveModel(project, mavenProjectBuilder.toMavenModel());
+        mavenProjectHelper.saveModel(project, mavenProjectBuilder.toMavenModel(), new NullProgressMonitor());
     }
 
     public static void backupExistingPomFile(IProject project,

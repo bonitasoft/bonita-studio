@@ -97,7 +97,7 @@ public class SetProjectMetadataOperation implements IRunnableWithProgress {
         }
         model.setArtifactId(artifactId);
         model.setVersion(metadata.getVersion());
-        mavenProjectHelper.saveModel(project, model);
+        mavenProjectHelper.saveModel(project, model, monitor);
         if (nameChanged) {
             repository.rename(model.getName(), monitor);
         }
@@ -109,7 +109,7 @@ public class SetProjectMetadataOperation implements IRunnableWithProgress {
             IProject project = newRepository.getProject();
             Model model = mavenProjectHelper.getMavenModel(project);
             dependencies.stream().forEach(model.getDependencies()::add);
-            mavenProjectHelper.saveModel(project, model);
+            mavenProjectHelper.saveModel(project, model, monitor);
             ProjectDependenciesStore projectDependenciesStore = newRepository.getProjectDependenciesStore();
             if (projectDependenciesStore != null) {
                 projectDependenciesStore.analyze(monitor);

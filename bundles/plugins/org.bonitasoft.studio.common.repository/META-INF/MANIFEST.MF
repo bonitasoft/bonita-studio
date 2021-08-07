@@ -79,5 +79,6 @@ Import-Package: javax.annotation;version="1.2.0",
  javax.inject;version="1.0.0",
  org.bonitasoft.engine.connector,
  org.bonitasoft.engine.filter,
- org.bonitasoft.engine.session
+ org.bonitasoft.engine.session,
+ org.bonitasoft.plugin.analyze.report.model
 Automatic-Module-Name: org.bonitasoft.studio.common.repository

@@ -188,7 +188,8 @@ public class BusinessObjectModelRepositoryStore<F extends AbstractBDMFileStore<?
     }
 
     @Override
-    public MigrationReport migrate(PostMigrationOperationCollector postMigrationOperationCollector, IProgressMonitor monitor)
+    public MigrationReport migrate(PostMigrationOperationCollector postMigrationOperationCollector,
+            IProgressMonitor monitor)
             throws CoreException, MigrationException {
         MigrationReport report = super.migrate(postMigrationOperationCollector, monitor);
         BusinessObjectModelFileStore fStore = (BusinessObjectModelFileStore) getChild(
@@ -265,19 +266,11 @@ public class BusinessObjectModelRepositoryStore<F extends AbstractBDMFileStore<?
 
     @Override
     public void projectOpened(AbstractRepository repository, IProgressMonitor monitor) {
-        Job job = new Job(Messages.generatingJarFromBDMModel) {
-
-            @Override
-            protected IStatus run(IProgressMonitor monitor) {
-                F fStore = getChild(BusinessObjectModelFileStore.BOM_FILENAME, true);
-                if (fStore != null) {
-                    return generateJar(fStore);
-                }
-                return Status.OK_STATUS;
-            }
-
-        };
-        job.schedule();
+        monitor.setTaskName(Messages.generatingJarFromBDMModel);
+        F fStore = getChild(BusinessObjectModelFileStore.BOM_FILENAME, true);
+        if (fStore != null) {
+            generateJar(fStore);
+        }
     }
 
     @Override

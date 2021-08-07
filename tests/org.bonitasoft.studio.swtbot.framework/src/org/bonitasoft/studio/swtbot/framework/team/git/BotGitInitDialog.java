@@ -29,7 +29,7 @@ public class BotGitInitDialog extends BotDialog {
 
     public BotGitAddRemoteDialog pushBranch() {
         bot.button(Messages.commitAndPush).click();
-        bot.waitUntil(Conditions.shellIsActive(MessageFormat.format(UIText.PushBranchWizard_WindowTitle, "master")));
+        bot.waitUntil(Conditions.shellIsActive(MessageFormat.format(UIText.PushBranchWizard_WindowTitle, "master")), 15000);
         return new BotGitAddRemoteDialog(bot);
     }
 

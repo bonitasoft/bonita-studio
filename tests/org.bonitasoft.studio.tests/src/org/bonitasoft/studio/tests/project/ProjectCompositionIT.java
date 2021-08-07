@@ -134,7 +134,7 @@ public class ProjectCompositionIT {
                         .map(ExtendedConnectorDefinition::getId))
                                 .anyMatch("bonita-actorfilter-initiator"::equals);
             }
-        });
+        }, 20000, 100);
 
         projectDetailsBot
                 .addConnectorExtension()
@@ -212,7 +212,7 @@ public class ProjectCompositionIT {
                 .findExtensionCardByArtifactId("bonita-connector-email")
                 .updateToLatest();
 
-        bot.waitUntil(Conditions.shellIsActive(Messages.updateProcessesTitle), 20000);
+        bot.waitUntil(Conditions.shellIsActive(Messages.updateProcessesTitle), 30000);
 
         var updateConnectorItem = bot.tree().getAllItems()[0];
         assertThat(updateConnectorItem.getText()).isEqualTo(
@@ -236,7 +236,7 @@ public class ProjectCompositionIT {
                 .findExtensionCardByArtifactId("bonita-connector-email")
                 .updateToLatest();
 
-        bot.waitUntil(Conditions.shellIsActive(Messages.updateProcessesTitle), 20000);
+        bot.waitUntil(Conditions.shellIsActive(Messages.updateProcessesTitle), 30000);
 
         bot.button(IDialogConstants.PROCEED_LABEL).click();
         bot.waitUntil(new AssertionCondition() {
@@ -265,7 +265,7 @@ public class ProjectCompositionIT {
                 .findExtensionCardByArtifactId("bonita-connector-email")
                 .remove();
 
-        bot.waitUntil(Conditions.shellIsActive(Messages.updateProcessesTitle), 20000);
+        bot.waitUntil(Conditions.shellIsActive(Messages.updateProcessesTitle), 30000);
         var removeConnectorItem = bot.tree().getAllItems()[0];
         assertThat(removeConnectorItem.getText()).isEqualTo(
                 String.format(Messages.definitionRemovedDescription,
@@ -325,7 +325,7 @@ public class ProjectCompositionIT {
                                 "email",
                                 "email--1.0.0"));
             }
-        });
+        }, 10000, 100);
 
         var importDialogBot = worbenchBot.importBOSArchive()
                 .setArchive(ImportBOSArchiveWizardIT.class.getResource("/EmailConnectorUpdate.bos"))

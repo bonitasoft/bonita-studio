@@ -249,6 +249,8 @@ public abstract class AbstractRepository implements IRepository, IJavaContainer 
         try {
             connect(project);
             initRepositoryStores(NULL_PROGRESS_MONITOR);
+            this.projectDependenciesStore = new MavenProjectDependenciesStore(project, eventBroker);
+            RepositoryManager.getInstance().setCurrentRepository(this);
             AbstractFileStore.refreshExplorerView();
             MavenPlugin.getProjectConfigurationManager()
                     .updateProjectConfiguration(project, subMonitor);
@@ -256,18 +258,17 @@ public abstract class AbstractRepository implements IRepository, IJavaContainer 
             BonitaStudioLog.error(e);
         }
 
-        this.projectDependenciesStore = new MavenProjectDependenciesStore(project, eventBroker);
-        this.projectDependenciesStore
-                .analyze(subMonitor);
-
         enableBuild(subMonitor);
         for (IBonitaProjectListener listener : getProjectListeners()) {
             listener.projectOpened(this, monitor);
         }
-
+        
+        
+        this.projectDependenciesStore
+                .analyze(subMonitor);
+        
         if (migrationEnabled()) {
             try {
-                RepositoryManager.getInstance().setCurrentRepository(this);
                 migrate(subMonitor);
             } catch (final MigrationException | CoreException e) {
                 BonitaStudioLog.error(e, CommonRepositoryPlugin.PLUGIN_ID);
