@@ -36,6 +36,7 @@ import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
@@ -43,6 +44,7 @@ import org.eclipse.e4.core.di.annotations.Creatable;
 import org.eclipse.m2e.core.MavenPlugin;
 import org.eclipse.m2e.core.internal.IMavenConstants;
 import org.eclipse.m2e.core.project.IMavenProjectFacade;
+import org.eclipse.m2e.core.project.MavenUpdateRequest;
 
 @Creatable
 public class MavenProjectHelper {
@@ -66,7 +68,7 @@ public class MavenProjectHelper {
         }
     }
 
-    public void saveModel(IProject project, Model model) throws CoreException {
+    public void saveModel(IProject project, Model model, IProgressMonitor monitor) throws CoreException {
         var pomFile = project.getFile(IMavenConstants.POM_FILE_NAME);
         try (OutputStream stream = new FileOutputStream(pomFile.getLocation().toFile())) {
             pomWriter.write(stream, model);
@@ -75,6 +77,8 @@ public class MavenProjectHelper {
                     new Status(IStatus.ERROR, getClass(), "Failed to write maven model in pom.xml file.", e));
         }
         pomFile.refreshLocal(IResource.DEPTH_ONE, new NullProgressMonitor());
+        MavenUpdateRequest mavenUpdateRequest = new MavenUpdateRequest(project, false, false);
+        MavenPlugin.getMavenProjectRegistry().refresh(mavenUpdateRequest, monitor);
     }
 
     public List<ArtifactRepository> getProjectMavenRepositories(IProject project) throws CoreException {
@@ -126,7 +130,8 @@ public class MavenProjectHelper {
      * dependency in parameter.
      * Version can be different.
      */
-    public Optional<Dependency> findDependencyInAnyVersion(Model mavenModel, String groupId, String artifactId, String type,
+    public Optional<Dependency> findDependencyInAnyVersion(Model mavenModel, String groupId, String artifactId,
+            String type,
             String classifier) {
         return mavenModel.getDependencies().stream()
                 .filter(aDep -> Objects.equals(aDep.getGroupId(), groupId))
@@ -137,10 +142,10 @@ public class MavenProjectHelper {
     }
 
     private boolean sameOptionalString(String a, String b) {
-        if(a != null && a.isBlank()) {
+        if (a != null && a.isBlank()) {
             a = null;
         }
-        if(b != null && b.isBlank()) {
+        if (b != null && b.isBlank()) {
             b = null;
         }
         return Objects.equals(a, b);

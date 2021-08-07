@@ -285,7 +285,7 @@ public class DependencyRepositoryStore extends AbstractRepositoryStore<Dependenc
                             }, () -> mavenModel.addDependency(newDependeny));
                 }
 
-                mavenProjectHelper.saveModel(project, mavenModel);
+                mavenProjectHelper.saveModel(project, mavenModel, monitor);
 
                 dependencyLookups.stream()
                         .filter(not(DependencyLookup::isSelected))

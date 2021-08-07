@@ -20,20 +20,26 @@ import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import org.bonitasoft.plugin.analyze.report.model.ActorFilterImplementation;
 import org.bonitasoft.plugin.analyze.report.model.ConnectorImplementation;
 import org.bonitasoft.plugin.analyze.report.model.Definition;
 import org.bonitasoft.plugin.analyze.report.model.DependencyReport;
 import org.bonitasoft.plugin.analyze.report.model.Form;
+import org.bonitasoft.plugin.analyze.report.model.Issue;
+import org.bonitasoft.plugin.analyze.report.model.Issue.Severity;
+import org.bonitasoft.plugin.analyze.report.model.Issue.Type;
 import org.bonitasoft.plugin.analyze.report.model.Page;
 import org.bonitasoft.plugin.analyze.report.model.RestAPIExtension;
 import org.bonitasoft.plugin.analyze.report.model.Theme;
 import org.bonitasoft.studio.common.jface.databinding.StatusToMarkerSeverity;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
+import org.bonitasoft.studio.common.repository.Messages;
 import org.bonitasoft.studio.common.repository.core.ProjectDependenciesStore;
 import org.bonitasoft.studio.common.repository.core.maven.plugin.BonitaProjectPlugin;
+import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -71,7 +77,7 @@ public class MavenProjectDependenciesStore implements ProjectDependenciesStore {
         try {
             project.deleteMarkers(ANALYZE_PLUGIN_MARKER_TYPE, true, IResource.DEPTH_INFINITE);
             BonitaProjectPlugin bonitaProjectPlugin = new BonitaProjectPlugin(project);
-            IStatus status = bonitaProjectPlugin.execute(monitor);
+            IStatus status = bonitaProjectPlugin.execute(project, monitor);
             if (!status.isOK()) {
                 throw new CoreException(status);
             }
@@ -83,7 +89,13 @@ public class MavenProjectDependenciesStore implements ProjectDependenciesStore {
             if (reportFile.isFile()) {
                 dependencyReport = mapper.readValue(reportFile, DependencyReport.class);
                 eventBroker.send(PROJECT_DEPENDENCIES_ANALYZED_TOPIC, Map.of());
+
+                dependencyReport.getIssues().stream()
+                        .map(MavenProjectDependenciesStore::toStatus)
+                        .filter(Objects::nonNull)
+                        .forEach(this::addMarker);
             }
+
             return dependencyReport;
         } catch (IOException e) {
             BonitaStudioLog.error(e);
@@ -97,17 +109,39 @@ public class MavenProjectDependenciesStore implements ProjectDependenciesStore {
         }
     }
 
+    public static IStatus toStatus(Issue issue) {
+        if (Issue.Type.valueOf(issue.getType()) == Type.INCOMPATIBLE_DEPENDENCY) {
+            String message = issue.getContext().size() == 2
+                    ? String.format(Messages.incompatibleTransitiveDependencyErrorMessage, issue.getContext().get(0),
+                            issue.getContext().get(1))
+                    : String.format(Messages.incompatibleDependencyErrorMessage, issue.getContext().get(0));
+            return ValidationStatus.error(message);
+        } else {
+            Severity severity = Issue.Severity.valueOf(issue.getSeverity());
+            switch (severity) {
+                case ERROR:
+                    return ValidationStatus.error(issue.getMessage());
+                case WARNING:
+                    return ValidationStatus.warning(issue.getMessage());
+                default:
+                    return ValidationStatus.info(issue.getMessage());
+            }
+        }
+    }
+
     private void addMarker(IStatus status) {
         try {
-            IMarker marker = project.createMarker(ANALYZE_PLUGIN_MARKER_TYPE);
-            marker.setAttribute(IMarker.SEVERITY, new StatusToMarkerSeverity(status).toMarkerSeverity());
-            marker.setAttribute(IMarker.MESSAGE, status.getException() != null
-                    ? status.getMessage() + ". See details in Studio logs." : status.getMessage());
+            if (project.isAccessible()) {
+                IMarker marker = project.createMarker(ANALYZE_PLUGIN_MARKER_TYPE);
+                marker.setAttribute(IMarker.SEVERITY, new StatusToMarkerSeverity(status).toMarkerSeverity());
+                marker.setAttribute(IMarker.MESSAGE, status.getException() != null
+                        ? status.getMessage() + ". See details in Studio logs." : status.getMessage());
+            }
         } catch (CoreException e) {
             BonitaStudioLog.error(e);
         }
     }
-    
+
     @Override
     public List<Definition> getConnectorDefinitions() {
         if (dependencyReport == null) {

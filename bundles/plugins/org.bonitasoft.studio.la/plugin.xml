@@ -179,7 +179,7 @@
             class="org.bonitasoft.studio.la.application.ui.editor.ApplicationEditor"
             default="false"
             extensions="xml"
-            icon="icons/applicationStore.gif"
+            icon="icons/application.png"
             id="org.bonitasoft.studio.la.editor"
             name="%applicationEditor">
          <contentTypeBinding

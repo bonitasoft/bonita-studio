@@ -21,6 +21,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 
 public interface MigrationStep {
@@ -40,6 +41,6 @@ public interface MigrationStep {
     }
 
     default void saveMavenModel(Model model, IProject project) throws CoreException {
-        new MavenProjectHelper().saveModel(project, model);
+        new MavenProjectHelper().saveModel(project, model, new NullProgressMonitor());
     }
 }

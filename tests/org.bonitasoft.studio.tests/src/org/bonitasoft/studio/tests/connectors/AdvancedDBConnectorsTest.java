@@ -53,10 +53,11 @@ public class AdvancedDBConnectorsTest {
                 .run(AbstractRepository.NULL_PROGRESS_MONITOR);
         new AddDependencyOperation("com.h2database", "h2", "1.4.200")
                 .run(AbstractRepository.NULL_PROGRESS_MONITOR);
-        
-        DatabaseConnectorPropertiesRepositoryStore repositoryStore = RepositoryManager.getInstance().getCurrentRepository().getRepositoryStore(DatabaseConnectorPropertiesRepositoryStore.class);
+
+        DatabaseConnectorPropertiesRepositoryStore repositoryStore = RepositoryManager.getInstance()
+                .getCurrentRepository().getRepositoryStore(DatabaseConnectorPropertiesRepositoryStore.class);
         DatabaseConnectorPropertiesFileStore conf = repositoryStore.getChild("database-h2.properties", false);
-        if(conf == null) {
+        if (conf == null) {
             conf = repositoryStore.createRepositoryFileStore("database-h2.properties");
         }
         conf.setDefault("h2-1.4.200.jar");

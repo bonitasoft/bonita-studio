@@ -62,7 +62,7 @@ import org.osgi.framework.Version;
  */
 public class BonitaStudioApplication extends JobChangeAdapter implements IApplication {
 
-    private static final String HOTSPOT_JRE_11 = "OpenJDK Hotspot JRE 11";
+    private static final String HOTSPOT_JDK_11 = "OpenJDK Hotspot JDK 11";
     private static final String JAVA_11 = "11";
     private Display display;
     public static final String PREFERENCES_FILE = ".wsPreferences";
@@ -244,16 +244,16 @@ public class BonitaStudioApplication extends JobChangeAdapter implements IApplic
         IVMInstall defaultVMInstall = JavaRuntime.getDefaultVMInstall();
         if (!Objects.equals(Platform.getOS(), Platform.OS_MACOSX) && jre11Location.exists()) {
             if (defaultVMInstall.getName() != null
-                    && !Objects.equals(defaultVMInstall.getName(), HOTSPOT_JRE_11)
+                    && !Objects.equals(defaultVMInstall.getName(), HOTSPOT_JDK_11)
                     && Objects.equals(defaultVMInstall.getInstallLocation(), installLocation)) { //Remove invalid JRE 
                 defaultVMInstall.getVMInstallType().disposeVMInstall(defaultVMInstall.getId());
             }
             IVMInstallType type = JavaRuntime
                     .getVMInstallType("org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType");
-            IVMInstall jre11Install = type.findVMInstall(HOTSPOT_JRE_11);
+            IVMInstall jre11Install = type.findVMInstall(HOTSPOT_JDK_11);
             if (jre11Install == null) {
-                jre11Install = type.createVMInstall(HOTSPOT_JRE_11);
-                jre11Install.setName(HOTSPOT_JRE_11);
+                jre11Install = type.createVMInstall(HOTSPOT_JDK_11);
+                jre11Install.setName(HOTSPOT_JDK_11);
                 jre11Install.setInstallLocation(jre11Location);
                 try {
                     JavaRuntime.setDefaultVMInstall(jre11Install, new NullProgressMonitor(), true);

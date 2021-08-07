@@ -10,6 +10,8 @@ package org.bonitasoft.studio.la.application.ui.control.provider;
 
 import org.bonitasoft.studio.la.LivingApplicationPlugin;
 import org.bonitasoft.studio.la.application.ui.control.model.ApplicationDescriptorWithFileName;
+import org.bonitasoft.studio.pics.Pics;
+import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.StyledCellLabelProvider;
 import org.eclipse.jface.viewers.StyledString;
@@ -36,7 +38,7 @@ public class ApplicationDescriptorWithFileNameLabelProvider extends StyledCellLa
 
     @Override
     public Image getImage(Object element) {
-        return LivingApplicationPlugin.getImage("icons/applicationStore.gif");
+        return Pics.getImage(PicsConstants.application);
     }
 
     @Override

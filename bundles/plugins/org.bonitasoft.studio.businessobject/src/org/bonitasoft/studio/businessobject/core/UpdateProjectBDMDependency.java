@@ -20,6 +20,7 @@ import org.apache.maven.artifact.Artifact;
 import org.bonitasoft.studio.businessobject.core.operation.GenerateBDMOperation;
 import org.bonitasoft.studio.businessobject.core.repository.BDMArtifactDescriptor;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.core.maven.AddDependencyOperation;
@@ -27,13 +28,14 @@ import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.e4.core.services.events.IEventBroker;
 import org.osgi.service.event.Event;
 import org.osgi.service.event.EventHandler;
 
 public class UpdateProjectBDMDependency implements EventHandler {
-    
+
     private RepositoryAccessor repositoryAccessor;
 
     @PostConstruct
@@ -48,19 +50,25 @@ public class UpdateProjectBDMDependency implements EventHandler {
     }
 
     private void execute(final Event event) {
-        final BDMArtifactDescriptor bdmArtifactDescriptor = (BDMArtifactDescriptor) event.getProperty(GenerateBDMOperation.BDM_ARTIFACT_DESCRIPTOR);
-      
-        AddDependencyOperation addBDMClientDependencyOperation = new AddDependencyOperation(bdmArtifactDescriptor.getGroupId(), 
-                GenerateBDMOperation.BDM_CLIENT, 
+        final BDMArtifactDescriptor bdmArtifactDescriptor = (BDMArtifactDescriptor) event
+                .getProperty(GenerateBDMOperation.BDM_ARTIFACT_DESCRIPTOR);
+
+        AddDependencyOperation addBDMClientDependencyOperation = new AddDependencyOperation(
+                bdmArtifactDescriptor.getGroupId(),
+                GenerateBDMOperation.BDM_CLIENT,
                 bdmArtifactDescriptor.getVersion(),
                 Artifact.SCOPE_PROVIDED);
-        
+
+        try {
+            addBDMClientDependencyOperation.run(new NullProgressMonitor());
+        } catch (CoreException e) {
+            BonitaStudioLog.error(e);
+        }
+
         new WorkspaceJob("Update Project BDM dependency") {
-            
+
             @Override
             public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
-                addBDMClientDependencyOperation.run(monitor);
-                
                 // Update bdm model and dao list cache
                 AbstractRepository currentRepository = repositoryAccessor.getCurrentRepository();
                 BusinessObjectModelRepositoryStore businessObjectModelRepositoryStore = currentRepository

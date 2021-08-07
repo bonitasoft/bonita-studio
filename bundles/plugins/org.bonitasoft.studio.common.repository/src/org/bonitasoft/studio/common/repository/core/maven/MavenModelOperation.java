@@ -18,6 +18,7 @@ import java.util.Objects;
 
 import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Model;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.core.ProjectDependenciesStore;
@@ -44,9 +45,14 @@ public abstract class MavenModelOperation implements IWorkspaceRunnable {
 
     protected void saveModel(IProject project, Model model, IProgressMonitor monitor) throws CoreException {
         if (modelUpdated) {
-            helper.saveModel(project, model);
-            if (!disableAnalyze) {
-                getRepositoryAccessor().getCurrentRepository().getProjectDependenciesStore().analyze(monitor);
+            helper.saveModel(project, model, monitor);
+
+            if (!disableAnalyze && getRepositoryAccessor().hasActiveRepository()) {
+                AbstractRepository currentRepository = getRepositoryAccessor().getCurrentRepository();
+                ProjectDependenciesStore projectDependenciesStore = currentRepository.getProjectDependenciesStore();
+                if (projectDependenciesStore != null) {
+                    projectDependenciesStore.analyze(monitor);
+                }
             }
             modelUpdated = false;
         }
@@ -60,7 +66,8 @@ public abstract class MavenModelOperation implements IWorkspaceRunnable {
                 repositoryAccessor.getCurrentRepository().getProjectDependenciesStore().analyze(monitor);
                 return Status.OK_STATUS;
             }
-            
+
+            @Override
             public boolean belongsTo(Object family) {
                 return Objects.equals(ProjectDependenciesStore.ANALYZE_PPROJECT_DEPENDENCIES_FAMILY, family);
             }

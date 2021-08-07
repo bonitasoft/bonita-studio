@@ -48,7 +48,7 @@ public class BotMarketplaceWizard extends BotWizardDialog {
     
     @Override
     protected int onFinishTimeout() {
-        return 15000;
+        return 20000;
     }
 
     
