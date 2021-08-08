@@ -89,7 +89,7 @@ public class CreateBonitaProjectOperation implements IWorkspaceRunnable {
     }
 
     public static MavenProjectModelBuilder newProjectBuilder(ProjectMetadata metadata) {
-        MavenProjectModelBuilder mavenProjectBuilder = new MavenProjectModelBuilder();
+        var mavenProjectBuilder = new MavenProjectModelBuilder();
         mavenProjectBuilder.setDisplayName(metadata.getName());
         String artifactId = metadata.getArtifactId();
         if(Strings.isNullOrEmpty(artifactId)) {
@@ -97,7 +97,7 @@ public class CreateBonitaProjectOperation implements IWorkspaceRunnable {
         }
         mavenProjectBuilder.setArtifactId(artifactId);
         mavenProjectBuilder.setGroupId(metadata.getGroupId());
-        mavenProjectBuilder.setBonitaVersion(ProductVersion.mavenVersion());
+        mavenProjectBuilder.setBonitaVersion(ProductVersion.BONITA_RUNTIME_VERSION);
         mavenProjectBuilder.setVersion(metadata.getVersion());
         mavenProjectBuilder.setDescription(metadata.getDescription());
         return mavenProjectBuilder;
@@ -105,7 +105,7 @@ public class CreateBonitaProjectOperation implements IWorkspaceRunnable {
 
     public static void createDefaultPomFile(IProject project,
             MavenProjectModelBuilder mavenProjectBuilder) throws CoreException {
-        MavenProjectHelper mavenProjectHelper = new MavenProjectHelper();
+        var mavenProjectHelper = new MavenProjectHelper();
         IFile pomFile = project.getFile("pom.xml");
         if (pomFile.exists()) {
             backupExistingPomFile(project, mavenProjectBuilder, mavenProjectHelper, pomFile);

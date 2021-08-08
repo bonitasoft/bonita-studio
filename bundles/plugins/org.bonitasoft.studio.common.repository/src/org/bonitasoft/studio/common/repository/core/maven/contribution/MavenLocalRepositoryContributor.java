@@ -15,15 +15,12 @@ import java.time.Instant;
 
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.repository.ArtifactRepository;
-import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
 import org.bonitasoft.studio.common.repository.core.maven.MavenInstallFileOperation;
 import org.eclipse.core.runtime.CoreException;
 
 public class MavenLocalRepositoryContributor {
-
-    public static final String BONITA_ARTIFACT_VERSION = ProductVersion.mavenVersion();
 
     private final MavenInstallFileOperation installCommand;
     private final DependencyCatalog catalog;

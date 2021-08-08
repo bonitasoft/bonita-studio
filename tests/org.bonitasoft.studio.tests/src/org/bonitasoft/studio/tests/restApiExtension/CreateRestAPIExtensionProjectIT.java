@@ -48,7 +48,7 @@ public class CreateRestAPIExtensionProjectIT {
     @Test
     public void should_create_a_rest_api_extension_project_in_workspace() throws Exception {
         RestAPIExtensionArchetypeConfiguration defaultArchetypeConfiguration = RestAPIExtensionArchetypeConfiguration.defaultArchetypeConfiguration();
-        defaultArchetypeConfiguration.setBonitaVersion(ProductVersion.mavenVersion());
+        defaultArchetypeConfiguration.setBonitaVersion(ProductVersion.BONITA_RUNTIME_VERSION);
         final CreateRestAPIExtensionProjectOperation operation = new CreateRestAPIExtensionProjectOperation(
                 RepositoryManager.getInstance().getRepositoryStore(RestAPIExtensionRepositoryStore.class),
                 MavenPlugin.getProjectConfigurationManager(),

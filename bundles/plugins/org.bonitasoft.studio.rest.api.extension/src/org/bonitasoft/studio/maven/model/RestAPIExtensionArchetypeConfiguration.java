@@ -12,8 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
+import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
-import org.bonitasoft.studio.common.repository.core.maven.contribution.MavenLocalRepositoryContributor;
 import org.bonitasoft.studio.common.repository.preferences.RepositoryPreferenceConstant;
 import org.bonitasoft.studio.maven.i18n.Messages;
 
@@ -46,7 +46,7 @@ public class RestAPIExtensionArchetypeConfiguration extends CustomPageArchetypeC
     public static RestAPIExtensionArchetypeConfiguration defaultArchetypeConfiguration(final String bdmGroupId,
             String bdmVersion) {
         final RestAPIExtensionArchetypeConfiguration configuration = new RestAPIExtensionArchetypeConfiguration();
-        configuration.setBonitaVersion(MavenLocalRepositoryContributor.BONITA_ARTIFACT_VERSION);
+        configuration.setBonitaVersion(ProductVersion.BONITA_RUNTIME_VERSION);
         configuration.setPageName("resourceNameRestAPI");
         configuration.setPathTemplate("resourceName");
         configuration.setPageDisplayName(Messages.defaultAPIDisplayName);

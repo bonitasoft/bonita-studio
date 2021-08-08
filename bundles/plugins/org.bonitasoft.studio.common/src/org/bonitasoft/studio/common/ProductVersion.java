@@ -36,6 +36,8 @@ public class ProductVersion {
     public static final String BRANDING_VERSION = BRANDING_VERSION_RAW != null
             ? BRANDING_VERSION_RAW.replaceAll("-.*", "")
             : null;
+    public static final String BONITA_RUNTIME_VERSION = System.getProperty("engine.version",
+            ProductVersion.mavenVersion());
 
     public static boolean sameVersion(final String version) {
         return CURRENT_VERSION.equals(version);
@@ -133,10 +135,11 @@ public class ProductVersion {
             return true;
         }
     }
-    
+
     public static boolean isBefore(String currentVersion, String referenceVersion) {
         try {
-            return new DefaultArtifactVersion(currentVersion).compareTo(new DefaultArtifactVersion(referenceVersion)) < 0;
+            return new DefaultArtifactVersion(currentVersion)
+                    .compareTo(new DefaultArtifactVersion(referenceVersion)) < 0;
         } catch (Exception e) {
             return true;
         }

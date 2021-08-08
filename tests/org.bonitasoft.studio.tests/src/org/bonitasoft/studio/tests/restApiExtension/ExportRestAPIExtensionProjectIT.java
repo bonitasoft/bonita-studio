@@ -52,7 +52,7 @@ public class ExportRestAPIExtensionProjectIT {
         final RestAPIExtensionArchetypeConfiguration configuration = RestAPIExtensionArchetypeConfiguration
                 .defaultArchetypeConfiguration();
         configuration.setGroupId("org.bonitasoft.test");
-        configuration.setBonitaVersion(ProductVersion.mavenVersion());
+        configuration.setBonitaVersion(ProductVersion.BONITA_RUNTIME_VERSION);
         configuration.setLanguage(RestAPIExtensionArchetypeConfiguration.GROOVY_LANGUAGE);
         configuration.setPageName(pageName);
         final CreateRestAPIExtensionProjectOperation operation = new CreateRestAPIExtensionProjectOperation(

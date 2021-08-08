@@ -60,7 +60,7 @@ public class BonitaProjectIT {
         assertThat(model.getArtifactId()).isEqualTo(defaultMetadata.getArtifactId());
         assertThat(model.getVersion()).isEqualTo(defaultMetadata.getVersion());
         assertThat(model.getName()).isEqualTo(defaultMetadata.getName());
-        assertThat(model.getProperties()).contains(entry("bonita.runtime.version", ProductVersion.mavenVersion()));
+        assertThat(model.getProperties()).contains(entry("bonita.runtime.version", ProductVersion.BONITA_RUNTIME_VERSION));
 
         // Validate the project natures and builders
         assertThat(project.getDescription().getNatureIds()).containsOnly(BonitaProjectNature.NATURE_ID,
