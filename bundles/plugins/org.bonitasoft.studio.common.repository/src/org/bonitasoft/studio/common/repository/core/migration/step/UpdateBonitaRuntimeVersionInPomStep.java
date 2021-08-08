@@ -15,7 +15,6 @@
 package org.bonitasoft.studio.common.repository.core.migration.step;
 
 import java.util.Objects;
-import java.util.Properties;
 
 import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.repository.core.maven.model.ProjectDefaultConfiguration;
@@ -33,7 +32,7 @@ public class UpdateBonitaRuntimeVersionInPomStep implements MigrationStep {
     @Override
     public MigrationReport run(IProject project, IProgressMonitor monitor) throws CoreException {
         var model = loadMavenModel(project);
-        Properties properties = model.getProperties();
+        var properties = model.getProperties();
         if (!properties.containsKey(ProjectDefaultConfiguration.BONITA_RUNTIME_VERSION)) {
             throw new CoreException(new Status(IStatus.ERROR,
                     UpdateBonitaRuntimeVersionInPomStep.class,
@@ -41,15 +40,15 @@ public class UpdateBonitaRuntimeVersionInPomStep implements MigrationStep {
                             ProjectDefaultConfiguration.BONITA_RUNTIME_VERSION)));
         }
         var oldVersion = properties.getProperty(ProjectDefaultConfiguration.BONITA_RUNTIME_VERSION);
-        var currentVersion = ProductVersion.mavenVersion();
+        var currentVersion = ProductVersion.BONITA_RUNTIME_VERSION;
         if (!Objects.equals(oldVersion, currentVersion)) {
             var report = new MigrationReport();
-            properties.setProperty(ProjectDefaultConfiguration.BONITA_RUNTIME_VERSION, ProductVersion.mavenVersion());
+            properties.setProperty(ProjectDefaultConfiguration.BONITA_RUNTIME_VERSION, ProductVersion.BONITA_RUNTIME_VERSION);
             saveMavenModel(model, project);
             report.updated(String.format("`%s` has been updated from `%s` to `%s`.",
                     ProjectDefaultConfiguration.BONITA_RUNTIME_VERSION, 
                     oldVersion,
-                    ProductVersion.mavenVersion()));
+                    ProductVersion.BONITA_RUNTIME_VERSION));
             return report;
         }
         return MigrationReport.emptyReport();
