@@ -135,8 +135,8 @@ public class DatabaseDriverConfigurationIT {
         assertThat(hsqldb.getJarList()).contains("hsqldb-2.5.1.jar");
 
         DatabaseConnectorPropertiesFileStore generic = dcpStore.getChild("database-jdbc.properties", false);
-        assertThat(generic.getDefault()).isEqualTo("h2-1.4.200.jar");
-        assertThat(generic.getJarList()).contains("hsqldb-2.5.1.jar", "h2-1.4.200.jar", "ojdbc11-21.1.0.0.jar",
+        assertThat(generic.getDefault()).isEqualTo("h2-1.4.199.jar");
+        assertThat(generic.getJarList()).contains("hsqldb-2.5.1.jar", "h2-1.4.199.jar", "ojdbc11-21.1.0.0.jar",
                 "postgresql-42.2.19.jar");
     }
 
