@@ -14,6 +14,10 @@
  */
 package org.bonitasoft.studio.common.repository.core.migration;
 
+import java.util.Objects;
+import java.util.function.Predicate;
+
+import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Model;
 import org.bonitasoft.studio.common.repository.core.maven.MavenProjectHelper;
 import org.bonitasoft.studio.common.repository.core.migration.report.MigrationReport;
@@ -42,5 +46,14 @@ public interface MigrationStep {
 
     default void saveMavenModel(Model model, IProject project) throws CoreException {
         new MavenProjectHelper().saveModel(project, model, new NullProgressMonitor());
+    }
+
+    default Predicate<Dependency> has(String groupId, String artifactId) {
+        return dep -> Objects.equals(dep.getGroupId(), groupId) &&
+                Objects.equals(dep.getArtifactId(), artifactId);
+    }
+    
+    default Predicate<Dependency> has(String groupId) {
+        return dep -> Objects.equals(dep.getGroupId(), groupId);
     }
 }

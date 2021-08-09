@@ -161,7 +161,7 @@ public class ImportBOSArchiveIT {
         }else {
             assertThat(mavenProjectHelper.findDependency(model, "com.bonitasoft.engine", "bonita-common-sp")).isPresent();
         }
-        assertThat(mavenProjectHelper.findDependency(model, "org.codehaus.groovy", "groovy-all")).isPresent();
+        assertThat(mavenProjectHelper.findDependency(model, "org.codehaus.groovy", "groovy")).isPresent();
         assertThat(mavenProjectHelper.findDependency(model, "org.codehaus.groovy", "groovy-dateutil")).isPresent();
         // Dependencies migrated from existing jars in lib folder
         assertThat(mavenProjectHelper.findDependency(model, dependency("org.apache.commons", "commons-exec", "1.1")))

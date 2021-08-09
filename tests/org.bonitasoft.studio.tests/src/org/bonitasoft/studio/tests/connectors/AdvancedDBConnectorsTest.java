@@ -17,6 +17,7 @@ import org.bonitasoft.studio.common.repository.core.DatabaseHandler;
 import org.bonitasoft.studio.common.repository.core.maven.AddDependencyOperation;
 import org.bonitasoft.studio.connectors.repository.DatabaseConnectorPropertiesFileStore;
 import org.bonitasoft.studio.connectors.repository.DatabaseConnectorPropertiesRepositoryStore;
+import org.bonitasoft.studio.dependencies.repository.DependencyRepositoryStore;
 import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.swtbot.framework.application.BotApplicationWorkbenchWindow;
 import org.bonitasoft.studio.swtbot.framework.diagram.BotProcessDiagramPerspective;
@@ -26,6 +27,7 @@ import org.bonitasoft.studio.swtbot.framework.diagram.general.connectors.BotAddC
 import org.bonitasoft.studio.swtbot.framework.diagram.general.connectors.BotEditConnectorDialog;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.data.BotDataPropertySection;
 import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
+import org.bonitasoft.studio.tests.util.Await;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
@@ -49,9 +51,11 @@ public class AdvancedDBConnectorsTest {
 
     @Before
     public void setUp() throws Exception {
+        BOSEngineManager.getInstance().start();
         new AddDependencyOperation("org.bonitasoft.connectors", "bonita-connector-database", "2.0.3")
+                .disableAnalyze()
                 .run(AbstractRepository.NULL_PROGRESS_MONITOR);
-        new AddDependencyOperation("com.h2database", "h2", "1.4.200")
+        new AddDependencyOperation("com.h2database", "h2", "1.4.199")
                 .run(AbstractRepository.NULL_PROGRESS_MONITOR);
 
         DatabaseConnectorPropertiesRepositoryStore repositoryStore = RepositoryManager.getInstance()
@@ -60,15 +64,18 @@ public class AdvancedDBConnectorsTest {
         if (conf == null) {
             conf = repositoryStore.createRepositoryFileStore("database-h2.properties");
         }
-        conf.setDefault("h2-1.4.200.jar");
-        conf.setJarList(List.of("h2-1.4.200.jar"));
+        conf.setDefault("h2-1.4.199.jar");
+        conf.setJarList(List.of("h2-1.4.199.jar"));
         conf.setAutoAddDriver(true);
+        var dependencyRepositoryStore = RepositoryManager.getInstance().getRepositoryStore(DependencyRepositoryStore.class);
+        Await.waitUntil(() -> {
+            return dependencyRepositoryStore.findDependencyByName("h2-1.4.199.jar").isPresent();
+        },10000, 500);
     }
 
     @Test
     public void testAdvancedDBConnectorsWithGraphicalQueryBuilderContainingVariable()
             throws Exception {
-        BOSEngineManager.getInstance().start();
         final BotApplicationWorkbenchWindow botApplicationWorkbenchWindow = new BotApplicationWorkbenchWindow(bot);
         final BotProcessDiagramPerspective diagramPerspective = botApplicationWorkbenchWindow.createNewDiagram();
         final BotDataPropertySection poolDataTab = diagramPerspective.getDiagramPropertiesPart().selectDataTab()
