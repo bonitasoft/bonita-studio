@@ -36,7 +36,6 @@ public class ProjectDefaultConfiguration implements DefaultPluginVersions {
             new MavenDependency(CODEHAUS_GROOVY_GROUPID, "groovy", null),
             new MavenDependency(CODEHAUS_GROOVY_GROUPID, "groovy-json", null),
             new MavenDependency(CODEHAUS_GROOVY_GROUPID, "groovy-xml", null),
-            new MavenDependency(CODEHAUS_GROOVY_GROUPID, "groovy-json", null),
             new MavenDependency(CODEHAUS_GROOVY_GROUPID, "groovy-nio", null),
             new MavenDependency(CODEHAUS_GROOVY_GROUPID, "groovy-datetime", null),
             new MavenDependency(CODEHAUS_GROOVY_GROUPID, "groovy-dateutil", null),

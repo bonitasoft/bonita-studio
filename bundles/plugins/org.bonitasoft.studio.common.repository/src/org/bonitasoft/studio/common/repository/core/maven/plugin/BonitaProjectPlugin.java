@@ -18,7 +18,9 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-import org.apache.maven.lifecycle.MavenExecutionPlan;
+import org.apache.maven.Maven;
+import org.apache.maven.execution.BuildSuccess;
+import org.apache.maven.execution.MavenExecutionResult;
 import org.apache.maven.model.Plugin;
 import org.apache.maven.project.MavenProject;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
@@ -31,7 +33,9 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.m2e.core.MavenPlugin;
+import org.eclipse.m2e.core.embedder.ICallable;
 import org.eclipse.m2e.core.embedder.IMaven;
+import org.eclipse.m2e.core.embedder.IMavenExecutionContext;
 import org.eclipse.m2e.core.project.IMavenProjectFacade;
 import org.eclipse.m2e.core.project.MavenUpdateRequest;
 
@@ -49,8 +53,7 @@ public class BonitaProjectPlugin {
         monitor.beginTask(Messages.analyzeProjectDependencies, IProgressMonitor.UNKNOWN);
 
         IMaven maven = maven();
-
-        MavenProject mavenProject = getMavenProject(project, monitor);
+        var mavenProject = getMavenProject(project, monitor);
         if (mavenProject == null) {
             return new Status(IStatus.ERROR, getClass(),
                     "An error occured while executing bonita project plugin. Cannot resolve the Maven project.");
@@ -59,18 +62,31 @@ public class BonitaProjectPlugin {
                 DefaultPluginVersions.BONITA_PROJECT_MAVEN_PLUGIN_GROUP_ID,
                 DefaultPluginVersions.BONITA_PROJECT_MAVEN_PLUGIN_ARTIFACT_ID,
                 "install"),
-                String.format("%s:%s:%s",
-                        DefaultPluginVersions.BONITA_PROJECT_MAVEN_PLUGIN_GROUP_ID,
-                        DefaultPluginVersions.BONITA_PROJECT_MAVEN_PLUGIN_ARTIFACT_ID,
-                        "analyze"));
-        MavenExecutionPlan executionPlan = maven.calculateExecutionPlan(mavenProject, goals, true, monitor);
-        for (var mojo : executionPlan.getMojoExecutions()) {
-            maven.execute(mavenProject, mojo, monitor);
-        }
+                        String.format("%s:%s:%s",
+                                DefaultPluginVersions.BONITA_PROJECT_MAVEN_PLUGIN_GROUP_ID,
+                                DefaultPluginVersions.BONITA_PROJECT_MAVEN_PLUGIN_ARTIFACT_ID,
+                                "analyze")
+        );
+        var ctx = maven.createExecutionContext();
+        var request = ctx.getExecutionRequest();
+        request.setGoals(goals);
+        request.setPom(mavenProject.getFile());
+        MavenExecutionResult executionResult = ctx.execute(mavenProject, new ICallable<MavenExecutionResult>() {
 
-        MavenPlugin.getMavenProjectRegistry().refresh(new MavenUpdateRequest(project, false, false), monitor);
+            @Override
+            public MavenExecutionResult call(IMavenExecutionContext context, IProgressMonitor monitor)
+                    throws CoreException {
+                return maven.lookup(Maven.class).execute(request);
+            }
+
+        }, monitor);
         
-        return Status.OK_STATUS;
+        if(executionResult.getBuildSummary(executionResult.getProject()) instanceof BuildSuccess) {
+            MavenPlugin.getMavenProjectRegistry().refresh(new MavenUpdateRequest(project, false, false), monitor);
+            return Status.OK_STATUS;
+        }else {
+            throw new CoreException(new Status(IStatus.ERROR, getClass(),"Failed to execute bonita-project-maven-plugin", executionResult.hasExceptions() ? executionResult.getExceptions().get(0) : null));
+        }
     }
 
     private MavenProject getMavenProject(IProject project, IProgressMonitor monitor) throws CoreException {

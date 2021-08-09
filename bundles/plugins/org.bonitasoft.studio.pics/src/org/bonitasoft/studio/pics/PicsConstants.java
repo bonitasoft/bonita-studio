@@ -443,6 +443,9 @@ public class PicsConstants {
     public static String extensions = "projectExtensions/extensions.png";
     public static String extensions32 = "projectExtensions/extensions32.png";
     public static String extensions32_hot = "projectExtensions/extensions32_hot.png";
+    
+    public static String refresh = "projectExtensions/refresh.png";
+    public static String refresh_hot = "projectExtensions/refresh_hot.png";
 
     public static String connectorDefaultIcon = "projectExtensions/connectorDefaultIcon.png";
     public static String actorfilterDefaultIcon = "projectExtensions/actorfilterDefaultIcon.png";
