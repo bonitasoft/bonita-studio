@@ -30,6 +30,7 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.net.PortSelector;
 import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.designer.UIDesignerPlugin;
@@ -225,9 +226,9 @@ public class DataRepositoryServerManager {
     public int selectPort(int exclude) {
         var selectedPort = getPreferenceStore().getInt(BonitaPreferenceConstants.DATA_REPOSITORY_PORT, -1);
         if (selectedPort == -1 || isPortInUse(selectedPort)) {
-            selectedPort = SocketUtil.findFreePort();
+            selectedPort = PortSelector.findFreePort();
             while (selectedPort == exclude) {
-                selectedPort = SocketUtil.findFreePort();
+                selectedPort = PortSelector.findFreePort();
             }
             getPreferenceStore().putInt(BonitaPreferenceConstants.DATA_REPOSITORY_PORT, selectedPort);
         }

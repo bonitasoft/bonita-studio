@@ -23,6 +23,7 @@ import java.net.UnknownHostException;
 import java.util.Map;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.net.PortSelector;
 import org.bonitasoft.studio.engine.EnginePlugin;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.eclipse.core.runtime.CoreException;
@@ -45,8 +46,6 @@ import com.google.common.base.Function;
  */
 public class PortConfigurator {
 
-    public static final int MIN_PORT_NUMBER = 1024;
-    public static final int MAX_PORT_NUMBER = 65535;
 
     private static final String TOMCAT_PORT_ID = "0";
 
@@ -73,7 +72,8 @@ public class PortConfigurator {
         final int tomcatPort = newPortByIds.get(TOMCAT_PORT_ID).getPort();
 
         try {
-            clientBonitaHomeBuildler.withHTTPAPIType().withHost("localhost").withPort(tomcatPort).writeClientProperties();
+            clientBonitaHomeBuildler.withHTTPAPIType().withHost("localhost").withPort(tomcatPort)
+                    .writeClientProperties();
         } catch (final IOException e) {
             throw new CoreException(new Status(IStatus.ERROR, EnginePlugin.PLUGIN_ID,
                     "Failed to write bonita home client property file", e));
@@ -87,7 +87,8 @@ public class PortConfigurator {
         if (adapter instanceof TomcatServer) {
             return (TomcatServer) adapter;
         }
-        throw new IllegalStateException(String.format("Unbable to retrieve TomcatServer from server: %s", server.getId()));
+        throw new IllegalStateException(
+                String.format("Unbable to retrieve TomcatServer from server: %s", server.getId()));
     }
 
     private void configurePort(final ServerPort port, final IProgressMonitor monitor) throws CoreException {
@@ -98,7 +99,7 @@ public class PortConfigurator {
             }
         }
         if (isPortInUse(port.getPort())) {
-            updatePort(port, findUnusedPort(MIN_PORT_NUMBER, MAX_PORT_NUMBER), monitor);
+            updatePort(port, findUnusedPort(), monitor);
         }
     }
 
@@ -137,12 +138,12 @@ public class PortConfigurator {
         }
     }
 
-    protected int findUnusedPort(final int low, final int hight) {
-        return SocketUtil.findUnusedPort(low, hight);
-    }
-
     public int getHttpPort() {
         return preferenceStore.getInt(BonitaPreferenceConstants.CONSOLE_PORT);
 
+    }
+
+    int findUnusedPort() {
+       return PortSelector.findFreePort();
     }
 }

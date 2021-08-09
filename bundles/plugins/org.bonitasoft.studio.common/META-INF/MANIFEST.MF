@@ -51,7 +51,8 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.ui.navigator,
  org.eclipse.e4.core.commands;bundle-version="0.12.400",
  org.eclipse.e4.ui.css.swt.theme,
- org.eclipse.e4.ui.services
+ org.eclipse.e4.ui.services,
+ org.eclipse.wst.server.core
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-ActivationPolicy: lazy
 Import-Package: javax.annotation;version="1.2.0",
@@ -85,6 +86,7 @@ Export-Package: org.bonitasoft.studio.common,
  org.bonitasoft.studio.common.log,
  org.bonitasoft.studio.common.model,
  org.bonitasoft.studio.common.model.validator,
+ org.bonitasoft.studio.common.net,
  org.bonitasoft.studio.common.palette,
  org.bonitasoft.studio.common.perspectives,
  org.bonitasoft.studio.common.platform.tools,
