@@ -352,7 +352,7 @@ public class MultiInstantiationIT implements SWTBotConstants {
                 assertNotNull("Error: Output Result used in the MultiInstantiation is not referenced in the Model.",
                         multiInstantiable.getListDataContainingOutputResults());
             }
-        });
+        }, 10000, 100);
       
 
         // remove vip collection and vipName Text

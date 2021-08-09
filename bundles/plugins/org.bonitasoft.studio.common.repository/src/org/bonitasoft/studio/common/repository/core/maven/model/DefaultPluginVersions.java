@@ -20,10 +20,13 @@ package org.bonitasoft.studio.common.repository.core.maven.model;
  */
 public interface DefaultPluginVersions {
 
+    static final String CODEHAUS_GROOVY_GROUPID = "org.codehaus.groovy";
+    
     static final String BONITA_PROJECT_MAVEN_PLUGIN_GROUP_ID = "org.bonitasoft.maven";
     static final String APACHE_MAVEN_PLUGIN_GROUP_ID = "org.apache.maven.plugins";
     static final String CODEHAUS_PLUGIN_GROUP_ID = "org.codehaus.mojo";
 
+    
     static final String MAVEN_INSTALL_PLUGIN = "maven-install-plugin";
     static final String MAVEN_INSTALL_PLUGIN_VERSION = "3.0.0-M1";
 
