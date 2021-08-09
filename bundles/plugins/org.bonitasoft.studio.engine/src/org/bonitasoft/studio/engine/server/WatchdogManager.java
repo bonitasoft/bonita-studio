@@ -22,6 +22,7 @@ import java.net.SocketException;
 import java.net.UnknownHostException;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.net.PortSelector;
 import org.bonitasoft.studio.engine.EnginePlugin;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.wst.server.core.util.SocketUtil;
@@ -37,7 +38,7 @@ public class WatchdogManager {
         return watchdogServer;
     }
 
-    public synchronized static WatchdogManager getInstance() {
+    public static synchronized  WatchdogManager getInstance() {
         if (INSTANCE == null) {
             INSTANCE = new WatchdogManager();
         }
@@ -55,8 +56,7 @@ public class WatchdogManager {
             try {
                 if (portIsUsed()) {
                     final int oldPort = WATCHDOG_PORT;
-                    WATCHDOG_PORT = SocketUtil.findUnusedPort(PortConfigurator.MIN_PORT_NUMBER,
-                            PortConfigurator.MAX_PORT_NUMBER);
+                    WATCHDOG_PORT = PortSelector.findFreePort();
                     BonitaStudioLog.debug("Port "
                             + oldPort
                             + " is not available for server watchdog, studio will use next available port : "

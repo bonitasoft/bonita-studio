@@ -26,6 +26,7 @@ import static org.mockito.Mockito.when;
 
 import java.io.IOException;
 
+import org.bonitasoft.studio.common.net.PortSelector;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -123,8 +124,7 @@ public class PortConfiguratorTest {
     public void should_update_port_if_current_port_is_not_available() throws Exception {
         //Given
         doReturn(true).when(portConfigurator).isPortInUse(8080);
-        doReturn(8081).when(portConfigurator).findUnusedPort(PortConfigurator.MIN_PORT_NUMBER,
-                PortConfigurator.MAX_PORT_NUMBER);
+        doReturn(8081).when(portConfigurator).findUnusedPort();
         when(tomcatServer.getServerPorts())
                 .thenReturn(toArray(newArrayList(new ServerPort("0", "p1", 8080, "")), ServerPort.class));
 

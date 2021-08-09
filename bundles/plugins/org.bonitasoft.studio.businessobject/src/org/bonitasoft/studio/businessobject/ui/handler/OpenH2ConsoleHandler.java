@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.net.PortSelector;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.eclipse.core.externaltools.internal.IExternalToolConstants;
@@ -51,7 +52,7 @@ public class OpenH2ConsoleHandler {
     private static final String URL = "\"jdbc:h2:file:%s/business_data.db;MVCC=TRUE;DB_CLOSE_ON_EXIT=TRUE;IGNORECASE=TRUE;AUTO_SERVER=TRUE;\"";
     private static final String DRIVER = "org.h2.Driver";
     private static final String USER = "sa";
-    private static final int PORT = SocketUtil.findFreePort();
+    private static final int PORT = PortSelector.findFreePort();
     private IProcess currentProcess;
 
     @Execute

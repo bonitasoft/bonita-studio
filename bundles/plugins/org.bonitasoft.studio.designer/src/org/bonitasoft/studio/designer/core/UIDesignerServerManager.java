@@ -37,6 +37,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.net.PortSelector;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.IBonitaProjectListener;
 import org.bonitasoft.studio.designer.UIDesignerPlugin;
@@ -78,9 +79,10 @@ public class UIDesignerServerManager implements IBonitaProjectListener {
     private static UIDesignerServerManager INSTANCE;
     private int port = -1;
     private ILaunch launch;
-    private int portalPort = 8080;
+    private int runtimePort = 8080;
     private static final String PORTAL_BASE_URL = "designer.bonita.portal.url";
     private static final String BONITA_DATA_REPOSITORY_ORIGIN = "designer.bonita.bdm.url";
+    private static final int UID_DEFAULT_PORT = 8081;
     private PageDesignerURLFactory pageDesignerURLBuilder;
     private boolean started = false;
 
@@ -100,11 +102,11 @@ public class UIDesignerServerManager implements IBonitaProjectListener {
     }
 
     public void setPortalPort(int portalPort) {
-        this.portalPort = portalPort;
+        this.runtimePort = portalPort;
     }
 
     public int getPortalPort() {
-        return portalPort;
+        return runtimePort;
     }
 
     public synchronized void start(AbstractRepository repository, IProgressMonitor monitor) {
@@ -116,7 +118,7 @@ public class UIDesignerServerManager implements IBonitaProjectListener {
             monitor.beginTask(Messages.startingUIDesigner, IProgressMonitor.UNKNOWN);
             BonitaStudioLog.info(Messages.startingUIDesigner, UIDesignerPlugin.PLUGIN_ID);
             Instant start = Instant.now();
-            int workspaceResourceServerPort = SocketUtil.findFreePort();
+            int workspaceResourceServerPort = PortSelector.findFreePort();
             DataRepositoryServerManager dataRepositoryServerManager = DataRepositoryServerManager.getInstance();
             int dataRepositoryPort = dataRepositoryServerManager.selectPort(workspaceResourceServerPort);
             WorkspaceResourceServerManager workspaceResourceServerManager = WorkspaceResourceServerManager
@@ -127,7 +129,7 @@ public class UIDesignerServerManager implements IBonitaProjectListener {
             } else {
                 workspaceResourceServerPort = workspaceResourceServerManager.runningPort();
             }
-            this.portalPort = BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore()
+            this.runtimePort = BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore()
                     .getInt(BonitaPreferenceConstants.CONSOLE_PORT);
             final ILaunchManager manager = getLaunchManager();
             final ILaunchConfigurationType ltype = manager
@@ -197,7 +199,7 @@ public class UIDesignerServerManager implements IBonitaProjectListener {
     }
 
     private void connectToURL(final URL url) throws URISyntaxException {
-        ClientResource cr = new ClientResource(url.toURI());
+        var cr = new ClientResource(url.toURI());
         cr.setRetryOnError(true);
         cr.setRetryDelay(1000);
         cr.setRetryAttempts(5);
@@ -254,9 +256,9 @@ public class UIDesignerServerManager implements IBonitaProjectListener {
             int workspaceResourceServerPort,
             int dataRepositoryPort) throws IOException {
         final WorkspaceSystemProperties workspaceSystemProperties = new WorkspaceSystemProperties(repository);
-        port = getPreferenceStore().getInt(BonitaPreferenceConstants.UID_PORT, -1);
-        if (port == -1 || isPortInUse(port)) {
-            port = SocketUtil.findFreePort();
+        port = getPreferenceStore().getInt(BonitaPreferenceConstants.UID_PORT, UID_DEFAULT_PORT);
+        if (isPortInUse(port)) {
+            port = PortSelector.findFreePort();
             getPreferenceStore().putInt(BonitaPreferenceConstants.UID_PORT, port);
         }
         return Arrays.asList(
@@ -266,7 +268,7 @@ public class UIDesignerServerManager implements IBonitaProjectListener {
                 workspaceSystemProperties.activateSpringProfile("studio"),
                 aSystemProperty(PORTAL_BASE_URL,
                         String.format("http://%s:%s", InetAddress.getByName(null).getHostAddress(),
-                                portalPort)),
+                                runtimePort)),
                 aSystemProperty(BONITA_DATA_REPOSITORY_ORIGIN, String.format("http://%s:%s",
                         InetAddress.getByName(null).getHostAddress(),
                         dataRepositoryPort)),

@@ -30,6 +30,7 @@ import org.bonitasoft.engine.platform.PlatformLogoutException;
 import org.bonitasoft.engine.session.SessionNotFoundException;
 import org.bonitasoft.studio.common.jface.BonitaErrorDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.net.PortSelector;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.designer.core.UIDesignerServerManager;
@@ -125,7 +126,7 @@ public class ServerPreferencePage extends AbstractBonitaPreferencePage implement
         getContributedEditors().put(lazyEditor, EnginePlugin.getDefault().getPreferenceStore());
         port = new IntegerFieldEditor(BonitaPreferenceConstants.CONSOLE_PORT, Messages.consolePreferencePortLabel,
                 getFieldEditorParent());
-        port.setValidRange(PortConfigurator.MIN_PORT_NUMBER, PortConfigurator.MAX_PORT_NUMBER);
+        port.setValidRange(PortSelector.MIN_PORT_NUMBER, PortSelector.MAX_PORT_NUMBER);
         addField(port);
 
         xmxOption = new IntegerFieldEditor(EnginePreferenceConstants.TOMCAT_XMX_OPTION, Messages.tomcatXmxOption,
