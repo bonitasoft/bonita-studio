@@ -20,6 +20,7 @@ import java.util.List;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.data.i18n.Messages;
 import org.bonitasoft.studio.expression.editor.provider.IOperatorEditor;
 import org.bonitasoft.studio.groovy.ui.JDTMethodHelper;
 import org.bonitasoft.studio.model.expression.Expression;
@@ -33,6 +34,7 @@ import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.Signature;
 import org.eclipse.jdt.internal.corext.template.java.SignatureUtil;
 import org.eclipse.jdt.internal.ui.viewsupport.JavaUILabelProvider;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ISelection;
@@ -45,6 +47,7 @@ import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 
 /**
  * @author Romain Bioteau
@@ -73,22 +76,14 @@ public class JavaSetterOperatorEditor implements IOperatorEditor {
                 && expression.getReferencedElements().get(0) instanceof JavaObjectData;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.expression.editor.provider.IOperatorEditor#canFinish()
-     */
     @Override
     public boolean canFinish() {
         return isSetterOrDataSelected((ITreeSelection) javaTreeviewer.getSelection());
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.expression.editor.provider.IOperatorEditor#createOpeartorEditor(org.eclipse.swt.widgets.Composite,
-     * org.bonitasoft.studio.model.expression.Operator, org.bonitasoft.studio.model.expression.Expression)
-     */
     @Override
-    public Composite createOpeartorEditor(final Composite parent, final Operator operator, final Expression sourceExpression) {
+    public Composite createOpeartorEditor(final Composite parent, final Operator operator,
+            final Expression sourceExpression) {
         final Composite client = new Composite(parent, SWT.NONE);
         client.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         client.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).spacing(0, 0).create());
@@ -96,7 +91,8 @@ public class JavaSetterOperatorEditor implements IOperatorEditor {
         final JavaObjectData data = (JavaObjectData) sourceExpression.getReferencedElements().get(0);
 
         javaTreeviewer = new TreeViewer(client, SWT.SINGLE | SWT.BORDER);
-        javaTreeviewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 200).create());
+        javaTreeviewer.getControl()
+                .setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 200).create());
         javaTreeviewer.setContentProvider(new JavaSetterContentProvider());
         javaTreeviewer.setLabelProvider(new JavaUILabelProvider() {
 
@@ -104,7 +100,8 @@ public class JavaSetterOperatorEditor implements IOperatorEditor {
             public String getText(final Object item) {
                 if (item instanceof IMethod) {
                     try {
-                        return super.getText(item) + " - " + SignatureUtil.stripSignatureToFQN(((IMethod) item).getReturnType());
+                        return super.getText(item) + " - "
+                                + SignatureUtil.stripSignatureToFQN(((IMethod) item).getReturnType());
                     } catch (final JavaModelException e) {
                         BonitaStudioLog.error(e);
                         return null;
@@ -142,7 +139,7 @@ public class JavaSetterOperatorEditor implements IOperatorEditor {
                 return JDTMethodHelper.retrieveQualifiedType(typeErasure, declaringType);
             }
         });
-        
+
         String className = null;
         if (data.isMultiple()) {
             className = List.class.getName();
@@ -150,7 +147,21 @@ public class JavaSetterOperatorEditor implements IOperatorEditor {
             className = data.getClassName();
         }
         if (className != null) {
-            javaTreeviewer.setInput(className);
+            IType type;
+            try {
+                type = RepositoryManager.getInstance().getCurrentRepository().getJavaProject()
+                        .findType(className);
+                if (type == null) {
+                    MessageDialog.openError(Display.getDefault().getActiveShell(), 
+                            Messages.cannotFindTypeTitle,
+                            String.format(Messages.cannotFindTypeMsg, className));
+                } else {
+                    javaTreeviewer.setInput(type);
+                }
+            } catch (JavaModelException e) {
+                BonitaStudioLog.error(e);
+            }
+
             javaTreeviewer.getTree().setFocus();
             javaTreeviewer.expandAll();
             final IMethod selectedMethod = getJavaSelectionFromContent(data, operator);
@@ -160,7 +171,7 @@ public class JavaSetterOperatorEditor implements IOperatorEditor {
         }
         return client;
     }
-    
+
     @Override
     public StructuredViewer getViewer() {
         return javaTreeviewer;
@@ -214,7 +225,8 @@ public class JavaSetterOperatorEditor implements IOperatorEditor {
                 final String content = operator.getExpression();
                 if (content != null && !content.isEmpty()) {
 
-                    final IJavaProject project = RepositoryManager.getInstance().getCurrentRepository().getJavaProject();
+                    final IJavaProject project = RepositoryManager.getInstance().getCurrentRepository()
+                            .getJavaProject();
                     IType type = null;
                     try {
                         type = project.findType(className);

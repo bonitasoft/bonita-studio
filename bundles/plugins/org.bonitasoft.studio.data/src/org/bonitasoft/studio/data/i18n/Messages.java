@@ -197,6 +197,10 @@ public class Messages extends NLS {
 
     public static String addBusinessDataTooltip;
 
+    public static String cannotFindTypeMsg;
+
+    public static String cannotFindTypeTitle;
+
     static {
         NLS.initializeMessages("messages", Messages.class);//$NON-NLS-1$
     }

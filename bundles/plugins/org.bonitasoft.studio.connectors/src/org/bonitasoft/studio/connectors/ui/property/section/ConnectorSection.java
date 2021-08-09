@@ -125,15 +125,14 @@ public abstract class ConnectorSection extends AbstractBonitaDescriptionSection
 
     @Override
     protected void createContent(final Composite parent) {
-        var mainComposite = getWidgetFactory().createComposite(parent);
-        mainComposite.setLayout(GridLayoutFactory.fillDefaults().margins(20, 5).create());
-        mainComposite.setLayoutData(GridDataFactory.fillDefaults()
-                .grab(true, true).create());
-        Composite viewerComposite = getWidgetFactory().createComposite(
-                mainComposite);
+        var viewerComposite = getWidgetFactory().createComposite(
+                parent);
         viewerComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         viewerComposite.setLayout(
-                GridLayoutFactory.fillDefaults().numColumns(2).spacing(LayoutConstants.getSpacing().x, 2).create());
+                GridLayoutFactory.fillDefaults().numColumns(2)
+                .margins(20,10)
+                .spacing(LayoutConstants.getSpacing().x, 2)
+                .create());
         createToolbar(viewerComposite);
         createConnectorComposite(viewerComposite);
     }
@@ -180,7 +179,7 @@ public abstract class ConnectorSection extends AbstractBonitaDescriptionSection
         getWidgetFactory().adapt(tableViewer.getTable(), false, false);
         tableViewer.getTable().setLayoutData(
                 GridDataFactory.fillDefaults().grab(true, true)
-                        .hint(SWT.DEFAULT, 120).create());
+                        .create());
 
         tableViewer.addDoubleClickListener(this);
         tableViewer.addSelectionChangedListener(this);

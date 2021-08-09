@@ -48,6 +48,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.Section;
 
 /**
@@ -67,7 +68,7 @@ public class OperatorSelectionDialog extends Dialog implements ISelectionChanged
 
     private List<IOperatorEditor> operatorEditors;
 
-    private final static List<String> operatorTypeList = new ArrayList<String>();
+    private static final List<String> operatorTypeList = new ArrayList<String>();
     static {
         operatorTypeList.add(ExpressionConstants.ASSIGNMENT_OPERATOR);
         operatorTypeList.add(ExpressionConstants.JAVA_METHOD_OPERATOR);
@@ -110,10 +111,8 @@ public class OperatorSelectionDialog extends Dialog implements ISelectionChanged
     @Override
     public boolean close() {
         final boolean closed = super.close();
-        if (closed) {
-            if (context != null) {
-                context.dispose();
-            }
+        if (closed && context != null) {
+            context.dispose();
         }
         return closed;
     }
@@ -121,8 +120,8 @@ public class OperatorSelectionDialog extends Dialog implements ISelectionChanged
     @Override
     protected Control createDialogArea(final Composite parent) {
         final Composite mainComposite = new Composite(parent, SWT.NONE);
-        mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(300, SWT.DEFAULT).create());
-        mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(10, 10).create());
+        mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+        mainComposite.setLayout(GridLayoutFactory.fillDefaults().equalWidth(false).numColumns(2).margins(10, 10).create());
         final Label operatorType = new Label(mainComposite, SWT.NONE);
         operatorType.setText(Messages.operatorType);
 
@@ -135,7 +134,7 @@ public class OperatorSelectionDialog extends Dialog implements ISelectionChanged
 
         operatorViewer.setInput(operatorTypeList);
 
-        section = new Section(mainComposite, Section.NO_TITLE);
+        section = new Section(mainComposite, ExpandableComposite.NO_TITLE);
         section.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).span(2, 1).create());
 
         final Expression exp = operation.getLeftOperand();
