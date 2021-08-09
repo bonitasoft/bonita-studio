@@ -24,7 +24,6 @@ import java.util.stream.Collectors;
 import org.bonitasoft.engine.business.application.xml.ApplicationNode;
 import org.bonitasoft.studio.common.jface.ArrayTreeContentProvider;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
-import org.bonitasoft.studio.designer.core.repository.WebPageRepositoryStore;
 import org.bonitasoft.studio.la.application.ui.editor.converter.ApplicationToNavigationConverter;
 import org.bonitasoft.studio.la.application.ui.editor.converter.UpdateApplicationNodeOperation;
 import org.bonitasoft.studio.la.application.ui.editor.customPage.ApplicationPageProposalProvider;
@@ -34,7 +33,6 @@ import org.bonitasoft.studio.la.application.ui.editor.listener.MoveMenuListener;
 import org.bonitasoft.studio.la.application.ui.provider.NavigationPageTreeContentProvider;
 import org.bonitasoft.studio.la.application.ui.validator.ApplicationDescriptorValidators;
 import org.bonitasoft.studio.la.i18n.Messages;
-import org.bonitasoft.studio.theme.ThemeRepositoryStore;
 import org.bonitasoft.studio.ui.converter.ConverterBuilder;
 import org.bonitasoft.studio.ui.viewer.AutoCompleteTextCellEditor;
 import org.bonitasoft.studio.ui.viewer.EditingSupportBuilder;
@@ -137,7 +135,8 @@ public class ApplicationNavigation extends Composite {
 
     private Composite createHomePageWidget(Section homePageSection) {
         Composite homePageComposite = toolkit.createComposite(homePageSection);
-        homePageComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).extendedMargins(0, 0, 10, 0).create());
+        homePageComposite
+                .setLayout(GridLayoutFactory.fillDefaults().numColumns(1).extendedMargins(0, 0, 10, 0).create());
         homePageComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 
         homePageObservable.addValueChangeListener(this::changeListener);
@@ -218,7 +217,8 @@ public class ApplicationNavigation extends Composite {
         });
 
         Button removeButton = createButton(buttonsComposite, Messages.remove, toolkit);
-        removeButton.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, "org.bonitasoft.studio.la.ex.ui.editor.orphanRemove");
+        removeButton.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY,
+                "org.bonitasoft.studio.la.ex.ui.editor.orphanRemove");
         removeButton.addListener(SWT.Selection, event -> {
             NavigationPageNode selectedNode = (NavigationPageNode) selectionObservable.getValue();
             inputList.remove(selectedNode);
@@ -246,7 +246,8 @@ public class ApplicationNavigation extends Composite {
         inputList.addChangeListener(this::valueChangeListener);
 
         Composite buttonsComposite = toolkit.createComposite(menuComposite);
-        buttonsComposite.setLayout(GridLayoutFactory.fillDefaults().spacing(0, LayoutConstants.getSpacing().y).create());
+        buttonsComposite
+                .setLayout(GridLayoutFactory.fillDefaults().spacing(0, LayoutConstants.getSpacing().y).create());
         buttonsComposite.setLayoutData(GridDataFactory.fillDefaults().grab(false, true).create());
 
         menuTreeViewer = new TreeViewer(menuComposite, SWT.FULL_SELECTION | SWT.SINGLE | SWT.BORDER);
@@ -536,7 +537,8 @@ public class ApplicationNavigation extends Composite {
                                 ? menuPageNodes.indexOf(selection) < menuPageNodes.size() - 1
                                 : selection.getParent().isPresent()
                                         ? selection.getParent().get().getChildren()
-                                                .indexOf(selection) < selection.getParent().get().getChildren().size() - 1
+                                                .indexOf(selection) < selection.getParent().get().getChildren().size()
+                                                        - 1
                                         : false))
                 .create();
     }
@@ -547,8 +549,12 @@ public class ApplicationNavigation extends Composite {
 
     private void refreshViewers() {
         getDisplay().asyncExec(() -> {
-            menuTreeViewer.refresh();
-            orphanPagesTreeViewer.refresh();
+            if (!menuTreeViewer.getTree().isDisposed()) {
+                menuTreeViewer.refresh();
+            }
+            if (!orphanPagesTreeViewer.getTree().isDisposed()) {
+                orphanPagesTreeViewer.refresh();
+            }
         });
     }
 }

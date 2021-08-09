@@ -46,6 +46,7 @@ import org.bonitasoft.studio.designer.core.UIDesignerServerManager;
 import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.engine.BOSWebServerManager;
 import org.bonitasoft.studio.engine.server.StartEngineJob;
+import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditorPlugin;
 import org.bonitasoft.studio.model.process.impl.ContractInputImpl;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.bonitasoft.studio.preferences.BonitaThemeConstants;
@@ -400,6 +401,8 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
 
     @Override
     public void preStartup() {
+        // Initialize adapter factories and avoid deadlock at startup
+        ProcessDiagramEditorPlugin.getInstance().getItemProvidersAdapterFactory();
         try {
             new InstallBonitaMavenArtifactsOperation(MavenPlugin.getMaven().getLocalRepository()).execute();
         } catch (CoreException e) {
