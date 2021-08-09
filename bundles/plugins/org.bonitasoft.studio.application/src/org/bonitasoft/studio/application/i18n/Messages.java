@@ -383,6 +383,8 @@ public class Messages extends NLS {
     public static String viewSource;
     public static String viewSourceTooltip;
     public static String processDiagram;
+    public static String refresh;
+    public static String refreshTooltip;
 
     static {
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);

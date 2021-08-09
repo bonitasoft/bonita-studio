@@ -15,15 +15,18 @@
 package org.bonitasoft.studio.application.views.overview;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.Map;
 import java.util.Objects;
 import java.util.function.Consumer;
 
 import org.apache.maven.model.Model;
+import org.bonitasoft.studio.application.handler.RefreshProjectHandler;
 import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.application.views.extension.ExtensionComposite;
 import org.bonitasoft.studio.common.CommandExecutor;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.core.maven.MavenProjectDependenciesStore;
@@ -33,6 +36,7 @@ import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.preferences.BonitaThemeConstants;
 import org.bonitasoft.studio.ui.dialog.ExceptionDialogHandler;
 import org.bonitasoft.studio.ui.widget.DynamicButtonWidget;
+import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceChangeListener;
@@ -48,6 +52,7 @@ import org.eclipse.jface.layout.LayoutConstants;
 import org.eclipse.jface.resource.FontDescriptor;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.resource.LocalResourceManager;
+import org.eclipse.m2e.core.MavenPlugin;
 import org.eclipse.m2e.core.internal.IMavenConstants;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyleRange;
@@ -67,6 +72,7 @@ import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.EditorPart;
+import org.eclipse.ui.progress.IProgressService;
 import org.osgi.service.event.EventHandler;
 
 public class ProjectOverviewEditorPart extends EditorPart implements EventHandler, IResourceChangeListener {
@@ -88,6 +94,8 @@ public class ProjectOverviewEditorPart extends EditorPart implements EventHandle
     public static final String UPDATE_GAV_COMMAND = "org.bonitasoft.studio.application.update.gav.command";
     public static final String EDIT_PROJECT_COMMAND = "org.bonitasoft.studio.application.edit.project.command";
 
+    private static final String REFRESH_PROJECT_COMMAND = null;
+
     private RepositoryAccessor repositoryAccessor;
     private LocalResourceManager localResourceManager;
     private ExceptionDialogHandler errorHandler;
@@ -108,6 +116,8 @@ public class ProjectOverviewEditorPart extends EditorPart implements EventHandle
     private DynamicButtonWidget toElementViewButton;
     private DynamicButtonWidget toExtensionViewButton;
 
+    private IProgressService progressService;
+
     public ProjectOverviewEditorPart() {
         repositoryAccessor = RepositoryManager.getInstance().getAccessor();
         localResourceManager = new LocalResourceManager(JFaceResources.getResources(Display.getDefault()));
@@ -119,7 +129,7 @@ public class ProjectOverviewEditorPart extends EditorPart implements EventHandle
         var eclipseContext = EclipseContextFactory.create();
         errorHandler = ContextInjectionFactory.make(ExceptionDialogHandler.class, eclipseContext);
         commandExecutor = ContextInjectionFactory.make(CommandExecutor.class, eclipseContext);
-
+        progressService = PlatformUI.getWorkbench().getProgressService();
         ResourcesPlugin.getWorkspace().addResourceChangeListener(this, IResourceChangeEvent.POST_CHANGE);
         PlatformUI.getWorkbench().getService(IEventBroker.class)
                 .subscribe(MavenProjectDependenciesStore.PROJECT_DEPENDENCIES_ANALYZED_TOPIC, this);
@@ -212,7 +222,7 @@ public class ProjectOverviewEditorPart extends EditorPart implements EventHandle
         refreshContent();
 
         toolbarComposite = new Composite(composite, SWT.NONE);
-        toolbarComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
+        toolbarComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(4).create());
         toolbarComposite.setLayoutData(GridDataFactory.fillDefaults().align(SWT.FILL, SWT.BOTTOM).create());
         toolbarComposite.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, BonitaThemeConstants.HEADER_BACKGROUND);
 
@@ -222,15 +232,43 @@ public class ProjectOverviewEditorPart extends EditorPart implements EventHandle
                 Pics.getImage(PicsConstants.openOverview32_hot),
                 Pics.getImage(PicsConstants.openOverview32_hot),
                 SWTBotConstants.SWTBOT_ID_OPEN_ELEMENT_VIEW,
-                e -> Display.getDefault().asyncExec(() -> toElementsView()));
+                e -> Display.getDefault().asyncExec(this::toElementsView));
 
-        toExtensionViewButton = createSwitchButton(toolbarComposite,
+       toExtensionViewButton = createSwitchButton(toolbarComposite,
                 Messages.extensionView,
                 Messages.extensionViewTooltip,
                 Pics.getImage(PicsConstants.extensions32),
                 Pics.getImage(PicsConstants.extensions32_hot),
                 SWTBotConstants.SWTBOT_ID_OPEN_EXTENSIONS_VIEW,
-                e -> Display.getDefault().asyncExec(() -> toExtensionsView()));
+                e -> Display.getDefault().asyncExec(this::toExtensionsView));
+ 
+        var separator = new Label(toolbarComposite, SWT.SEPARATOR | SWT.VERTICAL);
+        separator.setLayoutData(GridDataFactory.swtDefaults().hint(SWT.DEFAULT, 32).create());
+        new DynamicButtonWidget.Builder()
+                .withLabel(Messages.refresh)
+                .withTooltipText(Messages.refreshTooltip)
+                .withId(SWTBotConstants.SWTBOT_ID_REFRESH_PROJECT)
+                .withImage(Pics.getImage(PicsConstants.refresh))
+                .withHotImage(Pics.getImage(PicsConstants.refresh_hot))
+                .withCssclass(BonitaThemeConstants.HEADER_BACKGROUND)
+                .onClick(e -> {
+                    try {
+                        progressService.run(true, false, monitor ->{
+                            AbstractRepository currentRepository = RepositoryManager.getInstance().getCurrentRepository();
+                            try {
+                                MavenPlugin.getProjectConfigurationManager().updateProjectConfiguration(currentRepository.getProject(), monitor);
+                            } catch (CoreException ex) {
+                                BonitaStudioLog.error(ex);
+                            }
+                            currentRepository.getProjectDependenciesStore().analyze(monitor);
+                            currentRepository.build(monitor);
+                        });
+                    } catch (InvocationTargetException | InterruptedException ex) {
+                        BonitaStudioLog.error(ex);
+                    }
+                })
+                .createIn(toolbarComposite);
+               
     }
 
     public void openExtensionsView() {
