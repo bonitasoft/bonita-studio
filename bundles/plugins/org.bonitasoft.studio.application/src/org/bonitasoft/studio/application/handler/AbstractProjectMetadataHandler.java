@@ -73,7 +73,7 @@ public abstract class AbstractProjectMetadataHandler {
 
     protected List<WizardPageBuilder> createPages(RepositoryAccessor repositoryAccessor, ProjectMetadata metadata) {
         List<WizardPageBuilder> pages = new ArrayList<>();
-        ProjectMetadataPage projectMetadataPage = new ProjectMetadataPage(metadata, isNewProject());
+        var projectMetadataPage = new ProjectMetadataPage(metadata, isNewProject());
         pages.add(createProjectMetadataPage(projectMetadataPage));
         return pages;
 

@@ -366,6 +366,7 @@ public class ImportExtensionPage implements ControlSupplier {
                 .observeDetail(dependencyObservable);
         TextWidget groupIdText = createText(dependencyGroup,
                 "Group ID",
+                Messages.groupIdTootltip,
                 groupIdObservable,
                 ctx,
                 true,
@@ -382,6 +383,7 @@ public class ImportExtensionPage implements ControlSupplier {
                 .observeDetail(dependencyObservable);
         TextWidget artifactIdText = createText(dependencyGroup,
                 "Artifact ID",
+                Messages.depArtifactIdTootltip,
                 artifactIdObservable,
                 ctx,
                 true,
@@ -395,6 +397,7 @@ public class ImportExtensionPage implements ControlSupplier {
         versionObservable = PojoProperties.value("version", String.class).observeDetail(dependencyObservable);
         TextWidget versionText = createText(dependencyGroup,
                 "Version",
+                null,
                 versionObservable,
                 ctx,
                 true,
@@ -406,7 +409,9 @@ public class ImportExtensionPage implements ControlSupplier {
 
         IObservableValue<String> classifierObservable = PojoProperties.value("classifier", String.class)
                 .observeDetail(dependencyObservable);
-        TextWidget classifierText = createText(dependencyGroup, "Classifier",
+        TextWidget classifierText = createText(dependencyGroup,
+                "Classifier",
+                Messages.classifierTooltip,
                 classifierObservable,
                 ctx,
                 false,
@@ -534,12 +539,14 @@ public class ImportExtensionPage implements ControlSupplier {
 
     private TextWidget createText(Composite parent,
             String label,
+            String tooltip,
             IObservableValue<String> binding,
             DataBindingContext ctx,
             boolean mandatory,
             List<IValidator> validators) {
         return new TextWidget.Builder()
                 .withLabel(label + (mandatory ? " *" : ""))
+                .withTootltip(tooltip)
                 .labelAbove()
                 .grabHorizontalSpace()
                 .bindTo(binding)

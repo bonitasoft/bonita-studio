@@ -385,6 +385,8 @@ public class Messages extends NLS {
     public static String processDiagram;
     public static String refresh;
     public static String refreshTooltip;
+    public static String classifierTooltip;
+    public static String depArtifactIdTootltip;
 
     static {
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);
