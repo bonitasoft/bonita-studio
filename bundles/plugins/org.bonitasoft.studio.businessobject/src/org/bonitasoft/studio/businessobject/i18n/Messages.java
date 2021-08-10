@@ -512,6 +512,7 @@ public class Messages extends NLS {
     public static String bdmOverviewContribution;
     public static String define;
     public static String openH2Console;
+    public static String eagerRelationWarning;
 
     private Messages() {
     }
