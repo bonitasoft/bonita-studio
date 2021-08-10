@@ -130,7 +130,6 @@ public class RuntimeBOMMigrationStep implements MavenModelMigration {
         var runtimeBOMImportDependency = runtimeBOMImportDependency();
         return dep -> Objects.equals(dep.getGroupId(), runtimeBOMImportDependency.getGroupId())
                 && Objects.equals(dep.getArtifactId(), runtimeBOMImportDependency.getArtifactId())
-                && Objects.equals(dep.getVersion(), runtimeBOMImportDependency.getVersion())
                 && Objects.equals(dep.getType(), runtimeBOMImportDependency.getType())
                 && Objects.equals(dep.getScope(), runtimeBOMImportDependency.getScope());
     }
