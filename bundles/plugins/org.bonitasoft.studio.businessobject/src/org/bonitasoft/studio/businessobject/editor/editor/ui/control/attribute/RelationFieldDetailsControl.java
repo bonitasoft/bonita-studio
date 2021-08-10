@@ -25,6 +25,7 @@ import org.bonitasoft.studio.businessobject.editor.model.RelationType;
 import org.bonitasoft.studio.businessobject.i18n.Messages;
 import org.bonitasoft.studio.businessobject.refactor.DiffElement;
 import org.bonitasoft.studio.businessobject.refactor.Event;
+import org.bonitasoft.studio.common.properties.Well;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.ui.viewer.LabelProviderBuilder;
@@ -33,6 +34,7 @@ import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.observable.Realm;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.SelectObservableValue;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jface.databinding.swt.WidgetProperties;
@@ -111,6 +113,13 @@ public class RelationFieldDetailsControl extends Composite {
         IObservableValue<FetchType> fetchTypeObservable = EMFObservables.observeDetailValue(Realm.getDefault(),
                 selectedFieldObservable, BusinessDataModelPackage.Literals.RELATION_FIELD__FETCH_TYPE);
         ctx.bindValue(radioGroupObservable, fetchTypeObservable);
+        
+        var composite = formPage.getToolkit().createComposite(this);
+        composite.setLayout(GridLayoutFactory.fillDefaults().create());
+        composite.setLayoutData(GridDataFactory.fillDefaults().create());
+        var warning = new Well(composite, Messages.eagerRelationWarning, formPage.getToolkit(), IStatus.WARNING);
+        warning.setVisible(fetchTypeObservable.getValue() == FetchType.EAGER);
+        fetchTypeObservable.addValueChangeListener(e -> warning.setVisible(e.diff.getNewValue() == FetchType.EAGER ));
     }
 
     private void createRelationKindLabel() {

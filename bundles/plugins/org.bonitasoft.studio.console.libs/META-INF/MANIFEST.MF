@@ -109,7 +109,6 @@ Export-Package:
  org.bonitasoft.engine.tenant;version="0.0.0",
  org.bonitasoft.engine.theme;version="0.0.0",
  org.bonitasoft.engine.theme.exception;version="0.0.0",
- org.bonitasoft.engine.theme.impl;version="0.0.0",
  org.bonitasoft.engine.util;version="0.0.0",
  org.bonitasoft.engine.xml;version="0.0.0",
  org.bonitasoft.engine.xml.parser;version="0.0.0",
