@@ -16,7 +16,6 @@ package org.bonitasoft.studio.common.repository.core.maven.migration.model;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashSet;
@@ -25,7 +24,6 @@ import java.util.Optional;
 import java.util.Properties;
 import java.util.Set;
 import java.util.jar.JarFile;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.maven.artifact.Artifact;
@@ -96,7 +94,7 @@ public class DependencyLookup {
     }
 
     private File copy(String fileName) {
-        File file = new File(fileName);
+        var file = new File(fileName);
         if (file.isFile()) {
             String name = file.getName();
             try {
@@ -120,7 +118,7 @@ public class DependencyLookup {
         if (tmpFile != null && tmpFile.exists()) {
             try {
                 Files.deleteIfExists(tmpFile.toPath());
-                File parentFile = tmpFile.getParentFile();
+                var parentFile = tmpFile.getParentFile();
                 if (parentFile != null) {
                     Files.deleteIfExists(parentFile.toPath());
                 }
@@ -132,7 +130,7 @@ public class DependencyLookup {
 
     public static DependencyLookup fromCSV(String[] csvData) {
         if (csvData.length == 7) {
-            GAV gav = new GAV(csvData[3],
+            var gav = new GAV(csvData[3],
                     csvData[4],
                     csvData[5]);
             return new DependencyLookup(csvData[0],
@@ -143,9 +141,9 @@ public class DependencyLookup {
         }
         //Not found
         String fileName = csvData[0];
-        File file = new File(fileName);
+        var file = new File(fileName);
         String name = file.getName();
-        GAV defaultGav = new GAV(defaultGroupId(), name.replace(".jar", ""), "1.0.0");
+        var defaultGav = new GAV(defaultGroupId(), name.replace(".jar", ""), "1.0.0");
         return readPomProperties(file)
                 .map(pomProperties -> new GAV(pomProperties.getProperty("groupId"),
                         pomProperties.getProperty("artifactId"),
@@ -172,7 +170,7 @@ public class DependencyLookup {
             // Not classified
             return null;
         }
-        Matcher matcher = Pattern
+        var matcher = Pattern
                 .compile(String.format("%s-%s-(.*).jar", gav.getArtifactId(), gav.getVersion()))
                 .matcher(name);
         if (matcher.find()) {
@@ -187,14 +185,17 @@ public class DependencyLookup {
 
     public static Optional<Properties> readPomProperties(File file) {
         var fileName = file.getName();
-        String fileNameWithoutExtension = fileName.substring(0, fileName.length() - 4);
-        try (JarFile jarFile = new JarFile(file)) {
+        if(fileName.indexOf(".") == -1) {
+            return Optional.empty();
+        }
+        var fileNameWithoutExtension = fileName.substring(0, fileName.length() - 4);
+        try (var jarFile = new JarFile(file)) {
             return jarFile.stream()
                     .filter(entry -> entry.getName()
                             .matches("META-INF/maven/[^/]*/[^/]*/pom.properties"))
                     .map(entry -> {
-                        Properties properties = new Properties();
-                        try (InputStream is = jarFile.getInputStream(entry)) {
+                        var properties = new Properties();
+                        try (var is = jarFile.getInputStream(entry)) {
                             properties.load(is);
                             return properties;
                         } catch (IOException e) {
@@ -281,7 +282,7 @@ public class DependencyLookup {
     }
 
     public Dependency toMavenDependency() {
-        Dependency dependency = new Dependency();
+        var dependency = new Dependency();
         dependency.setArtifactId(gav.getArtifactId());
         dependency.setVersion(gav.getVersion());
         if (getConflictVersion() != null) {
