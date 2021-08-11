@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Team Plugin
 Bundle-SymbolicName: org.bonitasoft.studio.team;singleton:=true
-Bundle-Version: 7.12.6.qualifier
+Bundle-Version: 7.12.7.qualifier
 Bundle-Activator: org.bonitasoft.studio.team.TeamPlugin
 Bundle-Vendor: BonitaSoft S.A.
 Bundle-Localization: plugin

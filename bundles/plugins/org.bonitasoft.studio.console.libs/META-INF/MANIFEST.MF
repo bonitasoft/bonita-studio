@@ -12,7 +12,7 @@ Bundle-Name: Bonita Community Tomcat Bundle
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-SymbolicName: org.bonitasoft.studio.console.libs;singleton:=true
 Bundle-Vendor: Bonitasoft S.A.
-Bundle-Version: 7.12.6.qualifier
+Bundle-Version: 7.12.7.qualifier
 Created-By: Apache Maven Bundle Plugin
 Eclipse-BundleShape: dir
 Embed-Dependency: *;scope=compile|runtime
