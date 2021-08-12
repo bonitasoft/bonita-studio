@@ -19,9 +19,13 @@ import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.ParameterizedCommand;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.e4.core.commands.ECommandService;
 import org.eclipse.e4.core.commands.EHandlerService;
 import org.eclipse.egit.core.GitProvider;
+import org.eclipse.egit.core.internal.indexdiff.IndexDiffCache;
+import org.eclipse.egit.core.internal.indexdiff.IndexDiffCacheEntry;
+import org.eclipse.egit.core.project.RepositoryMapping;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.window.Window;
@@ -50,15 +54,30 @@ public class CloneGitProject extends AbstractHandler {
             }
         };
         dlg.setHelpAvailable(true);
-        if (dlg.open() == Window.OK && RepositoryManager.getInstance().getCurrentRepository().isShared(GitProvider.ID)) { // To prevent npe if the authentification failed
-            PlatformUtil.openDashboardIfNoOtherEditorOpen();
-            if (new MessageDialog(activeShell, Messages.repositoryClonedTitle, null,
-                    !wizard.hasBeenMigrated() ? String.format(Messages.repositoryClonedMsg,
-                            wizard.getRepositoryName())
-                            : migrationAfterCloneMessage(wizard),
-                    MessageDialog.INFORMATION, 0, org.bonitasoft.studio.importer.i18n.Messages.deploy,
-                    IDialogConstants.CLOSE_LABEL).open() == 0) {
-                executeCommand("org.bonitasoft.studio.application.command.deployArtifacts");
+
+        if (dlg.open() == Window.OK) { // To prevent npe if the authentification failed
+            var currentRepository = RepositoryManager.getInstance().getCurrentRepository();
+            if (currentRepository.isShared(GitProvider.ID)) {
+                IProject project = currentRepository.getProject();
+                var mapping = RepositoryMapping.getMapping(project);
+                if (mapping != null && mapping.getRepository() != null) {
+                    IndexDiffCacheEntry entry = IndexDiffCache.getInstance()
+                            .getIndexDiffCacheEntry(mapping.getRepository());
+                    if (entry != null) {
+                        entry.createRefreshResourcesAndIndexDiffJob().schedule();
+                    }
+                }
+                
+                PlatformUtil.openDashboardIfNoOtherEditorOpen();
+
+                if (new MessageDialog(activeShell, Messages.repositoryClonedTitle, null,
+                        !wizard.hasBeenMigrated() ? String.format(Messages.repositoryClonedMsg,
+                                wizard.getRepositoryName())
+                                : migrationAfterCloneMessage(wizard),
+                        MessageDialog.INFORMATION, 0, org.bonitasoft.studio.importer.i18n.Messages.deploy,
+                        IDialogConstants.CLOSE_LABEL).open() == 0) {
+                    executeCommand("org.bonitasoft.studio.application.command.deployArtifacts");
+                }
             }
         }
     }
