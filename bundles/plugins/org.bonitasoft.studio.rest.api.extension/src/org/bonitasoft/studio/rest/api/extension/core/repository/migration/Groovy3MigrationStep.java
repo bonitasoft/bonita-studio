@@ -33,6 +33,7 @@ import org.codehaus.plexus.util.xml.Xpp3Dom;
 
 public class Groovy3MigrationStep implements MavenModelMigration {
 
+    private static final String GROOVY_COMPILER_VERSION = "groovy-eclipse-batch.version";
     private static final String GROOVY_VERSION_PROPERTY = "groovy.version";
     private static final String GROOVY_ALL_VERSION_PROPERTY = "groovy-all.version";;
     private static final String MAVEN_SUREFIRE_PLUGIN_VERSION = "2.22.2";
@@ -50,7 +51,7 @@ public class Groovy3MigrationStep implements MavenModelMigration {
         properties.setProperty("maven-compiler-plugin.version", "3.8.1");
         properties.setProperty("maven-surefire-plugin.version", MAVEN_SUREFIRE_PLUGIN_VERSION);
         properties.setProperty("groovy-eclipse-compiler.version", "3.7.0");
-        properties.setProperty("groovy-eclipse-batch.version", "3.0.8-01");
+        properties.setProperty(GROOVY_COMPILER_VERSION, "3.0.8-01");
         properties.setProperty("spock.version", SPOCK_VERSION);
 
         var existingGroovyVersion = properties.getOrDefault(GROOVY_VERSION_PROPERTY, "2.4.x");
@@ -125,7 +126,7 @@ public class Groovy3MigrationStep implements MavenModelMigration {
                                                 "`maven-surefire-plugin` plugin version has been fixed to `%s`",
                                                 MAVEN_SUREFIRE_PLUGIN_VERSION));
                                     });
-           
+
             build.setPluginManagement(pluginManagement);
         }
 
@@ -174,6 +175,8 @@ public class Groovy3MigrationStep implements MavenModelMigration {
         if (model.getBuild() != null) {
             String groovyVersion = model.getProperties().getProperty(GROOVY_VERSION_PROPERTY);
             String groovyAllVersion = model.getProperties().getProperty(GROOVY_ALL_VERSION_PROPERTY);
+            String groovyCompilerVersion = model.getProperties().getProperty(GROOVY_COMPILER_VERSION);
+
             // Already using Groovy 3
             if (groovyVersion != null && !groovyVersion.isBlank()
                     && _3_0_0.compareTo(new ComparableVersion(groovyVersion)) < 0) {
@@ -181,6 +184,10 @@ public class Groovy3MigrationStep implements MavenModelMigration {
             }
             if (groovyAllVersion != null && !groovyAllVersion.isBlank()
                     && _3_0_0.compareTo(new ComparableVersion(groovyAllVersion)) < 0) {
+                return false;
+            }
+            if (groovyCompilerVersion != null && !groovyCompilerVersion.isBlank()
+                    && _3_0_0.compareTo(new ComparableVersion(groovyCompilerVersion)) < 0) {
                 return false;
             }
 
