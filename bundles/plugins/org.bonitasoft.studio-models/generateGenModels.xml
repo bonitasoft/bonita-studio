@@ -1,0 +1,57 @@
+<!--
+ * Copyright (C) 2012 BonitaSoft S.A.
+ * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2.0 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ -->
+<project name="org.bonitasoft.studio-build" default="generate" xmlns:gmfAnt="http://ecliptical.ca/gmf/ant">
+
+	<taskdef classpath="antTasks/bonita_antTasks.jar" name="refreshWorkspace" classname="org.bonitasoft.studio.antTasks.RefreshWorkspaceTask" />
+	<taskdef classpath="antTasks/ant-contrib-0.6.jar" name="propertyregex" classname="net.sf.antcontrib.property.RegexTask" />
+
+	<target name="generate">
+		<copy todir="${workspacePath}/org.bonitasoft.studio-models">
+			<fileset dir="${basedir}" />
+		</copy>
+		
+		<propertyregex property="plugin.version.replaced"
+		               input="${plugin.version}"
+					   defaultvalue="${plugin.version}"
+		               regexp="\-SNAPSHOT"
+		               replace="\.qualifier"
+		               global="true" />
+		 <echo>Replace version in generation templates</echo>
+		 <replace token="%VERSION_TOKEN%" value="${plugin.version.replaced}" file="${workspacePath}/org.bonitasoft.studio-models/process.gmfgen" />
+		 <replace token="%VERSION_TOKEN%" value="${plugin.version.replaced}" file="${workspacePath}/org.bonitasoft.studio-models/EMFTemplates/edit/manifest.mfjet" />
+		 <replace token="%VERSION_TOKEN%" value="${plugin.version.replaced}" file="${workspacePath}/org.bonitasoft.studio-models/EMFTemplates/model/manifest.mfjet" />
+		
+		<refreshWorkspace project="org.bonitasoft.studio-models" />
+		
+		<emf.Ecore2Java modelpluginid="org.bonitasoft.studio.model" modelproject="org.bonitasoft.studio.model" model="process.ecore" genmodel="process.genmodel" modelprojectfragmentpath="src" reconcilegenmodel="keep" generatejavacode="true" generatemodelproject="true" generateeditproject="true" generateeditorproject="false" generatetestsproject="false" templatepath="EMFTemplates/" autobuild="false" jdklevel="7.0">
+		</emf.Ecore2Java>
+		<gmfAnt:GenerateDiagramCode gmfgenPath="org.bonitasoft.studio-models/process.gmfgen" />
+		<delete dir="${workspacePath}/org.bonitasoft.studio.model.edit/icons/full/obj16"/>
+		<delete dir="${workspacePath}/org.bonitasoft.studio.diagram/icons/obj16"/>
+		<delete file="${workspacePath}/org.bonitasoft.studio.model.edit/plugin.xml"/>
+		<copy todir="${basedir}/../org.bonitasoft.studio.model">
+			<fileset dir="${workspacePath}/org.bonitasoft.studio.model" />
+		</copy>
+		<copy todir="${basedir}/../org.bonitasoft.studio.model.edit">
+			<fileset dir="${workspacePath}/org.bonitasoft.studio.model.edit" />
+		</copy>
+		<copy todir="${basedir}/../org.bonitasoft.studio.diagram">
+			<fileset dir="${workspacePath}/org.bonitasoft.studio.diagram" />
+		</copy>
+	</target>
+</project>
