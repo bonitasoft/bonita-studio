@@ -43,7 +43,7 @@ public class RichTextEditorDocumentViewerDelegate implements IDocumentViewer {
     private InsertVariableButton insertVariableButton;
 
     public RichTextEditorDocumentViewerDelegate(Composite tabFolder) {
-        RichTextEditorConfiguration richTextEditorConfiguration = new RichTextEditorConfiguration();
+        var richTextEditorConfiguration = new RichTextEditorConfiguration();
         richTextEditorConfiguration.setToolbarCollapsible(true);
         richTextEditorConfiguration.setRemovePasteFromWord(true);
         richTextEditorConfiguration.setRemovePasteText(true);
@@ -110,7 +110,10 @@ public class RichTextEditorDocumentViewerDelegate implements IDocumentViewer {
     public void bindExpressionContentValue(DataBindingContext context,
             IObservableValue<String> expressionContentObserveValue, UpdateValueStrategy targetToModelStartegy) {
         this.expressionContentObserveValue = expressionContentObserveValue;
-        richTextEditor.setText(expressionContentObserveValue.getValue());
+        var value = expressionContentObserveValue.getValue();
+        if(value != null) {
+            richTextEditor.setText(value);
+        }
         richTextEditor.addKeyListener(new KeyAdapter() {
 
             @Override
@@ -172,11 +175,11 @@ public class RichTextEditorDocumentViewerDelegate implements IDocumentViewer {
 
         @Override
         public Object execute() {
-            VariableSelectionDialog variableSelectionDialog = new VariableSelectionDialog(getControl().getShell(),
+            var variableSelectionDialog = new VariableSelectionDialog(getControl().getShell(),
                     filteredExpressions);
             variableSelectionDialog.open();
             Expression selection = variableSelectionDialog.getSelection();
-            String variablePattern = String.format("${%s}", selection.getName());
+            var variablePattern = String.format("${%s}", selection.getName());
             if (!String.class.getName().equals(selection.getReturnType())) {
                 variablePattern = String.format("${%s.toString()}", selection.getName());
             }
@@ -184,6 +187,12 @@ public class RichTextEditorDocumentViewerDelegate implements IDocumentViewer {
             return null;
         }
 
+    }
+
+    public void dispose() {
+        if(richTextEditor != null) {
+            richTextEditor.dispose();
+        }
     }
 
 }
