@@ -36,11 +36,19 @@ public class RichPatternExpressionViewer extends PatternExpressionViewer {
         multiEditorDelegate = new MultiEditorDocumentViewerDelegate(parent);
         Composite tabFolder = (Composite) multiEditorDelegate.getControl();
         richTextViewer = new RichTextEditorDocumentViewerDelegate(tabFolder);
-        SourceViewer textViewer = new SourceViewer(tabFolder, null, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL | SWT.H_SCROLL);
+        var textViewer = new SourceViewer(tabFolder, null, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL | SWT.H_SCROLL);
         plainTextEditor = new TextViewerDocumentViewerDelegate(textViewer);
         multiEditorDelegate.addViewer(richTextViewer, "Rich text");
         multiEditorDelegate.addViewer(plainTextEditor, "Plain text");
         return multiEditorDelegate;
+    }
+    
+    @Override
+    public void dispose() {
+        if(richTextViewer != null) {
+            richTextViewer.dispose();
+        }
+        super.dispose();
     }
 
     public void setRichTextActive(boolean activateRichText) {

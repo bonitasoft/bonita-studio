@@ -70,12 +70,13 @@ public class MailContentComponentSwitch extends PageComponentSwitch {
         ConnectorParameter htmlParamater = connectorConfigurationSupport.getConnectorParameter("html",
                 object, input);
         Expression htmlExpression = (Expression) htmlParamater.getExpression();
-        return ExpressionConstants.CONSTANT_TYPE.equals(htmlExpression.getType()) && "true".equalsIgnoreCase(htmlExpression.getContent());
+        return ExpressionConstants.CONSTANT_TYPE.equals(htmlExpression.getType())
+                && "true".equalsIgnoreCase(htmlExpression.getContent());
     }
 
     private RichPatternExpressionViewer createRichTextEditorViewer(final Composite composite, final TextArea object,
             final Input input, final ConnectorParameter parameter) {
-        final RichPatternExpressionViewer richTextViewer = new RichPatternExpressionViewer(composite, SWT.NONE);
+        var richTextViewer = new RichPatternExpressionViewer(composite, SWT.NONE);
         richTextViewer.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(500, 300).create());
         richTextViewer.addFilter(getConnectorExpressionContentTypeFilter());
 
@@ -85,7 +86,7 @@ public class MailContentComponentSwitch extends PageComponentSwitch {
             richTextViewer.setHint(desc);
         }
 
-        final UpdateValueStrategy startegy = new UpdateValueStrategy();
+        var startegy = new UpdateValueStrategy();
         if (input.isMandatory()) {
             startegy.setAfterConvertValidator(new EmptyInputValidator(getLabel(object.getId())));
         }
@@ -96,7 +97,13 @@ public class MailContentComponentSwitch extends PageComponentSwitch {
         richTextViewer.setInput(parameter);
         richTextViewer.setContextInput(getContainer());
         richTextViewer.setExpression(exp);
+
+        composite.addDisposeListener(e -> {
+            if (richTextViewer != null) {
+                richTextViewer.dispose();
+            }
+        });
         return richTextViewer;
     }
-  
+
 }
