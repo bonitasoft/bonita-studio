@@ -25,6 +25,8 @@ import java.util.Objects;
 import java.util.Properties;
 import java.util.stream.Stream;
 
+import javax.net.ssl.HttpsURLConnection;
+
 import org.bonitasoft.studio.application.contribution.IPreStartupContribution;
 import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.common.RedirectURLBuilder;
@@ -92,6 +94,8 @@ public class BonitaStudioApplication extends JobChangeAdapter implements IApplic
         }
 
         initWorkspaceLocation();
+        // Disable SSL hostname verification, See STUDIO-4101
+        HttpsURLConnection.setDefaultHostnameVerifier((hostname, session) -> Boolean.TRUE);
         executePreStartupContributions();
 
         //set our custom operation factory
