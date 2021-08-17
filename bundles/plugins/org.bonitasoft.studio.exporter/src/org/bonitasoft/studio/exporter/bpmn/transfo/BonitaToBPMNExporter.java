@@ -433,7 +433,7 @@ public class BonitaToBPMNExporter {
                 final TImport tImportBonitaConnector = ModelFactory.eINSTANCE.createTImport();
                 tImportBonitaConnector.setImportType("http://www.w3.org/2001/XMLSchema");
                 tImportBonitaConnector.setLocation(locationImport);
-                tImportBonitaConnector.setNamespace("http://www.bonitasoft.org/studio/connector/definition/6.0");
+                tImportBonitaConnector.setNamespace("http://www.bonitasoft.org/studio/connector/definition/6.1");
                 definitions.getImport().add(tImportBonitaConnector);
             }
         }
@@ -461,8 +461,8 @@ public class BonitaToBPMNExporter {
         //FIXME: this is only a workaround because currently we can't serialize the xml file in a way that both EMF and xslt can handle it correctly
         // see http://java.dzone.com/articles/emf-reading-model-xml-%E2%80%93-how
         var content = Files.readString(connectorToTransformWC.toPath(), StandardCharsets.UTF_8);
-        content = content.replaceAll("xmlns:definition=\"http://www.bonitasoft.org/ns/connector/definition/6.0\"",
-                "xmlns=\"http://www.bonitasoft.org/ns/connector/definition/6.0\" xmlns:definition=\"http://www.bonitasoft.org/ns/connector/definition/6.0\"");
+        content = content.replaceAll("xmlns:definition=\"http://www.bonitasoft.org/ns/connector/definition/6.1\"",
+                "xmlns=\"http://www.bonitasoft.org/ns/connector/definition/6.1\" xmlns:definition=\"http://www.bonitasoft.org/ns/connector/definition/6.1\"");
         Files.writeString(connectorToTransformWC.toPath(), content);
 
         final Source xmlSource = new StreamSource(connectorToTransformWC);
@@ -806,7 +806,7 @@ public class BonitaToBPMNExporter {
             populateContainer(shapeFactory, pool, bpmnProcess, null, poolBounds, modelSearch);
         } else {
             TLaneSet laneSet = ModelFactory.eINSTANCE.createTLaneSet();
-            laneSet.setId(bpmnProcess.getName() + "_laneSet");
+            laneSet.setId(Strings.slugify(bpmnProcess.getName()) + "_laneSet");
             bpmnProcess.getLaneSet().add(laneSet);
             lanes.stream().forEach(lane -> {
                 final TLane bpmnLane = ModelFactory.eINSTANCE.createTLane();
