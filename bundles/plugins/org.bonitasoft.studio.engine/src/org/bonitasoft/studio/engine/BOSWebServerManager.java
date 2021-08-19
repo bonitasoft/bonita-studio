@@ -88,8 +88,8 @@ public class BOSWebServerManager implements IBonitaProjectListener {
     public static final String SERVER_CONFIGURATION_PROJECT = "server_configuration";
     private static final String LOGINSERVICE_PATH = "/bonita/loginservice?";
     protected static final String WEBSERVERMANAGER_EXTENSION_ID = "org.bonitasoft.studio.engine.bonitaWebServerManager";
-    protected static final String TOMCAT_SERVER_TYPE = "org.eclipse.jst.server.tomcat.85";
-    protected static final String TOMCAT_RUNTIME_TYPE = "org.eclipse.jst.server.tomcat.runtime.85";
+    protected static final String TOMCAT_SERVER_TYPE = "org.eclipse.jst.server.tomcat.90";
+    protected static final String TOMCAT_RUNTIME_TYPE = "org.eclipse.jst.server.tomcat.runtime.90";
     protected static final String START_TIMEOUT = "start-timeout";
 
     protected static final String TMP_DIR = ProjectUtil.getBonitaStudioWorkFolder().getAbsolutePath();
@@ -108,7 +108,7 @@ public class BOSWebServerManager implements IBonitaProjectListener {
     private PortConfigurator portConfigurator;
     private IStatus startResult;
 
-    public synchronized static BOSWebServerManager getInstance() {
+    public static synchronized BOSWebServerManager getInstance() {
         if (INSTANCE == null) {
             INSTANCE = createInstance();
         }
