@@ -40,6 +40,7 @@ import org.bonitasoft.engine.profile.ProfileNotFoundException;
 import org.bonitasoft.engine.search.SearchOptionsBuilder;
 import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.core.ActiveOrganizationProvider;
 import org.bonitasoft.studio.engine.operation.ApplicationURLBuilder;
@@ -49,7 +50,14 @@ public class DeployedAppContentProvider {
 
     private String selection;
     private List<ApplicationItem> applications;
-    private static final Set<String> BONITA_APPS_TOKENS = Set.of("adminAppBonita", "userAppBonita");
+    private static Set<String> BONITA_APPS_TOKENS;
+    static {
+        if (PlatformUtil.isACommunityBonitaProduct()) {
+            BONITA_APPS_TOKENS = Set.of("adminAppBonita", "userAppBonita");
+        } else {
+            BONITA_APPS_TOKENS = Set.of("adminAppEEBonita", "userAppBonita");
+        }
+    }
 
     public DeployedAppContentProvider(IStatus status, ApplicationAPI appAPI, ProfileAPI profileAPI,
             UserAPI userAPI) {
