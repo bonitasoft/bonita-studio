@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin>
+
+   <extension-point id="import" name="import" schema="schema/import.exsd"/>
+
+   <extension
+         point="org.bonitasoft.studio.importer.import">
+      <importFactory
+            description="%import_BPM2_desc"
+            filterExtensions="*.bpmn,*.xml"
+            importerFactoryClass="org.bonitasoft.studio.importer.bpmn.BPMNToProcFactory"
+            inputName="BPMN 2.0"
+            menuIcon="icon/bpmn-desc.png"
+            priorityDisplay="3">
+      </importFactory>
+   </extension>
+   <extension
+         point="org.bonitasoft.studio.coolbarContributionItem">
+      <coolbarItem
+            class="org.bonitasoft.studio.importer.coolbar.ImportBarCoolbarItem"
+            priority="0"
+            toolbarPosition="4">
+      </coolbarItem>
+   </extension>
+   <extension
+         id="org.bonitasoft.studio.importer.fragment"
+         point="org.eclipse.e4.workbench.model">
+      <fragment
+            uri="fragment.e4xmi"
+            apply="always">
+      </fragment>
+   </extension>
+
+</plugin>
