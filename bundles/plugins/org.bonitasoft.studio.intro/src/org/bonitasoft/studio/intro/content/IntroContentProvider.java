@@ -92,6 +92,13 @@ public class IntroContentProvider implements IIntroXHTMLContentProvider {
         } catch (IOException e) {
             BonitaStudioLog.error(e);
         }
+        try {
+            CONTENT_PROVIDERS.add(new ExecuteCommandContentProvider("getting-started-bos-link",
+                    "org.bonitasoft.studio.importer.bos.command", Messages.importGettingStarted,
+                    buildImportParameters("734", null)));
+        } catch (IOException e) {
+            BonitaStudioLog.error(e);
+        }
 
         CONTENT_PROVIDERS.add(new SectionTitleContentProvider("design-title", Messages.design));
         CONTENT_PROVIDERS.add(new SectionTitleContentProvider("recent-title", Messages.recent));
@@ -141,10 +148,10 @@ public class IntroContentProvider implements IIntroXHTMLContentProvider {
     }
 
     protected static Map<String, Object> buildImportParameters(String redirectId, String projectName)
-            throws  IOException {
+            throws IOException {
         return buildImportParameters(redirectId, "bos", projectName);
     }
-    
+
     private static String productId() {
         return PlatformUtil.isACommunityBonitaProduct() ? "bos" : "sp";
     }
@@ -171,7 +178,6 @@ public class IntroContentProvider implements IIntroXHTMLContentProvider {
                 ProductVersion.maintenanceVersion(),
                 includeSEOParams ? SEO_PARAMS : "");
     }
-
 
     @Override
     public void createContent(String id, Element parent) {

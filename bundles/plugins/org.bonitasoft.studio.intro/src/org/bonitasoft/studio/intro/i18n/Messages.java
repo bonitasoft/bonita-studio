@@ -48,5 +48,6 @@ public class Messages extends NLS {
     public static String clone;
     public static String switchProject;
     public static String importAdminApplication;
+    public static String importGettingStarted;
 
 }
