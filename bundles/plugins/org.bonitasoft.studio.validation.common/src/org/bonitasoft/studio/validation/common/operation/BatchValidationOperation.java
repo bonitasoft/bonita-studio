@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.concurrent.atomic.AtomicReference;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.model.process.MainProcess;
@@ -47,6 +48,7 @@ import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.osgi.util.NLS;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IWorkbenchPage;
@@ -67,7 +69,7 @@ public class BatchValidationOperation extends WorkspaceModifyOperation {
 
     public BatchValidationOperation(final OffscreenEditPartFactory offscreenEditPartFactory,
             final ValidationMarkerProvider validationMarkerProvider,
-            IBatchValidator batchValidator ) {
+            IBatchValidator batchValidator) {
         this.offscreenEditPartFactory = offscreenEditPartFactory;
         this.validationMarkerProvider = validationMarkerProvider;
         this.batchValidator = batchValidator;
@@ -77,7 +79,7 @@ public class BatchValidationOperation extends WorkspaceModifyOperation {
     protected void execute(final IProgressMonitor monitor)
             throws CoreException, InvocationTargetException, InterruptedException {
         try {
-            if(diagramsToDiagramEditPart.isEmpty()) {
+            if (diagramsToDiagramEditPart.isEmpty()) {
                 return;
             }
             buildEditPart();
@@ -95,7 +97,7 @@ public class BatchValidationOperation extends WorkspaceModifyOperation {
                 }
             }
             status = createStatus();
-        }finally {
+        } finally {
             offscreenEditPartFactory.dispose();
             diagramsToDiagramEditPart.clear();
         }
@@ -112,7 +114,8 @@ public class BatchValidationOperation extends WorkspaceModifyOperation {
         final Diagnostic diagnostic = validationMarkerProvider.runEMFValidator(view);
         validationMarkerProvider.createMarkers(target, diagnostic, diagramEditPart);
         if (view.isSetElement() && view.getElement() != null && view.getElement().eResource() != null) {
-            validationMarkerProvider.createMarkers(target, batchValidator.validate(view.getElement(), monitor), diagramEditPart);
+            validationMarkerProvider.createMarkers(target, batchValidator.validate(view.getElement(), monitor),
+                    diagramEditPart);
         }
     }
 
@@ -125,15 +128,20 @@ public class BatchValidationOperation extends WorkspaceModifyOperation {
     }
 
     protected DiagramEditPart retrieveEditPartFromOpenedEditors(final Diagram d) {
-        final IWorkbenchPage activePage = getActivePage();
-        if (activePage != null) {
-            for (final IEditorReference ep : activePage.getEditorReferences()) {
+        AtomicReference<IWorkbenchPage> activePage = new AtomicReference<>();
+        Display.getDefault().syncExec(() -> {
+            if (PlatformUI.isWorkbenchRunning() && PlatformUI.getWorkbench().getActiveWorkbenchWindow() != null) {
+                activePage.set(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage());
+            }
+        });
+        if (activePage.get() != null) {
+            for (final IEditorReference ep : activePage.get().getEditorReferences()) {
                 final IEditorPart editor = ep.getEditor(false);
                 if (editor instanceof DiagramEditor
                         && ((DiagramEditor) editor).getDiagram().equals(d)
                         && ((DiagramEditor) editor).getDiagramEditPart() != null) {
-                        return ((DiagramEditor) editor).getDiagramEditPart();
-                    }
+                    return ((DiagramEditor) editor).getDiagramEditPart();
+                }
             }
         }
         return null;
@@ -149,13 +157,6 @@ public class BatchValidationOperation extends WorkspaceModifyOperation {
                 offscreenDiagramEditPart = offscreenEditPartFactory.createOffscreenDiagramEditPart(d);
             }
             return offscreenDiagramEditPart;
-        }
-        return null;
-    }
-
-    protected IWorkbenchPage getActivePage() {
-        if (PlatformUI.isWorkbenchRunning() && PlatformUI.getWorkbench().getActiveWorkbenchWindow() != null) {
-            return PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
         }
         return null;
     }
@@ -182,7 +183,7 @@ public class BatchValidationOperation extends WorkspaceModifyOperation {
         }
         return result;
     }
-    
+
     private void buildMultiStatus(final IFile target, final MultiStatus result) throws CoreException {
         String fileName = target.getName();
         fileName = fileName.substring(0, fileName.lastIndexOf("."));
