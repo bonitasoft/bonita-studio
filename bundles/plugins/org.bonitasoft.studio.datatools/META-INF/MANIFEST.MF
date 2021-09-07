@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Datatools plugin
 Bundle-SymbolicName: org.bonitasoft.studio.datatools
-Bundle-Version: 7.13.0.qualifier
+Bundle-Version: 7.13.0.W36-04
 Bundle-Activator: org.bonitasoft.studio.datatools.DatatoolsPlugin
 Bundle-Vendor: BonitaSoft S.A.
 Require-Bundle: org.eclipse.ui,
