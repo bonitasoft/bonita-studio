@@ -11,6 +11,7 @@ package org.bonitasoft.studio.team.git.core;
 import java.util.HashMap;
 
 import org.bonitasoft.studio.common.ProductVersion;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.team.git.i18n.Messages;
@@ -20,6 +21,9 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.ParameterizedCommand;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.e4.core.commands.ECommandService;
 import org.eclipse.e4.core.commands.EHandlerService;
 import org.eclipse.egit.core.GitProvider;
@@ -59,6 +63,11 @@ public class CloneGitProject extends AbstractHandler {
             var currentRepository = RepositoryManager.getInstance().getCurrentRepository();
             if (currentRepository.isShared(GitProvider.ID)) {
                 IProject project = currentRepository.getProject();
+                try {
+                    project.refreshLocal(IResource.DEPTH_INFINITE, new NullProgressMonitor());
+                } catch (CoreException e) {
+                    BonitaStudioLog.error(e);
+                }
                 var mapping = RepositoryMapping.getMapping(project);
                 if (mapping != null && mapping.getRepository() != null) {
                     IndexDiffCacheEntry entry = IndexDiffCache.getInstance()
@@ -67,7 +76,7 @@ public class CloneGitProject extends AbstractHandler {
                         entry.createRefreshResourcesAndIndexDiffJob().schedule();
                     }
                 }
-                
+
                 PlatformUtil.openDashboardIfNoOtherEditorOpen();
 
                 if (new MessageDialog(activeShell, Messages.repositoryClonedTitle, null,
