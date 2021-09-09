@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Living application support plugin-in
 Bundle-SymbolicName: org.bonitasoft.studio.la;singleton:=true
-Bundle-Version: 7.13.0.qualifier
+Bundle-Version: 7.13.0.W36-05
 Bundle-Activator: org.bonitasoft.studio.la.LivingApplicationPlugin
 Bundle-Vendor: BonitaSoft S.A.
 Bundle-Localization: plugin
