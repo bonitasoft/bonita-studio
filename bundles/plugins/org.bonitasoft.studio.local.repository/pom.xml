@@ -62,7 +62,7 @@
                 <artifactId>exec-maven-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>package-offline-repository</id>
+                        <id>package-dependencies</id>
                         <goals>
                             <goal>exec</goal>
                         </goals>
@@ -72,7 +72,25 @@
                             <executable>${mavenWrapper}</executable>
                             <useMavenLogger>true</useMavenLogger>
                             <arguments>
-                                <argument>org.apache.maven.plugins:maven-dependency-plugin:${maven-dependency-plugin.version}:go-offline</argument>
+                                <argument>org.apache.maven.plugins:maven-dependency-plugin:${maven-dependency-plugin.version}:resolve</argument>
+                                <argument>-Dmaven.repo.local=${repository.dir}</argument>
+                                <argument>-Dbonita.runtime.version=${engine.version}</argument>
+                                <argument>-Dbonita-project-maven-plugin.version=${bonita-project-report-model.version}</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>package-dependency-plugins</id>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <phase>generate-resources</phase>
+                        <configuration>
+                            <workingDirectory>${project.basedir}/src/template</workingDirectory>
+                            <executable>${mavenWrapper}</executable>
+                            <useMavenLogger>true</useMavenLogger>
+                            <arguments>
+                                <argument>org.apache.maven.plugins:maven-dependency-plugin:${maven-dependency-plugin.version}:resolve-plugins</argument>
                                 <argument>-Dmaven.repo.local=${repository.dir}</argument>
                                 <argument>-Dbonita.runtime.version=${engine.version}</argument>
                                 <argument>-Dbonita-project-maven-plugin.version=${bonita-project-report-model.version}</argument>
