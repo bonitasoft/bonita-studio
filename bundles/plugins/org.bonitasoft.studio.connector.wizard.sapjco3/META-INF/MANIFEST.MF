@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Sapjco3 Connector Wizard Plugin
 Bundle-SymbolicName: org.bonitasoft.studio.connector.wizard.sapjco3;singleton:=true
-Bundle-Version: 7.13.0.qualifier
+Bundle-Version: 7.14.0.qualifier
 Bundle-Activator: org.bonitasoft.studio.connector.wizard.sapjco3.Activator
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
