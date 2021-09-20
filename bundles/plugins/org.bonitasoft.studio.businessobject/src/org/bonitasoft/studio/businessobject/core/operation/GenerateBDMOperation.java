@@ -24,6 +24,7 @@ import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+import org.apache.maven.artifact.Artifact;
 import org.bonitasoft.engine.bdm.model.BusinessObjectModel;
 import org.bonitasoft.engine.business.data.generator.AbstractBDMJarBuilder;
 import org.bonitasoft.engine.business.data.generator.client.ClientBDMJarBuilder;
@@ -116,15 +117,16 @@ public class GenerateBDMOperation implements IRunnableWithProgress {
     }
 
     protected IEventBroker eventBroker() {
-        return (IEventBroker) PlatformUI.getWorkbench().getService(IEventBroker.class);
+        return PlatformUI.getWorkbench().getService(IEventBroker.class);
     }
 
     protected void removeDependency() {
         try {
             BDMArtifactDescriptor loadArtifactDescriptor = fileStore.loadArtifactDescriptor();
-            RemoveDependencyOperation operation = new RemoveDependencyOperation(loadArtifactDescriptor.getGroupId(), BDM_CLIENT, loadArtifactDescriptor.getVersion());
+            RemoveDependencyOperation operation = new RemoveDependencyOperation(loadArtifactDescriptor.getGroupId(),
+                    BDM_CLIENT, loadArtifactDescriptor.getVersion(), Artifact.SCOPE_PROVIDED);
             new WorkspaceJob("Remove Project BDM dependency") {
-                
+
                 @Override
                 public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
                     operation.run(monitor);
@@ -132,7 +134,7 @@ public class GenerateBDMOperation implements IRunnableWithProgress {
                 }
             }.schedule();
         } catch (CoreException e) {
-           BonitaStudioLog.error(e);
+            BonitaStudioLog.error(e);
         }
     }
 

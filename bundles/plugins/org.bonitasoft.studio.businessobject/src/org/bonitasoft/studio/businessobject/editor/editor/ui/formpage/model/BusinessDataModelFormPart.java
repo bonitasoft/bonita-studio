@@ -23,6 +23,7 @@ import java.util.function.Supplier;
 
 import javax.xml.bind.JAXBException;
 
+import org.apache.maven.artifact.Artifact;
 import org.bonitasoft.studio.businessobject.BusinessObjectPlugin;
 import org.bonitasoft.studio.businessobject.core.operation.DeployBDMJob;
 import org.bonitasoft.studio.businessobject.core.operation.GenerateBDMOperation;
@@ -136,7 +137,7 @@ public class BusinessDataModelFormPart extends AbstractFormPart {
             formPage.getEditorContribution().doSave(new NullProgressMonitor());
             BDMArtifactDescriptor loadArtifactDescriptor = formPage.getEditorContribution().loadBdmArtifactDescriptor();
             RemoveDependencyOperation operation = new RemoveDependencyOperation(oldValue,
-                    GenerateBDMOperation.BDM_CLIENT, loadArtifactDescriptor.getVersion());
+                    GenerateBDMOperation.BDM_CLIENT, loadArtifactDescriptor.getVersion(), Artifact.SCOPE_PROVIDED);
             BusinessObjectModelFileStore bdmFileStore = (BusinessObjectModelFileStore) formPage.getRepositoryAccessor()
                     .getRepositoryStore(BusinessObjectModelRepositoryStore.class)
                     .getChild(BusinessObjectModelFileStore.BOM_FILENAME, false);

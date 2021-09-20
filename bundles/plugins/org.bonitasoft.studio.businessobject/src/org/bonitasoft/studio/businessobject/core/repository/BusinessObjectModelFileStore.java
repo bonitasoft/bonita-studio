@@ -255,8 +255,7 @@ public class BusinessObjectModelFileStore extends AbstractBDMFileStore<BusinessO
         try {
             BDMArtifactDescriptor descriptor = loadArtifactDescriptor();
             RemoveDependencyOperation operation = new RemoveDependencyOperation(descriptor.getGroupId(),
-                    GenerateBDMOperation.BDM_CLIENT,
-                    descriptor.getVersion());
+                    GenerateBDMOperation.BDM_CLIENT, descriptor.getVersion(), Artifact.SCOPE_PROVIDED);
             new WorkspaceJob("Remove Project BDM dependency") {
 
                 @Override
