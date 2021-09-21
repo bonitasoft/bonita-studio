@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.bonitasoft.studio.bundles</groupId>
+		<artifactId>plugins</artifactId>
+		<version>7.13.0-SNAPSHOT</version>
+	</parent>
+	<groupId>org.bonitasoft.studio.bundles.plugins</groupId>
+	<artifactId>org.bonitasoft.studio.connector.wizard.sapjco3</artifactId>
+	<packaging>eclipse-plugin</packaging>
+
+	<build>
+		<plugins>
+				<plugin>
+					<groupId>org.eclipse.tycho</groupId>
+					<artifactId>target-platform-configuration</artifactId>
+					<configuration>
+						<filters>
+							<filter>
+								<type>eclipse-plugin</type>
+								<id>org.bonitasoft.studio.sap.dependency</id>
+								<removeAll />
+							</filter>
+						</filters>
+					</configuration>
+				</plugin>
+		</plugins>
+	</build>
+
+</project>
