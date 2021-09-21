@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
 
+import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -57,6 +58,9 @@ public class BusinessDataModelContentDescriber extends XMLContentDescriber {
         }
         final DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         dbf.setNamespaceAware(true);
+        dbf.setValidating(false);
+        dbf.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+        dbf.setAttribute(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
         try (InputStream is = new ByteArrayInputStream(stringContent.getBytes())) {
             final Document document = dbf.newDocumentBuilder().parse(is);
             final Element documentElement = document.getDocumentElement();
