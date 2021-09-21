@@ -28,7 +28,6 @@ import org.eclipse.e4.core.commands.ECommandService;
 import org.eclipse.e4.core.commands.EHandlerService;
 import org.eclipse.egit.core.GitProvider;
 import org.eclipse.egit.core.internal.indexdiff.IndexDiffCache;
-import org.eclipse.egit.core.internal.indexdiff.IndexDiffCacheEntry;
 import org.eclipse.egit.core.project.RepositoryMapping;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -70,11 +69,9 @@ public class CloneGitProject extends AbstractHandler {
                 }
                 var mapping = RepositoryMapping.getMapping(project);
                 if (mapping != null && mapping.getRepository() != null) {
-                    IndexDiffCacheEntry entry = IndexDiffCache.getInstance()
+                    IndexDiffCache.getInstance().remove(mapping.getGitDirAbsolutePath().toFile());
+                    IndexDiffCache.getInstance()
                             .getIndexDiffCacheEntry(mapping.getRepository());
-                    if (entry != null) {
-                        entry.createRefreshResourcesAndIndexDiffJob().schedule();
-                    }
                 }
 
                 PlatformUtil.openDashboardIfNoOtherEditorOpen();
