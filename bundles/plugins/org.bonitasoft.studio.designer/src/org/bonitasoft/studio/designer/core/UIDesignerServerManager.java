@@ -41,6 +41,7 @@ import org.bonitasoft.studio.common.net.PortSelector;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.IBonitaProjectListener;
 import org.bonitasoft.studio.designer.UIDesignerPlugin;
+import org.bonitasoft.studio.designer.core.resources.WorkspaceServerResource;
 import org.bonitasoft.studio.designer.i18n.Messages;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
@@ -65,7 +66,6 @@ import org.eclipse.debug.core.model.IProcess;
 import org.eclipse.jdt.internal.launching.StandardVMType;
 import org.eclipse.jdt.launching.IVMInstall;
 import org.eclipse.jdt.launching.JavaRuntime;
-import org.eclipse.jdt.launching.SocketUtil;
 import org.eclipse.ui.PlatformUI;
 import org.osgi.framework.Bundle;
 import org.restlet.resource.ClientResource;
@@ -143,12 +143,17 @@ public class UIDesignerServerManager implements IBonitaProjectListener {
                 Map<String, String> env = new HashMap<>();
                 env.put("JAVA_TOOL_OPTIONS", "-Dfile.encoding=UTF-8");
                 workingCopy.setAttribute(ILaunchManager.ATTR_ENVIRONMENT_VARIABLES, env);
+                // Avoid UID to call an eclipse workspace refresh during its initialization
+                // It can lead deadlock Studio side when trying to refresh
+                WorkspaceServerResource.disable();
                 launch = workingCopy.launch(ILaunchManager.RUN_MODE, AbstractRepository.NULL_PROGRESS_MONITOR);
                 pageDesignerURLBuilder = new PageDesignerURLFactory(getPreferenceStore());
                 if (waitForUID(pageDesignerURLBuilder)) {
                     schedule(workspaceResourceServerPort, workspaceResourceServerManager, dataRepositoryPort,
                             dataRepositoryServerManager);
                     started = true;
+                    // Re activate the workspace refresh from the UID once initilized
+                    WorkspaceServerResource.enable();
                     BonitaStudioLog.info(
                             String.format("UI Designer has been started on http://localhost:%s/bonita in %ss", port,
                                     Duration.between(start, Instant.now()).getSeconds()),
@@ -202,7 +207,7 @@ public class UIDesignerServerManager implements IBonitaProjectListener {
         var cr = new ClientResource(url.toURI());
         cr.setRetryOnError(true);
         cr.setRetryDelay(1000);
-        cr.setRetryAttempts(5);
+        cr.setRetryAttempts(15);
         cr.get();
     }
 

@@ -38,8 +38,9 @@ public class RemoveDependencyOperation extends MavenModelOperation {
 
     public RemoveDependencyOperation(String groupId,
             String artifactId,
-            String version) {
-        this(createDependency(groupId, artifactId, version, null));
+            String version,
+            String scope) {
+        this(createDependency(groupId, artifactId, version, scope));
     }
 
     @Override

@@ -19,6 +19,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
 
+import javax.xml.XMLConstants;
+import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -55,12 +57,17 @@ public class ApplicationContentDescriber extends XMLContentDescriber implements 
         if (stringContent == null || stringContent.isEmpty()) {
             return INVALID;
         }
-        final DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-        dbf.setNamespaceAware(true);
         try (InputStream is = new ByteArrayInputStream(stringContent.getBytes())) {
-            final Document document = dbf.newDocumentBuilder().parse(is);
+            final DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+            dbf.setNamespaceAware(true);
+            dbf.setValidating(false);
+            dbf.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+            dbf.setAttribute(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
+            DocumentBuilder documentBuilder = dbf.newDocumentBuilder();
+            final Document document = documentBuilder.parse(is);
             final Element documentElement = document.getDocumentElement();
-            return ModelVersion.CURRENT_APPLICATION_DESCRIPTOR_NAMESPACE.equals(documentElement.getNamespaceURI()) ? VALID : INVALID;
+            return ModelVersion.CURRENT_APPLICATION_DESCRIPTOR_NAMESPACE.equals(documentElement.getNamespaceURI())
+                    ? VALID : INVALID;
         } catch (SAXException | ParserConfigurationException e) {
             return stringContent.contains(ModelVersion.CURRENT_APPLICATION_DESCRIPTOR_NAMESPACE) ? VALID : INVALID;
         }
