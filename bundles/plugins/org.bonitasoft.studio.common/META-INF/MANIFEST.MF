@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Common code for all Bonita plugins
 Bundle-SymbolicName: org.bonitasoft.studio.common;singleton:=true
-Bundle-Version: 7.13.0.qualifier
+Bundle-Version: 7.13.1.qualifier
 Bundle-Activator: org.bonitasoft.studio.common.Activator
 Bundle-Vendor: BonitaSoft S.A.
 Require-Bundle: org.eclipse.core.runtime,
