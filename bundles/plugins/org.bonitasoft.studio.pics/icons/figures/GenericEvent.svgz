@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<svg xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" version="1.1" width="33.875" height="33.875" viewBox="0 0 33.875 33.875" id="Calque_1" xml:space="preserve"><defs id="defs251"/>
+
+<rect width="33.875" height="33.875" x="0" y="0" id="rect236" style="opacity:0;fill:#ffffff"/>
+<g id="g238">
+	<linearGradient x1="26.1929" y1="26.7397" x2="7.4482999" y2="6.8871999" id="SVGID_1_" gradientUnits="userSpaceOnUse">
+		<stop id="stop241" style="stop-color:#b8b9da;stop-opacity:1" offset="0"/>
+		<stop id="stop243" style="stop-color:#fbfbee;stop-opacity:1" offset="1"/>
+	</linearGradient>
+	<circle cx="16.938" cy="16.938" r="15.333" id="circle245" style="fill:url(#SVGID_1_);stroke:#2c6da3;stroke-width:2.70000005"/>
+	
+</g>
+</svg>
