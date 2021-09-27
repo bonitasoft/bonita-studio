@@ -17,6 +17,7 @@ package org.bonitasoft.studio.common.repository.core;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.spy;
@@ -74,6 +75,7 @@ public class CreateBonitaBPMProjectOperationTest {
     @Before
     public void setUp() throws Exception {
         createBonitaBPMProjectOperation = spy(new CreateBonitaBPMProjectOperation(workspace, "my project"));
+        doNothing().when(createBonitaBPMProjectOperation).removeExistingProjectDescriptor();
         doReturn(root).when(workspace).getRoot();
         doReturn(javaProject).when(createBonitaBPMProjectOperation).asJavaProject();
         doReturn(buildFile).when(project).getFile("build.properties");

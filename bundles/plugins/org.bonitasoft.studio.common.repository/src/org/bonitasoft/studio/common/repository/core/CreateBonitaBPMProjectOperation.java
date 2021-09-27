@@ -16,25 +16,22 @@ package org.bonitasoft.studio.common.repository.core;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.BonitaProjectNature;
 import org.bonitasoft.studio.common.repository.Messages;
-import org.eclipse.core.resources.IBuildConfiguration;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRunnable;
-import org.eclipse.core.resources.ResourceAttributes;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.QualifiedName;
 import org.eclipse.core.runtime.preferences.DefaultScope;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.jdt.core.IJavaProject;
@@ -62,18 +59,31 @@ public class CreateBonitaBPMProjectOperation implements IWorkspaceRunnable {
     public void run(final IProgressMonitor monitor) throws CoreException {
         project = workspace.getRoot().getProject(projectName);
         if (!project.exists()) {
+            // Remove existing project descriptor to sync the folder and project name
+            removeExistingProjectDescriptor();
             project.create(monitor);
             project.open(monitor);
-            if (!project.hasNature(BonitaProjectNature.NATURE_ID)) {
-                project.setDescription(
-                        new ProjectDescriptionBuilder().withProjectName(project.getName())
-                                .withComment(ProductVersion.CURRENT_VERSION).havingNatures(natures)
-                                .havingBuilders(builders).build(),
-                        monitor);
-            }
+            project.setDescription(
+                    new ProjectDescriptionBuilder()
+                            .withProjectName(project.getName())
+                            .withComment(ProductVersion.CURRENT_VERSION)
+                            .havingNatures(natures)
+                            .havingBuilders(builders)
+                            .build(),
+                    monitor);
             addBuildProperties(monitor);
         }
         createJavaProject(monitor);
+    }
+
+    void removeExistingProjectDescriptor() {
+        Path descriptor = workspace.getRoot().getLocation().toFile().toPath().resolve(projectName)
+                .resolve(".project");
+        try {
+            Files.deleteIfExists(descriptor);
+        } catch (IOException e) {
+           BonitaStudioLog.error(e);
+        }
     }
 
     private void addBuildProperties(IProgressMonitor monitor) throws CoreException {
