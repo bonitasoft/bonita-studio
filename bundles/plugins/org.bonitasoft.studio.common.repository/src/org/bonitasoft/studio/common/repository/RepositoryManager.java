@@ -201,9 +201,12 @@ public class RepositoryManager {
         return Stream.of(workspace.getRoot().getProjects())
                 .filter(project -> project.getLocation().toFile().toPath()
                         .resolve(IProjectDescription.DESCRIPTION_FILE_NAME).toFile().isFile())
-                .map(project -> project.getLocation().toFile().toPath()
-                        .resolve(IProjectDescription.DESCRIPTION_FILE_NAME).toFile())
-                .map(descriptorFile -> {
+                .map(project -> {
+                    File descriptorFile = project.getLocation()
+                            .toFile()
+                            .toPath()
+                            .resolve(IProjectDescription.DESCRIPTION_FILE_NAME)
+                            .toFile();
                     if (hasNature(descriptorFile, BonitaProjectNature.NATURE_ID)) {
                         String projectName = projectName(descriptorFile);
                         if (!projectName.equals(repository.getName())) {
