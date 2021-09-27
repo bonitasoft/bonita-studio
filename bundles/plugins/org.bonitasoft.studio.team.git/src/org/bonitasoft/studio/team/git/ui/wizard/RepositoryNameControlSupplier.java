@@ -13,7 +13,7 @@ import org.bonitasoft.studio.team.git.i18n.Messages;
 import org.bonitasoft.studio.ui.widget.TextWidget;
 import org.bonitasoft.studio.ui.wizard.ControlSupplier;
 import org.eclipse.core.databinding.DataBindingContext;
-import org.eclipse.core.databinding.beans.PojoProperties;
+import org.eclipse.core.databinding.beans.typed.PojoProperties;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -25,7 +25,7 @@ import org.eclipse.swt.widgets.Control;
 public class RepositoryNameControlSupplier implements ControlSupplier {
 
     private String repositoryName;
-    private IObservableValue repositoryNameObservable;
+    private IObservableValue<String> repositoryNameObservable;
 
     /*
      * (non-Javadoc)
@@ -38,7 +38,7 @@ public class RepositoryNameControlSupplier implements ControlSupplier {
         composite.setLayout(GridLayoutFactory.swtDefaults().create());
         composite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 
-        repositoryNameObservable = PojoProperties.value("repositoryName").observe(this);
+        repositoryNameObservable = PojoProperties.value("repositoryName", String.class).observe(this);
         new TextWidget.Builder()
                 .withLabel(Messages.workspaceLocation)
                 .useNativeRender()
