@@ -20,11 +20,15 @@ import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Objects;
 
 import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.Messages;
+import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.designer.core.UIDesignerServerManager;
+import org.bonitasoft.studio.swtbot.framework.ConditionBuilder;
 import org.bonitasoft.studio.swtbot.framework.application.BotApplicationWorkbenchWindow;
 import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
 import org.bonitasoft.studio.team.TeamRepositoryUtil;
@@ -57,14 +61,20 @@ import org.junit.runner.RunWith;
 public class ShareWithGitIT {
 
     private Path gitRepoPath;
-    private SWTGefBot bot = new SWTGefBot();
+    private static SWTGefBot bot = new SWTGefBot();
     @Rule
     public SWTGefBotRule gefBotRule = new SWTGefBotRule(bot);
     private org.eclipse.jgit.lib.Repository remote;
 
     @BeforeClass
     public static void switchToDefault() throws Exception {
-        TeamRepositoryUtil.switchToRepository(Messages.defaultRepositoryName, AbstractRepository.NULL_PROGRESS_MONITOR);
+        RepositoryAccessor repositoryAccessor = RepositoryManager.getInstance().getAccessor();
+        if(!Objects.equals(repositoryAccessor.getCurrentRepository().getName(), Messages.defaultRepositoryName)) {
+            bot.waitUntil(new ConditionBuilder()
+                    .withTest(() -> UIDesignerServerManager.getInstance().isStarted())
+                    .create(), 30000);
+            TeamRepositoryUtil.switchToRepository(Messages.defaultRepositoryName, AbstractRepository.NULL_PROGRESS_MONITOR);
+        }
     }
 
     @Before
@@ -76,6 +86,10 @@ public class ShareWithGitIT {
 
     @Test
     public void should_share_a_new_repositroy_with_Git_and_clone_it() throws Exception {
+        bot.waitUntil(new ConditionBuilder()
+                .withTest(() -> UIDesignerServerManager.getInstance().isStarted())
+                .create(), 30000);
+        
         BotApplicationWorkbenchWindow botApplicationWorkbenchWindow = new BotApplicationWorkbenchWindow(bot);
 
         AbstractRepository currentRepository = RepositoryManager.getInstance().getCurrentRepository();
