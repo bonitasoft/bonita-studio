@@ -8,6 +8,7 @@
  *******************************************************************************/
 package org.bonitasoft.studio.swtbot.framework.bdm;
 
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.bonitasoft.studio.businessobject.editor.editor.ui.control.attribute.AttributeEditionControl;
@@ -23,6 +24,7 @@ import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.SWTBot;
 import org.eclipse.swtbot.swt.finder.exceptions.WidgetNotFoundException;
 import org.eclipse.swtbot.swt.finder.keyboard.Keystrokes;
+import org.eclipse.swtbot.swt.finder.matchers.WithId;
 import org.eclipse.swtbot.swt.finder.waits.Conditions;
 import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
 import org.eclipse.swtbot.swt.finder.waits.ICondition;
@@ -32,6 +34,7 @@ import org.eclipse.swtbot.swt.finder.widgets.SWTBotTable;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTableItem;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTree;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
+import org.eclipse.swtbot.swt.finder.widgets.TimeoutException;
 
 public class BotBdmModelEditor extends BotBase {
 
@@ -117,11 +120,24 @@ public class BotBdmModelEditor extends BotBase {
 
     public BotBdmModelEditor renameBusinessObject(String packageName, String oldName, String newName) {
         SWTBotTree businessObjectTree = getBusinessObjectTree();
-        bot.waitUntil(treeItemAvailable(businessObjectTree, packageName));
+        bot.waitUntil(treeItemAvailable(businessObjectTree, packageName), 10000);
         SWTBotTreeItem packageItem = businessObjectTree.getTreeItem(packageName);
         packageItem.expand();
         bot.waitUntil(nodeAvailable(packageItem, oldName));
+        packageItem.getNode(oldName).select();
         packageItem.getNode(oldName).click();
+        bot.waitUntil(new ConditionBuilder()
+                .withTest(() -> {
+                    try {
+                        bot.waitUntil(Conditions.waitForWidget(WithId.withId(SWTBOT_ID_BO_NAME_TEXTEDITOR)), 2000, 500);
+                        return true;
+                    }catch (TimeoutException e) {
+                        packageItem.getNode(oldName).click();
+                        return false;
+                    }
+                })
+                .withFailureMessage(() -> String.format("Fails to open text cell editor to edit %s business object.", oldName))
+                .create());
         bot.textWithId(SWTBOT_ID_BO_NAME_TEXTEDITOR)
                 .setText(newName)
                 .pressShortcut(Keystrokes.CR);
@@ -316,7 +332,7 @@ public class BotBdmModelEditor extends BotBase {
                         return false;
                     }
                 })
-                .withFailureMessage(() -> String.format("The node %s isn't available", item))
+                .withFailureMessage(() -> String.format("The node %s isn't available. Available items are %s", item, Stream.of(tree.getAllItems()).map(SWTBotTreeItem::getText).collect(Collectors.joining(","))))
                 .create();
     }
 

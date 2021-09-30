@@ -87,7 +87,7 @@ public class CreateBonitaProjectOperation implements IWorkspaceRunnable {
     public MigrationReport getReport() {
         return report;
     }
-
+    
     public static MavenProjectModelBuilder newProjectBuilder(ProjectMetadata metadata) {
         var mavenProjectBuilder = new MavenProjectModelBuilder();
         mavenProjectBuilder.setDisplayName(metadata.getName());
