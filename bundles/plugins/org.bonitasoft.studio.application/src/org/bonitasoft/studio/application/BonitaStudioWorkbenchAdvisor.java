@@ -24,6 +24,7 @@ import java.util.stream.Stream;
 
 import org.apache.maven.cli.configuration.SettingsXmlConfigurationProcessor;
 import org.bonitasoft.studio.application.contribution.IPreShutdownContribution;
+import org.bonitasoft.studio.application.contribution.RecoverWorkspaceContribution;
 import org.bonitasoft.studio.application.handler.OpenReleaseNoteHandler;
 import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.common.DateUtil;
@@ -401,6 +402,8 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
 
     @Override
     public void preStartup() {
+        new RecoverWorkspaceContribution().execute();
+        
         // Initialize adapter factories and avoid deadlock at startup
         ProcessDiagramEditorPlugin.getInstance().getItemProvidersAdapterFactory();
         try {
