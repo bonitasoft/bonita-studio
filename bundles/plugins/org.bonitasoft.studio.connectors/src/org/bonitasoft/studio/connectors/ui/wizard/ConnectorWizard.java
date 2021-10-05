@@ -57,6 +57,7 @@ import org.bonitasoft.studio.connector.model.definition.wizard.SelectNameAndDesc
 import org.bonitasoft.studio.connector.model.implementation.ConnectorImplementation;
 import org.bonitasoft.studio.connector.model.implementation.wizard.AbstractDefinitionSelectionImpementationWizardPage;
 import org.bonitasoft.studio.connectors.ConnectorPlugin;
+import org.bonitasoft.studio.connectors.configuration.CustomConnectorDefinitionInput;
 import org.bonitasoft.studio.connectors.extension.CustomWizardExtension;
 import org.bonitasoft.studio.connectors.i18n.Messages;
 import org.bonitasoft.studio.connectors.repository.ConnectorDefRepositoryStore;
@@ -284,7 +285,7 @@ public class ConnectorWizard extends ExtensibleWizard implements
                         .find(definition)
                         .orElse(null);
             }
-            if (fStore != null && !fStore.isReadOnly() && cleanConfiguration(definition)) {
+            if (fStore != null && cleanConfiguration(definition)) {
                 MessageDialog.openWarning(
                         Display.getDefault().getActiveShell(),
                         Messages.configurationChangedTitle,
@@ -311,11 +312,13 @@ public class ConnectorWizard extends ExtensibleWizard implements
                 .getConfiguration();
         boolean changed = false;
         if (configuration != null) {
+            Set<String> customInputs = CustomConnectorDefinitionInput.CUSTOM_DEFINITION_INPUT.getOrDefault(definition.getId(), Set.of());
             final EList<Input> inputs = definition.getInput();
             final Set<String> inputNames = new HashSet<>();
             for (final Input in : inputs) {
                 inputNames.add(in.getName());
             }
+            customInputs.forEach(inputNames::add);
             final Set<String> connectorParamKey = new HashSet<>();
             for (final ConnectorParameter parameter : configuration
                     .getParameters()) {
