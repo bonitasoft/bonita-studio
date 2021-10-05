@@ -26,6 +26,7 @@ import java.util.stream.Collectors;
 
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.model.Dependency;
+import org.apache.maven.project.MavenProject;
 import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.application.operation.extension.participant.configuration.preview.JarAddedChange;
 import org.bonitasoft.studio.application.operation.extension.participant.configuration.preview.JarRemovedChange;
@@ -78,17 +79,23 @@ public class ProcessConfigurationUpdateParticipant implements ExtensionUpdatePar
     @Override
     public void preUpdate(IProgressMonitor monitor) {
         monitor.beginTask(Messages.preparingProcessConfigurationUpdate, IProgressMonitor.UNKNOWN);
+        try {
+            var mavenProject = getMavenProject();
+            currentArtifacts = dependenciesUpdates.stream()
+                    .filter(update -> isJarDependency(update.getCurrentDependency()))
+                    .map(update -> toArtifact(mavenProject, update.getCurrentDependency()))
+                    .collect(Collectors.toMap(a -> a, this::transitiveDependencies));
+        } catch (CoreException e) {
+            BonitaStudioLog.error(e);
+        }
 
-        currentArtifacts = dependenciesUpdates.stream()
-                .filter(update -> isJarDependency(update.getCurrentDependency()))
-                .map(update -> toArtifact(update.getCurrentDependency()))
-                .collect(Collectors.toMap(a -> a, this::transitiveDependencies));
     }
 
     @Override
-    public PreviewResult runPreview(IProgressMonitor monitor) {
+    public PreviewResult runPreview(IProgressMonitor monitor) throws CoreException {
         monitor.beginTask(Messages.updatePreview, IProgressMonitor.UNKNOWN);
 
+        var mavenProject = getMavenProject();
         previewResult = new PreviewResultImpl();
 
         var updatedArtifacts = new HashSet<Artifact>();
@@ -98,7 +105,7 @@ public class ProcessConfigurationUpdateParticipant implements ExtensionUpdatePar
                 .filter(update -> update.getUpdatedDependency() != null)
                 .filter(update -> isJarDependency(update.getUpdatedDependency()))
                 .forEach(update -> {
-                    var artifact = toArtifact(update.getUpdatedDependency());
+                    var artifact = toArtifact(mavenProject, update.getUpdatedDependency());
                     updatedArtifacts.add(artifact);
                     if (update.isRename()) {
                         updateRename.add(artifact);
@@ -128,6 +135,25 @@ public class ProcessConfigurationUpdateParticipant implements ExtensionUpdatePar
             }
         }
         return previewResult;
+    }
+
+    private MavenProject getMavenProject() throws CoreException {
+        IMavenProjectFacade projectFacade = MavenPlugin.getMavenProjectRegistry().getProject(repository.getProject());
+        var mavenProject = projectFacade.getMavenProject();
+        if (mavenProject == null) {
+            mavenProject = projectFacade.getMavenProject(new NullProgressMonitor());
+        }
+        // We wait for project artifacts to be resolved as it is done asynchronously.
+        int nbTry = 0;
+        while (mavenProject.getArtifacts().isEmpty() && nbTry < 50) {
+            try {
+                Thread.sleep(20);
+                nbTry++;
+            } catch (InterruptedException e) {
+                BonitaStudioLog.error(e);
+            }
+        }
+        return mavenProject;
     }
 
     private boolean isJarDependency(Dependency dependency) {
@@ -180,19 +206,14 @@ public class ProcessConfigurationUpdateParticipant implements ExtensionUpdatePar
         return change;
     }
 
-    private Artifact toArtifact(Dependency currentDependency) {
-        IMavenProjectFacade projectFacade = MavenPlugin.getMavenProjectRegistry().getProject(repository.getProject());
+    private Artifact toArtifact(MavenProject mavenProject, Dependency currentDependency) {
         ArtifactKey artifactKey = new ArtifactKey(currentDependency.getGroupId(), currentDependency.getArtifactId(),
                 currentDependency.getVersion(), currentDependency.getClassifier());
-        try {
-            return projectFacade.getMavenProject(new NullProgressMonitor()).getArtifacts().stream()
-                    .filter(a -> Objects.equals(new ArtifactKey(a), artifactKey))
-                    .findFirst()
-                    .orElseThrow();
-        } catch (CoreException e) {
-            BonitaStudioLog.error(e);
-            return null;
-        }
+        Set<Artifact> artifacts = mavenProject.getArtifacts();
+        return artifacts.stream()
+                .filter(a -> Objects.equals(new ArtifactKey(a), artifactKey))
+                .findFirst()
+                .orElseThrow();
     }
 
     private Set<Artifact> transitiveDependencies(Artifact artifact) {
@@ -213,7 +234,11 @@ public class ProcessConfigurationUpdateParticipant implements ExtensionUpdatePar
         monitor.beginTask(Messages.updatingConfiguration, IProgressMonitor.UNKNOWN);
 
         if (previewResult == null) {
-            previewResult = runPreview(AbstractRepository.NULL_PROGRESS_MONITOR);
+            try {
+                previewResult = runPreview(new NullProgressMonitor());
+            } catch (CoreException e) {
+                throw new InvocationTargetException(e.getCause());
+            }
         }
 
         modifiedResources = previewResult.getChanges().stream()

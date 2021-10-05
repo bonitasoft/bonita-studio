@@ -31,6 +31,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.m2e.core.MavenPlugin;
 import org.eclipse.m2e.core.embedder.ICallable;
@@ -104,7 +105,10 @@ public class BonitaProjectPlugin {
     public String getReportPath() throws CoreException {
         var mavenProjectFacade = MavenPlugin.getMavenProjectRegistry().getProject(project);
         if (mavenProjectFacade != null) {
-            var mavenProject = mavenProjectFacade.getMavenProject(AbstractRepository.NULL_PROGRESS_MONITOR);
+            var mavenProject = mavenProjectFacade.getMavenProject();
+            if(mavenProject == null) {
+                mavenProject = mavenProjectFacade.getMavenProject(new NullProgressMonitor());
+            }
             Optional<Plugin> plugin = mavenProject.getBuildPlugins().stream()
                     .filter(this::isBonitaProjectPlugin)
                     .findFirst();
