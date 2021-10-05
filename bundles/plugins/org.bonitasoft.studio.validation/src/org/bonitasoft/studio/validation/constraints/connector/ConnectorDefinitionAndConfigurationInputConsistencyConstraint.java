@@ -9,6 +9,7 @@ import org.bonitasoft.studio.connector.model.definition.AbstractDefFileStore;
 import org.bonitasoft.studio.connector.model.definition.AbstractDefinitionRepositoryStore;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
 import org.bonitasoft.studio.connector.model.definition.Input;
+import org.bonitasoft.studio.connectors.configuration.CustomConnectorDefinitionInput;
 import org.bonitasoft.studio.connectors.repository.ConnectorDefRepositoryStore;
 import org.bonitasoft.studio.identity.actors.repository.ActorFilterDefRepositoryStore;
 import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration;
@@ -26,20 +27,6 @@ public class ConnectorDefinitionAndConfigurationInputConsistencyConstraint
         extends AbstractLiveValidationMarkerConstraint {
 
     public static final String ID = "org.bonitasoft.studio.validation.constraints.connectorDefAndConfigInputConsistency";
-    private static final Set<String> IGNORED_DEFINITIONS = Set.of("scripting-groovy-script", 
-            "database-postgres",
-            "database-db2",
-            "database-oracle11g",
-            "database-h2",
-            "database-jdbc",
-            "database-postgresql92",
-            "database-mssqlserver",
-            "database-mysql",
-            "database-informix",
-            "database-teradata",
-            "database-hsqldb",
-            "database-ingres",
-            "database-sybase");
 
     @Override
     protected IStatus performLiveValidation(IValidationContext context) {
@@ -49,9 +36,6 @@ public class ConnectorDefinitionAndConfigurationInputConsistencyConstraint
     @Override
     protected IStatus performBatchValidation(IValidationContext context) {
         Connector connector = (Connector) context.getTarget();
-        if(ignoreSpecificDefinition(connector.getDefinitionId())){
-            return context.createSuccessStatus();
-        }
         AbstractDefinitionRepositoryStore<? extends AbstractDefFileStore> definitionStore = null;
         boolean isConnector = true;
         if (!(connector instanceof ActorFilter)) {
@@ -90,10 +74,6 @@ public class ConnectorDefinitionAndConfigurationInputConsistencyConstraint
         return context.createSuccessStatus();
     }
 
-    private boolean ignoreSpecificDefinition(String definitionId) {
-        return IGNORED_DEFINITIONS.contains(definitionId);
-    }
-
     protected AbstractDefFileStore getDefFileStore(
             AbstractDefinitionRepositoryStore<? extends AbstractDefFileStore> connectorDefStore,
             ConnectorDefinition def) {
@@ -107,11 +87,13 @@ public class ConnectorDefinitionAndConfigurationInputConsistencyConstraint
 
     protected IStatus checkInputConsistency(ConnectorConfiguration configuration, ConnectorDefinition def,
             IValidationContext context) {
+        Set<String> customInputs = CustomConnectorDefinitionInput.CUSTOM_DEFINITION_INPUT.getOrDefault(def.getId(), Set.of());
         List<Input> inputs = def.getInput();
         Set<String> inputNames = new HashSet<>();
         for (Input in : inputs) {
             inputNames.add(in.getName());
         }
+        customInputs.forEach(inputNames::add);
         Set<String> connectorParamKey = new HashSet<>();
         for (ConnectorParameter parameter : configuration.getParameters()) {
             connectorParamKey.add(parameter.getKey());
