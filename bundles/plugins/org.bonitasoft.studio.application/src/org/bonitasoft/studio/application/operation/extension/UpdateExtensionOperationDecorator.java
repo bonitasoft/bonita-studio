@@ -84,7 +84,11 @@ public class UpdateExtensionOperationDecorator {
         var localDependencyStore = currentRepository.getLocalDependencyStore();
         monitor.setTaskName(Messages.computingPreview);
         for (var p : participants) {
-            p.runPreview(new NullProgressMonitor());
+            try {
+                p.runPreview(new NullProgressMonitor());
+            } catch (CoreException e) {
+                throw new InvocationTargetException(e.getCause());
+            }
         }
         var previewResult = new PreviewResultImpl();
         participants.stream()
@@ -114,9 +118,9 @@ public class UpdateExtensionOperationDecorator {
         }
         // No need to trigger project validation when updating Themes or Rest API Extensions
         shouldValidateProject = dependenciesUpdates.stream()
-                    .map(DependencyUpdate::getCurrentDependency)
-                    .map(Dependency::getType)
-                    .anyMatch(type -> type == null || Objects.equals(type, "jar"));
+                .map(DependencyUpdate::getCurrentDependency)
+                .map(Dependency::getType)
+                .anyMatch(type -> type == null || Objects.equals(type, "jar"));
         return true;
     }
 

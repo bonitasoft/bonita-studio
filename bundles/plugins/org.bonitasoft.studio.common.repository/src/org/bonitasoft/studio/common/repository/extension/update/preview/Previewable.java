@@ -16,11 +16,12 @@
  */
 package org.bonitasoft.studio.common.repository.extension.update.preview;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 
 public interface Previewable {
 
-    PreviewResult runPreview(IProgressMonitor monitor);
+    PreviewResult runPreview(IProgressMonitor monitor) throws CoreException;
 
     PreviewResult getPreviewResult();
 
