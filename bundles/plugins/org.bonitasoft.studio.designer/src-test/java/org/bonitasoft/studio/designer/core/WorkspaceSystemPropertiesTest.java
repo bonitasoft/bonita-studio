@@ -78,6 +78,6 @@ public class WorkspaceSystemPropertiesTest {
     
     @Test
     public void should_create_workspacePathLocation_uid_environment_property() throws Exception {
-        assertThat(workspaceSystemProperties.getWorspacePathLocation()).isEqualTo("-Ddesigner.workspace.path="+projectFolder.toURI());
+        assertThat(workspaceSystemProperties.getWorspacePathLocation()).isEqualTo("-Ddesigner.workspace.path=\""+projectFolder.toURI()+"\"");
     }
 }
