@@ -16,7 +16,6 @@ package org.bonitasoft.studio.designer.core;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
-import java.io.File;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
@@ -41,7 +40,7 @@ public class WorkspaceSystemProperties {
     }
     
     public String getWorspacePathLocation() {
-        return aSystemProperty(UID_WORKSPACE_PATH_PROPERTIES,  repository.getProject().getLocation().toFile().toURI());
+        return aSystemProperty(UID_WORKSPACE_PATH_PROPERTIES, "\"" + repository.getProject().getLocation().toFile().toURI() + "\"");
     }
 
     public String activateSpringProfile(final String... profiles) {
