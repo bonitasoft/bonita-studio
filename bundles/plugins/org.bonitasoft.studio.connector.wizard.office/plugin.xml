@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.bonitasoft.studio.connectors.connectorWizard">
+      <connectorWizard
+            DefinitionId="document-templating"
+            priority="1"
+            useDefaultGeneratedPages="false"
+            useDefaultOutputPage="false">
+         <configurationPage
+               page="org.bonitasoft.studio.connector.wizard.office.templating.DocumentTemplatingConnectorConfigurationWizardPage">
+         </configurationPage>
+         <outputPage
+               page="org.bonitasoft.studio.connector.wizard.office.templating.DocumentTemplatingConnectorOutputWizardPage">
+         </outputPage>
+      </connectorWizard>
+      <connectorWizard
+            DefinitionId="document-converter"
+            priority="1"
+            useDefaultGeneratedPages="false"
+            useDefaultOutputPage="false">
+         <configurationPage
+               page="org.bonitasoft.studio.connector.wizard.office.converter.DocumentConverterConnectorConfigurationWizardPage">
+         </configurationPage>
+         <outputPage
+               page="org.bonitasoft.studio.connector.wizard.office.converter.DocumentConverterConnectorOutputWizardPage">
+         </outputPage>
+      </connectorWizard>
+   </extension>
+      <extension
+         point="org.eclipse.emf.validation.constraintProviders">
+      <constraintProvider
+            cache="true">
+         <package
+               namespaceUri="http://www.bonitasoft.org/ns/studio/process">
+         </package>
+         <package
+               namespaceUri="http://www.bonitasoft.org/ns/studio/expression">
+         </package>
+         <constraints
+               categories="org.bonitasoft.studio.validation.constraints.connector">
+            <constraint
+                  class="org.bonitasoft.studio.connector.wizard.office.validation.LazyLoadedBusinessObjectReferenceConstraint"
+                  id="org.bonitasoft.studio.validation.ex.constraint.officeConnectorConstraint"
+                  isEnabledByDefault="true"
+                  lang="java"
+                  mode="Batch"
+                  name="Office Connector "
+                  severity="WARNING"
+                  statusCode="0">
+               <message>
+                  {0}
+               </message>
+               <target
+                     class="Connector:http://www.bonitasoft.org/ns/studio/process">
+               </target>
+            </constraint>
+         </constraints>
+      </constraintProvider>
+      <category
+            id="org.bonitasoft.studio.validation.ex.constraints.kpi"
+            name="KPI Validation">
+      </category>
+      <category
+            id="org.bonitasoft.studio.validation.ex.constraints.connector"
+            name="Connector validation">
+      </category>
+   </extension>
+   <extension
+         point="org.eclipse.emf.validation.constraintBindings">
+      <binding
+            category="org.bonitasoft.studio.validation.constraints.connector"
+            context="org.bonitasoft.studio.validation.bonitaContext">
+      </binding>
+   </extension>
+
+</plugin>
