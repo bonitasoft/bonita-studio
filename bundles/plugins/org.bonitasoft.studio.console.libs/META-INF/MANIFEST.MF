@@ -13,7 +13,7 @@ Bundle-Name: Bonita Community Tomcat Bundle
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-SymbolicName: org.bonitasoft.studio.console.libs;singleton:=true
 Bundle-Vendor: Bonitasoft S.A.
-Bundle-Version: 7.14.0.qualifier
+Bundle-Version: 7.14.0.W42
 Eclipse-BundleShape: dir
 Export-Package: 
  org.bonitasoft.engine;version="0.0.0",
