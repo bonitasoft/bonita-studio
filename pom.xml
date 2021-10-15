@@ -193,6 +193,10 @@
 						<configuration>
 							<source>
 								project.properties["branding.version.short"] = "${branding.version}".replaceAll('-.*', '')
+                                def versionPattern = ~"([1-9]\\d*)\\.(\\d+)\\.(\\d+)(?:-([a-zA-Z0-9]+))?"
+                                def matcher = "${project.version}" =~ versionPattern
+                                def result = matcher[0..-1][0]
+                                project.properties["product.major.version"] = "${result[1]}.${result[2]}".toString()
 							</source>
 						</configuration>
 					</execution>
