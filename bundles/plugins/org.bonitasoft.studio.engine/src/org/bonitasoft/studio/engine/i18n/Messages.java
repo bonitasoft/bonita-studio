@@ -57,8 +57,6 @@ public class Messages extends NLS {
 
     public static String exportSuccessMsg;
 
-    public static String initializingUserXP;
-
     public static String waitingForEngineToStart;
 
     public static String enablingProcess;
