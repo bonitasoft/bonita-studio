@@ -44,21 +44,23 @@ public class CustomProcessDiagramEditor extends ProcessDiagramEditor {
 
     @Override
     public void init(IEditorSite site, IEditorInput input) throws PartInitException {
-        DiagramFileStore fileStore = repositoryAccessor.getRepositoryStore(DiagramRepositoryStore.class)
-                .getChild(input.getName(), true);
-        if (fileStore != null) {
-            DiagramEditor openedEditor = fileStore.getOpenedEditor();
-            if (openedEditor != null) { // Close other editors already opened for this input
-                fileStore.close();
-            }
-            try {
-                if (fileStore.getEMFResource().isLoaded()) {
-                    fileStore.getEMFResource().unload();
+        if (repositoryAccessor.getCurrentRepository().isLoaded()) {
+            DiagramFileStore fileStore = repositoryAccessor.getRepositoryStore(DiagramRepositoryStore.class)
+                    .getChild(input.getName(), true);
+            if (fileStore != null) {
+                DiagramEditor openedEditor = fileStore.getOpenedEditor();
+                if (openedEditor != null) { // Close other editors already opened for this input
+                    fileStore.close();
                 }
-                fileStore.getContent();
-            } catch (ReadFileStoreException e) {
-                throw new PartInitException(
-                        new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e.getCause()));
+                try {
+                    if (fileStore.getEMFResource().isLoaded()) {
+                        fileStore.getEMFResource().unload();
+                    }
+                    fileStore.getContent();
+                } catch (ReadFileStoreException e) {
+                    throw new PartInitException(
+                            new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e.getCause()));
+                }
             }
         }
         super.init(site, input);
