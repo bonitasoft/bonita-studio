@@ -65,6 +65,9 @@ public class WebPageNameResourceChangeListener implements IResourceChangeListene
     private IResourceDeltaVisitor resourceDeltaVisitor() {
         return delta -> {
             String name = delta.getResource().getName();
+            if(!repositoryAccessor.hasActiveRepository() || !repositoryAccessor.getCurrentRepository().isLoaded()) {
+                return true;
+            }
             WebPageRepositoryStore repositoryStore = repositoryAccessor
                     .getRepositoryStore(WebPageRepositoryStore.class);
             if ((delta.getKind() == IResourceDelta.ADDED || delta.getKind() == IResourceDelta.CHANGED)

@@ -62,6 +62,7 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.ILaunchConfiguration;
+import org.eclipse.debug.core.ILaunchConfigurationType;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.debug.ui.IDebugUIConstants;
@@ -79,6 +80,7 @@ import org.eclipse.wst.server.core.IServerType;
 import org.eclipse.wst.server.core.IServerWorkingCopy;
 import org.eclipse.wst.server.core.ServerCore;
 import org.eclipse.wst.server.core.internal.ProjectProperties;
+import org.eclipse.wst.server.core.internal.ServerType;
 
 public class BOSWebServerManager implements IBonitaProjectListener {
 
@@ -189,7 +191,8 @@ public class BOSWebServerManager implements IBonitaProjectListener {
                     uidManager.start(repository, monitor);
                 }
                 createLaunchConfiguration(tomcat, AbstractRepository.NULL_PROGRESS_MONITOR);
-                confProject.build(IncrementalProjectBuilder.INCREMENTAL_BUILD, AbstractRepository.NULL_PROGRESS_MONITOR);
+                confProject.build(IncrementalProjectBuilder.INCREMENTAL_BUILD,
+                        AbstractRepository.NULL_PROGRESS_MONITOR);
                 startResult = null;
                 tomcat.start(ILaunchManager.RUN_MODE, result -> startResult = result);
                 waitServerRunning();
@@ -294,25 +297,23 @@ public class BOSWebServerManager implements IBonitaProjectListener {
                 BonitaStudioLog.error(e);
             }
         } else {
-            BonitaStudioLog.error("Failed to login to engine after " + MAX_LOGGING_TRY + " tries", EnginePlugin.PLUGIN_ID);
+            BonitaStudioLog.error("Failed to login to engine after " + MAX_LOGGING_TRY + " tries",
+                    EnginePlugin.PLUGIN_ID);
         }
     }
 
-    protected void createLaunchConfiguration(final IServer server, final IProgressMonitor monitor)
+    protected ILaunchConfiguration createLaunchConfiguration(final IServer server, final IProgressMonitor monitor)
             throws CoreException {
-        ILaunchConfiguration conf = server.getLaunchConfiguration(false, AbstractRepository.NULL_PROGRESS_MONITOR);
-        if (conf == null) {
-            conf = server.getLaunchConfiguration(true,
-                    AbstractRepository.NULL_PROGRESS_MONITOR);
+        ILaunchConfigurationType launchConfigType = ((ServerType) server.getServerType()).getLaunchConfigurationType();
+        ILaunchManager launchManager = DebugPlugin.getDefault().getLaunchManager();
+        ILaunchConfiguration[] configurations = launchManager.getLaunchConfigurations(launchConfigType);
+        if (configurations != null) {
+            for (var existingConf : configurations) {
+                existingConf.delete();
+            }
         }
-        ILaunchConfigurationWorkingCopy workingCopy = conf.getWorkingCopy();
-        final String args = workingCopy.getAttribute(IJavaLaunchConfigurationConstants.ATTR_VM_ARGUMENTS, "");
-        if (!args.contains(tomcatInstanceLocation)) {
-            conf = server.getLaunchConfiguration(true,
-                    AbstractRepository.NULL_PROGRESS_MONITOR);
-            workingCopy = conf.getWorkingCopy();
-        }
-        configureLaunchConfiguration(workingCopy);
+        ILaunchConfiguration conf = server.getLaunchConfiguration(true, AbstractRepository.NULL_PROGRESS_MONITOR);
+        return configureLaunchConfiguration(conf.getWorkingCopy());
     }
 
     protected ILaunchConfiguration configureLaunchConfiguration(ILaunchConfigurationWorkingCopy workingCopy)
@@ -385,7 +386,8 @@ public class BOSWebServerManager implements IBonitaProjectListener {
         return serverWC.save(true, monitor);
     }
 
-    protected IRuntime createServerRuntime(final IRuntimeType type, final IProgressMonitor monitor) throws CoreException {
+    protected IRuntime createServerRuntime(final IRuntimeType type, final IProgressMonitor monitor)
+            throws CoreException {
         IRuntime runtime = ServerCore.findRuntime(BONITA_TOMCAT_RUNTIME_ID);
         if (runtime == null) {
             runtime = type.createRuntime(BONITA_TOMCAT_RUNTIME_ID, monitor);
