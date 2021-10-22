@@ -21,9 +21,9 @@ import org.bonitasoft.studio.businessobject.core.operation.GenerateBDMOperation;
 import org.bonitasoft.studio.businessobject.core.repository.BDMArtifactDescriptor;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.core.maven.AddDependencyOperation;
+import org.bonitasoft.studio.common.repository.core.maven.RemoveDependencyOperation;
 import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -53,24 +53,31 @@ public class UpdateProjectBDMDependency implements EventHandler {
         final BDMArtifactDescriptor bdmArtifactDescriptor = (BDMArtifactDescriptor) event
                 .getProperty(GenerateBDMOperation.BDM_ARTIFACT_DESCRIPTOR);
 
-        AddDependencyOperation addBDMClientDependencyOperation = new AddDependencyOperation(
+        var removeBDMClientDependencyOperation = new RemoveDependencyOperation(
+                bdmArtifactDescriptor.getGroupId(),
+                GenerateBDMOperation.BDM_CLIENT,
+                bdmArtifactDescriptor.getVersion(),
+                Artifact.SCOPE_PROVIDED);
+        var addBDMClientDependencyOperation = new AddDependencyOperation(
                 bdmArtifactDescriptor.getGroupId(),
                 GenerateBDMOperation.BDM_CLIENT,
                 bdmArtifactDescriptor.getVersion(),
                 Artifact.SCOPE_PROVIDED);
 
         try {
+            // Force a proper java project update by remove/adding the dependency in the project 
+            removeBDMClientDependencyOperation.run(new NullProgressMonitor());
             addBDMClientDependencyOperation.run(new NullProgressMonitor());
         } catch (CoreException e) {
             BonitaStudioLog.error(e);
         }
-
+        
         new WorkspaceJob("Update Project BDM dependency") {
 
             @Override
             public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
                 // Update bdm model and dao list cache
-                AbstractRepository currentRepository = repositoryAccessor.getCurrentRepository();
+                var currentRepository = repositoryAccessor.getCurrentRepository();
                 BusinessObjectModelRepositoryStore businessObjectModelRepositoryStore = currentRepository
                         .getRepositoryStore(BusinessObjectModelRepositoryStore.class);
                 businessObjectModelRepositoryStore.allBusinessObjectDao(currentRepository.getJavaProject());

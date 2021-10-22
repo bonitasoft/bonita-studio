@@ -68,7 +68,7 @@ public abstract class AbstractOpenConsoleCommand extends AbstractHandler {
         if (runSynchronously) {
             doOpen(AbstractRepository.NULL_PROGRESS_MONITOR);
         } else {
-            Job job = new Job(Messages.initializingUserXP) {
+            Job job = new Job(Messages.waitingForEngineToStart) {
 
                 @Override
                 public IStatus run(IProgressMonitor monitor) {
@@ -81,7 +81,7 @@ public abstract class AbstractOpenConsoleCommand extends AbstractHandler {
     }
 
     private IStatus doOpen(IProgressMonitor monitor) {
-        monitor.beginTask(Messages.initializingUserXP, IProgressMonitor.UNKNOWN);
+        monitor.beginTask(Messages.waitingForEngineToStart, IProgressMonitor.UNKNOWN);
         BOSEngineManager.getInstance().start();
         try {
             setURL(getURLBuilder().toURL(monitor));
