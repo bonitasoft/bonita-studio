@@ -99,10 +99,10 @@ public abstract class AbstractProcessBuilder extends ProcessSwitch<Element> {
             int i = 1;
             for (final SearchIndex searchIndex : pool.getSearchIndexes()) {
                 final Expression expr = EngineExpressionUtil.createExpression(searchIndex.getValue());
-                if (searchIndex.getName().getContent() != null && !searchIndex.getName().getContent().isEmpty()) {
+                if (searchIndex.getName().hasContent()) {
                     builder.setStringIndex(i, searchIndex.getName().getContent(), expr);
-                    i++;
                 }
+                i++;
             }
         }
     }
