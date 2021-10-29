@@ -20,13 +20,13 @@ securityConfig."security.rest.api.authorizations.check.debug" = 'true'
 securityConfig.store(securityConfigFile.newWriter(), null)
 
 println "Set tomcat session cookie path to '/' for uid integration"
-def contextNode = new XmlSlurper().parse(contextFile)
+def contextNode = new XmlParser().parse(contextFile)
 contextNode.@sessionCookiePath = '/'
 contextFile.write(XmlUtil.serialize(contextNode))
 
 println "Set hibernate slow query log level to WARN"
-def configurationNode = new XmlSlurper().parse(loggerConfigFile)
-def slowQueryLogger = cconfigurationNode.'Loggers'.'Logger'.find { it.'@name' == 'org.hibernate.SQL_SLOW.level'}
+def configurationNode = new XmlParser().parse(loggerConfigFile)
+def slowQueryLogger = configurationNode.'Loggers'.'Logger'.find { it.'@name' == 'org.hibernate.SQL_SLOW.level'}
 assert slowQueryLogger : "org.hibernate.SQL_SLOW.level logger not found in $loggerConfigFile"
 slowQueryLogger.'@level' = 'WARN'
 loggerConfigFile.write(XmlUtil.serialize(configurationNode))
