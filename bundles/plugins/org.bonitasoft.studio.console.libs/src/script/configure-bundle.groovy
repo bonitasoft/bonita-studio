@@ -4,11 +4,11 @@ def tomcatBundleDir =  new File(properties['tomcat.bundle.dir'])
 
 def securityConfigFile = new File(tomcatBundleDir, 'setup/platform_conf/initial/tenant_template_portal/security-config.properties')
 def contextFile = new File(tomcatBundleDir, 'server/conf/context.xml')
-def loggerConfigFile = new File(tomcatBundleDir, 'server/conf/log4j2-loggers.xml')
+def loggerConfigFile = new File(tomcatBundleDir, 'server/conf/bonita.log')
 
 assert securityConfigFile.exists() : 'Console Securtiy Configruation file not found'
 assert contextFile.exists() : 'Tomcat bundle context.xml file not found'
-assert loggerConfigFile.exists() : 'Tomcat bundle log4j2-loggers.xml file not found'
+assert loggerConfigFile.exists() : 'Tomcat bundle bonita.log file not found'
 
 def securityConfig = new Properties() 
 securityConfigFile.withInputStream {
