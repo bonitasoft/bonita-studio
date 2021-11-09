@@ -29,7 +29,7 @@ public class DependencyCatalog {
         this.parser = parser;
         this.rootFolder = rootFolder;
     }
-    
+
     public Set<Artifact> parseDependencies() throws IOException {
         Set<Artifact> result = new HashSet<>();
         Files.walkFileTree(rootFolder.toPath(), new SimpleFileVisitor<Path>() {
@@ -43,14 +43,16 @@ public class DependencyCatalog {
             @Override
             public FileVisitResult visitFile(Path file, BasicFileAttributes attrs)
                     throws IOException {
-                if(file.getFileName().toString().endsWith(".jar") || file.getFileName().toString().endsWith(".pom")) {
+                if (file.getFileName().toString().endsWith(".jar")
+                        || file.getFileName().toString().endsWith(".pom")
+                        || file.getFileName().toString().endsWith(".zip")) {
                     Artifact artifact = parser.parse(rootFolder.toPath().relativize(file));
                     result.add(artifact);
                 }
                 return FileVisitResult.CONTINUE;
             }
         });
-        
+
         return result;
     }
 }
