@@ -24,7 +24,18 @@ public class MavenArtifactParser {
 
     public Artifact parse(Path artifactPath) {
         final String filename = artifactPath.getFileName().toString();
-        final String type = filename.endsWith(".jar") ? "jar" : "pom";
+        String type = "";
+        if (filename.endsWith(".jar")) {
+            type = "jar";
+        } else if (filename.endsWith(".zip")) {
+            type = "zip";
+        } else if (filename.endsWith(".pom")) {
+            type = "pom";
+        } else {
+            throw new IllegalArgumentException(
+                    String.format("Unknown type for dependency '%s'. Only jar, zip or pom are supported.", filename));
+        }
+
         return artifactFactory.createArtifactWithClassifier(resolveGroupId(artifactPath),
                 resolveArtifactId(artifactPath),
                 resolveArtifactVersion(artifactPath),
