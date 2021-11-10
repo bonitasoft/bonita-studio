@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+
+<template name="bar"
+	description="%CodeTemplates.barResources"
+	id="org.bonitasoft.studio.groovy.ui.templates.barResources"
+	autoinsert="true"
+	context="groovy"
+	enabled="true">def additionalResources = apiAccessor.getProcessAPI().getProcessResources(processDefinitionId, 'resources/.*')</template>
+
+<template name="userById"
+	description="%CodeTemplates.userById"
+	id="org.bonitasoft.studio.groovy.ui.templates.userById"
+	autoinsert="true"
+	context="groovy"
+	enabled="true">def user = apiAccessor.getIdentityAPI().getUser(${userId:var(long)})</template>
+	
+<template name="userByUserName"
+	description="%CodeTemplates.userByUserName"
+	id="org.bonitasoft.studio.groovy.ui.templates.userByUsername"
+	autoinsert="true"
+	context="groovy"
+	enabled="true">def user = apiAccessor.getIdentityAPI().getUserByUserName(${userName:var(String)})</template>
+	
+<template name="processInitiatorUser"
+	description="%CodeTemplates.processInitiatorUser"
+	id="org.bonitasoft.studio.groovy.ui.templates.processInitiatorUser"
+	autoinsert="true"
+	context="groovy"
+	enabled="true">try{
+def processInitiator = apiAccessor.getIdentityAPI().getUser(apiAccessor.getProcessAPI()
+														.getProcessInstance(${processInstanceId:var(long)})
+														.getStartedBy())
+${cursor}
+}catch(${exceptionType:newType(org.bonitasoft.engine.identity.UserNotFoundException)} e){
+	// Handle UserNotFoundException here
+	// Was the process started by the system (e.g.: a start event) ?
+	// Has the user who started the process instance been deleted ?
+}
+</template>
+
+<template name="userPersonalContact"
+	description="%CodeTemplates.userPersonalContact"
+	id="org.bonitasoft.studio.groovy.ui.templates.userPersonalContact"
+	autoinsert="true"
+	context="groovy"
+	enabled="true">def personalContactData = apiAccessor.getIdentityAPI().getUserContactData(${userId:var(long)}, true)
+</template>
+
+<template name="userProfessionalContact"
+	description="%CodeTemplates.userProfessionalContact"
+	id="org.bonitasoft.studio.groovy.ui.templates.userProfessionalContact"
+	autoinsert="true"
+	context="groovy"
+	enabled="true">def proContactData = apiAccessor.getIdentityAPI().getUserContactData(${userId:var(long)}, false)</template>
+
+
+</templates>
