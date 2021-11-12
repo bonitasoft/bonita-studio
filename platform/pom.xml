@@ -8,7 +8,7 @@
 	<parent>
 		<groupId>org.bonitasoft.studio</groupId>
 		<artifactId>studio</artifactId>
-		<version>7.14.0-SNAPSHOT</version>
+		<version>7.14.0.W46</version>
 	</parent>
 
 	<groupId>org.bonitasoft.studio</groupId>
