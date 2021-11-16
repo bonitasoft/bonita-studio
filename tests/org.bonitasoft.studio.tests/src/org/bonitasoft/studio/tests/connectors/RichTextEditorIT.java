@@ -30,6 +30,7 @@ import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.keyboard.Keyboard;
 import org.eclipse.swtbot.swt.finder.keyboard.KeyboardFactory;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotBrowser;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -39,6 +40,7 @@ public class RichTextEditorIT {
     private SWTGefBot bot = new SWTGefBot();
 
     @Test
+    @Ignore
     public void should_rich_text_editor_write_html_output() throws Exception {
         BotApplicationWorkbenchWindow botApplicationWorkbenchWindow = new BotApplicationWorkbenchWindow(bot);
         BotProcessDiagramPerspective diagramEditor = botApplicationWorkbenchWindow
