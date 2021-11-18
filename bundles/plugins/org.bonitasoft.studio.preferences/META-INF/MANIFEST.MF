@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Bonita Studio Preferences
 Bundle-SymbolicName: org.bonitasoft.studio.preferences;singleton:=true
-Bundle-Version: 7.12.9.qualifier
+Bundle-Version: 7.12.10.qualifier
 Bundle-ClassPath: .
 Bundle-Activator: org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin
 Bundle-Vendor: BonitaSoft S.A.
