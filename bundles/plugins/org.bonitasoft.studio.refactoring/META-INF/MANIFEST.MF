@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Refactoring lugin
 Bundle-SymbolicName: org.bonitasoft.studio.refactoring
-Bundle-Version: 7.12.9.qualifier
+Bundle-Version: 7.12.10.qualifier
 Bundle-Activator: org.bonitasoft.studio.refactoring.RefactoringPlugin
 Bundle-Vendor: BonitaSoft S.A.
 Require-Bundle: org.junit;bundle-version="4.11.0";resolution:=optional,
