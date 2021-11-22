@@ -49,6 +49,12 @@ public class RepositoryModelBuilder {
         return new RepositoryModel(currentRepository.getName(), stores);
     }
 
+    public RepositoryModel create(AbstractRepository currentRepository,
+            List<IRepositoryStore<? extends IRepositoryFileStore>> repositoryStores) {
+        List<RepositoryStore> stores = repositoryStores.stream().map(this::fillStore).collect(Collectors.toList());
+        return new RepositoryModel(currentRepository.getName(), stores);
+    }
+
     private List<RepositoryStore> createStore(AbstractRepository repository) {
         return repository.getAllStores()
                 .stream()
@@ -68,8 +74,8 @@ public class RepositoryModelBuilder {
         return store;
     }
 
-    private Artifact createArtifact(RepositoryStore parent, IRepositoryFileStore fStore) {
-        if( fStore.validate().getSeverity() == IStatus.ERROR) {
+    protected Artifact createArtifact(RepositoryStore parent, IRepositoryFileStore fStore) {
+        if (fStore.validate().getSeverity() == IStatus.ERROR) {
             //Do not display invalid artifacts
             return null;
         }
