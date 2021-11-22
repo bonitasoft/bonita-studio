@@ -293,11 +293,11 @@
 			</activation>
 			<properties>
 				<if.task>net.sf.antcontrib.logic.IfTask</if.task>
-				<jre.url>https://github.com/AdoptOpenJDK/openjdk11-binaries/releases/download/jdk-11.0.11%2B9/</jre.url>
-				<jre.winx86.x64.url>OpenJDK11U-jdk_x64_windows_hotspot_11.0.11_9</jre.winx86.x64.url>
-				<jre.linuxx86.x64.url>OpenJDK11U-jdk_x64_linux_hotspot_11.0.11_9</jre.linuxx86.x64.url>
-				<jre.osx.url>OpenJDK11U-jdk_x64_mac_hotspot_11.0.11_9</jre.osx.url>
-				<jre.folder.name>jdk-11.0.11+9</jre.folder.name>
+				<jre.url>https://github.com/adoptium/temurin11-binaries/releases/download/jdk-11.0.13%2B8/</jre.url>
+            	<jre.winx86.x64.url>OpenJDK11U-jre_x64_windows_hotspot_11.0.13_8</jre.winx86.x64.url>
+				<jre.linuxx86.x64.url>OpenJDK11U-jre_x64_linux_hotspot_11.0.13_8</jre.linuxx86.x64.url>
+				<jre.osx.url>OpenJDK11U-jre_x64_mac_hotspot_11.0.13_8</jre.osx.url>
+				<jre.folder.name>jdk-11.0.13+8-jre</jre.folder.name>
 			</properties>
 			<build>
 				<plugins>
