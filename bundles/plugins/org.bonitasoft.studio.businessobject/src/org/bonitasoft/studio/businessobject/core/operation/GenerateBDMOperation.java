@@ -38,6 +38,7 @@ import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelR
 import org.bonitasoft.studio.businessobject.i18n.Messages;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
+import org.bonitasoft.studio.common.repository.core.maven.AddDependencyOperation;
 import org.bonitasoft.studio.common.repository.core.maven.RemoveDependencyOperation;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.eclipse.core.resources.WorkspaceJob;
@@ -45,6 +46,7 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.e4.core.services.events.IEventBroker;
 import org.eclipse.jface.operation.IRunnableWithProgress;
@@ -104,16 +106,54 @@ public class GenerateBDMOperation implements IRunnableWithProgress {
                 data.put(MODEL, model);
                 data.put(BDM_CLIENT, resources.get(BDM_CLIENT));
                 data.put(BDM_DAO, resources.get(BDM_DAO));
-                data.put(BDM_ARTIFACT_DESCRIPTOR, fileStore.loadArtifactDescriptor());
+                var bdmArtifactDescriptor = fileStore.loadArtifactDescriptor();
+                data.put(BDM_ARTIFACT_DESCRIPTOR, bdmArtifactDescriptor);
                 data.put(FILE_CONTENT, new String(((BusinessObjectModelRepositoryStore) fileStore.getParentStore())
                         .getConverter().marshall(model)));
+                
                 eventBroker().send(BDM_DEPLOYED_TOPIC, data);
+                
+                updateProjectBDMDependency(bdmArtifactDescriptor);
             } catch (final Exception e) {
                 throw new InvocationTargetException(e);
             }
         } else {
             removeDependency();
         }
+    }
+
+    private void updateProjectBDMDependency(BDMArtifactDescriptor bdmArtifactDescriptor) {
+        var removeBDMClientDependencyOperation = new RemoveDependencyOperation(
+                bdmArtifactDescriptor.getGroupId(),
+                GenerateBDMOperation.BDM_CLIENT,
+                bdmArtifactDescriptor.getVersion(),
+                Artifact.SCOPE_PROVIDED);
+        var addBDMClientDependencyOperation = new AddDependencyOperation(
+                bdmArtifactDescriptor.getGroupId(),
+                GenerateBDMOperation.BDM_CLIENT,
+                bdmArtifactDescriptor.getVersion(),
+                Artifact.SCOPE_PROVIDED);
+
+        try {
+            // Force a proper java project update by remove/adding the dependency in the project 
+            removeBDMClientDependencyOperation.disableAnalyze().run(new NullProgressMonitor());
+            addBDMClientDependencyOperation.disableAnalyze().run(new NullProgressMonitor());
+        } catch (CoreException e) {
+            BonitaStudioLog.error(e);
+        }
+
+        new WorkspaceJob("Update Project BDM dependency") {
+
+            @Override
+            public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
+                // Update bdm model and dao list cache
+                var currentRepository = fileStore.getRepositoryAccessor().getCurrentRepository();
+                BusinessObjectModelRepositoryStore businessObjectModelRepositoryStore = currentRepository
+                        .getRepositoryStore(BusinessObjectModelRepositoryStore.class);
+                businessObjectModelRepositoryStore.allBusinessObjectDao(currentRepository.getJavaProject());
+                return Status.OK_STATUS;
+            }
+        }.schedule();
     }
 
     protected IEventBroker eventBroker() {
@@ -129,7 +169,7 @@ public class GenerateBDMOperation implements IRunnableWithProgress {
 
                 @Override
                 public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
-                    operation.run(monitor);
+                    operation.disableAnalyze().run(monitor);
                     return Status.OK_STATUS;
                 }
             }.schedule();
