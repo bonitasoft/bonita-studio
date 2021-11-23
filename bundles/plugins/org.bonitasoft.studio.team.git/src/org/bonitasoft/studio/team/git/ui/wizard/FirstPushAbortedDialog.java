@@ -47,7 +47,7 @@ public class FirstPushAbortedDialog extends MessageDialog {
         Link link = new Link(composite, SWT.WRAP);
         link.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).indent(0, 10).create());
         link.setText(Messages.warningRepoNotPushedMsg);
-        link.addListener(SWT.Selection, new OpenSystemBrowserListener(String.format(DOCUMENTATION_GIT_URL, ProductVersion.majorVersion())));
+        link.addListener(SWT.Selection, new OpenSystemBrowserListener(String.format(DOCUMENTATION_GIT_URL, ProductVersion.minorVersion())));
         return composite;
     }
 

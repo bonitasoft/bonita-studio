@@ -30,6 +30,7 @@ import org.bonitasoft.studio.common.repository.core.migration.MavenModelMigratio
 import org.bonitasoft.studio.common.repository.core.migration.report.AsciidocMigrationReportWriter;
 import org.bonitasoft.studio.common.repository.core.migration.report.MigrationReport;
 import org.bonitasoft.studio.common.repository.core.migration.report.MigrationReportWriter;
+import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.PostMigrationOperationCollector;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
@@ -263,5 +264,10 @@ public class RestAPIExtensionRepositoryStore extends CustomPageProjectRepository
                         e);
             }
         }
+    }
+    
+    @Override
+    public IRepository getRepository() {
+        return super.getRepository();
     }
 }

@@ -14,12 +14,28 @@
  */
 package org.bonitasoft.studio.application.handler;
 
+import java.util.Objects;
+import java.util.Optional;
+
+import org.apache.maven.model.Model;
 import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.application.operation.SetProjectMetadataOperation;
+import org.bonitasoft.studio.common.RedirectURLBuilder;
+import org.bonitasoft.studio.common.jface.MessageDialogWithLink;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.core.maven.MavenProjectHelper;
+import org.bonitasoft.studio.common.repository.core.maven.model.ProjectDefaultConfiguration;
 import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
+import org.bonitasoft.studio.ui.dialog.ExceptionDialogHandler;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.wizard.IWizardContainer;
+import org.eclipse.swt.widgets.Display;
 
 public class EditProjectMetadataHandler extends AbstractProjectMetadataHandler {
 
@@ -30,7 +46,7 @@ public class EditProjectMetadataHandler extends AbstractProjectMetadataHandler {
     protected String getWizardTitle() {
         return Messages.editProjectMetadata;
     }
-    
+
     @Override
     public String getFinishLabel() {
         return Messages.modify;
@@ -49,6 +65,37 @@ public class EditProjectMetadataHandler extends AbstractProjectMetadataHandler {
     @Override
     protected ProjectMetadata initialMetadata(AbstractRepository currentRepository) {
         return ProjectMetadata.read(currentRepository.getProject());
+    }
+
+    @Override
+    protected Optional<IStatus> performFinish(IWizardContainer container, ProjectMetadata metadata,
+            RepositoryAccessor repositoryAccessor, MavenProjectHelper mavenProjectHelper,
+            ExceptionDialogHandler exceptionDialogHandler) {
+        if (targetRuntimeVersionChanged(metadata, repositoryAccessor.getCurrentRepository().getProject(),
+                mavenProjectHelper)
+                && new MessageDialogWithLink(Display.getDefault().getActiveShell(),
+                        Messages.updateTargetRuntimeVersionConfirmTitle,
+                        null,
+                        Messages.updateTargetRuntimeVersionConfirmMsg,
+                        MessageDialog.CONFIRM,
+                        new String[] { String.format(Messages.updateTo, metadata.getBonitaRuntimeVersion()), IDialogConstants.CANCEL_LABEL },
+                        0,
+                        RedirectURLBuilder.createURI("735")).open() == 1) {
+            return Optional.empty();
+        }
+        return super.performFinish(container, metadata, repositoryAccessor, mavenProjectHelper, exceptionDialogHandler);
+    }
+
+    private boolean targetRuntimeVersionChanged(ProjectMetadata metadata, IProject project, MavenProjectHelper helper) {
+        try {
+            Model mavenModel = helper.getMavenModel(project);
+            return !Objects.equals(
+                    mavenModel.getProperties().getProperty(ProjectDefaultConfiguration.BONITA_RUNTIME_VERSION),
+                    metadata.getBonitaRuntimeVersion());
+        } catch (CoreException e) {
+            BonitaStudioLog.error(e);
+            return false;
+        }
     }
 
 }

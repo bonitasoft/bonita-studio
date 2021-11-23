@@ -105,4 +105,6 @@ public interface IRepository extends IFileStoreChangeListener {
     
     boolean closeAllEditors();
     
+    String getBonitaRuntimeVersion();
+    
 }

@@ -16,6 +16,8 @@ package org.bonitasoft.studio.common;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
@@ -32,6 +34,15 @@ public class RedirectURLBuilder {
                 + bosProduct();
     }
 
+    public static URI createURI(String redirectId) {
+        try {
+            return new URI(create(redirectId));
+        } catch (URISyntaxException e) {
+            BonitaStudioLog.error(e);
+            return null;
+        }
+    }
+
     private static String bosProduct() {
         return "bos_redirect_product=bos";
     }
@@ -41,7 +52,7 @@ public class RedirectURLBuilder {
     }
 
     private static String bosMajorVersion() {
-        return "bos_redirect_major_version=" + ProductVersion.majorVersion();
+        return "bos_redirect_major_version=" + ProductVersion.minorVersion();
     }
 
     public static String handleURLRedirection(String url) {

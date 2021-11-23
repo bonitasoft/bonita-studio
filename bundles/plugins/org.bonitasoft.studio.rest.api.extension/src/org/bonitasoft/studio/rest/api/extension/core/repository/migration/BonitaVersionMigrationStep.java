@@ -17,6 +17,7 @@ package org.bonitasoft.studio.rest.api.extension.core.repository.migration;
 import java.util.Objects;
 import java.util.Properties;
 
+import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
 import org.apache.maven.model.Model;
 import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.repository.core.migration.MavenModelMigration;
@@ -38,7 +39,7 @@ public class BonitaVersionMigrationStep implements MavenModelMigration {
 
     private void updateProperty(String property, MigrationReport report, Properties properties) {
         if (properties.containsKey(property)) {
-            var existingVersion = properties.get(property);
+            var existingVersion = properties.getProperty(property);
             String currentBonitaRuntimeVersion = ProductVersion.BONITA_RUNTIME_VERSION;
             properties.setProperty(property, currentBonitaRuntimeVersion);
             if (existingVersion != null) {
@@ -58,12 +59,17 @@ public class BonitaVersionMigrationStep implements MavenModelMigration {
     public boolean appliesTo(Model model) {
         var properties = model.getProperties();
         if (properties.containsKey(BONITA_VERSION_PROPERTY)) {
-            return !Objects.equals(properties.get(BONITA_VERSION_PROPERTY), ProductVersion.BONITA_RUNTIME_VERSION);
+            return !Objects.equals(minorVersion(properties.getProperty(BONITA_VERSION_PROPERTY)), ProductVersion.minorVersion());
         }
         if (properties.containsKey(BONITA_RUNTIME_VERSION_PROPERTY)) {
-            return !Objects.equals(properties.get(BONITA_RUNTIME_VERSION_PROPERTY), ProductVersion.BONITA_RUNTIME_VERSION);
+            return !Objects.equals(minorVersion(properties.getProperty(BONITA_RUNTIME_VERSION_PROPERTY)),ProductVersion.minorVersion());
         }
         return false;
+    }
+    
+    private static String minorVersion(String bonitaRuntimeVersion) {
+        var version = new DefaultArtifactVersion(bonitaRuntimeVersion);
+        return version.getMajorVersion() + "." + version.getMinorVersion();
     }
 
 }
