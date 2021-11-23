@@ -65,10 +65,35 @@
                 class="org.bonitasoft.studio.common.repository.BonitaProjectNature">
           </run>
        </runtime>
+       <builder
+             id="org.bonitasoft.studio.common.repository.bonitaProjectValidationBuilder">
+       </builder>
     </extension>
     <extension
           id="analyzePluginMarkerType"
           name="Bonita Project Analyze Plugin Marker Type"
+          point="org.eclipse.core.resources.markers">
+       <super
+             type="org.eclipse.core.resources.problemmarker">
+       </super>
+       <persistent
+             value="true">
+       </persistent>
+    </extension>
+    <extension
+          id="bonitaProjectValidationBuilder"
+          point="org.eclipse.core.resources.builders">
+       <builder
+             callOnEmptyDelta="true"
+             hasNature="true">
+          <run
+                class="org.bonitasoft.studio.common.repository.core.maven.BonitaProjectBuilder">
+          </run>
+       </builder>
+    </extension>
+    <extension
+          id="targetRuntimeVersionMarkerType"
+          name="Bonita Project target runtime version Marker Type"
           point="org.eclipse.core.resources.markers">
        <super
              type="org.eclipse.core.resources.problemmarker">

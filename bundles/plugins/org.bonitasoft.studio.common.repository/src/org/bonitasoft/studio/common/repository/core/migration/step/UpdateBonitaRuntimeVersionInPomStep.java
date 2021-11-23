@@ -16,6 +16,7 @@ package org.bonitasoft.studio.common.repository.core.migration.step;
 
 import java.util.Objects;
 
+import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
 import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.repository.core.maven.model.ProjectDefaultConfiguration;
 import org.bonitasoft.studio.common.repository.core.migration.MigrationStep;
@@ -39,19 +40,24 @@ public class UpdateBonitaRuntimeVersionInPomStep implements MigrationStep {
                     String.format("The %s property has not been found and cannot be updated.",
                             ProjectDefaultConfiguration.BONITA_RUNTIME_VERSION)));
         }
-        var oldVersion = properties.getProperty(ProjectDefaultConfiguration.BONITA_RUNTIME_VERSION);
-        var currentVersion = ProductVersion.BONITA_RUNTIME_VERSION;
-        if (!Objects.equals(oldVersion, currentVersion)) {
+        var bonitaRuntimeVersion = properties.getProperty(ProjectDefaultConfiguration.BONITA_RUNTIME_VERSION);
+        var currentBonitaMinorVersion = ProductVersion.minorVersion();
+        if (!Objects.equals(minorVersion(bonitaRuntimeVersion), currentBonitaMinorVersion)) {
             var report = new MigrationReport();
             properties.setProperty(ProjectDefaultConfiguration.BONITA_RUNTIME_VERSION, ProductVersion.BONITA_RUNTIME_VERSION);
             saveMavenModel(model, project);
             report.updated(String.format("`%s` has been updated from `%s` to `%s`.",
                     ProjectDefaultConfiguration.BONITA_RUNTIME_VERSION, 
-                    oldVersion,
+                    bonitaRuntimeVersion,
                     ProductVersion.BONITA_RUNTIME_VERSION));
             return report;
         }
         return MigrationReport.emptyReport();
+    }
+
+    private static String minorVersion(String bonitaRuntimeVersion) {
+        var version = new DefaultArtifactVersion(bonitaRuntimeVersion);
+        return version.getMajorVersion() + "." + version.getMinorVersion();
     }
 
     @Override

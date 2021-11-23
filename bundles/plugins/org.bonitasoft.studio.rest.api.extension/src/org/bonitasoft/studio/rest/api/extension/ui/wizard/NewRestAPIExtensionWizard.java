@@ -50,6 +50,7 @@ public class NewRestAPIExtensionWizard extends Wizard {
             RestAPIAddressResolver addressReolver) {
         this.repositoryStore = repositoryStore;
         this.configuration = RestAPIExtensionArchetypeConfiguration.defaultArchetypeConfiguration(bdmPackage, bdmVersion);
+        this.configuration.setBonitaVersion(repositoryStore.getRepository().getBonitaRuntimeVersion());
         this.projectConfigurationManager = projectConfigurationManager;
         this.widgetFactory = widgetFactory;
         this.projectConfiguration = projectConfiguration;
@@ -73,7 +74,7 @@ public class NewRestAPIExtensionWizard extends Wizard {
                 workspace);
         configurationPage.setTitle(Messages.artifactConfigurationPageTitle);
         configurationPage.setDescription(Messages.artifactConfigurationPageDescription);
-        configurationPage.setHelpLinkURL(String.format(REST_API_EXT_DOC_URL,ProductVersion.majorVersion()));
+        configurationPage.setHelpLinkURL(String.format(REST_API_EXT_DOC_URL,ProductVersion.minorVersion()));
         addPage(configurationPage);
 
         final NewRestAPIProjectAdvancedConfigurationPage advancedConfigurationPage = new NewRestAPIProjectAdvancedConfigurationPage(

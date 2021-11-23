@@ -97,7 +97,7 @@ public class CreateBonitaProjectOperation implements IWorkspaceRunnable {
         }
         mavenProjectBuilder.setArtifactId(artifactId);
         mavenProjectBuilder.setGroupId(metadata.getGroupId());
-        mavenProjectBuilder.setBonitaVersion(ProductVersion.BONITA_RUNTIME_VERSION);
+        mavenProjectBuilder.setBonitaVersion(metadata.getBonitaRuntimeVersion());
         mavenProjectBuilder.setVersion(metadata.getVersion());
         mavenProjectBuilder.setDescription(metadata.getDescription());
         return mavenProjectBuilder;

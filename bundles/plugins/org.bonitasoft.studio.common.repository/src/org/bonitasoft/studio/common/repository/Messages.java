@@ -131,6 +131,8 @@ public final class Messages extends NLS {
 
     public static String incompatibleTransitiveDependencyErrorMessage;
     public static String incompatibleDependencyErrorMessage;
+    public static String targetRuntimeVersionWarning;
+    public static String targetRuntimeVersionError;
 
     private Messages() {
         // Do not instantiate

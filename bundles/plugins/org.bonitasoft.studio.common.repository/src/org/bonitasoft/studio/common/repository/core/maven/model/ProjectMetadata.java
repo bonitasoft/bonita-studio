@@ -18,6 +18,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.maven.model.Model;
+import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.Strings;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
@@ -37,6 +38,7 @@ public class ProjectMetadata {
     private String groupId;
     private String artifactId;
     private String version;
+    private String bonitaRuntimeVersion;
 
     public String getName() {
         return name;
@@ -77,12 +79,21 @@ public class ProjectMetadata {
     public void setVersion(String version) {
         this.version = version;
     }
+    
+    public String getBonitaRuntimeVersion() {
+        return bonitaRuntimeVersion;
+    }
+
+    public void setBonitaRuntimeVersion(String bonitaRuntimeVersion) {
+        this.bonitaRuntimeVersion = bonitaRuntimeVersion;
+    }
 
     @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
         result = prime * result + ((artifactId == null) ? 0 : artifactId.hashCode());
+        result = prime * result + ((bonitaRuntimeVersion == null) ? 0 : bonitaRuntimeVersion.hashCode());
         result = prime * result + ((description == null) ? 0 : description.hashCode());
         result = prime * result + ((groupId == null) ? 0 : groupId.hashCode());
         result = prime * result + ((name == null) ? 0 : name.hashCode());
@@ -103,6 +114,11 @@ public class ProjectMetadata {
             if (other.artifactId != null)
                 return false;
         } else if (!artifactId.equals(other.artifactId))
+            return false;
+        if (bonitaRuntimeVersion == null) {
+            if (other.bonitaRuntimeVersion != null)
+                return false;
+        } else if (!bonitaRuntimeVersion.equals(other.bonitaRuntimeVersion))
             return false;
         if (description == null) {
             if (other.description != null)
@@ -133,6 +149,7 @@ public class ProjectMetadata {
         metadata.setArtifactId(toArtifactId(Messages.defaultRepositoryName));
         metadata.setGroupId(defaultGroupId());
         metadata.setVersion(DEFAULT_VERSION);
+        metadata.setBonitaRuntimeVersion(ProductVersion.BONITA_RUNTIME_VERSION);
         return metadata;
     }
 
@@ -174,6 +191,7 @@ public class ProjectMetadata {
         projectMetadata.setGroupId(model.getGroupId());
         projectMetadata.setArtifactId(model.getArtifactId());
         projectMetadata.setVersion(model.getVersion());
+        projectMetadata.setBonitaRuntimeVersion(model.getProperties().getProperty(ProjectDefaultConfiguration.BONITA_RUNTIME_VERSION));
         return projectMetadata;
     }
     
@@ -227,6 +245,5 @@ public class ProjectMetadata {
         }
         return null;
     }
-
-
+ 
 }

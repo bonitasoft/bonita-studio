@@ -14,16 +14,22 @@
  */
 package org.bonitasoft.studio.application.ui.control;
 
+import java.io.IOException;
 import java.util.Objects;
 
 import org.bonitasoft.studio.application.i18n.Messages;
+import org.bonitasoft.studio.common.RedirectURLBuilder;
 import org.bonitasoft.studio.common.jface.databinding.validator.EmptyInputValidator;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryNameValidator;
+import org.bonitasoft.studio.common.repository.core.maven.BonitaProjectBuilder.BonitaRuntimeVersionValidator;
+import org.bonitasoft.studio.common.repository.core.maven.contribution.InstallBonitaMavenArtifactsOperation;
 import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
 import org.bonitasoft.studio.common.repository.ui.validator.MavenIdValidator;
 import org.bonitasoft.studio.ui.converter.ConverterBuilder;
 import org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory;
 import org.bonitasoft.studio.ui.validator.MultiValidator;
+import org.bonitasoft.studio.ui.widget.ComboWidget;
 import org.bonitasoft.studio.ui.widget.TextAreaWidget;
 import org.bonitasoft.studio.ui.widget.TextWidget;
 import org.bonitasoft.studio.ui.wizard.ControlSupplier;
@@ -40,9 +46,11 @@ import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Link;
 
 public class ProjectMetadataPage implements ControlSupplier {
 
+    private static final String STUDIO_MAINTENANCE_UPDATE_REDIRECT_ID = "735";
     private IObservableValue<ProjectMetadata> metadataObservale;
     private boolean createProject;
 
@@ -123,11 +131,41 @@ public class ProjectMetadataPage implements ControlSupplier {
                                 .create())
                         .create());
 
+        new ComboWidget.Builder()
+                .withLabel(Messages.targetRuntimeVersion + " *")
+                .labelAbove()
+                .horizontalSpan(2)
+                .grabHorizontalSpace()
+                .fill()
+                .widthHint(750)
+                .withItems(availableCompatibleVersions())
+                .withValidator(new MultiValidator.Builder()
+                        .havingValidators(new EmptyInputValidator(Messages.targetRuntimeVersion), new BonitaRuntimeVersionValidator())
+                        .create())
+                .bindTo(PojoProperties.value("bonitaRuntimeVersion", String.class).observeDetail(metadataObservale))
+                .inContext(ctx)
+                .useNativeRender()
+                .createIn(composite);
+        
+        var targetVersionMessage = new Link(composite, SWT.NONE);
+        targetVersionMessage
+                .setLayoutData(GridDataFactory.fillDefaults().grab(true, false).indent(0, -10).span(2, 1).create());
+        targetVersionMessage.setText(Messages.studioMaintenanceUpdateMessage);
+        targetVersionMessage.addListener(SWT.Selection, e -> {
+            try {
+                java.awt.Desktop.getDesktop()
+                        .browse(RedirectURLBuilder.createURI(STUDIO_MAINTENANCE_UPDATE_REDIRECT_ID));
+            } catch (final IOException ioe) {
+                BonitaStudioLog.error(ioe);
+            }
+        });
+
         var textArea = new TextAreaWidget.Builder()
                 .withLabel(Messages.description)
                 .labelAbove()
                 .heightHint(100)
                 .widthHint(500)
+                .grabVerticalSpace()
                 .grabHorizontalSpace()
                 .fill()
                 .bindTo(PojoProperties.value("description").observeDetail(metadataObservale))
@@ -144,6 +182,15 @@ public class ProjectMetadataPage implements ControlSupplier {
         });
 
         return composite;
+    }
+
+    private String[] availableCompatibleVersions() {
+        try {
+            return InstallBonitaMavenArtifactsOperation.listBonitaRuntimeBomVersions();
+        } catch (IOException e) {
+            BonitaStudioLog.error(e);
+            return new String[0];
+        }
     }
 
     private IValidator<String> engineRestartWarning(String originalName) {

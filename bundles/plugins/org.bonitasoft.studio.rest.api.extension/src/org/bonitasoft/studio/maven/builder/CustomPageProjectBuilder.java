@@ -35,7 +35,7 @@ public abstract class CustomPageProjectBuilder extends IncrementalProjectBuilder
         if (kind != FULL_BUILD) {
             delta = getDelta(project);
         }
-        if (delta == null || kind == FULL_BUILD) {
+        if (delta == null) {
             if (isInterestingProject(project) && RepositoryManager.getInstance().hasActiveRepository()) {
                 createPagePropertyFileValidator(project).acceptAndValidate();
             }

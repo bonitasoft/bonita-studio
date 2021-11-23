@@ -180,6 +180,14 @@ public abstract class EditableControlWidget extends ControlWidget {
 
         };
         binding.validateTargetToModel();
+        // Force message control redraw only for warnings and info status
+        // Avoid error message when opening a 'New' wizard
+        if (binding.getValidationStatus() != null &&
+                binding.getValidationStatus().getValue() != null &&
+                !binding.getValidationStatus().getValue().isOK() &&
+                binding.getValidationStatus().getValue().getSeverity() != IStatus.ERROR) {
+            statusChanged(binding.getValidationStatus().getValue());
+        }
         return controlMessageSupport;
     }
 
@@ -211,7 +219,7 @@ public abstract class EditableControlWidget extends ControlWidget {
     public void setMessage(String message) {
         setMessage(message, null);
     }
-    
+
     public void setMessage(String message, Image icon) {
         this.message = Optional.ofNullable(message);
         if (messageDecorator == null) {

@@ -98,7 +98,7 @@ public abstract class AbstractProjectMetadataHandler {
 
     protected abstract String getWizardTitle();
 
-    private Optional<IStatus> performFinish(IWizardContainer container,
+    protected Optional<IStatus> performFinish(IWizardContainer container,
             ProjectMetadata metadata,
             RepositoryAccessor repositoryAccessor,
             MavenProjectHelper mavenProjectHelper,
