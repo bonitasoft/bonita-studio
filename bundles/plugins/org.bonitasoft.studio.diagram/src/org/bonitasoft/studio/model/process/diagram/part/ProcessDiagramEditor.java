@@ -720,6 +720,13 @@ public class ProcessDiagramEditor extends DiagramDocumentEditor implements IGoto
          * });
          */
     }
+    
+    @Override
+    public void persistViewerSettings() {
+       if(getDiagramEditPart() != null) {
+           super.persistViewerSettings();
+       }
+    }
 
     /**
      * @generated BonitaSoft

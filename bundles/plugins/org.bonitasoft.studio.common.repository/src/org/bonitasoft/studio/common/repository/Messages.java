@@ -133,6 +133,7 @@ public final class Messages extends NLS {
     public static String incompatibleDependencyErrorMessage;
     public static String targetRuntimeVersionWarning;
     public static String targetRuntimeVersionError;
+    public static String editTargetRuntimeVersionFromProjectOverview;
 
     private Messages() {
         // Do not instantiate
