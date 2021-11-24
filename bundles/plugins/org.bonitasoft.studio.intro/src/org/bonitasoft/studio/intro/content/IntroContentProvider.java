@@ -174,7 +174,7 @@ public class IntroContentProvider implements IIntroXHTMLContentProvider {
                 "https://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=%s&bos_redirect_product=%s&bos_redirect_major_version=%s&bos_redirect_minor_version=%s%s",
                 redirectId,
                 product,
-                ProductVersion.majorVersion(),
+                ProductVersion.minorVersion(),
                 ProductVersion.maintenanceVersion(),
                 includeSEOParams ? SEO_PARAMS : "");
     }

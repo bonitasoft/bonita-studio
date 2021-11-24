@@ -44,13 +44,13 @@ public class ComboWidget extends EditableControlWidget {
             }
             if (ctx != null && modelObservable != null) {
                 control.bindControl(ctx,
-                        delay.map(time -> control.observeComboText(time))
+                        delay.map(control::observeComboText)
                                 .orElse(control.observeComboText()),
                         modelObservable,
                         targetToModelStrategy,
                         modelToTargetStrategy);
                 validator.ifPresent(v -> control.bindValidator(ctx,
-                        delay.map(time -> control.observeComboText(time))
+                        delay.map(control::observeComboText)
                                 .orElse(control.observeComboText(SWT.Modify)),
                         modelObservable,
                         v));

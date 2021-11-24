@@ -78,9 +78,19 @@ public class InstallBonitaMavenArtifactsOperation {
         return MavenPlugin.getMaven();
     }
 
-    protected File getRootFolder() throws IOException {
+    private static File getRootFolder() throws IOException {
         URL repositoryURL = CommonRepositoryPlugin.getDefault().getBundle().getResource("/repository/");
         return new File(FileLocator.toFileURL(repositoryURL).getFile());
     }
 
+    public static String[] listBonitaRuntimeBomVersions() throws IOException{
+        File bomArtifactFolder = getRootFolder().toPath()
+            .resolve("org")
+            .resolve("bonitasoft")
+            .resolve("runtime")
+            .resolve("bonita-runtime-bom")
+            .toFile();
+        
+        return bomArtifactFolder.list();
+    }
 }

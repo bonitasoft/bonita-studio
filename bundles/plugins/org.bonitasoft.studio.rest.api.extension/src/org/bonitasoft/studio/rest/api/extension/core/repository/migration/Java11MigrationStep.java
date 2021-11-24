@@ -111,7 +111,7 @@ public class Java11MigrationStep implements MavenModelMigration {
                         .map(Xpp3Dom::getValue)
                         .map("1.8"::equals)
                         .orElse(false);
-        var notValidJavaVersionProperty = !Objects.equals(model.getProperties().getProperty(JAVA_VERSION),
+        var notValidJavaVersionProperty = !Objects.equals(model.getProperties().getProperty(JAVA_VERSION_PROPERTY),
                 JAVA_VERSION);
         return notValidJavaVersionProperty || hasJava8Source || hasJava8Target;
     }

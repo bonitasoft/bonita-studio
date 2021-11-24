@@ -43,7 +43,9 @@ import org.bonitasoft.studio.common.repository.core.BonitaProjectMigrationOperat
 import org.bonitasoft.studio.common.repository.core.CreateBonitaProjectOperation;
 import org.bonitasoft.studio.common.repository.core.DatabaseHandler;
 import org.bonitasoft.studio.common.repository.core.ProjectDependenciesStore;
+import org.bonitasoft.studio.common.repository.core.maven.BonitaProjectBuilder;
 import org.bonitasoft.studio.common.repository.core.maven.MavenProjectDependenciesStore;
+import org.bonitasoft.studio.common.repository.core.maven.model.ProjectDefaultConfiguration;
 import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
 import org.bonitasoft.studio.common.repository.core.migration.report.AsciidocMigrationReportWriter;
 import org.bonitasoft.studio.common.repository.core.migration.report.MigrationReport;
@@ -97,6 +99,7 @@ import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.m2e.core.MavenPlugin;
 import org.eclipse.m2e.core.internal.IMavenConstants;
+import org.eclipse.m2e.core.project.IMavenProjectFacade;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.team.svn.core.SVNTeamPlugin;
@@ -216,7 +219,8 @@ public abstract class AbstractRepository implements IRepository, IJavaContainer 
                 .addNature("org.eclipse.jdt.groovy.core.groovyNature")
                 .addNature(IMavenConstants.NATURE_ID)
                 .addBuilder(IMavenConstants.BUILDER_ID)
-                .addBuilder("org.eclipse.jdt.core.javabuilder");
+                .addBuilder("org.eclipse.jdt.core.javabuilder")
+                .addBuilder(BonitaProjectBuilder.ID);
     }
 
     @Override
@@ -776,7 +780,8 @@ public abstract class AbstractRepository implements IRepository, IJavaContainer 
                 .addNature("org.eclipse.jdt.groovy.core.groovyNature")
                 .addNature(IMavenConstants.NATURE_ID)
                 .addBuilder(IMavenConstants.BUILDER_ID)
-                .addBuilder("org.eclipse.jdt.core.javabuilder");
+                .addBuilder("org.eclipse.jdt.core.javabuilder")
+                .addBuilder(BonitaProjectBuilder.ID);
     }
 
     @Override
@@ -880,4 +885,9 @@ public abstract class AbstractRepository implements IRepository, IJavaContainer 
         return new LocalDependenciesStore(getProject());
     }
 
+    @Override
+    public String getBonitaRuntimeVersion() {
+        IMavenProjectFacade projectFacade = MavenPlugin.getMavenProjectRegistry().getProject(getProject());
+        return projectFacade.getMavenProject().getProperties().getProperty(ProjectDefaultConfiguration.BONITA_RUNTIME_VERSION);
+    }
 }

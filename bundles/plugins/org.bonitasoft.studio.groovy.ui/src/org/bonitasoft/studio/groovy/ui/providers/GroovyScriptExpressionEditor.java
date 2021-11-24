@@ -137,7 +137,7 @@ public class GroovyScriptExpressionEditor extends SelectionAwareExpressionEditor
             EXPRESSION_AND_SCRIPTS_URL = new URL(
                     String.format(
                             "http://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=678&bos_redirect_product=bos&bos_redirect_major_version=%s",
-                            ProductVersion.majorVersion()));
+                            ProductVersion.minorVersion()));
         } catch (MalformedURLException e) {
             BonitaStudioLog.error(e);
         }

@@ -387,6 +387,11 @@ public class Messages extends NLS {
     public static String refreshTooltip;
     public static String classifierTooltip;
     public static String depArtifactIdTootltip;
+    public static String targetRuntimeVersion;
+    public static String studioMaintenanceUpdateMessage;
+    public static String updateTargetRuntimeVersionConfirmTitle;
+    public static String updateTargetRuntimeVersionConfirmMsg;
+    public static String updateTo;
 
     static {
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);

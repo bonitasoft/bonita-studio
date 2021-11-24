@@ -60,7 +60,7 @@ public class ShowHelpCommand extends AbstractHandler {
     }
 
     private String majorVersion() {
-        return "bos_redirect_major_version=" + ProductVersion.majorVersion();
+        return "bos_redirect_major_version=" + ProductVersion.minorVersion();
     }
 
 }

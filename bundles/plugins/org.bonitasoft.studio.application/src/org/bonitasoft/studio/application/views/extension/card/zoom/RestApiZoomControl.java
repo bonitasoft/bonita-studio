@@ -103,7 +103,7 @@ public class RestApiZoomControl extends AbstractZoomControl {
                 ExtensionPagePropertiesReader.getProperty(properties, PagePropertyConstants.API_EXTENSIONS)
                         .ifPresent(extensions -> {
                             for (String extension : extensions.split(",")) {
-                                createRestAPIExtensionDetails(definitionsComposite, properties, extension);
+                                createRestAPIExtensionDetails(definitionsComposite, properties, extension.trim());
                             }
                         });
             } catch (IOException e) {

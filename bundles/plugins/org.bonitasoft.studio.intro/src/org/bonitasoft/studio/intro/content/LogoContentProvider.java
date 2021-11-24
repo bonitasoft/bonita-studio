@@ -33,7 +33,7 @@ public class LogoContentProvider implements DOMContentProvider {
     public void createContent(Document dom, Element parent) {
         Element a = dom.createElement("a");
         try {
-            a.setAttribute("href", redirectUrl("99", ProductVersion.majorVersion()));
+            a.setAttribute("href", redirectUrl("99", ProductVersion.minorVersion()));
         } catch (DOMException | UnsupportedEncodingException e) {
             BonitaStudioLog.error(e);
         }
