@@ -61,7 +61,7 @@ public class NewProjectHandler extends AbstractProjectMetadataHandler {
             MavenProjectHelper mavenProjectHelper, ExceptionDialogHandler exceptionDialogHandler,
             ProjectMetadata metadata, List<WizardPageBuilder> pages) {
         return super.createWizard(repositoryAccessor, mavenProjectHelper, exceptionDialogHandler, metadata, pages)
-                .withSize(700, 700)
+                .withSize(750, 700)
                 .withFixedInitialSize();
     }
     

@@ -71,7 +71,7 @@ public class NewThemeWizard extends Wizard {
                 workspace);
         configurationPage.setTitle(Messages.artifactConfigurationPageTitle);
         configurationPage.setDescription(Messages.artifactConfigurationPageDescription);
-        configurationPage.setHelpLinkURL(String.format(THEME_DOC_URL,ProductVersion.majorVersion()));
+        configurationPage.setHelpLinkURL(String.format(THEME_DOC_URL,ProductVersion.minorVersion()));
         addPage(configurationPage);
     }
 

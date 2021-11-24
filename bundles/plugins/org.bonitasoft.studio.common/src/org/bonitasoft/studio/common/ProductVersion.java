@@ -123,7 +123,7 @@ public class ProductVersion {
                 && current.compareTo(initialVersion) >= 0;
     }
 
-    public static String majorVersion() {
+    public static String minorVersion() {
         final DefaultArtifactVersion productVersion = new DefaultArtifactVersion(CURRENT_VERSION);
         return String.format("%s.%s", productVersion.getMajorVersion(), productVersion.getMinorVersion());
     }

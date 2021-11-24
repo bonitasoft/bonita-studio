@@ -26,6 +26,7 @@ import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.BonitaProjectNature;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.core.maven.BonitaProjectBuilder;
 import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
 import org.bonitasoft.studio.groovy.repository.ProvidedGroovyRepositoryStore;
 import org.bonitasoft.studio.identity.organization.repository.OrganizationRepositoryStore;
@@ -70,7 +71,8 @@ public class BonitaProjectIT {
 
         assertThat(project.getDescription().getBuildSpec()).extracting(ICommand::getBuilderName)
                 .containsOnly(IMavenConstants.BUILDER_ID,
-                        "org.eclipse.jdt.core.javabuilder");
+                        "org.eclipse.jdt.core.javabuilder",
+                        BonitaProjectBuilder.ID);
 
         // Check default organization 
         OrganizationRepositoryStore orgaStore = currentRepository
