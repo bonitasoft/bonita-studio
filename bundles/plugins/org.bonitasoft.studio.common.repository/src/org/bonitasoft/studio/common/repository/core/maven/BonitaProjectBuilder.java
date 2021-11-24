@@ -22,6 +22,7 @@ import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.jface.databinding.StatusToMarkerSeverity;
 import org.bonitasoft.studio.common.repository.BonitaProjectNature;
 import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
+import org.bonitasoft.studio.common.repository.Messages;
 import org.bonitasoft.studio.common.repository.core.maven.model.ProjectDefaultConfiguration;
 import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
@@ -79,7 +80,7 @@ public class BonitaProjectBuilder extends IncrementalProjectBuilder {
             IStatus status = RUNTIME_VERSION_VALIDATOR.validate(runtimeVersion);
             IMarker marker = project.createMarker(TARGET_RUNTIME_VERSION_MARKER_TYPE);
             marker.setAttribute(IMarker.SEVERITY, new StatusToMarkerSeverity(status).toMarkerSeverity());
-            marker.setAttribute(IMarker.MESSAGE, status.getMessage());
+            marker.setAttribute(IMarker.MESSAGE, status.getMessage() + Messages.editTargetRuntimeVersionFromProjectOverview);
         }
     }
 
