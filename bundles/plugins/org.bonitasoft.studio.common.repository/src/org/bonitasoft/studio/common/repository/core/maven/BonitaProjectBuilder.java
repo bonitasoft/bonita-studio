@@ -48,7 +48,6 @@ public class BonitaProjectBuilder extends IncrementalProjectBuilder {
     protected IProject[] build(int kind, Map<String, String> args, IProgressMonitor monitor) throws CoreException {
         IProject project = getProject();
         if (project.hasNature(BonitaProjectNature.NATURE_ID)) {
-            project.deleteMarkers(TARGET_RUNTIME_VERSION_MARKER_TYPE, true, IResource.DEPTH_INFINITE);
             IResourceDelta delta = getDelta(project);
             IFile pomFile = project.getFile("pom.xml");
             if (delta != null) {
@@ -73,6 +72,7 @@ public class BonitaProjectBuilder extends IncrementalProjectBuilder {
     }
 
     private void validateTargetRuntimeVersion(IProject project) throws CoreException {
+        project.deleteMarkers(TARGET_RUNTIME_VERSION_MARKER_TYPE, true, IResource.DEPTH_ONE);
         Model model = new MavenProjectHelper().getMavenModel(project);
         String runtimeVersion = model.getProperties().getProperty(ProjectDefaultConfiguration.BONITA_RUNTIME_VERSION);
         if (project.isAccessible() && !Objects.equals(runtimeVersion, ProductVersion.BONITA_RUNTIME_VERSION)) {
