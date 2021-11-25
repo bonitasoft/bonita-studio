@@ -17,6 +17,7 @@ package org.bonitasoft.studio.common.repository.core;
 import org.apache.maven.model.Build;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.PluginManagement;
+import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.repository.core.maven.model.MavenDependency;
 import org.bonitasoft.studio.common.repository.core.maven.model.MavenPlugin;
 import org.bonitasoft.studio.common.repository.core.maven.model.ProjectDefaultConfiguration;
@@ -87,13 +88,13 @@ public class MavenProjectModelBuilder {
         model.setVersion(getVersion());
         model.setDescription(getDescription());
 
-        ProjectDefaultConfiguration defaultConfiguration = new ProjectDefaultConfiguration(bonitaVersion);
+        var bonitaRuntimeVersion = bonitaVersion == null ? ProductVersion.BONITA_RUNTIME_VERSION : bonitaVersion;
+        ProjectDefaultConfiguration defaultConfiguration = new ProjectDefaultConfiguration(bonitaRuntimeVersion);
         defaultConfiguration.getProperties()
                 .forEach((key, value) -> model.addProperty(key.toString(), value.toString()));
 
-        
         model.setDependencyManagement(defaultConfiguration.getDependencyManagement());
-        
+
         defaultConfiguration.getDependencies().stream()
                 .map(MavenDependency::toProvidedDependency)
                 .forEach(model::addDependency);
