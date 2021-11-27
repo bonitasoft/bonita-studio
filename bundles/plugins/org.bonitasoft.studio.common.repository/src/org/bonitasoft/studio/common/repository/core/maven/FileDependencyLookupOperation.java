@@ -107,16 +107,23 @@ public class FileDependencyLookupOperation implements IRunnableWithProgress {
                         && result.getFile() != null
                         && result.getFile().exists()) {
                     String name = result.getFile().getName();
-                    var fileExtension = name.toLowerCase().endsWith(".jar") | name.toLowerCase().endsWith(".zip")
-                            ? name.substring(name.length() - 3) : null;
-                    if (fileExtension != null) {
-                        Pattern pattern = Pattern.compile(String.format("^(.+?)-(\\d.*?)\\.%s$", fileExtension));
-                        Matcher matcher = pattern.matcher(name);
-                        if (matcher.find()) {
-                            var artifactId = matcher.group(1);
-                            var version = matcher.group(2);
-                            result.setArtifactId(artifactId);
-                            result.setVersion(version);
+                    if (gav != null) {
+                        result.setGroupId(gav.getGroupId());
+                        result.setArtifactId(gav.getArtifactId());
+                        result.setVersion(gav.getVersion());
+                        result.setClassifier(gav.getClassifier());
+                    } else {
+                        var fileExtension = name.toLowerCase().endsWith(".jar") | name.toLowerCase().endsWith(".zip")
+                                ? name.substring(name.length() - 3) : null;
+                        if (fileExtension != null) {
+                            Pattern pattern = Pattern.compile(String.format("^(.+?)-(\\d.*?)\\.%s$", fileExtension));
+                            Matcher matcher = pattern.matcher(name);
+                            if (matcher.find()) {
+                                var artifactId = matcher.group(1);
+                                var version = matcher.group(2);
+                                result.setArtifactId(artifactId);
+                                result.setVersion(version);
+                            }
                         }
                     }
                     result.setStatus(Status.LOCAL);
