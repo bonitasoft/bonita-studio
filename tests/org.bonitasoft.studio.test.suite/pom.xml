@@ -16,9 +16,17 @@
         <javaOPTS>-Xmx1g</javaOPTS>
         <additionalArgs>-Dbonita.noregister=1 -Declipse.log.level=${tests.log.level}</additionalArgs>
 		<target.test.dir>${test.workspace.dir}/community/junit/lé test</target.test.dir>
+        <testMavenUserSettingsFile>${project.basedir}/tests-settings.xml</testMavenUserSettingsFile>
+        <m2eSettingsCustomizationFile>${project.build.directory}/classes/m2e_settings_customization.ini</m2eSettingsCustomizationFile>
     </properties>
 
     <build>
+        <resources>
+            <resource>
+            <filtering>true</filtering>
+            <directory>src-resources</directory>
+            </resource>
+        </resources>
         <plugins>
             <plugin>
                 <groupId>org.eclipse.tycho</groupId>
@@ -77,7 +85,7 @@
                         <include>**/*TestSuite.java</include>
                     </includes>
                     <argLine>${javaOPTS} ${additionalArgs}</argLine>
-                    <appArgLine>-nl en -clean</appArgLine>
+                    <appArgLine>-pluginCustomization ${m2eSettingsCustomizationFile} -nl en -clean</appArgLine>
                     <osgiDataDirectory>${target.test.dir}</osgiDataDirectory>
                 </configuration>
             </plugin>

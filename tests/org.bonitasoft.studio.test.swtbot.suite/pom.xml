@@ -14,12 +14,20 @@
 	<packaging>eclipse-test-plugin</packaging>
 	
 	<properties>
+        <testMavenUserSettingsFile>${project.basedir}/tests-settings.xml</testMavenUserSettingsFile>
+        <m2eSettingsCustomizationFile>${project.build.directory}/classes/m2e_settings_customization.ini</m2eSettingsCustomizationFile>
 		<target.test.dir>${test.workspace.dir}/community/swtbot/lé test</target.test.dir>
 	</properties>
 
 	<build>
+        <resources>
+          <resource>
+            <filtering>true</filtering>
+            <directory>src-resources</directory>
+          </resource>
+        </resources>
 		<plugins>
-        <plugin>
+            <plugin>
                 <groupId>org.eclipse.tycho</groupId>
                 <artifactId>target-platform-configuration</artifactId>
                 <version>${tychoVersion}</version>
@@ -52,8 +60,7 @@
 						<include>**/*TestSuite.java</include>
 					</includes>
 					<argLine>-Xmx1g -DLAZYLOAD_ENGINE -Ddisable.notifications -Dbonita.noregister=1 -Declipse.log.level=${tests.log.level}</argLine>
-					<appArgLine>-nl en -clean</appArgLine>
-					
+					<appArgLine>-pluginCustomization ${m2eSettingsCustomizationFile} -nl en -clean</appArgLine>
 					<osgiDataDirectory>${target.test.dir}</osgiDataDirectory>
 				</configuration>
 			</plugin>
