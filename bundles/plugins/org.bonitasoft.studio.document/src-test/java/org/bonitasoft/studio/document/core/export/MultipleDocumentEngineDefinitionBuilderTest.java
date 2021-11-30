@@ -18,9 +18,9 @@ import static org.bonitasoft.studio.model.expression.builders.ExpressionBuilder.
 import static org.bonitasoft.studio.model.expression.builders.ExpressionBuilder.anExpression;
 import static org.bonitasoft.studio.model.process.builders.ContractInputBuilder.aContractInput;
 import static org.bonitasoft.studio.model.process.builders.DocumentBuilder.aDocument;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.notNull;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.notNull;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -38,7 +38,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 public class MultipleDocumentEngineDefinitionBuilderTest {
@@ -66,7 +66,7 @@ public class MultipleDocumentEngineDefinitionBuilderTest {
 
         builder.build();
 
-        verify(docDefinitionListBuilder).addInitialValue(Mockito.<org.bonitasoft.engine.expression.Expression> anyObject());
+        verify(docDefinitionListBuilder).addInitialValue(Mockito.<org.bonitasoft.engine.expression.Expression> any());
     }
 
     @Test
@@ -78,7 +78,7 @@ public class MultipleDocumentEngineDefinitionBuilderTest {
                 .build(), processBuilder, scriptFactory);
         builder.build();
 
-        verify(docDefinitionListBuilder, never()).addInitialValue(notNull(org.bonitasoft.engine.expression.Expression.class));
+        verify(docDefinitionListBuilder, never()).addInitialValue(notNull());
     }
 
     @Test
@@ -90,7 +90,7 @@ public class MultipleDocumentEngineDefinitionBuilderTest {
                 .build(), processBuilder, scriptFactory);
         builder.build();
 
-        verify(docDefinitionListBuilder, never()).addInitialValue(notNull(org.bonitasoft.engine.expression.Expression.class));
+        verify(docDefinitionListBuilder, never()).addInitialValue(notNull());
     }
 
     @Test
@@ -103,19 +103,17 @@ public class MultipleDocumentEngineDefinitionBuilderTest {
                 .build(), processBuilder, scriptFactory);
         builder.build();
 
-        verify(docDefinitionListBuilder).addInitialValue(notNull(org.bonitasoft.engine.expression.Expression.class));
+        verify(docDefinitionListBuilder).addInitialValue(notNull());
     }
 
     @Test
     public void should_add_initial_content_for_NONE_type_if_contract_input_is_not_null() throws Exception {
         when(processBuilder.addDocumentListDefinition(anyString())).thenReturn(docDefinitionListBuilder);
-        when(scriptFactory.createMultipleDocumentInitialContentScriptExpression(any(ContractInput.class))).thenReturn(
-                aGroovyScriptExpression().withContent("script content").build());
         final MultipleDocumentEngineDefinitionBuilder builder = new MultipleDocumentEngineDefinitionBuilder(aDocument().multiple()
                 .withDocumentType(DocumentType.NONE).build(), processBuilder, scriptFactory);
         builder.build();
 
-        verify(docDefinitionListBuilder, never()).addInitialValue(notNull(org.bonitasoft.engine.expression.Expression.class));
+        verify(docDefinitionListBuilder, never()).addInitialValue(notNull());
     }
 
     private Document createBasicDocument() {

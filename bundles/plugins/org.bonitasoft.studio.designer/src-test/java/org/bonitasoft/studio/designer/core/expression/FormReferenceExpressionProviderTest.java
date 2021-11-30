@@ -34,7 +34,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 /**
  * @author Romain Bioteau
@@ -81,7 +81,6 @@ public class FormReferenceExpressionProviderTest {
     private WebPageFileStore newWebPageFileStore(final String name, final String id) {
         final WebPageFileStore webPageFileStore = mock(WebPageFileStore.class);
         when(webPageFileStore.getCustomPageName()).thenReturn(name);
-        when(webPageFileStore.getId()).thenReturn(id);
         when(webPageFileStore.getUUID()).thenReturn(id);
         return webPageFileStore;
     }

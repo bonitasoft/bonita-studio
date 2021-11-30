@@ -15,10 +15,10 @@
 package org.bonitasoft.studio.contract.ui.property.constraint.edit.editor.contentassist;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyInt;
-import static org.mockito.Matchers.anySet;
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anySet;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -31,7 +31,6 @@ import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.ContractInputType;
 import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.bonitasoft.studio.swt.rules.RealmWithDisplay;
-import org.codehaus.groovy.ast.ClassNode;
 import org.codehaus.groovy.ast.ModuleNode;
 import org.codehaus.groovy.ast.expr.BinaryExpression;
 import org.codehaus.groovy.ast.expr.ConstantExpression;
@@ -43,7 +42,6 @@ import org.codehaus.jdt.groovy.model.GroovyCompilationUnit;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jdt.ui.text.java.JavaContentAssistInvocationContext;
 import org.eclipse.jface.text.BadLocationException;
-import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.junit.Before;
 import org.junit.Rule;
@@ -51,7 +49,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Spy;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 /**
  * @author Romain Bioteau
@@ -97,12 +95,11 @@ public class ContractInputCompletionProposalComputerTest {
         contract.getInputs().add(employeeInput);
         contract.getInputs().add(buildInput(null, "days", ContractInputType.TEXT, true));
         doReturn(contract.getInputs()).when(proposalComputer).getContractInputs(context);
-        doReturn(contentAssistContext).when(proposalComputer).createContentAssistContext(any(GroovyCompilationUnit.class),
-                anyInt(), any(Document.class));
+        doReturn(contentAssistContext).when(proposalComputer).createContentAssistContext(any(),
+                anyInt(), any());
         doReturn(ContractInputCompletionProposalComputerTest.class.getClassLoader()).when(proposalComputer)
-                .getProjectClassloader(any(GroovyCompilationUnit.class));
+                .getProjectClassloader(any());
         doReturn(methodProposalCreator).when(proposalComputer).createMethodProposalCreator();
-        doReturn(moduleNode).when(proposalComputer).getModuleNode(contentAssistContext);
         when(context.computeIdentifierPrefix()).thenReturn("");
         when(contentAssistContext.getPerceivedCompletionNode()).thenReturn(new VariableExpression(""));
         when(context.getCompilationUnit()).thenReturn(groovyCompilationUnit);
@@ -142,7 +139,6 @@ public class ContractInputCompletionProposalComputerTest {
 
     @Test
     public void should_computeCompletionProposals_returns_no_proposals_for_unsupported_expression() throws Exception {
-        when(contentAssistContext.getPerceivedCompletionNode()).thenReturn(null);
         doReturn(Collections.emptyList()).when(proposalComputer).getContractInputs(context);
         final List<ICompletionProposal> proposals = proposalComputer.computeCompletionProposals(context, null);
         assertThat(proposals).isEmpty();
@@ -160,7 +156,7 @@ public class ContractInputCompletionProposalComputerTest {
     public void should_computeCompletionProposals_call_java_methods_proposal_creator() throws Exception {
         when(contentAssistContext.getPerceivedCompletionNode()).thenReturn(new VariableExpression("days"));
         proposalComputer.computeCompletionProposals(context, monitor);
-        verify(methodProposalCreator).findAllProposals(any(ClassNode.class), anySet(), eq(""), eq(false), eq(false));
+        verify(methodProposalCreator).findAllProposals(any(), anySet(), eq(""), eq(false), eq(false));
     }
 
     @Test

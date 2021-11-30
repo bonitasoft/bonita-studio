@@ -15,7 +15,6 @@
 package org.bonitasoft.studio.importer;
 
 import org.bonitasoft.studio.importer.processors.ToProcProcessor;
-import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

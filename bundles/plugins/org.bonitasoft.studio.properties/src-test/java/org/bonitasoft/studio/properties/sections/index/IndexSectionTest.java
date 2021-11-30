@@ -18,12 +18,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFilter;
-import org.bonitasoft.studio.properties.sections.index.IndexSection;
 import org.bonitasoft.studio.swt.rules.RealmWithDisplay;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 public class IndexSectionTest {

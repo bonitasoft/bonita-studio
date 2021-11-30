@@ -15,9 +15,6 @@
 package org.bonitasoft.studio.diagram.custom.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
@@ -38,7 +35,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 /**
  * @author Romain Bioteau
@@ -65,7 +62,6 @@ public class NewDiagramFactoryTest {
         newDiagramFactory = spy(new NewDiagramFactory(repository));
 
         when(repository.getRepositoryStore(DiagramRepositoryStore.class)).thenReturn(diagramRepositoryStore);
-        when(diagramRepositoryStore.getChild(anyString(), any(Boolean.class))).thenReturn(null);
     }
 
     /**

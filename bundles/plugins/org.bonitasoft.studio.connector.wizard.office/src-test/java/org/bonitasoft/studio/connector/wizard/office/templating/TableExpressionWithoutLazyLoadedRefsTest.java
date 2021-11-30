@@ -22,23 +22,15 @@ import static org.bonitasoft.studio.model.expression.builders.ListExpressionBuil
 import static org.bonitasoft.studio.model.expression.builders.TableExpressionBuilder.aTableExpression;
 import static org.bonitasoft.studio.model.process.builders.BusinessObjectDataBuilder.aBusinessData;
 import static org.bonitasoft.studio.model.process.builders.DataBuilder.aData;
-import static org.mockito.Mockito.when;
 
-import java.util.Optional;
-
-import org.bonitasoft.engine.bdm.model.BusinessObject;
-import org.bonitasoft.engine.bdm.model.field.RelationField;
-import org.bonitasoft.engine.bdm.model.field.RelationField.FetchType;
 import org.bonitasoft.studio.assertions.StatusAssert;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelFileStore;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
-import org.bonitasoft.studio.model.businessObject.BusinessObjectBuilder;
-import org.bonitasoft.studio.model.businessObject.FieldBuilder.RelationFieldBuilder;
 import org.eclipse.core.runtime.IStatus;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 public class TableExpressionWithoutLazyLoadedRefsTest {
@@ -49,9 +41,6 @@ public class TableExpressionWithoutLazyLoadedRefsTest {
     @Test
     public void should_fail_if_table_expression_contains_a_business_object_data() throws Exception {
         final TableExpressionWithoutLazyLoadedRefs validator = newValidator();
-
-        when(store.getBusinessObjectByQualifiedName("Employee"))
-                .thenReturn(Optional.of(aBusinessObjectWithLazyFieldsAtLevel("Employee")));
 
         final IStatus status = validator
                 .validate(aTableExpression().havingRows(aListExpression().havingExpressions(
@@ -95,13 +84,6 @@ public class TableExpressionWithoutLazyLoadedRefsTest {
                         aVariableExpression().havingReferencedElements(aData()))).build());
 
         StatusAssert.assertThat(status).isOK();
-    }
-
-    private BusinessObject aBusinessObjectWithLazyFieldsAtLevel(String name) {
-        final RelationField lazyField = RelationFieldBuilder.aCompositionField("lazy",
-                BusinessObjectBuilder.aBO("Address").build());
-        lazyField.setFetchType(FetchType.LAZY);
-        return BusinessObjectBuilder.aBO(name).withField(lazyField).build();
     }
 
     private TableExpressionWithoutLazyLoadedRefs newValidator() {

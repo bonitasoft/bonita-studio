@@ -15,7 +15,7 @@
 package org.bonitasoft.studio.validation.constraints.process;
 
 import static com.google.common.collect.Lists.newArrayList;
-import static org.mockito.Matchers.any;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
@@ -40,7 +40,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Spy;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 public class QueryNameValidationConstraintTest {
@@ -53,7 +53,6 @@ public class QueryNameValidationConstraintTest {
 
     @Before
     public void setUp() throws Exception {
-        when(context.createSuccessStatus()).thenReturn(ValidationStatus.ok());
         when(context.createFailureStatus(any())).thenReturn(ValidationStatus.error("error"));
     }
 

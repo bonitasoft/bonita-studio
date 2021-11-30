@@ -15,7 +15,7 @@
 package org.bonitasoft.studio.common.repository.jdt;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Matchers.any;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
@@ -27,7 +27,6 @@ import static org.mockito.Mockito.when;
 
 import org.bonitasoft.studio.common.repository.filestore.FileStoreChangeEvent;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.ITypeHierarchy;
 import org.eclipse.jdt.core.JavaModelException;
@@ -37,7 +36,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 public class JDTTypeHierarchyManagerTest {
@@ -56,7 +55,7 @@ public class JDTTypeHierarchyManagerTest {
 
     @Before
     public void setUp() throws Exception {
-        Mockito.doReturn(typeHierarchy).when(type).newTypeHierarchy(Mockito.any(IProgressMonitor.class));
+        Mockito.doReturn(typeHierarchy).when(type).newTypeHierarchy(Mockito.any());
         new JDTTypeHierarchyManager().clearCache();
         doReturn("jar").when(jarResource).getFileExtension();
         doReturn("whatever").when(notAJarResource).getFileExtension();
@@ -73,7 +72,7 @@ public class JDTTypeHierarchyManagerTest {
         assertThat(spy.getTypeHierarchy(type)).isEqualTo(typeHierarchy);
         assertThat(spy.getTypeHierarchy(type)).isEqualTo(typeHierarchy);
         assertThat(spy.getTypeHierarchy(type)).isEqualTo(typeHierarchy);
-        verify(type, times(1)).newTypeHierarchy(any(IProgressMonitor.class));
+        verify(type, times(1)).newTypeHierarchy(any());
     }
 
     @Test
@@ -83,7 +82,7 @@ public class JDTTypeHierarchyManagerTest {
         assertThat(spy.getTypeHierarchy(type)).isEqualTo(typeHierarchy);
         spy.clearCache();
         assertThat(spy.getTypeHierarchy(type)).isEqualTo(typeHierarchy);
-        verify(type, Mockito.times(2)).newTypeHierarchy(any(IProgressMonitor.class));
+        verify(type, Mockito.times(2)).newTypeHierarchy(any());
     }
 
     @Test

@@ -20,10 +20,10 @@ import static org.bonitasoft.studio.model.process.builders.ActorBuilder.anActor;
 import static org.bonitasoft.studio.model.process.builders.ContractBuilder.aContract;
 import static org.bonitasoft.studio.model.process.builders.DocumentBuilder.aDocument;
 import static org.bonitasoft.studio.model.process.builders.PoolBuilder.aPool;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyBoolean;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyBoolean;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
@@ -50,7 +50,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 public class EngineProcessBuilderTest {
@@ -68,7 +68,7 @@ public class EngineProcessBuilderTest {
     public void setup() {
         engineProcessBuilder = spy(
                 new EngineProcessBuilder(processDefBuilder, builderProvider, new ModelSearch(Collections::emptyList)));
-        doReturn(bDataBuilder).when(processDefBuilder).addBusinessData(anyString(), anyString(), any(Expression.class));
+        doReturn(bDataBuilder).when(processDefBuilder).addBusinessData(any(), any(), any());
         
     }
 
@@ -92,7 +92,7 @@ public class EngineProcessBuilderTest {
                 .build();
         final IEngineDefinitionBuilder engineDefinitionBuilder = mock(IEngineDefinitionBuilder.class);
         doReturn(engineDefinitionBuilder).when(builderProvider).getEngineDefinitionBuilder(eq(pool),
-                any(Document.class), eq(ProcessDefinitionBuilder.class));
+                any(), eq(ProcessDefinitionBuilder.class));
         engineProcessBuilder.casePool(pool);
 
         final ArgumentCaptor<Expression> argument = ArgumentCaptor.forClass(Expression.class);
@@ -108,7 +108,7 @@ public class EngineProcessBuilderTest {
                 .build();
         final IEngineDefinitionBuilder engineDefinitionBuilder = mock(IEngineDefinitionBuilder.class);
         doReturn(engineDefinitionBuilder).when(builderProvider).getEngineDefinitionBuilder(eq(pool),
-                any(Document.class), eq(ProcessDefinitionBuilder.class));
+                any(), eq(ProcessDefinitionBuilder.class));
         engineProcessBuilder.casePool(pool);
 
         final ArgumentCaptor<Expression> argument = ArgumentCaptor.forClass(Expression.class);
@@ -125,7 +125,7 @@ public class EngineProcessBuilderTest {
                 .build();
         final IEngineDefinitionBuilder engineDefinitionBuilder = mock(IEngineDefinitionBuilder.class);
         doReturn(engineDefinitionBuilder).when(builderProvider).getEngineDefinitionBuilder(eq(pool),
-                any(Document.class), eq(ProcessDefinitionBuilder.class));
+                any(), eq(ProcessDefinitionBuilder.class));
         engineProcessBuilder.casePool(pool);
 
         final ArgumentCaptor<Expression> argument = ArgumentCaptor.forClass(Expression.class);
@@ -145,7 +145,7 @@ public class EngineProcessBuilderTest {
                 .havingActors(anActor().withName("employee").withDocumentation("an employee actor").initiator())
                 .build();
         final ActorDefinitionBuilder actorDefinitionBuilder = mock(ActorDefinitionBuilder.class);
-        doReturn(actorDefinitionBuilder).when(processDefBuilder).addActor(anyString(), anyBoolean());
+        doReturn(actorDefinitionBuilder).when(processDefBuilder).addActor(any(), anyBoolean());
 
         engineProcessBuilder.casePool(pool);
 
@@ -160,7 +160,7 @@ public class EngineProcessBuilderTest {
                         .withType(String.class.getName()))
                 .build();
         final ParameterDefinitionBuilder parameterDefinitionBuilder = mock(ParameterDefinitionBuilder.class);
-        doReturn(parameterDefinitionBuilder).when(processDefBuilder).addParameter(anyString(), anyString());
+        doReturn(parameterDefinitionBuilder).when(processDefBuilder).addParameter(any(), any());
 
         engineProcessBuilder.casePool(pool);
 
@@ -176,7 +176,7 @@ public class EngineProcessBuilderTest {
                 .build();
         final IEngineDefinitionBuilder engineDefinitionBuilder = mock(IEngineDefinitionBuilder.class);
         doReturn(engineDefinitionBuilder).when(builderProvider).getEngineDefinitionBuilder(eq(pool),
-                any(Document.class), eq(ProcessDefinitionBuilder.class));
+                any(), eq(ProcessDefinitionBuilder.class));
 
         engineProcessBuilder.casePool(pool);
 
@@ -191,7 +191,7 @@ public class EngineProcessBuilderTest {
                 .build();
         final IEngineDefinitionBuilder engineDefinitionBuilder = mock(IEngineDefinitionBuilder.class);
         doReturn(engineDefinitionBuilder).when(builderProvider).getEngineDefinitionBuilder(eq(pool),
-                any(Contract.class), eq(FlowElementBuilder.class));
+                any(), eq(FlowElementBuilder.class));
 
         engineProcessBuilder.casePool(pool);
 

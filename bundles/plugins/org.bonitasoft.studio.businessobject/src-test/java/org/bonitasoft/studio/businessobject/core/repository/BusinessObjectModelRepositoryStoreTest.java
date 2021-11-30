@@ -30,7 +30,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Spy;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 /**
  * @author Romain Bioteau
@@ -74,7 +74,6 @@ public class BusinessObjectModelRepositoryStoreTest {
     @Test
     public void import_should_generate_jar() {
         doReturn(businessObjectFileStore).when(storeUnderTest).superDoImportInputStream("test", inputStream);
-        doNothing().when(storeUnderTest).deploy(businessObjectFileStore);
         doReturn(Status.OK_STATUS).when(storeUnderTest).generateJar(businessObjectFileStore);
 
         storeUnderTest.doImportInputStream("test", inputStream);

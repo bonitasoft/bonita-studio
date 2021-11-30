@@ -15,9 +15,8 @@
 package org.bonitasoft.studio.common.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyInt;
-import static org.mockito.Mockito.doNothing;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
@@ -44,7 +43,7 @@ import org.eclipse.emf.edapt.migration.MigrationException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 public class AbstractRepositoryTest {
@@ -117,17 +116,11 @@ public class AbstractRepositoryTest {
     }
 
     private AbstractRepository newRepository() throws CoreException, MigrationException {
-        final AbstractRepository repo = spy(new TestRepository(workspace, project,
+        return spy(new TestRepository(workspace, project,
                 extensionContextInjectionFactory,
                 jdtTypeHierarchyManager, 
                 eventBroker,
                 true));
-        doReturn(bonitaHomeHandler).when(repo).getDatabaseHandler();
-        doNothing().when(repo).hookResourceListeners();
-        doNothing().when(repo).removeResourceListeners();
-        doNothing().when(repo).updateCurrentRepositoryPreference();
-        doNothing().when(repo).migrate(any(IProgressMonitor.class));
-        return repo;
     }
 
 }

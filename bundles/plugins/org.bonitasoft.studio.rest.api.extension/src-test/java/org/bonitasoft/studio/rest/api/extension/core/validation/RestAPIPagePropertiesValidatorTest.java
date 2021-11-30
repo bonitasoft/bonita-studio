@@ -10,10 +10,10 @@ package org.bonitasoft.studio.rest.api.extension.core.validation;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.entry;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Matchers.notNull;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.notNull;
 import static org.mockito.Mockito.doCallRealMethod;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
@@ -46,7 +46,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 public class RestAPIPagePropertiesValidatorTest {
@@ -111,7 +111,7 @@ public class RestAPIPagePropertiesValidatorTest {
         final MultiStatus status = validator.validate(pagePropertyFile);
 
         StatusAssert.assertThat(status).isOK();
-        verify(validator).validatePathTemplateUnicity(eq(project), notNull(LocationResolver.class));
+        verify(validator).validatePathTemplateUnicity(eq(project), notNull());
     }
 
     @Test
@@ -145,7 +145,7 @@ public class RestAPIPagePropertiesValidatorTest {
         final MultiStatus status = validator.validate(pagePropertyFile);
 
         StatusAssert.assertThat(status).isNotOK();
-        verify(validator, never()).validatePathTemplateUnicity(eq(project), notNull(LocationResolver.class));
+        verify(validator, never()).validatePathTemplateUnicity(eq(project), notNull());
     }
 
     @Test

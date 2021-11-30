@@ -19,7 +19,7 @@ import static org.bonitasoft.studio.model.expression.builders.ExpressionBuilder.
 import static org.bonitasoft.studio.model.process.builders.FormMappingBuilder.aFormMapping;
 import static org.bonitasoft.studio.model.process.builders.PoolBuilder.aPool;
 import static org.bonitasoft.studio.model.process.builders.TaskBuilder.aTask;
-import static org.mockito.Matchers.any;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
@@ -35,7 +35,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Spy;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 /**
  * @author Romain Bioteau
@@ -125,7 +125,6 @@ public class FormMappingConstraintTest {
                                         .havingTargetForm(anExpression().withName("newForm").withContent("id2"))))
                 .build();
         doReturn(fileStore).when(webPageRepositoryStore).getChild("id1", true);
-        doReturn(fileStore).when(webPageRepositoryStore).getChild("id2", true);
         doReturn(pool.getFormMapping()).when(ctx).getTarget();
 
         //When

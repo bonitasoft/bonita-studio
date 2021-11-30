@@ -17,7 +17,7 @@
 package org.bonitasoft.studio.businessobject.ui.wizard;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.spy;
 
@@ -30,7 +30,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 /**
  * @author Romain Bioteau
@@ -52,7 +52,6 @@ public class ExportBusinessDataModelWizardPageTest {
     @Before
     public void setUp() throws Exception {
         wizardPageUnderTest = spy(new ExportBusinessDataModelWizardPage(businessObjectDefinitionStore));
-        doNothing().when(wizardPageUnderTest).createControl(any(Composite.class));
         tmpFile = File.createTempFile("testExport", ".zip", new File(System.getProperty("java.io.tmpdir")));
     }
 

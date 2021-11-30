@@ -1,7 +1,7 @@
 package org.bonitasoft.studio.contract.ui.property.input.edit;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Matchers.anyObject;
+import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -16,7 +16,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CheckboxPropertyEditingSupportTest {
@@ -35,11 +35,7 @@ public class CheckboxPropertyEditingSupportTest {
     @Before
     public void setUp() throws Exception {
         editingSupport = new CheckboxPropertyEditingSupport(sourceProvider, viewer, "name");
-        when(sourceProvider.getPropertySource(anyObject())).thenReturn(value);
-    }
-
-    @After
-    public void tearDown() throws Exception {
+        when(sourceProvider.getPropertySource(any())).thenReturn(value);
     }
 
     @Test

@@ -16,7 +16,7 @@ package org.bonitasoft.studio.contract.ui.property.constraint;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.bonitasoft.studio.model.process.builders.ContractBuilder.aContract;
-import static org.mockito.Matchers.anyList;
+import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
@@ -40,7 +40,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 /**
  * @author Romain Bioteau
@@ -72,7 +72,6 @@ public class ContractConstraintControllerTest {
 
     @Test
     public void should_add_add_a_new_contract_constraint() throws Exception {
-        when(viewer.getSelection()).thenReturn(new StructuredSelection());
         final ContractConstraint constraint = controller.add(viewer);
         assertThat(contract.getConstraints()).containsOnly(constraint);
         assertThat(constraint.getName()).isEqualTo("constraint1");
@@ -125,7 +124,6 @@ public class ContractConstraintControllerTest {
 
     @Test
     public void should_moveUp_decrease_index_of_selected_constraint() throws Exception {
-        doReturn(false).when(controller).openConfirmation(anyList());
         final ContractConstraint c1 = ProcessFactory.eINSTANCE.createContractConstraint();
         final ContractConstraint c2 = ProcessFactory.eINSTANCE.createContractConstraint();
         final ContractConstraint c3 = ProcessFactory.eINSTANCE.createContractConstraint();
@@ -140,7 +138,6 @@ public class ContractConstraintControllerTest {
 
     @Test
     public void should_moveUp_do_nothing_when_selection_is_first_element() throws Exception {
-        doReturn(false).when(controller).openConfirmation(anyList());
         final ContractConstraint c1 = ProcessFactory.eINSTANCE.createContractConstraint();
         final ContractConstraint c2 = ProcessFactory.eINSTANCE.createContractConstraint();
         final ContractConstraint c3 = ProcessFactory.eINSTANCE.createContractConstraint();
@@ -155,7 +152,6 @@ public class ContractConstraintControllerTest {
 
     @Test
     public void should_moveDown_decrease_index_of_selected_constraint() throws Exception {
-        doReturn(false).when(controller).openConfirmation(anyList());
         final ContractConstraint c1 = ProcessFactory.eINSTANCE.createContractConstraint();
         final ContractConstraint c2 = ProcessFactory.eINSTANCE.createContractConstraint();
         final ContractConstraint c3 = ProcessFactory.eINSTANCE.createContractConstraint();
@@ -170,7 +166,6 @@ public class ContractConstraintControllerTest {
 
     @Test
     public void should_moveDown_do_nothing_when_selection_is_last_element() throws Exception {
-        doReturn(false).when(controller).openConfirmation(anyList());
         final ContractConstraint c1 = ProcessFactory.eINSTANCE.createContractConstraint();
         final ContractConstraint c2 = ProcessFactory.eINSTANCE.createContractConstraint();
         final ContractConstraint c3 = ProcessFactory.eINSTANCE.createContractConstraint();

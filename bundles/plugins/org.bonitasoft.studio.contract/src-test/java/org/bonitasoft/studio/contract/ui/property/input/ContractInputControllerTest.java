@@ -20,12 +20,12 @@ import static org.bonitasoft.studio.model.process.builders.ContractBuilder.aCont
 import static org.bonitasoft.studio.model.process.builders.ContractConstraintBuilder.aContractConstraint;
 import static org.bonitasoft.studio.model.process.builders.ContractInputBuilder.aContractInput;
 import static org.bonitasoft.studio.model.process.builders.TaskBuilder.aTask;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyBoolean;
-import static org.mockito.Matchers.anyList;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Matchers.notNull;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyBoolean;
+import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.notNull;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
@@ -38,8 +38,6 @@ import java.util.Arrays;
 
 import org.assertj.core.api.Assertions;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
-import org.bonitasoft.studio.contract.core.refactoring.RefactorContractInputOperation;
-import org.bonitasoft.studio.contract.ui.property.input.ContractInputController.EditNameRunnable;
 import org.bonitasoft.studio.model.process.Contract;
 import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.ContractInputType;
@@ -64,7 +62,7 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 /**
  * @author Romain Bioteau
@@ -103,7 +101,6 @@ public class ContractInputControllerTest {
         contractInputController = spy(new ContractInputController(progressService));
         doReturn(new TransactionalEditingDomainImpl(new ProcessItemProviderAdapterFactory())).when(contractInputController).editingDomain(any(Contract.class));
         doReturn(scriptRefactoringOperationFactory).when(contractInputController).scriptRefactoringOperationFactory();
-        when(scriptRefactoringOperationFactory.createScriptOperationFactory(anyString(), anyList())).thenReturn(refactorScriptOperation);
         observableValue = new WritableValue(Realm.getDefault());
         when(viewer.getInput()).thenReturn(observableValue);
         final Tree tree = mock(Tree.class);
@@ -120,7 +117,7 @@ public class ContractInputControllerTest {
         final ContractInput input = contractInputController.add(viewer);
 
         ContractInputAssert.assertThat(input).hasName("input1").hasType(ContractInputType.TEXT);
-        verify(display).asyncExec(notNull(EditNameRunnable.class));
+        verify(display).asyncExec(notNull());
     }
 
     @Test
@@ -169,7 +166,7 @@ public class ContractInputControllerTest {
         final ContractInput input = contractInputController.addChildInput(viewer);
         ContractInputAssert.assertThat(input1).hasInputs(input);
 
-        verify(display).asyncExec(notNull(EditNameRunnable.class));
+        verify(display).asyncExec(notNull());
     }
 
     public void should_addChildInput_return_null_if_selection_in_viewer_is_empty() throws Exception {
@@ -199,7 +196,7 @@ public class ContractInputControllerTest {
         when(viewer.getSelection()).thenReturn(new StructuredSelection(Arrays.asList(input2, input3)));
         contractInputController.remove(viewer);
 
-        verify(progressService).run(eq(true), eq(true), notNull(RefactorContractInputOperation.class));
+        verify(progressService).run(eq(true), eq(true), notNull());
     }
 
     @Test
@@ -281,7 +278,7 @@ public class ContractInputControllerTest {
 
         contractInputController.remove(viewer);
 
-        verify(progressService).run(eq(true), eq(true), notNull(RefactorContractInputOperation.class));
+        verify(progressService).run(eq(true), eq(true), notNull());
     }
 
     @Test

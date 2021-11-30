@@ -44,7 +44,7 @@ Require-Bundle: org.bonitasoft.studio.diagram,
  org.eclipse.e4.ui.di,
  org.bonitasoft.studio.validation;bundle-version="6.2.0",
  org.eclipse.e4.ui.workbench.swt,
- org.mockito;bundle-version="1.9.5";resolution:=optional,
+ org.mockito.mockito-core;bundle-version="1.9.5";resolution:=optional,
  org.junit;bundle-version="4.11.0";resolution:=optional,
  org.assertj;bundle-version="1.5.0";resolution:=optional,
  org.bonitasoft.studio.tests-utils;bundle-version="6.4.1";resolution:=optional,
@@ -76,7 +76,9 @@ Require-Bundle: org.bonitasoft.studio.diagram,
  org.bonitasoft.studio.connectors;bundle-version="7.13.0",
  org.bonitasoft.studio.connectors.model.edit,
  org.bonitasoft.studio.dependencies,
- org.bonitasoft.studio.diagram.custom
+ org.bonitasoft.studio.diagram.custom,
+ org.objenesis;bundle-version="3.2.0";resolution:=optional,
+ net.bytebuddy.byte-buddy;bundle-version="1.12.1";resolution:=optional
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-ActivationPolicy: lazy
 Import-Package: javax.annotation;version="1.2.0",

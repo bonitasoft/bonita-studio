@@ -22,14 +22,11 @@ import static org.bonitasoft.studio.model.expression.builders.ListExpressionBuil
 import static org.bonitasoft.studio.model.expression.builders.TableExpressionBuilder.aTableExpression;
 import static org.bonitasoft.studio.model.process.builders.BusinessObjectDataBuilder.aBusinessData;
 import static org.bonitasoft.studio.model.process.builders.ConnectorBuilder.aConnector;
-import static org.mockito.Matchers.anyObject;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-import java.util.Optional;
 
 import org.bonitasoft.engine.bdm.model.BusinessObject;
 import org.bonitasoft.engine.bdm.model.field.RelationField;
@@ -48,7 +45,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Spy;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 public class LazyLoadedBusinessObjectReferenceConstraintTest {
@@ -87,10 +84,8 @@ public class LazyLoadedBusinessObjectReferenceConstraintTest {
         final BusinessObjectModelRepositoryStore<BusinessObjectModelFileStore> store = mock(
                 BusinessObjectModelRepositoryStore.class);
         doReturn(store).when(constraint).getBusinessObjectRepositoryStore();
-        when(store.getBusinessObjectByQualifiedName("Employee"))
-                .thenReturn(Optional.of(aBusinessObjectWithLazyFields("Employee")));
         constraint.performBatchValidation(context);
-        verify(context).createFailureStatus(anyObject());
+        verify(context).createFailureStatus(any());
     }
 
     private Connector anOfficeConnectorWithNoBusinessData() {

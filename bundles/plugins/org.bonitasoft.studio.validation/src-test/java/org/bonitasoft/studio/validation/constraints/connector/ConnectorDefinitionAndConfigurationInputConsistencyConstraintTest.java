@@ -15,10 +15,8 @@
 package org.bonitasoft.studio.validation.constraints.connector;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyObject;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -30,8 +28,6 @@ import java.util.Set;
 import org.bonitasoft.studio.common.repository.provider.ConnectorDefinitionRegistry;
 import org.bonitasoft.studio.common.repository.provider.DefinitionResourceProvider;
 import org.bonitasoft.studio.common.repository.provider.ExtendedConnectorDefinition;
-import org.bonitasoft.studio.connector.model.definition.AbstractDefFileStore;
-import org.bonitasoft.studio.connector.model.definition.AbstractDefinitionRepositoryStore;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinitionFactory;
 import org.bonitasoft.studio.connector.model.definition.Input;
@@ -54,7 +50,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 /**
  * @author Romain Bioteau
@@ -87,19 +83,12 @@ public class ConnectorDefinitionAndConfigurationInputConsistencyConstraintTest {
     public void setUp() throws Exception {
         constraintUnderTest = spy(new ConnectorDefinitionAndConfigurationInputConsistencyConstraint());
         when(context.createSuccessStatus()).thenReturn(Status.OK_STATUS);
-        when(context.createFailureStatus(anyObject())).thenReturn(new Status(IStatus.ERROR, "unknown", ""));
+        when(context.createFailureStatus(any())).thenReturn(new Status(IStatus.ERROR, "unknown", ""));
         doReturn(connectorDefStore).when(constraintUnderTest).getConnectorDefinitionRepositoryStore();
         doReturn(actorFilterDefStore).when(constraintUnderTest).getActorFilterDefinitionStore();
         
         when(defResourceProvider.getConnectorDefinitionRegistry()).thenReturn(defRegistry);
         when(connectorDefStore.getResourceProvider()).thenReturn(defResourceProvider);
-        when(actorFilterDefStore.getResourceProvider()).thenReturn(defResourceProvider);
-        
-        
-        var abstractFileStore = mock(AbstractDefFileStore.class);
-        when(abstractFileStore.isReadOnly()).thenReturn(false);
-        doReturn(abstractFileStore).when(constraintUnderTest).getDefFileStore(any(AbstractDefinitionRepositoryStore.class),
-                any(ConnectorDefinition.class));
     }
 
     /**

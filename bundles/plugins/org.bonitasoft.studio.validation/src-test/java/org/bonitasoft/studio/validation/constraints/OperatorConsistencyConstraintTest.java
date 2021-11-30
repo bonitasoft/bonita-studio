@@ -14,7 +14,7 @@
  */
 package org.bonitasoft.studio.validation.constraints;
 
-import static org.mockito.Matchers.anyObject;
+import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.when;
 
 import org.assertj.core.api.Assertions;
@@ -32,7 +32,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 public class OperatorConsistencyConstraintTest {
@@ -43,7 +43,7 @@ public class OperatorConsistencyConstraintTest {
     @Before
     public void setUp() throws Exception {
         when(context.createSuccessStatus()).thenReturn(Status.OK_STATUS);
-        when(context.createFailureStatus(anyObject())).thenReturn(new Status(IStatus.ERROR, "unknown", ""));
+        when(context.createFailureStatus(any())).thenReturn(new Status(IStatus.ERROR, "unknown", ""));
     }
 
     @Test

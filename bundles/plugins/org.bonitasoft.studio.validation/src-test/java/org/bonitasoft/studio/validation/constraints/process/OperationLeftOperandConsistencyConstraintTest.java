@@ -15,7 +15,7 @@
 package org.bonitasoft.studio.validation.constraints.process;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Matchers.anyObject;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
@@ -25,13 +25,12 @@ import org.bonitasoft.studio.model.expression.Operation;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.validation.IValidationContext;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Spy;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 /**
  * @author Baptiste Mesta
@@ -53,14 +52,7 @@ public class OperationLeftOperandConsistencyConstraintTest {
     @Before
     public void setUp() throws Exception {
         when(context.createSuccessStatus()).thenReturn(Status.OK_STATUS);
-        when(context.createFailureStatus(anyObject())).thenReturn(new Status(IStatus.ERROR, "unknown", ""));
-    }
-
-    /**
-     * @throws java.lang.Exception
-     */
-    @After
-    public void tearDown() throws Exception {
+        when(context.createFailureStatus(any())).thenReturn(new Status(IStatus.ERROR, "unknown", ""));
     }
 
     @Test

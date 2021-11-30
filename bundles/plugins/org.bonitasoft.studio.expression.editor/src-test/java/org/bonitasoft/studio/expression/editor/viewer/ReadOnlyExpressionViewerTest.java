@@ -15,8 +15,8 @@
 package org.bonitasoft.studio.expression.editor.viewer;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doCallRealMethod;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -36,7 +36,7 @@ import org.eclipse.emf.common.command.CompoundCommand;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ReadOnlyExpressionViewerTest {
@@ -261,8 +261,6 @@ public class ReadOnlyExpressionViewerTest {
 
     @Test
     public void testUpdateRightOperandNotDoneWithNoLeftOperand() {
-        doCallRealMethod().when(roew).updateRightOperand(any(CompoundCommand.class), any(Operation.class), any(String.class), any(Expression.class));
-
         final Operation operation = ExpressionFactory.eINSTANCE.createOperation();
         final Expression oldRightOperand = ExpressionFactory.eINSTANCE.createExpression();
         operation.setRightOperand(oldRightOperand);

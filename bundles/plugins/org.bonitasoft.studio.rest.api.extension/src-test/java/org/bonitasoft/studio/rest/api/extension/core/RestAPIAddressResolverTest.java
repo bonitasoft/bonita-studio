@@ -16,7 +16,7 @@ import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 public class RestAPIAddressResolverTest {
@@ -35,8 +35,6 @@ public class RestAPIAddressResolverTest {
 
     @Test
     public void should_return_empty_address_if_pathTemaplte_is_null_or_empty() throws Exception {
-        when(preferenceStore.get(BonitaPreferenceConstants.CONSOLE_HOST, BonitaPreferenceConstants.DEFAULT_HOST)).thenReturn("localhost");
-        when(preferenceStore.getInt(BonitaPreferenceConstants.CONSOLE_PORT, BonitaPreferenceConstants.DEFAULT_PORT)).thenReturn(8080);
         final RestAPIAddressResolver restAPIAddressResolver = new RestAPIAddressResolver(preferenceStore);
 
         assertThat(restAPIAddressResolver.getAddress("")).isEmpty();

@@ -17,9 +17,9 @@
 package org.bonitasoft.studio.maven.operation;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
@@ -32,7 +32,6 @@ import org.apache.maven.archetype.catalog.Archetype;
 import org.bonitasoft.studio.assertions.StatusAssert;
 import org.bonitasoft.studio.common.RestAPIExtensionNature;
 import org.bonitasoft.studio.maven.model.RestAPIExtensionArchetypeConfiguration;
-import org.bonitasoft.studio.maven.operation.CreateCustomPageProjectOperation;
 import org.bonitasoft.studio.rest.api.extension.core.repository.RestAPIExtensionRepositoryStore;
 import org.eclipse.core.internal.resources.ProjectDescription;
 import org.eclipse.core.resources.IFile;
@@ -49,7 +48,7 @@ import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CreateCustomPageProjectOperationTest {
@@ -72,7 +71,6 @@ public class CreateCustomPageProjectOperationTest {
         when(newProject.getDescription()).thenReturn(new ProjectDescription());
         final IFile pagePropertyFile = mock(IFile.class);
         when(newProject.getFile("src/main/resources/page.properties")).thenReturn(pagePropertyFile);
-        when(newProject.getParent()).thenReturn(parentProject);
         when(projectConfigurationManager.createArchetypeProjects(any(Path.class),
                 any(Archetype.class),
                 anyString(),

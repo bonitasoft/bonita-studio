@@ -1,8 +1,8 @@
 package org.bonitasoft.studio.team.repository;
 
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Matchers.notNull;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.notNull;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.spy;
@@ -30,7 +30,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 public class RepositoryTest {
@@ -80,10 +80,10 @@ public class RepositoryTest {
     public void test_ask_for_release_lock_when_closing_diagram_in_manual_mode() throws Exception {
         when(scan.isLocalyLocked()).thenReturn(true);
         doReturn(false).when(sharedRepository).isAutoShare();
-        doNothing().when(lockManager).releaseLock(eq(resource), eq(false), notNull(Display.class));
+        doNothing().when(lockManager).releaseLock(eq(resource), eq(false), notNull());
 
         sharedRepository.postClose(fileStore, new FileStoreChangeEvent(EventType.POST_CLOSE, fileStore, null));
-        verify(lockManager).releaseLock(eq(resource), eq(false), notNull(Display.class));
+        verify(lockManager).releaseLock(eq(resource), eq(false), notNull());
     }
 
     @Test
@@ -92,7 +92,7 @@ public class RepositoryTest {
         when(scan.isLocalyLocked()).thenReturn(true);
         doReturn(true).when(sharedRepository).isAutoShare();
         sharedRepository.postClose(fileStore, new FileStoreChangeEvent(EventType.POST_CLOSE, fileStore, null));
-        verify(lockManager).releaseLock(eq(resource), eq(true), notNull(Display.class));
+        verify(lockManager).releaseLock(eq(resource), eq(true), notNull());
     }
 
 }

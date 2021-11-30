@@ -8,8 +8,8 @@
  *******************************************************************************/
 package org.bonitasoft.studio.businessobject.maven;
 
-import static org.mockito.Matchers.eq;
-import static org.mockito.Matchers.notNull;
+import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.notNull;
 import static org.mockito.Mockito.verify;
 
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
@@ -17,7 +17,7 @@ import org.eclipse.e4.core.services.events.IEventBroker;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 public class BDMDependencyHandlerAddonTest {
@@ -33,7 +33,7 @@ public class BDMDependencyHandlerAddonTest {
 
         addon.registerHandler(eventBroker, repositoryAccessor);
 
-        verify(eventBroker).subscribe(eq("bdm/deployed"), notNull(InstallBDMDependenciesEventHandler.class));
+        verify(eventBroker).subscribe(eq("bdm/deployed"), notNull());
     }
 
 }

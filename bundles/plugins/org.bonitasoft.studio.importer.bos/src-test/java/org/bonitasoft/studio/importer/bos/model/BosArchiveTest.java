@@ -9,9 +9,9 @@
 package org.bonitasoft.studio.importer.bos.model;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.notNull;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.notNull;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
@@ -116,7 +116,7 @@ public class BosArchiveTest {
 
     private BosArchive newBosArchive(File archiveFile) throws ZipException, IOException {
         final BosArchive bosArchive = spy(new BosArchive(archiveFile));
-        doReturn(true).when(bosArchive).canImport(notNull(String.class));
+        doReturn(true).when(bosArchive).canImport(notNull());
         doReturn(Arrays.asList(createRepositoryStore("application_resources"), createRepositoryStore("diagrams"),
                 createRepositoryStore("lib"))).when(bosArchive).allRepositoryStores();
         doReturn(Status.OK_STATUS).when(bosArchive).validateFile(any(), any());

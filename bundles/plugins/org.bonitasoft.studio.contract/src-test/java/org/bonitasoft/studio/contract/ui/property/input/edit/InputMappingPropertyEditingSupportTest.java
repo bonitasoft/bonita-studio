@@ -18,7 +18,7 @@ package org.bonitasoft.studio.contract.ui.property.input.edit;
 // package org.bonitasoft.studio.contract.ui.property.edit;
 //
 // import static org.assertj.core.api.Assertions.assertThat;
-// import static org.mockito.Matchers.any;
+// import static org.mockito.Mockito.any;
 // import static org.mockito.Mockito.never;
 // import static org.mockito.Mockito.verify;
 // import static org.mockito.Mockito.when;
@@ -38,7 +38,7 @@ package org.bonitasoft.studio.contract.ui.property.input.edit;
 // import org.junit.Test;
 // import org.junit.runner.RunWith;
 // import org.mockito.Mock;
-// import org.mockito.runners.MockitoJUnitRunner;
+// import org.mockito.junit.MockitoJUnitRunner;
 //
 //
 // /**

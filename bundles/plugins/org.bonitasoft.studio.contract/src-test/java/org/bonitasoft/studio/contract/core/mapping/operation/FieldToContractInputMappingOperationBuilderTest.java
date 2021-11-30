@@ -23,10 +23,9 @@ import static org.bonitasoft.studio.model.businessObject.FieldBuilder.aSimpleFie
 import static org.bonitasoft.studio.model.expression.builders.ExpressionBuilder.anExpression;
 import static org.bonitasoft.studio.model.process.builders.BusinessObjectDataBuilder.aBusinessData;
 import static org.bonitasoft.studio.model.process.builders.ContractInputBuilder.aContractInput;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyBoolean;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.doReturn;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyBoolean;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
@@ -56,7 +55,7 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 public class FieldToContractInputMappingOperationBuilderTest {
@@ -176,8 +175,6 @@ public class FieldToContractInputMappingOperationBuilderTest {
         final FieldToContractInputMapping mapping = spy(aRelationMapping(address).build());
         mapping.toContractInput(aContractInput().withName("employee").withType(ContractInputType.COMPLEX).build());
         final MappingOperationScriptBuilder fakeScriptBuilder = mock(MappingOperationScriptBuilder.class);
-        when(fakeScriptBuilder.toScript()).thenThrow(BusinessObjectInstantiationException.class);
-        doReturn(fakeScriptBuilder).when(mapping).getScriptBuilder(any(BusinessObjectData.class));
         when(expressionBuilder.toExpression(any(BusinessObjectData.class), any(FieldToContractInputMapping.class),
                 anyBoolean(), anyBoolean())).thenReturn(
                         anExpression().build());

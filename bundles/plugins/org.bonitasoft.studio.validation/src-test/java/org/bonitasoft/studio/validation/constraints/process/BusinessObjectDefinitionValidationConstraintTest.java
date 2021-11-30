@@ -15,7 +15,7 @@
 package org.bonitasoft.studio.validation.constraints.process;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Matchers.anyObject;
+import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.when;
 
@@ -36,7 +36,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Spy;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 /**
  * @author Romain Bioteau
@@ -83,31 +83,27 @@ public class BusinessObjectDefinitionValidationConstraintTest {
     @Test
     public void shouldBusinessObjectDefinitionExists_ReturnTrue() throws Exception {
         doReturn(Optional.of(fStore)).when(store).getChildByQualifiedName("org.bonitasoft.hr.LeaveRequest");
-        doReturn(Optional.of(fStore)).when(store).getChildByQualifiedName("org.bonitasoft.hr.Employee");
         assertThat(constraintUnderTest.businessObjectDefinitionExists(data)).isTrue();
     }
 
     @Test
     public void shouldBusinessObjectDefinitionExists_ReturnFalse() throws Exception {
         doReturn(Optional.empty()).when(store).getChildByQualifiedName("org.bonitasoft.hr.LeaveRequest");
-        doReturn(Optional.of(fStore)).when(store).getChildByQualifiedName("org.bonitasoft.hr.Employee");
         assertThat(constraintUnderTest.businessObjectDefinitionExists(data)).isFalse();
     }
 
     @Test
     public void shouldPerformBatchValidation_ReturnFailureStatus() throws Exception {
         doReturn(Optional.empty()).when(store).getChildByQualifiedName("org.bonitasoft.hr.LeaveRequest");
-        doReturn(Optional.of(fStore)).when(store).getChildByQualifiedName("org.bonitasoft.hr.Employee");
 
         final IStatus failure = new Status(IStatus.ERROR, "org.bonitasoft.studio.validation.ex", "");
-        when(context.createFailureStatus(anyObject())).thenReturn(failure);
+        when(context.createFailureStatus(any())).thenReturn(failure);
         assertThat(constraintUnderTest.performBatchValidation(context)).isEqualTo(failure);
     }
 
     @Test
     public void shouldPerformBatchValidation_ReturnOkStatus() throws Exception {
         doReturn(Optional.of(fStore)).when(store).getChildByQualifiedName("org.bonitasoft.hr.LeaveRequest");
-        doReturn(Optional.of(fStore)).when(store).getChildByQualifiedName("org.bonitasoft.hr.Employee");
 
         final IStatus success = Status.OK_STATUS;
         when(context.createSuccessStatus()).thenReturn(success);

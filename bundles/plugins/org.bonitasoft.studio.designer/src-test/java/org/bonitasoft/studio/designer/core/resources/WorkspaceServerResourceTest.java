@@ -15,16 +15,14 @@
 package org.bonitasoft.studio.designer.core.resources;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Matchers.notNull;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.notNull;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
-
-import java.nio.file.Path;
 
 import org.bonitasoft.studio.common.repository.extension.IGetLockStatusOperation;
 import org.bonitasoft.studio.common.repository.extension.ILockedResourceStatus;
@@ -38,7 +36,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Spy;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.restlet.Response;
 import org.restlet.data.Status;
 import org.restlet.resource.ResourceException;
@@ -127,7 +125,7 @@ public class WorkspaceServerResourceTest {
     public void should_notify_repository_when_dispatching_a_post_request() throws Exception {
         doReturn(WorkspaceAPIEvent.PRE_OPEN.name()).when(workspaceServerResource).getAttribute("action");
         doReturn("").when(workspaceServerResource).getAttribute("filePath");
-        doReturn(fileStore).when(repository).asRepositoryFileStore(notNull(Path.class), eq(true));
+        doReturn(fileStore).when(repository).asRepositoryFileStore(notNull(), eq(true));
         doReturn(repositoryNotifier).when(workspaceServerResource).newRepositoryNotifier();
         workspaceServerResource.doInit();
 
@@ -181,7 +179,7 @@ public class WorkspaceServerResourceTest {
 
     @Test
     public void should_have_a_localy_locked_status() throws Exception {
-        doReturn(fileStore).when(repository).asRepositoryFileStore(notNull(Path.class), eq(true));
+        doReturn(fileStore).when(repository).asRepositoryFileStore(notNull(), eq(true));
         doReturn(resource).when(fileStore).getResource();
         doReturn(lockStatus).when(locakStatusOperation).scanLock(resource);
         doReturn(true).when(lockStatus).isLocalyLocked();
@@ -194,7 +192,7 @@ public class WorkspaceServerResourceTest {
 
     @Test
     public void should_have_a_locked_status() throws Exception {
-        doReturn(fileStore).when(repository).asRepositoryFileStore(notNull(Path.class), eq(true));
+        doReturn(fileStore).when(repository).asRepositoryFileStore(notNull(), eq(true));
         doReturn(resource).when(fileStore).getResource();
         doReturn(lockStatus).when(locakStatusOperation).scanLock(resource);
         doReturn(true).when(lockStatus).isLockedByOther();
@@ -207,7 +205,7 @@ public class WorkspaceServerResourceTest {
 
     @Test
     public void should_have_a_not_locked_status_if_resource_is_neither_localy_locked_nor_locked_by_other() throws Exception {
-        doReturn(fileStore).when(repository).asRepositoryFileStore(notNull(Path.class), eq(true));
+        doReturn(fileStore).when(repository).asRepositoryFileStore(notNull(), eq(true));
         doReturn(resource).when(fileStore).getResource();
         doReturn(lockStatus).when(locakStatusOperation).scanLock(resource);
         doReturn(false).when(lockStatus).isLockedByOther();

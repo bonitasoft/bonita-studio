@@ -17,9 +17,9 @@
 package org.bonitasoft.studio.common.repository.core.maven.contribution;
 
 
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.notNull;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.notNull;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
@@ -28,7 +28,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.io.File;
-import java.util.Arrays;
 import java.util.Set;
 
 import org.apache.maven.artifact.Artifact;
@@ -38,7 +37,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 public class MavenLocalRepositoryContributorTest {
@@ -63,23 +62,21 @@ public class MavenLocalRepositoryContributorTest {
     public void setUp() throws Exception {
         contributor = spy(
                 new MavenLocalRepositoryContributor(rootFolder, localRepository, catalog, installFileCommand));
-        doReturn(pomFile).when(contributor).toPomFile(notNull(Artifact.class));
-        doReturn(artifactFile).when(contributor).toArtifactFile(notNull(Artifact.class));
+        doReturn(pomFile).when(contributor).toPomFile(notNull());
+        doReturn(artifactFile).when(contributor).toArtifactFile(notNull());
     }
 
     @Test
     public void should_install_artifact_not_in_local_repository() throws Exception {
         final Artifact artifactToInstall = mock(Artifact.class);
-        final File file = new File("artifactFile");
-        when(artifactToInstall.getFile()).thenReturn(file);
         when(artifactFile.exists()).thenReturn(true);
         when(catalog.parseDependencies()).thenReturn(Set.of(artifactToInstall));
         when(localRepository.find(artifactToInstall)).thenReturn(null);
 
         contributor.execute();
 
-        verify(installFileCommand).installFile(anyString(), anyString(), anyString(), anyString(), anyString(),
-                any(File.class), any(File.class));
+        verify(installFileCommand).installFile(any(), any(), any(), any(), any(),
+                notNull(), any());
     }
 
     @Test

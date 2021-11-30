@@ -23,7 +23,7 @@ import static org.bonitasoft.studio.model.configuration.builders.MembershipBuild
 import static org.bonitasoft.studio.model.parameter.builders.ParameterBuilder.aBooleanParameter;
 import static org.bonitasoft.studio.model.parameter.builders.ParameterBuilder.aStringParameter;
 import static org.bonitasoft.studio.model.parameter.builders.ParameterBuilder.anIntegerParameter;
-import static org.mockito.Matchers.any;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;

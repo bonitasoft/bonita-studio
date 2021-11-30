@@ -33,7 +33,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 public class NamedJSONFileStoreTest {
@@ -57,8 +57,6 @@ public class NamedJSONFileStoreTest {
         jsonFileWithoutId = Paths.get(JSONFileStoreTest.class.getResource("/noIdJson.json").toURI()).toFile();
         iResource = mock(IFile.class, RETURNS_DEEP_STUBS);
         doReturn(iResource).when(jsonFileStore).getResource();
-        when(parentStore.validate(Mockito.anyString(), Mockito.any(InputStream.class)))
-        .thenReturn(ValidationStatus.ok());
     }
 
     public void should_throw_IllegalAccessError_if_name_attribute_not_found() throws Exception {

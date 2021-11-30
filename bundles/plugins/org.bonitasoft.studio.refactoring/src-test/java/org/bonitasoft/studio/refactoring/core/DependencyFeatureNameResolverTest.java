@@ -19,19 +19,15 @@ import static org.bonitasoft.studio.model.parameter.builders.ParameterBuilder.aP
 import static org.bonitasoft.studio.model.process.builders.ContractInputBuilder.aContractInput;
 import static org.bonitasoft.studio.model.process.builders.DataBuilder.aData;
 import static org.bonitasoft.studio.model.process.builders.SearchIndexBuilder.aSearchIndex;
+import static org.junit.Assert.assertThrows;
 
 import org.bonitasoft.studio.model.parameter.ParameterFactory;
 import org.bonitasoft.studio.model.parameter.ParameterPackage;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.eclipse.emf.ecore.EStructuralFeature;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 public class DependencyFeatureNameResolverTest {
-
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
 
     @Test
     public void should_return_ELEMENT_NAME_feature_for_EObject_with_element_super_class() throws Exception {
@@ -46,7 +42,8 @@ public class DependencyFeatureNameResolverTest {
     public void should_return_CONTRACT_INPUT_NAME_feature_for_ContractInput() throws Exception {
         final DependencyFeatureNameResolver dependencyNameResolver = new DependencyFeatureNameResolver();
 
-        final EStructuralFeature nameFeature = dependencyNameResolver.resolveNameDependencyFeatureFor(aContractInput().build());
+        final EStructuralFeature nameFeature = dependencyNameResolver
+                .resolveNameDependencyFeatureFor(aContractInput().build());
 
         assertThat(nameFeature).isEqualTo(ProcessPackage.Literals.CONTRACT_INPUT__NAME);
     }
@@ -55,7 +52,8 @@ public class DependencyFeatureNameResolverTest {
     public void should_return_PARAMETER_NAME_feature_for_Parameter() throws Exception {
         final DependencyFeatureNameResolver dependencyNameResolver = new DependencyFeatureNameResolver();
 
-        final EStructuralFeature nameFeature = dependencyNameResolver.resolveNameDependencyFeatureFor(aParameter().build());
+        final EStructuralFeature nameFeature = dependencyNameResolver
+                .resolveNameDependencyFeatureFor(aParameter().build());
 
         assertThat(nameFeature).isEqualTo(ParameterPackage.Literals.PARAMETER__NAME);
     }
@@ -64,7 +62,8 @@ public class DependencyFeatureNameResolverTest {
     public void should_return_ELEMENT__NAME_feature_for_SearchIndex() throws Exception {
         final DependencyFeatureNameResolver dependencyNameResolver = new DependencyFeatureNameResolver();
 
-        final EStructuralFeature nameFeature = dependencyNameResolver.resolveNameDependencyFeatureFor(aSearchIndex().build());
+        final EStructuralFeature nameFeature = dependencyNameResolver
+                .resolveNameDependencyFeatureFor(aSearchIndex().build());
 
         assertThat(nameFeature).isEqualTo(ProcessPackage.Literals.ELEMENT__NAME);
     }
@@ -73,18 +72,17 @@ public class DependencyFeatureNameResolverTest {
     public void should_throw_a_IllegalStateException_for_unsupported_EObject() throws Exception {
         final DependencyFeatureNameResolver dependencyNameResolver = new DependencyFeatureNameResolver();
 
-        thrown.expect(IllegalStateException.class);
-
-        dependencyNameResolver.resolveNameDependencyFeatureFor(ParameterFactory.eINSTANCE.createParameterContext());
+        assertThrows(IllegalStateException.class,
+                () -> dependencyNameResolver
+                        .resolveNameDependencyFeatureFor(ParameterFactory.eINSTANCE.createParameterContext()));
     }
 
     @Test
     public void should_throw_a_IllegalArgumentException_for_null_EObject() throws Exception {
         final DependencyFeatureNameResolver dependencyNameResolver = new DependencyFeatureNameResolver();
 
-        thrown.expect(IllegalArgumentException.class);
-
-        dependencyNameResolver.resolveNameDependencyFeatureFor(null);
+        assertThrows(IllegalArgumentException.class,
+                () -> dependencyNameResolver.resolveNameDependencyFeatureFor(null));
     }
 
 }

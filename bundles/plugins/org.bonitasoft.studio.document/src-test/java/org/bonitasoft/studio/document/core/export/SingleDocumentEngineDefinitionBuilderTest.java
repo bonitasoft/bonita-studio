@@ -18,9 +18,9 @@ import static org.bonitasoft.studio.model.expression.builders.ExpressionBuilder.
 import static org.bonitasoft.studio.model.expression.builders.ExpressionBuilder.anExpression;
 import static org.bonitasoft.studio.model.process.builders.ContractInputBuilder.aContractInput;
 import static org.bonitasoft.studio.model.process.builders.DocumentBuilder.aDocument;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.notNull;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.notNull;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -38,7 +38,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 public class SingleDocumentEngineDefinitionBuilderTest {
@@ -130,7 +130,7 @@ public class SingleDocumentEngineDefinitionBuilderTest {
                 .build(), processBuilder, scriptFactory);
         builder.build();
 
-        verify(docDefinitionBuilder, never()).addInitialValue(notNull(Expression.class));
+        verify(docDefinitionBuilder, never()).addInitialValue(notNull());
     }
 
     @Test
@@ -145,6 +145,6 @@ public class SingleDocumentEngineDefinitionBuilderTest {
                 .havingContractInput(fileInput).build(), processBuilder, scriptFactory);
         builder.build();
 
-        verify(docDefinitionBuilder).addInitialValue(notNull(Expression.class));
+        verify(docDefinitionBuilder).addInitialValue(notNull());
     }
 }

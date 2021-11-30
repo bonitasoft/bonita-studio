@@ -8,8 +8,7 @@
  *******************************************************************************/
 package org.bonitasoft.studio.rest.api.extension.ui.handler;
 
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
@@ -24,7 +23,7 @@ import org.eclipse.ui.ide.FileStoreEditorInput;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 public class EditRestAPIExtensionPermissionsMappingHandlerTest {
@@ -49,7 +48,7 @@ public class EditRestAPIExtensionPermissionsMappingHandlerTest {
     }
 
     private EditRestAPIExtensionPermissionsMappingHandler newHandler() throws Exception {
-        when(activePage.openEditor(any(IEditorInput.class), anyString())).thenReturn(editorPart);
+        when(activePage.openEditor(any(), any())).thenReturn(editorPart);
         final EditRestAPIExtensionPermissionsMappingHandler handler = spy(
                 new EditRestAPIExtensionPermissionsMappingHandler());
         doReturn(preferenceStore).when(handler).getPreferenceStore();

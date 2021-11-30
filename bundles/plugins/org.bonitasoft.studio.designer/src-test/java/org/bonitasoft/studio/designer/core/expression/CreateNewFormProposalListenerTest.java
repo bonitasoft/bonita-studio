@@ -18,8 +18,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.bonitasoft.studio.model.process.builders.ContractBuilder.aContract;
 import static org.bonitasoft.studio.model.process.builders.FormMappingBuilder.aFormMapping;
 import static org.bonitasoft.studio.model.process.builders.TaskBuilder.aTask;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
@@ -46,7 +46,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 /**
  * @author Romain Bioteau
@@ -93,8 +93,6 @@ public class CreateNewFormProposalListenerTest implements BonitaPreferenceConsta
                         operationFactory));
 
         when(createFormOperation.getNewArtifactId()).thenReturn("page-id");
-        when(preferenceStore.get(CONSOLE_HOST, DEFAULT_HOST)).thenReturn(DEFAULT_HOST);
-        when(preferenceStore.getInt(CONSOLE_PORT, DEFAULT_PORT)).thenReturn(DEFAULT_PORT);
         doReturn(createFormOperation).when(createNewFormProposal).doCreateFormOperation(eq(pageDesignerURLFactory),
                 any(Contract.class), any(FormScope.class));
     }

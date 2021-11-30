@@ -91,5 +91,21 @@
             <unit id="de.jcup.asciidoctoreditor.feature.group" version="2.2.0"/>
             <repository location="https://update-site.bonitasoft.com/p2/4.16"/>
         </location>
-    </locations>
+	        <location includeDependencyScope="test" includeSource="true" missingManifest="generate" type="Maven">
+		        <dependencies>
+			        <dependency>
+				        <groupId>com.sun.istack</groupId>
+				        <artifactId>istack-commons-runtime</artifactId>
+				        <version>4.0.1</version>
+				        <type>jar</type>
+			        </dependency>
+			        <dependency>
+				        <groupId>org.mockito</groupId>
+				        <artifactId>mockito-core</artifactId>
+				        <version>4.1.0</version>
+				        <type>jar</type>
+			        </dependency>
+		        </dependencies>
+	        </location>
+        </locations>
 </target>

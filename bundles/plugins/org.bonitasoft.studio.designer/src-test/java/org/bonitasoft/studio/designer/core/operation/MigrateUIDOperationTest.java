@@ -1,8 +1,8 @@
 package org.bonitasoft.studio.designer.core.operation;
 
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Matchers.notNull;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.notNull;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
@@ -90,9 +90,9 @@ public class MigrateUIDOperationTest {
         WebPageFileStore fStore3 = mock(WebPageFileStore.class);
         when(repositoryStore.getChildren()).thenReturn(Arrays.asList(fStore1, fStore2, fStore3));
         op.migrate(monitor, urlBuilder, repositoryStore);
-        verify(op).migratePage(eq(urlBuilder), eq(fStore1), notNull(IProgressMonitor.class));
-        verify(op).migratePage(eq(urlBuilder), eq(fStore1), notNull(IProgressMonitor.class));
-        verify(op).migratePage(eq(urlBuilder), eq(fStore1), notNull(IProgressMonitor.class));
+        verify(op).migratePage(eq(urlBuilder), eq(fStore1), notNull());
+        verify(op).migratePage(eq(urlBuilder), eq(fStore1), notNull());
+        verify(op).migratePage(eq(urlBuilder), eq(fStore1), notNull());
     }
 
 }

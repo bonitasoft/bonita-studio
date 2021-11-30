@@ -15,7 +15,7 @@
 package org.bonitasoft.studio.contract.ui.property.input.edit;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -48,7 +48,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 /**
  * @author Romain Bioteau
@@ -139,7 +139,6 @@ public class ContractInputTypeEditingSupportTest {
         final ResourceImpl res = new ResourceImpl();
         res.getContents().add(contractInput);
         resourceSet.getResources().add(res);
-        when(viewer.getSelection()).thenReturn(new StructuredSelection(Arrays.asList(contractInput)));
         contractInputTypeEditingSupport.setValue(contractInput, ContractInputType.COMPLEX);
         contractInputTypeEditingSupport.applyEditorValue();
 
@@ -154,7 +153,6 @@ public class ContractInputTypeEditingSupportTest {
         res.getContents().add(contractInput);
         resourceSet.getResources().add(res);
 
-        when(viewer.getSelection()).thenReturn(new StructuredSelection(Arrays.asList(contractInput)));
         contractInputTypeEditingSupport.setValue(contractInput, ContractInputType.COMPLEX);
         contractInputTypeEditingSupport.applyEditorValue();
         assertThat(contractInput.getInputs()).hasSize(1);
@@ -167,7 +165,6 @@ public class ContractInputTypeEditingSupportTest {
         res.getContents().add(contractInput);
         resourceSet.getResources().add(res);
 
-        when(viewer.getSelection()).thenReturn(new StructuredSelection(Arrays.asList(contractInput)));
         contractInputTypeEditingSupport.setValue(contractInput, ContractInputType.INTEGER);
         contractInputTypeEditingSupport.applyEditorValue();
         assertThat(contractInput.getInputs()).hasSize(0);

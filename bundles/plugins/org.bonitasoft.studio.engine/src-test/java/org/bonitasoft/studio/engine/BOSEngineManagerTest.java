@@ -20,6 +20,7 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 
+import org.bonitasoft.engine.exception.ServerAPIException;
 import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.junit.Test;
@@ -30,7 +31,7 @@ public class BOSEngineManagerTest {
     public void should_not_flag_engine_running_state_to_true_if_post_start_fails() throws Exception {
         final BOSEngineManager engineManager = spy(new BOSEngineManager(new NullProgressMonitor()));
         doReturn(false).when(engineManager).tomcatServerIsRunning();
-        doThrow(Exception.class).when(engineManager).getLoginAPI();
+        doThrow(ServerAPIException.class).when(engineManager).getLoginAPI();
         IRepository repository = mock(IRepository.class);
         
         final boolean isRunning = engineManager.postEngineStart(repository);

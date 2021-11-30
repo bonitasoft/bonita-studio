@@ -9,7 +9,6 @@
 package org.bonitasoft.studio.maven.ui.wizard.validator;
 
 import org.bonitasoft.studio.assertions.StatusAssert;
-import org.bonitasoft.studio.maven.ui.wizard.validator.AllJavaIdentifierValidator;
 import org.bonitasoft.studio.swt.rules.RealmWithDisplay;
 import org.eclipse.core.databinding.observable.list.IObservableList;
 import org.eclipse.core.databinding.observable.list.WritableList;

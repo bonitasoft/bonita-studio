@@ -17,9 +17,8 @@ package org.bonitasoft.studio.engine.export.builder;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.bonitasoft.studio.model.expression.builders.ExpressionBuilder.aConstantExpression;
 import static org.bonitasoft.studio.model.process.builders.StringDataTypeBuilder.aStringDataType;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
@@ -75,14 +74,13 @@ import org.bonitasoft.studio.model.process.builders.MainProcessBuilder;
 import org.bonitasoft.studio.model.process.builders.PoolBuilder;
 import org.bonitasoft.studio.model.process.builders.StringDataTypeBuilder;
 import org.bonitasoft.studio.model.process.builders.TaskBuilder;
-import org.eclipse.emf.ecore.EObject;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 /**
  * @author Romain Bioteau
@@ -123,9 +121,9 @@ public class EngineFlowElementBuilderTest {
         instance = new ProcessDefinitionBuilder().createNewInstance("test", "1.0");
         flowElementSwitch = spy(
                 new EngineFlowElementBuilder(instance, builderProvider, new ModelSearch(Collections::emptyList)));
-        doReturn(engineContractBuilder).when(builderProvider).getEngineDefinitionBuilder(any(EObject.class),
+        doReturn(engineContractBuilder).when(builderProvider).getEngineDefinitionBuilder(any(),
                 any(Contract.class), eq(FlowElementBuilder.class));
-        doReturn(userFilterBuilder).when(taskBuilder).addUserFilter(anyString(), anyString(), anyString());
+        doReturn(userFilterBuilder).when(taskBuilder).addUserFilter(any(), any(), any());
     }
 
     /**
@@ -145,7 +143,7 @@ public class EngineFlowElementBuilderTest {
         flowElementSwitch.caseStartMessageEvent(startMessageEventinSubprocess);
 
         verify(flowElementSwitch).addMessageCorrelation(eq(startMessageEventinSubprocess),
-                any(CatchMessageEventTriggerDefinitionBuilder.class));
+                any());
     }
 
     @Test
@@ -161,7 +159,7 @@ public class EngineFlowElementBuilderTest {
         when(boundaryEventBuilder.addMessageEventTrigger(bmEvent.getEvent()))
                 .thenReturn(catchMessageEventTriggerDefinitionBuilder);
         flowElementSwitch.addBoundaryEvents(activityDefinitionBuilder, activity);
-        verify(flowElementSwitch).addMessageCorrelation(eq(bmEvent), any(CatchMessageEventTriggerDefinitionBuilder.class));
+        verify(flowElementSwitch).addMessageCorrelation(eq(bmEvent), any());
     }
 
     @Test
@@ -177,7 +175,7 @@ public class EngineFlowElementBuilderTest {
     @Test
     public void should_not_addContract_build_an_engine_contract() throws Exception {
         flowElementSwitch.addContract(taskBuilder, null);
-        verify(engineContractBuilder, never()).build(any(Contract.class));
+        verify(engineContractBuilder, never()).build(any());
     }
 
     @Test
@@ -250,7 +248,7 @@ public class EngineFlowElementBuilderTest {
                 .add(BusinessObjectDataTypeBuilder.aBusinessObjectDataType().withName("classname").build());
         flowElementSwitch.addContext(taskBuilder, (Task) pool.getElements().get(0));
 
-        verify(taskBuilder, times(0)).addContextEntry(anyString(), any(Expression.class));
+        verify(taskBuilder, times(0)).addContextEntry(any(), any());
     }
 
     @Test
@@ -319,7 +317,7 @@ public class EngineFlowElementBuilderTest {
                         ConnectorParameterBuilder.aConnectorParameter().withKey("plop").havingExpression(tableExpression)))
                 .build();
         flowElementSwitch.addUserFilterToTask(taskBuilder, "actor", actorFilter);
-        verify(userFilterBuilder).addInput(anyString(), any(Expression.class));
+        verify(userFilterBuilder).addInput(any(), any());
     }
 
     @Test
@@ -329,7 +327,7 @@ public class EngineFlowElementBuilderTest {
                         ConnectorParameterBuilder.aConnectorParameter().withKey("plop")))
                 .build();
         flowElementSwitch.addUserFilterToTask(taskBuilder, "actor", actorFilter);
-        verify(userFilterBuilder, never()).addInput(anyString(), any(Expression.class));
+        verify(userFilterBuilder, never()).addInput(any(), any(Expression.class));
     }
 
     @Test
@@ -351,7 +349,7 @@ public class EngineFlowElementBuilderTest {
                 ((Activity) pool.getElements().get(0)).getIteratorExpression(),
                 collectionDataToMultiInstantiate);
 
-        verify(activityDefinitionBuilder).addBusinessData(anyString(), anyString());
+        verify(activityDefinitionBuilder).addBusinessData(any(), any());
     }
 
     @Test
@@ -373,6 +371,6 @@ public class EngineFlowElementBuilderTest {
                 ((Activity) pool.getElements().get(0)).getIteratorExpression(),
                 collectionDataToMultiInstantiate);
 
-        verify(activityDefinitionBuilder).addData(anyString(), anyString(), any(Expression.class));
+        verify(activityDefinitionBuilder).addData(any(), any(), any());
     }
 }

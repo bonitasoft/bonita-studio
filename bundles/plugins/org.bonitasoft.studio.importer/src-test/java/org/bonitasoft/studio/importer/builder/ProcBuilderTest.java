@@ -14,7 +14,7 @@ import org.eclipse.gmf.runtime.notation.View;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 
 @RunWith(MockitoJUnitRunner.class)
@@ -33,11 +33,9 @@ public class ProcBuilderTest {
         final View currentView = mock(View.class);
         final EList list = mock(EList.class) ;
         final Node node = mock(Node.class);
-        final Location constraint = mock(Location.class);
         when(currentView.getChildren()).thenReturn(list);
         when(list.isEmpty()).thenReturn(false);
         when(list.get(0)).thenReturn(node);
-        when(node.getLayoutConstraint()).thenReturn(constraint);
         final Point point = new Point(400,500);
         doNothing().when(procBuilder).setLabelPosition(new Point(400,500),node);
         procBuilder.setCurrentView(currentView);

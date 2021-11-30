@@ -30,7 +30,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Spy;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import org.bonitasoft.engine.bdm.model.BusinessObject;
 import org.bonitasoft.engine.bdm.model.BusinessObjectModel;
@@ -72,7 +72,6 @@ public class ExportBusinessDataModelOperationTest {
         firstName.setType(FieldType.STRING);
         bo.getFields().add(firstName);
         bom.getBusinessObjects().add(bo);
-        doReturn(bom).when(bdmFileStore).getContent();
         operationUnderTest.setBdmFileStore(bdmFileStore);
         operationUnderTest.setDestinationFilePath(tempFile.getAbsolutePath());
     }

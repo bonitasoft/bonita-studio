@@ -8,8 +8,8 @@
  *******************************************************************************/
 package org.bonitasoft.studio.rest.api.extension.ui.handler;
 
-import static org.mockito.Matchers.eq;
-import static org.mockito.Matchers.notNull;
+import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.notNull;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
@@ -38,7 +38,7 @@ public class NewRestAPIExtensionHandlerTest {
         final WidgetFactory widgetFactory = mock(WidgetFactory.class);
         final IWorkspace workspace = mock(IWorkspace.class);
         doReturn(wizard).when(handler).newWizard(eq(repositoryAccessor), eq(widgetFactory), eq(workspace),
-                notNull(RestAPIAddressResolver.class));
+                notNull());
         final RestAPIExtensionFileStore fileStore = mock(RestAPIExtensionFileStore.class);
         when(wizard.getNewFileStore()).thenReturn(fileStore);
         final WizardDialog dialog = mock(WizardDialog.class);

@@ -17,8 +17,8 @@
 package org.bonitasoft.studio.contract.ui.property;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Matchers.anyBoolean;
-import static org.mockito.Matchers.anyInt;
+import static org.mockito.Mockito.anyBoolean;
+import static org.mockito.Mockito.anyInt;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
@@ -37,7 +37,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 
 /**
@@ -77,7 +77,6 @@ public class AddRowOnEnterCellNavigationStrategyTest {
     public void setUp() throws Exception {
         cellNavigationStrategy = spy(new AddRowOnEnterCellNavigationStrategy(viewer, controller));
         when(currentSelectedCell.getNeighbor(anyInt(), anyBoolean())).thenReturn(viewerCell);
-        when(currentSelectedCell.getViewerRow()).thenReturn(viewerRow);
         when(viewerCell.getItem()).thenReturn(treeItem);
         when(treeItem.getData()).thenReturn(new Object());
     }
@@ -123,7 +122,6 @@ public class AddRowOnEnterCellNavigationStrategyTest {
 
     @Test
     public void should_findSelectedCell_not_add_a_new_input_on_Enter_if_not_on_first_column() throws Exception {
-        when(currentSelectedCell.getNeighbor(anyInt(), anyBoolean())).thenReturn(null);
         when(currentSelectedCell.getColumnIndex()).thenReturn(1);
         final Event event = new Event();
         event.keyCode = SWT.CR;

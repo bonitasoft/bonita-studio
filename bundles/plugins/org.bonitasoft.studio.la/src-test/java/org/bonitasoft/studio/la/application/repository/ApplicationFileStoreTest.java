@@ -17,14 +17,13 @@ package org.bonitasoft.studio.la.application.repository;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 import static org.bonitasoft.studio.fakes.IResourceFakesBuilder.anIFile;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Matchers.notNull;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.notNull;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 
-import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
 import org.bonitasoft.engine.business.application.ApplicationState;
@@ -79,7 +78,7 @@ public class ApplicationFileStoreTest {
                         .havingApplications(ApplicationNodeBuilder.newApplication("anAppToken", "A Display Name", "2.0"))
                         .create());
 
-        verify(resource).create(notNull(ByteArrayInputStream.class), eq(IResource.FORCE),
+        verify(resource).create((InputStream)notNull(), eq(IResource.FORCE),
                 eq(AbstractRepository.NULL_PROGRESS_MONITOR));
     }
 
@@ -96,7 +95,7 @@ public class ApplicationFileStoreTest {
                         .havingApplications(ApplicationNodeBuilder.newApplication("anAppToken", "A Display Name", "2.0"))
                         .create());
 
-        verify(resource).setContents(notNull(ByteArrayInputStream.class), eq(IResource.FORCE | IResource.KEEP_HISTORY),
+        verify(resource).setContents((InputStream)notNull(), eq(IResource.FORCE | IResource.KEEP_HISTORY),
                 eq(AbstractRepository.NULL_PROGRESS_MONITOR));
     }
 

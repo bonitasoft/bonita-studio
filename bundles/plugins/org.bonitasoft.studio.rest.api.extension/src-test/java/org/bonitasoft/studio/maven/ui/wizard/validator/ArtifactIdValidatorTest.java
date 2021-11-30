@@ -8,13 +8,12 @@
  *******************************************************************************/
 package org.bonitasoft.studio.maven.ui.wizard.validator;
 
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
 import org.bonitasoft.studio.assertions.StatusAssert;
 import org.bonitasoft.studio.maven.i18n.Messages;
-import org.bonitasoft.studio.maven.ui.wizard.validator.ArtifactIdValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspace;
@@ -23,7 +22,7 @@ import org.eclipse.osgi.util.NLS;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ArtifactIdValidatorTest {

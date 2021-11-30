@@ -15,9 +15,9 @@
 package org.bonitasoft.studio.businessobject.ui.handler;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Matchers.notNull;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.notNull;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -43,7 +43,7 @@ import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.Spy;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 public class OpenH2ConsoleHandlerTest {
@@ -77,7 +77,7 @@ public class OpenH2ConsoleHandlerTest {
         doReturn("/usr/bin/java").when(openH2ConsoleHandler).javaBinaryLocation();
         when(launchManager.getLaunchConfigurationType(IExternalToolConstants.ID_PROGRAM_LAUNCH_CONFIGURATION_TYPE))
                 .thenReturn(lanchConfigurationType);
-        when(lanchConfigurationType.newInstance(any(IContainer.class), notNull(String.class))).thenReturn(workingCopy);
+        when(lanchConfigurationType.newInstance(any(), notNull())).thenReturn(workingCopy);
         when(workingCopy.launch(ILaunchManager.RUN_MODE, AbstractRepository.NULL_PROGRESS_MONITOR)).thenReturn(launch);
     }
 
@@ -108,7 +108,6 @@ public class OpenH2ConsoleHandlerTest {
     public void should_build_java_command() throws Exception {
         final File logFile = new File("");
         doReturn(logFile).when(openH2ConsoleHandler).logFile();
-        doReturn(rootFile()).when(openH2ConsoleHandler).rootFile(repositoryAccessor);
         doReturn("h2.jar").when(openH2ConsoleHandler).locateH2jar(repositoryAccessor);
 
         openH2ConsoleHandler.execute(repositoryAccessor);

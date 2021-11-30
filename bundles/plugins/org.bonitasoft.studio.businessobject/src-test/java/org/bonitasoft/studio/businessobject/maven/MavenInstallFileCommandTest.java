@@ -10,10 +10,10 @@ package org.bonitasoft.studio.businessobject.maven;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.entry;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Matchers.notNull;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.notNull;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
@@ -189,7 +189,7 @@ public class MavenInstallFileCommandTest {
         installFileCommand.installFile("groupId", "artifactId", "version", "jar", "classes", jarFile);
 
         verify(installFileCommand).execute(any(Properties.class),
-                notNull(IProgressMonitor.class));
+                notNull());
         verify(installFileCommand).logError("groupId", "artifactId", "jar", "version", fileNotFoundException);
     }
 

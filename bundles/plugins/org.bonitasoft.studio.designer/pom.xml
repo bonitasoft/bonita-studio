@@ -18,13 +18,7 @@
         <lib.dir>${basedir}/lib</lib.dir>
     </properties>
 
-    <dependencies>
-        <dependency>
-            <groupId>org.bonitasoft.web</groupId>
-            <artifactId>ui-designer-backend-contract</artifactId>
-            <version>${ui.designer.version}</version>
-        </dependency>
-    </dependencies>
+
     <build>
         <plugins>
             <plugin>

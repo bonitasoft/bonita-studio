@@ -5,7 +5,6 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import org.bonitasoft.studio.identity.actors.ui.wizard.connector.CustomUserInfoNameExpressionProvider;
 import org.bonitasoft.studio.identity.organization.model.organization.CustomUserInfoDefinition;
 import org.bonitasoft.studio.identity.organization.model.organization.CustomUserInfoDefinitions;
 import org.bonitasoft.studio.identity.organization.model.organization.Organization;
@@ -17,7 +16,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 
 @RunWith(MockitoJUnitRunner.class)
