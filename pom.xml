@@ -30,6 +30,7 @@
 		<groovy-maven-plugin.groovy.version>3.0.8</groovy-maven-plugin.groovy.version>
         <!-- Must be synched with org.bonitasoft.studio.common.repository.core.maven.model.DefaultPluginVersions.MAVEN_DEPENDENCY_PLUGIN_VERSION --> 
 		<maven-dependency-plugin.version>3.1.2</maven-dependency-plugin.version>
+        <org.eclipse.swt.version>3.117.0</org.eclipse.swt.version>
 	</properties>
 	<modules>
 		<module>patched-plugins</module>
@@ -240,7 +241,7 @@
 			<dependency>
 				<groupId>junit</groupId>
 				<artifactId>junit</artifactId>
-				<version>4.13.1</version>
+				<version>4.13.2</version>
 				<scope>test</scope>
 			</dependency>
 		</dependencies>
@@ -298,7 +299,7 @@
 			</activation>
 			<modules>
 				<module>platform</module>
-				<module>tests-dependencies</module>
+<!-- 				<module>tests-dependencies</module> -->
 				<module>bundles</module>
 			</modules>
 		</profile>

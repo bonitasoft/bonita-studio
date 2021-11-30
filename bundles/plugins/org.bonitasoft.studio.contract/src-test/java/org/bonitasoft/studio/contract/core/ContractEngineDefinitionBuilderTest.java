@@ -18,8 +18,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.bonitasoft.studio.model.process.builders.ContractBuilder.aContract;
 import static org.bonitasoft.studio.model.process.builders.ContractConstraintBuilder.aContractConstraint;
 import static org.bonitasoft.studio.model.process.builders.ContractInputBuilder.aContractInput;
-import static org.mockito.Matchers.anyBoolean;
-import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.anyBoolean;
+import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -40,7 +40,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 /**
  * @author Romain Bioteau
@@ -69,8 +69,8 @@ public class ContractEngineDefinitionBuilderTest {
      */
     @Before
     public void setUp() throws Exception {
-        when(contractInputDefinitionBuilder.addComplexInput(anyString(), anyString(), anyBoolean())).thenReturn(contractInputDefinitionBuilder);
-        when(contractDefBuilder.addComplexInput(anyString(), anyString(), anyBoolean())).thenReturn(contractInputDefinitionBuilder);
+        when(contractInputDefinitionBuilder.addComplexInput(any(), any(), anyBoolean())).thenReturn(contractInputDefinitionBuilder);
+        when(contractDefBuilder.addComplexInput(any(), any(), anyBoolean())).thenReturn(contractInputDefinitionBuilder);
         when(processBuilder.addContract()).thenReturn(contractDefBuilder);
         aContract = ProcessFactory.eINSTANCE.createContract();
         processengineContractBuilder = new ProcessContractEngineBuilder();

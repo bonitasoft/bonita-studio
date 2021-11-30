@@ -9,8 +9,8 @@
 package org.bonitasoft.studio.maven.operation;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.notNull;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.notNull;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -28,7 +28,6 @@ import org.bonitasoft.studio.engine.http.HttpClientFactory;
 import org.bonitasoft.studio.engine.http.LoginRequest;
 import org.bonitasoft.studio.engine.http.UpdateCustomPageRequest;
 import org.bonitasoft.studio.engine.http.UploadCustomPageRequest;
-import org.bonitasoft.studio.maven.operation.DeployCustomPageOperation;
 import org.bonitasoft.studio.rest.api.extension.core.repository.RestAPIExtensionFileStore;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.junit.Before;
@@ -38,7 +37,7 @@ import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.mockito.InOrder;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 public class DeployCustomPageOperationTest {
@@ -67,11 +66,11 @@ public class DeployCustomPageOperationTest {
     @Before
     public void setUp() throws Exception {
         when(engineManager.loginDefaultTenant(any(IProgressMonitor.class))).thenReturn(apiSession);
-        when(httpClientFactory.newAddCustomPageRequest(notNull(String.class))).thenReturn(addCustomPageRequest);
+        when(httpClientFactory.newAddCustomPageRequest(notNull())).thenReturn(addCustomPageRequest);
         when(httpClientFactory.newLoginRequest()).thenReturn(loginRequest);
         when(httpClientFactory.newUploadCustomPageRequest(any(File.class))).thenReturn(uploadCustomPageRequest);
         when(uploadCustomPageRequest.execute()).thenReturn("token");
-        when(httpClientFactory.newUpdateCustomPageRequest(notNull(String.class), notNull(Page.class)))
+        when(httpClientFactory.newUpdateCustomPageRequest(notNull(), notNull()))
                 .thenReturn(updateCustomPageRequest);
         when(fileStore.getPageId()).thenReturn("newPageId");
         when(fileStore.getArchiveFile()).thenReturn(tmpFolder.newFile());

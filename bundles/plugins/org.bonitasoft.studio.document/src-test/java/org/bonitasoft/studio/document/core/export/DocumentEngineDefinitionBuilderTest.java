@@ -17,7 +17,7 @@ package org.bonitasoft.studio.document.core.export;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.bonitasoft.studio.model.process.builders.DocumentBuilder.aDocument;
 import static org.bonitasoft.studio.model.process.builders.PoolBuilder.aPool;
-import static org.mockito.Matchers.notNull;
+import static org.mockito.Mockito.notNull;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.verify;
 
@@ -28,7 +28,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Spy;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 public class DocumentEngineDefinitionBuilderTest {
@@ -48,8 +48,8 @@ public class DocumentEngineDefinitionBuilderTest {
     @Before
     public void setUp() throws Exception {
         documentEngineDefinitionBuilder.setEngineBuilder(processDefinitionBuilder);
-        doReturn(singleDelegate).when(documentEngineDefinitionBuilder).singleDocumentDelegate(notNull(Document.class));
-        doReturn(multipleDelegate).when(documentEngineDefinitionBuilder).multipeDocumentDelegate(notNull(Document.class));
+        doReturn(singleDelegate).when(documentEngineDefinitionBuilder).singleDocumentDelegate(notNull());
+        doReturn(multipleDelegate).when(documentEngineDefinitionBuilder).multipeDocumentDelegate(notNull());
     }
 
     @Test

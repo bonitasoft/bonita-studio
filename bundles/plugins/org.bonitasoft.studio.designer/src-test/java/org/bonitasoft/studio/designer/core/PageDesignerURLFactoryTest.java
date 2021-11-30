@@ -26,7 +26,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 /**
  * @author Romain Bioteau
@@ -45,7 +45,6 @@ public class PageDesignerURLFactoryTest implements BonitaPreferenceConstants {
      */
     @Before
     public void setUp() throws Exception {
-        doReturn("localhost").when(preferenceStore).get(CONSOLE_HOST, DEFAULT_HOST);
         doReturn("en").when(preferenceStore).get(CURRENT_STUDIO_LOCALE, "en");
         pageDesignerURLBuilder = spy(new PageDesignerURLFactory(preferenceStore));
         doReturn(8080).when(uidesignerServerManager).getPort();

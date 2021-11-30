@@ -19,9 +19,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Matchers.notNull;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.notNull;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
@@ -37,19 +37,15 @@ import org.bonitasoft.studio.importer.builder.IProcBuilder;
 import org.bonitasoft.studio.importer.builder.IProcBuilder.TestTimeType;
 import org.bonitasoft.studio.importer.builder.ProcBuilder;
 import org.bonitasoft.studio.importer.builder.ProcBuilderException;
-import org.bonitasoft.studio.model.expression.Expression;
 import org.eclipse.draw2d.geometry.Point;
-import org.eclipse.emf.common.util.EMap;
-import org.eclipse.gmf.runtime.emf.core.GMFEditingDomainFactory;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.omg.spec.bpmn.di.BPMNEdge;
 import org.omg.spec.bpmn.di.BPMNLabel;
 import org.omg.spec.bpmn.di.BPMNShape;
 import org.omg.spec.bpmn.di.DiFactory;
-import org.omg.spec.bpmn.model.DocumentRoot;
 import org.omg.spec.bpmn.model.ModelFactory;
 import org.omg.spec.bpmn.model.TComplexGateway;
 import org.omg.spec.bpmn.model.TDefinitions;
@@ -68,13 +64,10 @@ import org.omg.spec.dd.dc.DcFactory;
 public class BPMNToProcTest {
 
     private BPMNToProc bpmnToProc;
-    private ProcBuilder builder;
 
     @Before
     public void setup() throws Exception {
         bpmnToProc = spy(new BPMNToProc("myProc"));
-        builder = spy(new ProcBuilder());
-        doReturn(GMFEditingDomainFactory.INSTANCE.createEditingDomain()).when(builder).createEditingDomain();
     }
 
     @Test
@@ -118,7 +111,6 @@ public class BPMNToProcTest {
     public void shouldNotinitializeLabelPositionOnSequenceFlowWhenIdIsNull() throws ProcBuilderException {
         final ProcBuilder builder = spy(new ProcBuilder());
         bpmnToProc.setBuilder(builder);
-        doNothing().when(builder).setLabelPositionOnSequenceFlowOrEvent(any(Point.class));
         bpmnToProc.initializeLabelPositionOnSequenceFlow(null);
         verify(builder, never()).setLabelPositionOnSequenceFlowOrEvent(any(Point.class));
     }
@@ -127,7 +119,6 @@ public class BPMNToProcTest {
     public void shouldNotinitializeLabelPositionOnSequenceFlowWhenIdIsEmpty() throws ProcBuilderException {
         final ProcBuilder builder = spy(new ProcBuilder());
         bpmnToProc.setBuilder(builder);
-        doNothing().when(builder).setLabelPositionOnSequenceFlowOrEvent(any(Point.class));
         bpmnToProc.initializeLabelPositionOnSequenceFlow("");
         verify(builder, never()).setLabelPositionOnSequenceFlowOrEvent(any(Point.class));
     }
@@ -136,7 +127,6 @@ public class BPMNToProcTest {
     public void shouldNotinitializeLabelPositionOnSequenceFlowWhenEdgeIsNull() throws ProcBuilderException {
         final ProcBuilder builder = spy(new ProcBuilder());
         bpmnToProc.setBuilder(builder);
-        doNothing().when(builder).setLabelPositionOnSequenceFlowOrEvent(any(Point.class));
         doReturn(null).when(bpmnToProc).getBPMNEdgeFor("mySequenceFlow");
         bpmnToProc.initializeLabelPositionOnSequenceFlow("mySequenceFlow");
         verify(builder, never()).setLabelPositionOnSequenceFlowOrEvent(any(Point.class));
@@ -149,7 +139,6 @@ public class BPMNToProcTest {
         doReturn(edge).when(bpmnToProc).getBPMNEdgeFor(id);
         final ProcBuilder builder = spy(new ProcBuilder());
         bpmnToProc.setBuilder(builder);
-        doNothing().when(builder).setLabelPositionOnSequenceFlowOrEvent(any(Point.class));
         bpmnToProc.initializeLabelPositionOnSequenceFlow(id);
         verify(builder, never()).setLabelPositionOnSequenceFlowOrEvent(any(Point.class));
     }
@@ -163,7 +152,6 @@ public class BPMNToProcTest {
         doReturn(edge).when(bpmnToProc).getBPMNEdgeFor(id);
         final ProcBuilder builder = spy(new ProcBuilder());
         bpmnToProc.setBuilder(builder);
-        doNothing().when(builder).setLabelPositionOnSequenceFlowOrEvent(any(Point.class));
         bpmnToProc.initializeLabelPositionOnSequenceFlow(id);
         verify(builder, never()).setLabelPositionOnSequenceFlowOrEvent(any(Point.class));
     }
@@ -195,7 +183,6 @@ public class BPMNToProcTest {
     public void shouldNotinitializeLabelPositionOnEventWhenIdIsNull() throws ProcBuilderException {
         final ProcBuilder builder = spy(new ProcBuilder());
         bpmnToProc.setBuilder(builder);
-        doNothing().when(builder).setLabelPositionOnSequenceFlowOrEvent(any(Point.class));
         bpmnToProc.initializeLabelPositionOnEvent(null);
         verify(builder, never()).setLabelPositionOnSequenceFlowOrEvent(any(Point.class));
     }
@@ -204,7 +191,6 @@ public class BPMNToProcTest {
     public void shouldNotinitializeLabelPositionOnEventWhenIdIsEmpty() throws ProcBuilderException {
         final ProcBuilder builder = spy(new ProcBuilder());
         bpmnToProc.setBuilder(builder);
-        doNothing().when(builder).setLabelPositionOnSequenceFlowOrEvent(any(Point.class));
         bpmnToProc.initializeLabelPositionOnEvent("");
         verify(builder, never()).setLabelPositionOnSequenceFlowOrEvent(any(Point.class));
     }
@@ -215,7 +201,6 @@ public class BPMNToProcTest {
         bpmnToProc.setBuilder(builder);
         final String id = "MyShpae";
         doReturn(null).when(bpmnToProc).getBPMNShapeForBpmnID(id);
-        doNothing().when(builder).setLabelPositionOnSequenceFlowOrEvent(any(Point.class));
         bpmnToProc.initializeLabelPositionOnEvent(id);
         verify(builder, never()).setLabelPositionOnSequenceFlowOrEvent(any(Point.class));
     }
@@ -227,7 +212,6 @@ public class BPMNToProcTest {
         bpmnToProc.setBuilder(builder);
         final String id = "MyShpae";
         doReturn(shape).when(bpmnToProc).getBPMNShapeForBpmnID(id);
-        doNothing().when(builder).setLabelPositionOnSequenceFlowOrEvent(any(Point.class));
         bpmnToProc.initializeLabelPositionOnEvent(id);
         verify(builder, never()).setLabelPositionOnSequenceFlowOrEvent(any(Point.class));
     }
@@ -241,17 +225,8 @@ public class BPMNToProcTest {
         bpmnToProc.setBuilder(builder);
         final String id = "MyShpae";
         doReturn(shape).when(bpmnToProc).getBPMNShapeForBpmnID(id);
-        doNothing().when(builder).setLabelPositionOnSequenceFlowOrEvent(any(Point.class));
         bpmnToProc.initializeLabelPositionOnEvent(id);
         verify(builder, never()).setLabelPositionOnSequenceFlowOrEvent(any(Point.class));
-    }
-
-    @Test
-    public void shouldNotUpdateXMLNamespace() {
-        final DocumentRoot documentRoot = mock(DocumentRoot.class);
-        final EMap<String, String> map = mock(EMap.class);
-        doReturn(map).when(documentRoot).getXMLNSPrefixMap();
-        bpmnToProc.updateXMLNamespaceIfNeeded(documentRoot);
     }
 
     @Test
@@ -468,7 +443,7 @@ public class BPMNToProcTest {
         bpmnToProc.importFromBPMN(definitions);
 
         verify(builder).addMultiInstantiation(false);
-        verify(builder).addCompletionConditionExpression(notNull(Expression.class));
+        verify(builder).addCompletionConditionExpression(notNull());
     }
 
     @Test
@@ -491,7 +466,7 @@ public class BPMNToProcTest {
         bpmnToProc.importFromBPMN(definitions);
 
         verify(builder).addMultiInstantiation(true);
-        verify(builder).addCardinalityExpression(notNull(Expression.class));
+        verify(builder).addCardinalityExpression(notNull());
     }
 
     @Test
@@ -514,7 +489,7 @@ public class BPMNToProcTest {
         definitions.getRootElement().add(process);
         bpmnToProc.importFromBPMN(definitions);
 
-        verify(builder).addLoopCondition(notNull(Expression.class), eq("10"), eq(TestTimeType.AFTER));
+        verify(builder).addLoopCondition(notNull(), eq("10"), eq(TestTimeType.AFTER));
     }
 
 }

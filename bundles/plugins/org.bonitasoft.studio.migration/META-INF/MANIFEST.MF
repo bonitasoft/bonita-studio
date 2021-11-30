@@ -22,10 +22,11 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.gmf.runtime.diagram.ui.properties;bundle-version="1.4.2",
  org.bonitasoft.studio.connectors.model;bundle-version="6.2.0",
  org.junit;bundle-version="4.11.0";resolution:=optional,
- org.mockito;bundle-version="1.9.5";resolution:=optional,
+ org.mockito.mockito-core;bundle-version="1.9.5";resolution:=optional,
  org.bonitasoft.studio.tests-utils;bundle-version="6.4.0";resolution:=optional,
  org.assertj;bundle-version="1.5.0";resolution:=optional,
- com.google.guava;bundle-version="11.0.1"
+ com.google.guava;bundle-version="11.0.1",
+ net.bytebuddy.byte-buddy;bundle-version="1.12.1";resolution:=optional
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-ActivationPolicy: lazy
 Export-Package: org.bonitasoft.studio.migration,

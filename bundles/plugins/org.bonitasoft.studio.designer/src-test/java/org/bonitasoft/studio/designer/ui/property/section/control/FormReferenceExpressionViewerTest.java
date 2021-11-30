@@ -16,7 +16,7 @@ package org.bonitasoft.studio.designer.ui.property.section.control;
 
 import static org.bonitasoft.studio.model.expression.builders.ExpressionBuilder.anExpression;
 import static org.bonitasoft.studio.model.process.builders.FormMappingBuilder.aFormMapping;
-import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.when;
 
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
@@ -37,7 +37,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 public class FormReferenceExpressionViewerTest {
@@ -65,7 +65,6 @@ public class FormReferenceExpressionViewerTest {
     @Before
     public void setUp() throws Exception {
         when(repositoryAccessor.getRepositoryStore(WebPageRepositoryStore.class)).thenReturn(webPageRepositoryStore);
-        when(repositoryAccessor.getWorkspace()).thenReturn(workspace);
         InternalMappingComposite composite = makeComposite();
         when(widgetFactory.createComposite(any())).thenReturn(composite);
     }
@@ -79,7 +78,6 @@ public class FormReferenceExpressionViewerTest {
         final FormMapping mapping = aFormMapping().havingTargetForm(anExpression().withContent("a-page-id")).build();
         formReferenceExpressionViewer.setInput(mapping);
         when(createOrEditNewFormProposalListener.handleEvent(mapping, null, null)).thenReturn(null);
-        when(webPageRepositoryStore.getChild("a-page-id", true)).thenReturn(selectedPage);
         formReferenceExpressionViewer.editControlSelected(editingDomain());
 
         Mockito.verify(createOrEditNewFormProposalListener).handleEvent(mapping, null, null);

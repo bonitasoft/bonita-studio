@@ -14,21 +14,19 @@
  */
 package org.bonitasoft.studio.common.repository;
 
-import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.doReturn;
 
 import java.util.function.Supplier;
 
 import org.assertj.core.api.Assertions;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 public class RepositoryNameValidatorTest {
@@ -49,12 +47,7 @@ public class RepositoryNameValidatorTest {
         doReturn("existing").when(repo).getName();
         doReturn(repoManager).when(rnv).getRepositoryManager();
         doReturn(repo).when(repoManager).getRepository("existing");
-        doReturn(null).when(repoManager).getRepository("notExisting");
         doReturn(repo).when(repoManager).getCurrentRepository();
-        doReturn(project).when(repo).getProject();
-        doReturn(ws).when(project).getWorkspace();
-        doReturn(wsRoot).when(ws).getRoot();
-        doReturn(new IResource[] {}).when(wsRoot).members();
         return rnv;
     }
 
@@ -79,14 +72,12 @@ public class RepositoryNameValidatorTest {
     @Test
     public void testNotValid_withinvalidFileCharactersAsterisk() throws Exception {
         RepositoryNameValidator validator = createFixture(() -> false );
-        doReturn(null).when(repoManager).getRepository(anyString());
         Assertions.assertThat(validator.isValid("a*")).isEqualTo(String.format(Messages.createNewProject_invalidCharacter, "*"));
     }
 
     @Test
     public void testNotValid_withinvalidFileCharactersDoubleQuote() throws Exception {
         RepositoryNameValidator validator = createFixture(() -> false );
-        doReturn(null).when(repoManager).getRepository(anyString());
         Assertions.assertThat(validator.isValid("a\""))
                 .isEqualTo(String.format(Messages.createNewProject_invalidCharacter, "\""));
     }

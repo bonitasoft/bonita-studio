@@ -18,17 +18,14 @@ import static com.google.common.collect.Lists.newArrayList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.bonitasoft.studio.model.process.builders.ConnectorBuilder.aConnector;
 import static org.bonitasoft.studio.model.process.builders.PoolBuilder.aPool;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.notNull;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.notNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
 import org.bonitasoft.studio.connectors.ui.wizard.page.MoveConnectorWizardPage;
 import org.bonitasoft.studio.swt.rules.RealmWithDisplay;
 import org.eclipse.core.commands.operations.IOperationHistory;
-import org.eclipse.core.commands.operations.IUndoableOperation;
-import org.eclipse.core.runtime.IAdaptable;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.transaction.impl.InternalTransactionalEditingDomain;
 import org.junit.Rule;
@@ -58,7 +55,7 @@ public class MoveConnectorWizardTest {
         wizard.addPages();
         wizard.performFinish();
 
-        verify(operationHistory).execute(notNull(IUndoableOperation.class), any(IProgressMonitor.class), any(IAdaptable.class));
+        verify(operationHistory).execute(notNull(), any(), any());
     }
 
 }

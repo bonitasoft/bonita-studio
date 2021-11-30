@@ -17,8 +17,7 @@ package org.bonitasoft.studio.validation.constraints.process;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.bonitasoft.studio.model.process.builders.DataBuilder.aData;
 import static org.bonitasoft.studio.model.process.builders.PoolBuilder.aPool;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyObject;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
@@ -40,7 +39,7 @@ import org.eclipse.emf.validation.IValidationContext;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CallActivityConstraintTest {
@@ -107,7 +106,7 @@ public class CallActivityConstraintTest {
         final IValidationContext context = mock(IValidationContext.class);
         doReturn(target).when(context).getTarget();
         when(context.createSuccessStatus()).thenReturn(Status.OK_STATUS);
-        when(context.createFailureStatus(anyObject())).thenReturn(new Status(IStatus.ERROR, "unknown", ""));
+        when(context.createFailureStatus(any())).thenReturn(new Status(IStatus.ERROR, "unknown", ""));
         return context;
     }
 }

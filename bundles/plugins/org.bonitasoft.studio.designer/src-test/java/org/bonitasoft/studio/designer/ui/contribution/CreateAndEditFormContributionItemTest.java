@@ -47,7 +47,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.Spy;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 /**
  * @author Romain Bioteau
@@ -171,7 +171,6 @@ public class CreateAndEditFormContributionItemTest {
                 .getSelection();
 
         doReturn(webPageFileStore).when(repositoryStore).getChild("newForm", true);
-        doReturn("newName").when(webPageFileStore).getDisplayName();
         doReturn(editingDomain()).when(contribution).getEditingDomain(pagefLow);
         contribution.createNewForm();
         verify(contribution, Mockito.never()).openHideEmptyContractDialog();

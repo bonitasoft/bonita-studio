@@ -38,7 +38,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 /**
  * @author Romain Bioteau
@@ -71,7 +71,7 @@ public class WebWidgetFileStoreTest {
         jsonResource = mock(IFile.class, RETURNS_DEEP_STUBS);
         doReturn(folderResource).when(webWidgetFileStore).getResource();
         doReturn(jsonResource).when(folderResource).getFile("pbButton.json");
-        when(parentStore.validate(Mockito.anyString(), Mockito.any(InputStream.class)))
+        when(parentStore.validate(Mockito.any(), Mockito.any()))
         .thenReturn(ValidationStatus.ok());
     }
 

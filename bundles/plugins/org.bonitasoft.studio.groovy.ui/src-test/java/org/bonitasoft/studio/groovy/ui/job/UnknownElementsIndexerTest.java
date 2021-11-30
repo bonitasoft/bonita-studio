@@ -16,7 +16,7 @@ package org.bonitasoft.studio.groovy.ui.job;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.entry;
-import static org.mockito.Matchers.notNull;
+import static org.mockito.Mockito.notNull;
 import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -52,7 +52,7 @@ public class UnknownElementsIndexerTest {
 
         unknownElementsIndexer.run(new NullProgressMonitor());
 
-        verify(statementBlock).visit(notNull(VariablesVisitor.class));
+        verify(statementBlock).visit(notNull());
     }
 
     @Test

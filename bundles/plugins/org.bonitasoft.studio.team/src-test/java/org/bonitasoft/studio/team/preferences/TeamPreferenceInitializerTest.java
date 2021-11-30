@@ -16,41 +16,20 @@
  */
 package org.bonitasoft.studio.team.preferences;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import org.assertj.core.api.Assertions;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferenceStore;
-import org.eclipse.team.svn.ui.preferences.SVNTeamPreferences;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 public class TeamPreferenceInitializerTest {
-
-    private TeamPreferenceInitializer teamPreferenceInitializer;
-    private IPreferenceStore svnPreferenceStore;
-
-
-    @Before
-    public void setUp() throws Exception {
-        teamPreferenceInitializer = new TeamPreferenceInitializer();
-        svnPreferenceStore = new PreferenceStore();
-    }
 
     @Test
     public void testSVNConnectorAvailable() {
         Assertions.assertThat(TeamPreferenceInitializer.DEFAULT_SVNKIT).isEqualTo("org.eclipse.team.svn.connector.svnkit18");
     }
 
-    @Test
-    public void should_initializeSvnConnectorDefaultValue_set_default_value_to_svnkit17() throws Exception {
-        teamPreferenceInitializer.initializeSvnConnectorDefaultValue(svnPreferenceStore);
-
-        final String coreName = SVNTeamPreferences.fullCoreName(SVNTeamPreferences.CORE_SVNCONNECTOR_NAME);
-
-        assertThat(svnPreferenceStore.getDefaultString(coreName)).isEqualTo(TeamPreferenceInitializer.DEFAULT_SVNKIT);
-    }
 }

@@ -15,7 +15,7 @@
 package org.bonitasoft.studio.validation.constraints.connector;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Matchers.anyObject;
+import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
@@ -48,7 +48,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 /**
  * @author Romain Bioteau
@@ -89,13 +89,11 @@ public class ConnectorDefinitionAndConfigurationOutputConsistencyConstraintTest 
     public void setUp() throws Exception {
         constraintUnderTest = spy(new ConnectorDefinitionAndConfigurationOutputConsistencyConstraint());
         when(context.createSuccessStatus()).thenReturn(Status.OK_STATUS);
-        when(context.createFailureStatus(anyObject())).thenReturn(new Status(IStatus.ERROR, "unknown", ""));
+        when(context.createFailureStatus(any())).thenReturn(new Status(IStatus.ERROR, "unknown", ""));
         doReturn(connectorDefStore).when(constraintUnderTest).getConnectorDefinitionRepositoryStore();
         doReturn(actorFilterDefStore).when(constraintUnderTest).getActorFilterDefinitionStore();
         when(defResourceProvider.getConnectorDefinitionRegistry()).thenReturn(defRegistry);
         when(connectorDefStore.getResourceProvider()).thenReturn(defResourceProvider);
-        when(actorFilterDefStore.getResourceProvider()).thenReturn(defResourceProvider);
-        
     }
 
     /**

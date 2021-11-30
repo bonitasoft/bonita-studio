@@ -23,7 +23,6 @@ import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
 import org.bonitasoft.studio.model.process.BusinessObjectData;
@@ -44,13 +43,11 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Text;
-import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 public class SelectDataWizardPageTest {
@@ -63,11 +60,6 @@ public class SelectDataWizardPageTest {
     @Mock
     private BusinessObjectModelRepositoryStore store;
     
-    @Before
-    public void setUp() throws Exception {
-       when(store.getBusinessObjectByQualifiedName(Mockito.anyString())).thenReturn(Optional.empty());
-    }
-
     @Test
     public void should_isPageComplete_ReturnFalse_when_available_data_is_empty() {
         final List<Data> availableBusinessData = new ArrayList<Data>();

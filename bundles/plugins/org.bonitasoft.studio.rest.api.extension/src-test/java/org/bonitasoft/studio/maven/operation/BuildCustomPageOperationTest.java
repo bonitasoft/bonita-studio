@@ -9,8 +9,7 @@
 package org.bonitasoft.studio.maven.operation;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Matchers.notNull;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
@@ -42,7 +41,8 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.Mockito;
+import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 public class BuildCustomPageOperationTest {
@@ -68,7 +68,7 @@ public class BuildCustomPageOperationTest {
         when(launchManager
                 .getLaunchConfigurationType(MavenLaunchConstants.LAUNCH_CONFIGURATION_TYPE_ID))
                         .thenReturn(launchConfigurationType);
-        when(launchConfigurationType.newInstance((IContainer) eq(null), notNull(String.class))).thenReturn(workingCopy);
+        when(launchConfigurationType.newInstance((IContainer) eq(null), Mockito.notNull())).thenReturn(workingCopy);
         mavenProject = mock(MavenProject.class);
         baseDir = tmpRule.newFolder();
         when(mavenProject.getBasedir()).thenReturn(baseDir);
@@ -125,8 +125,6 @@ public class BuildCustomPageOperationTest {
         when(mavenProcess.getStreamsProxy().getOutputStreamMonitor().getContents()).thenReturn("console output");
         when(launch.getProcesses()).thenReturn(new IProcess[] { mavenProcess });
 
-        when(mavenProject.getArtifactId()).thenReturn("defaultRestAPIExtension");
-        when(mavenProject.getVersion()).thenReturn("1.0.0-SNAPSHOT");
         doReturn(Optional.of(mavenProject)).when(descriptor).getMavenProject();
         doReturn(launch).when(workingCopy).launch(ILaunchManager.RUN_MODE, AbstractRepository.NULL_PROGRESS_MONITOR, true);
         doReturn("myProfile").when(operation).activeProfiles();

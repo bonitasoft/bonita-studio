@@ -16,7 +16,7 @@
     <properties>
         <lib.dir>lib</lib.dir>
     </properties>
-    
+
     <dependencies>
         <dependency>
             <groupId>org.jdom</groupId>

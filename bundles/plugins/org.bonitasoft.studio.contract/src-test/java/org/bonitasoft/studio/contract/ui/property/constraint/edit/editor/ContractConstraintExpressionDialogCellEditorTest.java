@@ -15,8 +15,8 @@
 package org.bonitasoft.studio.contract.ui.property.constraint.edit.editor;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -35,7 +35,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 /**
  * @author Romain Bioteau
@@ -66,7 +66,7 @@ public class ContractConstraintExpressionDialogCellEditorTest {
         contract.getConstraints().add(constraint);
         adapterFactoryContentProvider = new AdapterFactoryContentProvider(
                 new ProcessItemProviderAdapterFactory());
-        when(constraintEditorFactory.openConstraintEditor(any(Shell.class),
+        when(constraintEditorFactory.openConstraintEditor(any(),
                 eq(constraint),
                 eq(adapterFactoryContentProvider))).thenReturn(Dialog.OK);
         cellEditor = new ContractConstraintExpressionDialogCellEditor(composite,
@@ -79,7 +79,7 @@ public class ContractConstraintExpressionDialogCellEditorTest {
     @Test
     public void should_openDialogBox_open_constraint_editor() throws Exception {
         cellEditor.openDialogBox(composite);
-        verify(constraintEditorFactory).openConstraintEditor(any(Shell.class),
+        verify(constraintEditorFactory).openConstraintEditor(any(),
                 eq(constraint),
                 eq(adapterFactoryContentProvider));
     }

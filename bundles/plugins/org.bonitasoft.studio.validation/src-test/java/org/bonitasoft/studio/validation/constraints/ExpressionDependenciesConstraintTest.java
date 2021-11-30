@@ -18,7 +18,7 @@ import static org.bonitasoft.studio.assertions.StatusAssert.assertThat;
 import static org.bonitasoft.studio.model.expression.builders.ExpressionBuilder.aConstantExpression;
 import static org.bonitasoft.studio.model.expression.builders.ExpressionBuilder.aVariableExpression;
 import static org.bonitasoft.studio.model.process.builders.DataBuilder.aData;
-import static org.mockito.Matchers.any;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -32,7 +32,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 /**
  * @author Romain Bioteau

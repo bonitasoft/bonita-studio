@@ -21,7 +21,7 @@ Require-Bundle: org.bonitasoft.studio.common,
  org.eclipse.emf.edapt.history;bundle-version="0.3.0";visibility:=reexport,
  org.bonitasoft.studio.migration;bundle-version="1.0.0",
  org.junit;bundle-version="4.8.2";resolution:=optional,
- org.mockito;bundle-version="1.9.5";resolution:=optional,
+ org.mockito.mockito-core;bundle-version="1.9.5";resolution:=optional,
  org.assertj;bundle-version="1.5.0";resolution:=optional,
  org.eclipse.e4.core.contexts,
  org.eclipse.e4.core.di;bundle-version="1.4.0",
@@ -39,7 +39,8 @@ Require-Bundle: org.bonitasoft.studio.common,
  org.eclipse.debug.ui;bundle-version="3.14.500",
  com.fasterxml.jackson.core.jackson-core;bundle-version="2.4.4",
  org.eclipse.core.databinding.property;bundle-version="1.8.0",
- org.codehaus.groovy.eclipse.core
+ org.codehaus.groovy.eclipse.core,
+ org.eclipse.ltk.core.refactoring;bundle-version="3.11.400";resolution:=optional
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-ActivationPolicy: lazy
 Export-Package: org.bonitasoft.plugin.analyze.report.model,

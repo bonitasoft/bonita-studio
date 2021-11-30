@@ -25,7 +25,6 @@ import org.bonitasoft.engine.bpm.businessdata.BusinessDataDefinition;
 import org.bonitasoft.engine.bpm.flownode.FlowElementContainerDefinition;
 import org.bonitasoft.engine.bpm.process.impl.ProcessDefinitionBuilder;
 import org.bonitasoft.studio.engine.export.EngineExpressionUtil;
-import org.bonitasoft.studio.engine.export.builder.EngineDataBuilder;
 import org.bonitasoft.studio.model.process.BusinessObjectData;
 import org.junit.Before;
 import org.junit.Test;

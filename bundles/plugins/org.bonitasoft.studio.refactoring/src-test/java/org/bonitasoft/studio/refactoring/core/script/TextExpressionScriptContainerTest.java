@@ -18,60 +18,34 @@ import static com.google.common.collect.Lists.newArrayList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.bonitasoft.studio.model.expression.builders.ExpressionBuilder.anExpression;
 import static org.bonitasoft.studio.refactoring.core.script.ReferenceDiff.newReferenceDiff;
-import static org.mockito.Mockito.spy;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
-import org.bonitasoft.studio.model.expression.Expression;
-import org.bonitasoft.studio.model.expression.assertions.ExpressionAssert;
-import org.bonitasoft.studio.model.expression.provider.ExpressionItemProviderAdapterFactory;
 import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.model.process.builders.DataBuilder;
 import org.bonitasoft.studio.model.process.builders.StringDataTypeBuilder;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.emf.edit.domain.EditingDomain;
-import org.eclipse.emf.transaction.impl.TransactionalEditingDomainImpl;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
-public class ConditionExpressionScriptContrainerTest {
+public class TextExpressionScriptContainerTest {
 
     @Mock
     private IProgressMonitor monitor;
 
     @Test
-    public void should_update_expression_name_when_applynigUpdate() throws Exception {
-        final Data myData = DataBuilder.aData().havingDataType(StringDataTypeBuilder.aStringDataType()).build();
-        final Expression expression = anExpression()
-                .withName("myData == \"hello\"")
-                .withExpressionType(ExpressionConstants.CONDITION_TYPE)
-                .withContent("myData == \"hello\"").havingReferencedElements(myData).build();
-        final ConditionExpressionScriptContrainer textExpressionScriptContainer = spy(new ConditionExpressionScriptContrainer(expression,
-                ProcessPackage.Literals.ELEMENT__NAME));
-
-        textExpressionScriptContainer.updateScript(newArrayList(newReferenceDiff("myData", "myNewData")), monitor);
-        textExpressionScriptContainer.applyUpdate(editingDomain()).execute();
-
-        ExpressionAssert.assertThat(expression).hasName("myNewData == \"hello\"");
-    }
-
-    @Test
     public void should_replace_old_reference_with_new_reference_when_updatingScript() throws Exception {
         final Data myData = DataBuilder.aData().havingDataType(StringDataTypeBuilder.aStringDataType()).build();
-        final ConditionExpressionScriptContrainer textExpressionScriptContainer = new ConditionExpressionScriptContrainer(anExpression()
-                .withExpressionType(ExpressionConstants.CONDITION_TYPE)
-                .withContent("myData == \"hello\"").havingReferencedElements(myData).build(),
+        final TextExpressionScriptContainer textExpressionScriptContainer = new TextExpressionScriptContainer(anExpression()
+                .withExpressionType(ExpressionConstants.PATTERN_TYPE)
+                .withContent("Hello ${myData}, do you have ${myData}, but do not replace myData").havingReferencedElements(myData).build(),
                 ProcessPackage.Literals.ELEMENT__NAME);
 
         textExpressionScriptContainer.updateScript(newArrayList(newReferenceDiff("myData", "myNewData")), monitor);
 
-        assertThat(textExpressionScriptContainer.getNewScript()).isEqualTo("myNewData == \"hello\"");
-    }
-
-    private EditingDomain editingDomain() {
-        return new TransactionalEditingDomainImpl(new ExpressionItemProviderAdapterFactory());
+        assertThat(textExpressionScriptContainer.getNewScript()).isEqualTo("Hello ${myNewData}, do you have ${myNewData}, but do not replace myData");
     }
 }

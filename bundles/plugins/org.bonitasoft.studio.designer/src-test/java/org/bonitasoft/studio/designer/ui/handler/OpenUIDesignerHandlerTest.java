@@ -14,17 +14,13 @@
  */
 package org.bonitasoft.studio.designer.ui.handler;
 
-import static org.mockito.Matchers.any;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-import java.net.URL;
 
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.designer.core.PageDesignerURLFactory;
-import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.bonitasoft.studio.preferences.browser.OpenBrowserOperation;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.junit.After;
@@ -32,7 +28,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 /**
  * @author Romain Bioteau
@@ -58,15 +54,9 @@ public class OpenUIDesignerHandlerTest {
         disablePopup = FileActionDialog.getDisablePopup();
         FileActionDialog.setDisablePopup(true);
         openPageDesignerHandler = spy(new OpenUIDesignerHandler());
-        when(preferenceStore.get(BonitaPreferenceConstants.CONSOLE_HOST, BonitaPreferenceConstants.DEFAULT_HOST))
-                .thenReturn("localhost");
-        when(preferenceStore.getInt(BonitaPreferenceConstants.CONSOLE_PORT, BonitaPreferenceConstants.DEFAULT_PORT))
-                .thenReturn(8080);
-        when(preferenceStore.get(BonitaPreferenceConstants.CURRENT_STUDIO_LOCALE, "en")).thenReturn("en");
-        doReturn(preferenceStore).when(openPageDesignerHandler).getPreferenceStore();
         doReturn(urlFactory).when(openPageDesignerHandler).urlFactory();
-        doReturn(openBrowserOperation).when(openPageDesignerHandler).createOpenBrowserOperation(any(URL.class));
-        doReturn(true).when(openPageDesignerHandler).waitUntilTomcatIsReady(any(PageDesignerURLFactory.class));
+        doReturn(openBrowserOperation).when(openPageDesignerHandler).createOpenBrowserOperation(any());
+        doReturn(true).when(openPageDesignerHandler).waitUntilTomcatIsReady(any());
     }
 
     /**

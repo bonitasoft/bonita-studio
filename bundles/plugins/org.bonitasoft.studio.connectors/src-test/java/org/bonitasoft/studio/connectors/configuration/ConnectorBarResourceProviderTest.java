@@ -20,8 +20,8 @@ import static org.bonitasoft.studio.model.configuration.builders.DefinitionMappi
 import static org.bonitasoft.studio.model.configuration.builders.FragmentBuilder.aFragment;
 import static org.bonitasoft.studio.model.configuration.builders.FragmentContainerBuilder.aFragmentContainer;
 import static org.bonitasoft.studio.model.process.builders.PoolBuilder.aPool;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.anyString;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
@@ -49,7 +49,7 @@ import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ConnectorBarResourceProviderTest {
@@ -99,9 +99,6 @@ public class ConnectorBarResourceProviderTest {
         when(connectorSourceStore.getChild("org.test", true)).thenReturn(connectorSourceFileStore);
         when(connectorImplStore.getImplementationFileStore("myConnectorImpl", "1.0.0"))
                 .thenReturn(myConnectorImplFileStore);
-        when(connectorImplStore.getImplementation("myConnectorImpl", "1.0.0")).thenReturn(
-                aConnectorImplementation("myConnectorDef", "1.0.0", "myConnectorImpl", "1.0.0",
-                        "org.test.MyConnector"));
         final BusinessArchiveBuilder builder = mock(BusinessArchiveBuilder.class);
         provider.addResourcesForConfiguration(builder, aPool().build(),
                 connectorConfiguration("myConnectorDef", "1.0.0", "myConnectorImpl", "1.0.0"));
@@ -115,8 +112,6 @@ public class ConnectorBarResourceProviderTest {
     @Test
     public void should_add_implementation_jar_in_bar_resource_from_dependency_store() throws Exception {
         final ConnectorBarResourceProvider provider = spy(new ConnectorBarResourceProvider(repositoryAccessor));
-        doReturn(fileRule.newFile("myConnectorImpl-1.0.0.jar")).when(provider).exportJar(anyString(),
-                any(PackageFileStore.class));
 
         when(myConnectorImplFileStore.getContent())
                 .thenReturn(aConnectorImplementation("myConnectorDef", "1.0.0", "myConnectorImpl", "1.0.0",

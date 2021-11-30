@@ -1,14 +1,12 @@
 package org.bonitasoft.studio.team.core;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Matchers.notNull;
+import static org.mockito.ArgumentMatchers.notNull;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.team.operations.ScanResourcesLockOperation.LockStatus;
@@ -21,7 +19,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 public class SVNLockManagerTest {
@@ -58,7 +56,7 @@ public class SVNLockManagerTest {
     @Test
     public void testReleaseLock_whenNotAutoShare() throws CoreException {
         lockManager.releaseLock(resource, false, display);
-        verify(display, atLeastOnce()).asyncExec(notNull(Runnable.class));
+        verify(display, atLeastOnce()).asyncExec(notNull());
     }
 
     @Test

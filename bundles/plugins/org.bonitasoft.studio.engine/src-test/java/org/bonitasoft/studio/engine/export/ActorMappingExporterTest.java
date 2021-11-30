@@ -17,6 +17,8 @@ package org.bonitasoft.studio.engine.export;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.doReturn;
 
+import java.nio.charset.Charset;
+
 import org.bonitasoft.studio.model.actormapping.ActorMapping;
 import org.bonitasoft.studio.model.actormapping.ActorMappingFactory;
 import org.bonitasoft.studio.model.actormapping.ActorMappingsType;
@@ -30,7 +32,7 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.mockito.Spy;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ActorMappingExporterTest {
@@ -72,7 +74,7 @@ public class ActorMappingExporterTest {
     public void should_to_byteArray_returns_an_UTF8_byteArray() throws Exception {
         final byte[] content = actorMappingExporter.toByteArray(configuration);
         assertThat(content).isNotEmpty();
-        assertThat(new String(content)).contains("平仮名");
+        assertThat(new String(content, Charset.forName("UTF-8"))).contains("平仮名");
     }
 
 }

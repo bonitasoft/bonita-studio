@@ -22,8 +22,7 @@ import static org.bonitasoft.studio.model.process.builders.FormMappingBuilder.aF
 import static org.bonitasoft.studio.model.process.builders.PoolBuilder.aPool;
 import static org.bonitasoft.studio.model.process.builders.TaskBuilder.aTask;
 import static org.junit.Assert.assertThrows;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
@@ -40,7 +39,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 /**
  * @author Romain Bioteau
@@ -74,7 +73,7 @@ public class FormMappingBarResourceProviderTest {
         formMappingBarResourceProvider = spy(
                 new FormMappingBarResourceProvider(factory));
         doReturn(false).when(formMappingBarResourceProvider).forceMapping();
-        doReturn("id").when(formMappingBarResourceProvider).resolveUUID(anyString());
+        doReturn("id").when(formMappingBarResourceProvider).resolveUUID(any());
     }
 
     @Test(expected = NullPointerException.class)

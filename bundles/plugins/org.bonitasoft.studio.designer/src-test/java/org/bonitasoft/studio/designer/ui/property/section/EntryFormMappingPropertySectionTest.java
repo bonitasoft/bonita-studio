@@ -36,7 +36,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 /**
  * @author Romain Bioteau
@@ -76,7 +76,6 @@ public class EntryFormMappingPropertySectionTest {
         final Composite parent = realmWithDisplay.createComposite();
         doReturn(new TabbedPropertySheetWidgetFactory()).when(tabbedPropertySheetPage).getWidgetFactory();
         doReturn(webPageStore).when(repositoryAccessor).getRepositoryStore(WebPageRepositoryStore.class);
-        doReturn(workspace).when(repositoryAccessor).getWorkspace();
 
         section.createContent(parent);
 

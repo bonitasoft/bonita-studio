@@ -16,8 +16,8 @@
  */
 package org.bonitasoft.studio.preferences.pages;
 
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.anyString;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doCallRealMethod;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
@@ -36,8 +36,9 @@ import org.eclipse.swt.widgets.Composite;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 
-@RunWith(org.mockito.runners.MockitoJUnitRunner.class)
+@RunWith(MockitoJUnitRunner.class)
 public class AbstractBonitaPreferencePageTest {
 
     @Mock
@@ -49,10 +50,10 @@ public class AbstractBonitaPreferencePageTest {
     public void should_createPreferenceEditorContributions_call_createFieldEditors_for_matching_ids() throws Exception {
         final List<IPreferenceFieldEditorContribution> contributions = listOfContribWithIds("myContribId");
         when(preferencePage.getFieldEditorContibutions()).thenReturn(contributions);
-        doCallRealMethod().when(preferencePage).createPreferenceEditorContributions(anyString());
+        doCallRealMethod().when(preferencePage).createPreferenceEditorContributions(any());
         preferencePage.createPreferenceEditorContributions("myContribId");
 
-        verify(contributions.get(0)).createFieldEditors(any(Composite.class));
+        verify(contributions.get(0)).createFieldEditors(any());
     }
 
     @Test

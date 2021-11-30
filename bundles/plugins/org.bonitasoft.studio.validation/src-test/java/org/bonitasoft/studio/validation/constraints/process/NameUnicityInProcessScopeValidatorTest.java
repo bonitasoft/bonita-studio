@@ -17,9 +17,7 @@
 package org.bonitasoft.studio.validation.constraints.process;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyListOf;
-import static org.mockito.Matchers.anyVararg;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.spy;
 
@@ -39,7 +37,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 public class NameUnicityInProcessScopeValidatorTest {
@@ -53,7 +51,7 @@ public class NameUnicityInProcessScopeValidatorTest {
     @Before
     public void setup() {
         doReturn(Status.OK_STATUS).when(ctx).createSuccessStatus();
-        doReturn(failureSTatus).when(ctx).createFailureStatus(anyVararg());
+        doReturn(failureSTatus).when(ctx).createFailureStatus(any());
     }
 
     @Test
@@ -92,7 +90,7 @@ public class NameUnicityInProcessScopeValidatorTest {
         doReturn(pool).when(ctx).getTarget();
 
         final NameUnicityInProcessScopeValidator nameUnicityInProcessScopeValidator = spy(new NameUnicityInProcessScopeValidator());
-        doReturn(failureSTatus).when(nameUnicityInProcessScopeValidator).createMultiStatusConstraint(any(IValidationContext.class), anyListOf(IStatus.class));
+        doReturn(failureSTatus).when(nameUnicityInProcessScopeValidator).createMultiStatusConstraint(any(IValidationContext.class), any());
         final IStatus res = nameUnicityInProcessScopeValidator.performBatchValidation(ctx);
         assertThat(res.isOK()).isFalse();
     }
@@ -106,7 +104,7 @@ public class NameUnicityInProcessScopeValidatorTest {
         doReturn(pool).when(ctx).getTarget();
 
         final NameUnicityInProcessScopeValidator nameUnicityInProcessScopeValidator = spy(new NameUnicityInProcessScopeValidator());
-        doReturn(failureSTatus).when(nameUnicityInProcessScopeValidator).createMultiStatusConstraint(any(IValidationContext.class), anyListOf(IStatus.class));
+        doReturn(failureSTatus).when(nameUnicityInProcessScopeValidator).createMultiStatusConstraint(any(IValidationContext.class), any());
         final IStatus res = nameUnicityInProcessScopeValidator.performBatchValidation(ctx);
         assertThat(res.isOK()).isFalse();
     }
@@ -120,7 +118,7 @@ public class NameUnicityInProcessScopeValidatorTest {
         doReturn(pool.getElements().get(0)).when(ctx).getTarget();
 
         final NameUnicityInProcessScopeValidator nameUnicityInProcessScopeValidator = spy(new NameUnicityInProcessScopeValidator());
-        doReturn(failureSTatus).when(nameUnicityInProcessScopeValidator).createMultiStatusConstraint(any(IValidationContext.class), anyListOf(IStatus.class));
+        doReturn(failureSTatus).when(nameUnicityInProcessScopeValidator).createMultiStatusConstraint(any(IValidationContext.class), any());
         final IStatus res = nameUnicityInProcessScopeValidator.performBatchValidation(ctx);
         assertThat(res.isOK()).isFalse();
     }
@@ -133,7 +131,7 @@ public class NameUnicityInProcessScopeValidatorTest {
         doReturn(pool.getElements().get(0)).when(ctx).getTarget();
 
         final NameUnicityInProcessScopeValidator nameUnicityInProcessScopeValidator = spy(new NameUnicityInProcessScopeValidator());
-        doReturn(failureSTatus).when(nameUnicityInProcessScopeValidator).createMultiStatusConstraint(any(IValidationContext.class), anyListOf(IStatus.class));
+        doReturn(failureSTatus).when(nameUnicityInProcessScopeValidator).createMultiStatusConstraint(any(IValidationContext.class), any());
         final IStatus res = nameUnicityInProcessScopeValidator.performBatchValidation(ctx);
         assertThat(res.isOK()).isFalse();
     }

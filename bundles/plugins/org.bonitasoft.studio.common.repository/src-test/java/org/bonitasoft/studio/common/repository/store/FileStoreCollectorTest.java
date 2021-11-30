@@ -22,7 +22,7 @@ import org.eclipse.core.resources.IResource;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 /**
  * @author Romain Bioteau
@@ -57,7 +57,6 @@ public class FileStoreCollectorTest {
     public void should_collect_all_visible_resources_if_not_extension_is_defined() throws Exception {
         //Given
         final FileStoreCollector fileStoreCollector = new FileStoreCollector(root, null);
-        doReturn("proc").when(procResource).getFileExtension();
         doReturn("myDiagram").when(procResource).getName();
         when(hiddenResource.isHidden()).thenReturn(true);
         when(dotStartingResource.getName()).thenReturn(".svn");

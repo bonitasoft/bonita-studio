@@ -16,7 +16,7 @@
  */
 package org.bonitasoft.studio.common.repository.filestore;
 
-import static org.mockito.Matchers.any;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
@@ -28,13 +28,12 @@ import org.bonitasoft.studio.common.repository.store.SourceRepositoryStore;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.ui.jarpackager.IJarExportRunnable;
 import org.eclipse.jdt.ui.jarpackager.JarPackageData;
-import org.eclipse.swt.widgets.Shell;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 /**
  * @author Romain Bioteau
@@ -65,7 +64,7 @@ public class SourceFileStoreTest {
 		fileStoreUnderTest = spy(new SourceFileStore("org.bonita.test.Test", parentStore));
 		tmpJarFile = File.createTempFile("tmpJar",".jar",new File(System.getProperty("java.io.tmpdir")));
 		doReturn(packageData).when(fileStoreUnderTest).createJarPackageData();
-		doReturn(jarRunnable).when(packageData).createJarExportRunnable(any(Shell.class));
+		doReturn(jarRunnable).when(packageData).createJarExportRunnable(any());
 		doReturn(null).when(fileStoreUnderTest).getResource();
 	}
 
@@ -86,7 +85,7 @@ public class SourceFileStoreTest {
 		verify(packageData).setExportClassFiles(true);
 		verify(packageData).setExportJavaFiles(true);
 		verify(packageData).setGenerateManifest(true);
-		verify(packageData).setElements(any(Object[].class));
+		verify(packageData).setElements(any());
 		verify(packageData).setUseSourceFolderHierarchy(true) ;
 		verify(packageData).setOverwrite(true);
 		verify(packageData).setJarLocation(Path.fromOSString(tmpJarFile.getAbsolutePath())) ;

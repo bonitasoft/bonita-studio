@@ -16,9 +16,9 @@ package org.bonitasoft.studio.engine.operation;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.bonitasoft.studio.model.process.builders.PoolBuilder.aPool;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.notNull;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.notNull;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
@@ -33,7 +33,6 @@ import java.net.HttpURLConnection;
 import org.bonitasoft.engine.api.ProcessAPI;
 import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.studio.engine.BOSEngineManager;
-import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.junit.Test;
@@ -41,7 +40,7 @@ import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InOrder;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 public class UndeployProcessOperationTest {
@@ -72,8 +71,8 @@ public class UndeployProcessOperationTest {
 
     private UndeployProcessOperation createFixture() throws Exception {
         final BOSEngineManager engineManager = mock(BOSEngineManager.class);
-        when(engineManager.createSession(notNull(AbstractProcess.class), anyString(), any(IProgressMonitor.class))).thenReturn(mock(APISession.class));
-        when(engineManager.getProcessAPI(notNull(APISession.class))).thenReturn(processAPI);
+        when(engineManager.createSession(notNull(), any(), any(IProgressMonitor.class))).thenReturn(mock(APISession.class));
+        when(engineManager.getProcessAPI(notNull())).thenReturn(processAPI);
         when(processAPI.getNumberOfProcessDeploymentInfos()).thenReturn(1L);
         final UndeployProcessOperation operation = spy(new UndeployProcessOperation(engineManager));
         doReturn(connection).when(operation).openLoginConnection(any(IProgressMonitor.class));

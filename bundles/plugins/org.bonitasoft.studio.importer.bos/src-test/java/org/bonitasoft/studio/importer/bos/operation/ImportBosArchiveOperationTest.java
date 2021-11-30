@@ -1,6 +1,6 @@
 package org.bonitasoft.studio.importer.bos.operation;
 
-import static org.mockito.Matchers.any;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.inOrder;
@@ -23,9 +23,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InOrder;
-import org.mockito.Matchers;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.Mockito;
+import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ImportBosArchiveOperationTest {
@@ -54,14 +54,13 @@ public class ImportBosArchiveOperationTest {
     @Before
     public void setUp() throws Exception {
         operationUnserTest = spy(new ImportBosArchiveOperation(repositoryAccessor));
-        doNothing().when(operationUnserTest).migrateUID(any(IProgressMonitor.class));
-        doNothing().when(operationUnserTest).doUpdateProjectDependencies(any(IProgressMonitor.class), any(ImportBosArchiveStatusBuilder.class));
+        doNothing().when(operationUnserTest).migrateUID(any());
         doReturn(Collections.emptySet()).when(operationUnserTest).doMigrateToMavenDependencies(any(ImportArchiveModel.class), any(IProgressMonitor.class));
         doReturn(null).when(operationUnserTest).existingMavenModel(any());
         archiveFile = new File(ImportBosArchiveOperationTest.class.getResource("/customer_support_2.0.bos").getFile());
         when(parseOpeation.getImportArchiveModel()).thenReturn(mock(ImportArchiveModel.class));
-        doReturn(parseOpeation).when(operationUnserTest).newParseBosOperation(Matchers.any(File.class),
-                Matchers.any(AbstractRepository.class));
+        doReturn(parseOpeation).when(operationUnserTest).newParseBosOperation(Mockito.any(),
+                Mockito.any());
         doReturn(Collections.emptyList()).when(operationUnserTest).getValidators();
         when(repositoryAccessor.getRepositoryStore(DiagramRepositoryStore.class)).thenReturn(diagramStore);
     }

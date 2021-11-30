@@ -21,10 +21,10 @@ import static org.bonitasoft.studio.model.process.builders.BusinessObjectDataBui
 import static org.bonitasoft.studio.model.process.builders.ContractBuilder.aContract;
 import static org.bonitasoft.studio.model.process.builders.PoolBuilder.aPool;
 import static org.bonitasoft.studio.model.process.builders.TaskBuilder.aTask;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyBoolean;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.anyBoolean;
+import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -70,7 +70,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ContractInputGenerationWizardTest {
@@ -149,8 +149,6 @@ public class ContractInputGenerationWizardTest {
 
         final BusinessObjectModelRepositoryStore<BusinessObjectModelFileStore> store = getBusinessObjectModelRepositoryStore();
         when(repositoryAccessor.getRepositoryStore(BusinessObjectModelRepositoryStore.class)).thenReturn(store);
-        when(preferenceStore.getString(ContractInputGenerationInfoDialogFactory.SHOW_GENERATION_SUCCESS_DIALOG))
-                .thenReturn("always");
         when(sourceViewerFactory.createSourceViewer(any(Composite.class), any(Boolean.class))).thenReturn(groovyViewer);
         when(groovyViewer.getSourceViewer()).thenReturn(sourceViewer);
         when(groovyViewer.getDocument()).thenReturn(document);
@@ -176,8 +174,6 @@ public class ContractInputGenerationWizardTest {
 
         final BusinessObjectModelRepositoryStore<BusinessObjectModelFileStore> store = getBusinessObjectModelRepositoryStore();
         when(repositoryAccessor.getRepositoryStore(BusinessObjectModelRepositoryStore.class)).thenReturn(store);
-        when(preferenceStore.getString(ContractInputGenerationInfoDialogFactory.SHOW_GENERATION_SUCCESS_DIALOG))
-                .thenReturn("always");
         when(sourceViewerFactory.createSourceViewer(any(Composite.class), any(Boolean.class))).thenReturn(groovyViewer);
         when(groovyViewer.getSourceViewer()).thenReturn(sourceViewer);
         when(groovyViewer.getDocument()).thenReturn(document);
@@ -205,8 +201,6 @@ public class ContractInputGenerationWizardTest {
 
         final BusinessObjectModelRepositoryStore<BusinessObjectModelFileStore> store = getBusinessObjectModelRepositoryStore();
         when(repositoryAccessor.getRepositoryStore(BusinessObjectModelRepositoryStore.class)).thenReturn(store);
-        when(preferenceStore.getString(ContractInputGenerationInfoDialogFactory.SHOW_GENERATION_SUCCESS_DIALOG))
-                .thenReturn("always");
         when(expressionBuilder.toExpression(any(BusinessObjectData.class), any(FieldToContractInputMapping.class),
                 anyBoolean())).thenReturn(
                         aGroovyScriptExpression().build());
@@ -238,8 +232,6 @@ public class ContractInputGenerationWizardTest {
 
         final BusinessObjectModelRepositoryStore<BusinessObjectModelFileStore> store = getBusinessObjectModelRepositoryStore();
         when(repositoryAccessor.getRepositoryStore(BusinessObjectModelRepositoryStore.class)).thenReturn(store);
-        when(preferenceStore.getString(ContractInputGenerationInfoDialogFactory.SHOW_GENERATION_SUCCESS_DIALOG))
-                .thenReturn("always");
 
         final ContractInputGenerationWizard wizard = new ContractInputGenerationWizard(task, editingDomain(),
                 repositoryAccessor, operationBuilder,
@@ -266,8 +258,6 @@ public class ContractInputGenerationWizardTest {
 
         final BusinessObjectModelRepositoryStore<BusinessObjectModelFileStore> store = getBusinessObjectModelRepositoryStore();
         when(repositoryAccessor.getRepositoryStore(BusinessObjectModelRepositoryStore.class)).thenReturn(store);
-        when(preferenceStore.getString(ContractInputGenerationInfoDialogFactory.SHOW_GENERATION_SUCCESS_DIALOG))
-                .thenReturn("always");
         when(operationBuilder.toOperation(any(BusinessObjectData.class), any(FieldToContractInputMapping.class),
                 any(EditMode.class), any(IProgressMonitor.class))).thenReturn(anOperation().build());
 

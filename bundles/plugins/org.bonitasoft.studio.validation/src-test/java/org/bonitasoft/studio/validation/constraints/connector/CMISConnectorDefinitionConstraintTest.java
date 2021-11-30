@@ -16,10 +16,10 @@ package org.bonitasoft.studio.validation.constraints.connector;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.bonitasoft.studio.model.process.builders.ConnectorBuilder.aConnector;
-import static org.mockito.Matchers.anyString;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
 import org.bonitasoft.studio.model.connectorconfiguration.builders.ConnectorConfigurationBuilder;
@@ -32,7 +32,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.Mockito;
+import org.mockito.junit.MockitoJUnitRunner;
 
 /**
  * @author Romain Bioteau
@@ -67,7 +68,7 @@ public class CMISConnectorDefinitionConstraintTest {
     @Test
     public void should_performLiveValidation_return_null() throws Exception {
         assertThat(cmisConnectorDefinitionConstraint.performLiveValidation(context)).isNull();
-        verifyZeroInteractions(context);
+        verifyNoInteractions(context);
     }
 
     @Test
