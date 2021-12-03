@@ -14,7 +14,7 @@ Require-Bundle: org.eclipse.emf.edit,
  org.eclipse.jdt.core,
  org.eclipse.emf.edit.ui,
  org.junit;bundle-version="4.11.0";resolution:=optional,
- org.assertj;bundle-version="1.5.0";resolution:=optional,
+ assertj-core;bundle-version="1.5.0";resolution:=optional,
  org.bonitasoft.studio.tests-utils;bundle-version="7.1.0";resolution:=optional
 Export-Package: org.bonitasoft.studio.model.edit.custom.decision,org.b
  onitasoft.studio.model.edit.custom.process

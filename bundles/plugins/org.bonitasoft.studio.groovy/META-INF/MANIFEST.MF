@@ -36,7 +36,7 @@ Require-Bundle: org.junit;bundle-version="4.11.0";resolution:=optional,
  com.google.guava;bundle-version="11.0.1",
  org.eclipse.e4.core.di,
  org.eclipse.jdt.ui,
- org.assertj;bundle-version="1.5.0";resolution:=optional,
+ assertj-core;bundle-version="1.5.0";resolution:=optional,
  org.eclipse.jdt.ui,
  org.bonitasoft.studio.tests-utils;bundle-version="7.4.4";resolution:=optional
 Bundle-RequiredExecutionEnvironment: JavaSE-11

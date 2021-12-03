@@ -10,7 +10,7 @@ Export-Package: org.bonitasoft.studio.team.git.i18n;x-friends:="org.bonitasoft.s
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.egit.ui;bundle-version="4.8.0",
- org.assertj;bundle-version="1.5.0";resolution:=optional,
+ assertj-core;bundle-version="1.5.0";resolution:=optional,
  org.junit;resolution:=optional,
  org.mockito.mockito-core;resolution:=optional,
  org.bonitasoft.studio.common.repository,

@@ -23,7 +23,7 @@ Require-Bundle: org.eclipse.gmf.runtime.lite.svg;bundle-version="1.0.0",
  org.eclipse.core.databinding.property;bundle-version="1.4.200",
  org.junit;bundle-version="4.11.0";resolution:=optional,
  org.mockito.mockito-core;bundle-version="1.9.5";resolution:=optional,
- org.assertj;bundle-version="1.5.0";resolution:=optional,
+ assertj-core;bundle-version="1.5.0";resolution:=optional,
  org.bonitasoft.studio.tests-utils;bundle-version="7.1.0";resolution:=optional,
  org.bonitasoft.studio.preferences;bundle-version="7.11.0",
  org.bonitasoft.studio.ui;bundle-version="7.11.0"
