@@ -18,7 +18,7 @@ Export-Package: org.bonitasoft.studio.assertions,
  org.bonitasoft.studio.model.process.builders,
  org.bonitasoft.studio.swt,
  org.bonitasoft.studio.swt.rules
-Require-Bundle: org.assertj,
+Require-Bundle: assertj-core,
  org.bonitasoft.studio.model,
  org.eclipse.swt,
  org.eclipse.core.databinding.observable,
