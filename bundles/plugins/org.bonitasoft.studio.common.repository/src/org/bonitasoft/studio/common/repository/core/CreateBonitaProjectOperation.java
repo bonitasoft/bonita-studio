@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 import org.apache.maven.model.Model;
@@ -97,7 +98,12 @@ public class CreateBonitaProjectOperation implements IWorkspaceRunnable {
         }
         mavenProjectBuilder.setArtifactId(artifactId);
         mavenProjectBuilder.setGroupId(metadata.getGroupId());
-        mavenProjectBuilder.setBonitaVersion(metadata.getBonitaRuntimeVersion());
+        String bonitaRuntimeVersion = metadata.getBonitaRuntimeVersion();
+        var minorVersionString = ProductVersion.toMinorVersionString(ProductVersion.minorVersion(bonitaRuntimeVersion));
+        if(!Objects.equals(minorVersionString, ProductVersion.minorVersion())) {
+            bonitaRuntimeVersion = ProductVersion.BONITA_RUNTIME_VERSION; 
+        }
+        mavenProjectBuilder.setBonitaVersion(bonitaRuntimeVersion);
         mavenProjectBuilder.setVersion(metadata.getVersion());
         mavenProjectBuilder.setDescription(metadata.getDescription());
         return mavenProjectBuilder;
