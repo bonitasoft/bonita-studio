@@ -17,6 +17,7 @@ import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.core.maven.MavenRepositoryRegistry;
 import org.bonitasoft.studio.common.repository.core.maven.migration.model.DependencyLookup;
+import org.bonitasoft.studio.common.repository.core.maven.migration.model.DependencyLookup.Status;
 import org.bonitasoft.studio.dependencies.operation.DependenciesUpdateOperationFactory;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.importer.bos.i18n.Messages;
@@ -29,6 +30,7 @@ import org.bonitasoft.studio.importer.bos.wizard.ExtensionsPreviewPage;
 import org.bonitasoft.studio.importer.bos.wizard.ImportBosArchivePage;
 import org.bonitasoft.studio.ui.dialog.ExceptionDialogHandler;
 import org.bonitasoft.studio.ui.dialog.SkippableProgressMonitorJobsDialog;
+import org.bonitasoft.studio.ui.wizard.CanFinishSupplier;
 import org.bonitasoft.studio.ui.wizard.WizardBuilder;
 import org.eclipse.core.databinding.observable.list.IObservableList;
 import org.eclipse.core.databinding.observable.list.WritableList;
@@ -106,8 +108,7 @@ public class ImportBosHandler {
                                 .withDescription(Messages.extensionsPreviewDescription)
                                 .withControl(dependenciesPreviewControlSupplier)
                                 .withBackPageButtonLabel(Messages.detailsPageButtonLabel))
-                .canFinishProvider(wizardDialog -> Objects.equals(wizardDialog.getCurrentPage().getTitle(),
-                        Messages.extensionsPreviewTitle))
+                .canFinishProvider(canImportBosArchive(dependenciesLookup))
                 .onFinish(container -> onFinishOperation(importBosArchivePage, repositoryAccessor, container))
                 .withSize(SWT.DEFAULT, 800)
                 .open(activeShell, Messages.importButtonLabel);
@@ -123,6 +124,12 @@ public class ImportBosHandler {
         } catch (final Throwable t) {
             exceptionDialogHandler.openErrorDialog(activeShell, Messages.errorWhileImporting_message, t);
         }
+    }
+
+    private CanFinishSupplier canImportBosArchive(IObservableList<DependencyLookup> dependenciesLookup) {
+        return wizardDialog -> Objects.equals(wizardDialog.getCurrentPage().getTitle(),
+                Messages.extensionsPreviewTitle) 
+                && dependenciesLookup.stream().noneMatch(dl -> dl.getStatus()== Status.NOT_FOUND && dl.isSelected());
     }
 
     private void updateRemoteRepositories(String targetRepository,
