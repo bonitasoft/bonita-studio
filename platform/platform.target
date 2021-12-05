@@ -78,13 +78,6 @@
             <unit id="org.codehaus.groovy.compilerless.feature.feature.group" version="4.2.0.v202106301814-e2106-RELEASE"/>
             <unit id="org.codehaus.groovy.m2eclipse.feature.feature.group" version="4.2.0.v202106301814-e2106-RELEASE"/>
 	        <unit id="org.codehaus.groovy30.feature.feature.group" version="4.2.0.v202106301814-e2106-RELEASE"/>
-            <unit id="com.fasterxml.jackson.core.jackson-annotations" version="2.12.1.v20210128-1726"/>
-            <unit id="com.fasterxml.jackson.core.jackson-core" version="2.12.1.v20210128-1726"/>
-            <unit id="com.fasterxml.jackson.core.jackson-databind" version="2.12.1.v20210128-1726"/>
-            <unit id="com.fasterxml.jackson.module.jackson-module-jaxb-annotations" version="2.12.1.v20210128-1726"/>
-            <unit id="org.json" version="1.0.0.v201011060100"/>
-            <unit id="javax.jws" version="2.0.0.v201005080400"/>
-            <unit id="javax.xml.soap" version="1.3.0.v201105210645"/>
         </location>
                <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
             <unit id="de.jcup.asciidoctoreditor.feature.group" version="2.2.0"/>
@@ -110,6 +103,46 @@
 				        <version>4.1.0</version>
 				        <type>jar</type>
 			        </dependency>
+		        </dependencies>
+	        </location>
+	        <location includeSource="true" missingManifest="generate" type="Maven">
+		        <dependencies>
+			        <dependency>
+				        <groupId>com.fasterxml.jackson.core</groupId>
+				        <artifactId>jackson-annotations</artifactId>
+				        <version>2.12.5</version>
+				        <type>jar</type>
+			        </dependency>
+			        <dependency>
+				        <groupId>com.fasterxml.jackson.core</groupId>
+				        <artifactId>jackson-core</artifactId>
+				        <version>2.12.5</version>
+				        <type>jar</type>
+			        </dependency>
+			        <dependency>
+				        <groupId>com.fasterxml.jackson.core</groupId>
+				        <artifactId>jackson-databind</artifactId>
+				        <version>2.12.5</version>
+				        <type>jar</type>
+			        </dependency>
+			        <dependency>
+				        <groupId>com.fasterxml.jackson.module</groupId>
+				        <artifactId>jackson-module-jaxb-annotations</artifactId>
+				        <version>2.12.5</version>
+				        <type>jar</type>
+			        </dependency>
+			        <dependency>
+				        <groupId>jakarta.xml.bind</groupId>
+				        <artifactId>jakarta.xml.bind-api</artifactId>
+				        <version>2.3.3</version>
+				        <type>jar</type>
+			        </dependency>
+			        <dependency>
+					      <groupId>jakarta.xml.soap</groupId>
+						   <artifactId>jakarta.xml.soap-api</artifactId>
+						   <version>1.4.2</version>
+					    <type>jar</type>
+					</dependency>
 		        </dependencies>
 	        </location>
         </locations>
