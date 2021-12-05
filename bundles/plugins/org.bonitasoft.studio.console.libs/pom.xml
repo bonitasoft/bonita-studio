@@ -198,8 +198,7 @@
 						<_exportcontents>
 							!org.bonitasoft.engine.*.impl.db;version="0.0.0",
 							!org.bonitasoft.engine.*.impl.db.archive;version="0.0.0",
-							org.bonitasoft.engine.*;version="0.0.0",
-							javax.xml.bind.*;version="2.2.0"
+							org.bonitasoft.engine.*;version="0.0.0"
 						</_exportcontents>
 						<_nouses>true</_nouses>
 						<_noee>true</_noee>

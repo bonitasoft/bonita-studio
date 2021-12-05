@@ -111,11 +111,5 @@ Export-Package:
  org.bonitasoft.engine.theme.exception;version="0.0.0",
  org.bonitasoft.engine.util;version="0.0.0",
  org.bonitasoft.engine.xml;version="0.0.0",
- org.bonitasoft.engine.xml.parser;version="0.0.0",
- javax.xml.bind;version="2.2.0",
- javax.xml.bind.annotation;version="2.2.0",
- javax.xml.bind.annotation.adapters;version="2.2.0",
- javax.xml.bind.attachment;version="2.2.0",
- javax.xml.bind.helpers;version="2.2.0",
- javax.xml.bind.util;version="2.2.0"
+ org.bonitasoft.engine.xml.parser;version="0.0.0"
 Require-Bundle: javax.activation;bundle-version="1.1.0"

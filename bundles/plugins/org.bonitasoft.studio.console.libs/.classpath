@@ -5,6 +5,5 @@
 	<classpathentry exported="true" kind="lib" path="lib/bonita-client.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/bonita-common.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/commons-lang3.jar"/>
-	<classpathentry kind="lib" path="lib/jaxb-api.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
