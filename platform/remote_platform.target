@@ -108,15 +108,10 @@
             <repository location="https://download.eclipse.org/technology/babel/update-site/R0.19.0/2021-06/"/>
         </location>
         <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-            <repository location="https://dist.springsource.org/release/GRECLIPSE/e4.20"/>
+            <repository location="https://dist.springsource.org/release/GRECLIPSE/4.2.0/e4.20"/>
             <unit id="org.codehaus.groovy.compilerless.feature.feature.group" version="4.2.0.v202106301814-e2106-RELEASE"/>
             <unit id="org.codehaus.groovy.m2eclipse.feature.feature.group" version="4.2.0.v202106301814-e2106-RELEASE"/>
 	        <unit id="org.codehaus.groovy30.feature.feature.group" version="4.2.0.v202106301814-e2106-RELEASE"/>
-        </location>
-        <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">    			
-            <repository location="https://download.eclipse.org/tools/orbit/downloads/drops/R20210223232630/repository"/>
-            <unit id="javax.jws" version="2.0.0.v201005080400"/>
-            <unit id="javax.xml.soap" version="1.3.0.v201105210645"/>
         </location>
          <location includeDependencyScope="test" includeSource="true" missingManifest="generate" type="Maven">
 		        <dependencies>
