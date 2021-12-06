@@ -25,8 +25,10 @@ import java.util.stream.Collectors;
 import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
 import org.bonitasoft.studio.common.repository.Messages;
 import org.bonitasoft.studio.common.repository.core.InputStreamSupplier;
+import org.bonitasoft.studio.common.repository.core.maven.DependencyGetOperation;
 import org.bonitasoft.studio.common.repository.core.maven.FileDependencyLookupOperation;
 import org.bonitasoft.studio.common.repository.core.maven.migration.model.DependencyLookup;
+import org.bonitasoft.studio.common.repository.core.maven.migration.model.DependencyLookup.Status;
 import org.bonitasoft.studio.common.repository.core.maven.migration.model.GAV;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
@@ -100,6 +102,15 @@ public class ProjectDependenciesMigrationOperation implements IRunnableWithProgr
                 }
             }, () -> result.add(dl));
         }
+        
+        // Check that migrated jars can be retrieved
+        for(DependencyLookup dl : result) {
+            var op = new DependencyGetOperation(dl.getGAV());
+            repositories.stream().forEach(op::addRemoteRespository);
+            op.run(monitor);
+            var lookup = op.getResult();
+            dl.setStatus(lookup != null ? lookup.getStatus() : Status.NOT_FOUND);
+        }
 
         // Remove all transitive jar from bonita artifacts
         jars.stream()
@@ -144,7 +155,7 @@ public class ProjectDependenciesMigrationOperation implements IRunnableWithProgr
             DependencyLookup depToKeep = conflictingDependencies.get(0);
             for (var dep : conflictingDependencies.subList(1, conflictingDependencies.size())) {
                 dep.getJarNames().forEach(depToKeep::addJar);
-                if(dep.isUsed()) {
+                if (dep.isUsed()) {
                     depToKeep.setUsed(true);
                 }
                 dependencies.remove(dep);

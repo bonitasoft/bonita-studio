@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import org.apache.maven.model.Model;
@@ -58,6 +59,7 @@ import org.eclipse.core.databinding.observable.list.WritableList;
 import org.eclipse.core.databinding.observable.value.ComputedValue;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.IValueChangeListener;
+import org.eclipse.core.databinding.observable.value.WritableValue;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.databinding.viewers.ObservableListContentProvider;
 import org.eclipse.jface.dialogs.PageChangedEvent;
@@ -108,6 +110,7 @@ public class ExtensionsPreviewPage implements ControlSupplier {
     private IObservableList<IRepository> mavenRepositories;
     private DependencyLookupConflictHandler dependencyConflictHandler;
     private CheckboxTableViewer dependenciesViewer;
+    private IObservableValue<Boolean> canFinishObservable;
 
     public ExtensionsPreviewPage(IObservableList<DependencyLookup> dependenciesLookup,
             IObservableList<IRepository> mavenRepositories,
@@ -145,6 +148,7 @@ public class ExtensionsPreviewPage implements ControlSupplier {
             executeProjectDependenciesLookup(wizardContainer, bosArchive, mavenProject);
         }
         dependencyConflictHandler.resolve();
+        canFinishObservable.setValue(noInvalidSelection().get());
     }
 
     private void executeProjectDependenciesLookup(IWizardContainer wizardContainer,
@@ -246,13 +250,16 @@ public class ExtensionsPreviewPage implements ControlSupplier {
                         .anyMatch(DependencyLookup.Status.NOT_FOUND::equals);
             }
         };
+        
+        canFinishObservable =  new WritableValue<>(false, Boolean.class);
 
         var conflictObservable = dependencyConflictHandler.getConflictObservable();
 
         localDepObservable.addValueChangeListener(createLocalDependenciesPanelEventHandler(container));
         notFoundDepObservable.addValueChangeListener(createDependenciesPanelEventHandler(container));
         conflictObservable.addValueChangeListener(createConflictingDependenciesPanelEventHandler(container));
-
+        canFinishObservable.addValueChangeListener(event -> wizardContainer.updateButtons());
+        
         ExpandableComposite repositoriesExpandable = new ExpandableComposite(container, SWT.NONE,
                 ExpandableComposite.TWISTIE | ExpandableComposite.NO_TITLE_FOCUS_BOX
                         | ExpandableComposite.CLIENT_INDENT);
@@ -314,6 +321,7 @@ public class ExtensionsPreviewPage implements ControlSupplier {
                 event -> {
                     ((DependencyLookup) event.getElement()).setSelected(event.getChecked());
                     dependencyConflictHandler.updateConflictStatus();
+                    canFinishObservable.setValue(noInvalidSelection().get());
                 });
         dependenciesViewer.setContentProvider(new ObservableListContentProvider<DependencyLookup>());
         TableViewerColumn resolutionColumn = new TableViewerColumn(dependenciesViewer, SWT.FILL);
@@ -430,6 +438,11 @@ public class ExtensionsPreviewPage implements ControlSupplier {
         });
 
         return container;
+    }
+
+    private Supplier<Boolean> noInvalidSelection() {
+        return () -> dependenciesLookup.stream()
+                .noneMatch(dl -> dl.getStatus() == DependencyLookup.Status.NOT_FOUND && dl.isSelected());
     }
 
     private IValueChangeListener<? super Boolean> createLocalDependenciesPanelEventHandler(Composite container) {
