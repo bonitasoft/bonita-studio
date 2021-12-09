@@ -27,10 +27,10 @@ import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.core.migration.report.MigrationReport;
 import org.bonitasoft.studio.common.repository.model.PostMigrationOperationCollector;
+import org.bonitasoft.studio.designer.core.UIDWorkspaceSynchronizer;
 import org.bonitasoft.studio.designer.core.UIDesignerServerManager;
 import org.bonitasoft.studio.designer.core.operation.IndexingUIDOperation;
 import org.bonitasoft.studio.designer.core.operation.MigrateUIDOperation;
-import org.bonitasoft.studio.designer.core.resources.WorkspaceServerResource;
 import org.bonitasoft.studio.designer.i18n.Messages;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
@@ -159,7 +159,7 @@ public class WebPageRepositoryStore extends WebArtifactRepositoryStore<WebPageFi
             throws CoreException, MigrationException {
         if (UIDesignerServerManager.getInstance().isStarted()) {
             try {
-                WorkspaceServerResource.disable();
+                UIDWorkspaceSynchronizer.disable();
                 MigrateUIDOperation migrateUIDOperation = new MigrateUIDOperation();
                 migrateUIDOperation.run(monitor);
                 if (Objects.equals(migrateUIDOperation.getStatus().getSeverity(), IStatus.ERROR)) {
@@ -168,7 +168,7 @@ public class WebPageRepositoryStore extends WebArtifactRepositoryStore<WebPageFi
             } catch (InvocationTargetException | InterruptedException e) {
                 throw new MigrationException(e);
             } finally {
-                WorkspaceServerResource.enable();
+                UIDWorkspaceSynchronizer.enable();
             }
         }
         return MigrationReport.emptyReport();

@@ -61,8 +61,8 @@ import org.bonitasoft.studio.common.repository.store.LocalDependenciesStore;
 import org.bonitasoft.studio.connectors.repository.ConnectorImplRepositoryStore;
 import org.bonitasoft.studio.dependencies.operation.DependenciesUpdateOperationFactory;
 import org.bonitasoft.studio.dependencies.repository.DependencyFileStore;
+import org.bonitasoft.studio.designer.core.UIDWorkspaceSynchronizer;
 import org.bonitasoft.studio.designer.core.operation.MigrateUIDOperation;
-import org.bonitasoft.studio.designer.core.resources.WorkspaceServerResource;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.diagram.custom.repository.ProcessConfigurationRepositoryStore;
 import org.bonitasoft.studio.identity.actors.repository.ActorFilterImplRepositoryStore;
@@ -431,7 +431,7 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
 
     protected void migrateUID(IProgressMonitor monitor) {
         try {
-            WorkspaceServerResource.disable();
+            UIDWorkspaceSynchronizer.disable();
             MigrateUIDOperation migrateUIDOperation = new MigrateUIDOperation();
             migrateUIDOperation.run(monitor);
             Arrays.asList(migrateUIDOperation.getStatus().getChildren()).stream()
@@ -440,7 +440,7 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
         } catch (InvocationTargetException | InterruptedException e) {
             BonitaStudioLog.error(e);
         } finally {
-            WorkspaceServerResource.enable();
+            UIDWorkspaceSynchronizer.enable();
         }
     }
 

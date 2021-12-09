@@ -167,4 +167,5 @@ public interface BonitaPreferenceConstants {
 
     public static final String HIDE_BDM_REFACTOR_PREVIEW = "hideBdmRefactorPreview";
     public static final String NOTIFY_BDM_DEPLOYMENT_REQUIRED = "NOTIFY_BDM_DEPLOYMENT_REQUIRED";
+    public static final String HEALTHCHECK_SERVER_PORT = "studio.healthcheck.server.port";
 }

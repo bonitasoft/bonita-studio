@@ -16,11 +16,16 @@ package org.bonitasoft.console.server.listener;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.net.InetAddress;
-import java.net.InetSocketAddress;
 import java.net.Socket;
-import java.nio.channels.SocketChannel;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.net.http.HttpResponse.BodyHandlers;
 import java.nio.charset.Charset;
+import java.time.Duration;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import javax.management.MBeanServer;
 import javax.management.MBeanServerFactory;
@@ -42,45 +47,49 @@ public class StudioWatchdogListener implements ServletContextListener {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(StudioWatchdogListener.class);
 
-    private static final int PORT = 6969;
-
     private static final long TIMER = 5000;
 
-    private static final String WATCHDOG_PORT = "org.bonitasoft.studio.watchdog.port";
-
-    private static final String WATCHDOG_TIMER = "org.bonitasoft.studio.watchdog.timer";
+    private static final String HEALTHCHECK_ENDPOINT = "org.bonitasoft.studio.healthcheck.endpoint";
+    private static final String POLLING_INTERVAL = "org.bonitasoft.studio.healthcheck.interval";
+    private ExecutorService executor = Executors.newSingleThreadExecutor();
 
     @Override
     public void contextInitialized(final ServletContextEvent sce) {
-       final Thread watchdog = new Thread(new Runnable() {
+        executor.submit(() -> {
+            final String url = getHealthCheckEndpoint();
+            if (url == null) {
+                shutdownTomcat();
+            }
+            final long interval = getPollingInterval();
 
-            @Override
-            public void run() {
-                final int port = getPort();
-                final long timer = getTimer();
-                
-                LOGGER.warn("Bonita Studio watchdog process has started on port {} with a delay set to {} ms", port, timer);
-                
-                try {
-                    while (isAlive(port, timer)) {
-                    }
-                } catch (final IOException e) {
-                    LOGGER.warn("Bonita Studio process has been killed, terminating tomcat process properly");
-                    LOGGER.debug("Studio is considered killed due to:", e);
-                    shutdownTomcat();
+            LOGGER.warn("Polling Studio healthcheck endpoint {} with a delay set to {} ms", url, interval);
+
+            var client = HttpClient.newBuilder()
+                    .build();
+            var request = HttpRequest.newBuilder()
+                    .uri(URI.create(url))
+                    .timeout(Duration.ofSeconds(5))
+                    .GET()
+                    .build();
+
+            try {
+                while (isHealthy(client, request, interval)) {
                 }
+            } catch (final IOException | InterruptedException e) {
+                LOGGER.warn("Bonita Studio process has been killed, terminating tomcat process properly");
+                LOGGER.debug("Studio is considered killed due to:", e);
+                shutdownTomcat();
             }
         });
-       watchdog.setDaemon(true);
-       watchdog.start();
+ 
     }
 
     @Override
     public void contextDestroyed(final ServletContextEvent arg0) {
     }
 
-    private static long getTimer() {
-        final String timerValue = System.getProperty(WATCHDOG_TIMER, String.valueOf(TIMER));
+    private static long getPollingInterval() {
+        final String timerValue = System.getProperty(POLLING_INTERVAL, String.valueOf(TIMER));
         long timer = TIMER;
         try {
             timer = Long.valueOf(timerValue);
@@ -93,44 +102,26 @@ public class StudioWatchdogListener implements ServletContextListener {
         return timer;
     }
 
-    protected static int getPort() {
-        final String portValue = System.getProperty(WATCHDOG_PORT, String.valueOf(PORT));
-        int port = PORT;
-        try {
-            port = Integer.valueOf(portValue);
-            if (port < 1024 || port > 65535) {
-                throw new Exception("Invalid port range : " + port);
-            }
-        } catch (final Exception e) {
-            LOGGER.warn("org.bonitasoft.studio.watchdog.port property must be a valid port number [1024->65535]");
+    protected static String getHealthCheckEndpoint() {
+        final String url = System.getProperty(HEALTHCHECK_ENDPOINT);
+        if (url == null) {
+            LOGGER.warn("org.bonitasoft.studio.healthcheck.endpoint property must be a set.");
         }
-        return port;
+        return url;
     }
 
-    private static boolean isAlive(final int port, final long timer) throws IOException {
-        final SocketChannel sChannel = SocketChannel.open(new InetSocketAddress(InetAddress.getByName(null),port));
-        while (!sChannel.finishConnect()) {
-            try {
-                Thread.sleep(100);
-            } catch (final InterruptedException e) {
-
-            }
+    private static boolean isHealthy(HttpClient client, final HttpRequest request, final long interval)
+            throws IOException, InterruptedException {
+        HttpResponse<String> response = client.send(request, BodyHandlers.ofString());
+        if (response.statusCode() != 200) {
+            throw new IOException("Studio Healthcheck does not respond !");
         }
         try {
-            Thread.sleep(timer);
+            Thread.sleep(interval);
         } catch (final InterruptedException e) {
 
         }
-        sChannel.close();
-        while (sChannel.isConnected()) {
-            try {
-                Thread.sleep(100);
-            } catch (final InterruptedException e) {
-
-            }
-        }
-
-        LOGGER.debug("Bonita Studio JVM is alive");
+        LOGGER.debug("Studio is healthy");
         return true;
     }
 
@@ -144,7 +135,7 @@ public class StudioWatchdogListener implements ServletContextListener {
 
             // Get the server object
             Server server = (Server) mBeanServer.getAttribute(name, "managedResource");
-            
+
             // Get address and port on which we can send the shutdown command
             String address = server.getAddress();
             int port = server.getPort();
@@ -153,10 +144,9 @@ public class StudioWatchdogListener implements ServletContextListener {
             String shutdown = server.getShutdown();
 
             // Connect and send the shutdown command            
-            try(
+            try (
                     Socket clientSocket = new Socket(address, port);
-                    OutputStream outputStream = clientSocket.getOutputStream();
-            ) {
+                    OutputStream outputStream = clientSocket.getOutputStream();) {
                 outputStream.write(shutdown.getBytes(Charset.forName("UTF-8")));
                 outputStream.flush();
                 outputStream.close();
@@ -164,14 +154,16 @@ public class StudioWatchdogListener implements ServletContextListener {
             } catch (Exception e) {
                 shutdownTomcatForced(e);
             }
-        } catch(Exception e) {
+        } catch (Exception e) {
             shutdownTomcatForced(e);
         }
-   }
-    
-   private static void shutdownTomcatForced(Exception e) {
-       LOGGER.error("Error while trying to shutdown Tomcat (using shutdown command) from watchdog web application. We will call now System.exit(-1)", e);
-       System.exit(-1);
-   } 
+    }
+
+    private static void shutdownTomcatForced(Exception e) {
+        LOGGER.error(
+                "Error while trying to shutdown Tomcat (using shutdown command) from watchdog web application. We will call now System.exit(-1)",
+                e);
+        System.exit(-1);
+    }
 
 }

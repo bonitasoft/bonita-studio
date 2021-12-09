@@ -40,7 +40,6 @@ import org.bonitasoft.studio.engine.i18n.Messages;
 import org.bonitasoft.studio.engine.preferences.EnginePreferenceConstants;
 import org.bonitasoft.studio.engine.server.PortConfigurator;
 import org.bonitasoft.studio.engine.server.StartEngineJob;
-import org.bonitasoft.studio.engine.server.WatchdogManager;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.bonitasoft.studio.ui.notification.BonitaNotificator;
@@ -176,7 +175,6 @@ public class BOSWebServerManager implements IBonitaProjectListener {
                 BonitaStudioLog.debug("Starting tomcat...",
                         EnginePlugin.PLUGIN_ID);
             }
-            WatchdogManager.getInstance().startWatchdog();
             updateRuntimeLocationIfNeeded();
             final IRuntimeType type = ServerCore.findRuntimeType(TOMCAT_RUNTIME_TYPE);
 
@@ -468,7 +466,6 @@ public class BOSWebServerManager implements IBonitaProjectListener {
             if (BonitaStudioLog.isLoggable(IStatus.OK)) {
                 BonitaStudioLog.debug("Stopping tomcat server...", EnginePlugin.PLUGIN_ID);
             }
-            WatchdogManager.getInstance().stopWatchdog();
             tomcat.stop(true);
             try {
                 waitServerStopped(monitor);

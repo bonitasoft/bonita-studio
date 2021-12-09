@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.designer.core.PageDesignerURLFactory;
+import org.bonitasoft.studio.designer.core.UIDesignerServerManager;
 import org.bonitasoft.studio.designer.core.operation.CreateCustomWidgetOperation;
 import org.bonitasoft.studio.designer.core.operation.CreateLayoutOperation;
 import org.bonitasoft.studio.designer.core.operation.CreatePageOperation;
@@ -37,6 +38,7 @@ public class UIDArtifactCreationIT {
     @Before
     public void init() {
         repositoryAccessor = RepositoryManager.getInstance().getAccessor();
+        UIDesignerServerManager.getInstance().start(repositoryAccessor.getCurrentRepository(), new NullProgressMonitor());
     }
 
     @Test

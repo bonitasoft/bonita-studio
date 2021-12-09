@@ -15,19 +15,21 @@
 package org.bonitasoft.studio.engine;
 
 import java.io.File;
+import java.net.InetAddress;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.core.DatabaseHandler;
 import org.bonitasoft.studio.engine.preferences.EnginePreferenceConstants;
-import org.bonitasoft.studio.engine.server.WatchdogManager;
+import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
+import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.preference.IPreferenceStore;
 
 public class TomcatVmArgsBuilder {
 
-    private static final String WATCHDOG_TIMER = "org.bonitasoft.studio.watchdog.timer";
-    protected static final String WATCHDOG_PORT_PROPERTY = "org.bonitasoft.studio.watchdog.port";
+    private static final String HEALTH_CHECK_POLLING_INTERVAL = "org.bonitasoft.studio.healthcheck.interval";
+    protected static final String STUDIO_HEALTHCHECK_ENDPOINT_PROPERTY = "org.bonitasoft.studio.healthcheck.endpoint";
     protected static final String BONITA_WEB_REGISTER = "bonita.web.register";
 
     private final RepositoryAccessor repositoryAccessor;
@@ -66,7 +68,7 @@ public class TomcatVmArgsBuilder {
         }
         addSystemProperty(args, "com.arjuna.ats.arjuna.common.propertiesFile", "\"" + tomcatInstanceLocation + File.separatorChar + "conf" + File.separatorChar + "jbossts-properties.xml\"");
         addSystemProperty(args, "file.encoding", "UTF-8");
-        addWatchDogProperties(args);
+        addStudioHealthCheckEndpointProperties(args);
         addSystemProperty(args, "eclipse.product", getProductApplicationId());
         addSystemProperty(args, BONITA_WEB_REGISTER, System.getProperty(BONITA_WEB_REGISTER, "1"));
         addSystemProperty(args, DatabaseHandler.DB_LOCATION_PROPERTY,
@@ -87,9 +89,11 @@ public class TomcatVmArgsBuilder {
         return Platform.getProduct() != null ? Platform.getProduct().getApplication() : null;
     }
 
-    public void addWatchDogProperties(final StringBuilder args) {
-        addSystemProperty(args, WATCHDOG_PORT_PROPERTY, String.valueOf(WatchdogManager.WATCHDOG_PORT));
-        addSystemProperty(args, WATCHDOG_TIMER, System.getProperty(WATCHDOG_TIMER, "20000"));
+    public void addStudioHealthCheckEndpointProperties(final StringBuilder args) {
+        addSystemProperty(args, STUDIO_HEALTHCHECK_ENDPOINT_PROPERTY, String.format("http://%s:%s/api/workspace/status/",
+                InetAddress.getLoopbackAddress().getHostAddress(), 
+                BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().getInt(BonitaPreferenceConstants.HEALTHCHECK_SERVER_PORT)));
+        addSystemProperty(args, HEALTH_CHECK_POLLING_INTERVAL, System.getProperty(HEALTH_CHECK_POLLING_INTERVAL, "20000"));
     }
 
     protected void addMemoryOptions(final StringBuilder args) {
