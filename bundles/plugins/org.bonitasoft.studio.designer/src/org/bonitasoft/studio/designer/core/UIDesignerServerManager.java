@@ -24,7 +24,6 @@ import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLDecoder;
-import java.net.UnknownHostException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Duration;
@@ -41,7 +40,6 @@ import org.bonitasoft.studio.common.net.PortSelector;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.IBonitaProjectListener;
 import org.bonitasoft.studio.designer.UIDesignerPlugin;
-import org.bonitasoft.studio.designer.core.resources.WorkspaceServerResource;
 import org.bonitasoft.studio.designer.i18n.Messages;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
@@ -85,6 +83,7 @@ public class UIDesignerServerManager implements IBonitaProjectListener {
     private static final int UID_DEFAULT_PORT = 8081;
     private PageDesignerURLFactory pageDesignerURLBuilder;
     private boolean started = false;
+    private UIDWorkspaceSynchronizer synchronizer;
 
     private UIDesignerServerManager() {
         addShutdownHook();
@@ -118,17 +117,14 @@ public class UIDesignerServerManager implements IBonitaProjectListener {
             monitor.beginTask(Messages.startingUIDesigner, IProgressMonitor.UNKNOWN);
             BonitaStudioLog.info(Messages.startingUIDesigner, UIDesignerPlugin.PLUGIN_ID);
             Instant start = Instant.now();
-            int workspaceResourceServerPort = PortSelector.findFreePort();
+            int healthCheckServerPort = BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore()
+                    .getInt(BonitaPreferenceConstants.HEALTHCHECK_SERVER_PORT);
             DataRepositoryServerManager dataRepositoryServerManager = DataRepositoryServerManager.getInstance();
-            int dataRepositoryPort = dataRepositoryServerManager.selectPort(workspaceResourceServerPort);
-            WorkspaceResourceServerManager workspaceResourceServerManager = WorkspaceResourceServerManager
-                    .getInstance();
-            if (!workspaceResourceServerManager.isRunning() || !dataRepositoryServerManager.isStarted()) {
-                schedule(workspaceResourceServerPort, workspaceResourceServerManager, dataRepositoryPort,
+            int dataRepositoryPort = dataRepositoryServerManager.selectPort(healthCheckServerPort);
+            if (!dataRepositoryServerManager.isStarted()) {
+                schedule(healthCheckServerPort, dataRepositoryPort,
                         dataRepositoryServerManager);
-            } else {
-                workspaceResourceServerPort = workspaceResourceServerManager.runningPort();
-            }
+            } 
             this.runtimePort = BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore()
                     .getInt(BonitaPreferenceConstants.CONSOLE_PORT);
             final ILaunchManager manager = getLaunchManager();
@@ -138,26 +134,24 @@ public class UIDesignerServerManager implements IBonitaProjectListener {
                 final ILaunchConfigurationWorkingCopy workingCopy = ltype.newInstance(null, "Standalone UI Designer");
                 workingCopy.setAttribute(IExternalToolConstants.ATTR_LOCATION, javaBinaryLocation());
                 workingCopy.setAttribute(IExternalToolConstants.ATTR_TOOL_ARGUMENTS,
-                        buildCommand(repository, workspaceResourceServerPort, dataRepositoryPort).stream()
+                        buildCommand(repository, healthCheckServerPort, dataRepositoryPort).stream()
                                 .collect(Collectors.joining(" ")));
                 Map<String, String> env = new HashMap<>();
                 env.put("JAVA_TOOL_OPTIONS", "-Dfile.encoding=UTF-8");
                 workingCopy.setAttribute(ILaunchManager.ATTR_ENVIRONMENT_VARIABLES, env);
-                // Avoid UID to call an eclipse workspace refresh during its initialization
-                // It can lead deadlock Studio side when trying to refresh
-                WorkspaceServerResource.disable();
                 launch = workingCopy.launch(ILaunchManager.RUN_MODE, AbstractRepository.NULL_PROGRESS_MONITOR);
                 pageDesignerURLBuilder = new PageDesignerURLFactory(getPreferenceStore());
                 if (waitForUID(pageDesignerURLBuilder)) {
-                    schedule(workspaceResourceServerPort, workspaceResourceServerManager, dataRepositoryPort,
+                    schedule(healthCheckServerPort,
+                            dataRepositoryPort,
                             dataRepositoryServerManager);
                     started = true;
-                    // Re activate the workspace refresh from the UID once initilized
-                    WorkspaceServerResource.enable();
                     BonitaStudioLog.info(
                             String.format("UI Designer has been started on http://localhost:%s/bonita in %ss", port,
                                     Duration.between(start, Instant.now()).getSeconds()),
                             UIDesignerPlugin.PLUGIN_ID);
+                    synchronizer = new UIDWorkspaceSynchronizer(repository);
+                    synchronizer.connect();
                 }
             } catch (final CoreException | IOException e) {
                 BonitaStudioLog.error("Failed to run ui designer war", e);
@@ -165,8 +159,7 @@ public class UIDesignerServerManager implements IBonitaProjectListener {
         }
     }
 
-    private void schedule(int workspaceResourcePort,
-            WorkspaceResourceServerManager workspaceResourceServerManager,
+    private void schedule(int healthCheckServerPort,
             int dataRepositoryPort,
             DataRepositoryServerManager dataRepositoryServerManager) {
         new Job("Starting UID services...") {
@@ -174,13 +167,7 @@ public class UIDesignerServerManager implements IBonitaProjectListener {
             @Override
             protected IStatus run(IProgressMonitor monitor) {
                 try {
-                    workspaceResourceServerManager.start(workspaceResourcePort);
-                } catch (Exception e) {
-                    BonitaStudioLog.error(e);
-                    return new Status(IStatus.ERROR, getClass(), "Failed to start UID workspace synchronizer.", e);
-                }
-                try {
-                    dataRepositoryServerManager.start(workspaceResourcePort, dataRepositoryPort, monitor);
+                    dataRepositoryServerManager.start(healthCheckServerPort, dataRepositoryPort, monitor);
                 } catch (Exception e) {
                     BonitaStudioLog.error(e);
                     return new Status(IStatus.ERROR, getClass(), "Failed to start Data repository service.", e);
@@ -218,19 +205,18 @@ public class UIDesignerServerManager implements IBonitaProjectListener {
     }
 
     public synchronized void stop() {
-        WorkspaceResourceServerManager resourceServer = WorkspaceResourceServerManager.getInstance();
-        if (resourceServer.isRunning()) {
-            try {
-                resourceServer.stop();
-            } catch (Exception e1) {
-                BonitaStudioLog.error(e1);
-            }
-        }
         DataRepositoryServerManager dataRepositoryServerManager = DataRepositoryServerManager.getInstance();
         if (dataRepositoryServerManager.isStarted()) {
             dataRepositoryServerManager.stop();
         }
         if (launch != null) {
+            if (synchronizer != null) {
+                try {
+                    synchronizer.disconnect();
+                } catch (IOException e) {
+                    BonitaStudioLog.error(e);
+                }
+            }
             try {
                 launch.terminate();
                 BonitaStudioLog.info("UI Designer has been stopped.", UIDesignerPlugin.PLUGIN_ID);
@@ -272,10 +258,10 @@ public class UIDesignerServerManager implements IBonitaProjectListener {
                 workspaceSystemProperties.getRestAPIURL(workspaceResourceServerPort),
                 workspaceSystemProperties.activateSpringProfile("studio"),
                 aSystemProperty(PORTAL_BASE_URL,
-                        String.format("http://%s:%s", InetAddress.getByName(null).getHostAddress(),
+                        String.format("http://%s:%s", InetAddress.getLoopbackAddress().getHostAddress(),
                                 runtimePort)),
                 aSystemProperty(BONITA_DATA_REPOSITORY_ORIGIN, String.format("http://%s:%s",
-                        InetAddress.getByName(null).getHostAddress(),
+                        InetAddress.getLoopbackAddress().getHostAddress(),
                         dataRepositoryPort)),
                 aSystemProperty(UID_SERVER_PORT, String.valueOf(port)),
                 aSystemProperty(UID_LOGGING_FILE, String.format("\"%s\"", getLogFile().getAbsolutePath())),
@@ -284,12 +270,8 @@ public class UIDesignerServerManager implements IBonitaProjectListener {
     }
 
     private static boolean isPortInUse(int port) {
-        try {
-            return org.eclipse.wst.server.core.util.SocketUtil.isPortInUse(InetAddress.getByName(null), port)
-                    || org.eclipse.wst.server.core.util.SocketUtil.isPortInUse(port);
-        } catch (UnknownHostException e) {
-            return org.eclipse.wst.server.core.util.SocketUtil.isPortInUse(port);
-        }
+        return org.eclipse.wst.server.core.util.SocketUtil.isPortInUse(InetAddress.getLoopbackAddress(), port)
+                || org.eclipse.wst.server.core.util.SocketUtil.isPortInUse(port);
     }
 
     public int getPort() {

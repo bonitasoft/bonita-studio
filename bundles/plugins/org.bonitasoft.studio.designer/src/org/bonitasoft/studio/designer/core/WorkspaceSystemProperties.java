@@ -36,7 +36,7 @@ public class WorkspaceSystemProperties {
     }
 
     public String getRestAPIURL(final int port) throws UnknownHostException {
-        return aSystemProperty(WORKSPACE_API_REST_URL, String.format("http://%s:%s/api/workspace", InetAddress.getByName(null).getHostAddress(), port));
+        return aSystemProperty(WORKSPACE_API_REST_URL, String.format("http://%s:%s/api/workspace", InetAddress.getLoopbackAddress().getHostAddress(), port));
     }
     
     public String getWorspacePathLocation() {

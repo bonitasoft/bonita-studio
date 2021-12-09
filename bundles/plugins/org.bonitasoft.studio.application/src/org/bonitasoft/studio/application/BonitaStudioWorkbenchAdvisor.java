@@ -20,6 +20,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
 import java.net.URL;
 import java.util.Objects;
+import java.util.logging.Level;
 import java.util.stream.Stream;
 
 import org.apache.maven.cli.configuration.SettingsXmlConfigurationProcessor;
@@ -35,6 +36,7 @@ import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManag
 import org.bonitasoft.studio.common.extension.IPostStartupContribution;
 import org.bonitasoft.studio.common.jface.MessageDialogWithLink;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.net.PortSelector;
 import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
@@ -99,6 +101,7 @@ import org.eclipse.ui.internal.ide.IDEWorkbenchMessages;
 import org.eclipse.ui.internal.ide.IDEWorkbenchPlugin;
 import org.eclipse.ui.internal.progress.ProgressMonitorJobsDialog;
 import org.osgi.framework.Bundle;
+import org.restlet.engine.Engine;
 
 import com.google.common.base.Joiner;
 
@@ -432,6 +435,12 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
 
     @Override
     public void postStartup() {
+        try {
+            Engine.setRestletLogLevel(Level.OFF);
+            HealthCheckServerManager.getInstance().start(PortSelector.findFreePort());
+        } catch (IOException e) {
+            BonitaStudioLog.error(e);
+        }
         var initializeProjectJob = new Job("Initialize project") {
 
             @Override
