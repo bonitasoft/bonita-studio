@@ -251,7 +251,7 @@ public class ExtensionsPreviewPage implements ControlSupplier {
             }
         };
         
-        canFinishObservable =  new WritableValue<>(false, Boolean.class);
+        canFinishObservable =  new WritableValue<>(true, Boolean.class);
 
         var conflictObservable = dependencyConflictHandler.getConflictObservable();
 
@@ -259,7 +259,7 @@ public class ExtensionsPreviewPage implements ControlSupplier {
         notFoundDepObservable.addValueChangeListener(createDependenciesPanelEventHandler(container));
         conflictObservable.addValueChangeListener(createConflictingDependenciesPanelEventHandler(container));
         canFinishObservable.addValueChangeListener(event -> wizardContainer.updateButtons());
-        
+
         ExpandableComposite repositoriesExpandable = new ExpandableComposite(container, SWT.NONE,
                 ExpandableComposite.TWISTIE | ExpandableComposite.NO_TITLE_FOCUS_BOX
                         | ExpandableComposite.CLIENT_INDENT);
