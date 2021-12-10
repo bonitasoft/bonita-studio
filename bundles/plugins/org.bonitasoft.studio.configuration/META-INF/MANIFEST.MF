@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Configuration Plugin
 Bundle-SymbolicName: org.bonitasoft.studio.configuration;singleton:=true
 Bundle-Localization: plugin
-Bundle-Version: 7.14.0.qualifier
+Bundle-Version: 7.14.0.W50
 Bundle-Activator: org.bonitasoft.studio.configuration.ConfigurationPlugin
 Bundle-Vendor: BonitaSoft S.A.
 Require-Bundle: org.eclipse.ui,
