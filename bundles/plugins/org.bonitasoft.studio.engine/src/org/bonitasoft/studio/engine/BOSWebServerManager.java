@@ -43,6 +43,10 @@ import org.bonitasoft.studio.engine.server.StartEngineJob;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.bonitasoft.studio.ui.notification.BonitaNotificator;
+import org.eclipse.core.filesystem.EFS;
+import org.eclipse.core.filesystem.IFileInfo;
+import org.eclipse.core.filesystem.IFileStore;
+import org.eclipse.core.filesystem.IFileSystem;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -147,7 +151,6 @@ public class BOSWebServerManager implements IBonitaProjectListener {
                         EnginePlugin.PLUGIN_ID);
                 addBonitaWar(tomcatFolderInWorkspace, monitor);
             }
-
         } catch (final IOException e) {
             BonitaStudioLog.error(e, EnginePlugin.PLUGIN_ID);
         }
