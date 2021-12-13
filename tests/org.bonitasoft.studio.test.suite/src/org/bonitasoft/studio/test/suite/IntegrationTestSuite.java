@@ -15,7 +15,6 @@
 package org.bonitasoft.studio.test.suite;
 
 import org.bonitasoft.studio.tests.BonitaProjectIT;
-import org.bonitasoft.studio.tests.EngineConfigurationIT;
 import org.bonitasoft.studio.tests.ProductVersionIT;
 import org.bonitasoft.studio.tests.TestFullScenario;
 import org.bonitasoft.studio.tests.TestPatchedBundles;
@@ -132,7 +131,6 @@ import org.junit.runners.Suite;
         RestAPIExtensionMarkerResolutionIT.class,
         BuildAndDeployRestAPIExtensionIT.class,
         ExportRestAPIExtensionProjectIT.class,
-        EngineConfigurationIT.class,
         StudioShutdownIT.class
 })
 public class IntegrationTestSuite {

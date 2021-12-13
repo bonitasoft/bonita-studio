@@ -506,7 +506,8 @@ public class PlatformUtil {
         try {
             final IFileStore sourceStore = fileSystem.getStore(URIUtil.toURI(uri.getPath()));
             final IFileStore destStore = fileSystem.fromLocalFile(destFolder);
-            sourceStore.copy(destStore.getChild(sourceStore.getName()), EFS.OVERWRITE, new NullProgressMonitor());
+            IFileStore target = destStore.getChild(sourceStore.getName());
+            sourceStore.copy(target, EFS.OVERWRITE, new NullProgressMonitor());
             monitor.worked(1);
         } catch (final Exception e) {
             BonitaStudioLog.error(e);
