@@ -60,11 +60,12 @@ public class TomcatVmArgsBuilder {
                 "\"" + bundleLocation + File.separatorChar + "setup\"");
         addSystemProperty(args, "org.bonitasoft.engine.incident.folder",
                 "\"" + tomcatInstanceLocation + File.separatorChar + "logs\"");
-        addSystemProperty(args, "java.util.logging.manager", "org.apache.juli.ClassLoaderLogManager");
-        if (tomcatExtraParams == null || !tomcatExtraParams.contains("-Djava.util.logging.config.file=")) {
-            addSystemProperty(args, "java.util.logging.config.file",
+        addSystemProperty(args, "java.util.logging.manager", "org.apache.logging.log4j.jul.LogManager");
+        if (tomcatExtraParams == null || !tomcatExtraParams.contains("-Dlog4j.configurationFile=")) {
+            addSystemProperty(args, "log4j.configurationFile",
                     "\"" + tomcatInstanceLocation + File.separatorChar + "conf" + File.separatorChar
-                            + "logging.properties\"");
+                            + "log4j2-appenders.xml,"+ tomcatInstanceLocation + File.separatorChar + "conf" + File.separatorChar
+                            + "log4j2-loggers.xml\"");
         }
         addSystemProperty(args, "com.arjuna.ats.arjuna.common.propertiesFile", "\"" + tomcatInstanceLocation + File.separatorChar + "conf" + File.separatorChar + "jbossts-properties.xml\"");
         addSystemProperty(args, "file.encoding", "UTF-8");

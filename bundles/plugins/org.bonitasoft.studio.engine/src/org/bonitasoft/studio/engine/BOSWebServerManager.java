@@ -22,7 +22,10 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Stream;
 
 import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.studio.common.BonitaHomeUtil;
@@ -69,6 +72,8 @@ import org.eclipse.debug.core.ILaunchConfigurationType;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.debug.ui.IDebugUIConstants;
+import org.eclipse.jdt.core.JavaCore;
+import org.eclipse.jdt.internal.launching.RuntimeClasspathEntry;
 import org.eclipse.jdt.launching.IJavaLaunchConfigurationConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -329,6 +334,24 @@ public class BOSWebServerManager implements IBonitaProjectListener {
                 getTomcatLogFile());
         workingCopy.setAttribute(IDebugUIConstants.ATTR_APPEND_TO_FILE, true);
         workingCopy.setAttribute(DebugPlugin.ATTR_CONSOLE_ENCODING, "UTF-8");
+        final List<String> classpathEntries = workingCopy.getAttribute(IJavaLaunchConfigurationConstants.ATTR_CLASSPATH,
+                new ArrayList<>());
+        // Contains log4j jars
+        File[] extraJars = new File(tomcatInstanceLocation).toPath()
+                .resolve("lib")
+                .resolve("ext")
+                .toFile()
+                .listFiles(file -> file.getName().endsWith(".jar"));
+        Stream.of(extraJars).map(file -> {
+            try {
+                return new RuntimeClasspathEntry(
+                        JavaCore.newLibraryEntry(Path.fromOSString(file.getAbsolutePath()), null, null, true))
+                                .getMemento();
+            } catch (CoreException e) {
+                throw new RuntimeException(e);
+            }
+        }).forEach(classpathEntries::add);
+        workingCopy.setAttribute(IJavaLaunchConfigurationConstants.ATTR_CLASSPATH, classpathEntries);
         return workingCopy.doSave();
     }
 
