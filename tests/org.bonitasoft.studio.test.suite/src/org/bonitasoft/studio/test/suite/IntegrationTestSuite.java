@@ -41,6 +41,7 @@ import org.bonitasoft.studio.tests.designer.FragmentCreationIT;
 import org.bonitasoft.studio.tests.designer.UIDArtifactCreationIT;
 import org.bonitasoft.studio.tests.document.RefactorDocumentOperationTest;
 import org.bonitasoft.studio.tests.document.TestDocumentRefactoring;
+import org.bonitasoft.studio.tests.engine.RuntimeIntegrationIT;
 import org.bonitasoft.studio.tests.engine.StudioShutdownIT;
 import org.bonitasoft.studio.tests.engine.TestSubprocessEventExport;
 import org.bonitasoft.studio.tests.exporter.bpmn.BPMNDataExportImportTest;
@@ -131,6 +132,7 @@ import org.junit.runners.Suite;
         RestAPIExtensionMarkerResolutionIT.class,
         BuildAndDeployRestAPIExtensionIT.class,
         ExportRestAPIExtensionProjectIT.class,
+        RuntimeIntegrationIT.class,
         StudioShutdownIT.class
 })
 public class IntegrationTestSuite {

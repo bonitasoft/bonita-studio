@@ -70,22 +70,28 @@ public class TomcatVmArgsBuilderTest {
 
     @Test
     public void testLoggingPropertyCanBeOverriden() throws Exception {
-        final String overridenValue = "-Djava.util.logging.config.file=test";
+        final String overridenValue = "-Dlog4j.configurationFile=test";
         when(preferenceStore.getString(EnginePreferenceConstants.TOMCAT_EXTRA_PARAMS)).thenReturn(overridenValue);
-        assertThat(tomcatVmArgsBuilder.getVMArgs("")).contains(overridenValue).containsOnlyOnce("java.util.logging.config.file");
+        assertThat(tomcatVmArgsBuilder.getVMArgs("")).contains(overridenValue)
+                .containsOnlyOnce("log4j.configurationFile");
     }
 
     @Test
     public void testLoggingPropertyDefaultValueWithTomcatArgs() throws Exception {
         final String overridenValue = "plop";
         System.setProperty("tomcat.extra.params", overridenValue);
-        assertThat(tomcatVmArgsBuilder.getVMArgs("")).contains("-Djava.util.logging.config.file=").contains("logging.properties");
+        assertThat(tomcatVmArgsBuilder.getVMArgs(""))
+                .contains("-Dlog4j.configurationFile=")
+                .contains("log4j2-appenders.xml")
+                .contains("log4j2-loggers.xml");
     }
 
     @Test
     public void testLoggingPropertyDefaultValueWithoutTomcatArgs() throws Exception {
         System.clearProperty("tomcat.extra.params");
-        assertThat(tomcatVmArgsBuilder.getVMArgs("")).contains("-Djava.util.logging.config.file=").contains("logging.properties");
+        assertThat(tomcatVmArgsBuilder.getVMArgs("")).contains("-Dlog4j.configurationFile=")
+                .contains("log4j2-appenders.xml")
+                .contains("log4j2-loggers.xml");
     }
 
     @Test
@@ -93,9 +99,9 @@ public class TomcatVmArgsBuilderTest {
         when(preferenceStore.getInt(EnginePreferenceConstants.TOMCAT_XMX_OPTION)).thenReturn(1024);
         assertThat(tomcatVmArgsBuilder.getVMArgs("")).contains("-Xmx").containsOnlyOnce("1024m");
     }
+
     @Test
     public void should_launch_tomcat_with_bonita_csrf_cookie_path() throws Exception {
         assertThat(tomcatVmArgsBuilder.getVMArgs("")).contains("-Dbonita.csrf.cookie.path=\"/\"");
     }
 }
-
