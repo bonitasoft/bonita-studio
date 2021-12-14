@@ -4,12 +4,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 
 import java.util.List;
+import java.util.Map;
 
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.designer.core.PageDesignerURLFactory;
 import org.bonitasoft.studio.designer.core.operation.CreateUIDArtifactOperation.ArtifactyType;
-import org.json.JSONArray;
-import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -42,26 +41,26 @@ public class CreateUIDArtifactOperationTest {
     }
 
     private void validateJsonBodyForPages() throws Exception {
-        JSONObject pageBody = createPageOperation.createBody();
+        Map<String, Object> pageBody = createPageOperation.createBody();
         assertThat(pageBody.get(TYPE)).isEqualTo(ArtifactyType.PAGE);
-        JSONArray rows = (JSONArray) pageBody.get(ROWS);
-        assertThat(rows.length()).isEqualTo(1);
+        List rows = (List) pageBody.get(ROWS);
+        assertThat(rows.size()).isEqualTo(1);
         assertThat((List) rows.get(0)).isEmpty();
     }
 
     private void validateJsonBodyForForms() throws Exception {
-        JSONObject pageBody = createFormOperation.createBody();
+        Map<String, Object> pageBody = createFormOperation.createBody();
         assertThat(pageBody.get(TYPE)).isEqualTo(ArtifactyType.FORM);
-        JSONArray rows = (JSONArray) pageBody.get(ROWS);
-        assertThat(rows.length()).isEqualTo(1);
+        List rows = (List) pageBody.get(ROWS);
+        assertThat(rows.size()).isEqualTo(1);
         assertThat((List) rows.get(0)).isEmpty();
     }
 
     private void validateJsonBodyForLayouts() throws Exception {
-        JSONObject pageBody = createLayoutOperation.createBody();
+        Map<String, Object> pageBody = createLayoutOperation.createBody();
         assertThat(pageBody.get(TYPE)).isEqualTo(ArtifactyType.LAYOUT);
-        JSONArray rows = (JSONArray) pageBody.get(ROWS);
-        assertThat(rows.length()).isEqualTo(1);
+        List rows = (List) pageBody.get(ROWS);
+        assertThat(rows.size()).isEqualTo(1);
         assertThat((List) rows.get(0)).isEmpty();
     }
 

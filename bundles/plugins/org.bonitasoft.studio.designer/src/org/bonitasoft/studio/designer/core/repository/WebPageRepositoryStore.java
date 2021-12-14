@@ -18,6 +18,7 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
@@ -41,10 +42,9 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.edapt.migration.MigrationException;
 import org.eclipse.swt.graphics.Image;
-import org.json.JSONException;
 
-import com.google.common.base.Charsets;
-import com.google.common.io.Files;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * @author Romain Bioteau
@@ -54,6 +54,7 @@ public class WebPageRepositoryStore extends WebArtifactRepositoryStore<WebPageFi
     private static final Set<String> extensions = new HashSet<>();
     public static final String JSON_EXTENSION = "json";
     public static final String WEB_FORM_REPOSITORY_NAME = "web_page";
+    private ObjectMapper objectMapper = new ObjectMapper();
 
     static {
         extensions.add(JSON_EXTENSION);
@@ -128,24 +129,19 @@ public class WebPageRepositoryStore extends WebArtifactRepositoryStore<WebPageFi
         if (location != null) {
             File pageFolder = location.toFile();
             String id = new PageUUIDResolver(pageFolder).resolveUUID(uuid);
-            return Stream.of(pageFolder.listFiles())
+            return (String) Stream.of(pageFolder.listFiles())
                     .filter(file -> file.getName().equals(id))
                     .map(file -> new File(file, file.getName() + ".json"))
                     .map(file -> {
                         try {
-                            return new org.json.JSONObject(Files.toString(file, Charsets.UTF_8));
-                        } catch (JSONException | IOException e) {
+                            return objectMapper.readValue(file, new TypeReference<Map<String, Object>>() {
+                            });
+                        } catch (IOException e) {
                             return null;
                         }
                     })
                     .filter(Objects::nonNull)
-                    .map(json -> {
-                        try {
-                            return json.getString("name");
-                        } catch (JSONException e) {
-                            return null;
-                        }
-                    })
+                    .map(json ->json.get("name"))
                     .filter(Objects::nonNull)
                     .findFirst()
                     .orElse("");

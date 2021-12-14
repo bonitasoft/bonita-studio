@@ -20,8 +20,6 @@ import org.bonitasoft.studio.designer.core.repository.WebFragmentRepositoryStore
 import org.bonitasoft.studio.designer.i18n.Messages;
 import org.bonitasoft.studio.ui.util.StringIncrementer;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.json.JSONObject;
-import org.restlet.ext.json.JsonRepresentation;
 
 public class CreateFragmentOperation extends CreateUIDArtifactOperation {
 
@@ -32,9 +30,8 @@ public class CreateFragmentOperation extends CreateUIDArtifactOperation {
     @Override
     protected void doRun(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
         setArtifactName(getNewName());
-        JSONObject bodyObject = createBody();
         try {
-            responseObject = createArtifact(pageDesignerURLBuilder.newFragment(), new JsonRepresentation(bodyObject));
+            responseObject = createArtifact(pageDesignerURLBuilder.newFragment(), createBody());
         } catch (MalformedURLException e) {
             throw new InvocationTargetException(e, "Failed to create new fragment URL.");
         }

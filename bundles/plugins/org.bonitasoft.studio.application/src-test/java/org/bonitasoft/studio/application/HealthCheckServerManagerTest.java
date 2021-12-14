@@ -5,12 +5,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.URI;
-import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.net.http.HttpResponse.BodyHandlers;
 import java.time.Duration;
 
+import org.bonitasoft.studio.common.net.HttpClientFactory;
 import org.eclipse.jdt.launching.SocketUtil;
 import org.junit.After;
 import org.junit.Before;
@@ -54,16 +54,13 @@ public class HealthCheckServerManagerTest {
 
     @Test
     public void should_return_200_status_when_alive() throws Exception {
-        var client = HttpClient.newBuilder()
-                .build();
-
         var request = HttpRequest.newBuilder()
                 .uri(URI.create(String.format("http://localhost:%s/api/workspace/status/",
                         workspaceResourceServerManager.runningPort())))
                 .timeout(Duration.ofSeconds(10))
                 .GET()
                 .build();
-        HttpResponse<String> response = client.send(request, BodyHandlers.ofString());
+        HttpResponse<String> response = HttpClientFactory.INSTANCE.send(request, BodyHandlers.ofString());
         assertThat(response.statusCode()).isEqualTo(200);
     }
 

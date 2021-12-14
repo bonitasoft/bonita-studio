@@ -24,6 +24,9 @@ import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLDecoder;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.net.http.HttpResponse.BodyHandlers;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Duration;
@@ -36,6 +39,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.net.HttpClientFactory;
 import org.bonitasoft.studio.common.net.PortSelector;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.IBonitaProjectListener;
@@ -66,8 +70,6 @@ import org.eclipse.jdt.launching.IVMInstall;
 import org.eclipse.jdt.launching.JavaRuntime;
 import org.eclipse.ui.PlatformUI;
 import org.osgi.framework.Bundle;
-import org.restlet.resource.ClientResource;
-import org.restlet.resource.ResourceException;
 
 public class UIDesignerServerManager implements IBonitaProjectListener {
 
@@ -84,7 +86,8 @@ public class UIDesignerServerManager implements IBonitaProjectListener {
     private PageDesignerURLFactory pageDesignerURLBuilder;
     private boolean started = false;
     private UIDWorkspaceSynchronizer synchronizer;
-
+    
+    
     private UIDesignerServerManager() {
         addShutdownHook();
     }
@@ -183,19 +186,35 @@ public class UIDesignerServerManager implements IBonitaProjectListener {
 
     public boolean waitForUID(final PageDesignerURLFactory pageDesignerURLBuilder) {
         try {
-            connectToURL(pageDesignerURLBuilder.openPageDesignerHome());
-        } catch (ResourceException | URISyntaxException | MalformedURLException e) {
+            return connectToURL(pageDesignerURLBuilder.openPageDesignerHome());
+        } catch (URISyntaxException | MalformedURLException e) {
             return false;
         }
-        return true;
     }
 
-    private void connectToURL(final URL url) throws URISyntaxException {
-        var cr = new ClientResource(url.toURI());
-        cr.setRetryOnError(true);
-        cr.setRetryDelay(1000);
-        cr.setRetryAttempts(15);
-        cr.get();
+    private boolean connectToURL(final URL url) throws URISyntaxException {
+        var request = HttpRequest.newBuilder(url.toURI()).GET().build();
+        HttpResponse<Void> response = retriesUntil(request, 200, 15, 1000);
+        return response != null;
+    }
+    
+    private HttpResponse<Void> retriesUntil(HttpRequest request, int expectedStatus, int nbOfRetries,
+            int delayBetweenRetries) {
+        int retry = nbOfRetries;
+        while (retry >= 0) {
+            try {
+                HttpResponse<Void> httpResponse = HttpClientFactory.INSTANCE.send(request, BodyHandlers.discarding());
+                if (expectedStatus == httpResponse.statusCode()) {
+                    return httpResponse;
+                }
+                retry--;
+                Thread.sleep(delayBetweenRetries);
+            } catch (IOException | InterruptedException e) {
+               // Connection refused, the UID is not started yet
+            }
+        }
+        BonitaStudioLog.error("The UI Designer failed to start and cannot be reached. Check UI Designer logs for more information.", UIDesignerPlugin.PLUGIN_ID);
+        return null;
     }
 
     public File getLogFile() {

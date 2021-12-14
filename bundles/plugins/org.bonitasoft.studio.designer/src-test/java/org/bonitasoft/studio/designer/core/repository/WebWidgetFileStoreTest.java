@@ -22,17 +22,19 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.nio.file.Paths;
+import java.util.Map;
+import java.util.function.Supplier;
 
-import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
-import org.bonitasoft.studio.designer.core.repository.WebWidgetFileStore;
+import org.bonitasoft.studio.fakes.IResourceFakesBuilder;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
-import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -78,12 +80,26 @@ public class WebWidgetFileStoreTest {
     @Test
     public void should_get_content_of_child_json_file() throws Exception {
         doReturn(true).when(folderResource).exists();
-        doReturn(true).when(jsonResource).exists();
-        when(jsonResource.getLocation().toFile()).thenReturn(jsonWidgetFile);
+        jsonResource = IResourceFakesBuilder.anIFile()
+                .exists()
+                .withContentSupplier(inputStreamSupplier(jsonWidgetFile))
+                .build();
+        doReturn(jsonResource).when(folderResource).getFile("pbButton.json");
 
-        final JSONObject content = webWidgetFileStore.getContent();
+        final Map<String, Object> content = webWidgetFileStore.getContent();
 
         assertThat(content).isNotNull();
+    }
+    
+
+    private Supplier<InputStream> inputStreamSupplier(File file) {
+        return () -> {
+            try {
+                return new FileInputStream(file);
+            } catch (FileNotFoundException e) {
+                throw new RuntimeException(e);
+            }
+        };
     }
 
     @Test(expected = ReadFileStoreException.class)

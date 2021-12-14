@@ -58,11 +58,6 @@
             <unit id="org.eclipse.gmf.sdk.feature.group" version="3.2.1.201409171321"/>
         </location>
         <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-            <unit id="org.restlet.ext.json.feature.group" version="2.3.0.v20141217-1730"/>
-            <unit id="org.restlet.feature.group" version="2.3.0.v20141217-1730"/>
-            <repository location="https://update-site.bonitasoft.com/p2/4.16"/>
-        </location>
-        <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
             <repository location="https://download.eclipse.org/nebula/releases/2.5.0/"/>
         	<unit id="org.eclipse.nebula.widgets.richtext.feature.feature.group" version="1.4.0.202106201019"/>
         </location>

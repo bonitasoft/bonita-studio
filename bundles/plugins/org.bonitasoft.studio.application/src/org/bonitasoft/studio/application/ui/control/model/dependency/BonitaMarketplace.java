@@ -17,15 +17,20 @@ package org.bonitasoft.studio.application.ui.control.model.dependency;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.UncheckedIOException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.net.http.HttpResponse.BodyHandlers;
 import java.nio.channels.Channels;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Properties;
 
@@ -35,6 +40,7 @@ import org.bonitasoft.studio.common.FileUtil;
 import org.bonitasoft.studio.common.RedirectURLBuilder;
 import org.bonitasoft.studio.common.Strings;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.net.HttpClientFactory;
 import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.preferences.PreferenceUtil;
@@ -46,10 +52,9 @@ import org.eclipse.jface.resource.LocalResourceManager;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.internal.forms.widgets.ResourceManagerManger;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.restlet.resource.ClientResource;
-import org.restlet.resource.ResourceException;
+
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class BonitaMarketplace {
 
@@ -76,8 +81,10 @@ public class BonitaMarketplace {
     private File localStore;
     private File cacheFolder;
     private boolean synchronizeMarketplace = true;
+    private ObjectMapper objectMapper;
 
     private BonitaMarketplace() {
+        objectMapper = new ObjectMapper();
         manager = new ResourceManagerManger().getResourceManager(Display.getDefault());
         // Correspond to the css class wizardHighlightBackground -> we can't use css here :'(
         iconBackground = PreferenceUtil.isDarkTheme()
@@ -97,7 +104,7 @@ public class BonitaMarketplace {
                     || !Objects.equals(currentVersion, latestVersion)) {
                 downloadMarketplace(latestVersion, monitor);
             }
-        } catch (ResourceException e) {
+        } catch (IOException e) {
             BonitaStudioLog.error(e);
             // Do not retry to access remote marketplace
             synchronizeMarketplace = false;
@@ -233,24 +240,25 @@ public class BonitaMarketplace {
         }
     }
 
-    private String getLatestTag() throws ResourceException {
+    private String getLatestTag() throws IOException {
         var url = createURL(LATEST_RELEASE_URL);
         if (url != null) {
-            JSONObject release = doGet(url);
-            try {
-                return release.getString("tag_name");
-            } catch (JSONException e) {
-                throw new RuntimeException(e);
-            }
+            Map<String, Object> release = doGet(url);
+            return (String) release.get("tag_name");
         }
         return null;
     }
 
-    private JSONObject doGet(URL url) throws ResourceException {
+    private Map<String, Object> doGet(URL url) throws IOException {
         try {
-            return new JSONObject(new ClientResource(url.toURI()).get().getText());
-        } catch (JSONException | IOException | URISyntaxException e) {
-            throw new RuntimeException(e);
+            HttpResponse<InputStream> response = HttpClientFactory.INSTANCE
+                    .send(HttpRequest.newBuilder(url.toURI()).GET().build(), BodyHandlers.ofInputStream());
+            try (var is = response.body()) {
+                return objectMapper.readValue(is, new TypeReference<Map<String, Object>>() {
+                });
+            }
+        } catch (IOException | InterruptedException | URISyntaxException e) {
+            throw new IOException(url + " GET request failed ", e);
         }
     }
 

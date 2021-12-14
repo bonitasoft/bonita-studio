@@ -8,14 +8,20 @@
  *******************************************************************************/
 package org.bonitasoft.studio.designer.core;
 
+import java.io.IOException;
 import java.net.InetAddress;
-import java.net.UnknownHostException;
+import java.net.URI;
+import java.net.http.HttpRequest;
+import java.net.http.HttpRequest.BodyPublishers;
+import java.net.http.HttpResponse.BodyHandlers;
+import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.net.HttpClientFactory;
 import org.bonitasoft.studio.designer.UIDesignerPlugin;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
@@ -23,14 +29,14 @@ import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.e4.core.services.events.IEventBroker;
 import org.osgi.service.event.Event;
 import org.osgi.service.event.EventHandler;
-import org.restlet.ext.json.JsonRepresentation;
-import org.restlet.resource.ClientResource;
-import org.restlet.resource.ResourceException;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class PostBDMEventHandler implements EventHandler {
 
     private static final String FILE_CONTENT = "fileContent";
     private static final String BDM_DEPLOYED_TOPIC = "bdm/deployed";
+    private ObjectMapper objectMapper = new ObjectMapper();
 
     @PostConstruct
     public void registerHandler(IEventBroker eventBroker) {
@@ -46,17 +52,25 @@ public class PostBDMEventHandler implements EventHandler {
         final String fileContent = (String) event.getProperty(FILE_CONTENT);
         Map<String, Object> content = new HashMap<>();
         content.put("bdmXml", fileContent);
+
         try {
-            new ClientResource(String.format("http://%s:%s/bdm",
+            var response = HttpClientFactory.INSTANCE.send(HttpRequest.newBuilder(URI.create(String.format("http://%s:%s/bdm",
                     InetAddress.getByName(null).getHostAddress(),
                     InstanceScope.INSTANCE.getNode(BonitaStudioPreferencesPlugin.PLUGIN_ID)
-                            .get(BonitaPreferenceConstants.DATA_REPOSITORY_PORT, "-1")))
-                                    .post(new JsonRepresentation(content));
-            BonitaStudioLog.info("BDM has been publish into Data Repository service", UIDesignerPlugin.PLUGIN_ID);
-        } catch (ResourceException | UnknownHostException e) {
+                            .get(BonitaPreferenceConstants.DATA_REPOSITORY_PORT, "-1"))))
+                    .timeout(Duration.ofSeconds(10))
+                    .header("Content-Type", "application/json")
+                    .POST(BodyPublishers.ofByteArray(objectMapper.writeValueAsBytes(content)))
+                    .build(), BodyHandlers.discarding());
+            int statusCode = response.statusCode();
+            if(statusCode >= 200 && statusCode < 300) {
+                BonitaStudioLog.info("BDM has been publish into Data Repository service", UIDesignerPlugin.PLUGIN_ID);
+            } else {
+                BonitaStudioLog.error("An error occured while publishing the BDM into Data Repository service. Server response status is "+ statusCode, UIDesignerPlugin.PLUGIN_ID);
+            }
+        } catch (IOException | InterruptedException e) {
             BonitaStudioLog.error("An error occured while publishing the BDM into Data Repository service", e);
         }
-        
     }
 
 }

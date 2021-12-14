@@ -6,8 +6,7 @@ Bundle-Version: 7.14.0.qualifier
 Bundle-Vendor: BonitaSoft S.A.
 Eclipse-BundleShape: dir
 Bundle-RequiredExecutionEnvironment: JavaSE-11
-Bundle-ClassPath: .,
- lib/org.restlet.ext.html-2.2.3.jar
+Bundle-ClassPath: .
 Bundle-Activator: org.bonitasoft.studio.tests.Activator
 Import-Package: javax.xml.bind;version="2.2.0",
  org.bonitasoft.engine.api,
@@ -70,7 +69,6 @@ Require-Bundle: org.eclipse.ui.workbench,
  org.bonitasoft.studio.parameters,
  org.bonitasoft.studio.configuration,
  org.bonitasoft.studio.designer;bundle-version="6.5.0",
- org.restlet;bundle-version="2.2.2",
  org.eclipse.jdt.launching,
  org.bonitasoft.studio.importer.bos;bundle-version="7.1.0",
  assertj-core;bundle-version="1.5.0",
@@ -147,3 +145,4 @@ Export-Package: org.bonitasoft.studio.tests,
  org.bonitasoft.studio.tests.timer,
  org.bonitasoft.studio.tests.util,
  org.bonitasoft.studio.tests.validation
+Automatic-Module-Name: org.bonitasoft.studio.tests

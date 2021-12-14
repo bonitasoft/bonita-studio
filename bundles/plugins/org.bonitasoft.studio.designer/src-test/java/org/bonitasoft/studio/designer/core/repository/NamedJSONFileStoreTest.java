@@ -22,17 +22,15 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
 import java.io.File;
-import java.io.InputStream;
+import java.io.FileInputStream;
 import java.nio.file.Paths;
 
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
-import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.resources.IFile;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -46,9 +44,6 @@ public class NamedJSONFileStoreTest {
     private File jsonFileWithoutName;
     private File jsonFileWithoutId;
 
-    /**
-     * @throws java.lang.Exception
-     */
     @Before
     public void setUp() throws Exception {
         jsonFileStore = spy(new NamedJSONFileStore("myJson.json", parentStore));
@@ -59,16 +54,20 @@ public class NamedJSONFileStoreTest {
         doReturn(iResource).when(jsonFileStore).getResource();
     }
 
+    @Test
     public void should_throw_IllegalAccessError_if_name_attribute_not_found() throws Exception {
         when(iResource.exists()).thenReturn(true);
         when(iResource.getLocation().toFile()).thenReturn(jsonFileWithoutName);
+        when(iResource.getContents()).thenReturn(new FileInputStream(jsonFileWithoutName));
 
         assertThat(jsonFileStore.getDisplayName()).isNull();
     }
 
+    @Test
     public void should_reuturn_null_if_id_attribute_not_found() throws Exception {
         when(iResource.exists()).thenReturn(true);
         when(iResource.getLocation().toFile()).thenReturn(jsonFileWithoutId);
+        when(iResource.getContents()).thenReturn(new FileInputStream(jsonFileWithoutId));
 
         assertThat(jsonFileStore.getId()).isNull();
     }
@@ -77,6 +76,7 @@ public class NamedJSONFileStoreTest {
     public void should_get_name_attribute() throws Exception {
         when(iResource.exists()).thenReturn(true);
         when(iResource.getLocation().toFile()).thenReturn(jsonFile);
+        when(iResource.getContents()).thenReturn(new FileInputStream(jsonFile));
 
         final String name = jsonFileStore.getDisplayName();
 
@@ -87,6 +87,7 @@ public class NamedJSONFileStoreTest {
     public void should_get_id_attribute() throws Exception {
         when(iResource.exists()).thenReturn(true);
         when(iResource.getLocation().toFile()).thenReturn(jsonFile);
+        when(iResource.getContents()).thenReturn(new FileInputStream(jsonFile));
 
         final String id = jsonFileStore.getId();
 

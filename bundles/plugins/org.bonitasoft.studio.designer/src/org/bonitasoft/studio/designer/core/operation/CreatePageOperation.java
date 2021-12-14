@@ -17,6 +17,7 @@ package org.bonitasoft.studio.designer.core.operation;
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -27,8 +28,6 @@ import org.bonitasoft.studio.designer.core.repository.WebPageRepositoryStore;
 import org.bonitasoft.studio.designer.i18n.Messages;
 import org.bonitasoft.studio.ui.util.StringIncrementer;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.json.JSONObject;
-import org.restlet.ext.json.JsonRepresentation;
 
 public class CreatePageOperation extends CreateUIDArtifactOperation {
 
@@ -39,9 +38,9 @@ public class CreatePageOperation extends CreateUIDArtifactOperation {
     @Override
     protected void doRun(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
         setArtifactName(getNewName());
-        JSONObject bodyObject = createBody();
+        Map<String, Object> bodyObject = createBody();
         try {
-            responseObject = createArtifact(pageDesignerURLBuilder.newPage(), new JsonRepresentation(bodyObject));
+            responseObject = createArtifact(pageDesignerURLBuilder.newPage(), bodyObject);
         } catch (MalformedURLException e) {
             throw new InvocationTargetException(e, "Failed to create new page URL.");
         }

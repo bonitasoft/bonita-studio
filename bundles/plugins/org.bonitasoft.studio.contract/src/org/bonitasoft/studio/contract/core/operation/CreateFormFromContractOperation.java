@@ -21,6 +21,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -51,7 +52,6 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
-import org.restlet.ext.json.JsonRepresentation;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -65,7 +65,6 @@ public class CreateFormFromContractOperation extends CreateUIDArtifactOperation 
     private Contract contract;
     private FormScope formScope;
     private boolean buildReadOnlyAttributes = false;
-    private ObjectMapper objectMapper = new ObjectMapper();
 
     public CreateFormFromContractOperation(PageDesignerURLFactory pageDesignerURLBuilder,
             Contract contract, FormScope formScope, RepositoryAccessor repositoryAccessor) {
@@ -85,7 +84,7 @@ public class CreateFormFromContractOperation extends CreateUIDArtifactOperation 
                     businessDataStore);
             Contract tmpContract = EcoreUtil.copy(contract); // will contains unwanted contractInput for readOnly attributes 
             openReadOnlyAttributeDialog(tmpContract, businessDataStore);
-            responseObject = createArtifact(url, new JsonRepresentation(toWebContract(contractToBusinessDataResolver, tmpContract)));
+            responseObject = createArtifact(url, toWebContract(contractToBusinessDataResolver, tmpContract));
         } catch (MalformedURLException | JsonProcessingException e) {
             throw new InvocationTargetException(e, "Failed to create new form url.");
         }
@@ -96,10 +95,10 @@ public class CreateFormFromContractOperation extends CreateUIDArtifactOperation 
         return Messages.creatingNewForm;
     }
 
-    String toWebContract(ContractToBusinessDataResolver contractToBusinessDataResolver, Contract tmpContract) throws JsonProcessingException {
+    Map<String, Object> toWebContract(ContractToBusinessDataResolver contractToBusinessDataResolver, Contract tmpContract) throws JsonProcessingException {
         TreeResult treeResult = contractToBusinessDataResolver.resolve(tmpContract, buildReadOnlyAttributes);
         var webContract = new ToWebContract(treeResult).apply(tmpContract);
-        return objectMapper.writeValueAsString(webContract);
+        return objectMapper.readValue( objectMapper.writeValueAsString(webContract), Map.class);
     }
 
     private void openReadOnlyAttributeDialog(Contract contract, BusinessDataStore businessDataStore) {

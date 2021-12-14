@@ -1,8 +1,8 @@
 package org.bonitasoft.studio.designer.core.operation;
 
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.eq;
-import static org.mockito.Mockito.notNull;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.notNull;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
@@ -11,6 +11,7 @@ import static org.mockito.Mockito.when;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.net.http.HttpResponse;
 import java.util.Arrays;
 
 import org.bonitasoft.studio.assertions.StatusAssert;
@@ -18,10 +19,8 @@ import org.bonitasoft.studio.designer.core.PageDesignerURLFactory;
 import org.bonitasoft.studio.designer.core.repository.WebPageFileStore;
 import org.bonitasoft.studio.designer.core.repository.WebPageRepositoryStore;
 import org.eclipse.core.databinding.validation.ValidationStatus;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.junit.Test;
-import org.restlet.representation.Representation;
 
 public class MigrateUIDOperationTest {
 
@@ -31,9 +30,9 @@ public class MigrateUIDOperationTest {
     public void should_return_error_status_when_migration_fails() throws Exception {
         String migrationResponse = "{\"status\": \"error\"}";
         try (InputStream is = new ByteArrayInputStream(migrationResponse.getBytes())) {
-            Representation representation = mock(Representation.class);
-            when(representation.getStream()).thenReturn(is);
-            StatusAssert.assertThat(operation.parseMigrationResponse("", representation)).isError();
+            HttpResponse<InputStream> response = mock(HttpResponse.class);
+            when(response.body()).thenReturn(is);
+            StatusAssert.assertThat(operation.parseMigrationResponse("", response)).isError();
         }
     }
 
@@ -41,9 +40,9 @@ public class MigrateUIDOperationTest {
     public void should_return_error_status_when_trying_to_migrate_incompatible_artifact() throws Exception {
         String migrationResponse = "{\"status\": \"incompatible\"}";
         try (InputStream is = new ByteArrayInputStream(migrationResponse.getBytes())) {
-            Representation representation = mock(Representation.class);
-            when(representation.getStream()).thenReturn(is);
-            StatusAssert.assertThat(operation.parseMigrationResponse("", representation)).isError();
+            HttpResponse<InputStream> response = mock(HttpResponse.class);
+            when(response.body()).thenReturn(is);
+            StatusAssert.assertThat(operation.parseMigrationResponse("", response)).isError();
         }
     }
 
@@ -51,9 +50,9 @@ public class MigrateUIDOperationTest {
     public void should_return_warning_status_when_migration_succeed_with_warning() throws Exception {
         String migrationResponse = "{\"status\": \"warning\"}";
         try (InputStream is = new ByteArrayInputStream(migrationResponse.getBytes())) {
-            Representation representation = mock(Representation.class);
-            when(representation.getStream()).thenReturn(is);
-            StatusAssert.assertThat(operation.parseMigrationResponse("", representation)).isWarning();
+            HttpResponse<InputStream> response = mock(HttpResponse.class);
+            when(response.body()).thenReturn(is);
+            StatusAssert.assertThat(operation.parseMigrationResponse("", response)).isWarning();
         }
     }
 
@@ -61,9 +60,9 @@ public class MigrateUIDOperationTest {
     public void should_return_ok_status_when_migration_succeed() throws Exception {
         String migrationResponse = "{\"status\": \"success\"}";
         try (InputStream is = new ByteArrayInputStream(migrationResponse.getBytes())) {
-            Representation representation = mock(Representation.class);
-            when(representation.getStream()).thenReturn(is);
-            StatusAssert.assertThat(operation.parseMigrationResponse("", representation)).isOK();
+            HttpResponse<InputStream> response = mock(HttpResponse.class);
+            when(response.body()).thenReturn(is);
+            StatusAssert.assertThat(operation.parseMigrationResponse("", response)).isOK();
         }
     }
 
@@ -71,9 +70,9 @@ public class MigrateUIDOperationTest {
     public void should_return_ok_status_when_no_migration_is_performed() throws Exception {
         String migrationResponse = "{\"status\": \"none\"}";
         try (InputStream is = new ByteArrayInputStream(migrationResponse.getBytes())) {
-            Representation representation = mock(Representation.class);
-            when(representation.getStream()).thenReturn(is);
-            StatusAssert.assertThat(operation.parseMigrationResponse("", representation)).isOK();
+            HttpResponse<InputStream> response = mock(HttpResponse.class);
+            when(response.body()).thenReturn(is);
+            StatusAssert.assertThat(operation.parseMigrationResponse("", response)).isOK();
         }
     }
 

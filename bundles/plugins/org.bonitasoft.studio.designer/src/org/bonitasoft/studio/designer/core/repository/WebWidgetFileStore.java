@@ -24,7 +24,6 @@ import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IWorkbenchPart;
-import org.json.JSONException;
 
 /**
  * @author Romain Bioteau
@@ -39,7 +38,7 @@ public class WebWidgetFileStore extends InFolderJSONFileStore implements WebReso
     public boolean canBeExported() {
         try {
             return getBooleanAttribute("custom");
-        } catch (JSONException | ReadFileStoreException e) {
+        } catch (ReadFileStoreException e) {
             BonitaStudioLog.error(String.format("Failed to retrieve 'custom' attribute in widget %s", getName()), e);
         }
         return super.canBeExported();
@@ -49,7 +48,7 @@ public class WebWidgetFileStore extends InFolderJSONFileStore implements WebReso
     public boolean canBeDeleted() {
         try {
             return getBooleanAttribute("custom");
-        } catch (JSONException | ReadFileStoreException e) {
+        } catch (ReadFileStoreException e) {
             BonitaStudioLog.error(String.format("Failed to retrieve 'custom' attribute in widget %s", getName()), e);
         }
         return super.canBeDeleted();

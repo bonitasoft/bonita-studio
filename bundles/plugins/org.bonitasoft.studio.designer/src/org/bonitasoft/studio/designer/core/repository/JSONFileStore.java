@@ -17,62 +17,73 @@ package org.bonitasoft.studio.designer.core.repository;
 import static com.google.common.base.Preconditions.checkState;
 
 import java.io.IOException;
+import java.util.Map;
 
 import org.bonitasoft.studio.common.repository.filestore.AbstractFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IWorkbenchPart;
-import org.json.JSONException;
-import org.json.JSONObject;
 
-import com.google.common.base.Charsets;
-import com.google.common.io.Files;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * @author Romain Bioteau
  */
-public class JSONFileStore extends AbstractFileStore<JSONObject> {
+public class JSONFileStore extends AbstractFileStore<Map<String, Object>> {
 
-    private JSONObject content;
+    private Map<String, Object> content;
+    private ObjectMapper objectMapper = new ObjectMapper();
 
     public JSONFileStore(final String fileName, final IRepositoryStore parentStore) {
         super(fileName, parentStore);
     }
 
     @Override
-    protected JSONObject getUnsafeContent() throws ReadFileStoreException {
-        if(content == null) {
+    protected Map<String, Object> getUnsafeContent() throws ReadFileStoreException {
+        if (content == null) {
             content = super.getUnsafeContent();
         }
         return content;
     }
-    
-    protected String getStringAttribute(final String attribute) throws JSONException, ReadFileStoreException {
-        return getUnsafeContent().getString(attribute);
+
+    protected String getStringAttribute(final String attribute) throws ReadFileStoreException {
+        Object value = getUnsafeContent().get(attribute);
+        if(value != null) {
+            return String.valueOf(value);
+        }
+        throw new ReadFileStoreException(String.format("No string attribute '%s' found.", attribute));
     }
 
-    protected boolean getBooleanAttribute(final String attribute) throws JSONException, ReadFileStoreException {
-        return getUnsafeContent().getBoolean(attribute);
+    protected boolean getBooleanAttribute(final String attribute) throws ReadFileStoreException {
+        Object value = getUnsafeContent().get(attribute);
+        if(value instanceof Boolean) {
+            return (boolean) value;
+        }
+        throw new ReadFileStoreException(String.format("No boolean attribute '%s' found.", attribute));
     }
 
     @Override
     public Image getIcon() {
         return null;
     }
-    
+
     @Override
-    protected JSONObject doGetContent() throws ReadFileStoreException {
+    protected Map<String, Object> doGetContent() throws ReadFileStoreException {
         checkState(getResource() instanceof IFile && getResource().exists());
         return toJSONObject((IFile) getResource());
     }
 
-    protected JSONObject toJSONObject(final IFile jsonFile) throws ReadFileStoreException {
-        try {
-            return new org.json.JSONObject(Files.toString(jsonFile.getLocation().toFile(), Charsets.UTF_8));
-        } catch (JSONException | IOException e) {
-            throw new ReadFileStoreException(String.format("Failed to retrieve JSON content from %s", jsonFile.getName()), e);
+    protected Map<String, Object> toJSONObject(final IFile jsonFile) throws ReadFileStoreException {
+        try (var is = jsonFile.getContents()) {
+            return objectMapper.readValue(is, new TypeReference<Map<String, Object>>() {
+            });
+        } catch (IOException | CoreException e) {
+            throw new ReadFileStoreException(
+                    String.format("Failed to parse JSON content from %s", jsonFile.getName()), e);
         }
     }
 

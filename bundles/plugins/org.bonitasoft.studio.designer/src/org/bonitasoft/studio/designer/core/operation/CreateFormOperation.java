@@ -27,8 +27,6 @@ import org.bonitasoft.studio.designer.core.repository.WebPageRepositoryStore;
 import org.bonitasoft.studio.designer.i18n.Messages;
 import org.bonitasoft.studio.ui.util.StringIncrementer;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.json.JSONObject;
-import org.restlet.ext.json.JsonRepresentation;
 
 
 public class CreateFormOperation extends CreateUIDArtifactOperation {
@@ -40,9 +38,8 @@ public class CreateFormOperation extends CreateUIDArtifactOperation {
     @Override
     protected void doRun(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
         setArtifactName(getNewName());
-        JSONObject jsonBody = createBody();
         try {
-            responseObject = createArtifact(pageDesignerURLBuilder.newPage(), new JsonRepresentation(jsonBody));
+            responseObject = createArtifact(pageDesignerURLBuilder.newPage(), createBody());
         } catch (MalformedURLException e) {
             throw new InvocationTargetException(e, "Failed to create new form URL.");
         }

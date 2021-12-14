@@ -8,12 +8,17 @@
  *******************************************************************************/
 package org.bonitasoft.studio.designer.core;
 
+import java.io.IOException;
 import java.net.InetAddress;
-import java.net.UnknownHostException;
+import java.net.URI;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse.BodyHandlers;
+import java.time.Duration;
 
 import javax.annotation.PostConstruct;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.net.HttpClientFactory;
 import org.bonitasoft.studio.designer.UIDesignerPlugin;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
@@ -21,8 +26,6 @@ import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.e4.core.services.events.IEventBroker;
 import org.osgi.service.event.Event;
 import org.osgi.service.event.EventHandler;
-import org.restlet.resource.ClientResource;
-import org.restlet.resource.ResourceException;
 
 public class DeleteBDMEventHandler implements EventHandler {
 
@@ -35,21 +38,21 @@ public class DeleteBDMEventHandler implements EventHandler {
 
     @Override
     public void handleEvent(final Event event) {
-        execute(event);
+        execute();
     }
 
-    private void execute(final Event event) {
+    private void execute() {
         try {
-            new ClientResource(String.format("http://%s:%s/bdm",
-                    InetAddress.getByName(null).getHostAddress(),
+            HttpClientFactory.INSTANCE.send(HttpRequest.newBuilder(URI.create(String.format("http://%s:%s/bdm",
+                    InetAddress.getLoopbackAddress().getHostAddress(),
                     InstanceScope.INSTANCE.getNode(BonitaStudioPreferencesPlugin.PLUGIN_ID)
-                            .get(BonitaPreferenceConstants.DATA_REPOSITORY_PORT, "-1")))
-                                    .delete();
+                            .get(BonitaPreferenceConstants.DATA_REPOSITORY_PORT, "-1"))))
+                    .timeout(Duration.ofSeconds(10))
+                    .DELETE().build(), BodyHandlers.discarding());
             BonitaStudioLog.info("BDM has been deleted from the Data Repository service", UIDesignerPlugin.PLUGIN_ID);
-        } catch (ResourceException | UnknownHostException e) {
+        } catch (IOException | InterruptedException e) {
             BonitaStudioLog.error("An error occured while deleting the BDM from the Data Repository service", e);
         }
-        
     }
 
 }

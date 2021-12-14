@@ -21,6 +21,10 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Paths;
 
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.apache.http.impl.client.HttpClients;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.designer.core.PageDesignerURLFactory;
@@ -38,15 +42,7 @@ import org.eclipse.ui.progress.IProgressService;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.restlet.data.MediaType;
-import org.restlet.ext.html.FormData;
-import org.restlet.ext.html.FormDataSet;
-import org.restlet.representation.FileRepresentation;
-import org.restlet.resource.ClientResource;
 
-/**
- * @author Romain Bioteau
- */
 public class UIDesignerWorkspaceIntegrationIT {
 
     private IFile newPageResource;
@@ -79,8 +75,16 @@ public class UIDesignerWorkspaceIntegrationIT {
     public void import_a_custom_page_trigger_a_refresh_on_the_workspace() throws Exception {
         waitForServer();
 
-        new ClientResource(String.format("http://localhost:%s/bonita/import/page", uidPort()))
-                .post(formDataSetWithCustomPageZipFile());
+        try (var httpClient = HttpClients.createDefault()) {
+            final HttpPost uploadFileRequest = new HttpPost(
+                    String.format("http://localhost:%s/bonita/import/page", uidPort()));
+            final MultipartEntityBuilder builder = MultipartEntityBuilder.create();
+            File customPageToImport = customPageToImport();
+            builder.addBinaryBody("file", customPageToImport, ContentType.APPLICATION_OCTET_STREAM,
+                    customPageToImport.getName());
+            uploadFileRequest.setEntity(builder.build());
+            httpClient.execute(uploadFileRequest);
+        }
 
         final WebPageRepositoryStore repositoryStore = RepositoryManager.getInstance()
                 .getRepositoryStore(WebPageRepositoryStore.class);
@@ -91,20 +95,14 @@ public class UIDesignerWorkspaceIntegrationIT {
                         .isTrue();
     }
 
-    private FormDataSet formDataSetWithCustomPageZipFile() throws URISyntaxException, IOException {
-        final FormDataSet form = new FormDataSet();
-        form.setMultipart(true);
-        form.getEntries().add(new FormData("file", new FileRepresentation(customPageToImport(), MediaType.APPLICATION_ZIP)));
-        return form;
-    }
-
     private int uidPort() {
         return UIDesignerServerManager.getInstance().getPort();
     }
 
     private File customPageToImport() throws URISyntaxException, IOException {
         return Paths.get(
-                FileLocator.toFileURL(UIDesignerWorkspaceIntegrationIT.class.getResource("/page-APageToImport.zip")).toURI())
+                FileLocator.toFileURL(UIDesignerWorkspaceIntegrationIT.class.getResource("/page-APageToImport.zip"))
+                        .toURI())
                 .toFile();
     }
 

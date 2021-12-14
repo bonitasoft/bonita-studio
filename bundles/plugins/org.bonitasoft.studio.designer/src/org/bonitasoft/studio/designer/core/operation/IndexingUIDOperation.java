@@ -14,11 +14,16 @@
  */
 package org.bonitasoft.studio.designer.core.operation;
 
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.http.HttpRequest;
+import java.net.http.HttpRequest.BodyPublishers;
+import java.net.http.HttpResponse.BodyHandlers;
 
+import org.bonitasoft.studio.common.net.HttpClientFactory;
 import org.bonitasoft.studio.designer.core.PageDesignerURLFactory;
 import org.bonitasoft.studio.designer.core.UIDesignerServerManager;
 import org.bonitasoft.studio.designer.i18n.Messages;
@@ -27,10 +32,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.jface.operation.IRunnableWithProgress;
-import org.restlet.Context;
-import org.restlet.representation.EmptyRepresentation;
-import org.restlet.resource.ClientResource;
-import org.restlet.resource.ResourceException;
 
 public class IndexingUIDOperation implements IRunnableWithProgress {
 
@@ -56,15 +57,12 @@ public class IndexingUIDOperation implements IRunnableWithProgress {
             } catch (MalformedURLException | URISyntaxException e1) {
                 throw new InvocationTargetException(e1);
             }
-            Context currentContext = Context.getCurrent();
             try {
-                ClientResource clientResource = new ClientResource(uri);
-                clientResource.post(new EmptyRepresentation());
-            } catch (ResourceException e) {
+                HttpClientFactory.INSTANCE.send(HttpRequest.newBuilder(uri).POST(BodyPublishers.noBody()).build(),
+                        BodyHandlers.discarding());
+            } catch (IOException | InterruptedException e) {
                 throw new InvocationTargetException(e,
                         "Failed to post on " + uri);
-            } finally {
-                Context.setCurrent(currentContext);
             }
         }
     }
