@@ -32,14 +32,14 @@ import org.mockito.stubbing.Answer;
 public class IResourceFakesBuilder<T extends IResource> {
 
     public static IResourceFakesBuilder<IFile> anIFile() {
-        final IFile mock = mock(IFile.class);
-        when(mock.getType()).thenReturn(IResource.FILE);
+        final IFile mock =mock(IFile.class);
+        Mockito.lenient().when(mock.getType()).thenReturn(IResource.FILE);
         return new IResourceFakesBuilder<>(mock);
     }
 
     public static IResourceFakesBuilder<IFolder> anIFolder() {
         final IFolder mock = mock(IFolder.class);
-        when(mock.getType()).thenReturn(IResource.FOLDER);
+        Mockito.lenient().when(mock.getType()).thenReturn(IResource.FOLDER);
         return new IResourceFakesBuilder<>(mock);
     }
 

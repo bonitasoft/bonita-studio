@@ -17,14 +17,23 @@ package org.bonitasoft.studio.designer.core.operation;
 import static com.google.common.base.Preconditions.checkArgument;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpRequest.BodyPublishers;
+import java.net.http.HttpResponse;
+import java.net.http.HttpResponse.BodyHandlers;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
+import org.bonitasoft.studio.common.net.HttpClientFactory;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.designer.core.PageDesignerURLFactory;
 import org.bonitasoft.studio.designer.core.UIDesignerServerManager;
@@ -34,11 +43,10 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.osgi.util.NLS;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.restlet.representation.Representation;
-import org.restlet.resource.ClientResource;
-import org.restlet.resource.ResourceException;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 public abstract class CreateUIDArtifactOperation implements IRunnableWithProgress {
 
@@ -49,6 +57,7 @@ public abstract class CreateUIDArtifactOperation implements IRunnableWithProgres
     public static final String DEFAULT_FRAGMENT_NAME = "newFragment";
 
     public enum ArtifactyType {
+
         PAGE("page"), FORM("form"), WIDGET("widget"), LAYOUT("layout"), FRAGMENT("fragment");
 
         private String type;
@@ -63,29 +72,32 @@ public abstract class CreateUIDArtifactOperation implements IRunnableWithProgres
         }
     }
 
-    protected Optional<JSONObject> responseObject = Optional.empty();
+    protected Optional<Map<String, Object>> responseObject = Optional.empty();
     protected PageDesignerURLFactory pageDesignerURLBuilder;
     protected String artifactName = DEFAULT_PAGE_NAME;
     protected RepositoryAccessor repositoryAccessor;
+    protected ObjectMapper objectMapper = new ObjectMapper();
 
-    protected CreateUIDArtifactOperation(PageDesignerURLFactory pageDesignerURLBuilder, RepositoryAccessor repositoryAccessor) {
+    protected CreateUIDArtifactOperation(PageDesignerURLFactory pageDesignerURLBuilder,
+            RepositoryAccessor repositoryAccessor) {
         this.repositoryAccessor = repositoryAccessor;
         checkArgument(pageDesignerURLBuilder != null);
         this.pageDesignerURLBuilder = pageDesignerURLBuilder;
     }
-    
+
     @Override
     public final void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
         monitor.beginTask(getTaskName(), IProgressMonitor.UNKNOWN);
-        if(!UIDesignerServerManager.getInstance().isStarted()) {
+        if (!UIDesignerServerManager.getInstance().isStarted()) {
             monitor.subTask(NLS.bind(Messages.waitingForUIDesigner,
-                            org.bonitasoft.studio.common.Messages.uiDesignerModuleName));
-            UIDesignerServerManager.getInstance().start(repositoryAccessor.getCurrentRepository(), new NullProgressMonitor());
+                    org.bonitasoft.studio.common.Messages.uiDesignerModuleName));
+            UIDesignerServerManager.getInstance().start(repositoryAccessor.getCurrentRepository(),
+                    new NullProgressMonitor());
             monitor.subTask("");
         }
         doRun(monitor);
     }
-    
+
     protected abstract String getTaskName();
 
     protected abstract void doRun(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException;
@@ -94,39 +106,38 @@ public abstract class CreateUIDArtifactOperation implements IRunnableWithProgres
         return repositoryAccessor;
     }
 
-    protected String doPost(URL url, Representation entity) throws InvocationTargetException {
+    protected Map<String, Object> doPost(URL url, String entity) throws InvocationTargetException {
         try {
-            ClientResource resource = new ClientResource(url.toURI());
-            return resource.post(entity).getText();
-        } catch (final ResourceException e) {
-            throw new InvocationTargetException(e, "Failed to post request.");
-        } catch (final IOException e) {
-            throw new InvocationTargetException(e, "Failed to retrieve POST response.");
-        } catch (final URISyntaxException e) {
-            throw new InvocationTargetException(e, "Failed to build POST URL.");
-        }
-    }
-
-    protected JSONObject createBody() throws InvocationTargetException {
-        try {
-            JSONObject jsonObject = new JSONObject();
-            jsonObject.put("type", getArtifactType());
-            jsonObject.put("name", artifactName);
-            if (getArtifactType() != ArtifactyType.WIDGET) {
-                jsonObject.put("rows", Arrays.asList(new ArrayList<>()));
+            HttpResponse<InputStream> response = HttpClientFactory.INSTANCE.send(
+                    HttpRequest.newBuilder(url.toURI())
+                    .header("Content-Type", "application/json")
+                    .POST(BodyPublishers.ofString(entity)).build(),
+                    BodyHandlers.ofInputStream());
+            try (var is = response.body()) {
+                return objectMapper.readValue(is, new TypeReference<Map<String, Object>>() {
+                });
             }
-            return jsonObject;
-        } catch (JSONException e) {
-            throw new InvocationTargetException(e, "An error occured while creating JSON body for the request");
+        } catch (IOException | InterruptedException | URISyntaxException e) {
+            throw new InvocationTargetException(e, "Failed to post request.");
         }
     }
 
-    protected Optional<JSONObject> createArtifact(URL url, Representation body) throws InvocationTargetException {
+    protected Map<String, Object> createBody() {
+        Map<String, Object> body = new HashMap<>();
+        body.put("type", getArtifactType());
+        body.put("name", artifactName);
+        if (getArtifactType() != ArtifactyType.WIDGET) {
+            body.put("rows", Arrays.asList(new ArrayList<>()));
+        }
+        return body;
+    }
+
+    protected Optional<Map<String, Object>> createArtifact(URL url, Map<String, Object> body)
+            throws InvocationTargetException {
         try {
-            String response = doPost(url, body);
-            return Optional.of(new JSONObject(response));
-        } catch (final JSONException e) {
-            throw new InvocationTargetException(e, "Failed to build a JSON representation of the response.");
+            return Optional.of(doPost(url, objectMapper.writeValueAsString(body)));
+        } catch (JsonProcessingException | InvocationTargetException e) {
+            throw new InvocationTargetException(e);
         }
     }
 
@@ -153,25 +164,13 @@ public abstract class CreateUIDArtifactOperation implements IRunnableWithProgres
     }
 
     public String getNewArtifactId() {
-        if (responseObject.isPresent()) {
-            try {
-                return responseObject.get().getString("id");
-            } catch (final JSONException e) {
-                throw new RuntimeException("Failed to retrieve attribute \'id\' from JsonObject", e);
-            }
-        }
-        throw new IllegalStateException("Response is null.");
+        return (String) responseObject.map(response -> response.get("id"))
+                .orElseThrow(() -> new IllegalStateException("Failed to retrieve attribute \'id\' from response."));
     }
 
     public String getNewPageName() {
-        if (responseObject.isPresent()) {
-            try {
-                return responseObject.get().getString("name");
-            } catch (final JSONException e) {
-                throw new RuntimeException("Failed to retrieve attribute \'name\' from JsonObject", e);
-            }
-        }
-        throw new IllegalStateException("Response is null.");
+        return (String) responseObject.map(response -> response.get("name"))
+                .orElseThrow(() -> new IllegalStateException("Failed to retrieve attribute \'name\' from response."));
     }
 
     public void setArtifactName(String artifactName) {

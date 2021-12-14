@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
 import java.util.Set;
@@ -41,13 +42,12 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
-import org.json.JSONException;
 
-import com.google.common.base.Charsets;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
-import com.google.common.io.ByteStreams;
 
 public class BosArchive {
 
@@ -57,6 +57,7 @@ public class BosArchive {
     private static final Properties FALLBACK_PROPERTIES = new Properties();
     private String bonitaVersion;
     private final DiagramLegacyFormsValidator legacyFormsValidator = new DiagramLegacyFormsValidator();
+    private ObjectMapper objectMapper = new ObjectMapper();
 
     static {
         FALLBACK_PROPERTIES.put(VERSION, "6.0.0");
@@ -282,9 +283,9 @@ public class BosArchive {
     private String extractNameFromJSON(AbstractFileModel file) {
         try (ZipFile zipFile = new ZipFile(archiveFile);
                 InputStream is = zipFile.getInputStream(zipFile.getEntry(file.getPath()))) {
-            return new org.json.JSONObject(new String(ByteStreams.toByteArray(is), Charsets.UTF_8))
-                    .getString("name");
-        } catch (final IOException | JSONException e) {
+            return (String) objectMapper.readValue(is,new TypeReference<Map<String, Object>>(){})
+                    .get("name");
+        } catch (final IOException  e) {
             BonitaStudioLog.error(e);
         }
         return file.getFileName();

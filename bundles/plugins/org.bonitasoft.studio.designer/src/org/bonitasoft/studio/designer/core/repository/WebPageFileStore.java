@@ -19,17 +19,21 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.net.http.HttpResponse.BodyHandlers;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-import java.util.logging.Level;
+import java.util.stream.Collectors;
 
 import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.net.HttpClientFactory;
 import org.bonitasoft.studio.common.repository.model.IBuildable;
 import org.bonitasoft.studio.common.repository.model.IDeployable;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
@@ -37,10 +41,8 @@ import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.designer.UIDesignerPlugin;
 import org.bonitasoft.studio.designer.core.PageDesignerURLFactory;
-import org.bonitasoft.studio.designer.core.bar.CustomPageBarResourceBuilderFactory;
 import org.bonitasoft.studio.designer.core.bar.FormBuilder;
 import org.bonitasoft.studio.designer.core.bar.RestFormBuilder;
-import org.bonitasoft.studio.designer.core.bos.WebFormBOSArchiveFileStoreProvider;
 import org.bonitasoft.studio.designer.core.exception.PageIncompatibleException;
 import org.bonitasoft.studio.designer.i18n.Messages;
 import org.eclipse.core.databinding.validation.ValidationStatus;
@@ -54,11 +56,9 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IWorkbenchPart;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.restlet.representation.Representation;
-import org.restlet.resource.ClientResource;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.io.ByteSource;
 
 public class WebPageFileStore extends InFolderJSONFileStore
@@ -73,6 +73,7 @@ public class WebPageFileStore extends InFolderJSONFileStore
     public static final String PAGE_TYPE = "page";
     public static final String FORM_TYPE = "form";
     public static final String DEPLOY_PAGE_COMMAND = "org.bonitasoft.studio.engine.deploy.page.command";
+    private ObjectMapper objectMapper = new ObjectMapper();
 
     private FormBuilder formBuilder;
 
@@ -99,7 +100,7 @@ public class WebPageFileStore extends InFolderJSONFileStore
     public String getType() {
         try {
             return getStringAttribute(ID_TYPE);
-        } catch (final JSONException | ReadFileStoreException e) {
+        } catch (ReadFileStoreException e) {
             BonitaStudioLog.error(
                     String.format("Failed to retrieve id in JSON file %s.json, with key %s.", getName(), ID_TYPE),
                     UIDesignerPlugin.PLUGIN_ID);
@@ -111,7 +112,7 @@ public class WebPageFileStore extends InFolderJSONFileStore
     public String getDisplayName() {
         try {
             return getStringAttribute(DISPLAY_NAME_KEY);
-        } catch (final JSONException | ReadFileStoreException e) {
+        } catch (ReadFileStoreException e) {
             return super.getDisplayName();
         }
     }
@@ -119,7 +120,7 @@ public class WebPageFileStore extends InFolderJSONFileStore
     public String getDescription() {
         try {
             return getStringAttribute(DESCRIPTION_KEY);
-        } catch (final JSONException | ReadFileStoreException e) {
+        } catch (ReadFileStoreException e) {
             BonitaStudioLog.error(
                     String.format("Failed to retrieve id in JSON file %s.json, with key %s.", getName(),
                             DESCRIPTION_KEY),
@@ -221,33 +222,26 @@ public class WebPageFileStore extends InFolderJSONFileStore
 
     public Collection<String> getPageResources() {
         try {
-            ClientResource clientResource = new ClientResource(
-                    PageDesignerURLFactory.INSTANCE.resources(getId()).toURI());
-            clientResource.getLogger().setLevel(Level.OFF);
-            final Representation representation = clientResource.get();
-            return representation != null ? parseExtensionResources(representation.getText()) : Collections.emptyList();
-        } catch (URISyntaxException | IOException e) {
+            HttpResponse<InputStream> response = HttpClientFactory.INSTANCE.send(HttpRequest.newBuilder(PageDesignerURLFactory.INSTANCE.resources(getId()).toURI())
+                    .GET().build(), BodyHandlers.ofInputStream());
+            return response != null ? parseExtensionResources(response) : Collections.emptyList();
+        } catch (URISyntaxException | IOException | InterruptedException e) {
             BonitaStudioLog.error(e);
-            return null;
+            return Collections.emptyList();
         }
     }
 
-    private Collection<String> parseExtensionResources(String resources) {
-        Set<String> result = new HashSet<>();
-        if (resources != null) {
-            try {
-                JSONArray jsonArray = new JSONArray(resources);
-                for (int i = 0; i < jsonArray.length(); i++) {
-                    Object resource = jsonArray.get(i);
-                    if (resource.toString().contains(EXTENSION_RESOURCE_PREFIX)) {
-                        result.add(resource.toString());
-                    }
-                }
-            } catch (JSONException e) {
-                return result;
+    private Collection<String> parseExtensionResources(HttpResponse<InputStream> response) {
+        if (response != null) {
+            try(var is = response.body()){
+                List<String> resources = objectMapper.readValue(is, new TypeReference<List<String>>() {
+                });
+                return resources.stream().filter(r -> r.contains(EXTENSION_RESOURCE_PREFIX)).collect(Collectors.toSet());
+            } catch (IOException e) {
+               BonitaStudioLog.error(e);
             }
         }
-        return result;
+        return Set.of();
     }
 
 }

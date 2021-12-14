@@ -15,21 +15,23 @@
 package org.bonitasoft.studio.designer.core.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
 import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.nio.file.Paths;
+import java.util.Map;
+import java.util.function.Supplier;
 
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
+import org.bonitasoft.studio.fakes.IResourceFakesBuilder;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.resources.IFile;
-import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -58,41 +60,62 @@ public class JSONFileStoreTest {
         jsonFileStore = spy(new JSONFileStore("myJson.json", parentStore));
         jsonFile = Paths.get(JSONFileStoreTest.class.getResource("/myJson.json").toURI()).toFile();
         invalidJsonFile = Paths.get(JSONFileStoreTest.class.getResource("/invalidJson.json").toURI()).toFile();
-        iResource = mock(IFile.class, RETURNS_DEEP_STUBS);
-        doReturn(iResource).when(jsonFileStore).getResource();
+        // iResource = mock(IFile.class, RETURNS_DEEP_STUBS);
+        //  doReturn(iResource).when(jsonFileStore).getResource();
         when(parentStore.validate(Mockito.anyString(), Mockito.any(InputStream.class)))
                 .thenReturn(ValidationStatus.ok());
     }
 
     @Test
     public void should_get_content_as_a_JSONObject() throws Exception {
-        when(iResource.exists()).thenReturn(true);
-        when(iResource.getLocation().toFile()).thenReturn(jsonFile);
+        iResource = IResourceFakesBuilder.anIFile()
+                .exists()
+                .withContentSupplier(inputStreamSupplier(jsonFile))
+                .build();
+        doReturn(iResource).when(jsonFileStore).getResource();
 
-        final JSONObject content = jsonFileStore.getContent();
+        final Map<String, Object> content = jsonFileStore.getContent();
 
         assertThat(content).isNotNull();
     }
 
+    private Supplier<InputStream> inputStreamSupplier(File file) {
+        return () -> {
+            try {
+                return new FileInputStream(file);
+            } catch (FileNotFoundException e) {
+                throw new RuntimeException(e);
+            }
+        };
+    }
+
     @Test(expected = IllegalStateException.class)
     public void should_throw_IllegalStateException_if_resource_does_not_exists() throws Exception {
-        when(iResource.exists()).thenReturn(false);
+        iResource = IResourceFakesBuilder.anIFile()
+                .build();
+        doReturn(iResource).when(jsonFileStore).getResource();
 
         jsonFileStore.getContent();
     }
 
     @Test(expected = ReadFileStoreException.class)
     public void should_throw_ReadFileStoreException_if_content_cannot_be_parsed() throws Exception {
-        when(iResource.exists()).thenReturn(true);
-        when(iResource.getLocation().toFile()).thenReturn(invalidJsonFile);
+        iResource = IResourceFakesBuilder.anIFile()
+                .exists()
+                .withContentSupplier(inputStreamSupplier(invalidJsonFile))
+                .build();
+        doReturn(iResource).when(jsonFileStore).getResource();
 
         jsonFileStore.getContent();
     }
 
     @Test
     public void should_get_string_attribute_from_JSONObject() throws Exception {
-        when(iResource.exists()).thenReturn(true);
-        when(iResource.getLocation().toFile()).thenReturn(jsonFile);
+        iResource = IResourceFakesBuilder.anIFile()
+                .exists()
+                .withContentSupplier(inputStreamSupplier(jsonFile))
+                .build();
+        doReturn(iResource).when(jsonFileStore).getResource();
 
         final String name = jsonFileStore.getStringAttribute("name");
 

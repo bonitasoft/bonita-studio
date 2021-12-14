@@ -84,9 +84,6 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.wst.sse.ui,
  org.eclipse.core.databinding.property;bundle-version="1.6.300",
  org.bonitasoft.studio.designer,
- org.json,
- org.restlet,
- org.restlet.ext.json;bundle-version="2.3.0",
  org.bonitasoft.studio.migration
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Import-Package: javax.annotation;version="1.2.0",

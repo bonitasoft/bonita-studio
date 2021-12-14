@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Map;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
@@ -32,7 +33,6 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.preferences.InstanceScope;
-import org.json.JSONObject;
 
 /**
  * @author Romain Bioteau
@@ -52,7 +52,7 @@ public class InFolderJSONFileStore extends NamedJSONFileStore {
     }
     
     @Override
-    protected JSONObject doGetContent() throws ReadFileStoreException {
+    protected Map<String, Object> doGetContent() throws ReadFileStoreException {
         if (!getResource().exists()) {
             throw new ReadFileStoreException(getResource().getLocation() + " does not exists.");
         }

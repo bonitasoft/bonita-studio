@@ -14,15 +14,16 @@
  */
 package org.bonitasoft.studio.designer.core.repository;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.URISyntaxException;
-import java.nio.charset.StandardCharsets;
-import java.util.stream.Collectors;
+import java.net.http.HttpRequest;
+import java.net.http.HttpRequest.BodyPublishers;
+import java.net.http.HttpResponse.BodyHandlers;
+import java.time.Duration;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.net.HttpClientFactory;
 import org.bonitasoft.studio.designer.core.PageDesignerURLFactory;
 import org.bonitasoft.studio.designer.core.UIDesignerServerManager;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
@@ -31,19 +32,17 @@ import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.InstanceScope;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.restlet.representation.Representation;
-import org.restlet.resource.ClientResource;
-import org.restlet.resource.ResourceException;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class UIDModelValidator implements IValidator<InputStream> {
 
     private PageDesignerURLFactory pageDesignerURLBuilder;
     private String incompatibleErrorMessage;
     private String migrationNeededMessage;
+    private ObjectMapper objectMapper = new ObjectMapper();
 
-    public UIDModelValidator(PageDesignerURLFactory pageDesignerURLFactory, 
+    public UIDModelValidator(PageDesignerURLFactory pageDesignerURLFactory,
             String incompatibleErrorMessage,
             String migrationNeededMessage) {
         pageDesignerURLBuilder = pageDesignerURLFactory;
@@ -56,36 +55,54 @@ public class UIDModelValidator implements IValidator<InputStream> {
     }
 
     @Override
-    public IStatus validate(InputStream inputStream) {
-        if(!UIDesignerServerManager.getInstance().isStarted()) {
+    public IStatus validate(final InputStream inputStream) {
+        if (!UIDesignerServerManager.getInstance().isStarted()) {
             return ValidationStatus.ok();
         }
-        String artifactContent = new BufferedReader(
-                new InputStreamReader(inputStream, StandardCharsets.UTF_8))
-                        .lines()
-                        .collect(Collectors.joining(System.lineSeparator()));
         try {
-            Representation response = new ClientResource(pageDesignerURLBuilder.artifactStatus().toURI())
-                    .post(artifactContent);
-            String repsonseBody = new BufferedReader(
-                    new InputStreamReader(response.getStream(), StandardCharsets.UTF_8))
-                            .lines()
-                            .collect(Collectors.joining(System.lineSeparator()));
-            JSONObject status = new JSONObject(repsonseBody);
-            if (!status.getBoolean("compatible")) {
+            var response = HttpClientFactory.INSTANCE.send(HttpRequest.newBuilder(pageDesignerURLBuilder.artifactStatus().toURI())
+                    .timeout(Duration.ofSeconds(10))
+                    .header("Content-Type", "application/json")
+                    .POST(BodyPublishers.ofInputStream(() -> inputStream)).build(), BodyHandlers.ofInputStream());
+            Status status = objectMapper.readValue(response.body(), Status.class);
+            if (!status.isCompatible()) {
                 return ValidationStatus.error(incompatibleErrorMessage);
             }
-            if (status.getBoolean("migration")) {
+            if (status.isMigration()) {
                 return ValidationStatus.warning(migrationNeededMessage);
             }
-        } catch (ResourceException | URISyntaxException | IOException | JSONException e) {
+        } catch (IOException | InterruptedException | URISyntaxException e) {
             BonitaStudioLog.error(e);
         }
+
         return ValidationStatus.ok();
     }
 
     static IEclipsePreferences getPreferenceStore() {
         return InstanceScope.INSTANCE.getNode(BonitaStudioPreferencesPlugin.PLUGIN_ID);
+    }
+    
+    static class Status {
+        
+        private boolean compatible;
+        private boolean migration;
+        
+        public boolean isCompatible() {
+            return compatible;
+        }
+        
+        public void setCompatible(boolean compatible) {
+            this.compatible = compatible;
+        }
+        
+        public boolean isMigration() {
+            return migration;
+        }
+        
+        public void setMigration(boolean migration) {
+            this.migration = migration;
+        }
+        
     }
 
 }

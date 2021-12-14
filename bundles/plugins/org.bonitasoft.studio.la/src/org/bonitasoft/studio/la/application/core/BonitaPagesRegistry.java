@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -29,9 +30,9 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class BonitaPagesRegistry implements IRunnableWithProgress {
 
@@ -41,6 +42,7 @@ public class BonitaPagesRegistry implements IRunnableWithProgress {
     private static final String DISPLAY_NAME_FIELD = "displayName";
     private static final String PROVIDED_FIELD = "isProvided";
     private static BonitaPagesRegistry INSTANCE;
+    private ObjectMapper objectMapper = new ObjectMapper();
 
     private List<EntryPage> pages = new ArrayList<>();
     private HttpClientFactory httpClientFactory = new HttpClientFactory();
@@ -80,10 +82,10 @@ public class BonitaPagesRegistry implements IRunnableWithProgress {
 
     private void addCustomPages(String httpResponse) {
         try {
-            JSONArray jsonArray = new JSONArray(httpResponse);
-            for (int i = 0; i < jsonArray.length(); i++) {
-                JSONObject page = (JSONObject) jsonArray.get(i);
-                if (page.getBoolean(PROVIDED_FIELD) && !PAGES_TO_EXCLUDE.contains(page.get(URL_TOKEN_FIELD))) {
+            List<Map<String, Object>> jsonArray = objectMapper.readValue(httpResponse, new TypeReference<List<Map<String,Object>>>(){});
+            for (int i = 0; i < jsonArray.size(); i++) {
+                Map<String, Object> page = jsonArray.get(i);
+                if (Boolean.valueOf((String) page.get(PROVIDED_FIELD)) && !PAGES_TO_EXCLUDE.contains(page.get(URL_TOKEN_FIELD))) {
                     pages.add(new EntryPage((String) page.get(URL_TOKEN_FIELD),
                             (String) page.get(DISPLAY_NAME_FIELD),
                             (String) page.get(DESCRIPTION_FIELD),
@@ -91,7 +93,7 @@ public class BonitaPagesRegistry implements IRunnableWithProgress {
                             false));
                 }
             }
-        } catch (JSONException e) {
+        } catch (IOException e) {
             throw new RuntimeException("Unable to parse bonitaPages http response", e);
         }
     }

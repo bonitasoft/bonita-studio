@@ -14,19 +14,23 @@
  */
 package org.bonitasoft.studio.designer.core.operation;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.nio.charset.StandardCharsets;
+import java.net.http.HttpRequest;
+import java.net.http.HttpRequest.BodyPublishers;
+import java.net.http.HttpResponse;
+import java.net.http.HttpResponse.BodyHandlers;
+import java.time.Duration;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Map;
 
 import org.bonitasoft.studio.common.core.IRunnableWithStatus;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.net.HttpClientFactory;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.designer.UIDesignerPlugin;
 import org.bonitasoft.studio.designer.core.PageDesignerURLFactory;
@@ -46,18 +50,14 @@ import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.emf.edapt.migration.MigrationException;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.restlet.Context;
-import org.restlet.representation.EmptyRepresentation;
-import org.restlet.representation.Representation;
-import org.restlet.resource.ClientResource;
-import org.restlet.resource.ResourceException;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class MigrateUIDOperation implements IRunnableWithStatus {
 
     private PageDesignerURLFactory pageDesignerURLBuilder;
     private MultiStatus status = new MultiStatus(UIDesignerPlugin.PLUGIN_ID, 0, "", null);
+    private ObjectMapper objectMapper = new ObjectMapper();
 
     public MigrateUIDOperation(PageDesignerURLFactory pageDesignerURLBuilder) {
         this.pageDesignerURLBuilder = pageDesignerURLBuilder;
@@ -119,20 +119,32 @@ public class MigrateUIDOperation implements IRunnableWithStatus {
         } catch (MalformedURLException | URISyntaxException e1) {
             throw new InvocationTargetException(new MigrationException(e1));
         }
-        Context currentContext = Context.getCurrent();
-        try {
-            ClientResource clientResource = new ClientResource(uri);
-            clientResource.setRetryOnError(true);
-            clientResource.setRetryDelay(500);
-            clientResource.setRetryAttempts(5);
-            Representation response = clientResource.put(new EmptyRepresentation());
-            return parseMigrationResponse(fragmentId, response);
-        } catch (ResourceException e) {
-            throw new InvocationTargetException(new MigrationException(e),
-                    "Failed to post on " + uri);
-        } finally {
-            Context.setCurrent(currentContext);
+        HttpRequest request = HttpRequest.newBuilder(uri)
+                .timeout(Duration.ofSeconds(10))
+                .PUT(BodyPublishers.noBody()).build();
+        HttpResponse<InputStream> response = retriesUntil(request, 200, 5, 500);
+        if (response == null) {
+            throw new InvocationTargetException(new IOException("Failed to put on " + uri));
         }
+        return parseMigrationResponse(fragmentId, response);
+    }
+
+    private HttpResponse<InputStream> retriesUntil(HttpRequest request, int expectedStatus, int nbOfRetries,
+            int delayBetweenRetries) {
+        int retry = nbOfRetries;
+        while (retry >= 0) {
+            try {
+                HttpResponse<InputStream> httpResponse = HttpClientFactory.INSTANCE.send(request, BodyHandlers.ofInputStream());
+                if (expectedStatus == httpResponse.statusCode()) {
+                    return httpResponse;
+                }
+                retry--;
+                Thread.sleep(delayBetweenRetries);
+            } catch (IOException | InterruptedException e) {
+                BonitaStudioLog.error(e);
+            }
+        }
+        return null;
     }
 
     private IStatus migrateWidget(PageDesignerURLFactory urlBuilder, WebWidgetFileStore fileStore,
@@ -145,20 +157,14 @@ public class MigrateUIDOperation implements IRunnableWithStatus {
         } catch (MalformedURLException | URISyntaxException e1) {
             throw new InvocationTargetException(new MigrationException(e1));
         }
-        Context currentContext = Context.getCurrent();
-        try {
-            ClientResource clientResource = new ClientResource(uri);
-            clientResource.setRetryOnError(true);
-            clientResource.setRetryDelay(500);
-            clientResource.setRetryAttempts(5);
-            Representation response = clientResource.put(new EmptyRepresentation());
-            return parseMigrationResponse(widgetId, response);
-        } catch (ResourceException e) {
-            throw new InvocationTargetException(new MigrationException(e),
-                    "Failed to post on " + uri);
-        } finally {
-            Context.setCurrent(currentContext);
+        HttpRequest request = HttpRequest.newBuilder(uri)
+                .timeout(Duration.ofSeconds(10))
+                .PUT(BodyPublishers.noBody()).build();
+        HttpResponse<InputStream> response = retriesUntil(request, 200, 5, 500);
+        if (response == null) {
+            throw new InvocationTargetException(new IOException("Failed to put on " + uri));
         }
+        return parseMigrationResponse(widgetId, response);
     }
 
     protected void migrate(IProgressMonitor monitor, PageDesignerURLFactory urlBuilder,
@@ -182,30 +188,20 @@ public class MigrateUIDOperation implements IRunnableWithStatus {
         } catch (MalformedURLException | URISyntaxException e1) {
             throw new InvocationTargetException(new MigrationException(e1));
         }
-        Context currentContext = Context.getCurrent();
-        try {
-            ClientResource clientResource = new ClientResource(uri);
-            clientResource.setRetryOnError(true);
-            clientResource.setRetryDelay(500);
-            clientResource.setRetryAttempts(5);
-            Representation response = clientResource.put(new EmptyRepresentation());
-            return parseMigrationResponse(pageId, response);
-        } catch (ResourceException e) {
-            throw new InvocationTargetException(new MigrationException(e),
-                    "Failed to post on " + uri);
-        } finally {
-            Context.setCurrent(currentContext);
+        HttpRequest request = HttpRequest.newBuilder(uri)
+                .timeout(Duration.ofSeconds(10))
+                .PUT(BodyPublishers.noBody()).build();
+        HttpResponse<InputStream> response = retriesUntil(request, 200, 5, 500);
+        if (response == null) {
+            throw new InvocationTargetException(new IOException("Failed to put on " + uri));
         }
+        return parseMigrationResponse(pageId, response);
     }
 
-    protected IStatus parseMigrationResponse(String artifactId, Representation response) {
-        try {
-            String repsonseBody = new BufferedReader(
-                    new InputStreamReader(response.getStream(), StandardCharsets.UTF_8))
-                            .lines()
-                            .collect(Collectors.joining(System.lineSeparator()));
-            JSONObject status = new JSONObject(repsonseBody);
-            switch (status.getString("status")) {
+    protected IStatus parseMigrationResponse(String artifactId, HttpResponse<InputStream> response) {
+        try (var is = response.body()) {
+            Map migrationReport = objectMapper.readValue(is, Map.class);
+            switch ((String) migrationReport.get("status")) {
                 case "incompatible":
                     return ValidationStatus.error(String.format(Messages.migrationNotPossible, artifactId));
                 case "error":
@@ -217,7 +213,7 @@ public class MigrateUIDOperation implements IRunnableWithStatus {
                 default:
                     return ValidationStatus.ok();
             }
-        } catch (IOException | JSONException e) {
+        } catch (IOException e) {
             BonitaStudioLog.error(e);
             return ValidationStatus.error(e.getMessage(), e);
         }

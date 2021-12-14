@@ -15,7 +15,7 @@
 package org.bonitasoft.studio.designer.ui.property.section.control;
 
 import java.io.IOException;
-import java.io.InputStream;
+import java.util.Map;
 import java.util.Objects;
 
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
@@ -36,15 +36,16 @@ import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.resources.IResourceDeltaVisitor;
 import org.eclipse.core.runtime.CoreException;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.restlet.engine.io.IoUtils;
+
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class WebPageNameResourceChangeListener implements IResourceChangeListener {
 
     private MainProcess mainProcess;
     private RepositoryAccessor repositoryAccessor;
     private ExpressionItemProvider expressionItemProvider;
+    private ObjectMapper objectMapper = new ObjectMapper();
 
     public WebPageNameResourceChangeListener(RepositoryAccessor repositoryAccessor) {
         this.repositoryAccessor = repositoryAccessor;
@@ -78,10 +79,11 @@ public class WebPageNameResourceChangeListener implements IResourceChangeListene
                 WebPageFileStore pageFileStore = repositoryStore.getChild(name, false);
                 IFile indexJsonFile = retrieveIndexJsonFile(repositoryStore);
                 if (indexJsonFile.exists()) {
-                    try (InputStream is = indexJsonFile.getContents()) {
-                        JSONObject jsonObject = new JSONObject(IoUtils.toString(is));
+                    try (var is = indexJsonFile.getContents()){
+                        Map<String, Object> jsonObject = objectMapper.readValue(is, new TypeReference<Map<String, Object>>() {
+                        });
                         updateMatchingFormMapping(mainProcess, jsonObject, pageFileStore.getDisplayName());
-                    } catch (IOException | JSONException e) {
+                    } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
                 }
@@ -95,18 +97,12 @@ public class WebPageNameResourceChangeListener implements IResourceChangeListene
                 .getFile(".metadata/.index.json");
     }
 
-    private void updateMatchingFormMapping(MainProcess container, JSONObject jsonObject, String name) {
+    private void updateMatchingFormMapping(MainProcess container, Map<String, Object> jsonObject, String name) {
         ModelHelper.getAllElementOfTypeIn(container, FormMapping.class)
                 .stream()
                 .map(FormMapping::getTargetForm)
-                .filter(expression -> jsonObject.has(expression.getContent()))
-                .filter(expression -> {
-                    try {
-                        return Objects.equals(jsonObject.get(expression.getContent()), name);
-                    } catch (JSONException e1) {
-                       return false;
-                    }
-                })
+                .filter(expression -> jsonObject.containsKey(expression.getContent()))
+                .filter(expression -> Objects.equals(jsonObject.get(expression.getContent()), name))
                 .filter(expression -> !Objects.equals(expression.getName(), name))
                 .forEach(expression -> expressionItemProvider.setPropertyValue(expression,
                             ExpressionPackage.Literals.EXPRESSION__NAME.getName(),

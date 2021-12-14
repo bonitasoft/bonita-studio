@@ -15,7 +15,7 @@
 package org.bonitasoft.studio.designer.core.operation;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.any;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
@@ -23,19 +23,18 @@ import static org.mockito.Mockito.when;
 
 import java.net.URL;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.designer.core.PageDesignerURLFactory;
 import org.bonitasoft.studio.designer.core.repository.WebPageRepositoryStore;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.json.JSONObject;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.restlet.representation.Representation;
 
 /**
  * @author Romain Bioteau
@@ -65,26 +64,20 @@ public class CreateFormOperationTest {
         when(pageStore.getChildren()).thenReturn(Collections.emptyList());
         when(repositoryAccessor.getRepositoryStore(WebPageRepositoryStore.class)).thenReturn(pageStore);
         createFormOperation = spy(new CreateFormOperation(pageDesignerURLFactory, repositoryAccessor));
-        final JSONObject jsonObject = new JSONObject();
-        jsonObject.put("name", "newPage");
-        jsonObject.put("id", "page-id");
-        doReturn(jsonObject.toString()).when(createFormOperation).doPost(any(URL.class), any(Representation.class));
+        final Map<String, Object> response = new HashMap<>();
+        response.put("name", "newPage");
+        response.put("id", "page-id");
+        doReturn(response).when(createFormOperation).doPost(any(URL.class), any(String.class));
     }
 
-    /**
-     * @throws java.lang.Exception
-     */
-    @After
-    public void tearDown() throws Exception {
-    }
 
     @Test(expected = IllegalStateException.class)
-    public void should_getNewPageId_throw_illegal_argument_exception_if_operation_has_not_been_executed() throws Exception {
+    public void should_getNewPageId_throw_illegal_state_exception_if_operation_has_not_been_executed() throws Exception {
         createFormOperation.getNewArtifactId();
     }
 
     @Test(expected = IllegalStateException.class)
-    public void should_getNewPageName_throw_illegal_argument_exception_if_operation_has_not_been_executed()
+    public void should_getNewPageName_throw_illegal_state_exception_if_operation_has_not_been_executed()
             throws Exception {
         createFormOperation.getNewPageName();
     }

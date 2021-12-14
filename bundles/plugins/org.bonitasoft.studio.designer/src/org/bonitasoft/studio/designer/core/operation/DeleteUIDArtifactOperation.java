@@ -14,15 +14,16 @@
  */
 package org.bonitasoft.studio.designer.core.operation;
 
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.net.MalformedURLException;
 import java.net.URISyntaxException;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse.BodyHandlers;
 
+import org.bonitasoft.studio.common.net.HttpClientFactory;
 import org.bonitasoft.studio.designer.core.repository.WebResource;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
-import org.restlet.resource.ClientResource;
-import org.restlet.resource.ResourceException;
 
 public class DeleteUIDArtifactOperation implements IRunnableWithProgress {
 
@@ -35,8 +36,8 @@ public class DeleteUIDArtifactOperation implements IRunnableWithProgress {
     @Override
     public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
         try {
-            new ClientResource(fileStore.toURI()).delete();
-        } catch (ResourceException | MalformedURLException | URISyntaxException e) {
+            HttpClientFactory.INSTANCE.send(HttpRequest.newBuilder(fileStore.toURI()).DELETE().build(), BodyHandlers.ofInputStream());
+        } catch (IOException | URISyntaxException e) {
             throw new InvocationTargetException(e);
         }
     }
