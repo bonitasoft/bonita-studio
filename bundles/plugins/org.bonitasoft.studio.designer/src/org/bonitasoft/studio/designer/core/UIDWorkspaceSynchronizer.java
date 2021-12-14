@@ -130,11 +130,17 @@ public class UIDWorkspaceSynchronizer {
         if (pollingRunnable != null) {
             pollingRunnable.cancel(true);
         }
-        keys.clear();
-        watcher.close();
-        watcher = null;
-        executor.shutdown();
-        executor = null;
+        if (keys != null) {
+            keys.clear();
+        }
+        if (watcher != null) {
+            watcher.close();
+            watcher = null;
+        }
+        if (executor != null) {
+            executor.shutdown();
+            executor = null;
+        }
     }
 
     private Consumer<Path> registerWatchKeys(final Map<WatchKey, Path> keys) {
