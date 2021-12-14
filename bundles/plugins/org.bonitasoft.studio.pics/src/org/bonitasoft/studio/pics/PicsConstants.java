@@ -443,7 +443,7 @@ public class PicsConstants {
     public static String extensions = "projectExtensions/extensions.png";
     public static String extensions32 = "projectExtensions/extensions32.png";
     public static String extensions32_hot = "projectExtensions/extensions32_hot.png";
-    
+
     public static String refresh = "projectExtensions/refresh.png";
     public static String refresh_hot = "projectExtensions/refresh_hot.png";
 
@@ -524,4 +524,8 @@ public class PicsConstants {
 
     public static String viewSource = "view_source.png";
     public static String viewSourceHot = "view_source_hot.png";
+
+    public static String notificationInfo = "notification_info.png";
+    public static String notificationWarning = "notification_warning.png";
+    public static String notificationError = "notification_error.png";
 }

@@ -58,7 +58,7 @@ public class BdmLightweightDecorator extends LabelProvider
         repositoryAccessor.getWorkspace().addResourceChangeListener(this);
         BusinessObjectPlugin.getDefault().getPreferenceStore().addPropertyChangeListener(this);
     }
-    
+
     @Override
     public void decorate(Object element, IDecoration decoration) {
         if (!PlatformUI.isWorkbenchRunning() || ResourcesPlugin.getWorkspace() == null
@@ -179,7 +179,7 @@ public class BdmLightweightDecorator extends LabelProvider
         IPreferenceStore preferenceStore = BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore();
         if (Objects.equals(delta.getKind(), IResourceDelta.CHANGED)
                 && preferenceStore.getBoolean(BonitaPreferenceConstants.NOTIFY_BDM_DEPLOYMENT_REQUIRED)) {
-            BonitaNotificator.openNotification(Messages.bdmDeployRequiredTitle, Messages.bdmDeployRequired,
+            BonitaNotificator.openWarningNotification(Messages.bdmDeployRequiredTitle, Messages.bdmDeployRequired,
                     e -> {
                         BonitaPreferenceDialog dialog = new BonitaPreferenceDialog(new Shell(Display.getDefault()));
                         dialog.create();

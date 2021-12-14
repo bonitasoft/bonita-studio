@@ -152,7 +152,7 @@ public class BOSEngineManager {
     private boolean notifyStartServer() {
         if (EngineNotificationSemaphore.getInstance().tryAcquire()) {
             if (!isLazyModeEnabled(EnginePlugin.getDefault().getPreferenceStore())) {
-                BonitaNotificator.openNotification(Messages.startServerNotificationTitle,
+                BonitaNotificator.openInfoNotification(Messages.startServerNotificationTitle,
                         Messages.engineLazyModeNotificationLink, e -> {
                             BonitaPreferenceDialog dialog = new BonitaPreferenceDialog(new Shell(Display.getDefault()));
                             dialog.create();
@@ -190,7 +190,7 @@ public class BOSEngineManager {
     }
 
     private void notifyServerStarted() {
-        BonitaNotificator.openNotification(Messages.startServerCompletedNotificationTitle,
+        BonitaNotificator.openInfoNotification(Messages.startServerCompletedNotificationTitle,
                 Messages.serverRunningNotificationMessage);
         EngineNotificationSemaphore.getInstance().release();
     }

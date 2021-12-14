@@ -12,9 +12,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.bonitasoft.studio.pics.Pics;
+import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.preferences.BonitaThemeConstants;
-import org.bonitasoft.studio.preferences.PreferenceUtil;
-import org.bonitasoft.studio.ui.UIPlugin;
+import org.bonitasoft.studio.ui.notification.BonitaNotificator.NOTIFICATION_LEVEL;
 import org.bonitasoft.studio.ui.notification.job.CloseJob;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -55,19 +56,21 @@ public class BonitaNotificationPopup extends Window {
 
     private String title;
     private String content;
+    private NOTIFICATION_LEVEL level;
     private Optional<Listener> selectionListener;
     private boolean fadingEnabled;
     private FadeJob fadeJob;
     private Display display;
     private CloseJob closeJob;
 
-    public BonitaNotificationPopup(Display display, String title, String content,
+    public BonitaNotificationPopup(Display display, String title, String content, NOTIFICATION_LEVEL level,
             Optional<Listener> selectionListener) {
         super(new Shell(display));
         setShellStyle(SWT.NO_TRIM | SWT.ON_TOP | SWT.NO_FOCUS | SWT.TOOL);
         this.display = display;
         this.title = title;
         this.content = content;
+        this.level = level;
         this.selectionListener = selectionListener;
         this.closeJob = new CloseJob(this);
     }
@@ -80,10 +83,7 @@ public class BonitaNotificationPopup extends Window {
 
         Label iconLabel = new Label(composite, SWT.NONE);
         iconLabel.setLayoutData(GridDataFactory.fillDefaults().span(1, 2).create());
-        Image image = PreferenceUtil.isDarkTheme()
-                ? UIPlugin.getImage("icons/notification_dark.png")
-                : UIPlugin.getImage("icons/notification_light.png");
-        iconLabel.setImage(image);
+        iconLabel.setImage(getIcon());
         iconLabel.addListener(SWT.MouseUp, this::bringStudioToFront);
 
         Label titleLabel = new Label(composite, SWT.NONE);
@@ -117,6 +117,17 @@ public class BonitaNotificationPopup extends Window {
             }
 
         });
+    }
+
+    private Image getIcon() {
+        switch (level) {
+            case ERROR:
+                return Pics.getImage(PicsConstants.notificationError);
+            case WARNING:
+                return Pics.getImage(PicsConstants.notificationWarning);
+            default:
+                return Pics.getImage(PicsConstants.notificationInfo);
+        }
     }
 
     private void createContentArea(Composite parent) {

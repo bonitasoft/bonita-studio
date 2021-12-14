@@ -150,7 +150,7 @@ public class SwitchRepositoriesWorkspaceHandler extends AbstractHandler {
                                         if (shell == null) {
                                             shell = Display.getCurrent().getActiveShell();
                                         }
-                                        BonitaNotificator.openNotification(Messages.switchRepositorySuccessful_Title,
+                                        BonitaNotificator.openInfoNotification(Messages.switchRepositorySuccessful_Title,
                                                 Messages.bind(Messages.switchRepositorySuccessful_Message, repo.getName()));
                                     }
                                 });

@@ -61,7 +61,7 @@ public class PublishActiveOrganizationAction implements IEngineAction {
             }
             if (organizationFileStore == null) {
                 // No organization to deploy
-                BonitaNotificator.openNotification(Messages.noOrganizationFoundTitle,
+                BonitaNotificator.openInfoNotification(Messages.noOrganizationFoundTitle,
                         Messages.noOrganizationFoundMsg);
                 return;
             }

@@ -23,7 +23,7 @@ public class OpenRestartNotificationHandler {
 
     @Execute
     public void execute(@Named("title") String title, @Named("content") String content) {
-        BonitaNotificator.openNotification(title, content, e -> PlatformUI.getWorkbench().restart());
+        BonitaNotificator.openInfoNotification(title, content, e -> PlatformUI.getWorkbench().restart());
     }
 
 }
