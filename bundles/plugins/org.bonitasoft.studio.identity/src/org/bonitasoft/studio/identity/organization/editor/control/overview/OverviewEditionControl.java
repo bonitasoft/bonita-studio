@@ -188,7 +188,7 @@ public class OverviewEditionControl {
                     .map(User::getPassword)
                     .map(PasswordType::getValue)
                     .orElse(""));
-            BonitaNotificator.openNotification(Messages.defaultUserUpdatedTitle,
+            BonitaNotificator.openInfoNotification(Messages.defaultUserUpdatedTitle,
                     String.format(Messages.defaultUserUpdated, newName));
         }
     }

@@ -102,7 +102,7 @@ public class BonitaMarketplace {
             // Do not retry to access remote marketplace
             synchronizeMarketplace = false;
             if (Strings.hasText(currentVersion)) {
-                BonitaNotificator.openNotification(Messages.cannotAccessMarketplace,
+                BonitaNotificator.openInfoNotification(Messages.cannotAccessMarketplace,
                         Messages.cannotUpdateMarketplaceMessage);
             } else {
                 Display.getDefault()

@@ -72,7 +72,7 @@ public class RestartServerCommand extends AbstractHandler {
                 }
                 engineManager.start();
                 if (notifying) {
-                    BonitaNotificator.openNotification(Messages.restartServerCompletedNotificationTitle,
+                    BonitaNotificator.openInfoNotification(Messages.restartServerCompletedNotificationTitle,
                             Messages.serverRunningNotificationMessage);
                     EngineNotificationSemaphore.getInstance().release();
                 }
@@ -81,7 +81,7 @@ public class RestartServerCommand extends AbstractHandler {
 
             private boolean notifyRestartServer() {
                 if (EngineNotificationSemaphore.getInstance().tryAcquire()) {
-                    BonitaNotificator.openNotification(Messages.restartServerNotificationTitle,
+                    BonitaNotificator.openInfoNotification(Messages.restartServerNotificationTitle,
                             Messages.restartServerNotificationMessage);
                     return true;
                 }
