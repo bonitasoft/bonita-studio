@@ -84,6 +84,7 @@ public class ProcessConfigurationUpdateParticipant implements ExtensionUpdatePar
             currentArtifacts = dependenciesUpdates.stream()
                     .filter(update -> isJarDependency(update.getCurrentDependency()))
                     .map(update -> toArtifact(mavenProject, update.getCurrentDependency()))
+                    .filter(Objects::nonNull)
                     .collect(Collectors.toMap(a -> a, this::transitiveDependencies));
         } catch (CoreException e) {
             BonitaStudioLog.error(e);
@@ -106,9 +107,11 @@ public class ProcessConfigurationUpdateParticipant implements ExtensionUpdatePar
                 .filter(update -> isJarDependency(update.getUpdatedDependency()))
                 .forEach(update -> {
                     var artifact = toArtifact(mavenProject, update.getUpdatedDependency());
-                    updatedArtifacts.add(artifact);
-                    if (update.isRename()) {
-                        updateRename.add(artifact);
+                    if (artifact != null) {
+                        updatedArtifacts.add(artifact);
+                        if (update.isRename()) {
+                            updateRename.add(artifact);
+                        }
                     }
                 });
 
@@ -213,7 +216,7 @@ public class ProcessConfigurationUpdateParticipant implements ExtensionUpdatePar
         return artifacts.stream()
                 .filter(a -> Objects.equals(new ArtifactKey(a), artifactKey))
                 .findFirst()
-                .orElseThrow();
+                .orElse(null);
     }
 
     private Set<Artifact> transitiveDependencies(Artifact artifact) {
