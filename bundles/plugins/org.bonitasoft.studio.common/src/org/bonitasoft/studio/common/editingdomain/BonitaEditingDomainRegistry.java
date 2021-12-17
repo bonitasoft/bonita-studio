@@ -16,15 +16,37 @@ package org.bonitasoft.studio.common.editingdomain;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.bonitasoft.studio.connector.model.definition.ConnectorDefinitionPackage;
+import org.bonitasoft.studio.connector.model.implementation.ConnectorImplementationPackage;
+import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfigurationPackage;
+import org.bonitasoft.studio.model.expression.ExpressionPackage;
+import org.bonitasoft.studio.model.kpi.KpiPackage;
+import org.bonitasoft.studio.model.parameter.ParameterPackage;
+import org.bonitasoft.studio.model.process.ProcessPackage;
+import org.bonitasoft.studio.model.process.decision.DecisionPackage;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.transaction.impl.EditingDomainManager;
+import org.eclipse.gmf.runtime.notation.NotationPackage;
 
 public final class BonitaEditingDomainRegistry implements TransactionalEditingDomain.Registry {
 
-    public static BonitaEditingDomainRegistry INSTANCE = new BonitaEditingDomainRegistry();
+    static {
+        List.of(ProcessPackage.eINSTANCE,
+                ConnectorDefinitionPackage.eINSTANCE,
+                ExpressionPackage.eINSTANCE,
+                ParameterPackage.eINSTANCE,
+                ConnectorImplementationPackage.eINSTANCE,
+                KpiPackage.eINSTANCE,
+                ConnectorConfigurationPackage.eINSTANCE,
+                DecisionPackage.eINSTANCE,
+                NotationPackage.eINSTANCE);
+    }
+
+    public static final  BonitaEditingDomainRegistry INSTANCE = new BonitaEditingDomainRegistry();
 
     private final Map<String, TransactionalEditingDomain> domains = new HashMap<>();
 
