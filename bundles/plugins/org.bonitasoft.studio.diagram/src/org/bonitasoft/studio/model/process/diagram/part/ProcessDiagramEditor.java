@@ -24,7 +24,6 @@ import java.util.List;
 
 import org.bonitasoft.studio.common.diagram.palette.CustomMainPaletteViewer;
 import org.bonitasoft.studio.common.diagram.palette.CustomToolPaletteViewer;
-import org.bonitasoft.studio.common.editingdomain.BonitaEditingDomainUtil;
 import org.bonitasoft.studio.common.gmf.CustomPaletteService;
 import org.bonitasoft.studio.common.gmf.tools.PaletteToolTransferDropTargetListenerWithSelection;
 import org.bonitasoft.studio.common.gmf.tools.tree.BonitaTreeViewer;
@@ -501,33 +500,6 @@ public class ProcessDiagramEditor extends DiagramDocumentEditor implements IGoto
         return super.getDocumentProvider(input);
     }
 
-    @Override
-    public Diagram getDiagram() {
-        if (getDocumentProvider() != null) {
-            IDiagramDocument document = ((IDiagramDocument) getDocumentProvider()
-                    .getDocument(getEditorInput()));
-            if (document != null) {
-                Diagram diagram = document.getDiagram();
-                if (diagram == null) {
-                    try {
-                        while (document != null) {
-                            getDocumentProvider().disconnect(getEditorInput());
-                            document = ((IDiagramDocument) getDocumentProvider()
-                                    .getDocument(getEditorInput()));
-                        }
-                        getDocumentProvider().connect(getEditorInput());
-                        document = ((IDiagramDocument) getDocumentProvider()
-                                .getDocument(getEditorInput()));
-                        return document.getDiagram();
-                    } catch (CoreException e) {
-                        BonitaStudioLog.error(e);
-                    }
-                }
-                return diagram;
-            }
-        }
-        return null;
-    }
 
     /**
      * @generated BonitaSoft
@@ -970,8 +942,8 @@ public class ProcessDiagramEditor extends DiagramDocumentEditor implements IGoto
      * @generated BonitaSoft
      */
     protected TransactionalEditingDomain createEditingDomain() {
-        // BonitaSoft: use a shared editing domain between diagram contained in the same resource
-        return BonitaEditingDomainUtil.getSharedEditingDomain("org.bonitasoft.studio.diagram.EditingDomain");
+        // Editing domain are created in the DocumentProvider
+        return null;
     }
 
     // BonitaSoft: React to drop requests even if shortcuts are disabled
