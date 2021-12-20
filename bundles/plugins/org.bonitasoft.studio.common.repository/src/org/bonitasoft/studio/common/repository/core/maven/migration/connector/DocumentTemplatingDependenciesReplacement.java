@@ -29,7 +29,7 @@ public class DocumentTemplatingDependenciesReplacement extends BonitaJarDependen
                 "bonita-connector-document-templating-1.1.2.jar",
                 "bonita-connector-document-templating-1.1.1.jar",
                 "bonita-connector-document-templating-1.1.0.jar",
-                "bonita-connector-document-templating-1.0.1.jar",
+                "bonita-connector-document-templating-impl-1.0.1.jar",
                 "bonita-connector-document-templating-impl-1.0.0.jar");
     }
     

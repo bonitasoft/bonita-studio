@@ -28,6 +28,8 @@ public class SameTaskUserActorFilterDependenciesReplacement extends BonitaJarDep
     public SameTaskUserActorFilterDependenciesReplacement() {
         super(dependency(ACTOR_FILTER_GROUP_ID, "bonita-actorfilter-same-task-user", "1.0.0"), 
                 "bonita-actorfilter-same-task-user-1.0.0.jar",
+                "bonita-userfilter-same-task-user-impl-1.0.2.jar",
+                "bonita-userfilter-same-task-user-impl-1.0.1-SNAPSHOT.jar",
                 "bonita-userfilter-same-task-user-impl-1.0.0-SNAPSHOT.jar");
     }
     
