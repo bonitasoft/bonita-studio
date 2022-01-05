@@ -15,11 +15,17 @@
 package org.bonitasoft.studio.engine.ui.contributionItem;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.Objects;
 import java.util.Optional;
 
+import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.jface.ValidationDialog;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.diagram.custom.contributionItem.ListProcessContributionItem;
+import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
+import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.engine.i18n.Messages;
 import org.bonitasoft.studio.engine.operation.ExportBarOperation;
 import org.bonitasoft.studio.engine.operation.ProcessValidationOperation;
@@ -42,18 +48,33 @@ public class BuildProcessContributionItem extends ListProcessContributionItem {
     protected Listener createSelectionListener(AbstractProcess process) {
         return e -> {
             getPath(Display.getDefault().getActiveShell()).ifPresent(path -> {
-                if (validateBeforExport(process)) {
+                var uuid = ModelHelper.getEObjectID(process);
+                var diagramStore = RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
+                try {
+                    PlatformUI.getWorkbench().getProgressService().run(true, false, diagramStore::computeProcesses);
+                } catch (InvocationTargetException | InterruptedException ex) {
+                    BonitaStudioLog.error(ex);
+                }
+                var processToBuild = diagramStore.getAllProcesses().stream()
+                        .filter(p -> Objects.equals(ModelHelper.getEObjectID(p), uuid))
+                        .findFirst()
+                        .orElseThrow();
+                if (validateBeforExport(processToBuild)) {
                     ExportBarOperation exportBarOperation = getExportOperation();
-                    exportBarOperation.addProcessToDeploy(process);
+                    exportBarOperation.addProcessToDeploy(processToBuild);
                     exportBarOperation.setTargetFolder(path);
                     try {
                         PlatformUI.getWorkbench().getProgressService().run(true, false, exportBarOperation);
-                        displayOperatonStatus(exportBarOperation, path, process.getName());
+                        displayOperatonStatus(exportBarOperation, path, processToBuild.getName());
                     } catch (InvocationTargetException | InterruptedException e1) {
                         throw new RuntimeException(
                                 String.format("An error occurred while building bar for process %s", process.getName()),
                                 e1);
+                    }finally {
+                        diagramStore.resetComputedProcesses();
                     }
+                }else {
+                    diagramStore.resetComputedProcesses();
                 }
             });
 
@@ -69,7 +90,7 @@ public class BuildProcessContributionItem extends ListProcessContributionItem {
                 String generalMessage = status.getSeverity() == IStatus.ERROR
                         ? Messages.errorValidationInDiagramToExport
                         : Messages.warningValidationInDiagramToExport;
-                String errorMessage = String.format("%s\n%s%s", generalMessage, process.getName(),
+                String errorMessage = String.format("%s%n%s%s", generalMessage, process.getName(),
                         Messages.errorValidationContinueAnywayMessage);
                 return new ValidationDialog(Display.getDefault().getActiveShell(),
                         Messages.validationFailedTitle, errorMessage,
