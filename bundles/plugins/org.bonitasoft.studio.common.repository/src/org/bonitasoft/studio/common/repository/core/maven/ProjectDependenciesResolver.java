@@ -128,7 +128,7 @@ public class ProjectDependenciesResolver {
             org.eclipse.aether.artifact.Artifact a = node.getArtifact();
             if (a != null && Objects.equals(artifact.getGroupId(), a.getGroupId())
                     && Objects.equals(artifact.getArtifactId(), a.getArtifactId())
-                    && Objects.equals(artifact.getVersion(), a.getVersion())) {
+                    && Objects.equals(artifact.getBaseVersion(), a.getBaseVersion())) {
                 matchingNode = node;
                 return false;
             }
