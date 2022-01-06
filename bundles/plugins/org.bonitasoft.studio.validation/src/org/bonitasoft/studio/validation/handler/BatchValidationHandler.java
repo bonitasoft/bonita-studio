@@ -73,6 +73,7 @@ public class BatchValidationHandler extends AbstractHandler {
         AbstractRepository currentRepository = RepositoryManager.getInstance().getCurrentRepository();
         DiagramRepositoryStore diagramRepositoryStore = currentRepository
                 .getRepositoryStore(DiagramRepositoryStore.class);
+        boolean clearProcessComputedProcesses = !diagramRepositoryStore.hasComputedProcesses();
         if (!diagramRepositoryStore.hasComputedProcesses()) {
             try {
                 service.run(true, false, diagramRepositoryStore::computeProcesses);
@@ -116,7 +117,9 @@ public class BatchValidationHandler extends AbstractHandler {
         } catch (final InterruptedException e) {
             //Validation cancelled
         } finally {
-            diagramRepositoryStore.resetComputedProcesses();
+            if(clearProcessComputedProcesses) {
+                diagramRepositoryStore.resetComputedProcesses();
+            }
         }
 
         if (!checkAllModelVersion && aggregatedStatus.getSeverity() == IStatus.ERROR) {
