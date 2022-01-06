@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definition:ConnectorDefinition xmlns:definition="http://www.bonitasoft.org/ns/connector/definition/6.1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<id>email</id>
+	<version>1.2.0</version>
+	<icon>email.png</icon>
+
+	<category id="messaging" icon="messaging.png" />
+
+	<input name="smtpHost" type="java.lang.String" mandatory="true" defaultValue="smtp.gmail.com" />
+	<input name="smtpPort" type="java.lang.Integer" mandatory="true" defaultValue="465" />
+	<input name="sslSupport" type="java.lang.Boolean" defaultValue="true" mandatory="true" />
+	<input name="starttlsSupport" type="java.lang.Boolean" defaultValue="false" mandatory="true" />
+	<input name="trustCertificate" type="java.lang.Boolean" defaultValue="false" />
+	<input name="userName" type="java.lang.String" />
+	<input name="password" type="java.lang.String" />
+	<input name="from" type="java.lang.String" mandatory="true" />
+	<input name="returnPath" type="java.lang.String" />
+	<input name="to" type="java.lang.String" mandatory="true" />
+	<input name="bcc" type="java.lang.String" />
+	<input name="cc" type="java.lang.String" />
+	<input name="subject" type="java.lang.String" mandatory="true" />
+	<input name="html" type="java.lang.Boolean" defaultValue="true" />
+	<input name="message" type="java.lang.String" />
+	<input name="headers" type="java.util.List" />
+	<input name="charset" type="java.lang.String" defaultValue="UTF-8" />
+	<input name="replyTo" type="java.lang.String" />
+	<input name="attachments" type="java.util.List" />
+
+	<page id="connexionConfigPage">
+		<widget id="host" inputName="smtpHost" xsi:type="definition:Text" />
+		<widget id="port" inputName="smtpPort" xsi:type="definition:Text" />
+		<widget id="security" xsi:type="definition:Group">
+			<widget id="ssl" inputName="sslSupport" xsi:type="definition:Checkbox" />
+			<widget id="starttls" inputName="starttlsSupport" xsi:type="definition:Checkbox" />
+			<widget id="trustCertificate" inputName="trustCertificate" xsi:type="definition:Checkbox" />
+		</widget>
+		<widget id="authentication" optional="false" xsi:type="definition:Group">
+			<widget id="username" inputName="userName" xsi:type="definition:Text" />
+      		<widget id="password" inputName="password" xsi:type="definition:Password"/>
+		</widget>
+	</page>
+	<page id="addressee">
+		<widget id="from" inputName="from" xsi:type="definition:Text" />
+		<widget id="to" inputName="to" xsi:type="definition:Text" />
+		<widget id="other" xsi:type="definition:Group">
+			<widget id="returnPath" inputName="returnPath" xsi:type="definition:Text" />
+			<widget id="replyTo" inputName="replyTo" xsi:type="definition:Text" />
+			<widget id="cc" inputName="cc" xsi:type="definition:Text" />
+			<widget id="bcc" inputName="bcc" xsi:type="definition:Text" />
+		</widget>
+	</page>
+	<page id="contentPage">
+		<widget id="subject" inputName="subject" xsi:type="definition:Text" />
+		<widget id="message" inputName="message" xsi:type="definition:TextArea" />
+		<widget id="useHtml" inputName="html" xsi:type="definition:Checkbox" />
+		<widget id="attachment" xsi:type="definition:Group">
+			<widget id="attachmentGroup" inputName="attachments" xsi:type="definition:List" showDocuments="true" />
+		</widget>
+	</page>
+	<page id="advancedPage">
+		<widget id="charset" inputName="charset" xsi:type="definition:Text" />
+		<widget id="headers" inputName="headers" xsi:type="definition:Array" cols="2" rows="-1" fixedCols="true" fixedRows="false">
+			<colsCaption>Name</colsCaption>
+			<colsCaption>Value</colsCaption>
+		</widget>
+	</page>
+</definition:ConnectorDefinition>
