@@ -51,10 +51,7 @@ import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.model.PostMigrationOperationCollector;
 import org.bonitasoft.studio.common.repository.store.AbstractRepositoryStore;
 import org.bonitasoft.studio.common.repository.store.LocalDependenciesStore;
-import org.bonitasoft.studio.dependencies.DependenciesPlugin;
-import org.bonitasoft.studio.dependencies.i18n.Messages;
 import org.bonitasoft.studio.dependencies.operation.DependenciesUpdateOperationFactory;
-import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -125,9 +122,9 @@ public class DependencyRepositoryStore extends AbstractRepositoryStore<Dependenc
 
     @Override
     public DependencyFileStore createRepositoryFileStore(final String fileName) {
-        return DependencyFileStore.NULL;
+        return new DependencyFileStore(fileName, this);
     }
-
+    
     @Override
     public List<DependencyFileStore> getChildren() {
         try {
@@ -157,7 +154,7 @@ public class DependencyRepositoryStore extends AbstractRepositoryStore<Dependenc
         }
         return fileStore;
     }
-
+    
     protected static Set<String> retriveAllJarFilesFrom(final File root) {
         final Set<String> allJarFiles = new HashSet<>();
         final File[] listFiles = root.listFiles();
@@ -180,12 +177,12 @@ public class DependencyRepositoryStore extends AbstractRepositoryStore<Dependenc
 
     @Override
     public String getDisplayName() {
-        return Messages.dependenciesRepository;
+        return STORE_NAME;
     }
 
     @Override
     public Image getIcon() {
-        return Pics.getImage("dependencies.png", DependenciesPlugin.getDefault());
+        return null;
     }
 
     @Override
@@ -397,5 +394,6 @@ public class DependencyRepositoryStore extends AbstractRepositoryStore<Dependenc
     public int getImportOrder() {
         return 0;
     }
+
 
 }

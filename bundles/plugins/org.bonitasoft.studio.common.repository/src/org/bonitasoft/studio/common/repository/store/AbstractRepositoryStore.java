@@ -308,7 +308,7 @@ public abstract class AbstractRepositoryStore<T extends IRepositoryFileStore<?>>
 
     @Override
     public void refresh() {
-        if (!folder.isSynchronized(IResource.DEPTH_INFINITE)) {
+        if (folder != null && !folder.isSynchronized(IResource.DEPTH_INFINITE)) {
             try {
                 folder.refreshLocal(IResource.DEPTH_INFINITE, AbstractRepository.NULL_PROGRESS_MONITOR);
             } catch (final CoreException e1) {
