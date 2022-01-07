@@ -207,7 +207,9 @@ public abstract class AbstractFileStore<T>
         if (canBeDeleted()) {
             fireFileStoreEvent(new FileStoreChangeEvent(EventType.PRE_DELETE, this));
             doDelete();
-            getParentStore().refresh();
+            if(getParentStore() != null) {
+                getParentStore().refresh();
+            }
             refreshExplorerView();
             fireFileStoreEvent(new FileStoreChangeEvent(EventType.POST_DELETE, this));
         }

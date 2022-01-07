@@ -28,6 +28,7 @@ import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.filestore.AbstractFileStore;
 import org.bonitasoft.studio.common.repository.filestore.FileStoreFinder;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
+import org.bonitasoft.studio.dependencies.repository.DependencyRepositoryStore;
 import org.bonitasoft.studio.designer.core.operation.DeleteUIDArtifactOperation;
 import org.bonitasoft.studio.designer.core.repository.InFolderJSONFileStore;
 import org.bonitasoft.studio.designer.core.repository.WebResource;
@@ -122,7 +123,7 @@ public class DeleteHandler extends AbstractHandler {
                         return false;
                     } else if (fileStore == null && currentRepository.getRepositoryStore(adapter) != null
                             && adapter instanceof IFolder) {
-                        return false;
+                        return DependencyRepositoryStore.class.equals(currentRepository.getRepositoryStore(adapter).getClass());
                     }
                 }
             } else {
