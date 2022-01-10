@@ -24,7 +24,6 @@ import org.bonitasoft.studio.common.jface.ValidationDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.diagram.custom.contributionItem.ListProcessContributionItem;
-import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.engine.i18n.Messages;
 import org.bonitasoft.studio.engine.operation.ExportBarOperation;
@@ -55,7 +54,7 @@ public class BuildProcessContributionItem extends ListProcessContributionItem {
                 } catch (InvocationTargetException | InterruptedException ex) {
                     BonitaStudioLog.error(ex);
                 }
-                var processToBuild = diagramStore.getAllProcesses().stream()
+                var processToBuild = diagramStore.getComputedProcesses().stream()
                         .filter(p -> Objects.equals(ModelHelper.getEObjectID(p), uuid))
                         .findFirst()
                         .orElseThrow();
