@@ -23,7 +23,6 @@ import org.apache.maven.execution.BuildSuccess;
 import org.apache.maven.execution.MavenExecutionResult;
 import org.apache.maven.model.Plugin;
 import org.apache.maven.project.MavenProject;
-import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.Messages;
 import org.bonitasoft.studio.common.repository.core.maven.model.DefaultPluginVersions;
 import org.codehaus.plexus.util.xml.Xpp3Dom;

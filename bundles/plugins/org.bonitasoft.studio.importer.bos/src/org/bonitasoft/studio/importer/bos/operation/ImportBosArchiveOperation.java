@@ -34,7 +34,6 @@ import java.util.zip.ZipFile;
 
 import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Model;
-import org.bonitasoft.plugin.analyze.report.model.DependencyReport;
 import org.bonitasoft.studio.businessobject.maven.InstallBDMDependenciesEventHandler;
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
@@ -54,12 +53,12 @@ import org.bonitasoft.studio.common.repository.core.maven.ProjectDependenciesLoo
 import org.bonitasoft.studio.common.repository.core.maven.migration.ProjectDependenciesMigrationOperation;
 import org.bonitasoft.studio.common.repository.core.maven.migration.model.ConflictVersion;
 import org.bonitasoft.studio.common.repository.core.maven.migration.model.DependencyLookup;
+import org.bonitasoft.studio.common.repository.core.migration.dependencies.operation.DependenciesUpdateOperationFactory;
 import org.bonitasoft.studio.common.repository.filestore.FileStoreChangeEvent;
 import org.bonitasoft.studio.common.repository.filestore.FileStoreChangeEvent.EventType;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.store.LocalDependenciesStore;
 import org.bonitasoft.studio.connectors.repository.ConnectorImplRepositoryStore;
-import org.bonitasoft.studio.dependencies.operation.DependenciesUpdateOperationFactory;
 import org.bonitasoft.studio.dependencies.repository.DependencyFileStore;
 import org.bonitasoft.studio.designer.core.operation.MigrateUIDOperation;
 import org.bonitasoft.studio.designer.core.resources.WorkspaceServerResource;
@@ -359,10 +358,11 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
             ProjectDependenciesStore projectDependenciesStore = currentRepository.getProjectDependenciesStore();
             if (projectDependenciesStore != null) {
                 currentRepository.getProject().build(IncrementalProjectBuilder.INCREMENTAL_BUILD, monitor);
-                DependencyReport dependencyReport = projectDependenciesStore.analyze(monitor);
-                dependencyReport.getIssues().stream()
-                        .map(MavenProjectDependenciesStore::toStatus)
-                        .forEach(statusBuilder::addStatus);
+                projectDependenciesStore.analyze(monitor)
+                        .ifPresent(report -> report.getIssues().stream()
+                                .map(MavenProjectDependenciesStore::toStatus)
+                                .forEach(statusBuilder::addStatus));
+
             }
         } catch (CoreException e) {
             BonitaStudioLog.error(e);

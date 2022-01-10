@@ -19,6 +19,7 @@ import java.util.List;
 import org.bonitasoft.studio.common.Strings;
 import org.bonitasoft.studio.common.repository.core.migration.report.MigrationReport;
 import org.bonitasoft.studio.common.repository.core.migration.step.CreatePomMigrationStep;
+import org.bonitasoft.studio.common.repository.core.migration.step.JavaDependenciesMigrationStep;
 import org.bonitasoft.studio.common.repository.core.migration.step.RemoveLegacyFolderStep;
 import org.bonitasoft.studio.common.repository.core.migration.step.SplitGroovyAllIntoModulesStep;
 import org.bonitasoft.studio.common.repository.core.migration.step.UpdateBonitaProjectMavenPluginVersionInPomStep;
@@ -34,7 +35,8 @@ public class BonitaProjectMigrator {
             new RemoveLegacyFolderStep(),
             new UpdateBonitaRuntimeVersionInPomStep(),
             new UpdateBonitaProjectMavenPluginVersionInPomStep(),
-            new SplitGroovyAllIntoModulesStep());
+            new SplitGroovyAllIntoModulesStep(),
+            new JavaDependenciesMigrationStep());
 
     private IProject project;
 

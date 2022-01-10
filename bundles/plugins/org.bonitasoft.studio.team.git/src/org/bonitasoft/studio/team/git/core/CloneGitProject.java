@@ -14,6 +14,7 @@ import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.core.migration.report.MigrationReportWriter;
 import org.bonitasoft.studio.team.git.i18n.Messages;
 import org.bonitasoft.studio.team.git.ui.wizard.CustomGitCloneWizard;
 import org.eclipse.core.commands.AbstractHandler;
@@ -36,7 +37,9 @@ import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.ide.IDE;
 
 public class CloneGitProject extends AbstractHandler {
 
@@ -84,6 +87,16 @@ public class CloneGitProject extends AbstractHandler {
                         IDialogConstants.CLOSE_LABEL).open() == 0) {
                     executeCommand("org.bonitasoft.studio.application.command.deployArtifacts");
                 }
+                
+                var reportFile = project.getFile(MigrationReportWriter.DEFAULT_REPORT_FILE_NAME);
+                if(wizard.hasBeenMigrated() && reportFile.exists()) {
+                    try {
+                        IDE.openEditor(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage(), reportFile);
+                    } catch (PartInitException e) {
+                        BonitaStudioLog.error(e);
+                    }
+                }
+                
             }
         }
     }

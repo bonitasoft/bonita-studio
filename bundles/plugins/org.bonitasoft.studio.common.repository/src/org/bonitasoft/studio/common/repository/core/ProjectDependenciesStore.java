@@ -15,6 +15,7 @@
 package org.bonitasoft.studio.common.repository.core;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.bonitasoft.plugin.analyze.report.model.ActorFilterImplementation;
 import org.bonitasoft.plugin.analyze.report.model.ConnectorImplementation;
@@ -30,7 +31,7 @@ public interface ProjectDependenciesStore {
 
     String ANALYZE_PPROJECT_DEPENDENCIES_FAMILY = "ANALYZE_PPROJECT_DEPENDENCIES_FAMILY";
 
-    DependencyReport analyze(IProgressMonitor monitor);
+    Optional<DependencyReport> analyze(IProgressMonitor monitor);
 
     List<Definition> getConnectorDefinitions();
 

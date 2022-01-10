@@ -14,7 +14,6 @@
  */
 package org.bonitasoft.studio.common.repository.core;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashSet;
@@ -31,7 +30,6 @@ import org.bonitasoft.studio.common.repository.core.migration.BonitaProjectMigra
 import org.bonitasoft.studio.common.repository.core.migration.report.MigrationReport;
 import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
-import org.bonitasoft.studio.common.repository.model.PostMigrationOperationCollector;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
@@ -76,26 +74,19 @@ public class BonitaProjectMigrationOperation implements IWorkspaceRunnable {
             jdtPrefs.delete(true, monitor);
         }
         
-       report = new BonitaProjectMigrator(project).run(monitor);
+        report = new BonitaProjectMigrator(project).run(monitor);
 
         var orderedStores = repository.getAllStores().stream()
                 .sorted(Comparator.comparingInt(IRepositoryStore::getImportOrder))
                 .collect(Collectors.toList());
-        var postMigrationOperationCollector = new PostMigrationOperationCollector();
         for (var store : orderedStores) {
             store.createRepositoryStore(repository);
             try {
-                store.migrate(postMigrationOperationCollector, monitor).merge(report);
+                store.migrate(monitor).merge(report);
             } catch (MigrationException e) {
                 throw new CoreException(new Status(IStatus.ERROR, BonitaProjectMigrationOperation.class, e.getMessage()));
             }
         }
-        try {
-            postMigrationOperationCollector.run(monitor);
-        } catch (InvocationTargetException | InterruptedException e) {
-           throw new CoreException(new Status(IStatus.ERROR, BonitaProjectMigrationOperation.class, e.getMessage()));
-        }
-
 
         var currentVersion = project.getDescription().getComment();
         //In order to force the reorder of natures we must reset description
@@ -122,6 +113,8 @@ public class BonitaProjectMigrationOperation implements IWorkspaceRunnable {
             model.setName(projectName);
             mavenProjectHelper.saveModel(project, model, monitor);
         }
+        
+        repository.getProjectDependenciesStore().analyze(monitor);
     }
 
     public BonitaProjectMigrationOperation addBuilder(final String builderId) {
@@ -133,4 +126,5 @@ public class BonitaProjectMigrationOperation implements IWorkspaceRunnable {
         natures.add(natureId);
         return this;
     }
+
 }

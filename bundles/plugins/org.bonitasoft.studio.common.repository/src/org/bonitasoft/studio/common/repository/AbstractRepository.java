@@ -759,6 +759,11 @@ public abstract class AbstractRepository implements IRepository, IJavaContainer 
         var migrationOperation = newProjectMigrationOperation();
         workspace.run(migrationOperation, monitor);
         migrationOperation.getReport().merge(report);
+        try {
+            report.executePostMigrationOperations(monitor);
+        } catch (InvocationTargetException | InterruptedException e) {
+           throw new CoreException(new Status(IStatus.ERROR, BonitaProjectMigrationOperation.class, e.getMessage()));
+        }
         if (!report.isEmpty()) {
             try {
                 reportWriter.write(report, reportPath());

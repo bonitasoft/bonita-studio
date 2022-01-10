@@ -32,7 +32,6 @@ import org.bonitasoft.studio.common.repository.core.migration.report.MigrationRe
 import org.bonitasoft.studio.common.repository.core.migration.report.MigrationReportWriter;
 import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
-import org.bonitasoft.studio.common.repository.model.PostMigrationOperationCollector;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.maven.CustomPageProjectFileStore;
 import org.bonitasoft.studio.maven.CustomPageProjectRepositoryStore;
@@ -225,7 +224,7 @@ public class RestAPIExtensionRepositoryStore extends CustomPageProjectRepository
     }
 
     @Override
-    public MigrationReport migrate(PostMigrationOperationCollector postMigrationOperationCollector, IProgressMonitor monitor)
+    public MigrationReport migrate(IProgressMonitor monitor)
             throws CoreException, MigrationException {
         List<RestAPIExtensionFileStore> filesToMigrate = getChildren().stream()
                 .filter(fs -> !fs.isReadOnly())

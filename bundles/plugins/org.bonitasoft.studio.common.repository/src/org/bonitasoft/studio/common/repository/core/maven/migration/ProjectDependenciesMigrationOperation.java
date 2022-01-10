@@ -132,9 +132,7 @@ public class ProjectDependenciesMigrationOperation implements IRunnableWithProgr
             op.run(monitor);
             DependencyLookup dependencyLookup = op.getResult();
             if (dependencyLookup != null) {
-                if (usedDependencies.contains(jarToLookup.getName())) {
-                    dependencyLookup.setUsed(true);
-                }
+                dependencyLookup.setUsed(usedDependencies.contains(jarToLookup.getName()));
                 mergeResult(dependencyLookup, result);
             }
             monitor.worked(1);
