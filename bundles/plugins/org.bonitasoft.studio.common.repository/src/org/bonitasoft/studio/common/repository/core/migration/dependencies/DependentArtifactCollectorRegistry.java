@@ -14,27 +14,28 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.common.repository.model;
+package org.bonitasoft.studio.common.repository.core.migration.dependencies;
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.jface.operation.IRunnableWithProgress;
+import javax.inject.Singleton;
 
-public class PostMigrationOperationCollector {
+import org.eclipse.e4.core.di.annotations.Creatable;
 
-    private List<IRunnableWithProgress> operations = new ArrayList<>();
+@Creatable
+@Singleton
+public class DependentArtifactCollectorRegistry {
+    
+    private Map<Class<?>, DependentArtifactCollector<?>> registry = new HashMap<>();
 
-    public void addPostMigrationOperation(IRunnableWithProgress operation) {
-        this.operations.add(operation);
+    public <T> void register(Class<T> artifactType, DependentArtifactCollector<T> collector) {
+        registry.put(artifactType, collector);
     }
     
-    public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-        for(var operation : operations) {
-            operation.run(monitor);
-        }
+    @SuppressWarnings("unchecked")
+    public <T> DependentArtifactCollector<T> get(Class<T> artifactType){
+        return (DependentArtifactCollector<T>) registry.get(artifactType);
     }
-    
+
 }

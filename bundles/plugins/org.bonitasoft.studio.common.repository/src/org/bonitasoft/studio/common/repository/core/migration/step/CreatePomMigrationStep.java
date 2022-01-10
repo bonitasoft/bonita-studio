@@ -46,8 +46,7 @@ public class CreatePomMigrationStep implements MigrationStep {
         }
         report.updated("Groovy version has been updated from `2.4.x` to `3.0.x`");
         report.updated(
-                "Only Java `11` version is now supported. This might impact your existing projet if you were still using Java 8. Some dependencies in your project might be incompatible with the _Java Platform Module System_ introduced in Java 9.");
-        report.removed("`lib` folder and its content has been removed.");
+                "Only Java `11` version is now supported. This might impact your existing project if you were still using Java 8. Some dependencies in your project might be incompatible with the _Java Platform Module System_ introduced in Java 9.");
         report.added(String.format(
                 "Bonita projects are now Maven projects and rely on the https://maven.apache.org/guides/introduction/introduction-to-dependency-mechanism.html[Maven dependency mechanism] to manage their dependencies. Check the documentation for more information about %s[Project composition].",
                 RedirectURLBuilder.create("727")));

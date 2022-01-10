@@ -21,6 +21,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 
 import org.bonitasoft.plugin.analyze.report.model.ActorFilterImplementation;
 import org.bonitasoft.plugin.analyze.report.model.ConnectorImplementation;
@@ -73,7 +74,7 @@ public class MavenProjectDependenciesStore implements ProjectDependenciesStore {
     }
 
     @Override
-    public DependencyReport analyze(IProgressMonitor monitor) {
+    public Optional<DependencyReport> analyze(IProgressMonitor monitor) {
         try {
             project.deleteMarkers(ANALYZE_PLUGIN_MARKER_TYPE, true, IResource.DEPTH_INFINITE);
             BonitaProjectPlugin bonitaProjectPlugin = new BonitaProjectPlugin(project);
@@ -89,24 +90,20 @@ public class MavenProjectDependenciesStore implements ProjectDependenciesStore {
             if (reportFile.isFile()) {
                 dependencyReport = mapper.readValue(reportFile, DependencyReport.class);
                 eventBroker.send(PROJECT_DEPENDENCIES_ANALYZED_TOPIC, Map.of());
-
                 dependencyReport.getIssues().stream()
                         .map(MavenProjectDependenciesStore::toStatus)
                         .filter(Objects::nonNull)
                         .forEach(this::addMarker);
             }
-
-            return dependencyReport;
         } catch (IOException e) {
             BonitaStudioLog.error(e);
-            return null;
         } catch (CoreException ce) {
             addMarker(ce.getStatus());
             if (ce.getCause() != null) {
                 BonitaStudioLog.error(ce.getCause());
             }
-            return null;
         }
+        return Optional.ofNullable(dependencyReport);
     }
 
     public static IStatus toStatus(Issue issue) {

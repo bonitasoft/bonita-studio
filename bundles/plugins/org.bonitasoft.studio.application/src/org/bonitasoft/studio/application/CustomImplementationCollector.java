@@ -27,13 +27,13 @@ import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.common.repository.core.migration.dependencies.DependentArtifactCollector;
+import org.bonitasoft.studio.common.repository.core.migration.dependencies.DependentArtifactCollectorRegistry;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.connector.model.implementation.ConnectorImplementation;
 import org.bonitasoft.studio.connector.model.implementation.JarDependencies;
 import org.bonitasoft.studio.connectors.repository.ConnectorImplRepositoryStore;
 import org.bonitasoft.studio.connectors.repository.DependencyConnectorImplFileStore;
-import org.bonitasoft.studio.dependencies.DependentArtifactCollector;
-import org.bonitasoft.studio.dependencies.DependentArtifactCollectorRegistry;
 import org.bonitasoft.studio.identity.actors.repository.ActorFilterImplRepositoryStore;
 import org.bonitasoft.studio.identity.actors.repository.DependencyActorFilterImplFileStore;
 import org.eclipse.e4.core.di.annotations.Creatable;

@@ -21,11 +21,11 @@ import javax.inject.Inject;
 
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.core.maven.ProjectDependenciesResolver;
+import org.bonitasoft.studio.common.repository.core.migration.dependencies.configuration.ProcessConfigurationUpdater;
 import org.bonitasoft.studio.common.repository.extension.update.DependencyUpdate;
 import org.bonitasoft.studio.common.repository.extension.update.participant.ExtensionUpdateParticipant;
 import org.bonitasoft.studio.common.repository.extension.update.participant.ExtensionUpdateParticipantFactory;
 import org.bonitasoft.studio.common.repository.extension.update.participant.ExtensionUpdateParticipantFactoryRegistry;
-import org.bonitasoft.studio.dependencies.configuration.ProcessConfigurationUpdater;
 
 public class ProcessConfigurationUpdateParticipantFactory implements ExtensionUpdateParticipantFactory {
 

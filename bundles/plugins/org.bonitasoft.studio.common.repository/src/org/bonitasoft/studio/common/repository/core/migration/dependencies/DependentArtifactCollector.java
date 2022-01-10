@@ -14,25 +14,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.dependencies.configuration;
+package org.bonitasoft.studio.common.repository.core.migration.dependencies;
 
 import java.util.Collection;
 
-import org.bonitasoft.studio.common.FragmentTypes;
-import org.bonitasoft.studio.model.configuration.Configuration;
-import org.bonitasoft.studio.model.configuration.FragmentContainer;
+public interface DependentArtifactCollector<T> {
 
-public interface ProcessConfigurationChange {
+    Collection<T> findArtifactDependingOn(String jarName);
     
-    void apply(Configuration configuration);
-    
-    Collection<Configuration> getConfigurations();
-    
-    default FragmentContainer getOtherJarFragmentContainer(Configuration configuration) {
-        return configuration.getProcessDependencies().stream()
-                .filter(fc -> fc.getId().equals(FragmentTypes.OTHER))
-                .findFirst()
-                .orElseThrow();
-    }
-
 }

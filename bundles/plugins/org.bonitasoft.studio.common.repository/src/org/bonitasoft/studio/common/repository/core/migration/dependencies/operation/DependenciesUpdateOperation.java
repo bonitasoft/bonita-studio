@@ -12,7 +12,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.dependencies.operation;
+package org.bonitasoft.studio.common.repository.core.migration.dependencies.operation;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -24,12 +24,12 @@ import java.util.Map;
 import java.util.Set;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.repository.Messages;
 import org.bonitasoft.studio.common.repository.core.maven.ProjectDependenciesResolver;
+import org.bonitasoft.studio.common.repository.core.migration.dependencies.DependentArtifactCollectorRegistry;
+import org.bonitasoft.studio.common.repository.core.migration.dependencies.configuration.ProcessConfigurationUpdater;
+import org.bonitasoft.studio.common.repository.core.migration.dependencies.connector.ConnectorImplementationUpdater;
 import org.bonitasoft.studio.connector.model.implementation.ConnectorImplementation;
-import org.bonitasoft.studio.dependencies.DependentArtifactCollectorRegistry;
-import org.bonitasoft.studio.dependencies.configuration.ProcessConfigurationUpdater;
-import org.bonitasoft.studio.dependencies.connector.ConnectorImplementationUpdater;
-import org.bonitasoft.studio.dependencies.i18n.Messages;
 import org.bonitasoft.studio.model.configuration.Configuration;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -116,7 +116,7 @@ public class DependenciesUpdateOperation implements IRunnableWithProgress {
                             .get(ConnectorImplementation.class);
                     Collection<ConnectorImplementation> implementationsToUpdate = implementationsCollector
                             .findArtifactDependingOn(jar);
-                    if (!configurationsToUpdate.isEmpty()) {
+                    if (!configurationsToUpdate.isEmpty() || !implementationsToUpdate.isEmpty()) {
                         var change = new JarRemovedChange(jar,
                                 configurationsToUpdate, implementationsToUpdate);
                         Collection<Resource> resources = configurationUpdater.update(change);
