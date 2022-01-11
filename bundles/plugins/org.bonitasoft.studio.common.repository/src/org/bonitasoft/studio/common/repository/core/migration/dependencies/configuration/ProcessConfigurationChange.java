@@ -14,28 +14,25 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.dependencies;
+package org.bonitasoft.studio.common.repository.core.migration.dependencies.configuration;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Collection;
 
-import javax.inject.Singleton;
+import org.bonitasoft.studio.common.FragmentTypes;
+import org.bonitasoft.studio.model.configuration.Configuration;
+import org.bonitasoft.studio.model.configuration.FragmentContainer;
 
-import org.eclipse.e4.core.di.annotations.Creatable;
-
-@Creatable
-@Singleton
-public class DependentArtifactCollectorRegistry {
+public interface ProcessConfigurationChange {
     
-    private Map<Class<?>, DependentArtifactCollector<?>> registry = new HashMap<>();
-
-    public <T> void register(Class<T> artifactType, DependentArtifactCollector<T> collector) {
-        registry.put(artifactType, collector);
-    }
+    void apply(Configuration configuration);
     
-    @SuppressWarnings("unchecked")
-    public <T> DependentArtifactCollector<T> get(Class<T> artifactType){
-        return (DependentArtifactCollector<T>) registry.get(artifactType);
+    Collection<Configuration> getConfigurations();
+    
+    default FragmentContainer getOtherJarFragmentContainer(Configuration configuration) {
+        return configuration.getProcessDependencies().stream()
+                .filter(fc -> fc.getId().equals(FragmentTypes.OTHER))
+                .findFirst()
+                .orElseThrow();
     }
 
 }

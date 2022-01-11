@@ -14,11 +14,15 @@
  */
 package org.bonitasoft.studio.common.repository.core.migration.report;
 
+import java.lang.reflect.InvocationTargetException;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 
 public class MigrationReport {
 
@@ -26,6 +30,7 @@ public class MigrationReport {
     private List<String> added = new ArrayList<>();
     private List<String> updated = new ArrayList<>();
     private String title = "Migration notes";
+    private List<IRunnableWithProgress> postMigrationOperations = new ArrayList<>();
 
     public void removed(String message) {
         removed.add(message);
@@ -43,6 +48,7 @@ public class MigrationReport {
         removed.forEach(report::removed);
         added.forEach(report::added);
         updated.forEach(report::updated);
+        postMigrationOperations.forEach(report::addPostMigrationOperation);
         return report;
     }
 
@@ -90,4 +96,17 @@ public class MigrationReport {
         return !hasAdditions() && !hasRemovals() && !hasUpdates();
     }
 
+    public void addPostMigrationOperation(IRunnableWithProgress operation) {
+        this.postMigrationOperations.add(operation);
+    }
+
+    public List<IRunnableWithProgress> getPostMigrationOperations() {
+        return postMigrationOperations;
+    }
+    
+    public void executePostMigrationOperations(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+        for(var operation : postMigrationOperations) {
+            operation.run(monitor);
+        }
+    }
 }

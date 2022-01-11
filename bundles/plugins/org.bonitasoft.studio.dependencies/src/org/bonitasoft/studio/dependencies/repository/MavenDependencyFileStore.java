@@ -31,6 +31,7 @@ import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.ui.IWorkbenchPart;
 
 public class MavenDependencyFileStore extends DependencyFileStore {
 
@@ -71,6 +72,10 @@ public class MavenDependencyFileStore extends DependencyFileStore {
     protected void doSave(final Object content) {
     }
 
+    @Override
+    protected IWorkbenchPart doOpen() {
+        return null;
+    }
 
     @Override
     protected void doClose() {
@@ -106,5 +111,5 @@ public class MavenDependencyFileStore extends DependencyFileStore {
             return super.getTransitiveDependencies();
         }
     }
-    
+
 }

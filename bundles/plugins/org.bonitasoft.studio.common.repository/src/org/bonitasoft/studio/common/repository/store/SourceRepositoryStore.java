@@ -30,7 +30,6 @@ import org.bonitasoft.studio.common.repository.filestore.AbstractFileStore;
 import org.bonitasoft.studio.common.repository.filestore.PackageFileStore;
 import org.bonitasoft.studio.common.repository.filestore.RepositoryFileStoreComparator;
 import org.bonitasoft.studio.common.repository.filestore.SourceFileStore;
-import org.bonitasoft.studio.common.repository.model.PostMigrationOperationCollector;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
@@ -204,8 +203,7 @@ public abstract class SourceRepositoryStore<T extends AbstractFileStore<?>> exte
     }
 
     @Override
-    public MigrationReport migrate(PostMigrationOperationCollector postMigrationOperationCollector,
-            final IProgressMonitor monitor) throws CoreException, MigrationException {
+    public MigrationReport migrate(IProgressMonitor monitor) throws CoreException, MigrationException {
         // NOTHING TO MIGRATE
         return MigrationReport.emptyReport();
     }

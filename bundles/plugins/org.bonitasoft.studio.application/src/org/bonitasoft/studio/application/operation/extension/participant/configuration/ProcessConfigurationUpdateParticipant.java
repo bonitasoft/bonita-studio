@@ -35,6 +35,8 @@ import org.bonitasoft.studio.application.operation.extension.participant.preview
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.core.maven.ProjectDependenciesResolver;
+import org.bonitasoft.studio.common.repository.core.migration.dependencies.configuration.ProcessConfigurationChange;
+import org.bonitasoft.studio.common.repository.core.migration.dependencies.configuration.ProcessConfigurationUpdater;
 import org.bonitasoft.studio.common.repository.extension.update.DependencyUpdate;
 import org.bonitasoft.studio.common.repository.extension.update.participant.ExtensionUpdateParticipant;
 import org.bonitasoft.studio.common.repository.extension.update.preview.ChangePreview;
@@ -42,8 +44,6 @@ import org.bonitasoft.studio.common.repository.extension.update.preview.PreviewM
 import org.bonitasoft.studio.common.repository.extension.update.preview.PreviewResult;
 import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.connectors.repository.DatabaseConnectorPropertiesRepositoryStore;
-import org.bonitasoft.studio.dependencies.configuration.ProcessConfigurationChange;
-import org.bonitasoft.studio.dependencies.configuration.ProcessConfigurationUpdater;
 import org.bonitasoft.studio.model.configuration.Configuration;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;

@@ -27,8 +27,6 @@ import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.filestore.AbstractFileStore;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
-import org.bonitasoft.studio.dependencies.DependenciesPlugin;
-import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -36,6 +34,9 @@ import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.ide.IDE;
 
 /**
  * @author Romain Bioteau
@@ -54,7 +55,7 @@ public class DependencyFileStore extends AbstractFileStore<InputStream> {
      */
     @Override
     public Image getIcon() {
-        return Pics.getImage("jar.gif", DependenciesPlugin.getDefault());
+        return null ;//Pics.getImage("jar.gif", DependenciesPlugin.getDefault());
     }
 
     @Override
@@ -84,12 +85,13 @@ public class DependencyFileStore extends AbstractFileStore<InputStream> {
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.repository.filestore.AbstractFileStore#doOpen()
-     */
     @Override
     protected IWorkbenchPart doOpen() {
+        try {
+            return IDE.openEditor(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage(), getResource());
+        } catch (PartInitException e) {
+            BonitaStudioLog.error(e);
+        }
         return null;
     }
 
@@ -125,6 +127,11 @@ public class DependencyFileStore extends AbstractFileStore<InputStream> {
     @Override
     public IFile getResource() {
         return getParentStore().getResource().getFile(getName());
+    }
+    
+    @Override
+    public boolean isShared() {
+        return false;
     }
 
     @Override

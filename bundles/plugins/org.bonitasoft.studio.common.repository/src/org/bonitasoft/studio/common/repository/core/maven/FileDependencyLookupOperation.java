@@ -89,7 +89,11 @@ public class FileDependencyLookupOperation implements IRunnableWithProgress {
                     status = dependencyGetOperation.getStatus();
                     if (status.isOK()) {
                         if (dependencyGetOperation.getResult() != null) {
+                            var fileName = result.getFileName();
                             result = dependencyGetOperation.getResult();
+                            if(result.getFileName() == null) {
+                                result.setFileName(fileName);
+                            }
                         } else if (DependencyLookup.guessClassifier(fileToLookup.getName(), gav) != null) {
                             gav.setClassifier(DependencyLookup.guessClassifier(fileToLookup.getName(), gav));
                             dependencyGetOperation = new DependencyGetOperation(gav);
@@ -98,7 +102,11 @@ public class FileDependencyLookupOperation implements IRunnableWithProgress {
                             dependencyGetOperation.run(monitor);
                             status = dependencyGetOperation.getStatus();
                             if (status.isOK() && dependencyGetOperation.getResult() != null) {
+                                var fileName = result.getFileName();
                                 result = dependencyGetOperation.getResult();
+                                if(result.getFileName() == null) {
+                                    result.setFileName(fileName);
+                                }
                             }
                         }
                     }

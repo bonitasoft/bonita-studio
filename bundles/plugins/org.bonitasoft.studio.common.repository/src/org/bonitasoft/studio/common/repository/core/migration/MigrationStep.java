@@ -31,7 +31,7 @@ import org.eclipse.core.runtime.Status;
 public interface MigrationStep {
 
     MigrationReport run(IProject project, IProgressMonitor monitor) throws CoreException;
-
+    
     boolean appliesTo(String sourceVersion);
 
     default Model loadMavenModel(IProject project) throws CoreException {

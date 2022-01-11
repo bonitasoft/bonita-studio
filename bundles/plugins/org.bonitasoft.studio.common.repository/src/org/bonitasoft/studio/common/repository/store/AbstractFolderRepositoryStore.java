@@ -21,7 +21,6 @@ import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.core.migration.report.MigrationReport;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
-import org.bonitasoft.studio.common.repository.model.PostMigrationOperationCollector;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
@@ -74,8 +73,7 @@ public abstract class AbstractFolderRepositoryStore<T extends IRepositoryFileSto
     }
 
     @Override
-    public MigrationReport migrate(PostMigrationOperationCollector postMigrationOperationCollector,
-            final IProgressMonitor monitor) throws CoreException, MigrationException {
+    public MigrationReport migrate(IProgressMonitor monitor) throws CoreException, MigrationException {
         //NOTHING TO MIGRATE
         return MigrationReport.emptyReport();
     }

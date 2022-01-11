@@ -25,7 +25,6 @@ import org.bonitasoft.studio.common.model.validator.ModelNamespaceValidator;
 import org.bonitasoft.studio.common.model.validator.XMLModelCompatibilityValidator;
 import org.bonitasoft.studio.common.repository.core.migration.report.MigrationReport;
 import org.bonitasoft.studio.common.repository.model.IRepository;
-import org.bonitasoft.studio.common.repository.model.PostMigrationOperationCollector;
 import org.bonitasoft.studio.common.repository.provider.DefinitionResourceProvider;
 import org.bonitasoft.studio.connector.model.definition.AbstractDefinitionRepositoryStore;
 import org.bonitasoft.studio.connectors.ConnectorPlugin;
@@ -136,10 +135,9 @@ public class ConnectorDefRepositoryStore extends AbstractDefinitionRepositorySto
     }
 
     @Override
-    public MigrationReport migrate(PostMigrationOperationCollector postMigrationOperationCollector,
-            IProgressMonitor monitor)
+    public MigrationReport migrate(IProgressMonitor monitor)
             throws CoreException, MigrationException {
-        var report = super.migrate(postMigrationOperationCollector, monitor);
+        var report = super.migrate(monitor);
         if (PlatformUI.isWorkbenchRunning()) {
             getResourceProvider().loadDefinitionsCategories(null);
         }

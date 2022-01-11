@@ -12,14 +12,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.dependencies.operation;
+package org.bonitasoft.studio.common.repository.core.migration.dependencies.operation;
 
 import javax.inject.Inject;
 
 import org.bonitasoft.studio.common.repository.core.maven.ProjectDependenciesResolver;
-import org.bonitasoft.studio.dependencies.DependentArtifactCollectorRegistry;
-import org.bonitasoft.studio.dependencies.configuration.ProcessConfigurationUpdater;
-import org.bonitasoft.studio.dependencies.connector.ConnectorImplementationUpdater;
+import org.bonitasoft.studio.common.repository.core.migration.dependencies.DependentArtifactCollectorRegistry;
+import org.bonitasoft.studio.common.repository.core.migration.dependencies.configuration.ProcessConfigurationUpdater;
+import org.bonitasoft.studio.common.repository.core.migration.dependencies.connector.ConnectorImplementationUpdater;
 import org.eclipse.e4.core.di.annotations.Creatable;
 
 @Creatable

@@ -12,7 +12,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.dependencies.connector;
+package org.bonitasoft.studio.common.repository.core.migration.dependencies.connector;
 
 import java.util.Collection;
 
