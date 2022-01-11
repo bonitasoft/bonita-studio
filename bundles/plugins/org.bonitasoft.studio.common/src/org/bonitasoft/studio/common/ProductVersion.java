@@ -29,7 +29,7 @@ public class ProductVersion {
     public static final String VERSION_6_0_0_ALPHA = "6.0.0-Alpha";
     public static final String CURRENT_VERSION = manifestVersion(true);
 
-    public static final String CURRENT_YEAR = "2021";
+    public static final String CURRENT_YEAR = "2022";
 
     public static final String BUILD_ID = trimDot(System.getProperty("eclipse.buildId", null));
     public static final String BRANDING_VERSION_RAW = System.getProperty("branding.version", null);

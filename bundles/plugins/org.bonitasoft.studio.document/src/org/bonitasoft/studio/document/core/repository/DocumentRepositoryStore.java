@@ -15,7 +15,6 @@
 package org.bonitasoft.studio.document.core.repository;
 
 import org.bonitasoft.studio.common.repository.core.migration.report.MigrationReport;
-import org.bonitasoft.studio.common.repository.model.PostMigrationOperationCollector;
 import org.bonitasoft.studio.common.repository.store.AbstractRepositoryStore;
 import org.bonitasoft.studio.document.i18n.Messages;
 import org.bonitasoft.studio.pics.Pics;
@@ -33,44 +32,28 @@ public class DocumentRepositoryStore extends AbstractRepositoryStore<DocumentFil
     private static final String STORE_NAME = "attachments";
     public static final String PATH_IN_BAR = "attachments/";
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.repository.model.IRepositoryStore#createRepositoryFileStore(java.lang.String)
-     */
     @Override
     public DocumentFileStore createRepositoryFileStore(final String fileName) {
         return new DocumentFileStore(fileName, this);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.repository.model.IRepositoryStore#getName()
-     */
     @Override
     public String getName() {
         return STORE_NAME;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.repository.model.IRepositoryStore#getDisplayName()
-     */
     @Override
     public String getDisplayName() {
         return Messages.documentRepository;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.repository.model.IRepositoryStore#getIcon()
-     */
     @Override
     public Image getIcon() {
         return Pics.getImage(PicsConstants.attachmentData);
     }
 
     @Override
-    public MigrationReport migrate(PostMigrationOperationCollector postMigrationOperationCollector, final IProgressMonitor monitor) throws CoreException, MigrationException {
+    public MigrationReport migrate(IProgressMonitor monitor) throws CoreException, MigrationException {
         //DO NOTHING
         return MigrationReport.emptyReport();
     }

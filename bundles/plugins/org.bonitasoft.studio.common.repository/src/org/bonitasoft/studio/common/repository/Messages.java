@@ -135,6 +135,10 @@ public final class Messages extends NLS {
     public static String targetRuntimeVersionError;
     public static String editTargetRuntimeVersionFromProjectOverview;
 
+    public static String updateProcessConfigurations;
+    public static String updatingDependencyInConfigurations;
+    public static String removingDependencyInConfigurations;
+
     private Messages() {
         // Do not instantiate
     }

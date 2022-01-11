@@ -341,4 +341,8 @@ public class DependencyLookup {
         return artifact;
     }
 
+    public void setFileName(String fileName) {
+       this.fileName = fileName;
+    }
+
 }
