@@ -5,16 +5,15 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.common.platform.tools;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -26,26 +25,25 @@ import org.bonitasoft.studio.common.log.BonitaStudioLog;
 
 /**
  * @author Romain Bioteau
- *Utility object to copy an InputStream
+ *         Utility object to copy an InputStream
  */
-public class CopyInputStream implements AutoCloseable{
+public class CopyInputStream implements AutoCloseable {
 
     private final InputStream _is;
-	private Path file;
+    private Path file;
 
-
-    public CopyInputStream(InputStream is){
+    public CopyInputStream(InputStream is) {
         _is = is;
         OutputStream _copy = null;
         try {
-            file = Files.createTempFile("copy","");
-			_copy = Files.newOutputStream(file);
-		} catch (final IOException e) {
-			BonitaStudioLog.error(e);
-		}
-        try{
+            file = Files.createTempFile("copy", "");
+            _copy = Files.newOutputStream(file);
+        } catch (final IOException e) {
+            BonitaStudioLog.error(e);
+        }
+        try {
             copy(_copy);
-        }catch(final IOException ex){
+        } catch (final IOException ex) {
             BonitaStudioLog.error(ex);
         } finally {
             if (_copy != null) {
@@ -64,35 +62,31 @@ public class CopyInputStream implements AutoCloseable{
         final byte[] buffer = new byte[256];
         while (-1 != (chunk = _is.read(buffer))) {
             outputStream.write(buffer, 0, chunk);
-        	read += chunk;
+            read += chunk;
         }
         return read;
     }
 
     public InputStream getCopy() {
         try {
-			return Files.newInputStream(file);
-		} catch (final IOException e) {
-			BonitaStudioLog.error(e);
-		}
-		return _is;
+            return Files.newInputStream(file);
+        } catch (final IOException e) {
+            BonitaStudioLog.error(e);
+        }
+        return _is;
     }
-    
-    public void close(){
-    	if(_is != null){
-    		try {
-				_is.close();
-			} catch (final IOException e) {
-				BonitaStudioLog.error(e);
-			}
-    	}
-    	if(file != null && file.toFile().exists()){
-    		try {
-                Files.delete(file);
-            } catch (IOException e) {
+
+    public void close() {
+        if (_is != null) {
+            try {
+                _is.close();
+            } catch (final IOException e) {
                 BonitaStudioLog.error(e);
             }
-    	}
+        }
+        if (file != null && file.toFile().exists()) {
+            file.toFile().delete();
+        }
     }
 
     public File getFile() {
