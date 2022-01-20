@@ -146,8 +146,7 @@ public class QueryDetailsControl extends Composite {
 
         Composite client = formPage.getToolkit().createComposite(section);
         client.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-        client.setLayout(
-                GridLayoutFactory.fillDefaults().margins(10, 10).create());
+        client.setLayout(GridLayoutFactory.fillDefaults().margins(10, 10).create());
 
         createLink(client);
         createQueryTextArea(client);
@@ -197,14 +196,14 @@ public class QueryDetailsControl extends Composite {
     private void createReturnTypeComposite(Composite parent) {
         Composite returnTypeComposite = formPage.getToolkit().createComposite(parent);
         returnTypeComposite.setLayout(GridLayoutFactory.fillDefaults().create());
-        returnTypeComposite.setLayoutData(GridDataFactory.fillDefaults().grab(false, true).create());
+        returnTypeComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 
         Label queryResultTypeLabel = formPage.getToolkit().createLabel(returnTypeComposite, Messages.queryResultType);
         queryResultTypeLabel.setLayoutData(GridDataFactory.fillDefaults().align(SWT.LEFT, SWT.CENTER).create());
 
         returnTypeComboViewer = new ComboViewer(returnTypeComposite, SWT.BORDER | SWT.READ_ONLY);
         returnTypeComboViewer.getControl()
-                .setLayoutData(GridDataFactory.fillDefaults().grab(false, false).hint(300, SWT.DEFAULT).create());
+                .setLayoutData(GridDataFactory.fillDefaults().hint(300, SWT.DEFAULT).create());
         returnTypeComboViewer.setContentProvider(ArrayContentProvider.getInstance());
         returnTypeComboViewer.setLabelProvider(new QueryResultTypeLabelProvider(boSelectedObservable));
         updateReturnTypeViewerInput();
@@ -257,7 +256,7 @@ public class QueryDetailsControl extends Composite {
         Composite parametersComposite = formPage.getToolkit().createComposite(parent);
         parametersComposite.setLayout(GridLayoutFactory.fillDefaults().margins(0, 10).create());
         parametersComposite
-                .setLayoutData(GridDataFactory.fillDefaults().grab(true, false).hint(500, 300).create());
+                .setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 
         Label parametersLabel = formPage.getToolkit().createLabel(parametersComposite, Messages.parametersLabel);
         parametersLabel.setLayoutData(GridDataFactory.fillDefaults().create());

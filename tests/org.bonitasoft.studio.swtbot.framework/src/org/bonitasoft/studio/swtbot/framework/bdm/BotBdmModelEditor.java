@@ -105,6 +105,7 @@ public class BotBdmModelEditor extends BotBase {
         SWTBotTreeItem packageItem = businessObjectTree.getTreeItem(oldName);
         bot.sleep(200);
         packageItem
+                .select()
                 .expand()
                 .click();
         bot.text(oldName)
