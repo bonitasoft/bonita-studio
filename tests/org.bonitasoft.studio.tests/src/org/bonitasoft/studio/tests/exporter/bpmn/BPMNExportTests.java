@@ -24,6 +24,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.bonitasoft.studio.assertions.StatusAssert;
+import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.model.IModelSearch;
 import org.bonitasoft.studio.common.model.ModelSearch;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
@@ -101,7 +102,7 @@ public class BPMNExportTests {
         final File bpmnFileExported = tmpFolder.newFile("withAllExported.bpmn");
         BonitaToBPMNExporter bonitaToBPMNExporter = new BonitaToBPMNExporter();
         bonitaToBPMNExporter.export(exporter, modelSearch, bpmnFileExported,
-                new OSGIConnectorTransformationXSLProvider());
+                new OSGIConnectorTransformationXSLProvider(), ProductVersion.CURRENT_VERSION);
         StatusAssert.assertThat(bonitaToBPMNExporter.getStatus()).hasSeverity(IStatus.INFO);
 
         final BufferedReader reader = new BufferedReader(new FileReader(bpmnFileExported));
