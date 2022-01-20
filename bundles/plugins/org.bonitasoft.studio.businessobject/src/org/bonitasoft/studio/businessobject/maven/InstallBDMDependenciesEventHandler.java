@@ -30,6 +30,7 @@ import org.bonitasoft.studio.common.CommandExecutor;
 import org.bonitasoft.studio.common.FileUtil;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.core.maven.MavenInstallFileOperation;
 import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.CoreException;
@@ -55,7 +56,7 @@ public class InstallBDMDependenciesEventHandler implements EventHandler {
     }
 
     private void execute(final Event event) {
-        final MavenInstallFileCommand installFileCommand = newInstallCommand();
+        var installFileCommand = newInstallOperation();
         BDMArtifactDescriptor artifactDescriptor = (BDMArtifactDescriptor) event.getProperty(BDM_ARTIFACT_DESCRIPTOR);
         String groupId = artifactDescriptor.getGroupId();
         String version = artifactDescriptor.getVersion();
@@ -135,8 +136,8 @@ public class InstallBDMDependenciesEventHandler implements EventHandler {
         }
     }
 
-    protected MavenInstallFileCommand newInstallCommand() {
-        return new MavenInstallFileCommand(maven());
+    protected MavenInstallFileOperation newInstallOperation() {
+        return new MavenInstallFileOperation(maven());
     }
 
     protected File tmpFile(String name, byte[] content) throws IOException {

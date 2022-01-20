@@ -11,14 +11,11 @@ package org.bonitasoft.studio.businessobject.maven;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.notNull;
-import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 import java.io.File;
 import java.util.HashMap;
@@ -26,7 +23,7 @@ import java.util.Map;
 
 import org.bonitasoft.studio.businessobject.core.repository.BDMArtifactDescriptor;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
-import org.bonitasoft.studio.dependencies.repository.DependencyRepositoryStore;
+import org.bonitasoft.studio.common.repository.core.maven.MavenInstallFileOperation;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -41,7 +38,7 @@ public class InstallBDMDependenciesEventHandlerTest {
     private RepositoryAccessor repositoryAccessor;
 
     @Mock
-    private MavenInstallFileCommand installCommand;
+    private MavenInstallFileOperation installCommand;
     @Mock
     private File file;
 
@@ -58,7 +55,7 @@ public class InstallBDMDependenciesEventHandlerTest {
         properties.put("artifactDescriptor", bdmArtifactDescriptor);
         event = new Event("bdm/deployed", properties);
         doReturn(file).when(handler).tmpFile(any(String.class), any(byte[].class));
-        doReturn(installCommand).when(handler).newInstallCommand();
+        doReturn(installCommand).when(handler).newInstallOperation();
         doNothing().when(handler).updateMavenProjects();
         doNothing().when(handler).buildProject();
     }
