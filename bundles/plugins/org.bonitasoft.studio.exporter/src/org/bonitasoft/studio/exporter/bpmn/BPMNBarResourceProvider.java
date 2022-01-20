@@ -20,6 +20,7 @@ import java.util.List;
 
 import org.bonitasoft.engine.bpm.bar.BarResource;
 import org.bonitasoft.engine.bpm.bar.BusinessArchiveBuilder;
+import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.extension.BARResourcesProvider;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.model.IModelSearch;
@@ -58,7 +59,7 @@ public class BPMNBarResourceProvider implements BARResourcesProvider {
                         () -> allProcesses,
                         () -> definitions);
                 new BonitaToBPMNExporter().export(new BonitaModelExporterImpl(eResource, modelSearch), modelSearch,
-                        destFile, new OSGIConnectorTransformationXSLProvider());
+                        destFile, new OSGIConnectorTransformationXSLProvider(), ProductVersion.CURRENT_VERSION);
                 builder.addExternalResource(new BarResource("process.bpmn", Files.readAllBytes(destFile.toPath())));
             } else {
                 BonitaStudioLog.warning(
