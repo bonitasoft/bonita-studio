@@ -33,6 +33,7 @@ import java.util.Set;
 
 import org.bonitasoft.studio.assertions.StatusAssert;
 import org.bonitasoft.studio.common.NamingUtils;
+import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.editingdomain.CustomDiagramEditingDomainFactory;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.model.IModelSearch;
@@ -433,7 +434,7 @@ public class BPMNImportExportTest {
         final IBonitaModelExporter exporter = new BonitaModelExporterImpl(mainProcess.eResource(), modelSearch);
         final File bpmnFileExported = tmpFolder.newFile("withAllExported.bpmn");
         BonitaToBPMNExporter bonitaToBPMNExporter = new BonitaToBPMNExporter();
-        bonitaToBPMNExporter.export(exporter, modelSearch, bpmnFileExported, new OSGIConnectorTransformationXSLProvider());
+        bonitaToBPMNExporter.export(exporter, modelSearch, bpmnFileExported, new OSGIConnectorTransformationXSLProvider(), ProductVersion.CURRENT_VERSION);
         StatusAssert.assertThat(bonitaToBPMNExporter.getStatus()).hasSeverity(IStatus.INFO);
 
         //compare bpmn before import and after import/export

@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.bonitasoft.studio.assertions.StatusAssert;
+import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.model.IModelSearch;
 import org.bonitasoft.studio.common.model.ModelSearch;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
@@ -104,7 +105,7 @@ public class BPMNSequenceFlowDefaultFlowExportImportTest {
                 modelSearch);
         final File bpmnFileExported = tmpFolder.newFile("PoolToTestDefaultFlowInBPMN.bpmn");
         BonitaToBPMNExporter bonitaToBPMNExporter = new BonitaToBPMNExporter();
-        bonitaToBPMNExporter.export(exporter, modelSearch, bpmnFileExported, new OSGIConnectorTransformationXSLProvider());
+        bonitaToBPMNExporter.export(exporter, modelSearch, bpmnFileExported, new OSGIConnectorTransformationXSLProvider(), ProductVersion.CURRENT_VERSION);
         StatusAssert.assertThat(bonitaToBPMNExporter.getStatus()).hasSeverity(IStatus.INFO);
 
         final ResourceSet resourceSet1 = new ResourceSetImpl();

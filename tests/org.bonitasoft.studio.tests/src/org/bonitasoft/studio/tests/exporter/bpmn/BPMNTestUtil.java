@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.bonitasoft.studio.assertions.StatusAssert;
+import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.editingdomain.CustomDiagramEditingDomainFactory;
 import org.bonitasoft.studio.common.model.IModelSearch;
 import org.bonitasoft.studio.common.model.ModelSearch;
@@ -95,7 +96,7 @@ public class BPMNTestUtil {
         final File bpmnFileExported = File.createTempFile("testBpmnExport", ".bpmn");
         bpmnFileExported.deleteOnExit();
         BonitaToBPMNExporter bonitaToBPMNExporter = new BonitaToBPMNExporter();
-        bonitaToBPMNExporter.export(exporter, modelSearch, bpmnFileExported, new OSGIConnectorTransformationXSLProvider());
+        bonitaToBPMNExporter.export(exporter, modelSearch, bpmnFileExported, new OSGIConnectorTransformationXSLProvider(), ProductVersion.CURRENT_VERSION);
         StatusAssert.assertThat(bonitaToBPMNExporter.getStatus()).hasSeverity(IStatus.INFO);
 
         final ResourceSet resourceSet1 = new ResourceSetImpl();
