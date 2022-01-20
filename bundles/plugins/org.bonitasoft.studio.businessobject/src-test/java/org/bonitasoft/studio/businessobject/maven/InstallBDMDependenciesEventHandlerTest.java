@@ -22,6 +22,7 @@ import java.util.Map;
 
 import org.bonitasoft.studio.businessobject.core.repository.BDMArtifactDescriptor;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.common.repository.core.maven.MavenInstallFileOperation;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -37,7 +38,7 @@ public class InstallBDMDependenciesEventHandlerTest {
     private RepositoryAccessor repositoryAccessor;
 
     @Mock
-    private MavenInstallFileCommand installCommand;
+    private MavenInstallFileOperation installCommand;
     @Mock
     private File file;
 
@@ -54,7 +55,7 @@ public class InstallBDMDependenciesEventHandlerTest {
         properties.put("artifactDescriptor", bdmArtifactDescriptor);
         event = new Event("bdm/deployed", properties);
         doReturn(file).when(handler).tmpFile(any(), any());
-        doReturn(installCommand).when(handler).newInstallCommand();
+        doReturn(installCommand).when(handler).newInstallOperation();
         doNothing().when(handler).updateMavenProjects();
         doNothing().when(handler).buildProject();
     }

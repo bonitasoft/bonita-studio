@@ -45,7 +45,6 @@ import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
-import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.Strings;
 import org.bonitasoft.studio.common.model.IModelSearch;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
@@ -231,7 +230,8 @@ public class BonitaToBPMNExporter {
     public void export(final IBonitaModelExporter modelExporter,
             IModelSearch modelSearch,
             final File destFile,
-            ConnectorTransformationXSLProvider connectorXSLProvider) {
+            ConnectorTransformationXSLProvider connectorXSLProvider,
+            String currentVersion) {
         this.modelSearch = modelSearch;
         this.connectorXSLProvider = connectorXSLProvider;
         final MainProcess mainProcess = modelExporter.getMainProcess();
@@ -253,7 +253,7 @@ public class BonitaToBPMNExporter {
         definitions.getBPMNDiagram().add(bpmnDiagram);
         definitions.setTargetNamespace("http://bonitasoft.com/" + rootQNameIDValue);
         definitions.setExporter("BonitaSoft");
-        definitions.setExporterVersion(ProductVersion.CURRENT_VERSION);
+        definitions.setExporterVersion(currentVersion);
 
         /* Handle Bonita connector */
         destBpmnFile = destFile;

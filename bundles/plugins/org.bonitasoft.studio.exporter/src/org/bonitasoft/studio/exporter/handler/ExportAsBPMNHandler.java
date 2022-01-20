@@ -19,6 +19,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Optional;
 
+import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.model.IModelSearch;
 import org.bonitasoft.studio.common.model.ModelSearch;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
@@ -85,7 +86,8 @@ public class ExportAsBPMNHandler {
                                         new BonitaModelExporterImpl(diagram.eResource(), modelSearch),
                                         modelSearch,
                                         destFile,
-                                        new OSGIConnectorTransformationXSLProvider());
+                                        new OSGIConnectorTransformationXSLProvider(),
+                                        ProductVersion.CURRENT_VERSION);
                             });
                             MultiStatus status = transformer.getStatus();
                             if (status.getSeverity() < IStatus.ERROR) {
