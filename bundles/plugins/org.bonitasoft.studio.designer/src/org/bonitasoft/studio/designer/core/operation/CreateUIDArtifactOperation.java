@@ -22,7 +22,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpRequest.BodyPublishers;
 import java.net.http.HttpResponse;
@@ -124,7 +123,7 @@ public abstract class CreateUIDArtifactOperation implements IRunnableWithProgres
 
     protected Map<String, Object> createBody() {
         Map<String, Object> body = new HashMap<>();
-        body.put("type", getArtifactType());
+        body.put("type", getArtifactType().toString());
         body.put("name", artifactName);
         if (getArtifactType() != ArtifactyType.WIDGET) {
             body.put("rows", Arrays.asList(new ArrayList<>()));
