@@ -68,7 +68,7 @@ public class FieldDetailsControl extends Composite {
 
         stackLayout = new CustomStackLayout(this);
         setLayout(stackLayout);
-        setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+        setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 
         createStringFieldDetailsComposite(ctx);
         createDateDeprecatedDetailsComposite();

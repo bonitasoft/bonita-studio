@@ -113,13 +113,13 @@ public class RelationFieldDetailsControl extends Composite {
         IObservableValue<FetchType> fetchTypeObservable = EMFObservables.observeDetailValue(Realm.getDefault(),
                 selectedFieldObservable, BusinessDataModelPackage.Literals.RELATION_FIELD__FETCH_TYPE);
         ctx.bindValue(radioGroupObservable, fetchTypeObservable);
-        
+
         var composite = formPage.getToolkit().createComposite(this);
         composite.setLayout(GridLayoutFactory.fillDefaults().create());
         composite.setLayoutData(GridDataFactory.fillDefaults().create());
         var warning = new Well(composite, Messages.eagerRelationWarning, formPage.getToolkit(), IStatus.WARNING);
         warning.setVisible(fetchTypeObservable.getValue() == FetchType.EAGER);
-        fetchTypeObservable.addValueChangeListener(e -> warning.setVisible(e.diff.getNewValue() == FetchType.EAGER ));
+        fetchTypeObservable.addValueChangeListener(e -> warning.setVisible(e.diff.getNewValue() == FetchType.EAGER));
     }
 
     private void createRelationKindLabel() {
@@ -138,7 +138,7 @@ public class RelationFieldDetailsControl extends Composite {
     private void createRelationKindCombo() {
         ComboViewer relationComboViewer = new ComboViewer(this, SWT.BORDER | SWT.READ_ONLY);
         relationComboViewer.getControl()
-                .setLayoutData(GridDataFactory.fillDefaults().hint(400, SWT.DEFAULT).indent(0, -5).create());
+                .setLayoutData(GridDataFactory.fillDefaults().indent(0, -5).create());
         relationComboViewer.setContentProvider(ArrayContentProvider.getInstance());
         relationComboViewer.setLabelProvider(new LabelProviderBuilder<RelationType>()
                 .withTextProvider(type -> Objects.equals(type, RelationType.AGGREGATION)

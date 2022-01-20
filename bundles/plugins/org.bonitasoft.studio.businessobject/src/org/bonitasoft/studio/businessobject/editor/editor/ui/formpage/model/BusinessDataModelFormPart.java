@@ -77,7 +77,7 @@ public class BusinessDataModelFormPart extends AbstractFormPart {
         businessDataModelComposite
                 .setLayout(GridLayoutFactory.fillDefaults().numColumns(2).spacing(20, 5).create());
         businessDataModelComposite
-                .setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 600).create());
+                .setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 700).create());
 
         Composite leftComposite = formPage.getToolkit().createComposite(businessDataModelComposite);
         leftComposite.setLayout(GridLayoutFactory.fillDefaults().create());

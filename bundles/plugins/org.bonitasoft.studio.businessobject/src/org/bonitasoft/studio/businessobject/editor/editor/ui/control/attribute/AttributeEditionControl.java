@@ -116,7 +116,7 @@ public class AttributeEditionControl extends Composite {
 
         Composite viewerComposite = formPage.getToolkit().createComposite(this);
         viewerComposite.setLayout(GridLayoutFactory.fillDefaults().spacing(LayoutConstants.getSpacing().x, 1).create());
-        viewerComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).hint(SWT.DEFAULT, 300).create());
+        viewerComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 
         Composite toolbarComposite = formPage.getToolkit().createComposite(viewerComposite);
         toolbarComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
@@ -152,15 +152,16 @@ public class AttributeEditionControl extends Composite {
     }
 
     private void createDetailsSection() {
-        Section detailsSection = formPage.getToolkit().createSection(this, Section.EXPANDED);
+        var detailsSection = formPage.getToolkit().createSection(this, Section.TWISTIE);
         detailsSection.setLayout(GridLayoutFactory.fillDefaults().create());
-        detailsSection.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+        detailsSection.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         detailsSection.setText(Messages.details);
         fieldDetailsControl = new FieldDetailsControl(detailsSection, formPage, selectedFieldObservable, ctx);
         detailsSection.setClient(fieldDetailsControl);
         ctx.bindValue(WidgetProperties.visible().observe(detailsSection), new ComputedValueBuilder<Boolean>()
                 .withSupplier(() -> selectedFieldObservable.getValue() != null)
                 .build());
+        selectedFieldObservable.addValueChangeListener(e -> detailsSection.setExpanded(e.diff.getNewValue() != null));
     }
 
     private void enableButtons() {

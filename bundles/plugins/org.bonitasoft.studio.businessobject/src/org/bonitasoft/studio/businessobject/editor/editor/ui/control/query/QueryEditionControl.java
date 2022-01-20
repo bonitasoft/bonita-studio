@@ -112,7 +112,7 @@ public class QueryEditionControl {
 
     private void createDefinitionSection(Composite parent) {
         this.section = formPage.getToolkit().createSection(parent, Section.EXPANDED);
-        section.setLayoutData(GridDataFactory.fillDefaults().create());
+        section.setLayoutData(GridDataFactory.fillDefaults().grab(false, true).create());
         section.setLayout(GridLayoutFactory.fillDefaults().create());
 
         Composite client = formPage.getToolkit().createComposite(section);
