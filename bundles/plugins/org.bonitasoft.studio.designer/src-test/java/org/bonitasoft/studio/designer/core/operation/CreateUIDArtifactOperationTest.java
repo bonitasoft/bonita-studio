@@ -42,7 +42,7 @@ public class CreateUIDArtifactOperationTest {
 
     private void validateJsonBodyForPages() throws Exception {
         Map<String, Object> pageBody = createPageOperation.createBody();
-        assertThat(pageBody.get(TYPE)).isEqualTo(ArtifactyType.PAGE);
+        assertThat(pageBody.get(TYPE)).isEqualTo(ArtifactyType.PAGE.toString());
         List rows = (List) pageBody.get(ROWS);
         assertThat(rows.size()).isEqualTo(1);
         assertThat((List) rows.get(0)).isEmpty();
@@ -50,7 +50,7 @@ public class CreateUIDArtifactOperationTest {
 
     private void validateJsonBodyForForms() throws Exception {
         Map<String, Object> pageBody = createFormOperation.createBody();
-        assertThat(pageBody.get(TYPE)).isEqualTo(ArtifactyType.FORM);
+        assertThat(pageBody.get(TYPE)).isEqualTo(ArtifactyType.FORM.toString());
         List rows = (List) pageBody.get(ROWS);
         assertThat(rows.size()).isEqualTo(1);
         assertThat((List) rows.get(0)).isEmpty();
@@ -58,7 +58,7 @@ public class CreateUIDArtifactOperationTest {
 
     private void validateJsonBodyForLayouts() throws Exception {
         Map<String, Object> pageBody = createLayoutOperation.createBody();
-        assertThat(pageBody.get(TYPE)).isEqualTo(ArtifactyType.LAYOUT);
+        assertThat(pageBody.get(TYPE)).isEqualTo(ArtifactyType.LAYOUT.toString());
         List rows = (List) pageBody.get(ROWS);
         assertThat(rows.size()).isEqualTo(1);
         assertThat((List) rows.get(0)).isEmpty();
