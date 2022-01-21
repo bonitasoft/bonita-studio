@@ -75,6 +75,7 @@ public class TomcatVmArgsBuilder {
         addSystemProperty(args, DatabaseHandler.DB_LOCATION_PROPERTY,
                 "\"" + getDBLocation().getAbsolutePath() + "\"");
         addSystemProperty(args, "bonita.csrf.cookie.path", "\"/\"");
+        addSystemProperty(args, "bonita.runtime.logger.sysout", "Console");
         final String res = args.toString();
         if (System.getProperty("log.tomcat.vm.args") != null) {
             BonitaStudioLog.info(res, EnginePlugin.PLUGIN_ID);
