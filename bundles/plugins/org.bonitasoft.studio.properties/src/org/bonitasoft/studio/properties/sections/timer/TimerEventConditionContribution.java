@@ -22,13 +22,13 @@ import org.bonitasoft.studio.common.properties.IExtensibleGridPropertySectionCon
 import org.bonitasoft.studio.common.widgets.GTKStyleHandler;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.process.AbstractTimerEvent;
+import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditor;
 import org.bonitasoft.studio.properties.i18n.Messages;
 import org.bonitasoft.studio.properties.sections.timer.wizard.EditTimerConditionWizard;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.LabelEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ISelection;
@@ -38,6 +38,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
 
@@ -95,10 +96,10 @@ public class TimerEventConditionContribution implements IExtensibleGridPropertyS
             String conditionLabel = groovyToLabel(condition);
             conditionViewer.setText(conditionLabel != null ? conditionLabel : "");
 
-            DiagramEditor editor = (DiagramEditor) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
+            IEditorPart editor =  PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
                     .getActiveEditor();
-            if (editor != null) {
-                EditPart ep = GMFTools.findEditPart(editor.getDiagramEditPart(), eObject);
+            if (editor instanceof ProcessDiagramEditor) {
+                EditPart ep = GMFTools.findEditPart(((ProcessDiagramEditor)editor).getDiagramEditPart(), eObject);
                 if (ep != null && !ep.getChildren().isEmpty()) {
                     ((LabelEditPart) ep.getChildren().get(0)).refresh();
                 }
