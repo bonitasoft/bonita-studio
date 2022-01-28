@@ -69,7 +69,8 @@ import org.eclipse.wst.server.core.util.SocketUtil;
 
 public class ServerPreferencePage extends AbstractBonitaPreferencePage implements IWorkbenchPreferencePage {
 
-    private static final String ACM_CONTRIBUTOR_ID = "Acm";
+    public static final String ACM_CONTRIBUTOR_ID = "Acm";
+    public static final String DYNAMIC_SECURITY_CONTRIBUTOR_ID = "DynamicSecurityCheck";
     private Integer newPort = new Integer(-1);
     private IntegerFieldEditor port;
     private IntegerFieldEditor xmxOption;
@@ -95,19 +96,21 @@ public class ServerPreferencePage extends AbstractBonitaPreferencePage implement
 
         createTitleBar(Messages.BonitaPreferenceDialog_UserXP_Settings, Pics.getImage(PicsConstants.preferenceLogin),
                 false);
-        
-       var userAppTokenField = new StringFieldEditor(EnginePreferenceConstants.USER_APP_TOKEN,
+
+        var userAppTokenField = new StringFieldEditor(EnginePreferenceConstants.USER_APP_TOKEN,
                 Messages.userAppToken,
                 getFieldEditorParent());
-       getContributedEditors().put(userAppTokenField, EnginePlugin.getDefault().getPreferenceStore());
-       userAppTokenField.setEmptyStringAllowed(false);
-       addField(userAppTokenField);    
+        getContributedEditors().put(userAppTokenField, EnginePlugin.getDefault().getPreferenceStore());
+        userAppTokenField.setEmptyStringAllowed(false);
+        addField(userAppTokenField);
 
         BooleanFieldEditor lazyEditor = new BooleanFieldEditor(EnginePreferenceConstants.LAZYLOAD_ENGINE,
                 Messages.engineLazyLoad,
                 BooleanFieldEditor.SEPARATE_LABEL,
                 getFieldEditorParent());
         addField(lazyEditor);
+        
+        createPreferenceEditorContributions(DYNAMIC_SECURITY_CONTRIBUTOR_ID);
 
         debugCustomPage = new BooleanFieldEditor(BonitaPreferenceConstants.CUSTOM_PAGE_DEBUG,
                 Messages.debugCustomPageMode,
