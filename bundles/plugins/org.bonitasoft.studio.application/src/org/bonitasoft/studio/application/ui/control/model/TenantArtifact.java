@@ -26,6 +26,9 @@ public class TenantArtifact extends FileStoreArtifact implements ITenantResource
 
     @Override
     public int compareTo(TenantArtifact artifact) {
+        if(artifact.getName().equals("bdm_access_control.xml")) {
+            return -1; // Always last to be deployed
+        }
         return Integer.compare(ProjectExplorerViewerComparator.REPO_STORE_ORDER.get(((RepositoryStore) getParent()).getName()), ProjectExplorerViewerComparator.REPO_STORE_ORDER.get(((RepositoryStore) artifact.getParent()).getName()));
     }
     
