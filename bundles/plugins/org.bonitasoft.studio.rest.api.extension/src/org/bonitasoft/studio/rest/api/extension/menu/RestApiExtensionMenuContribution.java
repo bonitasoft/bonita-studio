@@ -20,8 +20,6 @@ import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.jface.action.ContributionItem;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.MenuAdapter;
-import org.eclipse.swt.events.MenuEvent;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 
@@ -71,13 +69,6 @@ public class RestApiExtensionMenuContribution extends ContributionItem {
         var item = new MenuItem(parent, SWT.NONE, index);
         item.setText(text);
         item.addListener(SWT.Selection, e -> commandExecutor.executeCommand(command, null));
-        parent.addMenuListener(new MenuAdapter() {
-
-            @Override
-            public void menuShown(MenuEvent e) {
-                item.setEnabled(commandExecutor.canExecute(command, null));
-            }
-        });
     }
 
 }
