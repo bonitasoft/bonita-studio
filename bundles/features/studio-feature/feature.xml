@@ -249,6 +249,10 @@ along with this program. If not, see &lt;http://www.gnu.org/licenses/&gt;.
          id="platform-specific-feature"
          version="0.0.0"/>
 
+   <includes
+         id="org.eclipse.m2e.sse.ui.feature"
+         version="0.0.0"/>
+
    <plugin
          id="org.bonitasoft.studio"
          download-size="0"
