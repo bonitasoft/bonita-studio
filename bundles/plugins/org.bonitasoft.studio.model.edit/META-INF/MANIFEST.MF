@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.bonitasoft.studio.model.edit;singleton:=true
-Bundle-Version: 7.13.3.qualifier
+Bundle-Version: 7.13.4.qualifier
 Bundle-ClassPath: .
 Bundle-Activator: org.bonitasoft.studio.model.edit.ProcessEditPlugin$Implementation
 Bundle-Vendor: %providerName
