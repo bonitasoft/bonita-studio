@@ -98,7 +98,7 @@ public class GITRepositoryStatusDialog extends Dialog {
         branch.setText(String.format("%s:  %s", Messages.currentBranch, brancheInfo));
 
         try {
-            RepositoryUtil repositoryUtil = RepositoryUtil.getInstance();
+            RepositoryUtil repositoryUtil = RepositoryUtil.INSTANCE;
             BranchTrackingStatus trackingStatus = BranchTrackingStatus.of(gitRepository,
                     repositoryUtil.getShortBranch(gitRepository));
             if (trackingStatus != null

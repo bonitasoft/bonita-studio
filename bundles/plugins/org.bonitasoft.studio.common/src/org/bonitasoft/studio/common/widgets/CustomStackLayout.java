@@ -34,7 +34,9 @@ public class CustomStackLayout extends StackLayout {
     public void setTopControl(final Control topControl) {
         this.topControl = topControl;
         super.topControl = topControl;
-        composite.layout();
+        if(!composite.isDisposed()) {
+            composite.layout();
+        }
     }
 
     public Control getTopControl() {

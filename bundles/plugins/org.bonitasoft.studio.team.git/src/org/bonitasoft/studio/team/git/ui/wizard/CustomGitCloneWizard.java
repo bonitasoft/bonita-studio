@@ -30,21 +30,21 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.egit.core.RepositoryUtil;
+import org.eclipse.egit.core.credentials.UserPasswordCredentials;
+import org.eclipse.egit.core.internal.credentials.EGitCredentialsProvider;
 import org.eclipse.egit.core.internal.util.ResourceUtil;
 import org.eclipse.egit.core.op.CloneOperation;
 import org.eclipse.egit.core.op.ConfigureFetchAfterCloneTask;
 import org.eclipse.egit.core.op.ConfigureGerritAfterCloneTask;
 import org.eclipse.egit.core.op.ConfigurePushAfterCloneTask;
 import org.eclipse.egit.core.op.SetRepositoryConfigPropertyTask;
-import org.eclipse.egit.core.securestorage.UserPasswordCredentials;
 import org.eclipse.egit.core.settings.GitSettings;
 import org.eclipse.egit.ui.Activator;
+import org.eclipse.egit.ui.internal.KnownHosts;
 import org.eclipse.egit.ui.internal.SecureStoreUtils;
 import org.eclipse.egit.ui.internal.UIText;
 import org.eclipse.egit.ui.internal.clone.GitCloneWizard;
-import org.eclipse.egit.ui.internal.clone.RememberHostTask;
 import org.eclipse.egit.ui.internal.components.RepositorySelection;
-import org.eclipse.egit.ui.internal.credentials.EGitCredentialsProvider;
 import org.eclipse.egit.ui.internal.dialogs.BasicConfigurationDialog;
 import org.eclipse.egit.ui.internal.provisional.wizards.GitRepositoryInfo;
 import org.eclipse.egit.ui.internal.provisional.wizards.GitRepositoryInfo.PushInfo;
@@ -59,6 +59,7 @@ import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.transport.CredentialsProvider;
 import org.eclipse.jgit.transport.URIish;
 import org.eclipse.osgi.util.NLS;
+import org.eclipse.ui.PlatformUI;
 
 public class CustomGitCloneWizard extends GitCloneWizard {
 
@@ -182,7 +183,7 @@ public class CustomGitCloneWizard extends GitCloneWizard {
             final IProgressMonitor monitor) throws InvocationTargetException,
             InterruptedException {
 
-        final RepositoryUtil util = RepositoryUtil.getInstance();
+        final RepositoryUtil util = RepositoryUtil.INSTANCE;
 
         op.run(monitor);
         util.addConfiguredRepository(op.getGitDir());
@@ -280,7 +281,10 @@ public class CustomGitCloneWizard extends GitCloneWizard {
         if (scheme != null && scheme.toLowerCase().startsWith("http")) { //$NON-NLS-1$
             String host = uri.getHost();
             if (host != null) {
-                op.addPostCloneTask(new RememberHostTask(host));
+                op.addPostCloneTask((repo, monitor) -> {
+                    PlatformUI.getWorkbench().getDisplay()
+                            .asyncExec(() -> KnownHosts.addKnownHost(host));
+                });
             }
         }
     }

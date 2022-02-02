@@ -72,8 +72,8 @@ public class CloneGitProject extends AbstractHandler {
                 }
                 var mapping = RepositoryMapping.getMapping(project);
                 if (mapping != null && mapping.getRepository() != null) {
-                    IndexDiffCache.getInstance().remove(mapping.getGitDirAbsolutePath().toFile());
-                    IndexDiffCache.getInstance()
+                    IndexDiffCache.INSTANCE.remove(mapping.getGitDirAbsolutePath().toFile());
+                    IndexDiffCache.INSTANCE
                             .getIndexDiffCacheEntry(mapping.getRepository());
                 }
 

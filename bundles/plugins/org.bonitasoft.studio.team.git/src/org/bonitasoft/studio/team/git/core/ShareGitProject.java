@@ -229,7 +229,7 @@ public class ShareGitProject extends AbstractHandler {
                         if (!gitDir.toString().contains("..")) //$NON-NLS-1$
                             project.refreshLocal(IResource.DEPTH_ONE,
                                     new NullProgressMonitor());
-                        RepositoryUtil.getInstance().addConfiguredRepository(gitDir);
+                        RepositoryUtil.INSTANCE.addConfiguredRepository(gitDir);
                         var gitIgnore = project.getFile(Constants.GITIGNORE_FILENAME);
                         if(!gitIgnore.exists()) {
                             gitIgnore.create(new ByteArrayInputStream(new byte[0]), true, new NullProgressMonitor());

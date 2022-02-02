@@ -190,7 +190,7 @@ public class ProjectExplorerBot extends BotBase {
                         return false;
                     }
                 })
-                .withFailureMessage(() -> String.format("The node %s of '%s' isn't available", node, item))
+                .withFailureMessage(() -> String.format("The node %s of '%s' isn't available. Found children %s", node, item, item.getNodes()))
                 .create();
     }
 

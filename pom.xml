@@ -10,7 +10,7 @@
 	<packaging>pom</packaging>
 	<name>Bonita Studio</name>
 	<properties>
-		<tychoVersion>2.5.0</tychoVersion>
+		<tychoVersion>2.6.0</tychoVersion>
 		<java.version>11</java.version>
 		<os-jvm-flags></os-jvm-flags>
 		<branding.version>2022.1-SNAPSHOT</branding.version>
@@ -30,7 +30,7 @@
 		<groovy-maven-plugin.groovy.version>3.0.8</groovy-maven-plugin.groovy.version>
         <!-- Must be synched with org.bonitasoft.studio.common.repository.core.maven.model.DefaultPluginVersions.MAVEN_DEPENDENCY_PLUGIN_VERSION --> 
 		<maven-dependency-plugin.version>3.1.2</maven-dependency-plugin.version>
-        <org.eclipse.swt.version>3.117.0</org.eclipse.swt.version>
+        <org.eclipse.swt.version>3.118.0</org.eclipse.swt.version>
 	</properties>
 	<modules>
 		<module>patched-plugins</module>
@@ -164,6 +164,23 @@
 								<id>org.bonitasoft.studioEx.console.libs</id>
 								<removeAll />
 							</filter>
+                            <filter>
+                                <type>eclipse-plugin</type>
+								<id>org.eclipse.m2e.editor.lemminx</id>
+								<removeAll />
+                            </filter>
+                            <filter>
+                                <type>eclipse-plugin</type>
+                                <id>org.eclipse.emf.compare.doc</id>
+                                <removeAll />
+                            </filter>
+                            <filter>
+                                <type>eclipse-plugin</type>
+                                <id>org.codehaus.groovy</id>
+                                <restrictTo>
+                                    <versionRange>[3.0.0,4.0.0)</versionRange>
+                                </restrictTo>
+                            </filter>
 						</filters>
 					</configuration>
 				</plugin>
@@ -299,7 +316,6 @@
 			</activation>
 			<modules>
 				<module>platform</module>
-<!-- 				<module>tests-dependencies</module> -->
 				<module>bundles</module>
 			</modules>
 		</profile>

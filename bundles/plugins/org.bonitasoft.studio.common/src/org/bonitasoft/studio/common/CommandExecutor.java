@@ -16,8 +16,6 @@ package org.bonitasoft.studio.common;
 
 import java.util.Map;
 
-import javax.inject.Inject;
-
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.eclipse.core.commands.ParameterizedCommand;
 import org.eclipse.core.commands.common.NotDefinedException;

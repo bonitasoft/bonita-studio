@@ -68,7 +68,9 @@ public class BdmLightweightDecorator extends LabelProvider
 
         IResource resource = getResource(element);
         if (resource != null && isBdmResource(resource)) {
-            if (BusinessObjectPlugin.getDefault().getPreferenceStore()
+            if (BusinessObjectPlugin.getDefault() != null 
+                    && BusinessObjectPlugin.getDefault().getPreferenceStore() != null 
+                    && BusinessObjectPlugin.getDefault().getPreferenceStore()
                     .getBoolean(BusinessObjectModelFileStore.BDM_DEPLOY_REQUIRED_PROPERTY)) {
                 decoration.addSuffix(" - " + Messages.bdmDeployMarker);
             }
