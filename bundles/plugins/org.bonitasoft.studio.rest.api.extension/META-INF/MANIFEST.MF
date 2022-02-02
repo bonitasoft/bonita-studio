@@ -87,6 +87,7 @@ Require-Bundle: org.eclipse.ui,
  org.bonitasoft.studio.migration
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Import-Package: javax.annotation;version="1.2.0",
+ javax.inject;version="1.0.0",
  org.bonitasoft.engine.api,
  org.bonitasoft.engine.bdm.model,
  org.bonitasoft.engine.bpm,

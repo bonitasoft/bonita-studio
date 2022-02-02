@@ -10,7 +10,7 @@
    </description>
 
    <copyright>
-      Copyright (C) 2009-2015 Bonitasoft S.A.
+      Copyright (C) 2009-2022 Bonitasoft S.A.
 Bonitasoft, 32 rue Gustave Eiffel - 38000 Grenoble
 This program is free software: you can redistribute it and/or
 modify
@@ -130,10 +130,6 @@ along with this program. If not, see &lt;http://www.gnu.org/licenses/&gt;.
          version="0.0.0"/>
 
    <includes
-         id="org.eclipse.emf.compare.ide.ui"
-         version="0.0.0"/>
-
-   <includes
          id="org.eclipse.babel.nls_eclipse_pt_BR"
          version="0.0.0"/>
 
@@ -183,10 +179,6 @@ along with this program. If not, see &lt;http://www.gnu.org/licenses/&gt;.
 
    <includes
          id="org.eclipse.babel.nls_technology.egit_pt_BR"
-         version="0.0.0"/>
-
-   <includes
-         id="org.eclipse.emf.compare.egit"
          version="0.0.0"/>
 
    <includes
@@ -531,14 +523,6 @@ along with this program. If not, see &lt;http://www.gnu.org/licenses/&gt;.
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.osgi.compatibility.state"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
          id="javax.wsdl"
          download-size="0"
          install-size="0"
@@ -651,20 +635,6 @@ along with this program. If not, see &lt;http://www.gnu.org/licenses/&gt;.
 
    <plugin
          id="org.bonitasoft.studio.connector.wizard.sapjco3"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="com.sun.jna.platform"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="com.sun.jna"
          download-size="0"
          install-size="0"
          version="0.0.0"

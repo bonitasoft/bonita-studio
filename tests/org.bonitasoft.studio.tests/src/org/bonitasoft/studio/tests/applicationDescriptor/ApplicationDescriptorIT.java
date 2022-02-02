@@ -171,7 +171,7 @@ public class ApplicationDescriptorIT {
                 .create()
                 .save();
 
-        ApplicationNodeContainer appNodeContainer = repositoryStore.getChild("ApplicationAddFromIntegrationTest.xml", true)
+        ApplicationNodeContainer appNodeContainer = repositoryStore.getChild("ApplicationAddFromIntegrationTest.xml", false)
                 .getContent();
         assertThat(appNodeContainer.getApplications()).hasSize(2);
         List<String> tokens = appNodeContainer.getApplications().stream().map(ApplicationNode::getToken)

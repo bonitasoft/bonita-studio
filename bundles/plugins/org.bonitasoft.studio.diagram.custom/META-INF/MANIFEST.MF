@@ -64,5 +64,6 @@ Require-Bundle: org.eclipse.ui,
  org.bonitasoft.studio.expression.editor
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-ActivationPolicy: lazy
-Import-Package: org.bonitasoft.engine.bpm.connector,
+Import-Package: javax.inject;version="1.0.0",
+ org.bonitasoft.engine.bpm.connector,
  org.bonitasoft.engine.session

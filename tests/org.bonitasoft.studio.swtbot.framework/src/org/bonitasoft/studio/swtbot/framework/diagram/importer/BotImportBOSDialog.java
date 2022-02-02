@@ -132,7 +132,7 @@ public class BotImportBOSDialog extends BotWizardDialog {
     }
 
     public BotImportBOSDependenciesPreviewPage dependenciesPreviewPage() {
-        var descriptionLabel = bot.label(Messages.extensionsPreviewDescription);
+        var descriptionLabel = bot.text(Messages.extensionsPreviewDescription);
         if (descriptionLabel != null) {
             return new BotImportBOSDependenciesPreviewPage(bot);
         }
