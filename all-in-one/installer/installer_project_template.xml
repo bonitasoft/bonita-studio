@@ -16,6 +16,8 @@
     <osxPlatforms>osx-intel osx-x86_64</osxPlatforms>
     <createOsxBundleZip>1</createOsxBundleZip>
     <createUninstaller>@enable.uninstaller@</createUninstaller>
+    <enableHDPISupport>1</enableHDPISupport>
+    <allowWindowResize>1</allowWindowResize>
     <slideShowLoop>1</slideShowLoop>
     <slideShowTiming>8</slideShowTiming>
     <slideShowImageList>
