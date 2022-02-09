@@ -67,8 +67,11 @@ public class ClientBonitaHomeBuildler {
                 Activator.PLUGIN_ID);
         final Map<String, String> param = new HashMap<String, String>();
             if (HTTP.equals(clientProperties.get(API_TYPE))) {
-            param.put(SERVER_URL, "http://" + host + ":" + port);
-            param.put(APPLICATION_NAME, BONITA_APPLICATION);
+                param.put(SERVER_URL, "http://" + host + ":" + port);
+                param.put(APPLICATION_NAME, BONITA_APPLICATION);
+                param.put("basicAuthentication.active", "true");
+                param.put("basicAuthentication.username", "http-api");
+                param.put("basicAuthentication.password", "h11p-@p1");
             }
         APITypeManager.setAPITypeAndParams(ApiAccessType.valueOf(clientProperties.getProperty(API_TYPE)), param);
     }
