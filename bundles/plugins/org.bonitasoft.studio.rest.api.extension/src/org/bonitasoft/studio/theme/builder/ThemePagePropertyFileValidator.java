@@ -1,0 +1,43 @@
+/**
+ * Copyright (C) 2019 BonitaSoft S.A.
+ * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2.0 of the License, or
+ * (at your option) any later version.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
+package org.bonitasoft.studio.theme.builder;
+
+import java.util.Collections;
+
+import org.bonitasoft.studio.maven.builder.validator.ContentTypeValidator;
+import org.bonitasoft.studio.maven.builder.validator.PagePropertyFileValidator;
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IProject;
+
+public class ThemePagePropertyFileValidator extends PagePropertyFileValidator {
+
+    private IFolder parentFolder;
+
+    public ThemePagePropertyFileValidator(IProject project, IFolder parentFolder) {
+        super(project, Collections.singletonList(new ContentTypeValidator("theme")));
+        this.parentFolder = parentFolder;
+    }
+
+    @Override
+    protected String getPagePropertyPath() {
+        return "page.properties";
+    }
+
+    @Override
+    protected IFolder getParentFolder() {
+        return parentFolder;
+    }
+
+}

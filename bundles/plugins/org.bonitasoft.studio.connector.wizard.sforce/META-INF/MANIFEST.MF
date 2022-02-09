@@ -1,0 +1,29 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Salesforce Wizard Plugin
+Bundle-SymbolicName: org.bonitasoft.studio.connector.wizard.sforce;singleton:=true
+Bundle-Version: 7.14.0.qualifier
+Bundle-Activator: org.bonitasoft.studio.connector.wizard.sforce.Activator
+Bundle-Vendor: BonitaSoft S.A.
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.bonitasoft.studio.connectors;bundle-version="6.0.0",
+ org.bonitasoft.studio.connectors.model;bundle-version="6.0.0",
+ org.bonitasoft.studio.connectors.model.edit;bundle-version="6.0.0",
+ org.eclipse.emf.databinding;bundle-version="1.2.0",
+ org.bonitasoft.studio.model;bundle-version="1.0.0",
+ org.eclipse.ui.forms;bundle-version="3.5.101",
+ org.eclipse.jface.databinding;bundle-version="1.5.0",
+ org.bonitasoft.studio.expression.editor;bundle-version="6.0.0",
+ org.bonitasoft.studio.common;bundle-version="6.0.0",
+ org.bonitasoft.studio.common.repository
+Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-ActivationPolicy: lazy
+Bundle-ClassPath: .,
+ lib/force-partner-api.jar,
+ lib/force-wsc.jar,
+ lib/gson.jar,
+ lib/js.jar
+Export-Package: com.sforce.ws,org.bonitasoft.studio.connector.wizard.s
+ force.i18n;x-friends:="org.bonitasoft.studio.connector.wizard.sforce.
+ test",org.bonitasoft.studio.connector.wizard.sforce.tooling
