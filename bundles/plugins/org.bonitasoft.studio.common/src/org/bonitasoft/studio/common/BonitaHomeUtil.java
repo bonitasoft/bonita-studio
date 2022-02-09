@@ -43,6 +43,9 @@ public class BonitaHomeUtil {
             final Map<String, String> parameters = new HashMap<>();
             parameters.put(SERVER_URL, "http://" + host + ":" + serverPort);
             parameters.put(APPLICATION_NAME, BONITA_APPLICATION);
+            parameters.put("basicAuthentication.active", "true");
+            parameters.put("basicAuthentication.username", "http-api");
+            parameters.put("basicAuthentication.password", "h11p-@p1");
             APITypeManager.setAPITypeAndParams(ApiAccessType.valueOf(HTTP), parameters);
         } catch (final Exception e) {
             BonitaStudioLog.error(e);
