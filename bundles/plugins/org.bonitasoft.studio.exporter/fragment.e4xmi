@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="ASCII"?>
+<fragment:ModelFragments xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:commands="http://www.eclipse.org/ui/2010/UIModel/application/commands" xmlns:fragment="http://www.eclipse.org/ui/2010/UIModel/fragment" xmi:id="_3rL1MKgREeenrNDGZa6BCw">
+  <fragments xsi:type="fragment:StringModelFragment" xmi:id="_Ib_DcKgTEeenrNDGZa6BCw" featurename="commands" parentElementId="org.eclipse.e4.legacy.ide.application">
+    <elements xsi:type="commands:Command" xmi:id="_JjBkAKgTEeenrNDGZa6BCw" elementId="org.bonitasoft.studio.exporter.exportAsBPMN" commandName="%Export_As_BPMN"/>
+    <elements xsi:type="commands:Command" xmi:id="_LcPvcKgTEeenrNDGZa6BCw" elementId="org.bonitasoft.studio.exportBosArchive" commandName="%export">
+      <parameters xmi:id="_UYNM0MxmEeiOMvU_0otrhA" elementId="diagram" name="Diagram to export"/>
+    </elements>
+  </fragments>
+  <fragments xsi:type="fragment:StringModelFragment" xmi:id="_ddzQYKgTEeenrNDGZa6BCw" featurename="handlers" parentElementId="org.eclipse.e4.legacy.ide.application">
+    <elements xsi:type="commands:Handler" xmi:id="_elml8KgTEeenrNDGZa6BCw" elementId="org.bonitasoft.studio.exporter.bosArchive.handler" contributionURI="bundleclass://org.bonitasoft.studio.exporter/org.bonitasoft.studio.exporter.handler.ExportBosArchiveHandler" command="_LcPvcKgTEeenrNDGZa6BCw"/>
+    <elements xsi:type="commands:Handler" xmi:id="_7WsywKgTEeenrNDGZa6BCw" elementId="org.bonitasoft.studio.exporter.bpmn.handler" contributionURI="bundleclass://org.bonitasoft.studio.exporter/org.bonitasoft.studio.exporter.handler.ExportAsBPMNHandler" command="_JjBkAKgTEeenrNDGZa6BCw"/>
+  </fragments>
+</fragment:ModelFragments>

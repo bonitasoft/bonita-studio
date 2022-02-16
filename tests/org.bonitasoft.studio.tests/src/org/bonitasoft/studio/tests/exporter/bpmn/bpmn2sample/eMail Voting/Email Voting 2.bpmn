@@ -1,0 +1,1572 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+<semantic:definitions id="_1276277375471" targetNamespace="http://www.trisotech.com/definitions/_1276277375471" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:semantic="http://www.omg.org/spec/BPMN/20100524/MODEL">
+    <semantic:message id="_1276277375799"/>
+    <semantic:message id="_1276277376049"/>
+    <semantic:message id="_1276277377002"/>
+    <semantic:message id="_1276277378033"/>
+    <semantic:message id="_1276277377799"/>
+    <semantic:message id="_1276277378549"/>
+    <semantic:message id="_1276277378690"/>
+    <semantic:message id="_1276277379689"/>
+    <semantic:process isExecutable="false" id="_6">
+        <semantic:ioSpecification>
+            <semantic:dataInput isCollection="true" name="Issue List [Initial]" id="_6-139">
+                <semantic:dataState name="Initial"/>
+            </semantic:dataInput>
+            <semantic:inputSet/>
+            <semantic:inputSet>
+                <semantic:dataInputRefs>_6-139</semantic:dataInputRefs>
+            </semantic:inputSet>
+            <semantic:outputSet/>
+        </semantic:ioSpecification>
+        <semantic:dataObject isCollection="true" name="Issue List" id="_1276277380518"/>
+        <semantic:dataObject isCollection="true" name="Issue Votes" id="_1276277380522"/>
+        <semantic:dataObject name="Warning Text" id="DO1276277381221"/>
+        <semantic:dataObject name="Member Vote" id="DO1276277381447"/>
+        <semantic:dataObject name="Issue Votes" id="DO1276277381448"/>
+        <semantic:startEvent name="Friday" id="_6-53">
+            <semantic:outgoing>_6-167</semantic:outgoing>
+            <semantic:timerEventDefinition>
+                <semantic:timeDate/>
+            </semantic:timerEventDefinition>
+        </semantic:startEvent>
+        <semantic:userTask implementation="##unspecified" completionQuantity="1" isForCompensation="false" startQuantity="1" name="Review Issue List" id="_6-66">
+            <semantic:incoming>_6-167</semantic:incoming>
+            <semantic:outgoing>_6-169</semantic:outgoing>
+            <semantic:ioSpecification>
+                <semantic:dataInput id="Din1276277381462"/>
+                <semantic:inputSet>
+                    <semantic:dataInputRefs>Din1276277381462</semantic:dataInputRefs>
+                </semantic:inputSet>
+                <semantic:outputSet/>
+            </semantic:ioSpecification>
+            <semantic:dataInputAssociation id="_6-151">
+                <semantic:sourceRef>_6-139</semantic:sourceRef>
+                <semantic:targetRef>Din1276277381462</semantic:targetRef>
+            </semantic:dataInputAssociation>
+        </semantic:userTask>
+        <semantic:exclusiveGateway default="_6-171" gatewayDirection="Unspecified" name="Are issues  ready?" id="_6-117">
+            <semantic:incoming>_6-169</semantic:incoming>
+            <semantic:outgoing>_6-171</semantic:outgoing>
+            <semantic:outgoing>_6-778</semantic:outgoing>
+        </semantic:exclusiveGateway>
+        <semantic:endEvent name="" id="_6-153">
+            <semantic:incoming>_6-171</semantic:incoming>
+        </semantic:endEvent>
+        <semantic:subProcess triggeredByEvent="false" completionQuantity="1" isForCompensation="false" startQuantity="1" name="Discussion Cycle" id="_6-173">
+            <semantic:incoming>_6-778</semantic:incoming>
+            <semantic:incoming>_6-1999</semantic:incoming>
+            <semantic:outgoing>_6-780</semantic:outgoing>
+            <semantic:standardLoopCharacteristics testBefore="false"/>
+            <semantic:sendTask implementation="##WebService" messageRef="_1276277375799" completionQuantity="1" isForCompensation="false" startQuantity="1" name="Announce Issues for Discussion" id="_6-206">
+                <semantic:outgoing>_6-359</semantic:outgoing>
+                <semantic:outgoing>_6-361</semantic:outgoing>
+                <semantic:outgoing>_6-633</semantic:outgoing>
+                <semantic:ioSpecification>
+                    <semantic:dataInput id="Din1276277381446"/>
+                    <semantic:dataInput id="Din1276277381474"/>
+                    <semantic:dataInput id="Din1276277381477"/>
+                    <semantic:dataOutput id="Dout1276277381439"/>
+                    <semantic:inputSet>
+                        <semantic:dataInputRefs>Din1276277381446</semantic:dataInputRefs>
+                        <semantic:dataInputRefs>Din1276277381474</semantic:dataInputRefs>
+                        <semantic:dataInputRefs>Din1276277381477</semantic:dataInputRefs>
+                    </semantic:inputSet>
+                    <semantic:outputSet>
+                        <semantic:dataOutputRefs>Dout1276277381439</semantic:dataOutputRefs>
+                    </semantic:outputSet>
+                </semantic:ioSpecification>
+                <semantic:dataInputAssociation id="_6-725">
+                    <semantic:sourceRef>_6-709</semantic:sourceRef>
+                    <semantic:targetRef>Din1276277381446</semantic:targetRef>
+                </semantic:dataInputAssociation>
+                <semantic:dataInputAssociation id="_6-2025">
+                    <semantic:sourceRef>_6-139</semantic:sourceRef>
+                    <semantic:targetRef>Din1276277381474</semantic:targetRef>
+                </semantic:dataInputAssociation>
+                <semantic:dataInputAssociation id="_6-2055">
+                    <semantic:sourceRef>_6-2043</semantic:sourceRef>
+                    <semantic:targetRef>Din1276277381477</semantic:targetRef>
+                </semantic:dataInputAssociation>
+                <semantic:dataOutputAssociation id="_6-670">
+                    <semantic:sourceRef>Dout1276277381439</semantic:sourceRef>
+                    <semantic:targetRef>_6-651</semantic:targetRef>
+                </semantic:dataOutputAssociation>
+            </semantic:sendTask>
+            <semantic:userTask implementation="##unspecified" completionQuantity="1" isForCompensation="false" startQuantity="1" name="Check Calendar for Conference Call1" id="_6-257">
+                <semantic:incoming>_6-361</semantic:incoming>
+                <semantic:outgoing>_6-641</semantic:outgoing>
+            </semantic:userTask>
+            <semantic:userTask implementation="##unspecified" completionQuantity="1" isForCompensation="false" startQuantity="1" name="Moderate  E-mail Discussion" id="_6-308">
+                <semantic:incoming>_6-359</semantic:incoming>
+            </semantic:userTask>
+            <semantic:boundaryEvent attachedToRef="_6-308" cancelActivity="true" parallelMultiple="false" name="7 Days" id="_6-363">
+                <semantic:outgoing>_6-649</semantic:outgoing>
+                <semantic:timerEventDefinition>
+                    <semantic:timeDate/>
+                </semantic:timerEventDefinition>
+            </semantic:boundaryEvent>
+            <semantic:exclusiveGateway gatewayDirection="Unspecified" name="Conference  Call in  Discussion  Week?" id="_6-521">
+                <semantic:incoming>_6-641</semantic:incoming>
+                <semantic:outgoing>_6-643</semantic:outgoing>
+                <semantic:outgoing>_6-645</semantic:outgoing>
+            </semantic:exclusiveGateway>
+            <semantic:intermediateCatchEvent parallelMultiple="false" name="Wait until  Thursday, 9 am" id="_6-616">
+                <semantic:incoming>_6-645</semantic:incoming>
+                <semantic:outgoing>_6-647</semantic:outgoing>
+                <semantic:timerEventDefinition>
+                    <semantic:timeDate/>
+                </semantic:timerEventDefinition>
+            </semantic:intermediateCatchEvent>
+            <semantic:intermediateCatchEvent parallelMultiple="false" name="Delay 6 days from Announcement" id="_6-380">
+                <semantic:incoming>_6-633</semantic:incoming>
+                <semantic:outgoing>_6-635</semantic:outgoing>
+                <semantic:timerEventDefinition>
+                    <semantic:timeDate/>
+                </semantic:timerEventDefinition>
+            </semantic:intermediateCatchEvent>
+            <semantic:userTask implementation="##unspecified" completionQuantity="1" isForCompensation="false" startQuantity="1" name="Moderate Conference Call Discussion" id="_6-565">
+                <semantic:incoming>_6-647</semantic:incoming>
+                <semantic:outgoing>_6-666</semantic:outgoing>
+                <semantic:ioSpecification>
+                    <semantic:dataInput id="Din1276277381443"/>
+                    <semantic:inputSet>
+                        <semantic:dataInputRefs>Din1276277381443</semantic:dataInputRefs>
+                    </semantic:inputSet>
+                    <semantic:outputSet/>
+                </semantic:ioSpecification>
+                <semantic:dataInputAssociation id="_6-690">
+                    <semantic:sourceRef>_6-651</semantic:sourceRef>
+                    <semantic:targetRef>Din1276277381443</semantic:targetRef>
+                </semantic:dataInputAssociation>
+            </semantic:userTask>
+            <semantic:sendTask implementation="##WebService" messageRef="_1276277376049" completionQuantity="1" isForCompensation="false" startQuantity="1" name="E-mail discussion Deadline Warning" id="_6-397">
+                <semantic:incoming>_6-635</semantic:incoming>
+                <semantic:outgoing>_6-637</semantic:outgoing>
+                <semantic:ioSpecification>
+                    <semantic:dataInput id="Din1276277381440"/>
+                    <semantic:dataInput id="Din1276277381442"/>
+                    <semantic:inputSet>
+                        <semantic:dataInputRefs>Din1276277381440</semantic:dataInputRefs>
+                        <semantic:dataInputRefs>Din1276277381442</semantic:dataInputRefs>
+                    </semantic:inputSet>
+                    <semantic:outputSet/>
+                </semantic:ioSpecification>
+                <semantic:dataInputAssociation id="_6-684">
+                    <semantic:sourceRef>_6-672</semantic:sourceRef>
+                    <semantic:targetRef>Din1276277381440</semantic:targetRef>
+                </semantic:dataInputAssociation>
+                <semantic:dataInputAssociation id="_6-688">
+                    <semantic:sourceRef>_6-651</semantic:sourceRef>
+                    <semantic:targetRef>Din1276277381442</semantic:targetRef>
+                </semantic:dataInputAssociation>
+            </semantic:sendTask>
+            <semantic:exclusiveGateway gatewayDirection="Unspecified" name="" id="_6-543">
+                <semantic:incoming>_6-643</semantic:incoming>
+                <semantic:incoming>_6-666</semantic:incoming>
+                <semantic:outgoing>_6-668</semantic:outgoing>
+            </semantic:exclusiveGateway>
+            <semantic:parallelGateway gatewayDirection="Unspecified" name="" id="_6-448">
+                <semantic:incoming>_6-637</semantic:incoming>
+                <semantic:incoming>_6-649</semantic:incoming>
+                <semantic:incoming>_6-668</semantic:incoming>
+                <semantic:outgoing>_6-639</semantic:outgoing>
+            </semantic:parallelGateway>
+            <semantic:task completionQuantity="1" isForCompensation="false" startQuantity="1" name="Evaluate Discussion Progress" id="_6-470">
+                <semantic:incoming>_6-639</semantic:incoming>
+                <semantic:ioSpecification>
+                    <semantic:dataInput id="Din1276277381441"/>
+                    <semantic:dataOutput id="Dout1276277381444"/>
+                    <semantic:dataOutput id="Dout1276277381445"/>
+                    <semantic:inputSet>
+                        <semantic:dataInputRefs>Din1276277381441</semantic:dataInputRefs>
+                    </semantic:inputSet>
+                    <semantic:outputSet>
+                        <semantic:dataOutputRefs>Dout1276277381444</semantic:dataOutputRefs>
+                        <semantic:dataOutputRefs>Dout1276277381445</semantic:dataOutputRefs>
+                    </semantic:outputSet>
+                </semantic:ioSpecification>
+                <semantic:dataInputAssociation id="_6-686">
+                    <semantic:sourceRef>_6-651</semantic:sourceRef>
+                    <semantic:targetRef>Din1276277381441</semantic:targetRef>
+                </semantic:dataInputAssociation>
+                <semantic:dataOutputAssociation id="_6-721">
+                    <semantic:sourceRef>Dout1276277381444</semantic:sourceRef>
+                    <semantic:targetRef>_6-709</semantic:targetRef>
+                </semantic:dataOutputAssociation>
+                <semantic:dataOutputAssociation id="_6-723">
+                    <semantic:sourceRef>Dout1276277381445</semantic:sourceRef>
+                    <semantic:targetRef>_6-697</semantic:targetRef>
+                </semantic:dataOutputAssociation>
+            </semantic:task>
+            <semantic:sequenceFlow sourceRef="_6-206" targetRef="_6-308" name="" id="_6-359"/>
+            <semantic:sequenceFlow sourceRef="_6-206" targetRef="_6-257" name="" id="_6-361"/>
+            <semantic:sequenceFlow sourceRef="_6-206" targetRef="_6-380" name="" id="_6-633"/>
+            <semantic:sequenceFlow sourceRef="_6-380" targetRef="_6-397" name="" id="_6-635"/>
+            <semantic:sequenceFlow sourceRef="_6-397" targetRef="_6-448" name="" id="_6-637"/>
+            <semantic:sequenceFlow sourceRef="_6-448" targetRef="_6-470" name="" id="_6-639"/>
+            <semantic:sequenceFlow sourceRef="_6-257" targetRef="_6-521" name="" id="_6-641"/>
+            <semantic:sequenceFlow sourceRef="_6-521" targetRef="_6-543" name="No" id="_6-643"/>
+            <semantic:sequenceFlow sourceRef="_6-521" targetRef="_6-616" name="Yes" id="_6-645"/>
+            <semantic:sequenceFlow sourceRef="_6-616" targetRef="_6-565" name="" id="_6-647"/>
+            <semantic:sequenceFlow sourceRef="_6-363" targetRef="_6-448" name="" id="_6-649"/>
+            <semantic:sequenceFlow sourceRef="_6-565" targetRef="_6-543" name="" id="_6-666"/>
+            <semantic:sequenceFlow sourceRef="_6-543" targetRef="_6-448" name="" id="_6-668"/>
+            <semantic:dataObjectReference dataObjectRef="_1276277380518" name="Issue List" id="_6-651">
+            	<semantic:dataState name="In Discussion"/>
+            </semantic:dataObjectReference>
+            <semantic:dataObjectReference dataObjectRef="DO1276277381221" name="Warning Text" id="_6-672"/>
+            <semantic:dataObjectReference dataObjectRef="_1276277380518" name="Issue List" id="_6-709">
+                <semantic:dataState name="Not Ready"/>
+            </semantic:dataObjectReference>
+            <semantic:dataObjectReference dataObjectRef="_1276277380518" name="Issue List" id="_6-697">
+                <semantic:dataState name="Ready"/>
+            </semantic:dataObjectReference>
+            <semantic:textAnnotation id="_6-663">
+                <semantic:text>Conference Calls are every two weeks</semantic:text>
+            </semantic:textAnnotation>
+            <semantic:textAnnotation id="_6-692">
+                <semantic:text>The Process will loop if there is no discussion of the issues or sufficient solutions</semantic:text>
+            </semantic:textAnnotation>
+            <semantic:association associationDirection="None" sourceRef="_6-692" targetRef="_6-470" id="_6-695"/>
+            <semantic:association associationDirection="None" sourceRef="_6-663" targetRef="_6-521" id="_6-2023"/>
+        </semantic:subProcess>
+        <semantic:sendTask implementation="##WebService" messageRef="_1276277377002" completionQuantity="1" isForCompensation="false" startQuantity="1" name="Announce Issues for Vote" id="_6-727">
+            <semantic:incoming>_6-780</semantic:incoming>
+            <semantic:incoming>_6-1997</semantic:incoming>
+            <semantic:outgoing>_6-1726</semantic:outgoing>
+            <semantic:ioSpecification>
+                <semantic:dataInput id="Din1276277381475"/>
+                <semantic:dataInput id="Din1276277381476"/>
+                <semantic:dataOutput id="Dout1276277381463"/>
+                <semantic:inputSet>
+                    <semantic:dataInputRefs>Din1276277381475</semantic:dataInputRefs>
+                    <semantic:dataInputRefs>Din1276277381476</semantic:dataInputRefs>
+                </semantic:inputSet>
+                <semantic:outputSet>
+                    <semantic:dataOutputRefs>Dout1276277381463</semantic:dataOutputRefs>
+                </semantic:outputSet>
+            </semantic:ioSpecification>
+            <semantic:dataInputAssociation id="_6-2039">
+                <semantic:sourceRef>_6-2027</semantic:sourceRef>
+                <semantic:targetRef>Din1276277381475</semantic:targetRef>
+            </semantic:dataInputAssociation>
+            <semantic:dataInputAssociation id="_6-2041">
+                <semantic:sourceRef>_6-697</semantic:sourceRef>
+                <semantic:targetRef>Din1276277381476</semantic:targetRef>
+            </semantic:dataInputAssociation>
+            <semantic:dataOutputAssociation id="_6-1126">
+                <semantic:sourceRef>Dout1276277381463</semantic:sourceRef>
+                <semantic:targetRef>_6-1114</semantic:targetRef>
+            </semantic:dataOutputAssociation>
+        </semantic:sendTask>
+        <semantic:subProcess triggeredByEvent="false" completionQuantity="1" isForCompensation="false" startQuantity="1" name="Collect Votes" id="_6-794">
+            <semantic:incoming>_6-1726</semantic:incoming>
+            <semantic:incoming>_6-1798</semantic:incoming>
+            <semantic:outgoing>_6-1722</semantic:outgoing>
+            <semantic:startEvent name="" id="_6-827">
+                <semantic:outgoing>_6-992</semantic:outgoing>
+                <semantic:outgoing>_6-994</semantic:outgoing>
+                <semantic:outgoing>_6-996</semantic:outgoing>
+            </semantic:startEvent>
+            <semantic:subProcess triggeredByEvent="true" completionQuantity="1" isForCompensation="false" startQuantity="1" name="" id="_6-959">
+                <semantic:startEvent isInterrupting="false" name="Receive  Vote" id="_6-1222">
+                    <semantic:outgoing>_6-1361</semantic:outgoing>
+                    <semantic:dataOutput id="Dout1276277381449"/>
+                    <semantic:dataOutputAssociation id="_6-1365">
+                        <semantic:sourceRef>Dout1276277381449</semantic:sourceRef>
+                        <semantic:targetRef>_6-1337</semantic:targetRef>
+                    </semantic:dataOutputAssociation>
+                    <semantic:outputSet>
+                        <semantic:dataOutputRefs>Dout1276277381449</semantic:dataOutputRefs>
+                    </semantic:outputSet>
+                    <semantic:messageEventDefinition messageRef="_1276277378033"/>
+                </semantic:startEvent>
+                <semantic:userTask implementation="##unspecified" completionQuantity="1" isForCompensation="false" startQuantity="1" name="Increment Tally" id="_6-1235">
+                    <semantic:incoming>_6-1361</semantic:incoming>
+                    <semantic:outgoing>_6-1363</semantic:outgoing>
+                    <semantic:ioSpecification>
+                        <semantic:dataInput id="Din1276277381450"/>
+                        <semantic:dataInput id="Din1276277381464"/>
+                        <semantic:dataOutput id="Dout1276277381451"/>
+                        <semantic:inputSet>
+                            <semantic:dataInputRefs>Din1276277381450</semantic:dataInputRefs>
+                            <semantic:dataInputRefs>Din1276277381464</semantic:dataInputRefs>
+                        </semantic:inputSet>
+                        <semantic:outputSet>
+                            <semantic:dataOutputRefs>Dout1276277381451</semantic:dataOutputRefs>
+                        </semantic:outputSet>
+                    </semantic:ioSpecification>
+                    <semantic:dataInputAssociation id="_6-1367">
+                        <semantic:sourceRef>_6-1337</semantic:sourceRef>
+                        <semantic:targetRef>Din1276277381450</semantic:targetRef>
+                    </semantic:dataInputAssociation>
+                    <semantic:dataInputAssociation id="_6-1389">
+                        <semantic:sourceRef>_6-1114</semantic:sourceRef>
+                        <semantic:targetRef>Din1276277381464</semantic:targetRef>
+                    </semantic:dataInputAssociation>
+                    <semantic:dataOutputAssociation id="_6-1369">
+                        <semantic:sourceRef>Dout1276277381451</semantic:sourceRef>
+                        <semantic:targetRef>_6-1349</semantic:targetRef>
+                    </semantic:dataOutputAssociation>
+                </semantic:userTask>
+                <semantic:userTask implementation="##unspecified" completionQuantity="1" isForCompensation="false" startQuantity="1" name="Post Status on Web Site" id="_6-1286">
+                    <semantic:incoming>_6-1363</semantic:incoming>
+                    <semantic:outgoing>_6-1385</semantic:outgoing>
+                    <semantic:ioSpecification>
+                        <semantic:dataInput id="Din1276277381452"/>
+                        <semantic:inputSet>
+                            <semantic:dataInputRefs>Din1276277381452</semantic:dataInputRefs>
+                        </semantic:inputSet>
+                        <semantic:outputSet/>
+                    </semantic:ioSpecification>
+                    <semantic:dataInputAssociation id="_6-1387">
+                        <semantic:sourceRef>_6-1349</semantic:sourceRef>
+                        <semantic:targetRef>Din1276277381452</semantic:targetRef>
+                    </semantic:dataInputAssociation>
+                </semantic:userTask>
+                <semantic:endEvent name="" id="_6-1371">
+                    <semantic:incoming>_6-1385</semantic:incoming>
+                </semantic:endEvent>
+                <semantic:sequenceFlow sourceRef="_6-1222" targetRef="_6-1235" name="" id="_6-1361"/>
+                <semantic:sequenceFlow sourceRef="_6-1235" targetRef="_6-1286" name="" id="_6-1363"/>
+                <semantic:sequenceFlow sourceRef="_6-1286" targetRef="_6-1371" name="" id="_6-1385"/>
+                <semantic:dataObjectReference dataObjectRef="DO1276277381447" name="Member Vote" id="_6-1337"/>
+                <semantic:dataObjectReference dataObjectRef="DO1276277381448" name="Issue Votes" id="_6-1349"/>
+            </semantic:subProcess>
+            <semantic:userTask implementation="##unspecified" completionQuantity="1" isForCompensation="false" startQuantity="1" name="Check Calendar for Conference Call" id="_6-840">
+                <semantic:incoming>_6-992</semantic:incoming>
+                <semantic:incoming>_6-2074</semantic:incoming>
+                <semantic:outgoing>_6-1020</semantic:outgoing>
+            </semantic:userTask>
+            <semantic:userTask implementation="##unspecified" completionQuantity="1" isForCompensation="false" startQuantity="1" name="Moderate E-mail Discussion" id="_6-891">
+                <semantic:incoming>_6-994</semantic:incoming>
+                <semantic:ioSpecification>
+                    <semantic:dataInput id="Din1276277381456"/>
+                    <semantic:inputSet>
+                        <semantic:dataInputRefs>Din1276277381456</semantic:dataInputRefs>
+                    </semantic:inputSet>
+                    <semantic:outputSet/>
+                </semantic:ioSpecification>
+                <semantic:dataInputAssociation id="_6-1218">
+                    <semantic:sourceRef>_6-1114</semantic:sourceRef>
+                    <semantic:targetRef>Din1276277381456</semantic:targetRef>
+                </semantic:dataInputAssociation>
+            </semantic:userTask>
+            <semantic:boundaryEvent attachedToRef="_6-891" cancelActivity="true" parallelMultiple="false" name="14 Days" id="_6-2076">
+                <semantic:outgoing>_6-1112</semantic:outgoing>
+                <semantic:timerEventDefinition>
+                    <semantic:timeDate/>
+                </semantic:timerEventDefinition>
+            </semantic:boundaryEvent>
+            <semantic:intermediateCatchEvent parallelMultiple="false" name="Delay 13 days" id="_6-942">
+                <semantic:incoming>_6-996</semantic:incoming>
+                <semantic:outgoing>_6-1198</semantic:outgoing>
+                <semantic:timerEventDefinition>
+                    <semantic:timeDate/>
+                </semantic:timerEventDefinition>
+            </semantic:intermediateCatchEvent>
+            <semantic:exclusiveGateway gatewayDirection="Unspecified" name="Conference Call in Voting Week?" id="_6-998">
+                <semantic:incoming>_6-1020</semantic:incoming>
+                <semantic:outgoing>_6-1104</semantic:outgoing>
+                <semantic:outgoing>_6-1106</semantic:outgoing>
+            </semantic:exclusiveGateway>
+            <semantic:intermediateCatchEvent parallelMultiple="false" name="Wait until  Thursday, 9am" id="_6-1022">
+                <semantic:incoming>_6-1106</semantic:incoming>
+                <semantic:outgoing>_6-1108</semantic:outgoing>
+                <semantic:timerEventDefinition>
+                    <semantic:timeDate/>
+                </semantic:timerEventDefinition>
+            </semantic:intermediateCatchEvent>
+            <semantic:intermediateCatchEvent parallelMultiple="false" name="Wait until Monday, 9 Am" id="_6-2057">
+                <semantic:incoming>_6-1104</semantic:incoming>
+                <semantic:outgoing>_6-2074</semantic:outgoing>
+                <semantic:timerEventDefinition>
+                    <semantic:timeDate/>
+                </semantic:timerEventDefinition>
+            </semantic:intermediateCatchEvent>
+            <semantic:userTask implementation="##unspecified" completionQuantity="1" isForCompensation="false" startQuantity="1" name="Moderate Conference Call Discussion" id="_6-1039">
+                <semantic:incoming>_6-1108</semantic:incoming>
+                <semantic:outgoing>_6-1110</semantic:outgoing>
+                <semantic:ioSpecification>
+                    <semantic:dataInput id="Din1276277381454"/>
+                    <semantic:inputSet>
+                        <semantic:dataInputRefs>Din1276277381454</semantic:dataInputRefs>
+                    </semantic:inputSet>
+                    <semantic:outputSet/>
+                </semantic:ioSpecification>
+                <semantic:dataInputAssociation id="_6-1128">
+                    <semantic:sourceRef>_6-1114</semantic:sourceRef>
+                    <semantic:targetRef>Din1276277381454</semantic:targetRef>
+                </semantic:dataInputAssociation>
+            </semantic:userTask>
+            <semantic:sendTask implementation="##WebService" messageRef="_1276277377799" completionQuantity="1" isForCompensation="false" startQuantity="1" name="E-mail Vote Deadline Warning" id="_6-1130">
+                <semantic:incoming>_6-1198</semantic:incoming>
+                <semantic:outgoing>_6-1200</semantic:outgoing>
+                <semantic:ioSpecification>
+                    <semantic:dataInput id="Din1276277381455"/>
+                    <semantic:dataInput id="Din1276277381457"/>
+                    <semantic:inputSet>
+                        <semantic:dataInputRefs>Din1276277381455</semantic:dataInputRefs>
+                        <semantic:dataInputRefs>Din1276277381457</semantic:dataInputRefs>
+                    </semantic:inputSet>
+                    <semantic:outputSet/>
+                </semantic:ioSpecification>
+                <semantic:dataInputAssociation id="_6-1216">
+                    <semantic:sourceRef>_6-1204</semantic:sourceRef>
+                    <semantic:targetRef>Din1276277381455</semantic:targetRef>
+                </semantic:dataInputAssociation>
+                <semantic:dataInputAssociation id="_6-1220">
+                    <semantic:sourceRef>_6-1114</semantic:sourceRef>
+                    <semantic:targetRef>Din1276277381457</semantic:targetRef>
+                </semantic:dataInputAssociation>
+            </semantic:sendTask>
+            <semantic:intermediateCatchEvent parallelMultiple="false" name="Delay 1 day" id="_6-1181">
+                <semantic:incoming>_6-1200</semantic:incoming>
+                <semantic:outgoing>_6-1202</semantic:outgoing>
+                <semantic:timerEventDefinition>
+                    <semantic:timeDate/>
+                </semantic:timerEventDefinition>
+            </semantic:intermediateCatchEvent>
+            <semantic:endEvent name="" id="_6-1090">
+                <semantic:incoming>_6-1110</semantic:incoming>
+                <semantic:incoming>_6-1112</semantic:incoming>
+                <semantic:incoming>_6-1202</semantic:incoming>
+            </semantic:endEvent>
+            <semantic:sequenceFlow sourceRef="_6-827" targetRef="_6-840" name="" id="_6-992"/>
+            <semantic:sequenceFlow sourceRef="_6-827" targetRef="_6-891" name="" id="_6-994"/>
+            <semantic:sequenceFlow sourceRef="_6-827" targetRef="_6-942" name="" id="_6-996"/>
+            <semantic:sequenceFlow sourceRef="_6-840" targetRef="_6-998" name="" id="_6-1020"/>
+            <semantic:sequenceFlow sourceRef="_6-998" targetRef="_6-2057" name="No" id="_6-1104"/>
+            <semantic:sequenceFlow sourceRef="_6-998" targetRef="_6-1022" name="Yes" id="_6-1106"/>
+            <semantic:sequenceFlow sourceRef="_6-1022" targetRef="_6-1039" name="" id="_6-1108"/>
+            <semantic:sequenceFlow sourceRef="_6-1039" targetRef="_6-1090" name="" id="_6-1110"/>
+            <semantic:sequenceFlow sourceRef="_6-2076" targetRef="_6-1090" name="" id="_6-1112"/>
+            <semantic:sequenceFlow sourceRef="_6-942" targetRef="_6-1130" name="" id="_6-1198"/>
+            <semantic:sequenceFlow sourceRef="_6-1130" targetRef="_6-1181" name="" id="_6-1200"/>
+            <semantic:sequenceFlow sourceRef="_6-1181" targetRef="_6-1090" name="" id="_6-1202"/>
+            <semantic:sequenceFlow sourceRef="_6-2057" targetRef="_6-840" name="" id="_6-2074"/>
+            <semantic:dataObjectReference dataObjectRef="_1276277380518" name="Issue List" id="_6-1114">
+                <semantic:dataState name="In Voting"/>
+            </semantic:dataObjectReference>
+            <semantic:dataObjectReference dataObjectRef="DO1276277381221" name="Warning Text" id="_6-1204"/>
+        </semantic:subProcess>
+        <semantic:userTask implementation="##unspecified" completionQuantity="1" isForCompensation="false" startQuantity="1" name="Prepare Results" id="_6-1391">
+            <semantic:incoming>_6-1722</semantic:incoming>
+            <semantic:outgoing>_6-1712</semantic:outgoing>
+            <semantic:outgoing>_6-1714</semantic:outgoing>
+            <semantic:ioSpecification>
+                <semantic:dataInput id="Din1276277381465"/>
+                <semantic:dataOutput id="Dout1276277381466"/>
+                <semantic:inputSet>
+                    <semantic:dataInputRefs>Din1276277381465</semantic:dataInputRefs>
+                </semantic:inputSet>
+                <semantic:outputSet>
+                    <semantic:dataOutputRefs>Dout1276277381466</semantic:dataOutputRefs>
+                </semantic:outputSet>
+            </semantic:ioSpecification>
+            <semantic:dataInputAssociation id="_6-1730">
+                <semantic:sourceRef>_6-1349</semantic:sourceRef>
+                <semantic:targetRef>Din1276277381465</semantic:targetRef>
+            </semantic:dataInputAssociation>
+            <semantic:dataOutputAssociation id="_6-1744">
+                <semantic:sourceRef>Dout1276277381466</semantic:sourceRef>
+                <semantic:targetRef>_6-1732</semantic:targetRef>
+            </semantic:dataOutputAssociation>
+        </semantic:userTask>
+        <semantic:userTask implementation="##unspecified" completionQuantity="1" isForCompensation="false" startQuantity="1" name="Post Results on Web Site" id="_6-1442">
+            <semantic:incoming>_6-1712</semantic:incoming>
+            <semantic:outgoing>_6-1716</semantic:outgoing>
+            <semantic:ioSpecification>
+                <semantic:dataInput id="Din1276277381467"/>
+                <semantic:inputSet>
+                    <semantic:dataInputRefs>Din1276277381467</semantic:dataInputRefs>
+                </semantic:inputSet>
+                <semantic:outputSet/>
+            </semantic:ioSpecification>
+            <semantic:dataInputAssociation id="_6-1746">
+                <semantic:sourceRef>_6-1732</semantic:sourceRef>
+                <semantic:targetRef>Din1276277381467</semantic:targetRef>
+            </semantic:dataInputAssociation>
+        </semantic:userTask>
+        <semantic:sendTask implementation="##WebService" messageRef="_1276277378549" completionQuantity="1" isForCompensation="false" startQuantity="1" name="E-mail Results of Vote" id="_6-1493">
+            <semantic:incoming>_6-1714</semantic:incoming>
+            <semantic:outgoing>_6-1718</semantic:outgoing>
+            <semantic:ioSpecification>
+                <semantic:dataInput id="Din1276277381468"/>
+                <semantic:inputSet>
+                    <semantic:dataInputRefs>Din1276277381468</semantic:dataInputRefs>
+                </semantic:inputSet>
+                <semantic:outputSet/>
+            </semantic:ioSpecification>
+            <semantic:dataInputAssociation id="_6-1748">
+                <semantic:sourceRef>_6-1732</semantic:sourceRef>
+                <semantic:targetRef>Din1276277381468</semantic:targetRef>
+            </semantic:dataInputAssociation>
+        </semantic:sendTask>
+        <semantic:parallelGateway gatewayDirection="Unspecified" name="" id="_6-1544">
+            <semantic:incoming>_6-1716</semantic:incoming>
+            <semantic:incoming>_6-1718</semantic:incoming>
+            <semantic:outgoing>_6-1720</semantic:outgoing>
+        </semantic:parallelGateway>
+        <semantic:exclusiveGateway default="_6-1774" gatewayDirection="Unspecified" name="Did Enough Members Vote?" id="_6-1566">
+            <semantic:incoming>_6-1720</semantic:incoming>
+            <semantic:outgoing>_6-1750</semantic:outgoing>
+            <semantic:outgoing>_6-1774</semantic:outgoing>
+        </semantic:exclusiveGateway>
+        <semantic:userTask implementation="##unspecified" completionQuantity="1" isForCompensation="false" startQuantity="1" name="Reduce number of Voting Members and Recalculate Vote" id="_6-1588">
+            <semantic:incoming>_6-1776</semantic:incoming>
+            <semantic:outgoing>_6-1802</semantic:outgoing>
+            <semantic:ioSpecification>
+                <semantic:dataInput id="Din1276277381471"/>
+                <semantic:dataOutput id="Dout1276277381472"/>
+                <semantic:inputSet>
+                    <semantic:dataInputRefs>Din1276277381471</semantic:dataInputRefs>
+                </semantic:inputSet>
+                <semantic:outputSet>
+                    <semantic:dataOutputRefs>Dout1276277381472</semantic:dataOutputRefs>
+                </semantic:outputSet>
+            </semantic:ioSpecification>
+            <semantic:dataInputAssociation id="_6-2005">
+                <semantic:sourceRef>_6-1732</semantic:sourceRef>
+                <semantic:targetRef>Din1276277381471</semantic:targetRef>
+            </semantic:dataInputAssociation>
+            <semantic:dataOutputAssociation id="_6-2019">
+                <semantic:sourceRef>Dout1276277381472</semantic:sourceRef>
+                <semantic:targetRef>_6-2007</semantic:targetRef>
+            </semantic:dataOutputAssociation>
+        </semantic:userTask>
+        <semantic:exclusiveGateway default="_6-1778" gatewayDirection="Unspecified" name="Have the  Members been warned?" id="_6-1639">
+            <semantic:incoming>_6-1750</semantic:incoming>
+            <semantic:outgoing>_6-1776</semantic:outgoing>
+            <semantic:outgoing>_6-1778</semantic:outgoing>
+        </semantic:exclusiveGateway>
+        <semantic:sendTask implementation="##WebService" messageRef="_1276277378690" completionQuantity="1" isForCompensation="false" startQuantity="1" name="Re-announce Vote with Warning to Voting Members" id="_6-1661">
+            <semantic:incoming>_6-1778</semantic:incoming>
+            <semantic:outgoing>_6-1798</semantic:outgoing>
+            <semantic:ioSpecification>
+                <semantic:dataInput id="Din1276277381469"/>
+                <semantic:dataInput id="Din1276277381470"/>
+                <semantic:inputSet>
+                    <semantic:dataInputRefs>Din1276277381469</semantic:dataInputRefs>
+                    <semantic:dataInputRefs>Din1276277381470</semantic:dataInputRefs>
+                </semantic:inputSet>
+                <semantic:outputSet/>
+            </semantic:ioSpecification>
+            <semantic:dataInputAssociation id="_6-1796">
+                <semantic:sourceRef>_6-1784</semantic:sourceRef>
+                <semantic:targetRef>Din1276277381469</semantic:targetRef>
+            </semantic:dataInputAssociation>
+            <semantic:dataInputAssociation id="_6-2003">
+                <semantic:sourceRef>_6-1732</semantic:sourceRef>
+                <semantic:targetRef>Din1276277381470</semantic:targetRef>
+            </semantic:dataInputAssociation>
+        </semantic:sendTask>
+        <semantic:exclusiveGateway default="_6-1840" gatewayDirection="Unspecified" name="Issues w/o Majority?" id="_6-1752">
+            <semantic:incoming>_6-1774</semantic:incoming>
+            <semantic:incoming>_6-1802</semantic:incoming>
+            <semantic:outgoing>_6-1840</semantic:outgoing>
+            <semantic:outgoing>_6-1842</semantic:outgoing>
+        </semantic:exclusiveGateway>
+        <semantic:exclusiveGateway gatewayDirection="Unspecified" name="2nd Time" id="_6-1804">
+            <semantic:incoming>_6-1842</semantic:incoming>
+            <semantic:outgoing>_6-1995</semantic:outgoing>
+            <semantic:outgoing>_6-1999</semantic:outgoing>
+        </semantic:exclusiveGateway>
+        <semantic:endEvent name="" id="_6-1826">
+            <semantic:incoming>_6-1840</semantic:incoming>
+        </semantic:endEvent>
+        <semantic:subProcess triggeredByEvent="false" completionQuantity="1" isForCompensation="false" startQuantity="1" name="" id="_6-1844">
+            <semantic:incoming>_6-1995</semantic:incoming>
+            <semantic:outgoing>_6-1997</semantic:outgoing>
+            <semantic:userTask implementation="##unspecified" completionQuantity="1" isForCompensation="false" startQuantity="1" name="Reduce to Two Solutions" id="_6-1877">
+                <semantic:ioSpecification>
+                    <semantic:dataInput id="Din1276277381473"/>
+                    <semantic:dataOutput id="Dout1276277381458"/>
+                    <semantic:inputSet>
+                        <semantic:dataInputRefs>Din1276277381473</semantic:dataInputRefs>
+                    </semantic:inputSet>
+                    <semantic:outputSet>
+                        <semantic:dataOutputRefs>Dout1276277381458</semantic:dataOutputRefs>
+                    </semantic:outputSet>
+                </semantic:ioSpecification>
+                <semantic:dataInputAssociation id="_6-2021">
+                    <semantic:sourceRef>_6-2007</semantic:sourceRef>
+                    <semantic:targetRef>Din1276277381473</semantic:targetRef>
+                </semantic:dataInputAssociation>
+                <semantic:dataOutputAssociation id="_6-1991">
+                    <semantic:sourceRef>Dout1276277381458</semantic:sourceRef>
+                    <semantic:targetRef>_6-1979</semantic:targetRef>
+                </semantic:dataOutputAssociation>
+            </semantic:userTask>
+            <semantic:sendTask implementation="##WebService" messageRef="_1276277379689" completionQuantity="1" isForCompensation="false" startQuantity="1" name="E-mail Voters that have to Change Votes" id="_6-1928">
+                <semantic:ioSpecification>
+                    <semantic:dataInput id="Din1276277381459"/>
+                    <semantic:inputSet>
+                        <semantic:dataInputRefs>Din1276277381459</semantic:dataInputRefs>
+                    </semantic:inputSet>
+                    <semantic:outputSet/>
+                </semantic:ioSpecification>
+                <semantic:dataInputAssociation id="_6-1993">
+                    <semantic:sourceRef>_6-1979</semantic:sourceRef>
+                    <semantic:targetRef>Din1276277381459</semantic:targetRef>
+                </semantic:dataInputAssociation>
+            </semantic:sendTask>
+            <semantic:dataObjectReference dataObjectRef="_1276277380522" name="Issue Votes" id="_6-1979">
+                <semantic:dataState name="Adjusted"/>
+            </semantic:dataObjectReference>
+        </semantic:subProcess>
+        <semantic:sequenceFlow sourceRef="_6-53" targetRef="_6-66" name="" id="_6-167"/>
+        <semantic:sequenceFlow sourceRef="_6-66" targetRef="_6-117" name="" id="_6-169"/>
+        <semantic:sequenceFlow sourceRef="_6-117" targetRef="_6-153" name="No" id="_6-171"/>
+        <semantic:sequenceFlow sourceRef="_6-117" targetRef="_6-173" name="Yes" id="_6-778"/>
+        <semantic:sequenceFlow sourceRef="_6-173" targetRef="_6-727" name="" id="_6-780"/>
+        <semantic:sequenceFlow sourceRef="_6-1391" targetRef="_6-1442" name="" id="_6-1712"/>
+        <semantic:sequenceFlow sourceRef="_6-1391" targetRef="_6-1493" name="" id="_6-1714"/>
+        <semantic:sequenceFlow sourceRef="_6-1442" targetRef="_6-1544" name="" id="_6-1716"/>
+        <semantic:sequenceFlow sourceRef="_6-1493" targetRef="_6-1544" name="" id="_6-1718"/>
+        <semantic:sequenceFlow sourceRef="_6-1544" targetRef="_6-1566" name="" id="_6-1720"/>
+        <semantic:sequenceFlow sourceRef="_6-794" targetRef="_6-1391" name="" id="_6-1722"/>
+        <semantic:sequenceFlow sourceRef="_6-727" targetRef="_6-794" name="" id="_6-1726"/>
+        <semantic:sequenceFlow sourceRef="_6-1566" targetRef="_6-1639" name="No" id="_6-1750"/>
+        <semantic:sequenceFlow sourceRef="_6-1566" targetRef="_6-1752" name="Yes" id="_6-1774"/>
+        <semantic:sequenceFlow sourceRef="_6-1639" targetRef="_6-1588" name="Yes" id="_6-1776"/>
+        <semantic:sequenceFlow sourceRef="_6-1639" targetRef="_6-1661" name="No" id="_6-1778"/>
+        <semantic:sequenceFlow sourceRef="_6-1661" targetRef="_6-794" name="" id="_6-1798"/>
+        <semantic:sequenceFlow sourceRef="_6-1588" targetRef="_6-1752" name="" id="_6-1802"/>
+        <semantic:sequenceFlow sourceRef="_6-1752" targetRef="_6-1826" name="No" id="_6-1840"/>
+        <semantic:sequenceFlow sourceRef="_6-1752" targetRef="_6-1804" name="Yes" id="_6-1842"/>
+        <semantic:sequenceFlow sourceRef="_6-1804" targetRef="_6-1844" name="No" id="_6-1995"/>
+        <semantic:sequenceFlow sourceRef="_6-1844" targetRef="_6-727" name="" id="_6-1997"/>
+        <semantic:sequenceFlow sourceRef="_6-1804" targetRef="_6-173" name="Yes" id="_6-1999"/>
+        <semantic:dataObjectReference dataObjectRef="DO1276277381448" name="Issue Votes" id="_6-1732">
+            <semantic:dataState name="Final"/>
+        </semantic:dataObjectReference>
+        <semantic:dataObjectReference dataObjectRef="DO1276277381221" name="Warning Text" id="_6-1784"/>
+        <semantic:dataObjectReference dataObjectRef="_1276277380522" name="Issue Votes" id="_6-2007">
+            <semantic:dataState name="Final 2"/>
+        </semantic:dataObjectReference>
+        <semantic:dataObjectReference dataObjectRef="_1276277380522" name="Issue Votes" id="_6-2027">
+            <semantic:dataState name="Adjusted"/>
+        </semantic:dataObjectReference>
+        <semantic:dataObjectReference dataObjectRef="_1276277380522" name="Issue Votes" id="_6-2043">
+            <semantic:dataState name="Final 2"/>
+        </semantic:dataObjectReference>
+    </semantic:process>
+    <semantic:collaboration id="C1276277381478">
+        <semantic:participant name="Voting Members" id="_6-782"/>
+        <semantic:participant processRef="_6" id="_1276277380736"/>
+        <semantic:messageFlow name="Issue Announcement" sourceRef="_6-206" targetRef="_6-782" id="_6-790"/>
+        <semantic:messageFlow name="Deadline  Warning" sourceRef="_6-397" targetRef="_6-782" id="_6-792"/>
+        <semantic:messageFlow name="Vote Announcement" sourceRef="_6-727" targetRef="_6-782" id="_6-1724"/>
+        <semantic:messageFlow name="Vote" sourceRef="_6-782" targetRef="_6-1222" id="_6-1728"/>
+        <semantic:messageFlow name="Deadline  Warning" sourceRef="_6-1130" targetRef="_6-782" id="_6-1780"/>
+        <semantic:messageFlow name="Vote  Results" sourceRef="_6-1493" targetRef="_6-782" id="_6-1782"/>
+        <semantic:messageFlow name="Vote announcement with Warning" sourceRef="_6-1661" targetRef="_6-782" id="_6-1800"/>
+        <semantic:messageFlow name="Change Vote Message" sourceRef="_6-1928" targetRef="_6-782" id="_6-2001"/>
+    </semantic:collaboration>
+    <bpmndi:BPMNDiagram documentation="" id="Trisotech.Visio-_6" name="eMail Voting" resolution="96.00000267028808">
+        <bpmndi:BPMNPlane bpmnElement="C1276277381478">
+            <bpmndi:BPMNShape bpmnElement="_6-782" isHorizontal="true" id="Trisotech.Visio__6-782">
+                <dc:Bounds height="96.0" width="2136.0" x="82.0" y="1008.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="_6-53" id="Trisotech.Visio__6__6-53">
+                <dc:Bounds height="30.0" width="30.0" x="70.0" y="372.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="_6-66" id="Trisotech.Visio__6__6-66">
+                <dc:Bounds height="68.0" width="83.0" x="124.0" y="353.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="_6-117" isMarkerVisible="false" id="Trisotech.Visio__6__6-117">
+                <dc:Bounds height="42.0" width="42.0" x="229.0" y="366.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="_6-153" id="Trisotech.Visio__6__6-153">
+                <dc:Bounds height="32.0" width="32.0" x="262.0" y="429.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="_6-173" isExpanded="true" id="Trisotech.Visio__6__6-173">
+                <dc:Bounds height="474.0" width="575.0" x="310.0" y="162.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="_6-206" id="Trisotech.Visio__6__6-206">
+                <dc:Bounds height="68.0" width="83.0" x="323.0" y="325.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="_6-257" id="Trisotech.Visio__6__6-257">
+                <dc:Bounds height="68.0" width="83.0" x="383.0" y="428.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="_6-308" id="Trisotech.Visio__6__6-308">
+                <dc:Bounds height="68.0" width="83.0" x="400.0" y="189.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="_6-363" id="Trisotech.Visio__6__6-363">
+                <dc:Bounds height="32.0" width="32.0" x="468.0" y="218.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="_6-521" isMarkerVisible="false" id="Trisotech.Visio__6__6-521">
+                <dc:Bounds height="42.0" width="42.0" x="517.0" y="441.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="_6-616" id="Trisotech.Visio__6__6-616">
+                <dc:Bounds height="32.0" width="32.0" x="522.0" y="525.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="_6-380" id="Trisotech.Visio__6__6-380">
+                <dc:Bounds height="32.0" width="32.0" x="527.0" y="343.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="_6-565" id="Trisotech.Visio__6__6-565">
+                <dc:Bounds height="68.0" width="83.0" x="574.0" y="507.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="_6-397" id="Trisotech.Visio__6__6-397">
+                <dc:Bounds height="68.0" width="83.0" x="616.0" y="325.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="_6-543" isMarkerVisible="false" id="Trisotech.Visio__6__6-543">
+                <dc:Bounds height="42.0" width="42.0" x="694.0" y="441.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="_6-448" id="Trisotech.Visio__6__6-448">
+                <dc:Bounds height="42.0" width="42.0" x="721.0" y="338.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="_6-470" id="Trisotech.Visio__6__6-470">
+                <dc:Bounds height="68.0" width="83.0" x="780.0" y="325.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="_6-651" id="Trisotech.Visio__6__6-651">
+                <dc:Bounds height="38.0" width="30.0" x="437.0" y="275.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="_6-672" id="Trisotech.Visio__6__6-672">
+                <dc:Bounds height="38.0" width="30.0" x="583.0" y="242.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="_6-709" id="Trisotech.Visio__6__6-709">
+                <dc:Bounds height="38.0" width="30.0" x="793.0" y="559.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="_6-697" id="Trisotech.Visio__6__6-697">
+                <dc:Bounds height="38.0" width="30.0" x="832.0" y="439.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="_6-663" id="Trisotech.Visio__6__6-663">
+                <dc:Bounds height="36.0" width="125.0" x="415.0" y="510.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="_6-692" id="Trisotech.Visio__6__6-692">
+                <dc:Bounds height="87.0" width="89.0" x="778.0" y="177.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="_6-727" id="Trisotech.Visio__6__6-727">
+                <dc:Bounds height="68.0" width="83.0" x="913.0" y="353.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="_6-794" isExpanded="true" id="Trisotech.Visio__6__6-794">
+                <dc:Bounds height="516.0" width="559.0" x="1035.0" y="129.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="_6-827" id="Trisotech.Visio__6__6-827">
+                <dc:Bounds height="30.0" width="30.0" x="1041.0" y="381.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="_6-959" isExpanded="true" id="Trisotech.Visio__6__6-959">
+                <dc:Bounds height="149.0" width="528.0" x="1051.0" y="487.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="_6-1222" id="Trisotech.Visio__6__6-1222">
+                <dc:Bounds height="30.0" width="30.0" x="1066.0" y="512.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="_6-1235" id="Trisotech.Visio__6__6-1235">
+                <dc:Bounds height="68.0" width="83.0" x="1192.0" y="504.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="_6-1286" id="Trisotech.Visio__6__6-1286">
+                <dc:Bounds height="68.0" width="83.0" x="1426.0" y="504.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="_6-1371" id="Trisotech.Visio__6__6-1371">
+                <dc:Bounds height="32.0" width="32.0" x="1534.0" y="511.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="_6-1337" id="Trisotech.Visio__6__6-1337">
+                <dc:Bounds height="38.0" width="30.0" x="1126.0" y="579.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="_6-1349" id="Trisotech.Visio__6__6-1349">
+                <dc:Bounds height="38.0" width="30.0" x="1348.0" y="581.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="_6-840" id="Trisotech.Visio__6__6-840">
+                <dc:Bounds height="68.0" width="83.0" x="1084.0" y="165.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="_6-891" id="Trisotech.Visio__6__6-891">
+                <dc:Bounds height="68.0" width="83.0" x="1139.0" y="317.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="_6-2076" id="Trisotech.Visio__6__6-2076">
+                <dc:Bounds height="32.0" width="32.0" x="1206.0" y="335.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="_6-942" id="Trisotech.Visio__6__6-942">
+                <dc:Bounds height="32.0" width="32.0" x="1158.0" y="421.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="_6-998" isMarkerVisible="false" id="Trisotech.Visio__6__6-998">
+                <dc:Bounds height="42.0" width="42.0" x="1234.0" y="178.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="_6-1022" id="Trisotech.Visio__6__6-1022">
+                <dc:Bounds height="32.0" width="32.0" x="1290.0" y="249.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="_6-2057" id="Trisotech.Visio__6__6-2057">
+                <dc:Bounds height="32.0" width="32.0" x="1312.0" y="153.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="_6-1039" id="Trisotech.Visio__6__6-1039">
+                <dc:Bounds height="68.0" width="83.0" x="1366.0" y="231.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="_6-1130" id="Trisotech.Visio__6__6-1130">
+                <dc:Bounds height="68.0" width="83.0" x="1366.0" y="403.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="_6-1181" id="Trisotech.Visio__6__6-1181">
+                <dc:Bounds height="32.0" width="32.0" x="1478.0" y="421.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="_6-1090" id="Trisotech.Visio__6__6-1090">
+                <dc:Bounds height="32.0" width="32.0" x="1546.0" y="340.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="_6-1114" id="Trisotech.Visio__6__6-1114">
+                <dc:Bounds height="38.0" width="30.0" x="1090.0" y="250.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="_6-1204" id="Trisotech.Visio__6__6-1204">
+                <dc:Bounds height="38.0" width="30.0" x="1291.0" y="365.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="_6-1391" id="Trisotech.Visio__6__6-1391">
+                <dc:Bounds height="68.0" width="83.0" x="1105.0" y="736.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="_6-1442" id="Trisotech.Visio__6__6-1442">
+                <dc:Bounds height="68.0" width="83.0" x="1234.0" y="688.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="_6-1493" id="Trisotech.Visio__6__6-1493">
+                <dc:Bounds height="68.0" width="83.0" x="1252.0" y="782.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="_6-1544" id="Trisotech.Visio__6__6-1544">
+                <dc:Bounds height="42.0" width="42.0" x="1354.0" y="750.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="_6-1566" isMarkerVisible="false" id="Trisotech.Visio__6__6-1566">
+                <dc:Bounds height="42.0" width="42.0" x="1468.0" y="750.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="_6-1588" id="Trisotech.Visio__6__6-1588">
+                <dc:Bounds height="68.0" width="120.0" x="1702.0" y="792.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="_6-1639" isMarkerVisible="false" id="Trisotech.Visio__6__6-1639">
+                <dc:Bounds height="42.0" width="42.0" x="1558.0" y="792.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="_6-1661" id="Trisotech.Visio__6__6-1661">
+                <dc:Bounds height="68.0" width="114.0" x="1522.0" y="868.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="_6-1752" isMarkerVisible="false" id="Trisotech.Visio__6__6-1752">
+                <dc:Bounds height="42.0" width="42.0" x="1741.0" y="675.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="_6-1804" isMarkerVisible="false" id="Trisotech.Visio__6__6-1804">
+                <dc:Bounds height="42.0" width="42.0" x="1741.0" y="555.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="_6-1826" id="Trisotech.Visio__6__6-1826">
+                <dc:Bounds height="32.0" width="32.0" x="1986.0" y="680.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="_6-1844" isExpanded="true" id="Trisotech.Visio__6__6-1844">
+                <dc:Bounds height="227.0" width="196.0" x="1822.0" y="307.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="_6-1877" id="Trisotech.Visio__6__6-1877">
+                <dc:Bounds height="68.0" width="83.0" x="1846.0" y="328.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="_6-1928" id="Trisotech.Visio__6__6-1928">
+                <dc:Bounds height="68.0" width="83.0" x="1846.0" y="444.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="_6-1979" id="Trisotech.Visio__6__6-1979">
+                <dc:Bounds height="38.0" width="30.0" x="1960.0" y="394.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="_6-1732" id="Trisotech.Visio__6__6-1732">
+                <dc:Bounds height="38.0" width="30.0" x="1132.0" y="876.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="_6-1784" id="Trisotech.Visio__6__6-1784">
+                <dc:Bounds height="38.0" width="30.0" x="1456.0" y="922.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="_6-2007" id="Trisotech.Visio__6__6-2007">
+                <dc:Bounds height="38.0" width="30.0" x="1831.0" y="708.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="_6-2027" id="Trisotech.Visio__6__6-2027">
+                <dc:Bounds height="38.0" width="30.0" x="907.0" y="477.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="_6-2043" id="Trisotech.Visio__6__6-2043">
+                <dc:Bounds height="38.0" width="30.0" x="223.0" y="526.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="_6-139" id="Trisotech.Visio__6__6-139">
+                <dc:Bounds height="38.0" width="30.0" x="94.0" y="273.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNEdge bpmnElement="_6-1724" messageVisibleKind="initiating" id="Trisotech.Visio__6__6-1724">
+                <di:waypoint x="954.0" y="421.0"/>
+                <di:waypoint x="958.0" y="1008.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="_6-1020" id="Trisotech.Visio__6__6-1020">
+                <di:waypoint x="1168.0" y="199.0"/>
+                <di:waypoint x="1234.0" y="199.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="_6-1112" id="Trisotech.Visio__6__6-1112">
+                <di:waypoint x="1238.0" y="351.0"/>
+                <di:waypoint x="1417.0" y="351.0"/>
+                <di:waypoint x="1528.0" y="351.0"/>
+                <di:waypoint x="1528.0" y="355.0"/>
+                <di:waypoint x="1546.0" y="356.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="_6-1198" id="Trisotech.Visio__6__6-1198">
+                <di:waypoint x="1190.0" y="437.0"/>
+                <di:waypoint x="1208.0" y="437.0"/>
+                <di:waypoint x="1366.0" y="437.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="_6-684" id="Trisotech.Visio__6__6-684">
+                <di:waypoint x="613.0" y="261.0"/>
+                <di:waypoint x="672.0" y="261.0"/>
+                <di:waypoint x="672.0" y="325.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="_6-1389" id="Trisotech.Visio__6__6-1389">
+                <di:waypoint x="1105.0" y="288.0"/>
+                <di:waypoint x="1105.0" y="474.0"/>
+                <di:waypoint x="1248.0" y="474.0"/>
+                <di:waypoint x="1248.0" y="504.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="_6-1995" id="Trisotech.Visio__6__6-1995">
+                <di:waypoint x="1762.0" y="555.0"/>
+                <di:waypoint x="1762.0" y="420.0"/>
+                <di:waypoint x="1822.0" y="420.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="_6-1726" id="Trisotech.Visio__6__6-1726">
+                <di:waypoint x="996.0" y="387.0"/>
+                <di:waypoint x="1035.0" y="387.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="_6-635" id="Trisotech.Visio__6__6-635">
+                <di:waypoint x="559.0" y="359.0"/>
+                <di:waypoint x="577.0" y="359.0"/>
+                <di:waypoint x="587.0" y="359.0"/>
+                <di:waypoint x="616.0" y="359.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="_6-2019" id="Trisotech.Visio__6__6-2019">
+                <di:waypoint x="1798.0" y="792.0"/>
+                <di:waypoint x="1798.0" y="727.0"/>
+                <di:waypoint x="1831.0" y="727.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="_6-2005" id="Trisotech.Visio__6__6-2005">
+                <di:waypoint x="1162.0" y="906.0"/>
+                <di:waypoint x="1249.0" y="906.0"/>
+                <di:waypoint x="1249.0" y="867.0"/>
+                <di:waypoint x="1290.0" y="867.0"/>
+                <di:waypoint x="1403.0" y="867.0"/>
+                <di:waypoint x="1453.0" y="867.0"/>
+                <di:waypoint x="1453.0" y="856.0"/>
+                <di:waypoint x="1575.0" y="856.0"/>
+                <di:waypoint x="1667.0" y="856.0"/>
+                <di:waypoint x="1667.0" y="837.0"/>
+                <di:waypoint x="1702.0" y="837.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="_6-1200" id="Trisotech.Visio__6__6-1200">
+                <di:waypoint x="1449.0" y="437.0"/>
+                <di:waypoint x="1454.0" y="437.0"/>
+                <di:waypoint x="1478.0" y="437.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="_6-668" id="Trisotech.Visio__6__6-668">
+                <di:waypoint x="736.0" y="462.0"/>
+                <di:waypoint x="742.0" y="462.0"/>
+                <di:waypoint x="742.0" y="380.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="_6-1730" id="Trisotech.Visio__6__6-1730">
+                <di:waypoint x="1348.0" y="611.0"/>
+                <di:waypoint x="1306.0" y="611.0"/>
+                <di:waypoint x="1306.0" y="660.0"/>
+                <di:waypoint x="1147.0" y="660.0"/>
+                <di:waypoint x="1147.0" y="736.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="_6-633" id="Trisotech.Visio__6__6-633">
+                <di:waypoint x="406.0" y="359.0"/>
+                <di:waypoint x="448.0" y="359.0"/>
+                <di:waypoint x="527.0" y="359.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="_6-649" id="Trisotech.Visio__6__6-649">
+                <di:waypoint x="500.0" y="234.0"/>
+                <di:waypoint x="742.0" y="234.0"/>
+                <di:waypoint x="742.0" y="338.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="_6-1110" id="Trisotech.Visio__6__6-1110">
+                <di:waypoint x="1449.0" y="265.0"/>
+                <di:waypoint x="1551.0" y="265.0"/>
+                <di:waypoint x="1551.0" y="345.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="_6-1728" messageVisibleKind="initiating" id="Trisotech.Visio__6__6-1728">
+                <di:waypoint x="1075.0" y="1008.0"/>
+                <di:waypoint x="1071.0" y="537.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="_6-167" id="Trisotech.Visio__6__6-167">
+                <di:waypoint x="100.0" y="387.0"/>
+                <di:waypoint x="114.0" y="387.0"/>
+                <di:waypoint x="124.0" y="387.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="_6-1218" id="Trisotech.Visio__6__6-1218">
+                <di:waypoint x="1114.0" y="288.0"/>
+                <di:waypoint x="1114.0" y="305.0"/>
+                <di:waypoint x="1180.0" y="305.0"/>
+                <di:waypoint x="1180.0" y="317.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="_6-723" id="Trisotech.Visio__6__6-723">
+                <di:waypoint x="847.0" y="393.0"/>
+                <di:waypoint x="847.0" y="411.0"/>
+                <di:waypoint x="847.0" y="439.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="_6-2021" id="Trisotech.Visio__6__6-2021">
+                <di:waypoint x="1837.0" y="708.0"/>
+                <di:waypoint x="1837.0" y="362.0"/>
+                <di:waypoint x="1846.0" y="362.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="_6-670" id="Trisotech.Visio__6__6-670">
+                <di:waypoint x="389.0" y="325.0"/>
+                <di:waypoint x="389.0" y="294.0"/>
+                <di:waypoint x="437.0" y="294.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="_6-171" id="Trisotech.Visio__6__6-171">
+                <di:waypoint x="250.0" y="408.0"/>
+                <di:waypoint x="250.0" y="445.0"/>
+                <di:waypoint x="262.0" y="445.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="_6-637" id="Trisotech.Visio__6__6-637">
+                <di:waypoint x="700.0" y="359.0"/>
+                <di:waypoint x="721.0" y="359.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="_6-1369" id="Trisotech.Visio__6__6-1369">
+                <di:waypoint x="1259.0" y="572.0"/>
+                <di:waypoint x="1259.0" y="588.0"/>
+                <di:waypoint x="1348.0" y="589.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="_6-1106" id="Trisotech.Visio__6__6-1106">
+                <di:waypoint x="1255.0" y="220.0"/>
+                <di:waypoint x="1255.0" y="265.0"/>
+                <di:waypoint x="1290.0" y="265.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="_6-688" id="Trisotech.Visio__6__6-688">
+                <di:waypoint x="468.0" y="305.0"/>
+                <di:waypoint x="634.0" y="305.0"/>
+                <di:waypoint x="633.0" y="325.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="_6-1840" id="Trisotech.Visio__6__6-1840">
+                <di:waypoint x="1783.0" y="696.0"/>
+                <di:waypoint x="1833.0" y="696.0"/>
+                <di:waypoint x="1883.0" y="696.0"/>
+                <di:waypoint x="1986.0" y="696.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="_6-1216" id="Trisotech.Visio__6__6-1216">
+                <di:waypoint x="1321.0" y="384.0"/>
+                <di:waypoint x="1383.0" y="384.0"/>
+                <di:waypoint x="1383.0" y="403.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="_6-1720" id="Trisotech.Visio__6__6-1720">
+                <di:waypoint x="1396.0" y="771.0"/>
+                <di:waypoint x="1403.0" y="771.0"/>
+                <di:waypoint x="1468.0" y="771.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="_6-1999" id="Trisotech.Visio__6__6-1999">
+                <di:waypoint x="1783.0" y="576.0"/>
+                <di:waypoint x="1833.0" y="576.0"/>
+                <di:waypoint x="1883.0" y="576.0"/>
+                <di:waypoint x="2098.0" y="576.0"/>
+                <di:waypoint x="2098.0" y="72.0"/>
+                <di:waypoint x="266.0" y="72.0"/>
+                <di:waypoint x="266.0" y="257.0"/>
+                <di:waypoint x="310.0" y="257.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="_6-645" id="Trisotech.Visio__6__6-645">
+                <di:waypoint x="538.0" y="482.0"/>
+                <di:waypoint x="538.0" y="525.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="_6-1800" messageVisibleKind="initiating" id="Trisotech.Visio__6__6-1800">
+                <di:waypoint x="1579.0" y="936.0"/>
+                <di:waypoint x="1577.0" y="1008.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="_6-780" id="Trisotech.Visio__6__6-780">
+                <di:waypoint x="885.0" y="399.0"/>
+                <di:waypoint x="885.0" y="387.0"/>
+                <di:waypoint x="913.0" y="387.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="_6-1385" id="Trisotech.Visio__6__6-1385">
+                <di:waypoint x="1509.0" y="527.0"/>
+                <di:waypoint x="1523.0" y="527.0"/>
+                <di:waypoint x="1534.0" y="527.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="_6-1363" id="Trisotech.Visio__6__6-1363">
+                <di:waypoint x="1276.0" y="527.0"/>
+                <di:waypoint x="1333.0" y="527.0"/>
+                <di:waypoint x="1404.0" y="527.0"/>
+                <di:waypoint x="1426.0" y="527.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="_6-1782" messageVisibleKind="initiating" id="Trisotech.Visio__6__6-1782">
+                <di:waypoint x="1294.0" y="850.0"/>
+                <di:waypoint x="1294.0" y="880.0"/>
+                <di:waypoint x="1300.0" y="880.0"/>
+                <di:waypoint x="1300.0" y="1008.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="_6-1712" id="Trisotech.Visio__6__6-1712">
+                <di:waypoint x="1188.0" y="759.0"/>
+                <di:waypoint x="1206.0" y="759.0"/>
+                <di:waypoint x="1206.0" y="722.0"/>
+                <di:waypoint x="1234.0" y="722.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="_6-643" id="Trisotech.Visio__6__6-643">
+                <di:waypoint x="559.0" y="462.0"/>
+                <di:waypoint x="587.0" y="462.0"/>
+                <di:waypoint x="619.0" y="462.0"/>
+                <di:waypoint x="668.0" y="462.0"/>
+                <di:waypoint x="694.0" y="462.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="_6-2025" id="Trisotech.Visio__6__6-2025">
+                <di:waypoint x="124.0" y="292.0"/>
+                <di:waypoint x="339.0" y="292.0"/>
+                <di:waypoint x="339.0" y="325.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="_6-1798" id="Trisotech.Visio__6__6-1798">
+                <di:waypoint x="1636.0" y="902.0"/>
+                <di:waypoint x="1728.0" y="902.0"/>
+                <di:waypoint x="1728.0" y="984.0"/>
+                <di:waypoint x="1582.0" y="984.0"/>
+                <di:waypoint x="1411.0" y="984.0"/>
+                <di:waypoint x="1304.0" y="984.0"/>
+                <di:waypoint x="1079.0" y="984.0"/>
+                <di:waypoint x="1010.0" y="984.0"/>
+                <di:waypoint x="1010.0" y="542.0"/>
+                <di:waypoint x="1035.0" y="542.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="_6-2003" id="Trisotech.Visio__6__6-2003">
+                <di:waypoint x="1162.0" y="906.0"/>
+                <di:waypoint x="1270.0" y="906.0"/>
+                <di:waypoint x="1270.0" y="890.0"/>
+                <di:waypoint x="1296.0" y="890.0"/>
+                <di:waypoint x="1403.0" y="890.0"/>
+                <di:waypoint x="1522.0" y="891.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="_6-1220" id="Trisotech.Visio__6__6-1220">
+                <di:waypoint x="1120.0" y="280.0"/>
+                <di:waypoint x="1234.0" y="280.0"/>
+                <di:waypoint x="1234.0" y="329.0"/>
+                <di:waypoint x="1421.0" y="329.0"/>
+                <di:waypoint x="1421.0" y="403.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="_6-994" id="Trisotech.Visio__6__6-994">
+                <di:waypoint x="1071.0" y="396.0"/>
+                <di:waypoint x="1081.0" y="396.0"/>
+                <di:waypoint x="1081.0" y="350.0"/>
+                <di:waypoint x="1101.0" y="350.0"/>
+                <di:waypoint x="1139.0" y="351.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="_6-1714" id="Trisotech.Visio__6__6-1714">
+                <di:waypoint x="1188.0" y="781.0"/>
+                <di:waypoint x="1211.0" y="781.0"/>
+                <di:waypoint x="1230.0" y="781.0"/>
+                <di:waypoint x="1230.0" y="816.0"/>
+                <di:waypoint x="1252.0" y="816.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="_6-1365" id="Trisotech.Visio__6__6-1365">
+                <di:waypoint x="1092.0" y="537.0"/>
+                <di:waypoint x="1092.0" y="598.0"/>
+                <di:waypoint x="1126.0" y="598.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="_6-996" id="Trisotech.Visio__6__6-996">
+                <di:waypoint x="1056.0" y="412.0"/>
+                <di:waypoint x="1056.0" y="438.0"/>
+                <di:waypoint x="1101.0" y="438.0"/>
+                <di:waypoint x="1158.0" y="437.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="_6-1776" id="Trisotech.Visio__6__6-1776">
+                <di:waypoint x="1600.0" y="813.0"/>
+                <di:waypoint x="1702.0" y="815.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="_6-792" messageVisibleKind="initiating" id="Trisotech.Visio__6__6-792">
+                <di:waypoint x="672.0" y="393.0"/>
+                <di:waypoint x="669.0" y="1008.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="_6-1744" id="Trisotech.Visio__6__6-1744">
+                <di:waypoint x="1147.0" y="804.0"/>
+                <di:waypoint x="1147.0" y="822.0"/>
+                <di:waypoint x="1147.0" y="876.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="_6-647" id="Trisotech.Visio__6__6-647">
+                <di:waypoint x="554.0" y="541.0"/>
+                <di:waypoint x="559.0" y="541.0"/>
+                <di:waypoint x="574.0" y="541.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="_6-1387" id="Trisotech.Visio__6__6-1387">
+                <di:waypoint x="1378.0" y="600.0"/>
+                <di:waypoint x="1403.0" y="600.0"/>
+                <di:waypoint x="1468.0" y="600.0"/>
+                <di:waypoint x="1468.0" y="572.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="_6-361" id="Trisotech.Visio__6__6-361">
+                <di:waypoint x="378.0" y="393.0"/>
+                <di:waypoint x="378.0" y="416.0"/>
+                <di:waypoint x="370.0" y="416.0"/>
+                <di:waypoint x="370.0" y="462.0"/>
+                <di:waypoint x="383.0" y="462.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="_6-2041" id="Trisotech.Visio__6__6-2041">
+                <di:waypoint x="862.0" y="458.0"/>
+                <di:waypoint x="929.0" y="458.0"/>
+                <di:waypoint x="929.0" y="421.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="_6-641" id="Trisotech.Visio__6__6-641">
+                <di:waypoint x="466.0" y="462.0"/>
+                <di:waypoint x="508.0" y="462.0"/>
+                <di:waypoint x="517.0" y="462.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="_6-992" id="Trisotech.Visio__6__6-992">
+                <di:waypoint x="1056.0" y="381.0"/>
+                <di:waypoint x="1056.0" y="199.0"/>
+                <di:waypoint x="1084.0" y="199.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="_6-721" id="Trisotech.Visio__6__6-721">
+                <di:waypoint x="808.0" y="393.0"/>
+                <di:waypoint x="808.0" y="559.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="_6-1718" id="Trisotech.Visio__6__6-1718">
+                <di:waypoint x="1336.0" y="816.0"/>
+                <di:waypoint x="1375.0" y="816.0"/>
+                <di:waypoint x="1375.0" y="792.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="_6-725" id="Trisotech.Visio__6__6-725">
+                <di:waypoint x="793.0" y="589.0"/>
+                <di:waypoint x="675.0" y="589.0"/>
+                <di:waypoint x="367.0" y="589.0"/>
+                <di:waypoint x="351.0" y="589.0"/>
+                <di:waypoint x="351.0" y="393.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="_6-790" messageVisibleKind="initiating" id="Trisotech.Visio__6__6-790">
+                <di:waypoint x="364.0" y="393.0"/>
+                <di:waypoint x="360.0" y="1008.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="_6-1796" id="Trisotech.Visio__6__6-1796">
+                <di:waypoint x="1486.0" y="952.0"/>
+                <di:waypoint x="1545.0" y="952.0"/>
+                <di:waypoint x="1545.0" y="936.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="_6-2055" id="Trisotech.Visio__6__6-2055">
+                <di:waypoint x="253.0" y="545.0"/>
+                <di:waypoint x="339.0" y="545.0"/>
+                <di:waypoint x="339.0" y="393.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="_6-1367" id="Trisotech.Visio__6__6-1367">
+                <di:waypoint x="1156.0" y="598.0"/>
+                <di:waypoint x="1209.0" y="598.0"/>
+                <di:waypoint x="1209.0" y="572.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="_6-666" id="Trisotech.Visio__6__6-666">
+                <di:waypoint x="657.0" y="541.0"/>
+                <di:waypoint x="667.0" y="541.0"/>
+                <di:waypoint x="715.0" y="541.0"/>
+                <di:waypoint x="715.0" y="482.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="_6-1842" id="Trisotech.Visio__6__6-1842">
+                <di:waypoint x="1762.0" y="675.0"/>
+                <di:waypoint x="1762.0" y="597.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="_6-778" id="Trisotech.Visio__6__6-778">
+                <di:waypoint x="271.0" y="387.0"/>
+                <di:waypoint x="291.0" y="387.0"/>
+                <di:waypoint x="291.0" y="399.0"/>
+                <di:waypoint x="310.0" y="399.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="_6-686" id="Trisotech.Visio__6__6-686">
+                <di:waypoint x="468.0" y="294.0"/>
+                <di:waypoint x="668.0" y="294.0"/>
+                <di:waypoint x="738.0" y="294.0"/>
+                <di:waypoint x="809.0" y="294.0"/>
+                <di:waypoint x="808.0" y="325.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="_6-1780" messageVisibleKind="initiating" id="Trisotech.Visio__6__6-1780">
+                <di:waypoint x="1408.0" y="471.0"/>
+                <di:waypoint x="1406.0" y="1008.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="_6-1108" id="Trisotech.Visio__6__6-1108">
+                <di:waypoint x="1322.0" y="265.0"/>
+                <di:waypoint x="1340.0" y="265.0"/>
+                <di:waypoint x="1366.0" y="265.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="_6-1997" id="Trisotech.Visio__6__6-1997">
+                <di:waypoint x="2018.0" y="420.0"/>
+                <di:waypoint x="2038.0" y="420.0"/>
+                <di:waypoint x="2038.0" y="104.0"/>
+                <di:waypoint x="940.0" y="104.0"/>
+                <di:waypoint x="940.0" y="353.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="_6-1802" id="Trisotech.Visio__6__6-1802">
+                <di:waypoint x="1762.0" y="792.0"/>
+                <di:waypoint x="1762.0" y="717.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="_6-1104" id="Trisotech.Visio__6__6-1104">
+                <di:waypoint x="1255.0" y="178.0"/>
+                <di:waypoint x="1255.0" y="168.0"/>
+                <di:waypoint x="1312.0" y="169.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="_6-690" id="Trisotech.Visio__6__6-690">
+                <di:waypoint x="461.0" y="312.0"/>
+                <di:waypoint x="590.0" y="312.0"/>
+                <di:waypoint x="591.0" y="507.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="_6-1361" id="Trisotech.Visio__6__6-1361">
+                <di:waypoint x="1096.0" y="527.0"/>
+                <di:waypoint x="1138.0" y="527.0"/>
+                <di:waypoint x="1192.0" y="527.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="_6-1774" id="Trisotech.Visio__6__6-1774">
+                <di:waypoint x="1489.0" y="750.0"/>
+                <di:waypoint x="1489.0" y="696.0"/>
+                <di:waypoint x="1741.0" y="696.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="_6-1716" id="Trisotech.Visio__6__6-1716">
+                <di:waypoint x="1317.0" y="722.0"/>
+                <di:waypoint x="1375.0" y="722.0"/>
+                <di:waypoint x="1375.0" y="750.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="_6-1202" id="Trisotech.Visio__6__6-1202">
+                <di:waypoint x="1510.0" y="437.0"/>
+                <di:waypoint x="1562.0" y="437.0"/>
+                <di:waypoint x="1562.0" y="372.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="_6-1993" id="Trisotech.Visio__6__6-1993">
+                <di:waypoint x="1975.0" y="432.0"/>
+                <di:waypoint x="1975.0" y="478.0"/>
+                <di:waypoint x="1929.0" y="478.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="_6-695" id="Trisotech.Visio__6__6-695">
+                <di:waypoint x="792.0" y="264.0"/>
+                <di:waypoint x="847.0" y="325.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="_6-151" id="Trisotech.Visio__6__6-151">
+                <di:waypoint x="124.0" y="303.0"/>
+                <di:waypoint x="166.0" y="303.0"/>
+                <di:waypoint x="166.0" y="353.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="_6-1128" id="Trisotech.Visio__6__6-1128">
+                <di:waypoint x="1120.0" y="269.0"/>
+                <di:waypoint x="1159.0" y="269.0"/>
+                <di:waypoint x="1159.0" y="245.0"/>
+                <di:waypoint x="1251.0" y="245.0"/>
+                <di:waypoint x="1366.0" y="244.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="_6-169" id="Trisotech.Visio__6__6-169">
+                <di:waypoint x="208.0" y="387.0"/>
+                <di:waypoint x="220.0" y="387.0"/>
+                <di:waypoint x="229.0" y="387.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="_6-2074" id="Trisotech.Visio__6__6-2074">
+                <di:waypoint x="1344.0" y="169.0"/>
+                <di:waypoint x="1362.0" y="169.0"/>
+                <di:waypoint x="1362.0" y="135.0"/>
+                <di:waypoint x="1126.0" y="135.0"/>
+                <di:waypoint x="1126.0" y="165.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="_6-1748" id="Trisotech.Visio__6__6-1748">
+                <di:waypoint x="1162.0" y="895.0"/>
+                <di:waypoint x="1226.0" y="895.0"/>
+                <di:waypoint x="1226.0" y="837.0"/>
+                <di:waypoint x="1252.0" y="836.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="_6-2023" id="Trisotech.Visio__6__6-2023">
+                <di:waypoint x="435.0" y="510.0"/>
+                <di:waypoint x="528.0" y="472.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="_6-639" id="Trisotech.Visio__6__6-639">
+                <di:waypoint x="763.0" y="359.0"/>
+                <di:waypoint x="780.0" y="359.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="_6-2001" messageVisibleKind="initiating" id="Trisotech.Visio__6__6-2001">
+                <di:waypoint x="1888.0" y="512.0"/>
+                <di:waypoint x="1888.0" y="542.0"/>
+                <di:waypoint x="1887.0" y="1008.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="_6-1991" id="Trisotech.Visio__6__6-1991">
+                <di:waypoint x="1901.0" y="396.0"/>
+                <di:waypoint x="1901.0" y="414.0"/>
+                <di:waypoint x="1960.0" y="413.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="_6-359" id="Trisotech.Visio__6__6-359">
+                <di:waypoint x="364.0" y="325.0"/>
+                <di:waypoint x="364.0" y="223.0"/>
+                <di:waypoint x="400.0" y="223.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="_6-2039" id="Trisotech.Visio__6__6-2039">
+                <di:waypoint x="937.0" y="496.0"/>
+                <di:waypoint x="951.0" y="496.0"/>
+                <di:waypoint x="979.0" y="496.0"/>
+                <di:waypoint x="979.0" y="421.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="_6-1750" id="Trisotech.Visio__6__6-1750">
+                <di:waypoint x="1489.0" y="792.0"/>
+                <di:waypoint x="1489.0" y="812.0"/>
+                <di:waypoint x="1558.0" y="813.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="_6-1126" id="Trisotech.Visio__6__6-1126">
+                <di:waypoint x="968.0" y="353.0"/>
+                <di:waypoint x="968.0" y="269.0"/>
+                <di:waypoint x="1052.0" y="269.0"/>
+                <di:waypoint x="1090.0" y="269.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="_6-1722" id="Trisotech.Visio__6__6-1722">
+                <di:waypoint x="1594.0" y="387.0"/>
+                <di:waypoint x="1630.0" y="387.0"/>
+                <di:waypoint x="1630.0" y="676.0"/>
+                <di:waypoint x="1411.0" y="676.0"/>
+                <di:waypoint x="1151.0" y="676.0"/>
+                <di:waypoint x="1076.0" y="676.0"/>
+                <di:waypoint x="1037.0" y="676.0"/>
+                <di:waypoint x="1037.0" y="770.0"/>
+                <di:waypoint x="1069.0" y="770.0"/>
+                <di:waypoint x="1105.0" y="770.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="_6-1778" id="Trisotech.Visio__6__6-1778">
+                <di:waypoint x="1579.0" y="834.0"/>
+                <di:waypoint x="1579.0" y="868.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="_6-1746" id="Trisotech.Visio__6__6-1746">
+                <di:waypoint x="1162.0" y="895.0"/>
+                <di:waypoint x="1216.0" y="895.0"/>
+                <di:waypoint x="1216.0" y="742.0"/>
+                <di:waypoint x="1234.0" y="742.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNEdge>
+        </bpmndi:BPMNPlane>
+    </bpmndi:BPMNDiagram>
+</semantic:definitions>
+
