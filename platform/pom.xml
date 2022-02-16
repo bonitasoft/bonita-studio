@@ -19,33 +19,9 @@
 		<pluginRepository>
 			<id>jboss-public-repository-group</id>
 			<name>JBoss Public Repository Group</name>
-			<url>http://repository.jboss.org/nexus/content/groups/public/</url>
+			<url>https://repository.jboss.org/nexus/content/repositories/ea/</url>
 		</pluginRepository>
 	</pluginRepositories>
-
-<!-- 	<build> -->
-<!-- 		<plugins> -->
-<!-- 			<plugin> -->
-<!-- 				<groupId>org.eclipse.tycho.extras</groupId> -->
-<!-- 				<artifactId>target-platform-validation-plugin</artifactId> -->
-<!-- 				<version>${tychoVersion}</version> -->
-<!-- 				<executions> -->
-<!-- 					<execution> -->
-<!-- 						<phase>verify</phase> -->
-<!-- 						<goals> -->
-<!-- 							<goal>validate-target-platform</goal> -->
-<!-- 						</goals> -->
-<!-- 						<configuration> -->
-<!-- 							<targetFiles> -->
-<!-- 								<param>platform.target</param> -->
-<!-- 							</targetFiles> -->
-<!-- 							<failOnError>false</failOnError> -->
-<!-- 						</configuration> -->
-<!-- 					</execution> -->
-<!-- 				</executions> -->
-<!-- 			</plugin> -->
-<!-- 		</plugins> -->
-<!-- 	</build> -->
 
 	<profiles>
 		<profile>
@@ -55,7 +31,10 @@
 					<plugin>
 						<groupId>org.jboss.tools.tycho-plugins</groupId>
 						<artifactId>target-platform-utils</artifactId>
-						<version>2.2.0</version>
+                        <!-- Check if the plugin version is available -->
+                        <!-- Ensure tycho version and target-platform-utils matches -->
+                        <!-- eg: ../mvnw package -Pmirror-tp -DtychoVersion=2.5.0 -->
+						<version>${tychoVersion}</version>
 						<executions>
 							<execution>
 								<phase>package</phase>
