@@ -26,13 +26,9 @@
 		<product.short.name>BonitaStudioCommunity</product.short.name>
 		<repositoryId>studio-repository</repositoryId>
 		<productId>org.bonitasoft.studio.product</productId>
-		<antRunner>-application org.eclipse.ant.core.antRunner</antRunner>
-		<p2BuildFile>-buildfile p2AllInOne.xml -clean -noSplash -consoleLog</p2BuildFile>
         <root.dir>${project.build.directory}/${product.short.name}-${branding.version}</root.dir>
-		<root.dir.arg>-Droot.dir=${root.dir}</root.dir.arg>
 		<signServiceURL></signServiceURL>
 	</properties>
-
 
 	<build>
 		<pluginManagement>
