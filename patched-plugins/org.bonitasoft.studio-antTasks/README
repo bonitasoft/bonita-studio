@@ -1,2 +1,0 @@
-This project is an Ant task that allows to refresh the workspace and to import all project that are inside of it.
-It is used as an Ant library (once exported as jar file) in org.bonitasoft.studio-build.
