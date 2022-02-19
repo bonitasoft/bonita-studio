@@ -163,15 +163,6 @@ along with this program. If not, see &lt;http://www.gnu.org/licenses/&gt;.
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.compare.win32"
-         os="win32"
-         arch="x86_64"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.eclipse.core.net.linux"
          os="linux"
          download-size="0"
