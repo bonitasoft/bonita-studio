@@ -16,18 +16,24 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
     
-    <!-- 
+     <!-- 
         The local repo is set to ${repository.dir} by the maven exec plugin that calls this pom (see the root pom.xml of this Studio plugin).
         In order to be able to retrieve dependencies from the real local repo we declare it as a remote repo (required for offline build for ex).
-        You might need to update the url below if you do note use the default maven local repo. 
     -->
     <repositories>
         <repository>
             <id>local-remote-repo</id>
             <name>Default local repo as remote repo</name>
-            <url>file:///${user.home}/.m2/repository</url>
+            <url>${local.remote.repo.url}</url>
         </repository>
     </repositories>
+    <pluginRepositories>
+        <pluginRepository>
+            <id>local-remote-repo</id>
+            <name>Default local repo as remote repo</name>
+            <url>${local.remote.repo.url}</url>
+        </pluginRepository>
+    </pluginRepositories>
     
     <dependencyManagement>
         <dependencies>
