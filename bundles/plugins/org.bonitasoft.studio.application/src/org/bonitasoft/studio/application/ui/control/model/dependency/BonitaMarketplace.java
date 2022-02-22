@@ -14,10 +14,12 @@
  */
 package org.bonitasoft.studio.application.ui.control.model.dependency;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.UncheckedIOException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
@@ -26,6 +28,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.net.http.HttpResponse.BodyHandlers;
 import java.nio.channels.Channels;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collections;
@@ -33,6 +36,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Properties;
+import java.util.stream.Collectors;
 
 import org.bonitasoft.studio.application.ApplicationPlugin;
 import org.bonitasoft.studio.application.i18n.Messages;
@@ -99,9 +103,12 @@ public class BonitaMarketplace {
         String currentVersion = readMetadata();
         try {
             String latestVersion = getLatestTag();
-            if (Strings.isNullOrEmpty(currentVersion)
+            if(Strings.isNullOrEmpty(latestVersion)) {
+                BonitaStudioLog.warning("Failed to retrieve Bonita marketplace latest version", ApplicationPlugin.PLUGIN_ID);
+            }
+            if (Strings.hasText(latestVersion) && (Strings.isNullOrEmpty(currentVersion)
                     || !new File(localStore, MARKETPLACE_DESCRIPTOR_NAME).exists()
-                    || !Objects.equals(currentVersion, latestVersion)) {
+                    || !Objects.equals(currentVersion, latestVersion))) {
                 downloadMarketplace(latestVersion, monitor);
             }
         } catch (IOException e) {
@@ -253,6 +260,16 @@ public class BonitaMarketplace {
         try {
             HttpResponse<InputStream> response = HttpClientFactory.INSTANCE
                     .send(HttpRequest.newBuilder(url.toURI()).GET().build(), BodyHandlers.ofInputStream());
+            if(response.statusCode() != 200) {
+                String body = "";
+                try (var is = response.body()) {
+                     body = new BufferedReader(
+                            new InputStreamReader(is, StandardCharsets.UTF_8))
+                              .lines()
+                              .collect(Collectors.joining(System.lineSeparator()));
+                }
+                throw new IOException(String.format("GET %s request failed with status: %s %s", response.uri(), response.statusCode(), body));
+            }
             try (var is = response.body()) {
                 return objectMapper.readValue(is, new TypeReference<Map<String, Object>>() {
                 });
