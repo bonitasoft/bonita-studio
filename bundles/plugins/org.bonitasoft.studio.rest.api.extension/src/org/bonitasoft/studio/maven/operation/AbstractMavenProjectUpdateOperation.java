@@ -13,7 +13,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Objects;
 
 import org.bonitasoft.studio.businessobject.maven.UpdateMavenProjectConfiguration;
-import org.bonitasoft.studio.rest.api.extension.core.repository.RestAPIExtensionRepositoryStore;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspaceRunnable;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -24,10 +23,6 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.egit.core.op.ConnectProviderOperation;
 import org.eclipse.m2e.core.ui.internal.UpdateMavenProjectJob;
 import org.eclipse.team.core.RepositoryProvider;
-import org.eclipse.team.svn.core.operation.local.management.ShareProjectOperation;
-import org.eclipse.team.svn.core.operation.local.management.ShareProjectOperation.IFolderNameMapper;
-import org.eclipse.team.svn.core.resource.IRepositoryLocation;
-import org.eclipse.team.svn.core.svnstorage.SVNRemoteStorage;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 
 public abstract class AbstractMavenProjectUpdateOperation implements IWorkspaceRunnable {
@@ -61,21 +56,8 @@ public abstract class AbstractMavenProjectUpdateOperation implements IWorkspaceR
 
     protected void shareProject(final IProject project, final IProgressMonitor monitor) throws CoreException {
         final IProject parentProject = getParentProject(project);
-        if (RepositoryProvider.getProvider(parentProject, "org.eclipse.team.svn.core.svnnature") != null) {
-            final IRepositoryLocation location = SVNRemoteStorage.instance().getRepositoryLocation(parentProject);
-            if (location != null) {
-                new ShareProjectOperation(
-                        new IProject[] { project },
-                        location,
-                        folderNameMapper(parentProject, RestAPIExtensionRepositoryStore.STORE_NAME),
-                        null,
-                        ShareProjectOperation.LAYOUT_DEFAULT,
-                        false,
-                        "Sharing project " + project.getName())
-                                .run(monitor);
-            }
-        } else if (RepositoryProvider.getProvider(parentProject, "org.eclipse.egit.core.GitProvider") != null) {
-            ConnectProviderOperation connectProviderOperation = new ConnectProviderOperation(project,
+       if (RepositoryProvider.getProvider(parentProject, "org.eclipse.egit.core.GitProvider") != null) {
+            var connectProviderOperation = new ConnectProviderOperation(project,
                     new File(parentProject.getLocation().toFile(), ".git"));
             connectProviderOperation.execute(monitor);
         }
@@ -84,16 +66,6 @@ public abstract class AbstractMavenProjectUpdateOperation implements IWorkspaceR
     private IProject getParentProject(IProject project) {
         File file = project.getLocation().toFile().getParentFile().getParentFile();
         return ResourcesPlugin.getWorkspace().getRoot().getProject(file.getName());
-    }
-
-    protected IFolderNameMapper folderNameMapper(final IProject parentProject, final String repositoryStoreName) {
-        return new IFolderNameMapper() {
-
-            @Override
-            public String getRepositoryFolderName(final IProject project) {
-                return parentProject.getName() + "/trunk/" + repositoryStoreName + "/" + project.getName();
-            }
-        };
     }
 
     protected abstract IProject doRun(final IProgressMonitor monitor) throws CoreException;

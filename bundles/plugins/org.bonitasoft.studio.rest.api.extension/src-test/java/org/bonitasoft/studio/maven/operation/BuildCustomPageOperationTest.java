@@ -18,12 +18,12 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.io.File;
-import java.io.FileOutputStream;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.Optional;
 
 import org.apache.maven.project.MavenProject;
 import org.bonitasoft.studio.assertions.StatusAssert;
-import org.bonitasoft.studio.common.FileUtil;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.rest.api.extension.core.repository.RestAPIExtensionDescriptor;
 import org.eclipse.core.resources.IContainer;
@@ -97,10 +97,8 @@ public class BuildCustomPageOperationTest {
         final File targetFolder = new File(baseDir, "target");
         final File archiveFile = new File(targetFolder, "defaultRestAPIExtension-1.0.0-SNAPSHOT.zip");
         targetFolder.mkdirs();
-        archiveFile.createNewFile();
-        final FileOutputStream out = new FileOutputStream(archiveFile);
-        FileUtil.copy(BuildCustomPageOperationTest.class.getResourceAsStream("/defaultRestAPIExtension-1.0.0-SNAPSHOT.zip"),
-                out);
+        Files.copy(BuildCustomPageOperationTest.class.getResourceAsStream("/defaultRestAPIExtension-1.0.0-SNAPSHOT.zip"),
+                archiveFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
 
         operation.run(monitor);
 

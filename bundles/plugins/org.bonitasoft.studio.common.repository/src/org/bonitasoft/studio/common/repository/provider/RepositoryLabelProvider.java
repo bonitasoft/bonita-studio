@@ -11,7 +11,6 @@ import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.team.svn.core.SVNTeamPlugin;
 
 public class RepositoryLabelProvider extends StyledCellLabelProvider {
 
@@ -60,9 +59,7 @@ public class RepositoryLabelProvider extends StyledCellLabelProvider {
     @Override
     public String getToolTipText(Object element) {
         IRepository repo = (IRepository) element;
-        return repo.isShared(SVNTeamPlugin.NATURE_ID)
-                ? Messages.sharedWithSvn
-                : repo.isShared()
+        return repo.isShared()
                         ? Messages.sharedWithGit
                         : Messages.localRepository;
     }

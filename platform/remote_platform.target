@@ -62,20 +62,6 @@
             <repository location="https://download.eclipse.org/nebula/releases/2.5.0/"/>
         	<unit id="org.eclipse.nebula.widgets.richtext.feature.feature.group" version="1.4.0.202106201019"/>
         </location>
-        <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-            <unit id="org.eclipse.team.svn.feature.group" version="4.0.5.I20170425-1700"/>
-            <unit id="org.eclipse.team.svn.m2e.feature.group" version="4.0.0.I20160226-1700"/>
-            <unit id="org.eclipse.team.svn.nl1.feature.group" version="4.0.0.I20160226-1700"/>
-            <unit id="org.eclipse.team.svn.revision.graph.feature.group" version="4.0.0.I20160226-1700"/>
-            <unit id="org.eclipse.team.svn.source.feature.group" version="4.0.5.I20170425-1700"/>
-            <repository location="https://download.eclipse.org/technology/subversive/4.0/update-site/"/>
-        </location>
-        <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-            <unit id="org.polarion.eclipse.team.svn.connector.feature.group" version="6.0.4.I20161211-1700"/>
-            <unit id="org.polarion.eclipse.team.svn.connector.javahl18.feature.group" version="6.0.0.I20160427-1700"/>
-            <unit id="org.polarion.eclipse.team.svn.connector.svnkit18.feature.group" version="6.0.4.I20161211-1700"/>
-            <repository location="http://community.polarion.com/projects/subversive/download/eclipse/6.0/update-site/"/>
-        </location>
        <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
             <unit id="de.jcup.asciidoctoreditor.feature.group" version="2.2.0"/>
             <repository location="https://update-site.bonitasoft.com/p2/4.16"/>

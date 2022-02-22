@@ -12,9 +12,6 @@
             id="org.bonitasoft.studio.preferences.advanced"
             name="advanced preference page">
          <keywordReference
-               id="org.bonitasoft.studio.repository.ex.keyword.svn">
-         </keywordReference>
-         <keywordReference
                id="org.bonitasoft.studio.preferences.keyword.advanced">
          </keywordReference>
       </page>

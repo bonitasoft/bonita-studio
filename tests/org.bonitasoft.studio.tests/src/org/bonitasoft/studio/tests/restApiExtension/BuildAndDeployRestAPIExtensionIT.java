@@ -11,14 +11,14 @@ package org.bonitasoft.studio.tests.restApiExtension;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.lang.reflect.InvocationTargetException;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.Properties;
 import java.util.zip.ZipFile;
 
 import org.bonitasoft.engine.page.Page;
 import org.bonitasoft.studio.assertions.StatusAssert;
-import org.bonitasoft.studio.common.FileUtil;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.engine.BOSEngineManager;
@@ -87,7 +87,7 @@ public class BuildAndDeployRestAPIExtensionIT {
         PlatformUI.getWorkbench().getProgressService().run(true, false, operation.asWorkspaceModifyOperation());
         StatusAssert.assertThat(operation.getStatus()).overridingErrorMessage(operation.getStatus().getMessage()).isOK();
 
-        FileUtil.copy(operation.getArchiveContent(), new FileOutputStream(exportedFile));
+        Files.copy(operation.getArchiveContent(), exportedFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
 
         assertThat(exportedFile).exists();
         try (final ZipFile zipFile = new ZipFile(exportedFile);) {

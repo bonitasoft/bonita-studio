@@ -15,13 +15,12 @@
 package org.bonitasoft.studio.maven.operation;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.Collection;
 
-import org.bonitasoft.studio.common.FileUtil;
 import org.bonitasoft.studio.common.jface.BonitaErrorDialog;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
@@ -66,11 +65,8 @@ public class BuildAndExportCustomPageOperation {
         }
         runnableContext.run(true, false, operation.asWorkspaceModifyOperation());
         if (operation.getStatus().isOK()) {
-            file.delete();
-            file.createNewFile();
-            try (FileOutputStream out = new FileOutputStream(file);
-                    InputStream archiveContent = operation.getArchiveContent()) {
-                FileUtil.copy(archiveContent, out);
+            try (var archiveContent = operation.getArchiveContent()) {
+                Files.copy(archiveContent, file.toPath(), StandardCopyOption.REPLACE_EXISTING);
             }
         }
         status.add(operation.getStatus());

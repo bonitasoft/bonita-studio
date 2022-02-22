@@ -32,7 +32,6 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 import org.bonitasoft.studio.common.CommandExecutor;
-import org.bonitasoft.studio.common.FileUtil;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.perspectives.BonitaPerspectivesUtils;
 import org.bonitasoft.studio.common.perspectives.ViewIds;
@@ -60,7 +59,6 @@ import org.eclipse.ui.internal.intro.impl.IntroPlugin;
 import org.eclipse.ui.internal.intro.impl.model.IntroModelRoot;
 import org.eclipse.ui.intro.IIntroManager;
 import org.eclipse.ui.intro.config.CustomizableIntroPart;
-import org.osgi.framework.Bundle;
 
 /**
  * @author Romain Bioteau
@@ -216,56 +214,7 @@ public class PlatformUtil {
                 IWorkbenchPage.STATE_RESTORED);
     }
 
-    /**
-     * Copy all the resources matching the pattern in the folder to the destination path
-     *
-     * @param path
-     * @param bundle
-     * @param folder
-     * @param patern
-     * @return the new parent folder
-     */
-    public static void copyResource(final File destFolder, final Bundle bundle, final String bundleFolder,
-            final String pattern, final IProgressMonitor monitor) {
-        InputStream in = null;
-        FileOutputStream out = null;
-        try {
-
-            if (!destFolder.exists()) {
-                destFolder.mkdir();
-            }
-
-            final Enumeration<?> e = bundle.findEntries(bundleFolder, pattern, true);
-
-            while (e.hasMoreElements()) {
-                final URL fileURL = (URL) e.nextElement();
-                in = fileURL.openStream();
-                final String filename = fileURL.getFile().substring(fileURL.getFile().lastIndexOf('/') + 1);
-                final File newFile = new File(destFolder, filename);
-                newFile.delete();
-                newFile.createNewFile();
-                out = new FileOutputStream(newFile);
-                FileUtil.copy(in, out);
-                monitor.worked(1);
-            }
-
-        } catch (final IOException e1) {
-            BonitaStudioLog.error(e1);
-        } finally {
-            try {
-                if (in != null) {
-                    in.close();
-                }
-                if (out != null) {
-                    out.close();
-                }
-            } catch (final IOException e) {
-                BonitaStudioLog.error(e);
-            }
-        }
-
-    }
-
+   
     /**
      * Copy a resource a the bundle to the destination path
      *
@@ -339,49 +288,6 @@ public class PlatformUtil {
                 new File(destFolder.getParent() + File.separator + sourceFolder.getName()).renameTo(destFolder);
             }
         }
-    }
-
-    /**
-     * Copy a resource a the bundle to the destination path
-     *
-     * @param destinationFolder
-     * @param bundle
-     * @param resourceName
-     * @return the copied resource
-     */
-    public static void copyResource(final File destinationFolder, final Bundle bundle, final String resourceName,
-            final IProgressMonitor monitor) {
-        final URL url = bundle.getResource(resourceName);
-        if (url == null) {
-            return;
-        }
-        InputStream in = null;
-        FileOutputStream out = null;
-        try {
-
-            in = url.openStream();
-            final File newFile = new File(destinationFolder, url.getPath().substring(url.getPath().lastIndexOf('/')));
-            newFile.delete();
-            newFile.createNewFile();
-            out = new FileOutputStream(newFile);
-            FileUtil.copy(in, out);
-            monitor.worked(1);
-
-        } catch (final IOException e1) {
-            BonitaStudioLog.error(e1);
-        } finally {
-            try {
-                if (in != null) {
-                    in.close();
-                }
-                if (out != null) {
-                    out.close();
-                }
-            } catch (final IOException e) {
-                BonitaStudioLog.error(e);
-            }
-        }
-
     }
 
     public static String getFileContent(final InputStream fis) {

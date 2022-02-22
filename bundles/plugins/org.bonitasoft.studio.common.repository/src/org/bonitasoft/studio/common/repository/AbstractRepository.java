@@ -102,7 +102,6 @@ import org.eclipse.m2e.core.internal.IMavenConstants;
 import org.eclipse.m2e.core.project.IMavenProjectFacade;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.team.svn.core.SVNTeamPlugin;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
@@ -266,11 +265,10 @@ public abstract class AbstractRepository implements IRepository, IJavaContainer 
         for (IBonitaProjectListener listener : getProjectListeners()) {
             listener.projectOpened(this, monitor);
         }
-        
-        
+
         this.projectDependenciesStore
                 .analyze(subMonitor);
-        
+
         if (migrationEnabled()) {
             try {
                 migrate(subMonitor);
@@ -561,9 +559,7 @@ public abstract class AbstractRepository implements IRepository, IJavaContainer 
 
     @Override
     public Image getIcon() {
-        if (isShared(SVNTeamPlugin.NATURE_ID)) {
-            return Pics.getImage("svnIcon.png", CommonRepositoryPlugin.getDefault());
-        } else if (isShared()) {
+        if (isShared()) {
             return Pics.getImage("git.png", CommonRepositoryPlugin.getDefault());
         } else {
             return Pics.getImage(PicsConstants.project);
@@ -762,7 +758,7 @@ public abstract class AbstractRepository implements IRepository, IJavaContainer 
         try {
             report.executePostMigrationOperations(monitor);
         } catch (InvocationTargetException | InterruptedException e) {
-           throw new CoreException(new Status(IStatus.ERROR, BonitaProjectMigrationOperation.class, e.getMessage()));
+            throw new CoreException(new Status(IStatus.ERROR, BonitaProjectMigrationOperation.class, e.getMessage()));
         }
         if (!report.isEmpty()) {
             try {
@@ -893,6 +889,7 @@ public abstract class AbstractRepository implements IRepository, IJavaContainer 
     @Override
     public String getBonitaRuntimeVersion() {
         IMavenProjectFacade projectFacade = MavenPlugin.getMavenProjectRegistry().getProject(getProject());
-        return projectFacade.getMavenProject().getProperties().getProperty(ProjectDefaultConfiguration.BONITA_RUNTIME_VERSION);
+        return projectFacade.getMavenProject().getProperties()
+                .getProperty(ProjectDefaultConfiguration.BONITA_RUNTIME_VERSION);
     }
 }
