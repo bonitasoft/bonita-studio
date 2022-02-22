@@ -21,6 +21,7 @@ import java.util.stream.Stream;
 import org.bonitasoft.studio.application.dialog.ExitDialog;
 import org.bonitasoft.studio.application.views.CustomObjectActionContributorManager;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.perspectives.AutomaticSwitchPerspectivePartListener;
 import org.eclipse.e4.ui.model.application.ui.basic.MWindow;
 import org.eclipse.e4.ui.workbench.modeling.EPartService;
@@ -43,6 +44,7 @@ import org.eclipse.ui.internal.WorkbenchPage;
 import org.eclipse.ui.internal.ide.EditorAreaDropAdapter;
 import org.eclipse.ui.internal.ide.IDEInternalPreferences;
 import org.eclipse.ui.internal.ide.IDEWorkbenchPlugin;
+import org.eclipse.ui.internal.registry.EditorRegistry;
 import org.eclipse.ui.part.EditorInputTransfer;
 import org.eclipse.ui.part.MarkerTransfer;
 import org.eclipse.ui.part.ResourceTransfer;
@@ -86,8 +88,6 @@ public class BonitaStudioWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 
     @Override
     public void openIntro() {
-        //        PrefUtil.getAPIPreferenceStore().setValue(IWorkbenchPreferenceConstants.SHOW_INTRO, true);
-        //        PrefUtil.saveAPIPrefs();
 
     }
 
@@ -97,6 +97,8 @@ public class BonitaStudioWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
      */
     @Override
     public void postWindowOpen() {
+        closeEmptyEditors();
+
         IWorkbenchWindowConfigurer configurer = getWindowConfigurer();
         configurer.addEditorAreaTransfer(EditorInputTransfer.getInstance());
         configurer.addEditorAreaTransfer(ResourceTransfer.getInstance());
@@ -113,6 +115,24 @@ public class BonitaStudioWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
         }
         // Replace ObjectActionContributorManager with filtered actions
         CustomObjectActionContributorManager.getManager();
+    }
+
+    void closeEmptyEditors() {
+        IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+        if (activePage != null) {
+            IEditorReference[] refs = activePage.getEditorReferences();
+            if (refs != null) {
+                for (IEditorReference ref : refs) {
+                    String editorId = ref.getId();
+                    if (EditorRegistry.EMPTY_EDITOR_ID.equals(editorId)) {
+                        BonitaStudioLog.warning(
+                                "Empty editor reference found ! This might be caused by a non graceful shutdown.",
+                                editorId);
+                        activePage.closeEditors(new IEditorReference[] { ref }, false);
+                    }
+                }
+            }
+        }
     }
 
     @Override
