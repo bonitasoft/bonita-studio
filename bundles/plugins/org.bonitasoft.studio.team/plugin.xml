@@ -10,56 +10,6 @@
    <extension
          point="org.eclipse.ui.commands">
       <command
-            categoryId="org.bonitasoft.studio.repository.ex.team"
-            defaultHandler="org.bonitasoft.studio.team.ui.handler.ConnectToRepositoryHandler"
-            id="org.bonitasoft.studio.team.ex.connect"
-            name="Connect To Repository">
-      </command>
-      <category
-            id="org.bonitasoft.studio.repository.ex.team"
-            name="Team Commands">
-      </category>
-      <command
-            categoryId="org.bonitasoft.studio.repository.ex.team"
-            defaultHandler="org.bonitasoft.studio.team.ui.handler.ManageLocksHandler"
-            id="org.bonitasoft.studio.repository.ex.manageLocks"
-            name="Manage locks">
-      </command>
-      <command
-            defaultHandler="org.bonitasoft.studio.team.ui.handler.ArtifactsHistoryHandler"
-            id="org.bonitasoft.studio.repository.ex.history"
-            name="History">
-      </command>
-      <command
-            categoryId="org.bonitasoft.studio.repository.ex.team"
-            defaultHandler="org.bonitasoft.studio.team.ui.handler.UpdateWorkspaceHandler"
-            id="org.bonitasoft.studio.repository.ex.update"
-            name="update">
-      </command>
-      <command
-            categoryId="org.bonitasoft.studio.repository.ex.team"
-            defaultHandler="org.bonitasoft.studio.team.ui.handler.CommitWorkspaceHandler"
-            id="org.bonitasoft.studio.repository.ex.commit"
-            name="commit">
-      </command>
-      <command
-            categoryId="org.bonitasoft.studio.repository.ex.team"
-            defaultHandler="org.bonitasoft.studio.team.ui.handler.ManageSharingTypeRepositoryHandler"
-            id="org.bonitasoft.studio.repository.ex.manageshare"
-            name="Manage share">
-      </command>
-      <command
-            categoryId="org.bonitasoft.studio.repository.ex.team"
-            defaultHandler="org.bonitasoft.studio.team.ui.handler.CreateRestorePointHandler"
-            id="org.bonitasoft.studio.team.ex.backup"
-            name="Create Restore Point">
-      </command>
-      <command
-            defaultHandler="org.bonitasoft.studio.team.ui.handler.RepositoryStatusHandler"
-            id="org.bonitasoft.studio.repository.status"
-            name="status">
-      </command>
-      <command
             defaultHandler="org.bonitasoft.studio.team.ui.handler.SwitchRepositoriesWorkspaceHandler"
             id="org.bonitasoft.studio.repository.switch"
             name="%Change_Repository">
@@ -69,19 +19,6 @@
             id="org.bonitasoft.studio.team.command.showinexplorer"
             name="Show in system explorer">
       </command>
-   </extension>
-   <extension
-         point="org.eclipse.ui.keywords">
-      <keyword
-            id="org.bonitasoft.studio.repository.ex.keyword.svn"
-            label="repository,svn,connector,team">
-      </keyword>
-   </extension>
-   <extension
-         point="org.bonitasoft.studio.preferences.preferenceFieldEditorContribution">
-      <fieldEditor
-            class="org.bonitasoft.studio.team.ui.preferences.SVNConnectorFieldEditorContribution">
-      </fieldEditor>
    </extension>
    <extension
          point="org.eclipse.core.runtime.preferences">
@@ -193,27 +130,6 @@
             class="org.bonitasoft.studio.team.repository.RepositoryFactory"
             priority="0">
       </repositoryFactory>
-   </extension>
-   <extension
-         point="org.eclipse.ui.bindings">
-      <key
-            sequence="CTRL+ALT+C"
-            contextId="org.bonitasoft.studio.context.id"
-            commandId="org.bonitasoft.studio.repository.ex.commit"
-            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
-      </key>
-   </extension>
-   <extension
-         point="org.bonitasoft.studio.common.repository.lockStatusProvider">
-      <lockStatusProvider
-            class="org.bonitasoft.studio.team.core.SVNLockManager">
-      </lockStatusProvider>
-   </extension>
-   <extension
-         point="org.eclipse.team.svn.core.resourceIgnoreRules">
-      <resourceIgnoreRules
-            class="org.bonitasoft.studio.team.core.SVNIgnoreRecommendations">
-      </resourceIgnoreRules>
    </extension>
    <extension
          point="org.eclipse.ui.perspectives">

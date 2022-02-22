@@ -18,12 +18,12 @@ package org.bonitasoft.studio.connectors.ui.wizard.custom.webservice;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.Authenticator;
 import java.net.PasswordAuthentication;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -55,7 +55,6 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
-import org.bonitasoft.studio.common.FileUtil;
 import org.bonitasoft.studio.common.ProjectUtil;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.connectors.i18n.Messages;
@@ -120,11 +119,9 @@ public class WSDLParsingTool {
 		// set.get
 		final File tmpFile = File.createTempFile("temp", ".wsdl", ProjectUtil.getBonitaStudioWorkFolder());
 		tmpFile.deleteOnExit();
-		final FileOutputStream fos = new FileOutputStream(tmpFile);
-		final InputStream is = new URL(wsdlURL).openStream();
-		FileUtil.copy(is, fos);
-		is.close();
-		fos.close();
+		try(var is = new URL(wsdlURL).openStream()){
+		    Files.copy(is, tmpFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+		}
 
 		final WSDLResourceImpl resource = (WSDLResourceImpl) set.createResource(URI.createFileURI(tmpFile.getAbsolutePath()));
 		final Map<String, Object> param = new HashMap<String, Object>();

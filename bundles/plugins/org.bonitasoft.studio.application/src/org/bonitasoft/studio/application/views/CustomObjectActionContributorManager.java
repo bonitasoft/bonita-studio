@@ -34,8 +34,6 @@ public class CustomObjectActionContributorManager extends ObjectActionContributo
     private static final String COMPARE_ACTIONS_ID = "org.eclipse.compare.CompareAction";
     private static final String REPLACE_WITH_EDITION_ID = "org.eclipse.compare.ReplaceWithEditionAction";
     private static final String COMPARE_WITH_EDITION_ID = "org.eclipse.compare.CompareWithEditionAction";
-    private static final String SVN_ACTION_ID_PREFIX = "org.eclipse.team.svn.ui.*";
-    private static final String SVN_SHARE_PROJECT_ACTION_ID = "org.eclipse.team.svn.ui.IProjectContributions";
 
     private static CustomObjectActionContributorManager sharedInstance;
 
@@ -59,7 +57,6 @@ public class CustomObjectActionContributorManager extends ObjectActionContributo
             includes.add(COMPARE_ACTIONS_ID);
             includes.add(REPLACE_WITH_EDITION_ID);
             includes.add(COMPARE_WITH_EDITION_ID);
-            includes.add(SVN_ACTION_ID_PREFIX);
         }
         return includes;
     }
@@ -67,7 +64,6 @@ public class CustomObjectActionContributorManager extends ObjectActionContributo
     private List<String> getExcludedActions() {
         if (excludes == null) {
             excludes = new ArrayList<>();
-            excludes.add(SVN_SHARE_PROJECT_ACTION_ID);
         }
         return excludes;
     }

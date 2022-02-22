@@ -10,10 +10,11 @@ package org.bonitasoft.studio.connector.wizard.sapjco3.pages;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.Arrays;
 import java.util.List;
 
-import org.bonitasoft.studio.common.FileUtil;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.connector.model.definition.Component;
@@ -382,7 +383,7 @@ public class SapConnectionPage extends AbstractPage {
                         }
                     });
                 } else {
-                    FileUtil.copyFile(from, endorsedFileEngine);
+                    Files.copy(from.toPath(), endorsedFileEngine.toPath().resolve(from.toPath().getFileName()), StandardCopyOption.REPLACE_EXISTING);
                     Display.getDefault().syncExec(new Runnable() {
 
                         @Override

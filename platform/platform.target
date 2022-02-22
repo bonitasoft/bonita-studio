@@ -52,14 +52,6 @@
 	  		<unit id="com.sun.jna.platform" version="5.8.0.v20210406-1004"/>
             <unit id="org.eclipse.gmf.sdk.feature.group" version="3.2.1.201409171321"/>
         	<unit id="org.eclipse.nebula.widgets.richtext.feature.feature.group" version="1.4.0.202106201019"/>
-            <unit id="org.eclipse.team.svn.feature.group" version="4.0.5.I20170425-1700"/>
-            <unit id="org.eclipse.team.svn.m2e.feature.group" version="4.0.0.I20160226-1700"/>
-            <unit id="org.eclipse.team.svn.nl1.feature.group" version="4.0.0.I20160226-1700"/>
-            <unit id="org.eclipse.team.svn.revision.graph.feature.group" version="4.0.0.I20160226-1700"/>
-            <unit id="org.eclipse.team.svn.source.feature.group" version="4.0.5.I20170425-1700"/>
-            <unit id="org.polarion.eclipse.team.svn.connector.feature.group" version="6.0.4.I20161211-1700"/>
-            <unit id="org.polarion.eclipse.team.svn.connector.javahl18.feature.group" version="6.0.0.I20160427-1700"/>
-            <unit id="org.polarion.eclipse.team.svn.connector.svnkit18.feature.group" version="6.0.4.I20161211-1700"/>
             <unit id="de.jcup.asciidoctoreditor.feature.group" version="2.2.0"/>
             <unit id="de.jcup.yamleditor.feature.group" version="1.7.0"/>
             <unit id="net.sourceforge.plantuml.feature.feature.group" version="1.1.24"/>
