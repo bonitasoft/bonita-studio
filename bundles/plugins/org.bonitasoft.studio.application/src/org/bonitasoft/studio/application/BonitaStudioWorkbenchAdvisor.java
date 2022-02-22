@@ -65,6 +65,7 @@ import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
@@ -403,16 +404,31 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
     @Override
     public void preStartup() {
         new RecoverWorkspaceContribution().execute();
-        
+
         // Initialize adapter factories and avoid deadlock at startup
         ProcessDiagramEditorPlugin.getInstance().getItemProvidersAdapterFactory();
         try {
             new InstallBonitaMavenArtifactsOperation(MavenPlugin.getMaven().getLocalRepository()).execute();
         } catch (CoreException e) {
-           BonitaStudioLog.error(e);
+            BonitaStudioLog.error(e);
         }
         disableInternalWebBrowser();
         setSystemProperties();
+        configureGradleScriptContentType();
+    }
+
+    private void configureGradleScriptContentType() {
+        // Avoid error logs to be written by the groovy eclipse editor plugin
+        try {
+            IContentType contentType = Platform.getContentTypeManager()
+                    .getContentType("org.eclipse.buildship.core.files.gradlebuildscript");
+            if (contentType == null) {
+                Platform.getContentTypeManager().addContentType("org.eclipse.buildship.core.files.gradlebuildscript",
+                        "Gradle Build Script", null);
+            }
+        } catch (CoreException e) {
+            BonitaStudioLog.error(e);
+        }
     }
 
     protected void setSystemProperties() {
@@ -455,16 +471,16 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
 
         super.postStartup();
         IThemeEngine engine = PlatformUI.getWorkbench().getService(IThemeEngine.class);
-        synchroniseTheme(engine);
+        synchronizeTheme(engine);
         applyTheme(engine);
     }
 
     /**
-     * Synchronise active eclipse theme with the Bonita preference,
+     * Synchronize active eclipse theme with the Bonita preference,
      * to ensure that specifics adjustments for Dark theme are applied.
-     * The preference value can be outdated if the user update the theme from the eclipse preference panel.
+     * The preference value can be out-dated if the user update the theme from the eclipse preference panel.
      */
-    private void synchroniseTheme(IThemeEngine engine) {
+    private void synchronizeTheme(IThemeEngine engine) {
         String currentValue = BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore()
                 .getString(BonitaThemeConstants.STUDIO_THEME_PREFERENCE);
         String activeTheme = engine.getActiveTheme() == null
@@ -669,7 +685,7 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
         if (isFirstStartup()) {
             new OpenReleaseNoteHandler().openBrowser();
             PlatformUtil.openIntroIfNoOtherEditorOpen();
-        }else {
+        } else {
             PlatformUtil.openDashboardIfNoOtherEditorOpen();
         }
         ApplicationPlugin.getDefault().getPreferenceStore().setValue(FIRST_STARTUP, false);
