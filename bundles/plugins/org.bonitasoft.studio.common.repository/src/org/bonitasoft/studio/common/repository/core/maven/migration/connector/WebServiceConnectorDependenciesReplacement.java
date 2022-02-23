@@ -21,7 +21,7 @@ public class WebServiceConnectorDependenciesReplacement extends BonitaJarDepende
     private static final String DEFINITION_ID = "webservice";
     
     public WebServiceConnectorDependenciesReplacement() {
-        super(dependency(CONNECTOR_GROUP_ID, "bonita-connector-webservice", "1.3.3"),
+        super(dependency(CONNECTOR_GROUP_ID, "bonita-connector-webservice", "1.3.4"),
                 "bonita-connector-webservice-1.3.*.jar",
                 "bonita-connector-webservice-1.2.*.jar",
                 "bonita-connector-webservice-1.1.*.jar",

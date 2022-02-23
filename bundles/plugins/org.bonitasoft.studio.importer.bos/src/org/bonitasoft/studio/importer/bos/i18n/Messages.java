@@ -60,7 +60,6 @@ public class Messages extends NLS {
     public static String failSwitchRepository;
     public static String importWithSwitchRepositorySuccessful;
     public static String importWithSwitchRepositoryError;
-    public static String currentRepoinfo;
     public static String updateProjectDependencies;
     public static String extensionsPreviewTitle;
     public static String extensionsPreviewDescription;

@@ -15,12 +15,10 @@
 package org.bonitasoft.studio.application.views.overview;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.Map;
 import java.util.Objects;
 import java.util.function.Consumer;
 
 import org.apache.maven.model.Model;
-import org.bonitasoft.studio.application.handler.RefreshProjectHandler;
 import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.application.views.extension.ExtensionComposite;
 import org.bonitasoft.studio.common.CommandExecutor;
@@ -36,7 +34,6 @@ import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.preferences.BonitaThemeConstants;
 import org.bonitasoft.studio.ui.dialog.ExceptionDialogHandler;
 import org.bonitasoft.studio.ui.widget.DynamicButtonWidget;
-import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceChangeListener;
@@ -361,7 +358,7 @@ public class ProjectOverviewEditorPart extends EditorPart implements EventHandle
                     extensionComposite.refreshContent();
                 }
             } catch (CoreException e) {
-                errorHandler.openErrorDialog(Display.getDefault().getActiveShell(), e.getMessage(), e);
+                errorHandler.openErrorDialog(Display.getDefault().getActiveShell(), e);
             }
         });
     }

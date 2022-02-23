@@ -40,6 +40,7 @@ import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.core.ActiveOrganizationProvider;
+import org.bonitasoft.studio.common.repository.core.DatabaseHandler;
 import org.bonitasoft.studio.common.repository.core.maven.DependencyGetOperation;
 import org.bonitasoft.studio.common.repository.core.maven.contribution.InstallBonitaMavenArtifactsOperation;
 import org.bonitasoft.studio.common.repository.core.maven.migration.model.GAV;
@@ -47,9 +48,12 @@ import org.bonitasoft.studio.common.repository.core.maven.repository.MavenReposi
 import org.bonitasoft.studio.designer.core.UIDesignerServerManager;
 import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.engine.BOSWebServerManager;
+import org.bonitasoft.studio.engine.EnginePlugin;
+import org.bonitasoft.studio.engine.preferences.EnginePreferenceConstants;
 import org.bonitasoft.studio.engine.server.StartEngineJob;
 import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditorPlugin;
 import org.bonitasoft.studio.model.process.impl.ContractInputImpl;
+import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.bonitasoft.studio.preferences.BonitaThemeConstants;
 import org.bonitasoft.studio.preferences.dialog.BonitaPreferenceDialog;
@@ -66,6 +70,7 @@ import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
@@ -77,6 +82,7 @@ import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.m2e.core.MavenPlugin;
 import org.eclipse.m2e.core.embedder.IMavenConfiguration;
@@ -119,9 +125,33 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
             if (BOSWebServerManager.getInstance().serverIsStarted() && BOSEngineManager.getInstance().isRunning()) {
                 BOSEngineManager.getInstance().stop();
             }
+            try {
+                deleteH2DatabasesFiles();
+            } catch (final IOException e) {
+                BonitaStudioLog.error(e);
+            }
             FileUtil.deleteDir(ProjectUtil.getBonitaStudioWorkFolder());
             deleteTomcatTempDir();
             monitor.done();
+        }
+        
+        private void deleteH2DatabasesFiles() throws IOException {
+            if (BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore()
+                    .getBoolean(BonitaPreferenceConstants.DELETE_TENANT_ON_EXIT)) {
+                final AbstractRepository currentRepository = RepositoryManager.getInstance().getCurrentRepository();
+                final DatabaseHandler bonitaHomeHandler = currentRepository.getDatabaseHandler();
+                bonitaHomeHandler.removeEngineDatabase();
+            }
+            if (dropBusinessDataDBOnExit()) {
+                final AbstractRepository currentRepository = RepositoryManager.getInstance().getCurrentRepository();
+                final DatabaseHandler bonitaHomeHandler = currentRepository.getDatabaseHandler();
+                bonitaHomeHandler.removeBusinessDataDatabase();
+            }
+        }
+        
+        private boolean dropBusinessDataDBOnExit() {
+            final IPreferenceStore preferenceStore = EnginePlugin.getDefault().getPreferenceStore();
+            return preferenceStore.getBoolean(EnginePreferenceConstants.DROP_BUSINESS_DATA_DB_ON_EXIT_PREF);
         }
 
         private void deleteTomcatTempDir() {
@@ -404,16 +434,31 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
     @Override
     public void preStartup() {
         new RecoverWorkspaceContribution().execute();
-        
+
         // Initialize adapter factories and avoid deadlock at startup
         ProcessDiagramEditorPlugin.getInstance().getItemProvidersAdapterFactory();
         try {
             new InstallBonitaMavenArtifactsOperation(MavenPlugin.getMaven().getLocalRepository()).execute();
         } catch (CoreException e) {
-           BonitaStudioLog.error(e);
+            BonitaStudioLog.error(e);
         }
         disableInternalWebBrowser();
         setSystemProperties();
+        configureGradleScriptContentType();
+    }
+
+    private void configureGradleScriptContentType() {
+        // Avoid error logs to be written by the groovy eclipse editor plugin
+        try {
+            IContentType contentType = Platform.getContentTypeManager()
+                    .getContentType("org.eclipse.buildship.core.files.gradlebuildscript");
+            if (contentType == null) {
+                Platform.getContentTypeManager().addContentType("org.eclipse.buildship.core.files.gradlebuildscript",
+                        "Gradle Build Script", null);
+            }
+        } catch (CoreException e) {
+            BonitaStudioLog.error(e);
+        }
     }
 
     protected void setSystemProperties() {
@@ -461,16 +506,16 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
 
         super.postStartup();
         IThemeEngine engine = PlatformUI.getWorkbench().getService(IThemeEngine.class);
-        synchroniseTheme(engine);
+        synchronizeTheme(engine);
         applyTheme(engine);
     }
 
     /**
-     * Synchronise active eclipse theme with the Bonita preference,
+     * Synchronize active eclipse theme with the Bonita preference,
      * to ensure that specifics adjustments for Dark theme are applied.
-     * The preference value can be outdated if the user update the theme from the eclipse preference panel.
+     * The preference value can be out-dated if the user update the theme from the eclipse preference panel.
      */
-    private void synchroniseTheme(IThemeEngine engine) {
+    private void synchronizeTheme(IThemeEngine engine) {
         String currentValue = BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore()
                 .getString(BonitaThemeConstants.STUDIO_THEME_PREFERENCE);
         String activeTheme = engine.getActiveTheme() == null
@@ -675,7 +720,7 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
         if (isFirstStartup()) {
             new OpenReleaseNoteHandler().openBrowser();
             PlatformUtil.openIntroIfNoOtherEditorOpen();
-        }else {
+        } else {
             PlatformUtil.openDashboardIfNoOtherEditorOpen();
         }
         ApplicationPlugin.getDefault().getPreferenceStore().setValue(FIRST_STARTUP, false);

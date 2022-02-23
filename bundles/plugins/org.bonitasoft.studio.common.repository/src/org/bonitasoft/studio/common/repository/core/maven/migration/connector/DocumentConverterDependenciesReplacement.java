@@ -22,7 +22,7 @@ public class DocumentConverterDependenciesReplacement extends BonitaJarDependenc
     private static final String DEFINITION_ID = "document-converter";
     
     public DocumentConverterDependenciesReplacement() {
-        super(dependency(CONNECTOR_GROUP_ID, "bonita-connector-document-converter", "2.2.0"),
+        super(dependency(CONNECTOR_GROUP_ID, "bonita-connector-document-converter", "2.2.1"),
                 "bonita-connector-document-converter-2.1.0.jar",
                 "bonita-connector-document-converter-2.0.0.jar",
                 "bonita-connector-document-converter-1.1.0.jar",
