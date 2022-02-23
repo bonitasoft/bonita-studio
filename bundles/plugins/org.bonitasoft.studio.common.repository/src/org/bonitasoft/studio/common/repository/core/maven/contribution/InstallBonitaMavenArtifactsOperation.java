@@ -58,6 +58,7 @@ public class InstallBonitaMavenArtifactsOperation {
         final IMaven maven = maven();
         File rootFolder = getRootFolder();
         if (rootFolder == null) {
+            BonitaStudioLog.warning("No local repository packaged with Studio binary", CommonRepositoryPlugin.PLUGIN_ID);
             return null;
         }
         ArtifactRepository internalRepository = maven.createArtifactRepository(LOCAL_REPOSITORY_ID,
@@ -80,7 +81,10 @@ public class InstallBonitaMavenArtifactsOperation {
 
     private static File getRootFolder() throws IOException {
         URL repositoryURL = CommonRepositoryPlugin.getDefault().getBundle().getResource("/repository/");
-        return new File(FileLocator.toFileURL(repositoryURL).getFile());
+        if(repositoryURL != null) {
+            return new File(FileLocator.toFileURL(repositoryURL).getFile());
+        }
+        return null;
     }
 
     public static String[] listBonitaRuntimeBomVersions() throws IOException{

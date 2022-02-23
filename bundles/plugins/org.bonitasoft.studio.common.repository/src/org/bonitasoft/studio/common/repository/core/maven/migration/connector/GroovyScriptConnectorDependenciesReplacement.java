@@ -25,7 +25,7 @@ public class GroovyScriptConnectorDependenciesReplacement extends BonitaJarDepen
             "scripting-groovy");
     
     public GroovyScriptConnectorDependenciesReplacement() {
-        super(dependency(CONNECTOR_GROUP_ID, "bonita-connector-groovy", "1.1.3"),
+        super(dependency(CONNECTOR_GROUP_ID, "bonita-connector-groovy", "1.1.4"),
                 "bonita-connector-groovy-1.1.2.jar", 
                 "bonita-connector-groovy-1.1.1.jar", 
                 "bonita-connector-scripting-groovy-impl-.*.jar",

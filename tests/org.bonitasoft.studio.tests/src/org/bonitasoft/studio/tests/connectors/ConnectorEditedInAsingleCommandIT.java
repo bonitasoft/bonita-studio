@@ -36,7 +36,7 @@ public class ConnectorEditedInAsingleCommandIT {
 
     @Before
     public void setUp() throws Exception {
-        new AddDependencyOperation("org.bonitasoft.connectors", "bonita-connector-groovy", "1.1.3")
+        new AddDependencyOperation("org.bonitasoft.connectors", "bonita-connector-groovy", "1.1.4")
                 .run(AbstractRepository.NULL_PROGRESS_MONITOR);
     }
 

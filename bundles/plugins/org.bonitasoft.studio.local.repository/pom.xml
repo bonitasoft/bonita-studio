@@ -15,6 +15,7 @@
 
     <properties>
         <repository.dir>${project.basedir}/repository</repository.dir>
+        <package-dependencies.skip>true</package-dependencies.skip>
     </properties>
 
     <build>
@@ -71,8 +72,10 @@
                             <workingDirectory>${project.basedir}/src/template</workingDirectory>
                             <executable>${mavenWrapper}</executable>
                             <useMavenLogger>true</useMavenLogger>
+                            <skip>${package-dependencies.skip}</skip>
                             <arguments>
                                 <argument>org.apache.maven.plugins:maven-dependency-plugin:${maven-dependency-plugin.version}:resolve</argument>
+                                <argument>-Dlocal.remote.repo.url=file:///${settings.localRepository}</argument>
                                 <argument>-Dmaven.repo.local=${repository.dir}</argument>
                                 <argument>-Dbonita.runtime.version=${engine.version}</argument>
                                 <argument>-Dbonita-project-maven-plugin.version=${bonita-project-report-model.version}</argument>
@@ -89,8 +92,10 @@
                             <workingDirectory>${project.basedir}/src/template</workingDirectory>
                             <executable>${mavenWrapper}</executable>
                             <useMavenLogger>true</useMavenLogger>
+                            <skip>${package-dependencies.skip}</skip>
                             <arguments>
                                 <argument>org.apache.maven.plugins:maven-dependency-plugin:${maven-dependency-plugin.version}:resolve-plugins</argument>
+                                <argument>-Dlocal.remote.repo.url=file:///${settings.localRepository}</argument>
                                 <argument>-Dmaven.repo.local=${repository.dir}</argument>
                                 <argument>-Dbonita.runtime.version=${engine.version}</argument>
                                 <argument>-Dbonita-project-maven-plugin.version=${bonita-project-report-model.version}</argument>
@@ -103,6 +108,15 @@
     </build>
 
     <profiles>
+        <profile>
+            <id>local-repository</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <package-dependencies.skip>false</package-dependencies.skip>
+            </properties>
+        </profile>
         <profile>
             <id>windows-maven-wrapper</id>
             <activation>

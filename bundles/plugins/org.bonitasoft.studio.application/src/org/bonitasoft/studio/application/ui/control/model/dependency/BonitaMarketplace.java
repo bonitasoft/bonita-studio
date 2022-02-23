@@ -14,10 +14,12 @@
  */
 package org.bonitasoft.studio.application.ui.control.model.dependency;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.UncheckedIOException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
@@ -26,6 +28,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.net.http.HttpResponse.BodyHandlers;
 import java.nio.channels.Channels;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collections;
@@ -33,6 +36,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Properties;
+import java.util.stream.Collectors;
 
 import org.bonitasoft.studio.application.ApplicationPlugin;
 import org.bonitasoft.studio.application.i18n.Messages;
@@ -45,6 +49,7 @@ import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.preferences.PreferenceUtil;
 import org.bonitasoft.studio.ui.notification.BonitaNotificator;
+import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -57,6 +62,8 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class BonitaMarketplace {
+
+    private static final String DEFAULT_MARKETPLACE_VERSION = "1.0.18";
 
     private static final String MARKETPLACE_VERSION_PROPERTY = "marketplace.version";
 
@@ -92,6 +99,18 @@ public class BonitaMarketplace {
                 : new RGB(245, 245, 245);
         cacheFolder = ApplicationPlugin.getDefault().getStateLocation().toFile();
         localStore = new File(cacheFolder, MARKETPLACE);
+        if(!getMetadataFile().exists()) {
+            try {
+                var defaultMarketplace = FileLocator.toFileURL(BonitaMarketplace.class.getResource("/bonita-marketplace.zip"));
+                if(defaultMarketplace != null) {
+                    extract(new File(defaultMarketplace.getFile()).toPath(), cacheFolder.toPath());
+                    updateMetadata(DEFAULT_MARKETPLACE_VERSION);
+                }
+            } catch (IOException e) {
+               BonitaStudioLog.error(e);
+            }
+          
+        }
     }
 
     private void checkStoreContent(IProgressMonitor monitor) throws IOException {
@@ -99,9 +118,12 @@ public class BonitaMarketplace {
         String currentVersion = readMetadata();
         try {
             String latestVersion = getLatestTag();
-            if (Strings.isNullOrEmpty(currentVersion)
+            if(Strings.isNullOrEmpty(latestVersion)) {
+                BonitaStudioLog.warning("Failed to retrieve Bonita marketplace latest version", ApplicationPlugin.PLUGIN_ID);
+            }
+            if (Strings.hasText(latestVersion) && (Strings.isNullOrEmpty(currentVersion)
                     || !new File(localStore, MARKETPLACE_DESCRIPTOR_NAME).exists()
-                    || !Objects.equals(currentVersion, latestVersion)) {
+                    || !Objects.equals(currentVersion, latestVersion))) {
                 downloadMarketplace(latestVersion, monitor);
             }
         } catch (IOException e) {
@@ -253,6 +275,16 @@ public class BonitaMarketplace {
         try {
             HttpResponse<InputStream> response = HttpClientFactory.INSTANCE
                     .send(HttpRequest.newBuilder(url.toURI()).GET().build(), BodyHandlers.ofInputStream());
+            if(response.statusCode() != 200) {
+                String body = "";
+                try (var is = response.body()) {
+                     body = new BufferedReader(
+                            new InputStreamReader(is, StandardCharsets.UTF_8))
+                              .lines()
+                              .collect(Collectors.joining(System.lineSeparator()));
+                }
+                throw new IOException(String.format("GET %s request failed with status: %s %s", response.uri(), response.statusCode(), body));
+            }
             try (var is = response.body()) {
                 return objectMapper.readValue(is, new TypeReference<Map<String, Object>>() {
                 });

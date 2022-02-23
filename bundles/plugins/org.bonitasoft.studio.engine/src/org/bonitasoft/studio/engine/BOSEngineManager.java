@@ -239,11 +239,6 @@ public class BOSEngineManager {
             BOSWebServerManager.getInstance().stopServer(monitor);
         }
         isRunning = false;
-        try {
-            BOSWebServerManager.getInstance().cleanBeforeShutdown();
-        } catch (final IOException e) {
-            BonitaStudioLog.error(e);
-        }
     }
 
     private boolean dropBusinessDataDBOnExit() {

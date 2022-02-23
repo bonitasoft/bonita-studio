@@ -64,7 +64,7 @@ public class MavenProjectHelper {
         try (InputStream is = Files.newInputStream(pomFile.toPath())) {
             return POM_READER.read(is);
         } catch (IOException | XmlPullParserException e) {
-            throw new CoreException(new Status(IStatus.ERROR, MavenModelOperation.class, null, e));
+            throw new CoreException(new Status(IStatus.ERROR, MavenModelOperation.class, String.format("Failed to parse %s", pomFile), e));
         }
     }
 

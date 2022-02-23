@@ -22,7 +22,7 @@ public class DocumentTemplatingDependenciesReplacement extends BonitaJarDependen
     private static final String DEFINITION_ID = "document-templating";
     
     public DocumentTemplatingDependenciesReplacement() {
-        super(dependency(CONNECTOR_GROUP_ID, "bonita-connector-document-templating", "2.2.0"),
+        super(dependency(CONNECTOR_GROUP_ID, "bonita-connector-document-templating", "2.2.1"),
                 "bonita-connector-document-templating-2.1.0.jar",
                 "bonita-connector-document-templating-2.0.0.jar",
                 "bonita-connector-document-templating-1.1.3.jar",
