@@ -49,6 +49,7 @@ import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.preferences.PreferenceUtil;
 import org.bonitasoft.studio.ui.notification.BonitaNotificator;
+import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -61,6 +62,8 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class BonitaMarketplace {
+
+    private static final String DEFAULT_MARKETPLACE_VERSION = "1.0.18";
 
     private static final String MARKETPLACE_VERSION_PROPERTY = "marketplace.version";
 
@@ -96,6 +99,18 @@ public class BonitaMarketplace {
                 : new RGB(245, 245, 245);
         cacheFolder = ApplicationPlugin.getDefault().getStateLocation().toFile();
         localStore = new File(cacheFolder, MARKETPLACE);
+        if(!getMetadataFile().exists()) {
+            try {
+                var defaultMarketplace = FileLocator.toFileURL(BonitaMarketplace.class.getResource("/bonita-marketplace.zip"));
+                if(defaultMarketplace != null) {
+                    extract(new File(defaultMarketplace.getFile()).toPath(), cacheFolder.toPath());
+                    updateMetadata(DEFAULT_MARKETPLACE_VERSION);
+                }
+            } catch (IOException e) {
+               BonitaStudioLog.error(e);
+            }
+          
+        }
     }
 
     private void checkStoreContent(IProgressMonitor monitor) throws IOException {
