@@ -66,7 +66,7 @@ public class ConnectorEditionTest {
     @Before
     public void setUp() throws Exception {
         FileActionDialog.setDisablePopup(true);
-        new AddDependencyOperation("org.bonitasoft.connectors", "bonita-connector-groovy", "1.1.3")
+        new AddDependencyOperation("org.bonitasoft.connectors", "bonita-connector-groovy", "1.1.4")
                 .run(AbstractRepository.NULL_PROGRESS_MONITOR);
         BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore()
                 .setValue(BonitaAdvancedPreferencePage.HIDE_CONNECTOR_DEFINITION_CHANGE_WARNING, true);

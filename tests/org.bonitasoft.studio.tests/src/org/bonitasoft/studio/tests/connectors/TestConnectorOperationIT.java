@@ -51,7 +51,7 @@ public class TestConnectorOperationIT {
 
     @Before
     public void init() throws Exception {
-        AddDependencyOperation addDependencyOperation = new AddDependencyOperation("org.bonitasoft.connectors", "bonita-connector-groovy", "1.1.3");
+        AddDependencyOperation addDependencyOperation = new AddDependencyOperation("org.bonitasoft.connectors", "bonita-connector-groovy", "1.1.4");
         addDependencyOperation.run(AbstractRepository.NULL_PROGRESS_MONITOR);
     }
     
