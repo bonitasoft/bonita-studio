@@ -19,13 +19,16 @@ import java.lang.reflect.InvocationTargetException;
 import javax.inject.Singleton;
 
 import org.bonitasoft.studio.ui.i18n.Messages;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.e4.core.di.annotations.Creatable;
-import org.eclipse.jface.dialogs.ErrorDialog;
+import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.internal.ide.dialogs.InternalErrorDialog;
 
 @Singleton
 @Creatable
@@ -36,16 +39,47 @@ public class ExceptionDialogHandler {
     private static final ILog LOG = Platform.getLog(Platform.getBundle(PLUGIN_ID));
 
     public void openErrorDialog(Shell shell, String errorMessage, Throwable t) {
-        final Status status = createErrorStatus(t);
-        LOG.log(status);
-        new ErrorDialog(shell, Messages.errorTitle, errorMessage,
-                status, IStatus.ERROR).open();
+        if(t instanceof CoreException) {
+            openErrorDialog(shell, (CoreException) t);
+        }else {
+            final Status status = createErrorStatus(t);
+            LOG.log(status);
+            var dialog = new InternalErrorDialog(shell,
+                    Messages.errorTitle,
+                    null, 
+                    errorMessage,
+                    status.getException(), 
+                    MessageDialog.ERROR, 
+                    new String[] {IDialogConstants.OK_LABEL, IDialogConstants.SHOW_DETAILS_LABEL}, 
+                    0);
+            dialog.setDetailButton(1);
+            dialog.open();
+        }
+      
     }
 
     private Status createErrorStatus(Throwable t) {
-        Throwable exception = InvocationTargetException.class.isInstance(t)
+        Throwable exception = t instanceof InvocationTargetException
                 ? ((InvocationTargetException) t).getTargetException() : t;
         return new Status(IStatus.ERROR, PLUGIN_ID, exception.getMessage(), exception);
+    }
+
+    public void openErrorDialog(Shell shell, CoreException e) {
+        IStatus status = e.getStatus();
+        if(status == null) {
+            status = createErrorStatus(e);
+        }
+        LOG.log(status);
+        var dialog = new InternalErrorDialog(shell,
+                Messages.errorTitle,
+                null, 
+                status.getMessage(), 
+                status.getException(), 
+                MessageDialog.ERROR, 
+                new String[] {IDialogConstants.OK_LABEL, IDialogConstants.SHOW_DETAILS_LABEL}, 
+                0);
+        dialog.setDetailButton(1);
+        dialog.open();
     }
 
 }
