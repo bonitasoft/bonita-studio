@@ -26,12 +26,9 @@
 		<product.short.name>BonitaStudioCommunity</product.short.name>
 		<repositoryId>studio-repository</repositoryId>
 		<productId>org.bonitasoft.studio.product</productId>
-		<antRunner>-application org.eclipse.ant.core.antRunner</antRunner>
-		<p2BuildFile>-buildfile p2AllInOne.xml -clean -noSplash -consoleLog</p2BuildFile>
-		<root.dir.arg>-Droot.dir=${project.build.directory}/${product.short.name}-${branding.version}</root.dir.arg>
+        <root.dir>${project.build.directory}/${product.short.name}-${branding.version}</root.dir>
 		<signServiceURL></signServiceURL>
 	</properties>
-
 
 	<build>
 		<pluginManagement>
@@ -130,10 +127,10 @@
 				<executions>
 					<execution>
 						<id>target-platform</id>
+                        <phase>initialize</phase>
 						<goals>
 							<goal>target-platform</goal>
 						</goals>
-						<phase>process-resources</phase>
 					</execution>
 				</executions>
 			</plugin>
@@ -202,47 +199,23 @@
 				</executions>
 			</plugin>
 
-
-
-			<!-- Create a proper bundles.info for all-in-one -->
-			<plugin>
-				<groupId>org.eclipse.tycho.extras</groupId>
-				<artifactId>tycho-eclipserun-plugin</artifactId>
-				<configuration>
-					<appArgLine>${os-jvm-flags} ${antRunner} ${p2BuildFile} ${root.dir.arg}</appArgLine>
-					<argLine>-Xmx512m -Xms256m</argLine>
-					<repositories>
-						<repository>
-                            <layout>p2</layout>
-                            <url>${p2MirrorUrl}</url>
-                        </repository>
-                        <repository>
-							<id>Additional Build Dependencies P2 Repository</id>
-							<layout>p2</layout>
-							<url>${project.baseUri}/repository/</url>
-						</repository>
-					</repositories>
-					<dependencies>
-						<dependency>
-							<artifactId>org.bonitasoft.studio_antTasks</artifactId>
-							<type>eclipse-plugin</type>
-						</dependency>
-						<dependency>
-							<artifactId>org.apache.ant</artifactId>
-							<type>eclipse-plugin</type>
-						</dependency>
-					</dependencies>
-				</configuration>
-				<executions>
-					<execution>
-						<id>create bundles.info</id>
-						<phase>package</phase>
-						<goals>
-							<goal>eclipse-run</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
+        	<!-- Create a proper bundles.info for all-in-one --> 
+            <plugin>
+                <groupId>org.codehaus.gmaven</groupId>
+                <artifactId>groovy-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>include-p2-bundles-for-all-in-one</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>execute</goal>
+                        </goals>
+                        <configuration>
+                            <source>${project.basedir}/all-in-one-p2-packaging.groovy</source>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
 
 			<!-- all-in-one assembly with all platforms -->
 			<plugin>
@@ -293,11 +266,11 @@
 			</activation>
 			<properties>
 				<if.task>net.sf.antcontrib.logic.IfTask</if.task>
-				<jre.url>https://github.com/adoptium/temurin11-binaries/releases/download/jdk-11.0.13%2B8/</jre.url>
-            	<jre.winx86.x64.url>OpenJDK11U-jre_x64_windows_hotspot_11.0.13_8</jre.winx86.x64.url>
-				<jre.linuxx86.x64.url>OpenJDK11U-jre_x64_linux_hotspot_11.0.13_8</jre.linuxx86.x64.url>
-				<jre.osx.url>OpenJDK11U-jre_x64_mac_hotspot_11.0.13_8</jre.osx.url>
-				<jre.folder.name>jdk-11.0.13+8-jre</jre.folder.name>
+				<jre.url>https://github.com/adoptium/temurin11-binaries/releases/download/jdk-11.0.14%2B9/</jre.url>
+            	<jre.winx86.x64.url>OpenJDK11U-jdk_x64_windows_hotspot_11.0.14_9</jre.winx86.x64.url>
+				<jre.linuxx86.x64.url>OpenJDK11U-jdk_x64_linux_hotspot_11.0.14_9</jre.linuxx86.x64.url>
+				<jre.osx.url>OpenJDK11U-jdk_x64_mac_hotspot_11.0.14_9</jre.osx.url>
+				<jre.folder.name>jdk-11.0.14+9</jre.folder.name>
 			</properties>
 			<build>
 				<plugins>

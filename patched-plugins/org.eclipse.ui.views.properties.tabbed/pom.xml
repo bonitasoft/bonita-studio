@@ -9,6 +9,6 @@
     </parent>
   <groupId>org.bonitasoft.studio.patched-plugins</groupId>
   <artifactId>org.eclipse.ui.views.properties.tabbed</artifactId>
-  <version>3.8.900.v20200513-0930</version>
+  <version>3.9.100.v20201223-1348</version>
   <packaging>eclipse-plugin</packaging>
 </project>
