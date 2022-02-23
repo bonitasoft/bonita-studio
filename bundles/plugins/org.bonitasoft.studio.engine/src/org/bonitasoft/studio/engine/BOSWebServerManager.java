@@ -37,7 +37,6 @@ import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.IBonitaProjectListener;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
-import org.bonitasoft.studio.common.repository.core.DatabaseHandler;
 import org.bonitasoft.studio.designer.core.UIDesignerServerManager;
 import org.bonitasoft.studio.engine.i18n.Messages;
 import org.bonitasoft.studio.engine.preferences.EnginePreferenceConstants;
@@ -517,18 +516,6 @@ public class BOSWebServerManager implements IBonitaProjectListener {
         return generateUrlBase() + LOGINSERVICE_PATH + "username=" + username + "&password=" + password;
     }
 
-    public void cleanBeforeShutdown() throws IOException {
-        final AbstractRepository currentRepository = RepositoryManager.getInstance().getCurrentRepository();
-        final DatabaseHandler bonitaHomeHandler = currentRepository.getDatabaseHandler();
-        if (BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore()
-                .getBoolean(BonitaPreferenceConstants.DELETE_TENANT_ON_EXIT)) {
-            bonitaHomeHandler.removeEngineDatabase();
-        }
-        if (dropBusinessDataDBOnExit()) {
-            bonitaHomeHandler.removeBusinessDataDatabase();
-        }
-    }
-
     public File getBonitaLogFile() {
         final File logDir = new File(tomcatInstanceLocation, "logs");
         final File[] list = logDir.listFiles(new FilenameFilter() {
@@ -548,11 +535,6 @@ public class BOSWebServerManager implements IBonitaProjectListener {
             }
         }
         return lastLogFile;
-    }
-
-    private boolean dropBusinessDataDBOnExit() {
-        final IPreferenceStore preferenceStore = EnginePlugin.getDefault().getPreferenceStore();
-        return preferenceStore.getBoolean(EnginePreferenceConstants.DROP_BUSINESS_DATA_DB_ON_EXIT_PREF);
     }
 
     @Override
