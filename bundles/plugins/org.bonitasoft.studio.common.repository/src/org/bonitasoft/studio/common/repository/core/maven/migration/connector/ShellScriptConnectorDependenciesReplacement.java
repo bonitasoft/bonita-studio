@@ -21,7 +21,7 @@ public class ShellScriptConnectorDependenciesReplacement extends BonitaJarDepend
     private static final String DEFINITION_ID = "scripting-shell";
     
     public ShellScriptConnectorDependenciesReplacement() {
-        super(dependency(CONNECTOR_GROUP_ID, "bonita-connector-shell-script", "1.1.2"),
+        super(dependency(CONNECTOR_GROUP_ID, "bonita-connector-shell-script", "1.1.3"),
                 "bonita-connector-shell-script-1.1.2.jar", 
                 "bonita-connector-shell-script-1.1.0.jar", 
                 "bonita-connector-scripting-1.1.0.jar",
