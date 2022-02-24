@@ -88,7 +88,11 @@ public class InstallBonitaMavenArtifactsOperation {
     }
 
     public static String[] listBonitaRuntimeBomVersions() throws IOException{
-        File bomArtifactFolder = getRootFolder().toPath()
+        File rootFolder = getRootFolder();
+        if(rootFolder == null) {
+            return new String[0];
+        }
+        File bomArtifactFolder = rootFolder.toPath()
             .resolve("org")
             .resolve("bonitasoft")
             .resolve("runtime")
