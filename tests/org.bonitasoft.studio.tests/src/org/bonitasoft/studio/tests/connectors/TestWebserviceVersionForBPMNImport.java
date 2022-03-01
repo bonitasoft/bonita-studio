@@ -27,8 +27,8 @@ public class TestWebserviceVersionForBPMNImport {
 
     @Before
     public void init() throws Exception {
-        AddDependencyOperation addDependencyOperation = new AddDependencyOperation("org.bonitasoft.connectors", "bonita-connector-webservice", "1.3.4");
-        addDependencyOperation.run(AbstractRepository.NULL_PROGRESS_MONITOR);
+        new AddDependencyOperation("org.bonitasoft.connectors", "bonita-connector-webservice", "1.3.5")
+            .run(AbstractRepository.NULL_PROGRESS_MONITOR);
     }
     
     
