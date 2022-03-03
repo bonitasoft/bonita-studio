@@ -136,16 +136,4 @@
         </plugins>
     </build>
 
-    <profiles>
-        <profile>
-            <id>local-repository</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-            <modules>
-                <module>org.bonitasoft.studio.local.repository</module>
-            </modules>
-        </profile>
-    </profiles>
-
 </project>
