@@ -55,7 +55,7 @@
             <groupId>org.bonitasoft.engine</groupId>
             <artifactId>bonita-common</artifactId>
             <version>${bonita.runtime.version}</version>
-            <classifier>javadoc</classifier>
+            <classifier>sources</classifier>
         </dependency>
         <dependency>
             <groupId>org.bonitasoft.engine</groupId>
@@ -65,7 +65,7 @@
             <groupId>org.bonitasoft.engine</groupId>
             <artifactId>bonita-client</artifactId>
             <version>${bonita.runtime.version}</version>
-            <classifier>javadoc</classifier>
+            <classifier>sources</classifier>
         </dependency>
         <dependency>
             <groupId>org.bonitasoft.web</groupId>
@@ -75,7 +75,7 @@
             <groupId>org.bonitasoft.web</groupId>
             <artifactId>bonita-web-extensions</artifactId>
             <version>${bonita.runtime.version}</version>
-            <classifier>javadoc</classifier>
+            <classifier>sources</classifier>
         </dependency>
         <dependency>
             <groupId>org.codehaus.groovy</groupId>
