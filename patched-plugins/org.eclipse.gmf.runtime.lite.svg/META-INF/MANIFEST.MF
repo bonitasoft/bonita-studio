@@ -1,0 +1,63 @@
+Manifest-Version: 1.0
+Bundle-RequiredExecutionEnvironment: JavaSE-11
+Built-By: genie.modeling.gmp.gmf-tooling
+Bundle-SymbolicName: org.eclipse.gmf.runtime.lite.svg;singleton:=true
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.eclipse.draw2d,
+ org.apache.batik.bridge;bundle-version="[1.6.0,1.7.0)",
+ org.apache.batik.css;bundle-version="[1.6.0,1.7.0)",
+ org.apache.batik.dom;bundle-version="[1.6.0,1.7.0)",
+ org.apache.batik.dom.svg;bundle-version="[1.6.0,1.7.0)",
+ org.apache.batik.ext.awt;bundle-version="[1.6.0,1.7.0)",
+ org.apache.batik.svggen;bundle-version="[1.6.0,1.7.0)",
+ org.apache.batik.transcoder;bundle-version="[1.6.0,1.7.0)",
+ org.apache.batik.util;bundle-version="[1.6.0,1.7.0)",
+ org.w3c.dom.svg;bundle-version="1.1.0"
+Bundle-Activator: org.eclipse.gmf.internal.runtime.lite.svg.Activator
+Export-Package: org.eclipse.gmf.internal.runtime.lite.svg;x-internal:=
+ true,org.eclipse.gmf.runtime.lite.svg
+Bundle-Version: 1.0.1.qualifier
+Build-Jdk: 1.7.0_51
+Bundle-ActivationPolicy: lazy
+Bundle-Vendor: Bonitasoft S.A.
+Bundle-Name: GMF SVG Support
+Archiver-Version: Plexus Archiver
+Created-By: Apache Maven
+Bundle-ManifestVersion: 2
+
+Name: org/eclipse/gmf/internal/runtime/lite/svg/SimpleImageTranscoder$
+ 1BridgeContextEx.class
+SHA1-Digest: 5uRkhzSgREve20Xt/cxvuVFRghA=
+
+Name: org/eclipse/gmf/internal/runtime/lite/svg/InferringNamespaceCont
+ ext.class
+SHA1-Digest: SqSpsh32YxA6Cz1gMZT4B9MGGss=
+
+Name: org/eclipse/gmf/runtime/lite/svg/SVGUtils.class
+SHA1-Digest: 9fyg5ujCbt9iA8TS03Vx11MKrBk=
+
+Name: org/eclipse/gmf/internal/runtime/lite/svg/Activator.class
+SHA1-Digest: Zouq8AsrD1c/q5unqADfigea1N4=
+
+Name: org/eclipse/gmf/internal/runtime/lite/svg/SimpleImageTranscoder.
+ class
+SHA1-Digest: 9fl+iv75E33X43kdn+LQAOu5lzE=
+
+Name: META-INF/maven/org.eclipse.gmf-tooling.plugins/org.eclipse.gmf.r
+ untime.lite.svg/pom.xml
+SHA1-Digest: /hBO8X99kg6+tLX4P+0HMg9eZ40=
+
+Name: about.html
+SHA1-Digest: m//+sZd+LYcO5OY/bjEiZVm0dk0=
+
+Name: META-INF/maven/org.eclipse.gmf-tooling.plugins/org.eclipse.gmf.r
+ untime.lite.svg/pom.properties
+SHA1-Digest: ndw3OCdtkMq2SJcG2XlHb2GeRwo=
+
+Name: plugin.properties
+SHA1-Digest: 3AkAqniEbS4VcoVAleL4V61UB9w=
+
+Name: org/eclipse/gmf/runtime/lite/svg/SVGFigure.class
+SHA1-Digest: hLKcAAOe9xu0tNfAC6U3gRYOH7Y=
+
