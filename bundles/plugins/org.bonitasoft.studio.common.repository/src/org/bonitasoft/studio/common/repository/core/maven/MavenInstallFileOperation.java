@@ -115,7 +115,7 @@ public class MavenInstallFileOperation {
         if (classifier != null) {
             properties.setProperty("classifier", classifier);
         }
-        if (!Objects.equals("sources", classifier)) {
+        if (!Objects.equals("sources", classifier) && !Objects.equals("javadoc", classifier)) {
             if (pomFile == null || !pomFile.exists()) {
                 properties.setProperty("generatePom", "true");
             } else {
