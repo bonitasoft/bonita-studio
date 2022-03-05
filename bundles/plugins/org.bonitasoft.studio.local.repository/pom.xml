@@ -15,7 +15,7 @@
 
     <properties>
         <repository.dir>${project.basedir}/repository</repository.dir>
-        <packageBetaLocalRepository.skip>${packageLocalRepository.skip}</packageBetaLocalRepository.skip>
+        <localRepository.compatibleVersions.skip>${localRepository.skip}</localRepository.compatibleVersions.skip>
     </properties>
 
     <build>
@@ -72,7 +72,7 @@
                             <workingDirectory>${project.basedir}/src/template</workingDirectory>
                             <executable>${mavenWrapper}</executable>
                             <useMavenLogger>true</useMavenLogger>
-                            <skip>${packageBetaLocalRepository.skip}</skip>
+                            <skip>${localRepository.compatibleVersions.skip}</skip>
                             <arguments>
                                 <argument>org.apache.maven.plugins:maven-dependency-plugin:${maven-dependency-plugin.version}:resolve</argument>
                                 <argument>-Dlocal.remote.repo.url=file:///${settings.localRepository}</argument>
@@ -92,7 +92,7 @@
                             <workingDirectory>${project.basedir}/src/template</workingDirectory>
                             <executable>${mavenWrapper}</executable>
                             <useMavenLogger>true</useMavenLogger>
-                            <skip>${packageLocalRepository.skip}</skip>
+                            <skip>${localRepository.skip}</skip>
                             <arguments>
                                 <argument>org.apache.maven.plugins:maven-dependency-plugin:${maven-dependency-plugin.version}:resolve</argument>
                                 <argument>-Dlocal.remote.repo.url=file:///${settings.localRepository}</argument>
@@ -112,7 +112,7 @@
                             <workingDirectory>${project.basedir}/src/template</workingDirectory>
                             <executable>${mavenWrapper}</executable>
                             <useMavenLogger>true</useMavenLogger>
-                            <skip>${packageLocalRepository.skip}</skip>
+                            <skip>${localRepository.skip}</skip>
                             <arguments>
                                 <argument>org.apache.maven.plugins:maven-dependency-plugin:${maven-dependency-plugin.version}:resolve-plugins</argument>
                                 <argument>-Dlocal.remote.repo.url=file:///${settings.localRepository}</argument>
