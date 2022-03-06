@@ -40,12 +40,6 @@ public class ProductVersionIT {
     }
 
     @Test
-    public void shouldCurrentYearEquals_EffectiveCurrentYear() throws Exception {
-        final String currentYear = new SimpleDateFormat("yyyy").format(new Date());
-        assertThat(ProductVersion.CURRENT_YEAR).isEqualTo(currentYear);
-    }
-
-    @Test
     public void should_not_import_version_below_6_0_0() throws Exception {
         assertThat(ProductVersion.canBeImported("5.10.0")).isFalse();
         assertThat(ProductVersion.canBeImported("6.0.0")).isTrue();
