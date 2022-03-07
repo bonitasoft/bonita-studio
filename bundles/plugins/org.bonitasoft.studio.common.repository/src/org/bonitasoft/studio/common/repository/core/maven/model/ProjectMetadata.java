@@ -191,7 +191,7 @@ public class ProjectMetadata {
         projectMetadata.setGroupId(model.getGroupId());
         projectMetadata.setArtifactId(model.getArtifactId());
         projectMetadata.setVersion(model.getVersion());
-        projectMetadata.setBonitaRuntimeVersion(model.getProperties().getProperty(ProjectDefaultConfiguration.BONITA_RUNTIME_VERSION));
+        projectMetadata.setBonitaRuntimeVersion(model.getProperties().getProperty(ProjectDefaultConfiguration.BONITA_RUNTIME_VERSION, ProductVersion.BONITA_RUNTIME_VERSION));
         return projectMetadata;
     }
     
