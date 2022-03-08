@@ -63,7 +63,7 @@ public class TestImportActorFilter {
     }
 
     @Test
-    public void testImportConnector() throws Exception {
+    public void testImportActorFilter() throws Exception {
         final ImportActorFilterArchiveOperation operation = new ImportActorFilterArchiveOperation() ;
         URL archiveURL = TestImportActorFilter.class.getResource("test-1.0.0.zip");
         final File toImport = new File(FileLocator.toFileURL(archiveURL).getFile());
