@@ -71,7 +71,7 @@
             <unit id="org.codehaus.groovy.m2eclipse.feature.feature.group" version="4.4.0.v202112311714-e2112-RELEASE"/>
 	        <unit id="org.codehaus.groovy30.feature.feature.group" version="4.4.0.v202112311714-e2112-RELEASE"/>
         </location>
-         <location includeDependencyScope="test" includeSource="true" missingManifest="generate" type="Maven">
+	        <location includeDependencyScope="test" includeSource="true" missingManifest="generate" type="Maven">
 		        <dependencies>
 			        <dependency>
 				        <groupId>com.sun.istack</groupId>
@@ -126,18 +126,24 @@
 				        <type>jar</type>
 			        </dependency>
 			        <dependency>
-					      <groupId>jakarta.xml.soap</groupId>
-						   <artifactId>jakarta.xml.soap-api</artifactId>
-						   <version>1.4.2</version>
-					    <type>jar</type>
-					</dependency>
-					<dependency>
-					      <groupId>jakarta.xml.soap</groupId>
-						   <artifactId>jakarta.xml.soap-api</artifactId>
-						   <version>1.4.2</version>
-					       <type>jar</type>
-					</dependency>
+				        <groupId>jakarta.xml.soap</groupId>
+				        <artifactId>jakarta.xml.soap-api</artifactId>
+				        <version>1.4.2</version>
+				        <type>jar</type>
+			        </dependency>
+			        <dependency>
+				        <groupId>jakarta.xml.soap</groupId>
+				        <artifactId>jakarta.xml.soap-api</artifactId>
+				        <version>1.4.2</version>
+				        <type>jar</type>
+			        </dependency>
+			        <dependency>
+				        <groupId>org.jdom</groupId>
+				        <artifactId>jdom2</artifactId>
+				        <version>2.0.6.1</version>
+				        <type>jar</type>
+			        </dependency>
 		        </dependencies>
 	        </location>
-    </locations>
+        </locations>
 </target>

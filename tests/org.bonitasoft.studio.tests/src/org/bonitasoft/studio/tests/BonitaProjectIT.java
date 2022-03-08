@@ -30,12 +30,14 @@ import org.bonitasoft.studio.common.repository.core.maven.BonitaProjectBuilder;
 import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
 import org.bonitasoft.studio.groovy.repository.ProvidedGroovyRepositoryStore;
 import org.bonitasoft.studio.identity.organization.repository.OrganizationRepositoryStore;
+import org.bonitasoft.studio.tests.util.Await;
 import org.eclipse.core.resources.ICommand;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
+import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.m2e.core.internal.IMavenConstants;
 import org.junit.Test;
 
@@ -84,6 +86,15 @@ public class BonitaProjectIT {
                 .getRepositoryStore(ProvidedGroovyRepositoryStore.class);
         assertNotSame(0, providedScriptStore.getChildren().size());
 
+        Await.waitUntil(() -> {
+            IJavaProject javaProject = currentRepository.getJavaProject();
+            try {
+                return javaProject.findType("BonitaUsers") != null;
+            } catch (JavaModelException e) {
+               BonitaStudioLog.error(e);
+               return false;
+            }
+        }, 2000, 100);
         IJavaProject javaProject = currentRepository.getJavaProject();
         assertThat(javaProject.findType("BonitaUsers")).isNotNull(); // provided script are compiling
         assertThat(javaProject.findType(AbstractConnector.class.getName())).isNotNull(); // classes in dependencies are in classpath

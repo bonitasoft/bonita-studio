@@ -76,7 +76,8 @@ Require-Bundle: org.bonitasoft.studio.diagram,
  org.bonitasoft.studio.dependencies,
  org.bonitasoft.studio.diagram.custom,
  org.objenesis;bundle-version="3.2.0";resolution:=optional,
- net.bytebuddy.byte-buddy;bundle-version="1.12.1";resolution:=optional
+ net.bytebuddy.byte-buddy;bundle-version="1.12.1";resolution:=optional,
+ wrapped.org.jdom.jdom2;bundle-version="2.0.6"
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-ActivationPolicy: lazy
 Import-Package: javax.annotation;version="1.2.0",
@@ -117,10 +118,6 @@ Export-Package: org.apache.maven.io.util,
  org.bonitasoft.studio.application.views.extension.card.zoom,
  org.bonitasoft.studio.application.views.overview,
  org.bonitasoft.studio.application.views.process,
- org.bonitasoft.studio.application.views.provider,
- org.jdom2,
- org.jdom2.input,
- org.jdom2.output
+ org.bonitasoft.studio.application.views.provider
 Bundle-ClassPath: .,
- lib/jdom.jar,
  lib/maven3-model-jdom-support.jar
