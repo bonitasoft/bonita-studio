@@ -189,7 +189,7 @@ public class MigrateUIDOperation implements IRunnableWithStatus {
             throw new InvocationTargetException(new MigrationException(e1));
         }
         HttpRequest request = HttpRequest.newBuilder(uri)
-                .timeout(Duration.ofSeconds(10))
+                .timeout(Duration.ofMinutes(1))
                 .PUT(BodyPublishers.noBody()).build();
         HttpResponse<InputStream> response = retriesUntil(request, 200, 5, 500);
         if (response == null) {
