@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin>
+
+   <extension-point id="exporterExtension" name="ExporterExtension" schema="schema/exporterExtension.exsd"/>
+   <extension-point id="cssGenerator" name="Css Generator" schema="schema/cssGenerator.exsd"/>
+   <extension-point id="barApplicationResourceProvider" name="Extension Point to add Application Resources to BAR at export" schema="schema/barApplicationResourcesProvider.exsd"/>
+   <extension-point id="exporterFactory" name="exporterFactory" schema="schema/exporterFactory.exsd"/>
+   <extension-point id="formsExporter" name="Forms Exporter" schema="schema/org.bonitasoft.studio.exporter.formsExporter.exsd"/>
+
+  
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            locationURI="menu:org.bonitasoft.studio.fileMenu?after=org.bonitasoft.studio.application.separator5">
+         <menu
+               label="%exportAs"
+               id="org.bonitasoft.studio.exporter.exportAs">
+            <command
+                  commandId="org.bonitasoft.studio.exporter.exportAsBPMN"
+                  icon="icons/bpmn.png"
+                  style="push">
+            </command>
+            <command
+                  commandId="org.bonitasoft.studio.diagram.custom.saveasimage"
+                  icon="icons/save-as-image.png"
+                  label="%exportAsImage"
+                  style="push">
+            </command>
+         </menu>
+         <separator
+               name="org.bonitasoft.studio.exporter.separator"
+               visible="true">
+         </separator>
+      </menuContribution>
+      <menuContribution
+            allPopups="false"
+            locationURI="menu:org.bonitasoft.studio.fileMenu?after=org.bonitasoft.studio.menu.import">
+         <command
+               commandId="org.bonitasoft.studio.exportBosArchive"
+               style="push">
+         </command>
+      </menuContribution>
+      <menuContribution
+            allPopups="false"
+            locationURI="popup:org.bonitasoft.studio.application.project.explorer?after=group.export">
+         <dynamic
+               class="org.bonitasoft.studio.exporter.menu.ExportContributionMenu"
+               id="org.bonitasoft.studio.exporter.popup.menu">
+            <visibleWhen
+                  checkEnabled="false">
+               <with
+                     variable="activeMenuSelection">
+                  <and>
+                     <count
+                           value="1">
+                     </count>
+                     <iterate>
+                        <instanceof
+                              value="org.eclipse.core.resources.IProject">
+                        </instanceof>
+                        <test
+                              property="org.bonitasoft.studio.application.isBonitaProject">
+                        </test>
+                     </iterate>
+                  </and>
+               </with>
+            </visibleWhen>
+         </dynamic>
+      </menuContribution>
+   </extension>
+   <extension
+         point="org.bonitasoft.studio.exporter.exporterFactory">
+      <exporterFactory
+            targetExtension="bpmn"
+            menuIcon="icons/bpmn.png"
+            priority="0"
+            menuLabel="BPMN 2.0"
+            class="org.bonitasoft.studio.exporter.bpmn.transfo.BonitaToBPMN">
+      </exporterFactory>
+   </extension>
+   <extension
+         point="org.bonitasoft.studio.coolbarContributionItem">
+      <coolbarItem
+            priority="0"
+            toolbarPosition="5"
+            class="org.bonitasoft.studio.exporter.coolbar.ExportBarCoolbarItem">
+      </coolbarItem>
+   </extension>
+   <extension
+         point="org.bonitasoft.studio.common.barResourcesProvider">
+      <barResourceProvider
+            providerClass="org.bonitasoft.studio.exporter.bpmn.BPMNBarResourceProvider">
+      </barResourceProvider>
+   </extension>
+   <extension
+         id="org.bonitasoft.studio.exporter.fragment"
+         point="org.eclipse.e4.workbench.model">
+      <fragment
+            uri="fragment.e4xmi">
+      </fragment>
+   </extension>
+
+</plugin>
