@@ -255,13 +255,13 @@ public abstract class AbstractRepository implements IRepository, IJavaContainer 
             this.projectDependenciesStore = new MavenProjectDependenciesStore(project, eventBroker);
             RepositoryManager.getInstance().setCurrentRepository(this);
             AbstractFileStore.refreshExplorerView();
+            enableBuild(subMonitor);
             MavenPlugin.getProjectConfigurationManager()
                     .updateProjectConfiguration(project, subMonitor);
         } catch (final CoreException e) {
             BonitaStudioLog.error(e);
         }
 
-        enableBuild(subMonitor);
         for (IBonitaProjectListener listener : getProjectListeners()) {
             listener.projectOpened(this, monitor);
         }
