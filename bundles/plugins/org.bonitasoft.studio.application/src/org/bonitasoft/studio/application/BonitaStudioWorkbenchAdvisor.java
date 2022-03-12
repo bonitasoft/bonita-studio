@@ -490,6 +490,11 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
                 RepositoryManager.getInstance().getAccessor().start(monitor);
                 return Status.OK_STATUS;
             }
+            
+            @Override
+            public boolean belongsTo(Object family) {
+                return RepositoryManager.class.equals(family);
+            }
         };
         initializeProjectJob.addJobChangeListener(new JobChangeAdapter() {
 

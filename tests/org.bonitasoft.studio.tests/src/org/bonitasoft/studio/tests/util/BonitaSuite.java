@@ -25,6 +25,7 @@ import org.bonitasoft.studio.application.actions.coolbar.NormalCoolBarHandler;
 import org.bonitasoft.studio.common.ConsoleColors;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.engine.BOSWebServerManager;
 import org.bonitasoft.studio.engine.EnginePlugin;
 import org.bonitasoft.studio.engine.preferences.EnginePreferenceConstants;
@@ -35,6 +36,7 @@ import org.bonitasoft.studio.preferences.pages.BonitaAdvancedPreferencePage;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
@@ -75,13 +77,23 @@ public class BonitaSuite extends Suite {
 
     @Override
     public void run(RunNotifier notifier) {
+        Display.getDefault().syncExec(() -> 
+        {
+            configurePreferencesForTests();
+            try {
+                PlatformUI.getWorkbench().getProgressService().run(true, false, monitor -> {
+                    Job.getJobManager().join(RepositoryManager.class, monitor);
+                });
+            } catch (InvocationTargetException | InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        });
         if (shouldWaitForServerStartup()) {
             var serverReady = new AtomicBoolean(false);
             Display.getDefault().syncExec(() -> {
                 try {
                     PlatformUI.getWorkbench().getProgressService().run(true, false, monitor -> {
                         monitor.beginTask("Preparing test suite env...", IProgressMonitor.UNKNOWN);
-                        configurePreferencesForTests();
                         try {
                             Await.waitUntil(() -> BOSWebServerManager.getInstance().serverIsStarted(),
                                     SERVER_STARTUP_TIMEOUT, 200);
