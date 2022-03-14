@@ -454,6 +454,16 @@ ${installdir}/@mac.shortcut.name@/Contents/Eclipse/jre/Contents/Home/bin/java
 		               </checkFreeDiskSpace>
 		            </ruleList>
 		        </throwError>
+                <throwError>
+                    <text>${msg(path.with.invalid.characters)}</text>
+                    <ruleList>
+                        <regExMatch>
+                           <logic>does_not_match</logic>
+                           <pattern>^[^#?]+$</pattern>
+                           <text>${installdir}</text>
+                        </regExMatch>
+                    </ruleList>
+                </throwError>
 	       </validationActionList>
         </directoryParameter>
         <parameterGroup>
