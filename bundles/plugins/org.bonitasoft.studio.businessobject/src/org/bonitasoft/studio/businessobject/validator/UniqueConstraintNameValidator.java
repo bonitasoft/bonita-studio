@@ -64,7 +64,7 @@ public class UniqueConstraintNameValidator implements IBDMValidator<UniqueConstr
     }
 
     protected IStatus validateJavaConvention(String name) {
-        return JavaConventions.validateFieldName(name, JavaCore.VERSION_1_8, JavaCore.VERSION_1_8);
+        return JavaConventions.validateFieldName(name, JavaCore.VERSION_11, JavaCore.VERSION_11);
     }
 
     private IStatus validateNameLength(String name) {

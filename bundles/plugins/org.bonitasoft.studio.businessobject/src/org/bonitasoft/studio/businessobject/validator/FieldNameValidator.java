@@ -46,6 +46,7 @@ public class FieldNameValidator implements IBDMValidator<Field> {
         }
         MultiStatus status = new MultiStatus(BusinessObjectPlugin.PLUGIN_ID, 0, "", null);
 
+        status.add(validateWhiteSpaceCharacter(name));
         status.add(validateJavaConvention(name));
         status.add(validateNameLength(name));
         status.add(sqlNameValidator.validate(name));
@@ -54,6 +55,12 @@ public class FieldNameValidator implements IBDMValidator<Field> {
         status.add(validateFirstCharacter(name));
 
         return status;
+    }
+    
+    private IStatus validateWhiteSpaceCharacter(String name) {
+        return name.contains(" ")
+                ? ValidationStatus.error(Messages.errorMessageNoWhitespaceInAttributeNames)
+                : ValidationStatus.ok();
     }
 
     private IStatus validateFirstCharacter(String name) {
@@ -88,7 +95,7 @@ public class FieldNameValidator implements IBDMValidator<Field> {
     }
 
     protected IStatus validateJavaConvention(String name) {
-        return JavaConventions.validateFieldName(name, JavaCore.VERSION_1_8, JavaCore.VERSION_1_8);
+        return JavaConventions.validateFieldName(name, JavaCore.VERSION_11, JavaCore.VERSION_11);
     }
 
     @Override

@@ -45,7 +45,7 @@ public class PackageNameValidator implements IBDMValidator<Package> {
     }
 
     protected IStatus javaPackageValidation(String value) {
-        return JavaConventions.validatePackageName(value, JavaCore.VERSION_1_8, JavaCore.VERSION_1_8);
+        return JavaConventions.validatePackageName(value, JavaCore.VERSION_11, JavaCore.VERSION_11);
     }
 
     @Override
