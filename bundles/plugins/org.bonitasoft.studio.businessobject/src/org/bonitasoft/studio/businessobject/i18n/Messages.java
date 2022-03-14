@@ -513,6 +513,7 @@ public class Messages extends NLS {
     public static String define;
     public static String openH2Console;
     public static String eagerRelationWarning;
+    public static String errorMessageNoWhitespaceInAttributeNames;
 
     private Messages() {
     }
