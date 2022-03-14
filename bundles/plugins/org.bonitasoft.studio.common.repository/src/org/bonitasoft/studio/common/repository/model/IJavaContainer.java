@@ -25,12 +25,6 @@ public interface IJavaContainer {
 
     void build(IProgressMonitor monitor);
 
-    boolean isBuildEnable();
-
-    void disableBuild();
-
-    void enableBuild(IProgressMonitor monitor);
-
     IJavaProject getJavaProject();
 
     JDTTypeHierarchyManager getJdtTypeHierarchyManager();

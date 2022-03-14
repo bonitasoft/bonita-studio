@@ -88,6 +88,7 @@ public class BonitaSuite extends Suite {
                 throw new RuntimeException(e);
             }
         });
+        
         if (shouldWaitForServerStartup()) {
             var serverReady = new AtomicBoolean(false);
             Display.getDefault().syncExec(() -> {

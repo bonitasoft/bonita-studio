@@ -40,6 +40,9 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.m2e.core.MavenPlugin;
+import org.eclipse.m2e.core.internal.project.ProjectConfigurationManager;
+import org.eclipse.m2e.core.project.MavenUpdateRequest;
 
 public class CreateBonitaProjectOperation implements IWorkspaceRunnable {
 
@@ -69,13 +72,6 @@ public class CreateBonitaProjectOperation implements IWorkspaceRunnable {
         project.create(AbstractRepository.NULL_PROGRESS_MONITOR);
         project.open(AbstractRepository.NULL_PROGRESS_MONITOR);
 
-        if (migrationEnabled) {
-            report = new BonitaProjectMigrator(project).run(monitor);
-        }else{
-            MavenProjectModelBuilder mavenProjectBuilder = newProjectBuilder(metadata);
-            createDefaultPomFile(project, mavenProjectBuilder);
-        }
-
         project.setDescription(
                 new ProjectDescriptionBuilder()
                         .withProjectName(project.getName())
@@ -84,25 +80,35 @@ public class CreateBonitaProjectOperation implements IWorkspaceRunnable {
                         .havingBuilders(builders)
                         .build(),
                 AbstractRepository.NULL_PROGRESS_MONITOR);
+
+        if (migrationEnabled) {
+            report = new BonitaProjectMigrator(project).run(monitor);
+            ((ProjectConfigurationManager) MavenPlugin.getProjectConfigurationManager())
+                    .updateProjectConfiguration(new MavenUpdateRequest(project, false, false), true, false, true,
+                            monitor);
+        } else {
+            MavenProjectModelBuilder mavenProjectBuilder = newProjectBuilder(metadata);
+            createDefaultPomFile(project, mavenProjectBuilder);
+        }
     }
-    
+
     public MigrationReport getReport() {
         return report;
     }
-    
+
     public static MavenProjectModelBuilder newProjectBuilder(ProjectMetadata metadata) {
         var mavenProjectBuilder = new MavenProjectModelBuilder();
         mavenProjectBuilder.setDisplayName(metadata.getName());
         String artifactId = metadata.getArtifactId();
-        if(Strings.isNullOrEmpty(artifactId)) {
+        if (Strings.isNullOrEmpty(artifactId)) {
             artifactId = ProjectMetadata.toArtifactId(metadata.getName());
         }
         mavenProjectBuilder.setArtifactId(artifactId);
         mavenProjectBuilder.setGroupId(metadata.getGroupId());
         String bonitaRuntimeVersion = metadata.getBonitaRuntimeVersion();
         var minorVersionString = ProductVersion.toMinorVersionString(ProductVersion.minorVersion(bonitaRuntimeVersion));
-        if(!Objects.equals(minorVersionString, ProductVersion.minorVersion())) {
-            bonitaRuntimeVersion = ProductVersion.BONITA_RUNTIME_VERSION; 
+        if (!Objects.equals(minorVersionString, ProductVersion.minorVersion())) {
+            bonitaRuntimeVersion = ProductVersion.BONITA_RUNTIME_VERSION;
         }
         mavenProjectBuilder.setBonitaVersion(bonitaRuntimeVersion);
         mavenProjectBuilder.setVersion(metadata.getVersion());
@@ -128,7 +134,7 @@ public class CreateBonitaProjectOperation implements IWorkspaceRunnable {
             throw new CoreException(
                     new Status(IStatus.ERROR, CreateBonitaProjectOperation.class, "Failed to create pom.xml file.", e));
         }
-        mavenProjectHelper.saveModel(project, mavenProjectBuilder.toMavenModel(), new NullProgressMonitor());
+        mavenProjectHelper.saveModel(project, mavenProjectBuilder.toMavenModel(), true, new NullProgressMonitor());
     }
 
     public static void backupExistingPomFile(IProject project,

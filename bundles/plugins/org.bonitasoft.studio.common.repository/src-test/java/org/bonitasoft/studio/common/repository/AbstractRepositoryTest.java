@@ -77,7 +77,6 @@ public class AbstractRepositoryTest {
     @Test
     public void should_refresh_project_when_deleting_an_open_repository() throws Exception {
         final AbstractRepository repository = newRepository();
-        doReturn(true).when(repository).isBuildEnable();
         doReturn(true).when(project).isOpen();
 
         repository.delete(monitor);

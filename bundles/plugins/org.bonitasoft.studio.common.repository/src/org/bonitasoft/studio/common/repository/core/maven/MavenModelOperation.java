@@ -45,7 +45,7 @@ public abstract class MavenModelOperation implements IWorkspaceRunnable {
 
     protected void saveModel(IProject project, Model model, IProgressMonitor monitor) throws CoreException {
         if (modelUpdated) {
-            helper.saveModel(project, model, monitor);
+            helper.saveModel(project, model, false, monitor);
 
             if (!disableAnalyze && getRepositoryAccessor().hasActiveRepository()) {
                 AbstractRepository currentRepository = getRepositoryAccessor().getCurrentRepository();

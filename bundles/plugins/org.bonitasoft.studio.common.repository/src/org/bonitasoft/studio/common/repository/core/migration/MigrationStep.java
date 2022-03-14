@@ -45,7 +45,7 @@ public interface MigrationStep {
     }
 
     default void saveMavenModel(Model model, IProject project) throws CoreException {
-        new MavenProjectHelper().saveModel(project, model, new NullProgressMonitor());
+        new MavenProjectHelper().saveModel(project, model, false, new NullProgressMonitor());
     }
 
     default Predicate<Dependency> has(String groupId, String artifactId) {

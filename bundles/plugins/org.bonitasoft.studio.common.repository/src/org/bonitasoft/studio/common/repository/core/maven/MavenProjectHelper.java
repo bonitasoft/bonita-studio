@@ -41,8 +41,11 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.e4.core.di.annotations.Creatable;
+import org.eclipse.jdt.core.IClasspathEntry;
+import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.m2e.core.MavenPlugin;
 import org.eclipse.m2e.core.internal.IMavenConstants;
+import org.eclipse.m2e.core.internal.project.ProjectConfigurationManager;
 import org.eclipse.m2e.core.project.IMavenProjectFacade;
 import org.eclipse.m2e.core.project.MavenUpdateRequest;
 
@@ -68,7 +71,7 @@ public class MavenProjectHelper {
         }
     }
 
-    public void saveModel(IProject project, Model model, IProgressMonitor monitor) throws CoreException {
+    public void saveModel(IProject project, Model model, boolean updateConfiguration, IProgressMonitor monitor) throws CoreException {
         var pomFile = project.getFile(IMavenConstants.POM_FILE_NAME);
         try (OutputStream stream = new FileOutputStream(pomFile.getLocation().toFile())) {
             pomWriter.write(stream, model);
@@ -76,9 +79,15 @@ public class MavenProjectHelper {
             throw new CoreException(
                     new Status(IStatus.ERROR, getClass(), "Failed to write maven model in pom.xml file.", e));
         }
-        pomFile.refreshLocal(IResource.DEPTH_ONE, new NullProgressMonitor());
-        MavenUpdateRequest mavenUpdateRequest = new MavenUpdateRequest(project, false, false);
-        MavenPlugin.getMavenProjectRegistry().refresh(mavenUpdateRequest, monitor);
+        ((ProjectConfigurationManager) MavenPlugin.getProjectConfigurationManager())
+            .updateProjectConfiguration(new MavenUpdateRequest(project, false, false),updateConfiguration,false,true, monitor);
+        var jProject =  JavaCore.create(project);  
+        if(jProject.isOpen()) {
+            var entry =  jProject.getClasspathEntryFor(jProject.getPath().append("src-connectors"));
+            if(entry == null) {
+                throw new CoreException(Status.error("Connector sources not in classpath after saving model."));
+            }
+        }
     }
 
     public List<ArtifactRepository> getProjectMavenRepositories(IProject project) throws CoreException {

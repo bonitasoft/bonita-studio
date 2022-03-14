@@ -60,7 +60,7 @@ public class AddDependencyOperation extends MavenModelOperation {
                 modelUpdated = true;
             }
         });
-
+        
         saveModel(getCurrentProject(), model, monitor);
     }
 
