@@ -36,6 +36,7 @@ import org.eclipse.m2e.core.MavenPlugin;
 import org.eclipse.m2e.core.embedder.ICallable;
 import org.eclipse.m2e.core.embedder.IMaven;
 import org.eclipse.m2e.core.embedder.IMavenExecutionContext;
+import org.eclipse.m2e.core.internal.project.ProjectConfigurationManager;
 import org.eclipse.m2e.core.project.IMavenProjectFacade;
 import org.eclipse.m2e.core.project.MavenUpdateRequest;
 
@@ -82,7 +83,8 @@ public class BonitaProjectPlugin {
         }, monitor);
         
         if(executionResult.getBuildSummary(executionResult.getProject()) instanceof BuildSuccess) {
-            MavenPlugin.getMavenProjectRegistry().refresh(new MavenUpdateRequest(project, false, false), monitor);
+            ((ProjectConfigurationManager) MavenPlugin.getProjectConfigurationManager())
+                .updateProjectConfiguration(new MavenUpdateRequest(project, true, false),false,false, monitor);
             return Status.OK_STATUS;
         }else {
             throw new CoreException(new Status(IStatus.ERROR, getClass(),"Failed to execute bonita-project-maven-plugin", executionResult.hasExceptions() ? executionResult.getExceptions().get(0) : null));
