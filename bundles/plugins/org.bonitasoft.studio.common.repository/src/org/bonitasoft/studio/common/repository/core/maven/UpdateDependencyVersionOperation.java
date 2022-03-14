@@ -59,7 +59,7 @@ public class UpdateDependencyVersionOperation extends MavenModelOperation {
                 modelUpdated = true;
             }
         });        
-      
+        
         saveModel(getCurrentProject(), model, monitor);
     }
 

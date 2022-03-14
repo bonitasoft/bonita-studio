@@ -76,12 +76,12 @@ import org.junit.runners.Suite;
 
 @RunWith(BonitaSuite.class)
 @Suite.SuiteClasses({
+        BonitaProjectIT.class,
         TestPatchedBundles.class,
         TestSpecificWizardIds.class,
         EdaptHistoryIT.class,
         TestBugs.class,
         ProductVersionIT.class,
-        BonitaProjectIT.class,
         TestFullScenario.class,
         TestSubprocess.class,
         TestRunSearchIndex.class,

@@ -62,7 +62,7 @@ public class RemoveDependencyOperation extends MavenModelOperation {
             }
             modelUpdated = true;
         }
-
+        
         saveModel(getCurrentProject(), model, monitor);
     }
 

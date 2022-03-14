@@ -16,28 +16,25 @@ package org.bonitasoft.studio.tests.git;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Objects;
 
-import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
+import org.bonitasoft.studio.common.FileUtil;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.Messages;
-import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.designer.core.UIDesignerServerManager;
+import org.bonitasoft.studio.engine.EnginePlugin;
+import org.bonitasoft.studio.engine.preferences.EnginePreferenceConstants;
 import org.bonitasoft.studio.swtbot.framework.ConditionBuilder;
 import org.bonitasoft.studio.swtbot.framework.application.BotApplicationWorkbenchWindow;
 import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
-import org.bonitasoft.studio.team.TeamRepositoryUtil;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.egit.core.GitProvider;
 import org.eclipse.egit.core.internal.util.ResourceUtil;
 import org.eclipse.egit.ui.internal.UIText;
 import org.eclipse.jface.dialogs.IDialogConstants;
-import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.Status;
 import org.eclipse.jgit.lib.Ref;
@@ -45,14 +42,11 @@ import org.eclipse.jgit.lib.RepositoryBuilder;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.osgi.util.NLS;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.waits.Conditions;
-import org.eclipse.ui.PlatformUI;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -66,22 +60,18 @@ public class ShareWithGitIT {
     public SWTGefBotRule gefBotRule = new SWTGefBotRule(bot);
     private org.eclipse.jgit.lib.Repository remote;
 
-    @BeforeClass
-    public static void switchToDefault() throws Exception {
-        RepositoryAccessor repositoryAccessor = RepositoryManager.getInstance().getAccessor();
-        if(!Objects.equals(repositoryAccessor.getCurrentRepository().getName(), Messages.defaultRepositoryName)) {
-            bot.waitUntil(new ConditionBuilder()
-                    .withTest(() -> UIDesignerServerManager.getInstance().isStarted())
-                    .create(), 30000);
-            TeamRepositoryUtil.switchToRepository(Messages.defaultRepositoryName, AbstractRepository.NULL_PROGRESS_MONITOR);
-        }
-    }
 
     @Before
     public void create_bare_repository() throws Exception {
-        gitRepoPath = Files.createDirectory(Paths.get(System.getProperty("java.io.tmpdir"), "tmp_git_repo.git"));
+        var tmpRemotePath = Paths.get(System.getProperty("java.io.tmpdir"), "tmp_git_repo.git");
+        if(tmpRemotePath.toFile().exists()) {
+            FileUtil.deleteDir(tmpRemotePath.toFile());
+        }
+        gitRepoPath = Files.createDirectory(tmpRemotePath);
         remote = new RepositoryBuilder().setBare().setGitDir(gitRepoPath.toFile()).build();
         remote.create(true);
+        IPreferenceStore preferenceStore = EnginePlugin.getDefault().getPreferenceStore();
+        preferenceStore.setValue(EnginePreferenceConstants.LAZYLOAD_ENGINE, true);
     }
 
     @Test
@@ -99,7 +89,6 @@ public class ShareWithGitIT {
                 .isFalse();
 
         botApplicationWorkbenchWindow.teamMenu().gitMenu().shareWithGit()
-                .setRepositoryName("git_it_repo")
                 .share()
                 .commitMessage("This is a test message")
                 .pushBranch().setURI(gitRepoPath.toUri().toString())
@@ -154,22 +143,6 @@ public class ShareWithGitIT {
     @After
     public void reset() throws Exception {
         remote.close();
-        Display.getDefault().syncExec(() -> {
-            try {
-                PlatformUI.getWorkbench().getProgressService().run(false, false, new IRunnableWithProgress() {
-
-                    @Override
-                    public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-                        PlatformUtil.delete(gitRepoPath.toFile(), monitor);
-                        TeamRepositoryUtil.switchToRepository(Messages.defaultRepositoryName, false, false, monitor);
-                    }
-                });
-            } catch (InvocationTargetException | InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-        });
-        
-        
-        
+        FileUtil.deleteDir(gitRepoPath.toFile());
     }
 }

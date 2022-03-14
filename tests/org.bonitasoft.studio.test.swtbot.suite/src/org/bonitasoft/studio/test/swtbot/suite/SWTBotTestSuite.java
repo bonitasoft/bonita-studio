@@ -77,6 +77,7 @@ import org.bonitasoft.studio.tests.exporter.bpmn.BPMNGatewayExportImportTest;
 import org.bonitasoft.studio.tests.exporter.bpmn.BPMNSequenceFlowDefaultFlowExportImportTest;
 import org.bonitasoft.studio.tests.expressionEditor.TestConnectorExpression;
 import org.bonitasoft.studio.tests.expressionEditor.TestPatternExpressionViewer;
+import org.bonitasoft.studio.tests.git.ShareWithGitIT;
 import org.bonitasoft.studio.tests.importer.bos.ImportBOSArchiveWizardIT;
 import org.bonitasoft.studio.tests.iteration.MultiInstantiationIT;
 import org.bonitasoft.studio.tests.organization.OrganizationIT;
@@ -108,13 +109,13 @@ import org.junit.runners.Suite;
         RichTextEditorIT.class,
         DiagramTests.class,
         DeleteCommandTest.class,
-        DeployWizardIT.class,
         ProjectExplorerDiagramIT.class,
         ProjectExplorerOrganizationIT.class,
         ProjectExplorerBdmIT.class,
         ProjectExplorerLivingApplicationIT.class,
         ProjectExplorerConnectorIT.class,
         ProjectExplorerRestApiIT.class,
+        DeployWizardIT.class,
         OpenExistingApplicationIT.class,
         TestMenus.class,
         OpenNameAndVersionForDiagramDialogTest.class,
@@ -185,7 +186,8 @@ import org.junit.runners.Suite;
         TestSeveralLocalRepositories.class,
         ApplicationDescriptorOverviewIT.class,
         ApplicationDescriptorIT.class,
-        MavenConfigurationIT.class
+        MavenConfigurationIT.class,
+        ShareWithGitIT.class
 })
 public class SWTBotTestSuite {
 

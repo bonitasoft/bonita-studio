@@ -106,7 +106,7 @@ public class SetProjectMetadataOperation implements IRunnableWithProgress {
         model.setVersion(metadata.getVersion());
         model.getProperties().setProperty(ProjectDefaultConfiguration.BONITA_RUNTIME_VERSION,
                 metadata.getBonitaRuntimeVersion());
-        mavenProjectHelper.saveModel(project, model, monitor);
+        mavenProjectHelper.saveModel(project, model, false, monitor);
         updateRestApiExtensionProjects(project, monitor);
 
         if (nameChanged) {
@@ -137,7 +137,7 @@ public class SetProjectMetadataOperation implements IRunnableWithProgress {
                             properties.setProperty(BONITA_VERSION_PROPERTY,
                                     metadata.getBonitaRuntimeVersion());
                         }
-                        mavenProjectHelper.saveModel(p, mavenModel, monitor);
+                        mavenProjectHelper.saveModel(p, mavenModel, false, monitor);
                     } catch (CoreException e) {
                         BonitaStudioLog.error(e);
                     }
@@ -150,7 +150,7 @@ public class SetProjectMetadataOperation implements IRunnableWithProgress {
             IProject project = newRepository.getProject();
             Model model = mavenProjectHelper.getMavenModel(project);
             dependencies.stream().forEach(model.getDependencies()::add);
-            mavenProjectHelper.saveModel(project, model, monitor);
+            mavenProjectHelper.saveModel(project, model, false, monitor);
             ProjectDependenciesStore projectDependenciesStore = newRepository.getProjectDependenciesStore();
             if (projectDependenciesStore != null) {
                 projectDependenciesStore.analyze(monitor);

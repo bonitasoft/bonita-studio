@@ -113,7 +113,7 @@ public class JavaDependenciesMigrationStep implements MigrationStep {
                         }, () -> mavenModel.addDependency(newDependeny));
             }
 
-            mavenProjectHelper.saveModel(project, mavenModel, monitor);
+            mavenProjectHelper.saveModel(project, mavenModel, false, monitor);
 
             dependencyLookups.stream()
                     .filter(not(DependencyLookup::isSelected))

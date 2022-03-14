@@ -80,7 +80,6 @@ public class ImportBosArchiveOperationTest {
         operationUnserTest.setCurrentRepository(repostioty);
         operationUnserTest.setArchiveFile(archiveFile.getAbsolutePath());
         operationUnserTest.run(monitor);
-        verify(operationUnserTest).restoreBuildState(monitor);
         verify(operationUnserTest).migrateUID(monitor);
     }
 

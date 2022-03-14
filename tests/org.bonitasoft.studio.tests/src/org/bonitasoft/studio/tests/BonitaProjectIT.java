@@ -30,14 +30,13 @@ import org.bonitasoft.studio.common.repository.core.maven.BonitaProjectBuilder;
 import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
 import org.bonitasoft.studio.groovy.repository.ProvidedGroovyRepositoryStore;
 import org.bonitasoft.studio.identity.organization.repository.OrganizationRepositoryStore;
-import org.bonitasoft.studio.tests.util.Await;
 import org.eclipse.core.resources.ICommand;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
-import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.m2e.core.internal.IMavenConstants;
 import org.junit.Test;
 
@@ -49,6 +48,7 @@ public class BonitaProjectIT {
     public void should_create_a_bonita_project() throws Exception {
         // Validate the default maven model
         AbstractRepository currentRepository = RepositoryManager.getInstance().getCurrentRepository();
+        
         IProject project = currentRepository.getProject();
         assertThat(project.getFile("pom.xml").exists()).isTrue();
 
@@ -63,7 +63,8 @@ public class BonitaProjectIT {
         assertThat(model.getArtifactId()).isEqualTo(defaultMetadata.getArtifactId());
         assertThat(model.getVersion()).isEqualTo(defaultMetadata.getVersion());
         assertThat(model.getName()).isEqualTo(defaultMetadata.getName());
-        assertThat(model.getProperties()).contains(entry("bonita.runtime.version", ProductVersion.BONITA_RUNTIME_VERSION));
+        assertThat(model.getProperties())
+                .contains(entry("bonita.runtime.version", ProductVersion.BONITA_RUNTIME_VERSION));
 
         // Validate the project natures and builders
         assertThat(project.getDescription().getNatureIds()).containsOnly(BonitaProjectNature.NATURE_ID,
@@ -86,16 +87,11 @@ public class BonitaProjectIT {
                 .getRepositoryStore(ProvidedGroovyRepositoryStore.class);
         assertNotSame(0, providedScriptStore.getChildren().size());
 
-        Await.waitUntil(() -> {
-            IJavaProject javaProject = currentRepository.getJavaProject();
-            try {
-                return javaProject.findType("BonitaUsers") != null;
-            } catch (JavaModelException e) {
-               BonitaStudioLog.error(e);
-               return false;
-            }
-        }, 2000, 100);
         IJavaProject javaProject = currentRepository.getJavaProject();
+        assertThat(javaProject.getClasspathEntryFor(javaProject.getPath().append("src-connectors"))).isNotNull();
+        assertThat(javaProject.getClasspathEntryFor(javaProject.getPath().append("src-filters"))).isNotNull();
+        assertThat(javaProject.getClasspathEntryFor(javaProject.getPath().append("src-groovy"))).isNotNull();
+        assertThat(javaProject.getClasspathEntryFor(javaProject.getPath().append("src-providedGroovy"))).isNotNull();
         assertThat(javaProject.findType("BonitaUsers")).isNotNull(); // provided script are compiling
         assertThat(javaProject.findType(AbstractConnector.class.getName())).isNotNull(); // classes in dependencies are in classpath
     }

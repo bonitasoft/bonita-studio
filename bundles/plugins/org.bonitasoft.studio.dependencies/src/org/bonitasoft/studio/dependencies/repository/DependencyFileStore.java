@@ -55,7 +55,7 @@ public class DependencyFileStore extends AbstractFileStore<InputStream> {
      */
     @Override
     public Image getIcon() {
-        return null ;//Pics.getImage("jar.gif", DependenciesPlugin.getDefault());
+        return null;//Pics.getImage("jar.gif", DependenciesPlugin.getDefault());
     }
 
     @Override
@@ -113,10 +113,8 @@ public class DependencyFileStore extends AbstractFileStore<InputStream> {
                 final AbstractRepository repository = getRepository();
                 final IProject project = repository.getProject();
                 project.refreshLocal(IResource.DEPTH_ONE, AbstractRepository.NULL_PROGRESS_MONITOR);
-                if (repository.isBuildEnable()) {
-                    project.build(IncrementalProjectBuilder.INCREMENTAL_BUILD,
-                            AbstractRepository.NULL_PROGRESS_MONITOR);
-                }
+                project.build(IncrementalProjectBuilder.INCREMENTAL_BUILD,
+                        AbstractRepository.NULL_PROGRESS_MONITOR);
 
             }
         } catch (final CoreException e) {
@@ -128,7 +126,7 @@ public class DependencyFileStore extends AbstractFileStore<InputStream> {
     public IFile getResource() {
         return getParentStore().getResource().getFile(getName());
     }
-    
+
     @Override
     public boolean isShared() {
         return false;

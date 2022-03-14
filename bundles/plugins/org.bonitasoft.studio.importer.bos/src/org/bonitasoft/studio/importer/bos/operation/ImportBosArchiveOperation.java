@@ -173,7 +173,6 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
         ImportBosArchiveStatusBuilder statusBuilder = createStatusBuilder();
         monitor.beginTask(Messages.retrivingDataToImport, IProgressMonitor.UNKNOWN);
         status = new MultiStatus(CommonRepositoryPlugin.PLUGIN_ID, 0, null, null);
-        currentRepository.disableBuild();
         currentRepository.handleFileStoreEvent(new FileStoreChangeEvent(EventType.PRE_IMPORT, null));
         final boolean disablePopup = FileActionDialog.getDisablePopup();
         final ImportArchiveModel importArchiveModel = archiveModel
@@ -241,7 +240,6 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
             dependenciesUpdateOperation.run(monitor);
         } finally {
             FileActionDialog.setDisablePopup(disablePopup);
-            restoreBuildState(monitor);
         }
 
         monitor.subTask("");
@@ -354,7 +352,7 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
             Model mavenModel = mavenProjectHelper.getMavenModel(currentRepository.getProject());
             dependencies.stream()
                     .forEach(dep -> updateProjectModel(dep, mavenModel, mavenProjectHelper, statusBuilder));
-            mavenProjectHelper.saveModel(currentRepository.getProject(), mavenModel, monitor);
+            mavenProjectHelper.saveModel(currentRepository.getProject(), mavenModel, false, monitor);
             ProjectDependenciesStore projectDependenciesStore = currentRepository.getProjectDependenciesStore();
             if (projectDependenciesStore != null) {
                 currentRepository.getProject().build(IncrementalProjectBuilder.INCREMENTAL_BUILD, monitor);
@@ -494,12 +492,6 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
 
     protected ParseBosArchiveOperation newParseBosOperation(final File archive, final AbstractRepository repository) {
         return new ParseBosArchiveOperation(archive, repository);
-    }
-
-    protected void restoreBuildState(IProgressMonitor monitor) {
-        if (!currentRepository.isBuildEnable()) {
-            currentRepository.enableBuild(monitor);
-        }
     }
 
     public void setProgressDialog(final SkippableProgressMonitorJobsDialog progressDialog) {

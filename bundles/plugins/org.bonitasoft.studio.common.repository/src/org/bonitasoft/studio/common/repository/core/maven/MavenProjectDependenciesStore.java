@@ -47,7 +47,9 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.e4.core.services.events.IEventBroker;
+import org.eclipse.jdt.core.JavaCore;
 
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -82,6 +84,13 @@ public class MavenProjectDependenciesStore implements ProjectDependenciesStore {
             if (!status.isOK()) {
                 throw new CoreException(status);
             }
+            var jProject =  JavaCore.create(project);  
+            if(jProject.isOpen()) {
+                var entry =  jProject.getClasspathEntryFor(jProject.getPath().append("src-connectors"));
+                if(entry == null) {
+                    throw new CoreException(Status.error("Connector sources not in classpath after analyze plugin."));
+                }
+            }
 
             String reportPath = bonitaProjectPlugin.getReportPath();
             var path = Paths.get(reportPath);
@@ -101,6 +110,8 @@ public class MavenProjectDependenciesStore implements ProjectDependenciesStore {
             addMarker(ce.getStatus());
             if (ce.getCause() != null) {
                 BonitaStudioLog.error(ce.getCause());
+            }else {
+                BonitaStudioLog.error(ce, CommonRepositoryPlugin.PLUGIN_ID);
             }
         }
         return Optional.ofNullable(dependencyReport);
