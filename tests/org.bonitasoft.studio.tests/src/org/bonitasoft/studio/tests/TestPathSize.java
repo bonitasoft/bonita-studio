@@ -17,19 +17,18 @@ package org.bonitasoft.studio.tests;
 import static org.junit.Assert.assertFalse;
 
 import java.io.File;
+import java.io.IOException;
 
+import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Platform;
 import org.junit.Test;
 
 public class TestPathSize {
 
     @Test
-    public void testMaxItemSizeIsEclipse() {
-        String location = Platform.getBundle("org.eclipse.core.runtime").getLocation();
-        if (location.startsWith("reference:file:")) {
-            location = location.substring("reference:file:".length());
-        }
-        File pluginFolder = new File(location).getParentFile();
+    public void testMaxItemSizeIsEclipse() throws IOException {
+        File file = FileLocator.getBundleFile(Platform.getBundle("org.eclipse.core.runtime"));
+        File pluginFolder = file.getParentFile();
         File longestPath = findLongestPath(pluginFolder);
         File longestPathNotBonita = findLongestPathNotBonita(pluginFolder);
         final String longestAbsolutePath = longestPath.getAbsolutePath();
