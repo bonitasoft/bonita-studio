@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+<extension
+      point="org.bonitasoft.studio.repositoryStore">
+   <repositoryStore
+         class="org.bonitasoft.studio.dependencies.repository.DependencyRepositoryStore">
+   </repositoryStore>
+</extension>
+<extension
+      point="org.eclipse.ui.menus">
+   <menuContribution
+         allPopups="false"
+         locationURI="menu:org.eclipse.ui.main.menu?after=org.bonitasoft.studio.actor.organizationMenu">
+        <menu
+              id="org.bonitasoft.studio.development"
+              label="%development">
+           <visibleWhen
+                 checkEnabled="true">
+                 <reference
+                     definitionId="isBonitaPerspectiveActive">
+               </reference>
+           </visibleWhen>
+        </menu>
+   </menuContribution>
+</extension>
+<extension
+      point="org.bonitasoft.studio.common.barResourcesProvider">
+   <barResourceProvider
+         providerClass="org.bonitasoft.studio.dependencies.provider.JarBarResourceProvider">
+   </barResourceProvider>
+</extension>
+</plugin>

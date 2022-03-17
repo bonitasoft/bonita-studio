@@ -1,0 +1,30 @@
+bin
+.classpath
+/src-providedGroovy
+/template
+/h2_database
+/process_configurations
+/META-INF
+.settings
+target/
+node/
+node_modules/
+/build.properties
+
+#provided web widgets
+/web_widgets/pb*/
+
+#web component preferenes
+/web_widgets/.metadata
+/web_fragments/.metadata
+/web_page/.metadata
+/web_page/*/js
+/web_fragments/*/*.js
+/web_widgets/*/*.js
+!/web_widgets/*/*.ctrl.js
+
+#bdm jar dependency is regenerate from bom.xml file
+/lib/bdm-client-pojo.jar
+
+#only used as user preferences
+/database_connectors_properties

@@ -1,0 +1,12 @@
+<svg width="512" height="512" xmlns="http://www.w3.org/2000/svg">
+
+ <g>
+  <title>background</title>
+  <rect fill="none" id="canvas_background" height="402" width="582" y="-1" x="-1"/>
+ </g>
+ <g>
+  <title>Layer 1</title>
+  <path fill="#044464" id="svg_1" d="m398.1,233.2c0,-1.2 0.2,-2.4 0.2,-3.6c0,-65 -51.8,-117.6 -115.7,-117.6c-46.1,0 -85.7,27.4 -104.3,67c-8.1,-4.1 -17.2,-6.5 -26.8,-6.5c-29.5,0 -54.1,21.9 -58.8,50.5c-35.4,12.2 -60.7,46.1 -60.7,86c0,50.2 40.1,90.9 89.5,91l276.7,0l0,0c45.2,-0.2 81.7,-37.5 81.7,-83.4c0.1,-46 -36.6,-83.3 -81.8,-83.4z"/>
+  <text stroke="null" transform="matrix(6.931258678436279,0,0,6.931258678436279,-1293.9411510676146,-1398.2015575245023) " xml:space="preserve" text-anchor="start" font-family="Arvo, sans-serif" font-size="24" id="svg_2" y="250.312525" x="214.947009" stroke-opacity="null" stroke-width="0" fill="#ffffff">R</text>
+ </g>
+</svg>

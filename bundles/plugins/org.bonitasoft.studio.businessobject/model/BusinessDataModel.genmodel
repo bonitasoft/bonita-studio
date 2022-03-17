@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.bonitasoft.studio.businessobject/src" modelPluginID="org.bonitasoft.studio.businessobject"
+    modelName="BusinessDataModel" editPluginClass="org.bonitasoft.studio.businessobject.editor.model.provider.BusinessDataModelEditPlugin"
+    editorPluginClass="org.bonitasoft.studio.businessobject.editor.model.presentation.BusinessDataModelEditorPlugin"
+    rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container" testSuiteClass="org.bonitasoft.studio.businessobject.editor.model.tests.BusinessDataModelAllTests"
+    importerID="org.eclipse.emf.importer.ecore" bundleManifest="false" complianceLevel="8.0"
+    copyrightFields="false" operationReflection="true" importOrganizing="true">
+  <foreignModel>BusinessDataModel.ecore</foreignModel>
+  <genPackages prefix="BusinessDataModel" basePackage="org.bonitasoft.studio.businessobject.editor"
+      disposableProviderFactory="true" ecorePackage="BusinessDataModel.ecore#/">
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="BusinessDataModel.ecore#//FieldType">
+      <genEnumLiterals ecoreEnumLiteral="BusinessDataModel.ecore#//FieldType/STRING"/>
+      <genEnumLiterals ecoreEnumLiteral="BusinessDataModel.ecore#//FieldType/TEXT"/>
+      <genEnumLiterals ecoreEnumLiteral="BusinessDataModel.ecore#//FieldType/INTEGER"/>
+      <genEnumLiterals ecoreEnumLiteral="BusinessDataModel.ecore#//FieldType/DOUBLE"/>
+      <genEnumLiterals ecoreEnumLiteral="BusinessDataModel.ecore#//FieldType/LONG"/>
+      <genEnumLiterals ecoreEnumLiteral="BusinessDataModel.ecore#//FieldType/FLOAT"/>
+      <genEnumLiterals ecoreEnumLiteral="BusinessDataModel.ecore#//FieldType/DATE"/>
+      <genEnumLiterals ecoreEnumLiteral="BusinessDataModel.ecore#//FieldType/BOOLEAN"/>
+      <genEnumLiterals ecoreEnumLiteral="BusinessDataModel.ecore#//FieldType/BYTE"/>
+      <genEnumLiterals ecoreEnumLiteral="BusinessDataModel.ecore#//FieldType/SHORT"/>
+      <genEnumLiterals ecoreEnumLiteral="BusinessDataModel.ecore#//FieldType/CHAR"/>
+      <genEnumLiterals ecoreEnumLiteral="BusinessDataModel.ecore#//FieldType/LOCALDATETIME"/>
+      <genEnumLiterals ecoreEnumLiteral="BusinessDataModel.ecore#//FieldType/LOCALDATE"/>
+      <genEnumLiterals ecoreEnumLiteral="BusinessDataModel.ecore#//FieldType/OFFSETDATETIME"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="BusinessDataModel.ecore#//RelationType">
+      <genEnumLiterals ecoreEnumLiteral="BusinessDataModel.ecore#//RelationType/AGGREGATION"/>
+      <genEnumLiterals ecoreEnumLiteral="BusinessDataModel.ecore#//RelationType/COMPOSITION"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="BusinessDataModel.ecore#//FetchType">
+      <genEnumLiterals ecoreEnumLiteral="BusinessDataModel.ecore#//FetchType/EAGER"/>
+      <genEnumLiterals ecoreEnumLiteral="BusinessDataModel.ecore#//FetchType/LAZY"/>
+    </genEnums>
+    <genClasses ecoreClass="BusinessDataModel.ecore#//BusinessObjectModel">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference BusinessDataModel.ecore#//BusinessObjectModel/packages"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute BusinessDataModel.ecore#//BusinessObjectModel/groupId"/>
+    </genClasses>
+    <genClasses ecoreClass="BusinessDataModel.ecore#//Package">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference BusinessDataModel.ecore#//Package/businessObjects"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute BusinessDataModel.ecore#//Package/name"/>
+    </genClasses>
+    <genClasses ecoreClass="BusinessDataModel.ecore#//BusinessObject">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute BusinessDataModel.ecore#//BusinessObject/qualifiedName"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute BusinessDataModel.ecore#//BusinessObject/simpleName"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute BusinessDataModel.ecore#//BusinessObject/description"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference BusinessDataModel.ecore#//BusinessObject/fields"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference BusinessDataModel.ecore#//BusinessObject/uniqueConstraints"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference BusinessDataModel.ecore#//BusinessObject/indexes"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference BusinessDataModel.ecore#//BusinessObject/queries"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference BusinessDataModel.ecore#//BusinessObject/defaultQueries"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="BusinessDataModel.ecore#//Field">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute BusinessDataModel.ecore#//Field/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute BusinessDataModel.ecore#//Field/description"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute BusinessDataModel.ecore#//Field/nullable"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute BusinessDataModel.ecore#//Field/collection"/>
+    </genClasses>
+    <genClasses ecoreClass="BusinessDataModel.ecore#//UniqueConstraint">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute BusinessDataModel.ecore#//UniqueConstraint/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute BusinessDataModel.ecore#//UniqueConstraint/description"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute BusinessDataModel.ecore#//UniqueConstraint/fieldNames"/>
+    </genClasses>
+    <genClasses ecoreClass="BusinessDataModel.ecore#//Index">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute BusinessDataModel.ecore#//Index/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute BusinessDataModel.ecore#//Index/description"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute BusinessDataModel.ecore#//Index/fieldNames"/>
+    </genClasses>
+    <genClasses ecoreClass="BusinessDataModel.ecore#//Query">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute BusinessDataModel.ecore#//Query/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute BusinessDataModel.ecore#//Query/description"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute BusinessDataModel.ecore#//Query/content"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute BusinessDataModel.ecore#//Query/returnType"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference BusinessDataModel.ecore#//Query/queryParameters"/>
+    </genClasses>
+    <genClasses ecoreClass="BusinessDataModel.ecore#//QueryParameter">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute BusinessDataModel.ecore#//QueryParameter/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute BusinessDataModel.ecore#//QueryParameter/description"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute BusinessDataModel.ecore#//QueryParameter/className"/>
+    </genClasses>
+    <genClasses ecoreClass="BusinessDataModel.ecore#//SimpleField">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute BusinessDataModel.ecore#//SimpleField/type"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute BusinessDataModel.ecore#//SimpleField/length"/>
+    </genClasses>
+    <genClasses ecoreClass="BusinessDataModel.ecore#//RelationField">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference BusinessDataModel.ecore#//RelationField/reference"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute BusinessDataModel.ecore#//RelationField/type"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute BusinessDataModel.ecore#//RelationField/fetchType"/>
+    </genClasses>
+  </genPackages>
+</genmodel:GenModel>
