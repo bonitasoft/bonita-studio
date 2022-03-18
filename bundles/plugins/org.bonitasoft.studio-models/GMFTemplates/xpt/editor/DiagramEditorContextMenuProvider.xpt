@@ -1,0 +1,74 @@
+﻿/*
+ * Copyright (c) 2008, 2009 Borland Software Corporation
+ * 
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Dmitry Stadnik (Borland) - initial API and implementation
+ */
+
+«IMPORT 'http://www.eclipse.org/gmf/2009/GenModel'»
+
+«DEFINE className FOR gmfgen::GenDiagram»DiagramEditorContextMenuProvider«ENDDEFINE»
+
+«DEFINE qualifiedClassName FOR gmfgen::GenDiagram»«editorGen.editor.packageName».«EXPAND className»«ENDDEFINE»
+
+«DEFINE DiagramEditorContextMenuProvider FOR gmfgen::GenDiagram-»
+«EXPAND xpt::Common::copyright FOR editorGen-»
+package «editorGen.editor.packageName»;
+
+«EXPAND xpt::Common::generatedClassComment»
+public class «EXPAND className» extends org.eclipse.gmf.runtime.diagram.ui.providers.DiagramContextMenuProvider {
+
+	«EXPAND xpt::Common::generatedMemberComment»
+	private org.eclipse.ui.IWorkbenchPart part;
+
+	«EXPAND xpt::Common::generatedMemberComment»
+	private «EXPAND xpt::editor::DeleteElementAction::qualifiedClassName» deleteAction;
+
+	«EXPAND xpt::Common::generatedMemberComment»
+	public DiagramEditorContextMenuProvider(org.eclipse.ui.IWorkbenchPart part, org.eclipse.gef.EditPartViewer viewer) {
+		super(part, viewer);
+		this.part = part;
+		deleteAction = new «EXPAND xpt::editor::DeleteElementAction::qualifiedClassName»(part);
+		deleteAction.init();
+	}
+
+	«EXPAND xpt::Common::generatedMemberComment»
+	public void dispose() {
+		if (deleteAction != null) {
+			deleteAction.dispose();
+			deleteAction = null;
+		}
+		super.dispose();
+	}
+	
+	«REM»Remove unwanted contextual popup contributions«ENDREM»
+    /**
+	*@Generated BonitaSoft
+	*/
+    @Override
+    protected void addDefaultExclusions() {
+        super.addDefaultExclusions();
+        final java.util.Set exclusionSet = getExclusionSet();
+        exclusionSet.add("org.eclipse.releng.tools.advancedFixCopyrights");
+        exclusionSet.add("groovyfile");
+        exclusionSet.add("groovyresource");
+    }
+
+	«REM»Remove the contibution of the delete from model action«ENDREM»
+	/**
+	*@Generated BonitaSoft
+	*/
+	public void buildContextMenu(final org.eclipse.jface.action.IMenuManager menu) {
+		getViewer().flush();
+	}
+	«EXPAND additions-»
+}
+«ENDDEFINE»
+
+«DEFINE additions FOR gmfgen::GenDiagram-»
+«ENDDEFINE»

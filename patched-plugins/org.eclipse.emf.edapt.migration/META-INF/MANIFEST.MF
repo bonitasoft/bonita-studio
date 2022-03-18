@@ -1,0 +1,279 @@
+Manifest-Version: 1.0
+Automatic-Module-Name: org.eclipse.emf.edapt.migration
+Bundle-SymbolicName: org.eclipse.emf.edapt.migration;singleton:=true
+Archiver-Version: Plexus Archiver
+Built-By: genie.edapt
+Require-Bundle: org.eclipse.core.runtime;bundle-version="[3.7.0,4.0.0)
+ ",org.eclipse.emf.ecore;bundle-version="[2.7.0,3.0.0)";visibility:=re
+ export,org.eclipse.ocl.ecore;bundle-version="[3.1.0,4.0.0)";visibilit
+ y:=reexport,org.eclipse.emf.ecore.xmi;bundle-version="[2.7.0,3.0.0)",
+ org.eclipse.emf.edapt.common;bundle-version="[1.4.0,2.0.0)"
+Bundle-ManifestVersion: 2
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-ActivationPolicy: lazy
+Bundle-Vendor: %providerName
+Export-Package: org.eclipse.emf.edapt.internal.migration;version="1.4.
+ 0",org.eclipse.emf.edapt.internal.migration.impl;version="1.4.0";x-in
+ ternal:=true,org.eclipse.emf.edapt.internal.migration.internal;versio
+ n="1.4.0"; x-friends:="org.eclipse.emf.edapt.history,  org.eclipse.em
+ f.edapt.history.cdo,  org.eclipse.emf.edapt.migration.test,  org.ecli
+ pse.emf.edapt.migration.ui",org.eclipse.emf.edapt.migration;version="
+ 1.4.0",org.eclipse.emf.edapt.spi.migration;version="1.4.0",org.eclips
+ e.emf.edapt.spi.migration.impl;version="1.4.0",org.eclipse.emf.edapt.
+ spi.migration.util;version="1.4.0"
+Bundle-Name: %pluginName
+Bundle-Version: 1.4.1.202002140949
+Bundle-ClassPath: .
+Bundle-Localization: plugin
+Bundle-Activator: org.eclipse.emf.edapt.spi.migration.MigrationPlugin$
+ Implementation
+Created-By: Apache Maven 3.6.3
+Build-Jdk: 1.8.0_192
+
+Name: org/eclipse/emf/edapt/migration/ReleaseUtils$ContentHandler.clas
+ s
+SHA-256-Digest: GnLoeHYdeRP9Xvymz1ZGcRfFZOouw5envVuzv97w9Dg=
+
+Name: plugin.xml
+SHA-256-Digest: 3UYX/z6o1MCjRnnoeqisCW5luJdtYXUN7lm4nLD+iGU=
+
+Name: org/eclipse/emf/edapt/internal/migration/impl/ModelValidator.cla
+ ss
+SHA-256-Digest: msKT2WY3XC5lR64siYGDe4fghN0rxQPo4+muxMQgqOs=
+
+Name: org/eclipse/emf/edapt/spi/migration/impl/InstanceImpl.class
+SHA-256-Digest: X78M6uQWHmkn//btRaMiT/VhT9oEwDQeRLcGJg59Ro0=
+
+Name: org/eclipse/emf/edapt/spi/migration/AbstractResource.class
+SHA-256-Digest: 3hVxcIzDLTts4uTjWkzRiEpksZvX843q7Xo48E0SszY=
+
+Name: org/eclipse/emf/edapt/spi/migration/MigrationPackage$Literals.cl
+ ass
+SHA-256-Digest: SyieDWXMlplyQ/gitdNF72EQ+tvpjweAUaj4Eou97vE=
+
+Name: org/eclipse/emf/edapt/migration/CustomMigration.class
+SHA-256-Digest: ReoBNThOBYHrgu1G1yWoAen9ETz42PKpZL+uBtN+k3g=
+
+Name: model/model.ecorediag
+SHA-256-Digest: tjbPFEQ0G3NqYdowippI3zPSTiT8BXxyMEFUjCQU1K0=
+
+Name: org/eclipse/emf/edapt/spi/migration/impl/SlotImpl.class
+SHA-256-Digest: NP8050TslFerXdaDjTtXfLNhw4Wk+C5CDpUYjCO+ErI=
+
+Name: model/model.png
+SHA-256-Digest: zdRQKb3ebPqMQjzn3/R+kKvicG95eXnfqyWWXF65W58=
+
+Name: org/eclipse/emf/edapt/internal/migration/internal/BackupUtils$UR
+ IMapper.class
+SHA-256-Digest: cQP8hCglzS+F9sZnDf9DJ5noT/RMRtKQBOBX8wjo8sA=
+
+Name: plugin.properties
+SHA-256-Digest: iiNw6U/e7JaJcjWBn4gb693aVzQEIVEWKdVm+3MzytA=
+
+Name: org/eclipse/emf/edapt/internal/migration/impl/LazyExtentMap.clas
+ s
+SHA-256-Digest: Z6ImSGSmwFLa94HVLqYrESkY6tuZRkWVbjCrxlr7jag=
+
+Name: org/eclipse/emf/edapt/internal/migration/internal/Persistency.cl
+ ass
+SHA-256-Digest: KLutJAkoggASSOO/UUxlIZAv/yeJANHvGuI8m1ZNLuY=
+
+Name: org/eclipse/emf/edapt/spi/migration/impl/ModelResourceImpl.class
+SHA-256-Digest: v/v55MeJTbakhT3tT3UuWoDp/aCqv4JTiWlVBPpQPAk=
+
+Name: org/eclipse/emf/edapt/internal/migration/internal/PrintStreamPro
+ gressMonitor.class
+SHA-256-Digest: bwD6R6VJWK1v65WBsrinzbCXhvQJVuZ3IAp17SSO3Uw=
+
+Name: org/eclipse/emf/edapt/spi/migration/MetamodelResource.class
+SHA-256-Digest: mynHljFq/PBsUZeGh6DWGPpeYPWWBWpzMUc4ztPGbvc=
+
+Name: org/eclipse/emf/edapt/spi/migration/Instance.class
+SHA-256-Digest: hfQpXIPrhc/zf1MuagUl3I1u4Gcau/eNhy7+IMxN/20=
+
+Name: org/eclipse/emf/edapt/internal/migration/internal/MaterializingB
+ ackwardConverter.class
+SHA-256-Digest: WRwwbeOXtE3OTPdjoeLO69qR7LCLkn26f/L3uXC7G8k=
+
+Name: org/eclipse/emf/edapt/internal/migration/internal/BackupUtils$Ba
+ ckupMapper.class
+SHA-256-Digest: oU4TLZ10Z3zg0vcBm0dsyueT9YTwak8UP/PEC+HsJdU=
+
+Name: org/eclipse/emf/edapt/internal/migration/internal/RandomOracle.c
+ lass
+SHA-256-Digest: /NeXmsqhuUbrw2Pc0f/bd5S/PgowjWjGfiMZp5QX/e0=
+
+Name: org/eclipse/emf/edapt/migration/MigrationException.class
+SHA-256-Digest: C+4QWEbVNXXY2Q/bwmwoOkdxpdwP4xO5i1NIqxyp0Qk=
+
+Name: org/eclipse/emf/edapt/internal/migration/internal/MigratorOption
+ s.class
+SHA-256-Digest: 0fugTXj8ufFBlX28xF7AAf8C8MEplYZOvwrKH4z8cxw=
+
+Name: org/eclipse/emf/edapt/spi/migration/impl/InstanceImpl$1.class
+SHA-256-Digest: ek5/F0meVuH3HbSZFfPsXvN9+qXE3xhD34xPS0eCbVM=
+
+Name: org/eclipse/emf/edapt/internal/migration/internal/BackwardConver
+ ter.class
+SHA-256-Digest: /rITavSX0r/mqBofigwiOQhLTUkm49EYvKfdVPXs5R4=
+
+Name: META-INF/maven/edapt/org.eclipse.emf.edapt.migration/pom.xml
+SHA-256-Digest: sAxfG8PqrgvyD6nvdrJysXeeZRbHl9Ix67CDPyZyxWU=
+
+Name: org/eclipse/emf/edapt/internal/migration/internal/BackupUtils$Re
+ storeMapper.class
+SHA-256-Digest: kT/VcI1hHaojY+bytordvJjqGuw2Ieqvx2su/b5rqSQ=
+
+Name: schema/org.eclipse.emf.edapt.factories.exsd
+SHA-256-Digest: kBVdyCTcEMI1OLXGXHr81zYSE4ZNAKQJPDy/DJwXVb0=
+
+Name: org/eclipse/emf/edapt/spi/migration/impl/AttributeSlotImpl.class
+SHA-256-Digest: TiYJUs5O/IFuzoYStFWYZI+vf9oc1MatKmhv0QGMIF0=
+
+Name: org/eclipse/emf/edapt/migration/ReleaseUtils.class
+SHA-256-Digest: ayWf1JoJwzqhBOZXYKdWT8NzWXIupLLGrTdTXLilrzM=
+
+Name: org/eclipse/emf/edapt/spi/migration/impl/RepositoryImpl.class
+SHA-256-Digest: NsLNaR/rriv5nGAoCC72K6L0hqd3D941mOlpBrAYlg0=
+
+Name: model/model.genmodel
+SHA-256-Digest: uV8E0uyuxIghJNkfMkXGjRDZjD8IkZCMTkmU9FofY+c=
+
+Name: org/eclipse/emf/edapt/spi/migration/Model.class
+SHA-256-Digest: ibbeZnsj9dJ27AKKhq4I4u8/8faN/JezLan5qXyI0uw=
+
+Name: org/eclipse/emf/edapt/spi/migration/util/MigrationAdapterFactory
+ $1.class
+SHA-256-Digest: 8C7KxoLWHNbno/3PvQvtoiay7Qw1gnFO3TOlXyy8fcQ=
+
+Name: org/eclipse/emf/edapt/internal/migration/internal/IOracle.class
+SHA-256-Digest: a5H8mnl+0ODBUilm4C+0XTKqVj80vchu6pvfatEvT8A=
+
+Name: org/eclipse/emf/edapt/spi/migration/impl/MigrationPackageImpl$1.
+ class
+SHA-256-Digest: 3PHK7bZVoUHwmmNJ2TJcXDC3QE+HRcIfsifCBnDFKUU=
+
+Name: org/eclipse/emf/edapt/internal/migration/internal/ForwardConvert
+ er.class
+SHA-256-Digest: NCrXuNRaoCoDskJKAD6PUVwDvbBYjjL4OtZcVfrRY/k=
+
+Name: org/eclipse/emf/edapt/spi/migration/impl/MigrationPackageImpl.cl
+ ass
+SHA-256-Digest: ncvTNi1ewtuyBKf5J4EbhbgN+GdWPp7IgqvWJCNzby4=
+
+Name: org/eclipse/emf/edapt/spi/migration/MigrationFactory.class
+SHA-256-Digest: 8NBg4FF3/0Gx5v73Hy2S+VdDOetb2EmiBojEQav5nTc=
+
+Name: org/eclipse/emf/edapt/spi/migration/Repository.class
+SHA-256-Digest: cJ3DCoNmLCu56rnh1uqhGu4jLIL45/4KIYqyF74fvF4=
+
+Name: model/model.ecore
+SHA-256-Digest: cJpH4B5S95aDLNmWe5qTeTnmgFgqKBn2a+NJT7rg3QY=
+
+Name: org/eclipse/emf/edapt/spi/migration/impl/ReferenceSlotImpl.class
+SHA-256-Digest: NNbWhxxK2Yt2J32a+ZSqEho8zIqspooET5XeO0e0cd8=
+
+Name: org/eclipse/emf/edapt/spi/migration/Type.class
+SHA-256-Digest: a8kGUKcP0zBW5pzX14KWbCF5Oeydxj72FTrX35EECwM=
+
+Name: org/eclipse/emf/edapt/spi/migration/impl/AbstractResourceImpl.cl
+ ass
+SHA-256-Digest: /+unzv1IvfWP3HOMFuSAwvZD4hvjnT4r2RFosbtMLiY=
+
+Name: org/eclipse/emf/edapt/spi/migration/Metamodel.class
+SHA-256-Digest: AbdO2j4IZss5QOFEaqRXhLq5NWpi2M2wsRwfFKWbggM=
+
+Name: org/eclipse/emf/edapt/spi/migration/impl/ModelImpl$1.class
+SHA-256-Digest: tKEQe8He6L0Wiz/OyklfyhzEs2Dcm76Drq3d3nDvLuM=
+
+Name: org/eclipse/emf/edapt/spi/migration/impl/MetamodelResourceImpl.c
+ lass
+SHA-256-Digest: DjmDGWsBQBAicQiTkJO0RfOH501raNkw8aC+vmi8w3I=
+
+Name: org/eclipse/emf/edapt/migration/ReleaseUtils$PackageRegistry.cla
+ ss
+SHA-256-Digest: ZR1zcSI1gDZ3fmDSy0biYJgkJ4u/CAFUjBaZbksJ1to=
+
+Name: META-INF/maven/edapt/org.eclipse.emf.edapt.migration/pom.propert
+ ies
+SHA-256-Digest: 5CGVT1HTwqS2VHKpIMtG0cjjI8p3swmtT48aus2532I=
+
+Name: model/model.history
+SHA-256-Digest: Cub4TYRwz+OP+D64RvMU+6MYyncSgZjlV1KtIWiLG2I=
+
+Name: org/eclipse/emf/edapt/spi/migration/impl/MigrationFactoryImpl.cl
+ ass
+SHA-256-Digest: TzyFs6vEVWYZ0d8NpzcLlFxF6jWtzsfs5kooHXWAFaI=
+
+Name: org/eclipse/emf/edapt/internal/migration/internal/FactoryHelper.
+ class
+SHA-256-Digest: VtwVmxtlqJWcq6A6RuivkpM+EPM+SXYBEOp04qDR8/w=
+
+Name: org/eclipse/emf/edapt/spi/migration/impl/TypeImpl.class
+SHA-256-Digest: qTwnAJ3hv8K6JpurAZCsc1w/9YuSU1Bnuq+SnaJLJ8c=
+
+Name: org/eclipse/emf/edapt/internal/migration/internal/BackupUtils.cl
+ ass
+SHA-256-Digest: C116y3XxMEVCwWYbqPbd9RVZLaa2xIfveaqpX5MqrOo=
+
+Name: about.html
+SHA-256-Digest: ZfK6xNVxSBRSyX9KoawZVQHhNUW3JHWBYHU1gqQSUs4=
+
+Name: org/eclipse/emf/edapt/spi/migration/MigrationPlugin.class
+SHA-256-Digest: J+kFjqgWKpPjagU0x2K4Sic+/VxAKyqgBrXLnatcNiM=
+
+Name: org/eclipse/emf/edapt/spi/migration/impl/ModelImpl.class
+SHA-256-Digest: zFcfOBgXQ9N1aNuqQqdiGT0m3mi/KacLzNWFtTFIlbQ=
+
+Name: org/eclipse/emf/edapt/spi/migration/util/MigrationValidator.clas
+ s
+SHA-256-Digest: XeNA8P1fkyHBMXI5O3Tz31dyNYFQGJ0YdFt6zT8UTag=
+
+Name: org/eclipse/emf/edapt/spi/migration/util/MigrationAdapterFactory
+ .class
+SHA-256-Digest: 50ack1IzhqkfC5YpX1JSOWYHrqNgANso27A1m0/76lw=
+
+Name: org/eclipse/emf/edapt/spi/migration/Slot.class
+SHA-256-Digest: GXL7tpW/6f97zhvAEHflsnErWKvzXqgJYmuT19cXM28=
+
+Name: org/eclipse/emf/edapt/spi/migration/MigrationPlugin$Implementati
+ on.class
+SHA-256-Digest: n5TI8Ke+qYaytXWB3SjipSQufJ8WmcJMa7hU2JlILwk=
+
+Name: org/eclipse/emf/edapt/spi/migration/MigrationPackage.class
+SHA-256-Digest: RT0Vm1qKfDOS/EQ4HlN9789tzpHU2DpeHS9BOb+zDnM=
+
+Name: org/eclipse/emf/edapt/spi/migration/ReferenceSlot.class
+SHA-256-Digest: wFmA7fXvhGXBAbj5G/b+5DmIqE0yl+l9J7pUH1O62JE=
+
+Name: org/eclipse/emf/edapt/internal/migration/DiagnosticException.cla
+ ss
+SHA-256-Digest: PLIQRqUpbnrsGLVScRFg3HuMn4uryLUsxFJfjK1VH1g=
+
+Name: org/eclipse/emf/edapt/spi/migration/ModelResource.class
+SHA-256-Digest: ZlHEKFmKiRVryrGiOzNmyXbALalKb3Ny6mq/l0BJ9x0=
+
+Name: org/eclipse/emf/edapt/migration/ReleaseUtils$NameSpaceURIsHandle
+ r.class
+SHA-256-Digest: HNjDWZpB+jmUbYG8Up3oBmxdzTOQn6tuZ4SeEwDBUJI=
+
+Name: org/eclipse/emf/edapt/spi/migration/util/MigrationSwitch.class
+SHA-256-Digest: Y2m/WaZ2L1zuhIk2OQyw/7R8OP5gNuhvcfUWfyxgf/g=
+
+Name: org/eclipse/emf/edapt/internal/migration/internal/IDebugger.clas
+ s
+SHA-256-Digest: K3DEvCnRgwMG0oc+CCF0q0ks5NLpV5WawzBsg4DS1pc=
+
+Name: org/eclipse/emf/edapt/internal/migration/internal/MigrationUtils
+ .class
+SHA-256-Digest: 8C3pDedGt/dUzfRJfTAG4ee4UCN1Pi5yB3HH9+sgpvc=
+
+Name: org/eclipse/emf/edapt/internal/migration/impl/UpdatingList.class
+SHA-256-Digest: lzRIlkt94ekC5//wGDSV0xw4YoXQYzsiVcBrLMv8B54=
+
+Name: org/eclipse/emf/edapt/spi/migration/impl/MetamodelImpl.class
+SHA-256-Digest: YeXRjJp3QhFWsfpDJfX+3++T/tuMXHfQOUOr5vwunyU=
+
+Name: org/eclipse/emf/edapt/spi/migration/AttributeSlot.class
+SHA-256-Digest: JaISYX8g5qPmp4X3kimyatcTjCsBM0PS7kdYXeEHwkk=
+
