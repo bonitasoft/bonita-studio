@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<filterGroups andFilters="false" markerLimit="100" markerLimitEnabled="true">
+	<filterGroup IMemento.internal.id="org.eclipse.ui.ide.projectErrorsWarningsGrouping" enabled="false" filterLimit="-1" scope="3">
+		<fieldFilter IMemento.internal.id="org.eclipse.ui.ide.severityAndDescriptionField" containsModifier="CONTAINS" containsText="" selectedSeverities="6"/>
+		<fieldFilter IMemento.internal.id="org.eclipse.ui.ide.markerType"/>
+	</filterGroup>
+	<filterGroup IMemento.internal.id="org.eclipse.ui.ide.selectedErrorsWarningsGrouping" enabled="true" filterLimit="-1" scope="2">
+		<fieldFilter IMemento.internal.id="org.eclipse.ui.ide.severityAndDescriptionField" containsModifier="CONTAINS" containsText="" selectedSeverities="6"/>
+		<fieldFilter IMemento.internal.id="org.eclipse.ui.ide.markerType"/>
+	</filterGroup>
+	<filterGroup IMemento.internal.id="org.eclipse.ui.ide.selectedWarningsGrouping" enabled="false" filterLimit="-1" scope="2">
+		<fieldFilter IMemento.internal.id="org.eclipse.ui.ide.severityAndDescriptionField" containsModifier="CONTAINS" containsText="" selectedSeverities="2"/>
+		<fieldFilter IMemento.internal.id="org.eclipse.ui.ide.markerType"/>
+	</filterGroup>
+	<filterGroup IMemento.internal.id="org.eclipse.ui.ide.errorsFilter" enabled="false" filterLimit="-1" scope="0">
+		<fieldFilter IMemento.internal.id="org.eclipse.ui.ide.severityAndDescriptionField" containsModifier="CONTAINS" containsText="" selectedSeverities="4"/>
+		<fieldFilter IMemento.internal.id="org.eclipse.ui.ide.markerType"/>
+	</filterGroup>
+</filterGroups>

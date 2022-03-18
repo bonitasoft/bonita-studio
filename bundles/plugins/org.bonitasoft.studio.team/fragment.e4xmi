@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="ASCII"?>
+<fragment:ModelFragments xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:commands="http://www.eclipse.org/ui/2010/UIModel/application/commands" xmlns:fragment="http://www.eclipse.org/ui/2010/UIModel/fragment" xmi:id="_mrHrwMc_Eeq20-1h2jjaKA">
+  <fragments xsi:type="fragment:StringModelFragment" xmi:id="_nZB6oMc_Eeq20-1h2jjaKA" featurename="commands" parentElementId="org.eclipse.e4.legacy.ide.application">
+    <elements xsi:type="commands:Command" xmi:id="_t2yBMMc_Eeq20-1h2jjaKA" elementId="org.bonitasoft.studio.team.command.switchrepository" commandName="Switch to repository">
+      <parameters xmi:id="_yfvJUMc_Eeq20-1h2jjaKA" elementId="repositoryName" name="Repository name" optional="false"/>
+    </elements>
+  </fragments>
+  <fragments xsi:type="fragment:StringModelFragment" xmi:id="_sFaKMMc_Eeq20-1h2jjaKA" featurename="handlers" parentElementId="org.eclipse.e4.legacy.ide.application">
+    <elements xsi:type="commands:Handler" xmi:id="_tGPDIMdBEeq20-1h2jjaKA" elementId="org.bonitasoft.studio.team.handler.switchrepository" contributionURI="bundleclass://org.bonitasoft.studio.team/org.bonitasoft.studio.team.ui.handler.SwitchToRepositoryHandler" command="_t2yBMMc_Eeq20-1h2jjaKA"/>
+  </fragments>
+</fragment:ModelFragments>
