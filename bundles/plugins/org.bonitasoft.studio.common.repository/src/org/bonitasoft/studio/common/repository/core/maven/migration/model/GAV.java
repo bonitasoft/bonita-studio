@@ -15,6 +15,7 @@
 package org.bonitasoft.studio.common.repository.core.maven.migration.model;
 
 import org.apache.maven.model.Dependency;
+import org.bonitasoft.studio.common.Strings;
 
 public class GAV {
 
@@ -57,7 +58,7 @@ public class GAV {
     @Override
     public String toString() {
         var label = String.format("%s:%s:%s", groupId, artifactId,type);
-        if (classifier != null) {
+        if (classifier != null && !classifier.isEmpty()) {
             label = label + ":" + classifier;
         }
         label = label + ":" + version;
@@ -89,7 +90,7 @@ public class GAV {
     }
 
     public String getClassifier() {
-        return classifier;
+        return Strings.isNullOrEmpty(classifier) ? null : classifier;
     }
 
     public void setClassifier(String classifier) {
