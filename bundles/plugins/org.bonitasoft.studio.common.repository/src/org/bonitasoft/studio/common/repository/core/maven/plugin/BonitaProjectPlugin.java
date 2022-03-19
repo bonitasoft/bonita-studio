@@ -46,48 +46,54 @@ public class BonitaProjectPlugin {
 
     private IProject project;
 
+    private static Object lock = new Object();
+
     public BonitaProjectPlugin(IProject project) {
         this.project = project;
     }
 
-    public synchronized IStatus execute(IProject project, IProgressMonitor monitor) throws CoreException {
-        monitor.beginTask(Messages.analyzeProjectDependencies, IProgressMonitor.UNKNOWN);
+    public IStatus execute(IProject project, IProgressMonitor monitor) throws CoreException {
+        synchronized (lock) {
+            monitor.beginTask(Messages.analyzeProjectDependencies, IProgressMonitor.UNKNOWN);
 
-        IMaven maven = maven();
-        var mavenProject = getMavenProject(project, monitor);
-        if (mavenProject == null) {
-            return new Status(IStatus.ERROR, getClass(),
-                    "An error occured while executing bonita project plugin. Cannot resolve the Maven project.");
-        }
-        List<String> goals = List.of(String.format("%s:%s:%s",
-                DefaultPluginVersions.BONITA_PROJECT_MAVEN_PLUGIN_GROUP_ID,
-                DefaultPluginVersions.BONITA_PROJECT_MAVEN_PLUGIN_ARTIFACT_ID,
-                "install"),
-                        String.format("%s:%s:%s",
-                                DefaultPluginVersions.BONITA_PROJECT_MAVEN_PLUGIN_GROUP_ID,
-                                DefaultPluginVersions.BONITA_PROJECT_MAVEN_PLUGIN_ARTIFACT_ID,
-                                "analyze")
-        );
-        var ctx = maven.createExecutionContext();
-        var request = ctx.getExecutionRequest();
-        request.setGoals(goals);
-        request.setPom(mavenProject.getFile());
-        MavenExecutionResult executionResult = ctx.execute(mavenProject, new ICallable<MavenExecutionResult>() {
-
-            @Override
-            public MavenExecutionResult call(IMavenExecutionContext context, IProgressMonitor monitor)
-                    throws CoreException {
-                return maven.lookup(Maven.class).execute(request);
+            IMaven maven = maven();
+            var mavenProject = getMavenProject(project, monitor);
+            if (mavenProject == null) {
+                return new Status(IStatus.ERROR, getClass(),
+                        "An error occured while executing bonita project plugin. Cannot resolve the Maven project.");
             }
+            List<String> goals = List.of(String.format("%s:%s:%s",
+                    DefaultPluginVersions.BONITA_PROJECT_MAVEN_PLUGIN_GROUP_ID,
+                    DefaultPluginVersions.BONITA_PROJECT_MAVEN_PLUGIN_ARTIFACT_ID,
+                    "install"),
+                    String.format("%s:%s:%s",
+                            DefaultPluginVersions.BONITA_PROJECT_MAVEN_PLUGIN_GROUP_ID,
+                            DefaultPluginVersions.BONITA_PROJECT_MAVEN_PLUGIN_ARTIFACT_ID,
+                            "analyze"));
+            var ctx = maven.createExecutionContext();
+            var request = ctx.getExecutionRequest();
+            request.setGoals(goals);
+            request.setPom(mavenProject.getFile());
+            MavenExecutionResult executionResult = ctx.execute(mavenProject, new ICallable<MavenExecutionResult>() {
 
-        }, monitor);
-        
-        if(executionResult.getBuildSummary(executionResult.getProject()) instanceof BuildSuccess) {
-            ((ProjectConfigurationManager) MavenPlugin.getProjectConfigurationManager())
-                .updateProjectConfiguration(new MavenUpdateRequest(project, true, false),false,false, monitor);
-            return Status.OK_STATUS;
-        }else {
-            throw new CoreException(new Status(IStatus.ERROR, getClass(),"Failed to execute bonita-project-maven-plugin", executionResult.hasExceptions() ? executionResult.getExceptions().get(0) : null));
+                @Override
+                public MavenExecutionResult call(IMavenExecutionContext context, IProgressMonitor monitor)
+                        throws CoreException {
+                    return maven.lookup(Maven.class).execute(request);
+                }
+
+            }, monitor);
+
+            if (executionResult.getBuildSummary(executionResult.getProject()) instanceof BuildSuccess) {
+                ((ProjectConfigurationManager) MavenPlugin.getProjectConfigurationManager())
+                        .updateProjectConfiguration(new MavenUpdateRequest(project, true, false), false, false,
+                                monitor);
+                return Status.OK_STATUS;
+            } else {
+                throw new CoreException(
+                        new Status(IStatus.ERROR, getClass(), "Failed to execute bonita-project-maven-plugin",
+                                executionResult.hasExceptions() ? executionResult.getExceptions().get(0) : null));
+            }
         }
     }
 
@@ -107,7 +113,7 @@ public class BonitaProjectPlugin {
         var mavenProjectFacade = MavenPlugin.getMavenProjectRegistry().getProject(project);
         if (mavenProjectFacade != null) {
             var mavenProject = mavenProjectFacade.getMavenProject();
-            if(mavenProject == null) {
+            if (mavenProject == null) {
                 mavenProject = mavenProjectFacade.getMavenProject(new NullProgressMonitor());
             }
             Optional<Plugin> plugin = mavenProject.getBuildPlugins().stream()

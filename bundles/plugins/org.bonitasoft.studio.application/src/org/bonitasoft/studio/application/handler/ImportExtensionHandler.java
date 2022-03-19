@@ -54,7 +54,6 @@ import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.e4.ui.services.IServiceConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.wizard.IWizardContainer;
-import org.eclipse.m2e.core.MavenPlugin;
 import org.eclipse.m2e.core.repository.IRepository;
 import org.eclipse.swt.widgets.Shell;
 
@@ -163,27 +162,14 @@ public class ImportExtensionHandler {
 
         var updateExtensionDecorator = new UpdateExtensionOperationDecorator(dependenciesUpdate,
                 currentRepository, commandExecutor);
-        try {
-            Optional<Boolean> result = doExtensionUpdate(container, importExtensionPage, currentRepository, mavenModel,
-                    extensionTypeHandler, updateExtensionDecorator);
-            if (result.isPresent()) {
-                container.run(true, false, monitor -> {
-                    try {
-                        MavenPlugin.getProjectConfigurationManager()
-                                .updateProjectConfiguration(currentRepository.getProject(), monitor);
-                    } catch (CoreException e) {
-                        throw new InvocationTargetException(e);
-                    }
-                });
-                if (updateExtensionDecorator.shouldValidateProject()) {
-                    updateExtensionDecorator.validateDependenciesConstraints();
-                }
+        Optional<Boolean> result = doExtensionUpdate(container, importExtensionPage, currentRepository, mavenModel,
+                extensionTypeHandler, updateExtensionDecorator);
+        if (result.isPresent()) {
+            if (updateExtensionDecorator.shouldValidateProject()) {
+                updateExtensionDecorator.validateDependenciesConstraints();
             }
-            return result;
-        } catch (InvocationTargetException | InterruptedException e) {
-            errorDialogHandler.openErrorDialog(container.getShell(), e.getMessage(), e);
-            return Optional.empty();
         }
+        return result;
     }
 
     protected Optional<Boolean> doExtensionUpdate(IWizardContainer container,
