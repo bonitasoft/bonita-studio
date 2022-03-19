@@ -28,13 +28,12 @@ import org.bonitasoft.studio.application.ui.control.model.dependency.BonitaArtif
 import org.bonitasoft.studio.application.ui.control.model.dependency.BonitaArtifactDependencyVersion;
 import org.bonitasoft.studio.application.views.overview.ProjectOverviewEditorPart;
 import org.bonitasoft.studio.common.CommandExecutor;
-import org.bonitasoft.studio.common.repository.AbstractRepository;
-import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.core.maven.UpdateDependencyVersionOperation;
 import org.bonitasoft.studio.common.repository.extension.update.DependencyUpdate;
 import org.bonitasoft.studio.ui.dialog.ExceptionDialogHandler;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.e4.core.di.annotations.Creatable;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
@@ -44,17 +43,14 @@ import org.eclipse.ui.progress.IProgressService;
 @Creatable
 public class UpdateExtensionListener {
 
-    private RepositoryAccessor repositoryAccessor;
     private UpdateExtensionOperationDecoratorFactory updateExtensionOperationDecoratorFactory;
     private CommandExecutor commandExecutor;
     private ExceptionDialogHandler errorHandler;
 
     @Inject
-    public UpdateExtensionListener(RepositoryAccessor repositoryAccessor,
-            UpdateExtensionOperationDecoratorFactory updateExtensionOperationDecoratorFactory,
+    public UpdateExtensionListener(UpdateExtensionOperationDecoratorFactory updateExtensionOperationDecoratorFactory,
             CommandExecutor commandExecutor,
             ExceptionDialogHandler errorHandler) {
-        this.repositoryAccessor = repositoryAccessor;
         this.updateExtensionOperationDecoratorFactory = updateExtensionOperationDecoratorFactory;
         this.commandExecutor = commandExecutor;
         this.errorHandler = errorHandler;
@@ -97,7 +93,7 @@ public class UpdateExtensionListener {
                         new UpdateDependencyVersionOperation(bonitaDep.getGroupId(),
                                 bonitaDep.getArtifactId(),
                                 latestVersion)
-                                        .run(AbstractRepository.NULL_PROGRESS_MONITOR);
+                                        .run(new NullProgressMonitor());
                         updateExtensionDecorator.postUpdate(monitor);
                     } catch (CoreException e) {
                         throw new InvocationTargetException(e);
