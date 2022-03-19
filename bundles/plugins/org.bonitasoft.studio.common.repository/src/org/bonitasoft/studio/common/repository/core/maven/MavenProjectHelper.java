@@ -34,14 +34,11 @@ import org.apache.maven.project.MavenProject;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.e4.core.di.annotations.Creatable;
-import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.m2e.core.MavenPlugin;
 import org.eclipse.m2e.core.internal.IMavenConstants;
@@ -85,7 +82,7 @@ public class MavenProjectHelper {
         if(jProject.isOpen()) {
             var entry =  jProject.getClasspathEntryFor(jProject.getPath().append("src-connectors"));
             if(entry == null) {
-                throw new CoreException(Status.error("Connector sources not in classpath after saving model."));
+                throw new CoreException(Status.error("The project configuration is out of synch. Please use the Refresh action."));
             }
         }
     }
