@@ -125,9 +125,12 @@ public class OpenMarketplaceHandler {
                 installDependencies(extendProjectPage, repositoryAccessor, forceAnalyzeInWizard, monitor);
                 updateExtensionDecorator.postUpdate(monitor);
             });
-        } catch (InvocationTargetException | InterruptedException e) {
+        } catch (InvocationTargetException  e) {
             BonitaStudioLog.error(e);
-            MessageDialog.openError(container.getShell(), Messages.addDependenciesError, e.getMessage());
+            MessageDialog.openError(container.getShell(), Messages.addDependenciesError, e.getTargetException() != null ? e.getTargetException().getMessage() : e.getMessage());
+        }catch (InterruptedException ie) {
+            BonitaStudioLog.error(ie);
+            MessageDialog.openError(container.getShell(), Messages.addDependenciesError, ie.getMessage());
         }
         if (updateExtensionDecorator.shouldValidateProject()) {
             updateExtensionDecorator.validateDependenciesConstraints();
