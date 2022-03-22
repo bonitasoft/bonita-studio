@@ -39,7 +39,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.e4.core.di.annotations.Creatable;
-import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.m2e.core.MavenPlugin;
 import org.eclipse.m2e.core.internal.IMavenConstants;
 import org.eclipse.m2e.core.internal.project.ProjectConfigurationManager;
@@ -78,13 +77,6 @@ public class MavenProjectHelper {
         }
         ((ProjectConfigurationManager) MavenPlugin.getProjectConfigurationManager())
             .updateProjectConfiguration(new MavenUpdateRequest(project, false, false),updateConfiguration,false,true, monitor);
-        var jProject =  JavaCore.create(project);  
-        if(jProject.isOpen()) {
-            var entry =  jProject.getClasspathEntryFor(jProject.getPath().append("src-connectors"));
-            if(entry == null) {
-                throw new CoreException(Status.error("The project configuration is out of synch. Please use the Refresh action."));
-            }
-        }
     }
 
     public List<ArtifactRepository> getProjectMavenRepositories(IProject project) throws CoreException {
