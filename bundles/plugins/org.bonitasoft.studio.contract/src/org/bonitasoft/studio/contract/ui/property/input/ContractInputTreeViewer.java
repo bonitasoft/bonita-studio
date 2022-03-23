@@ -18,7 +18,7 @@ import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.widgets.GTKStyleHandler;
 import org.bonitasoft.studio.contract.core.refactoring.ContractInputRefactorOperationFactory;
 import org.bonitasoft.studio.contract.i18n.Messages;
-import org.bonitasoft.studio.contract.ui.property.input.edit.CheckboxPropertyEditingSupport;
+import org.bonitasoft.studio.contract.ui.property.input.edit.ContractInputCardinalityEditingSupport;
 import org.bonitasoft.studio.contract.ui.property.input.edit.ContractInputTypeEditingSupport;
 import org.bonitasoft.studio.contract.ui.property.input.edit.ContractInputTypePropertyDescriptor;
 import org.bonitasoft.studio.contract.ui.property.input.edit.DescriptionObservableEditingSupport;
@@ -188,8 +188,10 @@ public class ContractInputTreeViewer extends TreeViewer {
         final TreeViewerColumn multipleColumnViewer = createColumnViewer(Messages.multiple, SWT.CENTER);
         multipleColumnViewer
                 .setLabelProvider(new MultipleInputCheckboxLabelProvider(multipleColumnViewer.getViewer(), knownElements()));
-        multipleColumnViewer.setEditingSupport(new CheckboxPropertyEditingSupport(propertySourceProvider, this,
-                ProcessPackage.Literals.CONTRACT_INPUT__MULTIPLE.getName()));
+        multipleColumnViewer.setEditingSupport(new ContractInputCardinalityEditingSupport(this, propertySourceProvider,
+                new ContractInputRefactorOperationFactory(), 
+                progressService,
+                TransactionalEditingDomain.Factory.INSTANCE));
     }
 
     protected TreeViewerColumn createColumnViewer(final String text, final int style) {
