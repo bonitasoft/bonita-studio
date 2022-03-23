@@ -27,13 +27,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.function.Function;
 
 import org.bonitasoft.engine.api.ProcessAPI;
 import org.bonitasoft.engine.api.result.StatusCode;
 import org.bonitasoft.engine.bpm.bar.BusinessArchive;
 import org.bonitasoft.engine.bpm.process.Problem;
 import org.bonitasoft.engine.bpm.process.ProcessDefinition;
-import org.bonitasoft.engine.bpm.process.ProcessDefinitionNotFoundException;
 import org.bonitasoft.engine.bpm.process.ProcessEnablementException;
 import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
@@ -95,17 +95,11 @@ public class DeployProcessOperation {
 
     public URL getUrlFor(final AbstractProcess process, final IProgressMonitor monitor) throws MalformedURLException,
             UnsupportedEncodingException, URISyntaxException {
-        long pId = 0;
-        for (final AbstractProcess p : processIdsMap.keySet()) {
-            if (p.getName().equals(process.getName()) && p.getVersion().equals(process.getVersion())) {
-                pId = processIdsMap.get(p);
-            }
-        }
         return new ProcessInstantiationFormURLBuilder(process, configurationId).toURL(monitor);
     }
 
     public IStatus run(final IProgressMonitor monitor) {
-        if(processes.isEmpty()) {
+        if (processes.isEmpty()) {
             return ValidationStatus.error(Messages.noProcessToRun);
         }
         try {
@@ -274,11 +268,27 @@ public class DeployProcessOperation {
         try {
             processApi.enableProcess(processDefinitionId);
         } catch (final ProcessEnablementException e) {
-            return disablePopup ? new Status(IStatus.ERROR,
-                    EnginePlugin.PLUGIN_ID,
-                    StatusCode.PROCESS_DEPLOYMENT_IMPOSSIBLE_UNRESOLVED.ordinal(),
-                    String.format("Failed to enable process '%s (%s)'", process.getName(), process.getVersion()), e)
-                    : handleProcessEnablementException(process, monitor, processApi, processDefinitionId, e);
+            final List<Problem> processResolutionProblems = processApi
+                    .getProcessResolutionProblems(processDefinitionId);
+            IStatus enablementFailedStatus = null;
+            if (processResolutionProblems.isEmpty()) {
+                BonitaStudioLog.error(e);
+                enablementFailedStatus = new Status(IStatus.ERROR, EnginePlugin.PLUGIN_ID,
+                        StatusCode.PROCESS_DEPLOYMENT_IMPOSSIBLE_UNRESOLVED.ordinal(),
+                        String.format("Failed to enable process '%s (%s)'", process.getName(), process.getVersion()),
+                        e);
+            } else {
+                var multiStatus = new MultiStatus(EnginePlugin.PLUGIN_ID,
+                        StatusCode.PROCESS_DEPLOYMENT_IMPOSSIBLE_UNRESOLVED.ordinal(),
+                        String.format("Failed to enable process '%s (%s)'", process.getName(), process.getVersion()),
+                        e);
+                processResolutionProblems.stream()
+                        .map(toStatus(String.format("%s (%s)", process.getName(), process.getVersion())))
+                        .forEach(multiStatus::add);
+                enablementFailedStatus = multiStatus;
+            }
+            return disablePopup ? enablementFailedStatus
+                    : handleProcessEnablementException(process, processResolutionProblems, monitor);
         } finally {
             if (session != null) {
                 BOSEngineManager.getInstance().logoutDefaultTenant(session);
@@ -287,14 +297,23 @@ public class DeployProcessOperation {
         return Status.OK_STATUS;
     }
 
-    protected IStatus handleProcessEnablementException(final AbstractProcess process, final IProgressMonitor monitor,
-            final ProcessAPI processApi,
-            final Long processDefinitionId, final ProcessEnablementException e)
-            throws ProcessDefinitionNotFoundException, Exception {
-        final List<Problem> processResolutionProblems = processApi.getProcessResolutionProblems(processDefinitionId);
-        if (processResolutionProblems.isEmpty()) {
-            BonitaStudioLog.error(e);
-        }
+    private Function<Problem, IStatus> toStatus(String process) {
+        return problem -> {
+            switch (problem.getLevel()) {
+                case ERROR:
+                    return Status.error(String.format("%s: %s", process, problem.getDescription()));
+                case WARNING:
+                    return Status.warning(String.format("%s: %s", process, problem.getDescription()));
+                default:
+                    return Status.info(String.format("%s: %s", process, problem.getDescription()));
+            }
+        };
+    }
+
+    protected IStatus handleProcessEnablementException(final AbstractProcess process,
+            List<Problem> processResolutionProblems,
+            final IProgressMonitor monitor)
+            throws Exception {
         IStatus status = openProcessEnablementProblemsDialog(process, processResolutionProblems);
         if (status.isOK()) {
             undeploy(Collections.singletonList(process), monitor);
