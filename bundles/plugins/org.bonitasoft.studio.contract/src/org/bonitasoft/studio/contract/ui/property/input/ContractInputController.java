@@ -79,10 +79,6 @@ public class ContractInputController implements IViewerController {
             this.input = input;
         }
 
-        /*
-         * (non-Javadoc)
-         * @see java.lang.Runnable#run()
-         */
         @Override
         public void run() {
             if (viewer != null && viewer.getControl() != null && !viewer.getControl().isDisposed()) {
