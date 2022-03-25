@@ -77,11 +77,17 @@ public class RefactorContractInputOperation
      */
     @Override
     protected boolean shouldUpdateReferencesInScripts(RefactorPair<ContractInput, ContractInput> pairRefactor) {
-        return super.shouldUpdateReferencesInScripts(pairRefactor) || hasContractInputTypeChanged(pairRefactor);
+        return super.shouldUpdateReferencesInScripts(pairRefactor) 
+                || hasContractInputTypeChanged(pairRefactor)
+                || hasContractInputCardinalityChanged(pairRefactor);
     }
 
     private boolean hasContractInputTypeChanged(RefactorPair<ContractInput, ContractInput> pairRefactor) {
         return pairRefactor.getOldValue().getType() != pairRefactor.getNewValue().getType();
+    }
+    
+    private boolean hasContractInputCardinalityChanged(RefactorPair<ContractInput, ContractInput> pairRefactor) {
+        return pairRefactor.getOldValue().isMultiple() != pairRefactor.getNewValue().isMultiple();
     }
 
     /*

@@ -130,6 +130,62 @@
 
     <profiles>
         <profile>
+            <id>offline-local-repository</id>
+            <properties>
+                <localRepository.compatibleVersions.skip>true</localRepository.compatibleVersions.skip>  
+            </properties>
+            <build>
+                <plugins>
+                    <plugin>
+                     <groupId>org.codehaus.mojo</groupId>
+                     <artifactId>exec-maven-plugin</artifactId>
+                     <executions>
+                         <execution>
+                            <id>resolve-dependencies-locally</id>
+                            <goals>
+                                <goal>exec</goal>
+                            </goals>
+                            <phase>generate-resources</phase>
+                            <configuration>
+                                <workingDirectory>${project.basedir}/src/template</workingDirectory>
+                                <executable>${mavenWrapper}</executable>
+                                <useMavenLogger>true</useMavenLogger>
+                                <skip>${localRepository.skip}</skip>
+                                <arguments>
+                                    <argument>org.apache.maven.plugins:maven-dependency-plugin:${maven-dependency-plugin.version}:resolve</argument>
+                                    <argument>-Dmaven.repo.local=${settings.localRepository}</argument>
+                                    <argument>-Dlocal.remote.repo.url=file:///${settings.localRepository}</argument>
+                                    <argument>-Dbonita.runtime.version=${engine.version}</argument>
+                                    <argument>-Dbonita-project-maven-plugin.version=${bonita-project-report-model.version}</argument>
+                                </arguments>
+                            </configuration>
+                        </execution>
+                        <execution>
+                            <id>resolve-dependency-plugins-locally</id>
+                            <goals>
+                                <goal>exec</goal>
+                            </goals>
+                            <phase>generate-resources</phase>
+                            <configuration>
+                                <workingDirectory>${project.basedir}/src/template</workingDirectory>
+                                <executable>${mavenWrapper}</executable>
+                                <useMavenLogger>true</useMavenLogger>
+                                <skip>${localRepository.skip}</skip>
+                                <arguments>
+                                    <argument>org.apache.maven.plugins:maven-dependency-plugin:${maven-dependency-plugin.version}:resolve-plugins</argument>
+                                    <argument>-Dmaven.repo.local=${settings.localRepository}</argument>
+                                    <argument>-Dlocal.remote.repo.url=file:///${settings.localRepository}</argument>
+                                    <argument>-Dbonita.runtime.version=${engine.version}</argument>
+                                    <argument>-Dbonita-project-maven-plugin.version=${bonita-project-report-model.version}</argument>
+                                </arguments>
+                            </configuration>
+                        </execution>
+                     </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile> 
+        <profile>
             <id>windows-maven-wrapper</id>
             <activation>
                 <os>
