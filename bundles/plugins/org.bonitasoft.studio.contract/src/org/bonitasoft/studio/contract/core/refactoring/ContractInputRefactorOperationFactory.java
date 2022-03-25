@@ -29,11 +29,7 @@ import org.eclipse.emf.transaction.TransactionalEditingDomain;
 
 public class ContractInputRefactorOperationFactory implements IRefactorOperationFactory {
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.refactoring.core.emf.IRefactorOperationFactory#createRefactorOperation(org.eclipse.emf.edit.domain.EditingDomain,
-     * org.eclipse.emf.ecore.EObject, java.lang.Object)
-     */
+  
     @Override
     public RefactorContractInputOperation createRefactorOperation(
             final TransactionalEditingDomain domain, final EObject item, final Object newValue) {
@@ -44,18 +40,21 @@ public class ContractInputRefactorOperationFactory implements IRefactorOperation
                 new GroovyScriptRefactoringOperationFactory(), RefactoringOperationType.UPDATE);
         refactorContractInputOperation.setEditingDomain(domain);
         refactorContractInputOperation.setAskConfirmation(true);
-        refactorContractInputOperation.addItemToRefactor(inputWithNewName((ContractInput) item, newValue),
+        refactorContractInputOperation.addItemToRefactor(modifiedInput((ContractInput) item, newValue),
                 (ContractInput) item);
         return refactorContractInputOperation;
     }
 
-    private ContractInput inputWithNewName(final ContractInput input, final Object newValue) {
+    private ContractInput modifiedInput(final ContractInput input, final Object newValue) {
         final ContractInput copy = EcoreUtil.copy(input);
         if (newValue instanceof String) {
             copy.setName((String) newValue);
         }
         if (newValue instanceof ContractInputType) {
             copy.setType((ContractInputType) newValue);
+        }
+        if (newValue instanceof Boolean) {
+            copy.setMultiple((boolean) newValue);
         }
         return copy;
     }
