@@ -18,18 +18,12 @@ import java.util.Arrays;
 import java.util.Map;
 
 import org.bonitasoft.studio.common.jface.TableColumnSorter;
-import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.RepositoryManager;
-import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
-import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
-import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditorUtil;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
+import org.bonitasoft.studio.ui.viewer.LabelProviderBuilder;
 import org.bonitasoft.studio.validation.i18n.Messages;
-import org.eclipse.core.internal.resources.Marker;
 import org.eclipse.core.resources.IMarker;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
@@ -37,7 +31,6 @@ import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.layout.TableColumnLayout;
-import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.ISelection;
@@ -49,8 +42,6 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
@@ -62,7 +53,6 @@ import org.eclipse.ui.ISelectionService;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.internal.views.markers.MarkerSupportInternalUtilities;
 import org.eclipse.ui.part.ViewPart;
 
 public class ValidationViewPart extends ViewPart implements ISelectionListener,
@@ -75,12 +65,6 @@ public class ValidationViewPart extends ViewPart implements ISelectionListener,
     private TableViewerColumn severityColumn;
     private ValidationViewAction validateAction;
 
-    /*
-     * (non-Javadoc)
-     * @see
-     * org.eclipse.ui.part.WorkbenchPart#createPartControl(org.eclipse.swt.widgets
-     * .Composite)
-     */
     @Override
     public void createPartControl(final Composite parent) {
         final Composite mainComposite = new Composite(parent, SWT.NONE);
@@ -100,7 +84,7 @@ public class ValidationViewPart extends ViewPart implements ISelectionListener,
 
         }
 
-        final TableColumnSorter sorter = new TableColumnSorter(tableViewer);
+        var sorter = new TableColumnSorter<IMarker>(tableViewer);
         sorter.setColumn(severityColumn.getColumn());
     }
 
@@ -120,19 +104,9 @@ public class ValidationViewPart extends ViewPart implements ISelectionListener,
         final Button validateButton = new Button(buttonComposite, SWT.PUSH);
         validateButton.setLayoutData(GridDataFactory.fillDefaults().create());
         validateButton.setText(Messages.validationViewValidateButtonLabel);
-        validateButton.addSelectionListener(new SelectionAdapter() {
-
-            /*
-             * (non-Javadoc)
-             * @see
-             * org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse
-             * .swt.events.SelectionEvent)
-             */
-            @Override
-            public void widgetSelected(final SelectionEvent e) {
-                validateAction.run();
-                tableViewer.refresh(true, true);
-            }
+        validateButton.addListener(SWT.Selection, e -> {
+            validateAction.run();
+            tableViewer.refresh(true, true);
         });
     }
 
@@ -179,60 +153,9 @@ public class ValidationViewPart extends ViewPart implements ISelectionListener,
         final TableViewerColumn elements = new TableViewerColumn(tableViewer,
                 SWT.NONE);
         elements.getColumn().setText(Messages.validationViewElementColumnName);
-        elements.setLabelProvider(new ColumnLabelProvider() {
-
-            @Override
-            public String getText(final Object element) {
-                final Marker marker = (Marker) element;
-                try {
-
-                    final String elementId = (String) marker
-                            .getAttribute(org.eclipse.gmf.runtime.common.core.resources.IMarker.ELEMENT_ID);
-                    String location = (String) marker.getAttribute(IMarker.LOCATION);
-                    int idx = location.lastIndexOf(":");
-                    if (idx > 0) {
-                        String result = location.substring(idx + 1);
-
-                        // get parent name if name is empty
-                        if (result.trim().isEmpty() && idx - 1 > 0) {
-                            location = location.substring(0, idx - 1);
-                            idx = location.lastIndexOf(":");
-                            result = location.substring(idx + 1);
-                        }
-
-                        if (!(result.startsWith("<") && result.endsWith(">"))) {
-                            return result;
-                        } else {
-                            final DiagramRepositoryStore store = RepositoryManager
-                                    .getInstance().getRepositoryStore(
-                                            DiagramRepositoryStore.class);
-                            final DiagramFileStore file = store.getChild(marker
-                                    .getResource().getLocation().toFile()
-                                    .getName(), true);
-                            if (file != null) {
-                                final EObject view = file.getEMFResource()
-                                        .getEObject(elementId);
-                                if (view != null) {
-                                    for (final EObject object : view
-                                            .eCrossReferences()) {
-                                        if (object instanceof Element) {
-                                            return ((Element) object).getName();
-                                        }
-                                    }
-                                }
-                            }
-                            return "";
-                        }
-                    }
-
-                    return location;
-                } catch (final CoreException e) {
-                    BonitaStudioLog.error(e);
-                    return "";
-                }
-            }
-        });
-
+        elements.setLabelProvider(new LabelProviderBuilder<IMarker>()
+                .withTextProvider(marker -> marker.getAttribute(IMarker.LOCATION, ""))
+                .createColumnLabelProvider());
     }
 
     private void addErrorDescriptionColumn() {
@@ -240,19 +163,9 @@ public class ValidationViewPart extends ViewPart implements ISelectionListener,
                 SWT.NONE);
         elements.getColumn().setText(
                 Messages.validationViewDescriptionColumnName);
-        elements.setLabelProvider(new ColumnLabelProvider() {
-
-            @Override
-            public String getText(final Object element) {
-
-                final Marker marker = (Marker) element;
-                try {
-                    return (String) marker.getAttribute("message");
-                } catch (final CoreException e) {
-                    return "";
-                }
-            }
-        });
+        elements.setLabelProvider(new LabelProviderBuilder<IMarker>()
+                .withTextProvider(marker -> marker.getAttribute(IMarker.MESSAGE, ""))
+                .createColumnLabelProvider());
     }
 
     private void addSeverityDescriptionColumn() {
@@ -292,11 +205,12 @@ public class ValidationViewPart extends ViewPart implements ISelectionListener,
     @Override
     public void selectionChanged(final SelectionChangedEvent event) {
         if (event.getSelection() instanceof StructuredSelection
-                && ((StructuredSelection) event.getSelection()).getFirstElement() instanceof Marker) {
+                && ((StructuredSelection) event.getSelection()).getFirstElement() instanceof IMarker) {
             updateStatusLine((IStructuredSelection) event.getSelection());
-            final Marker m = (Marker) ((StructuredSelection) event.getSelection())
+            final IMarker m = (IMarker) ((StructuredSelection) event.getSelection())
                     .getFirstElement();
-            final String elementId = m.getAttribute(org.eclipse.gmf.runtime.common.core.resources.IMarker.ELEMENT_ID, null);
+            final String elementId = m.getAttribute(org.eclipse.gmf.runtime.common.core.resources.IMarker.ELEMENT_ID,
+                    null);
             if (elementId == null
                     || !(getSite().getPage().getActiveEditor() instanceof DiagramEditor)) {
                 return;
@@ -357,15 +271,9 @@ public class ValidationViewPart extends ViewPart implements ISelectionListener,
      * @param newSelection
      */
     void updateStatusLine(IStructuredSelection newSelection) {
-        String message = MarkerSupportInternalUtilities.EMPTY_STRING;
-
-        if (newSelection.size() == 1) {
-            // Use the Message attribute of the marker
-            try {
-                message = (String) ((Marker) newSelection.getFirstElement()).getAttribute("message");
-            } catch (CoreException e) {
-                BonitaStudioLog.error(e);
-            }
+        String message = "";
+        if (!newSelection.isEmpty()) {
+            message = (String) ((IMarker) newSelection.getFirstElement()).getAttribute(IMarker.MESSAGE, "");
         }
         getViewSite().getActionBars().getStatusLineManager().setMessage(message);
     }
@@ -375,7 +283,7 @@ public class ValidationViewPart extends ViewPart implements ISelectionListener,
             tableViewer.setInput(tableViewer.getInput());
         }
     }
-    
+
     @Override
     public Image getTitleImage() {
         return Pics.getImage(PicsConstants.validate);

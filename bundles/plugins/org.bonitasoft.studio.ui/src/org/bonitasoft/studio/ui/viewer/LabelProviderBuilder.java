@@ -21,7 +21,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 
-import org.bonitasoft.studio.preferences.PreferenceUtil;
 import org.bonitasoft.studio.ui.ColorConstants;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
@@ -93,17 +92,13 @@ public class LabelProviderBuilder<T> {
 
             private Color errorColor;
             private Color warningColor;
-            private ColumnViewer viewer;
-            private boolean isDarkTheme;
             private Color darkModeSelectLineUnfocused;
 
             @Override
             public void initialize(ColumnViewer viewer, ViewerColumn column) {
                 super.initialize(viewer, column);
-                this.viewer = viewer;
                 errorColor = new Color(Display.getDefault(), ColorConstants.ERROR_RGB);
                 warningColor = new Color(Display.getDefault(), ColorConstants.WARNING_RGB);
-                isDarkTheme = PreferenceUtil.isDarkTheme();
                 darkModeSelectLineUnfocused = new Color(Display.getDefault(),
                         ColorConstants.DARK_MODE_TABLE_SELECTED_UNFOCUS);
                 viewer.getColumnViewerEditor().addEditorActivationListener(refreshAllAfterEdit());
