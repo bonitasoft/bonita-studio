@@ -52,7 +52,7 @@ public class ExpressionContentAssistProcessor implements IContentAssistProcessor
             return new ICompletionProposal[0];
         }
         ICompletionProposal[] proposals = null;
-
+        
         proposals = buildProposals(expressions, documentOffset, textViewer);
         return proposals;
 
@@ -87,7 +87,7 @@ public class ExpressionContentAssistProcessor implements IContentAssistProcessor
                             labelProvider.getStyledString(expression), 10000));
                 } else if (showAllProposals) {
                     final String replacementString = addDelimiters(expression);
-                    proposals.add(new JavaCompletionProposal(replacementString, offset, replacementString.length(),
+                    proposals.add(new JavaCompletionProposal(replacementString, offset, previousString.length(),
                             labelProvider.getImage(expression), labelProvider.getStyledString(expression), 10000));
                 }
             }
