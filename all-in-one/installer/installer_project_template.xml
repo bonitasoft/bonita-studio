@@ -300,6 +300,7 @@ ${installdir}/@mac.shortcut.name@/Contents/Eclipse/jre/Contents/Home/bin/java
             <program>${installdir}\${windowsExecName}</program>
             <programArguments>&amp;</programArguments>
             <progressText>${msg(launch)} ${product_fullname}</progressText>
+            <useMSDOSPath>0</useMSDOSPath>
         </runProgram>
         <launchBrowser>
             <show>0</show>
