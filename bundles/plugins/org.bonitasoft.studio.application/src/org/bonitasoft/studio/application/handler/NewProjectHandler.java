@@ -76,7 +76,7 @@ public class NewProjectHandler extends AbstractProjectMetadataHandler {
     protected SetProjectMetadataOperation createOperation(MavenProjectHelper mavenProjectHelper,
             ProjectMetadata metadata, RepositoryAccessor repositoryAccessor) {
         return new SetProjectMetadataOperation(metadata, repositoryAccessor, mavenProjectHelper)
-                .additionalDependencies(bonitaMarketplacePage.getDependenciesToAdd().stream()
+                .additionalDependencies(bonitaMarketplacePage.getSelectedDependencies().stream()
                         .map(BonitaArtifactDependency::toMavenDependency)
                         .collect(Collectors.toList()))
                 .createNewProject();

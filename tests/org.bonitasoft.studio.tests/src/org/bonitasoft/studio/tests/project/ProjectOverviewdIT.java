@@ -65,7 +65,7 @@ public class ProjectOverviewdIT {
     @Test
     public void should_manage_diagrams_from_dashboard() {
         var worbenchBot = new BotApplicationWorkbenchWindow(bot);
-        var dashboardBot = worbenchBot.openProjectDetails().toDashboardView();
+        var dashboardBot = worbenchBot.openProjectOverview().toDashboardView();
         dashboardBot.createDiagram().closeActiveDiagram();
         List<DiagramFileStore> diagrams = repositoryAccessor.getRepositoryStore(DiagramRepositoryStore.class).getChildren();
         assertThat(diagrams).isNotEmpty();
@@ -75,7 +75,7 @@ public class ProjectOverviewdIT {
     @Test
     public void should_manage_bdm_from_dashboard() {
         var worbenchBot = new BotApplicationWorkbenchWindow(bot);
-        var dashboardBot = worbenchBot.openProjectDetails().toDashboardView();
+        var dashboardBot = worbenchBot.openProjectOverview().toDashboardView();
         dashboardBot.createBdm().close();
         dashboardBot.openBdm().close();
     }
@@ -83,7 +83,7 @@ public class ProjectOverviewdIT {
     @Test
     public void should_manage_orga_from_dashboard() {
         var worbenchBot = new BotApplicationWorkbenchWindow(bot);
-        var dashboardBot = worbenchBot.openProjectDetails().toDashboardView();
+        var dashboardBot = worbenchBot.openProjectOverview().toDashboardView();
         var orgaEditorBot = dashboardBot.openActiveOrga();
         assertThat(bot.activeEditor().getTitle())
                 .isEqualTo(new ActiveOrganizationProvider().getActiveOrganizationFileName());
@@ -93,7 +93,7 @@ public class ProjectOverviewdIT {
     @Test
     public void should_manage_applications_from_dashboard() {
         var worbenchBot = new BotApplicationWorkbenchWindow(bot);
-        var dashboardBot = worbenchBot.openProjectDetails().toDashboardView();
+        var dashboardBot = worbenchBot.openProjectOverview().toDashboardView();
         dashboardBot.createApplicationFile().close();
         List<ApplicationFileStore> apps = repositoryAccessor
                 .getRepositoryStore(ApplicationRepositoryStore.class).getChildren();
