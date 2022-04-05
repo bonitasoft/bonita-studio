@@ -15,7 +15,7 @@
 package org.bonitasoft.studio.swtbot.framework.application.editor.project;
 
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
-import org.bonitasoft.studio.swtbot.framework.application.editor.BotProjectDetailsEditor;
+import org.bonitasoft.studio.swtbot.framework.application.editor.BotProjectOverviewEditor;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 
 public class BotMaximizedExtensionCard {
@@ -26,9 +26,9 @@ public class BotMaximizedExtensionCard {
         this.bot = bot;
     }
     
-    public BotProjectDetailsEditor minimize() {
+    public BotProjectOverviewEditor minimize() {
         bot.toolbarButtonWithId(SWTBotConstants.SWTBOT_ID_MINIMIZE_CARD_BUTTON).click();
-        return new BotProjectDetailsEditor(bot);
+        return new BotProjectOverviewEditor(bot);
     }
     
     public BotFindUsageWizard findUsage(String definitionId, String definitionVersion) {

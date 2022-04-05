@@ -15,11 +15,13 @@
 package org.bonitasoft.studio.tests.project;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.util.stream.Collectors;
 
 import org.apache.maven.model.Dependency;
+import org.assertj.core.api.Assertions;
 import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
@@ -46,6 +48,7 @@ import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
+import org.eclipse.swtbot.swt.finder.exceptions.WidgetNotFoundException;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.keyboard.Keystrokes;
 import org.eclipse.swtbot.swt.finder.waits.Conditions;
@@ -85,7 +88,7 @@ public class ProjectCompositionIT {
         var worbenchBot = new BotApplicationWorkbenchWindow(bot);
 
         var description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.";
-        var projectDetailsBot = worbenchBot.openProjectDetails().toExtensionView();
+        var projectDetailsBot = worbenchBot.openProjectOverview().toExtensionView();
         projectDetailsBot
                 .editProjectMetadata()
                 .setVersion("2.0.0-SNAPSHOT")
@@ -114,7 +117,7 @@ public class ProjectCompositionIT {
 
         var worbenchBot = new BotApplicationWorkbenchWindow(bot);
 
-        var projectDetailsBot = worbenchBot.openProjectDetails().toExtensionView();
+        var projectDetailsBot = worbenchBot.openProjectOverview().toExtensionView();
         projectDetailsBot
                 .openMarketplace()
                 .selectConnectorExtensionType()
@@ -207,7 +210,7 @@ public class ProjectCompositionIT {
         assertThat(localDepStore
                 .dependencyPath(dependency("org.bonitasoft.connectors", "bonita-connector-email", "1.1.0"))).exists();
 
-        var projectDetailsBot = worbenchBot.openProjectDetails().toExtensionView();
+        var projectDetailsBot = worbenchBot.openProjectOverview().toExtensionView();
         projectDetailsBot
                 .findExtensionCardByArtifactId("bonita-connector-email")
                 .updateToLatest();
@@ -301,7 +304,7 @@ public class ProjectCompositionIT {
             }
         });
 
-        projectDetailsBot = worbenchBot.openProjectDetails().toExtensionView();
+        projectDetailsBot = worbenchBot.openProjectOverview().toExtensionView();
         var extensionCardBot = projectDetailsBot
                 .findExtensionCardByArtifactId("bonita-connector-email");
         var maximizedCard = extensionCardBot.maximize();
@@ -354,6 +357,31 @@ public class ProjectCompositionIT {
                 assertThat(ResourceMarkerHelper.findErrors(project)).isEmpty();
             }
         });
+    }
+    
+    @Test
+    public void shouldDisplayInstalledExtensions() {
+        var worbenchBot = new BotApplicationWorkbenchWindow(bot);
+        var projectDetailsBot = worbenchBot.openProjectOverview().toExtensionView();
+        
+        projectDetailsBot
+                .openMarketplace()
+                .selectConnectorExtensionType()
+                .selectExtensionByArtifactId("bonita-connector-email")
+                .install();
+
+        var marketplaceBot = projectDetailsBot.openMarketplace();
+        try {
+            bot.label("Email");
+            Assertions.fail("Email extension should not be visible");
+        } catch (WidgetNotFoundException e) {
+            // email extension is hidden -> expected behavior
+        }
+        
+        marketplaceBot.displayInstalledExtensions();
+        bot.label("Email");
+        
+        marketplaceBot.cancel();
     }
 
     private Dependency dependency(String groupId, String artifactId, String version) {

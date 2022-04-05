@@ -42,6 +42,16 @@ public class BotMarketplaceWizard extends BotWizardDialog {
         return this;
     }
     
+    public BotMarketplaceWizard displayInstalledExtensions() {
+        bot.checkBox(Messages.displayInstalledExtensions).select();
+        return this;
+    }
+    
+    public BotMarketplaceWizard hideInstalledExtensions() {
+        bot.checkBox(Messages.displayInstalledExtensions).deselect();
+        return this;
+    }
+    
     public void install() {
         finish();
     }
