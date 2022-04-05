@@ -20,7 +20,7 @@ import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.la.i18n.Messages;
 import org.bonitasoft.studio.model.process.Pool;
-import org.bonitasoft.studio.swtbot.framework.application.editor.BotProjectDetailsEditor;
+import org.bonitasoft.studio.swtbot.framework.application.editor.BotProjectOverviewEditor;
 import org.bonitasoft.studio.swtbot.framework.application.menu.AbstractBotMenu;
 import org.bonitasoft.studio.swtbot.framework.application.menu.BotEditMenu;
 import org.bonitasoft.studio.swtbot.framework.application.menu.BotOrganizationMenu;
@@ -247,7 +247,7 @@ public class BotApplicationWorkbenchWindow extends AbstractBotMenu {
         return new BotPreferencesDialog(bot);
     }
 
-    public BotProjectDetailsEditor openProjectDetails() {
+    public BotProjectOverviewEditor openProjectOverview() {
         bot.toolbarButtonWithId(SWTBotConstants.SWTBOT_ID_OPEN_PROJECT_DETAILS_TOOLITEM).click();
         bot.waitUntil(new DefaultCondition() {
 
@@ -258,10 +258,10 @@ public class BotApplicationWorkbenchWindow extends AbstractBotMenu {
 
             @Override
             public String getFailureMessage() {
-                return "Failed to open the project details.";
+                return "Failed to open the project overview.";
             }
         }, 15000);
-        return new BotProjectDetailsEditor(bot);
+        return new BotProjectOverviewEditor(bot);
     }
 
 }

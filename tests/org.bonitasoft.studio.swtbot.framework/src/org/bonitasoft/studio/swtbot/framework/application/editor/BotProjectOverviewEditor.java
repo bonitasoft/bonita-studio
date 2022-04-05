@@ -37,11 +37,11 @@ import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.exceptions.WidgetNotFoundException;
 
-public class BotProjectDetailsEditor {
+public class BotProjectOverviewEditor {
 
     protected SWTGefBot bot;
 
-    public BotProjectDetailsEditor(SWTGefBot bot) {
+    public BotProjectOverviewEditor(SWTGefBot bot) {
         this.bot = bot;
     }
 
@@ -50,12 +50,12 @@ public class BotProjectDetailsEditor {
         return new BotEditProjectMetadataWizard(bot);
     }
 
-    public BotProjectDetailsEditor toExtensionView() {
+    public BotProjectOverviewEditor toExtensionView() {
         bot.toolbarButtonWithId(SWTBotConstants.SWTBOT_ID_OPEN_EXTENSIONS_VIEW).click();
         return this;
     }
 
-    public BotProjectDetailsEditor toDashboardView() {
+    public BotProjectOverviewEditor toDashboardView() {
         bot.toolbarButtonWithId(SWTBotConstants.SWTBOT_ID_OPEN_ELEMENT_VIEW).click();
         return this;
     }

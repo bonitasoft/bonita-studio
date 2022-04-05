@@ -392,6 +392,8 @@ public class Messages extends NLS {
     public static String updateTargetRuntimeVersionConfirmTitle;
     public static String updateTargetRuntimeVersionConfirmMsg;
     public static String updateTo;
+    public static String displayInstalledExtensions;
+    public static String alreadyInstalledExtensions;
 
     static {
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);

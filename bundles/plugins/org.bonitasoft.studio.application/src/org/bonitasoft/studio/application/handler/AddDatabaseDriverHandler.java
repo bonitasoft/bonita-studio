@@ -80,7 +80,7 @@ public class AddDatabaseDriverHandler extends OpenMarketplaceHandler {
                 .getRepositoryStore(DatabaseConnectorPropertiesRepositoryStore.class);
         DatabaseConnectorPropertiesFileStore genericConnectorConf = geConnectorConfigurationStore("database-jdbc",
                 databaseConnectorPropertiesRepositoryStore);
-        extendProjectPage.getDependenciesToAdd().stream().forEach(dep -> {
+        extendProjectPage.getSelectedDependencies().stream().forEach(dep -> {
             updateDriverConf(genericConnectorConf, toJarName(dep));
             findConnectorDefinitionFor(dep)
                     .map(defId -> geConnectorConfigurationStore(defId, databaseConnectorPropertiesRepositoryStore))

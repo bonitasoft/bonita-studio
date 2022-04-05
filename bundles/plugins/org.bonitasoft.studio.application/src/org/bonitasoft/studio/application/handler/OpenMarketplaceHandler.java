@@ -91,7 +91,7 @@ public class OpenMarketplaceHandler {
                 .withFixedInitialSize()
                 .open(activeShell, Messages.install);
 
-        if (databaseConnectorAdded(bonitaMarketplacePage.getDependenciesToAdd())
+        if (databaseConnectorAdded(bonitaMarketplacePage.getSelectedDependencies())
                 && MessageDialog.openQuestion(activeShell, Messages.addDatabaseDriverTitle,
                         Messages.addDatabaseDriverQuestion)) {
             new CommandExecutor().executeCommand(ADD_DRIVER_COMMAND_ID, Collections.emptyMap());
@@ -145,7 +145,7 @@ public class OpenMarketplaceHandler {
             throws InvocationTargetException {
         monitor.beginTask(Messages.installingExtensions, IProgressMonitor.UNKNOWN);
         updateDependency(extendProjectPage.getDependenciesToUpdate(), monitor);
-        addDependency(extendProjectPage.getDependenciesToAdd(), monitor);
+        addDependency(extendProjectPage.getSelectedDependencies(), monitor);
         if (extendProjectPage.getDependenciesToUpdate().isEmpty() && !forceAnalyzeInWizard) {
             MavenModelOperation.scheduleAnalyzeProjectDependenciesJob(repositoryAccessor);
         } else {

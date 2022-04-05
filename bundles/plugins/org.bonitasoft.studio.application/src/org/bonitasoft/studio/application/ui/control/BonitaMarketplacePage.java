@@ -17,7 +17,6 @@ package org.bonitasoft.studio.application.ui.control;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -32,7 +31,9 @@ import org.apache.maven.model.Dependency;
 import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.application.ui.control.model.dependency.BonitaArtifactDependency;
 import org.bonitasoft.studio.application.ui.control.model.dependency.BonitaArtifactDependencyVersion;
+import org.bonitasoft.studio.application.ui.control.model.dependency.BonitaMarketPlaceItem;
 import org.bonitasoft.studio.application.ui.control.model.dependency.BonitaMarketplace;
+import org.bonitasoft.studio.application.views.overview.ProjectOverviewEditorPart;
 import org.bonitasoft.studio.common.Strings;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.repository.core.maven.MavenProjectHelper;
@@ -97,10 +98,7 @@ public class BonitaMarketplacePage implements ControlSupplier {
     private Composite dependenciesComposite;
     private List<Dependency> knownDependencies;
     private List<BonitaArtifactDependency> dependencies;
-    private List<BonitaArtifactDependency> newDependencies = new ArrayList<>();
-    private List<BonitaArtifactDependency> dependenciesUpdatable = new ArrayList<>();
-    private List<BonitaArtifactDependency> dependenciesToAdd = new ArrayList<>();
-    private List<BonitaArtifactDependency> dependenciesToUpdate = new ArrayList<>();
+    private List<BonitaMarketPlaceItem> marketPlaceItems = new ArrayList<>();
     private IObservableValue<String> typeObservableValue;
     private ScrolledComposite sc;
     private IWizardContainer wizardContainer;
@@ -113,6 +111,8 @@ public class BonitaMarketplacePage implements ControlSupplier {
     private String[] extensionTypes;
 
     private IProject project;
+
+    private IObservableValue<Boolean> radioObservableValue;
 
     public BonitaMarketplacePage(IProject project, String... extensionTypes) {
         this.project = project;
@@ -161,7 +161,7 @@ public class BonitaMarketplacePage implements ControlSupplier {
     }
 
     /**
-     * Only triggered when wizard opens, but after intital control creation -> Allow us to display properly the fetching
+     * Only triggered when wizard opens, but after initial control creation -> Allow us to display properly the fetching
      * progress to the user using the wizard progress abr
      */
     @Override
@@ -174,11 +174,11 @@ public class BonitaMarketplacePage implements ControlSupplier {
                 try {
                     wizardContainer.getShell().setDefaultButton(null);
                     wizardContainer.run(true, false, this::initVariables);
-                    List<BonitaArtifactDependency> filteredDependencies = Stream
-                            .concat(dependenciesUpdatable.stream(), newDependencies.stream()).filter(hasSelectedType())
+                    List<BonitaMarketPlaceItem> filteredDependencies = marketPlaceItems.stream()
+                            .filter(hasSelectedType())
+                            .filter(Predicate.not(BonitaMarketPlaceItem::isInstalled))
                             .collect(Collectors.toList());
-                    filterDependenciesByType(filteredDependencies);
-                    displayFilteredDependencies(filteredDependencies);
+                    displayFilteredDependencies(filterDependenciesByType(filteredDependencies));
                 } catch (InvocationTargetException | InterruptedException e) {
                     new ExceptionDialogHandler().openErrorDialog(Display.getDefault().getActiveShell(), e.getMessage(),
                             e);
@@ -187,8 +187,9 @@ public class BonitaMarketplacePage implements ControlSupplier {
         }
     }
 
-    private Predicate<? super BonitaArtifactDependency> hasSelectedType() {
-        return dep -> Stream.of(extensionTypes).map(EXTENSIONS_TYPE::get).anyMatch(t -> dep.getType().equals(t));
+    private Predicate<? super BonitaMarketPlaceItem> hasSelectedType() {
+        return dep -> Stream.of(extensionTypes).map(EXTENSIONS_TYPE::get)
+                .anyMatch(t -> dep.getBonitaArtifactDependency().getType().equals(t));
     }
 
     private void initVariables(IProgressMonitor monitor) {
@@ -211,7 +212,7 @@ public class BonitaMarketplacePage implements ControlSupplier {
     private void createSearchComposite(Composite parent) {
         Composite searchComposite = new Composite(parent, SWT.NONE);
         searchComposite
-                .setLayout(GridLayoutFactory.fillDefaults().numColumns(extensionTypes.length > 1 ? 2 : 1).create());
+                .setLayout(GridLayoutFactory.fillDefaults().numColumns(extensionTypes.length > 1 ? 3 : 1).create());
         searchComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 
         if (extensionTypes.length > 1) {
@@ -242,19 +243,27 @@ public class BonitaMarketplacePage implements ControlSupplier {
                 .grabHorizontalSpace()
                 .createIn(searchComposite);
         searchWidget.observeText(400, SWT.Modify).addValueChangeListener(e -> applySearch());
+
+        // The "display installed extensions" must not be displayed in the New Project Wizard. 
+        if (project != null) {
+            Button radio = new Button(searchComposite, SWT.CHECK);
+            radio.setText(Messages.displayInstalledExtensions);
+            radio.setSelection(false);
+            radioObservableValue = WidgetProperties.buttonSelection().observe(radio);
+            radioObservableValue.addValueChangeListener(e -> applySearch());
+        }
     }
 
     private void applySearch() {
         Display.getDefault().asyncExec(() -> {
             String searchValue = searchWidget.getText();
             Arrays.asList(dependenciesComposite.getChildren()).forEach(Control::dispose);
-            List<BonitaArtifactDependency> filteredDependencies = filterDependenciesBySearchValue(searchValue);
-            filterDependenciesByType(filteredDependencies);
-            displayFilteredDependencies(filteredDependencies);
+            List<BonitaMarketPlaceItem> filteredDependencies = filterDependenciesBySearchValue(searchValue);
+            displayFilteredDependencies(filterDependenciesByType(filteredDependencies));
         });
     }
 
-    private void displayFilteredDependencies(List<BonitaArtifactDependency> filteredDependencies) {
+    private void displayFilteredDependencies(List<BonitaMarketPlaceItem> filteredDependencies) {
         if (filteredDependencies.isEmpty()) {
             createNoResultFoundLabel(dependenciesComposite);
         } else {
@@ -281,29 +290,34 @@ public class BonitaMarketplacePage implements ControlSupplier {
         sc.layout();
     }
 
-    private void filterDependenciesByType(List<BonitaArtifactDependency> filteredDependencies) {
+    private List<BonitaMarketPlaceItem> filterDependenciesByType(List<BonitaMarketPlaceItem> itemsToFilter) {
+        List<BonitaMarketPlaceItem> filterDeps = itemsToFilter.stream()
+                .collect(Collectors.toList());
         if (!Objects.equals(typeObservableValue.getValue(), ALL_TYPE)) {
             var type = EXTENSIONS_TYPE.get(typeObservableValue.getValue());
-            filteredDependencies.removeIf(dep -> !Objects.equals(dep.getType(), type));
+            filterDeps.removeIf(dep -> !Objects.equals(dep.getBonitaArtifactDependency().getType(), type));
         }
+        return filterDeps;
     }
 
-    private List<BonitaArtifactDependency> filterDependenciesBySearchValue(String searchValue) {
-        List<BonitaArtifactDependency> filteredDependencies = new ArrayList<>();
+    private List<BonitaMarketPlaceItem> filterDependenciesBySearchValue(String searchValue) {
+        List<BonitaMarketPlaceItem> filteredDependencies = new ArrayList<>();
         if (searchValue == null || searchValue.isBlank()) {
-            dependenciesUpdatable.forEach(filteredDependencies::add);
-            newDependencies.forEach(filteredDependencies::add);
+            marketPlaceItems.forEach(filteredDependencies::add);
         } else {
-            dependenciesUpdatable
+            marketPlaceItems
                     .stream()
-                    .filter(dep -> matchSearch(dep, searchValue))
-                    .forEach(filteredDependencies::add);
-            newDependencies
-                    .stream()
-                    .filter(dep -> matchSearch(dep, searchValue))
+                    .filter(dep -> matchSearch(dep.getBonitaArtifactDependency(), searchValue))
                     .forEach(filteredDependencies::add);
         }
-        return filteredDependencies;
+
+        //Searching with the installed extension display off -> dont display the installed extensions
+        if (!radioObservableValue.getValue().booleanValue()) {
+            return filteredDependencies.stream().filter(Predicate.not(BonitaMarketPlaceItem::isInstalled))
+                    .collect(Collectors.toList());
+        } else {
+            return filteredDependencies;
+        }
     }
 
     private boolean matchSearch(BonitaArtifactDependency dep, String searchValue) {
@@ -319,9 +333,9 @@ public class BonitaMarketplacePage implements ControlSupplier {
         noResultFoundLabel.setFont(JFaceResources.getFontRegistry().getItalic(JFaceResources.DEFAULT_FONT));
     }
 
-    private void createDependencyControl(Composite parent, BonitaArtifactDependency dep) {
+    private void createDependencyControl(Composite parent, BonitaMarketPlaceItem marketItem) {
         boolean addSeparator = parent.getChildren().length > 0;
-
+        BonitaArtifactDependency dep = marketItem.getBonitaArtifactDependency();
         Image icon = dep.getIconImage();
 
         Composite composite = new Composite(parent, SWT.NONE);
@@ -370,11 +384,14 @@ public class BonitaMarketplacePage implements ControlSupplier {
                         .sorted().findFirst()
                         .map(BonitaArtifactDependencyVersion::getVersion)
                         .orElse(""));
-        boolean updatable = dependenciesUpdatable.contains(dep);
 
-        Button addButton = latestCompatibleVersion.isPresent()
-                ? createAddButton(dep, heading, updatable)
+        Button addButton = latestCompatibleVersion.isPresent() && !marketItem.isInstalled()
+                ? createAddButton(marketItem, heading)
                 : null;
+
+        if (addButton == null && marketItem.isInstalled()) {
+            createInstalledLabel(heading);
+        }
 
         Label version = createLabel(heading, SWT.WRAP);
         version.setLayoutData(
@@ -388,28 +405,35 @@ public class BonitaMarketplacePage implements ControlSupplier {
             description.setText(dep.getDescription());
         }
 
-        if (updatable) {
+        if (marketItem.isUpdatable()) {
             createUpdatableComposite(contentComposite);
         } else if (!latestCompatibleVersion.isPresent()) {
             createIncompatibleComposite(contentComposite);
         }
 
         if (addButton != null) {
-            addSelectionListener(depComposite, addButton, dep, updatable);
-            addSelectionListener(contentComposite, addButton, dep, updatable);
-            addSelectionListener(heading, addButton, dep, updatable);
-            addSelectionListener(title, addButton, dep, updatable);
-            addSelectionListener(version, addButton, dep, updatable);
-            addSelectionListener(description, addButton, dep, updatable);
-            addSelectionListener(iconLabel, addButton, dep, updatable);
-        }
+            addSelectionListener(depComposite, addButton, marketItem);
+            addSelectionListener(contentComposite, addButton, marketItem);
+            addSelectionListener(heading, addButton, marketItem);
+            addSelectionListener(title, addButton, marketItem);
+            addSelectionListener(version, addButton, marketItem);
+            addSelectionListener(description, addButton, marketItem);
+            addSelectionListener(iconLabel, addButton, marketItem);
 
-        List<Control> hoverableControls = List
-                .of(depComposite, contentComposite, heading, title, version, description, iconLabel, addButton)
-                .stream()
-                .filter(Objects::nonNull)
-                .collect(Collectors.toList());
-        addHoverListener(hoverableControls);
+            List<Control> hoverableControls = List
+                    .of(depComposite, contentComposite, heading, title, version, description, iconLabel, addButton)
+                    .stream()
+                    .filter(Objects::nonNull)
+                    .collect(Collectors.toList());
+            addHoverListener(hoverableControls);
+        }
+    }
+
+    private void createInstalledLabel(Composite composite) {
+        Label installed = new Label(composite, SWT.WRAP);
+        installed.setLayoutData(GridDataFactory.fillDefaults().align(SWT.END, SWT.CENTER).create());
+        installed.setText(Messages.alreadyInstalledExtensions);
+        installed.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME, BonitaThemeConstants.GAV_TEXT_COLOR);
     }
 
     private void addHoverListener(List<Control> controls) {
@@ -441,8 +465,7 @@ public class BonitaMarketplacePage implements ControlSupplier {
         }));
     }
 
-    private void addSelectionListener(Control control, Button addButton, BonitaArtifactDependency dep,
-            boolean updatable) {
+    private void addSelectionListener(Control control, Button addButton, BonitaMarketPlaceItem marketPlaceItem) {
         control.addMouseListener(new MouseAdapter() {
 
             @Override
@@ -450,7 +473,7 @@ public class BonitaMarketplacePage implements ControlSupplier {
                 Rectangle bounds = control.getBounds();
                 if (e.x >= 0 && e.x <= bounds.width && e.y >= 0 && e.y <= bounds.height) {
                     addButton.setSelection(!addButton.getSelection());
-                    addDependency(dep, addButton.getSelection(), updatable ? dependenciesToUpdate : dependenciesToAdd);
+                    marketPlaceItem.setSelected(addButton.getSelection());
                 }
             }
         });
@@ -503,13 +526,14 @@ public class BonitaMarketplacePage implements ControlSupplier {
         depUpdatableLabel.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME, BonitaThemeConstants.INFO_TEXT_COLOR);
     }
 
-    private Button createAddButton(BonitaArtifactDependency dep, Composite parent, boolean updatable) {
+    private Button createAddButton(BonitaMarketPlaceItem marketPlaceItem, Composite parent) {
         Button button = new Button(parent, SWT.CHECK);
-        button.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, SWTBotConstants.extensionCheckboxId(dep.getArtifactId()));
+        button.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY,
+                SWTBotConstants.extensionCheckboxId(marketPlaceItem.getBonitaArtifactDependency().getArtifactId()));
         button.setLayoutData(GridDataFactory.fillDefaults().create());
-        button.setSelection(updatable ? dependenciesToUpdate.contains(dep) : dependenciesToAdd.contains(dep));
+        button.setSelection(marketPlaceItem.isUpdatable());
         button.addListener(SWT.Selection,
-                e -> addDependency(dep, button.getSelection(), updatable ? dependenciesToUpdate : dependenciesToAdd));
+                e -> marketPlaceItem.setSelected(button.getSelection()));
         return button;
     }
 
@@ -522,20 +546,22 @@ public class BonitaMarketplacePage implements ControlSupplier {
      */
     private void splitDependencies() {
         for (BonitaArtifactDependency dep : dependencies) {
-            Optional<Dependency> matchingDependency = knownDependencies.stream()
+            var marketPlaceItem = new BonitaMarketPlaceItem(dep);
+            knownDependencies.stream()
                     .filter(aDep -> Objects.equals(dep.getGroupId(), aDep.getGroupId())
                             && Objects.equals(dep.getArtifactId(), aDep.getArtifactId()))
-                    .findFirst();
-            if (matchingDependency.isPresent()) {
-                Optional<String> version = dep.getLatestCompatibleVersion()
-                        .map(BonitaArtifactDependencyVersion::getVersion);
-                if (version.isPresent()
-                        && !existingVersionEqualsOrGreater(matchingDependency.get().getVersion(), version.get())) {
-                    dependenciesUpdatable.add(dep);
-                }
-            } else {
-                newDependencies.add(dep);
-            }
+                    .findFirst()
+                    .ifPresent(matchingDependency -> {
+                        dep.getLatestCompatibleVersion()
+                                .map(BonitaArtifactDependencyVersion::getVersion)
+                                .ifPresent(version -> {
+                                    marketPlaceItem.setUpdatable(
+                                            !existingVersionEqualsOrGreater(matchingDependency.getVersion(), version));
+                                    marketPlaceItem.setInstalled(
+                                            existingVersionEqualsOrGreater(matchingDependency.getVersion(), version));
+                                });
+                    });
+            marketPlaceItems.add(marketPlaceItem);
         }
     }
 
@@ -545,21 +571,18 @@ public class BonitaMarketplacePage implements ControlSupplier {
         return existingV.compareTo(newV) >= 0;
     }
 
-    private void addDependency(BonitaArtifactDependency dep, boolean isSelected,
-            Collection<BonitaArtifactDependency> collection) {
-        if (isSelected) {
-            collection.add(dep);
-        } else {
-            collection.remove(dep);
-        }
-    }
-
-    public List<BonitaArtifactDependency> getDependenciesToAdd() {
-        return dependenciesToAdd;
+    public List<BonitaArtifactDependency> getSelectedDependencies() {
+        return marketPlaceItems.stream()
+                .filter(BonitaMarketPlaceItem::isSelected)
+                .map(BonitaMarketPlaceItem::getBonitaArtifactDependency)
+                .collect(Collectors.toList());
     }
 
     public List<BonitaArtifactDependency> getDependenciesToUpdate() {
-        return dependenciesToUpdate;
+        return marketPlaceItems.stream()
+                .filter(BonitaMarketPlaceItem::isUpdatable)
+                .map(BonitaMarketPlaceItem::getBonitaArtifactDependency)
+                .collect(Collectors.toList());
     }
 
     private Label createLabel(Composite parent, int style) {
