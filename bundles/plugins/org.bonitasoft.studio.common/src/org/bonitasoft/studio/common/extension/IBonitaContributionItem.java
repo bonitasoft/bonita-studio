@@ -17,6 +17,7 @@
 package org.bonitasoft.studio.common.extension;
 
 import org.eclipse.jface.action.IContributionItem;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.ToolBar;
 
 /**
@@ -28,4 +29,8 @@ public interface IBonitaContributionItem extends IContributionItem {
 	void fill(ToolBar toolbar, int index, int iconSize) ;
 
     String getText();
+
+    void setLabelControl(Label label);
+
+    void setEnabled(boolean enabled);
 }

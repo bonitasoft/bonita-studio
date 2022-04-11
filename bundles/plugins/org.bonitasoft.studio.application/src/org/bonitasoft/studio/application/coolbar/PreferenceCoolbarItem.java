@@ -26,6 +26,7 @@ import org.eclipse.jface.action.ContributionItem;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.ui.PlatformUI;
@@ -37,6 +38,8 @@ import org.eclipse.ui.commands.ICommandService;
 public class PreferenceCoolbarItem extends ContributionItem implements IBonitaContributionItem {
 
     public static final String PREFERENCE_COOLBAR_ITEM_ID = "preferenceCoolbarItem";
+    private Label label;
+    private ToolItem item;
 
     /*
      * (non-Javadoc)
@@ -49,7 +52,7 @@ public class PreferenceCoolbarItem extends ContributionItem implements IBonitaCo
 
     @Override
     public void fill(final ToolBar toolbar, final int index, final int iconSize) {
-        final ToolItem item = new ToolItem(toolbar, SWT.PUSH | SWT.RIGHT);
+        item = new ToolItem(toolbar, SWT.PUSH | SWT.RIGHT);
         item.setToolTipText(Messages.PreferencesButtonLabel);
         item.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, PREFERENCE_COOLBAR_ITEM_ID);
         if (iconSize < 0) {
@@ -82,5 +85,18 @@ public class PreferenceCoolbarItem extends ContributionItem implements IBonitaCo
     @Override
     public String getText() {
         return Messages.PreferencesButtonLabel;
+    }
+    
+    @Override
+    public void setLabelControl(Label label) {
+        this.label = label;
+    }
+
+    @Override
+    public void setEnabled(boolean enabled) {
+        item.setEnabled(enabled);
+        if(label != null) {
+            label.setEnabled(enabled);
+        }
     }
 }
