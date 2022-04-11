@@ -26,11 +26,15 @@ import org.eclipse.jface.action.ContributionItem;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.ui.PlatformUI;
 
 public class ImportBarCoolbarItem extends ContributionItem implements IBonitaContributionItem {
+
+    private Label label;
+    private ToolItem item;
 
     @Override
     public String getId() {
@@ -44,7 +48,7 @@ public class ImportBarCoolbarItem extends ContributionItem implements IBonitaCon
 
     @Override
     public void fill(final ToolBar toolbar, final int index, final int iconSize) {
-        final ToolItem item = new ToolItem(toolbar, SWT.PUSH);
+        item = new ToolItem(toolbar, SWT.PUSH);
         item.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, SWTBotConstants.SWTBOT_ID_IMPORT_TOOLITEM);
         item.setToolTipText(Messages.ImportProcessButtonLabel);
         if (iconSize < 0) {
@@ -68,4 +72,16 @@ public class ImportBarCoolbarItem extends ContributionItem implements IBonitaCon
 
     }
 
+    @Override
+    public void setLabelControl(Label label) {
+        this.label = label;
+    }
+
+    @Override
+    public void setEnabled(boolean enabled) {
+        item.setEnabled(enabled);
+        if(label != null) {
+            label.setEnabled(enabled);
+        }
+    }
 }

@@ -46,6 +46,7 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.ToolBar;
@@ -60,6 +61,8 @@ import org.eclipse.ui.handlers.IHandlerService;
 public class ConfigureCoolbarItem extends ContributionItem implements IBonitaContributionItem {
 
     private ConfigureHandler configureHandler;
+    private Label label;
+    private ToolItem item;
 
     public ConfigureCoolbarItem() {
         configureHandler = new ConfigureHandler();
@@ -154,7 +157,8 @@ public class ConfigureCoolbarItem extends ContributionItem implements IBonitaCon
                         try {
                             final Parameterization p = new Parameterization(cmd.getParameter("configuration"),
                                     selected.getText());
-                            handlerService.executeCommand(new ParameterizedCommand(cmd, new Parameterization[] { p }), null);
+                            handlerService.executeCommand(new ParameterizedCommand(cmd, new Parameterization[] { p }),
+                                    null);
                         } catch (final Exception e) {
                             BonitaStudioLog.error(e);
                         }
@@ -190,7 +194,7 @@ public class ConfigureCoolbarItem extends ContributionItem implements IBonitaCon
 
     @Override
     public void fill(final ToolBar toolbar, final int index, final int iconSize) {
-        final ToolItem item = new ToolItem(toolbar, SWT.DROP_DOWN);
+        item = new ToolItem(toolbar, SWT.DROP_DOWN);
         item.setToolTipText(Messages.configureButtonTooltip);
         item.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, SWTBotConstants.SWTBOT_ID_CONFIGURE_TOOLITEM);
         if (iconSize < 0) {
@@ -226,6 +230,19 @@ public class ConfigureCoolbarItem extends ContributionItem implements IBonitaCon
 
         });
 
+    }
+
+    @Override
+    public void setLabelControl(Label label) {
+        this.label = label;
+    }
+
+    @Override
+    public void setEnabled(boolean enabled) {
+        item.setEnabled(enabled);
+        if (label != null) {
+            label.setEnabled(enabled);
+        }
     }
 
 }

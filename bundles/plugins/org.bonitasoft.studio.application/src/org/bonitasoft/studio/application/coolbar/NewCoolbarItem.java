@@ -32,6 +32,7 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.ToolBar;
@@ -45,6 +46,8 @@ public class NewCoolbarItem extends ContributionItem implements IBonitaContribut
     protected static final String NEW_DIAGRAM_CMD_ID = "org.bonitasoft.studio.diagram.command.newDiagram";
     private ICommandService commandService;
     private IHandlerService handlerService;
+    private Label label;
+    private ToolItem item;
 
     public NewCoolbarItem() {
         commandService = PlatformUI.getWorkbench().getService(ICommandService.class);
@@ -114,7 +117,7 @@ public class NewCoolbarItem extends ContributionItem implements IBonitaContribut
 
     @Override
     public void fill(final ToolBar toolbar, final int index, final int iconSize) {
-        final ToolItem item = new ToolItem(toolbar, SWT.DROP_DOWN);
+        item = new ToolItem(toolbar, SWT.DROP_DOWN);
         item.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, getId());
         item.setToolTipText(Messages.NewButtonTooltip);
         if (iconSize < 0) {
@@ -180,6 +183,19 @@ public class NewCoolbarItem extends ContributionItem implements IBonitaContribut
 
         });
 
+    }
+    
+    @Override
+    public void setLabelControl(Label label) {
+        this.label = label;
+    }
+
+    @Override
+    public void setEnabled(boolean enabled) {
+        item.setEnabled(enabled);
+        if(label != null) {
+            label.setEnabled(enabled);
+        }
     }
 
 }

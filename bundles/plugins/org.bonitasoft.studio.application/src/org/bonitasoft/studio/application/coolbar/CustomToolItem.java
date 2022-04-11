@@ -41,12 +41,7 @@ public class CustomToolItem {
     }
 
     public void setEnabled(boolean enabled) {
-        if (toolItem != null && !toolItem.isDisposed()) {
-            toolItem.setEnabled(enabled);
-        }
-        if (text != null && !text.isDisposed()) {
-            text.setEnabled(enabled);
-        }
+        contributionItem.setEnabled(enabled);
     }
 
     public void update() {
@@ -73,6 +68,7 @@ public class CustomToolItem {
                 text = new Label(container, SWT.CENTER);
                 text.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
                 text.setText(contributionItem.getText());
+                contributionItem.setLabelControl(text);
             }
 
             tb.addMouseTrackListener(new MouseTrackAdapter() {
