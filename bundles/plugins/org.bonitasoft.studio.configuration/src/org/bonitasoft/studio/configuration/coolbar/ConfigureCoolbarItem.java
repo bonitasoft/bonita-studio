@@ -206,7 +206,7 @@ public class ConfigureCoolbarItem extends ContributionItem implements IBonitaCon
             item.setDisabledImage(Pics.getImage(PicsConstants.coolbar_configure_disabled_24));
             item.setHotImage(Pics.getImage(PicsConstants.coolbar_configure_hot_24));
         }
-        item.setEnabled(false);
+        setEnabled(false);
         item.addSelectionListener(new SelectionAdapter() {
 
             @Override
@@ -239,8 +239,10 @@ public class ConfigureCoolbarItem extends ContributionItem implements IBonitaCon
 
     @Override
     public void setEnabled(boolean enabled) {
-        item.setEnabled(enabled);
-        if (label != null) {
+        if(item != null && !item.isDisposed()) {
+            item.setEnabled(enabled);
+        }
+        if(label != null && !label.isDisposed()) {
             label.setEnabled(enabled);
         }
     }
