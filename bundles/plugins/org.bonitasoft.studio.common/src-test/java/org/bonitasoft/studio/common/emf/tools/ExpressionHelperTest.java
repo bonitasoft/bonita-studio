@@ -136,6 +136,7 @@ public class ExpressionHelperTest {
         expression.setName("Toto");
         expression.setContent("Titi2014");
         expression.setType(ExpressionConstants.SCRIPT_TYPE);
+        expression.setInterpreter(ExpressionConstants.GROOVY);
         expression.setReturnType(DocumentValue.class.getName());
         expression.getReferencedElements().add(ProcessFactory.eINSTANCE.createData());
 
@@ -145,6 +146,7 @@ public class ExpressionHelperTest {
         assertThat(expression.getType()).isEqualTo(ExpressionConstants.CONSTANT_TYPE);
         assertThat(expression.getReferencedElements()).isEmpty();
         assertThat(expression.getReturnType()).isEqualTo(String.class.getName());
+        assertThat(expression.getInterpreter()).isNull();
     }
 
 

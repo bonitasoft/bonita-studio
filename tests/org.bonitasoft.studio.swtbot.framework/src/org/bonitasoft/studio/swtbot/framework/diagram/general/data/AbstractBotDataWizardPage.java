@@ -81,6 +81,11 @@ public class AbstractBotDataWizardPage extends AbstractBotWizardPage {
         return this;
     }
     
+    public AbstractBotDataWizardPage typeDefaultValueExpression(String value) {
+        bot.textWithId(SWTBotConstants.SWTBOT_ID_EXPRESSIONVIEWER_TEXT, 0).typeText(value);
+        return this;
+    }
+    
     
     public AbstractBotDataWizardPage setAutoGenerateForm(final boolean pAutoGenerate) {
         final SWTBotCheckBox cb = bot.checkBox("Auto-generate form");
