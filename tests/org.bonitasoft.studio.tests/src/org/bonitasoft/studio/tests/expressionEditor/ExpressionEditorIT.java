@@ -14,28 +14,52 @@
  */
 package org.bonitasoft.studio.tests.expressionEditor;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.bonitasoft.studio.model.expression.assertions.ExpressionAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
+import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
+import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
+import org.bonitasoft.studio.model.process.Data;
+import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.swtbot.framework.SWTBotConnectorTestUtil;
+import org.bonitasoft.studio.swtbot.framework.application.BotApplicationWorkbenchWindow;
+import org.bonitasoft.studio.swtbot.framework.diagram.general.data.AbstractBotDataWizardPage;
 import org.bonitasoft.studio.swtbot.framework.expression.BotExpressionEditorDialog;
 import org.bonitasoft.studio.swtbot.framework.expression.BotScriptExpressionEditor;
+import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(SWTBotJunit4ClassRunner.class)
-public class TestConnectorExpression implements SWTBotConstants {
+public class ExpressionEditorIT implements SWTBotConstants {
 
     private final SWTGefBot bot = new SWTGefBot();
+
+    public SWTGefBotRule rule = new SWTGefBotRule(bot);
+
+    @Before
+    public void cleanup() throws Exception {
+        var currentRepository = RepositoryManager.getInstance().getCurrentRepository();
+        currentRepository.getRepositoryStore(DiagramRepositoryStore.class)
+                .getChildren()
+                .forEach(DiagramFileStore::delete);
+    }
 
     private void createConnectorDefinition(String id) {
         SWTBotConnectorTestUtil.activateConnectorDefinitionShell(bot);
@@ -133,6 +157,43 @@ public class TestConnectorExpression implements SWTBotConstants {
         bot.button(IDialogConstants.CANCEL_LABEL).click();
     }
 
+    @Test
+    public void testExpressionEditorConstantExpressionTyping() throws Exception {
+        var workbenchWindow = new BotApplicationWorkbenchWindow(bot);
+
+        var diagramEditor = workbenchWindow.createNewDiagram();
+        diagramEditor.activeProcessDiagramEditor()
+                .selectElement("Pool");
+        var contractTab = diagramEditor
+                .getDiagramPropertiesPart()
+                .selectExecutionTab()
+                .selectContractTab();
+
+        contractTab.selectInputTab()
+                .add()
+                .setName("myContractInput");
+
+        diagramEditor
+                .getDiagramPropertiesPart()
+                .selectDataTab()
+                .selectPoolDataTab()
+                .addData()
+                .setName("myProcessData")
+                .typeDefaultValueExpression("myContractInput")
+                .finishAfter(300);
+
+        EObject pool = diagramEditor.activeProcessDiagramEditor().getSelectedSemanticElement();
+        assertThat(pool).isInstanceOf(Pool.class);
+
+        var data = ModelHelper.getAllElementOfTypeIn(pool, Data.class);
+        assertThat(data)
+                .hasSize(1)
+                .extracting(Data::getDefaultValue)
+                .allSatisfy(defaultValue -> assertThat(defaultValue)
+                        .hasType(ExpressionConstants.CONSTANT_TYPE)
+                        .hasNoReferencedElements());
+    }
+
     private void editGroovyEditor(int buttonIndex, String inputName, String inputtype, String scriptName,
             String groovyScript) {
         SWTBotShell activeShell = bot.activeShell();
@@ -142,10 +203,6 @@ public class TestConnectorExpression implements SWTBotConstants {
                 .selectScriptTab()
                 .setName(scriptName)
                 .setScriptContent(groovyScript);
-        //        bot.table().select("Script");
-        //        bot.waitUntil(Conditions.widgetIsEnabled(bot.textWithLabel("Name")), 10000);
-        //        bot.textWithLabel("Name").setText(scriptName);
-        //        bot.styledText().setText(groovyScript);
         assertFalse("return type combobox should be disabled", bot.comboBoxWithLabel("Return type").isEnabled());
         assertEquals("return type should be" + inputtype, bot.comboBoxWithLabel("Return type").getText(), inputtype);
         editorDialog.ok();

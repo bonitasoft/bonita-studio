@@ -213,6 +213,7 @@ public interface Expression extends AbstractExpression {
      * @model containment="true"
      * @generated
      */
+	@Deprecated
 	EList<Connector> getConnectors();
 
 	/**
@@ -230,6 +231,7 @@ public interface Expression extends AbstractExpression {
      * @model default="false"
      * @generated
      */
+	@Deprecated
 	Boolean getPropagateVariableChange();
 
 	/**
@@ -240,6 +242,7 @@ public interface Expression extends AbstractExpression {
      * @see #getPropagateVariableChange()
      * @generated
      */
+	@Deprecated
 	void setPropagateVariableChange(Boolean value);
 
 	/**

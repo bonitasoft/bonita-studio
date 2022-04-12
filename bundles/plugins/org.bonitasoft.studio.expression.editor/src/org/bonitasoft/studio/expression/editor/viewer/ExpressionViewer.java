@@ -332,6 +332,7 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
             cc.append(RemoveCommand.create(editingDomain, expr,
                     ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS,
                     expr.getReferencedElements()));
+            cc.append(SetCommand.create(editingDomain, expr, ExpressionPackage.Literals.EXPRESSION__INTERPRETER, null));
             cc.append(RemoveCommand.create(editingDomain, expr, ExpressionPackage.Literals.EXPRESSION__CONNECTORS,
                     expr.getConnectors()));
             return cc;
@@ -660,7 +661,7 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
         targetToModelNameStrategy.setConverter(getNameConverter());
 
         if (textControl instanceof Text) {
-            final ISWTObservableValue textDelayedObservableValue = SWTObservables.observeDelayedValue(500,
+            final ISWTObservableValue textDelayedObservableValue = SWTObservables.observeDelayedValue(200,
                     SWTObservables.observeText(textControl, SWT.Modify));
             expressionBinding = internalDataBindingContext.bindValue(textDelayedObservableValue, nameObservable,
                     targetToModelNameStrategy, updateValueStrategy().create());
@@ -796,6 +797,10 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
                 expressionItemProvider.setPropertyValue(getSelectedExpression(),
                         ExpressionPackage.Literals.EXPRESSION__INTERPRETER.getName(), null);
             }
+            if (ExpressionConstants.CONSTANT_TYPE.equals(newContentType)) {
+                expressionItemProvider.setPropertyValue(getSelectedExpression(),
+                        ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS.getName(), new ArrayList<>());
+            }
         }
     }
 
@@ -861,26 +866,7 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
             return ExpressionConstants.MESSAGE_ID_TYPE;
         }
 
-        final Set<String> cache = new HashSet<>();
-        for (final Expression e : getFilteredExpressions()) {
-            if (e.getName() != null && e.getName().equals(input)) {
-                cache.add(e.getType());
-            }
-        }
-        if (cache.size() > 1) {
-            for (final String type : cache) {
-                if (type.equals(selectedExpression.getType())) {
-                    return type;
-                }
-            }
-            return cache.iterator().next();
-        } else if (cache.size() == 1) {
-            return cache.iterator().next();
-        } else {
-            expressionType = CONSTANT_TYPE;
-        }
-
-        return expressionType;
+        return CONSTANT_TYPE;
     }
 
     protected void internalRefresh() {
