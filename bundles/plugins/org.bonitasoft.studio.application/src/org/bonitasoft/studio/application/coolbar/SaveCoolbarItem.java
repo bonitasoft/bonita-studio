@@ -80,7 +80,7 @@ public class SaveCoolbarItem extends ContributionItem
             item.setHotImage(Pics.getImage(PicsConstants.coolbar_save_hot_24));
             item.setDisabledImage(Pics.getImage(PicsConstants.coolbar_save_disabled_24));
         }
-        item.setEnabled(false);
+        setEnabled(false);
         item.addSelectionListener(new SelectionAdapter() {
 
             @Override
@@ -129,7 +129,6 @@ public class SaveCoolbarItem extends ContributionItem
             }
         };
     }
-
 
     @Override
     public void selectionChanged(final SelectionChangedEvent event) {
@@ -185,14 +184,14 @@ public class SaveCoolbarItem extends ContributionItem
     public void setLabelControl(Label label) {
         this.label = label;
     }
-    
+
     @Override
     public void setEnabled(boolean enabled) {
         if (item != null && !item.isDisposed()) {
             item.getDisplay().asyncExec(() -> {
-                if(item.isEnabled() != enabled) {
+                if (item.isEnabled() != enabled) {
                     item.setEnabled(enabled);
-                    if(label != null && !label.isDisposed()) {
+                    if (label != null && !label.isDisposed()) {
                         label.setEnabled(enabled);
                     }
                 }

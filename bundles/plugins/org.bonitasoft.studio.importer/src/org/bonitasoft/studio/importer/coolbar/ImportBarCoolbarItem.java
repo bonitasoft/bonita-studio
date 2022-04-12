@@ -79,8 +79,10 @@ public class ImportBarCoolbarItem extends ContributionItem implements IBonitaCon
 
     @Override
     public void setEnabled(boolean enabled) {
-        item.setEnabled(enabled);
-        if(label != null) {
+        if(item != null && !item.isDisposed()) {
+            item.setEnabled(enabled);
+        }
+        if(label != null && !label.isDisposed()) {
             label.setEnabled(enabled);
         }
     }
