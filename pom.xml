@@ -10,7 +10,7 @@
     <packaging>pom</packaging>
     <name>Bonita Studio</name>
     <properties>
-        <tychoVersion>2.7.0</tychoVersion>
+        <tychoVersion>2.7.1</tychoVersion>
         <java.version>11</java.version>
         <os-jvm-flags></os-jvm-flags>
         <branding.version>2022.2-SNAPSHOT</branding.version>
