@@ -12,11 +12,7 @@ def bundlesInfo = rootFolder.toPath().resolve('configuration')
                                      .toFile()
 def pluginsFolder = rootFolder.toPath().resolve('plugins').toFile()
 
-def bundles = [
-    // org.apache.httpcomponents.httpclient.win dependencies
-    [id: 'com.sun.jna' , version: '4.5.1.v20190425-1842', location:'plugins/com.sun.jna_4.5.1.v20190425-1842.jar', startLevel: 4],
-    [id: 'com.sun.jna.platform' , version: '4.5.1.v20190425-1842', location:'plugins/com.sun.jna.platform_4.5.1.v20190425-1842.jar', startLevel: 4]
-]  
+def bundles = []  
 
 def platformSpecificFilter = new FilenameFilter() {
     boolean accept(File path, String filename) {
