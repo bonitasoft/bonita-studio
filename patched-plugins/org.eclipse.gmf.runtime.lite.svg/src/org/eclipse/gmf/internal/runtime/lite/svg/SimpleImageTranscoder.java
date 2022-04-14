@@ -16,8 +16,8 @@ import java.awt.Shape;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 
+import org.apache.batik.anim.dom.SVGOMDocument;
 import org.apache.batik.bridge.BridgeContext;
-import org.apache.batik.dom.svg.SVGOMDocument;
 import org.apache.batik.gvt.renderer.ImageRenderer;
 import org.apache.batik.gvt.renderer.StaticRenderer;
 import org.apache.batik.transcoder.SVGAbstractTranscoder;
