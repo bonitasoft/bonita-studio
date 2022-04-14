@@ -534,13 +534,6 @@ along with this program. If not, see &lt;http://www.gnu.org/licenses/&gt;.
          unpack="false"/>
 
    <plugin
-         id="org.apache.batik.util"
-         download-size="0"
-         install-size="0"
-         version="1.6.0.v201011041432"
-         unpack="false"/>
-
-   <plugin
          id="org.bonitasoft.studio.businessobject"
          download-size="0"
          install-size="0"
