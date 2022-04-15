@@ -12,7 +12,7 @@
 
     <properties>
         <javaOPTS>-Xmx1g</javaOPTS>
-        <additionalArgs>-Dbonita.noregister=1 -Declipse.log.level=${tests.log.level}</additionalArgs>
+        <additionalArgs>-Dbonita.noregister=1 -Dbonita.studio.skipReleaseNote -Declipse.log.level=${tests.log.level}</additionalArgs>
         <target.test.dir>${test.workspace.dir}/community/junit/lé test</target.test.dir>
         <testMavenUserSettingsFile>${project.basedir}/tests-settings.xml</testMavenUserSettingsFile>
         <m2eSettingsCustomizationFile>${project.build.directory}/classes/m2e_settings_customization.ini</m2eSettingsCustomizationFile>

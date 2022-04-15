@@ -75,7 +75,7 @@ import org.bonitasoft.studio.tests.exporter.bpmn.BPMNEventSubProcessExportImport
 import org.bonitasoft.studio.tests.exporter.bpmn.BPMNExportTests;
 import org.bonitasoft.studio.tests.exporter.bpmn.BPMNGatewayExportImportTest;
 import org.bonitasoft.studio.tests.exporter.bpmn.BPMNSequenceFlowDefaultFlowExportImportTest;
-import org.bonitasoft.studio.tests.expressionEditor.TestConnectorExpression;
+import org.bonitasoft.studio.tests.expressionEditor.ExpressionEditorIT;
 import org.bonitasoft.studio.tests.expressionEditor.TestPatternExpressionViewer;
 import org.bonitasoft.studio.tests.git.ShareWithGitIT;
 import org.bonitasoft.studio.tests.importer.bos.ImportBOSArchiveWizardIT;
@@ -151,7 +151,7 @@ import org.junit.runners.Suite;
         OpenNameAndVersionForDiagramDialogTest.class,
         TestDuplicate.class,
         TestLifeCycleWidget.class,
-        TestConnectorExpression.class,
+        ExpressionEditorIT.class,
         MultiInstantiationIT.class,
         BarExporterTest.class,
         ExportBosArchiveIT.class,

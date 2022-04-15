@@ -111,6 +111,7 @@ import com.google.common.base.Joiner;
 
 public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IStartup {
 
+    private static final String BONITA_STUDIO_SKIP_RELEASE_NOTE_SYSTEM_PROPERTY = "bonita.studio.skipReleaseNote";
     private static final String AWT_DRAW_STRING_AS_IMAGE = "drawStringAsImage";
 
     private final class PreShutdownStudio implements IRunnableWithProgress {
@@ -723,7 +724,10 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
                 ApplicationPlugin.PLUGIN_ID);
         ApplicationPlugin.getDefault().getPreferenceStore().setDefault(FIRST_STARTUP, true);
         if (isFirstStartup()) {
-            new OpenReleaseNoteHandler().openBrowser();
+            String skipReleaseNote = System.getProperty(BONITA_STUDIO_SKIP_RELEASE_NOTE_SYSTEM_PROPERTY);
+            if(skipReleaseNote == null || !(Boolean.valueOf(skipReleaseNote) || skipReleaseNote.isEmpty())) {
+                new OpenReleaseNoteHandler().openBrowser();
+            }
             PlatformUtil.openIntroIfNoOtherEditorOpen();
         } else {
             PlatformUtil.openDashboardIfNoOtherEditorOpen();
