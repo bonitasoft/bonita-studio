@@ -31,6 +31,7 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.ui.IEditorPart;
@@ -47,6 +48,7 @@ public class SaveCoolbarItem extends ContributionItem
 
     private ToolItem item;
     private DirtyStateTracker dirtyStateTracker;
+    private Label label;
 
     private Command getCommand() {
         final ICommandService service = PlatformUI.getWorkbench().getService(ICommandService.class);
@@ -78,7 +80,7 @@ public class SaveCoolbarItem extends ContributionItem
             item.setHotImage(Pics.getImage(PicsConstants.coolbar_save_hot_24));
             item.setDisabledImage(Pics.getImage(PicsConstants.coolbar_save_disabled_24));
         }
-        item.setEnabled(false);
+        setEnabled(false);
         item.addSelectionListener(new SelectionAdapter() {
 
             @Override
@@ -122,9 +124,7 @@ public class SaveCoolbarItem extends ContributionItem
                         .getActiveEditor();
                 if (activeEditor instanceof ISaveablePart && propID == ISaveablePart.PROP_DIRTY) {
                     update();
-                    if (item != null && !item.isDisposed()) {
-                        item.setEnabled(((ISaveablePart) activeEditor).isDirty());
-                    }
+                    setEnabled(((ISaveablePart) activeEditor).isDirty());
                 }
             }
         };
@@ -132,18 +132,7 @@ public class SaveCoolbarItem extends ContributionItem
 
     @Override
     public void selectionChanged(final SelectionChangedEvent event) {
-        if (item != null && !item.isDisposed()) {
-            item.getDisplay().asyncExec(new Runnable() {
-
-                @Override
-                public void run() {
-                    if (item != null && !item.isDisposed()) {
-                        item.setEnabled(getCommand().isEnabled());
-                    }
-                }
-            });
-
-        }
+        setEnabled(getCommand().isEnabled());
     }
 
     @Override
@@ -189,6 +178,25 @@ public class SaveCoolbarItem extends ContributionItem
     @Override
     public String getText() {
         return Messages.SaveProcessButtonLabel;
+    }
+
+    @Override
+    public void setLabelControl(Label label) {
+        this.label = label;
+    }
+
+    @Override
+    public void setEnabled(boolean enabled) {
+        if (item != null && !item.isDisposed()) {
+            item.getDisplay().asyncExec(() -> {
+                if (item.isEnabled() != enabled) {
+                    item.setEnabled(enabled);
+                    if (label != null && !label.isDisposed()) {
+                        label.setEnabled(enabled);
+                    }
+                }
+            });
+        }
     }
 
 }

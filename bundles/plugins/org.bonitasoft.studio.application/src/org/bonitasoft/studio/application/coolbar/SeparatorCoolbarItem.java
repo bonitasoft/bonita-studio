@@ -17,6 +17,7 @@ package org.bonitasoft.studio.application.coolbar;
 import org.bonitasoft.studio.common.extension.IBonitaContributionItem;
 import org.eclipse.jface.action.ContributionItem;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 
@@ -38,4 +39,13 @@ public class SeparatorCoolbarItem extends ContributionItem implements IBonitaCon
         return null;
     }
 
+    @Override
+    public void setLabelControl(Label label) {
+
+    }
+
+    @Override
+    public void setEnabled(boolean enabled) {
+
+    }
 }

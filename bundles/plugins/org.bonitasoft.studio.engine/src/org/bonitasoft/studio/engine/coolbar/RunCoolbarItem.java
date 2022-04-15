@@ -45,6 +45,7 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.ToolBar;
@@ -58,6 +59,9 @@ import org.eclipse.ui.handlers.IHandlerService;
  * @author Romain Bioteau
  */
 public class RunCoolbarItem extends ContributionItem implements IBonitaContributionItem {
+
+    private Label label;
+    private ToolItem item;
 
     private Command getCommand() {
         final ICommandService service = PlatformUI.getWorkbench().getService(ICommandService.class);
@@ -184,7 +188,7 @@ public class RunCoolbarItem extends ContributionItem implements IBonitaContribut
 
     @Override
     public void fill(final ToolBar toolbar, final int index, final int iconSize) {
-        final ToolItem item = new ToolItem(toolbar, SWT.DROP_DOWN);
+        item = new ToolItem(toolbar, SWT.DROP_DOWN);
         item.setToolTipText(Messages.runButtonTooltip);
         if (iconSize < 0) {
             item.setImage(Pics.getImage(PicsConstants.coolbar_run_32));
@@ -195,7 +199,7 @@ public class RunCoolbarItem extends ContributionItem implements IBonitaContribut
             item.setHotImage(Pics.getImage(PicsConstants.coolbar_run_hot_24));
             item.setDisabledImage(Pics.getImage(PicsConstants.coolbar_run_disabled_24));
         }
-        item.setEnabled(false);
+        setEnabled(false);
         item.addSelectionListener(new SelectionAdapter() {
 
             @Override
@@ -231,6 +235,21 @@ public class RunCoolbarItem extends ContributionItem implements IBonitaContribut
     public boolean isEnabled() {
         final Command cmd = getCommand();
         return cmd.isEnabled() && isSelectionRunnable();
+    }
+    
+    @Override
+    public void setLabelControl(Label label) {
+        this.label = label;
+    }
+
+    @Override
+    public void setEnabled(boolean enabled) {
+        if(item != null && !item.isDisposed()) {
+            item.setEnabled(enabled);
+        }
+        if(label != null && !label.isDisposed()) {
+            label.setEnabled(enabled);
+        }
     }
 
 }

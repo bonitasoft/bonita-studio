@@ -31,6 +31,7 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
@@ -39,6 +40,8 @@ import org.eclipse.ui.PlatformUI;
 public class OpenUIDesignerCoolBarItem extends ContributionItem implements IBonitaContributionItem {
 
     protected static final String HIDE_UIDESIGNER_INFO_DIALOG = "HIDE_UIDESIGNER_INFO_DIALOG";
+    private Label label;
+    private ToolItem item;
 
     /*
      * (non-Javadoc)
@@ -46,7 +49,7 @@ public class OpenUIDesignerCoolBarItem extends ContributionItem implements IBoni
      */
     @Override
     public void fill(final ToolBar toolbar, final int index, final int iconSize) {
-        final ToolItem item = new ToolItem(toolbar, SWT.PUSH);
+        item = new ToolItem(toolbar, SWT.PUSH);
         item.setToolTipText(Messages.openUIDesigner);
         if (iconSize < 0) {
             item.setImage(Pics.getImage(PicsConstants.coolbar_uid_32));
@@ -114,5 +117,20 @@ public class OpenUIDesignerCoolBarItem extends ContributionItem implements IBoni
     @Override
     public String getText() {
         return Messages.uiDesignerLabel;
+    }
+    
+    @Override
+    public void setLabelControl(Label label) {
+        this.label = label;
+    }
+
+    @Override
+    public void setEnabled(boolean enabled) {
+        if(item != null && !item.isDisposed()) {
+            item.setEnabled(enabled);
+        }
+        if(label != null && !label.isDisposed()) {
+            label.setEnabled(enabled);
+        }
     }
 }

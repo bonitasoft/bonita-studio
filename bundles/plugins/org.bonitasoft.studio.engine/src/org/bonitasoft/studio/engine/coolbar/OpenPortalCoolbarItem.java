@@ -25,12 +25,16 @@ import org.eclipse.jface.action.ContributionItem;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 
 public class OpenPortalCoolbarItem extends ContributionItem implements IBonitaContributionItem {
+
+    private Label label;
+    private ToolItem item;
 
     private Command getCommand() {
         final ICommandService service = PlatformUI.getWorkbench().getService(ICommandService.class);
@@ -49,7 +53,7 @@ public class OpenPortalCoolbarItem extends ContributionItem implements IBonitaCo
 
     @Override
     public void fill(final ToolBar toolbar, final int index, final int iconSize) {
-        final ToolItem item = new ToolItem(toolbar, SWT.PUSH);
+        item = new ToolItem(toolbar, SWT.PUSH);
         item.setToolTipText(Messages.OpenUserXPButtonLabel);
         if (iconSize < 0) {
             item.setImage(Pics.getImage(PicsConstants.coolbar_app_directory_32));
@@ -73,4 +77,18 @@ public class OpenPortalCoolbarItem extends ContributionItem implements IBonitaCo
 
     }
 
+    @Override
+    public void setLabelControl(Label label) {
+        this.label = label;
+    }
+
+    @Override
+    public void setEnabled(boolean enabled) {
+        if(item != null && !item.isDisposed()) {
+            item.setEnabled(enabled);
+        }
+        if(label != null && !label.isDisposed()) {
+            label.setEnabled(enabled);
+        }
+    }
 }

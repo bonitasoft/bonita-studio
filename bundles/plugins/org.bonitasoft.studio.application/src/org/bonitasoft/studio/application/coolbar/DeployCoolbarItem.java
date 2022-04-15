@@ -28,6 +28,7 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.ui.PlatformUI;
@@ -37,6 +38,7 @@ public class DeployCoolbarItem extends ContributionItem
         implements IBonitaContributionItem, ISelectionChangedListener {
 
     private ToolItem item;
+    private Label label;
 
     private Command getCommand() {
         final ICommandService service = PlatformUI.getWorkbench().getService(ICommandService.class);
@@ -100,6 +102,21 @@ public class DeployCoolbarItem extends ContributionItem
     @Override
     public String getText() {
         return Messages.DeployButtonLabel;
+    }
+    
+    @Override
+    public void setLabelControl(Label label) {
+        this.label = label;
+    }
+
+    @Override
+    public void setEnabled(boolean enabled) {
+        if(item != null && !item.isDisposed()) {
+            item.setEnabled(enabled);
+        }
+        if(label != null && !label.isDisposed()) {
+            label.setEnabled(enabled);
+        }
     }
 
 }

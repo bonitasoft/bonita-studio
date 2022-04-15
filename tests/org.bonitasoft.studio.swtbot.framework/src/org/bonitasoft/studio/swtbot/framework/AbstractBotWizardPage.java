@@ -37,6 +37,15 @@ public abstract class AbstractBotWizardPage extends BotBase {
         bot.waitUntil(Conditions.widgetIsEnabled(bot.button(IDialogConstants.FINISH_LABEL)), 5000);
         bot.button(IDialogConstants.FINISH_LABEL).click();
     }
+    
+    /**
+     * Click on finish after a given delay in ms.
+     */
+    public void finishAfter(long delay) {
+        bot.sleep(delay);
+        bot.waitUntil(Conditions.widgetIsEnabled(bot.button(IDialogConstants.FINISH_LABEL)), 5000);
+        bot.button(IDialogConstants.FINISH_LABEL).click();
+    }
 
     /**
      * Click on next.

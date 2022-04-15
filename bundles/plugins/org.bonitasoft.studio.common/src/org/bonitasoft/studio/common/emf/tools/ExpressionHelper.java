@@ -189,6 +189,7 @@ public class ExpressionHelper {
         expr.setName("");
         expr.setContent("");
         expr.setType(ExpressionConstants.CONSTANT_TYPE);
+        expr.setInterpreter(null);
         expr.getReferencedElements().clear();
         expr.getConnectors().clear();
         if (!expr.isReturnTypeFixed() || expr.getReturnType() == null) {
