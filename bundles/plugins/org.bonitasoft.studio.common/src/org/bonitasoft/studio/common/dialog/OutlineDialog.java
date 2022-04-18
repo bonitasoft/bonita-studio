@@ -64,19 +64,16 @@ public class OutlineDialog extends MessageDialog{
     private final ComposedAdapterFactory adapterFactory;
     private ListViewer objectListViewer;
     private TreeViewer outline;
-    private final Image warningImg;
 
     public OutlineDialog(	final Shell parentShell, 		final String dialogTitle,
             final Image dialogTitleImage, final String dialogMessage,
             final int dialogImageType,	final String[] dialogButtonLabels,
             final int defaultIndex,		final List<Object> elementToDisplay) {
-
         super(parentShell, dialogTitle, dialogTitleImage, dialogMessage,
                 dialogImageType, dialogButtonLabels, defaultIndex);
         message = dialogMessage;
         this.elementToDisplay = elementToDisplay;
         adapterFactory = new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
-        warningImg=dialogTitleImage;
         updateListOfElementToDisplay();
 
     }
@@ -201,10 +198,16 @@ public class OutlineDialog extends MessageDialog{
         final Composite messageComposite = new Composite(mainComposite,SWT.NONE);
         messageComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
         messageComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-        final Label imageLabel = new Label(messageComposite,SWT.NULL);
-        warningImg.setBackground(imageLabel.getBackground());
-        imageLabel.setImage(warningImg);
-        GridDataFactory.fillDefaults().align(SWT.CENTER, SWT.BEGINNING).applyTo(imageLabel);
+        Image image = getImage();
+        if(image == null) {
+            image = getWarningImage();
+        }
+        if(image != null) {
+            var imageLabel = new Label(messageComposite, SWT.NONE);
+            GridDataFactory.fillDefaults().align(SWT.CENTER, SWT.BEGINNING).applyTo(imageLabel);
+            image.setBackground(imageLabel.getBackground());
+            imageLabel.setImage(image);
+        }
         createMessageLabel(messageComposite);
     }
 

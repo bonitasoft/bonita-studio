@@ -45,8 +45,8 @@ public class RemoveDataHandler {
     public void execute(final IStructuredSelection structuredSelection, final EObject container, final EStructuralFeature dataFeature) {
         final String[] buttonList = { IDialogConstants.OK_LABEL, IDialogConstants.CANCEL_LABEL };
         final OutlineDialog dialog = new OutlineDialog(Display.getDefault().getActiveShell(),
-                org.bonitasoft.studio.common.Messages.removalConfirmationDialogTitle, Display.getCurrent().getSystemImage(
-                        SWT.ICON_WARNING), createMessage(structuredSelection), MessageDialog.CONFIRM, buttonList, 1, structuredSelection.toList());
+                org.bonitasoft.studio.common.Messages.removalConfirmationDialogTitle, 
+                Display.getDefault().getSystemImage(SWT.ICON_WARNING), createMessage(structuredSelection), MessageDialog.CONFIRM, buttonList, 1, structuredSelection.toList());
         if (dialog.open() == Dialog.OK) {
             final IProgressService service = PlatformUI.getWorkbench().getProgressService();
             final RefactorDataOperation op = new RefactorDataOperation(RefactoringOperationType.REMOVE);
