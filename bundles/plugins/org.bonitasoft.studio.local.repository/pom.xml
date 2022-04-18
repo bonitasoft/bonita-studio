@@ -16,6 +16,19 @@
     <properties>
         <repository.dir>${project.basedir}/repository</repository.dir>
         <localRepository.compatibleVersions.skip>${localRepository.skip}</localRepository.compatibleVersions.skip>
+        <resolveDependencyPlugin>
+            org.apache.maven.plugins:maven-dependency-plugin:${maven-dependency-plugin.version}:resolve
+            -Dlocal.remote.repo.url=file:///${settings.localRepository}
+            -Dmaven.repo.local=${repository.dir}
+            -Dbonita-project-maven-plugin.version=${bonita-project-report-model.version}
+        </resolveDependencyPlugin>
+        <resolvePluginDependencyPlugin>
+            org.apache.maven.plugins:maven-dependency-plugin:${maven-dependency-plugin.version}:resolve-plugins
+            -Dlocal.remote.repo.url=file:///${settings.localRepository}
+            -Dmaven.repo.local=${repository.dir}
+            -Dbonita-project-maven-plugin.version=${bonita-project-report-model.version}
+        </resolvePluginDependencyPlugin>
+        <mavenSettingsArg></mavenSettingsArg>
     </properties>
 
     <build>
@@ -74,13 +87,7 @@
                             <executable>${mavenWrapper}</executable>
                             <useMavenLogger>true</useMavenLogger>
                             <skip>${localRepository.compatibleVersions.skip}</skip>
-                            <arguments>
-                                <argument>org.apache.maven.plugins:maven-dependency-plugin:${maven-dependency-plugin.version}:resolve</argument>
-                                <argument>-Dlocal.remote.repo.url=file:///${settings.localRepository}</argument>
-                                <argument>-Dmaven.repo.local=${repository.dir}</argument>
-                                <argument>-Dbonita.runtime.version=7.14.0.beta-01</argument>
-                                <argument>-Dbonita-project-maven-plugin.version=${bonita-project-report-model.version}</argument>
-                            </arguments>
+                            <commandlineArgs>${mavenSettingsArg} ${resolveDependencyPlugin} -Dbonita.runtime.version=7.14.0.beta-01</commandlineArgs>
                         </configuration>
                     </execution>
                     <execution>
@@ -94,13 +101,7 @@
                             <executable>${mavenWrapper}</executable>
                             <useMavenLogger>true</useMavenLogger>
                             <skip>${localRepository.skip}</skip>
-                            <arguments>
-                                <argument>org.apache.maven.plugins:maven-dependency-plugin:${maven-dependency-plugin.version}:resolve</argument>
-                                <argument>-Dlocal.remote.repo.url=file:///${settings.localRepository}</argument>
-                                <argument>-Dmaven.repo.local=${repository.dir}</argument>
-                                <argument>-Dbonita.runtime.version=${engine.version}</argument>
-                                <argument>-Dbonita-project-maven-plugin.version=${bonita-project-report-model.version}</argument>
-                            </arguments>
+                            <commandlineArgs>${mavenSettingsArg} ${resolveDependencyPlugin} -Dbonita.runtime.version=${engine.version}</commandlineArgs>
                         </configuration>
                     </execution>
                     <execution>
@@ -114,13 +115,7 @@
                             <executable>${mavenWrapper}</executable>
                             <useMavenLogger>true</useMavenLogger>
                             <skip>${localRepository.skip}</skip>
-                            <arguments>
-                                <argument>org.apache.maven.plugins:maven-dependency-plugin:${maven-dependency-plugin.version}:resolve-plugins</argument>
-                                <argument>-Dlocal.remote.repo.url=file:///${settings.localRepository}</argument>
-                                <argument>-Dmaven.repo.local=${repository.dir}</argument>
-                                <argument>-Dbonita.runtime.version=${engine.version}</argument>
-                                <argument>-Dbonita-project-maven-plugin.version=${bonita-project-report-model.version}</argument>
-                            </arguments>
+                            <commandlineArgs>${mavenSettingsArg} ${resolvePluginDependencyPlugin} -Dbonita.runtime.version=${engine.version}</commandlineArgs>
                         </configuration>
                     </execution>
                 </executions>
@@ -130,9 +125,32 @@
 
     <profiles>
         <profile>
+            <id>maven-settings-arg</id>
+            <activation>
+                <property>
+                    <name>mavenSettingsFile</name>
+                </property>
+            </activation>
+            <properties>
+                <mavenSettingsArg>-s ${mavenSettingsFile}</mavenSettingsArg>
+            </properties>
+        </profile>
+        <profile>
             <id>offline-local-repository</id>
             <properties>
-                <localRepository.compatibleVersions.skip>true</localRepository.compatibleVersions.skip>  
+                 <localRepository.compatibleVersions.skip>true</localRepository.compatibleVersions.skip>
+                 <resolveDependencyPlugin>
+                    org.apache.maven.plugins:maven-dependency-plugin:${maven-dependency-plugin.version}:resolve
+                    -Dmaven.repo.local=${settings.localRepository}
+                    -Dlocal.remote.repo.url=file:///${settings.localRepository}
+                    -Dbonita-project-maven-plugin.version=${bonita-project-report-model.version}
+                </resolveDependencyPlugin>
+                <resolvePluginDependencyPlugin>
+                    org.apache.maven.plugins:maven-dependency-plugin:${maven-dependency-plugin.version}:resolve-plugins
+                    -Dlocal.remote.repo.url=file:///${settings.localRepository}
+                    -Dlocal.remote.repo.url=file:///${settings.localRepository}
+                    -Dbonita-project-maven-plugin.version=${bonita-project-report-model.version}
+                </resolvePluginDependencyPlugin>
             </properties>
             <build>
                 <plugins>
@@ -151,13 +169,7 @@
                                 <executable>${mavenWrapper}</executable>
                                 <useMavenLogger>true</useMavenLogger>
                                 <skip>${localRepository.skip}</skip>
-                                <arguments>
-                                    <argument>org.apache.maven.plugins:maven-dependency-plugin:${maven-dependency-plugin.version}:resolve</argument>
-                                    <argument>-Dmaven.repo.local=${settings.localRepository}</argument>
-                                    <argument>-Dlocal.remote.repo.url=file:///${settings.localRepository}</argument>
-                                    <argument>-Dbonita.runtime.version=${engine.version}</argument>
-                                    <argument>-Dbonita-project-maven-plugin.version=${bonita-project-report-model.version}</argument>
-                                </arguments>
+                                <commandlineArgs>${mavenSettingsArg} ${resolveDependencyPlugin} -Dbonita.runtime.version=${engine.version}</commandlineArgs>
                             </configuration>
                         </execution>
                         <execution>
@@ -171,13 +183,7 @@
                                 <executable>${mavenWrapper}</executable>
                                 <useMavenLogger>true</useMavenLogger>
                                 <skip>${localRepository.skip}</skip>
-                                <arguments>
-                                    <argument>org.apache.maven.plugins:maven-dependency-plugin:${maven-dependency-plugin.version}:resolve-plugins</argument>
-                                    <argument>-Dmaven.repo.local=${settings.localRepository}</argument>
-                                    <argument>-Dlocal.remote.repo.url=file:///${settings.localRepository}</argument>
-                                    <argument>-Dbonita.runtime.version=${engine.version}</argument>
-                                    <argument>-Dbonita-project-maven-plugin.version=${bonita-project-report-model.version}</argument>
-                                </arguments>
+                                <commandlineArgs>${mavenSettingsArg} ${resolveDependencyPlugin} -Dbonita.runtime.version=${engine.version}</commandlineArgs>
                             </configuration>
                         </execution>
                      </executions>
