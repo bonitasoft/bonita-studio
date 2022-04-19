@@ -31,6 +31,7 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
@@ -187,9 +188,8 @@ public class SaveCoolbarItem extends ContributionItem
 
     @Override
     public void setEnabled(boolean enabled) {
-        if (item != null && !item.isDisposed()) {
-            item.getDisplay().asyncExec(() -> {
-                if (item.isEnabled() != enabled) {
+            Display.getDefault().asyncExec(() -> {
+                if (item != null && !item.isDisposed() && item.isEnabled() != enabled) {
                     item.setEnabled(enabled);
                     if (label != null && !label.isDisposed()) {
                         label.setEnabled(enabled);
