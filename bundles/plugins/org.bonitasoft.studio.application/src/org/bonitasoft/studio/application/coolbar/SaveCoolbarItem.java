@@ -189,12 +189,10 @@ public class SaveCoolbarItem extends ContributionItem
     @Override
     public void setEnabled(boolean enabled) {
         Display.getDefault().asyncExec(() -> {
-            if (item != null && !item.isDisposed()) {
-                if (item.isEnabled() != enabled) {
-                    item.setEnabled(enabled);
-                    if (label != null && !label.isDisposed()) {
-                        label.setEnabled(enabled);
-                    }
+            if (item != null && !item.isDisposed() && item.isEnabled() != enabled) {
+                item.setEnabled(enabled);
+                if (label != null && !label.isDisposed()) {
+                    label.setEnabled(enabled);
                 }
             }
         });
