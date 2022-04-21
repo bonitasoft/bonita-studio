@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin>
+
+   <extension-point id="validator" name="org.bonitasoft.studio.importer.bos.validator" schema="schema/org.bonitasoft.studio.importer.bos.validator.exsd"/>
+
+   <extension
+         point="org.bonitasoft.studio.importer.bos.validator">
+      <bosImporterValidator
+            class="org.bonitasoft.studio.importer.bos.validator.DiagramValidator">
+      </bosImporterValidator>
+       <bosImporterValidator
+            class="org.bonitasoft.studio.importer.bos.validator.BDMBosImporterStatusProvider">
+      </bosImporterValidator>
+   </extension>
+   <extension
+         id="org.bonitasoft.studio.importer.bos.fragment"
+         point="org.eclipse.e4.workbench.model">
+      <fragment
+            uri="fragment.e4xmi">
+      </fragment>
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            allPopups="false"
+            locationURI="popup:org.bonitasoft.studio.application.project.explorer?after=group.import">
+         <dynamic
+               class="org.bonitasoft.studio.importer.bos.menu.ImportContributionMenu"
+               id="org.bonitasoft.studio.importer.bos.popup.menu">
+            <visibleWhen
+                  checkEnabled="false">
+               <with
+                     variable="activeMenuSelection">
+                  <and>
+                     <count
+                           value="1">
+                     </count>
+                     <iterate>
+                        <instanceof
+                              value="org.eclipse.core.resources.IProject">
+                        </instanceof>
+                        <test
+                              property="org.bonitasoft.studio.application.isBonitaProject">
+                        </test>
+                     </iterate>
+                  </and>
+               </with>
+            </visibleWhen>
+         </dynamic>
+      </menuContribution>
+   </extension>
+
+</plugin>

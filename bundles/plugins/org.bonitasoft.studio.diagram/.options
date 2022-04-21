@@ -1,0 +1,7 @@
+# Tracing options for the org.bonitasoft.studio.diagram plug-in
+
+# Common issues
+org.bonitasoft.studio.diagram/debug=false
+
+# Visual IDs
+org.bonitasoft.studio.diagram/debug/visualID=false
