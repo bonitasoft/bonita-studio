@@ -76,12 +76,11 @@ along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
       <plugin id="org.eclipse.equinox.event" autoStart="true" startLevel="2" />
       <plugin id="org.eclipse.equinox.simpleconfigurator" autoStart="true" startLevel="1" />
       <property name="file.encoding" value="UTF-8" />
-      <property name="engine.version" value="${engine.version}" />
+      <property name="bonita-runtime.version" value="${bonita-runtime.version}" />
       <property name="eclipse.log.level" value="INFO" />
       <property name="branding.version" value="${branding.version}" />
       <property name="osgi.nls.warnings" value="ignore" />
       <property name="product.version" value="${project.version}" />
-      <property name="portal.version" value="${bundle.version}" />
       <property name="osgi.instance.area" value="@noDefault" />
       <property name="eclipse.buildId" value="${unqualifiedVersion}.${buildQualifier}" />
    </configurations>
