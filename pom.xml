@@ -238,6 +238,11 @@
 
 	<dependencyManagement>
 		<dependencies>
+            <dependency>
+                <groupId>org.bonitasoft.engine</groupId>
+                <artifactId>bonita-client</artifactId>
+                <version>${bonita-runtime.version}</version>
+            </dependency>
 			<dependency>
 				<groupId>org.bonitasoft.engine.data</groupId>
 				<artifactId>bonita-business-data-generator</artifactId>
