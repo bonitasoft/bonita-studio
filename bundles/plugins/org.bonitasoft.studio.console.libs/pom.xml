@@ -25,7 +25,7 @@
 		<dependency>
 		    <groupId>org.bonitasoft.engine</groupId>
 		    <artifactId>bonita-client</artifactId>
-		    <version>${engine.version}</version>
+		    <version>${bonita-runtime.version}</version>
 		    <exclusions>
 		        <exclusion>
 		           <groupId>javax.xml.bind</groupId>
@@ -36,7 +36,7 @@
 		<dependency>
 		    <groupId>org.bonitasoft.engine</groupId>
 		    <artifactId>bonita-common</artifactId>
-	            <version>${engine.version}</version>
+	            <version>${bonita-runtime.version}</version>
 		    <exclusions>
 		        <exclusion>
 		            <groupId>javax.xml.bind</groupId>
@@ -87,7 +87,7 @@
 								<artifactItem>
 									<groupId>org.bonitasoft.distrib</groupId>
 									<artifactId>bundle-tomcat</artifactId>
-									<version>${bundle.version}</version>
+									<version>${bonita-runtime.version}</version>
 									<type>zip</type>
 								</artifactItem>
 							</artifactItems>
@@ -127,14 +127,14 @@
 								<artifactItem>
 									<groupId>org.bonitasoft.engine</groupId>
 									<artifactId>bonita-common</artifactId>
-									<version>${engine.version}</version>
+									<version>${bonita-runtime.version}</version>
 									<classifier>javadoc</classifier>
 									<type>jar</type>
 								</artifactItem>
 								<artifactItem>
 									<groupId>org.bonitasoft.engine</groupId>
 									<artifactId>bonita-client</artifactId>
-									<version>${engine.version}</version>
+									<version>${bonita-runtime.version}</version>
 									<classifier>javadoc</classifier>
 									<type>jar</type>
 								</artifactItem>

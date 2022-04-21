@@ -76,13 +76,12 @@ along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
       <plugin id="org.eclipse.update.configurator" autoStart="true" startLevel="4" />
       <property name="product.version" value="${project.version}" />
       <property name="eclipse.log.level" value="INFO" />
-      <property name="engine.version" value="${engine.version}" />
+      <property name="bonita-runtime.version" value="${bonita-runtime.version}" />
       <property name="file.encoding" value="UTF-8" />
       <property name="eclipse.buildId" value="${unqualifiedVersion}.${buildQualifier}" />
       <property name="branding.version" value="${branding.version}" />
       <property name="osgi.nls.warnings" value="ignore" />
       <property name="osgi.instance.area" value="@noDefault" />
-      <property name="portal.version" value="${bundle.version}" />
    </configurations>
 
    <preferencesInfo>

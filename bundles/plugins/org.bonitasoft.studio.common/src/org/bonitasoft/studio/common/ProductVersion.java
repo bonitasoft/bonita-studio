@@ -14,6 +14,11 @@
  */
 package org.bonitasoft.studio.common;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.UncheckedIOException;
+import java.util.Properties;
+
 import org.osgi.framework.Bundle;
 import org.osgi.framework.FrameworkUtil;
 import org.osgi.framework.Version;
@@ -22,6 +27,16 @@ import org.osgi.framework.Version;
  * @author Romain Bioteau
  */
 public class ProductVersion {
+    
+    public static final Properties BUILD_PROPERTIES;
+    static {
+        BUILD_PROPERTIES = new Properties();
+        try(InputStream is = ProductVersion.class.getResourceAsStream("/build.properties")){
+            BUILD_PROPERTIES.load(is);
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
+    }
 
     //OEM Variable to be use for redirect urls
     public static final String REDIRECT_URL_PRODUCT_ID = "bos";
@@ -29,10 +44,10 @@ public class ProductVersion {
     public static final String CURRENT_VERSION = manifestVersion(true);
     public static final Version VERSION_7_8_0 = new Version("7.8.0");
 
-    public static final String CURRENT_YEAR = "2021";
+    public static final String CURRENT_YEAR = BUILD_PROPERTIES.getProperty("build.year");
 
     public static final String BUILD_ID = trimDot(System.getProperty("eclipse.buildId", null));
-    public static final String BRANDING_VERSION_RAW = System.getProperty("branding.version", null);
+    public static final String BRANDING_VERSION_RAW = BUILD_PROPERTIES.getProperty("branding.version", null);
     public static final String BRANDING_VERSION = BRANDING_VERSION_RAW != null
             ? BRANDING_VERSION_RAW.replaceAll("-.*", "")
             : null;
@@ -49,10 +64,7 @@ public class ProductVersion {
     private static String manifestVersion(boolean stripQualifier) {
         Bundle bundle = FrameworkUtil.getBundle(ProductVersion.class);
         if (bundle == null) {
-            String implementationVersion = ProductVersion.class.getPackage().getImplementationVersion();
-            if (implementationVersion == null) {
-                return "7.6.0";//fake version used in unit test
-            }
+            String implementationVersion = BUILD_PROPERTIES.getProperty("studio.version");
             return stripQualifier ? stripSnaphot(implementationVersion) : implementationVersion;
         }
         Version version = bundle.getVersion();
