@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
+    <classpathentry kind="src" path="filtered-resources"/>
 	<classpathentry kind="src" path="src-test/java"/>
 	<classpathentry kind="src" path="src-test/resources"/>
 	<classpathentry kind="lib" path="lib/imgscalr-lib-3.2.jar"/>
