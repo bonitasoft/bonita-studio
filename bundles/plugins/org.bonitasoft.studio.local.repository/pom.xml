@@ -97,7 +97,7 @@
                                 <argument>org.apache.maven.plugins:maven-dependency-plugin:${maven-dependency-plugin.version}:resolve</argument>
                                 <argument>-Dlocal.remote.repo.url=file:///${settings.localRepository}</argument>
                                 <argument>-Dmaven.repo.local=${repository.dir}</argument>
-                                <argument>-Dbonita.runtime.version=${engine.version}</argument>
+                                <argument>-Dbonita.runtime.version=${bonita-runtime.version}</argument>
                                 <argument>-Dbonita-project-maven-plugin.version=${bonita-project-report-model.version}</argument>
                             </arguments>
                         </configuration>
@@ -117,7 +117,7 @@
                                 <argument>org.apache.maven.plugins:maven-dependency-plugin:${maven-dependency-plugin.version}:resolve-plugins</argument>
                                 <argument>-Dlocal.remote.repo.url=file:///${settings.localRepository}</argument>
                                 <argument>-Dmaven.repo.local=${repository.dir}</argument>
-                                <argument>-Dbonita.runtime.version=${engine.version}</argument>
+                                <argument>-Dbonita.runtime.version=${bonita-runtime.version}</argument>
                                 <argument>-Dbonita-project-maven-plugin.version=${bonita-project-report-model.version}</argument>
                             </arguments>
                         </configuration>
@@ -154,7 +154,7 @@
                                     <argument>org.apache.maven.plugins:maven-dependency-plugin:${maven-dependency-plugin.version}:resolve</argument>
                                     <argument>-Dmaven.repo.local=${settings.localRepository}</argument>
                                     <argument>-Dlocal.remote.repo.url=file:///${settings.localRepository}</argument>
-                                    <argument>-Dbonita.runtime.version=${engine.version}</argument>
+                                    <argument>-Dbonita.runtime.version=${bonita-runtime.version}</argument>
                                     <argument>-Dbonita-project-maven-plugin.version=${bonita-project-report-model.version}</argument>
                                 </arguments>
                             </configuration>
@@ -174,7 +174,7 @@
                                     <argument>org.apache.maven.plugins:maven-dependency-plugin:${maven-dependency-plugin.version}:resolve-plugins</argument>
                                     <argument>-Dmaven.repo.local=${settings.localRepository}</argument>
                                     <argument>-Dlocal.remote.repo.url=file:///${settings.localRepository}</argument>
-                                    <argument>-Dbonita.runtime.version=${engine.version}</argument>
+                                    <argument>-Dbonita.runtime.version=${bonita-runtime.version}</argument>
                                     <argument>-Dbonita-project-maven-plugin.version=${bonita-project-report-model.version}</argument>
                                 </arguments>
                             </configuration>
