@@ -17,7 +17,7 @@
 		<dependency>
 			<groupId>org.bonitasoft.engine.data</groupId>
 			<artifactId>bonita-business-data-generator</artifactId>
-			<version>${engine.version}</version>
+			<version>${bonita-runtime.version}</version>
 		</dependency>
 	</dependencies>
 
