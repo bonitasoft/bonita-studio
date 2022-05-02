@@ -261,5 +261,10 @@ public class TestGroovyScriptDialog extends Dialog {
         }
         return false;
     }
+    
+    @Override
+    protected boolean isResizable() {
+        return true;
+    }
 
 }
