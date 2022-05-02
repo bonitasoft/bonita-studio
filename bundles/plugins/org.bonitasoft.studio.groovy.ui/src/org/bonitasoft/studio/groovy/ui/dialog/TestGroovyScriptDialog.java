@@ -120,10 +120,10 @@ public class TestGroovyScriptDialog extends Dialog {
         dbc = new DataBindingContext();
 
         final Composite mainComposite = (Composite) super.createDialogArea(parent);
-        mainComposite.setLayoutData(GridDataFactory.fillDefaults().hint(400, SWT.DEFAULT).create());
+        mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(400, SWT.DEFAULT).create());
         mainComposite.setLayout(GridLayoutFactory.fillDefaults().extendedMargins(15, 15, 10, 0).spacing(0, 15).create());
         final Label descriptionLabel = new Label(mainComposite, SWT.WRAP);
-        descriptionLabel.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+        descriptionLabel.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         descriptionLabel.setText(Messages.testGroovyScriptDialogDescription);
         final Map<String, Serializable> procVariables = getProcessVariables(variables);
         final Map<String, Serializable> unknownVariables = getUnknownVariables(variables);
@@ -152,7 +152,7 @@ public class TestGroovyScriptDialog extends Dialog {
         final Group group = new Group(parent, SWT.NONE);
         group.setText(groupTitle);
         group.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(10, 10).create());
-        group.setLayoutData(GridDataFactory.fillDefaults().span(2, 1).grab(true, false).create());
+        group.setLayoutData(GridDataFactory.fillDefaults().span(2, 1).grab(true, true).create());
 
         final Iterator<Entry<String, Serializable>> it = groupVariables.entrySet().iterator();
         while (it.hasNext()) {
