@@ -65,7 +65,7 @@
         	<unit id="org.eclipse.nebula.widgets.richtext.feature.feature.group" version="0.0.0"/>
         </location>
        <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-            <unit id="de.jcup.asciidoctoreditor.feature.group" version="2.4.1"/>
+            <unit id="de.jcup.asciidoctoreditor.feature.group" version="2.5.0"/>
             <repository location="https://de-jcup.github.io/update-site-eclipse-asciidoctor-editor/update-site/"/>
         </location>
         <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
