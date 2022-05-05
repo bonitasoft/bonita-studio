@@ -72,21 +72,28 @@ public class CreateBonitaProjectOperation implements IWorkspaceRunnable {
         project.create(AbstractRepository.NULL_PROGRESS_MONITOR);
         project.open(AbstractRepository.NULL_PROGRESS_MONITOR);
 
-        project.setDescription(
-                new ProjectDescriptionBuilder()
-                        .withProjectName(project.getName())
-                        .withComment(ProductVersion.CURRENT_VERSION)
-                        .havingNatures(natures)
-                        .havingBuilders(builders)
-                        .build(),
-                AbstractRepository.NULL_PROGRESS_MONITOR);
-
         if (migrationEnabled) {
             report = new BonitaProjectMigrator(project).run(monitor);
+            project.setDescription(
+                    new ProjectDescriptionBuilder()
+                            .withProjectName(project.getName())
+                            .withComment(ProductVersion.CURRENT_VERSION)
+                            .havingNatures(natures)
+                            .havingBuilders(builders)
+                            .build(),
+                    AbstractRepository.NULL_PROGRESS_MONITOR);
             ((ProjectConfigurationManager) MavenPlugin.getProjectConfigurationManager())
                     .updateProjectConfiguration(new MavenUpdateRequest(project, false, false), true, false, true,
                             monitor);
         } else {
+            project.setDescription(
+                    new ProjectDescriptionBuilder()
+                            .withProjectName(project.getName())
+                            .withComment(ProductVersion.CURRENT_VERSION)
+                            .havingNatures(natures)
+                            .havingBuilders(builders)
+                            .build(),
+                    AbstractRepository.NULL_PROGRESS_MONITOR);
             MavenProjectModelBuilder mavenProjectBuilder = newProjectBuilder(metadata);
             createDefaultPomFile(project, mavenProjectBuilder);
         }
