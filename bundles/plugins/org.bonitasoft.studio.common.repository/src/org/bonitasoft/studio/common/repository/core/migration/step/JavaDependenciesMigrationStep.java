@@ -178,6 +178,9 @@ public class JavaDependenciesMigrationStep implements MigrationStep {
     private Set<String> definitionUsageAnalysis(IProject project, IProgressMonitor monitor)
             throws CoreException, InvocationTargetException, InterruptedException {
         IFolder diagrams = project.getFolder("diagrams");
+        if(!diagrams.exists()) {
+            return Set.of();
+        }
         List<InputStreamSupplier> files = Stream.of(diagrams.members())
                 .filter(IFile.class::isInstance)
                 .map(IFile.class::cast)
