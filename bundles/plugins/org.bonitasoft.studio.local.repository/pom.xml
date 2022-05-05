@@ -87,7 +87,7 @@
                             <executable>${mavenWrapper}</executable>
                             <useMavenLogger>true</useMavenLogger>
                             <skip>${localRepository.compatibleVersions.skip}</skip>
-                            <commandlineArgs>${mavenSettingsArg} ${resolveDependencyPlugin} -Dbonita.runtime.version=7.14.0.beta-01</commandlineArgs>
+                            <commandlineArgs>${mavenSettingsArg} -ntp ${resolveDependencyPlugin} -Dbonita.runtime.version=7.14.0.beta-01</commandlineArgs>
                         </configuration>
                     </execution>
                     <execution>
@@ -101,7 +101,7 @@
                             <executable>${mavenWrapper}</executable>
                             <useMavenLogger>true</useMavenLogger>
                             <skip>${localRepository.skip}</skip>
-                            <commandlineArgs>${mavenSettingsArg} ${resolveDependencyPlugin} -Dbonita.runtime.version=${bonita-runtime.version}</commandlineArgs>
+                            <commandlineArgs>${mavenSettingsArg} -ntp ${resolveDependencyPlugin} -Dbonita.runtime.version=${bonita-runtime.version}</commandlineArgs>
                         </configuration>
                     </execution>
                     <execution>
@@ -115,7 +115,7 @@
                             <executable>${mavenWrapper}</executable>
                             <useMavenLogger>true</useMavenLogger>
                             <skip>${localRepository.skip}</skip>
-                            <commandlineArgs>${mavenSettingsArg} ${resolvePluginDependencyPlugin} -Dbonita.runtime.version=${bonita-runtime.version}</commandlineArgs>
+                            <commandlineArgs>${mavenSettingsArg} -ntp ${resolvePluginDependencyPlugin} -Dbonita.runtime.version=${bonita-runtime.version}</commandlineArgs>
                         </configuration>
                     </execution>
                 </executions>
@@ -169,7 +169,7 @@
                                 <executable>${mavenWrapper}</executable>
                                 <useMavenLogger>true</useMavenLogger>
                                 <skip>${localRepository.skip}</skip>
-                                <commandlineArgs>${mavenSettingsArg} ${resolveDependencyPlugin} -Dbonita.runtime.version=${bonita-runtime.version}</commandlineArgs>
+                                <commandlineArgs>${mavenSettingsArg} -ntp ${resolveDependencyPlugin} -Dbonita.runtime.version=${bonita-runtime.version}</commandlineArgs>
                             </configuration>
                         </execution>
                         <execution>
@@ -183,7 +183,7 @@
                                 <executable>${mavenWrapper}</executable>
                                 <useMavenLogger>true</useMavenLogger>
                                 <skip>${localRepository.skip}</skip>
-                                <commandlineArgs>${mavenSettingsArg} ${resolveDependencyPlugin} -Dbonita.runtime.version=${bonita-runtime.version}</commandlineArgs>
+                                <commandlineArgs>${mavenSettingsArg} -ntp ${resolveDependencyPlugin} -Dbonita.runtime.version=${bonita-runtime.version}</commandlineArgs>
                             </configuration>
                         </execution>
                      </executions>

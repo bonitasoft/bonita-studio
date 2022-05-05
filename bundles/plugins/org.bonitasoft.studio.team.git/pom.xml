@@ -7,7 +7,7 @@
     <artifactId>plugins</artifactId>
           <version>7.15.0-SNAPSHOT</version>
   </parent>
-  <groupId>org.bonitasoft.studio.sp.bundles.plugins</groupId>
+  <groupId>org.bonitasoft.studio.bundles.plugins</groupId>
   <artifactId>org.bonitasoft.studio.team.git</artifactId>
   <packaging>eclipse-plugin</packaging>
 </project>

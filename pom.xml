@@ -30,6 +30,7 @@
         <maven-dependency-plugin.version>3.1.2</maven-dependency-plugin.version>
         <org.eclipse.swt.version>3.118.0</org.eclipse.swt.version>
         <maven3-model-jdom-support.version>1.6</maven3-model-jdom-support.version>
+        <jacocoVersion>0.8.8</jacocoVersion>
     </properties>
     <modules>
         <module>patched-plugins</module>
@@ -195,6 +196,11 @@
                         </dependency>
                     </dependencies>
                 </plugin>
+                <plugin>
+                    <groupId>org.jacoco</groupId>
+                    <artifactId>jacoco-maven-plugin</artifactId>
+                    <version>${jacocoVersion}</version>
+                </plugin>
             </plugins>
         </pluginManagement>
         <plugins>
@@ -234,6 +240,33 @@
                 <groupId>org.eclipse.tycho</groupId>
                 <artifactId>target-platform-configuration</artifactId>
             </plugin>
+            <plugin>
+			    <groupId>org.jacoco</groupId>
+			    <artifactId>jacoco-maven-plugin</artifactId>
+			    <executions>
+			        <execution>
+			            <id>prepare-agent</id>
+			            <goals>
+			                <goal>prepare-agent</goal>
+			            </goals>
+			        </execution>
+			        <execution>
+			            <id>prepare-agent-integration</id>
+			            <goals>
+			                <goal>prepare-agent-integration</goal>
+			            </goals>
+                        <configuration>
+                            <propertyName>jacocoAgentArgs</propertyName>
+                            <excludes>
+                                <exclude>org/bonitasoft/studio/test/suite/*</exclude>
+                                <exclude>org/bonitasoft/studio/sp/test/suite/*</exclude>
+                                <exclude>org/bonitasoft/studio/test/swtbot/suite/*</exclude>
+                                <exclude>org/bonitasoft/studio/sp/test/swtbot/suite/*</exclude>
+                            </excludes>
+                        </configuration>
+			        </execution>
+			    </executions>
+			</plugin>
         </plugins>
     </build>
 
