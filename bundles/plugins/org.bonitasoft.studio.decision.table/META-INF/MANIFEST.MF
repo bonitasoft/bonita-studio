@@ -5,13 +5,13 @@ Bundle-SymbolicName: org.bonitasoft.studio.decision.table
 Bundle-Version: 7.15.0.qualifier
 Bundle-Vendor: BonitaSoft S.A.
 Bundle-RequiredExecutionEnvironment: JavaSE-11
-Require-Bundle: org.bonitasoft.studio.model;bundle-version="1.0.0",
- org.bonitasoft.studio.expression.editor;bundle-version="1.0.0",
- org.bonitasoft.studio.common;bundle-version="1.0.0",
- org.eclipse.core.runtime;bundle-version="3.10.0",
+Require-Bundle: org.bonitasoft.studio.model,
+ org.bonitasoft.studio.expression.editor,
+ org.bonitasoft.studio.common,
+ org.eclipse.core.runtime,
  org.eclipse.ui;bundle-version="3.106.0",
- org.bonitasoft.studio.pics;bundle-version="7.6.0",
- org.bonitasoft.studio.preferences;bundle-version="7.11.0"
+ org.bonitasoft.studio.pics,
+ org.bonitasoft.studio.preferences
 Export-Package: org.bonitasoft.studio.decision.i18n,
  org.bonitasoft.studio.decision.ui,
  org.bonitasoft.studio.decision.ui.condition
