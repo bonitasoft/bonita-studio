@@ -4,10 +4,10 @@ Bundle-SymbolicName: org.eclipse.emf.edapt.migration;singleton:=true
 Archiver-Version: Plexus Archiver
 Built-By: genie.edapt
 Require-Bundle: org.eclipse.core.runtime;bundle-version="[3.7.0,4.0.0)
- ",org.eclipse.emf.ecore;bundle-version="[2.7.0,3.0.0)";visibility:=re
- export,org.eclipse.ocl.ecore;bundle-version="[3.1.0,4.0.0)";visibilit
- y:=reexport,org.eclipse.emf.ecore.xmi;bundle-version="[2.7.0,3.0.0)",
- org.eclipse.emf.edapt.common;bundle-version="[1.4.0,2.0.0)"
+ ",org.eclipse.emf.ecore;visibility:=re
+ export,org.eclipse.ocl.ecore;visibilit
+ y:=reexport,org.eclipse.emf.ecore.xmi,
+ org.eclipse.emf.edapt.common
 Bundle-ManifestVersion: 2
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
