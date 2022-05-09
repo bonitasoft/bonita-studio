@@ -77,20 +77,6 @@
                 <artifactId>exec-maven-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>package-beta-dependencies</id>
-                        <goals>
-                            <goal>exec</goal>
-                        </goals>
-                        <phase>generate-resources</phase>
-                        <configuration>
-                            <workingDirectory>${project.basedir}/src/template</workingDirectory>
-                            <executable>${mavenWrapper}</executable>
-                            <useMavenLogger>true</useMavenLogger>
-                            <skip>${localRepository.compatibleVersions.skip}</skip>
-                            <commandlineArgs>${mavenSettingsArg} -ntp ${resolveDependencyPlugin} -Dbonita.runtime.version=7.14.0.beta-01</commandlineArgs>
-                        </configuration>
-                    </execution>
-                    <execution>
                         <id>package-dependencies</id>
                         <goals>
                             <goal>exec</goal>
