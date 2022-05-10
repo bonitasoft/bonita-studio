@@ -133,10 +133,9 @@ public class NewCoolbarItem extends ContributionItem implements IBonitaContribut
             public void widgetSelected(final SelectionEvent e) {
                 if (isEnabled()) {
                     final DropdownSelectionListener listener = new DropdownSelectionListener(item);
-                    listener.add("org.bonitasoft.studio.identity.organization.create.command", Messages.organization,
-                            Pics.getImage(PicsConstants.organization));
+                    listener.add(NEW_DIAGRAM_CMD_ID, Messages.processDiagram, Pics.getImage(PicsConstants.diagram));
                     listener.addSeparator();
-
+                    
                     boolean hasNewBDM = RepositoryManager.getInstance()
                             .getRepositoryStore(BusinessObjectModelRepositoryStore.class)
                             .getChild(BusinessObjectModelFileStore.BOM_FILENAME, true) == null;
@@ -144,6 +143,33 @@ public class NewCoolbarItem extends ContributionItem implements IBonitaContribut
                         hasNewBDM = listener.add("org.bonitasoft.studio.businessobject.define",
                                 Messages.businessDataModel, Pics.getImage(PicsConstants.bdm));
                     }
+                    listener.addSeparator();
+                    
+                    listener.add("org.bonitasoft.studio.identity.organization.create.command", Messages.organization,
+                            Pics.getImage(PicsConstants.organization));
+                    listener.addSeparator();
+                    
+                    listener.add("org.bonitasoft.studio.designer.command.create.page", Messages.applicationPage,
+                            Pics.getImage(PicsConstants.page));
+                    listener.add("org.bonitasoft.studio.designer.command.create.layout", Messages.layout,
+                            Pics.getImage(PicsConstants.page));
+                    listener.add("org.bonitasoft.studio.designer.command.create.fragment", Messages.fragment,
+                            Pics.getImage(PicsConstants.fragment));
+                    listener.add("org.bonitasoft.studio.designer.command.create.widget", Messages.customWidget,
+                            Pics.getImage(PicsConstants.widget));                 
+                    listener.addSeparator();
+                    
+                    listener.add("org.bonitasoft.studio.rest.api.extension.newCommand", Messages.restAPIExtension,
+                            Pics.getImage(PicsConstants.restApi));
+                    listener.addSeparator();
+                    
+                    listener.add("org.bonitasoft.studio.la.new.command", Messages.applicationDescriptor,
+                            Pics.getImage(PicsConstants.application));
+                    listener.addSeparator();
+                    
+                    boolean hadAddedProfile = listener.add("org.bonitasoft.studio.customProfile.newFile.command", Messages.profile,
+                            Pics.getImage(PicsConstants.profile));
+                    
                     boolean hasNewBDMAccess = RepositoryManager.getInstance()
                             .getRepositoryStore(BusinessObjectModelRepositoryStore.class)
                             .getChild("bdm_access_control.xml", true) == null;
@@ -152,30 +178,12 @@ public class NewCoolbarItem extends ContributionItem implements IBonitaContribut
                                 "org.bonitasoft.studio.bdm.access.control.command.definebdmaccesscontrol",
                                 Messages.bdmAccessControl, Pics.getImage(PicsConstants.accessControl));
                     }
-                    if (hasNewBDM || hasNewBDMAccess) {
+
+                    if (hadAddedProfile || hasNewBDMAccess) {
                         listener.addSeparator();
                     }
-                    if (listener.add("org.bonitasoft.studio.customProfile.newFile.command", Messages.profile,
-                            Pics.getImage(PicsConstants.profile))) {
-                        listener.addSeparator();
-                    }
-                    listener.add("org.bonitasoft.studio.la.new.command", Messages.applicationDescriptor,
-                            Pics.getImage(PicsConstants.application));
-                    listener.addSeparator();
-                    listener.add(NEW_DIAGRAM_CMD_ID, Messages.processDiagram, Pics.getImage(PicsConstants.diagram));
-                    listener.addSeparator();
-                    listener.add("org.bonitasoft.studio.designer.command.create.page", Messages.applicationPage,
-                            Pics.getImage(PicsConstants.page));
-                    listener.add("org.bonitasoft.studio.designer.command.create.layout", Messages.layout,
-                            Pics.getImage(PicsConstants.page));
-                    listener.add("org.bonitasoft.studio.designer.command.create.widget", Messages.customWidget,
-                            Pics.getImage(PicsConstants.widget));
-                    listener.add("org.bonitasoft.studio.designer.command.create.fragment", Messages.fragment,
-                            Pics.getImage(PicsConstants.fragment));
-                    listener.add("org.bonitasoft.studio.rest.api.extension.newCommand", Messages.restAPIExtension,
-                            Pics.getImage(PicsConstants.restApi));
-                    listener.addSeparator();
-                    listener.add("org.bonitasoft.studio.application.show.extension.command", Messages.addExtensionMenuLabel,
+
+                    listener.add("org.bonitasoft.studio.application.show.extension.command", Messages.extensions,
                             Pics.getImage(PicsConstants.extensions));
                     listener.widgetSelected(e);
                 }

@@ -26,7 +26,7 @@
       </menuContribution>
       <menuContribution
             allPopups="false"
-            locationURI="popup:org.bonitasoft.studio.application.project.explorer.new?after=org.bonitasoft.studio.application.placeholder.application">
+            locationURI="popup:org.bonitasoft.studio.application.project.explorer.new?after=org.bonitasoft.studio.application.placeholder.restapi">
          <dynamic
                class="org.bonitasoft.studio.la.application.menu.NewApplicationMenuContribution"
                id="org.bonitasoft.studio.la.popup.menu.new">

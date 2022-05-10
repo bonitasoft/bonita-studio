@@ -343,7 +343,7 @@
                label="%new"
                mnemonic="w">
             <separator
-                  name="org.bonitasoft.studio.application.placeholder.organization"
+                  name="org.bonitasoft.studio.application.placeholder.diagram"
                   visible="true">
             </separator>
             <separator
@@ -351,15 +351,11 @@
                   visible="true">
             </separator>
             <separator
-                  name="org.bonitasoft.studio.application.placeholder.profile"
+                  name="org.bonitasoft.studio.application.placeholder.organization"
                   visible="true">
             </separator>
             <separator
                   name="org.bonitasoft.studio.application.placeholder.application"
-                  visible="true">
-            </separator>
-            <separator
-                  name="org.bonitasoft.studio.application.placeholder.diagram"
                   visible="true">
             </separator>
             <separator
@@ -368,6 +364,10 @@
             </separator>
             <separator
                   name="org.bonitasoft.studio.application.placeholder.restapi"
+                  visible="true">
+            </separator>
+            <separator
+                  name="org.bonitasoft.studio.application.placeholder.profile"
                   visible="true">
             </separator>
             <separator
