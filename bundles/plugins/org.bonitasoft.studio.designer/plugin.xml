@@ -14,7 +14,7 @@
       </menuContribution>
 <menuContribution
             allPopups="false"
-            locationURI="popup:org.bonitasoft.studio.application.project.explorer.new?after=org.bonitasoft.studio.application.placeholder.uidartifact">
+            locationURI="popup:org.bonitasoft.studio.application.project.explorer.new?after=org.bonitasoft.studio.application.placeholder.application">
          <dynamic
                class="org.bonitasoft.studio.designer.menu.NewPageMenuContribution"
                id="org.bonitasoft.studio.designer.pop.menu.page.new">
@@ -62,8 +62,8 @@
             </visibleWhen>
          </dynamic>
          <dynamic
-               class="org.bonitasoft.studio.designer.menu.NewWidgetMenuContribution"
-               id="org.bonitasoft.studio.designer.popup.menu.widget.new">
+               class="org.bonitasoft.studio.designer.menu.NewFragmentMenuContribution"
+               id="org.bonitasoft.studio.designer.popup.menu.fragment.new">
             <visibleWhen
                   checkEnabled="false">
                <with
@@ -85,8 +85,8 @@
             </visibleWhen>
          </dynamic>
          <dynamic
-               class="org.bonitasoft.studio.designer.menu.NewFragmentMenuContribution"
-               id="org.bonitasoft.studio.designer.popup.menu.fragment.new">
+               class="org.bonitasoft.studio.designer.menu.NewWidgetMenuContribution"
+               id="org.bonitasoft.studio.designer.popup.menu.widget.new">
             <visibleWhen
                   checkEnabled="false">
                <with

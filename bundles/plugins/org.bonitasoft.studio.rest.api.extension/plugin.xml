@@ -122,7 +122,7 @@
             point="org.eclipse.ui.menus">
          <menuContribution
                allPopups="false"
-               locationURI="popup:org.bonitasoft.studio.application.project.explorer.new?after=org.bonitasoft.studio.application.placeholder.restapi">
+               locationURI="popup:org.bonitasoft.studio.application.project.explorer.new?after=org.bonitasoft.studio.application.placeholder.uidartifact">
             <dynamic
                   class="org.bonitasoft.studio.rest.api.extension.menu.NewRestApiExtensionMenuContribution"
                   id="org.bonitasoft.studio.rest.api.extension.pop.menu.new">
