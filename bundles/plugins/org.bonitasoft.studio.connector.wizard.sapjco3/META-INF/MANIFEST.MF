@@ -6,16 +6,16 @@ Bundle-Version: 7.15.0.qualifier
 Bundle-Activator: org.bonitasoft.studio.connector.wizard.sapjco3.Activator
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
- org.bonitasoft.studio.connectors,
- org.bonitasoft.studio.connectors.model,
- org.bonitasoft.studio.connectors.model.edit,
- org.eclipse.emf.databinding,
- org.bonitasoft.studio.model,
- org.eclipse.ui.forms,
- org.eclipse.jface.databinding,
- org.bonitasoft.studio.expression.editor,
- org.bonitasoft.studio.common,
- org.eclipse.core.resources,
+ org.bonitasoft.studio.connectors;bundle-version="6.1.0",
+ org.bonitasoft.studio.connectors.model;bundle-version="6.1.0",
+ org.bonitasoft.studio.connectors.model.edit;bundle-version="6.1.0",
+ org.eclipse.emf.databinding;bundle-version="1.2.0",
+ org.bonitasoft.studio.model;bundle-version="6.1.0",
+ org.eclipse.ui.forms;bundle-version="3.5.101",
+ org.eclipse.jface.databinding;bundle-version="1.5.0",
+ org.bonitasoft.studio.expression.editor;bundle-version="6.1.0",
+ org.bonitasoft.studio.common;bundle-version="6.1.0",
+ org.eclipse.core.resources;bundle-version="3.13.700",
  org.bonitasoft.studio.common.repository
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-ActivationPolicy: lazy
