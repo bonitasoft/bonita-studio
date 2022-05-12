@@ -84,7 +84,7 @@ public class ConnectorZoomControl extends AbstractZoomControl {
     @Override
     protected void createDetailsSection(Composite parent) {
         var composite = createComposite(parent, SWT.NONE);
-        composite.setLayout(GridLayoutFactory.fillDefaults().extendedMargins(10, 10, 20, 10).create());
+        composite.setLayout(GridLayoutFactory.fillDefaults().extendedMargins(10, 10, 0, 0).create());
         composite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 
         var titleComposite = createComposite(composite, SWT.NONE);

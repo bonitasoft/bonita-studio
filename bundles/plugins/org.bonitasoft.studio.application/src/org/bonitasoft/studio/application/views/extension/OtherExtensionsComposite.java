@@ -23,6 +23,8 @@ import org.apache.maven.model.Dependency;
 import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.application.ui.control.model.dependency.ArtifactType;
 import org.bonitasoft.studio.application.ui.control.model.dependency.BonitaArtifactDependency;
+import org.bonitasoft.studio.application.ui.control.model.dependency.BonitaArtifactDependencyConverter;
+import org.bonitasoft.studio.application.views.extension.ExtensionComposite.DependencyResolution;
 import org.bonitasoft.studio.application.views.overview.ProjectOverviewEditorPart;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.core.maven.migration.model.DependencyLookup;
@@ -64,13 +66,17 @@ public class OtherExtensionsComposite extends Composite {
     private DynamicButtonWidget editMavenCoordinatesButton;
     private List<Dependency> localDependencies;
     private LocalDependenciesStore localDependencyStore;
+    private BonitaArtifactDependencyConverter bonitaArtifactDependencyConverter;
 
     public OtherExtensionsComposite(Composite parent,
             List<Dependency> otherDependencies,
             RemoveExtensionListener removeListener,
             UpdateExtensionListener updateListener,
+            DependencyResolution dependencyResolution,
+            BonitaArtifactDependencyConverter bonitaArtifactDependencyConverter,
             DataBindingContext ctx) {
         super(parent, SWT.NONE);
+        this.bonitaArtifactDependencyConverter = bonitaArtifactDependencyConverter;
         this.ctx = ctx;
         localDependencyStore = RepositoryManager.getInstance().getCurrentRepository().getLocalDependencyStore();
         localDependencies = otherDependencies.stream()
@@ -86,14 +92,29 @@ public class OtherExtensionsComposite extends Composite {
         Label separator = new Label(this, SWT.SEPARATOR | SWT.HORIZONTAL);
         separator.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 
+        if (dependencyResolution.hasOtherDependenciesIssues()) {
+            createProblemsSection(this, dependencyResolution);
+        }
+
         createOtherExtensionViewer(this, otherDependencies, updateListener, removeListener);
+    }
+
+    private void createProblemsSection(Composite parent, DependencyResolution dependencyResolution) {
+        var parentContainer = new Composite(parent, SWT.NONE);
+        parentContainer.setLayout(GridLayoutFactory.fillDefaults().extendedMargins(20, 20, 10, 0)
+                .spacing(LayoutConstants.getSpacing().x, 1).create());
+        parentContainer.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+        parentContainer.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME,
+                BonitaThemeConstants.EXTENSION_VIEW_BACKGROUND);
+
+        new ProblemSection(parentContainer, dependencyResolution.getOtherDependenciesProblems());
     }
 
     private void createOtherExtensionViewer(Composite parent,
             List<Dependency> otherDependencies,
             UpdateExtensionListener updateListener, RemoveExtensionListener removeListener) {
         var viewerComposite = new Composite(parent, SWT.NONE);
-        viewerComposite.setLayout(GridLayoutFactory.fillDefaults().extendedMargins(20, 20, 10, 0)
+        viewerComposite.setLayout(GridLayoutFactory.fillDefaults().extendedMargins(20, 20, 0, 0)
                 .spacing(LayoutConstants.getSpacing().x, 1).create());
         viewerComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         viewerComposite.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME,
@@ -181,6 +202,10 @@ public class OtherExtensionsComposite extends Composite {
     }
 
     private Image getIcon(Dependency dependency) {
+        var bonitaArtifactDependency = bonitaArtifactDependencyConverter.toBonitaArtifactDependency(dependency);
+        if (!bonitaArtifactDependency.getStatus().isOK()) {
+            return Pics.getImage(PicsConstants.problem_small);
+        }
         return localDependencies.contains(dependency)
                 ? Pics.getImage(PicsConstants.local)
                 : Pics.getImage(PicsConstants.remote);

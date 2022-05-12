@@ -27,22 +27,32 @@ import org.eclipse.ui.PlatformUI;
 
 public interface Zoomable {
 
-    public Control createZoomedControl(Composite parent);
+    default String getTextHoverCssClassname() {
+        return BonitaThemeConstants.CARD_HIGHLIGHT_TITLE_COLOR;
+    }
+    
+    default String getTextClassName() {
+        return BonitaThemeConstants.TITLE_TEXT_COLOR;
+    }
+    
+    Control createZoomedControl(Composite parent);
 
-    public void addZoomListener(ZoomListener listener);
+    void addZoomListener(ZoomListener listener);
 
-    public default void addComputeScrollListener(Listener computeScrollListener) {
+    default void addComputeScrollListener(Listener computeScrollListener) {
         // Only implemented when required
     }
 
-    public ZoomListener getZoomListener();
+    ZoomListener getZoomListener();
 
-    public default void addZoomBehavior(Control zoomControl) {
+    default void addZoomBehavior(Control zoomControl) {
         IThemeEngine engine = PlatformUI.getWorkbench().getService(IThemeEngine.class);
         var cursorHand = zoomControl.getDisplay().getSystemCursor(SWT.CURSOR_HAND);
         var cursorArrow = zoomControl.getDisplay().getSystemCursor(SWT.CURSOR_ARROW);
 
-        zoomControl.setToolTipText(Messages.showMore);
+        if (zoomControl.getToolTipText() == null) {
+            zoomControl.setToolTipText(Messages.showMore);
+        }
 
         zoomControl.addListener(SWT.MouseUp, e -> {
             if (getZoomListener() != null) {
@@ -57,14 +67,14 @@ public interface Zoomable {
             @Override
             public void mouseEnter(MouseEvent e) {
                 zoomControl.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME,
-                        BonitaThemeConstants.CARD_HIGHLIGHT_TITLE_COLOR);
+                        getTextHoverCssClassname());
                 engine.applyStyles(zoomControl, false);
                 zoomControl.setCursor(cursorHand);
             }
 
             @Override
             public void mouseExit(MouseEvent e) {
-                zoomControl.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME, BonitaThemeConstants.TITLE_TEXT_COLOR);
+                zoomControl.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME, getTextClassName());
                 engine.applyStyles(zoomControl, false);
                 zoomControl.setCursor(cursorArrow);
             }

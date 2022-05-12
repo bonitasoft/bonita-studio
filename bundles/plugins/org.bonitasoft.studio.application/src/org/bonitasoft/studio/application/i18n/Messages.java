@@ -394,6 +394,11 @@ public class Messages extends NLS {
     public static String updateTo;
     public static String displayInstalledExtensions;
     public static String alreadyInstalledExtensions;
+    public static String problems;
+    public static String problemInExtensionsMessage;
+    public static String problemsFound;
+    public static String problemsFoundMessage;
+    public static String undo;
 
     static {
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);

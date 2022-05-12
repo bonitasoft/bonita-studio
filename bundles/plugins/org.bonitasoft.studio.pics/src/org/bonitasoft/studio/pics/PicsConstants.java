@@ -528,4 +528,6 @@ public class PicsConstants {
     public static String notificationInfo = "notification_info.png";
     public static String notificationWarning = "notification_warning.png";
     public static String notificationError = "notification_error.png";
+    public static String problem = "problem.png";
+    public static String problem_small = "problem_small.png";
 }

@@ -76,6 +76,7 @@ public class BonitaArtifactDependencyConverter {
         bonitaDep.setVersions(Arrays.asList(version));
         ArtifactType type = findType(dep);
         bonitaDep.setArtifactType(type);
+        bonitaDep.setStatus(dependenciesStore.getStatus(dep));
         if (Objects.equals(type, ArtifactType.OTHER)) {
             return bonitaDep;
         }

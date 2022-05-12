@@ -22,7 +22,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
+import org.apache.maven.artifact.DefaultArtifact;
+import org.apache.maven.artifact.handler.DefaultArtifactHandler;
+import org.apache.maven.model.Dependency;
 import org.bonitasoft.plugin.analyze.report.model.ActorFilterImplementation;
 import org.bonitasoft.plugin.analyze.report.model.ConnectorImplementation;
 import org.bonitasoft.plugin.analyze.report.model.Definition;
@@ -40,13 +44,14 @@ import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
 import org.bonitasoft.studio.common.repository.Messages;
 import org.bonitasoft.studio.common.repository.core.ProjectDependenciesStore;
 import org.bonitasoft.studio.common.repository.core.maven.plugin.BonitaProjectPlugin;
-import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.MultiStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.e4.core.services.events.IEventBroker;
 
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -91,7 +96,10 @@ public class MavenProjectDependenciesStore implements ProjectDependenciesStore {
                 dependencyReport = mapper.readValue(reportFile, DependencyReport.class);
                 eventBroker.send(PROJECT_DEPENDENCIES_ANALYZED_TOPIC, Map.of());
                 dependencyReport.getIssues().stream()
-                        .map(MavenProjectDependenciesStore::toStatus)
+                        .map(this::getArtifactId)
+                        .filter(Objects::nonNull)
+                        .distinct()
+                        .map(artifactId -> createMultiStatus(artifactId, dependencyReport.getIssues()))
                         .filter(Objects::nonNull)
                         .forEach(this::addMarker);
             }
@@ -101,30 +109,65 @@ public class MavenProjectDependenciesStore implements ProjectDependenciesStore {
             addMarker(ce.getStatus());
             if (ce.getCause() != null) {
                 BonitaStudioLog.error(ce.getCause());
-            }else {
+            } else {
                 BonitaStudioLog.error(ce, CommonRepositoryPlugin.PLUGIN_ID);
             }
         }
         return Optional.ofNullable(dependencyReport);
     }
+    
+    private MultiStatus createMultiStatus(String artifactId, List<Issue> issues) {
+        if(artifactId != null) {
+            String artifact = artifactId.split(":")[1];
+            var status = new MultiStatus(getClass(), 0, String.format("%s: Open Overview > Extension for more details. ",artifact));
+            issues.stream()
+                .filter(issue -> Objects.equals(artifactId, getArtifactId(issue)))
+                .map(MavenProjectDependenciesStore::toStatus)
+                .forEach(status::add);
+            return status;
+        }
+        return null;
+    }
+
+    private String getArtifactId(Issue issue) {
+        if(!issue.getContext().isEmpty()) {
+            return issue.getContext().get(0);
+        }
+        return null;
+    }
 
     public static IStatus toStatus(Issue issue) {
-        if (Issue.Type.valueOf(issue.getType()) == Type.INCOMPATIBLE_DEPENDENCY) {
-            String message = issue.getContext().size() == 2
-                    ? String.format(Messages.incompatibleTransitiveDependencyErrorMessage, issue.getContext().get(0),
-                            issue.getContext().get(1))
-                    : String.format(Messages.incompatibleDependencyErrorMessage, issue.getContext().get(0));
-            return ValidationStatus.error(message);
-        } else {
-            Severity severity = Issue.Severity.valueOf(issue.getSeverity());
-            switch (severity) {
-                case ERROR:
-                    return ValidationStatus.error(issue.getMessage());
-                case WARNING:
-                    return ValidationStatus.warning(issue.getMessage());
-                default:
-                    return ValidationStatus.info(issue.getMessage());
-            }
+        Severity severity = Issue.Severity.valueOf(issue.getSeverity());
+        var message = toMessage(issue);
+        switch (severity) {
+            case ERROR:
+                return Status.error(message);
+            case WARNING:
+                return Status.warning(message);
+            default:
+                return Status.info(message);
+        }
+    }
+
+    private static String toMessage(Issue issue) {
+        Type issueType = null;
+        try {
+            issueType = Issue.Type.valueOf(issue.getType());
+        } catch (IllegalArgumentException e) {
+            // Unknown issue type
+            return issue.getMessage();
+        }
+        switch (issueType) {
+            case INCOMPATIBLE_DEPENDENCY:
+                return issue.getContext().size() == 2
+                        ? String.format(Messages.incompatibleTransitiveDependencyErrorMessage,
+                                issue.getContext().get(0),
+                                issue.getContext().get(1))
+                        : String.format(Messages.incompatibleDependencyErrorMessage, issue.getContext().get(0));
+            case UNKNOWN_DEFINITION_TYPE:
+            case INVALID_DESCRIPTOR_FILE:
+            default:
+                return issue.getMessage();
         }
     }
 
@@ -203,6 +246,36 @@ public class MavenProjectDependenciesStore implements ProjectDependenciesStore {
             return Collections.emptyList();
         }
         return dependencyReport.getThemes();
+    }
+
+    @Override
+    public List<Issue> getIssues() {
+        if (dependencyReport == null) {
+            return Collections.emptyList();
+        }
+        return dependencyReport.getIssues();
+    }
+
+    @Override
+    public List<Issue> findIssues(Dependency dependency) {
+        String artifactId = toArtifactId(dependency);
+        return getIssues().stream()
+                .filter(issue -> issue.getContext().stream().anyMatch(artifactId::equals))
+                .collect(Collectors.toList());
+    }
+    
+    @Override
+    public MultiStatus getStatus(Dependency dependency) {
+        if(dependencyReport == null) {
+            return new MultiStatus(getClass(), 0, "");
+        }
+        return createMultiStatus(toArtifactId(dependency), dependencyReport.getIssues());
+    }
+
+    private static String toArtifactId(Dependency dependency) {
+        return new DefaultArtifact(dependency.getGroupId(), dependency.getArtifactId(), dependency.getVersion(),
+                "compile", dependency.getType(),
+                dependency.getClassifier(), new DefaultArtifactHandler()).getId();
     }
 
 }

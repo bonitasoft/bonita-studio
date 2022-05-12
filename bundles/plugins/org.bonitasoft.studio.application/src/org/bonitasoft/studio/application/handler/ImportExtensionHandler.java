@@ -223,7 +223,9 @@ public class ImportExtensionHandler {
                     updateExtensionDecorator.preUpdate(monitor);
                     localDependenciesStore.install(dependencyLookup);
                     addDependency(mavenModel, dependency, monitor);
-                    updateExtensionDecorator.postUpdate(monitor);
+                    if(updateExtensionDecorator.checkIssues(dependency, monitor)){
+                        updateExtensionDecorator.postUpdate(monitor);
+                    }
                     monitor.done();
                 } catch (CoreException e) {
                     throw new InvocationTargetException(e);
@@ -266,7 +268,9 @@ public class ImportExtensionHandler {
                     monitor.beginTask(Messages.installingExtensions, IProgressMonitor.UNKNOWN);
                     updateExtensionDecorator.preUpdate(monitor);
                     addDependency(mavenModel, dependency, monitor);
-                    updateExtensionDecorator.postUpdate(monitor);
+                    if(updateExtensionDecorator.checkIssues(dependency, monitor)){
+                        updateExtensionDecorator.postUpdate(monitor);
+                    }
                 });
                 if (updateExtensionDecorator.shouldValidateProject()) {
                     updateExtensionDecorator.validateDependenciesConstraints();

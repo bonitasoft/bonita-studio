@@ -91,8 +91,6 @@ public class ProjectOverviewEditorPart extends EditorPart implements EventHandle
     public static final String UPDATE_GAV_COMMAND = "org.bonitasoft.studio.application.update.gav.command";
     public static final String EDIT_PROJECT_COMMAND = "org.bonitasoft.studio.application.edit.project.command";
 
-    private static final String REFRESH_PROJECT_COMMAND = null;
-
     private RepositoryAccessor repositoryAccessor;
     private LocalResourceManager localResourceManager;
     private ExceptionDialogHandler errorHandler;
@@ -114,6 +112,8 @@ public class ProjectOverviewEditorPart extends EditorPart implements EventHandle
     private DynamicButtonWidget toExtensionViewButton;
 
     private IProgressService progressService;
+
+    private static Object lock = new Object();
 
     public ProjectOverviewEditorPart() {
         repositoryAccessor = RepositoryManager.getInstance().getAccessor();
@@ -231,14 +231,14 @@ public class ProjectOverviewEditorPart extends EditorPart implements EventHandle
                 SWTBotConstants.SWTBOT_ID_OPEN_ELEMENT_VIEW,
                 e -> Display.getDefault().asyncExec(this::toElementsView));
 
-       toExtensionViewButton = createSwitchButton(toolbarComposite,
+        toExtensionViewButton = createSwitchButton(toolbarComposite,
                 Messages.extensionView,
                 Messages.extensionViewTooltip,
                 Pics.getImage(PicsConstants.extensions32),
                 Pics.getImage(PicsConstants.extensions32_hot),
                 SWTBotConstants.SWTBOT_ID_OPEN_EXTENSIONS_VIEW,
                 e -> Display.getDefault().asyncExec(this::toExtensionsView));
- 
+
         var separator = new Label(toolbarComposite, SWT.SEPARATOR | SWT.VERTICAL);
         separator.setLayoutData(GridDataFactory.swtDefaults().hint(SWT.DEFAULT, 32).create());
         new DynamicButtonWidget.Builder()
@@ -250,10 +250,12 @@ public class ProjectOverviewEditorPart extends EditorPart implements EventHandle
                 .withCssclass(BonitaThemeConstants.HEADER_BACKGROUND)
                 .onClick(e -> {
                     try {
-                        progressService.run(true, false, monitor ->{
-                            AbstractRepository currentRepository = RepositoryManager.getInstance().getCurrentRepository();
+                        progressService.run(true, false, monitor -> {
+                            AbstractRepository currentRepository = RepositoryManager.getInstance()
+                                    .getCurrentRepository();
                             try {
-                                MavenPlugin.getProjectConfigurationManager().updateProjectConfiguration(currentRepository.getProject(), monitor);
+                                MavenPlugin.getProjectConfigurationManager()
+                                        .updateProjectConfiguration(currentRepository.getProject(), monitor);
                             } catch (CoreException ex) {
                                 BonitaStudioLog.error(ex);
                             }
@@ -265,7 +267,7 @@ public class ProjectOverviewEditorPart extends EditorPart implements EventHandle
                     }
                 })
                 .createIn(toolbarComposite);
-               
+
     }
 
     public void openExtensionsView() {
@@ -332,35 +334,38 @@ public class ProjectOverviewEditorPart extends EditorPart implements EventHandle
     }
 
     private void refreshContent() {
-        Display.getDefault().asyncExec(() -> {
-            if (title == null || title.isDisposed()) {
-                return;
-            }
-            try {
-                Model mavenModel = mavenHelper
-                        .getMavenModel(repositoryAccessor.getCurrentRepository().getProject());
-                String name = mavenModel.getName();
-                String version = mavenModel.getVersion();
-                String descriptionContent = mavenModel.getDescription();
-                title.setText(String.format("%s %s", name, version));
-
-                StyleRange titleStyle = new StyleRange(0, name.length(), title.getForeground(), title.getBackground());
-                titleStyle.font = JFaceResources.getFontRegistry().get(ProjectOverviewEditorPart.BOLD_20_FONT_ID);
-                StyleRange versionStyle = new StyleRange(name.length() + 1, version.length(), title.getForeground(),
-                        title.getBackground());
-                versionStyle.font = JFaceResources.getFont(ProjectOverviewEditorPart.ITALIC_0_FONT_ID);
-                title.setStyleRanges(new StyleRange[] { titleStyle, versionStyle });
-
-                refreshDescription(descriptionContent);
-                mainComposite.layout();
-
-                if (extensionComposite != null && !extensionComposite.isDisposed()) {
-                    extensionComposite.refreshContent();
+        synchronized (lock) {
+            Display.getDefault().asyncExec(() -> {
+                if (title == null || title.isDisposed()) {
+                    return;
                 }
-            } catch (CoreException e) {
-                errorHandler.openErrorDialog(Display.getDefault().getActiveShell(), e);
-            }
-        });
+                try {
+                    Model mavenModel = mavenHelper
+                            .getMavenModel(repositoryAccessor.getCurrentRepository().getProject());
+                    String name = mavenModel.getName();
+                    String version = mavenModel.getVersion();
+                    String descriptionContent = mavenModel.getDescription();
+                    title.setText(String.format("%s %s", name, version));
+
+                    StyleRange titleStyle = new StyleRange(0, name.length(), title.getForeground(),
+                            title.getBackground());
+                    titleStyle.font = JFaceResources.getFontRegistry().get(ProjectOverviewEditorPart.BOLD_20_FONT_ID);
+                    StyleRange versionStyle = new StyleRange(name.length() + 1, version.length(), title.getForeground(),
+                            title.getBackground());
+                    versionStyle.font = JFaceResources.getFont(ProjectOverviewEditorPart.ITALIC_0_FONT_ID);
+                    title.setStyleRanges(new StyleRange[] { titleStyle, versionStyle });
+
+                    refreshDescription(descriptionContent);
+                    mainComposite.layout();
+
+                    if (extensionComposite != null && !extensionComposite.isDisposed()) {
+                        extensionComposite.refreshContent();
+                    }
+                } catch (CoreException e) {
+                    errorHandler.openErrorDialog(Display.getDefault().getActiveShell(), e);
+                }
+            });
+        }
     }
 
     private boolean refreshDescription(String descriptionContent) {

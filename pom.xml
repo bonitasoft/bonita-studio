@@ -10,7 +10,7 @@
     <packaging>pom</packaging>
     <name>Bonita Studio</name>
     <properties>
-        <tychoVersion>2.7.1</tychoVersion>
+        <tychoVersion>2.7.3</tychoVersion>
         <java.version>11</java.version>
         <os-jvm-flags></os-jvm-flags>
         <branding.version>2022.2-SNAPSHOT</branding.version>
@@ -20,7 +20,7 @@
         <platform.version>${project.parent.version}</platform.version>
         <tomcat.version>9.0.52</tomcat.version>
         <image-overlay-plugin.version>1.1.2</image-overlay-plugin.version>
-        <bonita-project-report-model.version>0.0.5</bonita-project-report-model.version>
+        <bonita-project-report-model.version>0.0.6</bonita-project-report-model.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <tycho.localArtifacts>ignore</tycho.localArtifacts>
         <maven.compiler.source>${java.version}</maven.compiler.source>
@@ -33,6 +33,7 @@
         <jacocoVersion>0.8.8</jacocoVersion>
     </properties>
     <modules>
+        <module>platform</module>
         <module>patched-plugins</module>
     </modules>
 
@@ -215,11 +216,18 @@
                         </goals>
                         <configuration>
                             <source>
-								project.properties["branding.version.short"] = "${branding.version}".replaceAll('-.*', '')
-                                def versionPattern = ~"([1-9]\\d*)\\.(\\d+)\\.(\\d+)(?:-([a-zA-Z0-9]+))?"
-                                def matcher = "${project.version}" =~ versionPattern
-                                def result = matcher[0..-1][0]
-                                project.properties["product.major.version"] = "${result[1]}.${result[2]}".toString()
+                                project.properties["branding.version.short"]
+                                =
+                                "${branding.version}".replaceAll('-.*',
+                                '')
+                                def versionPattern =
+                                ~"([1-9]\\d*)\\.(\\d+)\\.(\\d+)(?:-([a-zA-Z0-9]+))?"
+                                def matcher = "${project.version}" =~
+                                versionPattern
+                                def result =
+                                matcher[0..-1][0]
+                                project.properties["product.major.version"]
+                                = "${result[1]}.${result[2]}".toString()
                             </source>
                         </configuration>
                     </execution>
@@ -241,20 +249,20 @@
                 <artifactId>target-platform-configuration</artifactId>
             </plugin>
             <plugin>
-			    <groupId>org.jacoco</groupId>
-			    <artifactId>jacoco-maven-plugin</artifactId>
-			    <executions>
-			        <execution>
-			            <id>prepare-agent</id>
-			            <goals>
-			                <goal>prepare-agent</goal>
-			            </goals>
-			        </execution>
-			        <execution>
-			            <id>prepare-agent-integration</id>
-			            <goals>
-			                <goal>prepare-agent-integration</goal>
-			            </goals>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>prepare-agent</id>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>prepare-agent-integration</id>
+                        <goals>
+                            <goal>prepare-agent-integration</goal>
+                        </goals>
                         <configuration>
                             <propertyName>jacocoAgentArgs</propertyName>
                             <excludes>
@@ -264,9 +272,9 @@
                                 <exclude>org/bonitasoft/studio/sp/test/swtbot/suite/*</exclude>
                             </excludes>
                         </configuration>
-			        </execution>
-			    </executions>
-			</plugin>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 
@@ -308,7 +316,7 @@
 
     <repositories>
         <repository>
-            <id>ossrh</id>
+            <id>ossrh-snapshots</id>
             <url>https://oss.sonatype.org/content/repositories/snapshots</url>
             <snapshots>
                 <enabled>true</enabled>
@@ -357,7 +365,6 @@
                 <activeByDefault>true</activeByDefault>
             </activation>
             <modules>
-                <module>platform</module>
                 <module>bundles</module>
             </modules>
         </profile>

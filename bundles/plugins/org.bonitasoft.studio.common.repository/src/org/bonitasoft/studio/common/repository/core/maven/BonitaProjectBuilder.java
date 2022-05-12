@@ -75,16 +75,12 @@ public class BonitaProjectBuilder extends IncrementalProjectBuilder {
     private void validateTargetRuntimeVersion(IProject project) throws CoreException {
         project.deleteMarkers(TARGET_RUNTIME_VERSION_MARKER_TYPE, true, IResource.DEPTH_ONE);
         Model model = new MavenProjectHelper().getMavenModel(project);
-        if (model != null) {
-            String runtimeVersion = model.getProperties()
-                    .getProperty(ProjectDefaultConfiguration.BONITA_RUNTIME_VERSION);
-            if (project.isAccessible() && !Objects.equals(runtimeVersion, ProductVersion.BONITA_RUNTIME_VERSION)) {
-                IStatus status = RUNTIME_VERSION_VALIDATOR.validate(runtimeVersion);
-                IMarker marker = project.createMarker(TARGET_RUNTIME_VERSION_MARKER_TYPE);
-                marker.setAttribute(IMarker.SEVERITY, new StatusToMarkerSeverity(status).toMarkerSeverity());
-                marker.setAttribute(IMarker.MESSAGE,
-                        status.getMessage() + Messages.editTargetRuntimeVersionFromProjectOverview);
-            }
+        String runtimeVersion = model.getProperties().getProperty(ProjectDefaultConfiguration.BONITA_RUNTIME_VERSION);
+        if (project.isAccessible() && !Objects.equals(runtimeVersion, ProductVersion.BONITA_RUNTIME_VERSION)) {
+            IStatus status = RUNTIME_VERSION_VALIDATOR.validate(runtimeVersion);
+            IMarker marker = project.createMarker(TARGET_RUNTIME_VERSION_MARKER_TYPE);
+            marker.setAttribute(IMarker.SEVERITY, new StatusToMarkerSeverity(status).toMarkerSeverity());
+            marker.setAttribute(IMarker.MESSAGE, status.getMessage() + Messages.editTargetRuntimeVersionFromProjectOverview);
         }
     }
 

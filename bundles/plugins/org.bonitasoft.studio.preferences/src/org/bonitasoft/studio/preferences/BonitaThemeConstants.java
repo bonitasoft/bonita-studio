@@ -52,4 +52,6 @@ public interface BonitaThemeConstants {
     public static final String TYPE_TEXT_COLOR = "typeTextColor";
     public static final String CARD_HIGHLIGHT_TITLE_COLOR = "cardHighlightTitleColor";
     public static final String LABEL_COMPOSITE = "labelComposite";
+    public static final String PROBLEM_TEXT_COLOR = "problemTextColor";
+    public static final String PROBLEM_SECTION_BACKGROUND = "warningSectionBackground";
 }

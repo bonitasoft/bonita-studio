@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.apache.maven.model.Dependency;
+import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.swt.graphics.Image;
 
 public class BonitaArtifactDependency implements Comparable {
@@ -38,6 +39,7 @@ public class BonitaArtifactDependency implements Comparable {
 
     private boolean fromMarketplace = true;
     private String scmUrl;
+    private MultiStatus status = new MultiStatus(getClass(), 0, "");
 
     public BonitaArtifactDependency() {
     }
@@ -202,6 +204,14 @@ public class BonitaArtifactDependency implements Comparable {
     
     public String getScmUrl() {
         return scmUrl;
+    }
+
+    public MultiStatus getStatus() {
+        return status;
+    }
+    
+    public void setStatus(MultiStatus status) {
+        this.status = status;
     }
 
 }
