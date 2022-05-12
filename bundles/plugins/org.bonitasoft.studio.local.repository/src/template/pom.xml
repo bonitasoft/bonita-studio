@@ -33,6 +33,16 @@
             <name>Default local repo as remote repo</name>
             <url>${local.remote.repo.url}</url>
         </pluginRepository>
+        <pluginRepository>
+            <id>ossrh-snapshots-plugins</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+        </pluginRepository>
     </pluginRepositories>
     
     <dependencyManagement>

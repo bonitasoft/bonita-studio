@@ -14,9 +14,12 @@
  */
 package org.bonitasoft.studio.application.views.extension.card.zoom;
 
+import java.util.List;
+
 import org.apache.maven.model.Dependency;
 import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.application.ui.control.model.dependency.BonitaArtifactDependency;
+import org.bonitasoft.studio.application.views.extension.ProblemSection;
 import org.bonitasoft.studio.application.views.overview.ProjectOverviewEditorPart;
 import org.bonitasoft.studio.common.Strings;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
@@ -66,12 +69,15 @@ public abstract class AbstractZoomControl extends Composite {
         this.engine = PlatformUI.getWorkbench().getService(IThemeEngine.class);
         this.cursorHand = parent.getDisplay().getSystemCursor(SWT.CURSOR_HAND);
         this.cursorArrow = parent.getDisplay().getSystemCursor(SWT.CURSOR_ARROW);
-
-        setLayout(GridLayoutFactory.fillDefaults().margins(10, 10).create());
+        setLayout(GridLayoutFactory.fillDefaults().margins(10, 10).spacing(LayoutConstants.getSpacing().x, 20).create());
         setLayoutData(GridDataFactory.fillDefaults().grab(true, true).span(2, 1).create());
         setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, BonitaThemeConstants.CARD_BACKGROUND);
 
         createZoomedTitleComposite(this);
+
+        if (!bonitaDep.getStatus().isOK()) {
+            new ProblemSection(this, List.of(bonitaDep.getStatus()));
+        }
 
         var description = new Label(this, SWT.WRAP);
         description.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).indent(5, 10).create());
@@ -82,6 +88,7 @@ public abstract class AbstractZoomControl extends Composite {
 
         createDetailsSection(this);
     }
+
 
     protected abstract void createDetailsSection(Composite parent);
 

@@ -52,6 +52,7 @@ import org.bonitasoft.studio.ui.widget.DropdownDynamicButtonWidget;
 import org.bonitasoft.studio.ui.widget.DynamicButtonWidget;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.e4.core.contexts.ContextInjectionFactory;
 import org.eclipse.e4.core.contexts.EclipseContextFactory;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -208,7 +209,11 @@ public class ExtensionComposite extends Composite {
     private void createContent() {
         List<BonitaDependencyTuple> bonitaDependencies = new ArrayList<>();
         List<Dependency> otherDependencies = new ArrayList<>();
-        computeDependencies(bonitaDependencies, otherDependencies);
+        var dependencyResolution = computeDependencies(bonitaDependencies, otherDependencies);
+
+        if (dependencyResolution.hasExtensionIssues()) {
+            createProblemsSection(contentComposite);
+        }
 
         if (!bonitaDependencies.isEmpty() || !otherDependencies.isEmpty()) {
             var cardsComposite = createComposite(contentComposite, SWT.NONE);
@@ -223,6 +228,8 @@ public class ExtensionComposite extends Composite {
                         otherDependencies,
                         removeExtensionListener,
                         upadateExtensionListener,
+                        dependencyResolution,
+                        bonitaArtifactDependencyConverter,
                         ctx);
             }
         } else {
@@ -230,8 +237,18 @@ public class ExtensionComposite extends Composite {
         }
     }
 
-    private void computeDependencies(List<BonitaDependencyTuple> bonitaDependencies,
+    private void createProblemsSection(Composite parent) {
+        var container = createComposite(contentComposite, SWT.NONE);
+        container.setLayout(GridLayoutFactory.fillDefaults()
+                .margins(20, 5).spacing(20, 10).create());
+        container.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+        
+        new ProblemSection(container, Messages.problemInExtensionsMessage);
+    }
+
+    private DependencyResolution computeDependencies(List<BonitaDependencyTuple> bonitaDependencies,
             List<Dependency> otherDependencies) {
+        var result = new DependencyResolution();
         try {
             Model mavenModel = mavenHelper
                     .getMavenModel(repositoryAccessor.getCurrentRepository().getProject());
@@ -245,15 +262,26 @@ public class ExtensionComposite extends Composite {
                             .filter(d -> !Objects.equals(d.getArtifactType(), ArtifactType.OTHER))
                             .isPresent()) {
                         BonitaArtifactDependency bonitaArtifactDependency = bonitaDependency.get();
-                        BonitaArtifactDependency artifactDependency = bonitaArtifactDependencyConverter.toBonitaArtifactDependency(dep);
+                        BonitaArtifactDependency artifactDependency = bonitaArtifactDependencyConverter
+                                .toBonitaArtifactDependency(dep);
                         bonitaArtifactDependency.setSCMUrl(artifactDependency.getScmUrl());
+                        if(!result.hasExtensionIssues() && !bonitaDependency.get().getStatus().isOK()) {
+                            result.setHasExtensionIssues(true);
+                        }
                         bonitaDependencies.add(new BonitaDependencyTuple(dep, bonitaDependency.get()));
                     } else if (!ProjectDefaultConfiguration.isInternalDependency(dep) && !isBDMDependency(dep)) {
                         BonitaArtifactDependency bonitaDep = bonitaArtifactDependencyConverter
                                 .toBonitaArtifactDependency(dep);
                         if (Objects.equals(bonitaDep.getArtifactType(), ArtifactType.OTHER)) {
+                            if(!bonitaDep.getStatus().isOK()) {
+                                result.setHasOtherDependenciesIssues(true);
+                                result.addOtherDependencyProblem(bonitaDep.getStatus());
+                            }
                             otherDependencies.add(dep);
                         } else {
+                            if(!result.hasExtensionIssues() && !bonitaDep.getStatus().isOK()) {
+                                result.setHasExtensionIssues(true);
+                            }
                             bonitaDependencies.add(new BonitaDependencyTuple(dep, bonitaDep));
                         }
                     }
@@ -262,6 +290,7 @@ public class ExtensionComposite extends Composite {
         } catch (CoreException e) {
             errorHandler.openErrorDialog(Display.getDefault().getActiveShell(), e.getMessage(), e);
         }
+        return result;
     }
 
     private void createExtensionTitleComposite(Composite parent) {
@@ -276,7 +305,8 @@ public class ExtensionComposite extends Composite {
         extensionLabel.setToolTipText(Messages.bonitaExtensionTooltip);
         extensionLabel.setFont(JFaceResources.getFont(ProjectOverviewEditorPart.BOLD_8_FONT_ID));
         extensionLabel.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME, BonitaThemeConstants.TITLE_TEXT_COLOR);
-        extensionLabel.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, BonitaThemeConstants.EXTENSION_VIEW_BACKGROUND);
+        extensionLabel.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME,
+                BonitaThemeConstants.EXTENSION_VIEW_BACKGROUND);
 
         var vseparator = new Label(titleComposite, SWT.SEPARATOR | SWT.VERTICAL);
         vseparator.setLayoutData(GridDataFactory.fillDefaults().hint(SWT.DEFAULT, 10).create());
@@ -360,6 +390,38 @@ public class ExtensionComposite extends Composite {
         Composite composite = new Composite(parent, style);
         composite.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, BonitaThemeConstants.EXTENSION_VIEW_BACKGROUND);
         return composite;
+    }
+
+    static class DependencyResolution {
+
+        private boolean hasExtensionIssues = false;
+        private boolean hasOtherDependenciesIssues = false;
+        private List<MultiStatus> otherDependenciesProblems = new ArrayList<>();
+
+        public void setHasExtensionIssues(boolean hasExtensionIssues) {
+            this.hasExtensionIssues = hasExtensionIssues;
+        }
+
+        public void setHasOtherDependenciesIssues(boolean hasOtherDependenciesIssues) {
+            this.hasOtherDependenciesIssues = hasOtherDependenciesIssues;
+        }
+        
+        public boolean hasExtensionIssues() {
+            return hasExtensionIssues;
+        }
+        
+        public boolean hasOtherDependenciesIssues() {
+            return hasOtherDependenciesIssues;
+        }
+        
+        public void addOtherDependencyProblem(MultiStatus status) {
+            otherDependenciesProblems.add(status);
+        }
+
+        public List<MultiStatus> getOtherDependenciesProblems() {
+            return otherDependenciesProblems;
+        }
+
     }
 
 }

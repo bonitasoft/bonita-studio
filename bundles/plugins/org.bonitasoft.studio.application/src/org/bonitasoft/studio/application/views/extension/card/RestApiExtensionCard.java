@@ -54,9 +54,14 @@ public class RestApiExtensionCard extends ExtensionCard implements Zoomable {
     }
 
     @Override
-    protected void createTitleComposite(Composite parent) {
-        super.createTitleComposite(parent);
+    protected void createTitleComposite(Composite parent, String backgroundCssClassname) {
+        super.createTitleComposite(parent, backgroundCssClassname);
         addZoomBehavior(titleLabel);
+    }
+    
+    @Override
+    public String getTextClassName() {
+        return super.getTextClassName();
     }
 
     @Override

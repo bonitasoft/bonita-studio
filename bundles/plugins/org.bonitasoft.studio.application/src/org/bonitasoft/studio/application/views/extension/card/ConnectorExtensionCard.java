@@ -19,8 +19,11 @@ import org.bonitasoft.studio.application.ui.control.model.dependency.BonitaArtif
 import org.bonitasoft.studio.application.views.extension.card.zoom.ConnectorZoomControl;
 import org.bonitasoft.studio.application.views.extension.card.zoom.ZoomListener;
 import org.bonitasoft.studio.application.views.extension.card.zoom.Zoomable;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Event;
 
 public class ConnectorExtensionCard extends ExtensionCard implements Zoomable {
 
@@ -38,8 +41,8 @@ public class ConnectorExtensionCard extends ExtensionCard implements Zoomable {
     }
 
     @Override
-    protected void createTitleComposite(Composite parent) {
-        super.createTitleComposite(parent);
+    protected void createTitleComposite(Composite parent, String backgroundCssClassname) {
+        super.createTitleComposite(parent, backgroundCssClassname);
         addZoomBehavior(titleLabel);
     }
 
@@ -51,6 +54,11 @@ public class ConnectorExtensionCard extends ExtensionCard implements Zoomable {
     @Override
     public ZoomListener getZoomListener() {
         return zoomListener;
+    }
+    
+    @Override
+    public String getTextClassName() {
+        return super.getTextClassName();
     }
 
     @Override

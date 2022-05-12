@@ -17,15 +17,18 @@ package org.bonitasoft.studio.common.repository.core;
 import java.util.List;
 import java.util.Optional;
 
+import org.apache.maven.model.Dependency;
 import org.bonitasoft.plugin.analyze.report.model.ActorFilterImplementation;
 import org.bonitasoft.plugin.analyze.report.model.ConnectorImplementation;
 import org.bonitasoft.plugin.analyze.report.model.Definition;
 import org.bonitasoft.plugin.analyze.report.model.DependencyReport;
 import org.bonitasoft.plugin.analyze.report.model.Form;
+import org.bonitasoft.plugin.analyze.report.model.Issue;
 import org.bonitasoft.plugin.analyze.report.model.Page;
 import org.bonitasoft.plugin.analyze.report.model.RestAPIExtension;
 import org.bonitasoft.plugin.analyze.report.model.Theme;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.MultiStatus;
 
 public interface ProjectDependenciesStore {
 
@@ -48,5 +51,11 @@ public interface ProjectDependenciesStore {
     List<RestAPIExtension> getRestAPIExtensions();
 
     List<Form> getForms();
+    
+    List<Issue> getIssues();
+    
+    List<Issue> findIssues(Dependency dependency);
+
+    MultiStatus getStatus(Dependency dep);
 
 }

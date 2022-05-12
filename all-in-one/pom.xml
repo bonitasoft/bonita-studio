@@ -214,8 +214,19 @@
                             <source>${project.basedir}/all-in-one-p2-packaging.groovy</source>
                         </configuration>
                     </execution>
+                    <execution>
+                        <id>verify-packaging</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>execute</goal>
+                        </goals>
+                        <configuration>
+                            <source>${project.basedir}/verify-packaging.groovy</source>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
+            
 
 			<!-- all-in-one assembly with all platforms -->
 			<plugin>

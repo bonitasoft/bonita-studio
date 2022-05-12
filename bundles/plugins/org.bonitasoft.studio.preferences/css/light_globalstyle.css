@@ -71,6 +71,11 @@ CLabel#warningTextColor {
     color: #9baa14;
 }
 
+Label#problemTextColor,
+CLabel#problemTextColor {
+    color: #c05621;
+}
+
 Label#infoTextColor,
 CLabel#infoTextColor {
     color: #345fa3;
@@ -90,6 +95,12 @@ Label#titleTextColor,
 CLabel#titleTextColor,
 StyledText#titleTextColor {
     color: #2e405c;
+}
+
+Label#titleTextColor-error,
+CLabel#titleTextColor-error,
+StyledText#titleTextColor-error {
+    color: #c05621;
 }
 
 Label#headerTextColor,
@@ -122,6 +133,25 @@ CLabel#cardHighlightTitleColor {
 .MPart .cardBackground,
 .MPart .cardBackground > * {
     background-color: #ffffff;
+}
+
+.MPart .cardBackground-error,
+.MPart .cardBackground-error > * {
+    background-color: #fffaf0;
+}
+
+
+.MPart .warningSectionBackground,
+.MPart .warningSectionBackground > * {
+    background-color: #fffaf0;
+}
+
+.MPart .warningSectionBackground > .separator {
+    background-color:  rgb(237, 137, 54);
+}
+
+.MPart .cardBackground-error > .separator {
+    background-color: rgb(237, 137, 54);
 }
 
 .MPart .cardBackground > .separator {

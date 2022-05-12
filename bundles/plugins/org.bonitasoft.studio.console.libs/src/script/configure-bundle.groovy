@@ -13,7 +13,7 @@ assert contextFile.exists() : 'Tomcat bundle context.xml file not found'
 assert loggersConfigFile.exists() : 'Tomcat bundle log4j2-loggers.xml file not found'
 assert loggerAppendersConfigFile.exists() : 'Tomcat bundle log4j2-appenders.xml file not found'
 
-println "Set tomcat session cookie path to '/' for uid integration"
+print "Set tomcat session cookie path to '/' for uid integration"
 
 def contextNode = new XmlSlurper().parse(contextFile)
 contextNode.@sessionCookiePath = '/'

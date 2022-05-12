@@ -113,6 +113,17 @@ StyledText#titleTextColor {
 	color: #b4bec8;
 }
 
+Label#problemTextColor,
+CLabel#problemTextColor {
+    color: #c05621;
+}
+
+Label#titleTextColor-error,
+CLabel#titleTextColor-error,
+StyledText#titleTextColor-error {
+    color: #c05621;
+}
+
 Label#headerTextColor,
 CLabel#headerTextColor,
 StyledText#headerTextColor {
@@ -144,6 +155,25 @@ CLabel#cardHighlightTitleColor {
 .MPart .cardBackground > *,
 Table#extensionViewBackground { 
     background-color: #2d3749;
+}
+
+.MPart .cardBackground-error,
+.MPart .cardBackground-error > * {
+    background-color: #4a5568;
+}
+
+
+.MPart .warningSectionBackground,
+.MPart .warningSectionBackground > * {
+    background-color: #4a5568;
+}
+
+.MPart .warningSectionBackground > .separator {
+    background-color:  rgb(237, 137, 54);
+}
+
+.MPart .cardBackground-error > .separator {
+    background-color: rgb(237, 137, 54);
 }
 
 .MPart .cardBackground > .separator {

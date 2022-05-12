@@ -16,6 +16,7 @@ package org.bonitasoft.studio.application.operation.extension;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -26,12 +27,15 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 import org.apache.maven.model.Dependency;
+import org.bonitasoft.plugin.analyze.report.model.Issue;
+import org.bonitasoft.plugin.analyze.report.model.Issue.Severity;
 import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.application.operation.extension.participant.preview.PreviewResultImpl;
 import org.bonitasoft.studio.common.CommandExecutor;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.core.maven.AddDependencyOperation;
+import org.bonitasoft.studio.common.repository.core.maven.RemoveDependencyOperation;
 import org.bonitasoft.studio.common.repository.core.maven.UpdateDependencyVersionOperation;
 import org.bonitasoft.studio.common.repository.extension.update.DependencyUpdate;
 import org.bonitasoft.studio.common.repository.extension.update.participant.ExtensionUpdateParticipant;
@@ -41,11 +45,17 @@ import org.bonitasoft.studio.common.repository.extension.update.preview.Previewa
 import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.store.LocalDependenciesStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
+import org.bonitasoft.studio.ui.dialog.ProblemsDialog;
+import org.bonitasoft.studio.ui.provider.TypedLabelProvider;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.resource.JFaceResources;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 
 public class UpdateExtensionOperationDecorator {
@@ -79,10 +89,70 @@ public class UpdateExtensionOperationDecorator {
         }
     }
 
+    /**
+     * Check
+     * 
+     * @param dependency the added/updated dependency
+     * @param monitor a progress monitor
+     * @return true if the extension issues should be ignored and false if the update should be aborted.
+     * @throws InvocationTargetException 
+     */
+    public boolean checkIssues(Dependency dependency, IProgressMonitor monitor) throws InvocationTargetException {
+        var localDependencyStore = currentRepository.getLocalDependencyStore();
+        var projectDependenciesStore = currentRepository.getProjectDependenciesStore();
+        List<Issue> issues = projectDependenciesStore.findIssues(dependency);
+        if (!issues.isEmpty()) {
+            String artifactId = issues.get(0).getContext().get(0);
+            var dialogResult = new AtomicInteger(0);
+            Display.getDefault().syncExec(() -> dialogResult
+                    .set(new ProblemsDialog<Issue>(Display.getDefault().getActiveShell(),
+                            Messages.problemsFound,
+                            String.format(Messages.problemsFoundMessage, artifactId),
+                            MessageDialog.WARNING,
+                            new String[] { Messages.undo, IDialogConstants.IGNORE_LABEL}) {
+
+                        @Override
+                        protected TypedLabelProvider<Issue> getTypedLabelProvider() {
+                            return new TypedLabelProvider<Issue>() {
+
+                                @Override
+                                public String getText(Issue element) {
+                                    return element.getMessage();
+                                }
+
+                                @Override
+                                public Image getImage(Issue element) {
+                                    return Severity.valueOf(element.getSeverity()) == Severity.ERROR
+                                            ? JFaceResources.getImage(Dialog.DLG_IMG_MESSAGE_ERROR) : JFaceResources
+                                                    .getImage(Dialog.DLG_IMG_MESSAGE_WARNING);
+                                }
+                            };
+                        }
+
+                        @Override
+                        protected Collection<Issue> getInput() {
+                            return issues;
+                        }
+
+                    }.open()));
+            if(dialogResult.get() == 0) {
+                if(dependenciesUpdates.isEmpty()) {
+                    abortDependencyImport(dependency, localDependencyStore);
+                }else {
+                    abortDependenciesUpdate(localDependencyStore);
+                }
+                currentRepository.getProjectDependenciesStore().analyze(monitor);
+                return false;
+            }
+        }
+        return true;
+    }
+
     public boolean postUpdate(IProgressMonitor monitor)
             throws InvocationTargetException, InterruptedException {
         var localDependencyStore = currentRepository.getLocalDependencyStore();
         monitor.setTaskName(Messages.computingPreview);
+
         for (var p : participants) {
             try {
                 p.runPreview(new NullProgressMonitor());
@@ -160,6 +230,18 @@ public class UpdateExtensionOperationDecorator {
                     }
 
                 });
+    }
+    
+    
+    private void abortDependencyImport(Dependency depedency, LocalDependenciesStore localDependencyStore)
+            throws InvocationTargetException {
+        try {
+            new RemoveDependencyOperation(depedency)
+                    .run(AbstractRepository.NULL_PROGRESS_MONITOR);
+            localDependencyStore.remove(depedency);
+        } catch (CoreException e) {
+            throw new InvocationTargetException(e);
+        }
     }
 
     private void abortDependenciesUpdate(LocalDependenciesStore localDependencyStore)
