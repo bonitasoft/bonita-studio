@@ -1,0 +1,29 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Support for XML data
+Bundle-SymbolicName: org.bonitasoft.studio.xml;singleton:=true
+Bundle-Version: 7.15.0.qualifier
+Bundle-Activator: org.bonitasoft.studio.xml.XMLPlugin
+Bundle-Vendor: BonitaSoft S.A.
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.eclipse.xsd;bundle-version="2.6.0";visibility:=reexport,
+ org.bonitasoft.studio.model;bundle-version="1.0.0",
+ org.eclipse.core.resources;bundle-version="3.6.0",
+ org.bonitasoft.studio.pics;bundle-version="1.0.0",
+ org.bonitasoft.studio.common;bundle-version="1.0.0",
+ org.bonitasoft.studio.common.repository,
+ org.bonitasoft.studio.expression.editor,
+ org.eclipse.core.databinding;bundle-version="1.4.0",
+ org.eclipse.emf.databinding;bundle-version="1.2.0",
+ org.eclipse.emf.databinding.edit;bundle-version="1.2.0",
+ org.eclipse.emf.edit.ui,
+ org.eclipse.jface.databinding;bundle-version="1.5.0",
+ org.eclipse.ui.ide
+Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-ActivationPolicy: lazy
+Export-Package: org.bonitasoft.studio.xml.api,org.bonitasoft.studio.xm
+ l.repository,org.bonitasoft.studio.xml.ui
+Import-Package: org.bonitasoft.engine.bpm.bar,
+ org.eclipse.wst.xml.core.internal,
+ org.eclipse.wst.xml.core.internal.catalog.provisional

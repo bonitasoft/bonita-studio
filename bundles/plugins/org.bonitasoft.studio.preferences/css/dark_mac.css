@@ -1,0 +1,6 @@
+@import url("platform:/plugin/org.eclipse.ui.themes/css/e4-dark_mac.css");
+@import url("platform:/plugin/org.bonitasoft.studio.preferences/css/dark_globalstyle.css");
+
+Text#searchWidget {
+	background-color: #383a3b;
+}
