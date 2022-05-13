@@ -27,7 +27,6 @@ public class TestPatchedBundles{
     private static final String[] PATCHED_BUNDLES = {
             "org.eclipse.ui.views.properties.tabbed",
             "org.eclipse.gmf.runtime.lite.svg",
-            "org.eclipse.emf.edapt.migration",
             "org.eclipse.datatools.modelbase.sql.query"
     };
 

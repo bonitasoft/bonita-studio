@@ -9,7 +9,6 @@ def pluginsFolder = rootFolder.toPath().resolve('plugins').toFile()
 def patchedPluginsFilter = new FilenameFilter() {
     boolean accept(File path, String filename) {
         return (filename.startsWith('org.eclipse.ui.views.properties.tabbed_')
-                || filename.startsWith('org.eclipse.emf.edapt.migration_')
                 || filename.startsWith('org.eclipse.datatools.modelbase.sql.query_')
                 || filename.startsWith('org.eclipse.gmf.runtime.lite.svg_') ) 
             && !filename.contains('nl_')
@@ -18,7 +17,7 @@ def patchedPluginsFilter = new FilenameFilter() {
 
 def plugins = pluginsFolder.listFiles(patchedPluginsFilter)
 
-assert plugins.size() == 4 : 'Too many patched plugins collected'
+assert plugins.size() == 3 : 'Invalid number of patched plugins collected'
                     
 plugins.each { file ->
     try(def zip = new ZipFile(file)){
