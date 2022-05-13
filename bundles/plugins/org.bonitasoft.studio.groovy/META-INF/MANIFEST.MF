@@ -5,7 +5,7 @@ Bundle-SymbolicName: org.bonitasoft.studio.groovy;singleton:=true
 Bundle-Version: 7.15.0.qualifier
 Bundle-Activator: org.bonitasoft.studio.groovy.GroovyPlugin
 Bundle-Vendor: BonitaSoft S.A.
-Require-Bundle: org.junit;bundle-version="4.11.0";resolution:=optional,
+Require-Bundle: org.junit;resolution:=optional,
  org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.jface.text,
@@ -30,15 +30,15 @@ Require-Bundle: org.junit;bundle-version="4.11.0";resolution:=optional,
  org.eclipse.jdt.launching,
  org.bonitasoft.studio.common.repository,
  org.codehaus.groovy.eclipse.core,
- org.bonitasoft.studio.connectors.model;bundle-version="1.0.0",
- org.codehaus.groovy.eclipse.refactoring;bundle-version="2.8.0",
- org.codehaus.groovy.eclipse.quickfix;bundle-version="2.9.1",
+ org.bonitasoft.studio.connectors.model,
+ org.codehaus.groovy.eclipse.refactoring,
+ org.codehaus.groovy.eclipse.quickfix,
  com.google.guava;bundle-version="11.0.1",
  org.eclipse.e4.core.di,
  org.eclipse.jdt.ui,
- assertj-core;bundle-version="1.5.0";resolution:=optional,
+ assertj-core;resolution:=optional,
  org.eclipse.jdt.ui,
- org.bonitasoft.studio.tests-utils;bundle-version="7.4.4";resolution:=optional
+ org.bonitasoft.studio.tests-utils;resolution:=optional
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Import-Package: javax.inject;version="1.0.0",
  org.bonitasoft.engine.api,
