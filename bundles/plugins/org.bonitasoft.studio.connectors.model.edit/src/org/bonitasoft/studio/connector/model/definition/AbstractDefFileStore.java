@@ -135,7 +135,7 @@ public abstract class AbstractDefFileStore extends EMFFileStore<ConnectorDefinit
     @Override
     public Image getIcon() {
         try {
-            return getDefinitionImageResourceLoader().getIcon(getContent());
+            return getDefinitionImageResourceLoader().getIcon(getContent()).createImage();
         } catch (ReadFileStoreException e) {
             return null;
         }

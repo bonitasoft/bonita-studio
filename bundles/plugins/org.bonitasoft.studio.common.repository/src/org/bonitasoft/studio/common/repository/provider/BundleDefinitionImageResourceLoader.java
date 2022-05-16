@@ -41,13 +41,13 @@ public class BundleDefinitionImageResourceLoader implements DefinitionImageResou
     }
 
     @Override
-    public Image getIcon(ConnectorDefinition connectorDefinition) {
+    public ImageDescriptor getIcon(ConnectorDefinition connectorDefinition) {
         String icon = connectorDefinition.getIcon();
         Resource resource = connectorDefinition.eResource();
-        return loadImage(icon, resource);
+        return loadImageDescriptor(icon, resource);
     }
 
-    private Image loadImage(String icon, Resource resource) {
+    private ImageDescriptor loadImageDescriptor(String icon, Resource resource) {
         File parentFolder = getParentFile(resource);
         if (parentFolder != null && parentFolder.exists() && icon != null && !icon.isEmpty()) {
             final File iconFile = new File(parentFolder, icon);
@@ -55,8 +55,7 @@ public class BundleDefinitionImageResourceLoader implements DefinitionImageResou
                 URL iconURL = !iconFile.exists() ? lookupInBundle(icon) : iconFile.toURI().toURL();
                 if (iconURL != null) {
                     return ImageDescriptor
-                            .createFromURL(iconURL)
-                            .createImage();
+                            .createFromURL(iconURL);
                 }
             } catch (final MalformedURLException e) {
                 BonitaStudioLog.error(e);
@@ -91,10 +90,10 @@ public class BundleDefinitionImageResourceLoader implements DefinitionImageResou
     }
 
     @Override
-    public Image getIcon(Category category) {
+    public ImageDescriptor getIcon(Category category) {
         String icon = category.getIcon();
         final Resource resource = category.eResource();
-        return loadImage(icon, resource);
+        return loadImageDescriptor(icon, resource);
     }
 
 }

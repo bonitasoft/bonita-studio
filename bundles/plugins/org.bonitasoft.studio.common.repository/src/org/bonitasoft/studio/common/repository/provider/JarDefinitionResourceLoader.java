@@ -22,7 +22,6 @@ import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.connector.model.definition.Category;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.swt.graphics.Image;
 
 public class JarDefinitionResourceLoader implements DefinitionImageResourceLoader {
 
@@ -33,23 +32,22 @@ public class JarDefinitionResourceLoader implements DefinitionImageResourceLoade
     }
 
     @Override
-    public Image getIcon(ConnectorDefinition definition) {
-        return loadImage(definition.getIcon());
+    public ImageDescriptor getIcon(ConnectorDefinition definition) {
+        return loadImageDescriptor(definition.getIcon());
     }
 
     @Override
-    public Image getIcon(Category category) {
-        return loadImage(category.getIcon());
+    public ImageDescriptor getIcon(Category category) {
+        return loadImageDescriptor(category.getIcon());
     }
 
-    private Image loadImage(String iconPath) {
+    private ImageDescriptor loadImageDescriptor(String iconPath) {
         if (iconPath != null) {
             try {
                 URL jarFileURL = file.toURI().toURL();
                 URL imageURL = new URL("jar:" + jarFileURL.toExternalForm() + "!/" + iconPath);
                 return ImageDescriptor
-                        .createFromURL(imageURL)
-                        .createImage();
+                        .createFromURL(imageURL);
             } catch (MalformedURLException e) {
                 BonitaStudioLog.error(e);
                 return null;

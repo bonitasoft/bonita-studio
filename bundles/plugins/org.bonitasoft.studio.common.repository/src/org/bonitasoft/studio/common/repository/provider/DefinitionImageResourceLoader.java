@@ -16,12 +16,12 @@ package org.bonitasoft.studio.common.repository.provider;
 
 import org.bonitasoft.studio.connector.model.definition.Category;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
-import org.eclipse.swt.graphics.Image;
+import org.eclipse.jface.resource.ImageDescriptor;
 
 public interface DefinitionImageResourceLoader {
     
-    Image getIcon(ConnectorDefinition definition);
+    ImageDescriptor getIcon(ConnectorDefinition definition);
     
-    Image getIcon(Category category);
+    ImageDescriptor getIcon(Category category);
 
 }
