@@ -18,7 +18,6 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -92,7 +91,6 @@ public class DefinitionResourceProvider implements EventHandler {
     public static final String OUTPUT_DESC = "output.description";
 
     private ImageRegistry categoryImageRegistry;
-    private final ImageRegistry definitionImageRegistry;
     private final IRepositoryStore<? extends IRepositoryFileStore<?>> store;
     private final Bundle bundle;
     private List<ExtendedCategory> categories;
@@ -111,20 +109,11 @@ public class DefinitionResourceProvider implements EventHandler {
         return INSTANCES_MAP.computeIfAbsent(store, s -> new DefinitionResourceProvider(s, bundle));
     }
 
-    public ImageRegistry getImageRegistry() {
-        if (categoryImageRegistry == null) {
-            categoryImageRegistry = createImageRegistry();
-        }
-        return categoryImageRegistry;
-    }
-
     private DefinitionResourceProvider(
             final IRepositoryStore<? extends IRepositoryFileStore<?>> store,
             final Bundle bundle) {
         this.store = store;
         this.bundle = bundle;
-        categoryImageRegistry = createImageRegistry();
-        definitionImageRegistry = createImageRegistry();
         eventBroker().subscribe(MavenProjectDependenciesStore.PROJECT_DEPENDENCIES_ANALYZED_TOPIC, this);
     }
 
@@ -430,7 +419,7 @@ public class DefinitionResourceProvider implements EventHandler {
         return Collections.unmodifiableList(result);
     }
 
-    public Image createIcon(final File imageFile, final String iconName) {
+    public ImageDescriptor createIconDescritpor(final File imageFile, final String iconName) {
         final IFolder targetFoler = store.getResource();
         final IFile iconFile = targetFoler.getFile(iconName);
         BusyIndicator.showWhile(Display.getDefault(), () -> {
@@ -446,7 +435,7 @@ public class DefinitionResourceProvider implements EventHandler {
             }
         });
         try {
-            return ImageDescriptor.createFromURL(iconFile.getLocation().toFile().toURI().toURL()).createImage();
+            return ImageDescriptor.createFromURL(iconFile.getLocation().toFile().toURI().toURL());
         } catch (MalformedURLException e) {
             return null;
         }
@@ -546,7 +535,7 @@ public class DefinitionResourceProvider implements EventHandler {
                 .getCategories()
                 .stream()
                 .collect(Collectors.toList());
-        
+
         uncategorized = new ExtendedCategory(ConnectorDefinitionFactory.eINSTANCE.createCategory(),
                 null,
                 Messages.uncategorized);
@@ -560,26 +549,9 @@ public class DefinitionResourceProvider implements EventHandler {
         if (definition == null) {
             return Pics.getImage(PicsConstants.error);
         }
-        final String definitionId = definition.getId() + "_" + definition.getVersion();
-        Image icon = definitionImageRegistry.get(definitionId);
-        if (icon == null || icon.isDisposed()) {
-            IDefinitionRepositoryStore<?> defStore = (IDefinitionRepositoryStore<?>) store;
-            icon = defStore.find(definition)
-                    .map(DefinitionResourceLoaderProvider.class::cast)
-                    .map(DefinitionResourceLoaderProvider::getDefinitionImageResourceLoader)
-                    .map(loader -> loader.getIcon(definition))
-                    .orElse(null);
-            if (icon != null) {
-                definitionImageRegistry.put(definitionId, icon);
-            } else {
-                Image image = definitionImageRegistry.get(definitionId);
-                if (image != null) {
-                    image.dispose();
-                    definitionImageRegistry.remove(definitionId);
-                }
-            }
-        }
-        return icon;
+       return definitionRegistry.find(definition)
+            .map(ExtendedConnectorDefinition::getImage)
+            .orElse(null);
     }
 
     public void removeCategoryLabel(final Properties messages, final Category c) {

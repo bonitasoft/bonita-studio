@@ -138,6 +138,7 @@ public class VerticalLabel extends WrappingLabel {
             left = new PrecisionPoint(x, center );
         } 
         graphics.drawImage(labelImage, left);
+        disposeImage();
     }
 
     private boolean useGCTransformation() {
@@ -177,9 +178,8 @@ public class VerticalLabel extends WrappingLabel {
         
         Dimension strDim = FigureUtilities
                 .getTextExtents(string, font);
-        Image srcImage = useGCTransform ? new Image(display, strDim.height, strDim.width)
-                : new Image(display, strDim.width, strDim.height);
         if (useGCTransform) {
+            Image srcImage = new Image(display, strDim.height, strDim.width);
             GC gc = new GC(srcImage);
             Transform transform = new Transform(display);
             transform.rotate(-90);
@@ -193,7 +193,6 @@ public class VerticalLabel extends WrappingLabel {
             gc.dispose();
             return srcImage;
         }
-        disposeImage();
         return ImageUtilities.createRotatedImageOfString(string, font, foreground, background);
     }
 

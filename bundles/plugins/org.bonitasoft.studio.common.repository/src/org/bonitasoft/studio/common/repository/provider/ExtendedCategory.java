@@ -27,17 +27,19 @@ import org.eclipse.emf.ecore.EOperation;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.Image;
 
 public class ExtendedCategory implements Category {
 
     private Category category;
     private Image icon;
+    private ImageDescriptor iconDescriptor;
     private String label;
     
-    public ExtendedCategory(Category category, Image icon, String label) {
+    public ExtendedCategory(Category category, ImageDescriptor iconDescriptor, String label) {
         this.category = category;
-        this.icon = icon;
+        this.iconDescriptor = iconDescriptor;
         this.label = label;
     }
 
@@ -167,6 +169,9 @@ public class ExtendedCategory implements Category {
     }
 
     public Image getImage() {
+        if(icon == null || icon.isDisposed()) {
+            icon = iconDescriptor.createImage();
+        }
         return icon;
     }
     
@@ -180,7 +185,7 @@ public class ExtendedCategory implements Category {
     
     public void dispose() {
         if(icon != null) {
-            icon.dispose();
+            iconDescriptor.destroyResource(icon);;
         }
     }
 }

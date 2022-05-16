@@ -30,6 +30,7 @@ import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.connector.model.definition.Category;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.Image;
 
 public class ConnectorDefinitionRegistry {
@@ -47,9 +48,9 @@ public class ConnectorDefinitionRegistry {
             if (resourceLoaderProvider != null) {
                 ResourceBundle resourceBundle = resourceLoaderProvider.getBundleResourceLoader()
                         .getResourceBundle(DEFAULT_LOCALE);
-                Image icon = resourceLoaderProvider.getDefinitionImageResourceLoader().getIcon(definition);
+                ImageDescriptor iconDescriptor = resourceLoaderProvider.getDefinitionImageResourceLoader().getIcon(definition);
                 definitionRegistry.put(id(definition), new ExtendedConnectorDefinition(definition,
-                        icon,
+                        iconDescriptor,
                         resourceBundle));
 
                 definition.getCategory().stream()

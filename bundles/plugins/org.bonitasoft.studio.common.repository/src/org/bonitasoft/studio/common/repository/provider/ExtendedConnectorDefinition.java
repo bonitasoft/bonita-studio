@@ -33,17 +33,19 @@ import org.eclipse.emf.ecore.EOperation;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.Image;
 
 public class ExtendedConnectorDefinition implements ConnectorDefinition, LocalizedConnectorDefinition {
 
     private ConnectorDefinition definition;
+    private ImageDescriptor iconDescriptor;
     private Image icon;
     private ResourceBundle resourceBundle;
 
-    public ExtendedConnectorDefinition(ConnectorDefinition definition, Image icon, ResourceBundle resourceBundle) {
+    public ExtendedConnectorDefinition(ConnectorDefinition definition, ImageDescriptor iconDescriptor, ResourceBundle resourceBundle) {
         this.definition = definition;
-        this.icon = icon;
+        this.iconDescriptor = iconDescriptor;
         this.resourceBundle = resourceBundle;
     }
 
@@ -198,6 +200,9 @@ public class ExtendedConnectorDefinition implements ConnectorDefinition, Localiz
     }
 
     public Image getImage() {
+        if(icon == null || icon.isDisposed()) {
+            icon = iconDescriptor.createImage();
+        }
         return icon;
     }
 
@@ -268,7 +273,7 @@ public class ExtendedConnectorDefinition implements ConnectorDefinition, Localiz
     
     public void dispose() {
         if(icon != null) {
-            icon.dispose();
+            iconDescriptor.destroyResource(icon);
         }
     }
     

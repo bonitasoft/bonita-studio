@@ -54,6 +54,7 @@ import org.eclipse.jface.databinding.wizard.WizardPageSupport;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -358,9 +359,9 @@ public class DefinitionInformationWizardPage extends WizardPage implements ISele
                     Category newCategory = dialog.getCategory();
                     String displayName = dialog.getDisplayName();
                     messageProvider.setCategoryLabel(messages, newCategory.getId(), displayName);
-                    Image newIcon = null;
+                    ImageDescriptor newIcon = null;
                     if (imageFile != null) {
-                        newIcon = messageProvider.createIcon(imageFile, newCategory.getIcon());
+                        newIcon = messageProvider.createIconDescritpor(imageFile, newCategory.getIcon());
                     }
                     input = (List<Category>) categoryViewer.getInput();
                     
