@@ -30,7 +30,6 @@ import org.bonitasoft.studio.common.repository.core.maven.MavenProjectHelper;
 import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
 import org.bonitasoft.studio.common.repository.core.migration.BonitaProjectMigrator;
 import org.bonitasoft.studio.common.repository.core.migration.report.MigrationReport;
-import org.bonitasoft.studio.common.repository.core.migration.step.CreatePomMigrationStep;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspace;
@@ -72,21 +71,30 @@ public class CreateBonitaProjectOperation implements IWorkspaceRunnable {
         project.create(AbstractRepository.NULL_PROGRESS_MONITOR);
         project.open(AbstractRepository.NULL_PROGRESS_MONITOR);
 
-        project.setDescription(
-                new ProjectDescriptionBuilder()
-                        .withProjectName(project.getName())
-                        .withComment(ProductVersion.CURRENT_VERSION)
-                        .havingNatures(natures)
-                        .havingBuilders(builders)
-                        .build(),
-                AbstractRepository.NULL_PROGRESS_MONITOR);
+       
 
         if (migrationEnabled) {
             report = new BonitaProjectMigrator(project).run(monitor);
+            project.setDescription(
+                    new ProjectDescriptionBuilder()
+                            .withProjectName(project.getName())
+                            .withComment(ProductVersion.CURRENT_VERSION)
+                            .havingNatures(natures)
+                            .havingBuilders(builders)
+                            .build(),
+                    AbstractRepository.NULL_PROGRESS_MONITOR);
             ((ProjectConfigurationManager) MavenPlugin.getProjectConfigurationManager())
                     .updateProjectConfiguration(new MavenUpdateRequest(project, false, false), true, false, true,
                             monitor);
         } else {
+            project.setDescription(
+                    new ProjectDescriptionBuilder()
+                            .withProjectName(project.getName())
+                            .withComment(ProductVersion.CURRENT_VERSION)
+                            .havingNatures(natures)
+                            .havingBuilders(builders)
+                            .build(),
+                    AbstractRepository.NULL_PROGRESS_MONITOR);
             MavenProjectModelBuilder mavenProjectBuilder = newProjectBuilder(metadata);
             createDefaultPomFile(project, mavenProjectBuilder);
         }
