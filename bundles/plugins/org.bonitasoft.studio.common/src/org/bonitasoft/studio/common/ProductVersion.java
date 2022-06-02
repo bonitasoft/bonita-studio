@@ -15,6 +15,7 @@
 package org.bonitasoft.studio.common;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.UncheckedIOException;
 import java.util.Properties;
 
@@ -28,10 +29,9 @@ import org.osgi.framework.Version;
  */
 public class ProductVersion {
     
-    public static final Properties BUILD_PROPERTIES;
+    private static final Properties BUILD_PROPERTIES = new Properties();
     static {
-        BUILD_PROPERTIES = new Properties();
-        try(var is = ProductVersion.class.getResourceAsStream("/build.properties")){
+        try(InputStream is = ProductVersion.class.getResourceAsStream("/build_info.properties")){
             BUILD_PROPERTIES.load(is);
         } catch (IOException e) {
             throw new UncheckedIOException(e);
