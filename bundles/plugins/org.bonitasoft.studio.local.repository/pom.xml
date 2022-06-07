@@ -15,7 +15,7 @@
 
     <properties>
         <repository.dir>${project.basedir}/repository</repository.dir>
-        <localRepository.compatibleVersions.skip>${localRepository.skip}</localRepository.compatibleVersions.skip>
+        <localRepository.compatibleVersions.skip>true</localRepository.compatibleVersions.skip>
     </properties>
 
     <build>
@@ -130,9 +130,6 @@
     <profiles>
         <profile>
             <id>offline-local-repository</id>
-            <properties>
-                <localRepository.compatibleVersions.skip>true</localRepository.compatibleVersions.skip>  
-            </properties>
             <build>
                 <plugins>
                     <plugin>
