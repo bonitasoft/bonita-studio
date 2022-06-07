@@ -2,6 +2,7 @@ package org.bonitasoft.studio.application;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.net.InetAddress;
 import java.net.InetSocketAddress;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
@@ -31,7 +32,7 @@ public class HealthCheckServerManager {
     public synchronized void start(int port) throws IOException {
         if (server == null) {
             runningPort = port;
-            server = HttpServer.create(new InetSocketAddress(runningPort), 0);
+            server = HttpServer.create(new InetSocketAddress(InetAddress.getByName(null), runningPort), 0);
             server.createContext("/api/workspace/status/", exchange -> {
                 String response = "Studio is alive";
                 exchange.sendResponseHeaders(200, response.length());
