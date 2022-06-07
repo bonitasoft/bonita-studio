@@ -15,7 +15,7 @@
 
     <properties>
         <repository.dir>${project.basedir}/repository</repository.dir>
-        <localRepository.compatibleVersions.skip>true</localRepository.compatibleVersions.skip>
+        <localRepository.compatibleVersions.skip>false</localRepository.compatibleVersions.skip>
     </properties>
 
     <build>
@@ -62,26 +62,6 @@
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
                 <executions>
-                    <execution>
-                        <id>package-beta-dependencies</id>
-                        <goals>
-                            <goal>exec</goal>
-                        </goals>
-                        <phase>generate-resources</phase>
-                        <configuration>
-                            <workingDirectory>${project.basedir}/src/template</workingDirectory>
-                            <executable>${mavenWrapper}</executable>
-                            <useMavenLogger>true</useMavenLogger>
-                            <skip>${localRepository.compatibleVersions.skip}</skip>
-                            <arguments>
-                                <argument>org.apache.maven.plugins:maven-dependency-plugin:${maven-dependency-plugin.version}:resolve</argument>
-                                <argument>-Dlocal.remote.repo.url=file:///${settings.localRepository}</argument>
-                                <argument>-Dmaven.repo.local=${repository.dir}</argument>
-                                <argument>-Dbonita.runtime.version=7.14.0.beta-01</argument>
-                                <argument>-Dbonita-project-maven-plugin.version=${bonita-project-report-model.version}</argument>
-                            </arguments>
-                        </configuration>
-                    </execution>
                     <execution>
                         <id>package-dependencies</id>
                         <goals>
@@ -130,6 +110,9 @@
     <profiles>
         <profile>
             <id>offline-local-repository</id>
+            <properties>
+                <localRepository.compatibleVersions.skip>false</localRepository.compatibleVersions.skip>
+            </properties>
             <build>
                 <plugins>
                     <plugin>
