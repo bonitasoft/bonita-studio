@@ -137,13 +137,14 @@ public class BonitaArtifactDependencyConverter {
      * Replace properties used in the url
      * This is not a proper maven resolution.
      */
-    private String resolve(String url, Model model) {
-        Matcher m = Pattern.compile("\\$\\{(.*?)}").matcher(url);
+    private String resolve(String value, Model model) {
+        Matcher m = Pattern.compile("\\$\\{(.*?)}").matcher(value);
         Map<String, String> replacements = new HashMap<>();
         while (m.find()) {
             String property = m.group(1);
             if (model.getProperties().containsKey(property)) {
-                replacements.put(property, model.getProperties().getProperty(property));
+                var propertyValue = model.getProperties().getProperty(property);
+                replacements.put(property,  resolve(propertyValue, model));
             } else if ("project.artifactId".equals(property)) {
                 replacements.put(property, model.getArtifactId());
             } else if ("project.version".equals(property)) {
@@ -153,10 +154,13 @@ public class BonitaArtifactDependencyConverter {
             }
         }
         for (var entry : replacements.entrySet()) {
-            url = url.replace("${" + entry.getKey() + "}", entry.getValue());
+            value = value.replace("${" + entry.getKey() + "}", entry.getValue());
         }
-        return url;
+        return value;
     }
+    
+    
+    
 
     private void fillCustomPage(Dependency dep, BonitaArtifactDependency bonitaDep) {
         CustomPage bonitaArtifact = (CustomPage) matchingArtifact;
