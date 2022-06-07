@@ -140,8 +140,8 @@ public class BusinessObjectModelFileStore extends AbstractBDMFileStore<BusinessO
             return null;
         }
         final long modificationStamp = resource.getModificationStamp();
-        try (InputStream contents = resource.getContents()) {
-            final BusinessObjectModel bom = getConverter().unmarshall(ByteStreams.toByteArray(contents));
+        try {
+            final BusinessObjectModel bom = getConverter().unmarshall(Files.readAllBytes(resource.getLocation().toFile().toPath()));
             cachedBusinessObjectModel.clear();
             daoTypes = null;
             cachedBusinessObjectModel.put(modificationStamp, bom);

@@ -15,8 +15,8 @@
 package org.bonitasoft.studio.businessobject.core.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -73,12 +73,23 @@ public class BusinessObjectModelRepositoryStoreTest {
 
     @Test
     public void import_should_generate_jar() {
-        doReturn(businessObjectFileStore).when(storeUnderTest).superDoImportInputStream("test", inputStream);
+        doReturn(businessObjectFileStore).when(storeUnderTest).superDoImportInputStream("bom.xml", inputStream);
+        when(businessObjectFileStore.getName()).thenReturn("bom.xml");
         doReturn(Status.OK_STATUS).when(storeUnderTest).generateJar(businessObjectFileStore);
 
-        storeUnderTest.doImportInputStream("test", inputStream);
+        storeUnderTest.doImportInputStream("bom.xml", inputStream);
 
         verify(storeUnderTest).generateJar(businessObjectFileStore);
+    }
+    
+    @Test
+    public void import_artifact_descriptor_should_not_generate_jar() {
+        doReturn(businessObjectFileStore).when(storeUnderTest).superDoImportInputStream(".artifact-descriptor.properties", inputStream);
+        when(businessObjectFileStore.getName()).thenReturn(".artifact-descriptor.properties");
+
+        storeUnderTest.doImportInputStream(".artifact-descriptor.properties", inputStream);
+
+        verify(storeUnderTest, never()).generateJar(businessObjectFileStore);
     }
 
 }

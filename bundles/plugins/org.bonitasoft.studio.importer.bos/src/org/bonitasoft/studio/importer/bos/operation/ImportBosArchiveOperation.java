@@ -402,6 +402,8 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
         importArchiveModel.getStores().stream()
                 .sorted(storeImportOrderComparator())
                 .flatMap(AbstractFolderModel::importableUnits)
+                // Ensure .artifact-descriptor.properties is imported before bom.xml
+                .sorted(Comparator.comparing(ImportableUnit::getName))
                 .forEach(unit -> {
                     monitor.subTask(NLS.bind(Messages.importing, unit.getName()));
                     importUnit(unit, importArchiveModel.getBosArchive(), statusBuilder, monitor);
