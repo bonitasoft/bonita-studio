@@ -31,6 +31,7 @@ import java.nio.channels.Channels;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.Duration;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -265,16 +266,19 @@ public class BonitaMarketplace {
     private String getLatestTag() throws IOException {
         var url = createURL(LATEST_RELEASE_URL);
         if (url != null) {
-            Map<String, Object> release = doGet(url);
+            Map<String, Object> release = doGet(url, Duration.ofSeconds(5));
             return (String) release.get("tag_name");
         }
         return null;
     }
 
-    private Map<String, Object> doGet(URL url) throws IOException {
+    private Map<String, Object> doGet(URL url, Duration timeout) throws IOException {
         try {
             HttpResponse<InputStream> response = HttpClientFactory.INSTANCE
-                    .send(HttpRequest.newBuilder(url.toURI()).GET().build(), BodyHandlers.ofInputStream());
+                    .send(HttpRequest.newBuilder(url.toURI())
+                            .GET()
+                            .timeout(timeout)
+                            .build(), BodyHandlers.ofInputStream());
             if(response.statusCode() != 200) {
                 String body = "";
                 try (var is = response.body()) {
