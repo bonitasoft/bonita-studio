@@ -36,11 +36,12 @@ public class MavenArtifactParser {
                     String.format("Unknown type for dependency '%s'. Only jar, zip or pom are supported.", filename));
         }
 
+        var artifactVersion = resolveArtifactVersion(artifactPath);
         return artifactFactory.createArtifactWithClassifier(resolveGroupId(artifactPath),
                 resolveArtifactId(artifactPath),
-                resolveArtifactVersion(artifactPath),
+                artifactVersion,
                 type,
-                resolveClassifier(filename));
+                resolveClassifier(filename, artifactVersion));
     }
 
     private String resolveGroupId(final Path artifactPath) {
@@ -48,18 +49,14 @@ public class MavenArtifactParser {
         return groupPath.toString().replace(File.separator, ".");
     }
 
-    private String resolveClassifier(final String filename) {
-        if (filename.endsWith("-sources.jar")) {
-            return "sources";
-        }
-        if (filename.endsWith("-javadoc.jar")) {
-            return "javadoc";
-        }
-        if (filename.endsWith("-noaop.jar")) {
-            return "noaop";
-        }
-        if (filename.endsWith("-no_aop.jar")) {
-            return "no_aop";
+    private String resolveClassifier(final String filename, String artifactVersion) {
+        int indexOf = filename.indexOf(artifactVersion);
+        if( indexOf != -1) {
+            int postVersionIndex = indexOf + artifactVersion.length() + 1;
+            int extensionIndex = filename.lastIndexOf('.');
+            if(postVersionIndex < filename.length() && extensionIndex != -1 && postVersionIndex < extensionIndex ) {
+                return filename.substring(postVersionIndex, extensionIndex);
+            }
         }
         return null;
     }
