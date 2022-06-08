@@ -94,6 +94,9 @@ public class Messages extends NLS {
     public static String newLayoutMenuLabel;
     public static String newWidgetMenuLabel;
     public static String newFragmentMenuLabel;
+    public static String uidStartupFailedTitle;
+    public static String uidStartupFailedMsg;
+    public static String openLogFile;
 
     static {
         NLS.initializeMessages("messages", Messages.class);
