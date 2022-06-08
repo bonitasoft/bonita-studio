@@ -72,9 +72,9 @@ public class MigrateUIDOperation implements IRunnableWithStatus {
         monitor.beginTask(Messages.migratingUID, IProgressMonitor.UNKNOWN);
         PageDesignerURLFactory urlBuilder = pageDesignerURLBuilder == null
                 ? new PageDesignerURLFactory(getPreferenceStore()) : pageDesignerURLBuilder;
-        WebPageRepositoryStore repositoryStore = RepositoryManager.getInstance()
+        WebPageRepositoryStore webPageStore = RepositoryManager.getInstance()
                 .getRepositoryStore(WebPageRepositoryStore.class);
-        migrate(monitor, urlBuilder, repositoryStore);
+        migrate(monitor, urlBuilder, webPageStore);
         WebFragmentRepositoryStore fragmentStore = RepositoryManager.getInstance()
                 .getRepositoryStore(WebFragmentRepositoryStore.class);
         WebWidgetRepositoryStore widgetStore = RepositoryManager.getInstance()
@@ -122,7 +122,7 @@ public class MigrateUIDOperation implements IRunnableWithStatus {
         HttpRequest request = HttpRequest.newBuilder(uri)
                 .timeout(Duration.ofSeconds(10))
                 .PUT(BodyPublishers.noBody()).build();
-        HttpResponse<InputStream> response = retriesUntil(request, 200, 5, 500);
+        HttpResponse<InputStream> response = retriesUntil(request, 200, 10, 2000);
         if (response == null) {
             throw new InvocationTargetException(new IOException("Failed to put on " + uri));
         }
@@ -134,13 +134,22 @@ public class MigrateUIDOperation implements IRunnableWithStatus {
         int retry = nbOfRetries;
         while (retry >= 0) {
             try {
-                HttpResponse<InputStream> httpResponse = HttpClientFactory.INSTANCE.send(request, BodyHandlers.ofInputStream());
+                HttpResponse<InputStream> httpResponse = HttpClientFactory.INSTANCE.send(request,
+                        BodyHandlers.ofInputStream());
                 if (expectedStatus == httpResponse.statusCode()) {
                     return httpResponse;
+                } else {
+                    retry--;
+                    Thread.sleep(delayBetweenRetries);
                 }
-                retry--;
-                Thread.sleep(delayBetweenRetries);
+
             } catch (IOException | InterruptedException e) {
+                retry--;
+                try {
+                    Thread.sleep(delayBetweenRetries);
+                } catch (InterruptedException e1) {
+                   BonitaStudioLog.error(e1);
+                }
                 BonitaStudioLog.error(e);
             }
         }
@@ -160,7 +169,7 @@ public class MigrateUIDOperation implements IRunnableWithStatus {
         HttpRequest request = HttpRequest.newBuilder(uri)
                 .timeout(Duration.ofSeconds(10))
                 .PUT(BodyPublishers.noBody()).build();
-        HttpResponse<InputStream> response = retriesUntil(request, 200, 5, 500);
+        HttpResponse<InputStream> response = retriesUntil(request, 200, 10, 2000);
         if (response == null) {
             throw new InvocationTargetException(new IOException("Failed to put on " + uri));
         }
@@ -191,7 +200,7 @@ public class MigrateUIDOperation implements IRunnableWithStatus {
         HttpRequest request = HttpRequest.newBuilder(uri)
                 .timeout(Duration.ofMinutes(1))
                 .PUT(BodyPublishers.noBody()).build();
-        HttpResponse<InputStream> response = retriesUntil(request, 200, 5, 500);
+        HttpResponse<InputStream> response = retriesUntil(request, 200, 10, 2000);
         if (response == null) {
             throw new InvocationTargetException(new IOException("Failed to put on " + uri));
         }
