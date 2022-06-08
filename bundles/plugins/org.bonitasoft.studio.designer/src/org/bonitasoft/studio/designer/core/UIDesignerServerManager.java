@@ -24,6 +24,7 @@ import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLDecoder;
+import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.net.http.HttpResponse.BodyHandlers;
@@ -38,8 +39,8 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.bonitasoft.studio.common.CommandExecutor;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.net.HttpClientFactory;
 import org.bonitasoft.studio.common.net.PortSelector;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.IBonitaProjectListener;
@@ -68,6 +69,10 @@ import org.eclipse.debug.core.model.IProcess;
 import org.eclipse.jdt.internal.launching.StandardVMType;
 import org.eclipse.jdt.launching.IVMInstall;
 import org.eclipse.jdt.launching.JavaRuntime;
+import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 import org.osgi.framework.Bundle;
 
@@ -86,8 +91,7 @@ public class UIDesignerServerManager implements IBonitaProjectListener {
     private PageDesignerURLFactory pageDesignerURLBuilder;
     private boolean started = false;
     private UIDWorkspaceSynchronizer synchronizer;
-    
-    
+
     private UIDesignerServerManager() {
         addShutdownHook();
     }
@@ -127,7 +131,7 @@ public class UIDesignerServerManager implements IBonitaProjectListener {
             if (!dataRepositoryServerManager.isStarted()) {
                 schedule(healthCheckServerPort, dataRepositoryPort,
                         dataRepositoryServerManager);
-            } 
+            }
             this.runtimePort = BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore()
                     .getInt(BonitaPreferenceConstants.CONSOLE_PORT);
             final ILaunchManager manager = getLaunchManager();
@@ -155,6 +159,19 @@ public class UIDesignerServerManager implements IBonitaProjectListener {
                             UIDesignerPlugin.PLUGIN_ID);
                     synchronizer = new UIDWorkspaceSynchronizer(repository);
                     synchronizer.connect();
+                } else {
+                    Display.getDefault().asyncExec(() -> {
+                        int res = MessageDialog.open(MessageDialog.ERROR,
+                                Display.getDefault().getActiveShell(),
+                                Messages.uidStartupFailedTitle,
+                                Messages.uidStartupFailedMsg,
+                                SWT.NONE,
+                                IDialogConstants.CLOSE_LABEL, Messages.openLogFile);
+                        if (res == 1) {
+                            new CommandExecutor().executeCommand("org.bonitasoft.studio.application.openUidLog",
+                                    Map.of());
+                        }
+                    });
                 }
             } catch (final CoreException | IOException e) {
                 BonitaStudioLog.error("Failed to run ui designer war", e);
@@ -193,27 +210,48 @@ public class UIDesignerServerManager implements IBonitaProjectListener {
     }
 
     private boolean connectToURL(final URL url) throws URISyntaxException {
-        var request = HttpRequest.newBuilder(url.toURI()).GET().build();
-        HttpResponse<Void> response = retriesUntil(request, 200, 15, 1000);
+        var httpClient = HttpClient.newBuilder()
+                .connectTimeout(Duration.ofSeconds(5))
+                .build();
+        var request = HttpRequest.newBuilder()
+                .method("HEAD", HttpRequest.BodyPublishers.noBody())
+                .uri(url.toURI())
+                .build();
+        HttpResponse<Void> response = retriesUntil(httpClient, request, 200, 15, 2000);
         return response != null;
     }
-    
-    private HttpResponse<Void> retriesUntil(HttpRequest request, int expectedStatus, int nbOfRetries,
+
+    private HttpResponse<Void> retriesUntil(HttpClient client, HttpRequest request, int expectedStatus, int nbOfRetries,
             int delayBetweenRetries) {
+        BonitaStudioLog.debug("Waiting for UI Designer to be up and running...", UIDesignerPlugin.PLUGIN_ID);
         int retry = nbOfRetries;
         while (retry >= 0) {
             try {
-                HttpResponse<Void> httpResponse = HttpClientFactory.INSTANCE.send(request, BodyHandlers.discarding());
+                HttpResponse<Void> httpResponse = client.send(request, BodyHandlers.discarding());
                 if (expectedStatus == httpResponse.statusCode()) {
                     return httpResponse;
+                } else {
+                    retry--;
+                    BonitaStudioLog
+                            .debug(String.format("Failed to reach UI Designer (status = %s). Number of retries = %s",
+                                    httpResponse.statusCode(), retry), UIDesignerPlugin.PLUGIN_ID);
+                    Thread.sleep(delayBetweenRetries);
                 }
-                retry--;
-                Thread.sleep(delayBetweenRetries);
             } catch (IOException | InterruptedException e) {
-               // Connection refused, the UID is not started yet
+                // Connection refused, the UID is not started yet
+                retry--;
+                try {
+                    Thread.sleep(delayBetweenRetries);
+                } catch (InterruptedException e1) {
+                    BonitaStudioLog.error(e);
+                }
+                BonitaStudioLog.debug(String.format("Failed to reach UI Designer (%s). Number of retries = %s",
+                        e.getMessage(), retry), UIDesignerPlugin.PLUGIN_ID);
             }
         }
-        BonitaStudioLog.error("The UI Designer failed to start and cannot be reached. Check UI Designer logs for more information.", UIDesignerPlugin.PLUGIN_ID);
+        BonitaStudioLog.error(
+                "The UI Designer failed to start and cannot be reached. Check UI Designer logs for more information.",
+                UIDesignerPlugin.PLUGIN_ID);
         return null;
     }
 

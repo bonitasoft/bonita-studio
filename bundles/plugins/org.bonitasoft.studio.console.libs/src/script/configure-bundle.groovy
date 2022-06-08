@@ -26,6 +26,12 @@ def configurationNode = new XmlSlurper().parse(loggersConfigFile)
 def slowQueryLogger = configurationNode.'Loggers'.'Logger'.find { it.'@name' == 'org.hibernate.SQL_SLOW' }
 assert slowQueryLogger : "org.hibernate.SQL_SLOW logger not found in $loggerConfigFile"
 slowQueryLogger.'@level' = 'WARN'
+
+println "Set REST API authorization API log level to DEBUG"
+configurationNode.'Loggers'.appendNode{
+    Logger(level:'DEBUG', name:'org.bonitasoft.engine.authorization.PermissionServiceImpl')
+}
+
 loggersConfigFile.write(XmlUtil.serialize(configurationNode))
 
 println success()
