@@ -52,7 +52,7 @@ public class MavenArtifactParserTest {
         final MavenArtifactParser parser = newParser();
 
         parser.parse(Paths.get("org", "bonitasoft", "web", "bonita-web-extensions", "7.2.0-SNAPSHOT",
-                "bonita-web-extensions-1.0.2-SNAPSHOT-sources.jar"));
+                "bonita-web-extensions-7.2.0-SNAPSHOT-sources.jar"));
 
         verify(artifactFactory).createArtifactWithClassifier("org.bonitasoft.web",
                 "bonita-web-extensions",
