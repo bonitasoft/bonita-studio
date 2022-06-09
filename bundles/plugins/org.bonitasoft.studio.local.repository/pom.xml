@@ -15,7 +15,7 @@
 
     <properties>
         <repository.dir>${project.basedir}/repository</repository.dir>
-        <localRepository.compatibleVersions.skip>${localRepository.skip}</localRepository.compatibleVersions.skip>
+        <localRepository.compatibleVersions.skip>false</localRepository.compatibleVersions.skip>
         <resolveDependencyPlugin>
             org.apache.maven.plugins:maven-dependency-plugin:${maven-dependency-plugin.version}:resolve
             -Dlocal.remote.repo.url=file:///${settings.localRepository}
@@ -124,7 +124,7 @@
         <profile>
             <id>offline-local-repository</id>
             <properties>
-                 <localRepository.compatibleVersions.skip>true</localRepository.compatibleVersions.skip>
+                 <localRepository.compatibleVersions.skip>false</localRepository.compatibleVersions.skip>
                  <resolveDependencyPlugin>
                     org.apache.maven.plugins:maven-dependency-plugin:${maven-dependency-plugin.version}:resolve
                     -Dmaven.repo.local=${settings.localRepository}
