@@ -39,8 +39,10 @@ public class CustomANDGateway2EditPart extends ANDGateway2EditPart {
 	
 	@Override
 	protected NodeFigure createNodePlate() {
-		DefaultSizeNodeFigure result = new DefaultSizeNodeFigure(FiguresHelper.GATEWAY_WIDTH, FiguresHelper.GATEWAY_WIDTH) {
-			public PointList getPolygonPoints() {
+	    return new DefaultSizeNodeFigure(FiguresHelper.GATEWAY_WIDTH, FiguresHelper.GATEWAY_WIDTH) {
+		
+		    @Override
+		    public PointList getPolygonPoints() {
 				PointList points = new PointList(5);
 				Rectangle anchRect = getHandleBounds();
 				points.addPoint(anchRect.x+anchRect.width/2,anchRect.y);                         
@@ -51,7 +53,6 @@ public class CustomANDGateway2EditPart extends ANDGateway2EditPart {
 				return points;
 			}
 		};
-		return result;
 	}
 
 
