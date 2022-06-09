@@ -43,11 +43,14 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.gmf.runtime.diagram.ui.internal.util.LabelViewConstants;
+import org.eclipse.gmf.runtime.draw2d.ui.figures.BaseSlidableAnchor;
 import org.eclipse.gmf.runtime.draw2d.ui.geometry.PointListUtilities;
+import org.eclipse.gmf.runtime.notation.Anchor;
 import org.eclipse.gmf.runtime.notation.BasicCompartment;
 import org.eclipse.gmf.runtime.notation.DecorationNode;
 import org.eclipse.gmf.runtime.notation.Edge;
 import org.eclipse.gmf.runtime.notation.FontStyle;
+import org.eclipse.gmf.runtime.notation.IdentityAnchor;
 import org.eclipse.gmf.runtime.notation.Location;
 import org.eclipse.gmf.runtime.notation.Node;
 import org.eclipse.gmf.runtime.notation.NotationFactory;
@@ -205,7 +208,7 @@ public class BPMNShapeFactory {
     private void attachLabel(Node node, String labelText,
             final BPMNShape elementShape) {
         final Font font = createFont(node);
-        if (font != null) {
+        if (font != null && labelText != null && !labelText.isBlank()) {
             final BPMNLabel label = DiFactory.eINSTANCE.createBPMNLabel();
             final BPMNLabelStyle labelStyle = getLabelStyle(font);
             label.setId(EcoreUtil.generateUUID());
@@ -213,6 +216,7 @@ public class BPMNShapeFactory {
             node.getPersistedChildren().stream()
                     .filter(DecorationNode.class::isInstance)
                     .map(DecorationNode.class::cast)
+                    .filter(n -> ((DecorationNode) n).isVisible())
                     .findFirst()
                     .ifPresent(labelNode -> {
                         Location offsetLocation = modelExporter.getLocation((Node) labelNode);
@@ -305,6 +309,7 @@ public class BPMNShapeFactory {
             if (bonitaElement instanceof SequenceFlow) {
                 bonitaEdge.getPersistedChildren().stream()
                         .filter(DecorationNode.class::isInstance)
+                        .filter(decoNode -> ((DecorationNode) decoNode).isVisible())
                         .findFirst()
                         .ifPresent(decorationNode -> attachEdgeLabel((DecorationNode) decorationNode, edge,
                                 ((SequenceFlow) bonitaElement).getName(), bonitaEdge));
@@ -317,7 +322,7 @@ public class BPMNShapeFactory {
     private void attachEdgeLabel(final DecorationNode decorationNode, final BPMNEdge edge, String labelText,
             Edge bonitaEdge) {
         Font font = createFont(bonitaEdge);
-        if (font != null) {
+        if (font != null && labelText != null && !labelText.isBlank()) {
             final BPMNLabel label = DiFactory.eINSTANCE.createBPMNLabel();
             Location relativeLocation = (Location) decorationNode.getLayoutConstraint();
 
@@ -366,8 +371,23 @@ public class BPMNShapeFactory {
             sourceFigure.setBounds(toRectangle(sourceLocation));
             IFigure targetFigure = new Figure();
             targetFigure.setBounds(toRectangle(targetLocation));
-            conn.setSourceAnchor(new CustomAnchor(sourceFigure));
-            conn.setTargetAnchor(new CustomAnchor(targetFigure));
+
+            Anchor sourceAnchor = bonitaEdge.getSourceAnchor();
+            if (sourceAnchor instanceof IdentityAnchor) {
+                conn.setSourceAnchor(new CustomAnchor(sourceFigure,
+                        BaseSlidableAnchor.parseTerminalString(((IdentityAnchor) sourceAnchor).getId())));
+            } else {
+                conn.setSourceAnchor(new CustomAnchor(sourceFigure));
+            }
+
+            Anchor targetAnchor = bonitaEdge.getTargetAnchor();
+            if (targetAnchor instanceof IdentityAnchor) {
+                conn.setTargetAnchor(new CustomAnchor(targetFigure,
+                        BaseSlidableAnchor.parseTerminalString(((IdentityAnchor) targetAnchor).getId())));
+            } else {
+                conn.setTargetAnchor(new CustomAnchor(targetFigure));
+            }
+
             org.eclipse.draw2d.RelativeBendpoint rbp = new org.eclipse.draw2d.RelativeBendpoint(conn);
             rbp.setRelativeDimensions(
                     new Dimension(relativeBendpoint.getSourceX(), relativeBendpoint.getSourceY()),
