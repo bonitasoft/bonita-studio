@@ -148,7 +148,8 @@ public class BusinessObjectModelRepositoryStore<F extends AbstractBDMFileStore<?
         } else {
             fileStore = superDoImportInputStream(fileName, inputStream);
         }
-        if (fileStore instanceof BusinessObjectModelFileStore) {
+        if (fileStore instanceof BusinessObjectModelFileStore 
+                && Objects.equals(fileStore.getName(), BusinessObjectModelFileStore.BOM_FILENAME)) {
             try {
                 BDMArtifactDescriptor descriptor = ((BusinessObjectModelFileStore) fileStore).loadArtifactDescriptor();
                 ((BusinessObjectModelFileStore) fileStore).saveArtifactDescriptor(descriptor);
@@ -156,22 +157,24 @@ public class BusinessObjectModelRepositoryStore<F extends AbstractBDMFileStore<?
                 BonitaStudioLog.error("Failed to import Business data model artifact descriptor", e);
             }
             addNamespace((BusinessObjectModelFileStore) fileStore);
+            generateJar(fileStore);
         }
-        generateJar(fileStore);
         return fileStore;
     }
 
     // namespace migration (performed by the marshaller, engine side)
     private void addNamespace(BusinessObjectModelFileStore fStore) {
-        try {
-            BusinessObjectModel model = fStore.getContent();
-            if (model != null) {
-                byte[] bytes = converter.marshall(model);
-                model = converter.unmarshall(bytes);
-                fStore.save(model);
+        if (Objects.equals(fStore.getName(), BusinessObjectModelFileStore.BOM_FILENAME)) {
+            try {
+                BusinessObjectModel model = fStore.getContent();
+                if (model != null) {
+                    byte[] bytes = converter.marshall(model);
+                    model = converter.unmarshall(bytes);
+                    fStore.save(model);
+                }
+            } catch (JAXBException | IOException | SAXException | ReadFileStoreException e) {
+                BonitaStudioLog.error("Failed to perform namespace migration on Business data model", e);
             }
-        } catch (JAXBException | IOException | SAXException | ReadFileStoreException e) {
-            BonitaStudioLog.error("Failed to perform namespace migration on Business data model", e);
         }
     }
 

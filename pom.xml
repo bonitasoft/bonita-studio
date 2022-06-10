@@ -210,25 +210,17 @@
                 <artifactId>groovy-maven-plugin</artifactId>
                 <executions>
                     <execution>
-                        <phase>initialize</phase>
+                        <id>fetch-l10n</id>
                         <goals>
                             <goal>execute</goal>
                         </goals>
                         <configuration>
-                            <source>
-                                project.properties["branding.version.short"]
-                                =
-                                "${branding.version}".replaceAll('-.*',
-                                '')
-                                def versionPattern =
-                                ~"([1-9]\\d*)\\.(\\d+)\\.(\\d+)(?:-([a-zA-Z0-9]+))?"
-                                def matcher = "${project.version}" =~
-                                versionPattern
-                                def result =
-                                matcher[0..-1][0]
-                                project.properties["product.major.version"]
-                                = "${result[1]}.${result[2]}".toString()
-                            </source>
+                            <defaults>
+                                <project.basedir>${project.basedir}</project.basedir>
+                                <crowdin.branch>master</crowdin.branch>
+                                <crowdin.locale>fr</crowdin.locale>
+                            </defaults>
+                            <source>fetch_crowdin_l10n.groovy</source>
                         </configuration>
                     </execution>
                 </executions>
