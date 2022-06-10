@@ -28,6 +28,10 @@ public class CustomAnchor extends SlidableAnchor {
     public CustomAnchor(IFigure targetFigure) {
         super(targetFigure);
     }
+    
+    public CustomAnchor(IFigure targetFigure, PrecisionPoint p) {
+        super(targetFigure, p);
+    }
 
     /*
      * (non-Javadoc)

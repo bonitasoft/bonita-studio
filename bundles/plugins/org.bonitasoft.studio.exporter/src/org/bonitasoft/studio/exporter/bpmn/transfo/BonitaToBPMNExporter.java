@@ -29,6 +29,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
@@ -87,6 +88,7 @@ import org.bonitasoft.studio.model.process.IntermediateErrorCatchEvent;
 import org.bonitasoft.studio.model.process.IntermediateThrowMessageEvent;
 import org.bonitasoft.studio.model.process.IntermediateThrowSignalEvent;
 import org.bonitasoft.studio.model.process.Lane;
+import org.bonitasoft.studio.model.process.LinkEvent;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.Message;
 import org.bonitasoft.studio.model.process.MessageFlow;
@@ -111,7 +113,6 @@ import org.bonitasoft.studio.model.process.Task;
 import org.bonitasoft.studio.model.process.TextAnnotation;
 import org.bonitasoft.studio.model.process.TextAnnotationAttachment;
 import org.bonitasoft.studio.model.process.ThrowLinkEvent;
-import org.bonitasoft.studio.model.process.ThrowMessageEvent;
 import org.bonitasoft.studio.model.process.XMLData;
 import org.bonitasoft.studio.model.process.XMLType;
 import org.bonitasoft.studio.model.process.XORGateway;
@@ -173,7 +174,6 @@ import org.omg.spec.bpmn.model.TLaneSet;
 import org.omg.spec.bpmn.model.TLinkEventDefinition;
 import org.omg.spec.bpmn.model.TLoopCharacteristics;
 import org.omg.spec.bpmn.model.TMessage;
-import org.omg.spec.bpmn.model.TMessageEventDefinition;
 import org.omg.spec.bpmn.model.TMessageFlow;
 import org.omg.spec.bpmn.model.TMultiInstanceLoopCharacteristics;
 import org.omg.spec.bpmn.model.TOperation;
@@ -222,6 +222,8 @@ public class BonitaToBPMNExporter {
     private IModelSearch modelSearch;
     private MultiStatus status;
     private ConnectorTransformationXSLProvider connectorXSLProvider;
+    private Map<LinkEvent, TLinkEventDefinition> linkEvents = new HashMap<>();
+    private Set<String> messagesReferences = new HashSet<>();
 
     public BonitaToBPMNExporter() {
         errors.add("Forms and other resources are not exported.");
@@ -267,6 +269,8 @@ public class BonitaToBPMNExporter {
 
         populateWithMessageFlow(mainProcess);
         populateWithSignals(definitions);
+        handleLinkEvents();
+        handleMessageEvents();
 
         root.setDefinitions(definitions);
         final ResourceSet resourceSet = new ResourceSetImpl();
@@ -290,6 +294,35 @@ public class BonitaToBPMNExporter {
             status = createErrorStatus(ex);
         } finally {
             resource.unload();
+        }
+    }
+
+    private void handleMessageEvents() {
+        messagesReferences.stream()
+                .map(event -> {
+                    var message = ModelFactory.eINSTANCE.createTMessageEventDefinition();
+                    message.setId(event);
+                    return message;
+                })
+                .forEach(definitions.getRootElement()::add);
+    }
+
+    private void handleLinkEvents() {
+        for (Entry<LinkEvent, TLinkEventDefinition> entry : linkEvents.entrySet()) {
+            if (entry.getKey() instanceof ThrowLinkEvent) {
+                ThrowLinkEvent throwLink = (ThrowLinkEvent) entry.getKey();
+                var eventDefinition = entry.getValue();
+                if (throwLink.getTo() != null) {
+                    eventDefinition.setName(Strings.slugify(throwLink.getTo().getName()));
+                }
+            } else if (entry.getKey() instanceof CatchLinkEvent) {
+                CatchLinkEvent catchLink = (CatchLinkEvent) entry.getKey();
+                var eventDefinition = entry.getValue();
+                for (final ThrowLinkEvent from : catchLink.getFrom()) {
+                    var sourceEvent = linkEvents.get(from);
+                    eventDefinition.getSource().add(QName.valueOf(sourceEvent.getId()));
+                }
+            }
         }
     }
 
@@ -333,49 +366,93 @@ public class BonitaToBPMNExporter {
         /* handle output */
         final TMessage tMessageOutputBonitaConnector = createConnectorDefOutput(connectorDefId);
         /* Create interface with it operation */
-        final TInterface tInterfaceBonitaConnector = ModelFactory.eINSTANCE.createTInterface();
-        tInterfaceBonitaConnector.setName(connectorDefId + "_Bonita_Connector_Interface");
-        tInterfaceBonitaConnector.setId(connectorDefId + "_Bonita_Connector_Interface");
-        //tInterfaceBonitaConnector.setImplementationRef(QName.valueOf("BonitaConnector"));
-        final TOperation tOperationConnector = ModelFactory.eINSTANCE.createTOperation();
-        tOperationConnector.setId("Exec" + connectorDefId);
-        tOperationConnector.setName("Exec" + connectorDefId);
-        tOperationConnector.setInMessageRef(QName.valueOf(tMessageInputBonitaConnector.getId()));
-        tOperationConnector.setOutMessageRef(QName.valueOf(tMessageOutputBonitaConnector.getId()));
-        tInterfaceBonitaConnector.getOperation().add(tOperationConnector);
-        definitions.getRootElement().add(tInterfaceBonitaConnector);
+        var interfaceId = connectorDefId + "_Bonita_Connector_Interface";
+        definitions.getRootElement().stream()
+                .filter(TInterface.class::isInstance)
+                .map(TInterface.class::cast)
+                .filter(i -> interfaceId.equals(i.getId()))
+                .findFirst()
+                .ifPresentOrElse(id -> {
+                }, () -> {
+                    final TInterface tInterfaceBonitaConnector = ModelFactory.eINSTANCE.createTInterface();
+                    tInterfaceBonitaConnector.setName(interfaceId);
+                    tInterfaceBonitaConnector.setId(interfaceId);
+                    //tInterfaceBonitaConnector.setImplementationRef(QName.valueOf("BonitaConnector"));
+                    final TOperation tOperationConnector = ModelFactory.eINSTANCE.createTOperation();
+                    tOperationConnector.setId("Exec" + connectorDefId);
+                    tOperationConnector.setName("Exec" + connectorDefId);
+                    tOperationConnector.setInMessageRef(QName.valueOf(tMessageInputBonitaConnector.getId()));
+                    tOperationConnector.setOutMessageRef(QName.valueOf(tMessageOutputBonitaConnector.getId()));
+                    tInterfaceBonitaConnector.getOperation().add(tOperationConnector);
+                    definitions.getRootElement().add(tInterfaceBonitaConnector);
+                });
     }
 
     private TMessage createConnectorDefOutput(final String connectorDefId) {
-        final TItemDefinition tItemDefinitionBonitaConnectorOutput = ModelFactory.eINSTANCE.createTItemDefinition();
-        tItemDefinitionBonitaConnectorOutput
-                .setStructureRef(
-                        QName.valueOf(XMLNS_HTTP_BONITASOFT_COM_BONITA_CONNECTOR_DEFINITION + ":" + connectorDefId
-                                + "OutputType"));
         final String itemDefConnectorOutput = generateConnectorOutputItemDef(connectorDefId);
-        tItemDefinitionBonitaConnectorOutput.setId(itemDefConnectorOutput);
-        definitions.getRootElement().add(tItemDefinitionBonitaConnectorOutput);
-        final TMessage tMessageOutputBonitaConnector = ModelFactory.eINSTANCE.createTMessage();
-        tMessageOutputBonitaConnector.setItemRef(QName.valueOf(itemDefConnectorOutput));
-        tMessageOutputBonitaConnector.setId(connectorDefId + "ConnectorMessageOutput");
-        definitions.getRootElement().add(tMessageOutputBonitaConnector);
-        return tMessageOutputBonitaConnector;
+        definitions.getRootElement().stream()
+                .filter(e -> itemDefConnectorOutput.equals(e.getId()))
+                .findFirst()
+                .ifPresentOrElse(e -> {
+                }, () -> {
+                    final TItemDefinition tItemDefinitionBonitaConnectorOutput = ModelFactory.eINSTANCE
+                            .createTItemDefinition();
+                    tItemDefinitionBonitaConnectorOutput
+                            .setStructureRef(
+                                    QName.valueOf(
+                                            XMLNS_HTTP_BONITASOFT_COM_BONITA_CONNECTOR_DEFINITION + ":" + connectorDefId
+                                                    + "OutputType"));
+
+                    tItemDefinitionBonitaConnectorOutput.setId(itemDefConnectorOutput);
+                    definitions.getRootElement().add(tItemDefinitionBonitaConnectorOutput);
+                });
+
+        var outputId = connectorDefId + "ConnectorMessageOutput";
+        return definitions.getRootElement().stream()
+                .filter(TMessage.class::isInstance)
+                .map(TMessage.class::cast)
+                .filter(e -> outputId.equals(e.getId()))
+                .findFirst()
+                .orElseGet(() -> {
+                    final TMessage tMessageOutputBonitaConnector = ModelFactory.eINSTANCE.createTMessage();
+                    tMessageOutputBonitaConnector.setItemRef(QName.valueOf(itemDefConnectorOutput));
+                    tMessageOutputBonitaConnector.setId(outputId);
+                    definitions.getRootElement().add(tMessageOutputBonitaConnector);
+                    return tMessageOutputBonitaConnector;
+                });
+
     }
 
     private TMessage createConnectorDefInput(final String connectorDefId) {
-        final TItemDefinition tItemDefinitionBonitaConnectorInput = ModelFactory.eINSTANCE.createTItemDefinition();
-        tItemDefinitionBonitaConnectorInput
-                .setStructureRef(
-                        QName.valueOf(XMLNS_HTTP_BONITASOFT_COM_BONITA_CONNECTOR_DEFINITION + ":" + connectorDefId
-                                + "InputType"));
         final String itemDefConnectorInput = generateConnectorInputItemDef(connectorDefId);
-        tItemDefinitionBonitaConnectorInput.setId(itemDefConnectorInput);
-        definitions.getRootElement().add(tItemDefinitionBonitaConnectorInput);
-        final TMessage tMessageInputBonitaConnector = ModelFactory.eINSTANCE.createTMessage();
-        tMessageInputBonitaConnector.setItemRef(QName.valueOf(itemDefConnectorInput));
-        tMessageInputBonitaConnector.setId(connectorDefId + "ConnectorMessageInput");
-        definitions.getRootElement().add(tMessageInputBonitaConnector);
-        return tMessageInputBonitaConnector;
+        definitions.getRootElement().stream()
+                .filter(e -> itemDefConnectorInput.equals(e.getId()))
+                .findFirst()
+                .ifPresentOrElse(e -> {
+                }, () -> {
+                    final TItemDefinition tItemDefinitionBonitaConnectorInput = ModelFactory.eINSTANCE
+                            .createTItemDefinition();
+                    tItemDefinitionBonitaConnectorInput
+                            .setStructureRef(
+                                    QName.valueOf(
+                                            XMLNS_HTTP_BONITASOFT_COM_BONITA_CONNECTOR_DEFINITION + ":" + connectorDefId
+                                                    + "InputType"));
+                    tItemDefinitionBonitaConnectorInput.setId(itemDefConnectorInput);
+                    definitions.getRootElement().add(tItemDefinitionBonitaConnectorInput);
+                });
+        var id = connectorDefId + "ConnectorMessageInput";
+        return definitions.getRootElement().stream()
+                .filter(TMessage.class::isInstance)
+                .map(TMessage.class::cast)
+                .filter(e -> id.equals(e.getId()))
+                .findFirst()
+                .orElseGet(() -> {
+                    final TMessage tMessageInputBonitaConnector = ModelFactory.eINSTANCE.createTMessage();
+                    tMessageInputBonitaConnector.setItemRef(QName.valueOf(itemDefConnectorInput));
+                    tMessageInputBonitaConnector.setId(id);
+                    definitions.getRootElement().add(tMessageInputBonitaConnector);
+                    return tMessageInputBonitaConnector;
+                });
     }
 
     private File createXSDForConnectorDef(final String connectorDefId, IModelSearch modelSearch)
@@ -508,12 +585,10 @@ public class BonitaToBPMNExporter {
         bpmnPlane.getDiagramElement().add(processShape);
 
         populateWithData(pool, bpmnProcess);//create data before in order to have them accessible after
-        populateWithMessage(pool, bpmnProcess);
         populate(shapeFactory, pool, modelSearch.getAllItemsOfType(pool, Lane.class), bpmnProcess,
                 processShape.getBounds(), modelSearch);
         populateWithSequenceFlow(shapeFactory, pool, bpmnProcess);
         populateWithTextAnnotation(shapeFactory, pool, bpmnProcess, processShape.getBounds());
-
     }
 
     private void populateWithTextAnnotation(final BPMNShapeFactory shapeFactory, final Pool pool,
@@ -528,7 +603,8 @@ public class BonitaToBPMNExporter {
                     final List<TextAnnotationAttachment> textAnnotationAttachments = modelSearch.getAllItemsOfType(
                             pool,
                             TextAnnotationAttachment.class);
-                    EObject eContainer = source.eContainer() instanceof SubProcessEvent ? source.eContainer().eContainer() : source.eContainer();
+                    EObject eContainer = source.eContainer() instanceof SubProcessEvent
+                            ? source.eContainer().eContainer() : source.eContainer();
                     var containerId = modelSearch.getEObjectID(eContainer);
                     var containerBounds = bpmnPlane.getDiagramElement().stream()
                             .filter(BPMNShape.class::isInstance)
@@ -564,15 +640,6 @@ public class BonitaToBPMNExporter {
                 }).collect(Collectors.toList()));
     }
 
-    private void populateWithMessage(final Pool pool, final TProcess bpmnProcess) {
-        final List<ThrowMessageEvent> thowMessageEvents = modelSearch.getAllItemsOfType(pool, ThrowMessageEvent.class);
-        for (final ThrowMessageEvent throwMessageEvent : thowMessageEvents) {
-            for (final Message message : throwMessageEvent.getEvents()) {
-                final TMessage tMessage = ModelFactory.eINSTANCE.createTMessage();
-                tMessage.setId(EcoreUtil.getID(message));
-            }
-        }
-    }
 
     private void populateWithSignals(final TDefinitions definitions) {
         definitions.getRootElement().addAll(tSignals);
@@ -942,24 +1009,15 @@ public class BonitaToBPMNExporter {
                     }
                     bpmnBoundary.getEventDefinition().add(eventDef);
                 } else if (boundaryEvent instanceof BoundaryMessageEvent) {
-                    final TMessageEventDefinition eventDef = ModelFactory.eINSTANCE.createTMessageEventDefinition();
-                    eventDef.setId("eventdef-" + boundaryEvent.getName() + EcoreUtil.generateUUID());
                     final String eventCaught = ((BoundaryMessageEvent) boundaryEvent).getEvent();
-                    if (eventCaught != null && eventCaught.length() != 0) {
-                        eventDef.setMessageRef(QName.valueOf(eventCaught));
-                    }
-                    bpmnBoundary.getEventDefinition().add(eventDef);
+                    var eventId = eventCaught != null && !eventCaught.isBlank() ? eventCaught : EcoreUtil.generateUUID();
+                    bpmnBoundary.getEventDefinitionRef().add(QName.valueOf(eventId));
+                    messagesReferences.add(eventId);
                 } else if (boundaryEvent instanceof BoundaryTimerEvent) {
                     final TTimerEventDefinition eventDef = createTimerEventDef((AbstractTimerEvent) boundaryEvent);
                     bpmnBoundary.getEventDefinition().add(eventDef);
                 }
-
-                if (boundaryEvent instanceof NonInterruptingBoundaryTimerEvent) {
-                    bpmnBoundary.setCancelActivity(false);
-                } else {
-                    bpmnBoundary.setCancelActivity(true);
-                }
-
+                bpmnBoundary.setCancelActivity(!(boundaryEvent instanceof NonInterruptingBoundaryTimerEvent));
                 bpmnBoundary.setAttachedToRef(QName.valueOf(bpmnElement.getId()));
                 bpmnProcess.getFlowElement().add(bpmnBoundary);
                 mapping.put(boundaryEvent, bpmnBoundary);
@@ -1075,26 +1133,17 @@ public class BonitaToBPMNExporter {
             res = bpmnStart;
         } else if (child instanceof StartMessageEvent) {
             final TStartEvent bpmnStart = ModelFactory.eINSTANCE.createTStartEvent();
-            final TMessageEventDefinition eventDef = ModelFactory.eINSTANCE.createTMessageEventDefinition();
-            bpmnStart.getEventDefinition().add(eventDef);
-            final String eventId = ((StartMessageEvent) child).getEvent() != null
-                    ? ((StartMessageEvent) child).getEvent() + EcoreUtil.generateUUID()
+            final String eventId = ((StartMessageEvent) child).getEvent() != null &&  !((StartMessageEvent) child).getEvent().isBlank()
+                    ? ((StartMessageEvent) child).getEvent()
                     : EcoreUtil.generateUUID();
-            eventDef.setId("event-def" + eventId);
-            final EList<Operation> messageContent = ((StartMessageEvent) child).getMessageContent();
-            if (messageContent.size() > 0) {
-                //            	createOperation
-                //            	eventDef.setOperationRef(value)
-                //            	bpmnStart.
-            }
+            bpmnStart.getEventDefinitionRef().add(QName.valueOf(eventId));
+            messagesReferences.add(eventId);
             res = bpmnStart;
         } else if (child instanceof StartSignalEvent) {
             final TStartEvent bpmnStart = ModelFactory.eINSTANCE.createTStartEvent();
             final TSignal tSignal = getOrCreateTSignal((SignalEvent) child);
             final TSignalEventDefinition eventDef = ModelFactory.eINSTANCE.createTSignalEventDefinition();
-            if (tSignal != null) {
-                eventDef.setSignalRef(QName.valueOf(tSignal.getId()));
-            }
+            eventDef.setSignalRef(QName.valueOf(tSignal.getId()));
             bpmnStart.getEventDefinition().add(eventDef);
             eventDef.setId(((StartSignalEvent) child).getName());
             res = bpmnStart;
@@ -1120,12 +1169,9 @@ public class BonitaToBPMNExporter {
         } else if (child instanceof EndMessageEvent) {
             final TEndEvent bpmnEnd = ModelFactory.eINSTANCE.createTEndEvent();
             for (final Message eventObject : ((EndMessageEvent) child).getEvents()) {
-                final TMessageEventDefinition eventDef = ModelFactory.eINSTANCE.createTMessageEventDefinition();
-                //eventDef.setMessageRef(eventObject.get);
-                //eventDef.setOperationRef(value);
-                final String name = eventObject.getName() != null ? eventObject.getName() : EcoreUtil.generateUUID();
-                eventDef.setId("event-def" + name);
-                bpmnEnd.getEventDefinition().add(eventDef);
+                final String eventId = eventObject.getName() != null && !eventObject.getName().isBlank() ? eventObject.getName() : EcoreUtil.generateUUID();
+                bpmnEnd.getEventDefinitionRef().add(QName.valueOf(eventId));
+                messagesReferences.add(eventId);
             }
             res = bpmnEnd;
         } else if (child instanceof EndSignalEvent) {
@@ -1147,23 +1193,20 @@ public class BonitaToBPMNExporter {
         else if (child instanceof IntermediateCatchMessageEvent) {
             final IntermediateCatchMessageEvent bonitaEvent = (IntermediateCatchMessageEvent) child;
             final TIntermediateCatchEvent bpmnEvent = ModelFactory.eINSTANCE.createTIntermediateCatchEvent();
-            final String event = bonitaEvent.getEvent();
-            if (event != null) {
-                bpmnEvent.getEventDefinitionRef().add(QName.valueOf(event));
-            }
+            final String event = bonitaEvent.getEvent() != null && !bonitaEvent.getEvent().isBlank()
+                    ? bonitaEvent.getEvent()
+                    : EcoreUtil.generateUUID();
+            bpmnEvent.getEventDefinitionRef().add(QName.valueOf(event));
+            messagesReferences.add(event);
             res = bpmnEvent;
         } else if (child instanceof IntermediateThrowMessageEvent) {
             final IntermediateThrowMessageEvent bonitaEvent = (IntermediateThrowMessageEvent) child;
             final TIntermediateThrowEvent bpmnEvent = ModelFactory.eINSTANCE.createTIntermediateThrowEvent();
             for (final Message bonitaEventDef : bonitaEvent.getEvents()) {
-                final TMessageEventDefinition eventDef = ModelFactory.eINSTANCE.createTMessageEventDefinition();
-                final String name = bonitaEventDef.getName();
-                eventDef.setId(name);
-                final String eventDefId = eventDef.getId();
-                if (eventDefId != null) {
-                    bpmnEvent.getEventDefinitionRef().add(QName.valueOf(eventDefId));
-                }
-                bpmnEvent.getEventDefinition().add(eventDef);
+                final String eventId = bonitaEventDef.getName() != null && !bonitaEventDef.getName().isBlank() ? bonitaEventDef.getName()
+                        : EcoreUtil.generateUUID();
+                bpmnEvent.getEventDefinitionRef().add(QName.valueOf(eventId));
+                messagesReferences.add(eventId);
             }
             res = bpmnEvent;
         } else if (child instanceof IntermediateCatchSignalEvent) {
@@ -1177,22 +1220,14 @@ public class BonitaToBPMNExporter {
         } else if (child instanceof CatchLinkEvent) {
             final CatchLinkEvent bonitaEvent = (CatchLinkEvent) child;
             final TIntermediateCatchEvent bpmnEvent = ModelFactory.eINSTANCE.createTIntermediateCatchEvent();
-            createTLinkEventDefinition(bonitaEvent, bpmnEvent);
+            var bpmnLinkEvent = createTLinkEventDefinition(bonitaEvent);
+            bpmnEvent.getEventDefinition().add(bpmnLinkEvent);
             res = bpmnEvent;
         } else if (child instanceof ThrowLinkEvent) {
             final ThrowLinkEvent bonitaEvent = (ThrowLinkEvent) child;
             final TIntermediateThrowEvent bpmnEvent = ModelFactory.eINSTANCE.createTIntermediateThrowEvent();
-            final TLinkEventDefinition eventDef = ModelFactory.eINSTANCE.createTLinkEventDefinition();
-            final CatchLinkEvent to = bonitaEvent.getTo();
-            if (to != null) {
-                final String targetName = to.getName();
-                eventDef.setId(EcoreUtil.generateUUID());
-                eventDef.setName(to.getName() != null ? to.getName() : targetName);
-                eventDef.setTarget(QName.valueOf(modelSearch.getEObjectID(to)));
-            } else {
-                eventDef.setId(EcoreUtil.generateUUID());
-            }
-            bpmnEvent.getEventDefinition().add(eventDef);
+            var bpmnLinkEvent = createTLinkEventDefinition(bonitaEvent);
+            bpmnEvent.getEventDefinition().add(bpmnLinkEvent);
             res = bpmnEvent;
         } else if (child instanceof IntermediateCatchTimerEvent) {
             final IntermediateCatchTimerEvent bonitaEvent = (IntermediateCatchTimerEvent) child;
@@ -1342,16 +1377,10 @@ public class BonitaToBPMNExporter {
         return result;
     }
 
-    private TLinkEventDefinition createTLinkEventDefinition(final CatchLinkEvent bonitaEvent,
-            final TIntermediateCatchEvent bpmnEvent) {
+    private TLinkEventDefinition createTLinkEventDefinition(LinkEvent bonitaEvent) {
         final TLinkEventDefinition eventDef = ModelFactory.eINSTANCE.createTLinkEventDefinition();
         eventDef.setId(EcoreUtil.generateUUID());
-        final EList<ThrowLinkEvent> fromLinkEvent = bonitaEvent.getFrom();
-        final EList<QName> sourceLink = eventDef.getSource();
-        for (final ThrowLinkEvent from : fromLinkEvent) {
-            sourceLink.add(QName.valueOf(modelSearch.getEObjectID(from)));
-        }
-        bpmnEvent.getEventDefinition().add(eventDef);
+        linkEvents.put(bonitaEvent, eventDef);
         return eventDef;
     }
 
@@ -1394,7 +1423,7 @@ public class BonitaToBPMNExporter {
                 eventDef.setTimeCycle(expression);
             }
         }
-        eventDef.setId("eventdef-" + bonitaEvent.getName());
+        eventDef.setId("eventdef-" + Strings.slugify(bonitaEvent.getName()));
         return eventDef;
     }
 

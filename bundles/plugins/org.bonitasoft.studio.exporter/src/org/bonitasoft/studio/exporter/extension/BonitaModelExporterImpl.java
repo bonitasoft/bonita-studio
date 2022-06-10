@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import org.bonitasoft.studio.common.diagram.tools.FiguresHelper;
 import org.bonitasoft.studio.common.model.IModelSearch;
 import org.bonitasoft.studio.model.process.Container;
 import org.bonitasoft.studio.model.process.FlowElement;
@@ -149,31 +150,21 @@ public class BonitaModelExporterImpl implements IBonitaModelExporter {
             case LaneEditPart.VISUAL_ID:
                 return new Dimension(975, 250);
             case Activity2EditPart.VISUAL_ID:
-                return new Dimension(100, 50);
             case Task2EditPart.VISUAL_ID:
-                return new Dimension(100, 50);
             case ScriptTask2EditPart.VISUAL_ID:
-                return new Dimension(100, 50);
             case ServiceTask2EditPart.VISUAL_ID:
-                return new Dimension(100, 50);
             case SendTask2EditPart.VISUAL_ID:
-                return new Dimension(100, 50);
             case ReceiveTask2EditPart.VISUAL_ID:
-                return new Dimension(100, 50);
             case CallActivity2EditPart.VISUAL_ID:
-                return new Dimension(100, 50);
             case TextAnnotation2EditPart.VISUAL_ID:
-                return new Dimension(100, 50);
-            case XORGateway2EditPart.VISUAL_ID:
-                return new Dimension(43, 43);
-            case ANDGateway2EditPart.VISUAL_ID:
-                return new Dimension(43, 43);
-            case InclusiveGateway2EditPart.VISUAL_ID:
-                return new Dimension(43, 43);
             case SubProcessEvent2EditPart.VISUAL_ID:
-                return new Dimension(100, 50);
+                return new Dimension(FiguresHelper.ACTIVITY_WIDTH, FiguresHelper.ACTIVITY_HEIGHT);
+            case XORGateway2EditPart.VISUAL_ID:
+            case ANDGateway2EditPart.VISUAL_ID:
+            case InclusiveGateway2EditPart.VISUAL_ID:
+                return new Dimension(FiguresHelper.GATEWAY_WIDTH,FiguresHelper.GATEWAY_WIDTH);
             default:
-                return new Dimension(30, 30);
+                return new Dimension(FiguresHelper.EVENT_WIDTH, FiguresHelper.EVENT_WIDTH);
         }
     }
 
