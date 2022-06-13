@@ -1,25 +1,88 @@
 import java.util.zip.ZipFile
 import java.util.zip.ZipException
 
-print "Verifying patched plugins packaging in ${properties['root.dir']}"
+def productsDir =  new File(properties['products.dir'])
+def allProducts = [  
+                    productsDir.toPath().resolve('linux').resolve('gtk').resolve('x86_64').toFile(),
+                    productsDir.toPath().resolve('win32').resolve('win32').resolve('x86_64').toFile(),
+                    productsDir.toPath().resolve('macosx').resolve('cocoa').resolve('x86_64')
+                                .resolve(properties['macosx.appName'])
+                                .resolve('Contents')
+                                .resolve('Eclipse').toFile()
+                  ]
+                   
+allProducts.each { rootFolder -> verifyProduct(rootFolder, productsDir) }
 
-def rootFolder =  new File(properties['root.dir'])
-def pluginsFolder = rootFolder.toPath().resolve('plugins').toFile()
 
-def patchedPluginsFilter = new FilenameFilter() {
-    boolean accept(File path, String filename) {
-        return (filename.startsWith('org.eclipse.ui.views.properties.tabbed_')
-                || filename.startsWith('org.eclipse.datatools.modelbase.sql.query_')
-                || filename.startsWith('org.eclipse.gmf.runtime.lite.svg_') ) 
-            && !filename.contains('nl_')
+def verifyProduct(rootFolder, productsDir) {
+           
+    println "⚙️  Verifying patched plugins packaging in ${rootFolder}"
+        
+    def pluginsFolder = rootFolder.toPath().resolve('plugins').toFile()
+    def patchedPluginsFilter = new FilenameFilter() {
+        boolean accept(File path, String filename) {
+            return (filename.startsWith('org.eclipse.ui.views.properties.tabbed_')
+                    || filename.startsWith('org.eclipse.datatools.modelbase.sql.query_')
+                    || filename.startsWith('org.eclipse.gmf.runtime.lite.svg_') )
+                && !filename.contains('nl_')
+        }
     }
+    def plugins = pluginsFolder.listFiles(patchedPluginsFilter)
+    
+    assert plugins.size() == 3 : 'Invalid number of patched plugins collected'
+                        
+    plugins.each { file ->
+        try{
+            def providerName = readProviderName(file)
+            
+            if(!providerName.contains('bonitasoft')) {
+                warning("${file.name} is not the patched version !")
+                def patchPluginFolder = file.name.substring(0, file.name.indexOf('_'))
+                def patchedPluginFile = productsDir.parentFile.parentFile.parentFile.parentFile.toPath()
+                        .resolve('patched-plugins')
+                        .resolve(patchPluginFolder)
+                        .resolve('target')
+                        .toFile()
+                        .listFiles( new FilenameFilter() {
+                            boolean accept(File path, String filename) {
+                                return filename.startsWith(patchPluginFolder) && filename.endsWith('.jar') && !filename.contains('SNAPSHOT')
+                            }
+                        })
+                        .find{ it }
+                if(patchedPluginFile) {
+                    fix "Replacing ${file} with its pacthed version $patchedPluginFile"
+                    file.withDataOutputStream { os->
+                        patchedPluginFile.withDataInputStream { is->
+                           os << is
+                        }
+                     }
+                     providerName = readProviderName(file)
+                } else {
+                    warning("No valid patched version of ${file.name} found.")
+                }
+            }
+            if(!providerName.contains('bonitasoft')) {
+                throw new org.apache.maven.BuildFailureException( "Provider name should contains Bonitasoft in ${file.name} but found $providerName")
+            }
+          } catch (ZipException ex) {
+             println "Unable to open file ${file.name}"
+          }
+    }
+
 }
 
-def plugins = pluginsFolder.listFiles(patchedPluginsFilter)
+success('All packages have valid patched plugins')
 
-assert plugins.size() == 3 : 'Invalid number of patched plugins collected'
-                    
-plugins.each { file ->
+
+def static warning(message) {
+   println  '⚠️' + "  $message"
+}
+
+def static fix(message) {
+    println  '💊' + "  $message"
+}
+
+def String readProviderName(file) {
     try(def zip = new ZipFile(file)){
         def pluginPropertiesEntry = zip.entries().find { it.name.contains('plugin.properties') }
         assert pluginPropertiesEntry != null : "No plugins.properties file found in ${file.name}"
@@ -31,19 +94,11 @@ plugins.each { file ->
         }else if(p['Plugin.providerName'] != null) {
             providerName = p['Plugin.providerName'].toLowerCase()
         }
-        assert providerName.contains('bonitasoft') : "Provider name should contains Bonitasoft in ${file.name} but found $providerName"
-      } catch (ZipException ex) {
-         println "Unable to open file ${file.name}"
-      }
+        return providerName
+    } 
 }
 
-println success()
-
-def static String color(String text, String ansiValue) {
-        ansiValue + text + '\u001B[0m'
-}
-
-def static String success() {
-    '....' + color('✓','\u001B[32m')
+def static success(message) {
+    println "✨ $message"
 }
                       
