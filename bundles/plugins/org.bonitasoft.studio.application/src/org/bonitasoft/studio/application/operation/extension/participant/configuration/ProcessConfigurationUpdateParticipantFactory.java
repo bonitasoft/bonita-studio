@@ -56,6 +56,6 @@ public class ProcessConfigurationUpdateParticipantFactory implements ExtensionUp
                 processConfigurationCollector,
                 projectDependencyResolver,
                 processConfigurationUpdater,
-                repositoryAccessor.getCurrentRepository());
+                repositoryAccessor.getCurrentRepository().orElseThrow());
     }
 }

@@ -27,7 +27,9 @@ public class DiagramTreeContentProvider implements ITreeContentProvider {
     private final DiagramRepositoryStore diagramSotre;
 
     public DiagramTreeContentProvider() {
-        diagramSotre = RepositoryManager.getInstance().getCurrentRepository().getRepositoryStore(DiagramRepositoryStore.class);
+        diagramSotre = RepositoryManager.getInstance().getCurrentRepository()
+                .orElseThrow()
+                .getRepositoryStore(DiagramRepositoryStore.class);
     }
 
     @Override

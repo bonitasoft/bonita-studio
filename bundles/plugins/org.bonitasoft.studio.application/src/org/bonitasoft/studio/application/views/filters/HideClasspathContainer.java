@@ -17,6 +17,7 @@ package org.bonitasoft.studio.application.views.filters;
 import java.util.Objects;
 
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.internal.ui.packageview.ClassPathContainer;
 import org.eclipse.jface.viewers.Viewer;
@@ -26,9 +27,8 @@ public class HideClasspathContainer extends ViewerFilter {
 
     @Override
     public boolean select(Viewer viewer, Object parentElement, Object element) {
-        if (RepositoryManager.getInstance().hasActiveRepository()
-                && RepositoryManager.getInstance().getCurrentRepository().isLoaded()) {
-            IJavaProject javaProject = RepositoryManager.getInstance().getCurrentRepository().getJavaProject();
+        if (RepositoryManager.getInstance().getCurrentRepository().filter(IRepository::isLoaded).isPresent()) {
+            IJavaProject javaProject = RepositoryManager.getInstance().getCurrentRepository().orElseThrow().getJavaProject();
             if (element instanceof ClassPathContainer) {
                 return !(Objects.equals(((ClassPathContainer) element).getJavaProject(), javaProject));
             }

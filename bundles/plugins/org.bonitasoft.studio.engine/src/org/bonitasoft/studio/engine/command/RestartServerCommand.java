@@ -63,6 +63,7 @@ public class RestartServerCommand extends AbstractHandler {
                 engineManager.stop();
                 if (store.getBoolean(DROP_DB_KEY)) {
                     DatabaseHandler databaseHandler = RepositoryManager.getInstance().getCurrentRepository()
+                            .orElseThrow()
                             .getDatabaseHandler();
                     try {
                         databaseHandler.removeEngineDatabase();
@@ -89,6 +90,14 @@ public class RestartServerCommand extends AbstractHandler {
             }
         }.schedule();
         return null;
+    }
+    
+    @Override
+    public boolean isEnabled() {
+        if (RepositoryManager.getInstance().hasActiveRepository()) {
+            return true;
+        }
+        return false;
     }
 
 }

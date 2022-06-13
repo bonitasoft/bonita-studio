@@ -8,6 +8,7 @@
  *******************************************************************************/
 package org.bonitasoft.studio.configuration.ui.handler;
 
+import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.configuration.ui.wizard.EnvironmentWizard;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -30,5 +31,13 @@ public class EnvironmentHandler extends AbstractHandler {
 		new WizardDialog(Display.getDefault().getActiveShell(), wizard).open() ;
 		return null;
 	}
+	
+    @Override
+    public boolean isEnabled() {
+        if (RepositoryManager.getInstance().hasActiveRepository()) {
+            return true;
+        }
+        return false;
+    }
 
 }

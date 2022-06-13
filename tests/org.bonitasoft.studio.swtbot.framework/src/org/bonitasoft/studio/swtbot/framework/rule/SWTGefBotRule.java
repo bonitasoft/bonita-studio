@@ -14,9 +14,15 @@
  */
 package org.bonitasoft.studio.swtbot.framework.rule;
 
+import java.lang.reflect.InvocationTargetException;
+
 import org.bonitasoft.studio.application.actions.coolbar.NormalCoolBarHandler;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
+import org.bonitasoft.studio.common.repository.Messages;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.core.maven.contribution.InstallBonitaMavenArtifactsOperation;
 import org.bonitasoft.studio.engine.EnginePlugin;
 import org.bonitasoft.studio.engine.preferences.EnginePreferenceConstants;
 import org.bonitasoft.studio.preferences.BonitaCoolBarPreferenceConstant;
@@ -25,8 +31,10 @@ import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.bonitasoft.studio.preferences.pages.BonitaAdvancedPreferencePage;
 import org.bonitasoft.studio.swtbot.framework.conditions.BonitaBPMConditions;
 import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.m2e.core.MavenPlugin;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swtbot.eclipse.finder.SWTWorkbenchBot;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
@@ -67,10 +75,13 @@ public class SWTGefBotRule implements TestRule {
                 beforeStatement();
                 try {
                     base.evaluate();
-                }catch(Throwable t) {
+                } catch (Throwable t) {
                     String shellText = bot.activeShell().getText();
-                    BonitaStudioLog.error(String.format("%s failed ! (active shell = %s)", description.getDisplayName(), shellText), t);
-                    bot.captureScreenshot(String.format("screenshots/%s_%s.jpg", description.getClassName(), description.getMethodName()));
+                    BonitaStudioLog.error(
+                            String.format("%s failed ! (active shell = %s)", description.getDisplayName(), shellText),
+                            t);
+                    bot.captureScreenshot(String.format("screenshots/%s_%s.jpg", description.getClassName(),
+                            description.getMethodName()));
                     throw t;
                 } finally {
                     afterStatement(description);
@@ -85,7 +96,8 @@ public class SWTGefBotRule implements TestRule {
         try {
             bot.waitUntil(BonitaBPMConditions.noPopupActive());
         } catch (final TimeoutException e) {
-            bot.captureScreenshot(String.format("screenshots/OpenedShellAfter_%s_%s.jpg", description.getClassName(), description.getMethodName()));
+            bot.captureScreenshot(String.format("screenshots/OpenedShellAfter_%s_%s.jpg", description.getClassName(),
+                    description.getMethodName()));
             closeAllShells(bot, e);
         }
         try {
@@ -96,7 +108,8 @@ public class SWTGefBotRule implements TestRule {
     }
 
     private void closeAllShells(SWTWorkbenchBot bot, Exception e) {
-        System.out.println(String.format("Trying to close shell '%s' after test failure %s", bot.activeShell().getText(), e));
+        System.out.println(
+                String.format("Trying to close shell '%s' after test failure %s", bot.activeShell().getText(), e));
         //Force shell close
         final SWTBotShell[] shells = bot.shells();
         for (final SWTBotShell shell : shells) {
@@ -105,13 +118,13 @@ public class SWTGefBotRule implements TestRule {
                 try {
                     bot.button(IDialogConstants.CANCEL_LABEL).click();
                     break;
-                }catch (Throwable t) {
+                } catch (Throwable t) {
                     // not in a wizard
                 }
                 try {
                     bot.button(IDialogConstants.CLOSE_LABEL).click();
                     break;
-                }catch (Throwable t) {
+                } catch (Throwable t) {
                     // not in a dialog
                 }
                 try {
@@ -135,9 +148,34 @@ public class SWTGefBotRule implements TestRule {
     }
 
     protected void beforeStatement() {
+        Display.getDefault().syncExec(this::ensureDefaultProjectExists);
         initPreferences();
         bot.saveAllEditors();
         bot.closeAllEditors();
+        bot.waitUntil(BonitaBPMConditions.noPopupActive(), 10000);
+    }
+
+    private void ensureDefaultProjectExists() {
+        var repositoryManager = RepositoryManager.getInstance();
+        if (repositoryManager.getRepository(Messages.defaultRepositoryName) == null
+                || !repositoryManager.getRepository(Messages.defaultRepositoryName).exists()) {
+            try {
+                PlatformUI.getWorkbench().getProgressService().run(true, false, monitor -> {
+                    try {
+                        new InstallBonitaMavenArtifactsOperation(MavenPlugin.getMaven().getLocalRepository())
+                                .execute(monitor);
+                    } catch (CoreException e) {
+                        throw new InvocationTargetException(e);
+                    }
+                    repositoryManager.setCurrentRepository(
+                            repositoryManager.createRepository(Messages.defaultRepositoryName, false));
+                    repositoryManager.getAccessor().start(monitor);
+                    PlatformUtil.openDashboardIfNoOtherEditorOpen();
+                });
+            } catch (InvocationTargetException | InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 
     protected void closeAllAndReturnToWelcomePage() {

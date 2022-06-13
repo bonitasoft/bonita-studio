@@ -17,6 +17,7 @@ package org.bonitasoft.studio.application.ui.control.model;
 import org.bonitasoft.studio.application.views.ProjectExplorerViewerComparator;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.ITenantResource;
+import org.bonitasoft.studio.common.repository.store.AbstractRepositoryStore;
 
 public class TenantArtifact extends FileStoreArtifact implements ITenantResource, Comparable<TenantArtifact> {
 
@@ -29,7 +30,7 @@ public class TenantArtifact extends FileStoreArtifact implements ITenantResource
         if(artifact.getName().equals("bdm_access_control.xml")) {
             return -1; // Always last to be deployed
         }
-        return Integer.compare(ProjectExplorerViewerComparator.REPO_STORE_ORDER.get(((RepositoryStore) getParent()).getName()), ProjectExplorerViewerComparator.REPO_STORE_ORDER.get(((RepositoryStore) artifact.getParent()).getName()));
+        return Integer.compare(AbstractRepositoryStore.REPO_STORE_ORDER.get(((RepositoryStore) getParent()).getName()), AbstractRepositoryStore.REPO_STORE_ORDER.get(((RepositoryStore) artifact.getParent()).getName()));
     }
     
 }

@@ -61,7 +61,7 @@ public class ProjectExplorerLivingApplicationIT {
     @Before
     public void init() throws Exception {
         repositoryAccessor = RepositoryManager.getInstance().getAccessor();
-        repositoryAccessor.getCurrentRepository().getAllStores().stream()
+        repositoryAccessor.getCurrentRepository().orElseThrow().getAllStores().stream()
                 .filter(store -> !OrganizationRepositoryStore.class.isInstance(store))
                 .flatMap(store -> store.getChildren().stream())
                 .filter(IRepositoryFileStore::canBeDeleted)

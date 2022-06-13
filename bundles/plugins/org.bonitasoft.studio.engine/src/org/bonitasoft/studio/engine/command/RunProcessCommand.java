@@ -25,6 +25,7 @@ import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.filestore.FileStoreFinder;
+import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.configuration.ConfigurationPlugin;
 import org.bonitasoft.studio.configuration.preferences.ConfigurationPreferenceConstants;
 import org.bonitasoft.studio.designer.core.operation.IndexingUIDOperation;
@@ -188,10 +189,9 @@ public class RunProcessCommand extends AbstractHandler {
 
     @Override
     public boolean isEnabled() {
-        if (RepositoryManager.getInstance().hasActiveRepository()
-                && RepositoryManager.getInstance().getCurrentRepository().isLoaded()) {
+        if (RepositoryManager.getInstance().getCurrentRepository().filter(IRepository::isLoaded).isPresent()) {
             boolean diagramSelectedInExplorer = fileStoreFinder
-                    .findSelectedFileStore(RepositoryManager.getInstance().getCurrentRepository())
+                    .findSelectedFileStore(RepositoryManager.getInstance().getCurrentRepository().orElseThrow())
                     .filter(DiagramFileStore.class::isInstance).isPresent();
             if (diagramSelectedInExplorer) {
                 return true;

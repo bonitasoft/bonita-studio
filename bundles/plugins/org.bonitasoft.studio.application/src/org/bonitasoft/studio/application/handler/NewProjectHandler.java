@@ -24,7 +24,6 @@ import org.bonitasoft.studio.application.operation.SetProjectMetadataOperation;
 import org.bonitasoft.studio.application.ui.control.BonitaMarketplacePage;
 import org.bonitasoft.studio.application.ui.control.ProjectMetadataPage;
 import org.bonitasoft.studio.application.ui.control.model.dependency.BonitaArtifactDependency;
-import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.core.maven.MavenProjectHelper;
 import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
@@ -88,7 +87,7 @@ public class NewProjectHandler extends AbstractProjectMetadataHandler {
     }
     
     @Override
-    protected ProjectMetadata initialMetadata(AbstractRepository currentRepository) {
+    protected ProjectMetadata initialMetadata(RepositoryAccessor repositoryAccessor) {
         ProjectMetadata metadata = ProjectMetadata.defaultMetadata();
         metadata.setName("");
         metadata.setArtifactId("");

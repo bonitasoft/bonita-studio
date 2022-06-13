@@ -58,7 +58,7 @@ public class OpenLatestSubprocessCommand extends AbstractHandler {
 	 * ExecutionEvent)
 	 */
 	public Object execute(ExecutionEvent event) throws ExecutionException {
-		IRepository repository = RepositoryManager.getInstance().getCurrentRepository() ;
+		IRepository repository = RepositoryManager.getInstance().getCurrentRepository().orElseThrow() ;
 		diagramSotre = (DiagramRepositoryStore) repository.getRepositoryStore(DiagramRepositoryStore.class) ;
 
 		try {

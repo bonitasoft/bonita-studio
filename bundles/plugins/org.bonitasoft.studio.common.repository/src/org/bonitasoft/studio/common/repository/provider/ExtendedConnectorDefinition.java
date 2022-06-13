@@ -200,7 +200,7 @@ public class ExtendedConnectorDefinition implements ConnectorDefinition, Localiz
     }
 
     public Image getImage() {
-        if(icon == null || icon.isDisposed()) {
+        if((icon == null || icon.isDisposed()) && iconDescriptor != null) {
             icon = iconDescriptor.createImage();
         }
         return icon;

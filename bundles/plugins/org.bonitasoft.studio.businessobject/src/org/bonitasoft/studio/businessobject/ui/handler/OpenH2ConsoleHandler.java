@@ -27,6 +27,8 @@ import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.net.PortSelector;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.common.repository.core.DatabaseHandler;
+import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.eclipse.core.externaltools.internal.IExternalToolConstants;
 import org.eclipse.core.filesystem.EFS;
 import org.eclipse.core.filesystem.IFileStore;
@@ -43,7 +45,6 @@ import org.eclipse.debug.ui.IDebugUIConstants;
 import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.jdt.internal.launching.StandardVMType;
 import org.eclipse.jdt.launching.JavaRuntime;
-import org.eclipse.jdt.launching.SocketUtil;
 
 import com.google.common.base.Joiner;
 
@@ -119,7 +120,11 @@ public class OpenH2ConsoleHandler {
     }
 
     protected String pathToDBFolder(final RepositoryAccessor repositoryAccessor) {
-        return repositoryAccessor.getCurrentRepository().getDatabaseHandler().getDBLocation().getAbsolutePath();
+        return repositoryAccessor.getCurrentRepository()
+                .map(IRepository::getDatabaseHandler)
+                .map(DatabaseHandler::getDBLocation)
+                .map(File::getAbsolutePath)
+                .orElse(null);
     }
 
     protected String locateH2jar(RepositoryAccessor repositoryAccessor) throws IOException {

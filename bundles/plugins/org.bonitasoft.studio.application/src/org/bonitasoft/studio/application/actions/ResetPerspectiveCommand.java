@@ -20,12 +20,14 @@ package org.bonitasoft.studio.application.actions;
 import org.bonitasoft.studio.application.actions.coolbar.NormalCoolBarHandler;
 import org.bonitasoft.studio.application.actions.coolbar.SmallCoolBarHandler;
 import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.preferences.BonitaCoolBarPreferenceConstant;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.IHandler;
+import org.eclipse.e4.core.di.annotations.CanExecute;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.PlatformUI;
 
@@ -46,5 +48,10 @@ public class ResetPerspectiveCommand extends AbstractHandler implements IHandler
         PlatformUtil.openIntroIfNoOtherEditorOpen();
 		return null;
 	}
+	
+    @Override
+    public boolean isEnabled() {
+        return RepositoryManager.getInstance().hasActiveRepository();
+    }
 
 }

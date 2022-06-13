@@ -505,6 +505,7 @@ public class EngineFlowElementBuilder extends AbstractProcessBuilder {
 
     protected DiagramRepositoryStore getDiagramRepositoryStore() {
         return RepositoryManager.getInstance().getCurrentRepository()
+                .orElseThrow()
                 .getRepositoryStore(DiagramRepositoryStore.class);
     }
 

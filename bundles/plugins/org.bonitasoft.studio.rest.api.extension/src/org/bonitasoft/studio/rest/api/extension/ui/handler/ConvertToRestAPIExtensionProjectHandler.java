@@ -66,7 +66,7 @@ public class ConvertToRestAPIExtensionProjectHandler extends AbstractHandler {
                 if (selectedObject instanceof IAdaptable) {
                     IResource resource =  ((IAdaptable) selectedObject).getAdapter(IResource.class);
                     Optional<? extends IRepositoryFileStore> fStore = selectionFinder.findFileStore(resource,
-                            RepositoryManager.getInstance().getCurrentRepository());
+                            RepositoryManager.getInstance().getCurrentRepository().orElseThrow());
                     return fStore.filter(CustomPageProjectFileStore.class::isInstance)
                             .map(CustomPageProjectFileStore.class::cast)
                             .filter(CustomPageProjectFileStore::canBeImported)

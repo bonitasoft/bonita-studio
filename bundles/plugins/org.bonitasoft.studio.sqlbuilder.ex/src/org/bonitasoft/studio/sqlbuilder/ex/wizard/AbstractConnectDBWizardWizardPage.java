@@ -199,7 +199,7 @@ public abstract class AbstractConnectDBWizardWizardPage extends AbstractConnecto
         if (_sqlBuilder != null) {
             _sqlBuilder.removeContentChangeListener(this);
         }
-        final IFile f = RepositoryManager.getInstance().getCurrentRepository().getProject().getFile(BONITA_SQL_TMP_FILE);
+        final IFile f = RepositoryManager.getInstance().getCurrentRepository().orElseThrow().getProject().getFile(BONITA_SQL_TMP_FILE);
         if (f.exists()) {
             try {
                 f.delete(true, AbstractRepository.NULL_PROGRESS_MONITOR);
@@ -413,7 +413,7 @@ public abstract class AbstractConnectDBWizardWizardPage extends AbstractConnecto
             return null;
         }
 
-        final IFile f = RepositoryManager.getInstance().getCurrentRepository().getProject().getFile(BONITA_SQL_TMP_FILE);
+        final IFile f = RepositoryManager.getInstance().getCurrentRepository().orElseThrow().getProject().getFile(BONITA_SQL_TMP_FILE);
         String currentQuery = getQuery();
         if (currentQuery == null) {
             currentQuery = "";

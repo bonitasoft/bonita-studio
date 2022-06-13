@@ -114,7 +114,8 @@ public class GroovyUtil {
                             ExpressionConstants.NUMBER_OF_COMPLETED_INSTANCES.getEngineConstantName())) {
                         result.add(ExpressionConstants.NUMBER_OF_COMPLETED_INSTANCES);
                     }
-                    if (engineFilter.select(null, null, ExpressionConstants.NUMBER_OF_INSTANCES.getEngineConstantName())) {
+                    if (engineFilter.select(null, null,
+                            ExpressionConstants.NUMBER_OF_INSTANCES.getEngineConstantName())) {
                         result.add(ExpressionConstants.NUMBER_OF_INSTANCES);
                     }
                 }
@@ -149,7 +150,7 @@ public class GroovyUtil {
         final List<ExpressionConstants> bonitaConstantsFor = getBonitaConstantsFor(element, filters, isPageFlowContext);
         for (final ExpressionConstants expressionConstants : bonitaConstantsFor) {
             final ScriptVariable scriptVariable = new ScriptVariable(expressionConstants.getEngineConstantName(),
-                    getEngineExpressionReturnType(expressionConstants.getEngineConstantName()), 
+                    getEngineExpressionReturnType(expressionConstants.getEngineConstantName()),
                     null,
                     getDescriptionForEngineVariable(expressionConstants.getEngineConstantName()));
             scriptVariable.setCategory(org.bonitasoft.studio.common.ExpressionConstants.ENGINE_CONSTANT_TYPE);
@@ -161,7 +162,7 @@ public class GroovyUtil {
         ExpressionConstants expressionConstants = Stream.of(ExpressionConstants.values())
                 .filter(c -> c.getEngineConstantName().equals(engineConstantName))
                 .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("Unknown ExpressionConstants: "+engineConstantName));
+                .orElseThrow(() -> new IllegalArgumentException("Unknown ExpressionConstants: " + engineConstantName));
         switch (expressionConstants) {
             case API_ACCESSOR:
                 return Messages.apiAccessorDescription;
@@ -275,9 +276,11 @@ public class GroovyUtil {
 
     public static IType getType(final String className)
             throws JavaModelException {
-        final IJavaProject project = RepositoryManager.getInstance()
-                .getCurrentRepository().getJavaProject();
-        return project.findType(className);
+        return RepositoryManager.getInstance()
+                .getCurrentRepository()
+                .orElseThrow()
+                .getJavaProject()
+                .findType(className);
     }
 
     public static boolean isMultipleData(final Element container,
@@ -401,7 +404,7 @@ public class GroovyUtil {
         } else if (org.bonitasoft.studio.common.ExpressionConstants.VARIABLE_TYPE.equals(e.getType())) {
             final Data data = (Data) e.getReferencedElements().get(0);
             MultiInstantiable multiInstantiable = ModelHelper.getFirstContainerOfType(context, MultiInstantiable.class);
-            if(multiInstantiable != null
+            if (multiInstantiable != null
                     && multiInstantiable.getIteratorExpression() != null
                     && Objects.equals(multiInstantiable.getIteratorExpression().getName(), e.getName())
                     && Objects.equals(multiInstantiable.getIteratorExpression().getReturnType(), e.getReturnType())) {

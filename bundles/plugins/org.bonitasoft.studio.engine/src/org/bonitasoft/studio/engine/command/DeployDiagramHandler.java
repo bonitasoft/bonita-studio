@@ -71,7 +71,7 @@ public class DeployDiagramHandler {
         String configurationId = retrieveDefaultConfiguration();
         DiagramRepositoryStore diagamStore = repositoryAccessor.getRepositoryStore(DiagramRepositoryStore.class);
         boolean resetComputedProcesses = false;
-        if(!diagamStore.hasComputedProcesses()) {
+        if (!diagamStore.hasComputedProcesses()) {
             diagamStore.computeProcesses(AbstractRepository.NULL_PROGRESS_MONITOR);
             resetComputedProcesses = true;
         }
@@ -92,9 +92,11 @@ public class DeployDiagramHandler {
             if (!shouldDisablePopup) {
                 runInJob(diagramFileStore, deployOperation, diagamStore, resetComputedProcesses);
             } else {
-                repositoryAccessor.getCurrentRepository().build(AbstractRepository.NULL_PROGRESS_MONITOR);
+                repositoryAccessor.getCurrentRepository()
+                        .orElseThrow()
+                        .build(AbstractRepository.NULL_PROGRESS_MONITOR);
                 deployOperation.run(AbstractRepository.NULL_PROGRESS_MONITOR);
-                if(resetComputedProcesses) {
+                if (resetComputedProcesses) {
                     diagamStore.resetComputedProcesses();
                 }
                 return deployOperation.getStatus();
@@ -103,7 +105,8 @@ public class DeployDiagramHandler {
         return Status.OK_STATUS;
     }
 
-    private void runInJob(DiagramFileStore diagramFileStore, DeployProcessOperation deployOperation, DiagramRepositoryStore diagamStore, boolean resetComputedProcesses) {
+    private void runInJob(DiagramFileStore diagramFileStore, DeployProcessOperation deployOperation,
+            DiagramRepositoryStore diagamStore, boolean resetComputedProcesses) {
         Job deployJob = new Job(String.format(Messages.deployingProcessesFrom, diagramFileStore.getName())) {
 
             @Override
@@ -116,7 +119,7 @@ public class DeployDiagramHandler {
 
             @Override
             public void done(IJobChangeEvent event) {
-                if(resetComputedProcesses) {
+                if (resetComputedProcesses) {
                     diagamStore.resetComputedProcesses();
                 }
                 Display.getDefault().syncExec(() -> displayDeployResult(event.getResult()));

@@ -21,6 +21,7 @@ import static org.mockito.Mockito.when;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
@@ -59,7 +60,7 @@ public class ExpressionReturnTypeFilterTest {
         when(javaContainer.getJavaProject()).thenReturn(javaProject);
         when(javaContainer.getJdtTypeHierarchyManager()).thenReturn(typeHierarchyManager);
         when(javaProject.findType(anyString())).thenReturn(null);
-        when(repositoryAccessor.getCurrentRepository()).thenReturn(javaContainer);
+        when(repositoryAccessor.getCurrentRepository()).thenReturn(Optional.of(javaContainer));
     }
 
     @Test

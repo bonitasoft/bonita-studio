@@ -34,6 +34,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRunnable;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -103,10 +104,13 @@ public class BonitaProjectMigrationOperation implements IWorkspaceRunnable {
         IProjectDescription description = project.getDescription();
         if (!Objects.equals(projectName, description.getName())) {
             description.setName(projectName);
-            ((org.eclipse.core.internal.resources.Project) project).writeDescription(description, 
-                    IResource.FORCE, 
-                    true,
-                    false);
+            IWorkspace workspace = project.getWorkspace();
+            workspace.run(m -> {
+                ((org.eclipse.core.internal.resources.Project) project).writeDescription(description, 
+                        IResource.FORCE, 
+                        true,
+                        false);
+            }, monitor);
         }
         if (!Objects.equals(projectMetadata.getName(), projectName)) {
             Model model = mavenProjectHelper.getMavenModel(project);

@@ -41,7 +41,7 @@ public class ExportSingleActorFilterHandler extends AbstractHandler {
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
         fileStoreFinder
-                .findSelectedFileStore(repositoryAccessor.getCurrentRepository())
+                .findSelectedFileStore(repositoryAccessor.getCurrentRepository().orElseThrow())
                 .filter(ActorFilterImplFileStore.class::isInstance)
                 .map(ActorFilterImplFileStore.class::cast)
                 .map(t -> {

@@ -62,7 +62,7 @@ public class DeployWizardIT {
     public void cleanRepository() throws Exception {
         new UndeployProcessOperation(BOSEngineManager.getInstance())
                 .undeployAll().run(AbstractRepository.NULL_PROGRESS_MONITOR);
-        AbstractRepository currentRepository = RepositoryManager.getInstance().getCurrentRepository();
+        AbstractRepository currentRepository = RepositoryManager.getInstance().getCurrentRepository().orElseThrow();;
         currentRepository.getAllStores().stream().filter(store -> !OrganizationRepositoryStore.class.isInstance(store))
                 .flatMap(store -> store.getChildren().stream())
                 .filter(IRepositoryFileStore::canBeDeleted)

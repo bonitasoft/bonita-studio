@@ -35,10 +35,12 @@ import org.bonitasoft.studio.identity.actors.repository.ActorFilterDefRepository
 import org.bonitasoft.studio.identity.actors.repository.ActorFilterImplRepositoryStore;
 import org.bonitasoft.studio.identity.actors.repository.ActorFilterSourceRepositoryStore;
 import org.bonitasoft.studio.identity.actors.repository.ImportActorFilterArchiveOperation;
+import org.bonitasoft.studio.tests.util.InitialProjectRule;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 
 /**
@@ -48,7 +50,9 @@ import org.junit.Test;
  */
 public class TestImportActorFilter {
 
-
+    @Rule
+    public InitialProjectRule projectRule = InitialProjectRule.INSTANCE;
+    
     private ActorFilterDefRepositoryStore cdrs;
     private ActorFilterImplRepositoryStore cirs;
     private ActorFilterSourceRepositoryStore csrs;

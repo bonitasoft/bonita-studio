@@ -13,6 +13,7 @@ import static org.bonitasoft.studio.ui.wizard.WizardPageBuilder.newPage;
 import java.util.Optional;
 
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.engine.http.HttpClientFactory;
 import org.bonitasoft.studio.maven.i18n.Messages;
 import org.bonitasoft.studio.maven.ui.WidgetFactory;
@@ -57,7 +58,7 @@ public class OpenCustomPageProjectHandler {
 
     @CanExecute
     public boolean canExecute(final RepositoryAccessor repositoryAccessor) {
-        return repositoryAccessor.getCurrentRepository().isLoaded()
+        return repositoryAccessor.getCurrentRepository().filter(IRepository::isLoaded).isPresent()
                 && !repositoryAccessor.getRepositoryStore(RestAPIExtensionRepositoryStore.class).getChildren().isEmpty();
     }
 

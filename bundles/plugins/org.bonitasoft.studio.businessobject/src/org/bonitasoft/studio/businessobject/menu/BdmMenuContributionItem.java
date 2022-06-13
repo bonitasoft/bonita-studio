@@ -16,10 +16,13 @@ package org.bonitasoft.studio.businessobject.menu;
 
 import org.bonitasoft.studio.businessobject.i18n.Messages;
 import org.bonitasoft.studio.common.CommandExecutor;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.jface.action.ContributionItem;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.MenuAdapter;
+import org.eclipse.swt.events.MenuEvent;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 
@@ -43,7 +46,7 @@ public class BdmMenuContributionItem extends ContributionItem {
     public void fill(Menu parent, int index) {
         var bdmMenuItem = new MenuItem(parent, SWT.CASCADE, index);
         bdmMenuItem.setText(Messages.businessDataModel);
-        bdmMenuItem.setEnabled(true);
+        bdmMenuItem.setEnabled(isEnabled());
         bdmMenuItem.setImage(Pics.getImage(PicsConstants.bdm));
 
         var bdmMenu = new Menu(bdmMenuItem);
@@ -63,12 +66,26 @@ public class BdmMenuContributionItem extends ContributionItem {
         createItem(bdmMenu, EXPORT_COMMAND, org.bonitasoft.studio.common.Messages.exportMenuLabel, 8);
 
         bdmMenuItem.setMenu(bdmMenu);
+        
+        parent.addMenuListener(new MenuAdapter() {
+
+            @Override
+            public void menuShown(MenuEvent e) {
+                bdmMenuItem.setEnabled(isEnabled());
+            }
+
+        });
     }
 
     private void createItem(Menu parent, String command, String text, int index) {
         var item = new MenuItem(parent, SWT.NONE, index);
         item.setText(text);
         item.addListener(SWT.Selection, e -> commandExecutor.executeCommand(command, null));
+    }
+    
+    @Override
+    public boolean isEnabled() {
+       return RepositoryManager.getInstance().hasActiveRepository();
     }
 
 }

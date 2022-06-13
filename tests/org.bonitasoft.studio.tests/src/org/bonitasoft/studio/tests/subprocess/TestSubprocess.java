@@ -43,10 +43,12 @@ import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.tests.util.Await;
 import org.bonitasoft.studio.tests.util.EngineAPIUtil;
+import org.bonitasoft.studio.tests.util.InitialProjectRule;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.ui.PlatformUI;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 
 /**
@@ -54,6 +56,9 @@ import org.junit.Test;
  * @author Aurelie Zara
  */
 public class TestSubprocess {
+    
+    @Rule
+    public InitialProjectRule projectRule = InitialProjectRule.INSTANCE;
 
     private HumanTaskInstance newTask;
 

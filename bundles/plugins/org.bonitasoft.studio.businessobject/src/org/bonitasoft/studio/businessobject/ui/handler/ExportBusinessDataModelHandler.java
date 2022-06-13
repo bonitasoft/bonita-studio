@@ -27,6 +27,7 @@ import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -61,7 +62,7 @@ public class ExportBusinessDataModelHandler extends AbstractHandler {
     @CanExecute
     @Override
     public boolean isEnabled() {
-        if (!PlatformUtil.isHeadless() && RepositoryManager.getInstance().getCurrentRepository().isLoaded()) {
+        if (!PlatformUtil.isHeadless() && RepositoryManager.getInstance().getCurrentRepository().filter(IRepository::isLoaded).isPresent()) {
             final BusinessObjectModelFileStore fileStore = (BusinessObjectModelFileStore) RepositoryManager.getInstance()
                     .getRepositoryStore(BusinessObjectModelRepositoryStore.class)
                     .getChild(BusinessObjectModelFileStore.BOM_FILENAME, true);
@@ -72,7 +73,7 @@ public class ExportBusinessDataModelHandler extends AbstractHandler {
                 BonitaStudioLog.warning(e.getMessage(), BusinessObjectPlugin.PLUGIN_ID);
                return false;
             }
-            return fileStore != null && businessObjectModel != null
+            return businessObjectModel != null
                     && !businessObjectModel.getBusinessObjects().isEmpty();
         }
         return false;

@@ -31,12 +31,17 @@ import org.bonitasoft.studio.model.process.Document;
 import org.bonitasoft.studio.model.process.DocumentType;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.Pool;
+import org.bonitasoft.studio.tests.util.InitialProjectRule;
 import org.eclipse.core.runtime.FileLocator;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 
 public class DocumentMigrationIT {
 
+    @Rule
+    public InitialProjectRule projectRule = InitialProjectRule.INSTANCE;
+    
     private RepositoryAccessor repositoryAccessor;
 
     @Before

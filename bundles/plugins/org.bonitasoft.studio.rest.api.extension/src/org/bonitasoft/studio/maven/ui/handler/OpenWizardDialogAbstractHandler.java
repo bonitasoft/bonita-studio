@@ -10,6 +10,7 @@ package org.bonitasoft.studio.maven.ui.handler;
 
 import org.bonitasoft.studio.common.jface.CustomWizardDialog;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.engine.http.HttpClientFactory;
 import org.bonitasoft.studio.maven.CustomPageProjectFileStore;
 import org.bonitasoft.studio.maven.CustomPageProjectRepositoryStore;
@@ -41,7 +42,7 @@ public abstract class OpenWizardDialogAbstractHandler {
 
     @CanExecute
     public boolean canExecute(final RepositoryAccessor repositoryAccessor) {
-        return repositoryAccessor.getCurrentRepository().isLoaded()
+        return repositoryAccessor.getCurrentRepository().filter(IRepository::isLoaded).isPresent()
                 && !getStore(repositoryAccessor).getChildren().isEmpty();
     }
 

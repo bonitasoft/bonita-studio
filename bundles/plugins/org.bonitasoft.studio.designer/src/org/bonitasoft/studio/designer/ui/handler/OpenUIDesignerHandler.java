@@ -57,6 +57,14 @@ public class OpenUIDesignerHandler extends AbstractHandler {
     public void execute() throws ExecutionException {
         openUiDesignerInBrowser();
     }
+    
+    @Override
+    public boolean isEnabled() {
+        if (RepositoryManager.getInstance().hasActiveRepository()) {
+            return true;
+        }
+        return false;
+    }
 
     protected boolean waitUntilTomcatIsReady(final PageDesignerURLFactory pageDesignerURLBuilder) {
         final IProgressService service = PlatformUI.getWorkbench().getProgressService();
@@ -69,7 +77,7 @@ public class OpenUIDesignerHandler extends AbstractHandler {
                             Messages.bind(Messages.waitingForUIDesigner,
                                     org.bonitasoft.studio.common.Messages.uiDesignerModuleName),
                             IProgressMonitor.UNKNOWN);
-                    UIDesignerServerManager.getInstance().start(RepositoryManager.getInstance().getCurrentRepository(),
+                    UIDesignerServerManager.getInstance().start(RepositoryManager.getInstance().getCurrentRepository().orElseThrow(),
                             AbstractRepository.NULL_PROGRESS_MONITOR);
                 }
             });

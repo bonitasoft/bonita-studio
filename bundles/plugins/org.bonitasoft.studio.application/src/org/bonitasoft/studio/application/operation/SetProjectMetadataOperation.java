@@ -27,7 +27,6 @@ import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.common.RestAPIExtensionNature;
 import org.bonitasoft.studio.common.Strings;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.core.ProjectDependenciesStore;
@@ -91,7 +90,7 @@ public class SetProjectMetadataOperation implements IRunnableWithProgress {
 
     private void editProject(IProgressMonitor monitor)
             throws CoreException, InvocationTargetException, InterruptedException {
-        AbstractRepository repository = repositoryAccessor.getCurrentRepository();
+        var repository = repositoryAccessor.getCurrentRepository().orElseThrow();
         IProject project = repository.getProject();
         Model model = mavenProjectHelper.getMavenModel(project);
         boolean nameChanged = !Objects.equals(model.getName(), metadata.getName());

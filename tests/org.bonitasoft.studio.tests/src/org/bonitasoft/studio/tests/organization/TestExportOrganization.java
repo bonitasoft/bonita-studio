@@ -24,10 +24,15 @@ import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.identity.organization.repository.OrganizationRepositoryStore;
+import org.bonitasoft.studio.tests.util.InitialProjectRule;
+import org.junit.Rule;
 import org.junit.Test;
 
 public class TestExportOrganization {
-
+    
+    @Rule
+    public InitialProjectRule projectRule = InitialProjectRule.INSTANCE;
+    
     @Test
     public void testExportDefaultOrganization() throws Exception {
         final IRepositoryStore<? extends IRepositoryFileStore> organizationStore = RepositoryManager.getInstance()

@@ -33,7 +33,6 @@ import org.bonitasoft.studio.application.ui.control.model.dependency.BonitaArtif
 import org.bonitasoft.studio.application.ui.control.model.dependency.BonitaArtifactDependencyVersion;
 import org.bonitasoft.studio.application.ui.control.model.dependency.BonitaMarketPlaceItem;
 import org.bonitasoft.studio.application.ui.control.model.dependency.BonitaMarketplace;
-import org.bonitasoft.studio.application.views.overview.ProjectOverviewEditorPart;
 import org.bonitasoft.studio.common.Strings;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.repository.core.maven.MavenProjectHelper;

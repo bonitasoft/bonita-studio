@@ -59,7 +59,9 @@ public class AdvancedDBConnectorsTest {
                 .run(AbstractRepository.NULL_PROGRESS_MONITOR);
 
         DatabaseConnectorPropertiesRepositoryStore repositoryStore = RepositoryManager.getInstance()
-                .getCurrentRepository().getRepositoryStore(DatabaseConnectorPropertiesRepositoryStore.class);
+                .getCurrentRepository()
+                .orElseThrow()
+                .getRepositoryStore(DatabaseConnectorPropertiesRepositoryStore.class);
         DatabaseConnectorPropertiesFileStore conf = repositoryStore.getChild("database-h2.properties", false);
         if (conf == null) {
             conf = repositoryStore.createRepositoryFileStore("database-h2.properties");
@@ -120,6 +122,7 @@ public class AdvancedDBConnectorsTest {
         final BotDatabaseAccesInformationWizardPage daiwp = new BotDatabaseAccesInformationWizardPage(bot);
 
         final DatabaseHandler databaseHandler = RepositoryManager.getInstance().getCurrentRepository()
+                .orElseThrow()
                 .getDatabaseHandler();
         SWTBotShell activeShell = bot.activeShell();
         daiwp.connectToDatabase()

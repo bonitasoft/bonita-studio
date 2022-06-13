@@ -90,7 +90,7 @@ public abstract class CreateUIDArtifactOperation implements IRunnableWithProgres
         if (!UIDesignerServerManager.getInstance().isStarted()) {
             monitor.subTask(NLS.bind(Messages.waitingForUIDesigner,
                     org.bonitasoft.studio.common.Messages.uiDesignerModuleName));
-            UIDesignerServerManager.getInstance().start(repositoryAccessor.getCurrentRepository(),
+            UIDesignerServerManager.getInstance().start(repositoryAccessor.getCurrentRepository().orElseThrow(),
                     new NullProgressMonitor());
             monitor.subTask("");
         }

@@ -14,10 +14,8 @@
  */
 package org.bonitasoft.studio.application.perspective;
 
-import org.bonitasoft.studio.application.views.BonitaProjectExplorer;
 import org.bonitasoft.studio.common.perspectives.AbstractPerspectiveFactory;
 import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IFolderLayout;
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.internal.intro.IIntroConstants;
 
@@ -28,29 +26,14 @@ public class WelcomePagePerspectiveFactory extends AbstractPerspectiveFactory {
 
     @Override
     public void createInitialLayout(final IPageLayout layout) {
-        layout.setEditorAreaVisible(false);
-        final String editorArea = layout.getEditorArea();
-        final IFolderLayout leftFolder = layout.createFolder("left", IPageLayout.LEFT, getExplorerViewRatio(), editorArea); //$NON-NLS-1$
-        leftFolder.addView(BonitaProjectExplorer.ID);
-        IFolderLayout bottomLeft = layout.createFolder("bottomLeft", IPageLayout.BOTTOM, 0.75f, "left");
-        bottomLeft.addView(PROBLEM_VIEW_ID);
-        final IFolderLayout rightFolder = layout.createFolder("right", IPageLayout.RIGHT, 0.75f, editorArea); //$NON-NLS-1$
-        rightFolder.addPlaceholder(IIntroConstants.INTRO_VIEW_ID);
+        layout.addStandaloneViewPlaceholder(IIntroConstants.INTRO_VIEW_ID, IPageLayout.TOP, 1f, layout.getEditorArea(), true);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.perspectives.AbstractPerspectiveFactory#isRelevantFor(org.eclipse.ui.IEditorPart)
-     */
     @Override
     public boolean isRelevantFor(final IEditorPart part) {
         return part == null;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.perspectives.AbstractPerspectiveFactory#getID()
-     */
     @Override
     public String getID() {
         return ID;

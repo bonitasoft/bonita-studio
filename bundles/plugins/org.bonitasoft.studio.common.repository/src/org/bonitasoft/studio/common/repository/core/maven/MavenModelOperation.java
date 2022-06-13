@@ -18,10 +18,10 @@ import java.util.Objects;
 
 import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Model;
-import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.core.ProjectDependenciesStore;
+import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.store.LocalDependenciesStore;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspaceRunnable;
@@ -48,8 +48,10 @@ public abstract class MavenModelOperation implements IWorkspaceRunnable {
             helper.saveModel(project, model, false, monitor);
 
             if (!disableAnalyze && getRepositoryAccessor().hasActiveRepository()) {
-                AbstractRepository currentRepository = getRepositoryAccessor().getCurrentRepository();
-                ProjectDependenciesStore projectDependenciesStore = currentRepository.getProjectDependenciesStore();
+                var projectDependenciesStore = getRepositoryAccessor().getCurrentRepository()
+                        .map(IRepository::getProjectDependenciesStore)
+                        .filter(Objects::nonNull)
+                        .orElse(null);
                 if (projectDependenciesStore != null) {
                     projectDependenciesStore.analyze(monitor);
                 }
@@ -63,7 +65,9 @@ public abstract class MavenModelOperation implements IWorkspaceRunnable {
 
             @Override
             public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
-                repositoryAccessor.getCurrentRepository().getProjectDependenciesStore().analyze(monitor);
+                repositoryAccessor.getCurrentRepository()
+                        .map(IRepository::getProjectDependenciesStore)
+                        .ifPresent(projectDepStore -> projectDepStore.analyze(monitor));
                 return Status.OK_STATUS;
             }
 
@@ -80,7 +84,7 @@ public abstract class MavenModelOperation implements IWorkspaceRunnable {
     }
 
     protected IProject getCurrentProject() {
-        return RepositoryManager.getInstance().getCurrentRepository().getProject();
+        return RepositoryManager.getInstance().getCurrentRepository().map(IRepository::getProject).orElse(null);
     }
 
     protected RepositoryAccessor getRepositoryAccessor() {
@@ -88,7 +92,7 @@ public abstract class MavenModelOperation implements IWorkspaceRunnable {
     }
 
     protected LocalDependenciesStore getLocalStore() {
-        return getRepositoryAccessor().getCurrentRepository().getLocalDependencyStore();
+        return getRepositoryAccessor().getCurrentRepository().map(IRepository::getLocalDependencyStore).orElse(null);
     }
 
     static Dependency createDependency(String groupId, String artifactId, String version, String scope) {

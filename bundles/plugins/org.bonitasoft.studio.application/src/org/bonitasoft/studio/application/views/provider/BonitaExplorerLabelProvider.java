@@ -14,11 +14,14 @@
  */
 package org.bonitasoft.studio.application.views.provider;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Objects;
 import java.util.Optional;
 
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.filestore.FileStoreFinder;
+import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.pics.Pics;
@@ -37,6 +40,7 @@ import org.eclipse.jdt.internal.ui.packageview.PackageExplorerProblemsDecorator;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.navigator.ICommonContentExtensionSite;
 
 public class BonitaExplorerLabelProvider extends JavaNavigatorLabelProvider {
@@ -44,13 +48,17 @@ public class BonitaExplorerLabelProvider extends JavaNavigatorLabelProvider {
     private PackageExplorerProblemsDecorator packageExplorerProblemsDecorator;
     private FileStoreFinder fileStoreFinder;
     private GroovyNavigatorLabelProvider groovyNavigatorLabelProvider;
+    
+    
+    public BonitaExplorerLabelProvider() {
+        groovyNavigatorLabelProvider = new GroovyNavigatorLabelProvider();
+        packageExplorerProblemsDecorator = new PackageExplorerProblemsDecorator();
+        fileStoreFinder = new FileStoreFinder();
+    }
 
     @Override
     public void init(ICommonContentExtensionSite commonContentExtensionSite) {
         super.init(commonContentExtensionSite);
-        groovyNavigatorLabelProvider = new GroovyNavigatorLabelProvider();
-        packageExplorerProblemsDecorator = new PackageExplorerProblemsDecorator();
-        fileStoreFinder = new FileStoreFinder();
     }
 
     /*
@@ -81,7 +89,7 @@ public class BonitaExplorerLabelProvider extends JavaNavigatorLabelProvider {
             return groovyNavigatorLabelProvider.getImage(element);
         }
         RepositoryManager repositoryManager = RepositoryManager.getInstance();
-        if (!repositoryManager.hasActiveRepository() || !repositoryManager.getCurrentRepository().isLoaded()) {
+        if (RepositoryManager.getInstance().getCurrentRepository().filter(IRepository::isLoaded).isEmpty()) {
             return super.getImage(element);
         }
         if (!(element instanceof IJavaElement)) {
@@ -112,7 +120,7 @@ public class BonitaExplorerLabelProvider extends JavaNavigatorLabelProvider {
     @Override
     public StyledString getStyledText(Object element) {
         RepositoryManager repositoryManager = RepositoryManager.getInstance();
-        if (!repositoryManager.hasActiveRepository() || !repositoryManager.getCurrentRepository().isLoaded()) {
+        if (RepositoryManager.getInstance().getCurrentRepository().filter(IRepository::isLoaded).isEmpty()) {
             return super.getStyledText(element);
         }
         if (!(element instanceof IPackageFragment)) {
@@ -137,7 +145,7 @@ public class BonitaExplorerLabelProvider extends JavaNavigatorLabelProvider {
                 .filter(IResource.class::isInstance)
                 .map(IResource.class::cast)
                 .flatMap(resource -> fileStoreFinder.findFileStore(resource,
-                        repositoryManager.getCurrentRepository()));
+                        repositoryManager.getCurrentRepository().orElseThrow()));
     }
 
     public static boolean isFolder(Object element, String folderName) {

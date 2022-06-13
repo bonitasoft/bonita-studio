@@ -399,6 +399,7 @@ public class Messages extends NLS {
     public static String problemsFound;
     public static String problemsFoundMessage;
     public static String undo;
+    public static String RecentlyModified;
 
     static {
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);

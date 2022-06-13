@@ -34,8 +34,7 @@ public class HideEmptyRepository extends ViewerFilter {
     @Override
     public boolean select(Viewer viewer, Object parentElement, Object element) {
         RepositoryManager repositoryManager = RepositoryManager.getInstance();
-        IRepository repository = repositoryManager.getCurrentRepository();
-        if (repositoryManager.hasActiveRepository() && repository.isLoaded()) {
+        if (repositoryManager.getCurrentRepository().filter(IRepository::isLoaded).isPresent()) {
             IRepositoryStore<?> store = repositoryManager.getRepositoryStore(element).orElse(null);
             if (store != null) {
                 try {

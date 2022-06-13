@@ -33,6 +33,7 @@ import org.bonitasoft.studio.model.process.Event;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.TextAnnotation;
+import org.bonitasoft.studio.tests.util.InitialProjectRule;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.common.util.TreeIterator;
@@ -42,11 +43,15 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 
 
 public class TestImportBPMN2 {
-
+    
+    @Rule
+    public InitialProjectRule projectRule = InitialProjectRule.INSTANCE;
+    
     private File destFile;
 
     protected org.eclipse.emf.common.util.URI toEMFURI(File file) throws MalformedURLException {

@@ -34,7 +34,7 @@ public class NewGroovyClassWizard extends NewTypeWizard {
     @Override
     public void addPages() {
     	 PageOne page = new PageOne(getSelection());
-    	 IJavaProject project = RepositoryManager.getInstance().getCurrentRepository().getJavaProject();
+    	 IJavaProject project = RepositoryManager.getInstance().getCurrentRepository().orElseThrow().getJavaProject();
          IFolder srcFolder = RepositoryManager.getInstance().getRepositoryStore(GroovyRepositoryStore.class).getResource();
          page.setPackageFragmentRoot(project.getPackageFragmentRoot(
                  srcFolder), false);

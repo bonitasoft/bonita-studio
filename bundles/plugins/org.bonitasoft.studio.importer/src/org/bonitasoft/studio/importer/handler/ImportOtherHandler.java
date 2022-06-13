@@ -31,6 +31,7 @@ import org.bonitasoft.studio.importer.i18n.Messages;
 import org.bonitasoft.studio.importer.processors.ImportFileOperation;
 import org.bonitasoft.studio.importer.ui.wizard.ImportFileWizard;
 import org.bonitasoft.studio.ui.dialog.SkippableProgressMonitorJobsDialog;
+import org.eclipse.e4.core.di.annotations.CanExecute;
 import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.swt.widgets.Display;
@@ -93,6 +94,14 @@ public class ImportOtherHandler {
 
     protected ImportFileWizard createImportWizard() {
         return new ImportFileWizard();
+    }
+    
+    @CanExecute
+    public boolean isEnabled() {
+        if (RepositoryManager.getInstance().hasActiveRepository()) {
+            return true;
+        }
+        return false;
     }
 
 }

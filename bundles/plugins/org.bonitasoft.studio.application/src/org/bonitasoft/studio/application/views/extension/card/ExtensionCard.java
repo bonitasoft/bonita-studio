@@ -74,7 +74,7 @@ public class ExtensionCard extends Composite {
         super(parent, SWT.BORDER);
         this.dep = dep;
         this.bonitaDep = bonitaDep;
-        localDependencyStore = RepositoryManager.getInstance().getCurrentRepository().getLocalDependencyStore();
+        localDependencyStore = RepositoryManager.getInstance().getCurrentRepository().orElseThrow().getLocalDependencyStore();
 
         setLayout(GridLayoutFactory.fillDefaults().margins(10, 10).create());
         setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());

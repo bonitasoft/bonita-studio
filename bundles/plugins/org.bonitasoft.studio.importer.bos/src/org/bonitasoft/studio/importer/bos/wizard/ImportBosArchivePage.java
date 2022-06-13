@@ -36,6 +36,7 @@ import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.jface.databinding.validator.EmptyInputValidator;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
+import org.bonitasoft.studio.common.repository.FakeRepository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.RepositoryNameValidator;
 import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
@@ -355,6 +356,7 @@ public class ImportBosArchivePage implements ControlSupplier, Supplier<ImportArc
         final Button currentRepositoryButton = new Button(radioGroup, SWT.RADIO);
         currentRepositoryButton.setText(org.bonitasoft.studio.importer.i18n.Messages.currentRepository);
         currentRepositoryButton.setLayoutData(GridDataFactory.fillDefaults().create());
+        currentRepositoryButton.setEnabled(repositoryAccessor.getCurrentRepository().isPresent());
 
         repositoryModeObservable = new SelectObservableValue<>();
         repositoryModeObservable.addOption(RepositoryMode.CURRENT,
@@ -386,8 +388,8 @@ public class ImportBosArchivePage implements ControlSupplier, Supplier<ImportArc
     protected void updateArchiveModel(String targetRepository, IProgressMonitor monitor) {
         if (repositoryAccessor.getRepository(targetRepository) != null && archiveModel != null) {
             final AbstractRepository newRepository = repositoryAccessor.getRepository(targetRepository);
-            if (!Objects.equals(repositoryAccessor.getCurrentRepository().getName(),
-                    newRepository.getName())) {
+            if (repositoryAccessor.getCurrentRepository().filter(repo -> Objects.equals(repo.getName(),
+                    newRepository.getName())).isEmpty()) {
                 newRepository.open(monitor);
             }
             final ImportConflictsChecker conflictChecker = new ImportConflictsChecker(newRepository);
@@ -398,8 +400,8 @@ public class ImportBosArchivePage implements ControlSupplier, Supplier<ImportArc
                         Messages.errorReadArchive,
                         e);
             } finally {
-                if (!Objects.equals(repositoryAccessor.getCurrentRepository().getName(),
-                        newRepository.getName())) {
+                if (repositoryAccessor.getCurrentRepository().filter(repo -> Objects.equals(repo.getName(),
+                        newRepository.getName())).isEmpty()) {
                     newRepository.close();
                 }
             }
@@ -425,7 +427,7 @@ public class ImportBosArchivePage implements ControlSupplier, Supplier<ImportArc
                         : switchRepositoryStrategy.getTargetRepository();
             case CURRENT:
             default:
-                return repositoryAccessor.getCurrentRepository().getName();
+                return repositoryAccessor.getCurrentRepository().orElseThrow().getName();
         }
     }
 
@@ -560,7 +562,7 @@ public class ImportBosArchivePage implements ControlSupplier, Supplier<ImportArc
 
     private ParseBosArchiveOperation newParseOperation(File selectedFile) {
         return new ParseBosArchiveOperation(selectedFile,
-                mode == RepositoryMode.NEW ? repositoryAccessor.getCurrentRepository()
+                mode == RepositoryMode.NEW ? FakeRepository.INSTANCE
                         : repositoryAccessor.getRepository(switchRepositoryStrategy.getTargetRepository()));
     }
 

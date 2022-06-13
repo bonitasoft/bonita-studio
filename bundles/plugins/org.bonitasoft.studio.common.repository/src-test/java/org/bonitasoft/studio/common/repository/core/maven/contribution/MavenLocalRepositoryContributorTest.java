@@ -19,6 +19,7 @@ package org.bonitasoft.studio.common.repository.core.maven.contribution;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.notNull;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
@@ -33,6 +34,7 @@ import java.util.Set;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.bonitasoft.studio.common.repository.core.maven.MavenInstallFileOperation;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -73,10 +75,10 @@ public class MavenLocalRepositoryContributorTest {
         when(catalog.parseDependencies()).thenReturn(Set.of(artifactToInstall));
         when(localRepository.find(artifactToInstall)).thenReturn(null);
 
-        contributor.execute();
+        contributor.execute(new NullProgressMonitor());
 
         verify(installFileCommand).installFile(any(), any(), any(), any(), any(),
-                notNull(), any());
+                notNull(), any(), any());
     }
 
     @Test
@@ -88,10 +90,11 @@ public class MavenLocalRepositoryContributorTest {
         when(catalog.parseDependencies()).thenReturn(Set.of(artifactToInstall));
         when(localRepository.find(artifactToInstall)).thenReturn(artifactToInstall);
 
-        contributor.execute();
+        var monitor = new NullProgressMonitor();
+        contributor.execute(monitor);
 
         verify(installFileCommand, never()).installFile(anyString(), anyString(), anyString(), anyString(), anyString(),
-                any(File.class), any(File.class));
+                any(File.class), any(File.class),eq(monitor));
     }
 
 }

@@ -32,7 +32,9 @@ import org.bonitasoft.studio.identity.organization.model.organization.Organizati
 import org.bonitasoft.studio.identity.organization.model.organization.User;
 import org.bonitasoft.studio.identity.organization.repository.OrganizationRepositoryStore;
 import org.bonitasoft.studio.identity.organization.validator.OrganizationValidator;
+import org.bonitasoft.studio.tests.util.InitialProjectRule;
 import org.eclipse.core.runtime.FileLocator;
+import org.junit.Rule;
 import org.junit.Test;
 
 /**
@@ -41,6 +43,9 @@ import org.junit.Test;
 
 public class TestImportOrganization {
 
+    @Rule
+    public InitialProjectRule projectRule = InitialProjectRule.INSTANCE;
+    
     @Test
     public void testImportOrganization() throws Exception {
         final OrganizationRepositoryStore organizationStore = RepositoryManager.getInstance()

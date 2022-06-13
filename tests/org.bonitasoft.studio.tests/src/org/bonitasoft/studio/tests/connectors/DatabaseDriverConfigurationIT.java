@@ -38,14 +38,19 @@ import org.bonitasoft.studio.model.configuration.Configuration;
 import org.bonitasoft.studio.model.configuration.Fragment;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.tests.importer.bos.ImportBOSArchiveIT;
+import org.bonitasoft.studio.tests.util.InitialProjectRule;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.ui.PlatformUI;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 
 public class DatabaseDriverConfigurationIT {
 
+    @Rule
+    public InitialProjectRule projectRule = InitialProjectRule.INSTANCE;
+    
     private RepositoryAccessor repositoryAccessor;
 
     @After
@@ -53,9 +58,13 @@ public class DatabaseDriverConfigurationIT {
     public void cleanRepository() throws Exception {
         repositoryAccessor = RepositoryManager.getInstance().getAccessor();
 
-        repositoryAccessor.getCurrentRepository().getRepositoryStore(DiagramRepositoryStore.class).getChildren()
+        repositoryAccessor.getCurrentRepository()
+                .orElseThrow()
+                .getRepositoryStore(DiagramRepositoryStore.class).getChildren()
                 .stream().forEach(IRepositoryFileStore::delete);
-        repositoryAccessor.getCurrentRepository().getRepositoryStore(DatabaseConnectorPropertiesRepositoryStore.class)
+        repositoryAccessor.getCurrentRepository()
+                .orElseThrow()
+                .getRepositoryStore(DatabaseConnectorPropertiesRepositoryStore.class)
                 .getChildren()
                 .stream().forEach(IRepositoryFileStore::delete);
     }

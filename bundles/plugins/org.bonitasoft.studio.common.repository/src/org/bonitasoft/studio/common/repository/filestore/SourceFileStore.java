@@ -26,6 +26,7 @@ import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.model.IJavaContainer;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.common.repository.store.SourceRepositoryStore;
 import org.bonitasoft.studio.pics.Pics;
@@ -101,18 +102,21 @@ public class SourceFileStore extends AbstractFileStore<InputStream> {
         }
         return null;
     }
-   
+
     @Override
     public IFile getResource() {
-        final IJavaProject project = RepositoryManager.getInstance().getCurrentRepository().getJavaProject();
-        IType type;
-        try {
-            type = project.findType(qualifiedClassName);
-            if (type != null && type.getCompilationUnit() != null) {
-                return (IFile) type.getCompilationUnit().getResource();
+        final IJavaProject project = RepositoryManager.getInstance().getCurrentRepository()
+                .map(IJavaContainer::getJavaProject).orElse(null);
+        if (project != null) {
+            IType type;
+            try {
+                type = project.findType(qualifiedClassName);
+                if (type != null && type.getCompilationUnit() != null) {
+                    return (IFile) type.getCompilationUnit().getResource();
+                }
+            } catch (final JavaModelException e) {
+                BonitaStudioLog.error(e);
             }
-        } catch (final JavaModelException e) {
-            BonitaStudioLog.error(e);
         }
         return null;
     }
@@ -185,30 +189,33 @@ public class SourceFileStore extends AbstractFileStore<InputStream> {
 
     @Override
     public void renameLegacy(final String newQualifiedClassName) {
-        final IJavaProject project = RepositoryManager.getInstance().getCurrentRepository().getJavaProject();
-        String packageName = "";
-        String className = newQualifiedClassName;
+        final IJavaProject project = RepositoryManager.getInstance().getCurrentRepository()
+                .map(IJavaContainer::getJavaProject).orElse(null);
+        if (project != null) {
+            String packageName = "";
+            String className = newQualifiedClassName;
 
-        if (newQualifiedClassName.indexOf(".") != -1) {
-            packageName = newQualifiedClassName.substring(0, newQualifiedClassName.lastIndexOf("."));
-            className = newQualifiedClassName.substring(newQualifiedClassName.lastIndexOf(".") + 1,
-                    newQualifiedClassName.length());
-        }
-
-        try {
-            final IRepositoryStore<?> store = getParentStore();
-            final IPackageFragmentRoot root = project.findPackageFragmentRoot(store.getResource().getFullPath());
-            root.createPackageFragment(packageName, true, AbstractRepository.NULL_PROGRESS_MONITOR);
-            final IPackageFragment targetContainer = project
-                    .findPackageFragment(store.getResource().getFullPath().append(packageName.replace(".", "/")));
-            final IType type = project.findType(qualifiedClassName);
-            if (type != null) {
-                type.getCompilationUnit().move(targetContainer, null, className + ".java", true,
-                        AbstractRepository.NULL_PROGRESS_MONITOR);
-                qualifiedClassName = newQualifiedClassName;
+            if (newQualifiedClassName.indexOf(".") != -1) {
+                packageName = newQualifiedClassName.substring(0, newQualifiedClassName.lastIndexOf("."));
+                className = newQualifiedClassName.substring(newQualifiedClassName.lastIndexOf(".") + 1,
+                        newQualifiedClassName.length());
             }
-        } catch (final Exception e) {
-            BonitaStudioLog.error(e);
+
+            try {
+                final IRepositoryStore<?> store = getParentStore();
+                final IPackageFragmentRoot root = project.findPackageFragmentRoot(store.getResource().getFullPath());
+                root.createPackageFragment(packageName, true, AbstractRepository.NULL_PROGRESS_MONITOR);
+                final IPackageFragment targetContainer = project
+                        .findPackageFragment(store.getResource().getFullPath().append(packageName.replace(".", "/")));
+                final IType type = project.findType(qualifiedClassName);
+                if (type != null) {
+                    type.getCompilationUnit().move(targetContainer, null, className + ".java", true,
+                            AbstractRepository.NULL_PROGRESS_MONITOR);
+                    qualifiedClassName = newQualifiedClassName;
+                }
+            } catch (final Exception e) {
+                BonitaStudioLog.error(e);
+            }
         }
     }
 

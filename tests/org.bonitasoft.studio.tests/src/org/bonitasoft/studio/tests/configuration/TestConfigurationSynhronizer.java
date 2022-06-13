@@ -41,15 +41,18 @@ import org.bonitasoft.studio.model.process.ActorFilter;
 import org.bonitasoft.studio.model.process.Connector;
 import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.bonitasoft.studio.model.process.Task;
+import org.bonitasoft.studio.tests.util.InitialProjectRule;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 
 
 
 public class TestConfigurationSynhronizer {
 
-
+    @Rule
+    public InitialProjectRule projectRule = InitialProjectRule.INSTANCE;
     private Configuration configuration;
 
     @Before

@@ -21,6 +21,7 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.la.application.repository.ApplicationRepositoryStore;
 import org.bonitasoft.studio.la.application.ui.provider.ApplicationFileStoreLabelProvider;
@@ -54,7 +55,7 @@ public class OpenApplicationHandler {
 
     @CanExecute
     public boolean canExecute(final RepositoryAccessor repositoryAccessor) {
-        return repositoryAccessor.getCurrentRepository().isLoaded()
+        return repositoryAccessor.getCurrentRepository().filter(IRepository::isLoaded).isPresent()
                 && !repositoryAccessor.getRepositoryStore(ApplicationRepositoryStore.class).getChildren().isEmpty();
     }
 }

@@ -6,6 +6,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Objects;
 
 import org.bonitasoft.studio.common.repository.AbstractRepository;
+import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.importer.bos.model.BosArchive;
 import org.bonitasoft.studio.importer.bos.model.ImportArchiveModel;
 import org.eclipse.core.runtime.Assert;
@@ -19,9 +20,9 @@ public class ParseBosArchiveOperation implements IRunnableWithProgress {
     private IStatus status;
     private final File archiveFile;
     private ImportArchiveModel archiveModel;
-    protected AbstractRepository repository;
+    protected IRepository repository;
 
-    public ParseBosArchiveOperation(File archiveFile, AbstractRepository repository) {
+    public ParseBosArchiveOperation(File archiveFile, IRepository repository) {
         Objects.requireNonNull(archiveFile);
         Assert.isTrue(archiveFile.exists());
         Objects.requireNonNull(repository);
@@ -31,11 +32,13 @@ public class ParseBosArchiveOperation implements IRunnableWithProgress {
 
     @Override
     public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-        final boolean isOpen = repository.getProject().isOpen();
-        try {
-            repository.getProject().open(monitor);
-        } catch (CoreException e1) {
-            throw new InvocationTargetException(e1);
+        final boolean isOpen = repository.getProject() != null && repository.getProject().isOpen();
+        if (repository.getProject() != null && !isOpen) {
+            try {
+                repository.getProject().open(monitor);
+            } catch (CoreException e1) {
+                throw new InvocationTargetException(e1);
+            }
         }
         final ImportConflictsChecker parser = new ImportConflictsChecker(repository);
         try {
@@ -43,7 +46,7 @@ public class ParseBosArchiveOperation implements IRunnableWithProgress {
         } catch (final IOException e) {
             throw new InvocationTargetException(e);
         } finally {
-            if (!isOpen) {
+            if (repository.getProject() != null && !isOpen) {
                 try {
                     repository.getProject().close(monitor);
                 } catch (CoreException e) {

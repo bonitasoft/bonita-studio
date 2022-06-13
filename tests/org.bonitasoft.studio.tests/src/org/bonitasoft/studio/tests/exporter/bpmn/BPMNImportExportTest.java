@@ -53,6 +53,7 @@ import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.model.process.Task;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.MainProcessEditPart;
+import org.bonitasoft.studio.tests.util.InitialProjectRule;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.draw2d.geometry.Point;
@@ -105,6 +106,9 @@ import org.omg.spec.dd.di.Shape;
  */
 public class BPMNImportExportTest {
 
+    @Rule
+    public InitialProjectRule projectRule = InitialProjectRule.INSTANCE;
+    
     @Rule
     public TemporaryFolder tmpFolder = new TemporaryFolder();
 

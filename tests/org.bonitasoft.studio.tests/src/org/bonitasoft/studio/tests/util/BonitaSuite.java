@@ -79,8 +79,10 @@ public class BonitaSuite extends Suite {
     public void run(RunNotifier notifier) {
         Display.getDefault().syncExec(() -> 
         {
-            configurePreferencesForTests();
             try {
+                InitialProjectRule.ensureDefaultProjectExists();
+                configurePreferencesForTests();
+           
                 PlatformUI.getWorkbench().getProgressService().run(true, false, monitor -> {
                     Job.getJobManager().join(RepositoryManager.class, monitor);
                 });

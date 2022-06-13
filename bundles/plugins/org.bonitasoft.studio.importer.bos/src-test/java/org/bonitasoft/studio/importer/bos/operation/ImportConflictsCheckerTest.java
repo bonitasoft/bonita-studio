@@ -39,6 +39,7 @@ import org.bonitasoft.studio.importer.bos.model.BosArchive;
 import org.bonitasoft.studio.importer.bos.model.BosArchiveTest;
 import org.bonitasoft.studio.importer.bos.model.ImportArchiveModel;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Status;
@@ -117,7 +118,7 @@ public class ImportConflictsCheckerTest {
         when(repo.getRepositoryStoreByName("diagrams")).thenReturn(Optional.of(diagramStore));
         when(repo.getRepositoryStoreByName("application_resources")).thenReturn(Optional.of(appRessourcesStore));
         when(repo.getRepositoryStoreByName("lib")).thenReturn(Optional.of(libStore));
-
+        when(repo.getProject()).thenReturn(mock(IProject.class));
         return repo;
     }
 
@@ -164,8 +165,6 @@ public class ImportConflictsCheckerTest {
     private BosArchive newBosArchive(File archiveFile) throws ZipException, IOException {
         final BosArchive bosArchive = spy(new BosArchive(archiveFile));
         doReturn(true).when(bosArchive).canImport(notNull());
-        doReturn(Arrays.asList(createRepositoryStore("application_resources"), createRepositoryStore("diagrams"),
-                createRepositoryStore("lib"))).when(bosArchive).allRepositoryStores();
         doReturn(Status.OK_STATUS).when(bosArchive).validateFile(any(), any());
         return bosArchive;
     }

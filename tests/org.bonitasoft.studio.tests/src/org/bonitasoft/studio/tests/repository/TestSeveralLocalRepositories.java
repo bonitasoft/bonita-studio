@@ -42,7 +42,7 @@ public class TestSeveralLocalRepositories {
     @Before
     public void setUp() throws Exception {
         BOSEngineManager.getInstance().start();
-        currentRepo = RepositoryManager.getInstance().getCurrentRepository();
+        currentRepo = RepositoryManager.getInstance().getCurrentRepository().orElseThrow();
     }
 
     @After
@@ -68,9 +68,9 @@ public class TestSeveralLocalRepositories {
 
         ICondition condition = new ConditionBuilder()
                 .withTest(() -> Objects.equals(testRepoName,
-                        RepositoryManager.getInstance().getCurrentRepository().getName()))
+                        RepositoryManager.getInstance().getCurrentRepository().orElseThrow().getName()))
                 .withFailureMessage(() -> String.format("The project name should be %s, but is %s", testRepoName,
-                        RepositoryManager.getInstance().getCurrentRepository().getName()))
+                        RepositoryManager.getInstance().getCurrentRepository().orElseThrow().getName()))
                 .create();
         bot.waitUntil(condition, 120000);
 

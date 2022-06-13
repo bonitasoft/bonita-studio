@@ -95,7 +95,7 @@ public class ProjectCompositionIT {
                 .setDescription(description)
                 .modify();
 
-        var metadata = ProjectMetadata.read(repositoryAccessor.getCurrentRepository().getProject());
+        var metadata = ProjectMetadata.read(repositoryAccessor.getCurrentRepository().orElseThrow().getProject());
         assertThat(metadata.getVersion()).isEqualTo("2.0.0-SNAPSHOT");
         assertThat(metadata.getDescription()).isEqualTo(description);
         assertThat(bot.styledTextWithId(SWTBotConstants.SWTBOT_ID_PROJECT_DETAILS_TITLE).getText())
@@ -107,10 +107,12 @@ public class ProjectCompositionIT {
     @Test
     public void shouldAddAndUpdateExtensionsFromMarketplace() throws CoreException {
         var connectorDefinitionRegistry = repositoryAccessor.getCurrentRepository()
+                .orElseThrow()
                 .getRepositoryStore(ConnectorDefRepositoryStore.class)
                 .getResourceProvider()
                 .getConnectorDefinitionRegistry();
         var actorFilterDefinitionRegistry = repositoryAccessor.getCurrentRepository()
+                .orElseThrow()
                 .getRepositoryStore(ActorFilterDefRepositoryStore.class)
                 .getResourceProvider()
                 .getConnectorDefinitionRegistry();
@@ -152,7 +154,7 @@ public class ProjectCompositionIT {
                 .updateToLatest();
         bot.waitWhile(Conditions.shellIsActive(JFaceResources.getString("ProgressMonitorDialog.title")), 15000);
 
-        var project = repositoryAccessor.getCurrentRepository().getProject();
+        var project = repositoryAccessor.getCurrentRepository().orElseThrow().getProject();
         var mavenModel = mavenProjectHelper.getMavenModel(project);
         var groovyConnectorDependencies = mavenModel.getDependencies().stream()
                 .filter(d -> d.getArtifactId().equals("bonita-connector-groovy"))
@@ -181,6 +183,7 @@ public class ProjectCompositionIT {
     @Test
     public void shouldUpdateEmailConnectorDefinitions() throws IOException {
         var connectorDefinitionRegistry = repositoryAccessor.getCurrentRepository()
+                .orElseThrow()
                 .getRepositoryStore(ConnectorDefRepositoryStore.class)
                 .getResourceProvider()
                 .getConnectorDefinitionRegistry();
@@ -206,7 +209,7 @@ public class ProjectCompositionIT {
                 .next()
                 .importArchive();
 
-        var localDepStore = repositoryAccessor.getCurrentRepository().getLocalDependencyStore();
+        var localDepStore = repositoryAccessor.getCurrentRepository().orElseThrow().getLocalDependencyStore();
         assertThat(localDepStore
                 .dependencyPath(dependency("org.bonitasoft.connectors", "bonita-connector-email", "1.1.0"))).exists();
 
@@ -295,7 +298,7 @@ public class ProjectCompositionIT {
                 .next()
                 .importArchive();
 
-        IProject project = repositoryAccessor.getCurrentRepository().getProject();
+        IProject project = repositoryAccessor.getCurrentRepository().orElseThrow().getProject();
         bot.waitUntil(new AssertionCondition() {
 
             @Override

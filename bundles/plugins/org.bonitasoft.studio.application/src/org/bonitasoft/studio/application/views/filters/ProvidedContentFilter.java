@@ -22,6 +22,7 @@ import java.util.Set;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.BonitaProjectNature;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.designer.core.repository.WebWidgetFileStore;
 import org.bonitasoft.studio.designer.core.repository.WebWidgetRepositoryStore;
@@ -60,7 +61,7 @@ public class ProvidedContentFilter extends ViewerFilter {
 
     @Override
     public boolean select(Viewer viewer, Object parentElement, Object element) {
-        if( !RepositoryManager.getInstance().hasActiveRepository() || !RepositoryManager.getInstance().getCurrentRepository().isLoaded() ) {
+        if(RepositoryManager.getInstance().getCurrentRepository().filter(IRepository::isLoaded).isEmpty() ) {
             return false;
         }
         if (element instanceof IPackageFragmentRoot) {

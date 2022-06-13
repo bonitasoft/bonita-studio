@@ -1,3 +1,5 @@
+@import 'tailwind.min.css';
+
 .background {
 	background-color: rgba(240, 240, 240, .5);
 }

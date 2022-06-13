@@ -28,6 +28,7 @@ import org.bonitasoft.studio.la.application.repository.ApplicationRepositoryStor
 import org.bonitasoft.studio.swtbot.framework.application.BotApplicationWorkbenchWindow;
 import org.bonitasoft.studio.swtbot.framework.la.OpenApplicationWizardBot;
 import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
+import org.bonitasoft.studio.tests.util.EditorMatcherExceptOverview;
 import org.bonitasoft.studio.ui.util.StringIncrementer;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotEditor;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
@@ -77,7 +78,7 @@ public class OpenExistingApplicationIT {
         workBenchBot.openApplication()
                 .select(applicationName1 + ".xml", applicationName2 + ".xml")
                 .finish();
-        assertEquals(2, bot.editors().size());
+        assertEquals(2, bot.editors(new EditorMatcherExceptOverview()).size());
 
         deleteApplications(workBenchBot, applicationName1 + ".xml", applicationName2 + ".xml");
     }
@@ -108,7 +109,8 @@ public class OpenExistingApplicationIT {
     }
 
     private String findNewApplicationName() {
-        List<String> existingApplicationNameList = repositoryAccessor.getRepositoryStore(ApplicationRepositoryStore.class)
+        List<String> existingApplicationNameList = repositoryAccessor
+                .getRepositoryStore(ApplicationRepositoryStore.class)
                 .getChildren().stream().map(ApplicationFileStore::getDisplayName).collect(Collectors.toList());
         String newName = StringIncrementer.getNextIncrement(NewApplicationHandler.DEFAULT_FILE_NAME,
                 existingApplicationNameList);
