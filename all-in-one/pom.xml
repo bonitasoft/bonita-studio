@@ -24,9 +24,8 @@
 
 	<properties>
 		<product.short.name>BonitaStudioCommunity</product.short.name>
-		<repositoryId>studio-repository</repositoryId>
 		<productId>org.bonitasoft.studio.product</productId>
-        <root.dir>${project.build.directory}/${product.short.name}-${branding.version}</root.dir>
+		<macosx.appName>${product.short.name}-${branding.version}.app</macosx.appName>
 		<signServiceURL></signServiceURL>
 	</properties>
 
@@ -59,6 +58,10 @@
 						</execution>
 						<execution>
 							<id>default-attach-artifacts</id>
+							<phase>none</phase>
+						</execution>
+						<execution>
+							<id>default-publish-osgi-ee</id>
 							<phase>none</phase>
 						</execution>
 					</executions>
@@ -142,28 +145,6 @@
 						<id>publish</id>
 						<goals>
 							<goal>publish-products</goal>
-							<goal>publish-categories</goal>
-							<goal>attach-artifacts</goal>
-						</goals>
-						<phase>process-resources</phase>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.eclipse.tycho</groupId>
-				<artifactId>tycho-p2-repository-plugin</artifactId>
-				<configuration>
-					<includeAllDependencies>true</includeAllDependencies>
-					<finalName>${repositoryId}-${branding.version}</finalName>
-					<profileProperties>
-						<macosx-bundled>true</macosx-bundled>
-					</profileProperties>
-				</configuration>
-				<executions>
-					<execution>
-						<id>build-repository</id>
-						<goals>
-							<goal>assemble-repository</goal>
 						</goals>
 						<phase>process-resources</phase>
 					</execution>
@@ -183,7 +164,7 @@
 						<product>
 							<id>${productId}</id>
 							<rootFolders>
-								<macosx>${product.short.name}-${branding.version}.app</macosx>
+								<macosx>${macosx.appName}</macosx>
 							</rootFolders>
 						</product>
 					</products>
@@ -212,6 +193,10 @@
                         <configuration>
                             <source>
                                 project.properties["branding.version.short"] = "${branding.version}".replaceAll('-.*', '')
+                           		def versionPattern = ~"([1-9]\\d*)\\.(\\d+)\\.(\\d+)(?:-([a-zA-Z0-9]+))?"
+                                def matcher = "${project.version}" =~ versionPattern
+                                def result = matcher[0..-1][0]
+                                project.properties["product.major.version"] = "${result[1]}.${result[2]}".toString()
                             </source>
                         </configuration>
                     </execution>
@@ -222,16 +207,22 @@
                             <goal>execute</goal>
                         </goals>
                         <configuration>
+                        	<defaults>
+                               <root.dir>${project.build.directory}/${product.short.name}-${branding.version}</root.dir>
+                            </defaults>
                             <source>${project.basedir}/all-in-one-p2-packaging.groovy</source>
                         </configuration>
                     </execution>
                     <execution>
                         <id>verify-packaging</id>
-                        <phase>verify</phase>
+                        <phase>prepare-package</phase>
                         <goals>
                             <goal>execute</goal>
                         </goals>
                         <configuration>
+                        	<defaults>
+                               <products.dir>${project.build.directory}/products/${productId}</products.dir>
+                            </defaults>
                             <source>${project.basedir}/verify-packaging.groovy</source>
                         </configuration>
                     </execution>
