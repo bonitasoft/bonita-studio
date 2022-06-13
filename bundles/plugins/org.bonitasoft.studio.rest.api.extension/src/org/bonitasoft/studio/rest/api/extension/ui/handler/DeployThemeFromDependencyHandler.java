@@ -28,7 +28,7 @@ public class DeployThemeFromDependencyHandler extends DeployRestApiExtensionFrom
     @Execute
     public void execute(RepositoryAccessor repositoryAccessor, HttpClientFactory httpClientFactory, String groupId,
             String artifactId, String version, String classifier) {
-        repositoryAccessor.getCurrentRepository().getProjectDependenciesStore()
+        repositoryAccessor.getCurrentRepository().orElseThrow().getProjectDependenciesStore()
                 .getThemes().stream()
                 .filter(theme -> Objects.equals(theme.getArtifact().getGroupId(), groupId))
                 .filter(theme -> Objects.equals(theme.getArtifact().getArtifactId(), artifactId))

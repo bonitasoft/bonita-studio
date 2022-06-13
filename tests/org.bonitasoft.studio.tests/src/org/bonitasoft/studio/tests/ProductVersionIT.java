@@ -16,12 +16,8 @@ package org.bonitasoft.studio.tests;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 import org.bonitasoft.studio.common.ProductVersion;
 import org.eclipse.core.runtime.Platform;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.osgi.framework.Version;
 
@@ -38,13 +34,6 @@ public class ProductVersionIT {
 
     private Version loadBundleVersion() {
         return Platform.getBundle("org.bonitasoft.studio.tests").getVersion();
-    }
-
-    @Test
-    @Ignore
-    public void shouldCurrentYearEquals_EffectiveCurrentYear() throws Exception {
-        final String currentYear = new SimpleDateFormat("yyyy").format(new Date());
-        assertThat(ProductVersion.CURRENT_YEAR).isEqualTo(currentYear);
     }
 
     @Test

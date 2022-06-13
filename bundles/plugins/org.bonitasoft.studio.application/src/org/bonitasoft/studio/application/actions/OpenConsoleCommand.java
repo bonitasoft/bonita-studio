@@ -17,6 +17,7 @@
  */
 package org.bonitasoft.studio.application.actions;
 
+import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.engine.command.AbstractOpenConsoleCommand;
 
 public class OpenConsoleCommand extends AbstractOpenConsoleCommand {
@@ -27,6 +28,11 @@ public class OpenConsoleCommand extends AbstractOpenConsoleCommand {
 
     public OpenConsoleCommand(boolean runSynchronously) {
         this.runSynchronously = runSynchronously;
+    }
+    
+    @Override
+    public boolean isEnabled() {
+        return RepositoryManager.getInstance().hasActiveRepository();
     }
 
 }

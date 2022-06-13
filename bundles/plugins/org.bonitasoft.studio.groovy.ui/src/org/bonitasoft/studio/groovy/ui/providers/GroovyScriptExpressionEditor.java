@@ -540,7 +540,7 @@ public class GroovyScriptExpressionEditor extends SelectionAwareExpressionEditor
             final Expression inputExpression,
             final ViewerFilter[] filters, final ExpressionViewer viewer) {
 
-        GroovyDocumentUtil.refreshUserLibrary(RepositoryManager.getInstance().getCurrentRepository());
+        GroovyDocumentUtil.refreshUserLibrary(RepositoryManager.getInstance().getCurrentRepository().orElseThrow());
 
         this.inputExpression = inputExpression;
         this.context = context;

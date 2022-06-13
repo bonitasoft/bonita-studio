@@ -170,7 +170,7 @@ public abstract class AbstractFileStore<T>
     }
 
     public AbstractRepository getRepository() {
-        return RepositoryManager.getInstance().getCurrentRepository();
+        return RepositoryManager.getInstance().getCurrentRepository().orElse(null);
     }
 
     @Override
@@ -417,7 +417,7 @@ public abstract class AbstractFileStore<T>
 
     @Override
     public void fireFileStoreEvent(final FileStoreChangeEvent event) {
-        final IRepository repository = RepositoryManager.getInstance().getCurrentRepository();
+        final IRepository repository = RepositoryManager.getInstance().getCurrentRepository().orElse(null);
         if (repository != null) {
             repository.handleFileStoreEvent(event);
         }

@@ -32,11 +32,13 @@ public class ComparePerspectiveFactory extends AbstractPerspectiveFactory {
         leftFolder.addView(BonitaProjectExplorer.ID);
         IFolderLayout bottomLeft = layout.createFolder("bottomLeft", IPageLayout.BOTTOM, 0.75f, "left");
         bottomLeft.addView(PROBLEM_VIEW_ID);
-        if (RepositoryManager.getInstance().getCurrentRepository().isShared("org.eclipse.egit.core.GitProvider")) {
+        RepositoryManager.getInstance().getCurrentRepository()
+        .filter(repo -> repo.isShared("org.eclipse.egit.core.GitProvider"))
+        .ifPresent(repo -> {
             final IFolderLayout bottomfolder = layout.createFolder("bottom", IPageLayout.BOTTOM, 0.75f, editorArea); //$NON-NLS-1$
             bottomfolder.addView("org.eclipse.egit.ui.StagingView");
             bottomfolder.addPlaceholder("org.eclipse.team.ui.GenericHistoryView");
-        }
+        });
     }
 
     /*

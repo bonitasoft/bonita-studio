@@ -41,7 +41,7 @@ public class ExportSingleConnectorHandler extends AbstractHandler {
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
         fileStoreFinder
-                .findSelectedFileStore(repositoryAccessor.getCurrentRepository())
+                .findSelectedFileStore(repositoryAccessor.getCurrentRepository().orElseThrow())
                 .filter(ConnectorImplFileStore.class::isInstance)
                 .map(ConnectorImplFileStore.class::cast)
                 .map(t -> {

@@ -37,6 +37,7 @@ import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.parameters.action.RefactorParametersOperation;
 import org.bonitasoft.studio.parameters.action.RemoveParametersOperation;
+import org.bonitasoft.studio.tests.util.InitialProjectRule;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.FileLocator;
@@ -46,6 +47,7 @@ import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.IProgressService;
 import org.junit.After;
+import org.junit.Rule;
 import org.junit.Test;
 
 /**
@@ -53,6 +55,9 @@ import org.junit.Test;
  */
 public class TestParametersRefactoring {
 
+    @Rule
+    public InitialProjectRule projectRule = InitialProjectRule.INSTANCE;
+    
     private final String mainProcessName = "testParametersRefactoring";
 
     private final String newParameterName = "parameter1Refactored";

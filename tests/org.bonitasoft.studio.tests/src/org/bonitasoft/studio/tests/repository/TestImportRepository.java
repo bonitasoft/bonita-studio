@@ -31,13 +31,18 @@ import org.bonitasoft.studio.document.core.repository.DocumentRepositoryStore;
 import org.bonitasoft.studio.groovy.repository.GroovyFileStore;
 import org.bonitasoft.studio.groovy.repository.GroovyRepositoryStore;
 import org.bonitasoft.studio.importer.bos.operation.ImportBosArchiveOperation;
+import org.bonitasoft.studio.tests.util.InitialProjectRule;
 import org.eclipse.core.runtime.FileLocator;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 
 public class TestImportRepository {
 
+    @Rule
+    public InitialProjectRule projectRule = InitialProjectRule.INSTANCE;
+    
     private static final String TEST_ATTACHMENT_ARTIFACT_ID = "attachment.txt"; //$NON-NLS-1$
 
     private static final String TEST_ATTACHMENT_BAR_NAME = "Test Attachment Import-1.0.bos"; //$NON-NLS-1$

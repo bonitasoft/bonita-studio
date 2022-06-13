@@ -28,13 +28,11 @@ public class BontaIntroConfigurer extends IntroConfigurer {
 
     @Override
     public IntroElement[] getGroupChildren(String pageId, String groupId) {
-        // TODO Auto-generated method stub
         return null;
     }
 
     @Override
     public String resolvePath(String extensionId, String path) {
-        // TODO Auto-generated method stub
         return null;
     }
 

@@ -99,7 +99,7 @@ public class ProcessScriptsCompiler {
         }
 
         public GroovySourceWriter() {
-            IProject project = RepositoryManager.getInstance().getCurrentRepository().getProject();
+            IProject project = RepositoryManager.getInstance().getCurrentRepository().orElseThrow().getProject();
             srcFolder = project.getFolder("src-providedGroovy");
         }
 

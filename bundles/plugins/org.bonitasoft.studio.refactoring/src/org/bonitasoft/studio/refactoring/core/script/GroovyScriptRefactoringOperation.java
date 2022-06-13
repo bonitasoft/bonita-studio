@@ -90,7 +90,7 @@ public class GroovyScriptRefactoringOperation implements IScriptRefactoringOpera
     }
 
     protected IJavaProject javaProject() {
-        return RepositoryManager.getInstance().getCurrentRepository().getJavaProject();
+        return RepositoryManager.getInstance().getCurrentRepository().orElseThrow().getJavaProject();
     }
 
     /*

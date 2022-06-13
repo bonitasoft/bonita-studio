@@ -23,6 +23,7 @@ import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.model.IModelSearch;
 import org.bonitasoft.studio.common.model.ModelSearch;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.connectors.repository.ConnectorDefRepositoryStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.exporter.Messages;
@@ -115,6 +116,14 @@ public class ExportAsBPMNHandler {
     @CanExecute
     public boolean isDiagramEditorActive(IWorkbenchPage activePage) {
         return activePage != null && activePage.getActiveEditor() instanceof ProcessDiagramEditor;
+    }
+    
+    @CanExecute
+    public boolean isEnabled() {
+        if (RepositoryManager.getInstance().hasActiveRepository()) {
+            return true;
+        }
+        return false;
     }
 
 }

@@ -16,6 +16,7 @@ package org.bonitasoft.studio.common.repository;
 
 import static org.mockito.Mockito.doReturn;
 
+import java.util.Optional;
 import java.util.function.Supplier;
 
 import org.assertj.core.api.Assertions;
@@ -47,7 +48,7 @@ public class RepositoryNameValidatorTest {
         doReturn("existing").when(repo).getName();
         doReturn(repoManager).when(rnv).getRepositoryManager();
         doReturn(repo).when(repoManager).getRepository("existing");
-        doReturn(repo).when(repoManager).getCurrentRepository();
+        doReturn(Optional.of(repo)).when(repoManager).getCurrentRepository();
         return rnv;
     }
 

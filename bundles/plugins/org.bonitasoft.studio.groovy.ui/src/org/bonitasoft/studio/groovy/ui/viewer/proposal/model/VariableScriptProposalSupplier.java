@@ -137,7 +137,7 @@ public class VariableScriptProposalSupplier extends ScriptProposalSupplier {
     }
     
     private void addGetterProposalChildren(ScriptProposal scriptProposal) {
-        final IJavaProject project = repositoryAccessor.getCurrentRepository().getJavaProject();
+        final IJavaProject project = repositoryAccessor.getCurrentRepository().orElseThrow().getJavaProject();
         try {
             IType type = project.findType(scriptProposal.getType());
             if(type != null) {

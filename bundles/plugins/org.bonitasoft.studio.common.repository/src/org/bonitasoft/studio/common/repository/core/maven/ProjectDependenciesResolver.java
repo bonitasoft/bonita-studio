@@ -27,6 +27,7 @@ import org.apache.maven.artifact.Artifact;
 import org.apache.maven.model.Dependency;
 import org.apache.maven.project.MavenProject;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.eclipse.aether.graph.DependencyNode;
 import org.eclipse.aether.graph.DependencyVisitor;
 import org.eclipse.core.resources.IProject;
@@ -47,7 +48,11 @@ public class ProjectDependenciesResolver {
     }
 
     public List<Artifact> getCompileDependencies(IProgressMonitor monitor) throws CoreException {
-        MavenProject mavenProject = getMavenProject(repositoryAccessor.getCurrentRepository().getProject(), monitor);
+        var project = repositoryAccessor.getCurrentRepository().map(IRepository::getProject).orElse(null);
+        if(project == null) {
+            return Collections.emptyList();
+        }
+        MavenProject mavenProject = getMavenProject(project, monitor);
         if(mavenProject == null) {
             return Collections.emptyList();
         }
@@ -71,7 +76,11 @@ public class ProjectDependenciesResolver {
 
     public Optional<Artifact> findCompileDependency(String fileName, IProgressMonitor monitor)
             throws CoreException {
-        MavenProject mavenProject = getMavenProject(repositoryAccessor.getCurrentRepository().getProject(), monitor);
+        var project = repositoryAccessor.getCurrentRepository().map(IRepository::getProject).orElse(null);
+        if(project == null) {
+            return Optional.empty();
+        }
+        MavenProject mavenProject = getMavenProject(project, monitor);
         if(mavenProject == null) {
             return Optional.empty();
         }
@@ -84,7 +93,10 @@ public class ProjectDependenciesResolver {
 
     public List<Artifact> getTransitiveDependencies(Artifact artifact, IProgressMonitor monitor)
             throws CoreException {
-        var project = repositoryAccessor.getCurrentRepository().getProject();
+        var project = repositoryAccessor.getCurrentRepository().map(IRepository::getProject).orElse(null);
+        if(project == null) {
+            return Collections.emptyList();
+        }
         MavenProject mavenProject = getMavenProject(project, monitor);
         if(mavenProject == null) {
             return Collections.emptyList();

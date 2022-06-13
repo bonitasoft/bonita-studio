@@ -30,6 +30,7 @@ import org.bonitasoft.studio.rest.api.extension.core.maven.CreateRestAPIExtensio
 import org.bonitasoft.studio.rest.api.extension.core.repository.RestAPIExtensionDescriptor;
 import org.bonitasoft.studio.rest.api.extension.core.repository.RestAPIExtensionFileStore;
 import org.bonitasoft.studio.rest.api.extension.core.repository.RestAPIExtensionRepositoryStore;
+import org.bonitasoft.studio.tests.util.InitialProjectRule;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.jobs.Job;
@@ -43,6 +44,9 @@ import org.junit.rules.TemporaryFolder;
 
 public class BuildAndDeployRestAPIExtensionIT {
 
+    @Rule
+    public InitialProjectRule projectRule = InitialProjectRule.INSTANCE;
+    
     private static final  String ARTIFACT_ID = "myRestApiTestExportRuntime";
     @Rule
     public TemporaryFolder tmp = new TemporaryFolder();

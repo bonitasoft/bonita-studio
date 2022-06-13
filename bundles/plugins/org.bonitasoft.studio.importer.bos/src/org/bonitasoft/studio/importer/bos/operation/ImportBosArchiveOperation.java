@@ -130,7 +130,7 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
             DependenciesUpdateOperationFactory dependenciesUpdateOperationFactory) {
         this.launchValidationafterImport = launchValidationafterImport;
         this.repositoryAccessor = repositoryAccessor;
-        currentRepository = repositoryAccessor.getCurrentRepository();
+        currentRepository = repositoryAccessor.getCurrentRepository().orElseThrow();
         progressDialog = progressManager;
         archive = selectedFile;
         archiveModel = Optional.ofNullable(root);
@@ -143,7 +143,7 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
     public ImportBosArchiveOperation(RepositoryAccessor repositoryAccessor) {
         this.launchValidationafterImport = true;
         this.repositoryAccessor = repositoryAccessor;
-        currentRepository = repositoryAccessor.getCurrentRepository();
+        currentRepository = repositoryAccessor.getCurrentRepository().orElseThrow();
         var eclipseContext = EclipseContextFactory.create();
         dependenciesUpdateOperationFactory = ContextInjectionFactory
                 .make(DependenciesUpdateOperationFactory.class, eclipseContext);
@@ -537,6 +537,11 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
 
     public void setCurrentRepository(final AbstractRepository currentRepository) {
         this.currentRepository = currentRepository;
+    }
+    
+    @Deprecated
+    public void setCurrentRepository(Optional<AbstractRepository> currentRepository) {
+        this.currentRepository = currentRepository.orElseThrow();
     }
 
     public void openFilesToOpen() {

@@ -3,6 +3,8 @@ package org.bonitasoft.studio.document.ui.validator;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import java.util.Optional;
+
 import org.bonitasoft.studio.assertions.StatusAssert;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
@@ -30,7 +32,7 @@ public class AdditionalResourceProjectPathValidatorTest {
         RepositoryAccessor repositoryAccessor = mock(RepositoryAccessor.class);
         validator.repositoryAccessor = repositoryAccessor;
 
-        when(repositoryAccessor.getCurrentRepository()).thenReturn(repository);
+        when(repositoryAccessor.getCurrentRepository()).thenReturn(Optional.of(repository));
         when(repository.getProject()).thenReturn(project);
         when(project.getFile(KNOWN_RESOURCE)).thenReturn(knownFile);
         when(project.getFile(UNKNOWN_RESOURCE)).thenReturn(unknownFile);

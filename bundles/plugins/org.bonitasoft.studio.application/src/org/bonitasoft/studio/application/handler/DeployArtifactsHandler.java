@@ -57,6 +57,7 @@ import org.bonitasoft.studio.common.jface.BonitaErrorDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.core.ActiveOrganizationProvider;
 import org.bonitasoft.studio.common.repository.model.DeployOptions;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
@@ -81,6 +82,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
+import org.eclipse.e4.core.di.annotations.CanExecute;
 import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.e4.ui.services.IServiceConstants;
 import org.eclipse.emf.common.util.URI;
@@ -119,7 +121,7 @@ public class DeployArtifactsHandler {
             RepositoryAccessor repositoryAccessor, IProgressService progressService)
             throws InvocationTargetException, InterruptedException {
         ModelFileCompatibilityValidator validator = new ModelFileCompatibilityValidator(
-                repositoryAccessor.getCurrentRepository());
+                repositoryAccessor.getCurrentRepository().orElseThrow());
         validator.addResourceMarkers();
         progressService.busyCursorWhile(validator::run);
         boolean shouldUpdateModels = Stream.of(validator.getStatus().getChildren())
@@ -140,7 +142,7 @@ public class DeployArtifactsHandler {
             if (Stream.of(validator.getStatus().getChildren()).anyMatch(s -> s.matches(IStatus.WARNING))) {
                 progressService.busyCursorWhile(monitor -> {
                     try {
-                        repositoryAccessor.getCurrentRepository().migrate(monitor);
+                        repositoryAccessor.getCurrentRepository().orElseThrow().migrate(monitor);
                         validator.run(monitor);
                     } catch (CoreException | MigrationException e) {
                         BonitaStudioLog.error(e);
@@ -176,6 +178,11 @@ public class DeployArtifactsHandler {
             openStatusDialog(activeShell, result.get(), repositoryAccessor);
         }
         diagramStore.resetComputedProcesses();
+    }
+    
+    @CanExecute
+    public boolean isEnabled() {
+       return RepositoryManager.getInstance().hasActiveRepository();
     }
 
     private Artifact asArtifact(IRepositoryFileStore<?> fStore) {

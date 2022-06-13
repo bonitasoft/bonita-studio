@@ -72,7 +72,7 @@ public class PojoBrowserContentProvider implements ITreeContentProvider {
     public Object[] getElements(Object inputElement) {
         if (inputElement instanceof String) {
             try {
-                type = RepositoryManager.getInstance().getCurrentRepository().getJavaProject()
+                type = RepositoryManager.getInstance().getCurrentRepository().orElseThrow().getJavaProject()
                         .findType(inputElement.toString());
             } catch (JavaModelException e1) {
                 BonitaStudioLog.error(e1);
@@ -95,7 +95,7 @@ public class PojoBrowserContentProvider implements ITreeContentProvider {
                 String className = Signature.toString(((IMethod) parentElement).getReturnType());
                 IType type = null;
                 try {
-                    type = RepositoryManager.getInstance().getCurrentRepository().getJavaProject().findType(className);
+                    type = RepositoryManager.getInstance().getCurrentRepository().orElseThrow().getJavaProject().findType(className);
                 } catch (JavaModelException e1) {
                     BonitaStudioLog.error(e1);
                 }

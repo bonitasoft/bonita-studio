@@ -27,6 +27,7 @@ import org.bonitasoft.studio.ui.util.StringIncrementer;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.e4.core.di.annotations.CanExecute;
 import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.e4.ui.services.IServiceConstants;
 import org.eclipse.swt.widgets.Display;
@@ -56,5 +57,13 @@ public abstract class NewFileHandler extends AbstractHandler {
     public Object execute(ExecutionEvent event) throws ExecutionException {
         execute(Display.getDefault().getActiveShell(), RepositoryManager.getInstance().getAccessor());
         return null;
+    }
+    
+    @CanExecute
+    public boolean isEnabled() {
+        if (RepositoryManager.getInstance().hasActiveRepository()) {
+            return true;
+        }
+        return false;
     }
 }

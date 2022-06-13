@@ -171,7 +171,7 @@ public class BOSEngineManager {
     }
 
     public synchronized void start() {
-        start(RepositoryManager.getInstance().getCurrentRepository());
+        start(RepositoryManager.getInstance().getCurrentRepository().orElseThrow());
     }
 
     protected boolean postEngineStart(IRepository repository) {

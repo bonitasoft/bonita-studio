@@ -50,8 +50,7 @@ public abstract class AbstractProjectMetadataHandler {
             MavenProjectHelper mavenProjectHelper,
             ExceptionDialogHandler exceptionDialogHandler) {
 
-        AbstractRepository currentRepository = repositoryAccessor.getCurrentRepository();
-        ProjectMetadata metadata = initialMetadata(currentRepository);
+        ProjectMetadata metadata = initialMetadata(repositoryAccessor);
 
         List<WizardPageBuilder> pages = createPages(repositoryAccessor, metadata);
 
@@ -90,7 +89,7 @@ public abstract class AbstractProjectMetadataHandler {
         return IDialogConstants.FINISH_LABEL;
     }
 
-    protected abstract ProjectMetadata initialMetadata(AbstractRepository currentRepository);
+    protected abstract ProjectMetadata initialMetadata(RepositoryAccessor repositoryAccessor);
 
     protected abstract boolean isNewProject();
 

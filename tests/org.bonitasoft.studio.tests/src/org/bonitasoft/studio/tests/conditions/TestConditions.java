@@ -53,6 +53,7 @@ import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.tests.util.Await;
 import org.bonitasoft.studio.tests.util.EngineAPIUtil;
+import org.bonitasoft.studio.tests.util.InitialProjectRule;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.FileLocator;
@@ -60,6 +61,7 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.ui.PlatformUI;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 
 /**
@@ -67,6 +69,9 @@ import org.junit.Test;
  */
 public class TestConditions {
 
+    @Rule
+    public InitialProjectRule projectRule = InitialProjectRule.INSTANCE;
+    
     private HumanTaskInstance newTask;
     private APISession session;
     private RepositoryAccessor repositoryAccessor;

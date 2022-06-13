@@ -47,7 +47,7 @@ public class OpenSpecificProcessCommand extends AbstractHandler {
 	 * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
 	 */
 	public Object execute(ExecutionEvent event) throws ExecutionException {
-		IRepository repository = RepositoryManager.getInstance().getCurrentRepository() ;
+		IRepository repository = RepositoryManager.getInstance().getCurrentRepository().orElseThrow();
 		diagramSotre = (DiagramRepositoryStore) repository.getRepositoryStore(DiagramRepositoryStore.class) ;
 		try {
 			if (event.getParameter(PARAMETER_PROCESS_NAME) != null &&

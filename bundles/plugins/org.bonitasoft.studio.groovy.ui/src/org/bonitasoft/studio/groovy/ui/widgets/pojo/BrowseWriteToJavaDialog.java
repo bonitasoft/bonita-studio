@@ -81,7 +81,7 @@ public class BrowseWriteToJavaDialog extends Dialog {
 		
 		if (type == null) {
 			try {
-				type = RepositoryManager.getInstance().getCurrentRepository().getJavaProject().findType(className);
+				type = RepositoryManager.getInstance().getCurrentRepository().orElseThrow().getJavaProject().findType(className);
 			} catch (JavaModelException e1) {
 				BonitaStudioLog.error(e1) ;
 			}

@@ -207,7 +207,7 @@ public class ScriptExpressionEditor extends SelectionAwareExpressionEditor imple
     private void openClassSelectionDialog() {
         final JavaSearchScope scope = new JavaSearchScope(true);
         try {
-            scope.add(RepositoryManager.getInstance().getCurrentRepository().getJavaProject());
+            scope.add(RepositoryManager.getInstance().getCurrentRepository().orElseThrow().getJavaProject());
         } catch (final Exception ex) {
             BonitaStudioLog.error(ex);
         }

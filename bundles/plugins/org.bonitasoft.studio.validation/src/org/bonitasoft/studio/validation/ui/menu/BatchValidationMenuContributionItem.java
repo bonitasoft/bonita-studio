@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.bonitasoft.studio.common.CommandExecutor;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.validation.i18n.Messages;
@@ -43,7 +44,7 @@ public class BatchValidationMenuContributionItem extends ContributionItem {
         MenuItem item = new MenuItem(parent, SWT.NONE, index);
         item.setText(Messages.validate);
         item.addListener(SWT.Selection, e -> performValidation());
-        item.setEnabled(true);
+        item.setEnabled(isEnabled());
         item.setImage(Pics.getImage(PicsConstants.validate));
     }
 
@@ -52,6 +53,11 @@ public class BatchValidationMenuContributionItem extends ContributionItem {
         parameters.put(CHECK_ALL_PARAMETER, Boolean.TRUE.toString());
         parameters.put(SHOW_REPORT_PARAMETER, Boolean.TRUE.toString());
         commandExecutor.executeCommand(VALIDATION_COMMAND, parameters);
+    }
+    
+    @Override
+    public boolean isEnabled() {
+        return RepositoryManager.getInstance().hasActiveRepository();
     }
 
 }

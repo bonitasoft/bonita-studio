@@ -22,6 +22,7 @@ import java.net.URLEncoder;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.intro.Activator;
 import org.bonitasoft.studio.intro.content.actions.OpenEditorFromHistoryItemAction;
 import org.eclipse.core.resources.IResource;
@@ -51,7 +52,7 @@ public class RecentFilesContentProvider implements DOMContentProvider {
         
         
         if (!RepositoryManager.getInstance().hasActiveRepository()
-                || !RepositoryManager.getInstance().getCurrentRepository().isLoaded()) {
+                || RepositoryManager.getInstance().getCurrentRepository().filter(IRepository::isLoaded).isEmpty()) {
             return;
         }
 

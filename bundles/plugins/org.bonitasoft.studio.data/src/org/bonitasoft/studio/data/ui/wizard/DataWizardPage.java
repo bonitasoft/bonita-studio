@@ -759,7 +759,7 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
                     }
                     IType type = null;
                     try {
-                        type = RepositoryManager.getInstance().getCurrentRepository().getJavaProject()
+                        type = RepositoryManager.getInstance().getCurrentRepository().orElseThrow().getJavaProject()
                                 .findType(value.toString());
                     } catch (final JavaModelException e) {
                     }
@@ -1300,6 +1300,7 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
     protected void openClassSelectionDialog(final Text classText) {
         final IJavaSearchScope searchScope = SearchEngine
                 .createJavaSearchScope(new IJavaElement[] { RepositoryManager.getInstance().getCurrentRepository()
+                        .orElseThrow()
                         .getJavaProject() });
         final OpenTypeSelectionDialog searchDialog = new OpenTypeSelectionDialog(getShell(), false, null, searchScope,
                 IJavaSearchConstants.TYPE);

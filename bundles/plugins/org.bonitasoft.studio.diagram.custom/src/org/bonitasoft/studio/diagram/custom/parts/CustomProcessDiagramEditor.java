@@ -10,6 +10,7 @@ package org.bonitasoft.studio.diagram.custom.parts;
 
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.designer.ui.property.section.control.WebPageNameResourceChangeListener;
 import org.bonitasoft.studio.diagram.custom.Activator;
@@ -44,7 +45,7 @@ public class CustomProcessDiagramEditor extends ProcessDiagramEditor {
 
     @Override
     public void init(IEditorSite site, IEditorInput input) throws PartInitException {
-        if (repositoryAccessor.getCurrentRepository().isLoaded()) {
+        if (repositoryAccessor.getCurrentRepository().filter(IRepository::isLoaded).isPresent()) {
             DiagramFileStore fileStore = repositoryAccessor.getRepositoryStore(DiagramRepositoryStore.class)
                     .getChild(input.getName(), true);
             if (fileStore != null) {

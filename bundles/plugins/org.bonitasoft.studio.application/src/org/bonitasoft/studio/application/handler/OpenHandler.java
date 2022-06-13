@@ -20,6 +20,7 @@ import org.bonitasoft.studio.application.views.provider.UIDArtifactFilters;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.filestore.FileStoreFinder;
+import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -40,9 +41,10 @@ public class OpenHandler extends AbstractHandler {
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
         ISelection selection = fileStoreFinder.getSelectionInExplorer();
-        IResource resource = ((IAdaptable) ((IStructuredSelection) selection).getFirstElement()).getAdapter(IResource.class);
+        IResource resource = ((IAdaptable) ((IStructuredSelection) selection).getFirstElement())
+                .getAdapter(IResource.class);
         Optional<? extends IRepositoryFileStore> fileStore = fileStoreFinder.findFileStore(resource,
-                RepositoryManager.getInstance().getCurrentRepository());
+                RepositoryManager.getInstance().getCurrentRepository().orElseThrow());
         if (fileStore.isPresent()) {
             fileStore.get().open();
         } else {
@@ -57,19 +59,22 @@ public class OpenHandler extends AbstractHandler {
 
     @Override
     public boolean isEnabled() {
-        ISelection selection = fileStoreFinder.getSelectionInExplorer();
-        if (selection instanceof IStructuredSelection
-                && ((IStructuredSelection) selection).size() == 1) {
-            Object sel = ((IStructuredSelection) selection).getFirstElement();
-            if (sel instanceof IAdaptable && ((IAdaptable) sel).getAdapter(IResource.class) != null) {
-                IResource adapter = ((IAdaptable) sel).getAdapter(IResource.class);
-                if (adapter instanceof IFile || UIDArtifactFilters.isUIDArtifact(adapter)) {
-                    IRepositoryFileStore fileStore = RepositoryManager.getInstance().getCurrentRepository()
-                            .getFileStore(adapter);
-                    if (fileStore != null) {
-                        return !fileStore.getName().endsWith(".jar");
+        if (RepositoryManager.getInstance().getCurrentRepository().filter(IRepository::isLoaded).isPresent()) {
+            ISelection selection = fileStoreFinder.getSelectionInExplorer();
+            if (selection instanceof IStructuredSelection
+                    && ((IStructuredSelection) selection).size() == 1) {
+                Object sel = ((IStructuredSelection) selection).getFirstElement();
+                if (sel instanceof IAdaptable && ((IAdaptable) sel).getAdapter(IResource.class) != null) {
+                    IResource adapter = ((IAdaptable) sel).getAdapter(IResource.class);
+                    if (adapter instanceof IFile || UIDArtifactFilters.isUIDArtifact(adapter)) {
+                        IRepositoryFileStore fileStore = RepositoryManager.getInstance().getCurrentRepository()
+                                .orElseThrow()
+                                .getFileStore(adapter);
+                        if (fileStore != null) {
+                            return !fileStore.getName().endsWith(".jar");
+                        }
+                        return true;
                     }
-                    return true;
                 }
             }
         }

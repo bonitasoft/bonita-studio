@@ -57,7 +57,7 @@ public class RootFileModel extends ImportStoreModel {
             @Override
             public IRepositoryFileStore doImport(ZipFile archive, IProgressMonitor monitor) {
                 ImportArchiveData data = new ImportArchiveData(archive, archive.getEntry(path), true);
-                IFile file = RepositoryManager.getInstance().getCurrentRepository().getProject().getFile(getName());
+                IFile file = RepositoryManager.getInstance().getCurrentRepository().orElseThrow().getProject().getFile(getName());
                 try {
                     if (file.exists()) {
                         file.setContents(data.getInputStream(), IResource.KEEP_HISTORY, new NullProgressMonitor());

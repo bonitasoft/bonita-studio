@@ -43,29 +43,33 @@ public class RepositoryNameValidator implements IInputValidator, IValidator<Stri
         if (invalidChar.isPresent()) {
             return String.format(Messages.createNewProject_invalidCharacter, invalidChar.get());
         }
-
-        if (newProjectSupplier.get() || !isCurrentName(newText)) {
-            if (getRepositoryManager().getRepository(newText) != null) {
-                return String.format(Messages.projectAlreadyExist, newText);
-            }
-            if (Stream.of(getRepositoryManager().getCurrentRepository()
-                    .getProject()
-                    .getWorkspace()
-                    .getRoot()
-                    .getLocation()
-                    .toFile()
-                    .listFiles())
-                    .map(File::getName)
-                    .map(String::toLowerCase)
-                    .anyMatch(newText.toLowerCase()::equals)) {
-                return String.format(Messages.projectAlreadyExist, newText);
+        
+        var currentRepo = getRepositoryManager().getCurrentRepository().orElse(null);
+        if(currentRepo != null) {
+            if (newProjectSupplier.get() || !isCurrentName(newText)) {
+                if (getRepositoryManager().getRepository(newText) != null) {
+                    return String.format(Messages.projectAlreadyExist, newText);
+                }
+                if (Stream.of(currentRepo
+                        .getProject()
+                        .getWorkspace()
+                        .getRoot()
+                        .getLocation()
+                        .toFile()
+                        .listFiles())
+                        .map(File::getName)
+                        .map(String::toLowerCase)
+                        .anyMatch(newText.toLowerCase()::equals)) {
+                    return String.format(Messages.projectAlreadyExist, newText);
+                }
             }
         }
         return null;
     }
 
     private boolean isCurrentName(String newText) {
-        return Objects.equals(newText, getRepositoryManager().getCurrentRepository().getName());
+        return getRepositoryManager().getCurrentRepository()
+                .filter(repo -> Objects.equals(newText,repo.getName())).isPresent();
     }
 
     protected Optional<String> isValidFileName(final String newText) {

@@ -108,9 +108,10 @@ public class OpenMarketplaceHandler {
 
     protected BonitaMarketplacePage createBonitaMarketPlacePage(RepositoryAccessor repositoryAccessor,
             String... types) {
+        var project = repositoryAccessor.getCurrentRepository().orElseThrow().getProject();
         return types.length == 0
-                ? new BonitaMarketplacePage(repositoryAccessor.getCurrentRepository().getProject())
-                : new BonitaMarketplacePage(repositoryAccessor.getCurrentRepository().getProject(), types);
+                ? new BonitaMarketplacePage(project)
+                : new BonitaMarketplacePage(project, types);
     }
 
     private Optional<Boolean> performFinish(IWizardContainer container, BonitaMarketplacePage extendProjectPage, boolean forceAnalyzeInWizard) {
@@ -118,7 +119,7 @@ public class OpenMarketplaceHandler {
                 .map(bad -> new DependencyUpdate(findCurrentDependency(bad), bad.getBestVersion()))
                 .collect(Collectors.toList());
         var updateExtensionDecorator = new UpdateExtensionOperationDecorator(dependenciesUpdates,
-                repositoryAccessor.getCurrentRepository(), commandExecutor);
+                repositoryAccessor.getCurrentRepository().orElseThrow(), commandExecutor);
         try {
             container.run(true, false, monitor -> {
                 updateExtensionDecorator.preUpdate(monitor);
@@ -149,7 +150,7 @@ public class OpenMarketplaceHandler {
         if (extendProjectPage.getDependenciesToUpdate().isEmpty() && !forceAnalyzeInWizard) {
             MavenModelOperation.scheduleAnalyzeProjectDependenciesJob(repositoryAccessor);
         } else {
-            repositoryAccessor.getCurrentRepository().getProjectDependenciesStore().analyze(SubMonitor.convert(monitor));
+            repositoryAccessor.getCurrentRepository().orElseThrow().getProjectDependenciesStore().analyze(SubMonitor.convert(monitor));
         }
     }
 
@@ -177,7 +178,7 @@ public class OpenMarketplaceHandler {
 
     private Dependency findCurrentDependency(BonitaArtifactDependency bad) {
         try {
-            return mavenProjectHelper.getMavenModel(repositoryAccessor.getCurrentRepository().getProject())
+            return mavenProjectHelper.getMavenModel(repositoryAccessor.getCurrentRepository().orElseThrow().getProject())
                     .getDependencies().stream()
                     .filter(dep -> dep.getGroupId().equals(bad.getGroupId())
                             && dep.getArtifactId().equals(bad.getArtifactId()))

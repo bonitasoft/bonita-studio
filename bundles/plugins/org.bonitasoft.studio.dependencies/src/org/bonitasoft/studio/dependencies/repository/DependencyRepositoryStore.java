@@ -65,8 +65,10 @@ public class DependencyRepositoryStore extends AbstractRepositoryStore<Dependenc
 
     @Override
     public IFolder getResource() {
-        final IProject project = repository.getProject();
-        return project.getFolder(getName());
+        if(repository != null && repository.getProject() != null) {
+            return repository.getProject().getFolder(getName());
+        }
+        return null;
     }
 
     @Override

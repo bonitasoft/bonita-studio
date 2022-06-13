@@ -19,6 +19,7 @@ import org.eclipse.e4.ui.workbench.UIEvents;
 import org.eclipse.egit.ui.JobFamilies;
 import org.eclipse.egit.ui.internal.push.PushJob;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jsch.internal.core.JSchCorePlugin;
 import org.osgi.service.event.Event;
 
 public class StartAddon {
@@ -27,7 +28,8 @@ public class StartAddon {
     @Optional
     public void applicationStarted(
             @EventTopic(UIEvents.UILifeCycle.APP_STARTUP_COMPLETE) Event event) {
-
+        // Force jsch.core plugin startup
+        JSchCorePlugin.getPlugin();
         Job.getJobManager().addJobChangeListener(new JobChangeAdapter() {
 
             @Override
@@ -57,7 +59,7 @@ public class StartAddon {
                             .getBoolean(ProjectFileChangeListenerEx.VALIDATE_REPO_VERSION_AFTER_SWITCH_BRANCH)) {
                         teamPluginPrefStore.setValue(ProjectFileChangeListenerEx.VALIDATE_REPO_VERSION_AFTER_SWITCH_BRANCH,
                                 false);
-                        RepositoryManager.getInstance().getCurrentRepository().validateRepositoryVersion();
+                        RepositoryManager.getInstance().getCurrentRepository().orElseThrow().validateRepositoryVersion();
                     }
                 }
             }

@@ -19,13 +19,17 @@ import org.bonitasoft.studio.designer.core.PageDesignerURLFactory;
 import org.bonitasoft.studio.designer.core.operation.CreateFragmentOperation;
 import org.bonitasoft.studio.designer.core.repository.WebFragmentFileStore;
 import org.bonitasoft.studio.designer.core.repository.WebFragmentRepositoryStore;
+import org.bonitasoft.studio.tests.util.InitialProjectRule;
 import org.bonitasoft.studio.ui.util.StringIncrementer;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 
 public class FragmentCreationIT {
-
+    @Rule
+    public InitialProjectRule projectRule = InitialProjectRule.INSTANCE;
+    
     private RepositoryAccessor repositoryAccessor;
 
     @Before

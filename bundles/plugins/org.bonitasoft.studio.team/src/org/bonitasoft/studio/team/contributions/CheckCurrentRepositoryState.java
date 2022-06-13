@@ -31,28 +31,31 @@ public class CheckCurrentRepositoryState implements IPostStartupContribution {
 
     @Override
     public void execute() {
-        AbstractRepository repository = RepositoryManager.getInstance().getCurrentRepository();
-        String version = repository.getVersion();
-        if (!ProductVersion.sameVersion(version)) {
-            if (!ProductVersion.sameMinorVersion(version) && !ProductVersion.canBeMigrated(version)) {
-                openSwitchProjectDialog(repository);
-            } else {
-                try {
-                    ModelFileCompatibilityValidator validateModelCompatibility = new ModelFileCompatibilityValidator(
-                            repository)
-                                    .addResourceMarkers();
-                    PlatformUI.getWorkbench().getProgressService().run(true, false, validateModelCompatibility::run);
-                    if (validateModelCompatibility.getStatus().getSeverity() == IStatus.ERROR) {
-                        openSwitchProjectDialog(repository);
-                    } else if (validateModelCompatibility.getStatus().getSeverity() == IStatus.WARNING) {
-                        openMigrationRequiredDialog(repository);
+        RepositoryManager.getInstance().getCurrentRepository().ifPresent(repository -> {
+            String version = repository.getVersion();
+            if (!ProductVersion.sameVersion(version)) {
+                if (!ProductVersion.sameMinorVersion(version) && !ProductVersion.canBeMigrated(version)) {
+                    openSwitchProjectDialog(repository);
+                } else {
+                    try {
+                        ModelFileCompatibilityValidator validateModelCompatibility = new ModelFileCompatibilityValidator(
+                                repository)
+                                        .addResourceMarkers();
+                        PlatformUI.getWorkbench().getProgressService().run(true, false,
+                                validateModelCompatibility::run);
+                        if (validateModelCompatibility.getStatus().getSeverity() == IStatus.ERROR) {
+                            openSwitchProjectDialog(repository);
+                        } else if (validateModelCompatibility.getStatus().getSeverity() == IStatus.WARNING) {
+                            openMigrationRequiredDialog(repository);
+                        }
+                    } catch (InvocationTargetException | InterruptedException e) {
+                        new ExceptionDialogHandler().openErrorDialog(Display.getDefault().getActiveShell(),
+                                e.getMessage(),
+                                e);
                     }
-                } catch (InvocationTargetException | InterruptedException e) {
-                    new ExceptionDialogHandler().openErrorDialog(Display.getDefault().getActiveShell(), e.getMessage(),
-                            e);
                 }
             }
-        }
+        });
     }
 
     private void openMigrationRequiredDialog(AbstractRepository repository) {

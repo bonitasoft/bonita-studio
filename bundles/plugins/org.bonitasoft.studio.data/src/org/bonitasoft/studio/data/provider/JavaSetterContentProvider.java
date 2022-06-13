@@ -66,7 +66,7 @@ public class JavaSetterContentProvider implements ITreeContentProvider {
         if (inputElement instanceof String) {
             IType type = null;
             try {
-                type = RepositoryManager.getInstance().getCurrentRepository().getJavaProject()
+                type = RepositoryManager.getInstance().getCurrentRepository().orElseThrow().getJavaProject()
                         .findType(inputElement.toString());
                 if(type == null) {
                     return new Object[0];
@@ -84,7 +84,7 @@ public class JavaSetterContentProvider implements ITreeContentProvider {
     @Override
     public Object[] getChildren(final Object parentElement) {
         try {
-            final IJavaProject javaProject = RepositoryManager.getInstance().getCurrentRepository().getJavaProject();
+            final IJavaProject javaProject = RepositoryManager.getInstance().getCurrentRepository().orElseThrow().getJavaProject();
             if (parentElement instanceof IMethod) {
                 final String typeName = ((IMethod) parentElement).getReturnType();
                 IType type = null;

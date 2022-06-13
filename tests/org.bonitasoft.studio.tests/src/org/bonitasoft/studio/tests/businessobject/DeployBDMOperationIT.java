@@ -34,6 +34,7 @@ import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.engine.BOSEngineManager;
+import org.bonitasoft.studio.tests.util.InitialProjectRule;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -50,12 +51,16 @@ import org.eclipse.m2e.core.embedder.IMavenExecutionContext;
 import org.eclipse.m2e.core.internal.embedder.MavenImpl;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 
 import com.google.common.collect.Lists;
 
 public class DeployBDMOperationIT {
 
+    @Rule
+    public InitialProjectRule projectRule = InitialProjectRule.INSTANCE;
+    
     private BusinessObjectModelRepositoryStore<BusinessObjectModelFileStore> bomRepositoryStore;
     private BusinessObjectModelFileStore businessObjectDefinitionFileStore;
     private APISession apiSession;
@@ -92,7 +97,7 @@ public class DeployBDMOperationIT {
     public void should_generate_and_deploy_bdm() throws Exception {
         new GenerateBDMOperation(businessObjectDefinitionFileStore).run(null);
 
-        AbstractRepository currentRepository = RepositoryManager.getInstance().getCurrentRepository();
+        AbstractRepository currentRepository = RepositoryManager.getInstance().getCurrentRepository().orElseThrow();
         
         IProject project = currentRepository.getProject();
         final IJavaProject javaProject = currentRepository.getJavaProject();

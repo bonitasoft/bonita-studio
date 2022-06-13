@@ -6,10 +6,15 @@ import java.io.File;
 
 import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.engine.BOSWebServerManager;
+import org.bonitasoft.studio.tests.util.InitialProjectRule;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 
 public class RuntimeIntegrationIT {
+    
+    @Rule
+    public InitialProjectRule projectRule = InitialProjectRule.INSTANCE;
     
     @Before
     public void setUp() throws Exception {

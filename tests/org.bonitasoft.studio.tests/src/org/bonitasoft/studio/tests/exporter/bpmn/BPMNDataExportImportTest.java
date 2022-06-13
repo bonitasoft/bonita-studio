@@ -48,6 +48,7 @@ import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.model.process.Task;
 import org.bonitasoft.studio.model.process.XMLData;
 import org.bonitasoft.studio.model.process.builders.XMLDataTypeBuilder;
+import org.bonitasoft.studio.tests.util.InitialProjectRule;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.edit.command.AddCommand;
 import org.eclipse.emf.edit.command.SetCommand;
@@ -55,6 +56,7 @@ import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.ui.PlatformUI;
 import org.junit.After;
+import org.junit.Rule;
 import org.junit.Test;
 import org.omg.spec.bpmn.model.DocumentRoot;
 import org.omg.spec.bpmn.model.TActivity;
@@ -68,6 +70,9 @@ import org.omg.spec.bpmn.model.TRootElement;
 
 public class BPMNDataExportImportTest {
 
+    @Rule
+    public InitialProjectRule projectRule = InitialProjectRule.INSTANCE;
+    
     @After
     public void closeEditor() throws Exception {
         PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().closeAllEditors(false);

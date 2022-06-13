@@ -266,6 +266,7 @@ public class RestAPIDependencyVersionToUpdateFinder extends DependencyVersionToU
 
     String currentBDMVersion() {
         BusinessObjectModelRepositoryStore repositoryStore = RepositoryManager.getInstance().getCurrentRepository()
+                .orElseThrow()
                 .getRepositoryStore(BusinessObjectModelRepositoryStore.class);
         BusinessObjectModelFileStore bdmFileStore = (BusinessObjectModelFileStore) repositoryStore
                 .getChild(BusinessObjectModelFileStore.BOM_FILENAME, false);
@@ -290,6 +291,7 @@ public class RestAPIDependencyVersionToUpdateFinder extends DependencyVersionToU
 
     String currentBDMGroupId() {
         BusinessObjectModelRepositoryStore repositoryStore = RepositoryManager.getInstance().getCurrentRepository()
+                .orElseThrow()
                 .getRepositoryStore(BusinessObjectModelRepositoryStore.class);
         BusinessObjectModelFileStore bdmFileStore = (BusinessObjectModelFileStore) repositoryStore
                 .getChild(BusinessObjectModelFileStore.BOM_FILENAME, false);

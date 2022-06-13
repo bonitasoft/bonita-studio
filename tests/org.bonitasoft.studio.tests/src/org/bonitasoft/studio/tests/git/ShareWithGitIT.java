@@ -82,7 +82,7 @@ public class ShareWithGitIT {
         
         BotApplicationWorkbenchWindow botApplicationWorkbenchWindow = new BotApplicationWorkbenchWindow(bot);
 
-        AbstractRepository currentRepository = RepositoryManager.getInstance().getCurrentRepository();
+        AbstractRepository currentRepository = RepositoryManager.getInstance().getCurrentRepository().orElseThrow();
         assertThat(currentRepository.getName()).isEqualTo(Messages.defaultRepositoryName);
         assertThat(currentRepository.isShared(GitProvider.ID))
                 .as("%s repository should not be connected", currentRepository.getName())
@@ -103,7 +103,7 @@ public class ShareWithGitIT {
         bot.button(IDialogConstants.CLOSE_LABEL).click();
 
         //Check that the current repo is connected to Git and clean
-        currentRepository = RepositoryManager.getInstance().getCurrentRepository();
+        currentRepository = RepositoryManager.getInstance().getCurrentRepository().orElseThrow();
         assertThat(currentRepository.isShared(GitProvider.ID))
                 .as("%s repository should be connected", currentRepository.getName())
                 .isTrue();
@@ -133,7 +133,7 @@ public class ShareWithGitIT {
                 .next()
                 .finish();
 
-        currentRepository = RepositoryManager.getInstance().getCurrentRepository();
+        currentRepository = RepositoryManager.getInstance().getCurrentRepository().orElseThrow();
         assertThat(currentRepository.getName()).isEqualTo("tmp_git_repo");
         assertThat(currentRepository.isShared(GitProvider.ID))
                 .as("%s project should be connected", currentRepository.getName())

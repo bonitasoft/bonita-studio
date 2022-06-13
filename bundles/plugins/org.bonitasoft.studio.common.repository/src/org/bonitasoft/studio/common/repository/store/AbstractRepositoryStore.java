@@ -24,7 +24,9 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -70,6 +72,34 @@ public abstract class AbstractRepositoryStore<T extends IRepositoryFileStore<?>>
     public static final IValidator<InputStream> DEFAULT_MODEL_VALIDATOR = is -> ValidationStatus.ok();
     private IFolder folder;
     protected IRepository repository;
+    
+    public static final Map<String, Integer> REPO_STORE_ORDER = new HashMap<>();
+    static {
+        REPO_STORE_ORDER.put("organizations", 1);
+        REPO_STORE_ORDER.put("profiles", 2);
+        REPO_STORE_ORDER.put("bdm", 3);
+        REPO_STORE_ORDER.put("applications", 10);
+        REPO_STORE_ORDER.put("diagrams", 11);
+        REPO_STORE_ORDER.put("web_page", 12);
+        REPO_STORE_ORDER.put("web_widgets", 13);
+        REPO_STORE_ORDER.put("web_fragments", 14);
+        REPO_STORE_ORDER.put("themes", 15);
+        REPO_STORE_ORDER.put("restAPIExtensions", 16);
+        REPO_STORE_ORDER.put("connectors-def", 17);
+        REPO_STORE_ORDER.put("connectors-impl", 18);
+        REPO_STORE_ORDER.put("connectors-conf", 19);
+        REPO_STORE_ORDER.put("src-connectors", 20);
+        REPO_STORE_ORDER.put("filters-def", 21);
+        REPO_STORE_ORDER.put("filters-impl", 22);
+        REPO_STORE_ORDER.put("filters-conf", 23);
+        REPO_STORE_ORDER.put("src-filters", 24);
+        REPO_STORE_ORDER.put("customTypes", 25);
+        REPO_STORE_ORDER.put("src-customTypes", 26);
+        REPO_STORE_ORDER.put("environements", 27);
+        REPO_STORE_ORDER.put("src-groovy", 28);
+        REPO_STORE_ORDER.put("attachments", 29);
+        REPO_STORE_ORDER.put("lib", 30);
+    }
 
     @Override
     public void createRepositoryStore(final IRepository repository) {
@@ -290,6 +320,9 @@ public abstract class AbstractRepositoryStore<T extends IRepositoryFileStore<?>>
     @Override
     public T getChild(final String fileName, boolean force) {
         Assert.isNotNull(fileName);
+        if(getResource() == null) {
+            return null;
+        }
         final IFile file = getResource().getFile(fileName);
         if (force && !file.isSynchronized(IResource.DEPTH_ONE) && file.isAccessible()) {
             try {

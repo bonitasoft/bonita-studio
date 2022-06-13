@@ -55,7 +55,7 @@ public class ExpressionEditorIT implements SWTBotConstants {
 
     @Before
     public void cleanup() throws Exception {
-        var currentRepository = RepositoryManager.getInstance().getCurrentRepository();
+        var currentRepository = RepositoryManager.getInstance().getCurrentRepository().orElseThrow();
         currentRepository.getRepositoryStore(DiagramRepositoryStore.class)
                 .getChildren()
                 .forEach(DiagramFileStore::delete);

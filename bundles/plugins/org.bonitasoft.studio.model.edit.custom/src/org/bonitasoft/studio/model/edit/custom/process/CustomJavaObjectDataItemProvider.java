@@ -55,7 +55,7 @@ public class CustomJavaObjectDataItemProvider extends JavaObjectDataItemProvider
 			if(object instanceof JavaObjectData){
 				if(((JavaObjectData) object).getClassName() != null){
 					try {
-						IType t = RepositoryManager.getInstance().getCurrentRepository().getJavaProject().findType(((JavaObjectData) object).getClassName());
+						IType t = RepositoryManager.getInstance().getCurrentRepository().orElseThrow().getJavaProject().findType(((JavaObjectData) object).getClassName());
 						if(t != null && t.isInterface()){
 							iconImage = Pics.getImage("int_obj.gif");
 							if(EMFEditCustomPlugin.getDefault().getImageRegistry().get("decoratedImageForInterfaceJavaObject") == null){

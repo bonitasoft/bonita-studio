@@ -103,7 +103,7 @@ public class JavaSetterOperatorConstraint extends AbstractLiveValidationMarkerCo
     }
 
     protected IJavaProject javaProject() {
-        return RepositoryManager.getInstance().getCurrentRepository().getJavaProject();
+        return RepositoryManager.getInstance().getCurrentRepository().orElseThrow().getJavaProject();
     }
 
     private String leftOperandType(final Operator operator) {

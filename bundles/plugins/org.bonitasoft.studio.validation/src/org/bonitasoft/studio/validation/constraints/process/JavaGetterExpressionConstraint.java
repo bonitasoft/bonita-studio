@@ -109,7 +109,7 @@ public class JavaGetterExpressionConstraint extends AbstractLiveValidationMarker
     }
 
     protected IJavaProject javaProject() {
-        return RepositoryManager.getInstance().getCurrentRepository().getJavaProject();
+        return RepositoryManager.getInstance().getCurrentRepository().orElseThrow().getJavaProject();
     }
 
 }

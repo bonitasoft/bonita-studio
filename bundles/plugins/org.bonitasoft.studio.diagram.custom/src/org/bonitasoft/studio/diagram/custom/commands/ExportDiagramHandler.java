@@ -46,7 +46,7 @@ public class ExportDiagramHandler extends AbstractHandler {
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
         fileStoreFinder
-                .findSelectedFileStore(RepositoryManager.getInstance().getCurrentRepository())
+                .findSelectedFileStore(RepositoryManager.getInstance().getCurrentRepository().orElseThrow())
                 .ifPresent(fileStore -> {
                     Map<String, Object> parameters = new HashMap<>();
                     parameters.put(EXPORT_PARAMETER, fileStore.getName());

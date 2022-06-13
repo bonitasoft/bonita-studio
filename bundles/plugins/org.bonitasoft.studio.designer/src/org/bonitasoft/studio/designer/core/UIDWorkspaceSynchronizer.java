@@ -23,7 +23,6 @@ import java.util.concurrent.Future;
 import java.util.function.Consumer;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.filestore.AbstractFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepository;
@@ -182,17 +181,19 @@ public class UIDWorkspaceSynchronizer {
 
             @Override
             public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
-                AbstractRepository currentRepository = RepositoryManager.getInstance().getCurrentRepository();
-                WebPageRepositoryStore pageRepositoryStore = currentRepository
-                        .getRepositoryStore(WebPageRepositoryStore.class);
-                pageRepositoryStore.getResource().refreshLocal(IResource.DEPTH_INFINITE, monitor);
-                WebFragmentRepositoryStore fragmentRepositoryStore = RepositoryManager.getInstance()
-                        .getCurrentRepository().getRepositoryStore(WebFragmentRepositoryStore.class);
-                fragmentRepositoryStore.getResource().refreshLocal(IResource.DEPTH_INFINITE, monitor);
-                WebWidgetRepositoryStore widgetRepositoryStore = RepositoryManager.getInstance().getCurrentRepository()
-                        .getRepositoryStore(WebWidgetRepositoryStore.class);
-                widgetRepositoryStore.getResource().refreshLocal(IResource.DEPTH_INFINITE, monitor);
-                AbstractFileStore.refreshExplorerView();
+                var currentRepository = RepositoryManager.getInstance().getCurrentRepository();
+                if (currentRepository.isPresent()) {
+                    var pageRepositoryStore = currentRepository.orElseThrow()
+                            .getRepositoryStore(WebPageRepositoryStore.class);
+                    pageRepositoryStore.getResource().refreshLocal(IResource.DEPTH_INFINITE, monitor);
+                    var fragmentRepositoryStore = currentRepository.orElseThrow()
+                            .getRepositoryStore(WebFragmentRepositoryStore.class);
+                    fragmentRepositoryStore.getResource().refreshLocal(IResource.DEPTH_INFINITE, monitor);
+                    var widgetRepositoryStore = currentRepository.orElseThrow()
+                            .getRepositoryStore(WebWidgetRepositoryStore.class);
+                    widgetRepositoryStore.getResource().refreshLocal(IResource.DEPTH_INFINITE, monitor);
+                    AbstractFileStore.refreshExplorerView();
+                }
                 return org.eclipse.core.runtime.Status.OK_STATUS;
             }
         }.schedule();

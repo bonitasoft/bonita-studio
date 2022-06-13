@@ -20,6 +20,7 @@ import org.bonitasoft.studio.identity.actors.repository.ActorFilterDefRepository
 import org.bonitasoft.studio.identity.actors.repository.ActorFilterImplRepositoryStore;
 import org.bonitasoft.studio.swtbot.framework.conditions.AssertionCondition;
 import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
+import org.bonitasoft.studio.tests.util.EditorMatcherExceptOverview;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotEclipseEditor;
@@ -328,7 +329,7 @@ public class ActorFilterImplementationTest implements SWTBotConstants {
 
             @Override
             public boolean test() throws Exception {
-                return bot.editors().isEmpty();
+                return bot.editors(new EditorMatcherExceptOverview()).isEmpty();
             }
 
             @Override

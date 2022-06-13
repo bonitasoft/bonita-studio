@@ -27,19 +27,22 @@ public class SetSelectionAsDefaultConfigurationHandler {
 
     @Execute
     public void execute(RepositoryAccessor repositoryAccessor) {
-        fileStoreFinder.findSelectedFileStore(repositoryAccessor.getCurrentRepository())
-                .filter(EnvironmentFileStore.class::isInstance)
-                .map(EnvironmentFileStore.class::cast)
-                .ifPresent(env -> {
-                    ConfigurationPlugin.getDefault().getPreferenceStore()
-                            .setValue(ConfigurationPreferenceConstants.DEFAULT_CONFIGURATION, env.getDisplayName());
-                    AbstractFileStore.refreshExplorerView();
-                });
+        repositoryAccessor.getCurrentRepository().ifPresent(repo -> {
+            fileStoreFinder.findSelectedFileStore(repo)
+                    .filter(EnvironmentFileStore.class::isInstance)
+                    .map(EnvironmentFileStore.class::cast)
+                    .ifPresent(env -> {
+                        ConfigurationPlugin.getDefault().getPreferenceStore()
+                                .setValue(ConfigurationPreferenceConstants.DEFAULT_CONFIGURATION, env.getDisplayName());
+                        AbstractFileStore.refreshExplorerView();
+                    });
+        });
     }
 
     @CanExecute
     public boolean canExecute(RepositoryAccessor repositoryAccessor) {
-        return fileStoreFinder.findSelectedFileStore(repositoryAccessor.getCurrentRepository())
+        return repositoryAccessor.getCurrentRepository().isPresent() 
+                && fileStoreFinder.findSelectedFileStore(repositoryAccessor.getCurrentRepository().orElse(null))
                 .filter(EnvironmentFileStore.class::isInstance)
                 .isPresent();
     }

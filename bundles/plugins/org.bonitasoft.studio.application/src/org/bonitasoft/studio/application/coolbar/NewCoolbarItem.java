@@ -207,5 +207,10 @@ public class NewCoolbarItem extends ContributionItem implements IBonitaContribut
             label.setEnabled(enabled);
         }
     }
+    
+    @Override
+    public boolean isEnabled() {
+        return RepositoryManager.getInstance().hasActiveRepository();
+    }
 
 }

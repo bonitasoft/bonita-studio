@@ -16,6 +16,7 @@ package org.bonitasoft.studio.la.application.menu;
 
 import org.bonitasoft.studio.common.CommandExecutor;
 import org.bonitasoft.studio.common.Messages;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.jface.action.ContributionItem;
@@ -46,7 +47,7 @@ public class ApplicationMenuContributionItem extends ContributionItem {
     public void fill(Menu parent, int index) {
         var applicationMenuItem = new MenuItem(parent, SWT.CASCADE, index);
         applicationMenuItem.setText(org.bonitasoft.studio.application.i18n.Messages.applicationDescriptor);
-        applicationMenuItem.setEnabled(true);
+        applicationMenuItem.setEnabled(isEnabled());
         applicationMenuItem.setImage(Pics.getImage(PicsConstants.application));
 
         var applicationMenu = new Menu(applicationMenuItem);
@@ -65,6 +66,15 @@ public class ApplicationMenuContributionItem extends ContributionItem {
         createItem(applicationMenu, DEPLOY_COMMAND, Messages.deployWithWizardMenuLabel, 7);
 
         applicationMenuItem.setMenu(applicationMenu);
+        
+        parent.addMenuListener(new MenuAdapter() {
+
+            @Override
+            public void menuShown(MenuEvent e) {
+                applicationMenuItem.setEnabled(isEnabled());
+            }
+
+        });
     }
 
     private void createItem(Menu parent, String command, String text, int index) {
@@ -78,6 +88,14 @@ public class ApplicationMenuContributionItem extends ContributionItem {
                 item.setEnabled(commandExecutor.canExecute(command, null));
             }
         });
+    }
+    
+    @Override
+    public boolean isEnabled() {
+        if (RepositoryManager.getInstance().hasActiveRepository()) {
+            return true;
+        }
+        return false;
     }
 
 }

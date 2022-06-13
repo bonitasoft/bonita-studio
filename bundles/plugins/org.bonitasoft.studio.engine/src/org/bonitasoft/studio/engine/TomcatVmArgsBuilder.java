@@ -84,7 +84,10 @@ public class TomcatVmArgsBuilder {
     }
 
     public File getDBLocation() {
-        return repositoryAccessor.getCurrentRepository().getDatabaseHandler().getDBLocation();
+        return repositoryAccessor.getCurrentRepository()
+                .orElseThrow()
+                .getDatabaseHandler()
+                .getDBLocation();
     }
 
     public String getProductApplicationId() {

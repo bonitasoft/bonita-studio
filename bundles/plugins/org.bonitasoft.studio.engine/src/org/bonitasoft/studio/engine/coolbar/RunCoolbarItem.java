@@ -210,6 +210,7 @@ public class RunCoolbarItem extends ContributionItem implements IBonitaContribut
 
                     final EnvironmentRepositoryStore environmentStore = RepositoryManager.getInstance()
                             .getCurrentRepository()
+                            .orElseThrow()
                             .getRepositoryStore(EnvironmentRepositoryStore.class);
                     for (final IRepositoryFileStore file : environmentStore.getChildren()) {
                         confName.add(file.getDisplayName());

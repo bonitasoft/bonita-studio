@@ -35,16 +35,21 @@ import org.bonitasoft.studio.model.process.Message;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.model.process.ThrowMessageEvent;
 import org.bonitasoft.studio.properties.sections.message.commands.UpdateMessageCommand;
+import org.bonitasoft.studio.tests.util.InitialProjectRule;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 import org.junit.BeforeClass;
+import org.junit.Rule;
 import org.junit.Test;
 
 public class TestMessageRefactoring {
 
+    @Rule
+    public InitialProjectRule projectRule = InitialProjectRule.INSTANCE;
+    
     private static final String DIAGRAM_1_NAME = "Diagram 1";
     private static final String DIAGRAM_2_NAME = "Diagram 2";
     private static final String DIAGRAMS_VERSION = "1.0";

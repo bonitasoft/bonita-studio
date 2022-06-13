@@ -22,7 +22,12 @@ import static org.junit.Assert.assertTrue;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
+import org.bonitasoft.studio.application.views.overview.ProjectOverviewEditorInput;
 import org.bonitasoft.studio.assertions.StatusAssert;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.diagram.custom.commands.NewDiagramCommandHandler;
@@ -36,6 +41,7 @@ import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.model.process.Task;
 import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditor;
+import org.bonitasoft.studio.tests.util.InitialProjectRule;
 import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
@@ -49,10 +55,12 @@ import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
+import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 
 public class TestFullScenario {
@@ -79,6 +87,9 @@ public class TestFullScenario {
 
     }
 
+    @Rule
+    public InitialProjectRule projectRule = InitialProjectRule.INSTANCE;
+    
     private static final String TESTNAME = "TESTNAME";
     private static ProcessDiagramEditor processEditor;
     private static IEditorInput input;
@@ -90,13 +101,12 @@ public class TestFullScenario {
     @Before
     public void closeEditors() throws Exception {
         PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().closeAllEditors(false);
-        BOSEngineManager.getInstance().start();
     }
     
     @Test
     public void testNewProcess() throws Exception {
         final CountProcessesResourceVisitor visitor = new CountProcessesResourceVisitor();
-        RepositoryManager.getInstance().getCurrentRepository().getProject().accept(visitor);
+        RepositoryManager.getInstance().getCurrentRepository().orElseThrow().getProject().accept(visitor);
         nbProcBefore = visitor.getNbProc();
 
         createProcess();
@@ -179,6 +189,7 @@ public class TestFullScenario {
      * @throws IOException
      */
     public void execute() throws Exception {
+        PlatformUI.getWorkbench().getProgressService().run(true, false, monitor -> BOSEngineManager.getInstance(monitor).start());
         final RunProcessCommand deployProcessCommand = new RunProcessCommand(true);
 
         final IStatus status = (IStatus) deployProcessCommand.execute(new ExecutionEvent());
@@ -218,15 +229,27 @@ public class TestFullScenario {
         IEditorPart editor;
         ProcessDiagramEditor processEditor;
 
-        final IEditorReference[] editorReferences = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
-                .getEditorReferences();
+        List<IEditorReference> openedEditors = Stream.of(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
+                .getEditorReferences())
+                //Project overview can be opened asynchronously and must be ignored
+        .filter(ref -> {
+            try {
+                return !Objects.equals(ProjectOverviewEditorInput.getInstance(), ref.getEditorInput());
+            } catch (PartInitException e) {
+               throw new RuntimeException(e);
+            }
+        })
+        .collect(Collectors.toList());
+        
+        
         final StringBuilder sb = new StringBuilder();
-        for (final IEditorReference iEditorReference : editorReferences) {
+        for (final IEditorReference iEditorReference : openedEditors) {
             sb.append(iEditorReference);
         }
+        
         assertEquals("There should be only be 1 editor after save. But there are:\n" + sb.toString(),
                 1,
-                editorReferences.length);
+                openedEditors.size());
         editor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
         assertTrue(editor instanceof ProcessDiagramEditor);
         processEditor = (ProcessDiagramEditor) editor;

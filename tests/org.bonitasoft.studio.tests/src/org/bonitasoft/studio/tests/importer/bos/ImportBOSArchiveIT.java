@@ -37,6 +37,7 @@ import org.bonitasoft.studio.importer.bos.model.BosArchive;
 import org.bonitasoft.studio.importer.bos.model.ImportArchiveModel;
 import org.bonitasoft.studio.importer.bos.operation.ImportBosArchiveOperation;
 import org.bonitasoft.studio.importer.bos.operation.ImportConflictsChecker;
+import org.bonitasoft.studio.tests.util.InitialProjectRule;
 import org.bonitasoft.studio.ui.dialog.SkippableProgressMonitorJobsDialog;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -47,10 +48,14 @@ import org.eclipse.e4.core.contexts.EclipseContextFactory;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 
 public class ImportBOSArchiveIT {
 
+    @Rule
+    public InitialProjectRule projectRule = InitialProjectRule.INSTANCE;
+    
     RepositoryAccessor repositoryAccessor;
     private DependenciesUpdateOperationFactory dependenciesUpdateOperationFactory;
 
@@ -61,6 +66,7 @@ public class ImportBOSArchiveIT {
         dependenciesUpdateOperationFactory = ContextInjectionFactory
                 .make(DependenciesUpdateOperationFactory.class, eclipseContext);
         final DiagramRepositoryStore repositoryStore = repositoryAccessor.getCurrentRepository()
+                .orElseThrow()
                 .getRepositoryStore(DiagramRepositoryStore.class);
         repositoryStore.getChildren().stream().forEach(IRepositoryFileStore::delete);
     }
@@ -85,6 +91,7 @@ public class ImportBOSArchiveIT {
         operation.run(new NullProgressMonitor());
         StatusAssert.assertThat(operation.getStatus()).isOK();
         DiagramRepositoryStore diagramStore = repositoryAccessor.getCurrentRepository()
+                .orElseThrow()
                 .getRepositoryStore(DiagramRepositoryStore.class);
 
         final byte[] firstDiagram = diagramStore.getDiagram("TestImportUserChoices", "1.0").toByteArray();
@@ -92,7 +99,7 @@ public class ImportBOSArchiveIT {
         final File conflictingFile = loadArchiveFile("testConflicts-toImport/TestImportUserChoices-1.0.bos");
 
         final ImportConflictsChecker conflictsChecker = new ImportConflictsChecker(
-                repositoryAccessor.getCurrentRepository());
+                repositoryAccessor.getCurrentRepository().orElseThrow());
         final ImportArchiveModel archiveModel = conflictsChecker.checkConflicts(new BosArchive(conflictingFile),
                 new NullProgressMonitor());
         archiveModel.getStores().stream()
@@ -107,6 +114,7 @@ public class ImportBOSArchiveIT {
         StatusAssert.assertThat(operation.getStatus()).isOK();
 
         diagramStore = repositoryAccessor.getCurrentRepository()
+                .orElseThrow()
                 .getRepositoryStore(DiagramRepositoryStore.class);
 
         final byte[] newDiagram = diagramStore.getDiagram("TestImportUserChoices", "1.0").toByteArray();
@@ -123,6 +131,7 @@ public class ImportBOSArchiveIT {
         assertThat(operation.getStatus()).isNotNull();
 
         DiagramRepositoryStore diagramStore = repositoryAccessor.getCurrentRepository()
+                .orElseThrow()
                 .getRepositoryStore(DiagramRepositoryStore.class);
 
         final byte[] firstDiagram = diagramStore.getDiagram("TestImportUserChoices", "1.0").toByteArray();
@@ -135,6 +144,7 @@ public class ImportBOSArchiveIT {
         assertThat(operation.getStatus()).isNotNull();
 
         diagramStore = repositoryAccessor.getCurrentRepository()
+                .orElseThrow()
                 .getRepositoryStore(DiagramRepositoryStore.class);
 
         final byte[] newDiagram = diagramStore.getDiagram("TestImportUserChoices", "1.0").toByteArray();
@@ -151,7 +161,7 @@ public class ImportBOSArchiveIT {
         PlatformUI.getWorkbench().getProgressService().run(true, false, operation);
         assertThat(operation.getStatus()).isNotNull();
 
-        IProject project = repositoryAccessor.getCurrentRepository().getProject();
+        IProject project = repositoryAccessor.getCurrentRepository().orElseThrow().getProject();
         var mavenProjectHelper = new MavenProjectHelper();
         var model = mavenProjectHelper.getMavenModel(project);
 
@@ -188,6 +198,7 @@ public class ImportBOSArchiveIT {
         operation.run(new NullProgressMonitor());
         assertThat(operation.getStatus()).isNotNull();
         final DiagramRepositoryStore store = repositoryAccessor.getCurrentRepository()
+                .orElseThrow()
                 .getRepositoryStore(DiagramRepositoryStore.class);
         final DiagramFileStore diagram1 = store.getDiagram("diagram1", "1.0");
         assertThat(diagram1).isNotNull().as("diagram1 was not imported correctly");

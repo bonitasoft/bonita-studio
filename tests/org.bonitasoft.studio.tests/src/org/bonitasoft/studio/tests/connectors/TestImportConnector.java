@@ -33,10 +33,12 @@ import org.bonitasoft.studio.connectors.repository.ConnectorDefRepositoryStore;
 import org.bonitasoft.studio.connectors.repository.ConnectorImplRepositoryStore;
 import org.bonitasoft.studio.connectors.repository.ConnectorSourceRepositoryStore;
 import org.bonitasoft.studio.connectors.repository.ImportConnectorArchiveOperation;
+import org.bonitasoft.studio.tests.util.InitialProjectRule;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 
 /**
@@ -45,7 +47,9 @@ import org.junit.Test;
  */
 public class TestImportConnector{
 
-
+    @Rule
+    public InitialProjectRule projectRule = InitialProjectRule.INSTANCE;
+    
     private ConnectorDefRepositoryStore cdrs;
     private ConnectorImplRepositoryStore cirs;
     private ConnectorSourceRepositoryStore csrs;

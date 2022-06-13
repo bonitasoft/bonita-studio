@@ -17,7 +17,9 @@ import java.util.stream.Stream;
 
 import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.repository.BonitaProjectNature;
+import org.bonitasoft.studio.common.repository.FakeRepository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.team.TeamPlugin;
 import org.bonitasoft.studio.team.git.i18n.Messages;
 import org.bonitasoft.studio.validation.ModelFileCompatibilityValidator;
@@ -72,8 +74,15 @@ public class ValidateClonedRepository implements PostCloneTask {
         }
         if (ProductVersion.sameMinorVersion(version)) {
             try {
+                IRepository currentRepository;
+                var activeRepo = RepositoryManager.getInstance().getCurrentRepository();
+                if(activeRepo.isPresent()) {
+                    currentRepository =  activeRepo.get();
+                }else {
+                    currentRepository = new FakeRepository();
+                }
                 ModelFileCompatibilityValidator validateModelCompatibility = new ModelFileCompatibilityValidator(
-                        repository.getDirectory().getParentFile(), RepositoryManager.getInstance().getCurrentRepository());
+                        repository.getDirectory().getParentFile(),currentRepository);
                 validateModelCompatibility.run(monitor);
                 if (validateModelCompatibility.getStatus().getSeverity() == IStatus.ERROR) {
                     throw new CoreException(ValidationStatus

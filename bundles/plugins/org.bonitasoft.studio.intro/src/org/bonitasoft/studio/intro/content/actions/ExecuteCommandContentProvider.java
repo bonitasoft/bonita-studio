@@ -51,7 +51,7 @@ public class ExecuteCommandContentProvider implements DOMContentProvider {
     public void createContent(Document dom, Element parent) {
         Element a = dom.createElement("a");
         boolean canExecute = canExecute();
-        a.setAttribute("class", canExecute ? "hover:text-red-600" : "text-gray-500 cursor-not-allowed");
+        a.setAttribute("class", canExecute ? "" : "text-gray-500 cursor-not-allowed");
         String actionLink = String.format(
                 "http://org.eclipse.ui.intro/runAction?pluginId=%s&class=%s&id=%s",
                 Activator.PLUGIN_ID,

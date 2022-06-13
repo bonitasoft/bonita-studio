@@ -19,6 +19,7 @@ import java.io.File;
 import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.engine.BOSWebServerManager;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -27,6 +28,7 @@ import org.eclipse.core.commands.IHandler;
 import org.eclipse.core.filesystem.EFS;
 import org.eclipse.core.filesystem.IFileStore;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.program.Program;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbenchPage;
@@ -40,7 +42,7 @@ import org.eclipse.ui.ide.IDE;
  */
 public class OpenEngineLogCommand extends AbstractHandler implements IHandler {
 
-    private static final long MAX_FILE_SIZE = 1000000 * 40; //40Mo
+    private static final long MAX_FILE_SIZE = (1000000 * 40); //40Mo
 
     /*
      * (non-Javadoc)
@@ -87,8 +89,13 @@ public class OpenEngineLogCommand extends AbstractHandler implements IHandler {
 
     protected void showWarningMessage(final File localFile) {
         MessageDialog.openWarning(Display.getDefault().getActiveShell(), Messages.failedToOpenLogTitle,
-                Messages.bind(Messages.failedToOpenLogMessage, localFile.getAbsolutePath(),
+                NLS.bind(Messages.failedToOpenLogMessage, localFile.getAbsolutePath(),
                         org.bonitasoft.studio.common.Messages.bonitaStudioModuleName));
+    }
+    
+    @Override
+    public boolean isEnabled() {
+        return RepositoryManager.getInstance().hasActiveRepository();
     }
 
 }

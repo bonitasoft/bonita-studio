@@ -9,12 +9,13 @@
 package org.bonitasoft.studio.team.git;
 
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.eclipse.core.expressions.PropertyTester;
 
 public class ProjectNotSharedPropertyTester extends PropertyTester {
 
     @Override
     public boolean test(Object receiver, String property, Object[] args, Object expectedValue) {
-        return !RepositoryManager.getInstance().getCurrentRepository().isShared();
+        return RepositoryManager.getInstance().getCurrentRepository().filter(IRepository::isShared).isEmpty();
     }
 }

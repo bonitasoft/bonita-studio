@@ -87,7 +87,7 @@ public class ValidationViewAction extends Action {
             String filename = URI.decode(resource.getURI().lastSegment());
             try {
                 ModelFileCompatibilityValidator modelValidator = new ModelFileCompatibilityValidator(
-                        RepositoryManager.getInstance().getCurrentRepository())
+                        RepositoryManager.getInstance().getCurrentRepository().orElseThrow())
                                 .addResourceMarkers()
                                 .addFile(store.getChild(filename, false).getResource().getLocation().toFile());
                 modelValidator.run(AbstractRepository.NULL_PROGRESS_MONITOR);

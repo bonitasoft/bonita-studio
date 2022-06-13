@@ -86,7 +86,7 @@ public class DeploySuccessDialog extends MessageDialog {
 
     private String defaultSelection(IDialogSettings dialogSettings) {
         IDialogSettings section = dialogSettings
-                .getSection(RepositoryManager.getInstance().getCurrentRepository().getName());
+                .getSection(RepositoryManager.getInstance().getCurrentRepository().orElseThrow().getName());
         if (section != null && section.get(DEFAULT_APP_SELECTION) != null) {
             String lastSelection = section.get(DEFAULT_APP_SELECTION);
             return Arrays.asList(contentProvider.getItems()).contains(lastSelection) ? lastSelection
@@ -96,7 +96,7 @@ public class DeploySuccessDialog extends MessageDialog {
     }
 
     private void saveSelectedApp(IDialogSettings dialogSettings) {
-        String sectionName = RepositoryManager.getInstance().getCurrentRepository().getName();
+        String sectionName = RepositoryManager.getInstance().getCurrentRepository().orElseThrow().getName();
         IDialogSettings section = dialogSettings.getSection(sectionName);
         if (section == null) {
             section = dialogSettings.addNewSection(sectionName);

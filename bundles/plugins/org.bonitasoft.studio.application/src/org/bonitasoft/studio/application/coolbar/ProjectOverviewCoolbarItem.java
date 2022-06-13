@@ -18,6 +18,7 @@ import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.common.extension.IBonitaContributionItem;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.core.commands.Command;
@@ -72,6 +73,11 @@ public class ProjectOverviewCoolbarItem extends ContributionItem
         });
     }
 
+    @Override
+    public boolean isEnabled() {
+        return RepositoryManager.getInstance().hasActiveRepository();
+    }
+    
     @Override
     public void selectionChanged(SelectionChangedEvent event) {
         if (item != null && !item.isDisposed()) {

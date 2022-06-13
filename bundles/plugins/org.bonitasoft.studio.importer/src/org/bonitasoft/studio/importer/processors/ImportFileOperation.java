@@ -75,7 +75,7 @@ public class ImportFileOperation implements IRunnableWithProgress {
             InterruptedException {
         monitor.beginTask(Messages.importProcessProgressDialog, IProgressMonitor.UNKNOWN);
         processor = importerFactory.createProcessor(fileToImport.getName());
-        processor.setRepository(RepositoryManager.getInstance().getCurrentRepository().getName());
+        processor.setRepository(RepositoryManager.getInstance().getCurrentRepository().orElseThrow().getName());
         processor.setProgressDialog(progressDialog);
         try {
             processor.createDiagram(fileToImport.toURI().toURL(), monitor);
@@ -104,6 +104,7 @@ public class ImportFileOperation implements IRunnableWithProgress {
                 try {
                     fis = new FileInputStream(f);
                     final DiagramRepositoryStore diagramStore = RepositoryManager.getInstance().getCurrentRepository()
+                            .orElseThrow()
                             .getRepositoryStore(DiagramRepositoryStore.class);
                     final DiagramFileStore fileStore = diagramStore.importInputStream(f.getName(), fis);
                     if (fileStore instanceof DiagramFileStore) {

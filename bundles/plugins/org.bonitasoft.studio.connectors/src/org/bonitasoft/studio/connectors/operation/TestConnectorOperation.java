@@ -213,6 +213,7 @@ public class TestConnectorOperation implements IRunnableWithProgress {
             driver = file.getDefault();
             if (driver != null) {
                 final DependencyRepositoryStore depStore = RepositoryManager.getInstance().getCurrentRepository()
+                        .orElseThrow()
                         .getRepositoryStore(DependencyRepositoryStore.class);
                 Optional<DependencyFileStore> result = depStore.findDependencyByName(driver);
                 if (result.isPresent()) {

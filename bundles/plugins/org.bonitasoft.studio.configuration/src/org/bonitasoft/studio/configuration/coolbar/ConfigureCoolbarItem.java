@@ -214,14 +214,14 @@ public class ConfigureCoolbarItem extends ContributionItem implements IBonitaCon
                 if (isEnabled()) {
                     final DropdownSelectionListener listener = new DropdownSelectionListener(item);
                     final List<String> confName = new ArrayList<>();
-                    final EnvironmentRepositoryStore environmentStore = RepositoryManager.getInstance()
+                    RepositoryManager.getInstance()
                             .getCurrentRepository()
-                            .getRepositoryStore(EnvironmentRepositoryStore.class);
-
-                    environmentStore.getChildren().stream()
-                            .map(EnvironmentFileStore::getDisplayName)
-                            .peek(confName::add)
-                            .forEach(listener::add);
+                            .map(repo -> repo.getRepositoryStore(EnvironmentRepositoryStore.class))
+                            .map(environmentStore -> environmentStore.getChildren().stream())
+                            .ifPresent(environements -> environements
+                                    .map(EnvironmentFileStore::getDisplayName)
+                                    .peek(confName::add)
+                                    .forEach(listener::add));
 
                     listener.add(Messages.newEnvironmentLabel);
                     listener.widgetSelected(e);
@@ -239,10 +239,10 @@ public class ConfigureCoolbarItem extends ContributionItem implements IBonitaCon
 
     @Override
     public void setEnabled(boolean enabled) {
-        if(item != null && !item.isDisposed()) {
+        if (item != null && !item.isDisposed()) {
             item.setEnabled(enabled);
         }
-        if(label != null && !label.isDisposed()) {
+        if (label != null && !label.isDisposed()) {
             label.setEnabled(enabled);
         }
     }

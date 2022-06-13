@@ -149,7 +149,7 @@ public class JavaSetterOperatorEditor implements IOperatorEditor {
         if (className != null) {
             IType type;
             try {
-                type = RepositoryManager.getInstance().getCurrentRepository().getJavaProject()
+                type = RepositoryManager.getInstance().getCurrentRepository().orElseThrow().getJavaProject()
                         .findType(className);
                 if (type == null) {
                     MessageDialog.openError(Display.getDefault().getActiveShell(), 
@@ -226,6 +226,7 @@ public class JavaSetterOperatorEditor implements IOperatorEditor {
                 if (content != null && !content.isEmpty()) {
 
                     final IJavaProject project = RepositoryManager.getInstance().getCurrentRepository()
+                            .orElseThrow()
                             .getJavaProject();
                     IType type = null;
                     try {

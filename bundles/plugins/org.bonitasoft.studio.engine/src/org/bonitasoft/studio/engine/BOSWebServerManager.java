@@ -463,7 +463,7 @@ public class BOSWebServerManager implements IBonitaProjectListener {
     public void resetServer(IProgressMonitor monitor) {
         boolean notifying = notifyRestartServer();
         stopServer(monitor);
-        startServer(RepositoryManager.getInstance().getCurrentRepository(), monitor);
+        startServer(RepositoryManager.getInstance().getCurrentRepository().orElseThrow(), monitor);
         if (notifying) {
             notifyRestartServerCompleted();
         }

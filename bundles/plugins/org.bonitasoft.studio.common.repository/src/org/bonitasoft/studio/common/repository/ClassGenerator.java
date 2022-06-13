@@ -27,6 +27,8 @@ import org.bonitasoft.engine.filter.UserFilterException;
 import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.filestore.SourceFileStore;
+import org.bonitasoft.studio.common.repository.model.IJavaContainer;
+import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.store.SourceRepositoryStore;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
 import org.bonitasoft.studio.connector.model.definition.Input;
@@ -81,7 +83,7 @@ public class ClassGenerator {
         final String abstractClassName = "Abstract" + simpleClassName;
         final String qualifiedAbstractClassName = packageName + "." + abstractClassName;
 
-        final IJavaProject javaProject = RepositoryManager.getInstance().getCurrentRepository().getJavaProject();
+        final IJavaProject javaProject = getJavaProject();
         IType classType = javaProject.findType(qualifiedAbstractClassName);
         if (classType != null) {
             final ICompilationUnit compilationUnit = classType.getCompilationUnit();
@@ -126,7 +128,7 @@ public class ClassGenerator {
             oldSimpleName = oldSuperClassName.substring(oldSuperClassName.lastIndexOf(".") + 1,
                     oldSuperClassName.length());
         }
-        final IJavaProject javaProject = RepositoryManager.getInstance().getCurrentRepository().getJavaProject();
+        final IJavaProject javaProject = getJavaProject();
         final IType classType = javaProject.findType(className);
         String newSimpleName = getAbstractClassName(className);
         if (newSimpleName.indexOf(".") != -1) {
@@ -141,7 +143,7 @@ public class ClassGenerator {
             SourceRepositoryStore sourceStore, IProgressMonitor monitor) throws Exception {
         final String className = implementation.getImplementationClassname();
 
-        final IJavaProject javaProject = RepositoryManager.getInstance().getCurrentRepository().getJavaProject();
+        final IJavaProject javaProject = getJavaProject();
         if (!javaProject.isConsistent()) {
             javaProject.makeConsistent(monitor);
         }
@@ -158,9 +160,11 @@ public class ClassGenerator {
             classType = generateImplementationClass(packageName, simpleClassName, sourceStore, monitor);
 
             final IType abstractConnectorType = javaProject.findType(AbstractConnector.class.getName());
-            if(abstractConnectorType == null) {
-               BonitaStudioLog.error(String.format("Cannot find type %s in project %s", AbstractConnector.class.getName(), javaProject),
-                       CommonRepositoryPlugin.PLUGIN_ID );
+            if (abstractConnectorType == null) {
+                BonitaStudioLog.error(
+                        String.format("Cannot find type %s in project %s", AbstractConnector.class.getName(),
+                                javaProject),
+                        CommonRepositoryPlugin.PLUGIN_ID);
             }
             final IType abstractFilterType = javaProject.findType(AbstractUserFilter.class.getName());
             final ITypeHierarchy hierarchy = classType.newTypeHierarchy(javaProject, monitor);
@@ -220,12 +224,12 @@ public class ClassGenerator {
             SourceRepositoryStore sourceStore,
             IProgressMonitor progressMonitor) throws Exception {
 
-        final IJavaProject javaProject = RepositoryManager.getInstance().getCurrentRepository().getJavaProject();
+        final IJavaProject javaProject = getJavaProject();
         if (!javaProject.isConsistent()) {
             javaProject.makeConsistent(progressMonitor);
         }
         final ProjectTemplateStore fTemplateStore = new ProjectTemplateStore(
-                RepositoryManager.getInstance().getCurrentRepository().getProject());
+                RepositoryManager.getInstance().getCurrentRepository().map(IRepository::getProject).orElse(null));
         try {
             fTemplateStore.load();
         } catch (final IOException e) {
@@ -260,15 +264,16 @@ public class ClassGenerator {
             SourceRepositoryStore sourceStore,
             IProgressMonitor progressMonitor)
             throws Exception {
-        final IJavaProject javaProject = RepositoryManager.getInstance().getCurrentRepository().getJavaProject();
-        if(!javaProject.isConsistent()) {
+        final IJavaProject javaProject = getJavaProject();
+        if (!javaProject.isConsistent()) {
             javaProject.makeConsistent(progressMonitor);
         }
         final IType abstractConnectorType = javaProject.findType(AbstractConnector.class.getName());
-        if(abstractConnectorType == null) {
-            BonitaStudioLog.error(String.format("Cannot find type %s in project %s", AbstractConnector.class.getName(), javaProject),
-                    CommonRepositoryPlugin.PLUGIN_ID );
-         }
+        if (abstractConnectorType == null) {
+            BonitaStudioLog.error(
+                    String.format("Cannot find type %s in project %s", AbstractConnector.class.getName(), javaProject),
+                    CommonRepositoryPlugin.PLUGIN_ID);
+        }
         final IType abstractFilterType = javaProject.findType(AbstractUserFilter.class.getName());
         String abstractClassName = "Abstract" + className;
         if (packageName != null && !packageName.isEmpty()) {
@@ -300,7 +305,7 @@ public class ClassGenerator {
         classWizard.enableCommentControl(true);
 
         final ProjectTemplateStore fTemplateStore = new ProjectTemplateStore(
-                RepositoryManager.getInstance().getCurrentRepository().getProject());
+                RepositoryManager.getInstance().getCurrentRepository().map(IRepository::getProject).orElse(null));
         try {
             fTemplateStore.load();
         } catch (final IOException e) {
@@ -436,6 +441,10 @@ public class ClassGenerator {
             stringBuilder.append(setter);
 
         }
+    }
+
+    private static IJavaProject getJavaProject() {
+        return RepositoryManager.getInstance().getCurrentRepository().map(IJavaContainer::getJavaProject).orElse(null);
     }
 
 }

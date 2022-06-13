@@ -22,7 +22,6 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IFolderLayout;
 import org.eclipse.ui.IPageLayout;
 
-
 public class PerspectiveProcessFactory extends AbstractPerspectiveFactory {
 
     public static final String PROCESS_PERSPECTIVE_ID = "org.bonitasoft.studio.perspective.process";
@@ -39,7 +38,7 @@ public class PerspectiveProcessFactory extends AbstractPerspectiveFactory {
                 editorArea);
         left.addView("org.bonitasoft.studio.application.project.explorer");
         left.addView("org.bonitasoft.studio.views.overview.tree");
-        
+
         IFolderLayout bottomLeft = layout.createFolder("bottomLeft", IPageLayout.BOTTOM, 0.7f, "left");
         bottomLeft.addView(PROBLEM_VIEW_ID);
 
@@ -57,11 +56,12 @@ public class PerspectiveProcessFactory extends AbstractPerspectiveFactory {
         }
         bottomRight.addView("org.bonitasoft.studio.validation.view");
         bottomRight.addView("org.bonitasoft.studio.views.overview");
-        if (RepositoryManager.getInstance().getCurrentRepository().isShared("org.eclipse.egit.core.GitProvider")) {
-            bottomRight.addView("org.eclipse.egit.ui.StagingView");
-            bottomRight.addPlaceholder("org.eclipse.team.ui.GenericHistoryView");
-        }
-
+        RepositoryManager.getInstance().getCurrentRepository()
+                .filter(repo -> repo.isShared("org.eclipse.egit.core.GitProvider"))
+                .ifPresent(repo -> {
+                    bottomRight.addView("org.eclipse.egit.ui.StagingView");
+                    bottomRight.addPlaceholder("org.eclipse.team.ui.GenericHistoryView");
+                });
     }
 
     @Override

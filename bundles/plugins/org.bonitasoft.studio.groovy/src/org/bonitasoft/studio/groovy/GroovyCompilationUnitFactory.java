@@ -17,6 +17,7 @@ package org.bonitasoft.studio.groovy;
 import javax.inject.Inject;
 
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.common.repository.model.IJavaContainer;
 import org.bonitasoft.studio.groovy.repository.GroovyFileStore;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.e4.core.di.annotations.Creatable;
@@ -47,7 +48,7 @@ public class GroovyCompilationUnitFactory {
     }
 
     private IJavaProject javaProject() {
-        return repositoryAccessor.getCurrentRepository() != null ? repositoryAccessor.getCurrentRepository().getJavaProject() : null;
+        return repositoryAccessor.getCurrentRepository().map(IJavaContainer::getJavaProject).orElse(null);
     }
 
 }

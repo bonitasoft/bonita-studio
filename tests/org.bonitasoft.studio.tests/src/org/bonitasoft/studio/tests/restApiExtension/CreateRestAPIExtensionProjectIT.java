@@ -20,6 +20,7 @@ import org.bonitasoft.studio.common.repository.core.maven.MavenProjectHelper;
 import org.bonitasoft.studio.maven.model.RestAPIExtensionArchetypeConfiguration;
 import org.bonitasoft.studio.rest.api.extension.core.maven.CreateRestAPIExtensionProjectOperation;
 import org.bonitasoft.studio.rest.api.extension.core.repository.RestAPIExtensionRepositoryStore;
+import org.bonitasoft.studio.tests.util.InitialProjectRule;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
@@ -32,10 +33,14 @@ import org.eclipse.m2e.core.MavenPlugin;
 import org.eclipse.m2e.core.project.ProjectImportConfiguration;
 import org.eclipse.swt.SWT;
 import org.junit.After;
+import org.junit.Rule;
 import org.junit.Test;
 
 public class CreateRestAPIExtensionProjectIT {
 
+    @Rule
+    public InitialProjectRule projectRule = InitialProjectRule.INSTANCE;
+    
     @After
     public void tearDown() throws Exception {
         final IFolder createdFolder = RepositoryManager.getInstance().getRepositoryStore(RestAPIExtensionRepositoryStore.class).getResource()

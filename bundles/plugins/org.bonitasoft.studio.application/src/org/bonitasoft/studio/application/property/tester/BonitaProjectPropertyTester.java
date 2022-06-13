@@ -18,8 +18,8 @@ import java.util.Objects;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.BonitaProjectNature;
-import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.eclipse.core.expressions.PropertyTester;
@@ -47,6 +47,9 @@ public class BonitaProjectPropertyTester extends PropertyTester {
                 return resource instanceof IContainer && !isContainedInBonitaStore(resource);
             }
         }
+        if (Objects.equals(property, "isBonitaProjectActive")) {
+            return RepositoryManager.getInstance().hasActiveRepository();
+        }
         return false;
     }
 
@@ -59,9 +62,8 @@ public class BonitaProjectPropertyTester extends PropertyTester {
     }
 
     private boolean isBonitaStoreContainer(Object receiver) {
-        if (RepositoryManager.getInstance().hasActiveRepository()
-                && RepositoryManager.getInstance().getCurrentRepository().isLoaded()) {
-            AbstractRepository currentRepository = RepositoryManager.getInstance().getCurrentRepository();
+        if (RepositoryManager.getInstance().getCurrentRepository().filter(IRepository::isLoaded).isPresent()) {
+            var currentRepository = RepositoryManager.getInstance().getCurrentRepository().orElseThrow();
             if (receiver instanceof IFolder && !isDocumentationStore(receiver)) {
                 for (final IRepositoryStore<? extends IRepositoryFileStore> store : currentRepository.getAllStores()) {
                     if (Objects.equals(store.getResource(), receiver)) {

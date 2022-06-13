@@ -43,7 +43,7 @@ public class ProjectUtil {
      * @throws CoreException
      */
     public static void cleanProject() throws CoreException {
-        var project = RepositoryManager.getInstance().getAccessor().getCurrentRepository();
+        var project = RepositoryManager.getInstance().getAccessor().getCurrentRepository().orElseThrow();
         project.getAllShareableStores().stream()
                 .flatMap(s -> s.getChildren().stream())
                 .filter(not(OrganizationFileStore.class::isInstance))
@@ -54,7 +54,7 @@ public class ProjectUtil {
     }
 
     public static void removeUserExtensions() throws CoreException {
-        IProject project = RepositoryManager.getInstance().getAccessor().getCurrentRepository().getProject();
+        IProject project = RepositoryManager.getInstance().getAccessor().getCurrentRepository().orElseThrow().getProject();
         Model mavenModel = new MavenProjectHelper().getMavenModel(project);
         var dependenciesToRemove = mavenModel.getDependencies()
                 .stream()

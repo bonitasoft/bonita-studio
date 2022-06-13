@@ -106,7 +106,7 @@ public class ProcessVersion extends BuildableArtifact implements ArtifactVersion
     }
 
     private AbstractRepository getRepository() {
-        return RepositoryManager.getInstance().getCurrentRepository();
+        return RepositoryManager.getInstance().getCurrentRepository().orElseThrow();
     }
 
     @Override

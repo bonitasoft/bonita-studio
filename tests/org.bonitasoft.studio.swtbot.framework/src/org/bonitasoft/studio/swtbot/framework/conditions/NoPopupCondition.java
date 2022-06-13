@@ -1,29 +1,39 @@
 package org.bonitasoft.studio.swtbot.framework.conditions;
 
-import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
-import org.eclipse.swtbot.swt.finder.SWTBot;
+import java.util.stream.Stream;
+
+import org.eclipse.swtbot.swt.finder.exceptions.WidgetNotFoundException;
+import org.eclipse.swtbot.swt.finder.finders.UIThreadRunnable;
+import org.eclipse.swtbot.swt.finder.results.BoolResult;
 import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 
 public class NoPopupCondition extends DefaultCondition {
 
-    private SWTGefBot swtGefBot;
-    private String shellText;
-
-    @Override
-    public void init(final SWTBot swtGefBot) {
-        super.init(bot);
-        this.swtGefBot = (SWTGefBot) swtGefBot;
-    }
-
     @Override
     public boolean test() throws Exception {
-        shellText = swtGefBot.activeShell().getText();
-        return shellText != null && shellText.startsWith("Bonita Studio");
+        try {
+            final SWTBotShell shell = Stream.of(bot.shells())
+                    .filter(s -> s.getText() != null && s.getText().startsWith("Bonita Studio"))
+                    .findFirst().orElse(null);
+            if (shell != null) {
+                return UIThreadRunnable.syncExec(new BoolResult() {
+
+                    @Override
+                    public Boolean run() {
+                        return shell.widget.isVisible() || shell.widget.isFocusControl();
+                    }
+                });
+            }
+        } catch (WidgetNotFoundException e) {
+        }
+        return false;
     }
 
     @Override
     public String getFailureMessage() {
-        return String.format("Shell with text '%s' has still focus. Close all dialogs and wizard inside your test.",
-                shellText);
+        return String.format(
+                "Shell with text '%s' has still focus. Was waiting for main shell 'Bonita Studio' to be active.",
+                bot.activeShell().getText());
     }
 }

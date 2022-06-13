@@ -169,7 +169,7 @@ public class ExtendedCategory implements Category {
     }
 
     public Image getImage() {
-        if(icon == null || icon.isDisposed()) {
+        if((icon == null || icon.isDisposed()) && iconDescriptor != null) {
             icon = iconDescriptor.createImage();
         }
         return icon;

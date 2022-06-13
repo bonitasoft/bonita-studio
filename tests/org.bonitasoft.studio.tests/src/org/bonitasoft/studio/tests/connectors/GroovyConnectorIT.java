@@ -26,9 +26,11 @@ import org.bonitasoft.studio.engine.operation.ProcessSelector;
 import org.bonitasoft.studio.importer.bos.operation.ImportBosArchiveOperation;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.MainProcess;
+import org.bonitasoft.studio.tests.util.InitialProjectRule;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
+import org.junit.Rule;
 import org.junit.Test;
 
 /**
@@ -36,6 +38,9 @@ import org.junit.Test;
  */
 public class GroovyConnectorIT {
 
+    @Rule
+    public InitialProjectRule projectRule = InitialProjectRule.INSTANCE;
+    
     @Test
     public void should_groovy_connector_configuration_be_converted_at_export() throws Exception {
         RepositoryAccessor repositoryAccessor = RepositoryManager.getInstance().getAccessor();

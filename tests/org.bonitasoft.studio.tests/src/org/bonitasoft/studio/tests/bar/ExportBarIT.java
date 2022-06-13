@@ -40,6 +40,7 @@ import org.bonitasoft.studio.engine.operation.ExportBarOperation;
 import org.bonitasoft.studio.importer.bos.operation.ImportBosArchiveOperation;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.Pool;
+import org.bonitasoft.studio.tests.util.InitialProjectRule;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -55,6 +56,9 @@ import org.junit.rules.TemporaryFolder;
  */
 public class ExportBarIT {
 
+    @Rule
+    public InitialProjectRule projectRule = InitialProjectRule.INSTANCE;
+    
     @Rule
     public TemporaryFolder tmpFolder = new TemporaryFolder();
 
@@ -112,14 +116,14 @@ public class ExportBarIT {
         var processVersionResourcesToCopy = new File(FileLocator
                 .toFileURL(ExportBarIT.class.getResource(String.format("/%s-%s", pool.getName(), pool.getVersion())))
                 .getFile());
-        var resourcesFolder = repositoryAccessor.getCurrentRepository().getProject().getFolder("src/main/resources/_common");
+        var resourcesFolder = repositoryAccessor.getCurrentRepository().orElseThrow().getProject().getFolder("src/main/resources/_common");
         PlatformUtil.copyResource(resourcesFolder.getLocation().toFile(), commonResourcesToCopy,
                 AbstractRepository.NULL_PROGRESS_MONITOR);
         PlatformUtil.copyResource(resourcesFolder.getLocation().toFile(), processResourcesToCopy,
                 AbstractRepository.NULL_PROGRESS_MONITOR);
         PlatformUtil.copyResource(resourcesFolder.getLocation().toFile(), processVersionResourcesToCopy,
                 AbstractRepository.NULL_PROGRESS_MONITOR);
-        repositoryAccessor.getCurrentRepository().getProject().refreshLocal(IResource.DEPTH_INFINITE,
+        repositoryAccessor.getCurrentRepository().orElseThrow().getProject().refreshLocal(IResource.DEPTH_INFINITE,
                 AbstractRepository.NULL_PROGRESS_MONITOR);
 
         exportBarOperation.addProcessToDeploy(process);

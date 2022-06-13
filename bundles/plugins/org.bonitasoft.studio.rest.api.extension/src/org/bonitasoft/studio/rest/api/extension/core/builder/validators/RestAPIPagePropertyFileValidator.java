@@ -60,7 +60,9 @@ public class RestAPIPagePropertyFileValidator extends PagePropertyFileValidator 
     }
 
     private RestAPIExtensionRepositoryStore restAPIExtensionRepositoryStore() {
-        return RepositoryManager.getInstance().getCurrentRepository().getRepositoryStore(RestAPIExtensionRepositoryStore.class);
+        return RepositoryManager.getInstance().getCurrentRepository()
+                .orElseThrow()
+                .getRepositoryStore(RestAPIExtensionRepositoryStore.class);
     }
 
     @Override

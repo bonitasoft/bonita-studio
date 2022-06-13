@@ -73,12 +73,12 @@ public class ShareGitProject extends AbstractHandler {
 
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
-        execute(RepositoryManager.getInstance().getCurrentRepository().getProject());
+        execute(RepositoryManager.getInstance().getCurrentRepository().orElseThrow().getProject());
         return null;
     }
 
     public void share(RepositoryAccessor repositoryAccessor) {
-        execute(repositoryAccessor.getCurrentRepository().getProject());
+        execute(repositoryAccessor.getCurrentRepository().orElseThrow().getProject());
     }
 
     public void execute(IProject currentProject) {
@@ -131,7 +131,7 @@ public class ShareGitProject extends AbstractHandler {
                     throw new InvocationTargetException(e);
                 }
             }
-            TeamRepositoryUtil.switchToRepository(repositoryName, false, true, false, monitor);
+            TeamRepositoryUtil.switchToRepository(repositoryName, true, monitor);
         });
         return Optional
                 .of(currentProject.getWorkspace().getRoot()
@@ -261,7 +261,7 @@ public class ShareGitProject extends AbstractHandler {
     }
 
     public boolean canExecute(IProject project) {
-        return !RepositoryProvider.isShared(project);
+        return project != null && !RepositoryProvider.isShared(project);
     }
 
 }
