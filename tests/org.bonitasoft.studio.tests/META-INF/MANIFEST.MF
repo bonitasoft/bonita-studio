@@ -102,7 +102,6 @@ Require-Bundle: org.eclipse.ui.workbench,
  org.objenesis
 Export-Package: org.bonitasoft.studio.tests,
  org.bonitasoft.studio.tests.actors,
- org.bonitasoft.studio.tests.api,
  org.bonitasoft.studio.tests.applicationDescriptor,
  org.bonitasoft.studio.tests.bar,
  org.bonitasoft.studio.tests.bug,

@@ -34,7 +34,7 @@ public class ExportSingleApplicationHandler extends AbstractHandler {
 
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
-        fileStoreFinder.findSelectedFileStore(RepositoryManager.getInstance().getCurrentRepository())
+        fileStoreFinder.findSelectedFileStore(RepositoryManager.getInstance().getCurrentRepository().orElseThrow())
                 .filter(ApplicationFileStore.class::isInstance)
                 .map(ApplicationFileStore.class::cast)
                 .ifPresent(

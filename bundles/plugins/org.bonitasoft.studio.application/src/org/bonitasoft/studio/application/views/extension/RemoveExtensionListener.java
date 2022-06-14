@@ -62,7 +62,7 @@ public class RemoveExtensionListener {
                 progressService.run(true, false, monitor -> {
                     try {
                         updateExtensionDecorator.preUpdate(monitor);
-                        repositoryAccessor.getCurrentRepository().getLocalDependencyStore().backup(dep);
+                        repositoryAccessor.getCurrentRepository().orElseThrow().getLocalDependencyStore().backup(dep);
                         removeDependencyOperation.run(monitor);
                         updateExtensionDecorator.postUpdate(monitor);
                     } catch (CoreException | IOException e) {

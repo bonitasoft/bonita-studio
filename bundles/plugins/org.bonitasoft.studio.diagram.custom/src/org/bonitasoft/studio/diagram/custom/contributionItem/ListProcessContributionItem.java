@@ -47,7 +47,7 @@ public abstract class ListProcessContributionItem extends CompoundContributionIt
     @Override
     protected IContributionItem[] getContributionItems() {
         Optional<DiagramFileStore> fileStore = fileStoreFinder
-                .findSelectedFileStore(repositoryAccessor.getCurrentRepository())
+                .findSelectedFileStore(repositoryAccessor.getCurrentRepository().orElseThrow())
                 .filter(DiagramFileStore.class::isInstance)
                 .map(DiagramFileStore.class::cast);
         if (fileStore.isPresent()) {

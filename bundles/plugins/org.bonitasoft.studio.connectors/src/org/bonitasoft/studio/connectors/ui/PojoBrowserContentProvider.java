@@ -49,7 +49,7 @@ public class PojoBrowserContentProvider implements ITreeContentProvider {
     private final AbstractRepository repository;
 
     public PojoBrowserContentProvider() {
-        repository = RepositoryManager.getInstance().getCurrentRepository();
+        repository = RepositoryManager.getInstance().getCurrentRepository().orElseThrow();
     }
 
     @Override

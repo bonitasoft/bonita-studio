@@ -180,7 +180,7 @@ public class ScriptExpressionContext {
                 Pics.getImage("BusinessObjectData.gif", Activator.getDefault()));
         findBusinessObjectFromDAO(variable.getType(), bdm)
                 .ifPresent(bo -> cat.setDescription(bo.getDescription()));
-        IJavaProject javaProject = RepositoryManager.getInstance().getCurrentRepository().getJavaProject();
+        IJavaProject javaProject = RepositoryManager.getInstance().getCurrentRepository().orElseThrow().getJavaProject();
         try {
             IType type = javaProject.findType(variable.getType());
             Stream.of(type.getMethods())

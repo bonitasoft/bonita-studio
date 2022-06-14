@@ -86,7 +86,7 @@ public class DefinitionUpdateParticipantFactory implements ExtensionUpdatePartic
 
     private ArtifactDefinitionProvider getArtifactDefinitionProvider() {
         return new ArtifactDefinitionProviderDelegate(
-                new ConnectorArtifactDefinitionProvider(repositoryAccessor.getCurrentRepository()),
-                new ActorFilterArtifactDefinitionProvider(repositoryAccessor.getCurrentRepository()));
+                new ConnectorArtifactDefinitionProvider(repositoryAccessor.getCurrentRepository().orElseThrow()),
+                new ActorFilterArtifactDefinitionProvider(repositoryAccessor.getCurrentRepository().orElseThrow()));
     }
 }

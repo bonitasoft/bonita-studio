@@ -21,6 +21,7 @@ import java.util.Objects;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.designer.core.repository.WebPageFileStore;
 import org.bonitasoft.studio.designer.core.repository.WebPageRepositoryStore;
 import org.bonitasoft.studio.model.expression.ExpressionPackage;
@@ -66,7 +67,7 @@ public class WebPageNameResourceChangeListener implements IResourceChangeListene
     private IResourceDeltaVisitor resourceDeltaVisitor() {
         return delta -> {
             String name = delta.getResource().getName();
-            if(!repositoryAccessor.hasActiveRepository() || !repositoryAccessor.getCurrentRepository().isLoaded()) {
+            if(!repositoryAccessor.hasActiveRepository() || repositoryAccessor.getCurrentRepository().filter(IRepository::isLoaded).isEmpty()) {
                 return true;
             }
             WebPageRepositoryStore repositoryStore = repositoryAccessor

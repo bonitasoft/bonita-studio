@@ -326,7 +326,7 @@ public class ExportRepositoryWizardPage extends WizardPage {
                     }
                 }
                 if (isZip) {
-                    AbstractRepository currentRepository = RepositoryManager.getInstance().getCurrentRepository();
+                    var currentRepository = RepositoryManager.getInstance().getCurrentRepository().orElse(null);
                     IProject project = currentRepository.getProject();
                     IFile pomFile = project
                             .getFile(IMavenConstants.POM_FILE_NAME);

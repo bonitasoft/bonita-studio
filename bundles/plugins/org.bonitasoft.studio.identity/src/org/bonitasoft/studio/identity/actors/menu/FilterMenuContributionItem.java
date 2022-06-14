@@ -18,11 +18,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.bonitasoft.studio.common.CommandExecutor;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.identity.i18n.Messages;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.jface.action.ContributionItem;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.MenuAdapter;
+import org.eclipse.swt.events.MenuEvent;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 
@@ -43,7 +46,7 @@ public class FilterMenuContributionItem extends ContributionItem {
     public void fill(Menu parent, int index) {
         var connectorsMenuItem = new MenuItem(parent, SWT.CASCADE, index);
         connectorsMenuItem.setText(Messages.actorFilters);
-        connectorsMenuItem.setEnabled(true);
+        connectorsMenuItem.setEnabled(isEnabled());
         connectorsMenuItem.setImage(Pics.getImage(PicsConstants.filterDef));
 
         var connectorsMenu = new Menu(connectorsMenuItem);
@@ -57,6 +60,15 @@ public class FilterMenuContributionItem extends ContributionItem {
         createItem(connectorsMenu, EXPORT_COMMAND, org.bonitasoft.studio.common.Messages.exportMenuLabel, 4);
 
         connectorsMenuItem.setMenu(connectorsMenu);
+        
+        parent.addMenuListener(new MenuAdapter() {
+
+            @Override
+            public void menuShown(MenuEvent e) {
+                connectorsMenuItem.setEnabled(isEnabled());
+            }
+
+        });
     }
 
     private MenuItem createItem(Menu parent, String command, String text, int index) {
@@ -71,6 +83,14 @@ public class FilterMenuContributionItem extends ContributionItem {
     @Override
     public void update(String id) {
         items.forEach((command, item) -> item.setEnabled(commandExecutor.canExecute(command, null)));
+    }
+    
+    @Override
+    public boolean isEnabled() {
+        if (RepositoryManager.getInstance().hasActiveRepository()) {
+            return true;
+        }
+        return false;
     }
 
 }

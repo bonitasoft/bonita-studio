@@ -11,6 +11,7 @@ import static org.mockito.Mockito.when;
 
 import java.io.File;
 import java.util.Collections;
+import java.util.Optional;
 
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
@@ -33,7 +34,7 @@ public class ImportBosArchiveOperationTest {
     private ImportBosArchiveOperation operationUnserTest;
 
     @Mock
-    private AbstractRepository repostioty;
+    private AbstractRepository repostiory;
 
     private File archiveFile;
 
@@ -53,6 +54,7 @@ public class ImportBosArchiveOperationTest {
 
     @Before
     public void setUp() throws Exception {
+        when(repositoryAccessor.getCurrentRepository()).thenReturn(Optional.of(repostiory));
         operationUnserTest = spy(new ImportBosArchiveOperation(repositoryAccessor));
         doNothing().when(operationUnserTest).migrateUID(any());
         doReturn(Collections.emptySet()).when(operationUnserTest).doMigrateToMavenDependencies(any(ImportArchiveModel.class), any(IProgressMonitor.class));
@@ -67,7 +69,7 @@ public class ImportBosArchiveOperationTest {
 
     @Test
     public void should_compute_processes_at_the_start_of_the_import() throws Exception {
-        operationUnserTest.setCurrentRepository(repostioty);
+        operationUnserTest.setCurrentRepository(repostiory);
         operationUnserTest.setArchiveFile(archiveFile.getAbsolutePath());
         operationUnserTest.run(monitor);
         InOrder inOrder = inOrder(diagramStore);
@@ -77,7 +79,7 @@ public class ImportBosArchiveOperationTest {
 
     @Test
     public void should_refresh_repository_at_the_end_of_import() throws Exception {
-        operationUnserTest.setCurrentRepository(repostioty);
+        operationUnserTest.setCurrentRepository(repostiory);
         operationUnserTest.setArchiveFile(archiveFile.getAbsolutePath());
         operationUnserTest.run(monitor);
         verify(operationUnserTest).migrateUID(monitor);
@@ -87,7 +89,7 @@ public class ImportBosArchiveOperationTest {
     public void should_validate_all_imported_processes_at_the_end_of_import() throws Exception {
         ImportBosArchiveStatusBuilder importBosArchiveStatusBuilder = new ImportBosArchiveStatusBuilder();
         when(operationUnserTest.createStatusBuilder()).thenReturn(importBosArchiveStatusBuilder);
-        operationUnserTest.setCurrentRepository(repostioty);
+        operationUnserTest.setCurrentRepository(repostiory);
         operationUnserTest.setArchiveFile(archiveFile.getAbsolutePath());
         operationUnserTest.run(monitor);
         verify(operationUnserTest).validateAllAfterImport(monitor, importBosArchiveStatusBuilder);

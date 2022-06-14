@@ -50,7 +50,7 @@ public class RefreshProjectHandler extends AbstractHandler {
 
                     @Override
                     public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
-                        AbstractRepository currentRepository = RepositoryManager.getInstance().getCurrentRepository();
+                        AbstractRepository currentRepository = RepositoryManager.getInstance().getCurrentRepository().orElseThrow();
                         MavenPlugin.getProjectConfigurationManager().updateProjectConfiguration(currentRepository.getProject(), monitor);
                         currentRepository.getProjectDependenciesStore().analyze(monitor);
                         currentRepository.build(monitor);

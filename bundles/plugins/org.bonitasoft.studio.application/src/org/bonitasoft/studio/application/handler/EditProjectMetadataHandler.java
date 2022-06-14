@@ -23,7 +23,6 @@ import org.bonitasoft.studio.application.operation.SetProjectMetadataOperation;
 import org.bonitasoft.studio.common.RedirectURLBuilder;
 import org.bonitasoft.studio.common.jface.MessageDialogWithLink;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.core.maven.MavenProjectHelper;
 import org.bonitasoft.studio.common.repository.core.maven.model.ProjectDefaultConfiguration;
@@ -63,7 +62,8 @@ public class EditProjectMetadataHandler extends AbstractProjectMetadataHandler {
     }
 
     @Override
-    protected ProjectMetadata initialMetadata(AbstractRepository currentRepository) {
+    protected ProjectMetadata initialMetadata(RepositoryAccessor repositoryAccessor) {
+        var currentRepository = repositoryAccessor.getCurrentRepository().orElseThrow();
         return ProjectMetadata.read(currentRepository.getProject());
     }
 
@@ -71,7 +71,7 @@ public class EditProjectMetadataHandler extends AbstractProjectMetadataHandler {
     protected Optional<IStatus> performFinish(IWizardContainer container, ProjectMetadata metadata,
             RepositoryAccessor repositoryAccessor, MavenProjectHelper mavenProjectHelper,
             ExceptionDialogHandler exceptionDialogHandler) {
-        if (targetRuntimeVersionChanged(metadata, repositoryAccessor.getCurrentRepository().getProject(),
+        if (targetRuntimeVersionChanged(metadata, repositoryAccessor.getCurrentRepository().orElseThrow().getProject(),
                 mavenProjectHelper)
                 && new MessageDialogWithLink(Display.getDefault().getActiveShell(),
                         Messages.updateTargetRuntimeVersionConfirmTitle,

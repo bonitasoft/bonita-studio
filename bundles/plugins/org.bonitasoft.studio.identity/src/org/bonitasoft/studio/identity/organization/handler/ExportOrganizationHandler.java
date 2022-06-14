@@ -67,11 +67,19 @@ public class ExportOrganizationHandler extends AbstractHandler {
 
     private Set<Object> getSelection() {
         Set<Object> res = new HashSet<>();
-        fileStoreFinder.findSelectedFileStore(RepositoryManager.getInstance().getCurrentRepository())
+        fileStoreFinder.findSelectedFileStore(RepositoryManager.getInstance().getCurrentRepository().orElseThrow())
                 .filter(OrganizationFileStore.class::isInstance)
                 .map(OrganizationFileStore.class::cast)
                 .ifPresent(res::add);
         return res;
+    }
+    
+    @Override
+    public boolean isEnabled() {
+        if (RepositoryManager.getInstance().hasActiveRepository()) {
+            return true;
+        }
+        return false;
     }
 
 }

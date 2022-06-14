@@ -795,7 +795,7 @@ public class IterationPropertySection extends AbstractBonitaDescriptionSection {
     private String openClassSelectionDialog() {
         final JavaSearchScope scope = new JavaSearchScope(true);
         try {
-            scope.add(RepositoryManager.getInstance().getCurrentRepository().getJavaProject());
+            scope.add(RepositoryManager.getInstance().getCurrentRepository().orElseThrow().getJavaProject());
         } catch (final Exception ex) {
             BonitaStudioLog.error(ex);
         }

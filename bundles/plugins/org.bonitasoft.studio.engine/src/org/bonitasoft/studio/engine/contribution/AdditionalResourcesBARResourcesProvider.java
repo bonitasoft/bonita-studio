@@ -38,7 +38,7 @@ public class AdditionalResourcesBARResourcesProvider implements BARResourcesProv
     private static final String COMMON_FOLDER = "_common";
 
     private IProject getProject() {
-        return RepositoryManager.getInstance().getCurrentRepository().getProject();
+        return RepositoryManager.getInstance().getCurrentRepository().orElseThrow().getProject();
     }
 
     @Override

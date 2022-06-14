@@ -28,12 +28,17 @@ import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.core.maven.AddDependencyOperation;
 import org.bonitasoft.studio.connectors.repository.ConnectorDefRepositoryStore;
+import org.bonitasoft.studio.tests.util.InitialProjectRule;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 
 public class TestSpecificWizardIds {
 
+    @Rule
+    public InitialProjectRule projectRule = InitialProjectRule.INSTANCE;
+    
 	private static final String SPECIFIC_CONNECTOR_WIZARD = "org.bonitasoft.studio.connectors.connectorWizard";
 
 	private static final Map<String,String> WIZARD_IDS ;

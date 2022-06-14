@@ -81,6 +81,7 @@ public class RemoveParametersOperation extends AbstractRefactorOperation<Paramet
             final String id = ModelHelper.getEObjectID(process);
             final String fileName = id + ".conf";
             final ProcessConfigurationRepositoryStore processConfStore = RepositoryManager.getInstance().getCurrentRepository()
+                    .orElseThrow()
                     .getRepositoryStore(ProcessConfigurationRepositoryStore.class);
             final ProcessConfigurationFileStore file = processConfStore.getChild(fileName, true);
             Configuration localeConfiguration = null;

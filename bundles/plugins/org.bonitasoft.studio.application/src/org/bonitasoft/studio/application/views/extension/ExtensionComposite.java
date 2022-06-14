@@ -117,7 +117,7 @@ public class ExtensionComposite extends Composite {
         mavenHelper = new MavenProjectHelper();
         ctx = new DataBindingContext();
 
-        var currentRepository = repositoryAccessor.getCurrentRepository();
+        var currentRepository = repositoryAccessor.getCurrentRepository().orElseThrow();
         bonitaArtifactDependencyConverter = new BonitaArtifactDependencyConverter(
                 currentRepository.getProjectDependenciesStore(),
                 currentRepository.getLocalDependencyStore());
@@ -251,7 +251,7 @@ public class ExtensionComposite extends Composite {
         var result = new DependencyResolution();
         try {
             Model mavenModel = mavenHelper
-                    .getMavenModel(repositoryAccessor.getCurrentRepository().getProject());
+                    .getMavenModel(repositoryAccessor.getCurrentRepository().orElseThrow().getProject());
             if (mavenModel != null) {
                 List<Dependency> modelDependencies = mavenModel.getDependencies();
                 modelDependencies.forEach(dep -> {

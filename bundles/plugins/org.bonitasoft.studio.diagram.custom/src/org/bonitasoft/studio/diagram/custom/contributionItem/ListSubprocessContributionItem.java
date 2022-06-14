@@ -78,7 +78,7 @@ public class ListSubprocessContributionItem extends CompoundContributionItem {
         @Override
         protected IContributionItem[] getContributionItems() {
             final List<IContributionItem> res = new ArrayList<>();
-            IRepository repository = RepositoryManager.getInstance().getCurrentRepository() ;
+            IRepository repository = RepositoryManager.getInstance().getCurrentRepository().orElseThrow() ;
             diagramSotre = repository.getRepositoryStore(DiagramRepositoryStore.class) ;
             try {
                 for(AbstractProcess process : diagramSotre.getAllProcesses()){

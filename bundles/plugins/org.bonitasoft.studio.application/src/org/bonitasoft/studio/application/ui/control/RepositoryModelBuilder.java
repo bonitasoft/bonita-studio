@@ -43,10 +43,13 @@ import org.eclipse.core.runtime.IStatus;
 public class RepositoryModelBuilder {
 
     public RepositoryModel create(RepositoryAccessor repositoryAccessor) {
-        AbstractRepository currentRepository = repositoryAccessor.getCurrentRepository();
-        currentRepository.getAllStores();
-        List<RepositoryStore> stores = createStore(currentRepository);
-        return new RepositoryModel(currentRepository.getName(), stores);
+        var currentRepository = repositoryAccessor.getCurrentRepository().orElse(null);
+        if (currentRepository != null) {
+            currentRepository.getAllStores();
+            List<RepositoryStore> stores = createStore(currentRepository);
+            return new RepositoryModel(currentRepository.getName(), stores);
+        }
+        return null;
     }
 
     public RepositoryModel create(AbstractRepository currentRepository,
@@ -60,7 +63,7 @@ public class RepositoryModelBuilder {
                 .stream()
                 .filter(repositoryStore -> repositoryStore.getChildren().stream()
                         .anyMatch(IDeployable.class::isInstance))
-                .map(s -> fillStore(s))
+                .map(this::fillStore)
                 .collect(Collectors.toList());
     }
 

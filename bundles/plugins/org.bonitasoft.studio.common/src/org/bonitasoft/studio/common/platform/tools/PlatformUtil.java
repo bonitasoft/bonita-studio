@@ -74,18 +74,14 @@ public class PlatformUtil {
     }
 
     public static void maximizeWindow(final IWorkbenchPage page) {
-        if (!page.isPageZoomed()) {
-            if (page.getActivePartReference() != null) {
-                page.toggleZoom(page.getActivePartReference());
-            }
+        if (!page.isPageZoomed() && page.getActivePartReference() != null) {
+            page.toggleZoom(page.getActivePartReference());
         }
     }
 
     public static void maximizeWindow(final IWorkbenchPage page, final IWorkbenchPartReference pr) {
-        if (!page.isPageZoomed()) {
-            if (pr != null) {
-                page.toggleZoom(pr);
-            }
+        if (!page.isPageZoomed() && pr != null) {
+            page.toggleZoom(pr);
         }
     }
 
@@ -154,9 +150,13 @@ public class PlatformUtil {
     }
 
     public static void openDashboardIfNoOtherEditorOpen() {
+        openDashboardIfNoOtherEditorOpen(false);
+    }
+
+    public static void openDashboardIfNoOtherEditorOpen(boolean synched) {
         final IWorkbench workbench = PlatformUI.getWorkbench();
         if (workbench != null) {
-            workbench.getDisplay().asyncExec(() -> Optional.ofNullable(PlatformUI.getWorkbench())
+            Runnable openDashboard = () -> Optional.ofNullable(PlatformUI.getWorkbench())
                     .map(IWorkbench::getActiveWorkbenchWindow)
                     .map(IWorkbenchWindow::getActivePage)
                     .map(page -> page.getEditorReferences().length)
@@ -169,7 +169,12 @@ public class PlatformUtil {
                                 commandExecutor.executeCommand(OPEN_DASHBOARD_COMMAND, null);
                             }
                         }
-                    }));
+                    });
+            if (synched) {
+                workbench.getDisplay().syncExec(openDashboard);
+            } else {
+                workbench.getDisplay().asyncExec(openDashboard);
+            }
         }
     }
 
@@ -188,13 +193,8 @@ public class PlatformUtil {
     }
 
     public static void showIntroPart(IWorkbenchPage page) {
-        IViewReference explorerView = page.findViewReference("org.bonitasoft.studio.application.project.explorer");
-        if (explorerView != null) {
-            page.activate(explorerView.getPart(true));
-        }
-
         final IIntroManager introManager = PlatformUI.getWorkbench().getIntroManager();
-        //colse intro to reload content if already opened
+        //close intro to reload content if already opened
         hideIntroPart();
         final IntroModelRoot model = IntroPlugin.getDefault().getIntroModelRoot();
         if (model != null
@@ -203,18 +203,12 @@ public class PlatformUtil {
             model.getPresentation().navigateHome();
         }
         BonitaPerspectivesUtils.switchToPerspective("org.bonitasoft.studio.perspective.welcomePage");
-        page.setEditorAreaVisible(false);
         introManager.showIntro(
                 page.getWorkbenchWindow(),
                 false);
-
-        page.setPartState(page.findViewReference("org.bonitasoft.studio.application.project.explorer"),
-                IWorkbenchPage.STATE_RESTORED);
-        page.setPartState(page.findViewReference(ViewIds.PROBLEM_VIEW_ID),
-                IWorkbenchPage.STATE_RESTORED);
+        page.setPartState(page.findViewReference(INTROVIEW_ID), IWorkbenchPage.STATE_RESTORED);
     }
 
-   
     /**
      * Copy a resource a the bundle to the destination path
      *
@@ -349,7 +343,8 @@ public class PlatformUtil {
      * @param monitor
      * @throws Exception
      */
-    public static void unzipZipFiles(final File zipFile, final File destDir, IProgressMonitor monitor) throws Exception {
+    public static void unzipZipFiles(final File zipFile, final File destDir, IProgressMonitor monitor)
+            throws Exception {
         if (monitor == null) {
             monitor = new NullProgressMonitor();
         }
@@ -361,7 +356,8 @@ public class PlatformUtil {
             final Enumeration<? extends ZipEntry> enumEntry = zip.entries();
             while (enumEntry.hasMoreElements()) {
                 final ZipEntry file = enumEntry.nextElement();
-                final java.io.File f = new java.io.File(destDir.getAbsolutePath() + File.separatorChar + file.getName());
+                final java.io.File f = new java.io.File(
+                        destDir.getAbsolutePath() + File.separatorChar + file.getName());
                 if (file.isDirectory()) { // if its a directory, create it
                     f.mkdir();
                     continue;

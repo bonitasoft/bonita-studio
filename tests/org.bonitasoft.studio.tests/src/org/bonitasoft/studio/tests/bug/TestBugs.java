@@ -19,14 +19,19 @@ import static org.junit.Assert.assertFalse;
 import org.bonitasoft.studio.diagram.custom.commands.NewDiagramCommandHandler;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramActionBarContributor;
+import org.bonitasoft.studio.tests.util.InitialProjectRule;
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PlatformUI;
 import org.junit.After;
+import org.junit.Rule;
 import org.junit.Test;
 
 
 public class TestBugs {
+    
+    @Rule
+    public InitialProjectRule projectRule = InitialProjectRule.INSTANCE;
 
     private DiagramFileStore newDiagram;
 

@@ -24,6 +24,7 @@ import org.bonitasoft.studio.application.views.ProjectExplorerViewerComparator;
 import org.bonitasoft.studio.common.repository.model.IDisplayable;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
+import org.bonitasoft.studio.common.repository.store.AbstractRepositoryStore;
 import org.bonitasoft.studio.designer.core.repository.WebPageRepositoryStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.eclipse.core.resources.IResource;
@@ -78,6 +79,6 @@ public class RepositoryStore implements IDisplayable, Comparable<RepositoryStore
 
     @Override
     public int compareTo(RepositoryStore o) {
-        return Integer.compare(ProjectExplorerViewerComparator.REPO_STORE_ORDER.get(getName()), ProjectExplorerViewerComparator.REPO_STORE_ORDER.get(o.getName()));
+        return Integer.compare(AbstractRepositoryStore.REPO_STORE_ORDER.get(getName()), AbstractRepositoryStore.REPO_STORE_ORDER.get(o.getName()));
     }
 }

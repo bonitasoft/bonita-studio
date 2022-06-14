@@ -109,7 +109,8 @@ public abstract class AbstractImplementationWizardPage extends NewTypeWizardPage
         this.messageProvider = messageProvider;
         this.definitions = definitions;
         try {
-            final IPackageFragmentRoot root = RepositoryManager.getInstance().getCurrentRepository().getJavaProject()
+            final IPackageFragmentRoot root = RepositoryManager.getInstance().getCurrentRepository().orElseThrow()
+                    .getJavaProject()
                     .findPackageFragmentRoot(sourceStore.getResource().getFullPath());
             setPackageFragmentRoot(root, false);
         } catch (final JavaModelException e) {

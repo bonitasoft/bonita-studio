@@ -50,6 +50,7 @@ import org.bonitasoft.studio.ui.wizard.WizardBuilder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.e4.core.di.annotations.CanExecute;
 import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.e4.ui.services.IServiceConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -78,6 +79,14 @@ public class ImportExtensionHandler {
         this.errorDialogHandler = errorDialogHandler;
         this.commandExecutor = commandExecutor;
     }
+    
+    @CanExecute
+    public boolean canExecute() {
+        return  repositoryAccessor.getCurrentRepository()
+                .filter(org.bonitasoft.studio.common.repository.model.IRepository::isLoaded)
+                .isPresent();
+    }
+   
 
     @Execute
     public void execute(@Named(IServiceConstants.ACTIVE_SHELL) Shell activeShell,
@@ -89,7 +98,7 @@ public class ImportExtensionHandler {
             @org.eclipse.e4.core.di.annotations.Optional @Named("classifier") String classifier,
             @org.eclipse.e4.core.di.annotations.Optional @Named("isLocal") String isLocal) {
 
-        AbstractRepository currentRepository = repositoryAccessor.getCurrentRepository();
+        var currentRepository = repositoryAccessor.getCurrentRepository().orElseThrow();
         Model mavenModel = loadMavenModel(mavenProjectHelper, currentRepository);
         if (mavenModel == null) {
             return;

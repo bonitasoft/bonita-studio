@@ -64,8 +64,8 @@ public class PomFileValidator extends AbstractCustomPageValidator {
         RepositoryManager repositoryManager = RepositoryManager.getInstance();
         return repositoryManager.hasActiveRepository()
                 && candidate.getLocation() != null
-                && repositoryManager.getCurrentRepository().getProject().getLocation() != null
-                && repositoryManager.getCurrentRepository().getProject().getLocation()
+                && repositoryManager.getCurrentRepository().orElseThrow().getProject().getLocation() != null
+                && repositoryManager.getCurrentRepository().orElseThrow().getProject().getLocation()
                         .isPrefixOf(candidate.getLocation())
                 && candidate.getProjectRelativePath().equals(Path.fromOSString(IMavenConstants.POM_FILE_NAME));
     }

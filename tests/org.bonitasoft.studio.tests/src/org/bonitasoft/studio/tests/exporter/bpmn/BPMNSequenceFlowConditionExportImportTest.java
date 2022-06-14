@@ -30,10 +30,12 @@ import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.model.process.SequenceFlow;
 import org.bonitasoft.studio.model.process.SequenceFlowConditionType;
+import org.bonitasoft.studio.tests.util.InitialProjectRule;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.transaction.util.TransactionUtil;
+import org.junit.Rule;
 import org.junit.Test;
 import org.omg.spec.bpmn.model.DocumentRoot;
 import org.omg.spec.bpmn.model.TExpression;
@@ -45,6 +47,9 @@ import org.omg.spec.bpmn.model.TSequenceFlow;
 
 public class BPMNSequenceFlowConditionExportImportTest {
 
+    @Rule
+    public InitialProjectRule projectRule = InitialProjectRule.INSTANCE;
+    
     @Test
     public void testProcessWithConstantCondition() throws Exception {
         final Expression condition = ExpressionFactory.eINSTANCE.createExpression();

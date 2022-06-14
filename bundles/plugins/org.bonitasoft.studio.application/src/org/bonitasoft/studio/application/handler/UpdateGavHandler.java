@@ -72,7 +72,7 @@ public class UpdateGavHandler extends ImportExtensionHandler {
             @org.eclipse.e4.core.di.annotations.Optional @Named("type") String type,
             @org.eclipse.e4.core.di.annotations.Optional @Named("classifier") String classifier) {
 
-        AbstractRepository currentRepository = repositoryAccessor.getCurrentRepository();
+        AbstractRepository currentRepository = repositoryAccessor.getCurrentRepository().orElseThrow();
         Model mavenModel = loadMavenModel(mavenProjectHelper, currentRepository);
         if (mavenModel == null) {
             return;

@@ -23,6 +23,7 @@ import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelR
 import org.bonitasoft.studio.businessobject.i18n.Messages;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.bonitasoft.studio.preferences.dialog.BonitaPreferenceDialog;
@@ -61,8 +62,10 @@ public class BdmLightweightDecorator extends LabelProvider
 
     @Override
     public void decorate(Object element, IDecoration decoration) {
-        if (!PlatformUI.isWorkbenchRunning() || ResourcesPlugin.getWorkspace() == null
-                || !repositoryAccessor.hasActiveRepository() || !repositoryAccessor.getCurrentRepository().isLoaded()) {
+        if (!PlatformUI.isWorkbenchRunning() 
+                || ResourcesPlugin.getWorkspace() == null
+                || !repositoryAccessor.hasActiveRepository() 
+                || repositoryAccessor.getCurrentRepository().filter(IRepository::isLoaded).isEmpty()) {
             return;
         }
 

@@ -24,11 +24,11 @@ import org.bonitasoft.studio.application.views.extension.ExtensionComposite;
 import org.bonitasoft.studio.common.CommandExecutor;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.core.maven.MavenProjectDependenciesStore;
 import org.bonitasoft.studio.common.repository.core.maven.MavenProjectHelper;
+import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.preferences.BonitaThemeConstants;
@@ -141,11 +141,10 @@ public class ProjectOverviewEditorPart extends EditorPart implements EventHandle
     @Override
     public void createPartControl(Composite parent) {
         try {
-            PlatformUI.getWorkbench().getProgressService().run(true, false, monitor -> {
+            PlatformUI.getWorkbench().getProgressService().busyCursorWhile(monitor -> {
                 monitor.beginTask("Loading project overview...", IProgressMonitor.UNKNOWN);
-                while (!repositoryAccessor.hasActiveRepository()
-                        && !repositoryAccessor.getCurrentRepository().isLoaded()) {
-                    Thread.sleep(100);
+                while (repositoryAccessor.getCurrentRepository().filter(IRepository::isLoaded).isEmpty()) {
+                    Thread.sleep(20);
                 }
             });
         } catch (InvocationTargetException | InterruptedException e) {
@@ -153,6 +152,9 @@ public class ProjectOverviewEditorPart extends EditorPart implements EventHandle
         }
 
         initVariables(parent);
+        if(parent.isDisposed()) {
+            return;
+        }
         parent.setLayout(GridLayoutFactory.fillDefaults().create());
 
         mainComposite = createComposite(parent, SWT.NONE);
@@ -165,7 +167,7 @@ public class ProjectOverviewEditorPart extends EditorPart implements EventHandle
 
         elementComposite = new ElementComposite(mainComposite);
     }
-
+    
     private void toElementsView() {
         if (extensionComposite != null && !extensionComposite.isDisposed()) {
             extensionComposite.dispose();
@@ -251,8 +253,7 @@ public class ProjectOverviewEditorPart extends EditorPart implements EventHandle
                 .onClick(e -> {
                     try {
                         progressService.run(true, false, monitor -> {
-                            AbstractRepository currentRepository = RepositoryManager.getInstance()
-                                    .getCurrentRepository();
+                            var currentRepository = RepositoryManager.getInstance().getCurrentRepository().orElseThrow();
                             try {
                                 MavenPlugin.getProjectConfigurationManager()
                                         .updateProjectConfiguration(currentRepository.getProject(), monitor);
@@ -323,8 +324,10 @@ public class ProjectOverviewEditorPart extends EditorPart implements EventHandle
     }
 
     private void initVariables(Composite parent) {
-        cursorHand = parent.getDisplay().getSystemCursor(SWT.CURSOR_HAND);
-        cursorArrow = parent.getDisplay().getSystemCursor(SWT.CURSOR_ARROW);
+        if(!parent.isDisposed() && !parent.getDisplay().isDisposed()) {
+            cursorHand = parent.getDisplay().getSystemCursor(SWT.CURSOR_HAND);
+            cursorArrow = parent.getDisplay().getSystemCursor(SWT.CURSOR_ARROW);
+        }
     }
 
     private Composite createComposite(Composite parent, int style) {
@@ -341,7 +344,7 @@ public class ProjectOverviewEditorPart extends EditorPart implements EventHandle
                 }
                 try {
                     Model mavenModel = mavenHelper
-                            .getMavenModel(repositoryAccessor.getCurrentRepository().getProject());
+                            .getMavenModel(repositoryAccessor.getCurrentRepository().orElseThrow().getProject());
                     String name = mavenModel.getName();
                     String version = mavenModel.getVersion();
                     String descriptionContent = mavenModel.getDescription();
@@ -454,7 +457,7 @@ public class ProjectOverviewEditorPart extends EditorPart implements EventHandle
         try {
             event.getDelta().accept(delta -> {
                 IResource r = delta.getResource();
-                if (Objects.equals(r, repositoryAccessor.getCurrentRepository().getProject()
+                if (Objects.equals(r, repositoryAccessor.getCurrentRepository().orElseThrow().getProject()
                         .getFile(IMavenConstants.POM_FILE_NAME))) {
                     refreshContent();
                     return false;

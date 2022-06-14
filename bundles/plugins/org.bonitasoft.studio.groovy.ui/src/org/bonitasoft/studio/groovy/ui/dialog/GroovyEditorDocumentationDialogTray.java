@@ -107,7 +107,7 @@ public class GroovyEditorDocumentationDialogTray extends DialogTray {
         categoriesList.setLabelProvider(new CategoryLabelProvider());
         categoriesList.setContentProvider(new FunctionCategoriesProvider());
         categoriesList.setInput(
-                FunctionsRepositoryFactory.getFunctionCatgories(RepositoryManager.getInstance().getCurrentRepository()));
+                FunctionsRepositoryFactory.getFunctionCatgories(RepositoryManager.getInstance().getCurrentRepository().orElseThrow()));
         categoriesList.getList().setSelection(0);
         final int categorieMinheight = categoriesList.getList().getItemHeight() * categoriesList.getList().getItemCount();
         categoriesList.getList().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).hint(SWT.DEFAULT, categorieMinheight).create());

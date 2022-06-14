@@ -54,7 +54,7 @@ public class SVGContentProvider implements DOMContentProvider {
         try {
             Document document = loadXMLFromFile(toSvgFile());
             Element node = (Element) dom.importNode(document.getFirstChild(), true);
-            node.setAttribute("class", String.format("inline h-%s w-%s mb-2",size, size));
+            node.setAttribute("class", String.format("inline h-%s w-%s mb-2 fill-current stroke-current",size, size));
             parent.appendChild(node);
             parent.setAttribute("class", "inline");
         } catch (ParserConfigurationException | SAXException | IOException e) {

@@ -49,20 +49,13 @@ public class IntroContentProvider implements IIntroXHTMLContentProvider {
         CONTENT_PROVIDERS.add(new RecentFilesContentProvider());
         CONTENT_PROVIDERS.add(new LogoContentProvider());
 
-        CONTENT_PROVIDERS.add(new ExecuteCommandContentProvider("new-diagram-action",
-                "org.bonitasoft.studio.diagram.command.newDiagram", Messages.newProcess));
-        CONTENT_PROVIDERS.add(new ExecuteCommandContentProvider("open-diagram-action",
-                "org.bonitasoft.studio.diagram.command.openDiagram", Messages.openAProcess));
-        CONTENT_PROVIDERS.add(new ExecuteCommandContentProvider("import-action",
-                "org.bonitasoft.studio.importer.bos.command", Messages.importLabel));
-
-        CONTENT_PROVIDERS.add(new ExecuteCommandContentProvider("new-project-action",
+        CONTENT_PROVIDERS.add(new ButtonLinkContentProvider("new-project-action",
                 "org.bonitasoft.studio.application.newproject.command",
-                Messages.newProject));
-        CONTENT_PROVIDERS.add(new ExecuteCommandContentProvider("clone-action",
-                "org.bonitasoft.studio.team.git.command.clone", Messages.clone));
-        CONTENT_PROVIDERS.add(new ExecuteCommandContentProvider("switch-action",
-                "org.bonitasoft.studio.repository.switch", Messages.switchProject));
+                Messages.newProject, "new-project.svg"));
+        CONTENT_PROVIDERS.add(new ButtonLinkContentProvider("clone-action",
+                "org.bonitasoft.studio.team.git.command.clone", Messages.clone, "git.svg"));
+        CONTENT_PROVIDERS.add(new ButtonLinkContentProvider("import-action",
+                "org.bonitasoft.studio.importer.bos.command", Messages.importLabel, "import.svg"));
 
         try {
             CONTENT_PROVIDERS.add(new ExecuteCommandContentProvider("procurement-example-link",

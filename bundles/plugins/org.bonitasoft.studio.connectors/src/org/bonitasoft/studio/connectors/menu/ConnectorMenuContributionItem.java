@@ -18,11 +18,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.bonitasoft.studio.common.CommandExecutor;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.connectors.i18n.Messages;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.jface.action.ContributionItem;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.MenuAdapter;
+import org.eclipse.swt.events.MenuEvent;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 
@@ -45,11 +48,11 @@ public class ConnectorMenuContributionItem extends ContributionItem {
     public void fill(Menu parent, int index) {
         var connectorsMenuItem = new MenuItem(parent, SWT.CASCADE, index);
         connectorsMenuItem.setText(Messages.connectorType);
-        connectorsMenuItem.setEnabled(true);
+        connectorsMenuItem.setEnabled(isEnabled());
         connectorsMenuItem.setImage(Pics.getImage(PicsConstants.connectorDef));
 
         var connectorsMenu = new Menu(connectorsMenuItem);
-
+        
         createItem(connectorsMenu, EDIT_DEF_COMMAND, Messages.editDefinitionMenuLabel, 0)
                 .setImage(Pics.getImage(PicsConstants.connectorDef));
         new MenuItem(connectorsMenu, SWT.SEPARATOR, 1);
@@ -63,8 +66,17 @@ public class ConnectorMenuContributionItem extends ContributionItem {
         createItem(connectorsMenu, EDIT_CONF_COMMAND, Messages.editConnectorConfigurationMenuLabel, 8);
 
         connectorsMenuItem.setMenu(connectorsMenu);
-    }
+        
+        parent.addMenuListener(new MenuAdapter() {
 
+            @Override
+            public void menuShown(MenuEvent e) {
+                connectorsMenuItem.setEnabled(isEnabled());
+            }
+
+        });
+    }
+    
     private MenuItem createItem(Menu parent, String command, String text, int index) {
         var item = new MenuItem(parent, SWT.NONE, index);
         item.setText(text);
@@ -77,6 +89,11 @@ public class ConnectorMenuContributionItem extends ContributionItem {
     @Override
     public void update(String id) {
         items.forEach((command, item) -> item.setEnabled(commandExecutor.canExecute(command, null)));
+    }
+    
+    @Override
+    public boolean isEnabled() {
+        return RepositoryManager.getInstance().hasActiveRepository();
     }
 
 }

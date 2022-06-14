@@ -26,7 +26,6 @@ import org.eclipse.core.runtime.IAdaptable;
 
 public class OrganizationPropertyTester extends PropertyTester {
 
-
     @Override
     public boolean test(Object receiver, String property, Object[] args, Object expectedValue) {
         if (Objects.equals("isOrganizationFolder", property)) {
@@ -36,7 +35,7 @@ public class OrganizationPropertyTester extends PropertyTester {
                     adapter);
         } else if (Objects.equals("isOrganizationFile", property)) {
             IResource adapter = ((IAdaptable) receiver).getAdapter(IResource.class);
-            return adapter != null && RepositoryManager.getInstance().getCurrentRepository()
+            return adapter != null && RepositoryManager.getInstance().getCurrentRepository().orElseThrow()
                     .getFileStore(adapter) instanceof OrganizationFileStore;
 
         }

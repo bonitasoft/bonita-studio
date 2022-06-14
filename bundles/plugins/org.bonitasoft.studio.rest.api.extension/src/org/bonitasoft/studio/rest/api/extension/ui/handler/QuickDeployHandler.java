@@ -69,6 +69,7 @@ public class QuickDeployHandler {
             if (projectPath != null) {
                 try {
                     IRepositoryFileStore fStore = repositoryAccessor.getCurrentRepository()
+                            .orElseThrow()
                             .asRepositoryFileStore(Paths.get(projectPath), false);
                     if (fStore instanceof CustomPageProjectFileStore) {
                         customPageFilseStore = (CustomPageProjectFileStore) fStore;
@@ -160,7 +161,7 @@ public class QuickDeployHandler {
                 IDeployable deployable = new FileStoreFinder()
                         .findElementToDeploy(
                                 ((IAdaptable) firstSelectedElement).getAdapter(IResource.class).getProject(),
-                                repositoryAccessor.getCurrentRepository())
+                                repositoryAccessor.getCurrentRepository().orElseThrow())
                         .orElse(null);
                 if (deployable instanceof CustomPageProjectFileStore) {
                     return (CustomPageProjectFileStore) deployable;

@@ -24,7 +24,6 @@ import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.execution.MavenExecutionRequest;
 import org.apache.maven.execution.MavenExecutionResult;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
 import org.bonitasoft.studio.common.repository.core.maven.model.DefaultPluginVersions;
 import org.eclipse.core.runtime.CoreException;
@@ -77,6 +76,11 @@ public class MavenInstallFileOperation {
                 }
                 request.setSystemProperties(systemProperties);
                 Maven maven = mavenEngine.lookup(Maven.class);
+                innerMonitor.setTaskName(String.format("Installing %s:%s:%s in %s repository",
+                        configuration.getProperty("groupId"), 
+                        configuration.getProperty("artifactId"), 
+                        configuration.getProperty("version"), 
+                        internalRepository != null ? internalRepository.getId() : "local"));
                 return maven.execute(request);
             }
         }, monitor);
@@ -84,9 +88,9 @@ public class MavenInstallFileOperation {
     }
 
     public void installFile(final String groupId, final String artifactId, final String version, final String type,
-            final String classifier, final File file)
+            final String classifier, final File file, IProgressMonitor monitor)
             throws CoreException {
-        installFile(groupId, artifactId, version, type, classifier, file, null);
+        installFile(groupId, artifactId, version, type, classifier, file, null, monitor);
     }
 
     protected void logError(final String groupId, final String artifactId, final String type, final String version,
@@ -103,7 +107,8 @@ public class MavenInstallFileOperation {
             final String type,
             final String classifier,
             final File file,
-            final File pomFile) throws CoreException {
+            final File pomFile,
+            IProgressMonitor monitor) throws CoreException {
         final Properties properties = new Properties();
         if (file != null && file.exists()) {
             properties.setProperty("file", file.getAbsolutePath());
@@ -126,7 +131,7 @@ public class MavenInstallFileOperation {
             properties.setProperty("localRepositoryPath", localRepository.getBasedir());
         }
         final MavenExecutionResult executionResult = execute(properties,
-                AbstractRepository.NULL_PROGRESS_MONITOR);
+                monitor);
         if (executionResult.hasExceptions()) {
             final Throwable exception = executionResult.getExceptions().get(0);
             logError(groupId, artifactId, type, version, exception);

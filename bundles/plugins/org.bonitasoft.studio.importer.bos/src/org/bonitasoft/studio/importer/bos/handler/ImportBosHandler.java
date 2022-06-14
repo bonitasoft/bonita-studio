@@ -183,7 +183,7 @@ public class ImportBosHandler {
 
     private AbstractRepository getTargetRepository(RepositoryAccessor repositoryAccessor) {
         String targetRepository = switchRepositoryStrategy.getTargetRepository();
-        AbstractRepository currentRepository = repositoryAccessor.getCurrentRepository();
+        AbstractRepository currentRepository = repositoryAccessor.getCurrentRepository().orElseThrow();
         if (Objects.equals(targetRepository, currentRepository.getName())) {
             return currentRepository;
         }
@@ -217,7 +217,7 @@ public class ImportBosHandler {
 
         activeShell.getDisplay().asyncExec(() -> openEndImportDialog(operation,
                 repositoryAccessor.getRepositoryStore(DiagramRepositoryStore.class), activeShell,
-                repositoryAccessor.getCurrentRepository().getName()));
+                repositoryAccessor.getCurrentRepository().orElseThrow().getName()));
     }
 
     protected void openEndImportDialog(ImportBosArchiveOperation operation, DiagramRepositoryStore store,

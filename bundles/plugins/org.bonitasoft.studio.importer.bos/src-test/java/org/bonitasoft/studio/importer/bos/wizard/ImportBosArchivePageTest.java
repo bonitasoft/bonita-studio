@@ -29,6 +29,7 @@ import org.bonitasoft.studio.importer.bos.operation.ImportConflictsChecker;
 import org.bonitasoft.studio.swt.rules.RealmWithDisplay;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Status;
@@ -74,7 +75,7 @@ public class ImportBosArchivePageTest {
     private RepositoryAccessor getRepositoryAccessor() throws Exception {
         final RepositoryAccessor accessor = mock(RepositoryAccessor.class);
         final AbstractRepository defaultRepo = createRepository("default");
-        when(accessor.getCurrentRepository()).thenReturn(defaultRepo);
+        when(accessor.getCurrentRepository()).thenReturn(Optional.of(defaultRepo));
         when(accessor.getRepository("default")).thenReturn(defaultRepo);
 
         return accessor;
@@ -108,13 +109,12 @@ public class ImportBosArchivePageTest {
         when(repo.getRepositoryStoreByName("application_resources")).thenReturn(Optional.of(appRessourcesStore));
         when(repo.getRepositoryStoreByName("lib")).thenReturn(Optional.of(libStore));
         when(repo.getName()).thenReturn(name);
+        when(repo.getProject()).thenReturn(mock(IProject.class));
         return repo;
     }
 
     private BosArchive newBosArchive(File archiveFile) throws ZipException, IOException {
         final BosArchive bosArchive = spy(new BosArchive(archiveFile));
-        doReturn(Arrays.asList(createRepositoryStore("application_resources"), createRepositoryStore("diagrams"),
-                createRepositoryStore("lib"))).when(bosArchive).allRepositoryStores();
         doReturn(Status.OK_STATUS).when(bosArchive).validateFile(any(), any());
         return bosArchive;
     }

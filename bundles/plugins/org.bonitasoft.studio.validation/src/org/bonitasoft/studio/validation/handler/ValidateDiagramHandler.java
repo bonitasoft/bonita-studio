@@ -28,7 +28,7 @@ public class ValidateDiagramHandler extends AbstractHandler {
 
     @Override
     public Object execute(ExecutionEvent event) {
-        new FileStoreFinder().findSelectedFileStore(RepositoryManager.getInstance().getCurrentRepository())
+        new FileStoreFinder().findSelectedFileStore(RepositoryManager.getInstance().getCurrentRepository().orElseThrow())
                 .filter(DiagramFileStore.class::isInstance)
                 .map(DiagramFileStore.class::cast)
                 .map(DiagramFileStore::getName)

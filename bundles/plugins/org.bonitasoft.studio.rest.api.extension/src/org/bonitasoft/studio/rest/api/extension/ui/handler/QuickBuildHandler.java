@@ -81,7 +81,7 @@ public class QuickBuildHandler {
             if (firstSelectedElement instanceof IAdaptable) {
                 IRepositoryFileStore fStore = new FileStoreFinder()
                         .findFileStore(((IAdaptable) firstSelectedElement).getAdapter(IResource.class).getProject(),
-                                repositoryAccessor.getCurrentRepository())
+                                repositoryAccessor.getCurrentRepository().orElseThrow())
                         .orElse(null);
                 if (fStore instanceof CustomPageProjectFileStore) {
                     return (CustomPageProjectFileStore) fStore;

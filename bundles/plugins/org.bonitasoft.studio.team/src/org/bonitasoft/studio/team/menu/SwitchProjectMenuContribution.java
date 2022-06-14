@@ -16,6 +16,7 @@ package org.bonitasoft.studio.team.menu;
 
 import org.bonitasoft.studio.common.CommandExecutor;
 import org.bonitasoft.studio.common.Messages;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.jface.action.ContributionItem;
@@ -40,6 +41,14 @@ public class SwitchProjectMenuContribution extends ContributionItem {
         item.addListener(SWT.Selection, e -> commandExecutor.executeCommand(SWITCH_COMMAND, null));
         item.setEnabled(true);
         item.setImage(Pics.getImage(PicsConstants.switchIcon));
+    }
+
+    @Override
+    public boolean isEnabled() {
+        if (RepositoryManager.getInstance().hasActiveRepository()) {
+            return true;
+        }
+        return false;
     }
 
 }

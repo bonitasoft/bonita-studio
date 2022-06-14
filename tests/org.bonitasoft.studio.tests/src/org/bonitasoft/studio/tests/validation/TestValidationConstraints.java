@@ -36,6 +36,7 @@ import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.Pool;
+import org.bonitasoft.studio.tests.util.InitialProjectRule;
 import org.bonitasoft.studio.validation.constraints.connector.ConnectorExistenceConstraint;
 import org.bonitasoft.studio.validation.constraints.process.AssignableConstraint;
 import org.bonitasoft.studio.validation.constraints.process.XORGatewayConstraint;
@@ -51,12 +52,16 @@ import org.eclipse.emf.validation.service.ModelValidationService;
 import org.eclipse.ui.PlatformUI;
 import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 
 /**
  * @author Romain Bioteau
  */
 public class TestValidationConstraints {
+    
+    @Rule
+    public InitialProjectRule projectRule = InitialProjectRule.INSTANCE;
     
     private IBatchValidator batchValidator;
     private RepositoryAccessor repositoryAccessor;

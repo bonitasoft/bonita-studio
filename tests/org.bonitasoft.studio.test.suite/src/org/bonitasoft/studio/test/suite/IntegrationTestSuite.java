@@ -21,7 +21,6 @@ import org.bonitasoft.studio.tests.TestPatchedBundles;
 import org.bonitasoft.studio.tests.TestPathSize;
 import org.bonitasoft.studio.tests.TestSpecificWizardIds;
 import org.bonitasoft.studio.tests.actors.TestImportActorFilter;
-import org.bonitasoft.studio.tests.api.TestBonitaAPI;
 import org.bonitasoft.studio.tests.bar.ExportBarIT;
 import org.bonitasoft.studio.tests.bar.TestExportProcessBar;
 import org.bonitasoft.studio.tests.bug.TestBugs;
@@ -109,7 +108,6 @@ import org.junit.runners.Suite;
         BPMNDataExportImportTest.class,
         BPMNSequenceFlowConditionExportImportTest.class,
         DataRefactorIT.class,
-        TestBonitaAPI.class,
         TestNonInterruptingBoundaryTimerEvent.class,
         TestDeployCommand.class,
         TestValidationConstraints.class,

@@ -26,19 +26,24 @@ import org.bonitasoft.studio.designer.core.repository.WebPageFileStore;
 import org.bonitasoft.studio.designer.core.repository.WebPageRepositoryStore;
 import org.bonitasoft.studio.designer.core.repository.WebWidgetFileStore;
 import org.bonitasoft.studio.designer.core.repository.WebWidgetRepositoryStore;
+import org.bonitasoft.studio.tests.util.InitialProjectRule;
 import org.bonitasoft.studio.ui.util.StringIncrementer;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 
 public class UIDArtifactCreationIT {
 
+    @Rule
+    public InitialProjectRule projectRule = InitialProjectRule.INSTANCE;
+    
     private RepositoryAccessor repositoryAccessor;
 
     @Before
     public void init() {
         repositoryAccessor = RepositoryManager.getInstance().getAccessor();
-        UIDesignerServerManager.getInstance().start(repositoryAccessor.getCurrentRepository(), new NullProgressMonitor());
+        UIDesignerServerManager.getInstance().start(repositoryAccessor.getCurrentRepository().orElseThrow(), new NullProgressMonitor());
     }
 
     @Test

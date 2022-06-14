@@ -58,7 +58,7 @@ public class NewDiagramCommandHandler extends AbstractHandler {
     }
 
     public DiagramFileStore newDiagram() {
-        final NewDiagramFactory diagramFactory = new NewDiagramFactory(RepositoryManager.getInstance().getCurrentRepository());
+        final NewDiagramFactory diagramFactory = new NewDiagramFactory(RepositoryManager.getInstance().getCurrentRepository().orElseThrow());
         diagramFactory.setDefaultPoolWidth(CustomPoolEditPart.getDefaultWidth());
         final IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
         try {

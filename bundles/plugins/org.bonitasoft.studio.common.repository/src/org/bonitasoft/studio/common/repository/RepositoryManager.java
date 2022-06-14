@@ -19,7 +19,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -38,6 +37,7 @@ import javax.xml.xpath.XPathFactory;
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.core.IBonitaProjectListenerProvider;
+import org.bonitasoft.studio.common.repository.core.maven.contribution.InstallBonitaMavenArtifactsOperation;
 import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
 import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
@@ -52,6 +52,7 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.m2e.core.MavenPlugin;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -97,10 +98,10 @@ public class RepositoryManager {
                 }
             }
             String currentRepository = preferenceStore.getString(RepositoryPreferenceConstant.CURRENT_REPOSITORY);
-            if (currentRepository == null || currentRepository.isEmpty()) {
-                currentRepository = Messages.defaultRepositoryName;
+            if (currentRepository != null && !currentRepository.isEmpty()) {
+                repository = createRepository(currentRepository, false);
             }
-            repository = createRepository(currentRepository, false);
+
         }
     }
 
@@ -110,24 +111,20 @@ public class RepositoryManager {
             sortedConfigElems.add(elem);
         }
 
-        Collections.sort(sortedConfigElems, new Comparator<IConfigurationElement>() {
-
-            @Override
-            public int compare(final IConfigurationElement e1, final IConfigurationElement e2) {
-                int p1 = 0;
-                int p2 = 0;
-                try {
-                    p1 = Integer.parseInt(e1.getAttribute(PRIORITY));
-                } catch (final NumberFormatException e) {
-                    p1 = 0;
-                }
-                try {
-                    p2 = Integer.parseInt(e2.getAttribute(PRIORITY));
-                } catch (final NumberFormatException e) {
-                    p2 = 0;
-                }
-                return p2 - p1; //Highest Priority first
+        Collections.sort(sortedConfigElems, (e1, e2) -> {
+            int p1 = 0;
+            int p2 = 0;
+            try {
+                p1 = Integer.parseInt(e1.getAttribute(PRIORITY));
+            } catch (final NumberFormatException e3) {
+                p1 = 0;
             }
+            try {
+                p2 = Integer.parseInt(e2.getAttribute(PRIORITY));
+            } catch (final NumberFormatException e4) {
+                p2 = 0;
+            }
+            return p2 - p1; //Highest Priority first
         });
         return sortedConfigElems;
 
@@ -159,12 +156,15 @@ public class RepositoryManager {
         return preferenceStore;
     }
 
-    public AbstractRepository getCurrentRepository() {
-        return repository;
+    public Optional<AbstractRepository> getCurrentRepository() {
+        return Optional.ofNullable(repository);
     }
 
     public <T> T getRepositoryStore(final Class<T> storeClass) {
-        return storeClass.cast(getCurrentRepository().getRepositoryStore(storeClass));
+        return getCurrentRepository()
+                .map(repo -> repo.getRepositoryStore(storeClass))
+                .map(storeClass::cast)
+                .orElse(null);
     }
 
     public AbstractRepository getRepository(final String repositoryName) {
@@ -172,10 +172,13 @@ public class RepositoryManager {
     }
 
     public AbstractRepository getRepository(final String repositoryName, final boolean migrationEnabled) {
-        AbstractRepository currentRepository = getCurrentRepository();
-        if (repositoryName.equals(currentRepository.getName())) {
+        var currentRepository = getCurrentRepository()
+                .filter(repo -> Objects.equals(repo.getName(), repositoryName))
+                .orElse(null);
+        if (currentRepository != null) {
             return currentRepository;
         }
+
         final IWorkspace workspace = ResourcesPlugin.getWorkspace();
         final IProject project = workspace.getRoot().getProject(repositoryName);
         if (project == null || !project.exists()) {
@@ -270,7 +273,8 @@ public class RepositoryManager {
     public void setRepository(final String repositoryName,
             final boolean migrationEnabled,
             final IProgressMonitor monitor) {
-        AbstractRepository currentRepository = getCurrentRepository();
+        var currentRepository = getCurrentRepository()
+                .orElse(null);
         if (currentRepository != null && currentRepository.getName().equals(repositoryName)) {
             return;
         } else if (currentRepository != null) {
@@ -278,10 +282,19 @@ public class RepositoryManager {
         }
         currentRepository = getRepository(repositoryName, migrationEnabled);
         if (currentRepository == null) {
+            // Ensure Bonita artifacts are properly installed in user local repository before creating a project
+            try {
+                monitor.subTask("");
+                monitor.beginTask("Check local repository required artifacts...", IProgressMonitor.UNKNOWN);
+                new InstallBonitaMavenArtifactsOperation(MavenPlugin.getMaven().getLocalRepository()).execute(monitor);
+            } catch (CoreException e1) {
+                BonitaStudioLog.error(e1);
+            }
             currentRepository = createRepository(repositoryName, migrationEnabled);
         }
         ProjectMetadata metadata = ProjectMetadata.read(currentRepository.getProject());
         metadata.setName(repositoryName);
+        monitor.setTaskName(Messages.creatingNewProject);
         currentRepository.create(metadata, monitor);
         currentRepository.open(monitor);
         setCurrentRepository(currentRepository);
@@ -289,11 +302,12 @@ public class RepositoryManager {
 
     public Optional<IRepositoryStore<? extends IRepositoryFileStore>> getRepositoryStore(Object element) {
         Object resource = element instanceof IJavaElement ? ((IJavaElement) element).getResource() : element;
-        if (!hasActiveRepository() || !getCurrentRepository().isLoaded()
-                || !getCurrentRepository().getProject().isOpen()) {
+        var currentRepository = getCurrentRepository().orElse(null);
+        if (!hasActiveRepository() || !currentRepository.isLoaded()
+                || !currentRepository.getProject().isOpen()) {
             return Optional.empty();
         }
-        return getCurrentRepository().getAllStores().stream()
+        return currentRepository.getAllStores().stream()
                 .filter(repo -> java.util.Objects.equals(resource, repo.getResource()))
                 .findFirst();
     }

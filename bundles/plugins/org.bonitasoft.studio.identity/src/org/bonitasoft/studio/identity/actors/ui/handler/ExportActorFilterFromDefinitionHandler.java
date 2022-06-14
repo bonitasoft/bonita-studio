@@ -38,7 +38,7 @@ public class ExportActorFilterFromDefinitionHandler extends AbstractHandler {
 
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
-        fileStoreFinder.findSelectedFileStore(repositoryAccessor.getCurrentRepository())
+        fileStoreFinder.findSelectedFileStore(repositoryAccessor.getCurrentRepository().orElseThrow())
                 .filter(ActorFilterDefFileStore.class::isInstance)
                 .map(ActorFilterDefFileStore.class::cast)
                 .map(fStore -> {

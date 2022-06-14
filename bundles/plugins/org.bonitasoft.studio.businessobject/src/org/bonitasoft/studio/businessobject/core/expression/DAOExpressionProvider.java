@@ -28,6 +28,7 @@ import org.bonitasoft.studio.businessobject.i18n.Messages;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.common.repository.model.IJavaContainer;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionEditor;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionProvider;
@@ -55,7 +56,7 @@ public class DAOExpressionProvider implements IExpressionProvider {
         final Set<Expression> result = new HashSet<>();
         final BusinessObjectModelRepositoryStore<BusinessObjectModelFileStore> boStore = repositoryAccessor
                 .getRepositoryStore(BusinessObjectModelRepositoryStore.class);
-        List<IType> allBusinessObjectDao = boStore.allBusinessObjectDao(repositoryAccessor.getCurrentRepository().getJavaProject());
+        List<IType> allBusinessObjectDao = boStore.allBusinessObjectDao(repositoryAccessor.getCurrentRepository().map(IJavaContainer::getJavaProject).orElse(null));
         for (final IType t : allBusinessObjectDao) {
             result.add(createExpression(t));
         }

@@ -21,6 +21,7 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.identity.i18n.Messages;
 import org.bonitasoft.studio.identity.organization.repository.OrganizationRepositoryStore;
@@ -56,7 +57,7 @@ public class OpenOrganizationHandler {
 
     @CanExecute
     public boolean canExecute(final RepositoryAccessor repositoryAccessor) {
-        return repositoryAccessor.getCurrentRepository().isLoaded()
+        return repositoryAccessor.getCurrentRepository().filter(IRepository::isLoaded).isPresent()
                 && !repositoryAccessor.getRepositoryStore(OrganizationRepositoryStore.class).getChildren().isEmpty();
     }
 }

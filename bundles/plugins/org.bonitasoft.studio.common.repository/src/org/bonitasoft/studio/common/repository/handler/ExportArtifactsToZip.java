@@ -14,7 +14,6 @@ import java.util.Set;
 
 import org.bonitasoft.studio.common.repository.Messages;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
-import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.common.repository.ui.wizard.ExportRepositoryWizard;
@@ -36,7 +35,7 @@ public class ExportArtifactsToZip extends AbstractHandler {
 
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
-        IRepository currentRepository = RepositoryManager.getInstance().getCurrentRepository();
+        var currentRepository = RepositoryManager.getInstance().getCurrentRepository().orElse(null);
         String defaultName = currentRepository.getName() + "_" + new SimpleDateFormat("ddMMyy_HHmm").format(new Date()) + ".bos";
         Set<Object> selectedFiles = new HashSet<Object>() ;
         for(IRepositoryStore store : currentRepository.getAllExportableStores()){

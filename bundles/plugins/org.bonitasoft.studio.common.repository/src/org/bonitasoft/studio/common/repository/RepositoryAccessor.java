@@ -16,12 +16,14 @@ package org.bonitasoft.studio.common.repository;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
+import java.util.Optional;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Singleton;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
+import org.bonitasoft.studio.common.repository.core.maven.contribution.InstallBonitaMavenArtifactsOperation;
 import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
 import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
@@ -29,8 +31,8 @@ import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.e4.core.di.annotations.Creatable;
+import org.eclipse.m2e.core.MavenPlugin;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
@@ -63,17 +65,20 @@ public class RepositoryAccessor {
         return repositoryManagerInstance.getRepositoryStore(storeClass);
     }
 
-    public AbstractRepository getCurrentRepository() {
+    public Optional<AbstractRepository> getCurrentRepository() {
         return repositoryManagerInstance.getCurrentRepository();
     }
 
     public IRepository start(final IProgressMonitor monitor) {
         monitor.beginTask(Messages.loadingCurrentProject, IProgressMonitor.UNKNOWN);
-        AbstractRepository repository = getCurrentRepository();
-        if (!repository.exists()) {
-            repository.create(ProjectMetadata.defaultMetadata(), AbstractRepository.NULL_PROGRESS_MONITOR);
+        var repository = getCurrentRepository().orElse(null);
+        if (repository != null) {
+            if (!repository.exists()) {
+                repository.create(ProjectMetadata.defaultMetadata(), AbstractRepository.NULL_PROGRESS_MONITOR);
+            }
+            return repository.open(AbstractRepository.NULL_PROGRESS_MONITOR);
         }
-        return repository.open(AbstractRepository.NULL_PROGRESS_MONITOR);
+        return null;
     }
 
     public IWorkspace getWorkspace() {
@@ -87,7 +92,7 @@ public class RepositoryAccessor {
     public void setRepository(final String repositoryName) {
         repositoryManagerInstance.setRepository(repositoryName, false, AbstractRepository.NULL_PROGRESS_MONITOR);
     }
-    
+
     public boolean hasActiveRepository() {
         return repositoryManagerInstance.hasActiveRepository();
     }
@@ -102,30 +107,37 @@ public class RepositoryAccessor {
 
     public IRepository createNewRepository(ProjectMetadata metadata,
             IProgressMonitor monitor) {
+        // Ensure Bonita artifacts are properly installed in user local repository before creating a project
+        try {
+            monitor.beginTask("Check local repository required artifacts...", IProgressMonitor.UNKNOWN);
+            new InstallBonitaMavenArtifactsOperation(MavenPlugin.getMaven().getLocalRepository()).execute(monitor);
+        } catch (CoreException e1) {
+            BonitaStudioLog.error(e1);
+        }
         monitor.beginTask(Messages.creatingNewProject, IProgressMonitor.UNKNOWN);
-        BonitaStudioLog.info(String.format("Creating new project %s...", metadata.getName()), CommonRepositoryPlugin.PLUGIN_ID);
-        getCurrentRepository().close();
+        BonitaStudioLog.info(String.format("Creating new project %s...", metadata.getName()),
+                CommonRepositoryPlugin.PLUGIN_ID);
+        getCurrentRepository().ifPresent(IRepository::close);
         try {
             WorkspaceModifyOperation workspaceModifyOperation = new WorkspaceModifyOperation() {
 
                 @Override
                 protected void execute(final IProgressMonitor monitor)
                         throws CoreException, InvocationTargetException, InterruptedException {
-                    AbstractRepository currentRepository = getCurrentRepository();
+                    var currentRepository = getCurrentRepository().orElse(null);
                     if (currentRepository != null && currentRepository.getName().equals(metadata.getName())) {
                         return;
                     } else if (currentRepository != null) {
                         currentRepository.close();
                     }
-                    currentRepository =  RepositoryManager.getInstance().getRepository(metadata.getName(), false);
+                    currentRepository = RepositoryManager.getInstance().getRepository(metadata.getName(), false);
                     if (currentRepository == null) {
                         currentRepository = RepositoryManager.getInstance().createRepository(metadata.getName(), false);
                     }
                     currentRepository.create(metadata, AbstractRepository.NULL_PROGRESS_MONITOR);
                     currentRepository.open(AbstractRepository.NULL_PROGRESS_MONITOR);
                     RepositoryManager.getInstance().setCurrentRepository(currentRepository);
-                    final AbstractRepository currentRepo = RepositoryManager.getInstance().getCurrentRepository();
-                    BonitaStudioLog.info(String.format("%s project created.", currentRepo.getName()),
+                    BonitaStudioLog.info(String.format("%s project created.", currentRepository.getName()),
                             CommonRepositoryPlugin.PLUGIN_ID);
                 }
             };
@@ -133,13 +145,18 @@ public class RepositoryAccessor {
             Display.getDefault().asyncExec(
                     () -> {
                         PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().resetPerspective();
-                        PlatformUtil.openIntroIfNoOtherEditorOpen();
+                        PlatformUtil.openDashboardIfNoOtherEditorOpen();
                     });
-            return getCurrentRepository();
+            return getCurrentRepository().orElse(null);
         } catch (final InvocationTargetException | InterruptedException e) {
             BonitaStudioLog.error(e);
             return null;
-        } 
+        }
+    }
+
+    public AbstractRepository fakeRepository() {
+        var repository = repositoryManagerInstance.createRepository("fake_repo_tmp_for_import", false);
+        return repository;
     }
 
 }
