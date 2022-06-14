@@ -14,6 +14,7 @@ import java.util.List;
 import org.bonitasoft.studio.businessobject.maven.UpdateMavenProjectConfiguration;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.rest.api.extension.core.repository.RestAPIExtensionFileStore;
 import org.bonitasoft.studio.rest.api.extension.core.repository.RestAPIExtensionRepositoryStore;
@@ -25,7 +26,7 @@ public class UpdateMavenProjectsHandler {
 
     @Execute
     public void execute(RepositoryAccessor repositoryAccessor) {
-        if (repositoryAccessor.hasActiveRepository() && repositoryAccessor.getCurrentRepository().isLoaded()) {
+        if (repositoryAccessor.getCurrentRepository().filter(IRepository::isLoaded).isPresent()) {
             final RestAPIExtensionRepositoryStore repositoryStore = repositoryAccessor
                     .getRepositoryStore(RestAPIExtensionRepositoryStore.class);
             final List<IProject> projects = new ArrayList<>();

@@ -46,7 +46,9 @@ public class DeleteDiagramWizardPage extends AbstractManageDiagramWizardPage {
         setTitle(pageName);
         setDescription(Messages.DeleteDiagramWizardPage_desc);
         setImageDescriptor(Pics.getWizban());
-        diagramStore = RepositoryManager.getInstance().getCurrentRepository().getRepositoryStore(DiagramRepositoryStore.class);
+        diagramStore = RepositoryManager.getInstance().getCurrentRepository()
+                .orElseThrow()
+                .getRepositoryStore(DiagramRepositoryStore.class);
     }
 
     /*

@@ -114,7 +114,7 @@ public class OutputTypeEditingSupport extends ObservableValueEditingSupport {
     protected void openClassSelectionDialog() {
         JavaSearchScope scope = new JavaSearchScope(true);
         try {
-            scope.add(RepositoryManager.getInstance().getCurrentRepository().getJavaProject());
+            scope.add(RepositoryManager.getInstance().getCurrentRepository().orElseThrow().getJavaProject());
         } catch (Exception ex) {
             BonitaStudioLog.error(ex);
         }

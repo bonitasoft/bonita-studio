@@ -18,6 +18,7 @@ import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.model.ConflictStatus;
 import org.bonitasoft.studio.common.model.ImportAction;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
+import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
@@ -34,16 +35,17 @@ import org.eclipse.core.runtime.IProgressMonitor;
 public class ImportConflictsChecker {
 
     private static final String LEGACY_BDM_FILENAME = "bdm.zip";
-    private final AbstractRepository currentRepository;
+    private final IRepository repository;
 
-    public ImportConflictsChecker(AbstractRepository currentRepository) {
-        Objects.requireNonNull(currentRepository);
-        this.currentRepository = currentRepository;
+    public ImportConflictsChecker(IRepository currentRepository) {
+        this.repository = currentRepository;
     }
 
     public ImportArchiveModel checkConflicts(BosArchive bosArchive, IProgressMonitor monitor) throws IOException {
-        final ImportArchiveModel importModel = bosArchive.toImportModel(currentRepository, monitor);
-        performAnalysis(bosArchive, importModel, monitor);
+        final ImportArchiveModel importModel = bosArchive.toImportModel(repository, monitor);
+        if(repository.getProject() != null) {
+            performAnalysis(bosArchive, importModel, monitor);
+        }
         return importModel;
     }
 
@@ -57,14 +59,14 @@ public class ImportConflictsChecker {
     }
 
     private void compareStore(AbstractFolderModel importedStore, BosArchive bosArchive) {
-        currentRepository.getAllStores().stream()
+        repository.getAllStores().stream()
                 .filter(aStoreInCurrentRepo -> Objects.equals(aStoreInCurrentRepo.getName(), importedStore.getFolderName()))
                 .findFirst()
                 .ifPresent(storeInCurrentRepo -> {
                     if (Objects.equals(storeInCurrentRepo.getName(),
                             DatabaseConnectorPropertiesRepositoryStore.STORE_NAME)) {
                         compareDatabaseConnectorProperties(storeInCurrentRepo, importedStore, bosArchive);
-                    } else {
+                    } else if(storeInCurrentRepo.getResource() != null) {
                         final File file = storeInCurrentRepo.getResource().getLocation().toFile();
                         File[] files = file.listFiles();
                         if(files == null) {
@@ -76,7 +78,7 @@ public class ImportConflictsChecker {
                 });
         
         if(importedStore instanceof SourceFolderStoreModel) {
-            final File file = currentRepository.getProject().getFolder("src").getLocation().toFile();
+            final File file = repository.getProject().getFolder("src").getLocation().toFile();
             File[] files = file.listFiles();
             if(files == null) {
                 files = new File[0];

@@ -7,7 +7,7 @@ Bundle-ClassPath: .
 Bundle-Activator: org.bonitasoft.studio.connector.model.ConnectorModelPlugin
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
-Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Export-Package: org.bonitasoft.studio.connector.model,org.bonitasoft.s
  tudio.connector.model.definition,org.bonitasoft.studio.connector.mode
  l.definition.impl,org.bonitasoft.studio.connector.model.definition.ut

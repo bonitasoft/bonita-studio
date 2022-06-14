@@ -24,6 +24,7 @@ import org.bonitasoft.studio.common.repository.Messages;
 import org.bonitasoft.studio.common.repository.core.maven.MavenInstallFileOperation;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.m2e.core.MavenPlugin;
 import org.eclipse.m2e.core.embedder.IMaven;
 import org.eclipse.swt.widgets.Display;
@@ -38,11 +39,11 @@ public class InstallBonitaMavenArtifactsOperation {
         this.targetRepository = targetRepository;
     }
     
-    public void execute() {
+    public void execute(IProgressMonitor monitor) {
         try {
             var localRepositoryContributor = newMavenLocalRepositoryContributor(targetRepository);
             if (localRepositoryContributor != null) {
-                localRepositoryContributor.execute();
+                localRepositoryContributor.execute(monitor);
             }
         } catch (IOException | CoreException e) {
             if (!PlatformUtil.isHeadless()) {

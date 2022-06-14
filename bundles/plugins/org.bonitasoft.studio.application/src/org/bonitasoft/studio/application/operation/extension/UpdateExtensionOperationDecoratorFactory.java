@@ -37,7 +37,7 @@ public class UpdateExtensionOperationDecoratorFactory {
 
     public UpdateExtensionOperationDecorator create(List<DependencyUpdate> dependenciesUpdates) {
         return new UpdateExtensionOperationDecorator(dependenciesUpdates,
-                repositoryAccessor.getCurrentRepository(), commandExecutor);
+                repositoryAccessor.getCurrentRepository().orElseThrow(), commandExecutor);
     }
 
 }

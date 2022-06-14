@@ -33,6 +33,7 @@ import org.bonitasoft.studio.model.process.SearchIndex;
 import org.bonitasoft.studio.model.process.Task;
 import org.bonitasoft.studio.properties.sections.index.RefactorSearchIndexOperation;
 import org.bonitasoft.studio.properties.sections.index.RemoveSearchReferencesOperation;
+import org.bonitasoft.studio.tests.util.InitialProjectRule;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.FileLocator;
@@ -43,10 +44,14 @@ import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.IProgressService;
 import org.junit.After;
+import org.junit.Rule;
 import org.junit.Test;
 
 public class TestSearchIndexRefactoring {
 
+    @Rule
+    public InitialProjectRule projectRule = InitialProjectRule.INSTANCE;
+    
     private static final String DIAGRAM_NAME = "searchIndexRefactoringTest-1.0.bos";
     private static final String MAIN_PROCESS_NAME = "searchIndexRefactoringTest";
     private static final String SEARCH_INDEX_1 = "search1";

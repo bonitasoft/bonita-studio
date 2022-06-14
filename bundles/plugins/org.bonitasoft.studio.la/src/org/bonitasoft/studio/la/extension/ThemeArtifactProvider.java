@@ -23,21 +23,20 @@ import org.apache.maven.model.Dependency;
 import org.bonitasoft.plugin.analyze.report.model.Artifact;
 import org.bonitasoft.plugin.analyze.report.model.Theme;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
-import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.eclipse.e4.core.di.annotations.Creatable;
 
 @Creatable
 public class ThemeArtifactProvider {
 
-    private IRepository currentRepository;
+    private RepositoryAccessor repositoryAccessor;
 
     @Inject
     public ThemeArtifactProvider(RepositoryAccessor repositoryAccessor) {
-        this.currentRepository = repositoryAccessor.getCurrentRepository();
+        this.repositoryAccessor = repositoryAccessor;
     }
 
     public Optional<Theme> findTheme(Dependency dependency) {
-        return currentRepository.getProjectDependenciesStore().getThemes().stream()
+        return repositoryAccessor.getCurrentRepository().orElseThrow().getProjectDependenciesStore().getThemes().stream()
                 .filter(theme -> isSameArtifact(theme.getArtifact(), dependency))
                 .findAny();
     }

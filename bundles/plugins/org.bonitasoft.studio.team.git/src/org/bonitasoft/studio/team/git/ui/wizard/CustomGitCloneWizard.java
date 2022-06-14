@@ -18,6 +18,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.team.TeamRepositoryUtil;
 import org.bonitasoft.studio.team.git.core.RetrieveHEADRefOperation;
@@ -25,19 +26,25 @@ import org.bonitasoft.studio.team.git.core.ValidateClonedRepository;
 import org.bonitasoft.studio.team.git.i18n.Messages;
 import org.bonitasoft.studio.ui.dialog.ExceptionDialogHandler;
 import org.bonitasoft.studio.ui.wizard.WizardPageBuilder;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.egit.core.RepositoryUtil;
 import org.eclipse.egit.core.credentials.UserPasswordCredentials;
 import org.eclipse.egit.core.internal.credentials.EGitCredentialsProvider;
+import org.eclipse.egit.core.internal.indexdiff.IndexDiffCache;
 import org.eclipse.egit.core.internal.util.ResourceUtil;
 import org.eclipse.egit.core.op.CloneOperation;
 import org.eclipse.egit.core.op.ConfigureFetchAfterCloneTask;
 import org.eclipse.egit.core.op.ConfigureGerritAfterCloneTask;
 import org.eclipse.egit.core.op.ConfigurePushAfterCloneTask;
 import org.eclipse.egit.core.op.SetRepositoryConfigPropertyTask;
+import org.eclipse.egit.core.project.RepositoryMapping;
 import org.eclipse.egit.core.settings.GitSettings;
 import org.eclipse.egit.ui.Activator;
 import org.eclipse.egit.ui.internal.KnownHosts;
@@ -158,8 +165,16 @@ public class CustomGitCloneWizard extends GitCloneWizard {
                     public void run(IProgressMonitor monitor)
                             throws InvocationTargetException, InterruptedException {
                         executeCloneOperation(cloneOperation, gitRepositoryInfo, monitor);
-                        TeamRepositoryUtil.switchToRepository(repositoryNameControlSupplier.getRepositoryName(), false, true,
+                        TeamRepositoryUtil.switchToRepository(repositoryNameControlSupplier.getRepositoryName(), true,
                                 monitor);
+                        var project = RepositoryManager.getInstance().getCurrentRepository().orElseThrow().getProject();
+                        var mapping = RepositoryMapping.getMapping(project);
+                        if (mapping != null && mapping.getRepository() != null) {
+                            IndexDiffCache.INSTANCE.remove(mapping.getGitDirAbsolutePath().toFile());
+                            IndexDiffCache.INSTANCE
+                                    .getIndexDiffCacheEntry(mapping.getRepository());
+                        }
+
                     }
                 });
             } catch (InvocationTargetException | InterruptedException | NoRepositoryInfoException e) {
@@ -169,7 +184,7 @@ public class CustomGitCloneWizard extends GitCloneWizard {
             }
             if (finish) {
                 Repository repository = ResourceUtil
-                        .getRepository(RepositoryManager.getInstance().getCurrentRepository().getProject());
+                        .getRepository(RepositoryManager.getInstance().getCurrentRepository().orElseThrow().getProject());
                 BasicConfigurationDialog.show(repository);
             } else {
                 getContainer().showPage(getStartingPage());

@@ -31,12 +31,14 @@ import org.bonitasoft.studio.common.FileUtil;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.core.maven.MavenInstallFileOperation;
+import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.m2e.core.MavenPlugin;
 import org.eclipse.m2e.core.embedder.IMaven;
@@ -64,7 +66,7 @@ public class InstallBDMDependenciesEventHandler implements EventHandler {
         File tmpFile = null;
         try {
             tmpFile = tmpFile(GenerateBDMOperation.BDM_CLIENT, bdmClientJarContent);
-            installFileCommand.installFile(groupId, GenerateBDMOperation.BDM_CLIENT, version, JAR_TYPE, null, tmpFile);
+            installFileCommand.installFile(groupId, GenerateBDMOperation.BDM_CLIENT, version, JAR_TYPE, null, tmpFile, new NullProgressMonitor());
         } catch (final CoreException | IOException e) {
             BonitaStudioLog.error(e);
         } finally {
@@ -77,7 +79,7 @@ public class InstallBDMDependenciesEventHandler implements EventHandler {
         try {
             tmpFile = tmpFile(GenerateBDMOperation.BDM_DAO, bdmDaoJarContent);
             installFileCommand.installFile(groupId, GenerateBDMOperation.BDM_DAO, version, JAR_TYPE, null, tmpFile,
-                    daoPomFile(groupId, version));
+                    daoPomFile(groupId, version), new NullProgressMonitor());
         } catch (final IOException | CoreException e) {
             BonitaStudioLog.error(e);
         } finally {
@@ -109,8 +111,11 @@ public class InstallBDMDependenciesEventHandler implements EventHandler {
 
             @Override
             public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
-                RepositoryManager.getInstance().getCurrentRepository().getProject()
-                        .build(IncrementalProjectBuilder.INCREMENTAL_BUILD, monitor);
+                var project = RepositoryManager.getInstance().getCurrentRepository().map(IRepository::getProject)
+                        .orElse(null);
+                if (project != null) {
+                    project.build(IncrementalProjectBuilder.INCREMENTAL_BUILD, monitor);
+                }
                 return Status.OK_STATUS;
             }
         }.schedule();

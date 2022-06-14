@@ -18,11 +18,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.bonitasoft.studio.common.CommandExecutor;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.validation.i18n.Messages;
 import org.eclipse.jface.action.ContributionItem;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.MenuAdapter;
+import org.eclipse.swt.events.MenuEvent;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 
@@ -43,8 +46,17 @@ public class BatchValidationMenuContributionItem extends ContributionItem {
         MenuItem item = new MenuItem(parent, SWT.NONE, index);
         item.setText(Messages.validate);
         item.addListener(SWT.Selection, e -> performValidation());
-        item.setEnabled(true);
+        item.setEnabled(isEnabled());
         item.setImage(Pics.getImage(PicsConstants.validate));
+
+        parent.addMenuListener(new MenuAdapter() {
+
+            @Override
+            public void menuShown(MenuEvent e) {
+                item.setEnabled(isEnabled());
+            }
+
+        });
     }
 
     private void performValidation() {
@@ -52,6 +64,11 @@ public class BatchValidationMenuContributionItem extends ContributionItem {
         parameters.put(CHECK_ALL_PARAMETER, Boolean.TRUE.toString());
         parameters.put(SHOW_REPORT_PARAMETER, Boolean.TRUE.toString());
         commandExecutor.executeCommand(VALIDATION_COMMAND, parameters);
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return RepositoryManager.getInstance().hasActiveRepository();
     }
 
 }

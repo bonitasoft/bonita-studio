@@ -38,10 +38,12 @@ public class PerspectiveJavaFactory extends AbstractPerspectiveFactory {
         bottomLeft.addView(PROBLEM_VIEW_ID);
         
         final IFolderLayout bottomfolder = layout.createFolder("bottom", IPageLayout.BOTTOM, 0.75f, editorArea); //$NON-NLS-1$
-        if (RepositoryManager.getInstance().getCurrentRepository().isShared("org.eclipse.egit.core.GitProvider")) {
+        RepositoryManager.getInstance().getCurrentRepository()
+        .filter(repo -> repo.isShared("org.eclipse.egit.core.GitProvider"))
+        .ifPresent(repo -> {
             bottomfolder.addView("org.eclipse.egit.ui.StagingView");
             bottomfolder.addPlaceholder("org.eclipse.team.ui.GenericHistoryView");
-        }
+        });
 
         final IFolderLayout rightFolder = layout.createFolder("right", IPageLayout.RIGHT, 0.75f, editorArea); //$NON-NLS-1$
         rightFolder.addView(IPageLayout.ID_OUTLINE);

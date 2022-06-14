@@ -206,7 +206,10 @@ public class ConnectorBarResourceProvider implements BARResourcesProvider {
     }
 
     protected boolean classInSourceProject(final String qualifiedClassName) throws JavaModelException {
-        return repositoryAccessor.getCurrentRepository().getJavaProject().findType(qualifiedClassName) != null;
+        return repositoryAccessor.getCurrentRepository()
+                .orElseThrow()
+                .getJavaProject()
+                .findType(qualifiedClassName) != null;
     }
 
     protected File exportJar(final String connectorJarName, final PackageFileStore file)

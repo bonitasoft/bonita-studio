@@ -57,7 +57,7 @@ public class DeleteHandler extends AbstractHandler {
         for (Object sel : selection.toList()) {
             selectedResources.add(((IAdaptable) sel).getAdapter(IResource.class));
         }
-        AbstractRepository currentRepository = RepositoryManager.getInstance().getCurrentRepository();
+        AbstractRepository currentRepository = RepositoryManager.getInstance().getCurrentRepository().orElseThrow();
         if ((selectedResources.size() == 1 && FileActionDialog
                 .confirmDeletionQuestion(selectedResources.get(0).getName()))
                 || selectedResources.size() > 1 && FileActionDialog.confirmDeletionQuestionWithCustomMessage(
@@ -102,7 +102,7 @@ public class DeleteHandler extends AbstractHandler {
                 && PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage() != null
                 && PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActivePart() instanceof BonitaProjectExplorer) {
             ISelection selection = selectionFinder.getSelectionInExplorer();
-            AbstractRepository currentRepository = RepositoryManager.getInstance().getCurrentRepository();
+            AbstractRepository currentRepository = RepositoryManager.getInstance().getCurrentRepository().orElseThrow();
             return selection instanceof IStructuredSelection
                     ? selectionCanBeDeleted((IStructuredSelection) selection, currentRepository)
                     : false;

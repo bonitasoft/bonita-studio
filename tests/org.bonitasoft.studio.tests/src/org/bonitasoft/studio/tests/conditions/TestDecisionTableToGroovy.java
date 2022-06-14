@@ -34,7 +34,7 @@ import groovy.lang.GroovyShell;
  * @author Mickael Istria
  */
 public class TestDecisionTableToGroovy {
-
+    
     @Test
     public void testSimpleDecisionOK() {
         final TakeTransitionAction takeTransition = TransitionsFactory.eINSTANCE.createTakeTransitionAction();

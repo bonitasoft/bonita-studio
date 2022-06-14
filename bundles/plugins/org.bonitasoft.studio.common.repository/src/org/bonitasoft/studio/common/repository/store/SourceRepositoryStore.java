@@ -30,6 +30,7 @@ import org.bonitasoft.studio.common.repository.filestore.AbstractFileStore;
 import org.bonitasoft.studio.common.repository.filestore.PackageFileStore;
 import org.bonitasoft.studio.common.repository.filestore.RepositoryFileStoreComparator;
 import org.bonitasoft.studio.common.repository.filestore.SourceFileStore;
+import org.bonitasoft.studio.common.repository.model.IJavaContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
@@ -127,7 +128,7 @@ public abstract class SourceRepositoryStore<T extends AbstractFileStore<?>> exte
     }
 
     private void addChildren(final IResource r, final List<T> result) throws CoreException {
-        final AbstractRepository currentRepository = RepositoryManager.getInstance().getCurrentRepository();
+        final AbstractRepository currentRepository = RepositoryManager.getInstance().getCurrentRepository().orElse(null);
         if (r instanceof IFolder && !r.isHidden() && !r.getName().startsWith(".")) {
             if (containsSourceFile((IFolder) r)) {
                 final IPackageFragment pk = currentRepository.getJavaProject().findPackageFragment(r.getFullPath());
@@ -164,7 +165,7 @@ public abstract class SourceRepositoryStore<T extends AbstractFileStore<?>> exte
             }
         }
         try {
-            final IJavaProject javaProject = RepositoryManager.getInstance().getCurrentRepository().getJavaProject();
+            final IJavaProject javaProject = RepositoryManager.getInstance().getCurrentRepository().map(IJavaContainer::getJavaProject).orElse(null);
             if (javaProject != null) {
                 final IType javaType = javaProject.findType(fileName);
                 if (javaType != null) {

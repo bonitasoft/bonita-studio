@@ -44,7 +44,8 @@ public class EnvironmentWizard extends Wizard {
         environments = new ArrayList<>();
         environmentsWorkingCopy = new ArrayList<>();
         environmentStore = RepositoryManager.getInstance().getCurrentRepository()
-                .getRepositoryStore(EnvironmentRepositoryStore.class);
+                .map(repo ->  repo.getRepositoryStore(EnvironmentRepositoryStore.class))
+                .orElseThrow();
 
         environmentStore.getChildren().stream()
                 .filter(env -> !(env instanceof LocalEnvironmentFileStore))

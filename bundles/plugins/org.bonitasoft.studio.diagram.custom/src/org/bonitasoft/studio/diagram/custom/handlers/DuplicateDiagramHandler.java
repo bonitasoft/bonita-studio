@@ -33,7 +33,7 @@ public class DuplicateDiagramHandler {
     @Execute
     public void execute(RepositoryAccessor repositoryAccessor) {
         DiagramFileStore fileStore = fileStoreFinder
-                .findSelectedFileStore(repositoryAccessor.getCurrentRepository())
+                .findSelectedFileStore(repositoryAccessor.getCurrentRepository().orElseThrow())
                 .filter(DiagramFileStore.class::isInstance)
                 .map(DiagramFileStore.class::cast)
                 .orElseThrow(() -> new IllegalArgumentException("The selected element should be a diagram"));

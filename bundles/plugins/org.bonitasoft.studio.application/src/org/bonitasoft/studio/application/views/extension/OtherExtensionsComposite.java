@@ -78,7 +78,7 @@ public class OtherExtensionsComposite extends Composite {
         super(parent, SWT.NONE);
         this.bonitaArtifactDependencyConverter = bonitaArtifactDependencyConverter;
         this.ctx = ctx;
-        localDependencyStore = RepositoryManager.getInstance().getCurrentRepository().getLocalDependencyStore();
+        localDependencyStore = RepositoryManager.getInstance().getCurrentRepository().orElseThrow().getLocalDependencyStore();
         localDependencies = otherDependencies.stream()
                 .filter(localDependencyStore::isLocalDependency)
                 .collect(Collectors.toList());

@@ -100,6 +100,7 @@ import org.eclipse.m2e.core.internal.IMavenConstants;
 import org.eclipse.m2e.core.internal.project.ProjectConfigurationManager;
 import org.eclipse.m2e.core.project.IMavenProjectFacade;
 import org.eclipse.m2e.core.project.MavenUpdateRequest;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -152,7 +153,7 @@ public abstract class AbstractRepository implements IRepository, IJavaContainer 
 
     private MigrationReport report = MigrationReport.emptyReport();
 
-    public AbstractRepository(final IWorkspace workspace,
+    protected AbstractRepository(final IWorkspace workspace,
             final IProject project,
             final ExtensionContextInjectionFactory extensionContextInjectionFactory,
             final JDTTypeHierarchyManager jdtTypeHierarchyManager,
@@ -337,7 +338,7 @@ public abstract class AbstractRepository implements IRepository, IJavaContainer 
         return this.enableOpenIntroListener;
     }
 
-    private void disableOpenIntroListener() {
+    public void disableOpenIntroListener() {
         this.enableOpenIntroListener = false;
     }
 
@@ -398,7 +399,7 @@ public abstract class AbstractRepository implements IRepository, IJavaContainer 
         final IRepositoryStore<? extends IRepositoryFileStore> store;
         try {
             store = extensionContextInjectionFactory.make(configuration, CLASS, IRepositoryStore.class);
-            monitor.subTask(Messages.bind(Messages.creatingStore, store.getDisplayName()));
+            monitor.subTask(NLS.bind(Messages.creatingStore, store.getDisplayName()));
             store.createRepositoryStore(this);
             monitor.worked(1);
             return store;

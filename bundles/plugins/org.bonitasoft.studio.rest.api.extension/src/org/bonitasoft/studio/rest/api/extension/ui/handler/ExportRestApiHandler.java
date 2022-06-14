@@ -46,7 +46,7 @@ public class ExportRestApiHandler extends AbstractHandler {
     @Execute
     public void export(RepositoryAccessor repositoryAccessor) {
         fileStoreFinder
-                .findSelectedFileStore(repositoryAccessor.getCurrentRepository())
+                .findSelectedFileStore(repositoryAccessor.getCurrentRepository().orElseThrow())
                 .filter(RestAPIExtensionFileStore.class::isInstance)
                 .map(RestAPIExtensionFileStore.class::cast)
                 .ifPresent(this::export);

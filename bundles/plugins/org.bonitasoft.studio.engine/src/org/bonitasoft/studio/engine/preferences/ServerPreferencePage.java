@@ -39,11 +39,11 @@ import org.bonitasoft.studio.engine.BOSWebServerManager;
 import org.bonitasoft.studio.engine.EnginePlugin;
 import org.bonitasoft.studio.engine.i18n.Messages;
 import org.bonitasoft.studio.engine.operation.GetApiSessionOperation;
-import org.bonitasoft.studio.engine.server.PortConfigurator;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
+import org.bonitasoft.studio.preferences.extension.IPreferenceFieldEditorContribution;
 import org.bonitasoft.studio.preferences.pages.AbstractBonitaPreferencePage;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -109,13 +109,14 @@ public class ServerPreferencePage extends AbstractBonitaPreferencePage implement
                 BooleanFieldEditor.SEPARATE_LABEL,
                 getFieldEditorParent());
         addField(lazyEditor);
-        
+
         createPreferenceEditorContributions(DYNAMIC_SECURITY_CONTRIBUTOR_ID);
 
         debugCustomPage = new BooleanFieldEditor(BonitaPreferenceConstants.CUSTOM_PAGE_DEBUG,
                 Messages.debugCustomPageMode,
                 BooleanFieldEditor.SEPARATE_LABEL,
                 getFieldEditorParent());
+        debugCustomPage.setEnabled(BOSEngineManager.getInstance().isRunning(), getFieldEditorParent());
         addField(debugCustomPage);
         Control descriptionControl = debugCustomPage.getDescriptionControl(getFieldEditorParent());
         ControlDecoration debugHintControlDecorator = new ControlDecoration(descriptionControl, SWT.RIGHT);
@@ -165,29 +166,28 @@ public class ServerPreferencePage extends AbstractBonitaPreferencePage implement
         }
 
         final boolean ok = super.performOk();
-        boolean needRestartEngineServer = false;
+        boolean needRestartEngineServer = getContributions().stream()
+                .anyMatch(IPreferenceFieldEditorContribution::shouldRestart);
 
-        if (getContributions().stream().anyMatch(field -> field.shouldRestart())) {
-            needRestartEngineServer = true;
-        }
+        if (BOSEngineManager.getInstance().isRunning()) {
+            try {
+                PlatformUI.getWorkbench().getProgressService().run(true, false, new GetApiSessionOperation());
+            } catch (InvocationTargetException | InterruptedException e) {
+                BonitaStudioLog.error(e);
+                new BonitaErrorDialog(Display.getDefault().getActiveShell(), Messages.cannotStartTomcatTitle,
+                        Messages.cannotStartTomcatMessage, e).open();
+                return false;
+            }
 
-        try {
-            PlatformUI.getWorkbench().getProgressService().run(true, false, new GetApiSessionOperation());
-        } catch (InvocationTargetException | InterruptedException e) {
-            BonitaStudioLog.error(e);
-            new BonitaErrorDialog(Display.getDefault().getActiveShell(), Messages.cannotStartTomcatTitle,
-                    Messages.cannotStartTomcatMessage, e).open();
-            return false;
-        }
-
-        Properties consoleProperties = readConsoleConfigProperties();
-        Boolean currentCustomPageDebug = Boolean
-                .valueOf(consoleProperties.getProperty(BonitaPreferenceConstants.CUSTOM_PAGE_DEBUG));
-        if (!currentCustomPageDebug.equals(debugCustomPage.getBooleanValue())) {
-            consoleProperties.setProperty(BonitaPreferenceConstants.CUSTOM_PAGE_DEBUG,
-                    String.valueOf(debugCustomPage.getBooleanValue()));
-            updateConsoleConfig(consoleProperties);
-            needRestartEngineServer = true;
+            Properties consoleProperties = readConsoleConfigProperties();
+            Boolean currentCustomPageDebug = Boolean
+                    .valueOf(consoleProperties.getProperty(BonitaPreferenceConstants.CUSTOM_PAGE_DEBUG));
+            if (!currentCustomPageDebug.equals(debugCustomPage.getBooleanValue())) {
+                consoleProperties.setProperty(BonitaPreferenceConstants.CUSTOM_PAGE_DEBUG,
+                        String.valueOf(debugCustomPage.getBooleanValue()));
+                updateConsoleConfig(consoleProperties);
+                needRestartEngineServer = true;
+            }
         }
 
         if (newPort != -1) {
@@ -200,11 +200,11 @@ public class ServerPreferencePage extends AbstractBonitaPreferencePage implement
             needRestartEngineServer = true;
             newExtraParams = null;
         }
-        if (needRestartEngineServer) {
+        if (needRestartEngineServer && BOSEngineManager.getInstance().isRunning()) {
             restartServer();
         }
 
-        if (newuidExtraParams != null) {
+        if (newuidExtraParams != null && RepositoryManager.getInstance().getCurrentRepository().isPresent()) {
             if (MessageDialog.openConfirm(getShell(), Messages.restartServer, Messages.restartServerConfirmationMsg)) {
                 new Job(Messages.restartingWebServer) {
 
@@ -212,7 +212,7 @@ public class ServerPreferencePage extends AbstractBonitaPreferencePage implement
                     protected IStatus run(IProgressMonitor monitor) {
                         UIDesignerServerManager.getInstance().stop();
                         UIDesignerServerManager.getInstance()
-                                .start(RepositoryManager.getInstance().getCurrentRepository(), monitor);
+                                .start(RepositoryManager.getInstance().getCurrentRepository().orElseThrow(), monitor);
                         return Status.OK_STATUS;
                     }
                 }.schedule();
@@ -268,7 +268,7 @@ public class ServerPreferencePage extends AbstractBonitaPreferencePage implement
     private void updatePortConfiguration(final Integer newPort) {
         if (SocketUtil.isPortInUse(newPort)) {
             MessageDialog.openWarning(getShell(), Messages.portAlreadyUseTitle,
-                    Messages.bind(Messages.portAlreadyUseMsg, newPort));
+                    NLS.bind(Messages.portAlreadyUseMsg, newPort));
             return;
         }
         getPreferenceStore().setValue(BonitaPreferenceConstants.CONSOLE_PORT, newPort);
@@ -290,15 +290,11 @@ public class ServerPreferencePage extends AbstractBonitaPreferencePage implement
 
     @Override
     public void propertyChange(final PropertyChangeEvent event) {
-        if (event.getSource().equals(port)) {
-            if (port.isValid()) {
-                newPort = port.getIntValue();
-            }
+        if (event.getSource().equals(port) && port.isValid()) {
+            newPort = port.getIntValue();
         }
-        if (event.getSource().equals(xmxOption)) {
-            if (xmxOption.isValid()) {
-                xmx = xmxOption.getIntValue();
-            }
+        if (event.getSource().equals(xmxOption) && xmxOption.isValid()) {
+            xmx = xmxOption.getIntValue();
         }
         if (event.getSource().equals(extraParamsField)) {
             newExtraParams = extraParamsField.getStringValue();
@@ -316,6 +312,7 @@ public class ServerPreferencePage extends AbstractBonitaPreferencePage implement
      */
     @Override
     public void init(final IWorkbench workbench) {
+        // Nothing to do
     }
 
 }

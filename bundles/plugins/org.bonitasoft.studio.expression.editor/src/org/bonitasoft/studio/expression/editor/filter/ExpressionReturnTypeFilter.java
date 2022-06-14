@@ -78,7 +78,7 @@ public class ExpressionReturnTypeFilter {
     }
 
     protected IJavaContainer javaContainer() {
-        return repositoryAccessor.getCurrentRepository();
+        return repositoryAccessor.getCurrentRepository().orElseThrow();
     }
 
 }

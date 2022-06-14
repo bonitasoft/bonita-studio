@@ -30,11 +30,13 @@ import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.dependencies.repository.DependencyRepositoryStore;
 import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.importer.bos.operation.ImportBosArchiveOperation;
+import org.bonitasoft.studio.tests.util.InitialProjectRule;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IStatus;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 
 /**
@@ -42,6 +44,9 @@ import org.junit.Test;
  */
 public class ImportLegacyBDMIT {
 
+    @Rule
+    public InitialProjectRule projectRule = InitialProjectRule.INSTANCE;
+    
     private BusinessObjectModelRepositoryStore<BusinessObjectModelFileStore> defStore;
     private DependencyRepositoryStore depStore;
     private RepositoryAccessor repositoryAccessor;

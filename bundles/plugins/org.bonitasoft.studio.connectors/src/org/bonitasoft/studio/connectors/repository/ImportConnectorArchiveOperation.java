@@ -122,7 +122,7 @@ public class ImportConnectorArchiveOperation implements IRunnableWithProgress {
             importConnectorDefinition(tmp);
             importConnectorImplementation(tmp);
             PlatformUtil.delete(tmp, monitor);
-            RepositoryManager.getInstance().getCurrentRepository().build(monitor);
+            RepositoryManager.getInstance().getCurrentRepository().orElseThrow().build(monitor);
         } finally {
             FileActionDialog.deactivateYesNoToAll();
         }

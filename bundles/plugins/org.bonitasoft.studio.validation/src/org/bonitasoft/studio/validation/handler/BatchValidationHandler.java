@@ -70,7 +70,7 @@ public class BatchValidationHandler extends AbstractHandler {
         }
         final IProgressService service = PlatformUI.getWorkbench().getProgressService();
         final Map<?, ?> parameters = event.getParameters();
-        AbstractRepository currentRepository = RepositoryManager.getInstance().getCurrentRepository();
+        AbstractRepository currentRepository = RepositoryManager.getInstance().getCurrentRepository().orElseThrow();
         DiagramRepositoryStore diagramRepositoryStore = currentRepository
                 .getRepositoryStore(DiagramRepositoryStore.class);
         boolean clearProcessComputedProcesses = !diagramRepositoryStore.hasComputedProcesses();
@@ -248,7 +248,7 @@ public class BatchValidationHandler extends AbstractHandler {
                     try {
                         service.run(true, false, monitor -> {
                             try {
-                                RepositoryManager.getInstance().getCurrentRepository().migrate(monitor);
+                                RepositoryManager.getInstance().getCurrentRepository().orElseThrow().migrate(monitor);
                             } catch (CoreException | MigrationException e) {
                                 throw new InvocationTargetException(e);
                             }

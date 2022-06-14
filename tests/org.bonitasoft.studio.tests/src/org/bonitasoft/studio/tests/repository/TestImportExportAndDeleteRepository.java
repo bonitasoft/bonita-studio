@@ -27,10 +27,15 @@ import org.bonitasoft.studio.document.core.repository.DocumentFileStore;
 import org.bonitasoft.studio.document.core.repository.DocumentRepositoryStore;
 import org.bonitasoft.studio.groovy.repository.GroovyFileStore;
 import org.bonitasoft.studio.groovy.repository.GroovyRepositoryStore;
+import org.bonitasoft.studio.tests.util.InitialProjectRule;
+import org.junit.Rule;
 import org.junit.Test;
 
 public class TestImportExportAndDeleteRepository {
 
+    @Rule
+    public InitialProjectRule projectRule = InitialProjectRule.INSTANCE;
+    
     @Test
     public void testImportExportGroovy() throws Exception {
         /* Join with the job because it adds DefaultUserScript.groovy to the artifacts */

@@ -18,6 +18,7 @@ import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.common.extension.IBonitaContributionItem;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.core.commands.Command;
@@ -52,8 +53,11 @@ public class DeployCoolbarItem extends ContributionItem
 
     @Override
     public boolean isEnabled() {
-        final Command cmd = getCommand();
-        return cmd.isEnabled();
+        if (RepositoryManager.getInstance().hasActiveRepository()) {
+            final Command cmd = getCommand();
+            return cmd.isEnabled();
+        }
+        return false;
     }
 
     @Override

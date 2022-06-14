@@ -15,6 +15,7 @@
 
 package org.bonitasoft.studio.application.actions;
 
+import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
@@ -36,7 +37,8 @@ public class PrintCommandHandler extends AbstractHandler {
 
     @Override
     public Object execute(final ExecutionEvent event) throws ExecutionException {
-        final IEditorPart activeEditor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
+        final IEditorPart activeEditor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
+                .getActiveEditor();
         if (activeEditor instanceof DiagramEditor) {
             ((DiagramEditor) activeEditor).getDiagramGraphicalViewer().deselectAll();
         }
@@ -44,13 +46,11 @@ public class PrintCommandHandler extends AbstractHandler {
         return Status.OK_STATUS;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.core.commands.AbstractHandler#isEnabled()
-     */
     @Override
     public boolean isEnabled() {
-        return super.isEnabled() && printAction.isEnabled();
+        return RepositoryManager.getInstance().hasActiveRepository()
+                && super.isEnabled()
+                && printAction.isEnabled();
     }
 
 }

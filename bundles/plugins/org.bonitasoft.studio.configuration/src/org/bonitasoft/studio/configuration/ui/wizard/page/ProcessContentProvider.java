@@ -42,7 +42,9 @@ public class ProcessContentProvider implements ITreeContentProvider {
     private final DiagramRepositoryStore diagramStore;
 
     public ProcessContentProvider() {
-        diagramStore = RepositoryManager.getInstance().getCurrentRepository().getRepositoryStore(DiagramRepositoryStore.class);
+        diagramStore = RepositoryManager.getInstance().getCurrentRepository()
+                .map(repo -> repo.getRepositoryStore(DiagramRepositoryStore.class))
+                .orElseThrow();
     }
 
     /*

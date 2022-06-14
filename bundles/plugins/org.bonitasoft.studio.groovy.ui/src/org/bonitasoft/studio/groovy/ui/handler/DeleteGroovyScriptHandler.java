@@ -19,6 +19,7 @@ import static org.bonitasoft.studio.ui.wizard.WizardPageBuilder.newPage;
 import java.util.stream.Stream;
 
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.groovy.repository.GroovyRepositoryStore;
 import org.bonitasoft.studio.groovy.ui.Messages;
@@ -46,7 +47,7 @@ public class DeleteGroovyScriptHandler extends DeleteFileHandler {
 
     @CanExecute
     public boolean canExecute(final RepositoryAccessor repositoryAccessor) {
-        return repositoryAccessor.getCurrentRepository().isLoaded()
+        return repositoryAccessor.getCurrentRepository().filter(IRepository::isLoaded).isPresent()
                 && !repositoryAccessor.getRepositoryStore(GroovyRepositoryStore.class).getChildren().isEmpty();
     }
 }

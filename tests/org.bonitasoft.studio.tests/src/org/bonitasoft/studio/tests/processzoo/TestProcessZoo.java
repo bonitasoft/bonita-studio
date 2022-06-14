@@ -40,6 +40,7 @@ import org.bonitasoft.studio.model.configuration.FragmentContainer;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditor;
+import org.bonitasoft.studio.tests.util.InitialProjectRule;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.ui.IEditorPart;
@@ -47,6 +48,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.ErrorEditorPart;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 
 /**
@@ -54,6 +56,9 @@ import org.junit.Test;
  */
 public class TestProcessZoo {
 
+    @Rule
+    public InitialProjectRule projectRule = InitialProjectRule.INSTANCE;
+    
     private RepositoryAccessor repositoryAccessor;
 
     @Before

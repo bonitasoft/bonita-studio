@@ -93,8 +93,9 @@ public class BonitaExplorerContentProvider extends JavaNavigatorContentProvider 
     protected void postAdd(Object parent, Object element, Collection<Runnable> runnables) {
         super.postAdd(parent, element, runnables);
         AbstractRepository currentRepository = RepositoryManager.getInstance()
-                .getCurrentRepository();
-        if (viewer.testFindItem(parent) == null
+                .getCurrentRepository().orElse(null);
+        if (currentRepository != null 
+                && viewer.testFindItem(parent) == null
                 && currentRepository.isLoaded()
                 && currentRepository
                         .getAllStores()

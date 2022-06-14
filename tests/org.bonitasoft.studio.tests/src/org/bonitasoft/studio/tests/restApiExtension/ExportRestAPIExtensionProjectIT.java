@@ -25,6 +25,7 @@ import org.bonitasoft.studio.maven.model.RestAPIExtensionArchetypeConfiguration;
 import org.bonitasoft.studio.maven.operation.BuildAndExportCustomPageOperation;
 import org.bonitasoft.studio.rest.api.extension.core.maven.CreateRestAPIExtensionProjectOperation;
 import org.bonitasoft.studio.rest.api.extension.core.repository.RestAPIExtensionRepositoryStore;
+import org.bonitasoft.studio.tests.util.InitialProjectRule;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.m2e.core.MavenPlugin;
 import org.eclipse.m2e.core.project.ProjectImportConfiguration;
@@ -39,6 +40,10 @@ public class ExportRestAPIExtensionProjectIT {
 
     private static final String pageName = "my-rest-api-test-export";
     private static final String pageName2 = "my-rest-api-test-export2";
+    
+    @Rule
+    public InitialProjectRule projectRule = InitialProjectRule.INSTANCE;
+    
     @Rule
     public TemporaryFolder tmp = new TemporaryFolder();
 

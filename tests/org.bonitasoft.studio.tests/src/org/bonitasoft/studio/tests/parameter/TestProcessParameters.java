@@ -37,12 +37,14 @@ import org.bonitasoft.studio.model.process.FormMappingType;
 import org.bonitasoft.studio.model.process.Task;
 import org.bonitasoft.studio.parameters.action.ExportParametersAction;
 import org.bonitasoft.studio.parameters.action.ImportParametersAction;
+import org.bonitasoft.studio.tests.util.InitialProjectRule;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.ui.PlatformUI;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 
 /**
@@ -50,6 +52,9 @@ import org.junit.Test;
  */
 public class TestProcessParameters {
 
+    @Rule
+    public InitialProjectRule projectRule = InitialProjectRule.INSTANCE;
+    
     private static final String CONF_NAME = "TestConfiguration";
     private static AbstractProcess pool;
 

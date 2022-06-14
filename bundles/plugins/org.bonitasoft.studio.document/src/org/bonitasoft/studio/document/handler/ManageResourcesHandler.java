@@ -16,7 +16,9 @@ package org.bonitasoft.studio.document.handler;
 
 import javax.inject.Named;
 
+import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.document.ui.dialog.ManageResourceDialog;
+import org.eclipse.e4.core.di.annotations.CanExecute;
 import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.e4.ui.services.IServiceConstants;
 import org.eclipse.swt.widgets.Shell;
@@ -26,6 +28,14 @@ public class ManageResourcesHandler {
     @Execute
     public void execute(@Named(IServiceConstants.ACTIVE_SHELL) Shell shell) {
         new ManageResourceDialog(shell).open();
+    }
+    
+    @CanExecute
+    public boolean isEnabled() {
+        if (RepositoryManager.getInstance().hasActiveRepository()) {
+            return true;
+        }
+        return false;
     }
 
 }

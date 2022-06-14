@@ -20,11 +20,16 @@ import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.core.maven.AddDependencyOperation;
 import org.bonitasoft.studio.connectors.repository.ConnectorDefRepositoryStore;
+import org.bonitasoft.studio.tests.util.InitialProjectRule;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 
 public class TestWebserviceVersionForBPMNImport {
 
+    @Rule
+    public InitialProjectRule projectRule = InitialProjectRule.INSTANCE;
+    
     @Before
     public void init() throws Exception {
         new AddDependencyOperation("org.bonitasoft.connectors", "bonita-connector-webservice", "1.3.5")

@@ -48,7 +48,7 @@ public class ImportBOSArchiveWizardIT {
     @After
     @Before
     public void cleanRepository() throws Exception {
-        RepositoryManager.getInstance().getCurrentRepository().getAllStores()
+        RepositoryManager.getInstance().getCurrentRepository().orElseThrow().getAllStores()
                 .stream().forEach(store -> store.getChildren().stream().forEach(IRepositoryFileStore::delete));
     }
 

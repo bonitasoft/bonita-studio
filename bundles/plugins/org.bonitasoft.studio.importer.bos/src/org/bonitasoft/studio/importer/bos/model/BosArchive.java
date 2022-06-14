@@ -25,7 +25,6 @@ import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.Messages;
-import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.core.InputStreamSupplier;
 import org.bonitasoft.studio.common.repository.core.maven.model.ProjectDefaultConfiguration;
 import org.bonitasoft.studio.common.repository.core.migration.step.RemoveLegacyFolderStep;
@@ -33,6 +32,7 @@ import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.common.repository.model.smartImport.ISmartImportable;
+import org.bonitasoft.studio.common.repository.store.AbstractRepositoryStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramLegacyFormsValidator;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.importer.bos.BosArchiveImporterPlugin;
@@ -75,7 +75,7 @@ public class BosArchive {
         return archiveFile;
     }
 
-    public ImportArchiveModel toImportModel(AbstractRepository repository, IProgressMonitor monitor)
+    public ImportArchiveModel toImportModel(IRepository repository, IProgressMonitor monitor)
             throws IOException {
         final IStatus validationStatus = validate();
         final ImportArchiveModel archiveModel = new ImportArchiveModel(this);
@@ -382,14 +382,10 @@ public class BosArchive {
     }
 
     private boolean matchRepositoryFormat(ZipEntry entry) {
-        return allRepositoryStores().stream().map(IRepositoryStore::getName)
+        return AbstractRepositoryStore.REPO_STORE_ORDER.keySet().stream()
                 .anyMatch(
                         storeName -> Pattern.compile(String.format("^.*/%s/.*$", storeName)).matcher(entry.getName())
                                 .find());
-    }
-
-    public List<IRepositoryStore<? extends IRepositoryFileStore>> allRepositoryStores() {
-        return RepositoryManager.getInstance().getCurrentRepository().getAllStores();
     }
 
     public String getBonitaVersion() {

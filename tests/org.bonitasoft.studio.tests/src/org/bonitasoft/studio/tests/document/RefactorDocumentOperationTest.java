@@ -35,6 +35,7 @@ import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.bonitasoft.studio.model.process.Task;
 import org.bonitasoft.studio.refactoring.core.RefactoringOperationType;
+import org.bonitasoft.studio.tests.util.InitialProjectRule;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.command.AddCommand;
@@ -42,10 +43,14 @@ import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 
 public class RefactorDocumentOperationTest {
 
+    @Rule
+    public InitialProjectRule projectRule = InitialProjectRule.INSTANCE;
+    
     private TransactionalEditingDomain domain;
     private Pool parentProcess;
     private Operation operation;

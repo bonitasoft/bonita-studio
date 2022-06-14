@@ -49,6 +49,7 @@ import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.e4.core.di.annotations.CanExecute;
 import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
@@ -73,6 +74,7 @@ public class ExportBosArchiveHandler {
                 PlatformUI.getWorkbench().getProgressService().run(true, false, monitor -> {
                     final List<IRepositoryStore<? extends IRepositoryFileStore>> exportableStores = repositoryAccessor
                             .getCurrentRepository()
+                            .orElseThrow()
                             .getAllExportableStores();
                     for (final IRepositoryStore<? extends IRepositoryFileStore> store : exportableStores) {
                         final List<? extends IRepositoryFileStore> files = store.getChildren();
@@ -91,6 +93,7 @@ public class ExportBosArchiveHandler {
             }
             final ExportRepositoryWizard wizard = new ExportRepositoryWizard(
                     RepositoryManager.getInstance().getCurrentRepository()
+                            .orElseThrow()
                             .getAllExportableStores(),
                     true, selectedFiles,
                     getDefaultName(repositoryAccessor),
@@ -104,7 +107,7 @@ public class ExportBosArchiveHandler {
     }
 
     private String getDefaultName(RepositoryAccessor repositoryAccessor) {
-        return repositoryAccessor.getCurrentRepository().getName() + "_"
+        return repositoryAccessor.getCurrentRepository().orElseThrow().getName() + "_"
                 + new SimpleDateFormat("yyyyMMdd_HHmm").format(new Date()) + ".bos";
     }
 
@@ -204,6 +207,15 @@ public class ExportBosArchiveHandler {
         //Synchronize configuration with definition
         new ConfigurationSynchronizer(process, configuration).synchronize();
         return configuration;
+    }
+    
+    
+    @CanExecute
+    public boolean isEnabled() {
+        if (RepositoryManager.getInstance().hasActiveRepository()) {
+            return true;
+        }
+        return false;
     }
 
 }

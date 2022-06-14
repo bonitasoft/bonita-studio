@@ -15,6 +15,7 @@
 package org.bonitasoft.studio.rest.api.extension.menu;
 
 import org.bonitasoft.studio.common.CommandExecutor;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.maven.i18n.Messages;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
@@ -46,7 +47,7 @@ public class RestApiExtensionMenuContribution extends ContributionItem {
     public void fill(Menu parent, int index) {
         var restApiMenuItem = new MenuItem(parent, SWT.CASCADE, index);
         restApiMenuItem.setText(Messages.restApiExtensionRepositoryName);
-        restApiMenuItem.setEnabled(true);
+        restApiMenuItem.setEnabled(isEnabled());
         restApiMenuItem.setImage(Pics.getImage(PicsConstants.restApi));
 
         var restApiMenu = new Menu(restApiMenuItem);
@@ -65,6 +66,15 @@ public class RestApiExtensionMenuContribution extends ContributionItem {
         createItem(restApiMenu, DEPLOY_COMMAND, org.bonitasoft.studio.common.Messages.deployWithWizardMenuLabel, 7);
 
         restApiMenuItem.setMenu(restApiMenu);
+        
+        parent.addMenuListener(new MenuAdapter() {
+
+            @Override
+            public void menuShown(MenuEvent e) {
+                restApiMenuItem.setEnabled(isEnabled());
+            }
+
+        });
     }
 
     private void createItem(Menu parent, String command, String text, int index) {
@@ -78,6 +88,14 @@ public class RestApiExtensionMenuContribution extends ContributionItem {
                 item.setEnabled(commandExecutor.canExecute(command, null));
             }
         });
+    }
+    
+    @Override
+    public boolean isEnabled() {
+        if (RepositoryManager.getInstance().hasActiveRepository()) {
+            return true;
+        }
+        return false;
     }
 
 }

@@ -43,7 +43,9 @@ public class CustomPageProjectSelectionProvider {
             final IFile file = (IFile) editorInput.getAdapter(IFile.class);
             try {
                 if (file != null && file.getProject().hasNature(RestAPIExtensionNature.NATURE_ID)) {
-                    IRepositoryFileStore fileStore = repositoryAccessor.getCurrentRepository().getFileStore(file.getProject());
+                    IRepositoryFileStore fileStore = repositoryAccessor.getCurrentRepository()
+                            .orElseThrow()
+                            .getFileStore(file.getProject());
                     return (CustomPageProjectFileStore) fileStore;
                     //return repositoryAccessor.getRepositoryStore(RestAPIExtensionRepositoryStore.class).getChild(file.getProject().getName());
                 }

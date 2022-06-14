@@ -28,7 +28,7 @@ public class RepositoryLabelProvider extends StyledCellLabelProvider {
      */
     public Color getForeground(final Object element) {
         final IRepository repository = (IRepository) element;
-        if (RepositoryManager.getInstance().getCurrentRepository().equals(element)) {
+        if (RepositoryManager.getInstance().getCurrentRepository().filter(element::equals).isPresent()) {
             return ColorConstants.gray;
         } else if (!ProductVersion.sameMinorVersion(repository.getVersion())) {
             return ColorConstants.red;
@@ -70,7 +70,7 @@ public class RepositoryLabelProvider extends StyledCellLabelProvider {
         final StyledString styledString = new StyledString();
 
         styledString.append(getText(element), null);
-        if (RepositoryManager.getInstance().getCurrentRepository().equals(element)) {
+        if (RepositoryManager.getInstance().getCurrentRepository().filter(element::equals).isPresent()) {
             styledString.append(" -- ", StyledString.QUALIFIER_STYLER);
             styledString.append(Messages.current, StyledString.DECORATIONS_STYLER);
         }

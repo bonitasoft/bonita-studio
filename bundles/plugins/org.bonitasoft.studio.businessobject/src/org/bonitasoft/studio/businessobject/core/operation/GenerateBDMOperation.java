@@ -110,9 +110,9 @@ public class GenerateBDMOperation implements IRunnableWithProgress {
                 data.put(BDM_ARTIFACT_DESCRIPTOR, bdmArtifactDescriptor);
                 data.put(FILE_CONTENT, new String(((BusinessObjectModelRepositoryStore) fileStore.getParentStore())
                         .getConverter().marshall(model)));
-                
+
                 eventBroker().send(BDM_DEPLOYED_TOPIC, data);
-                
+
                 updateProjectBDMDependency(bdmArtifactDescriptor);
             } catch (final Exception e) {
                 throw new InvocationTargetException(e);
@@ -147,10 +147,12 @@ public class GenerateBDMOperation implements IRunnableWithProgress {
             @Override
             public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
                 // Update bdm model and dao list cache
-                var currentRepository = fileStore.getRepositoryAccessor().getCurrentRepository();
-                BusinessObjectModelRepositoryStore businessObjectModelRepositoryStore = currentRepository
-                        .getRepositoryStore(BusinessObjectModelRepositoryStore.class);
-                businessObjectModelRepositoryStore.allBusinessObjectDao(currentRepository.getJavaProject());
+                var currentRepository = fileStore.getRepositoryAccessor().getCurrentRepository().orElse(null);
+                if (currentRepository != null) {
+                    BusinessObjectModelRepositoryStore businessObjectModelRepositoryStore = currentRepository
+                            .getRepositoryStore(BusinessObjectModelRepositoryStore.class);
+                    businessObjectModelRepositoryStore.allBusinessObjectDao(currentRepository.getJavaProject());
+                }
                 return Status.OK_STATUS;
             }
         }.schedule();

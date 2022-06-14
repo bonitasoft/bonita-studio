@@ -61,6 +61,7 @@ public class DeleteDiagramCommandHandler extends AbstractHandler implements IHan
         if (RepositoryManager.getInstance().hasActiveRepository()) {
             final DiagramRepositoryStore diagramSotre = RepositoryManager.getInstance()
                     .getCurrentRepository()
+                    .orElseThrow()
                     .getRepositoryStore(DiagramRepositoryStore.class);
             return !diagramSotre.isEmpty();
         }

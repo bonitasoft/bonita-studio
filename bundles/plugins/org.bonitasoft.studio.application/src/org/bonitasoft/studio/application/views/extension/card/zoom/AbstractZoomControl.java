@@ -65,7 +65,7 @@ public abstract class AbstractZoomControl extends Composite {
         this.zoomListener = zoomListener;
         this.dep = dep;
         this.bonitaDep = bonitaDep;
-        this.projectDependenciesStore = repoManager.getCurrentRepository().getProjectDependenciesStore();
+        this.projectDependenciesStore = repoManager.getCurrentRepository().orElseThrow().getProjectDependenciesStore();
         this.engine = PlatformUI.getWorkbench().getService(IThemeEngine.class);
         this.cursorHand = parent.getDisplay().getSystemCursor(SWT.CURSOR_HAND);
         this.cursorArrow = parent.getDisplay().getSystemCursor(SWT.CURSOR_ARROW);

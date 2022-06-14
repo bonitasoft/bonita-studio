@@ -44,6 +44,7 @@ public class ExtendendResourceLinkHelper extends ResourceLinkHelper {
             return;
         if (aSelection.getFirstElement() instanceof IFile) {
             DiagramRepositoryStore store = RepositoryManager.getInstance().getCurrentRepository()
+                    .orElseThrow()
                     .getRepositoryStore(DiagramRepositoryStore.class);
             IFile file = (IFile) aSelection.getFirstElement();
             DiagramFileStore fStore = store.getChild(file.getName(), true);

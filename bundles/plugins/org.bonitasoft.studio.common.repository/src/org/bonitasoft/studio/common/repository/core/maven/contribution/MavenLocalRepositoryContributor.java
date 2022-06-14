@@ -19,6 +19,7 @@ import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
 import org.bonitasoft.studio.common.repository.core.maven.MavenInstallFileOperation;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 
 public class MavenLocalRepositoryContributor {
 
@@ -37,7 +38,7 @@ public class MavenLocalRepositoryContributor {
         this.internalRepositoryRootFolder = internalRepositoryRootFolder;
     }
 
-    public void execute() throws IOException, CoreException {
+    public void execute(IProgressMonitor monitor) throws IOException, CoreException {
         BonitaStudioLog.info(String.format("Configuring %s maven repository...", targetRepository.getId()),
                 CommonRepositoryPlugin.PLUGIN_ID);
         Instant start = Instant.now();
@@ -53,7 +54,8 @@ public class MavenLocalRepositoryContributor {
                             artifact.getType(),
                             artifact.getClassifier(),
                             artifactFile,
-                            toPomFile(artifact));
+                            toPomFile(artifact), 
+                            monitor);
                 } else {
                     BonitaStudioLog.warning(
                             String.format("File %s for artifact %s not found in studio internal repository",

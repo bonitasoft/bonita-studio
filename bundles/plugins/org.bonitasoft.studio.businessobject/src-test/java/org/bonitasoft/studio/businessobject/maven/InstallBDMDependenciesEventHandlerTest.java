@@ -64,7 +64,7 @@ public class InstallBDMDependenciesEventHandlerTest {
     public void should_install_bdm_client() throws Exception {
         handler.handleEvent(event);
 
-        verify(installCommand).installFile("com.company.test", "bdm-client", "1.0.0", "jar", null, file);
+        verify(installCommand).installFile(eq("com.company.test"), eq("bdm-client"), eq("1.0.0"), eq("jar"), Mockito.isNull(), eq(file), Mockito.notNull());
         verify(handler).updateMavenProjects();
     }
 
@@ -73,7 +73,7 @@ public class InstallBDMDependenciesEventHandlerTest {
         handler.handleEvent(event);
 
         verify(installCommand).installFile(eq("com.company.test"), eq("bdm-dao"), eq("1.0.0"), eq("jar"), eq(null),
-                eq(file), Mockito.notNull());
+                eq(file), Mockito.notNull(), Mockito.notNull());
         verify(file,times(2)).delete();
         verify(handler).updateMavenProjects();
     }

@@ -32,9 +32,10 @@ import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
-import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
+import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -101,14 +102,19 @@ public class ExportBosArchiveOperation {
             status = new Status(IStatus.ERROR, CommonRepositoryPlugin.PLUGIN_ID, e.getMessage(), e);
             return status;
         }
-        
+
         status = op.getStatus();
         return status;
     }
 
     protected IStatus addManifest() {
-        manifestFile = RepositoryManager.getInstance().getCurrentRepository().getProject()
-                .getFile(BOS_ARCHIVE_MANIFEST);
+        var project = RepositoryManager.getInstance().getCurrentRepository()
+                .map(IRepository::getProject)
+                .orElse(null);
+        if (project == null) {
+            return Status.error("No active project.");
+        }
+        manifestFile = project.getFile(BOS_ARCHIVE_MANIFEST);
         if (manifestFile.exists()) {
             try {
                 manifestFile.delete(true, AbstractRepository.NULL_PROGRESS_MONITOR);
@@ -192,7 +198,7 @@ public class ExportBosArchiveOperation {
     }
 
     private boolean isBuildOutputFolder(IResource resource) {
-        return Pattern.matches("target", resource.getName()) 
+        return Pattern.matches("target", resource.getName())
                 || Pattern.matches("bin", resource.getName())
                 || Pattern.matches("node", resource.getName())
                 || Pattern.matches("node_modules", resource.getName());

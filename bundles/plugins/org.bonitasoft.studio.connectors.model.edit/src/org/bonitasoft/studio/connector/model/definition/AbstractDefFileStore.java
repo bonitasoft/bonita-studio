@@ -43,6 +43,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.xmi.XMLResource;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IWorkbenchPart;
 import org.osgi.framework.Bundle;
@@ -135,10 +136,15 @@ public abstract class AbstractDefFileStore extends EMFFileStore<ConnectorDefinit
     @Override
     public Image getIcon() {
         try {
-            return getDefinitionImageResourceLoader().getIcon(getContent()).createImage();
+            var definition = getContent();
+            ImageDescriptor descriptor = getDefinitionImageResourceLoader().getIcon(definition);
+            if(descriptor != null) {
+                return descriptor.createImage();
+            }
         } catch (ReadFileStoreException e) {
             return null;
         }
+        return null;
     }
 
     protected abstract Bundle getBundle();

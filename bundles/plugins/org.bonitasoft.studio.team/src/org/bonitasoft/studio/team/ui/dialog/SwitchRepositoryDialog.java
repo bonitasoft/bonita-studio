@@ -114,7 +114,7 @@ public class SwitchRepositoryDialog extends Dialog {
                     final IRepository repository = (IRepository) ((StructuredSelection) event.getSelection())
                             .getFirstElement();
                     if (ProductVersion.sameMinorVersion(repository.getVersion())
-                            && (force || !repository.equals(RepositoryManager.getInstance().getCurrentRepository()))) {
+                            && (force || RepositoryManager.getInstance().getCurrentRepository().filter(repository::equals).isEmpty())) {
                         updateOKButton(true);
                     } else {
                         updateOKButton(false);
@@ -165,7 +165,7 @@ public class SwitchRepositoryDialog extends Dialog {
                 });
 
                 repositoryList.setInput(RepositoryManager.getInstance().getAllRepositories());
-                repositoryList.setSelection(new StructuredSelection(RepositoryManager.getInstance().getCurrentRepository()));
+                RepositoryManager.getInstance().getCurrentRepository().ifPresent(repo -> repositoryList.setSelection(new StructuredSelection(repo)));
             } catch (final Exception e) {
                 BonitaStudioLog.error(e);
             }
@@ -176,7 +176,7 @@ public class SwitchRepositoryDialog extends Dialog {
         if (!((StructuredSelection) repositoryList.getSelection()).isEmpty()) {
             final IRepository repository = (IRepository) ((StructuredSelection) repositoryList.getSelection())
                     .getFirstElement();
-            delete.setEnabled(!repository.equals(RepositoryManager.getInstance().getCurrentRepository()));
+            delete.setEnabled(RepositoryManager.getInstance().getCurrentRepository().filter(repository::equals).isEmpty());
         } else {
             delete.setEnabled(false);
         }

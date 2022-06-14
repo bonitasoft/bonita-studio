@@ -14,12 +14,14 @@
  */
 package org.bonitasoft.studio.common.repository.core;
 
+import java.util.Optional;
+
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.preferences.OrganizationPreferenceConstants;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
-import org.eclipse.core.runtime.preferences.IScopeContext;
 import org.eclipse.e4.core.di.annotations.Creatable;
 import org.eclipse.e4.core.services.events.IEventBroker;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
@@ -32,10 +34,12 @@ public class ActiveOrganizationProvider {
 
     private static final String PLUGIN_ID = CommonRepositoryPlugin.PLUGIN_ID;
     public static final String ACTIVE_ORGANIZATION_CHANGED = "activeOrganizationChanged";
-    
+
     public String getActiveOrganization() {
-        return getPreferenceNode().get(OrganizationPreferenceConstants.DEFAULT_ORGANIZATION,
-                OrganizationPreferenceConstants.DEFAULT_ORGANIZATION_NAME);
+        return getPreferenceNode()
+                .map(prefs -> prefs.get(OrganizationPreferenceConstants.DEFAULT_ORGANIZATION,
+                        OrganizationPreferenceConstants.DEFAULT_ORGANIZATION_NAME))
+                .orElse(OrganizationPreferenceConstants.DEFAULT_ORGANIZATION_NAME);
     }
 
     public String getActiveOrganizationFileName() {
@@ -43,40 +47,51 @@ public class ActiveOrganizationProvider {
     }
 
     public String getDefaultUser() {
-        return getPreferenceNode().get(OrganizationPreferenceConstants.DEFAULT_USER,
-                OrganizationPreferenceConstants.DEFAULT_USER_NAME);
+        return getPreferenceNode().map(prefs -> prefs.get(OrganizationPreferenceConstants.DEFAULT_USER,
+                OrganizationPreferenceConstants.DEFAULT_USER_NAME))
+                .orElse(OrganizationPreferenceConstants.DEFAULT_USER_NAME);
     }
 
-    private IEclipsePreferences getPreferenceNode() {
-        final IScopeContext projectScope = RepositoryManager.getInstance().getCurrentRepository().getScopeContext();
-        return projectScope.getNode(PLUGIN_ID);
+    private Optional<IEclipsePreferences> getPreferenceNode() {
+        return RepositoryManager.getInstance().getCurrentRepository()
+                .map(AbstractRepository::getScopeContext)
+                .map(ctx -> ctx.getNode(PLUGIN_ID));
     }
 
     public String getDefaultPassword() {
-        return getPreferenceNode().get(OrganizationPreferenceConstants.DEFAULT_PASSWORD,
-                OrganizationPreferenceConstants.DEFAULT_USER_PASSWORD);
+        return getPreferenceNode()
+                .map(prefs -> prefs.get(OrganizationPreferenceConstants.DEFAULT_PASSWORD,
+                        OrganizationPreferenceConstants.DEFAULT_USER_PASSWORD))
+                .orElse(OrganizationPreferenceConstants.DEFAULT_USER_PASSWORD);
     }
 
     public void saveDefaultUser(final String userName) {
-        getPreferenceNode().put(OrganizationPreferenceConstants.DEFAULT_USER, userName);
+        getPreferenceNode().ifPresent(prefs -> prefs.put(OrganizationPreferenceConstants.DEFAULT_USER, userName));
     }
 
     public void saveDefaultPassword(final String password) {
-        getPreferenceNode().put(OrganizationPreferenceConstants.DEFAULT_PASSWORD, password);
+        getPreferenceNode().ifPresent(prefs -> prefs.put(OrganizationPreferenceConstants.DEFAULT_PASSWORD, password));
     }
 
     public void saveActiveOrganization(final String organizationName) {
-        getPreferenceNode().put(OrganizationPreferenceConstants.DEFAULT_ORGANIZATION, organizationName);
-        PlatformUI.getWorkbench().getService(IEventBroker.class).send(ACTIVE_ORGANIZATION_CHANGED, organizationName);
+        getPreferenceNode().ifPresent(prefs -> {
+            prefs.put(OrganizationPreferenceConstants.DEFAULT_ORGANIZATION, organizationName);
+            PlatformUI.getWorkbench().getService(IEventBroker.class).send(ACTIVE_ORGANIZATION_CHANGED,
+                    organizationName);
+        });
     }
 
     public boolean shouldPublishOrganization() {
-        return getPreferenceNode().getBoolean(OrganizationPreferenceConstants.PUBLISH_ORGANIZATION, false);
+        return getPreferenceNode()
+                .map(prefs -> prefs.getBoolean(OrganizationPreferenceConstants.PUBLISH_ORGANIZATION, false))
+                .orElse(false);
     }
 
     public String getPublishOrganizationState() {
-        return getPreferenceNode().get(OrganizationPreferenceConstants.TOGGLE_STATE_FOR_PUBLISH_ORGANIZATION,
-                MessageDialogWithToggle.NEVER);
+        return getPreferenceNode()
+                .map(prefs -> prefs.get(OrganizationPreferenceConstants.TOGGLE_STATE_FOR_PUBLISH_ORGANIZATION,
+                        MessageDialogWithToggle.NEVER))
+                .orElse(MessageDialogWithToggle.NEVER);
     }
 
     public IPreferenceStore getPreferenceStore() {
@@ -84,19 +99,23 @@ public class ActiveOrganizationProvider {
     }
 
     public void savePublishOrganization(final boolean publishOrganization) {
-        getPreferenceNode().putBoolean(OrganizationPreferenceConstants.PUBLISH_ORGANIZATION, publishOrganization);
+        getPreferenceNode().ifPresent(
+                prefs -> prefs.putBoolean(OrganizationPreferenceConstants.PUBLISH_ORGANIZATION, publishOrganization));
     }
 
     public void savePublishOrganizationState(final String state) {
-        getPreferenceNode().get(OrganizationPreferenceConstants.TOGGLE_STATE_FOR_PUBLISH_ORGANIZATION, state);
+        getPreferenceNode().ifPresent(
+                prefs -> prefs.put(OrganizationPreferenceConstants.TOGGLE_STATE_FOR_PUBLISH_ORGANIZATION, state));
     }
 
     public void flush() {
-        try {
-            getPreferenceNode().flush();
-        } catch (BackingStoreException e) {
-            BonitaStudioLog.error(e);
-        }
+        getPreferenceNode().ifPresent(prefs -> {
+            try {
+                prefs.flush();
+            } catch (BackingStoreException e) {
+                BonitaStudioLog.error(e);
+            }
+        });
     }
 
 }

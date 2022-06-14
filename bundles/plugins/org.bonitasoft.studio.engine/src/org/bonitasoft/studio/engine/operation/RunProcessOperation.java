@@ -154,7 +154,7 @@ public class RunProcessOperation implements IRunnableWithProgress, Runnable {
 
     private void openBrowser(final IProgressMonitor monitor, final DeployProcessOperation deployOperation,
             final String configurationId, final boolean hasInitiator) throws Exception {
-        BOSWebServerManager.getInstance().startServer(RepositoryManager.getInstance().getCurrentRepository(),
+        BOSWebServerManager.getInstance().startServer(RepositoryManager.getInstance().getCurrentRepository().orElseThrow(),
                 monitor);
         final APISession session = BOSEngineManager.getInstance()
                 .createSession(processToRun, configurationId, monitor);

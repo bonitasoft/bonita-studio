@@ -53,14 +53,10 @@
                   name="org.bonitasoft.studio.application.deploySeparator"
                   visible="true">
             </separator>
-            <menu
-                  icon="icons/menuIcons/recently.png"
-                  label="%RecentlyModified">
-               <dynamic
-                     class="org.bonitasoft.studio.application.actions.ProcessListContribution"
-                     id="org.bonitasoft.studio.application.openRecently">
-               </dynamic>
-            </menu>
+            <dynamic
+                  class="org.bonitasoft.studio.application.actions.RecentlyModifiedContribution"
+                  id="org.bonitasoft.studio.application.openRecently">
+            </dynamic>
             <command
                   commandId="org.eclipse.ui.file.save"
                   disabledIcon="icons/menuIcons/save_disabled.png"
@@ -149,15 +145,11 @@
                id="org.bonitasoft.studio.menu.edit"
                label="%editMenu_label">
             <command
-                  commandId="org.eclipse.ui.views.showView"
+                  commandId="org.bonitasoft.studio.application.find.command"
                   icon="icons/find.png"
                   label="%findLabel"
                   mnemonic="F"
                   style="push">
-               <parameter
-                     name="org.eclipse.ui.views.showView.viewId"
-                     value="org.bonitasoft.studio.views.overview.tree">
-               </parameter>
             </command>
              <separator
                   name="org.bonitasoft.studio.application.separator20"
@@ -230,14 +222,10 @@
                </command>
             </menu>
             <command
-                  commandId="org.eclipse.ui.views.showView"
+                  commandId="org.bonitasoft.studio.application.showView.command"
                   icon="icons/show_view.png"
                   label="%showOverview_label"
                   style="push">
-               <parameter
-                     name="org.eclipse.ui.views.showView.viewId"
-                     value="org.bonitasoft.studio.views.overview">
-               </parameter>
             </command>
             <command
                   commandId="org.bonitasoft.studio.application.resetWindowCommand"
@@ -694,6 +682,16 @@
          id="org.bonitasoft.studio.application.newWithWizard"
          name="%newWithWizard">
    </command>
+   <command
+         defaultHandler="org.bonitasoft.studio.application.actions.FindHandler"
+         id="org.bonitasoft.studio.application.find.command"
+         name="%findLabel">
+   </command>
+   <command
+         defaultHandler="org.bonitasoft.studio.application.actions.ShowOverviewHandler"
+         id="org.bonitasoft.studio.application.showView.command"
+         name="%showOverview_label">
+   </command>
    </extension>
    <extension
          point="org.eclipse.ui.views">
@@ -998,6 +996,12 @@
             </instanceof>
          </with>
       </definition>
+      <definition
+            id="isBonitaProjectActive">
+         <test
+               property="org.bonitasoft.studio.application.isBonitaProjectActive">
+         </test>
+      </definition>
    </extension>
 
    <extension
@@ -1166,11 +1170,6 @@
             class="org.bonitasoft.studio.application.coolbar.HelpCoolbarItem"
             priority="0"
             toolbarPosition="19">
-      </coolbarItem>
-      <coolbarItem
-            class="org.bonitasoft.studio.application.coolbar.WelcomeCoolbarItem"
-            priority="0"
-            toolbarPosition="20">
       </coolbarItem>
    </extension>
    <extension
@@ -1428,7 +1427,7 @@
             class="org.bonitasoft.studio.application.property.tester.BonitaProjectPropertyTester"
             id="org.bonitasoft.studio.application.project.propertyTester"
             namespace="org.bonitasoft.studio.application"
-            properties="isBonitaProject,isBonitaStoreContainer,isContainer"
+            properties="isBonitaProject,isBonitaStoreContainer,isContainer,isBonitaProjectActive"
             type="org.eclipse.core.runtime.IAdaptable">
       </propertyTester>
       <propertyTester

@@ -14,7 +14,6 @@
  */
 package org.bonitasoft.studio.businessobject.core.operation;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -40,10 +39,9 @@ import org.bonitasoft.studio.common.ProjectUtil;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
-import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.core.DatabaseHandler;
+import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
-import org.bonitasoft.studio.dependencies.repository.DependencyFileStore;
-import org.bonitasoft.studio.dependencies.repository.DependencyRepositoryStore;
 import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.eclipse.core.commands.ParameterizedCommand;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -230,7 +228,11 @@ public class DeployBDMOperation implements IRunnableWithProgress {
     }
 
     protected String pathToDBFolder(final RepositoryAccessor repositoryAccessor) {
-        return repositoryAccessor.getCurrentRepository().getDatabaseHandler().getDBLocation().getAbsolutePath();
+        return repositoryAccessor.getCurrentRepository()
+                    .map(IRepository::getDatabaseHandler)
+                    .map(DatabaseHandler::getDBLocation)
+                    .map(File::getAbsolutePath)
+                    .orElse(null);
     }
 
     private boolean containsBusinessObjects(final BusinessObjectModel bom) {

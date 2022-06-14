@@ -13,6 +13,7 @@ import javax.inject.Named;
 import org.bonitasoft.studio.common.jface.CustomWizardDialog;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.maven.MavenProjectConfiguration;
 import org.bonitasoft.studio.maven.i18n.Messages;
 import org.bonitasoft.studio.maven.ui.WidgetFactory;
@@ -49,7 +50,7 @@ public class NewThemeHandler extends AbstractHandler {
 
     @CanExecute
     public boolean canExecute(RepositoryAccessor repositoryAccessor) {
-        return repositoryAccessor.getCurrentRepository().isLoaded();
+        return repositoryAccessor.getCurrentRepository().filter(IRepository::isLoaded).isPresent();
     }
 
     protected NewThemeWizard newWizard(RepositoryAccessor repositoryAccessor, WidgetFactory widgetFactory, IWorkspace workspace) {

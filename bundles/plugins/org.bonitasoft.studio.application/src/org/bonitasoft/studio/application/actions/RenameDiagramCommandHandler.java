@@ -84,7 +84,7 @@ public class RenameDiagramCommandHandler extends AbstractHandler {
     public boolean isEnabled() {
         if (RepositoryManager.getInstance().hasActiveRepository()) {
             boolean diagramSelected = fileStoreFinder
-                    .findSelectedFileStore(RepositoryManager.getInstance().getCurrentRepository())
+                    .findSelectedFileStore(RepositoryManager.getInstance().getCurrentRepository().orElseThrow())
                     .filter(DiagramFileStore.class::isInstance).isPresent();
             return diagramSelected || getMainProcess() != null;
         }
@@ -97,11 +97,10 @@ public class RenameDiagramCommandHandler extends AbstractHandler {
             if (diagramEditor.isPresent()) {
                 ProcessDiagramEditor processDiagramEditor = diagramEditor.get();
                 final EObject mainElement = processDiagramEditor.getDiagramEditPart().resolveSemanticElement();
-                final MainProcess diagram = ModelHelper.getMainProcess(mainElement);
-                return diagram;
+                return ModelHelper.getMainProcess(mainElement);
             }
             return fileStoreFinder
-                    .findSelectedFileStore(RepositoryManager.getInstance().getCurrentRepository())
+                    .findSelectedFileStore(RepositoryManager.getInstance().getCurrentRepository().orElseThrow())
                     .filter(DiagramFileStore.class::isInstance)
                     .map(DiagramFileStore.class::cast)
                     .map(t -> {

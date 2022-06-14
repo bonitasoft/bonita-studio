@@ -43,7 +43,7 @@ public class ShowRepositoryInSystemExplorerHandler extends AbstractHandler {
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
 
-        IProject project = RepositoryManager.getInstance().getCurrentRepository().getProject();
+        IProject project = RepositoryManager.getInstance().getCurrentRepository().orElseThrow().getProject();
 
         final StatusReporter statusReporter = HandlerUtil.getActiveWorkbenchWindow(event).getService(
                 StatusReporter.class);

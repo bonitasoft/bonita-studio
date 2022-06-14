@@ -57,7 +57,6 @@ public class BonitaStudioWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
     static {
         EDITOR_TYPE_TO_CLOSE_ON_EXIT.add("org.bonitasoft.studio.customProfile.editor");
         EDITOR_TYPE_TO_CLOSE_ON_EXIT.add("org.bonitasoft.studio.la.editor");
-        EDITOR_TYPE_TO_CLOSE_ON_EXIT.add("org.bonitasoft.studio.application.dashboard.editor");
     }
 
     public BonitaStudioWorkbenchWindowAdvisor(final IWorkbenchWindowConfigurer configurer) {

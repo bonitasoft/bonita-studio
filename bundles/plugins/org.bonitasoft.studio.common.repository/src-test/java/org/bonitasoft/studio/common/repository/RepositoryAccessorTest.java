@@ -17,6 +17,8 @@ package org.bonitasoft.studio.common.repository;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.Optional;
+
 import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -61,7 +63,7 @@ public class RepositoryAccessorTest {
     @Test
     public void should_open_existing_repository_when_starting() throws Exception {
         //Given
-        when(repositoryManager.getCurrentRepository()).thenReturn(repository);
+        when(repositoryManager.getCurrentRepository()).thenReturn(Optional.of(repository));
         when(repository.exists()).thenReturn(true);
 
         //When
@@ -75,7 +77,7 @@ public class RepositoryAccessorTest {
     @Test
     public void should_create_repository_when_starting() throws Exception {
         //Given
-        when(repositoryManager.getCurrentRepository()).thenReturn(repository);
+        when(repositoryManager.getCurrentRepository()).thenReturn(Optional.of(repository));
         when(repository.exists()).thenReturn(false);
 
         //When

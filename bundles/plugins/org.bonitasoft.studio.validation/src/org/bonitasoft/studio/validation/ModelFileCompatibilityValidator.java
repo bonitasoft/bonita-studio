@@ -86,7 +86,7 @@ public class ModelFileCompatibilityValidator implements IRunnableWithStatus {
     @Override
     public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
         IProject project = repository.getProject();
-        if (addResourceMarkers) {
+        if (project != null && addResourceMarkers) {
             File projectRoot = project.getLocation().toFile();
             if (!Objects.equals(projectRoot, projectRootFolder)) {
                 throw new InvocationTargetException(new IllegalArgumentException(

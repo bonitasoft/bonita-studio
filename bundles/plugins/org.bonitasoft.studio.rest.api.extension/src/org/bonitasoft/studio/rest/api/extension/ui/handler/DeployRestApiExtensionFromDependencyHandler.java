@@ -48,7 +48,7 @@ public class DeployRestApiExtensionFromDependencyHandler {
             @Named("version") String version,
             @Named("classifier") @Optional String classifier) {
 
-        repositoryAccessor.getCurrentRepository().getProjectDependenciesStore()
+        repositoryAccessor.getCurrentRepository().orElseThrow().getProjectDependenciesStore()
                 .getRestAPIExtensions().stream()
                 .filter(ext -> Objects.equals(ext.getArtifact().getGroupId(), groupId))
                 .filter(ext -> Objects.equals(ext.getArtifact().getArtifactId(), artifactId))

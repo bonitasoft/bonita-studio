@@ -25,6 +25,7 @@ import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.jdt.CreateJarOperation;
+import org.bonitasoft.studio.common.repository.model.IJavaContainer;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.core.resources.IFile;
@@ -88,7 +89,8 @@ public class PackageFileStore extends AbstractFileStore<IFolder> {
         return null;
     }
 
-    public void exportAsJar(final String absoluteTargetFilePath, final boolean includeSources) throws InvocationTargetException, InterruptedException {
+    public void exportAsJar(final String absoluteTargetFilePath, final boolean includeSources)
+            throws InvocationTargetException, InterruptedException {
         try {
             checkWritePermission(new File(absoluteTargetFilePath));
         } catch (final IOException e) {
@@ -96,18 +98,23 @@ public class PackageFileStore extends AbstractFileStore<IFolder> {
         }
         final IPackageFragment packageFragment = getPackageFragment();
         try {
-            new CreateJarOperation(new File(absoluteTargetFilePath), packageFragment.getCompilationUnits()).run(AbstractRepository.NULL_PROGRESS_MONITOR);
+            new CreateJarOperation(new File(absoluteTargetFilePath), packageFragment.getCompilationUnits())
+                    .run(AbstractRepository.NULL_PROGRESS_MONITOR);
         } catch (final JavaModelException e) {
             throw new InvocationTargetException(e, "Failed to retrieve compilation units from package frgament");
         }
     }
 
     public IPackageFragment getPackageFragment() {
-        final IJavaProject project = RepositoryManager.getInstance().getCurrentRepository().getJavaProject();
-        try {
-            return project.findPackageFragment(getParentStore().getResource().getFullPath().append(packageName.replace(".", "/")));
-        } catch (final JavaModelException e) {
-            BonitaStudioLog.error(e);
+        final IJavaProject project = RepositoryManager.getInstance().getCurrentRepository()
+                .map(IJavaContainer::getJavaProject).orElse(null);
+        if (project != null) {
+            try {
+                return project.findPackageFragment(
+                        getParentStore().getResource().getFullPath().append(packageName.replace(".", "/")));
+            } catch (final JavaModelException e) {
+                BonitaStudioLog.error(e);
+            }
         }
         return null;
     }
@@ -169,7 +176,8 @@ public class PackageFileStore extends AbstractFileStore<IFolder> {
         }
     }
 
-    private void deleteRecursivelyEmptyPackages(final IJavaProject project, IPackageFragment packageFragment) throws JavaModelException {
+    private void deleteRecursivelyEmptyPackages(final IJavaProject project, IPackageFragment packageFragment)
+            throws JavaModelException {
         if (packageFragment != null) {
             packageFragment.delete(true, new NullProgressMonitor());//delete the first one, we have only one package per Type
             packageFragment = retrieveParentPackageFragment(project, packageFragment);

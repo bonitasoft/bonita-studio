@@ -88,14 +88,14 @@ public class ExportBosArchiveIT {
         RepositoryAccessor repositoryAccessor = RepositoryManager.getInstance().getAccessor();
         try (var zipFile = new ZipFile(bosFile)) {
             assertThat(
-                    zipFile.getEntry(String.format("%s/pom.xml", repositoryAccessor.getCurrentRepository().getName())))
+                    zipFile.getEntry(String.format("%s/pom.xml", repositoryAccessor.getCurrentRepository().orElseThrow().getName())))
                             .isNotNull();
             assertThat(zipFile.getEntry(
                     String.format("%s/.store/org/bonitasoft/theme/my-darkly-theme/1.0.0/my-darkly-theme-1.0.0.zip",
-                            repositoryAccessor.getCurrentRepository().getName()))).isNotNull();
+                            repositoryAccessor.getCurrentRepository().orElseThrow().getName()))).isNotNull();
             assertThat(zipFile.getEntry(
                     String.format("%s/.store/org/bonitasoft/restapi/extension/task-candidates-rest-api/1.0.1-SNAPSHOT/task-candidates-rest-api-1.0.1-SNAPSHOT.zip",
-                            repositoryAccessor.getCurrentRepository().getName()))).isNotNull();
+                            repositoryAccessor.getCurrentRepository().orElseThrow().getName()))).isNotNull();
         }
     }
 
@@ -103,6 +103,7 @@ public class ExportBosArchiveIT {
     public void should_not_export_ui_designer_metadata() throws Exception {
         RepositoryAccessor repositoryAccessor = RepositoryManager.getInstance().getAccessor();
         final WebPageRepositoryStore repositoryStore = repositoryAccessor.getCurrentRepository()
+                .orElseThrow()
                 .getRepositoryStore(WebPageRepositoryStore.class);
 
         final CreateFormOperation createFormOperation = new CreateFormOperation(
@@ -131,9 +132,9 @@ public class ExportBosArchiveIT {
         assertThat(bosFile).exists();
         try (ZipFile zipFile = new ZipFile(bosFile);) {
             assertThat(zipFile.getEntry(String.format("%s/web_page/%s/%s.json",
-                    repositoryAccessor.getCurrentRepository().getName(), pageId, pageId))).isNotNull();
+                    repositoryAccessor.getCurrentRepository().orElseThrow().getName(), pageId, pageId))).isNotNull();
             assertThat(zipFile.getEntry(String.format("%s/web_page/.metadata",
-                    repositoryAccessor.getCurrentRepository().getName()))).isNull();
+                    repositoryAccessor.getCurrentRepository().orElseThrow().getName()))).isNull();
         }
     }
 

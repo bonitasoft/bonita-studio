@@ -16,6 +16,7 @@ package org.bonitasoft.studio.application;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
 import java.net.URL;
@@ -40,7 +41,6 @@ import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.core.ActiveOrganizationProvider;
-import org.bonitasoft.studio.common.repository.core.DatabaseHandler;
 import org.bonitasoft.studio.common.repository.core.maven.DependencyGetOperation;
 import org.bonitasoft.studio.common.repository.core.maven.contribution.InstallBonitaMavenArtifactsOperation;
 import org.bonitasoft.studio.common.repository.core.maven.migration.model.GAV;
@@ -57,6 +57,7 @@ import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.bonitasoft.studio.preferences.BonitaThemeConstants;
 import org.bonitasoft.studio.preferences.dialog.BonitaPreferenceDialog;
+import org.codehaus.groovy.eclipse.GroovyPlugin;
 import org.eclipse.core.internal.databinding.beans.BeanPropertyHelper;
 import org.eclipse.core.internal.resources.Workspace;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -121,35 +122,38 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
             monitor.beginTask(Messages.shuttingDown, IProgressMonitor.UNKNOWN);
             UIDesignerServerManager.getInstance().stop();
             Job.getJobManager().cancel(StartEngineJob.FAMILY);
+            RepositoryManager.getInstance().getCurrentRepository().ifPresent(AbstractRepository::disableOpenIntroListener);
             executePreShutdownContribution();
             new ActiveOrganizationProvider().flush();
             if (BOSWebServerManager.getInstance().serverIsStarted() && BOSEngineManager.getInstance().isRunning()) {
                 BOSEngineManager.getInstance().stop();
             }
-            try {
-                deleteH2DatabasesFiles();
-            } catch (final IOException e) {
-                BonitaStudioLog.error(e);
-            }
+            deleteH2DatabasesFiles();
             FileUtil.deleteDir(ProjectUtil.getBonitaStudioWorkFolder());
             deleteTomcatTempDir();
             monitor.done();
         }
-        
-        private void deleteH2DatabasesFiles() throws IOException {
-            if (BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore()
-                    .getBoolean(BonitaPreferenceConstants.DELETE_TENANT_ON_EXIT)) {
-                final AbstractRepository currentRepository = RepositoryManager.getInstance().getCurrentRepository();
-                final DatabaseHandler bonitaHomeHandler = currentRepository.getDatabaseHandler();
-                bonitaHomeHandler.removeEngineDatabase();
-            }
-            if (dropBusinessDataDBOnExit()) {
-                final AbstractRepository currentRepository = RepositoryManager.getInstance().getCurrentRepository();
-                final DatabaseHandler bonitaHomeHandler = currentRepository.getDatabaseHandler();
-                bonitaHomeHandler.removeBusinessDataDatabase();
-            }
+
+        private void deleteH2DatabasesFiles() {
+            RepositoryManager.getInstance().getCurrentRepository().ifPresent(currentRepository -> {
+                if (BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore()
+                        .getBoolean(BonitaPreferenceConstants.DELETE_TENANT_ON_EXIT)) {
+                    try {
+                        currentRepository.getDatabaseHandler().removeEngineDatabase();
+                    } catch (IOException e) {
+                        throw new UncheckedIOException(e);
+                    }
+                }
+                if (dropBusinessDataDBOnExit()) {
+                    try {
+                        currentRepository.getDatabaseHandler().removeBusinessDataDatabase();
+                    } catch (IOException e) {
+                        throw new UncheckedIOException(e);
+                    }
+                }
+            });
         }
-        
+
         private boolean dropBusinessDataDBOnExit() {
             final IPreferenceStore preferenceStore = EnginePlugin.getDefault().getPreferenceStore();
             return preferenceStore.getBoolean(EnginePreferenceConstants.DROP_BUSINESS_DATA_DB_ON_EXIT_PREF);
@@ -438,11 +442,7 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
 
         // Initialize adapter factories and avoid deadlock at startup
         ProcessDiagramEditorPlugin.getInstance().getItemProvidersAdapterFactory();
-        try {
-            new InstallBonitaMavenArtifactsOperation(MavenPlugin.getMaven().getLocalRepository()).execute();
-        } catch (CoreException e) {
-            BonitaStudioLog.error(e);
-        }
+
         disableInternalWebBrowser();
         setSystemProperties();
         configureGradleScriptContentType();
@@ -488,10 +488,17 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
 
             @Override
             protected IStatus run(IProgressMonitor monitor) {
+                // Ensure the local repository contains Bonita artifacts
+                try {
+                    new InstallBonitaMavenArtifactsOperation(MavenPlugin.getMaven().getLocalRepository())
+                            .execute(monitor);
+                } catch (CoreException e) {
+                    return e.getStatus();
+                }
                 RepositoryManager.getInstance().getAccessor().start(monitor);
                 return Status.OK_STATUS;
             }
-            
+
             @Override
             public boolean belongsTo(Object family) {
                 return RepositoryManager.class.equals(family);
@@ -508,7 +515,9 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
             }
         });
         initializeProjectJob.setPriority(Job.INTERACTIVE);
-        initializeProjectJob.schedule();
+        if (RepositoryManager.getInstance().hasActiveRepository()) {
+            initializeProjectJob.schedule();
+        }
 
         super.postStartup();
         IThemeEngine engine = PlatformUI.getWorkbench().getService(IThemeEngine.class);
@@ -648,12 +657,13 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
         if (PlatformUtil.isHeadless()) {
             return;//Do not execute earlyStartup in headless mode
         }
-
+        // Force groovy plugin startup
+        GroovyPlugin.getDefault();
         new Job("Setup internal maven repository") {
 
             @Override
             protected IStatus run(IProgressMonitor monitor) {
-                new InstallBonitaMavenArtifactsOperation(MavenRepositories.internalRepository()).execute();
+                new InstallBonitaMavenArtifactsOperation(MavenRepositories.internalRepository()).execute(monitor);
                 try {
                     testMavenCentralAccess(monitor);
                 } catch (InvocationTargetException | InterruptedException e) {
@@ -717,21 +727,23 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
             }
         }.schedule();
 
-        preLoad();
-
         final long startupDuration = System.currentTimeMillis() - BonitaStudioApplication.START_TIME;
         BonitaStudioLog.info("Startup duration : " + DateUtil.getDisplayDuration(startupDuration),
                 ApplicationPlugin.PLUGIN_ID);
         ApplicationPlugin.getDefault().getPreferenceStore().setDefault(FIRST_STARTUP, true);
         if (isFirstStartup()) {
             String skipReleaseNote = System.getProperty(BONITA_STUDIO_SKIP_RELEASE_NOTE_SYSTEM_PROPERTY);
-            if(skipReleaseNote == null || !(Boolean.valueOf(skipReleaseNote) || skipReleaseNote.isEmpty())) {
+            if (skipReleaseNote == null || !(Boolean.valueOf(skipReleaseNote) || skipReleaseNote.isEmpty())) {
                 new OpenReleaseNoteHandler().openBrowser();
             }
-            PlatformUtil.openIntroIfNoOtherEditorOpen();
-        } else {
-            PlatformUtil.openDashboardIfNoOtherEditorOpen();
         }
+
+        if (RepositoryManager.getInstance().hasActiveRepository()) {
+            PlatformUtil.openDashboardIfNoOtherEditorOpen();
+        } else {
+            PlatformUtil.openIntroIfNoOtherEditorOpen();
+        }
+
         ApplicationPlugin.getDefault().getPreferenceStore().setValue(FIRST_STARTUP, false);
     }
 
@@ -754,35 +766,6 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
 
     private boolean isFirstStartup() {
         return ApplicationPlugin.getDefault().getPreferenceStore().getBoolean(FIRST_STARTUP);
-    }
-
-    private void preLoad() {
-        //Fix performance issue
-        BeanPropertyHelper.getPropertyDescriptor(ContractInputImpl.class, "name");
-        preLoadSVG();
-    }
-
-    private void preLoadSVG() {
-        final SVGFigure svgFigure = new SVGFigure();
-        try {
-            final File iconsFolder = new File(
-                    FileLocator.toFileURL(Platform.getBundle("org.bonitasoft.studio.pics").getResource("icons"))
-                            .getFile());
-            initSVGFigure(svgFigure, iconsFolder, "figures");
-            initSVGFigure(svgFigure, iconsFolder, "decoration", "svg");
-        } catch (final IOException e) {
-            BonitaStudioLog.error(e);
-        }
-    }
-
-    private void initSVGFigure(final SVGFigure svgFigure, final File iconsFolder, final String... pathToFolder) {
-        for (final String filename : new File(iconsFolder, Joiner.on(File.separatorChar).join(pathToFolder)).list()) {
-            if (filename.endsWith(".svgz")) {
-                svgFigure
-                        .setURI("platform:/plugin/org.bonitasoft.studio.pics/icons/" + Joiner.on("/").join(pathToFolder)
-                                + "/" + filename);
-            }
-        }
     }
 
 }
