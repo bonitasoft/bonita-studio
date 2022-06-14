@@ -24,6 +24,8 @@ import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.validation.i18n.Messages;
 import org.eclipse.jface.action.ContributionItem;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.MenuAdapter;
+import org.eclipse.swt.events.MenuEvent;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 
@@ -46,6 +48,15 @@ public class BatchValidationMenuContributionItem extends ContributionItem {
         item.addListener(SWT.Selection, e -> performValidation());
         item.setEnabled(isEnabled());
         item.setImage(Pics.getImage(PicsConstants.validate));
+
+        parent.addMenuListener(new MenuAdapter() {
+
+            @Override
+            public void menuShown(MenuEvent e) {
+                item.setEnabled(isEnabled());
+            }
+
+        });
     }
 
     private void performValidation() {
@@ -54,7 +65,7 @@ public class BatchValidationMenuContributionItem extends ContributionItem {
         parameters.put(SHOW_REPORT_PARAMETER, Boolean.TRUE.toString());
         commandExecutor.executeCommand(VALIDATION_COMMAND, parameters);
     }
-    
+
     @Override
     public boolean isEnabled() {
         return RepositoryManager.getInstance().hasActiveRepository();
