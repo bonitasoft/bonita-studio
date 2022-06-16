@@ -193,11 +193,9 @@ public class RunCoolbarItem extends ContributionItem implements IBonitaContribut
         if (iconSize < 0) {
             item.setImage(Pics.getImage(PicsConstants.coolbar_run_32));
             item.setHotImage(Pics.getImage(PicsConstants.coolbar_run_hot_32));
-            item.setDisabledImage(Pics.getImage(PicsConstants.coolbar_run_disabled_32));
         } else {
             item.setImage(Pics.getImage(PicsConstants.coolbar_run_24));
             item.setHotImage(Pics.getImage(PicsConstants.coolbar_run_hot_24));
-            item.setDisabledImage(Pics.getImage(PicsConstants.coolbar_run_disabled_24));
         }
         setEnabled(false);
         item.addSelectionListener(new SelectionAdapter() {

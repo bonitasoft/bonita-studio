@@ -542,8 +542,7 @@ public class BOSWebServerManager implements IBonitaProjectListener {
         if (PlatformUtil.isHeadless()) {
             return;
         }
-        IPreferenceStore preferenceStore = EnginePlugin.getDefault().getPreferenceStore();
-        if (!isLazyModeEnabled(preferenceStore)) {
+        if (!isLazyModeEnabled()) {
             final StartEngineJob job = new StartEngineJob(Messages.startingEngineServer, repository);
             job.setPriority(Job.LONG);
             job.setUser(false);
@@ -551,7 +550,8 @@ public class BOSWebServerManager implements IBonitaProjectListener {
         }
     }
 
-    private boolean isLazyModeEnabled(IPreferenceStore preferenceStore) {
+    public boolean isLazyModeEnabled() {
+        IPreferenceStore preferenceStore = EnginePlugin.getDefault().getPreferenceStore();
         return preferenceStore.getBoolean(EnginePreferenceConstants.LAZYLOAD_ENGINE)
                 || System.getProperty(EnginePreferenceConstants.LAZYLOAD_ENGINE) != null;
     }
