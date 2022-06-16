@@ -75,11 +75,9 @@ public class SaveCoolbarItem extends ContributionItem
         if (iconSize < 0) {
             item.setImage(Pics.getImage(PicsConstants.coolbar_save_32));
             item.setHotImage(Pics.getImage(PicsConstants.coolbar_save_hot_32));
-            item.setDisabledImage(Pics.getImage(PicsConstants.coolbar_save_disabled_32));
         } else {
             item.setImage(Pics.getImage(PicsConstants.coolbar_save_24));
             item.setHotImage(Pics.getImage(PicsConstants.coolbar_save_hot_24));
-            item.setDisabledImage(Pics.getImage(PicsConstants.coolbar_save_disabled_24));
         }
         setEnabled(false);
         item.addSelectionListener(new SelectionAdapter() {
