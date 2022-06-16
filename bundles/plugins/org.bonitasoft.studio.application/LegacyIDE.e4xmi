@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="ASCII"?>
+<application:Application xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:application="http://www.eclipse.org/ui/2010/UIModel/application" xmlns:basic="http://www.eclipse.org/ui/2010/UIModel/application/ui/basic" xmlns:menu="http://www.eclipse.org/ui/2010/UIModel/application/ui/menu" xsi:schemaLocation="http://www.eclipse.org/ui/2010/UIModel/application/ui/basic http://www.eclipse.org/ui/2010/UIModel/application#//ui/basic http://www.eclipse.org/ui/2010/UIModel/application/ui/menu http://www.eclipse.org/ui/2010/UIModel/application#//ui/menu" xmi:id="org.eclipse.e4.legacy.ide.application" elementId="org.eclipse.e4.legacy.ide.application" bindingContexts="_SeXUHO8EEd6BC9cDb6iV7y">
+  <children xsi:type="basic:TrimmedWindow" xmi:id="IDEWindow" elementId="IDEWindow">
+    <tags>shellMaximized</tags>
+    <trimBars xmi:id="_Xlit0PmrEeKmbqF_-KBA6g" elementId="org.eclipse.ui.main.toolbar">
+      <children xsi:type="menu:ToolControl" xmi:id="_YoyTgPmrEeKmbqF_-KBA6g" elementId="BonitaCoolbar" contributionURI="bundleclass://org.bonitasoft.studio.application/org.bonitasoft.studio.application.coolbar.CoolbarToolControl"/>
+    </trimBars>
+  </children>
+  <handlers xmi:id="_UW9TY_r3Ed6gmo7caOxU9g" elementId="_UW9TY_r3Ed6gmo7caOxU9g" contributionURI="bundleclass://org.eclipse.e4.ui.workbench/org.eclipse.e4.ui.internal.workbench.handlers.ExitHandler" command="e4.exit"/>
+  <handlers xmi:id="_BESTZfr3Ed6gmo7caOxU04" elementId="_BESTZfr3Ed6gmo7caOxU04" contributionURI="bundleclass://org.eclipse.e4.ui.workbench.swt/org.eclipse.e4.ui.internal.workbench.swt.handlers.ShowViewHandler" command="e4.show.view"/>
+  <handlers xmi:id="_eTBRgAFSEd-Z8rQksLwRYw" elementId="org.eclipse.e4.ui.saveHandler" contributionURI="bundleclass://org.eclipse.e4.ui.workbench/org.eclipse.e4.ui.internal.workbench.handlers.SaveHandler" command="_jR5mUAFSEd-Z8rQksLwRYw"/>
+  <handlers xmi:id="_eTBRgAFSEd-Z8rQksLwRYx" elementId="org.eclipse.e4.ui.saveAllHandler" contributionURI="bundleclass://org.eclipse.e4.ui.workbench/org.eclipse.e4.ui.internal.workbench.handlers.SaveAllHandler" command="_jR5mUAFSEd-Z8rQksLwRYx"/>
+  <bindingTables xmi:id="_SeXUEO8EEd6FC9cDb6iV7x" bindingContext="_SeXUHO8EEd6BC9cDb6iV7y">
+    <bindings xmi:id="_UW9TZfr3Ed6gmo7caOxU9g" elementId="_UW9TZfr3Ed6gmo7caOxU9g" keySequence="CTRL+Q" command="e4.exit"/>
+    <bindings xmi:id="_oRr6EAFSEd-Z8rQksLwRYw" elementId="_oRr6EAFSEd-Z8rQksLwRYw" keySequence="CTRL+S" command="_jR5mUAFSEd-Z8rQksLwRYw"/>
+    <bindings xmi:id="_oRr6EAFSEd-Z8rQksLwRYx" keySequence="CTRL+SHIFT+S" command="_jR5mUAFSEd-Z8rQksLwRYx"/>
+  </bindingTables>
+  <rootContext xmi:id="_SeXUHO8EEd6BC9cDb6iV7y" elementId="org.eclipse.ui.contexts.dialogAndWindow" name="%bindingcontext.name.dialogAndWindows">
+    <children xmi:id="_SeXUEO8EEd6FC9cDb6iV7w" elementId="org.eclipse.ui.contexts.window" name="%bindingcontext.name.windows">
+      <children xmi:id="_SeXUEO8EEd6FC9cDb6yV7x" elementId="org.eclipse.e4.ui.contexts.views" name="%bindingcontext.name.bindingView"/>
+    </children>
+    <children xmi:id="_SeXUEO8EEd6FC9cDb6iV7x" elementId="org.eclipse.ui.contexts.dialog" name="%bindingcontext.name.dialogs"/>
+  </rootContext>
+  <descriptors xmi:id="_7zkswPgrEeKQjpqZyIOY1Q" elementId="org.bonitasoft.studio.views.overview" label="%overviewViewName" iconURI="platform:/plugin/org.bonitasoft.studio.application/icons/overview.png" closeable="true" contributionURI="bundleclass://org.eclipse.ui.workbench/org.eclipse.ui.internal.e4.compatibility.CompatibilityView">
+    <menus xmi:id="_7zkswfgrEeKQjpqZyIOY1Q" elementId="org.bonitasoft.studio.views.overview">
+      <tags>ViewMenu</tags>
+    </menus>
+  </descriptors>
+  <descriptors xmi:id="_70D08PgrEeKQjpqZyIOY1Q" elementId="org.bonitasoft.studio.views.properties.process.general" label="%General_process" iconURI="platform:/plugin/org.bonitasoft.studio.application/icons/details.png" closeable="true" contributionURI="bundleclass://org.eclipse.ui.workbench/org.eclipse.ui.internal.e4.compatibility.CompatibilityView">
+    <menus xmi:id="_70D08fgrEeKQjpqZyIOY1Q" elementId="org.bonitasoft.studio.views.properties.process.general">
+      <tags>ViewMenu</tags>
+    </menus>
+  </descriptors>
+  <descriptors xmi:id="_70LwwPgrEeKQjpqZyIOY1Q" elementId="org.bonitasoft.studio.views.properties.process.appearance" label="%Appearance" iconURI="platform:/plugin/org.bonitasoft.studio.application/icons/appearanceView.png" closeable="true" contributionURI="bundleclass://org.eclipse.ui.workbench/org.eclipse.ui.internal.e4.compatibility.CompatibilityView">
+    <menus xmi:id="_70LwwfgrEeKQjpqZyIOY1Q" elementId="org.bonitasoft.studio.views.properties.process.appearance">
+      <tags>ViewMenu</tags>
+    </menus>
+  </descriptors>
+  <descriptors xmi:id="_70O0EPgrEeKQjpqZyIOY1Q" elementId="org.bonitasoft.studio.views.overview.tree" label="%TreeOverView" iconURI="platform:/plugin/org.bonitasoft.studio.application/icons/overview.png" closeable="true" contributionURI="bundleclass://org.eclipse.ui.workbench/org.eclipse.ui.internal.e4.compatibility.CompatibilityView">
+    <menus xmi:id="_70O0EfgrEeKQjpqZyIOY1Q" elementId="org.bonitasoft.studio.views.overview.tree">
+      <tags>ViewMenu</tags>
+    </menus>
+    <toolbar xmi:id="_70O0EvgrEeKQjpqZyIOY1Q" elementId="org.bonitasoft.studio.views.overview.tree"/>
+  </descriptors>
+  <descriptors xmi:id="_UH4tcKvdEequIa8fowuzrQ" elementId="org.eclipse.ui.views.ProblemView" contributionURI="bundleclass://org.eclipse.ui.workbench/org.eclipse.ui.internal.e4.compatibility.CompatibilityView">
+    <persistedState key="memento" value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?>&lt;view PRIMARY_SORT_FIELD=&quot;org.eclipse.ui.ide.severityAndDescriptionField&quot; categoryGroup=&quot;none&quot; markerContentGenerator=&quot;org.eclipse.ui.ide.problemsGenerator&quot;>&lt;columnWidths org.eclipse.ui.ide.resourceField=&quot;120&quot; org.eclipse.ui.ide.severityAndDescriptionField=&quot;450&quot;/>&lt;visible IMemento.internal.id=&quot;org.eclipse.ui.ide.severityAndDescriptionField&quot;/>&lt;visible IMemento.internal.id=&quot;org.eclipse.ui.ide.resourceField&quot;/>&lt;/view>"/>
+  </descriptors>
+  <commands xmi:id="e4.exit" elementId="e4.exit" commandName="%command.name.exit" description=""/>
+  <commands xmi:id="e4.show.view" elementId="e4.show.view" commandName="%command.name.showView">
+    <parameters xmi:id="_oRr6EAFSEd-Z8rQksLwRYz" elementId="org.eclipse.ui.views.showView.viewId" name="View"/>
+  </commands>
+  <commands xmi:id="_jR5mUAFSEd-Z8rQksLwRYw" elementId="org.eclipse.e4.ui.saveCommands" commandName="%command.name.save"/>
+  <commands xmi:id="_jR5mUAFSEd-Z8rQksLwRYx" elementId="org.eclipse.e4.ui.saveAllCommands" commandName="%command.name.saveAll"/>
+  <addons xmi:id="_XGB3wPZlEd-XstlTZ6nTXg" elementId="org.eclipse.e4.core.commands.service" contributionURI="bundleclass://org.eclipse.e4.core.commands/org.eclipse.e4.core.commands.CommandServiceAddon"/>
+  <addons xmi:id="_XGB3wPZlEd-XstlTZ6nTXh" elementId="org.eclipse.e4.ui.contexts.service" contributionURI="bundleclass://org.eclipse.e4.ui.services/org.eclipse.e4.ui.services.ContextServiceAddon"/>
+  <addons xmi:id="_XGB3wPZlEd-XstlTZ6nTXi" elementId="org.eclipse.e4.ui.bindings.service" contributionURI="bundleclass://org.eclipse.e4.ui.bindings/org.eclipse.e4.ui.bindings.BindingServiceAddon"/>
+  <addons xmi:id="_LK0NgPZmEd-XstlTZ6nTXj" elementId="org.eclipse.e4.ui.workbench.commands.model" contributionURI="bundleclass://org.eclipse.e4.ui.workbench/org.eclipse.e4.ui.internal.workbench.addons.CommandProcessingAddon"/>
+  <addons xmi:id="_LK0NgPZmEd-XstlTZ6nTXk" elementId="org.eclipse.e4.ui.workbench.contexts.model" contributionURI="bundleclass://org.eclipse.e4.ui.workbench/org.eclipse.e4.ui.internal.workbench.addons.ContextProcessingAddon"/>
+  <addons xmi:id="_LK0NgPZmEd-XstlTZ6nTXl" elementId="org.eclipse.e4.ui.workbench.bindings.model" contributionURI="bundleclass://org.eclipse.e4.ui.workbench.swt/org.eclipse.e4.ui.workbench.swt.util.BindingProcessingAddon"/>
+  <addons xmi:id="_XwQYkE2EEd-DfN2vYY4Lew" elementId="Cleanup Addon" contributionURI="bundleclass://org.eclipse.e4.ui.workbench.addons.swt/org.eclipse.e4.ui.workbench.addons.cleanupaddon.CleanupAddon"/>
+  <addons xmi:id="_bqcWME2EEd-DfN2vYY4Lew" elementId="DnD Addon" contributionURI="bundleclass://org.eclipse.e4.ui.workbench.addons.swt/org.eclipse.e4.ui.workbench.addons.dndaddon.DnDAddon"/>
+  <addons xmi:id="_7GC6sGp-Ed-QyNZjH9g15Q" elementId="MinMax Addon" contributionURI="bundleclass://org.eclipse.e4.ui.workbench.addons.swt/org.eclipse.e4.ui.workbench.addons.minmax.MinMaxAddon"/>
+  <addons xmi:id="_00yosOXqEeGugqEu_OWUGQ" elementId="org.eclipse.ui.workbench.addon.0" contributionURI="bundleclass://org.eclipse.e4.ui.workbench/org.eclipse.e4.ui.internal.workbench.addons.HandlerProcessingAddon"/>
+  <addons xmi:id="_s8MBsPtgEeKy1qSE7bOrWA" elementId="org.bonitasoft.studio.application.addon.0" contributionURI="bundleclass://org.bonitasoft.studio.application/org.bonitasoft.studio.application.OpenIntroAddon"/>
+  <addons xmi:id="_LQpUgHr3EeSGZs6Rx6niag" elementId="org.bonitasoft.studio.common.log.LoggerAddon" contributionURI="bundleclass://org.bonitasoft.studio.common/org.bonitasoft.studio.common.log.BonitaStudioLogger"/>
+  <addons xmi:id="_nYIaIL6DEeSbWZYS5_ItTA" elementId="org.bonitasoft.studio.repository.accessor" contributionURI="bundleclass://org.bonitasoft.studio.common.repository/org.bonitasoft.studio.common.repository.RepositoryAccessor"/>
+</application:Application>
