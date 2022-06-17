@@ -200,10 +200,8 @@ public class ConfigureCoolbarItem extends ContributionItem implements IBonitaCon
         if (iconSize < 0) {
             item.setImage(Pics.getImage(PicsConstants.coolbar_configure_32));
             item.setHotImage(Pics.getImage(PicsConstants.coolbar_configure_hot_32));
-            item.setDisabledImage(Pics.getImage(PicsConstants.coolbar_configure_disabled_32));
         } else {
             item.setImage(Pics.getImage(PicsConstants.coolbar_configure_24));
-            item.setDisabledImage(Pics.getImage(PicsConstants.coolbar_configure_disabled_24));
             item.setHotImage(Pics.getImage(PicsConstants.coolbar_configure_hot_24));
         }
         setEnabled(false);
