@@ -26,6 +26,7 @@ import org.bonitasoft.studio.common.repository.core.maven.BonitaProjectBuilder.B
 import org.bonitasoft.studio.common.repository.core.maven.contribution.InstallBonitaMavenArtifactsOperation;
 import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
 import org.bonitasoft.studio.common.repository.ui.validator.MavenIdValidator;
+import org.bonitasoft.studio.engine.BOSWebServerManager;
 import org.bonitasoft.studio.ui.converter.ConverterBuilder;
 import org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory;
 import org.bonitasoft.studio.ui.validator.MultiValidator;
@@ -140,13 +141,14 @@ public class ProjectMetadataPage implements ControlSupplier {
                 .widthHint(750)
                 .withItems(availableCompatibleVersions())
                 .withValidator(new MultiValidator.Builder()
-                        .havingValidators(new EmptyInputValidator(Messages.targetRuntimeVersion), new BonitaRuntimeVersionValidator())
+                        .havingValidators(new EmptyInputValidator(Messages.targetRuntimeVersion),
+                                new BonitaRuntimeVersionValidator())
                         .create())
                 .bindTo(PojoProperties.value("bonitaRuntimeVersion", String.class).observeDetail(metadataObservale))
                 .inContext(ctx)
                 .useNativeRender()
                 .createIn(composite);
-        
+
         var targetVersionMessage = new Link(composite, SWT.NONE);
         targetVersionMessage
                 .setLayoutData(GridDataFactory.fillDefaults().grab(true, false).indent(0, -10).span(2, 1).create());
@@ -194,9 +196,14 @@ public class ProjectMetadataPage implements ControlSupplier {
     }
 
     private IValidator<String> engineRestartWarning(String originalName) {
-        return name -> !Objects.equals(originalName, name)
-                ? ValidationStatus.warning(Messages.engineRestartWarning)
+        return name -> !BOSWebServerManager.getInstance().isLazyModeEnabled() && !Objects.equals(originalName, name)
+                ? ValidationStatus.warning(displayWarningServerMessage())
                 : ValidationStatus.ok();
+    }
+
+    private String displayWarningServerMessage() {
+        return BOSWebServerManager.getInstance().serverIsStarted() ? Messages.engineRestartWarning
+                : Messages.engineStartWarning;
     }
 
     public ProjectMetadata getMetadata() {
