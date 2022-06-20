@@ -19,6 +19,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
+import org.bonitasoft.studio.common.CommandExecutor;
 import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
@@ -191,7 +192,7 @@ public class ConnectorImplementationTest implements SWTBotConstants {
                 return "Editor for implementation has not been opened.";
             }
         }, 30000);
-        bot.menu("Development").menu("Connectors").menu("Edit implementation...").click();
+        bot.getDisplay().asyncExec(() -> new CommandExecutor().executeCommand("org.bonitasoft.studio.connectors.editImplementation", null));
         bot.table().unselect();
         assertFalse("Edit button should be disabled",
                 bot.button(Messages.Edit).isEnabled());

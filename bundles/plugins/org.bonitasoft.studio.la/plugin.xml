@@ -18,14 +18,6 @@
          point="org.eclipse.ui.menus">
       <menuContribution
             allPopups="false"
-            locationURI="menu:org.bonitasoft.studio.development?after=org.bonitasoft.studio.menu.filter">
-         <dynamic
-               class="org.bonitasoft.studio.la.application.menu.ApplicationMenuContributionItem"
-               id="org.bonitasoft.studio.la.menu">
-         </dynamic>
-      </menuContribution>
-      <menuContribution
-            allPopups="false"
             locationURI="popup:org.bonitasoft.studio.application.project.explorer.new?after=org.bonitasoft.studio.application.placeholder.restapi">
          <dynamic
                class="org.bonitasoft.studio.la.application.menu.NewApplicationMenuContribution"

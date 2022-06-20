@@ -18,21 +18,15 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
-import org.bonitasoft.studio.team.TeamRepositoryUtil;
 import org.bonitasoft.studio.team.git.core.RetrieveHEADRefOperation;
 import org.bonitasoft.studio.team.git.core.ValidateClonedRepository;
 import org.bonitasoft.studio.team.git.i18n.Messages;
 import org.bonitasoft.studio.ui.dialog.ExceptionDialogHandler;
 import org.bonitasoft.studio.ui.wizard.WizardPageBuilder;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.egit.core.RepositoryUtil;
 import org.eclipse.egit.core.credentials.UserPasswordCredentials;
@@ -165,7 +159,7 @@ public class CustomGitCloneWizard extends GitCloneWizard {
                     public void run(IProgressMonitor monitor)
                             throws InvocationTargetException, InterruptedException {
                         executeCloneOperation(cloneOperation, gitRepositoryInfo, monitor);
-                        TeamRepositoryUtil.switchToRepository(repositoryNameControlSupplier.getRepositoryName(), true,
+                        RepositoryManager.getInstance().switchToRepository(repositoryNameControlSupplier.getRepositoryName(), true,
                                 monitor);
                         var project = RepositoryManager.getInstance().getCurrentRepository().orElseThrow().getProject();
                         var mapping = RepositoryMapping.getMapping(project);

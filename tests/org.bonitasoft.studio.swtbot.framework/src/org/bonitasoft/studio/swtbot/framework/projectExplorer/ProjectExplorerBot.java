@@ -21,7 +21,6 @@ import static org.eclipse.swtbot.swt.finder.matchers.WidgetMatcherFactory.withId
 import java.util.Objects;
 import java.util.Optional;
 
-import org.bonitasoft.studio.common.CommandExecutor;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.identity.i18n.Messages;
 import org.bonitasoft.studio.swtbot.framework.BotBase;
@@ -30,6 +29,7 @@ import org.bonitasoft.studio.swtbot.framework.bdm.BotBdmEditor;
 import org.bonitasoft.studio.swtbot.framework.connector.ConnectorDefinitionWizardBot;
 import org.bonitasoft.studio.swtbot.framework.connector.ConnectorImplementationWizardBot;
 import org.bonitasoft.studio.swtbot.framework.diagram.BotProcessDiagramPerspective;
+import org.bonitasoft.studio.swtbot.framework.diagram.importer.BotImportOtherDialog;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotView;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
@@ -46,8 +46,6 @@ public class ProjectExplorerBot extends BotBase {
     private static final String NEW_CONNECTOR_IMPL_COMMAND = "org.bonitasoft.studio.connectors.newImplementation";
     private static final String NEW_FILTER_DEF_COMMAND = "org.bonitasoft.studio.actors.newFilterDef";
     private static final String NEW_FILTER_IMPL_COMMAND = "org.bonitasoft.studio.actors.newFilterImpl";
-
-    private CommandExecutor commandExecutor = new CommandExecutor();
 
     protected String projectName;
 
@@ -93,9 +91,15 @@ public class ProjectExplorerBot extends BotBase {
         projectTreeItem.contextMenu().menu("New").menu(org.bonitasoft.studio.application.i18n.Messages.processDiagram).click();
         return new BotProcessDiagramPerspective(bot);
     }
+    
+    public BotImportOtherDialog importBPMNFile() {
+        SWTBotTreeItem projectTreeItem = getProjectTreeItem();
+        bot.waitUntil(contextMenuAvailable(projectTreeItem, "Import BPMN 2.0 File..."));
+        projectTreeItem.contextMenu().menu("Import BPMN 2.0 File...").click();
+        return new BotImportOtherDialog(bot);
+    }
 
     public ConnectorDefinitionWizardBot newConnectorDefinition() {
-        bot.waitUntil(Conditions.widgetIsEnabled(bot.menu("Development")), 10000);
         bot.getDisplay().asyncExec(() -> commandExecutor.executeCommand(NEW_CONNECTOR_DEF_COMMAND, null));
         bot.waitUntil(Conditions.shellIsActive("New connector definition"), 10000);
         return new ConnectorDefinitionWizardBot(bot,
@@ -103,7 +107,6 @@ public class ProjectExplorerBot extends BotBase {
     }
 
     public ConnectorImplementationWizardBot newConnectorImplementation() {
-        bot.waitUntil(Conditions.widgetIsEnabled(bot.menu("Development")), 10000);
         bot.getDisplay().asyncExec(() -> commandExecutor.executeCommand(NEW_CONNECTOR_IMPL_COMMAND, null));
         bot.waitUntil(Conditions.shellIsActive("New connector implementation"), 10000);
         return new ConnectorImplementationWizardBot(bot,
@@ -111,13 +114,11 @@ public class ProjectExplorerBot extends BotBase {
     }
 
     public ConnectorDefinitionWizardBot newActorFilterDefinition() {
-        bot.waitUntil(Conditions.widgetIsEnabled(bot.menu("Development")), 10000);
         bot.getDisplay().asyncExec(() -> commandExecutor.executeCommand(NEW_FILTER_DEF_COMMAND, null));
         return new ConnectorDefinitionWizardBot(bot, org.bonitasoft.studio.identity.i18n.Messages.newFilterDefinition);
     }
 
     public ConnectorImplementationWizardBot newActorFilterImplementation() {
-        bot.waitUntil(Conditions.widgetIsEnabled(bot.menu("Development")), 10000);
         bot.getDisplay().asyncExec(() -> commandExecutor.executeCommand(NEW_FILTER_IMPL_COMMAND, null));
         bot.waitUntil(Conditions.shellIsActive(Messages.newFilterImplementation), 10000);
         return new ConnectorImplementationWizardBot(bot,
@@ -224,5 +225,7 @@ public class ProjectExplorerBot extends BotBase {
         bot.waitUntil(contextMenuAvailable(projectTreeItem, "Validate"));
         projectTreeItem.contextMenu().menu("Validate").click();
     }
+
+
 
 }

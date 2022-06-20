@@ -30,8 +30,8 @@ import org.bonitasoft.studio.identity.organization.model.organization.PasswordTy
 import org.bonitasoft.studio.identity.organization.repository.OrganizationFileStore;
 import org.bonitasoft.studio.identity.organization.repository.OrganizationRepositoryStore;
 import org.bonitasoft.studio.swtbot.framework.SWTBotTestUtil;
-import org.bonitasoft.studio.swtbot.framework.application.BotApplicationWorkbenchWindow;
 import org.bonitasoft.studio.swtbot.framework.organization.BotOrganizationEditor;
+import org.bonitasoft.studio.swtbot.framework.projectExplorer.ProjectExplorerBot;
 import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
@@ -53,9 +53,9 @@ public class TestOrganizationPassword {
     public void testImportExportWithPasswordUpdated() throws IOException, ReadFileStoreException {
         importOrganizationProgrammatically();
 
-        BotApplicationWorkbenchWindow botApplicationWorkbenchWindow = new BotApplicationWorkbenchWindow(bot);
-        BotOrganizationEditor botOrganizationEditor = botApplicationWorkbenchWindow.organizationMenu().open()
-                .select("OrganizationWithEncryptedPassword.organization").open();
+        BotOrganizationEditor botOrganizationEditor = new ProjectExplorerBot(bot)
+                .organization()
+                .openOrganization("OrganizationWithEncryptedPassword");
 
         botOrganizationEditor
                 .userPage()
@@ -71,7 +71,8 @@ public class TestOrganizationPassword {
                 + OrganizationRepositoryStore.ORGANIZATION_EXT, true);
         PasswordType password = orgaFileStore.getContent().getUsers().getUser().get(0).getPassword();
         Assert.assertEquals("The passsword value should have been updated.", "updatedPassord", password.getValue());
-        Assert.assertFalse("The password has been updated and the value of the attribute encrypted should be set to false",
+        Assert.assertFalse(
+                "The password has been updated and the value of the attribute encrypted should be set to false",
                 password.isEncrypted());
     }
 
@@ -83,7 +84,7 @@ public class TestOrganizationPassword {
         assertNotNull("filePath should not be null", archiveURL.getPath());
         File toImport = new File(FileLocator.toFileURL(archiveURL).getFile());
         assertTrue("organization to import does not exist", toImport.exists());
-        try(InputStream fis = Files.newInputStream(toImport.toPath())){
+        try (InputStream fis = Files.newInputStream(toImport.toPath())) {
             organizationStore.importInputStream(toImport.getName(), fis);
         }
     }

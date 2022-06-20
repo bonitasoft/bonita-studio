@@ -8,23 +8,6 @@
    </repositoryStore>
 </extension>
 <extension
-      point="org.eclipse.ui.menus">
-   <menuContribution
-         allPopups="false"
-         locationURI="menu:org.eclipse.ui.main.menu?after=org.bonitasoft.studio.actor.organizationMenu">
-        <menu
-              id="org.bonitasoft.studio.development"
-              label="%development">
-           <visibleWhen
-                 checkEnabled="true">
-                 <reference
-                     definitionId="isBonitaPerspectiveActive">
-               </reference>
-           </visibleWhen>
-        </menu>
-   </menuContribution>
-</extension>
-<extension
       point="org.bonitasoft.studio.common.barResourcesProvider">
    <barResourceProvider
          providerClass="org.bonitasoft.studio.dependencies.provider.JarBarResourceProvider">

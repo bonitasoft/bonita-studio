@@ -5,13 +5,6 @@
 
 <extension
          point="org.eclipse.ui.menus">
-      <menuContribution
-            locationURI="menu:org.bonitasoft.studio.development?after=org.bonitasoft.studio.businessobject.menu">
-           <command
-                 commandId="org.bonitasoft.studio.pagedesigner.open.command"
-                 style="push">
-           </command>
-      </menuContribution>
 <menuContribution
             allPopups="false"
             locationURI="popup:org.bonitasoft.studio.application.project.explorer.new?after=org.bonitasoft.studio.application.placeholder.application">

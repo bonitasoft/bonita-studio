@@ -20,34 +20,11 @@
       </fragment>
    </extension>
    <extension
-         point="org.eclipse.ui.menus">
-      <menuContribution
-            allPopups="false"
-            locationURI="popup:org.bonitasoft.studio.application.project.explorer?after=group.import">
-         <dynamic
-               class="org.bonitasoft.studio.importer.bos.menu.ImportContributionMenu"
-               id="org.bonitasoft.studio.importer.bos.popup.menu">
-            <visibleWhen
-                  checkEnabled="false">
-               <with
-                     variable="activeMenuSelection">
-                  <and>
-                     <count
-                           value="1">
-                     </count>
-                     <iterate>
-                        <instanceof
-                              value="org.eclipse.core.resources.IProject">
-                        </instanceof>
-                        <test
-                              property="org.bonitasoft.studio.application.isBonitaProject">
-                        </test>
-                     </iterate>
-                  </and>
-               </with>
-            </visibleWhen>
-         </dynamic>
-      </menuContribution>
+         point="org.eclipse.ui.commandImages">
+      <image
+            commandId="org.bonitasoft.studio.importer.bos.command"
+            icon="icons/import@2x.png">
+      </image>
    </extension>
 
 </plugin>

@@ -2,25 +2,6 @@
 <plugin>
 
    <extension
-         point="org.bonitasoft.studio.common.poststartup">
-      <contribution
-            class="org.bonitasoft.studio.team.contributions.CheckCurrentRepositoryState">
-      </contribution>
-   </extension>
-   <extension
-         point="org.eclipse.ui.commands">
-      <command
-            defaultHandler="org.bonitasoft.studio.team.ui.handler.SwitchRepositoriesWorkspaceHandler"
-            id="org.bonitasoft.studio.repository.switch"
-            name="%Change_Repository">
-      </command>
-      <command
-            defaultHandler="org.bonitasoft.studio.team.ui.handler.ShowRepositoryInSystemExplorerHandler"
-            id="org.bonitasoft.studio.team.command.showinexplorer"
-            name="Show in system explorer">
-      </command>
-   </extension>
-   <extension
          point="org.eclipse.core.runtime.preferences">
       <initializer
             class="org.bonitasoft.studio.team.preferences.TeamPreferenceInitializer">
@@ -65,66 +46,6 @@
       </extension>
    </extension>
    <extension
-         point="org.eclipse.ui.menus">
-      <menuContribution
-            allPopups="false"
-            locationURI="popup:org.bonitasoft.studio.application.project.explorer?after=additions">
-         <dynamic
-               class="org.bonitasoft.studio.team.menu.SwitchProjectMenuContribution"
-               id="org.bonitasoft.studio.team.switch.popup.menu">
-            <visibleWhen
-                  checkEnabled="false">
-               <with
-                     variable="activeMenuSelection">
-                  <and>
-                     <count
-                           value="1">
-                     </count>
-                     <or>
-                        <iterate>
-                           <instanceof
-                                 value="org.eclipse.core.resources.IProject">
-                           </instanceof>
-                           <test
-                                 property="org.bonitasoft.studio.application.isBonitaProject">
-                           </test>
-                        </iterate>
-                     </or>
-                  </and>
-               </with>
-            </visibleWhen>
-         </dynamic>
-      </menuContribution>
-      <menuContribution
-            allPopups="false"
-            locationURI="menu:org.bonitasoft.studio.fileMenu?after=org.bonitasoft.studio.exporter.exportAs">
-         <separator
-               name="org.bonitasoft.studio.team.separator2"
-               visible="true">
-         </separator>
-         <dynamic
-               class="org.bonitasoft.studio.team.menu.SwitchProjectMenuContribution"
-               id="org.bonitasoft.studio.repository.switch.menu">
-         </dynamic>
-         <separator
-               name="org.bonitasoft.studio.team.separator3"
-               visible="true">
-         </separator>
-      </menuContribution>
-      <menuContribution
-            allPopups="false"
-            locationURI="menu:org.bonitasoft.studio.fileMenu?before=org.bonitasoft.studio.application.command.deployArtifacts">
-         <dynamic
-               class="org.bonitasoft.studio.team.menu.NewProjectMenuContribution"
-               id="org.bonitasoft.studio.team.new.project.menu">
-         </dynamic>
-         <separator
-               name="org.bonitasoft.studio.team.separator1"
-               visible="true">
-         </separator>
-      </menuContribution>
-   </extension>
-   <extension
          point="org.bonitasoft.studio.repositoryFactory">
       <repositoryFactory
             class="org.bonitasoft.studio.team.repository.RepositoryFactory"
@@ -138,34 +59,6 @@
             id="org.bonitasoft.studio.team.compare.perspective"
             name="Comapre perspective">
       </perspective>
-   </extension>
-   <extension
-         point="org.eclipse.ui.navigator.navigatorContent">
-      <actionProvider
-            class="org.bonitasoft.studio.team.ui.provider.ProjectActionProvider"
-            id="org.bonitasoft.studio.team.actionProvider">
-         <enablement>
-         </enablement>
-      </actionProvider>
-   </extension>
-   <extension
-         point="org.eclipse.ui.navigator.viewer">
-      <viewerActionBinding
-            viewerId="org.bonitasoft.studio.application.project.explorer">
-         <includes>
-            <actionExtension
-                  pattern="org.bonitasoft.studio.team.actionProvider">
-            </actionExtension>
-         </includes>
-      </viewerActionBinding>
-   </extension>
-   <extension
-         id="org.bonitasoft.studio.team.fragment"
-         point="org.eclipse.e4.workbench.model">
-      <fragment
-            uri="fragment.e4xmi"
-            apply="always">
-      </fragment>
    </extension>
 
 </plugin>

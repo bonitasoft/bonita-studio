@@ -14,18 +14,11 @@
  */
 package org.bonitasoft.studio.importer.ui.wizard;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.bonitasoft.studio.common.CommandExecutor;
 import org.bonitasoft.studio.importer.ImporterFactory;
 import org.bonitasoft.studio.importer.i18n.Messages;
 import org.eclipse.jface.wizard.Wizard;
 
 public class ImportFileWizard extends Wizard {
-
-    public static final String SWITCH_TO_REPOSITORY_COMMAND = "org.bonitasoft.studio.team.command.switchrepository";
-    public static final String REPOSITORY_NAME_PARAMETER = "repositoryName";
 
     private ImportFileData importFileData;
 
