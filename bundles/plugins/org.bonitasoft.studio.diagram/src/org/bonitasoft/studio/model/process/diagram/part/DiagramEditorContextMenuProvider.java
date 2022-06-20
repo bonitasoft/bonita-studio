@@ -70,6 +70,7 @@ public class DiagramEditorContextMenuProvider extends DiagramContextMenuProvider
 		exclusionSet.add("org.eclipse.releng.tools.advancedFixCopyrights");
 		exclusionSet.add("groovyfile");
 		exclusionSet.add("groovyresource");
+		exclusionSet.add("ValidationCommand");
 	}
 
 	/**

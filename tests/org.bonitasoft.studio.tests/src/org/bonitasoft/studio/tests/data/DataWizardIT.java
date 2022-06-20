@@ -187,7 +187,8 @@ public class DataWizardIT {
         bot.tree().getTreeItem("Pool " + pool.getName()).getNode("Lane " + lane.getName()).select("Task Step1");
         bot.button(IDialogConstants.FINISH_LABEL).click();
         SWTBotTestUtil.waitUntilRootShellIsActive(bot);
-        bot.menu("File").menu("Save").click();
+        bot.activeEditor().setFocus();
+        bot.toolbarButtonWithId(SWTBotConstants.SWTBOT_ID_SAVE_EDITOR).click();
         bot.waitUntil(new DefaultCondition() {
 
             @Override

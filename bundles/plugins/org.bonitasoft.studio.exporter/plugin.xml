@@ -9,66 +9,6 @@
 
   
    <extension
-         point="org.eclipse.ui.menus">
-      <menuContribution
-            locationURI="menu:org.bonitasoft.studio.fileMenu?after=org.bonitasoft.studio.application.separator5">
-         <menu
-               label="%exportAs"
-               id="org.bonitasoft.studio.exporter.exportAs">
-            <command
-                  commandId="org.bonitasoft.studio.exporter.exportAsBPMN"
-                  icon="icons/bpmn.png"
-                  style="push">
-            </command>
-            <command
-                  commandId="org.bonitasoft.studio.diagram.custom.saveasimage"
-                  icon="icons/save-as-image.png"
-                  label="%exportAsImage"
-                  style="push">
-            </command>
-         </menu>
-         <separator
-               name="org.bonitasoft.studio.exporter.separator"
-               visible="true">
-         </separator>
-      </menuContribution>
-      <menuContribution
-            allPopups="false"
-            locationURI="menu:org.bonitasoft.studio.fileMenu?after=org.bonitasoft.studio.menu.import">
-         <command
-               commandId="org.bonitasoft.studio.exportBosArchive"
-               style="push">
-         </command>
-      </menuContribution>
-      <menuContribution
-            allPopups="false"
-            locationURI="popup:org.bonitasoft.studio.application.project.explorer?after=group.export">
-         <dynamic
-               class="org.bonitasoft.studio.exporter.menu.ExportContributionMenu"
-               id="org.bonitasoft.studio.exporter.popup.menu">
-            <visibleWhen
-                  checkEnabled="false">
-               <with
-                     variable="activeMenuSelection">
-                  <and>
-                     <count
-                           value="1">
-                     </count>
-                     <iterate>
-                        <instanceof
-                              value="org.eclipse.core.resources.IProject">
-                        </instanceof>
-                        <test
-                              property="org.bonitasoft.studio.application.isBonitaProject">
-                        </test>
-                     </iterate>
-                  </and>
-               </with>
-            </visibleWhen>
-         </dynamic>
-      </menuContribution>
-   </extension>
-   <extension
          point="org.bonitasoft.studio.exporter.exporterFactory">
       <exporterFactory
             targetExtension="bpmn"
@@ -77,14 +17,6 @@
             menuLabel="BPMN 2.0"
             class="org.bonitasoft.studio.exporter.bpmn.transfo.BonitaToBPMN">
       </exporterFactory>
-   </extension>
-   <extension
-         point="org.bonitasoft.studio.coolbarContributionItem">
-      <coolbarItem
-            priority="0"
-            toolbarPosition="5"
-            class="org.bonitasoft.studio.exporter.coolbar.ExportBarCoolbarItem">
-      </coolbarItem>
    </extension>
    <extension
          point="org.bonitasoft.studio.common.barResourcesProvider">
@@ -98,6 +30,17 @@
       <fragment
             uri="fragment.e4xmi">
       </fragment>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commandImages">
+      <image
+            commandId="org.bonitasoft.studio.exportBosArchive"
+            icon="icons/export.png">
+      </image>
+      <image
+            commandId="org.bonitasoft.studio.exporter.exportAsBPMN"
+            icon="icons/bpmn.png">
+      </image>
    </extension>
 
 </plugin>

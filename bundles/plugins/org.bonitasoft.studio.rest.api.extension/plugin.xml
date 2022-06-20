@@ -18,37 +18,6 @@
       </fragment>
    </extension>
    <extension
-         point="org.eclipse.ui.menus">
-      <menuContribution
-            allPopups="false"
-            locationURI="menu:org.bonitasoft.studio.development?after=org.bonitasoft.studio.menu.filter">
-         <dynamic
-               class="org.bonitasoft.studio.rest.api.extension.menu.RestApiExtensionMenuContribution"
-               id="org.bonitasoft.studio.rest.api.extension.menu">
-         </dynamic>
-         <menu
-               icon="icons/theme.png"
-               label="%ThemeMenuLabel">
-            <command
-                  commandId="org.bonitasoft.studio.theme.deleteCommand"
-                  style="push">
-            </command>
-            <separator
-                  name="org.bonitasoft.studio.theme.separator"
-                  visible="true">
-            </separator>
-            <command
-                  commandId="org.bonitasoft.studio.theme.buildCommand"
-                  style="push">
-            </command>
-            <command
-                  commandId="org.bonitasoft.studio.theme.deployCommand"
-                  style="push">
-            </command>
-         </menu>
-      </menuContribution>
-   </extension>
-   <extension
          point="org.eclipse.ui.perspectives">
       <perspective
             class="org.bonitasoft.studio.rest.api.extension.ui.perspective.RestAPIExtensionPerspectiveFactory"
@@ -309,6 +278,50 @@
                </visibleWhen>
             </command>
          </menuContribution>
+         <menuContribution
+               allPopups="false"
+               locationURI="popup:org.bonitasoft.studio.application.project.explorer?after=group.export">
+            <command
+                  commandId="org.bonitasoft.studio.rest.api.extension.buildCommand"
+                  style="push">
+               <visibleWhen
+                     checkEnabled="false">
+                  <with
+                        variable="activeMenuSelection">
+                     <and>
+                        <count
+                              value="1">
+                        </count>
+                        <iterate>
+                           <test
+                                 property="org.bonitasoft.studio.rest.api.extension.propertyTester.isRestApiElement">
+                           </test>
+                        </iterate>
+                     </and>
+                  </with>
+               </visibleWhen>
+            </command>
+            <command
+                  commandId="org.bonitasoft.studio.theme.buildCommand"
+                  style="push">
+               <visibleWhen
+                     checkEnabled="false">
+                  <with
+                        variable="activeMenuSelection">
+                     <and>
+                        <count
+                              value="1">
+                        </count>
+                        <iterate>
+                           <test
+                                 property="org.bonitasoft.studio.rest.api.extension.propertyTester.isThemeElement">
+                           </test>
+                        </iterate>
+                     </and>
+                  </with>
+               </visibleWhen>
+            </command>
+         </menuContribution>
       </extension>
       <extension
             point="org.bonitasoft.studio.importer.bos.validator">
@@ -349,25 +362,6 @@
                   <iterate>
                      <test
                            property="org.bonitasoft.studio.rest.api.extension.propertyTester.isRestApiFolder">
-                     </test>
-                  </iterate>
-               </and>
-               </with>
-            </activeWhen>
-         </handler>
-         <handler
-               class="org.bonitasoft.studio.rest.api.extension.ui.handler.ExportRestApiHandler"
-               commandId="org.bonitasoft.studio.application.export">
-            <activeWhen>
-            	<with
-                  variable="activeMenuSelection">
-               <and>
-                  <count
-                        value="1">
-                  </count>
-                  <iterate>
-                     <test
-                           property="org.bonitasoft.studio.rest.api.extension.propertyTester.isRestApiProject">
                      </test>
                   </iterate>
                </and>

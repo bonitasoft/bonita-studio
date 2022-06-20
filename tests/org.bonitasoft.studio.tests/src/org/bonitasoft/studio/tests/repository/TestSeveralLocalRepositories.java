@@ -16,7 +16,6 @@ import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.swtbot.framework.ConditionBuilder;
 import org.bonitasoft.studio.swtbot.framework.SWTBotTestUtil;
 import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
-import org.bonitasoft.studio.team.TeamRepositoryUtil;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
@@ -48,7 +47,7 @@ public class TestSeveralLocalRepositories {
     @After
     public void tearDown() throws Exception {
         if (!RepositoryManager.getInstance().getCurrentRepository().equals(currentRepo)) {
-            TeamRepositoryUtil.switchToRepository(currentRepo.getName(), new NullProgressMonitor());
+            RepositoryManager.getInstance().switchToRepository(currentRepo.getName(), new NullProgressMonitor());
         }
         SWTBotTestUtil.waitUntilRootShellIsActive(bot);
     }

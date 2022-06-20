@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bonitasoft.studio.common.ProjectUtil;
+import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.engine.i18n.Messages;
 import org.bonitasoft.studio.swtbot.framework.SWTBotTestUtil;
 import org.bonitasoft.studio.swtbot.framework.conditions.BonitaBPMConditions;
@@ -30,6 +31,7 @@ import org.bonitasoft.studio.swtbot.framework.conditions.ShellIsActiveWithThread
 import org.bonitasoft.studio.swtbot.framework.diagram.BotProcessDiagramPropertiesViewFolder;
 import org.bonitasoft.studio.swtbot.framework.diagram.execution.BotExecutionDiagramPropertiesView;
 import org.bonitasoft.studio.swtbot.framework.draw.BotGefProcessDiagramEditor;
+import org.bonitasoft.studio.swtbot.framework.projectExplorer.ProjectExplorerBot;
 import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
@@ -83,11 +85,12 @@ public class BarExporterTest {
         new BotProcessDiagramPropertiesViewFolder(bot).selectExecutionTab().selectInstantiationFormTab().selectNone();
 
         // Save Diagram
-        bot.menu("File").menu("Save").click();
+        bot.activeEditor().setFocus();
+        bot.toolbarButtonWithId(SWTBotConstants.SWTBOT_ID_SAVE_EDITOR).click();
+        
         bot.waitUntil(BonitaBPMConditions.noPopupActive());
 
-        // Menu Server > Build...
-        bot.menu("Server").menu("Build...").click();
+        new ProjectExplorerBot(bot).diagram().build();
 
         // shell 'Build'
         final SWTBotShell shell = bot.shell(Messages.buildTitle);

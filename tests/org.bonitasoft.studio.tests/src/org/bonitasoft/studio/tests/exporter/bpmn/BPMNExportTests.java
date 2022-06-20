@@ -14,12 +14,12 @@
  */
 package org.bonitasoft.studio.tests.exporter.bpmn;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.nio.file.Files;
 import java.util.Collections;
 import java.util.List;
 
@@ -37,24 +37,13 @@ import org.bonitasoft.studio.exporter.extension.IBonitaModelExporter;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditor;
-import org.bonitasoft.studio.swtbot.framework.SWTBotConnectorTestUtil;
 import org.bonitasoft.studio.swtbot.framework.application.BotApplicationWorkbenchWindow;
 import org.bonitasoft.studio.swtbot.framework.projectExplorer.ProjectExplorerBot;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.MenuItem;
-import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
-import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotEditor;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
-import org.eclipse.swtbot.swt.finder.widgets.SWTBotMenu;
-import org.eclipse.ui.IEditorReference;
-import org.hamcrest.BaseMatcher;
-import org.hamcrest.Description;
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
@@ -147,66 +136,8 @@ public class BPMNExportTests {
         assertTrue("Could not find the condition on the transition", conditionFalseFound);
 
         // clean
-        new File(resource.getURI().toFileString()).delete();
+        Files.deleteIfExists(new File(resource.getURI().toFileString()).toPath());
     }
 
-    private boolean menuBPMN2found = false;
-
-    @Test
-    public void testBPMN2MenuPresent() {
-        final SWTBotMenu processMenu = bot.menu("File");
-        final SWTBotMenu exportAsMenu = processMenu.menu("Export as").click();
-        final MenuItem mi = exportAsMenu.widget;
-        Display.getDefault().syncExec(() -> {
-            mi.getMenu().notifyListeners(SWT.Show, new Event());
-            final MenuItem[] mis = mi.getMenu().getItems();
-            for (final MenuItem menuItem : mis) {
-                final String menuText = menuItem.getText();
-                menuBPMN2found = menuBPMN2found || "BPMN 2.0...".equals(menuText);
-            }
-        });
-
-        assertTrue("BPMN 2.0 menu is not present", menuBPMN2found);
-    }
-
-    @Test
-    public void testBPMN2MenuPresentAfterOepningAnotherEditor() {
-        final String id = "testBPMN2MenuPresentAfterOpeningAnotherEditor";
-        final String className = "MyConnectorImpl" + System.currentTimeMillis();
-        final String packageName = "org.bonita.connector.test";
-        SWTBotConnectorTestUtil.createConnectorDefAndImpl(bot, id, "1.0.0", className, packageName);
-
-        bot.waitUntil(Conditions.waitForEditor(new BaseMatcher<IEditorReference>() {
-
-            @Override
-            public boolean matches(final Object item) {
-                return "org.eclipse.jdt.ui.CompilationUnitEditor".equals(((IEditorReference) item).getId());
-            }
-
-            @Override
-            public void describeTo(final Description description) {
-
-            }
-
-        }), 10000);
-        final SWTBotEditor activeEditor = bot.activeEditor();
-        assertEquals("org.eclipse.jdt.ui.CompilationUnitEditor", activeEditor.getReference().getId());
-
-        final SWTBotMenu processMenu = bot.menu("File");
-
-        final SWTBotMenu exportAsMenu = processMenu.menu("Export as").click();
-        final MenuItem mi = exportAsMenu.widget;
-        Display.getDefault().syncExec(() -> {
-            mi.getMenu().notifyListeners(SWT.Show, new Event());
-            final MenuItem[] mis = mi.getMenu().getItems();
-
-            for (final MenuItem menuItem : mis) {
-                final String menuText = menuItem.getText();
-                menuBPMN2found = menuBPMN2found || "BPMN 2.0...".equals(menuText);
-            }
-        });
-
-        assertTrue("BPMN 2.0 menu is not present", menuBPMN2found);
-    }
 
 }

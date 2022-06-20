@@ -46,77 +46,37 @@
                id="org.bonitasoft.studio.fileMenu"
                label="%fileMenu_Label">
             <command
-                  commandId="org.bonitasoft.studio.application.command.deployArtifacts"
-                  style="push">
-            </command>
-            <separator
-                  name="org.bonitasoft.studio.application.deploySeparator"
-                  visible="true">
-            </separator>
-            <dynamic
-                  class="org.bonitasoft.studio.application.actions.RecentlyModifiedContribution"
-                  id="org.bonitasoft.studio.application.openRecently">
-            </dynamic>
-            <command
-                  commandId="org.eclipse.ui.file.save"
-                  disabledIcon="icons/menuIcons/save_disabled.png"
-                  hoverIcon="icons/menuIcons/save_hover.png"
-                  icon="icons/menuIcons/save.png"
-                  label="%saveProcess_label"
+                  commandId="org.bonitasoft.studio.application.newproject.command"
                   style="push">
             </command>
             <command
-                  commandId="org.eclipse.ui.file.saveAll"
-                  disabledIcon="icons/menuIcons/save_disabled.png"
-                  hoverIcon="icons/menuIcons/save_hover.png"
-                  icon="icons/menuIcons/save_all.png"
-                  label="%saveAll_label"
+                  commandId="org.bonitasoft.studio.repository.switch"
                   style="push">
             </command>
             <command
-                  commandId="org.bonitasoft.studio.application.command.saveAs"
-                  disabledIcon="icons/duplicate_disabled.png"
-                  icon="icons/duplicate.png"
+                  commandId="org.bonitasoft.studio.team.git.command.clone"
                   style="push">
             </command>
             <separator
                   name="org.bonitasoft.studio.application.separator2"
                   visible="true">
             </separator>
-            <menu
-                  id="org.bonitasoft.studio.menu.import"
-                  label="%importLabel">
-               <command
-                     commandId="org.bonitasoft.studio.importer.bos.command"
-                     style="push">
-               </command>
-               <command
-                     commandId="org.bonitasoft.studio.importer.other.command"
-                     style="push">
-               </command>
-            </menu>
+            <command
+                  commandId="org.bonitasoft.studio.importer.bos.command"
+                  style="push">
+            </command>
+            <command
+                  commandId="org.bonitasoft.studio.exportBosArchive"
+                  style="push">
+            </command>
+            <command
+                  commandId="org.bonitasoft.studio.team.git.command.share"
+                  style="push">
+            </command>
             <separator
                   name="org.bonitasoft.studio.application.separator5"
                   visible="true">
             </separator>
-            <command
-                  commandId="org.bonitasoft.studio.application.printCommand"
-                  disabledIcon="icons/menuIcons/print_disabled.png"
-                  hoverIcon="icons/menuIcons/print_hover.png"
-                  icon="icons/menuIcons/print.png"
-                  label="%printLabel"
-                  style="push">
-            </command>
-            <separator
-                  name="org.bonitasoft.studio.application.separator3"
-                  visible="true">
-            </separator>
-            <command
-                  commandId="org.eclipse.ui.file.close"
-                  icon="icons/menuIcons/close.png"
-                  label="%close"
-                  style="push">
-            </command>
             <command
                   commandId="org.eclipse.ui.file.closeAll"
                   disabledIcon="icons/menuIcons/close_all_disabled.png"
@@ -129,73 +89,21 @@
                   visible="true">
             </separator>
             <command
+                  commandId="org.bonitasoft.studio.engine.resetServerCommand"
+                  style="push">
+            </command>
+            <command
+                  commandId="org.eclipse.ui.window.preferences"
+                  style="push">
+            </command>
+            <separator
+                  name="org.bonitasoft.studio.application.separator6"
+                  visible="true">
+            </separator>
+            <command
                   commandId="org.eclipse.ui.file.exit"
                   icon="icons/menuIcons/exit.png"
                   label="%exitAction_label"
-                  style="push">
-            </command>
-            <visibleWhen
-                  checkEnabled="true">
-               <reference
-                     definitionId="isBonitaPerspectiveActive">
-               </reference>
-            </visibleWhen>
-         </menu>
-         <menu
-               id="org.bonitasoft.studio.menu.edit"
-               label="%editMenu_label">
-            <command
-                  commandId="org.bonitasoft.studio.application.find.command"
-                  icon="icons/find.png"
-                  label="%findLabel"
-                  mnemonic="F"
-                  style="push">
-            </command>
-             <separator
-                  name="org.bonitasoft.studio.application.separator20"
-                  visible="true">
-            </separator>
-            <command
-                  commandId="org.eclipse.ui.edit.undo"
-                  disabledIcon="icons/undo_disabled.png"
-                  icon="icons/undo.png"
-                  label="%undoLabel"
-                  style="push">
-            </command>
-            <command
-                  commandId="org.eclipse.ui.edit.redo"
-                  disabledIcon="icons/redo_disabled.png"
-                  icon="icons/redo.png"
-                  label="%redoLabel"
-                  style="push">
-            </command>
-            <separator
-                  name="org.bonitasoft.studio.application.separator1"
-                  visible="true">
-            </separator>
-            <command
-                  commandId="org.eclipse.ui.edit.copy"
-                  disabledIcon="icons/menuIcons/copy_disabled.png"
-                  hoverIcon="icons/menuIcons/copy_hover.png"
-                  icon="icons/menuIcons/copy.png"
-                  label="%copyLabel"
-                  style="push">
-            </command>
-            <command
-                  commandId="org.eclipse.ui.edit.paste"
-                  disabledIcon="icons/menuIcons/paste_disabled.png"
-                  hoverIcon="icons/menuIcons/paste_hover.png"
-                  icon="icons/menuIcons/paste.png"
-                  label="%pasteLabel"
-                  style="push">
-            </command>
-            <separator
-                  name="org.bonitasoft.studio.application.separator2"
-                  visible="true">
-            </separator>
-            <command
-                  commandId="org.eclipse.ui.window.preferences"
-                  icon="icons/menuIcons/preferences.png"
                   style="push">
             </command>
             <visibleWhen
@@ -239,6 +147,14 @@
                   icon="icons/full_screen.png"
                   style="push">
             </command>
+            <command
+                  commandId="org.bonitasoft.studio.application.openIntroCommand"
+                  hoverIcon="icons/menuIcons/bonita_hover.png"
+                  icon="icons/bonitasoft-icon-16-16-transparent.png"
+                  id="org.bonitasoft.studio.helpMenu.welcomeMenu"
+                  label="%openWelcomePage_label"
+                  style="push">
+            </command>
             <visibleWhen
                   checkEnabled="true">
                <reference
@@ -263,14 +179,6 @@
          <menu
                id="org.bonitasoft.studio.menu.help"
                label="%help_label">
-            <command
-                  commandId="org.bonitasoft.studio.application.openIntroCommand"
-                  hoverIcon="icons/menuIcons/bonita_hover.png"
-                  icon="icons/bonitasoft-icon-16-16-transparent.png"
-                  id="org.bonitasoft.studio.helpMenu.welcomeMenu"
-                  label="%openWelcomePage_label"
-                  style="push">
-            </command>
 
             <command
                   commandId="org.bonitasoft.studio.application.showHelp"
@@ -281,8 +189,40 @@
                   style="push">
             </command>
             <command
-                  commandId="org.bonitasoft.studio.application.command.releaseNote"
+                  commandId="org.bonitasoft.studio.application.command.openExternalBrowser"
+                  label="%releaseNote"
                   style="push">
+               <parameter
+                     name="org.bonitasoft.studio.application.command.openExternalBrowser.redirectId"
+                     value="696">
+               </parameter>
+            </command>
+            <command
+                  commandId="org.bonitasoft.studio.application.command.openExternalBrowser"
+                  label="%questionsAndAnswers"
+                  style="push">
+               <parameter
+                     name="org.bonitasoft.studio.application.command.openExternalBrowser.redirectId"
+                     value="77">
+               </parameter>
+            </command>
+            <command
+                  commandId="org.bonitasoft.studio.application.command.openExternalBrowser"
+                  label="%reportIssue"
+                  style="push">
+               <parameter
+                     name="org.bonitasoft.studio.application.command.openExternalBrowser.redirectId"
+                     value="709">
+               </parameter>
+            </command>
+            <command
+                  commandId="org.bonitasoft.studio.application.command.openExternalBrowser"
+                  label="%productFeedback"
+                  style="push">
+               <parameter
+                     name="org.bonitasoft.studio.application.command.openExternalBrowser.redirectId"
+                     value="708">
+               </parameter>
             </command>
             <separator
                   name="org.bonitasoft.studio.application.help.separator4"
@@ -514,17 +454,63 @@
    <menuContribution
          allPopups="false"
          locationURI="popup:org.bonitasoft.studio.application.project.explorer?after=group.import">
-      <command
+     <command
             commandId="org.bonitasoft.studio.application.import"
             style="push">
          <visibleWhen
                checkEnabled="true">
          </visibleWhen>
       </command>
+      <command
+            commandId="org.bonitasoft.studio.importer.bos.command"
+            style="push">
+         <visibleWhen
+               checkEnabled="false">
+            <with
+                  variable="activeMenuSelection">
+               <and>
+                  <count
+                        value="1">
+                  </count>
+                  <iterate>
+                     <instanceof
+                           value="org.eclipse.core.resources.IProject">
+                     </instanceof>
+                     <test
+                           property="org.bonitasoft.studio.application.isBonitaProject">
+                     </test>
+                  </iterate>
+               </and>
+            </with>
+         </visibleWhen>
+      </command>
    </menuContribution>
    <menuContribution
          allPopups="false"
          locationURI="popup:org.bonitasoft.studio.application.project.explorer?after=group.export">
+      <command
+            commandId="org.bonitasoft.studio.exportBosArchive"
+            style="push">
+         <visibleWhen
+               checkEnabled="false">
+            <with
+                  variable="activeMenuSelection">
+               <and>
+                  <count
+                        value="1">
+                  </count>
+                  <iterate>
+                     <instanceof
+                           value="org.eclipse.core.resources.IProject">
+                     </instanceof>
+                     <test
+                           property="org.bonitasoft.studio.application.isBonitaProject">
+                     </test>
+                  </iterate>
+               </and>
+            </with>
+         </visibleWhen>
+      </command>
       <command
             commandId="org.bonitasoft.studio.application.export"
             style="push">
@@ -543,6 +529,35 @@
             style="push">
          <visibleWhen
                checkEnabled="true">
+         </visibleWhen>
+      </command>
+   </menuContribution>
+   <menuContribution
+         allPopups="false"
+         locationURI="popup:org.bonitasoft.studio.application.project.explorer?after=additions">
+      <command
+            commandId="org.bonitasoft.studio.repository.switch"
+            style="push">
+         <visibleWhen
+               checkEnabled="false">
+            <with
+                  variable="activeMenuSelection">
+               <and>
+                  <count
+                        value="1">
+                  </count>
+                  <or>
+                     <iterate>
+                        <instanceof
+                              value="org.eclipse.core.resources.IProject">
+                        </instanceof>
+                        <test
+                              property="org.bonitasoft.studio.application.isBonitaProject">
+                        </test>
+                     </iterate>
+                  </or>
+               </and>
+            </with>
          </visibleWhen>
       </command>
    </menuContribution>
@@ -691,6 +706,16 @@
          defaultHandler="org.bonitasoft.studio.application.actions.ShowOverviewHandler"
          id="org.bonitasoft.studio.application.showView.command"
          name="%showOverview_label">
+   </command>
+   <command
+         defaultHandler="org.bonitasoft.studio.application.handler.SwitchRepositoriesWorkspaceHandler"
+         id="org.bonitasoft.studio.repository.switch"
+         name="%Change_Repository">
+   </command>
+   <command
+         defaultHandler="org.eclipse.ui.internal.ide.handlers.ShowInSystemExplorerHandler"
+         id="org.bonitasoft.studio.team.command.showinexplorer"
+         name="%showInExplorer">
    </command>
    </extension>
    <extension
@@ -1024,6 +1049,9 @@
       <contribution
             class="org.bonitasoft.studio.application.contribution.CheckJavaVersionPostStartupContribution">
       </contribution>
+      <contribution
+            class="org.bonitasoft.studio.application.contribution.CheckCurrentRepositoryState">
+      </contribution>
    </extension>
    <extension
          id="id1"
@@ -1288,6 +1316,9 @@
             <contentExtension
                   pattern="org.bonitasoft.studio.application.hideClasspathContainers">
             </contentExtension>
+            <actionExtension
+                  pattern="org.bonitasoft.studio.team.actionProvider">
+            </actionExtension>
          </includes>
          <excludes>
             <contentExtension
@@ -1404,6 +1435,11 @@
             id="org.bonitasoft.studio.application.hideClasspathContainers"
             name="Hide classpath containers">
       </commonFilter>
+      <actionProvider
+            class="org.bonitasoft.studio.application.actions.ProjectActionProvider"
+            id="org.bonitasoft.studio.team.actionProvider">
+         <enablement></enablement>
+      </actionProvider>
    </extension>
    <extension
          point="org.eclipse.ui.navigator.linkHelper">
@@ -1580,5 +1616,24 @@
             class="org.bonitasoft.studio.application.views.overview.DiagramOverviewContribution">
       </dashboardContribution>
    </extension>
+      <extension
+            point="org.eclipse.ui.commandImages">
+         <image
+               commandId="org.bonitasoft.studio.application.newproject.command"
+               icon="icons/menuIcons/project.png">
+         </image>
+         <image
+               commandId="org.bonitasoft.studio.repository.switch"
+               icon="icons/menuIcons/switch.png">
+         </image>
+         <image
+               commandId="org.eclipse.ui.window.preferences"
+               icon="icons/menuIcons/preferences.png">
+         </image>
+         <image
+               commandId="org.bonitasoft.studio.application.find.command"
+               icon="icons/find.png">
+         </image>
+      </extension>
 
 </plugin>

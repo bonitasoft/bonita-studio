@@ -23,7 +23,6 @@ import java.util.List;
 
 import org.bonitasoft.studio.common.extension.ExtensionContextInjectionFactory;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
-import org.bonitasoft.studio.common.repository.ProjectFileChangeListener;
 import org.bonitasoft.studio.common.repository.jdt.JDTTypeHierarchyManager;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -59,11 +58,6 @@ public class Repository extends AbstractRepository {
                 jdtTypeHierarchyManager,
                 eventBroker,
                 migrationEnabled);
-    }
-
-    @Override
-    protected ProjectFileChangeListener createProjectFileChangeListener() {
-        return new ProjectFileChangeListenerEx(this);
     }
 
     @Override

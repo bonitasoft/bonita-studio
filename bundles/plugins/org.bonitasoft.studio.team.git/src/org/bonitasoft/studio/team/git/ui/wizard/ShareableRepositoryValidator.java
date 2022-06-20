@@ -36,7 +36,7 @@ public class ShareableRepositoryValidator extends RepositoryNameValidator {
         IStatus status = Stream.of(availableRepositories).anyMatch(repoName::equalsIgnoreCase)
                 ? ValidationStatus.ok()
                 : super.validate(repoName);
-        if (org.bonitasoft.studio.team.i18n.Messages.repoAlreadyExist.equals(status.getMessage())) {
+        if (Messages.repoAlreadyExist.equals(status.getMessage())) {
             status = ValidationStatus.error(Messages.repoAlreadyShared);
         }
         return status;

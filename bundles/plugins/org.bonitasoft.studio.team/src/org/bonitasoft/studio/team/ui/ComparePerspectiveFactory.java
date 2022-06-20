@@ -20,10 +20,6 @@ public class ComparePerspectiveFactory extends AbstractPerspectiveFactory {
 
     private static final String COMPARE_PERSPECTIVE_ID = "org.bonitasoft.studio.team.compare.perspective";
 
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.ui.IPerspectiveFactory#createInitialLayout(org.eclipse.ui.IPageLayout)
-     */
     @Override
     public void createInitialLayout(IPageLayout layout) {
         final String editorArea = layout.getEditorArea();

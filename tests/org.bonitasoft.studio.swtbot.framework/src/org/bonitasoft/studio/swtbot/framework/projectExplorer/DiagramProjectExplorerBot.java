@@ -82,6 +82,10 @@ public class DiagramProjectExplorerBot extends ProjectExplorerBot {
         bot.button(IDialogConstants.OK_LABEL).click();
         bot.waitUntil(Conditions.shellCloses(activeShell));
     }
+    
+    public void build() {
+        clickOnContextualMenu(getDiagramFolderTreeItem(), "Build...");
+    }
 
     private SWTBotTreeItem getDiagramFolderTreeItem() {
         return getTreeItem(getProjectTreeItem(), Messages.diagrams);

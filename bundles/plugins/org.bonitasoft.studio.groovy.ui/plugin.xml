@@ -20,26 +20,6 @@
       </comboElementsProvider>
    </extension>
    <extension
-         point="org.eclipse.ui.menus">
-      <menuContribution
-            allPopups="false"
-            locationURI="menu:org.bonitasoft.studio.development?after=org.bonitasoft.studio.businessobject.menu">
-         <menu
-               icon="icons/groovy_file.gif"
-               id="org.bonitasoft.studio.groovy.menu"
-               label="%groovyScript">
-            <command
-                  commandId="org.bonitasoft.studio.groovy.ui.open.command"
-                  style="push">
-            </command>
-            <command
-                  commandId="org.bonitasoft.studio.groovy.ui.delete.command"
-                  style="push">
-            </command>
-         </menu>
-      </menuContribution>
-   </extension>
-   <extension
          point="org.eclipse.ui.commands">
       <command
             id="org.bonitasoft.studio.groovy.ui.newScript"
