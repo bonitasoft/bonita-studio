@@ -230,6 +230,15 @@
       <menuContribution
             locationURI="popup:org.eclipse.gmf.runtime.diagram.ui.DiagramEditorContextMenu?after=additions">
          <command
+               commandId="org.eclipse.ui.file.save"
+               icon="icons/menuIcons/save.png"
+               style="push">
+         </command>
+         <separator
+               name="org.bonitasoft.studio.diagram.custom.separator0"
+               visible="true">
+         </separator>
+         <command
                commandId="org.bonitasoft.studio.validation.command.validateDiagram"
                style="push">
          </command>
