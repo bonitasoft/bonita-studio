@@ -41,10 +41,10 @@ public class TestMenus {
         SWTBotTestUtil.waitUntilRootShellIsActive(bot);
         List<String> menuItems = bot.menu().menuItems();
         if (Platform.getProduct().getId().equals("org.bonitasoft.studioEx.product")) {
-            assertEquals(String.format("Menu bar polluted by third-party menus.\n available menu:\n%s\n", menuItems), 9,
+            assertEquals(String.format("Menu bar polluted by third-party menus.\n available menu:\n%s\n", menuItems), 4,
                     menuItems.size());
         } else if (Platform.getProduct().getId().equals("org.bonitasoft.studio.product")) {
-            assertEquals(String.format("Menu bar polluted by third-party menus.\n available menu:\n%s\n", menuItems), 8,
+            assertEquals(String.format("Menu bar polluted by third-party menus.\n available menu:\n%s\n", menuItems), 3,
                     menuItems.size());
         }
         assertThat(menuItems).doesNotContain("Run");

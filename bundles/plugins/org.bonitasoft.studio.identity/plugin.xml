@@ -19,57 +19,6 @@
          point="org.eclipse.ui.menus">
       <menuContribution
             allPopups="false"
-            locationURI="menu:org.eclipse.ui.main.menu?after=org.bonitasoft.studio.menu.edit">
-         <menu
-               label="%actors_Label"
-               id="org.bonitasoft.studio.actor.organizationMenu">
-            <command
-                  commandId="org.bonitasoft.studio.identity.organization.create.command"
-                  style="push">
-            </command>
-            <separator
-                  name="org.bonitasoft.studio.identity.separator1"
-                  visible="true">
-            </separator>
-            <command
-                  commandId="org.bonitasoft.studio.identity.organization.open.command"
-                  style="push">
-            </command>
-            <separator
-                  name="separator0"
-                  visible="true">
-            </separator>
-            <command
-                  commandId="org.bonitasoft.studio.organization.publish"
-                  icon="icons/synchronize.png"
-                  style="push">
-            </command>
-            <separator
-                  name="separator1"
-                  visible="true">
-            </separator>
-            <command
-                  commandId="org.bonitasoft.studio.actors.export"
-                  icon="icons/organization_export.png"
-                  style="push">
-            </command>
-            <command
-                  commandId="org.bonitasoft.studio.actors.import"
-                  icon="icons/organization_import.png"
-                  style="push">
-            </command>
-         </menu>
-      </menuContribution>
-      <menuContribution
-            allPopups="false"
-            locationURI="menu:org.bonitasoft.studio.development?after=org.bonitasoft.studio.menu.connector">
-         <dynamic
-               class="org.bonitasoft.studio.identity.actors.menu.FilterMenuContributionItem"
-               id="org.bonitasoft.studio.menu.filter">
-         </dynamic>
-      </menuContribution>
-      <menuContribution
-            allPopups="false"
             locationURI="popup:org.bonitasoft.studio.application.project.explorer.new?after=org.bonitasoft.studio.application.placeholder.organization">
          <dynamic
                class="org.bonitasoft.studio.identity.organization.menu.NewOrganizationContributionItem"

@@ -124,7 +124,9 @@ public class BatchValidationHandler extends AbstractHandler {
 
         if (!checkAllModelVersion && aggregatedStatus.getSeverity() == IStatus.ERROR) {
             MessageDialog.openError(Display.getDefault().getActiveShell(), Messages.validationFailedTitle,
-                    aggregatedStatus.getChildren()[0].getMessage());
+                    Stream.of(aggregatedStatus.getChildren()).filter(s -> s.getSeverity() == IStatus.ERROR)
+                    .findFirst().map(IStatus::getMessage)
+                    .orElseThrow());
             if (currentDiagramStore != null && validateModelCompatibility.getStatus().getSeverity() == IStatus.ERROR) {
                 Display.getDefault()
                         .asyncExec(() -> PlatformUI.getWorkbench()

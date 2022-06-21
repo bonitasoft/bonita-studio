@@ -15,14 +15,6 @@
       </importFactory>
    </extension>
    <extension
-         point="org.bonitasoft.studio.coolbarContributionItem">
-      <coolbarItem
-            class="org.bonitasoft.studio.importer.coolbar.ImportBarCoolbarItem"
-            priority="0"
-            toolbarPosition="4">
-      </coolbarItem>
-   </extension>
-   <extension
          id="org.bonitasoft.studio.importer.fragment"
          point="org.eclipse.e4.workbench.model">
       <fragment

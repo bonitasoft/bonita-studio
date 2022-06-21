@@ -11,14 +11,12 @@ package org.bonitasoft.studio.team.git.ui;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.function.BooleanSupplier;
-import java.util.function.Supplier;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.pics.Pics;
-import org.bonitasoft.studio.team.TeamPlugin;
 import org.bonitasoft.studio.team.git.TeamGitPlugin;
 import org.bonitasoft.studio.team.git.core.CloneGitProject;
 import org.bonitasoft.studio.team.git.core.CustomEvaluationContext;
@@ -26,8 +24,6 @@ import org.bonitasoft.studio.team.git.core.CustomHandlerService;
 import org.bonitasoft.studio.team.git.core.CustomPushBranchActionHandler;
 import org.bonitasoft.studio.team.git.core.ShareGitProject;
 import org.bonitasoft.studio.team.git.i18n.Messages;
-import org.bonitasoft.studio.team.git.ui.wizard.GITRepositoryStatusDialog;
-import org.bonitasoft.studio.team.repository.Repository;
 import org.bonitasoft.studio.ui.dialog.ExceptionDialogHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
@@ -57,7 +53,6 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.ISources;
 import org.eclipse.ui.PartInitException;
@@ -75,9 +70,6 @@ public class MenuContributionItem extends ContributionItem {
 
         createShareGitProjectMenu(menu);
         createCloneGitProjectMenu(menu);
-
-        new MenuItem(menu, SWT.SEPARATOR);
-
         createCommitMenu(menu, customEvaluationContext);
         createSimplePushMenu(menu, customEvaluationContext);
         createSimpleFetchMenu(menu, customEvaluationContext);
@@ -91,63 +83,41 @@ public class MenuContributionItem extends ContributionItem {
         }
         createPullFromUpstreamMenu(menu);
 
-        new MenuItem(menu, SWT.SEPARATOR);
-
         if (repository != null) {
             createSwitchToMenu(menu, customEvaluationContext);
-            new MenuItem(menu, SWT.SEPARATOR);
         }
         createMergeMenu(menu, customEvaluationContext);
-
-        new MenuItem(menu, SWT.SEPARATOR);
-
         createResetMenu(menu, customEvaluationContext);
         createRebaseMenu(menu, customEvaluationContext);
-
-        new MenuItem(menu, SWT.SEPARATOR);
-
         createShowGitStagingMenu(menu);
         createShowHistoryMenu(menu);
-
-        new MenuItem(menu, SWT.SEPARATOR);
-
-        createStatusMenu(menu);
         createOpenPreferenceMenu(menu);
-    }
-
-    private void createStatusMenu(Menu menu) {
-        createMenu(menu,
-                Messages.repositoryStatus,
-                e -> createGitRepositoryStatusDialog().open(),
-                () -> RepositoryManager.getInstance().getCurrentRepository().filter(repo -> repo.isShared(GitProvider.ID)).isPresent(),
-                TeamGitPlugin.getImage("icons/repository-status.png"));
-    }
-
-    private GITRepositoryStatusDialog createGitRepositoryStatusDialog() {
-        Repository currentRepository = (Repository) RepositoryManager.getInstance().getCurrentRepository()
-                .orElseThrow();
-        Shell activeShell = Display.getDefault().getActiveShell();
-        return new GITRepositoryStatusDialog(activeShell, currentRepository);
     }
 
     private void createOpenPreferenceMenu(Menu menu) {
         createMenu(menu, Messages.openGitPreferences, openGitPreferenceListener(), () -> true,
-                TeamGitPlugin.getImage("icons/prefGit.gif"));
+                TeamGitPlugin.getImage("icons/editconfig.png"));
     }
 
     private void createShowHistoryMenu(Menu menu) {
         createMenu(menu,
                 Messages.showHistory,
                 openView("org.eclipse.team.ui.GenericHistoryView"),
-                () -> RepositoryManager.getInstance().getCurrentRepository().filter(repo -> repo.isShared(GitProvider.ID)).isPresent(),
-                TeamGitPlugin.getImage("icons/history_view.gif"));
+                () -> RepositoryManager.getInstance().getCurrentRepository()
+                        .filter(repo -> repo.isShared(GitProvider.ID)).isPresent(),
+                TeamGitPlugin.getImage("icons/history.png"));
+        if(RepositoryManager.getInstance().getCurrentRepository()
+                .filter(repo -> repo.isShared(GitProvider.ID)).isPresent()) {
+            new MenuItem(menu, SWT.SEPARATOR);
+        }
     }
 
     private void createShowGitStagingMenu(Menu menu) {
         createMenu(menu,
                 Messages.showGitStaging,
                 openView(StagingView.VIEW_ID),
-                () -> RepositoryManager.getInstance().getCurrentRepository().filter(repo -> repo.isShared(GitProvider.ID)).isPresent(),
+                () -> RepositoryManager.getInstance().getCurrentRepository()
+                        .filter(repo -> repo.isShared(GitProvider.ID)).isPresent(),
                 TeamGitPlugin.getImage("icons/staging.png"));
     }
 
@@ -163,8 +133,11 @@ public class MenuContributionItem extends ContributionItem {
                         BonitaStudioLog.error(e1);
                     }
                 },
-                () -> rebaseActionHandler.isEnabled(),
+                rebaseActionHandler::isEnabled,
                 UIIcons.getImage(pluginResources, UIIcons.REBASE));
+        if(rebaseActionHandler.isEnabled()) {
+            new MenuItem(menu, SWT.SEPARATOR);
+        }
     }
 
     private void createResetMenu(Menu menu, IEvaluationContext customEvaluationContext) {
@@ -197,6 +170,10 @@ public class MenuContributionItem extends ContributionItem {
                 },
                 mergeActionHandler::isEnabled,
                 UIIcons.getImage(pluginResources, UIIcons.MERGE));
+        
+        if(mergeActionHandler.isEnabled()) {
+            new MenuItem(menu, SWT.SEPARATOR);
+        }
     }
 
     private void createSwitchToMenu(Menu menu, IEvaluationContext customEvaluationContext) {
@@ -205,12 +182,13 @@ public class MenuContributionItem extends ContributionItem {
                 new CustomHandlerService(customEvaluationContext));
         switchToMenuContribution.initialize(PlatformUI.getWorkbench());
         switchToMenuContribution.fill(switchToMenu, 0);
+        new MenuItem(menu, SWT.SEPARATOR);
     }
 
     private void createPullFromUpstreamMenu(Menu menu) {
         PullFromUpstreamConfigAction pullAction = new PullFromUpstreamConfigAction();
         var project = getProject();
-        if(project != null) {
+        if (project != null) {
             pullAction.selectionChanged(null, new StructuredSelection(project));
         }
         createMenu(menu,
@@ -218,6 +196,9 @@ public class MenuContributionItem extends ContributionItem {
                 e -> pullAction.run(null),
                 pullAction::isEnabled,
                 UIIcons.getImage(pluginResources, UIIcons.PULL));
+        if(pullAction.isEnabled()) {
+            new MenuItem(menu, SWT.SEPARATOR);
+        }
     }
 
     private void createPushBranchMenu(Menu menu, org.eclipse.jgit.lib.Repository repository) {
@@ -225,8 +206,8 @@ public class MenuContributionItem extends ContributionItem {
         String branch = "";
         try {
             branch = repository.getBranch();
-        } catch (IOException e2) {
-            BonitaStudioLog.error(e2);
+        } catch (IOException e2createMenu) {
+            BonitaStudioLog.error(e2createMenu);
         }
         createMenu(menu,
                 String.format(Messages.push, branch),
@@ -254,7 +235,7 @@ public class MenuContributionItem extends ContributionItem {
                         BonitaStudioLog.error(e1);
                     }
                 },
-                () -> fetchActionHandler.isEnabled(),
+                fetchActionHandler::isEnabled,
                 UIIcons.getImage(pluginResources, UIIcons.FETCH));
     }
 
@@ -306,6 +287,7 @@ public class MenuContributionItem extends ContributionItem {
                 e -> cloneGitProject.execute(),
                 () -> true,
                 UIIcons.getImage(pluginResources, UIIcons.CLONEGIT));
+        new MenuItem(menu, SWT.SEPARATOR);
     }
 
     private void createShareGitProjectMenu(Menu menu) {
@@ -367,16 +349,17 @@ public class MenuContributionItem extends ContributionItem {
         return true;
     }
 
-    private MenuItem createMenu(Menu parent, String label, Listener selectionListener, BooleanSupplier enablement,
+    private void createMenu(Menu parent, String label, Listener selectionListener, BooleanSupplier enablement,
             Image icon) {
-        MenuItem item = new MenuItem(parent, SWT.NONE);
-        item.setText(label);
-        item.addListener(SWT.Selection, selectionListener);
-        item.setEnabled(enablement.getAsBoolean());
-        if (icon != null) {
-            item.setImage(icon);
+        if (enablement.getAsBoolean()) {
+            MenuItem item = new MenuItem(parent, SWT.NONE);
+            item.setText(label);
+            item.addListener(SWT.Selection, selectionListener);
+            item.setEnabled(enablement.getAsBoolean());
+            if (icon != null) {
+                item.setImage(icon);
+            }
         }
-        return item;
     }
 
     private Listener openGitPreferenceListener() {

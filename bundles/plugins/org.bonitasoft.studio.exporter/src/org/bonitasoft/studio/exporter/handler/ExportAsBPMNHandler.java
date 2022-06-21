@@ -42,6 +42,7 @@ import org.eclipse.e4.core.di.annotations.CanExecute;
 import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
@@ -69,7 +70,7 @@ public class ExportAsBPMNHandler {
                     boolean overwrite = destFile.exists()
                             && MessageDialog.openQuestion(Display.getDefault().getActiveShell(),
                                     Messages.overwriteBPMNFile_title,
-                                    Messages.bind(Messages.overwriteBPMNFile_message, destFile.getName()));
+                                    NLS.bind(Messages.overwriteBPMNFile_message, destFile.getName()));
                     if (!destFile.exists() || overwrite) {
                         try {
                             progressService.run(true, false, monitor -> {
@@ -115,15 +116,7 @@ public class ExportAsBPMNHandler {
 
     @CanExecute
     public boolean isDiagramEditorActive(IWorkbenchPage activePage) {
-        return activePage != null && activePage.getActiveEditor() instanceof ProcessDiagramEditor;
+        return RepositoryManager.getInstance().hasActiveRepository() && activePage != null && activePage.getActiveEditor() instanceof ProcessDiagramEditor;
     }
     
-    @CanExecute
-    public boolean isEnabled() {
-        if (RepositoryManager.getInstance().hasActiveRepository()) {
-            return true;
-        }
-        return false;
-    }
-
 }

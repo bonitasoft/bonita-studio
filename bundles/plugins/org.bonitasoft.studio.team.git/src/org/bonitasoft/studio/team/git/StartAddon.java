@@ -7,9 +7,9 @@ import java.util.Objects;
 import javax.inject.Inject;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.repository.ProjectFileChangeListener;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.team.TeamPlugin;
-import org.bonitasoft.studio.team.repository.ProjectFileChangeListenerEx;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
@@ -56,8 +56,8 @@ public class StartAddon {
                 if (job.belongsTo(JobFamilies.CHECKOUT)) {
                     IPreferenceStore teamPluginPrefStore = TeamPlugin.getDefault().getPreferenceStore();
                     if (teamPluginPrefStore
-                            .getBoolean(ProjectFileChangeListenerEx.VALIDATE_REPO_VERSION_AFTER_SWITCH_BRANCH)) {
-                        teamPluginPrefStore.setValue(ProjectFileChangeListenerEx.VALIDATE_REPO_VERSION_AFTER_SWITCH_BRANCH,
+                            .getBoolean(ProjectFileChangeListener.VALIDATE_REPO_VERSION_AFTER_SWITCH_BRANCH)) {
+                        teamPluginPrefStore.setValue(ProjectFileChangeListener.VALIDATE_REPO_VERSION_AFTER_SWITCH_BRANCH,
                                 false);
                         RepositoryManager.getInstance().getCurrentRepository().orElseThrow().validateRepositoryVersion();
                     }

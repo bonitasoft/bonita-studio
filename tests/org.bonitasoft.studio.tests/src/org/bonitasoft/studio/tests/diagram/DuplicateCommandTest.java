@@ -20,6 +20,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
+import org.bonitasoft.studio.common.CommandExecutor;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
@@ -81,11 +82,15 @@ public class DuplicateCommandTest {
             alterDiagram(botEditor);
         }
 
-        bot.menu("File").menu("Duplicate diagram...").click();
+        bot.getDisplay().asyncExec(() -> new CommandExecutor().executeCommand("org.bonitasoft.studio.diagram.custom.command.duplicate", null));
         bot.waitUntil(Conditions.shellIsActive(org.bonitasoft.studio.common.Messages.openNameAndVersionDialogTitle));
+        bot.shell(org.bonitasoft.studio.common.Messages.openNameAndVersionDialogTitle).activate();
         bot.text(0).setText(processName);
+        bot.shell(org.bonitasoft.studio.common.Messages.openNameAndVersionDialogTitle).activate();
         bot.text(1).setText(processVersion);
+        bot.shell(org.bonitasoft.studio.common.Messages.openNameAndVersionDialogTitle).activate();
         bot.text(2).setText("Pool" + System.currentTimeMillis());
+        bot.shell(org.bonitasoft.studio.common.Messages.openNameAndVersionDialogTitle).activate();
         assertTrue("OK button should be active", bot.button(IDialogConstants.OK_LABEL).isEnabled());
         bot.button(IDialogConstants.OK_LABEL).click();
         bot.waitUntil(new ICondition() {

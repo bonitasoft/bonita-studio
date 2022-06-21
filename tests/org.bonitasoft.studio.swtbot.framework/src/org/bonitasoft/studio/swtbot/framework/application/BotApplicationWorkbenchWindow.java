@@ -22,21 +22,19 @@ import org.bonitasoft.studio.la.i18n.Messages;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.swtbot.framework.application.editor.BotProjectOverviewEditor;
 import org.bonitasoft.studio.swtbot.framework.application.menu.AbstractBotMenu;
-import org.bonitasoft.studio.swtbot.framework.application.menu.BotEditMenu;
-import org.bonitasoft.studio.swtbot.framework.application.menu.BotOrganizationMenu;
 import org.bonitasoft.studio.swtbot.framework.bdm.BotBdmEditor;
 import org.bonitasoft.studio.swtbot.framework.bdm.ImportBdmWizardBot;
 import org.bonitasoft.studio.swtbot.framework.diagram.BotProcessDiagramPerspective;
 import org.bonitasoft.studio.swtbot.framework.diagram.configuration.BotConfigureDialog;
 import org.bonitasoft.studio.swtbot.framework.diagram.export.BotExportBOSDialog;
 import org.bonitasoft.studio.swtbot.framework.diagram.importer.BotImportBOSDialog;
-import org.bonitasoft.studio.swtbot.framework.diagram.importer.BotImportOtherDialog;
 import org.bonitasoft.studio.swtbot.framework.la.BotApplicationEditor;
 import org.bonitasoft.studio.swtbot.framework.la.DeleteApplicationWizardBot;
 import org.bonitasoft.studio.swtbot.framework.la.OpenApplicationWizardBot;
 import org.bonitasoft.studio.swtbot.framework.la.SelectApplicationToDeployWizardBot;
 import org.bonitasoft.studio.swtbot.framework.preferences.BotPreferencesDialog;
-import org.bonitasoft.studio.swtbot.framework.team.BotTeamMenu;
+import org.bonitasoft.studio.swtbot.framework.team.git.BotGitCloneDialog;
+import org.bonitasoft.studio.swtbot.framework.team.git.BotShareRepoDialog;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
 import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
@@ -105,7 +103,7 @@ public class BotApplicationWorkbenchWindow extends AbstractBotMenu {
         }, 40000);
         return this;
     }
-
+    
     public BotApplicationWorkbenchWindow close() {
         final int nbEditorsBefore = bot.editors().size();
         bot.waitUntil(Conditions.widgetIsEnabled(bot.menu("File")), 40000);
@@ -130,16 +128,6 @@ public class BotApplicationWorkbenchWindow extends AbstractBotMenu {
         return this;
     }
 
-    public BotEditMenu editMenu() {
-        openMenu("Edit");
-        return new BotEditMenu(bot);
-    }
-
-    public BotOrganizationMenu organizationMenu() {
-        openMenu("Organization");
-        return new BotOrganizationMenu(bot);
-    }
-
     public BotConfigureDialog configure() {
         bot.waitUntil(Conditions
                 .widgetIsEnabled(bot.toolbarDropDownButtonWithId(SWTBotConstants.SWTBOT_ID_CONFIGURE_TOOLITEM)));
@@ -152,68 +140,52 @@ public class BotApplicationWorkbenchWindow extends AbstractBotMenu {
     }
 
     public BotExportBOSDialog export() {
-        bot.toolbarButtonWithId(SWTBotConstants.SWTBOT_ID_EXPORT_TOOLITEM).click();
+        bot.menu("File").menu("Export project").click();
         return new BotExportBOSDialog(bot);
     }
 
     public BotImportBOSDialog importBOSArchive() {
-        bot.toolbarButtonWithId(SWTBotConstants.SWTBOT_ID_IMPORT_TOOLITEM).click();
+        bot.menu("File").menu("Import project").click();
         return new BotImportBOSDialog(bot);
-    }
-
-    public BotImportOtherDialog importOther() {
-        waitForMainShell(bot);
-        bot.menu("File").menu("Import").menu("Other...").click();
-        return new BotImportOtherDialog(bot);
-    }
-
-    public BotImportOtherDialog importFromOtherWorkspace() {
-        waitForMainShell(bot);
-        bot.menu("File").menu("Import").menu("From another Workspace...").click();
-        return new BotImportOtherDialog(bot);
     }
 
     public OpenApplicationWizardBot openApplication() {
         waitForMainShell(bot);
-        bot.menu("Development").menu(org.bonitasoft.studio.application.i18n.Messages.applicationDescriptor)
-                .menu("Open...")
-                .click();
+        bot.getDisplay().asyncExec(() -> commandExecutor.executeCommand("org.bonitasoft.studio.la.open.command", null));
         return new OpenApplicationWizardBot(bot, Messages.openExistingApplication);
     }
 
     public void newApplicationDescriptorFile() {
         waitForMainShell(bot);
-        bot.menu("Development").menu(org.bonitasoft.studio.application.i18n.Messages.applicationDescriptor)
-                .menu("New...")
-                .click();
+        bot.getDisplay().asyncExec(() -> commandExecutor.executeCommand("org.bonitasoft.studio.la.new.command", null));
         bot.waitUntil(Conditions.waitForEditor(IsInstanceOf.instanceOf(IEditorReference.class)));
     }
 
     public SelectApplicationToDeployWizardBot deployApplicationFile() {
         waitForMainShell(bot);
-        bot.menu("Development").menu(org.bonitasoft.studio.application.i18n.Messages.applicationDescriptor)
-                .menu("Deploy...")
-                .click();
+        bot.getDisplay()
+                .asyncExec(() -> commandExecutor.executeCommand("org.bonitasoft.studio.la.deploy.command", null));
         return new SelectApplicationToDeployWizardBot(bot, Messages.deployExistingApplication);
     }
 
     public DeleteApplicationWizardBot deleteApplicationDescriptor() {
         waitForMainShell(bot);
-        bot.menu("Development").menu(org.bonitasoft.studio.application.i18n.Messages.applicationDescriptor)
-                .menu("Delete...")
-                .click();
+        bot.getDisplay()
+                .asyncExec(() -> commandExecutor.executeCommand("org.bonitasoft.studio.la.delete.command", null));
         return new DeleteApplicationWizardBot(bot, Messages.deleteExistingApplication);
     }
 
     public BotBdmEditor defineBDM() {
         waitForMainShell(bot);
-        bot.menu("Development").menu("Business Data Model").menu("Define...").click();
+        bot.getDisplay()
+                .asyncExec(() -> commandExecutor.executeCommand("org.bonitasoft.studio.businessobject.define", null));
         return new BotBdmEditor(bot);
     }
 
     public ImportBdmWizardBot importBDM() {
         waitForMainShell(bot);
-        bot.menu("Development").menu("Business Data Model").menu("Import...").click();
+        bot.getDisplay().asyncExec(
+                () -> commandExecutor.executeCommand("org.bonitasoft.studio.businessobject.command.import", null));
         bot.waitUntil(
                 Conditions.shellIsActive(org.bonitasoft.studio.businessobject.i18n.Messages.importBdm));
         bot.shell(org.bonitasoft.studio.businessobject.i18n.Messages.importBdm).activate().setFocus();
@@ -221,21 +193,13 @@ public class BotApplicationWorkbenchWindow extends AbstractBotMenu {
     }
 
     public BotDeployDialog openDeploy() {
-        bot.menu("File").menu("Deploy...").click();
+        bot.toolbarButtonWithId(SWTBotConstants.SWTBOT_ID_DEPLOY_TOOLITEM).click();
         return new BotDeployDialog(bot);
-    }
-
-    public BotTeamMenu teamMenu() {
-        waitForMainShell(bot);
-        openMenu("Team");
-        return new BotTeamMenu(bot);
     }
 
     public BotApplicationEditor newApplicationContainer() {
         waitForMainShell(bot);
-        bot.menu("Development").menu(org.bonitasoft.studio.application.i18n.Messages.applicationDescriptor)
-                .menu("New...")
-                .click();
+        bot.getDisplay().asyncExec(() -> commandExecutor.executeCommand("org.bonitasoft.studio.la.new.command", null));
         bot.waitUntil(Conditions.waitForEditor(IsInstanceOf.instanceOf(IEditorReference.class)));
         return new BotApplicationEditor(bot, bot.activeEditor());
     }
@@ -262,6 +226,17 @@ public class BotApplicationWorkbenchWindow extends AbstractBotMenu {
             }
         }, 15000);
         return new BotProjectOverviewEditor(bot);
+    }
+
+    public BotShareRepoDialog shareWithGit() {
+        waitForMainShell(bot);
+        bot.menu("File").menu("Share with Git").click();
+        return new BotShareRepoDialog(bot);
+    }
+    
+    public BotGitCloneDialog gitClone() {
+        bot.menu("File").menu("Clone").click();
+        return new BotGitCloneDialog(bot);
     }
 
 }

@@ -7,11 +7,8 @@ Bundle-Activator: org.bonitasoft.studio.team.TeamPlugin
 Bundle-Vendor: BonitaSoft S.A.
 Bundle-Localization: plugin
 Export-Package: org.bonitasoft.studio.team,
- org.bonitasoft.studio.team.i18n,
  org.bonitasoft.studio.team.preferences,
- org.bonitasoft.studio.team.repository,
- org.bonitasoft.studio.team.ui.handler,
- org.bonitasoft.studio.team.ui.provider
+ org.bonitasoft.studio.team.repository
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.bonitasoft.studio.common.repository,

@@ -5,22 +5,6 @@
          point="org.eclipse.ui.menus">
       <menuContribution
             allPopups="false"
-            locationURI="menu:org.eclipse.ui.main.menu?before=org.bonitasoft.studio.menu.help">
-         <menu
-               id="org.bonitasoft.studio.teamMenu"
-               label="%team">
-            <menu
-                  id="org.bonitasoft.studio.team.git.menu"
-                  label="Git">
-               <dynamic
-                     class="org.bonitasoft.studio.team.git.ui.MenuContributionItem"
-                     id="org.bonitasoft.studio.team.git.dynamicMenu">
-               </dynamic>
-            </menu>
-         </menu>
-      </menuContribution>
-      <menuContribution
-            allPopups="false"
             locationURI="popup:org.bonitasoft.studio.application.project.explorer?after=team.main">
          <command
                commandId="org.bonitasoft.studio.team.git.command.share"
@@ -84,6 +68,25 @@
       <initializer
             class="org.bonitasoft.studio.team.git.PreferenceInitializer">
       </initializer>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commandImages">
+      <image
+            commandId="org.bonitasoft.studio.team.git.command.clone"
+            icon="icons/cloneGit.png">
+      </image>
+      <image
+            commandId="org.bonitasoft.studio.team.git.command.share"
+            icon="icons/git.png">
+      </image>
+  icons/cloneGit.png </extension>
+   <extension
+         point="org.bonitasoft.studio.coolbarContributionItem">
+      <coolbarItem
+            class="org.bonitasoft.studio.team.git.ui.GitCoolbarItem"
+            priority="0"
+            toolbarPosition="4">
+      </coolbarItem>
    </extension>
 
 </plugin>

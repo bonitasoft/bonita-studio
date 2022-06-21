@@ -24,7 +24,7 @@
     <elements xsi:type="commands:Command" xmi:id="_2OMEUGtqEeWUnsGmiq8DQg" elementId="org.bonitasoft.studio.rest.api.extension.newCommand" commandName="%newAndMore"/>
     <elements xsi:type="commands:Command" xmi:id="_RoRyMIF1EeWqz5DEEjiV_A" elementId="org.bonitasoft.studio.rest.api.extension.openCommand" commandName="%open"/>
     <elements xsi:type="commands:Command" xmi:id="_yW0sEH5AEeW1qcvePltJLA" elementId="org.bonitasoft.studio.rest.api.extension.deleteCommand" commandName="%delete"/>
-    <elements xsi:type="commands:Command" xmi:id="_Qx5IsHfxEeWSb-F6KSbJOQ" elementId="org.bonitasoft.studio.rest.api.extension.buildCommand" commandName="%build"/>
+    <elements xsi:type="commands:Command" xmi:id="_Qx5IsHfxEeWSb-F6KSbJOQ" elementId="org.bonitasoft.studio.rest.api.extension.buildCommand" commandName="%exportRestApi"/>
     <elements xsi:type="commands:Command" xmi:id="_00IMEHu7EeW2j7yIulv7KA" elementId="org.bonitasoft.studio.rest.api.extension.deployCommand" commandName="%deploy"/>
     <elements xsi:type="commands:Command" xmi:id="_fFL2kJQpEeWPtp-bXIjyLQ" elementId="org.bonitasoft.studio.rest.api.extension.editPermissionCommand" commandName="%editPermissionCommand"/>
     <elements xsi:type="commands:Command" xmi:id="__DpO0JdsEeWG2cYaYkPesQ" elementId="org.bonitasoft.studio.rest.api.extension.quickDeployCommand" commandName="%quickDeploy">
@@ -34,11 +34,10 @@
     <elements xsi:type="commands:Command" xmi:id="_8GbjYJ2ZEeWXpf_8Tk-zQQ" elementId="org.bonitasoft.studio.rest.api.extension.newGroovyClass" commandName="%groovyClass"/>
     <elements xsi:type="commands:Command" xmi:id="_rNA5wJ2aEeWXpf_8Tk-zQQ" elementId="org.bonitasoft.studio.rest.api.extension.newPackage" commandName="%newPackage"/>
     <elements xsi:type="commands:Command" xmi:id="_uHNPoJ2-EeW2hadT4aUOSQ" elementId="org.bonitasoft.studio.rest.api.extension.quickBuildCommand" commandName="%quickBuild"/>
-    <elements xsi:type="commands:Command" xmi:id="_gjR-YMxtEeiOMvU_0otrhA" elementId="org.bonitasoft.studio.rest.api.extension.command.export" commandName="%exportRestApi"/>
     <elements xsi:type="commands:Command" xmi:id="_96RFoONaEeiL4pBp9NVlMw" elementId="org.bonitasoft.studio.rest.api.extension.convertToProject" commandName="%convertToProject"/>
     <elements xsi:type="commands:Command" xmi:id="_gHtx8FYQEemxWsao4RNazA" elementId="org.bonitasoft.studio.theme.newCommand" commandName="%newAndMore"/>
     <elements xsi:type="commands:Command" xmi:id="_6yeDQFt0Eem1IowXlZ1N2Q" elementId="org.bonitasoft.studio.theme.deleteCommand" commandName="%delete"/>
-    <elements xsi:type="commands:Command" xmi:id="_QIqkwFt1Eem1IowXlZ1N2Q" elementId="org.bonitasoft.studio.theme.buildCommand" commandName="%build"/>
+    <elements xsi:type="commands:Command" xmi:id="_QIqkwFt1Eem1IowXlZ1N2Q" elementId="org.bonitasoft.studio.theme.buildCommand" commandName="%exportRestApi"/>
     <elements xsi:type="commands:Command" xmi:id="_WprasFt1Eem1IowXlZ1N2Q" elementId="org.bonitasoft.studio.theme.deployCommand" commandName="%deploy"/>
     <elements xsi:type="commands:Command" xmi:id="_qQ0Y4NI8EeqTs8GlxYwpfA" elementId="org.bonitasoft.studio.rest.api.extension.updatemavenprojects.command" commandName="%updateMavenProjects"/>
     <elements xsi:type="commands:Command" xmi:id="_tZmfYCWZEeuku6hN8lb9Sw" elementId="org.bonitasoft.studio.rest.api.extension.newJavaClass" commandName="%javaClass"/>

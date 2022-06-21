@@ -139,6 +139,10 @@ public final class Messages extends NLS {
     public static String updatingDependencyInConfigurations;
     public static String removingDependencyInConfigurations;
 
+    public static String team_switchingProject;
+
+    public static String switchIntoNewbranch;
+
     private Messages() {
         // Do not instantiate
     }

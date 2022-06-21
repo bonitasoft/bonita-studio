@@ -17,6 +17,7 @@ package org.bonitasoft.studio.common.repository;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -36,9 +37,11 @@ import javax.xml.xpath.XPathFactory;
 
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.common.repository.core.IBonitaProjectListenerProvider;
 import org.bonitasoft.studio.common.repository.core.maven.contribution.InstallBonitaMavenArtifactsOperation;
 import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
+import org.bonitasoft.studio.common.repository.filestore.AbstractFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
@@ -50,9 +53,12 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.m2e.core.MavenPlugin;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -334,6 +340,51 @@ public class RepositoryManager {
 
     public void setRepositoryAccessor(RepositoryAccessor repositoryAccessor) {
         this.repositoryAccessor = repositoryAccessor;
+    }
+    
+    public void switchToRepository(final String newWorkspaceFolder,
+            final IProgressMonitor monitor) {
+        switchToRepository(newWorkspaceFolder, false, monitor);
+    }
+
+    public synchronized void switchToRepository(
+            final String repositoryName,
+            final boolean migrateExistingContent,
+            IProgressMonitor monitor) {
+        if (monitor == null) {
+            monitor = new NullProgressMonitor();
+        }
+        var currentRepository = RepositoryManager.getInstance()
+                .getCurrentRepository();
+        if (currentRepository.filter(repo -> Objects.equals(repo.getName(), repositoryName)).isPresent()) {
+            return;
+        }
+        currentRepository.ifPresent(IRepository::close);
+        try {
+            WorkspaceModifyOperation workspaceModifyOperation = new WorkspaceModifyOperation() {
+
+                @Override
+                protected void execute(final IProgressMonitor monitor)
+                        throws CoreException, InvocationTargetException, InterruptedException {
+                    monitor.beginTask(Messages.team_switchingProject,
+                            IProgressMonitor.UNKNOWN);
+                    BonitaStudioLog.info("Switching project to "
+                            + repositoryName, CommonRepositoryPlugin.PLUGIN_ID);
+                    RepositoryManager.getInstance().setRepository(repositoryName, migrateExistingContent, monitor);
+                    BonitaStudioLog.info(
+                            "Project switched to " + repositoryName,
+                            CommonRepositoryPlugin.PLUGIN_ID);
+                }
+            };
+            workspaceModifyOperation.run(monitor);
+            Display.getDefault().asyncExec(
+                    PlatformUtil::openDashboardIfNoOtherEditorOpen);
+            Display.getDefault().asyncExec(
+                    AbstractFileStore::refreshExplorerView);
+        } catch (final InvocationTargetException | InterruptedException e) {
+            BonitaStudioLog.error(e);
+        } 
+
     }
 
 }

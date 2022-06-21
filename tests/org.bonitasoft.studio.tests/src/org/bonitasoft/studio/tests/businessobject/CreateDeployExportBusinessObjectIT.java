@@ -26,6 +26,7 @@ import org.bonitasoft.studio.businessobject.editor.editor.ui.control.attribute.A
 import org.bonitasoft.studio.businessobject.editor.editor.ui.control.businessObject.BusinessObjectList;
 import org.bonitasoft.studio.businessobject.helper.PackageHelper;
 import org.bonitasoft.studio.businessobject.ui.DateTypeLabels;
+import org.bonitasoft.studio.common.CommandExecutor;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
@@ -196,7 +197,7 @@ public class CreateDeployExportBusinessObjectIT {
     }
 
     protected void exportBDM() {
-        bot.menu("Development").menu("Business Data Model").menu("Export...").click();
+        bot.getDisplay().asyncExec(() -> new CommandExecutor().executeCommand("org.bonitasoft.studio.businessobject.exportCommand", null));
         assertTrue("Export button should be enabled", bot.button("Export").isEnabled());
 
         bot.text().setText("/User/FakePath/");

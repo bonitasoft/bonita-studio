@@ -39,7 +39,10 @@ Require-Bundle: org.bonitasoft.studio.common,
  com.fasterxml.jackson.core.jackson-core,
  org.eclipse.core.databinding.property,
  org.codehaus.groovy.eclipse.core,
- org.eclipse.ltk.core.refactoring;resolution:=optional
+ org.eclipse.ltk.core.refactoring;resolution:=optional,
+ org.eclipse.egit.ui,
+ org.eclipse.jgit,
+ org.eclipse.egit.core
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-ActivationPolicy: lazy
 Export-Package: org.bonitasoft.plugin.analyze.report.model,

@@ -14,30 +14,32 @@
  */
 package org.bonitasoft.studio.tests.actors;
 
-import static org.eclipse.swtbot.swt.finder.matchers.WidgetMatcherFactory.withMnemonic;
-
 import org.bonitasoft.studio.common.CommandExecutor;
 import org.bonitasoft.studio.identity.i18n.Messages;
 import org.bonitasoft.studio.swtbot.framework.SWTBotTestUtil;
 import org.eclipse.jface.dialogs.IDialogConstants;
-import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swtbot.eclipse.finder.SWTWorkbenchBot;
 import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
 import org.eclipse.swtbot.swt.finder.SWTBot;
 import org.eclipse.swtbot.swt.finder.waits.ICondition;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotCombo;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
-import org.hamcrest.Matcher;
 import org.junit.Assert;
 
-/**
- * @author Aur�lie Zara
- */
 
 public class SWTBotActorFilterUtil {
 
     private static final String NEW_FILTER_DEF_COMMAND = "org.bonitasoft.studio.actors.newFilterDef";
     private static final String NEW_FILTER_IMPL_COMMAND = "org.bonitasoft.studio.actors.newFilterImpl";
+    private static final String EDIT_FILTER_DEF_COMMAND = "org.bonitasoft.studio.actors.editFilterDef";
+    private static final String EDIT_FILTER_IMPL_COMMAND = "org.bonitasoft.studio.actors.editFilterImpl";
+    private static final String EXPORT_FILTER_COMMAND = "org.bonitasoft.studio.actors.filter.export";
+    
+    private static final String NEW_ORGANIZATION_COMMAND = "org.bonitasoft.studio.identity.organization.create.command";
+    private static final String EXPORT_ORGANIZATION_COMMAND = "org.bonitasoft.studio.actors.export";
+    private static final String DEPLOY_ORGANIZATION_COMMAND = "org.bonitasoft.studio.organization.publish";
+
+
 
     private static CommandExecutor commandExecutor = new CommandExecutor();
 
@@ -48,8 +50,6 @@ public class SWTBotActorFilterUtil {
      * @param bot
      */
     public static void activateActorFilterDefinitionShell(final SWTBot bot) {
-        final Matcher<MenuItem> matcher = withMnemonic("Development");
-        bot.waitUntil(Conditions.waitForMenu(bot.activeShell(), matcher), 40000);
         bot.getDisplay().asyncExec(() -> commandExecutor.executeCommand(NEW_FILTER_DEF_COMMAND, null));
         bot.waitUntil(Conditions.shellIsActive(Messages.newFilterDefinition), 10000);
     }
@@ -62,8 +62,6 @@ public class SWTBotActorFilterUtil {
      * @param bot
      */
     public static void activateActorFilterImplementationShell(final SWTBot bot) {
-        final Matcher<MenuItem> matcher = withMnemonic("Development");
-        bot.waitUntil(Conditions.waitForMenu(bot.activeShell(), matcher), 40000);
         bot.getDisplay().asyncExec(() -> commandExecutor.executeCommand(NEW_FILTER_IMPL_COMMAND, null));
         bot.waitUntil(Conditions
                 .shellIsActive(Messages.newFilterImplementation), 10000);
@@ -76,8 +74,7 @@ public class SWTBotActorFilterUtil {
      * @param bot
      */
     public static void activateNewOrganizationWizard(final SWTBot bot) {
-        bot.waitUntil(Conditions.widgetIsEnabled(bot.menu("Organization")), 10000);
-        bot.menu("Organization").menu("Define...").click();
+        bot.getDisplay().asyncExec(() -> commandExecutor.executeCommand(NEW_ORGANIZATION_COMMAND, null));
         bot.waitUntil(Conditions.shellIsActive(Messages.manageOrganizationTitle), 10000);
     }
 
@@ -88,8 +85,7 @@ public class SWTBotActorFilterUtil {
      * @param bot
      */
     public static void activateExportOrganizationWizard(final SWTBot bot) {
-        bot.waitUntil(Conditions.widgetIsEnabled(bot.menu("Organization")), 10000);
-        bot.menu("Organization").menu("Export...").click();
+        bot.getDisplay().asyncExec(() -> commandExecutor.executeCommand(EXPORT_ORGANIZATION_COMMAND, null));
         bot.waitUntil(Conditions.shellIsActive(Messages.exportOrganizationTitle), 10000);
     }
 
@@ -100,8 +96,7 @@ public class SWTBotActorFilterUtil {
      * @param bot
      */
     public static void activateSynchronizeOrganizationWizard(final SWTBot bot) {
-        bot.waitUntil(Conditions.widgetIsEnabled(bot.menu("Organization")), 10000);
-        bot.menu("Organization").menu("Deploy...").click();
+        bot.getDisplay().asyncExec(() -> commandExecutor.executeCommand(DEPLOY_ORGANIZATION_COMMAND, null));
         bot.waitUntil(Conditions.shellIsActive(Messages.deployOrganizationTitle), 10000);
     }
 
@@ -112,11 +107,8 @@ public class SWTBotActorFilterUtil {
      * @param bot
      */
     public static void activateActorFilterDefEditionShell(final SWTBot bot) {
-        final Matcher<MenuItem> matcher = withMnemonic("Development");
-        bot.waitUntil(Conditions.waitForMenu(bot.activeShell(), matcher), 40000);
-        bot.menu("Development").menu("Actor filters")
-                .menu("Edit definition...").click();
-        bot.waitUntil(Conditions
+        bot.getDisplay().asyncExec(() -> commandExecutor.executeCommand(EDIT_FILTER_DEF_COMMAND, null));
+        bot.waitUntil(org.eclipse.swtbot.swt.finder.waits.Conditions
                 .shellIsActive("Select an actor filter definition"), 10000);
     }
 
@@ -127,9 +119,7 @@ public class SWTBotActorFilterUtil {
      * @param bot
      */
     public static void activateActorFilterImplEditionShell(final SWTBot bot) {
-        bot.waitUntil(Conditions.widgetIsEnabled(bot.menu("Development")), 10000);
-        bot.menu("Development").menu("Actor filters")
-                .menu("Edit implementation...").click();
+        bot.getDisplay().asyncExec(() -> commandExecutor.executeCommand(EDIT_FILTER_IMPL_COMMAND, null));
         bot.waitUntil(Conditions
                 .shellIsActive("Select an actor filter implementation"), 10000);
     }
@@ -149,19 +139,16 @@ public class SWTBotActorFilterUtil {
 
             @Override
             public boolean test() throws Exception {
-                // TODO Auto-generated method stub
                 return id.equals(bot.textWithLabel("Definition id *").getText());
             }
 
             @Override
             public void init(final SWTBot bot) {
-                // TODO Auto-generated method stub
 
             }
 
             @Override
             public String getFailureMessage() {
-                // TODO Auto-generated method stub
                 return null;
             }
         }, 10000);
@@ -170,13 +157,11 @@ public class SWTBotActorFilterUtil {
 
             @Override
             public boolean test() throws Exception {
-                // TODO Auto-generated method stub
                 return version.equals(bot.textWithLabel("Version *").getText());
             }
 
             @Override
             public void init(final SWTBot bot) {
-                // TODO Auto-generated method stub
 
             }
 
@@ -196,8 +181,7 @@ public class SWTBotActorFilterUtil {
      * @param categoryId
      * @throws Exception
      */
-    public static void createNewCategory(final SWTBot bot, final String categoryId)
-            throws Exception {
+    public static void createNewCategory(final SWTBot bot, final String categoryId) {
         bot.waitUntil(Conditions.widgetIsEnabled(bot.button("New...")), 10000);
         SWTBotShell activeShell = bot.activeShell();
         bot.button("New...").click();
@@ -231,9 +215,7 @@ public class SWTBotActorFilterUtil {
      */
     public static void activateExportActorFilterShell(final SWTWorkbenchBot bot) {
         SWTBotTestUtil.waitUntilRootShellIsActive(bot);
-        final Matcher<MenuItem> matcher = withMnemonic("Development");
-        bot.waitUntil(Conditions.waitForMenu(bot.activeShell(), matcher), 40000);
-        bot.menu("Development").menu("Actor filters").menu("Export...").click();
+        bot.getDisplay().asyncExec(() -> commandExecutor.executeCommand(EXPORT_FILTER_COMMAND, null));
         bot.waitUntil(Conditions.shellIsActive(Messages.exportActorFilterTitle));
         bot.activeShell().setFocus();
     }

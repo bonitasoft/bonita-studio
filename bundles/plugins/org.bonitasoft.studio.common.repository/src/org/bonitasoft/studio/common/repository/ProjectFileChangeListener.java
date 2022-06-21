@@ -26,12 +26,20 @@ import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.resources.IResourceDeltaVisitor;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.egit.core.GitProvider;
+import org.eclipse.egit.ui.internal.branch.BranchOperationUI;
+import org.eclipse.egit.ui.internal.dialogs.CheckoutDialog;
+import org.eclipse.egit.ui.internal.selection.SelectionUtils;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 
 public class ProjectFileChangeListener implements IResourceChangeListener {
 
+    public static boolean migrationDialogOpened = false;
+    public static final String VALIDATE_REPO_VERSION_AFTER_SWITCH_BRANCH = "VALIDATE_REPO_VERSION_AFTER_SWITCH_BRANCH";;
     protected AbstractRepository repository;
 
     public ProjectFileChangeListener(AbstractRepository repository) {
@@ -86,16 +94,61 @@ public class ProjectFileChangeListener implements IResourceChangeListener {
     }
 
     protected void openMigrationDialog() {
-        Display.getDefault()
-                .asyncExec(() -> {
-                    MessageDialog.open(MessageDialog.INFORMATION,
-                            Display.getDefault().getActiveShell(),
-                            Messages.migrationTitle,
-                            String.format(Messages.mustMigrationMsg,
-                                    ProductVersion.CURRENT_VERSION),
-                            SWT.NONE, Messages.migrate);
+        if (repository.isShared(GitProvider.ID)) {
+            openGitMigrationDialog();
+        } else {
+            Display.getDefault()
+                    .asyncExec(() -> {
+                        MessageDialog.open(MessageDialog.INFORMATION,
+                                Display.getDefault().getActiveShell(),
+                                Messages.migrationTitle,
+                                String.format(Messages.mustMigrationMsg,
+                                        ProductVersion.CURRENT_VERSION),
+                                SWT.NONE, Messages.migrate);
+                        repository.runMigrationInDialog();
+                    });
+        }
+    }
+
+    @SuppressWarnings("restriction")
+    private void openGitMigrationDialog() {
+        Display.getDefault().asyncExec(() -> {
+            if (!migrationDialogOpened) {
+                migrationDialogOpened = true;
+                boolean migrate = MessageDialog.open(MessageDialog.INFORMATION,
+                        Display.getDefault().getActiveShell(),
+                        Messages.migrationTitle,
+                        String.format(Messages.mustMigrationMsg,
+                                ProductVersion.CURRENT_VERSION),
+                        SWT.NONE, Messages.migrate, Messages.switchIntoNewbranch) == 0; // default index is 0 -> migrate
+                migrationDialogOpened = false;
+                if (migrate) {
                     repository.runMigrationInDialog();
-                });
+                } else {
+                    // open switch branch dialog
+                    // if he leaves or click cancel, then re open migration dialog
+                    org.eclipse.jgit.lib.Repository gitRepository = getGitRepository(repository);
+                    CheckoutDialog checkoutDialog = new CheckoutDialog(Display.getDefault().getActiveShell(),
+                            gitRepository);
+                    checkoutDialog.open();
+                    if (checkoutDialog.getReturnCode() == CheckoutDialog.OK) {
+                        CommonRepositoryPlugin.getDefault().getPreferenceStore()
+                                .setValue(ProjectFileChangeListener.VALIDATE_REPO_VERSION_AFTER_SWITCH_BRANCH, true);
+                        BranchOperationUI
+                                .checkout(gitRepository, checkoutDialog.getRefName())
+                                .start();
+                    } else {
+                        openGitMigrationDialog();
+                    }
+                }
+            }
+        });
+    }
+
+    @SuppressWarnings("restriction")
+    private org.eclipse.jgit.lib.Repository getGitRepository(AbstractRepository repository) {
+        IStructuredSelection selection = new StructuredSelection(repository.getProject());
+        return SelectionUtils.getRepository(selection);
     }
 
 }

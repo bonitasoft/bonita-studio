@@ -115,23 +115,6 @@
       </expressionProvider>
    </extension>
    <extension
-         point="org.eclipse.ui.menus">
-      <menuContribution
-            allPopups="false"
-            locationURI="menu:org.bonitasoft.studio.development?before=org.bonitasoft.studio.document.manageResources.command">
-         <dynamic
-               class="org.bonitasoft.studio.connectors.menu.ConnectorMenuContributionItem"
-               id="org.bonitasoft.studio.menu.connector">
-            <visibleWhen
-                  checkEnabled="true">
-               <reference
-                     definitionId="isBonitaPerspectiveActive">
-               </reference>
-            </visibleWhen>
-         </dynamic>
-      </menuContribution>
-   </extension>
-   <extension
          point="org.bonitasoft.studio.configuration.synchronizer">
       <synchronier
             class="org.bonitasoft.studio.connectors.configuration.ConnectorsConfigurationSynchronizer">

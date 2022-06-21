@@ -230,6 +230,18 @@
       <menuContribution
             locationURI="popup:org.eclipse.gmf.runtime.diagram.ui.DiagramEditorContextMenu?after=additions">
          <command
+               commandId="org.bonitasoft.studio.validation.command.validateDiagram"
+               style="push">
+         </command>
+         <command
+               commandId="org.bonitasoft.studio.application.find.command"
+               style="push">
+         </command>
+         <separator
+               name="org.bonitasoft.studio.diagram.custom.separator0"
+               visible="true">
+         </separator>
+         <command
                commandId="org.eclipse.gef.zoom_in"
                label="%zoomIn"
                icon="icons/menuIcons/zoomplus.gif"
@@ -352,9 +364,16 @@
                icon="icons/menuIcons/paste.png"
                style="push">
          </command>
+         <separator
+               name="org.bonitasoft.studio.diagram.custom.separator5"
+               visible="true">
+         </separator>
+         <command
+               commandId="org.bonitasoft.studio.exporter.exportAsBPMN"
+               style="push">
+         </command>
          <command
                commandId="org.bonitasoft.studio.diagram.custom.saveasimage"
-               label="%saveAsImage"
                icon="icons/menuIcons/save-as-image.png"
                style="push">
          </command>
@@ -463,7 +482,114 @@
                </with>
             </visibleWhen>
          </command>
+         <command
+               commandId="org.bonitasoft.studio.application.find.command"
+               style="push">
+            <visibleWhen
+                  checkEnabled="false">
+               <with
+                     variable="activeMenuSelection">
+                  <and>
+                     <count
+                           value="1">
+                     </count>
+                     <iterate>
+                        <and>
+                           <test
+                                 property="org.bonitasoft.studio.diagram.isDiagramFile">
+                           </test>
+                           <reference
+                                 definitionId="isActiveEditorAnInstanceOfProcessEditor">
+                           </reference>
+                        </and>
+                     </iterate>
+                  </and>
+               </with>
+            </visibleWhen>
+         </command>
       </menuContribution>
+<menuContribution
+      allPopups="false"
+      locationURI="popup:org.bonitasoft.studio.application.project.explorer?after=group.export">
+   <command
+         commandId="org.bonitasoft.studio.diagram.custom.saveasimage"
+         style="push">
+      <visibleWhen
+            checkEnabled="false">
+         <with
+               variable="activeMenuSelection">
+            <and>
+               <count
+                     value="1">
+               </count>
+               <iterate>
+                  <and>
+                     <test
+                           property="org.bonitasoft.studio.diagram.isDiagramFile">
+                     </test>
+                  </and>
+               </iterate>
+            </and>
+         </with>
+      </visibleWhen>
+   </command>
+   <command
+         commandId="org.bonitasoft.studio.exporter.exportAsBPMN"
+         style="push">
+      <visibleWhen
+            checkEnabled="false">
+         <with
+               variable="activeMenuSelection">
+            <and>
+               <count
+                     value="1">
+               </count>
+               <iterate>
+                  <and>
+                     <test
+                           property="org.bonitasoft.studio.diagram.isDiagramFile">
+                     </test>
+                  </and>
+               </iterate>
+            </and>
+         </with>
+      </visibleWhen>
+   </command>
+</menuContribution>
+<menuContribution
+      allPopups="false"
+      locationURI="popup:org.bonitasoft.studio.application.project.explorer?after=group.import">
+   <command
+         commandId="org.bonitasoft.studio.importer.other.command"
+         style="push">
+      <visibleWhen
+            checkEnabled="false">
+         <with
+               variable="activeMenuSelection">
+            <and>
+               <count
+                     value="1">
+               </count>
+               <iterate>
+                  <or>
+                     <test
+                           property="org.bonitasoft.studio.diagram.isDiagramFolder">
+                     </test>
+                     <and>
+                        <instanceof
+                              value="org.eclipse.core.resources.IProject">
+                        </instanceof>
+                        <test
+                              property="org.bonitasoft.studio.application.isBonitaProject">
+                        </test>
+                     </and>
+                  </or>
+               </iterate>
+            </and>
+         </with>
+      </visibleWhen>
+   </command>
+</menuContribution>
    </extension>
    <extension
          point="org.eclipse.ui.commands">
@@ -599,25 +725,6 @@
                   <iterate>
                      <test
                            property="org.bonitasoft.studio.diagram.isDiagramFolder">
-                     </test>
-                  </iterate>
-               </and>
-            </with>
-         </activeWhen>
-      </handler>
-      <handler
-            commandId="org.bonitasoft.studio.application.export"
-            class="org.bonitasoft.studio.diagram.custom.commands.ExportDiagramHandler">
-         <activeWhen>
-            <with
-                  variable="activeMenuSelection">
-               <and>
-                  <count
-                        value="1">
-                  </count>
-                  <iterate>
-                     <test
-                           property="org.bonitasoft.studio.diagram.isDiagramFile">
                      </test>
                   </iterate>
                </and>
@@ -886,5 +993,12 @@
          matchingStrategy="org.bonitasoft.studio.model.process.diagram.part.ProcessMatchingStrategy"
          name="Process Diagram Editor">
    </editor>
+</extension>
+<extension
+      point="org.eclipse.ui.commandImages">
+   <image
+         commandId="org.bonitasoft.studio.diagram.custom.saveasimage"
+         icon="icons/menuIcons/save-as-image.png">
+   </image>
 </extension>
 </plugin>

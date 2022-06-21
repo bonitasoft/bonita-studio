@@ -79,6 +79,7 @@ import org.bonitasoft.studio.tests.expressionEditor.ExpressionEditorIT;
 import org.bonitasoft.studio.tests.expressionEditor.TestPatternExpressionViewer;
 import org.bonitasoft.studio.tests.git.ShareWithGitIT;
 import org.bonitasoft.studio.tests.importer.bos.ImportBOSArchiveWizardIT;
+import org.bonitasoft.studio.tests.importer.bpmn2.ImportBPMMNFileIT;
 import org.bonitasoft.studio.tests.iteration.MultiInstantiationIT;
 import org.bonitasoft.studio.tests.organization.OrganizationIT;
 import org.bonitasoft.studio.tests.organization.TestOrganizationPassword;
@@ -116,6 +117,7 @@ import org.junit.runners.Suite;
         ProjectExplorerConnectorIT.class,
         ProjectExplorerRestApiIT.class,
         DeployWizardIT.class,
+        ImportBPMMNFileIT.class,
         OpenExistingApplicationIT.class,
         TestMenus.class,
         OpenNameAndVersionForDiagramDialogTest.class,

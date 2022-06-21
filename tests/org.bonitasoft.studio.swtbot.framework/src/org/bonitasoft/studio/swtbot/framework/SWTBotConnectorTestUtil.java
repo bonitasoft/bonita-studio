@@ -35,8 +35,11 @@ import org.junit.Assert;
 public class SWTBotConnectorTestUtil {
 
     private static final String NEW_DEF_COMMAND = "org.bonitasoft.studio.connectors.newDefinition";
+    private static final String EDIT_DEF_COMMAND = "org.bonitasoft.studio.connectors.editDefinition";
     private static final String NEW_IMPL_COMMAND = "org.bonitasoft.studio.connectors.newImplementation";
     private static final String IMPORT_COMMAND = "org.bonitasoft.studio.connectors.importConnector";
+    private static final String TEST_COMMAND = "org.bonitasoft.studio.connectors.testConnector";
+    private static final String EXPORT_COMMAND = "org.bonitasoft.studio.connectors.exportConnector";
 
     private static SWTBotTreeItem categoryItem;
     private static List<String> nodes;
@@ -49,7 +52,6 @@ public class SWTBotConnectorTestUtil {
      * @param bot
      */
     public static void activateConnectorDefinitionShell(SWTBot bot) {
-        bot.waitUntil(Conditions.widgetIsEnabled(bot.menu("Development")), 10000);
         bot.getDisplay().asyncExec(() -> commandExecutor.executeCommand(NEW_DEF_COMMAND, null));
         bot.waitUntil(Conditions.shellIsActive("New connector definition"), 10000);
     }
@@ -61,7 +63,6 @@ public class SWTBotConnectorTestUtil {
      * @param bot
      */
     public static void activateConnectorImplementationShell(SWTBot bot) {
-        bot.waitUntil(Conditions.widgetIsEnabled(bot.menu("Development")), 10000);
         bot.getDisplay().asyncExec(() -> commandExecutor.executeCommand(NEW_IMPL_COMMAND, null));
         bot.waitUntil(Conditions.shellIsActive("New connector implementation"), 10000);
     }
@@ -73,8 +74,7 @@ public class SWTBotConnectorTestUtil {
      * @param bot
      */
     public static void activateConnectorDefEditionShell(SWTBot bot) {
-        bot.waitUntil(Conditions.widgetIsEnabled(bot.menu("Development")), 10000);
-        bot.menu("Development").menu("Connectors").menu("Edit definition...").click();
+        bot.getDisplay().asyncExec(() -> commandExecutor.executeCommand(EDIT_DEF_COMMAND, null));
         bot.waitUntil(Conditions.shellIsActive("Select a connector definition"), 10000);
     }
 
@@ -85,8 +85,7 @@ public class SWTBotConnectorTestUtil {
      * @param bot
      */
     public static void activateConnectorTestWizard(SWTBot bot) {
-        bot.waitUntil(Conditions.widgetIsEnabled(bot.menu("Development")), 10000);
-        bot.menu("Development").menu("Connectors").menu("Test connector...").click();
+        bot.getDisplay().asyncExec(() -> commandExecutor.executeCommand(TEST_COMMAND, null));
         bot.waitUntil(Conditions.shellIsActive("Test connector"), 10000);
     }
 
@@ -166,7 +165,6 @@ public class SWTBotConnectorTestUtil {
      * @param bot
      */
     public static void activateConnectorImportShell(SWTBot bot) {
-        bot.waitUntil(Conditions.widgetIsEnabled(bot.menu("Development")), 10000);
         bot.getDisplay().asyncExec(() -> commandExecutor.executeCommand(IMPORT_COMMAND, null));
         bot.waitUntil(Conditions.shellIsActive("Import connector archive"), 10000);
     }
@@ -175,7 +173,7 @@ public class SWTBotConnectorTestUtil {
      * use it to access to the wizard "Export connector" (menu Development<Connector>Export)
      */
     public static void activateExportConnectorShell(SWTBot bot) {
-        bot.menu("Development").menu("Connectors").menu("Export connector...").click();
+        bot.getDisplay().asyncExec(() -> commandExecutor.executeCommand(EXPORT_COMMAND, null));
         bot.waitUntil(Conditions.shellIsActive("Export connector"), 10000);
         bot.activeShell().setFocus();
     }

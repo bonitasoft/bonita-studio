@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.bonitasoft.studio.common.CommandExecutor;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.eclipse.jface.bindings.keys.KeyStroke;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
@@ -29,11 +30,13 @@ public class BotBase implements SWTBotConstants {
 
     protected final SWTGefBot bot;
     private final Keyboard keyboard;
+    protected CommandExecutor commandExecutor;
 
     public BotBase(final SWTGefBot bot) {
         this.bot = bot;
         SWTBotPreferences.KEYBOARD_LAYOUT = "EN_US";
         keyboard = KeyboardFactory.getSWTKeyboard();
+        commandExecutor = new CommandExecutor();
     }
 
     public void selectText() {

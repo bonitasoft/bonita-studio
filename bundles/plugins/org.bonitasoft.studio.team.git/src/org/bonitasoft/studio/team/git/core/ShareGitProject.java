@@ -26,7 +26,6 @@ import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.engine.BOSWebServerManager;
-import org.bonitasoft.studio.team.TeamRepositoryUtil;
 import org.bonitasoft.studio.team.git.i18n.Messages;
 import org.bonitasoft.studio.team.git.ui.wizard.FirstCommitDialog;
 import org.bonitasoft.studio.team.git.ui.wizard.FirstPushAbortedDialog;
@@ -80,6 +79,12 @@ public class ShareGitProject extends AbstractHandler {
     public void share(RepositoryAccessor repositoryAccessor) {
         execute(repositoryAccessor.getCurrentRepository().orElseThrow().getProject());
     }
+    
+    @Override
+    public boolean isEnabled() {
+        return RepositoryManager.getInstance().getCurrentRepository()
+                .stream().anyMatch( r -> !r.isShared());
+    }
 
     public void execute(IProject currentProject) {
         Shell activeShell = Display.getDefault().getActiveShell();
@@ -131,7 +136,7 @@ public class ShareGitProject extends AbstractHandler {
                     throw new InvocationTargetException(e);
                 }
             }
-            TeamRepositoryUtil.switchToRepository(repositoryName, true, monitor);
+            RepositoryManager.getInstance().switchToRepository(repositoryName, true, monitor);
         });
         return Optional
                 .of(currentProject.getWorkspace().getRoot()
