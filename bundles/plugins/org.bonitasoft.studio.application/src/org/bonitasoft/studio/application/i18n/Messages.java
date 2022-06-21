@@ -401,6 +401,15 @@ public class Messages extends NLS {
     public static String undo;
     public static String RecentlyModified;
     public static String engineStartWarning;
+    public static String switchRepositorySuccessful_Title;
+    public static String switchRepositorySuccessful_Message;
+    public static String team_selectWorkspace;
+    public static String createNewLocalRepo;
+    public static String confirmDeleteRepositoryTitle;
+    public static String confirmDeleteRepository;
+    public static String removeRepository;
+    public static String switchRepositoryDialogTitle;
+    public static String switchRepository;
 
     static {
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);

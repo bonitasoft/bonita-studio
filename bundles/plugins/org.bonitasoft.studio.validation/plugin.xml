@@ -1283,18 +1283,11 @@
       <extension
             point="org.eclipse.ui.menus">
       <menuContribution
-            locationURI="menu:org.bonitasoft.studio.fileMenu?after=org.bonitasoft.studio.application.separator2">
-            <dynamic
-                  class="org.bonitasoft.studio.validation.ui.menu.BatchValidationMenuContributionItem"
-                  id="org.bonitasoft.studio.validation.menu.contribution">
-            </dynamic>
-       </menuContribution>
-      <menuContribution
             allPopups="false"
             locationURI="popup:org.bonitasoft.studio.application.project.explorer?after=additions">
-         <dynamic
-               class="org.bonitasoft.studio.validation.ui.menu.DiagramValidationMenuContributionItem"
-               id="org.bonitasoft.studio.validation.command.validateDiagram">
+         <command
+               commandId="org.bonitasoft.studio.validation.command.validateDiagram"
+               style="push">
             <visibleWhen>
                <and>
                   <count
@@ -1307,10 +1300,15 @@
                   </iterate>
                </and>
             </visibleWhen>
-         </dynamic>
-         <dynamic
-               class="org.bonitasoft.studio.validation.ui.menu.BatchValidationMenuContributionItem"
-               id="org.bonitasoft.studio.validation.batchValidation">
+         </command>
+         <command
+               commandId="org.bonitasoft.studio.validation.batchValidation"
+               label="%batchValidationAction_Label"
+               style="push">
+            <parameter
+                  name="showReport"
+                  value="true">
+            </parameter>
             <visibleWhen
                   checkEnabled="true">
                <and>
@@ -1324,7 +1322,11 @@
                   </iterate>
                </and>
             </visibleWhen>
-         </dynamic>
+            <parameter
+                  name="checkAllModelVersion"
+                  value="true">
+            </parameter>
+         </command>
       </menuContribution>
       </extension>
       <extension
@@ -1400,5 +1402,16 @@
          <persistent
                value="true">
          </persistent>
+      </extension>
+      <extension
+            point="org.eclipse.ui.commandImages">
+         <image
+               commandId="org.bonitasoft.studio.validation.command.validateDiagram"
+               icon="icons/validate.png">
+         </image>
+         <image
+               commandId="org.bonitasoft.studio.validation.batchValidation"
+               icon="icons/validate.png">
+         </image>
       </extension>
 </plugin>

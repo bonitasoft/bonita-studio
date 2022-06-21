@@ -76,17 +76,25 @@ public class SWTGefBotRule implements TestRule {
                 try {
                     base.evaluate();
                 } catch (Throwable t) {
+                    captureScreenshot(description, t);
+                    throw t;
+                } finally {
+                    afterStatement(description);
+                }
+
+            }
+
+            void captureScreenshot(Description description, Throwable t) {
+                try {
                     String shellText = bot.activeShell().getText();
                     BonitaStudioLog.error(
                             String.format("%s failed ! (active shell = %s)", description.getDisplayName(), shellText),
                             t);
                     bot.captureScreenshot(String.format("screenshots/%s_%s.jpg", description.getClassName(),
                             description.getMethodName()));
-                    throw t;
-                } finally {
-                    afterStatement(description);
+                } catch (Throwable e) {
+                   BonitaStudioLog.error("Failed to capture screenshot after test failure.", e);
                 }
-
             }
 
         };

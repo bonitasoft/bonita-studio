@@ -14,16 +14,21 @@
  */
 package org.bonitasoft.studio.tests.diagram;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.model.process.MainProcess;
+import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.bonitasoft.studio.swtbot.framework.SWTBotTestUtil;
+import org.bonitasoft.studio.swtbot.framework.application.BotApplicationWorkbenchWindow;
 import org.bonitasoft.studio.swtbot.framework.projectExplorer.ProjectExplorerBot;
 import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
@@ -49,12 +54,16 @@ public class TestRenameDiagram {
     public void testFirstSaveRenaming() {
         BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore()
                 .setValue(BonitaPreferenceConstants.ASK_RENAME_ON_FIRST_SAVE, true);
-        SWTBotTestUtil.createNewDiagram(bot);
-        SWTBotEditor botEditor = bot.activeEditor();
-        SWTBotGefEditor gmfEditor = bot.gefEditor(botEditor.getTitle());
-        MainProcess diagram = (MainProcess) ((IGraphicalEditPart) gmfEditor.mainEditPart().part()).resolveSemanticElement();
-        String originalName = diagram.getName();
-        bot.menu("File").menu("Save").click();
+        var applicationWorkbenchWindow = new BotApplicationWorkbenchWindow(bot);
+        var activeProcessDiagramEditor = applicationWorkbenchWindow.createNewDiagram().activeProcessDiagramEditor();
+        EObject pool = activeProcessDiagramEditor
+                .getSelectedSemanticElement();
+
+        assertThat(pool).isInstanceOf(Pool.class);
+        String originalName = ((MainProcess) pool.eContainer()).getName();
+
+        bot.activeEditor().setFocus();
+        bot.toolbarButtonWithId(SWTBotConstants.SWTBOT_ID_SAVE_EDITOR).click();
         bot.waitUntil(Conditions.shellIsActive(org.bonitasoft.studio.common.Messages.openNameAndVersionDialogTitle));
         assertTrue("OK should be enabled", bot.button(IDialogConstants.OK_LABEL).isEnabled());
 
@@ -76,7 +85,8 @@ public class TestRenameDiagram {
 
             @Override
             public String getFailureMessage() {
-                return "The editor title (" + bot.activeEditor().getTitle() + ") doesn't match the new name of the diagram "
+                return "The editor title (" + bot.activeEditor().getTitle()
+                        + ") doesn't match the new name of the diagram "
                         + editorTitle + "\n" +
                         "Please attach Studio log from .metadata/.logs folder on [BS-9265]";
             }
@@ -84,12 +94,16 @@ public class TestRenameDiagram {
         assertFalse("Editor is dirty", bot.activeEditor().isDirty());
 
         //Disable dialog
-        SWTBotTestUtil.createNewDiagram(bot);
-        botEditor = bot.activeEditor();
-        gmfEditor = bot.gefEditor(botEditor.getTitle());
-        diagram = (MainProcess) ((IGraphicalEditPart) gmfEditor.mainEditPart().part()).resolveSemanticElement();
-        originalName = diagram.getName();
-        bot.menu("File").menu("Save").click();
+        pool = applicationWorkbenchWindow
+            .createNewDiagram()
+            .activeProcessDiagramEditor()
+            .getSelectedSemanticElement();
+        
+        assertThat(pool).isInstanceOf(Pool.class);
+        
+        originalName = ((MainProcess) pool.eContainer()).getName();
+        bot.activeEditor().setFocus();
+        bot.toolbarButtonWithId(SWTBotConstants.SWTBOT_ID_SAVE_EDITOR).click();
         bot.waitUntil(Conditions.shellIsActive(org.bonitasoft.studio.common.Messages.openNameAndVersionDialogTitle));
         assertTrue("OK should be enabled", bot.button(IDialogConstants.OK_LABEL).isEnabled());
 
@@ -99,9 +113,10 @@ public class TestRenameDiagram {
         assertFalse("Editor is dirty", bot.activeEditor().isDirty());
 
         SWTBotTestUtil.createNewDiagram(bot);
-        bot.menu("File").menu("Save").click();
+        applicationWorkbenchWindow.save();
         bot.waitWhile(Conditions.shellIsActive("Progress Information"));
-        assertFalse(bot.activeShell().getText().equals(org.bonitasoft.studio.common.Messages.openNameAndVersionDialogTitle));
+        assertFalse(bot.activeShell().getText()
+                .equals(org.bonitasoft.studio.common.Messages.openNameAndVersionDialogTitle));
         assertFalse("Editor is dirty", bot.activeEditor().isDirty());
     }
 
@@ -109,7 +124,10 @@ public class TestRenameDiagram {
     public void testRenameMenu() {
         SWTBotTestUtil.createNewDiagram(bot);
 
-        bot.menu("File").menu("Save").click();
+        var applicationWorkbenchWindow = new BotApplicationWorkbenchWindow(bot);
+        applicationWorkbenchWindow.createNewDiagram();
+        bot.activeEditor().setFocus();
+        bot.toolbarButtonWithId(SWTBotConstants.SWTBOT_ID_SAVE_EDITOR).click();
 
         final SWTBotEditor botEditor = bot.activeEditor();
         final SWTBotGefEditor gmfEditor = bot.gefEditor(botEditor.getTitle());

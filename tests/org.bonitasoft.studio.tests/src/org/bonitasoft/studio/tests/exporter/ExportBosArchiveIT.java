@@ -140,10 +140,11 @@ public class ExportBosArchiveIT {
 
     @Test
     public void testExportDiagramBOSArchive() throws Exception {
-        SWTBotTestUtil.createNewDiagram(bot);
+        var workbenchBot = new BotApplicationWorkbenchWindow(bot);
+        var gmfEditor =workbenchBot.createNewDiagram()
+        .activeProcessDiagramEditor()
+        .getGmfEditor();
 
-        final SWTBotEditor botEditor = bot.activeEditor();
-        final SWTBotGefEditor gmfEditor = bot.gefEditor(botEditor.getTitle());
         final List<SWTBotGefEditPart> runnableEPs = gmfEditor.editParts(new BaseMatcher<EditPart>() {
 
             @Override
@@ -160,8 +161,7 @@ public class ExportBosArchiveIT {
         gmfEditor.select(runnableEPs.get(0));
 
         bot.saveAllEditors();
-
-        bot.toolbarButtonWithId(SWTBotConstants.SWTBOT_ID_EXPORT_TOOLITEM).click();
+        workbenchBot.export();
         bot.waitUntil(Conditions.shellIsActive(Messages.ExportButtonLabel));
 
         final SWTBotCombo destComboBot = bot

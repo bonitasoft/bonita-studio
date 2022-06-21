@@ -88,7 +88,7 @@ public class ShareWithGitIT {
                 .as("%s repository should not be connected", currentRepository.getName())
                 .isFalse();
 
-        botApplicationWorkbenchWindow.teamMenu().gitMenu().shareWithGit()
+        botApplicationWorkbenchWindow.shareWithGit()
                 .share()
                 .commitMessage("This is a test message")
                 .pushBranch().setURI(gitRepoPath.toUri().toString())
@@ -125,9 +125,7 @@ public class ShareWithGitIT {
         }
 
         //Clone created repository in another bonita project
-        botApplicationWorkbenchWindow.teamMenu()
-                .gitMenu()
-                .gitClone()
+        botApplicationWorkbenchWindow.gitClone()
                 .setURI(gitRepoPath.toUri().toString())
                 .next()
                 .next()

@@ -12,6 +12,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import org.bonitasoft.studio.common.CommandExecutor;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.core.maven.AddDependencyOperation;
@@ -77,8 +78,7 @@ public abstract class AbstractSforceTest implements SWTBotConstants {
     }
 
     protected void goToSalesForceWizard(final String salesforceConnector) {
-        bot.menu("Development").menu("Connectors").menu("Test connector...")
-                .click();
+        bot.getDisplay().asyncExec(() -> new CommandExecutor().executeCommand("org.bonitasoft.studio.connectors.testConnector", null));
         assertEquals(
                 "Menu : Development/Connectors/Test connector... doesn't exist",
                 "Test connector", bot.activeShell().getText());

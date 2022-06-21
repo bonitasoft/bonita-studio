@@ -12,7 +12,6 @@ Export-Package: org.bonitasoft.studio.exporter,
   org.bonitasoft.studio.exporter.bpmn.transfo,
   org.bonitasoft.studio.exporter.bpmn.transfo.data,
   org.bonitasoft.studio.exporter.bpmn.transfo.expression,
-  org.bonitasoft.studio.exporter.coolbar,
   org.bonitasoft.studio.exporter.extension,
   org.bonitasoft.studio.exporter.handler,
  org.bonitasoft.studio.exporter.runtime

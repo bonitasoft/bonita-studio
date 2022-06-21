@@ -67,6 +67,15 @@ public class Messages extends NLS {
     public static String confirmMigratonTitle;
     public static String confirmMigraton;
     public static String cloneOperationCancelled;
+    public static String GITStatusDialog;
+    public static String sharedWithGit;
+    public static String currentBranch;
+    public static String remoteURL;
+    public static String gitUser;
+    public static String commitAhead;
+    public static String commitBehind;
+    public static String repoAlreadyExist;
+    public static String gitButtonTooltip;
 
     static {
         // initialize resource bundle

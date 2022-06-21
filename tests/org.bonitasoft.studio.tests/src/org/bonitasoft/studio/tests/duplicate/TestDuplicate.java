@@ -16,6 +16,7 @@ package org.bonitasoft.studio.tests.duplicate;
 
 import static org.junit.Assert.assertTrue;
 
+import org.bonitasoft.studio.common.CommandExecutor;
 import org.bonitasoft.studio.common.Messages;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
@@ -42,7 +43,7 @@ public class TestDuplicate {
     public void testDuplicateWithSeveralPool() throws Exception {
         SWTBotTestUtil.createNewDiagram(bot);
         final int nbEditorBefore = bot.editors().size();
-        bot.menu("File").menu("Duplicate diagram...").click();
+        bot.getDisplay().asyncExec(() -> new CommandExecutor().executeCommand("org.bonitasoft.studio.diagram.custom.command.duplicate", null));
         bot.waitUntil(Conditions.shellIsActive(Messages.openNameAndVersionDialogTitle));
         bot.textWithLabel("Name").setText("DuplicatedTestDuplicateWithSeveralPool");
         bot.textWithLabel("Version").setText("2.0");
@@ -97,7 +98,7 @@ public class TestDuplicate {
                 .finish();
 
         final int nbEditorBefore = bot.editors().size();
-        bot.menu("File").menu("Duplicate diagram...").click();
+        bot.getDisplay().asyncExec(() -> new CommandExecutor().executeCommand("org.bonitasoft.studio.diagram.custom.command.duplicate", null));
         bot.waitUntil(Conditions.shellIsActive(Messages.openNameAndVersionDialogTitle));
         bot.textWithLabel("Version", 0).setText("2.0");
         bot.textWithLabel("Version", 1).setText("2.0");

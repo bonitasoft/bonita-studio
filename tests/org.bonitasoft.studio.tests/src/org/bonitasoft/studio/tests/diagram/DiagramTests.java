@@ -33,18 +33,16 @@ import org.bonitasoft.studio.swtbot.framework.application.BotApplicationWorkbenc
 import org.bonitasoft.studio.swtbot.framework.conditions.AssertionCondition;
 import org.bonitasoft.studio.swtbot.framework.draw.BotGefProcessDiagramEditor;
 import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.swt.SWT;
-import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotEclipseEditor;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotEditor;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditPart;
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditor;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
-import org.eclipse.swtbot.swt.finder.keyboard.Keyboard;
-import org.eclipse.swtbot.swt.finder.keyboard.KeyboardFactory;
-import org.eclipse.swtbot.swt.finder.utils.SWTBotPreferences;
+import org.eclipse.swtbot.swt.finder.keyboard.Keystrokes;
 import org.eclipse.swtbot.swt.finder.waits.Conditions;
 import org.junit.Assert;
 import org.junit.Rule;
@@ -117,7 +115,7 @@ public class DiagramTests {
                 assertThat(pool.getElements()).hasSize(2);
             }
         });
-        botApplicationWorkbenchWindow.editMenu().undo();
+        bot.activeShell().pressShortcut(Keystrokes.toKeys(SWT.CTRL, 'z'));
         bot.waitUntil(new AssertionCondition() {
 
             @Override
@@ -126,7 +124,8 @@ public class DiagramTests {
             }
         });
       
-        botApplicationWorkbenchWindow.editMenu().redo();
+        var redoKeyStrokes = Platform.OS_WIN32.equals(Platform.getOS()) ? Keystrokes.toKeys(SWT.CTRL, 'y') : Keystrokes.toKeys(SWT.CTRL+SWT.SHIFT, 'z');
+        bot.activeShell().pressShortcut(redoKeyStrokes);
         bot.waitUntil(new AssertionCondition() {
 
             @Override

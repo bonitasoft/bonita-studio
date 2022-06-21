@@ -68,50 +68,6 @@
         point="org.eclipse.ui.menus">
      <menuContribution
            allPopups="false"
-           locationURI="menu:org.eclipse.ui.main.menu?after=org.bonitasoft.studio.development">
-        <menu
-              id="org.bonitasoft.studio.menu.run"
-              label="%serverMenuLabel">
-           <command
-                 commandId="org.bonitasoft.studio.engine.runCommand"
-                 icon="icons/run.png"
-                 style="push">
-           </command>
-           <command
-                 commandId="org.bonitasoft.studio.application.openConsole"
-                 disabledIcon="icons/user_xp_disabled.png"
-                 icon="icons/user_xp.png"
-                 style="push">
-           </command>
-           <separator
-                 name="org.bonitasoft.studio.engine.separator1"
-                 visible="true">
-           </separator>
-           <command
-                 commandId="org.bonitasoft.studio.engine.exportAsBarCommand"
-                 disabledIcon="icons/export_disabled.png"
-                 icon="icons/export.png"
-                 style="push">
-           </command>
-           <separator
-                 name="org.bonitasoft.studio.engine.separator2"
-                 visible="true">
-           </separator>
-           <command
-                 commandId="org.bonitasoft.studio.engine.resetServerCommand"
-                 icon="icons/reset_server.png"
-                 style="push">
-           </command>
-           <visibleWhen
-                 checkEnabled="true">
-              <reference
-                    definitionId="isBonitaPerspectiveActive">
-              </reference>
-           </visibleWhen>
-        </menu>
-     </menuContribution>
-     <menuContribution
-           allPopups="false"
            locationURI="popup:org.bonitasoft.studio.application.project.explorer?after=group.build">
         <menu
               icon="icons/export.png"
@@ -138,6 +94,30 @@
                </with>
             </visibleWhen>
         </menu>
+     </menuContribution>
+     <menuContribution
+           allPopups="false"
+           locationURI="popup:org.bonitasoft.studio.application.project.explorer?after=group.edit">
+        <command
+              commandId="org.bonitasoft.studio.engine.exportAsBarCommand"
+              style="push">
+           <visibleWhen
+                 checkEnabled="false">
+              <with
+                    variable="activeMenuSelection">
+                 <and>
+                    <count
+                          value="1">
+                    </count>
+                    <iterate>
+                       <test
+                             property="org.bonitasoft.studio.diagram.isDiagramFolder">
+                       </test>
+                    </iterate>
+                 </and>
+              </with>
+           </visibleWhen>
+        </command>
      </menuContribution>
   </extension>
   <extension
@@ -176,5 +156,16 @@
      <barResourceProvider
            providerClass="org.bonitasoft.studio.engine.contribution.AdditionalResourcesBARResourcesProvider">
      </barResourceProvider>
+  </extension>
+  <extension
+        point="org.eclipse.ui.commandImages">
+     <image
+           commandId="org.bonitasoft.studio.engine.resetServerCommand"
+           icon="icons/restart_server.png">
+     </image>
+     <image
+           commandId="org.bonitasoft.studio.engine.exportAsBarCommand"
+           icon="icons/export.png">
+     </image>
   </extension>
 </plugin>
