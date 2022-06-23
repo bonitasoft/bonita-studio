@@ -21,6 +21,7 @@ import java.util.Set;
 
 import org.eclipse.gef.EditPartViewer;
 import org.eclipse.gmf.runtime.diagram.ui.providers.DiagramContextMenuProvider;
+import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.ui.IWorkbenchPart;
 
@@ -71,6 +72,13 @@ public class DiagramEditorContextMenuProvider extends DiagramContextMenuProvider
 		exclusionSet.add("groovyfile");
 		exclusionSet.add("groovyresource");
 		exclusionSet.add("ValidationCommand");
+		exclusionSet.add("org.eclipse.tm4e.ui.internal.menus.Theme");
+	}
+	
+	@Override
+	protected boolean allowItem(IContributionItem itemToAdd) {
+	    System.out.println(itemToAdd);
+	    return super.allowItem(itemToAdd);
 	}
 
 	/**

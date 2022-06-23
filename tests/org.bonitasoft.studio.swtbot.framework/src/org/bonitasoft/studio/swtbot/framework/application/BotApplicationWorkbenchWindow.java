@@ -193,6 +193,7 @@ public class BotApplicationWorkbenchWindow extends AbstractBotMenu {
     }
 
     public BotDeployDialog openDeploy() {
+        bot.waitUntil(Conditions.widgetIsEnabled(bot.toolbarButtonWithId(SWTBotConstants.SWTBOT_ID_DEPLOY_TOOLITEM)));
         bot.toolbarButtonWithId(SWTBotConstants.SWTBOT_ID_DEPLOY_TOOLITEM).click();
         return new BotDeployDialog(bot);
     }
