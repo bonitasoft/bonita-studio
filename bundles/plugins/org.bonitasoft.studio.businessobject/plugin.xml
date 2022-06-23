@@ -110,30 +110,6 @@
       </menuContribution>
       <menuContribution
             allPopups="false"
-            locationURI="popup:org.bonitasoft.studio.application.project.explorer?after=group.export">
-         <command
-               commandId="org.bonitasoft.studio.businessobject.exportCommand"
-               style="push">
-            <visibleWhen
-                  checkEnabled="false">
-               <with
-                     variable="activeMenuSelection">
-                  <and>
-                     <count
-                           value="1">
-                     </count>
-                     <iterate>
-                        <test
-                              property="org.bonitasoft.studio.businessobject.isBDMFile">
-                        </test>
-                     </iterate>
-                  </and>
-               </with>
-            </visibleWhen>
-         </command>
-      </menuContribution>
-      <menuContribution
-            allPopups="false"
             locationURI="popup:org.bonitasoft.studio.application.project.explorer?after=group.import">
          <command
                commandId="org.bonitasoft.studio.businessobject.command.import"
@@ -335,9 +311,6 @@
             </objectClass>
          </enablement>
       </decorator>
-   </extension>
-   <extension
-         point="org.bonitasoft.studio.common.dashboardContribution">
    </extension>
    <extension
          point="org.bonitasoft.studio.common.dashboardContribution">
