@@ -17,6 +17,7 @@ package org.bonitasoft.studio.tests.configuration;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertTrue;
 
+import java.time.Duration;
 import java.util.List;
 
 import org.bonitasoft.studio.configuration.i18n.Messages;
@@ -46,7 +47,8 @@ public class JavaDependenciesConfigurationIT {
                 .currentRepository()
                 .next()
                 .next()
-                .finish();
+                // Depending of the network latency this may take a while....
+                .finishWithTimeout(Duration.ofMinutes(5));
 
         final IStatus status = SWTBotTestUtil.selectAndRunFirstPoolFound(bot);
         assertTrue(status.getMessage(), status.isOK());

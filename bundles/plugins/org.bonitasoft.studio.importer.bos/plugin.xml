@@ -23,7 +23,7 @@
          point="org.eclipse.ui.commandImages">
       <image
             commandId="org.bonitasoft.studio.importer.bos.command"
-            icon="icons/import@2x.png">
+            icon="icons/import.png">
       </image>
    </extension>
 
