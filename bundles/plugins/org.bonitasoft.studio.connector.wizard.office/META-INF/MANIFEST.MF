@@ -1,0 +1,32 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Advanced wizard for Office connector
+Bundle-SymbolicName: org.bonitasoft.studio.connector.wizard.office;singleton:=true
+Bundle-Version: 7.15.0.qualifier
+Bundle-Activator: org.bonitasoft.studio.connector.wizard.office.Activator
+Bundle-Vendor: Bonitasoft S.A.
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.bonitasoft.studio.connectors,
+ org.bonitasoft.studio.connectors.model.edit,
+ org.eclipse.emf.databinding,
+ org.bonitasoft.studio.common,
+ org.bonitasoft.studio.model,
+ org.bonitasoft.studio.common.repository,
+ org.bonitasoft.studio.expression.editor,
+ org.eclipse.jface.databinding,
+ org.bonitasoft.studio.businessobject,
+ org.junit;bundle-version="4.11.0";resolution:=optional,
+ assertj-core;resolution:=optional,
+ org.mockito.mockito-core;resolution:=optional,
+ org.bonitasoft.studio.tests-utils;resolution:=optional,
+ org.eclipse.ui.forms,
+ org.bonitasoft.studio.preferences,
+ org.bonitasoft.studio.validation,
+ org.eclipse.emf.validation
+Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-ActivationPolicy: lazy
+Export-Package: org.bonitasoft.studio.connector.wizard.office,
+ org.bonitasoft.studio.connector.wizard.office.templating
+Import-Package: org.bonitasoft.engine.bdm.model,
+ org.bonitasoft.engine.bdm.model.field
