@@ -28,7 +28,6 @@
         <groovy-maven-plugin.groovy.version>3.0.8</groovy-maven-plugin.groovy.version>
         <!-- Must be synched with org.bonitasoft.studio.common.repository.core.maven.model.DefaultPluginVersions.MAVEN_DEPENDENCY_PLUGIN_VERSION -->
         <maven-dependency-plugin.version>3.1.2</maven-dependency-plugin.version>
-        <org.eclipse.swt.version>3.118.0</org.eclipse.swt.version>
         <maven3-model-jdom-support.version>1.6</maven3-model-jdom-support.version>
         <jacocoVersion>0.8.8</jacocoVersion>
     </properties>
@@ -53,12 +52,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
-                    <version>3.9.0</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-surefire-plugin</artifactId>
-                    <version>2.22.2</version>
+                    <version>3.10.1</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -291,12 +285,6 @@
                 <groupId>org.bonitasoft.web</groupId>
                 <artifactId>ui-designer-artifact-builder</artifactId>
                 <version>${ui.designer.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>junit</groupId>
-                <artifactId>junit</artifactId>
-                <version>4.13.2</version>
-                <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>org.commonjava.maven</groupId>

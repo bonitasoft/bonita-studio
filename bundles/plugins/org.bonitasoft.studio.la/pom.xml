@@ -13,11 +13,4 @@
     <artifactId>org.bonitasoft.studio.la</artifactId>
     <packaging>eclipse-plugin</packaging>
 
-    <dependencies>
-        <dependency>
-            <groupId>org.bonitasoft.maven</groupId>
-            <artifactId>bonita-project-report-model</artifactId>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
 </project>

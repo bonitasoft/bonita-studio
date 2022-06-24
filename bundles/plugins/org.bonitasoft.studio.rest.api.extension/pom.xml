@@ -13,17 +13,4 @@
     <artifactId>org.bonitasoft.studio.rest.api.extension</artifactId>
     <packaging>eclipse-plugin</packaging>
 
-    <dependencies>
-       <dependency>
-            <groupId>org.bonitasoft.maven</groupId>
-            <artifactId>bonita-project-report-model</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.commonjava.maven</groupId>
-            <artifactId>maven3-model-jdom-support</artifactId>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
-
 </project>

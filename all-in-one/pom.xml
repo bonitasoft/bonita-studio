@@ -254,6 +254,7 @@
 						<id>make-zip-assembly</id>
 						<phase>package</phase>
 						<configuration>
+						    <archiveBaseDirectory>${project.build.directory}/${product.short.name}-${branding.version}</archiveBaseDirectory>
 							<appendAssemblyId>false</appendAssemblyId>
 							<descriptors>
 								<descriptor>${basedir}/assembly-zip-descriptor.xml</descriptor>

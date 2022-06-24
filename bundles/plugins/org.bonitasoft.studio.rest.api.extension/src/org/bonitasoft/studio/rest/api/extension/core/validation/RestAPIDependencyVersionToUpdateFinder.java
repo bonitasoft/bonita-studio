@@ -289,7 +289,7 @@ public class RestAPIDependencyVersionToUpdateFinder extends DependencyVersionToU
                 IStatus.WARNING);
     }
 
-    String currentBDMGroupId() {
+    protected String currentBDMGroupId() {
         BusinessObjectModelRepositoryStore repositoryStore = RepositoryManager.getInstance().getCurrentRepository()
                 .orElseThrow()
                 .getRepositoryStore(BusinessObjectModelRepositoryStore.class);
