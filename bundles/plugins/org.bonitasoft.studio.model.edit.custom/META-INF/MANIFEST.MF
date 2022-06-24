@@ -12,10 +12,7 @@ Require-Bundle: org.eclipse.emf.edit,
  org.eclipse.ui,
  org.bonitasoft.studio.pics,
  org.eclipse.jdt.core,
- org.eclipse.emf.edit.ui,
- org.junit;resolution:=optional,
- assertj-core;resolution:=optional,
- org.bonitasoft.studio.tests-utils;resolution:=optional
+ org.eclipse.emf.edit.ui
 Export-Package: org.bonitasoft.studio.model.edit.custom.decision,org.b
  onitasoft.studio.model.edit.custom.process
 Bundle-Activator: org.bonitasoft.studio.model.edit.custom.EMFEditCustomPlugin

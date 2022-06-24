@@ -12,13 +12,5 @@
     <groupId>org.bonitasoft.studio.bundles.plugins</groupId>
     <artifactId>org.bonitasoft.studio.importer.bos</artifactId>
     <packaging>eclipse-plugin</packaging>
-
-    <dependencies>
-        <dependency>
-            <groupId>org.bonitasoft.maven</groupId>
-            <artifactId>bonita-project-report-model</artifactId>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
     
 </project>

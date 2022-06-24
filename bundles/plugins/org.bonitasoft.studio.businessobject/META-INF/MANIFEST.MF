@@ -54,10 +54,6 @@ Require-Bundle: org.bonitasoft.studio.model,
  org.bonitasoft.studio.configuration,
  org.bonitasoft.studio.expression.editor,
  org.bonitasoft.studio.preferences,
- org.junit;resolution:=optional,
- org.mockito.mockito-core;resolution:=optional,
- assertj-core;resolution:=optional,
- org.bonitasoft.studio.tests-utils;resolution:=optional,
  org.bonitasoft.studio.refactoring,
  com.google.guava,
  org.eclipse.e4.core.services,
@@ -89,10 +85,7 @@ Require-Bundle: org.bonitasoft.studio.model,
  org.eclipse.debug.ui,
  org.eclipse.debug.core,
  org.bonitasoft.studio.engine,
- org.eclipse.wst.sse.ui,
- org.objenesis;resolution:=optional,
- net.bytebuddy.byte-buddy;resolution:=optional,
- com.sun.istack.commons-runtime;resolution:=optional
+ org.eclipse.wst.sse.ui
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-ActivationPolicy: lazy
 Import-Package: javax.activation;version="1.1.0",

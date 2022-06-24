@@ -32,6 +32,7 @@ import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.internal.Workbench;
 import org.eclipse.ui.internal.forms.widgets.ResourceManagerManger;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
@@ -104,6 +105,9 @@ public class Pics extends AbstractUIPlugin {
      *        this project.
      */
     public static Image getImage(final String imageName) {
+        if(Workbench.getInstance() == null) {
+            return null;
+        }
         if (PicsConstants.hint.equals(imageName) && plugin != null) {
             return PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJS_INFO_TSK);
         }
@@ -111,7 +115,7 @@ public class Pics extends AbstractUIPlugin {
     }
 
     public static Image getImage(final String imageName, final Plugin plugin) {
-        if (plugin == null) {
+        if (plugin == null || Workbench.getInstance() == null) {
             return null;
         }
         final ImageDescriptor descriptor = getImageDescriptor(imageName, plugin);

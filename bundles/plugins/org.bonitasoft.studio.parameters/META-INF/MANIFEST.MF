@@ -27,8 +27,6 @@ Require-Bundle: org.eclipse.ui,
  org.bonitasoft.studio.groovy.ui,
  org.bonitasoft.studio.refactoring,
  org.eclipse.jdt.groovy.core,
- org.junit;bundle-version="4.11.0";resolution:=optional,
- assertj-core;resolution:=optional,
  org.bonitasoft.studio.ui,
  org.bonitasoft.studio.preferences
 Bundle-RequiredExecutionEnvironment: JavaSE-11
