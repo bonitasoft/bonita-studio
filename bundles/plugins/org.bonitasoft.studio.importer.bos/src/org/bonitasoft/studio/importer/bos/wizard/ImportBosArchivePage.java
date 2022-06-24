@@ -244,7 +244,7 @@ public class ImportBosArchivePage implements ControlSupplier, Supplier<ImportArc
                 .observeDetail(projectMetadataObservable);
         var projectArtifactIdObservable = PojoProperties.value("artifactId", String.class)
                 .observeDetail(projectMetadataObservable);
-        
+
         newProjectNameText = new TextWidget.Builder()
                 .widthHint(500)
                 .labelAbove()
@@ -262,9 +262,10 @@ public class ImportBosArchivePage implements ControlSupplier, Supplier<ImportArc
 
         projectNameObservable.addValueChangeListener(event -> {
             String newProjectName = event.diff.getNewValue();
-            if (newProjectName != null && !newProjectName.isBlank() && archiveModel != null && mode == RepositoryMode.NEW) {
+            if (newProjectName != null && !newProjectName.isBlank() && archiveModel != null
+                    && mode == RepositoryMode.NEW) {
                 updateTargetRepository(newProjectName);
-                if(Strings.isNullOrEmpty(projectArtifactIdObservable.getValue())){
+                if (Strings.isNullOrEmpty(projectArtifactIdObservable.getValue())) {
                     projectArtifactIdObservable.setValue(ProjectMetadata.toArtifactId(newProjectName));
                 }
             }
@@ -298,8 +299,7 @@ public class ImportBosArchivePage implements ControlSupplier, Supplier<ImportArc
                 .useNativeRender()
                 .createIn(newRepositoryComposite);
 
-    
-            new TextWidget.Builder()
+        new TextWidget.Builder()
                 .widthHint(700)
                 .horizontalSpan(2)
                 .labelAbove()
@@ -602,8 +602,4 @@ public class ImportBosArchivePage implements ControlSupplier, Supplier<ImportArc
         return archiveModel;
     }
 
-    // Test purpose
-    void setTextWidgetText(String path) {
-        fileLocationText.setText(path);
-    }
 }

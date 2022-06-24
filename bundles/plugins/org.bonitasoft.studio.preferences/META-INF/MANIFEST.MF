@@ -25,10 +25,7 @@ Require-Bundle: org.eclipse.ui,
  org.bonitasoft.studio.common.repository,
  org.eclipse.ui.ide,
  org.eclipse.core.net,
- org.eclipse.ui.net;bundle-version="1.2.100",
- org.junit;resolution:=optional,
- org.mockito.mockito-core;resolution:=optional,
- assertj-core;resolution:=optional,
+ org.eclipse.ui.net,
  org.eclipse.debug.ui,
  org.eclipse.jdt.ui,
  org.eclipse.wst.html.core,
@@ -38,12 +35,10 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.e4.ui.css.swt.theme,
  org.eclipse.ui.themes,
  org.eclipse.e4.ui.model.workbench,
- org.eclipse.e4.core.services;bundle-version="2.2.100",
+ org.eclipse.e4.core.services,
  org.eclipse.e4.ui.workbench,
  org.eclipse.osgi.services,
- org.codehaus.groovy.eclipse.core,
- net.bytebuddy.byte-buddy;resolution:=optional,
- org.objenesis;resolution:=optional
+ org.codehaus.groovy.eclipse.core
 Import-Package: org.eclipse.core.expressions
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-11

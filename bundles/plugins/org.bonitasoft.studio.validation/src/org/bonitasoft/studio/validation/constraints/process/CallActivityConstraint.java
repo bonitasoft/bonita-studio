@@ -89,7 +89,7 @@ public class CallActivityConstraint extends AbstractLiveValidationMarkerConstrai
         return ctx.createSuccessStatus();
     }
 
-    CallActivityHelper createHelper(final CallActivity callActivity) {
+    protected CallActivityHelper createHelper(final CallActivity callActivity) {
         CallActivitySelectionProvider callActivitySelectionProvider = new CallActivitySelectionProvider();
         callActivitySelectionProvider.setSelection(new StructuredSelection(new IAdaptable() {
             

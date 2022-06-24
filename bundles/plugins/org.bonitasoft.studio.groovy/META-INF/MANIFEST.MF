@@ -5,8 +5,7 @@ Bundle-SymbolicName: org.bonitasoft.studio.groovy;singleton:=true
 Bundle-Version: 7.16.0.qualifier
 Bundle-Activator: org.bonitasoft.studio.groovy.GroovyPlugin
 Bundle-Vendor: BonitaSoft S.A.
-Require-Bundle: org.junit;resolution:=optional,
- org.eclipse.ui,
+Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.jface.text,
  org.eclipse.jdt.groovy.core,
@@ -33,12 +32,9 @@ Require-Bundle: org.junit;resolution:=optional,
  org.bonitasoft.studio.connectors.model,
  org.codehaus.groovy.eclipse.refactoring,
  org.codehaus.groovy.eclipse.quickfix,
- com.google.guava;bundle-version="11.0.1",
+ com.google.guava,
  org.eclipse.e4.core.di,
- org.eclipse.jdt.ui,
- assertj-core;resolution:=optional,
- org.eclipse.jdt.ui,
- org.bonitasoft.studio.tests-utils;resolution:=optional
+ org.eclipse.jdt.ui
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Import-Package: javax.inject;version="1.0.0",
  org.bonitasoft.engine.api,

@@ -12,13 +12,4 @@
 	<artifactId>org.bonitasoft.studio.contract</artifactId>
 	<packaging>eclipse-plugin</packaging>
     
-    <dependencies>
-        <dependency>
-            <groupId>org.bonitasoft.web</groupId>
-            <artifactId>ui-designer-backend-contract</artifactId>
-            <version>${ui.designer.version}</version>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
-    
 </project>

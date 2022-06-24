@@ -40,10 +40,9 @@ import org.eclipse.debug.core.ILaunchConfigurationType;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.debug.core.IStreamListener;
+import org.eclipse.debug.core.RefreshUtil;
 import org.eclipse.debug.core.model.IProcess;
 import org.eclipse.debug.core.model.IStreamMonitor;
-import org.eclipse.debug.ui.IDebugUIConstants;
-import org.eclipse.debug.ui.RefreshTab;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
@@ -142,9 +141,9 @@ public class BuildCustomPageOperation implements IWorkspaceRunnable {
         workingCopy.setAttribute(MavenLaunchConstants.ATTR_GOALS, mavenGoals);
         workingCopy.setAttribute(MavenLaunchConstants.ATTR_PROFILES,
                 activeProfiles());
-        workingCopy.setAttribute(IDebugUIConstants.ATTR_PRIVATE, true);
-        workingCopy.setAttribute(RefreshTab.ATTR_REFRESH_SCOPE, "${project}");
-        workingCopy.setAttribute(RefreshTab.ATTR_REFRESH_RECURSIVE, true);
+        workingCopy.setAttribute(ILaunchManager.ATTR_PRIVATE, true);
+        workingCopy.setAttribute(RefreshUtil.ATTR_REFRESH_SCOPE, "${project}");
+        workingCopy.setAttribute(RefreshUtil.ATTR_REFRESH_RECURSIVE, true);
         workingCopy.setAttribute(DebugPlugin.ATTR_CAPTURE_OUTPUT, true);
         workingCopy.setAttribute(DebugPlugin.ATTR_CONSOLE_ENCODING, "UTF-8");
         final IPath path = getJREContainerPath(fileStoreDescriptor.getProject());

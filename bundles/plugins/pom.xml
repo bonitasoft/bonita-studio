@@ -29,7 +29,6 @@
         <module>org.bonitasoft.studio.common</module>
         <module>org.bonitasoft.studio.common.diagram</module>
         <module>org.bonitasoft.studio.common.repository</module>
-        <module>org.bonitasoft.studio.contract</module>
         <module>org.bonitasoft.studio.configuration</module>
         <module>org.bonitasoft.studio.connector.wizard.office</module>
         <module>org.bonitasoft.studio.connector.wizard.sapjco3</module>
@@ -38,6 +37,7 @@
         <module>org.bonitasoft.studio.connectors</module>
         <module>org.bonitasoft.studio.connectors.model</module>
         <module>org.bonitasoft.studio.connectors.model.edit</module>
+        <module>org.bonitasoft.studio.contract</module>
         <module>org.bonitasoft.studio.data</module>
         <module>org.bonitasoft.studio.datatools</module>
         <module>org.bonitasoft.studio.decision.table</module>
@@ -81,53 +81,42 @@
         <module>org.bonitasoft.studio.xml</module>
         <module>org.omg.schema.spec.bpmn</module>
         <module>org.bonitasoft.studio-product</module>
+        
+        <!-- Test fragments -->
+        <module>org.bonitasoft.studio.application.tests</module>
+        <module>org.bonitasoft.studio.businessobject.tests</module>
+        <module>org.bonitasoft.studio.common.tests</module>
+        <module>org.bonitasoft.studio.common.diagram.tests</module>
+        <module>org.bonitasoft.studio.common.repository.tests</module>
+        <module>org.bonitasoft.studio.configuration.tests</module>
+        <module>org.bonitasoft.studio.connector.wizard.office.tests</module>
+        <module>org.bonitasoft.studio.connectors.model.edit.tests</module>
+        <module>org.bonitasoft.studio.connectors.tests</module>
+        <module>org.bonitasoft.studio.contract.tests</module>
+        <module>org.bonitasoft.studio.data.tests</module>
+        <module>org.bonitasoft.studio.dependencies.tests</module>
+        <module>org.bonitasoft.studio.designer.tests</module>
+        <module>org.bonitasoft.studio.diagram.custom.tests</module>
+        <module>org.bonitasoft.studio.document.tests</module>
+        <module>org.bonitasoft.studio.engine.tests</module>
+        <module>org.bonitasoft.studio.exporter.tests</module>
+        <module>org.bonitasoft.studio.expression.editor.tests</module>
+        <module>org.bonitasoft.studio.groovy.tests</module>
+        <module>org.bonitasoft.studio.groovy.ui.tests</module>
+        <module>org.bonitasoft.studio.identity.tests</module>
+        <module>org.bonitasoft.studio.importer.tests</module>
+        <module>org.bonitasoft.studio.importer.bos.tests</module>
+        <module>org.bonitasoft.studio.la.tests</module>
+        <module>org.bonitasoft.studio.migration.tests</module>
+        <module>org.bonitasoft.studio.model.edit.custom.tests</module>
+        <module>org.bonitasoft.studio.refactoring.tests</module>
+        <module>org.bonitasoft.studio.parameters.tests</module>
+        <module>org.bonitasoft.studio.preferences.tests</module>
+        <module>org.bonitasoft.studio.properties.tests</module>
+        <module>org.bonitasoft.studio.rest.api.extension.tests</module>
+        <module>org.bonitasoft.studio.ui.tests</module>
+        <module>org.bonitasoft.studio.validation.tests</module>
+        
     </modules>
-
-    <build>
-        <testSourceDirectory>src-test/java</testSourceDirectory>
-        <testResources>
-            <testResource>
-                <directory>src-test/resources</directory>
-            </testResource>
-        </testResources>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.0.0-M5</version>
-                <configuration>
-                    <systemProperties>
-                        <osgi.nls.warnings>ignore</osgi.nls.warnings>
-                    </systemProperties>
-                </configuration>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.apache.maven.surefire</groupId>
-                        <artifactId>surefire-junit47</artifactId>
-                        <version>3.0.0-M5</version>
-                    </dependency>
-                </dependencies>
-            </plugin>
-        </plugins>
-    </build>
-
-    <profiles>
-        <profile>
-            <id>windows-specific-swt-test-dependency</id>
-            <activation>
-                <os>
-                    <family>windows</family>
-                </os>
-            </activation>
-            <dependencies>
-                <dependency>
-                    <groupId>org.eclipse.platform</groupId>
-                    <artifactId>org.eclipse.swt.win32.win32.x86_64</artifactId>
-                    <version>${org.eclipse.swt.version}</version>
-                    <scope>test</scope>
-                </dependency>
-            </dependencies>
-        </profile>
-    </profiles>
     
 </project>
