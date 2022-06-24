@@ -25,13 +25,7 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.emf.workspace,
  org.eclipse.emf.databinding.edit,
  org.bonitasoft.studio.model.edit.custom,
- org.bonitasoft.studio.model.edit,
- org.mockito.mockito-core;resolution:=optional,
- assertj-core;resolution:=optional,
- org.junit;resolution:=optional,
- org.bonitasoft.studio.tests-utils;resolution:=optional,
- net.bytebuddy.byte-buddy;resolution:=optional,
- org.objenesis;resolution:=optional
+ org.bonitasoft.studio.model.edit
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-ActivationPolicy: lazy
 Export-Package: org.bonitasoft.studio.refactoring.core,

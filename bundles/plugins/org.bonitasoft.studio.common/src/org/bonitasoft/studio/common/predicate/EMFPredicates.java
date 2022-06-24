@@ -26,7 +26,12 @@ public class EMFPredicates {
 
             @Override
             public boolean apply(final T input) {
-                return input.eGet(feature) != null;
+                try {
+                    return input.eGet(feature) != null;
+                } catch (NullPointerException | AssertionError e) {
+                    throw new IllegalArgumentException(String.format("%s feature cannot be applied to %s", feature, input));
+                }
+
             }
         };
     }

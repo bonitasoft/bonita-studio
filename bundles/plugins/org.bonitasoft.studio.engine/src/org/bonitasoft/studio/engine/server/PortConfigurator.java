@@ -143,7 +143,7 @@ public class PortConfigurator {
 
     }
 
-    int findUnusedPort() {
+    protected int findUnusedPort() {
        return PortSelector.findFreePort();
     }
 }

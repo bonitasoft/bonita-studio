@@ -17,7 +17,6 @@
 		<dependency>
 			<groupId>org.bonitasoft.engine.data</groupId>
 			<artifactId>bonita-business-data-generator</artifactId>
-			<version>${bonita-runtime.version}</version>
 		</dependency>
 	</dependencies>
 
@@ -26,7 +25,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-shade-plugin</artifactId>
-				<version>3.2.1</version>
+				<version>3.3.0</version>
 				<executions>
 					<execution>
 						<phase>package</phase>
@@ -58,6 +57,12 @@
 								</filter>
 								<filter>
 									<artifact>javax.xml.bind:jsr173_api</artifact>
+									<excludes>
+										<exclude>**</exclude>
+									</excludes>
+								</filter>
+								<filter>
+									<artifact>org.glassfish.jaxb:jaxb-runtime</artifact>
 									<excludes>
 										<exclude>**</exclude>
 									</excludes>

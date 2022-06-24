@@ -19,18 +19,25 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.UncheckedIOException;
+import java.net.URL;
 import java.nio.charset.Charset;
 
+import org.eclipse.core.runtime.FileLocator;
 import org.junit.rules.ExternalResource;
 
 public class FileResource extends ExternalResource {
 
-    private final String res;
+    private final URL res;
     private File file = null;
     private InputStream stream;
 
-    public FileResource(String resourcePathInClassloader) {
-        this.res = resourcePathInClassloader;
+    public FileResource(URL resourcePathInClassloader) {
+        try {
+            this.res = FileLocator.toFileURL(resourcePathInClassloader);
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
     }
 
     public File getFile() throws IOException {
@@ -45,7 +52,11 @@ public class FileResource extends ExternalResource {
     }
 
     private InputStream createInputStream() {
-        return getClass().getResourceAsStream(res);
+        try {
+            return res.openStream();
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
     }
 
     public String getContent() throws IOException {
@@ -71,7 +82,7 @@ public class FileResource extends ExternalResource {
     @Override
     protected void before() throws Throwable {
         super.before();
-        stream = getClass().getResourceAsStream(res);
+        stream = createInputStream();
     }
 
     @Override
@@ -88,8 +99,8 @@ public class FileResource extends ExternalResource {
     }
 
     private void createFile() throws IOException {
-        file = new File(".", res);
-        try (InputStream stream = getClass().getResourceAsStream(res)) {
+        file = File.createTempFile("fileResourceCopy", ".test");
+        try (var stream = createInputStream()) {
             file.createNewFile();
             try (FileOutputStream ostream = new FileOutputStream(file)) {
                 final byte[] buffer = new byte[4096];

@@ -27,9 +27,6 @@ Require-Bundle: org.eclipse.ui,
  org.bonitasoft.studio.connectors.model.edit,
  org.eclipse.core.databinding.property,
  org.bonitasoft.studio.ui,
- org.junit;resolution:=optional,
- org.bonitasoft.studio.tests-utils;resolution:=optional,
- assertj-core;resolution:=optional,
  org.eclipse.e4.core.di.annotations
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-ActivationPolicy: lazy

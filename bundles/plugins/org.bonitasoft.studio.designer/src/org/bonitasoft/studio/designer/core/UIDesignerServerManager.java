@@ -262,9 +262,8 @@ public class UIDesignerServerManager implements IBonitaProjectListener {
     }
 
     public synchronized void stop() {
-        DataRepositoryServerManager dataRepositoryServerManager = DataRepositoryServerManager.getInstance();
-        if (dataRepositoryServerManager.isStarted()) {
-            dataRepositoryServerManager.stop();
+        if (DataRepositoryServerManager.isStarted()) {
+            DataRepositoryServerManager.getInstance().stop();
         }
         if (launch != null) {
             if (synchronizer != null) {

@@ -56,7 +56,6 @@ import org.eclipse.debug.core.model.IProcess;
 import org.eclipse.debug.internal.core.IInternalDebugCoreConstants;
 import org.eclipse.debug.internal.ui.DebugUIPlugin;
 import org.eclipse.debug.internal.ui.preferences.IDebugPreferenceConstants;
-import org.eclipse.jdt.launching.SocketUtil;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.FrameworkUtil;
@@ -252,8 +251,8 @@ public class DataRepositoryServerManager {
         return DebugPlugin.getDefault().getLaunchManager();
     }
 
-    public boolean isStarted() {
-        return launch != null;
+    public static boolean isStarted() {
+        return INSTANCE != null && INSTANCE.launch != null;
     }
 
 }

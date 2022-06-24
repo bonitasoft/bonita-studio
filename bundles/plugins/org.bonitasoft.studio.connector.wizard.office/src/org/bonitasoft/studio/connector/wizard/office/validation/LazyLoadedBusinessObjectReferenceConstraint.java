@@ -29,19 +29,11 @@ import org.bonitasoft.studio.validation.constraints.AbstractLiveValidationMarker
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.validation.IValidationContext;
 
-/**
- * @author aurelie
- */
 public class LazyLoadedBusinessObjectReferenceConstraint extends AbstractLiveValidationMarkerConstraint {
 
-    private final static String CONNECTOR_ID = "document-templating";
-    private final static String REPLACEMENT_PARAMETER_ID = "replacements";
+    private static final String CONNECTOR_ID = "document-templating";
+    private static final String REPLACEMENT_PARAMETER_ID = "replacements";
 
-    /*
-     * (non-Javadoc)
-     * @see
-     * org.bonitasoft.studio.validation.constraints.AbstractLiveValidationMarkerConstraint#performBatchValidation(org.eclipse.emf.validation.IValidationContext)
-     */
     @Override
     protected IStatus performBatchValidation(final IValidationContext context) {
         final Connector connector = (Connector) context.getTarget();
@@ -64,10 +56,6 @@ public class LazyLoadedBusinessObjectReferenceConstraint extends AbstractLiveVal
         return RepositoryManager.getInstance().getRepositoryStore(BusinessObjectModelRepositoryStore.class);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.validation.constraints.AbstractLiveValidationMarkerConstraint#getConstraintId()
-     */
     @Override
     protected String getConstraintId() {
         return "org.bonitasoft.studio.validation.ex.constraint.officeConnectorConstraint";
@@ -81,7 +69,7 @@ public class LazyLoadedBusinessObjectReferenceConstraint extends AbstractLiveVal
         return configuration.getParameters().stream()
                 .filter(withInputName(REPLACEMENT_PARAMETER_ID))
                 .findFirst()
-                .orElse(null);
+                .orElseThrow();
     }
 
 }

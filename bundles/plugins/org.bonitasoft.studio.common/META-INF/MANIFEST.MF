@@ -32,10 +32,7 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.e4.ui.workbench,
  org.eclipse.e4.ui.model.workbench,
  org.eclipse.e4.core.contexts,
- org.junit;resolution:=optional,
  org.eclipse.compare,
- assertj-core;resolution:=optional,
- org.bonitasoft.studio.tests-utils;resolution:=optional,
  org.codehaus.groovy.eclipse.core,
  org.codehaus.groovy,
  org.eclipse.jdt.groovy.core,
@@ -51,10 +48,7 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.e4.core.commands,
  org.eclipse.e4.ui.css.swt.theme,
  org.eclipse.e4.ui.services,
- org.eclipse.wst.server.core,
- org.mockito.mockito-core;resolution:=optional,
- org.objenesis;resolution:=optional,
- net.bytebuddy.byte-buddy;resolution:=optional
+ org.eclipse.wst.server.core
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-ActivationPolicy: lazy
 Import-Package: javax.annotation;version="1.2.0",
