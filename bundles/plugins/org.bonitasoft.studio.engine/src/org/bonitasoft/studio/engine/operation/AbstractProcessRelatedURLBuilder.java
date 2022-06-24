@@ -72,7 +72,7 @@ public abstract class AbstractProcessRelatedURLBuilder extends AbstractBonitaURL
         return buildLoginUrl(userName, password);
     }
 
-    Optional<String> retrieveUserPasswordFromActiveOrga(String user) {
+    protected Optional<String> retrieveUserPasswordFromActiveOrga(String user) {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("userName", user);
         Object result = commandExecutor.executeCommand(FIND_USER_PASSWORD_COMMAND, parameters);
