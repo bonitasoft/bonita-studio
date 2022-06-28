@@ -400,15 +400,16 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
         monitor.beginTask(Messages.importBosArchive,
                 (int) importArchiveModel.getStores().stream().flatMap(AbstractFolderModel::importableUnits).count());
         importArchiveModel.getStores().stream()
-                .sorted(storeImportOrderComparator())
-                .flatMap(AbstractFolderModel::importableUnits)
-                // Ensure .artifact-descriptor.properties is imported before bom.xml
-                .sorted(Comparator.comparing(ImportableUnit::getName))
-                .forEach(unit -> {
-                    monitor.subTask(NLS.bind(Messages.importing, unit.getName()));
-                    importUnit(unit, importArchiveModel.getBosArchive(), statusBuilder, monitor);
-                    monitor.worked(1);
-                });
+        .sorted(storeImportOrderComparator())
+        .forEachOrdered(s -> 
+            s.importableUnits()
+            // Ensure .artifact-descriptor.properties is imported before bom.xml
+            .sorted(Comparator.comparing(ImportableUnit::getName))
+            .forEach(unit -> {
+                monitor.subTask(NLS.bind(Messages.importing, unit.getName()));
+                importUnit(unit, importArchiveModel.getBosArchive(), statusBuilder, monitor);
+                monitor.worked(1);
+            }));
         migrateUID(monitor);
     }
 
@@ -450,7 +451,7 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
             ImportBosArchiveStatusBuilder statusBuilder,
             IProgressMonitor monitor) {
         try (ZipFile zipFile = bosArchive.getZipFile()) {
-            IRepositoryFileStore repositoryFileStore = unit.doImport(zipFile, monitor);
+            var repositoryFileStore = unit.doImport(zipFile, monitor);
             if (repositoryFileStore == null && (unit instanceof ImportFileStoreModel)
                     && ((ImportFileStoreModel) unit).isStoreResource()) {
                 status.add(ValidationStatus
