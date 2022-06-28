@@ -377,7 +377,7 @@ public class DiagramRepositoryStore extends AbstractEMFRepositoryStore<DiagramFi
             new RemoveDanglingReferences(diagram).execute();
             diagram.eResource().getContents().stream().filter(Diagram.class::isInstance).findFirst()
                     .ifPresent(d -> new RemoveDanglingReferences(d).execute());
-            diagram.eResource().getContents().removeIf(eObject -> isFormDiagram(eObject));
+            diagram.eResource().getContents().removeIf(this::isFormDiagram);
 
             applyTransformations(diagram);
 
@@ -506,6 +506,11 @@ public class DiagramRepositoryStore extends AbstractEMFRepositoryStore<DiagramFi
             throw new IllegalArgumentException("Project process list not computed yet !");
         }
         return computedProcessesList;
+    }
+    
+    @Override
+    public int getImportOrder() {
+        return 999;
     }
 
 }
