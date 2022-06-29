@@ -447,9 +447,8 @@ public class TextWidget extends EditableControlWidget {
         final ToolItem editButton = new ToolItem(toolBar, SWT.FLAT);
         editButton.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY,
                 SWTBotConstants.SWTBOT_ID_TRANSACTIONAL_TEXT_EDIT_BUTTON);
-        editButton.setImage(Pics.getImageDescriptor(PicsConstants.edit_simple).createImage());
-        editButton.setHotImage(Pics.getImageDescriptor(PicsConstants.edit_simple_hot).createImage());
-        editButton.addListener(SWT.Dispose, event -> editButton.getImage().dispose());
+        editButton.setImage(Pics.getImage(Pics.getImageDescriptor(PicsConstants.edit_simple)));
+        editButton.setHotImage(Pics.getImage(Pics.getImageDescriptor(PicsConstants.edit_simple_hot)));
         editButton.setToolTipText(Messages.edit);
         editButton.addListener(SWT.Selection, editListener(toolBar));
     }
@@ -472,20 +471,16 @@ public class TextWidget extends EditableControlWidget {
         final ToolItem cancelButton = new ToolItem(toolBar, SWT.FLAT);
         cancelButton.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY,
                 SWTBotConstants.SWTBOT_ID_TRANSACTIONAL_TEXT_CANCEL_BUTTON);
-        cancelButton.setImage(Pics.getImageDescriptor(PicsConstants.error)
-                .createImage());
+        cancelButton.setImage(Pics.getImage(Pics.getImageDescriptor(PicsConstants.error)));
         cancelButton.setToolTipText(Messages.revertEdit);
         cancelButton.addListener(SWT.Selection, cancelListener(toolBar));
-        cancelButton.addListener(SWT.Dispose, event -> cancelButton.getImage().dispose());
 
         okButton = new ToolItem(toolBar, SWT.FLAT);
         okButton.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY,
                 SWTBotConstants.SWTBOT_ID_TRANSACTIONAL_TEXT_OK_BUTTON);
-        okButton.setImage(Pics.getImageDescriptor(PicsConstants.checkmark)
-                .createImage());
+        okButton.setImage(Pics.getImage(Pics.getImageDescriptor(PicsConstants.checkmark)));
         okButton.setToolTipText(Messages.applyEdit);
         okButton.addListener(SWT.Selection, okListener(toolBar));
-        okButton.addListener(SWT.Dispose, event -> okButton.getImage().dispose());
 
         toolBar.getParent().layout();
 

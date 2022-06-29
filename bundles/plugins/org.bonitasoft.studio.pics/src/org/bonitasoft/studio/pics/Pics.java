@@ -120,10 +120,14 @@ public class Pics extends AbstractUIPlugin {
         }
         final ImageDescriptor descriptor = getImageDescriptor(imageName, plugin);
         if (descriptor != null) {
-            LocalResourceManager manager = RMM.getResourceManager(Display.getDefault());
-            return manager.createImage(descriptor);
+            return getImage(descriptor);
         }
         return null;
+    }
+    
+    public static Image getImage(ImageDescriptor descriptor) {
+        LocalResourceManager manager = RMM.getResourceManager(Display.getDefault());
+        return manager.createImage(descriptor);
     }
 
     public static ImageDescriptor getImageDescriptor(final String imageName, final Plugin plugin) {
@@ -201,5 +205,7 @@ public class Pics extends AbstractUIPlugin {
     public static Cursor getClosedHandCursor() {
         return Display.getDefault().getSystemCursor(SWT.CURSOR_SIZEALL);
     }
+
+   
 
 }

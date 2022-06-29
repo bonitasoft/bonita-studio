@@ -173,7 +173,7 @@ public abstract class SourceRepositoryStore<T extends AbstractFileStore<?>> exte
                         return (T) new SourceFileStore(fileName, this);
                     }
                     return null;
-                } else { // package name
+                } else  if(getResource() != null ){ // package name
                     final IPackageFragment packageFragment = javaProject
                             .findPackageFragment(getResource().getFullPath().append(fileName.replace(".", "/")));
                     if (packageFragment != null) {
