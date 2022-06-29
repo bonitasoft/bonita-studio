@@ -40,6 +40,7 @@ import org.bonitasoft.studio.engine.command.RunProcessCommand;
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.PoolEditPart;
+import org.bonitasoft.studio.swtbot.framework.conditions.BonitaBPMConditions;
 import org.bonitasoft.studio.swtbot.framework.conditions.ShellIsActiveWithThreadSTacksOnFailure;
 import org.bonitasoft.studio.swtbot.framework.expression.BotExpressionEditorDialog;
 import org.eclipse.core.commands.ExecutionException;
@@ -592,8 +593,8 @@ public class SWTBotTestUtil implements SWTBotConstants {
 
         gmfEditor.mainEditPart().click();
 
-        bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_GENERAL).show();
-        bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_GENERAL).setFocus();
+        bot.viewById(SWTBotConstants.VIEWS_PROPERTIES_PROCESS_GENERAL).show();
+        bot.viewById(SWTBotConstants.VIEWS_PROPERTIES_PROCESS_GENERAL).setFocus();
 
         selectTabbedPropertyView(bot, "Diagram");
         bot.waitUntil(Conditions.widgetIsEnabled(bot.button(org.bonitasoft.studio.common.Messages.edit)));
@@ -604,7 +605,7 @@ public class SWTBotTestUtil implements SWTBotConstants {
 
         bot.textWithLabel(org.bonitasoft.studio.common.Messages.name, 0).setText(newDiagramName);
         bot.button(IDialogConstants.OK_LABEL).click();
-
+        bot.waitUntil(BonitaBPMConditions.noPopupActive(),10000);
     }
 
     /**

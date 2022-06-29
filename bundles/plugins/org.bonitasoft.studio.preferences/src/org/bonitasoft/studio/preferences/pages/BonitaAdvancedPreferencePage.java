@@ -34,10 +34,6 @@ public class BonitaAdvancedPreferencePage extends AbstractBonitaPreferencePage {
 
     private static final String ADVANCED_CONTRIBUTOR_ID = "Advanced";
 
-    private BooleanFieldEditor askSaveDiagramAfterFirstSave;
-    private BooleanFieldEditor showConnectorEditionConfirmation;
-    private BooleanFieldEditor notifyBdmDeploymentRequired;
-
     public BonitaAdvancedPreferencePage() {
         super(GRID);
         setPreferenceStore(BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore());
@@ -53,17 +49,12 @@ public class BonitaAdvancedPreferencePage extends AbstractBonitaPreferencePage {
 
         createTitleBar(Messages.BonitaPreferenceDialog_Advanced, Pics.getImage(PicsConstants.preferenceAdvanced), false);
 
-        askSaveDiagramAfterFirstSave = new BooleanFieldEditor(BonitaPreferenceConstants.ASK_RENAME_ON_FIRST_SAVE,
-                Messages.askRenameDiagram,
-                getFieldEditorParent());
-        addField(askSaveDiagramAfterFirstSave);
-
-        showConnectorEditionConfirmation = new BooleanFieldEditor(
+        var showConnectorEditionConfirmation = new BooleanFieldEditor(
                 HIDE_CONNECTOR_DEFINITION_CHANGE_WARNING,
                 Messages.doNotDisplayConnectorDefConfirmationMessage, getFieldEditorParent());
         addField(showConnectorEditionConfirmation);
 
-        notifyBdmDeploymentRequired = new BooleanFieldEditor(BonitaPreferenceConstants.NOTIFY_BDM_DEPLOYMENT_REQUIRED,
+        var notifyBdmDeploymentRequired = new BooleanFieldEditor(BonitaPreferenceConstants.NOTIFY_BDM_DEPLOYMENT_REQUIRED,
                 Messages.notifyBdmDeploymentRequiredMessage, getFieldEditorParent());
         addField(notifyBdmDeploymentRequired);
 
