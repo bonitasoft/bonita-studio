@@ -56,7 +56,7 @@ import org.eclipse.swt.graphics.Image;
 public class ProcessConfigurationRepositoryStore extends AbstractEMFRepositoryStore<ProcessConfigurationFileStore> {
 
     public static final String STORE_NAME = "process_configurations";
-    private static final Set<String> extensions = new HashSet<String>();
+    private static final Set<String> extensions = new HashSet<>();
     public static final String CONF_EXT = "conf";
 
     static {
@@ -216,5 +216,10 @@ public class ProcessConfigurationRepositoryStore extends AbstractEMFRepositorySt
     @Override
     protected void addAdapterFactory(final ComposedAdapterFactory adapterFactory) {
         adapterFactory.addAdapterFactory(new ConfigurationAdapterFactory());
+    }
+    
+    @Override
+    public int getImportOrder() {
+        return 10;
     }
 }
