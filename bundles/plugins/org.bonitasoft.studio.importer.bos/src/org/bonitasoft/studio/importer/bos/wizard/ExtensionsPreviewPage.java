@@ -553,11 +553,11 @@ public class ExtensionsPreviewPage implements ControlSupplier {
                 throw new IllegalStateException("Unsupported status: " + dep.getStatus());
         }
         if (!dep.isUsed()) {
-            return new DecorationOverlayIcon(descriptor,
+            return Pics.getImage(new DecorationOverlayIcon(descriptor,
                     Pics.getImageDescriptor("problem.gif", BosArchiveImporterPlugin.getDefault()),
-                    IDecoration.TOP_RIGHT).createImage();
+                    IDecoration.TOP_RIGHT));
         }
-        return descriptor.createImage();
+        return Pics.getImage(descriptor);
     }
 
 }

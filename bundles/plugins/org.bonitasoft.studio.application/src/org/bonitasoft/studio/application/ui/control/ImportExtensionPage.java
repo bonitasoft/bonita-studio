@@ -312,11 +312,10 @@ public class ImportExtensionPage implements ControlSupplier {
                 } else { // Update mode -> Only version can be updated 
                     versionObservable.setValue(parsedDependency.getVersion());
                 }
-                Image image = Pics
+                Image image = Pics.getImage(Pics
                         .getImageDescriptor(
                                 dependencyLookup.getStatus() == Status.FOUND ? PicsConstants.checkmark
-                                        : PicsConstants.warning)
-                        .createImage();
+                                        : PicsConstants.warning));
                 String message = dependencyLookup.getStatus() == Status.FOUND
                         ? String.format(Messages.resolvedDependency, dependencyLookup.getRepository())
                         : Messages.cannotResolveDependencyInstalledLocally;

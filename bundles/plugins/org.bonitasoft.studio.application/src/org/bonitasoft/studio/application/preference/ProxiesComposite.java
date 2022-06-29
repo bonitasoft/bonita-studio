@@ -369,7 +369,7 @@ public class ProxiesComposite extends Composite {
         new ToolItem(toolBar, SWT.SEPARATOR);
 
         activateItem = new ToolItem(toolBar, SWT.PUSH);
-        activateItem.setImage(Pics.getImageDescriptor(PicsConstants.checkmark).createImage());
+        activateItem.setImage(Pics.getImage(Pics.getImageDescriptor(PicsConstants.checkmark)));
         activateItem.setText(Messages.activate);
         activateItem.setToolTipText(Messages.activateProxyTooltip);
         activateItem.addListener(SWT.Selection, e -> activateProxy());
@@ -427,7 +427,7 @@ public class ProxiesComposite extends Composite {
         column.setLabelProvider(new LabelProviderBuilder<Proxy>()
                 .withTextProvider(Proxy::getId)
                 .withImageProvider(
-                        p -> p.isActive() ? Pics.getImageDescriptor(PicsConstants.checkmark).createImage() : null)
+                        p -> p.isActive() ? Pics.getImage(Pics.getImageDescriptor(PicsConstants.checkmark)) : null)
                 .withTooltipProvider(p -> p.isActive() ? Messages.active : null)
                 .shouldRefreshAllLabels(viewer)
                 .createColumnLabelProvider());
