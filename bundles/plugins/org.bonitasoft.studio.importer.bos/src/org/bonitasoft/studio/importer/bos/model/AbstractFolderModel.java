@@ -14,7 +14,7 @@ public abstract class AbstractFolderModel extends AbstractImportModel {
     private final List<AbstractFileModel> files = new ArrayList<>();
     private final String folderName;
 
-    public AbstractFolderModel(String path, AbstractFolderModel parent) {
+    protected AbstractFolderModel(String path, AbstractFolderModel parent) {
         super(path, parent);
         final String[] segments = path.split("/");
         folderName = segments[segments.length - 1];
