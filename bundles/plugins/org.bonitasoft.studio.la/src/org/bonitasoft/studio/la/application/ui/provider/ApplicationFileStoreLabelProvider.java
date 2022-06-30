@@ -21,6 +21,7 @@ import org.bonitasoft.engine.business.application.xml.ApplicationNode;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.la.application.repository.ApplicationFileStore;
+import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.ui.UIPlugin;
 import org.bonitasoft.studio.ui.provider.FileStoreLabelProvider;
 import org.eclipse.jface.viewers.DecorationOverlayIcon;
@@ -46,9 +47,8 @@ public class ApplicationFileStoreLabelProvider extends FileStoreLabelProvider {
     }
 
     protected void applyUnparsableFileStyle(ViewerCell cell) {
-        cell.setImage(new DecorationOverlayIcon(getImage(cell.getElement()),
-                UIPlugin.getImageDescriptor("icons/problem.gif"), IDecoration.BOTTOM_RIGHT)
-                        .createImage());
+        cell.setImage(Pics.getImage(new DecorationOverlayIcon(getImage(cell.getElement()),
+                UIPlugin.getImageDescriptor("icons/problem.gif"), IDecoration.BOTTOM_RIGHT)));
     }
 
     private String appendAppTokens(final ApplicationFileStore fileStore, final StyledString styledString)

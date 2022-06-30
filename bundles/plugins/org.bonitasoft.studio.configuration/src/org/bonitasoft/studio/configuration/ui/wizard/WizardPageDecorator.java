@@ -81,8 +81,7 @@ public class WizardPageDecorator implements ILabelDecorator {
         IProcessConfigurationWizardPage page = (IProcessConfigurationWizardPage) element ;
         String erroMessage = page.isConfigurationPageValid(dialog.getConfiguration()) ;
         if (image != null && erroMessage != null) {
-            return new DecorationOverlayIcon(image,Pics.getImageDescriptor("problem.gif",ConfigurationPlugin.getDefault()) , IDecoration.BOTTOM_RIGHT)
-                    .createImage();
+            return Pics.getImage(new DecorationOverlayIcon(image,Pics.getImageDescriptor("problem.gif",ConfigurationPlugin.getDefault()) , IDecoration.BOTTOM_RIGHT));
         }
         return null;
     }

@@ -153,7 +153,6 @@ public interface BonitaPreferenceConstants {
     public static String PREF_MARGIN_RIGHT = "print.margin.right"; //$NON-NLS-1$
     // END PRINTING PREFERENCES
 
-    public static final String ASK_RENAME_ON_FIRST_SAVE = "renameOnFirstSave";
     public static final String ALWAYS_USE_SCRIPTING_MODE = "useScriptingMode";
     public static final String DEFAULT_STUDIO_LOCALE = "defaultLocale";
     public static final int DEFAULT_PORT = 8080;

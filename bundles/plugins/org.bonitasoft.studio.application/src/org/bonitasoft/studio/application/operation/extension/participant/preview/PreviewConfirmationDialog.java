@@ -120,9 +120,9 @@ public class PreviewConfirmationDialog extends MessageDialog {
 
     private static Image addProblemDecorator(ChangePreview change, Image image) {
         if (change.hasBreakingChanges()) {
-            return new DecorationOverlayIcon(image,
+            return Pics.getImage(new DecorationOverlayIcon(image,
                     UIPlugin.getImageDescriptor("icons/problem.gif"),
-                    IDecoration.BOTTOM_RIGHT).createImage();
+                    IDecoration.BOTTOM_RIGHT));
         }
         return image;
     }

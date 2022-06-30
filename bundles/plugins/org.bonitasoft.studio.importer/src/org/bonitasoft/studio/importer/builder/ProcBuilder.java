@@ -237,7 +237,6 @@ public class ProcBuilder implements IProcBuilder {
                     }
                     diagramModel.setVersion(version);
                     diagramModel.setBonitaModelVersion(ModelVersion.CURRENT_DIAGRAM_VERSION);
-                    diagramModel.setBonitaVersion(ProductVersion.CURRENT_VERSION);
                     ModelHelper.addDataTypes(diagramModel);
                     diagram.setElement(diagramModel);
                 }

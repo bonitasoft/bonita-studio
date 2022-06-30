@@ -8,9 +8,9 @@ import java.io.File;
 import java.nio.file.Files;
 import java.util.Optional;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.sonatype.plexus.components.cipher.DefaultPlexusCipher;
 import org.sonatype.plexus.components.cipher.PlexusCipher;
 
@@ -20,7 +20,7 @@ public class MavenPasswordManagerTest {
 
     MavenPasswordManager pwdManager = spy(MavenPasswordManager.class);
 
-    @Before
+    @BeforeEach
     public void init() throws Exception {
         securityFile = Files.createTempFile("settings-security", ".xml").toFile();
 
@@ -29,7 +29,7 @@ public class MavenPasswordManagerTest {
         doReturn(encrypter).when(pwdManager).getEncrypter();
     }
 
-    @After
+    @AfterEach
     public void clean() throws Exception {
         securityFile.delete();
     }

@@ -19,13 +19,16 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
+import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.bonitasoft.studio.swtbot.framework.SWTBotTestUtil;
 import org.bonitasoft.studio.swtbot.framework.application.BotApplicationWorkbenchWindow;
+import org.bonitasoft.studio.swtbot.framework.draw.BotGefProcessDiagramEditor;
 import org.bonitasoft.studio.swtbot.framework.projectExplorer.ProjectExplorerBot;
 import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
 import org.eclipse.emf.ecore.EObject;
@@ -51,76 +54,6 @@ public class TestRenameDiagram {
     public SWTGefBotRule botRule = new SWTGefBotRule(bot);
 
     @Test
-    public void testFirstSaveRenaming() {
-        BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore()
-                .setValue(BonitaPreferenceConstants.ASK_RENAME_ON_FIRST_SAVE, true);
-        var applicationWorkbenchWindow = new BotApplicationWorkbenchWindow(bot);
-        var activeProcessDiagramEditor = applicationWorkbenchWindow.createNewDiagram().activeProcessDiagramEditor();
-        EObject pool = activeProcessDiagramEditor
-                .getSelectedSemanticElement();
-
-        assertThat(pool).isInstanceOf(Pool.class);
-        String originalName = ((MainProcess) pool.eContainer()).getName();
-
-        bot.activeEditor().setFocus();
-        bot.toolbarButtonWithId(SWTBotConstants.SWTBOT_ID_SAVE_EDITOR).click();
-        bot.waitUntil(Conditions.shellIsActive(org.bonitasoft.studio.common.Messages.openNameAndVersionDialogTitle));
-        assertTrue("OK should be enabled", bot.button(IDialogConstants.OK_LABEL).isEnabled());
-
-        final String newName = originalName + " renamed" + System.currentTimeMillis();
-        bot.textWithLabel(org.bonitasoft.studio.common.Messages.name, 0).setText(newName);
-
-        bot.button(IDialogConstants.OK_LABEL).click();
-        final String editorTitle = newName + " (1.0)";
-        bot.waitUntil(new ICondition() {
-
-            @Override
-            public boolean test() throws Exception {
-                return editorTitle.equals(bot.activeEditor().getTitle());
-            }
-
-            @Override
-            public void init(final SWTBot bot) {
-            }
-
-            @Override
-            public String getFailureMessage() {
-                return "The editor title (" + bot.activeEditor().getTitle()
-                        + ") doesn't match the new name of the diagram "
-                        + editorTitle + "\n" +
-                        "Please attach Studio log from .metadata/.logs folder on [BS-9265]";
-            }
-        });
-        assertFalse("Editor is dirty", bot.activeEditor().isDirty());
-
-        //Disable dialog
-        pool = applicationWorkbenchWindow
-            .createNewDiagram()
-            .activeProcessDiagramEditor()
-            .getSelectedSemanticElement();
-        
-        assertThat(pool).isInstanceOf(Pool.class);
-        
-        originalName = ((MainProcess) pool.eContainer()).getName();
-        bot.activeEditor().setFocus();
-        bot.toolbarButtonWithId(SWTBotConstants.SWTBOT_ID_SAVE_EDITOR).click();
-        bot.waitUntil(Conditions.shellIsActive(org.bonitasoft.studio.common.Messages.openNameAndVersionDialogTitle));
-        assertTrue("OK should be enabled", bot.button(IDialogConstants.OK_LABEL).isEnabled());
-
-        bot.checkBox(org.bonitasoft.studio.application.i18n.Messages.doNotDisplayForOtherDiagrams).select();
-        bot.button(IDialogConstants.OK_LABEL).click();
-        assertEquals(originalName + " (1.0)", bot.activeEditor().getTitle());
-        assertFalse("Editor is dirty", bot.activeEditor().isDirty());
-
-        SWTBotTestUtil.createNewDiagram(bot);
-        applicationWorkbenchWindow.save();
-        bot.waitWhile(Conditions.shellIsActive("Progress Information"));
-        assertFalse(bot.activeShell().getText()
-                .equals(org.bonitasoft.studio.common.Messages.openNameAndVersionDialogTitle));
-        assertFalse("Editor is dirty", bot.activeEditor().isDirty());
-    }
-
-    @Test
     public void testRenameMenu() {
         SWTBotTestUtil.createNewDiagram(bot);
 
@@ -143,20 +76,18 @@ public class TestRenameDiagram {
 
     @Test
     public void testRenameDiagramOnce() throws Exception {
-
-        final boolean tmpDisablePopup = BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore()
-                .getDefaultBoolean(BonitaPreferenceConstants.ASK_RENAME_ON_FIRST_SAVE);
-        BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore()
-                .setValue(BonitaPreferenceConstants.ASK_RENAME_ON_FIRST_SAVE, true);
-
-        SWTBotTestUtil.createNewDiagram(bot);
+        var activeProcessDiagramEditor = new BotApplicationWorkbenchWindow(bot)
+                .createNewDiagram()
+                .activeProcessDiagramEditor();
+        
+        var pool = activeProcessDiagramEditor.getSelectedSemanticElement();
+        assertThat(pool).isInstanceOf(Pool.class);
+        assertThat(ModelHelper.getMainProcess(pool).getName()).isNotEqualTo("NewDiagramName");
+        
         SWTBotTestUtil.changeDiagramName(bot, "NewDiagramName");
-
-        // TimeOUt if a the pop up has been reopened (see BS-9819)
-        bot.waitWhile(Conditions.shellIsActive(org.bonitasoft.studio.common.Messages.openNameAndVersionDialogTitle));
-
-        BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore()
-                .setValue(BonitaPreferenceConstants.ASK_RENAME_ON_FIRST_SAVE, tmpDisablePopup);
+        activeProcessDiagramEditor.getGmfEditor().getSWTBotGefViewer().mainEditPart().select();
+        var diagram = activeProcessDiagramEditor.getSelectedSemanticElement();
+        assertThat(((MainProcess) diagram).getName()).isEqualTo("NewDiagramName");
     }
 
 }

@@ -15,7 +15,6 @@
 package org.bonitasoft.studio.common.repository.migration.transformation;
 
 import org.bonitasoft.studio.common.ModelVersion;
-import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.repository.migration.ProcessModelTransformation;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.eclipse.emf.ecore.EObject;
@@ -27,15 +26,17 @@ public class DiagramVersionTransformation implements ProcessModelTransformation 
         MainProcess diagram = (MainProcess) modelObject;
         final String pVersion = diagram.getBonitaVersion();
         final String mVersion = diagram.getBonitaModelVersion();
-        if (!ProductVersion.CURRENT_VERSION.equals(pVersion)) {
-            diagram.setBonitaVersion(ProductVersion.CURRENT_VERSION);
+        if (pVersion != null) {
+            diagram.setBonitaVersion(null);
         }
         if (!ModelVersion.CURRENT_DIAGRAM_VERSION.equals(mVersion)) {
             diagram.setBonitaModelVersion(ModelVersion.CURRENT_DIAGRAM_VERSION);
         }
-        if (diagram.getAuthor() == null) {
-            diagram.setAuthor(System.getProperty("user.name",
-                    "Unknown"));
+        if (diagram.getAuthor() != null) {
+            diagram.setAuthor(null);
+        }
+        if (diagram.getConfigId() != null) {
+            diagram.setConfigId(null);
         }
     }
 
