@@ -54,6 +54,7 @@ import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -189,74 +190,8 @@ public class SaveCommandHandler extends SaveHandler {
         }
     }
 
-    /**
-     * @param proc
-     * @param editorPart
-     * @return
-     */
     protected boolean nameOrVersionChanged(final MainProcess proc, DiagramEditor editorPart) {
         final MainProcess originalProcess = getOldProcess(proc);
-        if (originalProcess.getAuthor() == null
-                && BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().getBoolean(BonitaPreferenceConstants.ASK_RENAME_ON_FIRST_SAVE)) {
-            final DiagramRepositoryStore diagramStore = RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
-            final OpenNameAndVersionForDiagramDialog nameDialog = new OpenNameAndVersionForDiagramDialog(Display.getDefault().getActiveShell(), proc,
-                    diagramStore) {
-
-                private boolean askRename = true;
-
-                @Override
-                protected void createButtonsForButtonBar(final Composite parent) {
-                    final GridData gridData = (GridData) parent.getLayoutData();
-                    gridData.horizontalAlignment = SWT.FILL;
-                    ((GridLayout) parent.getLayout()).numColumns++;
-                    ((GridLayout) parent.getLayout()).makeColumnsEqualWidth = false;
-                    final Button askAgainButton = new Button(parent, SWT.CHECK);
-                    askAgainButton.setText(Messages.doNotDisplayForOtherDiagrams);
-                    askAgainButton.setLayoutData(GridDataFactory.swtDefaults().align(SWT.BEGINNING, SWT.CENTER).grab(true, false).create());
-                    askAgainButton.addSelectionListener(new SelectionAdapter() {
-
-                        @Override
-                        public void widgetSelected(final SelectionEvent e) {
-                            askRename = !askAgainButton.getSelection();
-                        }
-                    });
-                    createButton(parent, IDialogConstants.OK_ID, IDialogConstants.OK_LABEL,
-                            true).addSelectionListener(new SelectionAdapter() {
-
-                        @Override
-                        public void widgetSelected(final SelectionEvent e) {
-                            BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore()
-                                    .setValue(BonitaPreferenceConstants.ASK_RENAME_ON_FIRST_SAVE, askRename);
-                        }
-                    });
-                }
-            };
-            if (nameDialog.open() == Dialog.OK) {
-                final String author = System.getProperty("user.name", "unknown");
-                final TransactionalEditingDomain editingDomain = TransactionUtil
-                        .getEditingDomain(proc.eResource());
-                editingDomain.getCommandStack().execute(
-                        SetCommand.create(editingDomain,
-                                ((DiagramEditor) editorPart).getDiagramEditPart().resolveSemanticElement(),
-                                ProcessPackage.Literals.ABSTRACT_PROCESS__AUTHOR, author));
-                editorPart.doSave(AbstractRepository.NULL_PROGRESS_MONITOR);
-                final RenameDiagramOperation renameDiagramOperation = new RenameDiagramOperation();
-                renameDiagramOperation.setDiagramToDuplicate(proc);
-                final Identifier identifier = nameDialog.getIdentifier();
-                renameDiagramOperation.setNewDiagramName(identifier.getName());
-                renameDiagramOperation.setNewDiagramVersion(nameDialog.getIdentifier().getVersion());
-                renameDiagramOperation.setPoolsRenamed(nameDialog.getPools());
-                final IProgressService service = PlatformUI.getWorkbench().getProgressService();
-                try {
-                    service.run(false, false, renameDiagramOperation);
-                } catch (final InvocationTargetException e) {
-                    BonitaStudioLog.error(e);
-                } catch (final InterruptedException e) {
-                    BonitaStudioLog.error(e);
-                }
-            }
-
-        }
         return !(originalProcess.getName().equals(proc.getName()) && originalProcess.getVersion().equals(proc.getVersion()));
     }
 

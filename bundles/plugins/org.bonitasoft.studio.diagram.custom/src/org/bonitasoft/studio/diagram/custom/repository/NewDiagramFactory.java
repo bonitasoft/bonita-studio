@@ -22,7 +22,6 @@ import java.util.Map;
 
 import org.bonitasoft.studio.common.ModelVersion;
 import org.bonitasoft.studio.common.NamingUtils;
-import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
@@ -272,7 +271,6 @@ public class NewDiagramFactory {
         final MainProcess mainProcess = processFactory.createMainProcess();
         mainProcess.setName(diagramName);
         mainProcess.setVersion(BASE_VERSION);
-        mainProcess.setBonitaVersion(ProductVersion.CURRENT_VERSION);
         mainProcess.setBonitaModelVersion(modelVersion);
         mainProcess.setEnableValidation(true);
         ModelHelper.addDataTypes(mainProcess);

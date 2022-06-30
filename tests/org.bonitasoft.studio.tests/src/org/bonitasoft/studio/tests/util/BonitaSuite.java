@@ -219,9 +219,6 @@ public class BonitaSuite extends Suite {
                 BonitaStudioLog.error(e);
             }
         });
-
-        preferenceStore
-                .setValue(BonitaPreferenceConstants.ASK_RENAME_ON_FIRST_SAVE, false);
         preferenceStore
                 .setValue(BonitaPreferenceConstants.CONSOLE_BROWSER_CHOICE, BonitaPreferenceConstants.INTERNAL_BROWSER);
         preferenceStore.setValue(BonitaPreferenceConstants.HIDE_BDM_REFACTOR_PREVIEW, true);

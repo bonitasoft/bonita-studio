@@ -240,7 +240,7 @@ public class ServersComposite extends Composite {
 
         ControlDecoration clearPasswordWarningDecorator = new ControlDecoration(clearPasswordButton, SWT.RIGHT);
         clearPasswordWarningDecorator.setDescriptionText(Messages.clearPasswordTooltip);
-        clearPasswordWarningDecorator.setImage(Pics.getImageDescriptor(PicsConstants.warning).createImage());
+        clearPasswordWarningDecorator.setImage(Pics.getImage(Pics.getImageDescriptor(PicsConstants.warning)));
         clearPasswordWarningDecorator.setMarginWidth(3);
 
         ComputedValue<Boolean> passwordSetObservable = new ComputedValueBuilder<Boolean>()

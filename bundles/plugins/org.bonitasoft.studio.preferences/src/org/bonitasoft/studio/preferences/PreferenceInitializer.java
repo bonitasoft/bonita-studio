@@ -20,7 +20,6 @@ import java.nio.charset.Charset;
 import java.util.Locale;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.codehaus.groovy.eclipse.core.GroovyCoreActivator;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
@@ -68,7 +67,6 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer impleme
 
         store.setDefault(BonitaCoolBarPreferenceConstant.COOLBAR_DEFAULT_SIZE, BonitaCoolBarPreferenceConstant.NORMAL);
         store.setDefault(APLLICATION_DEPLOYMENT_MODE, ALL_IN_BAR);
-        store.setDefault(ASK_RENAME_ON_FIRST_SAVE, true);
         store.setDefault(ALWAYS_USE_SCRIPTING_MODE, false);
         store.setDefault(SHOW_LEGACY_6X_MODE, false);
         store.setDefault(UID_JVM_OPTS, "-Xmx256m");

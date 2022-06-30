@@ -205,9 +205,6 @@ public class SWTGefBotRule implements TestRule {
                 BonitaStudioLog.error(e);
             }
         });
-
-        preferenceStore
-                .setValue(BonitaPreferenceConstants.ASK_RENAME_ON_FIRST_SAVE, false);
         preferenceStore
                 .setValue(BonitaPreferenceConstants.CONSOLE_BROWSER_CHOICE, BonitaPreferenceConstants.INTERNAL_BROWSER);
         WebBrowserUIPlugin.getInstance().getPreferenceStore()

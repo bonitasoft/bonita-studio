@@ -48,7 +48,7 @@ public class MessagePanel {
         panel.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
 
         Label icon = new Label(panel, SWT.NONE);
-        icon.setImage(statusImageDescriptor(status).createImage());
+        icon.setImage(Pics.getImage(statusImageDescriptor(status)));
         icon.setLayoutData(GridDataFactory.swtDefaults().align(SWT.CENTER, SWT.TOP).create());
 
         messageControlSupplier.create(panel);
