@@ -18,6 +18,7 @@
         <maven-war-plugin.version>3.3.1</maven-war-plugin.version>
         <javax.servlet-api.version>4.0.1</javax.servlet-api.version>
         <slf4j-api.version> 1.7.30</slf4j-api.version>
+        <tycho.mode>maven</tycho.mode>
     </properties>
 
     <dependencies>
