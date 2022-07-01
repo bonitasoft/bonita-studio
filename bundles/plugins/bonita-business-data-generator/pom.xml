@@ -12,6 +12,10 @@
 	<groupId>org.bonitasoft.studio.bundles.plugins</groupId>
 	<artifactId>bonita-business-data-generator</artifactId>
 	<packaging>jar</packaging>
+	
+	<properties>
+	   <tycho.mode>maven</tycho.mode>
+	</properties>
 
 	<dependencies>
 		<dependency>
