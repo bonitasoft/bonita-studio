@@ -88,6 +88,7 @@
 									<type>zip</type>
 								</artifactItem>
 							</artifactItems>
+							<excludes>**/setup/**,**/start-bonita.*,**/stop-bonita.*,**/HOW_TO_CONFIGURE_AND_RUN.txt</excludes>
 							<outputDirectory>${tomcat.bundle.dir}</outputDirectory>
 							<overWriteReleases>true</overWriteReleases>
 							<overWriteSnapshots>true</overWriteSnapshots>
