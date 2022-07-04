@@ -50,7 +50,6 @@ import org.bonitasoft.studio.expression.editor.provider.ExpressionLabelProvider;
 import org.bonitasoft.studio.expression.editor.provider.ExpressionTypeLabelProvider;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionNatureProvider;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionProvider;
-import org.bonitasoft.studio.expression.editor.provider.IExpressionToolbarContribution;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionValidator;
 import org.bonitasoft.studio.expression.editor.widget.ContentAssistText;
 import org.bonitasoft.studio.model.expression.Expression;
@@ -843,15 +842,11 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
         if (input.equals(selectedExpression.getName()) && CONSTANT_TYPE.equals(expressionType)) {
             return expressionType;
         }
-        if (selectedExpression.getType() == null) {
-            expressionType = CONSTANT_TYPE;
+        if (expressionType == null) {
+            return CONSTANT_TYPE;
         }
         if (ExpressionConstants.SCRIPT_TYPE.equals(expressionType)) {
             return ExpressionConstants.SCRIPT_TYPE;
-        } else if (ExpressionConstants.CONDITION_TYPE.equals(expressionType)) {
-            return ExpressionConstants.CONDITION_TYPE;
-        } else if (ExpressionConstants.CONNECTOR_TYPE.equals(expressionType)) {
-            return ExpressionConstants.CONNECTOR_TYPE;
         } else if (ExpressionConstants.PATTERN_TYPE.equals(expressionType)) {
             return ExpressionConstants.PATTERN_TYPE;
         } else if (ExpressionConstants.JAVA_TYPE.equals(expressionType)) {
@@ -865,8 +860,16 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
         } else if (ExpressionConstants.MESSAGE_ID_TYPE.equals(expressionType)) {
             return ExpressionConstants.MESSAGE_ID_TYPE;
         }
+        return matchingExpressionType(input, expressionType);
+    }
 
-        return CONSTANT_TYPE;
+    private String matchingExpressionType(final String input, String expressionType) {
+       return getFilteredExpressions().stream()
+                   .filter(expr -> Objects.equals(expr.getName(), input))
+                   .filter(expr -> Objects.equals(expr.getType(), expressionType))
+                   .findFirst()
+                   .map(Expression::getType)
+                   .orElse(CONSTANT_TYPE);
     }
 
     protected void internalRefresh() {
