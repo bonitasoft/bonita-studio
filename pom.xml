@@ -22,10 +22,8 @@
         <image-overlay-plugin.version>1.1.2</image-overlay-plugin.version>
         <bonita-project-report-model.version>0.0.6</bonita-project-report-model.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <tycho.localArtifacts>ignore</tycho.localArtifacts>
-        <maven.compiler.source>${java.version}</maven.compiler.source>
-        <maven.compiler.target>${java.version}</maven.compiler.target>
-        <groovy-maven-plugin.groovy.version>3.0.8</groovy-maven-plugin.groovy.version>
+        <maven.compiler.release>${java.version}</maven.compiler.release>
+        <groovy-maven-plugin.groovy.version>3.0.11</groovy-maven-plugin.groovy.version>
         <!-- Must be synched with org.bonitasoft.studio.common.repository.core.maven.model.DefaultPluginVersions.MAVEN_DEPENDENCY_PLUGIN_VERSION -->
         <maven-dependency-plugin.version>3.1.2</maven-dependency-plugin.version>
         <maven3-model-jdom-support.version>1.6</maven3-model-jdom-support.version>

@@ -17,14 +17,6 @@
         <lib.dir>lib</lib.dir>
     </properties>
 
-    <dependencies>
-        <dependency>
-            <groupId>org.commonjava.maven</groupId>
-            <artifactId>maven3-model-jdom-support</artifactId>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
-
     <build>
         <plugins>
             <plugin>
