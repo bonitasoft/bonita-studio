@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions
+	name="Bpmn20-101-Process"
+	targetNamespace="http://www.example.org/Messages"
+	xmlns:tns="http://www.example.org/Messages"
+	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+
+	<!--
+		=====================================================================
+		Import XSD types
+		=====================================================================
+	-->
+	<wsdl:types>
+		<schema xmlns="http://www.w3.org/2001/XMLSchema">
+			<import namespace="http://www.example.org/Messages"
+				schemaLocation="DataDefinitions.xsd" />
+		</schema>
+	</wsdl:types>
+
+	<!--
+		=====================================================================
+		Messages
+		=====================================================================
+	-->
+	<!--Messages for requestQuotation Operation-->
+	<wsdl:message name="rfqMessage">
+		<wsdl:part name="request" element="tns:requestForQuotation" />
+	</wsdl:message>
+	<wsdl:message name="rfqResponse">
+		<wsdl:part name="response" element="tns:quoteResponse" />
+	</wsdl:message>
+	<wsdl:message name="rfqFault">
+		<wsdl:part name="fault" element="tns:quoteFault" />
+	</wsdl:message>
+
+	<!--Messages for order Operation-->
+	<wsdl:message name="orderRequest">
+		<wsdl:part name="priceQuotationRef" type="xsd:string" />
+		<wsdl:part name="order" element="tns:orderData" />
+		<wsdl:part name="customer" element="tns:customerData" />
+	</wsdl:message>
+	<wsdl:message name="orderResponse">
+		<wsdl:part name="customerID" type="xsd:string" />
+		<wsdl:part name="order" element="tns:orderConfirmationData" />
+	</wsdl:message>
+
+	<wsdl:message name="shippingRequest">
+		<wsdl:part name="order" element="tns:orderData" />
+		<!-- other message parts omitted -->
+	</wsdl:message>
+
+	<wsdl:message name="shippingResponse">
+		<wsdl:part name="order" element="tns:orderData" />
+		<!-- other message parts omitted -->
+	</wsdl:message>
+
+	<!--
+		=====================================================================
+		Port Types and Operations
+		=====================================================================
+	-->
+	<wsdl:portType name="SellerPT">
+		<wsdl:operation name="requestQuotation">
+			<wsdl:input message="tns:rfqMessage" />
+			<wsdl:output message="tns:rfqResponse" />
+			<wsdl:fault name="error" message="tns:rfqFault" />
+		</wsdl:operation>
+		<wsdl:operation name="order">
+			<wsdl:input message="tns:orderRequest" />
+			<wsdl:output message="tns:orderResponse" />
+		</wsdl:operation>
+	</wsdl:portType>
+
+</wsdl:definitions>
