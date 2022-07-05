@@ -16,7 +16,6 @@ package org.bonitasoft.studio.application;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.UncheckedIOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
 import java.net.URL;
@@ -52,13 +51,11 @@ import org.bonitasoft.studio.engine.EnginePlugin;
 import org.bonitasoft.studio.engine.preferences.EnginePreferenceConstants;
 import org.bonitasoft.studio.engine.server.StartEngineJob;
 import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditorPlugin;
-import org.bonitasoft.studio.model.process.impl.ContractInputImpl;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.bonitasoft.studio.preferences.BonitaThemeConstants;
 import org.bonitasoft.studio.preferences.dialog.BonitaPreferenceDialog;
 import org.codehaus.groovy.eclipse.GroovyPlugin;
-import org.eclipse.core.internal.databinding.beans.BeanPropertyHelper;
 import org.eclipse.core.internal.resources.Workspace;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
@@ -78,7 +75,6 @@ import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.e4.core.contexts.ContextInjectionFactory;
 import org.eclipse.e4.core.di.InjectionException;
 import org.eclipse.e4.ui.css.swt.theme.IThemeEngine;
-import org.eclipse.gmf.runtime.lite.svg.SVGFigure;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -108,8 +104,6 @@ import org.eclipse.ui.internal.ide.IDEWorkbenchPlugin;
 import org.eclipse.ui.internal.progress.ProgressMonitorJobsDialog;
 import org.osgi.framework.Bundle;
 
-import com.google.common.base.Joiner;
-
 public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IStartup {
 
     private static final String BONITA_STUDIO_SKIP_RELEASE_NOTE_SYSTEM_PROPERTY = "bonita.studio.skipReleaseNote";
@@ -122,7 +116,8 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
             monitor.beginTask(Messages.shuttingDown, IProgressMonitor.UNKNOWN);
             UIDesignerServerManager.getInstance().stop();
             Job.getJobManager().cancel(StartEngineJob.FAMILY);
-            RepositoryManager.getInstance().getCurrentRepository().ifPresent(AbstractRepository::disableOpenIntroListener);
+            RepositoryManager.getInstance().getCurrentRepository()
+                    .ifPresent(AbstractRepository::disableOpenIntroListener);
             executePreShutdownContribution();
             new ActiveOrganizationProvider().flush();
             if (BOSWebServerManager.getInstance().serverIsStarted() && BOSEngineManager.getInstance().isRunning()) {
@@ -138,18 +133,10 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
             RepositoryManager.getInstance().getCurrentRepository().ifPresent(currentRepository -> {
                 if (BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore()
                         .getBoolean(BonitaPreferenceConstants.DELETE_TENANT_ON_EXIT)) {
-                    try {
-                        currentRepository.getDatabaseHandler().removeEngineDatabase();
-                    } catch (IOException e) {
-                        throw new UncheckedIOException(e);
-                    }
+                    currentRepository.getDatabaseHandler().removeEngineDatabase();
                 }
                 if (dropBusinessDataDBOnExit()) {
-                    try {
-                        currentRepository.getDatabaseHandler().removeBusinessDataDatabase();
-                    } catch (IOException e) {
-                        throw new UncheckedIOException(e);
-                    }
+                    currentRepository.getDatabaseHandler().removeBusinessDataDatabase();
                 }
             });
         }
