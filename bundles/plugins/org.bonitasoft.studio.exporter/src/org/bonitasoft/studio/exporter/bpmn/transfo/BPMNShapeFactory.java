@@ -351,6 +351,7 @@ public class BPMNShapeFactory {
             elementBounds.setY(absoluteBounds.getY());
             elementBounds.setHeight(absoluteBounds.getHeight());
             elementBounds.setWidth(absoluteBounds.getWidth());
+            label.setBounds(elementBounds);
             edge.setBPMNLabel(label);
         }
     }
@@ -374,16 +375,16 @@ public class BPMNShapeFactory {
 
             Anchor sourceAnchor = bonitaEdge.getSourceAnchor();
             if (sourceAnchor instanceof IdentityAnchor) {
-                conn.setSourceAnchor(new CustomAnchor(sourceFigure,
-                        BaseSlidableAnchor.parseTerminalString(((IdentityAnchor) sourceAnchor).getId())));
+                var referencePoint = BaseSlidableAnchor.parseTerminalString(((IdentityAnchor) sourceAnchor).getId());
+                conn.setSourceAnchor(new CustomAnchor(sourceFigure, referencePoint));
             } else {
                 conn.setSourceAnchor(new CustomAnchor(sourceFigure));
             }
 
             Anchor targetAnchor = bonitaEdge.getTargetAnchor();
             if (targetAnchor instanceof IdentityAnchor) {
-                conn.setTargetAnchor(new CustomAnchor(targetFigure,
-                        BaseSlidableAnchor.parseTerminalString(((IdentityAnchor) targetAnchor).getId())));
+                var referencePoint = BaseSlidableAnchor.parseTerminalString(((IdentityAnchor) targetAnchor).getId());
+                conn.setTargetAnchor(new CustomAnchor(targetFigure, referencePoint));
             } else {
                 conn.setTargetAnchor(new CustomAnchor(targetFigure));
             }
@@ -402,6 +403,11 @@ public class BPMNShapeFactory {
         conn.setRoutingConstraint(figureConstraint);
         router.route(conn);
         return conn;
+    }
+    
+    private static double round (double value, int precision) {
+        int scale = (int) Math.pow(10, precision);
+        return (double) Math.round(value * scale) / scale;
     }
 
     private Rectangle toRectangle(Bounds bounds) {
