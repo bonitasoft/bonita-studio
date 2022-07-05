@@ -14,10 +14,7 @@
  */
 package org.bonitasoft.studio.engine.command;
 
-import java.io.IOException;
-
 import org.bonitasoft.studio.common.jface.MessageDialogWithPrompt;
-import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.core.DatabaseHandler;
 import org.bonitasoft.studio.engine.BOSEngineManager;
@@ -65,11 +62,7 @@ public class RestartServerCommand extends AbstractHandler {
                     DatabaseHandler databaseHandler = RepositoryManager.getInstance().getCurrentRepository()
                             .orElseThrow()
                             .getDatabaseHandler();
-                    try {
-                        databaseHandler.removeEngineDatabase();
-                    } catch (IOException e) {
-                        BonitaStudioLog.error(e);
-                    }
+                    databaseHandler.removeEngineDatabase();
                 }
                 engineManager.start();
                 if (notifying) {
@@ -91,7 +84,7 @@ public class RestartServerCommand extends AbstractHandler {
         }.schedule();
         return null;
     }
-    
+
     @Override
     public boolean isEnabled() {
         if (RepositoryManager.getInstance().hasActiveRepository()) {
