@@ -15,7 +15,6 @@
 package org.bonitasoft.studio.tests.project;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.util.stream.Collectors;
@@ -37,6 +36,7 @@ import org.bonitasoft.studio.model.connectorconfiguration.ConnectorParameter;
 import org.bonitasoft.studio.model.process.Connector;
 import org.bonitasoft.studio.swtbot.framework.application.BotApplicationWorkbenchWindow;
 import org.bonitasoft.studio.swtbot.framework.conditions.AssertionCondition;
+import org.bonitasoft.studio.swtbot.framework.conditions.BonitaBPMConditions;
 import org.bonitasoft.studio.swtbot.framework.projectExplorer.ProjectExplorerBot;
 import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
 import org.bonitasoft.studio.tests.importer.bos.ImportBOSArchiveWizardIT;
@@ -243,8 +243,8 @@ public class ProjectCompositionIT {
                 .updateToLatest();
 
         bot.waitUntil(Conditions.shellIsActive(Messages.updateProcessesTitle), 30000);
-
         bot.button(IDialogConstants.PROCEED_LABEL).click();
+        bot.waitWhile(Conditions.shellIsActive(JFaceResources.getString("ProgressMonitorDialog.title")), 15000);
         bot.waitUntil(new AssertionCondition() {
 
             @Override
@@ -279,6 +279,7 @@ public class ProjectCompositionIT {
                         "1.2.0",
                         1));
         bot.button(IDialogConstants.PROCEED_LABEL).click();
+        bot.waitWhile(Conditions.shellIsActive(JFaceResources.getString("ProgressMonitorDialog.title")), 15000);
         bot.waitUntil(new AssertionCondition() {
 
             @Override
@@ -290,6 +291,7 @@ public class ProjectCompositionIT {
                 assertThat(connectors).isEmpty();
             }
         });
+        bot.waitUntil(BonitaBPMConditions.noPopupActive());
 
         worbenchBot.importBOSArchive()
                 .setArchive(ImportBOSArchiveWizardIT.class.getResource("/EmailConnectorUpdate.bos"))

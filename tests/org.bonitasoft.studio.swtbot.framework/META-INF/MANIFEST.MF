@@ -40,7 +40,8 @@ Require-Bundle: org.eclipse.swtbot.eclipse.gef.finder,
  org.bonitasoft.studio.team,
  org.bonitasoft.studio.team.git,
  org.eclipse.m2e.maven.runtime,
- org.eclipse.m2e.core
+ org.eclipse.m2e.core,
+ org.slf4j.api
 Import-Package: org.bonitasoft.studio.application.i18n,
  org.bonitasoft.studio.configuration.i18n,
  org.bonitasoft.studio.connector.model.i18n,

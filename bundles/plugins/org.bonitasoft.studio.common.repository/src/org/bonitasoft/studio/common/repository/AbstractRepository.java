@@ -468,7 +468,7 @@ public abstract class AbstractRepository implements IRepository, IJavaContainer 
                 try {
                     fis = new FileInputStream(projectFile);
                     final InputSource source = new InputSource(fis);
-                    final ProjectDescriptionReader reader = new ProjectDescriptionReader();
+                    final ProjectDescriptionReader reader = new ProjectDescriptionReader(project);
                     final IProjectDescription desc = reader.read(source);
                     return desc.getComment();
                 } catch (final FileNotFoundException e) {
