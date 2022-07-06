@@ -15,25 +15,19 @@
 package org.bonitasoft.studio.common.repository.core;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.net.URL;
-import java.util.Properties;
 
-import org.bonitasoft.studio.common.ProjectUtil;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.runtime.FileLocator;
 
 public class DatabaseHandler {
 
     public static final String H2_DATABASE_FOLDER_NAME = "h2_database";
     public static final String DB_LOCATION_PROPERTY = "org.bonitasoft.h2.database.dir";
     public static final String BITRONIX_ROOT = "btm.root";
-    static final String BONITA_DB_NAME_PROPERTY = "db.database.name";
-    static final String BUSINESS_DATA_DB_NAME_PROPERTY = "bdm.db.database.name";
+    static final String BONITA_DB_NAME = "bonita_journal.db";
+    static final String BUSINESS_DATA_DB_NAME = "business_data.db";
 
     private final IProject project;
 
@@ -41,30 +35,16 @@ public class DatabaseHandler {
         this.project = project;
     }
 
-    protected Properties readDatabaseProperties() throws IOException {
-        final URL databasePropertiesURL = FileLocator
-                .toFileURL(ProjectUtil.getConsoleLibsBundle().getResource("tomcat/setup/database.properties"));
-        final File file = new File(databasePropertiesURL.getFile());
-        final Properties properties = new Properties();
-        try (FileInputStream inStream = new FileInputStream(file)) {
-            properties.load(inStream);
-        }
-        return properties;
-
-    }
-
-    public void removeEngineDatabase() throws IOException {
+    public void removeEngineDatabase() {
         deleteH2DbFiles(getBonitaDBName());
     }
-    
-    public String getBonitaDBName() throws IOException {
-        final Properties databaseProperties = readDatabaseProperties();
-        return databaseProperties.getProperty(BONITA_DB_NAME_PROPERTY);
+
+    public String getBonitaDBName() {
+        return BONITA_DB_NAME;
     }
 
-    public void removeBusinessDataDatabase() throws IOException {
-        final Properties databaseProperties = readDatabaseProperties();
-        deleteH2DbFiles(databaseProperties.getProperty(BUSINESS_DATA_DB_NAME_PROPERTY));
+    public void removeBusinessDataDatabase() {
+        deleteH2DbFiles(BUSINESS_DATA_DB_NAME);
     }
 
     protected void deleteH2DbFiles(final String dbFileName) {
@@ -77,7 +57,8 @@ public class DatabaseHandler {
                     if (file.exists()) {
                         BonitaStudioLog.info(fileName + " failed to be deleted", CommonRepositoryPlugin.PLUGIN_ID);
                     } else {
-                        BonitaStudioLog.info(fileName + " has been deleted successfuly", CommonRepositoryPlugin.PLUGIN_ID);
+                        BonitaStudioLog.info(fileName + " has been deleted successfuly",
+                                CommonRepositoryPlugin.PLUGIN_ID);
                     }
                 }
             }

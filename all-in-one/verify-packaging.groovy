@@ -38,13 +38,16 @@ def verifyProduct(rootFolder, productsDir) {
             if(!providerName.contains('bonitasoft')) {
                 warning("${file.name} is not the patched version !")
                 def patchPluginFolder = file.name.substring(0, file.name.indexOf('_'))
-                def patchedPluginFile = productsDir.parentFile.parentFile.parentFile.parentFile.toPath()
+                def targetFolder = productsDir.parentFile.parentFile.parentFile.parentFile.toPath()
                         .resolve('patched-plugins')
                         .resolve(patchPluginFolder)
                         .resolve('target')
                         .toFile()
+                println "Looking for patched jar in $targetFolder"
+                def patchedPluginFile = targetFolder
                         .listFiles( new FilenameFilter() {
                             boolean accept(File path, String filename) {
+                                println "File found: $filename"
                                 return filename.startsWith(patchPluginFolder) && filename.endsWith('.jar') && !filename.contains('SNAPSHOT')
                             }
                         })
