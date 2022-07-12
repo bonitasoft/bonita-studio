@@ -37,6 +37,7 @@ import org.bonitasoft.studio.model.connectorconfiguration.ConnectorParameter;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.process.Connector;
 import org.bonitasoft.studio.model.process.Pool;
+import org.bonitasoft.studio.validation.ValidationPlugin;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IMarker;
@@ -148,11 +149,14 @@ public class ProcessScriptsCompiler {
         public void addExpression(Expression expression) {
             try {
                 String uuid = ModelHelper.getEObjectID(expression);
-                Path sourceFilePath = srcFolder.getLocation().toFile().toPath().resolve(uuid + ".groovy");
+                Path sourceFilePath = srcFolder.getLocation().toFile().toPath()
+                        .resolve(uuid.replace("-", "666") + ".groovy");
+                if (sourceFilePath.toFile().exists()) {
+                    BonitaStudioLog.warning("Expression class name collision ! Some script validation will be ignored.", ValidationPlugin.PLUGIN_ID);
+                }
                 Files.writeString(sourceFilePath, expression.getContent(),
                         StandardCharsets.UTF_8);
-
-                sourceIndex.put(ModelHelper.getEObjectID(expression), sourceFilePath);
+                sourceIndex.put(uuid, sourceFilePath);
             } catch (IOException e) {
                 BonitaStudioLog.error(e);
             }

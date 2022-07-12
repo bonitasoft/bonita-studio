@@ -54,6 +54,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.ecore.EObject;
@@ -93,7 +94,8 @@ public class GroovyScriptBarResourceProvider implements BARResourcesProvider {
     protected void addGroovyScriptDependenciesToClasspath(
             final BusinessArchiveBuilder builder,
             final Configuration configuration,
-            final List<FragmentContainer> containers) throws InvocationTargetException, InterruptedException, IOException {
+            final List<FragmentContainer> containers)
+            throws InvocationTargetException, InterruptedException, IOException {
         final Set<ICompilationUnit> compilationUnits = collectCompilationUnits(configuration, containers);
         addGroovyCompilationUnitToClasspath(builder, compilationUnits, GroovyRepositoryStore.EXPORTED_JAR_NAME);
     }
@@ -118,10 +120,10 @@ public class GroovyScriptBarResourceProvider implements BARResourcesProvider {
                                     String.format("%s (line %s, col %s): %s", compilationUnit.getElementName(),
                                             e.getAttribute(IMarker.LINE_NUMBER),
                                             e.getAttribute(IMarker.CHAR_START), e.getAttribute(IMarker.MESSAGE))));
-                            throw new JarExportFailedException(
-                                    Messages.errorBuildingJarForGroovyScriptsForProcess + " ",
-                                    errorStatus);
                         }
+                        throw new JarExportFailedException(
+                                Messages.errorBuildingJarForGroovyScriptsForProcess + " ",
+                                errorStatus);
                     }
                 }
             } catch (CoreException e1) {
@@ -159,12 +161,18 @@ public class GroovyScriptBarResourceProvider implements BARResourcesProvider {
         if (configuration != null) {
             final GroovyRepositoryStore store = repositoryAccessor.getRepositoryStore(GroovyRepositoryStore.class);
             for (final FragmentContainer fc : containers) {
-                for (final EObject fragment : ModelHelper.getAllItemsOfType(fc, ConfigurationPackage.Literals.FRAGMENT)) {
+                for (final EObject fragment : ModelHelper.getAllItemsOfType(fc,
+                        ConfigurationPackage.Literals.FRAGMENT)) {
                     if (((Fragment) fragment).getType().equals(FragmentTypes.GROOVY_SCRIPT)) {
                         if (((Fragment) fragment).isExported()) {
                             final IResource file = store.getResource()
                                     .findMember(Path.fromOSString(((Fragment) fragment).getValue()));
                             if (file instanceof IFile && file.exists()) {
+                                try {
+                                    file.refreshLocal(IResource.DEPTH_ZERO, new NullProgressMonitor());
+                                } catch (CoreException e) {
+                                    BonitaStudioLog.error(e);
+                                }
                                 result.add(JavaCore.createCompilationUnitFrom((IFile) file));
                             }
                         }
