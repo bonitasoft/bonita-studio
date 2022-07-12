@@ -326,9 +326,6 @@ public class ProcessElementNameContribution extends AbstractNamePropertySectionC
             final DiagramEditor editor = (DiagramEditor) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
                     .getActiveEditor();
             final MainProcess newProcess = (MainProcess) editor.getDiagramEditPart().resolveSemanticElement();
-            editingDomain.getCommandStack().execute(
-                    SetCommand.create(editingDomain, newProcess, ProcessPackage.Literals.ABSTRACT_PROCESS__AUTHOR,
-                            System.getProperty("user.name", "Unknown")));
             final String oldName = newProcess.getName();
             final String oldVersion = newProcess.getVersion();
             if (new Identifier(oldName, oldVersion).equals(nameDialog.getIdentifier())) {

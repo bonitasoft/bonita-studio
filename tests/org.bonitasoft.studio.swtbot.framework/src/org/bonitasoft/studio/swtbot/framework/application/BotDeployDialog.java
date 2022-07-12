@@ -116,4 +116,14 @@ public class BotDeployDialog extends BotDialog {
         bot.checkBox(Messages.selectLatestVersion).deselect();
         return this;
     }
+
+    public BotDeployDialog disableProcessValidation() {
+        bot.checkBoxInGroup(Messages.validateProcess, Messages.deployOptions).deselect();
+        return this;
+    }
+    
+    public BotDeployDialog enableProcessValidation() {
+        bot.checkBoxInGroup(Messages.validateProcess, Messages.deployOptions).select();
+        return this;
+    }
 }
