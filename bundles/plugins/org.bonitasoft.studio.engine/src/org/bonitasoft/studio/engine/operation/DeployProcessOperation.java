@@ -60,6 +60,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Display;
 
 import com.google.common.base.Predicate;
@@ -169,7 +170,7 @@ public class DeployProcessOperation {
     }
 
     private IStatus deployProcess(final AbstractProcess process, final IProgressMonitor monitor) {
-        monitor.subTask(Messages.bind(Messages.deployingProcess, getProcessLabel(process)));
+        monitor.subTask(NLS.bind(Messages.deployingProcess, getProcessLabel(process)));
         BusinessArchive bar;
         IStatus deployStatus = Status.OK_STATUS;
         try {
