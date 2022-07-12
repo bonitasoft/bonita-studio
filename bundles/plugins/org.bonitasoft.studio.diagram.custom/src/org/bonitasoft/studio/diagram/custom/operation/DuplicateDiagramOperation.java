@@ -46,9 +46,6 @@ import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 
-/**
- * @author Romain Bioteau
- */
 public class DuplicateDiagramOperation implements IRunnableWithProgress {
 
     private MainProcess diagram;
@@ -56,10 +53,6 @@ public class DuplicateDiagramOperation implements IRunnableWithProgress {
     private String diagramName;
     private List<ProcessesNameVersion> pools = new ArrayList<>();
 
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.jface.operation.IRunnableWithProgress#run(org.eclipse.core.runtime.IProgressMonitor)
-     */
     @Override
     public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
         Assert.isNotNull(diagram);
@@ -72,24 +65,21 @@ public class DuplicateDiagramOperation implements IRunnableWithProgress {
 
         final DiagramRepositoryStore diagramStore = RepositoryManager.getInstance()
                 .getRepositoryStore(DiagramRepositoryStore.class);
-        DiagramFileStore newFildeStore = null;
+        DiagramFileStore newFileStore = null;
         if (!(oldName.equals(diagramName) && oldVersion.equals(diagramVersion))) {
-            newFildeStore = copyDiagram();
+            newFileStore = copyDiagram();
         }
-        if (newFildeStore == null) {
-            newFildeStore = diagramStore
+        if (newFileStore == null) {
+            newFileStore = diagramStore
                     .createRepositoryFileStore(NamingUtils.toDiagramFilename(diagramName, diagramVersion));
         }
         MainProcess newDiagram;
         try {
-            newDiagram = newFildeStore.getContent();
+            newDiagram = newFileStore.getContent();
         } catch (ReadFileStoreException e) {
             throw new InvocationTargetException(e);
         }
-        final TransactionalEditingDomain editingDomain = TransactionUtil.getEditingDomain(newFildeStore.getEMFResource());
-        editingDomain.getCommandStack().execute(
-                SetCommand.create(editingDomain, newDiagram, ProcessPackage.Literals.ABSTRACT_PROCESS__AUTHOR,
-                        System.getProperty("user.name", "Unknown")));
+        var editingDomain = TransactionUtil.getEditingDomain(newFileStore.getEMFResource());
 
         boolean poolRenamed = false;
         for (final ProcessesNameVersion pnv : pools) {
@@ -113,7 +103,7 @@ public class DuplicateDiagramOperation implements IRunnableWithProgress {
 
         }
         if (poolRenamed) {
-            newFildeStore.save(null);
+            newFileStore.save(null);
         }
     }
 

@@ -64,7 +64,12 @@ public class SaveDiagramResourceCommand extends AbstractTransactionalCommand {
             resource.getContents().add(1, (EObject) content);
         } else if (content instanceof Collection) {
             final Collection<EObject> collectionsOfContents = (Collection<EObject>) content;
-            resource.getContents().addAll(collectionsOfContents);
+            if(resource.getContents().isEmpty()) {
+                resource.getContents().addAll(collectionsOfContents);
+            } else {
+                resource.getContents().clear();
+                resource.getContents().addAll(collectionsOfContents);
+            }
         }
         return CommandResult.newOKCommandResult(resource);
     }

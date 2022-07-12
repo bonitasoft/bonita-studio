@@ -92,7 +92,7 @@ public class UndeployProcessOperation {
                 return undeployAll(monitor);
             } catch (final Exception e) {
                 BonitaStudioLog.error(e, EnginePlugin.PLUGIN_ID);
-                return new Status(Status.ERROR, EnginePlugin.PLUGIN_ID, String.format(Messages.undeploymentFailedMessage+": %s",e.getMessage()), e);
+                return Status.error(String.format(Messages.undeploymentFailedMessage+": %s",e.getMessage()), e);
             }
         } else {
             Assert.isTrue(!processes.isEmpty());

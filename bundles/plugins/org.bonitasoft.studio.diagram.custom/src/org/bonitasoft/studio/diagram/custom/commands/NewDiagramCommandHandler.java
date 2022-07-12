@@ -21,14 +21,10 @@ import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.diagram.custom.parts.CustomPoolEditPart;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.NewDiagramFactory;
-import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.emf.edit.command.SetCommand;
-import org.eclipse.emf.transaction.TransactionalEditingDomain;
-import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.swt.widgets.Display;
@@ -44,13 +40,6 @@ public class NewDiagramCommandHandler extends AbstractHandler {
         Display.getDefault().asyncExec(() -> {
                 final IEditorPart editor = (IEditorPart) diagramFileStore.open();
                 if (editor instanceof DiagramEditor) {
-                    final String author = System.getProperty("user.name", "unknown");
-                    final TransactionalEditingDomain editingDomain = TransactionUtil
-                            .getEditingDomain(diagramFileStore.getEMFResource());
-                    editingDomain.getCommandStack().execute(
-                            SetCommand.create(editingDomain,
-                                    ((DiagramEditor) editor).getDiagramEditPart().resolveSemanticElement(),
-                                    ProcessPackage.Literals.ABSTRACT_PROCESS__AUTHOR, author));
                     PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().activate(editor);
                 }
         });
