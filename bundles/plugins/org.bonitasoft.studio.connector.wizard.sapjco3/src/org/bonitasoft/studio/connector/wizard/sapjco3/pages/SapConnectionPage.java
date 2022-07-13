@@ -139,14 +139,14 @@ public class SapConnectionPage extends AbstractPage {
         createDestinationGroup(pageComposite);
 
         createAdditionalParametersGroup(pageComposite);
-
+      
         return mainComposite;
     }
 
     private void createAdditionalParametersGroup(final Composite pageComposite) {
         final Composite destinationDataComposite = new Composite(pageComposite, SWT.NONE);
         destinationDataComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
-        destinationDataComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).span(2, 1).create());
+        destinationDataComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).hint(SWT.DEFAULT, 200).span(2, 1).create());
         final PageComponentSwitch componentSwitch = getPageComponentSwitch(context, destinationDataComposite);
         componentSwitch.doSwitch(getComponentById(DESTINATION_DATA));
     }
@@ -373,7 +373,7 @@ public class SapConnectionPage extends AbstractPage {
                 final File tomcatLibFolder = new File(ResourcesPlugin.getWorkspace().getRoot().getLocation().toFile(),
                         "tomcat" + File.separatorChar + "server" + File.separatorChar + "lib");
                 final File endorsedFileEngine = new File(tomcatLibFolder, "sapjco3.jar");
-                if (!endorsedFileEngine.createNewFile()) {
+                if (endorsedFileEngine.exists() || !tomcatLibFolder.canWrite() ) {
                     Display.getDefault().syncExec(new Runnable() {
 
                         @Override
@@ -383,7 +383,7 @@ public class SapConnectionPage extends AbstractPage {
                         }
                     });
                 } else {
-                    Files.copy(from.toPath(), endorsedFileEngine.toPath().resolve(from.toPath().getFileName()), StandardCopyOption.REPLACE_EXISTING);
+                    Files.copy(from.toPath(), tomcatLibFolder.toPath().resolve(from.toPath().getFileName()), StandardCopyOption.REPLACE_EXISTING);
                     Display.getDefault().syncExec(new Runnable() {
 
                         @Override
