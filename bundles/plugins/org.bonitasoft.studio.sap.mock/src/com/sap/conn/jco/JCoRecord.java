@@ -22,4 +22,8 @@ package com.sap.conn.jco;
 public interface JCoRecord extends java.lang.Iterable<JCoField> {
 
     public JCoTable getTable(int index);
+
+    String getString(String xpath);
+
+    void setValue(String parameterName, Object parameterValue);
 }
