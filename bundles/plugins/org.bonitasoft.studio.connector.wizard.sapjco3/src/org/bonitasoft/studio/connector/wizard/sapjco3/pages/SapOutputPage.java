@@ -113,7 +113,7 @@ public class SapOutputPage extends AbstractInputOutputPage {
 		addField.setText(Messages.newOutputButton);
 	}
 
-	protected Boolean canBeAdd(SapFunctionField field) {
+	protected boolean canBeAdd(SapFunctionField field) {
 		if (field.isStructure() || field.isTable()) {
 			return false;
 		} else {
