@@ -65,21 +65,21 @@ public class SapFunctionField {
 		return defaultContent;
 	}
 
-	public Boolean isTable() {
+	public boolean isTable() {
 		return isTable;
 	}
 
-	public Boolean isOptionnal() {
+	public boolean isOptionnal() {
 		return isOptionnal;
 	}
 
-	public Boolean isStructure() {
+	public boolean isStructure() {
 		return isStructure;
 	}
 
 	public List<SapFunctionField> getFieldsList() {
 		if(fieldsList==null){
-			fieldsList = new ArrayList<SapFunctionField>();
+			fieldsList = new ArrayList<>();
 		}
 		return fieldsList;
 	}
