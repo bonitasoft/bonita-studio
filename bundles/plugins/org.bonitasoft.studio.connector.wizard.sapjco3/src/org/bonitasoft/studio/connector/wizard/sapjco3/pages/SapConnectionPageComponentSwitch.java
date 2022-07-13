@@ -6,7 +6,6 @@ import org.bonitasoft.studio.common.repository.provider.DefinitionResourceProvid
 import org.bonitasoft.studio.connector.model.definition.Array;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
 import org.bonitasoft.studio.connector.model.definition.Select;
-import org.bonitasoft.studio.connector.model.definition.wizard.ConnectorConfigurationSupport;
 import org.bonitasoft.studio.connector.model.definition.wizard.PageComponentSwitch;
 import org.bonitasoft.studio.connector.wizard.sapjco3.i18n.Messages;
 import org.bonitasoft.studio.connector.wizard.sapjco3.providers.ExpressionNatureProvider;
@@ -14,8 +13,6 @@ import org.bonitasoft.studio.connector.wizard.sapjco3.tooling.SapTool;
 import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFilter;
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionCollectionViewer;
 import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration;
-import org.bonitasoft.studio.model.connectorconfiguration.ConnectorParameter;
-import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ListExpression;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.ecore.EObject;
@@ -39,9 +36,8 @@ public class SapConnectionPageComponentSwitch extends PageComponentSwitch {
 	private ExpressionCollectionViewer expColViewer;
 	private Group serverTypeOptionsComposite;
 	private SapConnectionPage connectionPage;
-    private ConnectorConfigurationSupport connectorConfigurationSupport;
 
-	private static final String DESTINATION_DATA = "destinationData";
+	private static String DESTINATION_DATA = "destinationData";
 
 	public SapConnectionPageComponentSwitch(IWizardContainer iWizardContainer, Composite parent, EObject container,
 			ConnectorDefinition definition, ConnectorConfiguration connectorConfiguration, EMFDataBindingContext context,
@@ -49,7 +45,6 @@ public class SapConnectionPageComponentSwitch extends PageComponentSwitch {
 			SapTool sap, SapConnectionPage connectionPage) {
 		super(iWizardContainer, parent, container, definition, connectorConfiguration, context, messageProvider,
 				connectorExpressionContentTypeFilter);
-	     this.connectorConfigurationSupport = new ConnectorConfigurationSupport(connectorConfiguration);
 		this.sap = sap;
 		this.connectionPage = connectionPage;
 	}
@@ -110,16 +105,15 @@ public class SapConnectionPageComponentSwitch extends PageComponentSwitch {
 					super.widgetSelected(e);
 					final Combo c = (Combo) e.getSource();
 					connectionPage.refreshServerTypeOptions(serverTypeOptionsComposite, c.getItem(c.getSelectionIndex()));
-					destinationType.getParent().layout(true, true);
+					destinationType.layout(true, true);
 				}
 			});
 			serverTypeOptionsComposite = new Group(composite, SWT.NONE);
 			serverTypeOptionsComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(5, 5).create());
-			serverTypeOptionsComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false)
+			serverTypeOptionsComposite.setLayoutData(GridDataFactory.fillDefaults().hint(SWT.DEFAULT, 57).grab(true, false)
 					.span(2, 1).create());
 			serverTypeOptionsComposite.setText(Messages.serverTypeGroupTitle);
-			ConnectorParameter connectorParameter = connectorConfigurationSupport.getConnectorParameter(object.getInputName(),object, getConnectorInput(object.getInputName()));
-			connectionPage.refreshServerTypeOptions(serverTypeOptionsComposite, ((Expression) connectorParameter.getExpression()).getContent());
+			connectionPage.refreshServerTypeOptions(serverTypeOptionsComposite, "ApplicationServer");
 			return combo;
 		} else {
 			return super.createSelectControl(composite, object);

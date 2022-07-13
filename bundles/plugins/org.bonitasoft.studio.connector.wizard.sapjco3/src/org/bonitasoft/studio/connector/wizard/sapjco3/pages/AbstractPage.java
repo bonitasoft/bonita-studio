@@ -19,7 +19,7 @@ import org.eclipse.core.resources.ResourcesPlugin;
  */
 public abstract class AbstractPage extends GeneratedConnectorWizardPage {
 
-    protected boolean libraryLoaded;
+    protected Boolean libraryLoaded;
     protected SapTool sapTool;
 
     public AbstractPage() {
@@ -33,10 +33,7 @@ public abstract class AbstractPage extends GeneratedConnectorWizardPage {
             final File tomcatLibFolder = new File(ResourcesPlugin.getWorkspace().getRoot().getLocation().toFile(),
                     "tomcat" + File.separatorChar + "server" + File.separatorChar + "lib");
             final File endorsedFileEngine = new File(tomcatLibFolder, "sapjco3.jar");
-            return Class.forName("com.sap.conn.jco.JCoFunction") != null
-                    && Class.forName("com.sap.conn.jco.ext.Environment") != null
-                    && Class.forName("com.sap.conn.jco.JCoDestinationManager") != null
-                    && endorsedFileEngine.exists();
+            return Class.forName("com.sap.conn.jco.JCoFunction") != null && endorsedFileEngine.exists();
         } catch (final ClassNotFoundException | NoClassDefFoundError e) {
             return false;
         }

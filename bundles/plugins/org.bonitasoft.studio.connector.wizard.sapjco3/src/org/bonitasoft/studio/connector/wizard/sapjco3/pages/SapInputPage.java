@@ -135,7 +135,7 @@ public class SapInputPage extends AbstractInputOutputPage {
 		((TableExpression) expressionInput).getExpressions().add(rowExp);
 	}
 
-	protected boolean canBeAdd(SapFunctionField field) {
+	protected Boolean canBeAdd(SapFunctionField field) {
 		if (field.isStructure() || field.isTable()) {
 			return false;
 		} else {

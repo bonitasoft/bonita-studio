@@ -54,6 +54,15 @@ public class SapFonctionPage extends AbstractPage {
 		}
 	}
 
+	@Override
+	public boolean isPageComplete() {
+		return super.isPageComplete();
+	}
+
+	@Override
+	public void setErrorMessage(String newMessage) {
+		super.setErrorMessage(newMessage);
+	}
 
 	@Override
 	public IWizardPage getNextPage() {
