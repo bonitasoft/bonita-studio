@@ -34,7 +34,6 @@ import org.bonitasoft.studio.la.application.ui.editor.ApplicationFormPage;
 import org.bonitasoft.studio.la.application.ui.validator.ApplicationDescriptorValidators;
 import org.bonitasoft.studio.la.application.ui.validator.ApplicationTokenUnicityValidator;
 import org.bonitasoft.studio.la.i18n.Messages;
-import org.bonitasoft.studio.ui.converter.ConverterBuilder;
 import org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory;
 import org.bonitasoft.studio.ui.validator.EmptyInputValidator;
 import org.bonitasoft.studio.ui.widget.TextWidget;
@@ -42,6 +41,7 @@ import org.bonitasoft.studio.ui.wizard.ControlSupplier;
 import org.bonitasoft.studio.ui.wizard.listener.WizardDoubleClickListener;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.beans.typed.PojoProperties;
+import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.core.databinding.observable.value.SelectObservableValue;
 import org.eclipse.core.databinding.validation.MultiValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
@@ -120,10 +120,7 @@ public class AddApplicationDescriptorPage implements ControlSupplier {
         ctx.bindValue(PojoProperties.value("topControl").observe(stackLayout), addModeObservable,
                 UpdateStrategyFactory.neverUpdateValueStrategy().create(),
                 UpdateStrategyFactory.updateValueStrategy()
-                        .withConverter(ConverterBuilder.<AddApplicationMode, Composite> newConverter()
-                                .fromType(AddApplicationMode.class)
-                                .toType(Composite.class)
-                                .withConvertFunction(mode -> {
+                        .withConverter(IConverter.<AddApplicationMode, Composite> create(mode -> {
                                     switch (mode) {
                                         case FROM:
                                             return addFromComposite;
@@ -131,7 +128,7 @@ public class AddApplicationDescriptorPage implements ControlSupplier {
                                         default:
                                             return addNewComposite;
                                     }
-                                }).create())
+                                }))
                         .create());
         ctx.updateModels();
     }

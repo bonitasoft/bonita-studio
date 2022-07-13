@@ -47,10 +47,10 @@ import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.preferences.PreferenceUtil;
 import org.bonitasoft.studio.preferences.browser.OpenBrowserOperation;
-import org.bonitasoft.studio.ui.converter.ConverterBuilder;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.beans.typed.PojoProperties;
+import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
@@ -142,11 +142,7 @@ public class ApplicationDescriptorControl {
         formPage.getToolkit().adapt(link, true, true);
 
         UpdateValueStrategy updateUrlStrategy = updateValueStrategy()
-                .withConverter(ConverterBuilder.<String, String> newConverter()
-                        .fromType(String.class)
-                        .toType(String.class)
-                        .withConvertFunction(this::getUrlToDisplay)
-                        .create())
+                .withConverter(IConverter.<String, String> create(this::getUrlToDisplay))
                 .create();
 
         IObservableValue observeLinkText = PojoProperties.value("text").observe(link);
@@ -184,33 +180,20 @@ public class ApplicationDescriptorControl {
         ctx.bindValue(imageObservable, homePageObservable,
                 neverUpdateValueStrategy().create(),
                 updateValueStrategy()
-                        .withConverter(ConverterBuilder.<String, Image> newConverter()
-                                .fromType(String.class)
-                                .toType(Image.class)
-                                .withConvertFunction(
+                        .withConverter(IConverter.<String, Image> create(
                                         s -> applicationNavigation.validateHomePageToken(s).isOK() ? homeIcon
-                                                : warningIcon)
-                                .create())
+                                                : warningIcon))
                         .create());
         ctx.bindValue(imageToolTipObservable, homePageObservable,
                 neverUpdateValueStrategy().create(),
                 updateValueStrategy()
-                        .withConverter(ConverterBuilder.<String, String> newConverter()
-                                .fromType(String.class)
-                                .toType(String.class)
-                                .withConvertFunction(
-                                        s -> applicationNavigation.validateHomePageToken(s).isOK() ? ""
-                                                : Messages.previewWarning)
-                                .create())
+                        .withConverter(IConverter.<String, String> create(s -> applicationNavigation.validateHomePageToken(s).isOK() ? ""
+                                                : Messages.previewWarning))
                         .create());
         ctx.bindValue(WidgetProperties.enabled().observe(link), homePageObservable,
                 neverUpdateValueStrategy().create(),
                 updateValueStrategy()
-                        .withConverter(ConverterBuilder.<String, Boolean> newConverter()
-                                .fromType(String.class)
-                                .toType(Boolean.class)
-                                .withConvertFunction(s -> applicationNavigation.validateHomePageToken(s).isOK())
-                                .create())
+                        .withConverter(IConverter.<String, Boolean> create(s -> applicationNavigation.validateHomePageToken(s).isOK()))
                         .create());
     }
 

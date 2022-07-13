@@ -23,6 +23,10 @@ public class BotConfigureDialog extends BotWizardDialog {
     public BotConfigureDialog(final SWTGefBot bot, final String processName) {
         super(bot, Messages.bind(Messages.configurationTitle, "Local", processName));
     }
+    
+    public BotConfigureDialog(final SWTGefBot bot, final String envName, final String processName) {
+        super(bot, Messages.bind(Messages.configurationTitle, envName, processName));
+    }
 
     public BotActorMappingConfigurationPage selectActorMapping() {
         bot.table().select(org.bonitasoft.studio.identity.i18n.Messages.actorMapping);

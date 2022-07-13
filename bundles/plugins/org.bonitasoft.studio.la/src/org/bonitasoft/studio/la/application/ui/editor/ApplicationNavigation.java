@@ -33,7 +33,6 @@ import org.bonitasoft.studio.la.application.ui.editor.listener.MoveMenuListener;
 import org.bonitasoft.studio.la.application.ui.provider.NavigationPageTreeContentProvider;
 import org.bonitasoft.studio.la.application.ui.validator.ApplicationDescriptorValidators;
 import org.bonitasoft.studio.la.i18n.Messages;
-import org.bonitasoft.studio.ui.converter.ConverterBuilder;
 import org.bonitasoft.studio.ui.viewer.AutoCompleteTextCellEditor;
 import org.bonitasoft.studio.ui.viewer.EditingSupportBuilder;
 import org.bonitasoft.studio.ui.viewer.LabelProviderBuilder;
@@ -499,48 +498,32 @@ public class ApplicationNavigation extends Composite {
         return NavigationPageNode::isTopMenu;
     }
 
-    private IConverter nonNullConverter() {
-        return ConverterBuilder.<NavigationPageNode, Boolean> newConverter()
-                .fromType(NavigationPageNode.class)
-                .toType(Boolean.class)
-                .withConvertFunction(Objects::nonNull)
-                .create();
+    private IConverter<NavigationPageNode, Boolean> nonNullConverter() {
+        return IConverter.<NavigationPageNode, Boolean> create(Objects::nonNull);
     }
 
-    private IConverter isTopMenuConverter() {
-        return ConverterBuilder.<NavigationPageNode, Boolean> newConverter()
-                .fromType(NavigationPageNode.class)
-                .toType(Boolean.class)
-                .withConvertFunction(selection -> Objects.nonNull(selection) && selection.isTopMenu())
-                .create();
+    private IConverter<NavigationPageNode,Boolean> isTopMenuConverter() {
+        return IConverter.<NavigationPageNode, Boolean> create(selection -> Objects.nonNull(selection) && selection.isTopMenu());
     }
 
-    private IConverter upAvailableConverter() {
-        return ConverterBuilder.<NavigationPageNode, Boolean> newConverter()
-                .fromType(NavigationPageNode.class)
-                .toType(Boolean.class)
-                .withConvertFunction(selection -> Objects.nonNull(selection)
+    private IConverter<NavigationPageNode, Boolean> upAvailableConverter() {
+        return IConverter.<NavigationPageNode, Boolean> create(selection -> Objects.nonNull(selection)
                         && (menuPageNodes.contains(selection)
                                 ? menuPageNodes.indexOf(selection) > 0
                                 : selection.getParent().isPresent()
                                         ? selection.getParent().get().getChildren().indexOf(selection) > 0
-                                        : false))
-                .create();
+                                        : false));
     }
 
-    private IConverter downAvailableConverter() {
-        return ConverterBuilder.<NavigationPageNode, Boolean> newConverter()
-                .fromType(NavigationPageNode.class)
-                .toType(Boolean.class)
-                .withConvertFunction(selection -> Objects.nonNull(selection)
+    private IConverter<NavigationPageNode, Boolean> downAvailableConverter() {
+        return IConverter.<NavigationPageNode, Boolean> create(selection -> Objects.nonNull(selection)
                         && (menuPageNodes.contains(selection)
                                 ? menuPageNodes.indexOf(selection) < menuPageNodes.size() - 1
                                 : selection.getParent().isPresent()
                                         ? selection.getParent().get().getChildren()
                                                 .indexOf(selection) < selection.getParent().get().getChildren().size()
                                                         - 1
-                                        : false))
-                .create();
+                                        : false));
     }
 
     public TreeViewer getMenuTreeViewer() {

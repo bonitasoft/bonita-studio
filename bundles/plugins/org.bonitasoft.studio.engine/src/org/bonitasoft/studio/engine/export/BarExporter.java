@@ -206,7 +206,7 @@ public class BarExporter {
             configurationId = ConfigurationPlugin.getDefault().getPreferenceStore()
                     .getString(ConfigurationPreferenceConstants.DEFAULT_CONFIGURATION);
         }
-        if (configurationId.equals(ConfigurationPreferenceConstants.LOCAL_CONFIGURAITON)) {
+        if (configurationId.equals(ConfigurationPreferenceConstants.LOCAL_CONFIGURATION)) {
             final String id = ModelHelper.getEObjectID(process);
             IRepositoryFileStore file = processConfStore.getChild(id + ".conf", true);
             if (file == null) {
@@ -221,7 +221,7 @@ public class BarExporter {
             } catch (final ReadFileStoreException e) {
                 BonitaStudioLog.error("Failed to read process configuration", e);
             }
-        } else if (Objects.equals(configurationId, ConfigurationPreferenceConstants.NONE_CONFIGURAITON)) {
+        } else if (Objects.equals(configurationId, ConfigurationPreferenceConstants.NONE_CONFIGURATION)) {
             configuration = createEmptyConfiguration(configurationId);
         } else {
             for (final Configuration conf : process.getConfigurations()) {

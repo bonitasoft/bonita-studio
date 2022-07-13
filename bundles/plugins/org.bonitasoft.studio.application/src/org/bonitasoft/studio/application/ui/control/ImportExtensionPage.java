@@ -41,7 +41,6 @@ import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.preferences.BonitaThemeConstants;
 import org.bonitasoft.studio.preferences.dialog.BonitaPreferenceDialog;
-import org.bonitasoft.studio.ui.converter.ConverterBuilder;
 import org.bonitasoft.studio.ui.databinding.ComputedValueBuilder;
 import org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory;
 import org.bonitasoft.studio.ui.validator.MultiValidator;
@@ -51,6 +50,7 @@ import org.eclipse.core.databinding.Binding;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.ValidationStatusProvider;
 import org.eclipse.core.databinding.beans.typed.PojoProperties;
+import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.core.databinding.observable.IObservable;
 import org.eclipse.core.databinding.observable.list.IObservableList;
 import org.eclipse.core.databinding.observable.value.ComputedValue;
@@ -188,11 +188,7 @@ public class ImportExtensionPage implements ControlSupplier {
         ctx.bindValue(PojoProperties.value("topControl").observe(stackLayout), importModeObservable,
                 UpdateStrategyFactory.neverUpdateValueStrategy().create(),
                 UpdateStrategyFactory.updateValueStrategy()
-                        .withConverter(ConverterBuilder.<ImportMode, Composite> newConverter()
-                                .fromType(ImportMode.class)
-                                .toType(Composite.class)
-                                .withConvertFunction(o -> o != null ? compositeFor(o) : null)
-                                .create())
+                        .withConverter(IConverter.<ImportMode, Composite> create(o -> o != null ? compositeFor(o) : null))
                         .create());
     }
 

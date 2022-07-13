@@ -26,12 +26,12 @@ import org.bonitasoft.studio.identity.organization.validator.DisplayNameValidato
 import org.bonitasoft.studio.identity.organization.validator.GroupNameValidator;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
-import org.bonitasoft.studio.ui.converter.ConverterBuilder;
 import org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory;
 import org.bonitasoft.studio.ui.widget.TextAreaWidget;
 import org.bonitasoft.studio.ui.widget.TextWidget;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.beans.typed.PojoProperties;
+import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
@@ -98,11 +98,7 @@ public class GroupEditionControl {
                 .widthHint(400)
                 .bindTo(selectedGroupObservable)
                 .withModelToTargetStrategy(UpdateStrategyFactory.updateValueStrategy()
-                        .withConverter(ConverterBuilder.<Group, String> newConverter()
-                                .fromType(Group.class)
-                                .toType(String.class)
-                                .withConvertFunction(this::toPath)
-                                .create()))
+                        .withConverter(IConverter.<Group, String> create((this::toPath))))
                 .withTargetToModelStrategy(UpdateStrategyFactory.neverUpdateValueStrategy())
                 .inContext(ctx)
                 .adapt(formPage.getToolkit())

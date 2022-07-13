@@ -175,7 +175,7 @@ public class ExportBarOperation implements IRunnableWithProgress {
         Configuration emptyConfig = ConfigurationFactory.eINSTANCE.createConfiguration();
         emptyConfig.setName(configurationId);
         emptyConfig.setVersion(ModelVersion.CURRENT_DIAGRAM_VERSION);
-        if (configurationId.equals(ConfigurationPreferenceConstants.LOCAL_CONFIGURAITON)) {
+        if (configurationId.equals(ConfigurationPreferenceConstants.LOCAL_CONFIGURATION)) {
             final String id = ModelHelper.getEObjectID(process);
             ProcessConfigurationFileStore file = processConfStore.getChild(id + ".conf", true);
             if (file == null) {

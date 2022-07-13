@@ -21,9 +21,9 @@ import org.bonitasoft.studio.businessobject.editor.editor.ui.control.businessObj
 import org.bonitasoft.studio.businessobject.editor.editor.ui.control.query.QueryEditionControl;
 import org.bonitasoft.studio.businessobject.editor.model.BusinessObject;
 import org.bonitasoft.studio.businessobject.i18n.Messages;
-import org.bonitasoft.studio.ui.converter.ConverterBuilder;
 import org.bonitasoft.studio.ui.databinding.ComputedValueBuilder;
 import org.eclipse.core.databinding.DataBindingContext;
+import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
@@ -49,12 +49,10 @@ public class QueryFormPart extends AbstractFormPart {
     private void createQueryEditionControl(Composite parent) {
         queryEditionControl = new QueryEditionControl(parent, formPage, ctx);
         ctx.bindValue(formPage.observeBusinessObjectSelected(), queryEditionControl.observeSectionTitle(),
-                updateValueStrategy().withConverter(ConverterBuilder.<BusinessObject, String> newConverter()
-                        .fromType(BusinessObject.class)
-                        .toType(String.class)
-                        .withConvertFunction(
-                                bo -> bo == null ? "" : String.format(Messages.querySectionTitle, bo.getSimpleName()))
-                        .create()).create(),
+                updateValueStrategy()
+                        .withConverter(IConverter.<BusinessObject, String> create(
+                                bo -> bo == null ? "" : String.format(Messages.querySectionTitle, bo.getSimpleName())))
+                        .create(),
                 neverUpdateValueStrategy().create());
         ctx.bindValue(queryEditionControl.observeSectionVisible(), new ComputedValueBuilder<Boolean>()
                 .withSupplier(() -> formPage.observeBusinessObjectSelected().getValue() != null)

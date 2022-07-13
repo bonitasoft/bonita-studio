@@ -152,7 +152,7 @@ public class ConfigurationWizard extends Wizard {
         final Configuration configuration = getConfigurationCopy();
         if (process != null && configuration != null) {
             final String id = ModelHelper.getEObjectID(process);
-            if (configurationName.equals(ConfigurationPreferenceConstants.LOCAL_CONFIGURAITON)) {
+            if (configurationName.equals(ConfigurationPreferenceConstants.LOCAL_CONFIGURATION)) {
                 final String fileName = id + ".conf";
                 ProcessConfigurationFileStore file = processConfStore.getChild(fileName, true);
                 if (file == null) {
@@ -221,7 +221,7 @@ public class ConfigurationWizard extends Wizard {
     private Configuration getConfigurationFromProcess(final AbstractProcess process, final String confName) {
         final String id = ModelHelper.getEObjectID(getProcess());
         Configuration configuration = null;
-        if (ConfigurationPreferenceConstants.LOCAL_CONFIGURAITON.equals(confName)) {
+        if (ConfigurationPreferenceConstants.LOCAL_CONFIGURATION.equals(confName)) {
             final IRepositoryFileStore file = processConfStore.getChild(id + ".conf", true);
             if (file != null) {
                 try {
@@ -231,7 +231,7 @@ public class ConfigurationWizard extends Wizard {
                 }
             } else {
                 configuration = ConfigurationFactory.eINSTANCE.createConfiguration();
-                configuration.setName(ConfigurationPreferenceConstants.LOCAL_CONFIGURAITON);
+                configuration.setName(ConfigurationPreferenceConstants.LOCAL_CONFIGURATION);
                 configuration.setVersion(ModelVersion.CURRENT_DIAGRAM_VERSION);
             }
         } else if (process != null) {

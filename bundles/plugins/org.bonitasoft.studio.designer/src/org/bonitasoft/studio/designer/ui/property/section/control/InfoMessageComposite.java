@@ -20,9 +20,9 @@ import org.bonitasoft.studio.common.properties.Well;
 import org.bonitasoft.studio.model.process.FormMapping;
 import org.bonitasoft.studio.model.process.FormMappingType;
 import org.bonitasoft.studio.model.process.Task;
-import org.bonitasoft.studio.ui.converter.ConverterBuilder;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
+import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
@@ -60,11 +60,7 @@ public class InfoMessageComposite extends Composite {
                 formMappingObservable,
                 null,
                 updateValueStrategy()
-                        .withConverter(ConverterBuilder.<FormMapping, Integer> newConverter()
-                                .fromType(FormMapping.class)
-                                .toType(Integer.class)
-                                .withConvertFunction(mapping -> convertToSeverity(mapping, type))
-                                .create())
+                        .withConverter(IConverter.<FormMapping, Integer> create(mapping -> convertToSeverity(mapping, type)))
                         .create());
     }
 

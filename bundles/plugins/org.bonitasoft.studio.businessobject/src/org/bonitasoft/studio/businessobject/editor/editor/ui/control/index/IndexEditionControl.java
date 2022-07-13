@@ -28,10 +28,10 @@ import org.bonitasoft.studio.businessobject.editor.model.Index;
 import org.bonitasoft.studio.businessobject.i18n.Messages;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.ui.ColorConstants;
-import org.bonitasoft.studio.ui.converter.ConverterBuilder;
 import org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory;
 import org.bonitasoft.studio.ui.viewer.LabelProviderBuilder;
 import org.eclipse.core.databinding.DataBindingContext;
+import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.core.databinding.observable.Realm;
 import org.eclipse.core.databinding.observable.list.IObservableList;
 import org.eclipse.core.databinding.observable.list.WritableList;
@@ -126,23 +126,15 @@ public class IndexEditionControl extends Composite {
     private void bindIndexedFieldObservableLists(DataBindingContext ctx, IObservableList<Field> actualsFieldsObservable) {
         ctx.bindList(indexedFieldsObservable, indexedFieldNameObservable,
                 UpdateStrategyFactory.updateListStrategyFactory()
-                        .withConverter(ConverterBuilder.<Field, String> newConverter()
-                                .fromType(Field.class)
-                                .toType(String.class)
-                                .withConvertFunction(Field::getName)
-                                .create())
+                        .withConverter(IConverter.<Field, String> create(Field::getName))
                         .create(),
                 UpdateStrategyFactory.updateListStrategyFactory()
-                        .withConverter(ConverterBuilder.<String, Field> newConverter()
-                                .fromType(String.class)
-                                .toType(Field.class)
-                                .withConvertFunction(fieldName -> actualsFieldsObservable
+                        .withConverter(IConverter.<String, Field> create(fieldName -> actualsFieldsObservable
                                         .stream()
                                         .filter(aField -> Objects.equals(fieldName, aField.getName()))
                                         .findFirst()
                                         .orElseThrow(() -> new IllegalArgumentException(
-                                                String.format("The field %s doesn't exists.", fieldName))))
-                                .create())
+                                                String.format("The field %s doesn't exists.", fieldName)))))
                         .create());
     }
 

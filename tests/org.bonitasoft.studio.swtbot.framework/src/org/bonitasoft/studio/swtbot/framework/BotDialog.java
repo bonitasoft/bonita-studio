@@ -62,6 +62,22 @@ public class BotDialog extends BotBase {
         bot.waitUntil(Conditions.widgetIsEnabled(bot.button(IDialogConstants.CANCEL_LABEL)), 10000);
         bot.button(IDialogConstants.CANCEL_LABEL).click();
     }
+    
+    /**
+     * Click on Close.
+     */
+    public void close() {
+        if (dialogTitle != null && !dialogTitle.isEmpty()) {
+            final SWTBotShell shell = bot.shell(dialogTitle);
+            shell.activate();
+            shell.setFocus();
+        }
+        bot.waitUntil(Conditions.waitForWidget(allOf(widgetOfType(Button.class),
+                withMnemonic(IDialogConstants.CLOSE_LABEL),
+                withStyle(SWT.PUSH, "SWT.PUSH"))), 20000);
+        bot.waitUntil(Conditions.widgetIsEnabled(bot.button(IDialogConstants.CLOSE_LABEL)), 10000);
+        bot.button(IDialogConstants.CLOSE_LABEL).click();
+    }
 
     protected String getDialogTitle() {
         return dialogTitle;

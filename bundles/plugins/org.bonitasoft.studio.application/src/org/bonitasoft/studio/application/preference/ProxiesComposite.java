@@ -29,7 +29,6 @@ import org.bonitasoft.studio.identity.IdentityPlugin;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.ui.browser.OpenSystemBrowserListener;
-import org.bonitasoft.studio.ui.converter.ConverterBuilder;
 import org.bonitasoft.studio.ui.databinding.ComputedValueBuilder;
 import org.bonitasoft.studio.ui.util.StringIncrementer;
 import org.bonitasoft.studio.ui.viewer.LabelProviderBuilder;
@@ -37,6 +36,7 @@ import org.bonitasoft.studio.ui.widget.TextWidget;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.beans.typed.PojoProperties;
+import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.core.databinding.observable.list.IObservableList;
 import org.eclipse.core.databinding.observable.value.ComputedValue;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
@@ -224,15 +224,12 @@ public class ProxiesComposite extends Composite {
                     masterPasswordObservable,
                     new UpdateValueStrategy<>(UpdateValueStrategy.POLICY_NEVER),
                     updateValueStrategy()
-                            .withConverter(ConverterBuilder.<Boolean, String> newConverter()
-                                    .fromType(Boolean.class)
-                                    .toType(String.class)
-                                    .withConvertFunction(masterPwdSet -> {
+                            .withConverter(IConverter.<Boolean, String> create(masterPwdSet -> {
                                         if (Boolean.FALSE.equals(masterPwdSet)) {
                                             return Messages.encryptButtonTooltip;
                                         }
                                         return Messages.encryptPassword;
-                                    }).create())
+                                    }))
                             .create());
         });
     }
@@ -317,19 +314,11 @@ public class ProxiesComposite extends Composite {
                 .widthHint(100)
                 .bindTo(PojoProperties.value("port", Integer.class).observeDetail(selectionObservable))
                 .withModelToTargetStrategy(updateValueStrategy()
-                        .withConverter(ConverterBuilder.<Integer, String> newConverter()
-                                .fromType(Integer.class)
-                                .toType(String.class)
-                                .withConvertFunction(String::valueOf)
-                                .create())
+                        .withConverter(IConverter.<Integer, String> create(String::valueOf))
                         .create())
                 .withTargetToModelStrategy(updateValueStrategy()
                         .withValidator(intValueValidaor)
-                        .withConverter(ConverterBuilder.<String, Integer> newConverter()
-                                .fromType(String.class)
-                                .toType(Integer.class)
-                                .withConvertFunction(Integer::valueOf)
-                                .create())
+                        .withConverter(IConverter.<String, Integer> create(Integer::valueOf))
                         .create())
                 .inContext(ctx)
                 .useNativeRender()

@@ -85,7 +85,6 @@ public class Messages extends NLS {
     public static String name;
     public static String descripiton;
     public static String localEnvironmentDesc;
-    public static String newEnvironmentLabel;
     public static String emptyName;
     public static String alreadyExists;
     public static String defaultEnvName;
@@ -98,4 +97,12 @@ public class Messages extends NLS {
     public static String invalidImplementationFor;
     public static String missingInternalFormMapping;
     public static String openEnvironmentsMenuLabel;
+    public static String createEnvironmentTitle;
+    public static String duplicateEnvironmentDesc;
+    public static String confirmationSaveEnvironmentTitle;
+    public static String confirmationSaveEnvironmentMessage;
+    public static String copyingProcessConfigurations;
+    public static String detailsEnvironment;
+    public static String modify;
+    public static String renamingProcessConfigurations;
 }

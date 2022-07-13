@@ -30,6 +30,7 @@ import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.ui.dialog.SaveBeforeDeployDialog;
 import org.bonitasoft.studio.ui.dialog.SaveBeforeDeployDialog.DeployStrategy;
+import org.bonitasoft.studio.ui.editors.DirtyEditorChecker;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.action.ContributionItem;
 import org.eclipse.swt.SWT;
@@ -74,14 +75,14 @@ public class DeployContributionItem extends ContributionItem {
             }
         }
 
-        DeployArtifactsHandler deployHandler = new DeployArtifactsHandler();
+        DeployArtifactsHandler deployHandler = new DeployArtifactsHandler(new DirtyEditorChecker(), formPage.getRepositoryAccessor());
         ApplicationFileStore applicationFileStore = formPage.getRepositoryAccessor()
                 .getRepositoryStore(ApplicationRepositoryStore.class).getChild(name, true);
         List<IRepositoryFileStore<?>> dependencies = dependencyResolver.findDependencies(applicationFileStore);
         dependencies.add(applicationFileStore);
         deployHandler.setDefaultSelection(dependencies);
         try {
-            deployHandler.deploy(shell, formPage.getRepositoryAccessor(), PlatformUI.getWorkbench().getProgressService());
+            deployHandler.deploy(shell, PlatformUI.getWorkbench().getProgressService());
         } catch (InvocationTargetException | InterruptedException e) {
             BonitaStudioLog.error(e);
         }

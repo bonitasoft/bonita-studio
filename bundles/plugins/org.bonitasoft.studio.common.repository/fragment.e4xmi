@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="ASCII"?>
+<fragment:ModelFragments xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:application="http://www.eclipse.org/ui/2010/UIModel/application" xmlns:fragment="http://www.eclipse.org/ui/2010/UIModel/fragment" xmi:id="_OSiqoPtzEeyY18ej93AIXg">
+  <fragments xsi:type="fragment:StringModelFragment" xmi:id="_UMKwcPtzEeyY18ej93AIXg" featurename="addons" parentElementId="org.eclipse.e4.legacy.ide.application">
+    <elements xsi:type="application:Addon" xmi:id="_W4HZUPtzEeyY18ej93AIXg" elementId="org.bonitasoft.studio.repository.accessor.addon" contributionURI="bundleclass://org.bonitasoft.studio.common.repository/org.bonitasoft.studio.common.repository.RepositoryAccessor"/>
+  </fragments>
+</fragment:ModelFragments>

@@ -65,7 +65,7 @@ public class ConfigureHandler extends AbstractHandler {
                     process = (AbstractProcess) event.getParameters().get("process");
                 }
                 if (configuration == null || configuration.isEmpty()) {
-                    configuration = ConfigurationPreferenceConstants.LOCAL_CONFIGURAITON;
+                    configuration = ConfigurationPreferenceConstants.LOCAL_CONFIGURATION;
                 }
 
                 MainProcess diagram = null;

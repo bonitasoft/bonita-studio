@@ -17,16 +17,13 @@ package org.bonitasoft.studio.configuration.coolbar;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bonitasoft.studio.common.CommandExecutor;
 import org.bonitasoft.studio.common.extension.IBonitaContributionItem;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.filestore.AbstractFileStore;
-import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
-import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.configuration.ConfigurationPlugin;
-import org.bonitasoft.studio.configuration.environment.Environment;
-import org.bonitasoft.studio.configuration.environment.EnvironmentFactory;
 import org.bonitasoft.studio.configuration.i18n.Messages;
 import org.bonitasoft.studio.configuration.preferences.ConfigurationPreferenceConstants;
 import org.bonitasoft.studio.configuration.repository.EnvironmentFileStore;
@@ -37,15 +34,13 @@ import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.Parameterization;
 import org.eclipse.core.commands.ParameterizedCommand;
+import org.eclipse.core.commands.common.NotDefinedException;
 import org.eclipse.jface.action.ContributionItem;
-import org.eclipse.jface.dialogs.Dialog;
-import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
@@ -60,6 +55,8 @@ import org.eclipse.ui.handlers.IHandlerService;
  */
 public class ConfigureCoolbarItem extends ContributionItem implements IBonitaContributionItem {
 
+    private static final String CONFIGURE_COMMAND_ID = "org.bonitasoft.studio.configuration.configure";
+    private static final String CREATE_ENVIRONMENT_COMMAND_ID = "org.bonitasoft.studio.configuration.environment.create.command";
     private ConfigureHandler configureHandler;
     private Label label;
     private ToolItem item;
@@ -68,14 +65,14 @@ public class ConfigureCoolbarItem extends ContributionItem implements IBonitaCon
         configureHandler = new ConfigureHandler();
     }
 
-    private Command getCommand() {
+    private Command getCommand(String commandId) {
         final ICommandService service = PlatformUI.getWorkbench().getService(ICommandService.class);
-        return service.getCommand("org.bonitasoft.studio.configuration.configure");
+        return service.getCommand(commandId);
     }
 
     @Override
     public String getId() {
-        return "org.bonitasoft.studio.coolbar.configure";
+        return CONFIGURE_COMMAND_ID;
     }
 
     @Override
@@ -96,76 +93,44 @@ public class ConfigureCoolbarItem extends ContributionItem implements IBonitaCon
             menu = new Menu(dropdown.getParent().getShell());
         }
 
+        public void add(final Command command) throws NotDefinedException {
+            final MenuItem menuItem = new MenuItem(menu, SWT.NONE);
+            menuItem.setText(command.getName());
+            menuItem.addListener(SWT.Selection, e -> new CommandExecutor().executeCommand(command.getId(), null));
+        }
+
         public void add(final String item) {
-            if (item.equals(Messages.newEnvironmentLabel)) {
-                final MenuItem menuItem = new MenuItem(menu, SWT.NONE);
-                menuItem.setText(item);
-                menuItem.addSelectionListener(new SelectionAdapter() {
-
-                    @Override
-                    public void widgetSelected(final SelectionEvent e) {
-                        final IRepositoryStore<?> store = RepositoryManager.getInstance()
-                                .getRepositoryStore(EnvironmentRepositoryStore.class);
-                        final InputDialog dialog = new InputDialog(Display.getDefault().getActiveShell(),
-                                Messages.newEnvironmentLabel,
-                                Messages.name,
-                                "",
-                                input -> {
-                                    if (input == null || input.isEmpty()) {
-                                        return Messages.emptyName;
-                                    }
-
-                                    if (input.equals(ConfigurationPreferenceConstants.LOCAL_CONFIGURAITON)
-                                            || store.getChild(
-                                                    input + "." + EnvironmentRepositoryStore.ENV_EXT, true) != null) {
-                                        return Messages.alreadyExists;
-                                    }
-                                    return null;
-                                });
-                        if (dialog.open() == Dialog.OK) {
-                            final String name = dialog.getValue();
-                            final IRepositoryFileStore file = store
-                                    .createRepositoryFileStore(name + "." + EnvironmentRepositoryStore.ENV_EXT);
-                            final Environment env = EnvironmentFactory.eINSTANCE.createEnvironment();
-                            env.setName(name);
-                            file.save(env);
-                        }
-                    }
-                });
-            } else {
-                final MenuItem menuItem = new MenuItem(menu, SWT.CHECK);
-                menuItem.setText(item);
-                String configuration = ConfigurationPlugin.getDefault().getPreferenceStore()
-                        .getString(ConfigurationPreferenceConstants.DEFAULT_CONFIGURATION);
-                if (configuration == null || configuration.isEmpty()) {
-                    configuration = ConfigurationPlugin.getDefault().getPreferenceStore()
-                            .getDefaultString(ConfigurationPreferenceConstants.DEFAULT_CONFIGURATION);
-                }
-                menuItem.setSelection(configuration.equals(item));
-                menuItem.addSelectionListener(new SelectionAdapter() {
-
-                    @Override
-                    public void widgetSelected(final SelectionEvent event) {
-                        final MenuItem selected = (MenuItem) event.widget;
-                        selected.setSelection(true);
-                        ConfigurationPlugin.getDefault().getPreferenceStore()
-                                .setValue(ConfigurationPreferenceConstants.DEFAULT_CONFIGURATION, selected.getText());
-                        AbstractFileStore.refreshExplorerView();
-                        final Command cmd = getCommand();
-                        final IHandlerService handlerService = PlatformUI.getWorkbench()
-                                .getService(IHandlerService.class);
-                        try {
-                            final Parameterization p = new Parameterization(cmd.getParameter("configuration"),
-                                    selected.getText());
-                            handlerService.executeCommand(new ParameterizedCommand(cmd, new Parameterization[] { p }),
-                                    null);
-                        } catch (final Exception e) {
-                            BonitaStudioLog.error(e);
-                        }
-                    }
-
-                });
+            final MenuItem menuItem = new MenuItem(menu, SWT.CHECK);
+            menuItem.setText(item);
+            String configuration = ConfigurationPlugin.getDefault().getPreferenceStore()
+                    .getString(ConfigurationPreferenceConstants.DEFAULT_CONFIGURATION);
+            if (configuration == null || configuration.isEmpty()) {
+                configuration = ConfigurationPlugin.getDefault().getPreferenceStore()
+                        .getDefaultString(ConfigurationPreferenceConstants.DEFAULT_CONFIGURATION);
             }
+            menuItem.setSelection(configuration.equals(item));
+            menuItem.addSelectionListener(new SelectionAdapter() {
+
+                @Override
+                public void widgetSelected(final SelectionEvent event) {
+                    final MenuItem selected = (MenuItem) event.widget;
+                    selected.setSelection(true);
+                    ConfigurationPlugin.getDefault().getPreferenceStore()
+                            .setValue(ConfigurationPreferenceConstants.DEFAULT_CONFIGURATION, selected.getText());
+                    AbstractFileStore.refreshExplorerView();
+                    final Command cmd = getCommand(CONFIGURE_COMMAND_ID);
+                    final IHandlerService handlerService = PlatformUI.getWorkbench()
+                            .getService(IHandlerService.class);
+                    try {
+                        final Parameterization p = new Parameterization(cmd.getParameter("configuration"),
+                                selected.getText());
+                        handlerService.executeCommand(new ParameterizedCommand(cmd, new Parameterization[] { p }),
+                                null);
+                    } catch (final Exception e) {
+                        BonitaStudioLog.error(e);
+                    }
+                }
+            });
         }
 
         @Override
@@ -177,7 +142,7 @@ public class ConfigureCoolbarItem extends ContributionItem implements IBonitaCon
                 menu.setLocation(pt.x, pt.y + rect.height);
                 menu.setVisible(true);
             } else {
-                final Command cmd = getCommand();
+                final Command cmd = getCommand(CONFIGURE_COMMAND_ID);
                 final String configuration = ConfigurationPlugin.getDefault().getPreferenceStore()
                         .getString(ConfigurationPreferenceConstants.DEFAULT_CONFIGURATION);
                 final IHandlerService handlerService = PlatformUI.getWorkbench()
@@ -221,7 +186,11 @@ public class ConfigureCoolbarItem extends ContributionItem implements IBonitaCon
                                     .peek(confName::add)
                                     .forEach(listener::add));
 
-                    listener.add(Messages.newEnvironmentLabel);
+                    try {
+                        listener.add(getCommand(CREATE_ENVIRONMENT_COMMAND_ID));
+                    } catch (NotDefinedException notDefinedEx) {
+                        BonitaStudioLog.error(notDefinedEx);
+                    }
                     listener.widgetSelected(e);
                 }
             }

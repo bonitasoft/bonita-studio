@@ -89,8 +89,8 @@ public class BarExporterTest {
         AbstractProcess process = mock(AbstractProcess.class);
         doReturn(null).when(exporter).getProcessConfigurationRepositoryStore();
         doNothing().when(exporter).synchronizeConfiguration(any(), any());
-        exporter.getConfiguration(process, ConfigurationPreferenceConstants.NONE_CONFIGURAITON);
-        verify(exporter).createEmptyConfiguration(ConfigurationPreferenceConstants.NONE_CONFIGURAITON);
+        exporter.getConfiguration(process, ConfigurationPreferenceConstants.NONE_CONFIGURATION);
+        verify(exporter).createEmptyConfiguration(ConfigurationPreferenceConstants.NONE_CONFIGURATION);
     }
 
 }
