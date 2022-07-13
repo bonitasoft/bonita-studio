@@ -31,7 +31,6 @@ import org.bonitasoft.studio.identity.IdentityPlugin;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.ui.browser.OpenSystemBrowserListener;
-import org.bonitasoft.studio.ui.converter.ConverterBuilder;
 import org.bonitasoft.studio.ui.databinding.ComputedValueBuilder;
 import org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory;
 import org.bonitasoft.studio.ui.util.StringIncrementer;
@@ -41,6 +40,7 @@ import org.bonitasoft.studio.ui.widget.TextWidget;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.beans.typed.PojoProperties;
+import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.core.databinding.observable.list.IObservableList;
 import org.eclipse.core.databinding.observable.value.ComputedValue;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
@@ -194,11 +194,7 @@ public class ServersComposite extends Composite {
         ctx.bindValue(PojoProperties.value("topControl").observe(stackLayout), authenticationModeObservable,
                 UpdateStrategyFactory.neverUpdateValueStrategy().create(),
                 UpdateStrategyFactory.updateValueStrategy()
-                        .withConverter(ConverterBuilder.<AuthenticationMode, Composite> newConverter()
-                                .fromType(AuthenticationMode.class)
-                                .toType(Composite.class)
-                                .withConvertFunction(o -> o != null ? compositeFor(o) : null)
-                                .create())
+                        .withConverter(IConverter.<AuthenticationMode, Composite> create(o -> o != null ? compositeFor(o) : null))
                         .create());
         selectionObservable.addValueChangeListener(e -> {
             if (e.diff.getNewValue() != null
@@ -330,15 +326,12 @@ public class ServersComposite extends Composite {
                     masterPasswordObservable,
                     new UpdateValueStrategy<>(UpdateValueStrategy.POLICY_NEVER),
                     updateValueStrategy()
-                            .withConverter(ConverterBuilder.<Boolean, String> newConverter()
-                                    .fromType(Boolean.class)
-                                    .toType(String.class)
-                                    .withConvertFunction(masterPwdSet -> {
+                            .withConverter(IConverter.<Boolean, String> create(masterPwdSet -> {
                                         if (Boolean.FALSE.equals(masterPwdSet)) {
                                             return Messages.encryptButtonTooltip;
                                         }
                                         return Messages.encryptPassword;
-                                    }).create())
+                                    }))
                             .create());
         });
     }

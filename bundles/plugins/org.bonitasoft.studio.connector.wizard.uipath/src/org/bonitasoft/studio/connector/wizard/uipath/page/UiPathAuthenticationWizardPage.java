@@ -30,9 +30,9 @@ import org.bonitasoft.studio.connector.wizard.uipath.i18n.Messages;
 import org.bonitasoft.studio.connector.wizard.uipath.switchBuilder.UIPathPageComponentSwitchBuilder;
 import org.bonitasoft.studio.model.connectorconfiguration.ConnectorParameter;
 import org.bonitasoft.studio.model.expression.Expression;
-import org.bonitasoft.studio.ui.converter.ConverterBuilder;
 import org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory;
 import org.eclipse.core.databinding.beans.PojoProperties;
+import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.SelectObservableValue;
 import org.eclipse.core.databinding.validation.IValidator;
@@ -148,12 +148,7 @@ public class UiPathAuthenticationWizardPage extends GeneratedConnectorWizardPage
         ctx.bindValue(PojoProperties.value("topControl").observe(stackLayout), modeObservable,
                 UpdateStrategyFactory.neverUpdateValueStrategy().create(),
                 UpdateStrategyFactory.updateValueStrategy()
-                        .withConverter(ConverterBuilder.<Mode, Composite> newConverter()
-                                .fromType(Mode.class)
-                                .toType(Composite.class)
-                                .withConvertFunction(
-                                        mode -> Objects.equals(mode, Mode.CLOUD) ? cloudComposite : onPremiseComposite)
-                                .create())
+                        .withConverter(IConverter.<Mode, Composite> create(mode -> Objects.equals(mode, Mode.CLOUD) ? cloudComposite : onPremiseComposite))
                         .create());
     }
 

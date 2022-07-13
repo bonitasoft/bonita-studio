@@ -138,6 +138,17 @@ public class BotApplicationWorkbenchWindow extends AbstractBotMenu {
         final Pool selectedProcess = ModelHelper.getFirstContainerOfType(ep.resolveSemanticElement(), Pool.class);
         return new BotConfigureDialog(bot, selectedProcess.getName() + " (" + selectedProcess.getVersion() + ")");
     }
+    
+    public BotConfigureDialog configure(String environment) {
+        bot.waitUntil(Conditions
+                .widgetIsEnabled(bot.toolbarDropDownButtonWithId(SWTBotConstants.SWTBOT_ID_CONFIGURE_TOOLITEM)));
+        bot.toolbarDropDownButtonWithId(SWTBotConstants.SWTBOT_ID_CONFIGURE_TOOLITEM).click();
+        final DiagramEditor editor = (DiagramEditor) bot.activeEditor().getReference().getEditor(true);
+        final IGraphicalEditPart ep = (IGraphicalEditPart) editor.getDiagramGraphicalViewer().getSelectedEditParts()
+                .get(0);
+        final Pool selectedProcess = ModelHelper.getFirstContainerOfType(ep.resolveSemanticElement(), Pool.class);
+        return new BotConfigureDialog(bot, environment, selectedProcess.getName() + " (" + selectedProcess.getVersion() + ")");
+    }
 
     public BotExportBOSDialog export() {
         bot.menu("File").menu("Export project").click();

@@ -156,6 +156,11 @@ public class ProjectExplorerBot extends BotBase {
     public ActorFilterImplementationProjectExplorerBot actorFilterImplementation() {
         return new ActorFilterImplementationProjectExplorerBot(bot);
     }
+    
+    public EnvironmentsProjectExplorerBot environments() {
+        return new EnvironmentsProjectExplorerBot(bot);
+    }
+
 
     public SWTBotTreeItem getProjectTreeItem() {
         return getProjectExplorerTree().getTreeItem(projectName);
@@ -225,7 +230,6 @@ public class ProjectExplorerBot extends BotBase {
         bot.waitUntil(contextMenuAvailable(projectTreeItem, "Validate"));
         projectTreeItem.contextMenu().menu("Validate").click();
     }
-
 
 
 }

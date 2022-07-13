@@ -19,7 +19,6 @@ import static org.bonitasoft.studio.ui.wizard.WizardPageBuilder.newPage;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -31,6 +30,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.bonitasoft.engine.api.result.StatusCode;
@@ -70,7 +70,7 @@ import org.bonitasoft.studio.engine.operation.GetApiSessionOperation;
 import org.bonitasoft.studio.identity.organization.repository.OrganizationRepositoryStore;
 import org.bonitasoft.studio.preferences.browser.OpenBrowserOperation;
 import org.bonitasoft.studio.ui.dialog.MultiStatusDialog;
-import org.bonitasoft.studio.ui.dialog.SaveBeforeDeployDialog;
+import org.bonitasoft.studio.ui.editors.DirtyEditorChecker;
 import org.bonitasoft.studio.ui.util.ProcessValidationStatus;
 import org.bonitasoft.studio.ui.wizard.WizardBuilder;
 import org.bonitasoft.studio.validation.ModelFileCompatibilityValidator;
@@ -93,8 +93,6 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.WorkbenchPlugin;
 import org.eclipse.ui.progress.IProgressService;
 import org.eclipse.ui.statushandlers.StatusManager;
@@ -104,6 +102,9 @@ public class DeployArtifactsHandler {
     private RepositoryModel repositoryModel;
     private List<IRepositoryFileStore<?>> defaultSelection;
     private static final List<String> REPO_STORE_DEPLOY_ORDER = new ArrayList<>();
+    private DirtyEditorChecker dirtyEditorChecker;
+    private RepositoryAccessor repositoryAccessor;
+    private IProgressService progressService;
 
     static {
         REPO_STORE_DEPLOY_ORDER.add("organizations");
@@ -115,10 +116,15 @@ public class DeployArtifactsHandler {
         REPO_STORE_DEPLOY_ORDER.add("themes");
         REPO_STORE_DEPLOY_ORDER.add("applications");
     }
+    
+    @Inject
+    public DeployArtifactsHandler(DirtyEditorChecker dirtyEditorChecker, RepositoryAccessor repositoryAccessor) {
+        this.dirtyEditorChecker = dirtyEditorChecker;
+        this.repositoryAccessor = repositoryAccessor;
+    }
 
     @Execute
-    public void deploy(@Named(IServiceConstants.ACTIVE_SHELL) Shell activeShell,
-            RepositoryAccessor repositoryAccessor, IProgressService progressService)
+    public void deploy(@Named(IServiceConstants.ACTIVE_SHELL) Shell activeShell, IProgressService progressService)
             throws InvocationTargetException, InterruptedException {
         ModelFileCompatibilityValidator validator = new ModelFileCompatibilityValidator(
                 repositoryAccessor.getCurrentRepository().orElseThrow());
@@ -202,7 +208,7 @@ public class DeployArtifactsHandler {
             Map<String, Object> deployOptions,
             IWizardContainer container) {
         MultiStatus status = new MultiStatus(ApplicationPlugin.PLUGIN_ID, 0, null, null);
-        if (!checkDirtyState(container)) {
+        if (!dirtyEditorChecker.checkDirtyState(container, true)) {
             return null;
         }
         try {
@@ -217,58 +223,6 @@ public class DeployArtifactsHandler {
             openAbortDialog(Display.getDefault().getActiveShell());
         }
         return status.getSeverity() == IStatus.CANCEL ? null : status;
-    }
-
-    private boolean checkDirtyState(IWizardContainer container) {
-        if (PlatformUI.isWorkbenchRunning()
-                && PlatformUI.getWorkbench().getActiveWorkbenchWindow() != null
-                && PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage() != null) {
-            List<IEditorPart> dirtyEditors = Arrays
-                    .asList(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getEditorReferences())
-                    .stream()
-                    .map(ref -> ref.getEditor(false))
-                    .filter(Objects::nonNull)
-                    .filter(IEditorPart::isDirty)
-                    .collect(Collectors.toList());
-            if (!dirtyEditors.isEmpty()) {
-                SaveStrategy strategy = saveDirtyEditors();
-                if (Objects.equals(strategy, SaveStrategy.CANCEL)) {
-                    return false;
-                } else if (Objects.equals(strategy, SaveStrategy.SAVE)) {
-                    try {
-                        container.run(false, false, monitor -> {
-                            monitor.beginTask(Messages.savingEditors, dirtyEditors.size());
-                            dirtyEditors.forEach(editor -> {
-                                editor.doSave(monitor);
-                                monitor.worked(1);
-                            });
-                            monitor.done();
-                        });
-                    } catch (InvocationTargetException | InterruptedException e) {
-                        throw new RuntimeException("An error occured while saving editors", e);
-                    }
-                }
-            }
-        }
-        return true;
-    }
-
-    private SaveStrategy saveDirtyEditors() {
-        int choice = SaveBeforeDeployDialog.open(Messages.saveOpenedEditorsTitle,
-                Messages.saveOpenedEditors,
-                IDialogConstants.CANCEL_LABEL, IDialogConstants.NO_LABEL, IDialogConstants.YES_LABEL);
-        switch (choice) {
-            case 0:
-                return SaveStrategy.CANCEL;
-            case 1:
-                return SaveStrategy.DONT_SAVE;
-            default:
-                return SaveStrategy.SAVE;
-        }
-    }
-
-    enum SaveStrategy {
-        SAVE, DONT_SAVE, CANCEL
     }
 
     private IRunnableWithProgress performFinish(Collection<Artifact> artifactsToDeploy,

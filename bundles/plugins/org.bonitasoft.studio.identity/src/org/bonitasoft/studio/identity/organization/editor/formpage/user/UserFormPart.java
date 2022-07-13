@@ -21,9 +21,9 @@ import org.bonitasoft.studio.identity.organization.editor.control.user.ManageCus
 import org.bonitasoft.studio.identity.organization.editor.control.user.UserEditionControl;
 import org.bonitasoft.studio.identity.organization.editor.control.user.UserList;
 import org.bonitasoft.studio.identity.organization.model.organization.User;
-import org.bonitasoft.studio.ui.converter.ConverterBuilder;
 import org.bonitasoft.studio.ui.databinding.ComputedValueBuilder;
 import org.eclipse.core.databinding.DataBindingContext;
+import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -60,11 +60,10 @@ public class UserFormPart extends AbstractFormPart {
         userEditionControl = new UserEditionControl(parent, formPage, selectedUserObservable, ctx);
 
         ctx.bindValue(selectedUserObservable, userEditionControl.observeSectionTitle(),
-                updateValueStrategy().withConverter(ConverterBuilder.<User, String> newConverter()
-                        .fromType(User.class)
-                        .toType(String.class)
-                        .withConvertFunction(user -> user == null ? "" : formPage.toUserDisplayName(user))
-                        .create()).create(),
+                updateValueStrategy()
+                        .withConverter(IConverter
+                                .<User, String> create(user -> user == null ? "" : formPage.toUserDisplayName(user)))
+                        .create(),
                 neverUpdateValueStrategy().create());
 
         ctx.bindValue(userEditionControl.observeSectionVisible(), new ComputedValueBuilder<Boolean>()
@@ -76,7 +75,8 @@ public class UserFormPart extends AbstractFormPart {
     private void createUserList(Composite parent) {
         Composite userListComposite = formPage.getToolkit().createComposite(parent);
         userListComposite.setLayout(GridLayoutFactory.fillDefaults().create());
-        userListComposite.setLayoutData(GridDataFactory.fillDefaults().grab(false, true).hint(400, SWT.DEFAULT).create());
+        userListComposite
+                .setLayoutData(GridDataFactory.fillDefaults().grab(false, true).hint(400, SWT.DEFAULT).create());
 
         userList = new UserList(userListComposite, formPage, ctx);
     }

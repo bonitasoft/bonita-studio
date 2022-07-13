@@ -20,9 +20,9 @@ import static org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory.updateV
 import org.bonitasoft.studio.identity.organization.editor.control.group.GroupEditionControl;
 import org.bonitasoft.studio.identity.organization.editor.control.group.GroupList;
 import org.bonitasoft.studio.identity.organization.model.organization.Group;
-import org.bonitasoft.studio.ui.converter.ConverterBuilder;
 import org.bonitasoft.studio.ui.databinding.ComputedValueBuilder;
 import org.eclipse.core.databinding.DataBindingContext;
+import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -65,11 +65,7 @@ public class GroupFormPart extends AbstractFormPart {
         groupEditionControl = new GroupEditionControl(parent, formPage, selectedGroupObservable, ctx);
 
         ctx.bindValue(groupList.observeGroupSelected(), groupEditionControl.observeSectionTitle(),
-                updateValueStrategy().withConverter(ConverterBuilder.<Group, String> newConverter()
-                        .fromType(Group.class)
-                        .toType(String.class)
-                        .withConvertFunction(grp -> grp == null ? "" : grp.getDisplayName())
-                        .create()).create(),
+                updateValueStrategy().withConverter(IConverter.<Group, String> create(grp -> grp == null ? "" : grp.getDisplayName())).create(),
                 neverUpdateValueStrategy().create());
 
         ctx.bindValue(groupEditionControl.observeSectionVisible(), new ComputedValueBuilder<Boolean>()

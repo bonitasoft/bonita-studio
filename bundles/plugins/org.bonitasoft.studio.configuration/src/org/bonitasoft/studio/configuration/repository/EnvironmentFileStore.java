@@ -9,35 +9,40 @@
 package org.bonitasoft.studio.configuration.repository;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.filestore.EMFFileStore;
+import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.configuration.ConfigurationPlugin;
 import org.bonitasoft.studio.configuration.environment.Environment;
 import org.bonitasoft.studio.configuration.i18n.Messages;
 import org.bonitasoft.studio.configuration.preferences.ConfigurationPreferenceConstants;
-import org.bonitasoft.studio.configuration.ui.wizard.EnvironmentWizard;
+import org.bonitasoft.studio.configuration.ui.dialog.DetailsEnvironmentDialog;
+import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
+import org.bonitasoft.studio.model.configuration.Configuration;
+import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
+import org.bonitasoft.studio.ui.editors.DirtyEditorChecker;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.xmi.XMLResource;
-import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.emf.transaction.RecordingCommand;
+import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.jface.viewers.StyledString;
-import org.eclipse.jface.wizard.WizardDialog;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbenchPart;
 
-/**
- * @author Romain Bioteau
- */
 public class EnvironmentFileStore extends EMFFileStore<Environment> {
 
     private DefaultConfigurationStyler defaultConfigurationStyler;
@@ -75,10 +80,88 @@ public class EnvironmentFileStore extends EMFFileStore<Environment> {
 
     @Override
     protected IWorkbenchPart doOpen() {
-        EnvironmentWizard wizard = new EnvironmentWizard();
-        wizard.setSelection(new StructuredSelection(getDisplayName()));
-        new WizardDialog(Display.getDefault().getActiveShell(), wizard).open();
+        try {
+            var envFile = store.getChild(getDisplayName() + "." + EnvironmentRepositoryStore.ENV_EXT, true);
+            var dialog = new DetailsEnvironmentDialog(Display.getDefault().getActiveShell(), envFile.getContent());
+            if (dialog.open() == Window.OK) {
+                updateEnv(dialog, envFile);
+            }
+        } catch (Exception e) {
+            BonitaStudioLog.error(e);
+        }
+
         return null;
+    }
+
+    private void updateEnv(DetailsEnvironmentDialog dialog, IRepositoryFileStore<Environment> envFile)
+            throws ReadFileStoreException {
+        var env = envFile.getContent();
+        var dirtyEditorChecker = new DirtyEditorChecker();
+        var newEnvFile = store.getChild(dialog.getNameEnv() + "." + EnvironmentRepositoryStore.ENV_EXT, true);
+        env.setDescription(dialog.getDescEnv());
+        if (newEnvFile == null && dirtyEditorChecker.checkDirtyState(getProgressService(), false)) {
+            // Create and save new env file, delete the old one
+            newEnvFile = store
+                    .createRepositoryFileStore(dialog.getNameEnv() + "." + EnvironmentRepositoryStore.ENV_EXT);
+            var oldEnvName = env.getName();
+            env.setName(dialog.getNameEnv());
+            newEnvFile.save(env);
+            envFile.delete();
+            // Updating existing same name Configuration for each Process 
+            var diagStore = getRepositoryAccessor()
+                    .getRepositoryStore(DiagramRepositoryStore.class);
+            var progressService = getProgressService();
+            try {
+                progressService.run(true, false, diagStore::computeProcesses);
+                progressService.run(true, false, monitor -> {
+                    var allProcesses = diagStore.getAllProcesses();
+                    monitor.beginTask(String.format(Messages.renamingProcessConfigurations, oldEnvName, env.getName()),
+                            allProcesses.size());
+                    diagStore.getAllProcesses()
+                            .forEach(process -> updateConfiguration(process, oldEnvName, env.getName(), monitor));
+                });
+            } catch (InvocationTargetException | InterruptedException e) {
+                BonitaStudioLog.error(e);
+            } finally {
+                diagStore.resetComputedProcesses();
+            }
+
+        } else {
+            envFile.save(env);
+        }
+    }
+
+    private void updateConfiguration(AbstractProcess process, String newConfigName, String oldConfigName,
+            IProgressMonitor monitor) {
+        // Find configuration
+        var config = process.getConfigurations().stream()
+                .filter(c -> Objects.equals(c.getName(), oldConfigName))
+                .findFirst()
+                .orElse(null);
+
+        // Update name
+        if (config != null) {
+            monitor.subTask(String.format("%s (%s)", process.getName(), process.getVersion()));
+            updateConfigurationName(newConfigName, config, process);
+            // Save the process
+            try {
+                process.eResource().save(Map.of(XMLResource.OPTION_ENCODING, "UTF-8"));
+            } catch (IOException e) {
+                BonitaStudioLog.error(e);
+            }
+        }
+    }
+
+    private void updateConfigurationName(String newEnv, Configuration srcConfig, AbstractProcess process) {
+        var editingDomain = TransactionUtil.getEditingDomain(process);
+        editingDomain.getCommandStack()
+                .execute(new RecordingCommand(editingDomain) {
+
+                    @Override
+                    protected void doExecute() {
+                        srcConfig.setName(newEnv);
+                    }
+                });
     }
 
     @Override

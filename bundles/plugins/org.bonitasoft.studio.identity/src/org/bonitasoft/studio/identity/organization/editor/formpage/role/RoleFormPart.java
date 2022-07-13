@@ -20,9 +20,9 @@ import static org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory.updateV
 import org.bonitasoft.studio.identity.organization.editor.control.role.RoleEditionControl;
 import org.bonitasoft.studio.identity.organization.editor.control.role.RoleList;
 import org.bonitasoft.studio.identity.organization.model.organization.Role;
-import org.bonitasoft.studio.ui.converter.ConverterBuilder;
 import org.bonitasoft.studio.ui.databinding.ComputedValueBuilder;
 import org.eclipse.core.databinding.DataBindingContext;
+import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -54,11 +54,9 @@ public class RoleFormPart extends AbstractFormPart {
         roleEditionControl = new RoleEditionControl(parent, formPage, selectedRoleObservable, ctx);
 
         ctx.bindValue(selectedRoleObservable, roleEditionControl.observeSectionTitle(),
-                updateValueStrategy().withConverter(ConverterBuilder.<Role, String> newConverter()
-                        .fromType(Role.class)
-                        .toType(String.class)
-                        .withConvertFunction(rle -> rle == null ? "" : rle.getDisplayName())
-                        .create()).create(),
+                updateValueStrategy()
+                        .withConverter(IConverter.<Role, String> create(rle -> rle == null ? "" : rle.getDisplayName()))
+                        .create(),
                 neverUpdateValueStrategy().create());
 
         ctx.bindValue(roleEditionControl.observeSectionVisible(), new ComputedValueBuilder<Boolean>()
@@ -69,7 +67,8 @@ public class RoleFormPart extends AbstractFormPart {
     private void createRoleList(Composite parent) {
         Composite roleListComposite = formPage.getToolkit().createComposite(parent);
         roleListComposite.setLayout(GridLayoutFactory.fillDefaults().create());
-        roleListComposite.setLayoutData(GridDataFactory.fillDefaults().grab(false, true).hint(400, SWT.DEFAULT).create());
+        roleListComposite
+                .setLayoutData(GridDataFactory.fillDefaults().grab(false, true).hint(400, SWT.DEFAULT).create());
 
         roleList = new RoleList(roleListComposite, formPage, ctx);
     }
