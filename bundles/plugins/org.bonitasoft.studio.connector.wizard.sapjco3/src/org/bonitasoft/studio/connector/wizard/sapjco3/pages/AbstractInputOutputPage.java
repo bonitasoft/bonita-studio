@@ -165,5 +165,5 @@ public abstract class AbstractInputOutputPage extends AbstractPage {
 	protected abstract void createExpressionField(SapFunctionField field,
 			Object expressionInput);
 
-	protected abstract Boolean canBeAdd(SapFunctionField field);
+	protected abstract boolean canBeAdd(SapFunctionField field);
 }
