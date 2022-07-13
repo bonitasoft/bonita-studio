@@ -18,20 +18,22 @@ import org.bonitasoft.studio.businessobject.core.operation.DeployBDMJob;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelFileStore;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.e4.core.di.annotations.CanExecute;
 import org.eclipse.e4.core.di.annotations.Execute;
-import org.eclipse.swt.widgets.Shell;
 
 public class DeployBDMHandler {
 
     @Execute
-    public void deploy(RepositoryAccessor repositoryAccessor, Shell shell) {
-        BusinessObjectModelRepositoryStore store = repositoryAccessor
+    public IStatus deploy(RepositoryAccessor repositoryAccessor) {
+        var store = repositoryAccessor
                 .getRepositoryStore(BusinessObjectModelRepositoryStore.class);
         DeployBDMJob job = new DeployBDMJob(
                 (BusinessObjectModelFileStore) store.getChild(BusinessObjectModelFileStore.BOM_FILENAME, true), false);
         job.setUser(true);
         job.schedule();
+        return Status.OK_STATUS;
     }
 
     @CanExecute

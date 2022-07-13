@@ -69,16 +69,6 @@ public class Messages extends NLS {
 
     public static String errorWhileDeployingBDM;
 
-    public static String publishBusinessObjectTitle;
-
-    public static String publishBusinessObjectDescription;
-
-    public static String publish;
-
-    public static String businessObjectPublishedTitle;
-
-    public static String businessObjectPublishedMessage;
-
     public static String export;
 
     public static String exportBusinessDataModelTitle;

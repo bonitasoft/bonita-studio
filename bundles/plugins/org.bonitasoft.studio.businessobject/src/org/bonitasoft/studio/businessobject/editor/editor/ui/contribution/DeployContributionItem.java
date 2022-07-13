@@ -73,7 +73,7 @@ public class DeployContributionItem extends ContributionItem {
         if (clean) {
             new CleanDeployBDMHandler().deploy(formPage.getRepositoryAccessor(), Display.getDefault().getActiveShell());
         } else {
-            new DeployBDMHandler().deploy(formPage.getRepositoryAccessor(), Display.getDefault().getActiveShell());
+            new DeployBDMHandler().deploy(formPage.getRepositoryAccessor());
         }
     }
 
