@@ -383,7 +383,7 @@ public class SapConnectionPage extends AbstractPage {
                         }
                     });
                 } else {
-                    Files.copy(from.toPath(), tomcatLibFolder.toPath().resolve(from.toPath().getFileName()), StandardCopyOption.REPLACE_EXISTING);
+                    Files.copy(from.toPath(), tomcatLibFolder.toPath().resolve("sapjco3.jar"), StandardCopyOption.REPLACE_EXISTING);
                     Display.getDefault().syncExec(new Runnable() {
 
                         @Override
