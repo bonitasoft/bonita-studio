@@ -14,6 +14,8 @@
  */
 package org.bonitasoft.studio.swtbot.framework.projectExplorer;
 
+import java.util.Objects;
+
 import org.bonitasoft.studio.swtbot.framework.configuration.BotEnvironmentDetails;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
@@ -22,8 +24,6 @@ import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
 
 public class EnvironmentsProjectExplorerBot extends ProjectExplorerBot {
-
-    private String activeEnvironment = "Local";
 
     public EnvironmentsProjectExplorerBot(SWTGefBot bot) {
         super(bot);
@@ -51,25 +51,29 @@ public class EnvironmentsProjectExplorerBot extends ProjectExplorerBot {
 
     public void setAsActiveEnvironment(String environment) {
         clickOnContextualMenu(getEnvironmentTreeItem(environment), "Set as active environment");
-        activeEnvironment = environment;
     }
 
     public SWTBotTreeItem getEnvironmentTreeItem(String environment) {
-        return getTreeItem(getEnvironmentFolderTreeItem(), addXmlExtension(environment));
+        var environmentFolderTreeItem = getEnvironmentFolderTreeItem();
+        environmentFolderTreeItem.expand();
+        String envTreeLabel = environmentFolderTreeItem.getNodes().stream()
+                .filter(node -> isMatchingNode(environment, node))
+                .findFirst()
+                .orElseThrow();
+        return getTreeItem(environmentFolderTreeItem, envTreeLabel);
     }
 
     public SWTBotTreeItem getEnvironmentFolderTreeItem() {
         return getTreeItem(getProjectTreeItem(), "Environments");
     }
 
-    private String addXmlExtension(String application) {
-        if (!application.endsWith(".xml")) {
-            application += ".xml";
-            if (application.contains(activeEnvironment)) {
-                application += "  (active)";
-            }
+    private boolean isMatchingNode(String environment, String treeNodeLabel) {
+        treeNodeLabel = treeNodeLabel.endsWith("  (active)")
+                ? treeNodeLabel.substring(0, treeNodeLabel.indexOf("  (active)")) : treeNodeLabel;
+        if (!environment.endsWith(".xml")) {
+            environment += ".xml";
         }
-        return application;
+        return Objects.equals(treeNodeLabel, environment);
     }
 
 }

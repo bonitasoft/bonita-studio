@@ -15,6 +15,7 @@ import java.util.Map;
 import java.util.Objects;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.repository.filestore.AbstractFileStore;
 import org.bonitasoft.studio.common.repository.filestore.EMFFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
@@ -118,12 +119,20 @@ public class EnvironmentFileStore extends EMFFileStore<Environment> {
                     monitor.beginTask(String.format(Messages.renamingProcessConfigurations, oldEnvName, env.getName()),
                             allProcesses.size());
                     diagStore.getAllProcesses()
-                            .forEach(process -> updateConfiguration(process, oldEnvName, env.getName(), monitor));
+                            .forEach(process -> updateConfiguration(process, env.getName(),  oldEnvName,monitor));
                 });
             } catch (InvocationTargetException | InterruptedException e) {
                 BonitaStudioLog.error(e);
             } finally {
                 diagStore.resetComputedProcesses();
+            }
+            
+            // If the former env file was active, we need to put active the modified one
+            if (ConfigurationPlugin.getDefault().getPreferenceStore()
+                    .getString(ConfigurationPreferenceConstants.DEFAULT_CONFIGURATION).equals(oldEnvName)) {
+                ConfigurationPlugin.getDefault().getPreferenceStore()
+                        .setValue(ConfigurationPreferenceConstants.DEFAULT_CONFIGURATION, newEnvFile.getDisplayName());
+                AbstractFileStore.refreshExplorerView();
             }
 
         } else {

@@ -85,6 +85,7 @@ public class EnvironmentDialogIT {
         envDialog.close();
 
         // Checking if the existing configuration has been updated
+        myDiag.activeProcessDiagramEditor().selectElement(process.getName());
         bot.toolbarDropDownButtonWithId(SWTBotConstants.SWTBOT_ID_CONFIGURE_TOOLITEM).click();
         bot.table().getTableItem("Actor mapping").select();
         var itemTree = bot.tree().getTreeItem(EMPLOYEE_ACTOR).getNode("Groups").expand();
