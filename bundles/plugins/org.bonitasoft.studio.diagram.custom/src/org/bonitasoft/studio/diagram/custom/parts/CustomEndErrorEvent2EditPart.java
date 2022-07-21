@@ -31,26 +31,22 @@ import org.eclipse.gmf.runtime.notation.View;
  */
 public class CustomEndErrorEvent2EditPart extends EndErrorEvent2EditPart {
 
-	/**
-	 * @param view
-	 */
 	public CustomEndErrorEvent2EditPart(View view) {
 		super(view);
-		// TODO Auto-generated constructor stub
 	}
 	
-	/** Create a list of points to draw a circle
-	 * 
+	/**
+	 *  Create a list of points to draw a circle
 	 */
 	@Override
 	protected NodeFigure createNodePlate() {
-		DefaultSizeNodeFigure result = new DefaultSizeNodeFigure(FiguresHelper.EVENT_WIDTH, FiguresHelper.EVENT_WIDTH) {
+	    return new DefaultSizeNodeFigure(FiguresHelper.EVENT_WIDTH, FiguresHelper.EVENT_WIDTH) {
+			@Override
 			public PointList getPolygonPoints() {
 				Rectangle anchRect = getHandleBounds();
 				return FiguresHelper.CirclePointList(anchRect);
 			}
 		};
-		return result;
 	}
 
 }
