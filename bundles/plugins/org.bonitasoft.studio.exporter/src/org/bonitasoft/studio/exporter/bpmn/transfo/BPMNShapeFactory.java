@@ -49,6 +49,7 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.gmf.runtime.diagram.ui.internal.util.LabelViewConstants;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.BaseSlidableAnchor;
 import org.eclipse.gmf.runtime.draw2d.ui.geometry.PointListUtilities;
+import org.eclipse.gmf.runtime.draw2d.ui.internal.routers.ObliqueRouter;
 import org.eclipse.gmf.runtime.gef.ui.figures.DefaultSizeNodeFigure;
 import org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure;
 import org.eclipse.gmf.runtime.notation.Anchor;
@@ -371,7 +372,7 @@ public class BPMNShapeFactory {
     @SuppressWarnings("unchecked")
     private PolylineConnection createConnectorFigure(Edge bonitaEdge, EObject bonitaConnection) {
         PolylineConnection conn = new PolylineConnection();
-        AbstractRouter router = new CustomRectilinearRouter();
+        AbstractRouter router = bonitaConnection instanceof TextAnnotationAttachment ? new ObliqueRouter() : new CustomRectilinearRouter();
         conn.setConnectionRouter(router);
         
         EObject source = null;
