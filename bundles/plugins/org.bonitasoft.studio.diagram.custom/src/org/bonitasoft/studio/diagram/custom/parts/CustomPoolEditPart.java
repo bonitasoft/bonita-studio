@@ -28,6 +28,7 @@ import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.gef.DragTracker;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.Request;
@@ -126,6 +127,7 @@ public class CustomPoolEditPart extends PoolEditPart {
             width = getSize().width;
         }
 
+        int modelHeight = ((Integer) getStructuralFeatureValue(NotationPackage.eINSTANCE.getSize_Height())).intValue();
         int height = ((Integer) getStructuralFeatureValue(NotationPackage.eINSTANCE.getSize_Height())).intValue();
 
         if (width == -1) {
@@ -139,10 +141,13 @@ public class CustomPoolEditPart extends PoolEditPart {
             compartment.refreshPoolLanes();
         }
 
-        if (compartment != null && compartment.getPoolLanes() != null && compartment.getPoolLanes().size() > 0) {
+        if (compartment != null && compartment.getPoolLanes() != null && !compartment.getPoolLanes().isEmpty()) {
             height = 0;
             for (final CustomLaneEditPart lane : compartment.getPoolLanes()) {
                 height = height + lane.getFigure().getPreferredSize().height;
+            }
+            if (height != modelHeight) {
+                getEditingDomain().getCommandStack().execute(SetCommand.create(getEditingDomain(), getModel(), NotationPackage.eINSTANCE.getSize_Height(), height));
             }
         }
 
@@ -152,12 +157,10 @@ public class CustomPoolEditPart extends PoolEditPart {
         currentSize = size;
 
         for (final Object o : getChildren()) {
-            if (o instanceof GraphicalEditPart) {
-                if (o instanceof CustomPoolCompartmentEditPart) {
-                    for (final Object o2 : ((CustomPoolCompartmentEditPart) o).getChildren()) {
-                        if (o2 instanceof CustomLaneEditPart) {
-                            ((CustomLaneEditPart) o2).refreshBounds();
-                        }
+            if (o instanceof CustomPoolCompartmentEditPart) {
+                for (final Object o2 : ((CustomPoolCompartmentEditPart) o).getChildren()) {
+                    if (o2 instanceof CustomLaneEditPart) {
+                        ((CustomLaneEditPart) o2).refreshBounds();
                     }
                 }
             }
@@ -424,7 +427,8 @@ public class CustomPoolEditPart extends PoolEditPart {
     protected void setBackgroundColor(Color color) {
         Object preferenceStore = getDiagramPreferencesHint().getPreferenceStore();
         if (preferenceStore instanceof IPreferenceStore) {
-            super.setBackgroundColor(DiagramColorProvider.getBackgroundColor((IPreferenceStore) preferenceStore, color));
+            super.setBackgroundColor(
+                    DiagramColorProvider.getBackgroundColor((IPreferenceStore) preferenceStore, color));
         } else {
             super.setBackgroundColor(color);
         }
