@@ -18,8 +18,11 @@ import org.bonitasoft.studio.diagram.custom.parts.CustomANDGateway2EditPart;
 import org.bonitasoft.studio.diagram.custom.parts.CustomActivity2EditPart;
 import org.bonitasoft.studio.diagram.custom.parts.CustomActivityName2EditPart;
 import org.bonitasoft.studio.diagram.custom.parts.CustomAndGatewayLabel2EditPart;
+import org.bonitasoft.studio.diagram.custom.parts.CustomBoundaryMessageEventEditPart;
 import org.bonitasoft.studio.diagram.custom.parts.CustomBoundaryMessageEventLabelEditPart;
+import org.bonitasoft.studio.diagram.custom.parts.CustomBoundarySignalEventEditPart;
 import org.bonitasoft.studio.diagram.custom.parts.CustomBoundarySignalEventLabelEditPart;
+import org.bonitasoft.studio.diagram.custom.parts.CustomBoundaryTimerEventEditPart;
 import org.bonitasoft.studio.diagram.custom.parts.CustomBoundaryTimerEventLabelEditPart;
 import org.bonitasoft.studio.diagram.custom.parts.CustomCallActivity2EditPart;
 import org.bonitasoft.studio.diagram.custom.parts.CustomCallActivityName2EditPart;
@@ -60,6 +63,7 @@ import org.bonitasoft.studio.diagram.custom.parts.CustomLaneNameEditPart;
 import org.bonitasoft.studio.diagram.custom.parts.CustomMainProcessEditPart;
 import org.bonitasoft.studio.diagram.custom.parts.CustomMessageFlowEditPart;
 import org.bonitasoft.studio.diagram.custom.parts.CustomMessageFlowLabelEditPart;
+import org.bonitasoft.studio.diagram.custom.parts.CustomNonInterruptingBoundaryTimerEventEditPart;
 import org.bonitasoft.studio.diagram.custom.parts.CustomNonInterruptingBoundaryTimerEventNameEditPart;
 import org.bonitasoft.studio.diagram.custom.parts.CustomPoolCompartmentEditPart;
 import org.bonitasoft.studio.diagram.custom.parts.CustomPoolEditPart;
@@ -99,8 +103,11 @@ import org.bonitasoft.studio.model.process.diagram.edit.parts.ANDGateway2EditPar
 import org.bonitasoft.studio.model.process.diagram.edit.parts.ANDGatewayLabel2EditPart;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.Activity2EditPart;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.ActivityName2EditPart;
+import org.bonitasoft.studio.model.process.diagram.edit.parts.BoundaryMessageEvent2EditPart;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.BoundaryMessageEventLabelEditPart;
+import org.bonitasoft.studio.model.process.diagram.edit.parts.BoundarySignalEvent2EditPart;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.BoundarySignalEventLabelEditPart;
+import org.bonitasoft.studio.model.process.diagram.edit.parts.BoundaryTimerEvent2EditPart;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.BoundaryTimerEventLabelEditPart;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.CallActivity2EditPart;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.CallActivityName2EditPart;
@@ -140,6 +147,7 @@ import org.bonitasoft.studio.model.process.diagram.edit.parts.LaneNameEditPart;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.MainProcessEditPart;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.MessageFlowEditPart;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.MessageFlowLabelEditPart;
+import org.bonitasoft.studio.model.process.diagram.edit.parts.NonInterruptingBoundaryTimerEvent2EditPart;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.NonInterruptingBoundaryTimerEventNameEditPart;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.PoolEditPart;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.PoolNameEditPart;
@@ -432,7 +440,18 @@ public class CustomProcessEditPartFactory extends ProcessEditPartFactory {
 
                 case ThrowLinkEventLabel2EditPart.VISUAL_ID:
                     return new CustomThrowLinkEventLabel2EditPart(view);
+                    
+                case BoundaryTimerEvent2EditPart.VISUAL_ID:
+                    return new CustomBoundaryTimerEventEditPart(view);
+                    
+                case BoundarySignalEvent2EditPart.VISUAL_ID:
+                    return new CustomBoundarySignalEventEditPart(view);
+                    
+                case BoundaryMessageEvent2EditPart.VISUAL_ID:
+                    return new CustomBoundaryMessageEventEditPart(view);
 
+                case NonInterruptingBoundaryTimerEvent2EditPart.VISUAL_ID:
+                    return new CustomNonInterruptingBoundaryTimerEventEditPart(view);    
             }
         }
         return super.createEditPart(context, model);

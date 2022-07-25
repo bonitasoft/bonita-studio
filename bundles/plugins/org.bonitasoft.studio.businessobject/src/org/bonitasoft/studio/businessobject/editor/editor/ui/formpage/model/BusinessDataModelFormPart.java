@@ -38,10 +38,10 @@ import org.bonitasoft.studio.businessobject.editor.model.BusinessObjectModel;
 import org.bonitasoft.studio.businessobject.i18n.Messages;
 import org.bonitasoft.studio.businessobject.ui.wizard.validator.GroupIdValidator;
 import org.bonitasoft.studio.common.repository.core.maven.RemoveDependencyOperation;
-import org.bonitasoft.studio.ui.converter.ConverterBuilder;
 import org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory;
 import org.bonitasoft.studio.ui.widget.TextWidget;
 import org.eclipse.core.databinding.DataBindingContext;
+import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.core.databinding.observable.Realm;
 import org.eclipse.core.databinding.observable.value.ComputedValue;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
@@ -157,11 +157,8 @@ public class BusinessDataModelFormPart extends AbstractFormPart {
     private void createBusinessObjectEditionControl(Composite parent) {
         businessObjectEditionControl = new BusinessObjectEditionControl(parent, formPage, ctx);
         ctx.bindValue(formPage.observeBusinessObjectSelected(), businessObjectEditionControl.observeSectionTitle(),
-                updateValueStrategy().withConverter(ConverterBuilder.<BusinessObject, String> newConverter()
-                        .fromType(BusinessObject.class)
-                        .toType(String.class)
-                        .withConvertFunction(o -> o != null ? o.getSimpleName() : "")
-                        .create()).create(),
+                updateValueStrategy()
+                    .withConverter(IConverter.<BusinessObject, String> create(o -> o != null ? o.getSimpleName() : "")).create(),
                 neverUpdateValueStrategy().create());
         ctx.bindValue(businessObjectEditionControl.observeSectionVisible(), new ComputedValue<Boolean>(Boolean.TYPE) {
 

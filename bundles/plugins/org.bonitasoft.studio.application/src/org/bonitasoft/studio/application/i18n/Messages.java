@@ -123,9 +123,6 @@ public class Messages extends NLS {
     public static String youCanOpenApp;
     public static String artifactCounter;
     public static String pagesAndLayouts;
-    public static String saveOpenedEditorsTitle;
-    public static String saveOpenedEditors;
-    public static String savingEditors;
     public static String deploySuccessButNoAppToOpenMsg;
     public static String deploying;
     public static String deployStatusWithUnresolvedProcessesMessage;

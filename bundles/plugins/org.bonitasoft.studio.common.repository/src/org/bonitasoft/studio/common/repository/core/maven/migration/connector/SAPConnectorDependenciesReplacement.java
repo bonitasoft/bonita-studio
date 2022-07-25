@@ -21,7 +21,7 @@ public class SAPConnectorDependenciesReplacement extends BonitaJarDependencyRepl
     private static final String DEFINITION_ID = "sap-jco3-callfunction";
     
     public SAPConnectorDependenciesReplacement() {
-        super(dependency(CONNECTOR_GROUP_ID, "bonita-connector-sap", "2.0.2"),
+        super(dependency(CONNECTOR_GROUP_ID, "bonita-connector-sap", "2.0.3"),
                 "bonita-connector-sap-2.0.2.jar",
                 "bonita-connector-sap-2.0.1.jar",
                 "bonita-connector-sap-2.0.0.jar",

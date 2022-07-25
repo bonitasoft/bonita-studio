@@ -63,5 +63,4 @@
   <addons xmi:id="_00yosOXqEeGugqEu_OWUGQ" elementId="org.eclipse.ui.workbench.addon.0" contributionURI="bundleclass://org.eclipse.e4.ui.workbench/org.eclipse.e4.ui.internal.workbench.addons.HandlerProcessingAddon"/>
   <addons xmi:id="_s8MBsPtgEeKy1qSE7bOrWA" elementId="org.bonitasoft.studio.application.addon.0" contributionURI="bundleclass://org.bonitasoft.studio.application/org.bonitasoft.studio.application.OpenIntroAddon"/>
   <addons xmi:id="_LQpUgHr3EeSGZs6Rx6niag" elementId="org.bonitasoft.studio.common.log.LoggerAddon" contributionURI="bundleclass://org.bonitasoft.studio.common/org.bonitasoft.studio.common.log.BonitaStudioLogger"/>
-  <addons xmi:id="_nYIaIL6DEeSbWZYS5_ItTA" elementId="org.bonitasoft.studio.repository.accessor" contributionURI="bundleclass://org.bonitasoft.studio.common.repository/org.bonitasoft.studio.common.repository.RepositoryAccessor"/>
 </application:Application>

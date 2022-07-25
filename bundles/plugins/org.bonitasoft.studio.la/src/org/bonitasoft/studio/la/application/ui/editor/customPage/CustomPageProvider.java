@@ -21,7 +21,6 @@ import org.bonitasoft.studio.designer.core.repository.WebPageFileStore;
 import org.bonitasoft.studio.designer.core.repository.WebPageRepositoryStore;
 import org.bonitasoft.studio.la.application.core.BonitaPagesRegistry;
 import org.bonitasoft.studio.theme.ThemeRepositoryStore;
-import org.bonitasoft.studio.ui.converter.ConverterBuilder;
 import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceChangeEvent;
@@ -97,31 +96,17 @@ public class CustomPageProvider implements IResourceChangeListener {
     }
 
     public static IConverter<String, String> getCustomPageIdConverter(Collection<CustomPageDescriptor> layouts) {
-        return ConverterBuilder.<String, String> newConverter()
-                .fromType(String.class)
-                .toType(String.class)
-                .withConvertFunction(id -> findById(layouts, id).getId())
-                .create();
+        return IConverter.<String, String> create(id -> findById(layouts, id).getId());
     }
 
     public static IConverter<String, CustomPageDescriptor> getCustomPageDescriptorConverter(
             Collection<CustomPageDescriptor> layouts) {
-        return ConverterBuilder.<String, CustomPageDescriptor> newConverter()
-                .fromType(String.class)
-                .toType(CustomPageDescriptor.class)
-                .withConvertFunction(
-                        id -> findById(layouts, id))
-                .create();
+        return IConverter.<String, CustomPageDescriptor> create(id -> findById(layouts, id));
     }
 
     public static IConverter<String, String> getCustomPageDisplayNameConverter(
             Collection<CustomPageDescriptor> layouts) {
-        return ConverterBuilder.<String, String> newConverter()
-                .fromType(String.class)
-                .toType(String.class)
-                .withConvertFunction(
-                        id -> findById(layouts, id).getDisplayName())
-                .create();
+        return IConverter.<String, String> create(id -> findById(layouts, id).getDisplayName());
     }
 
     public static CustomPageDescriptor findById(Collection<CustomPageDescriptor> customPages,

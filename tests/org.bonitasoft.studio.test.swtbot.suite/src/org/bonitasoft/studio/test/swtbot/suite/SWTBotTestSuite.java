@@ -69,6 +69,7 @@ import org.bonitasoft.studio.tests.document.TestDocument;
 import org.bonitasoft.studio.tests.document.TestRunWithDocument;
 import org.bonitasoft.studio.tests.draw2d.TestLifeCycleWidget;
 import org.bonitasoft.studio.tests.duplicate.TestDuplicate;
+import org.bonitasoft.studio.tests.environment.EnvironmentDialogIT;
 import org.bonitasoft.studio.tests.exporter.ExportBosArchiveIT;
 import org.bonitasoft.studio.tests.exporter.bpmn.BPMNConnectorExportImportTest;
 import org.bonitasoft.studio.tests.exporter.bpmn.BPMNEventSubProcessExportImportTest;
@@ -105,6 +106,7 @@ import org.junit.runners.Suite;
 
 @RunWith(BonitaSuite.class)
 @Suite.SuiteClasses({
+        EnvironmentDialogIT.class,
         ProjectCompositionIT.class,
         ProjectOverviewdIT.class,
         RichTextEditorIT.class,

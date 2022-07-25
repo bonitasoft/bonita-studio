@@ -21,9 +21,9 @@ import org.bonitasoft.studio.businessobject.editor.editor.ui.control.businessObj
 import org.bonitasoft.studio.businessobject.editor.editor.ui.control.index.IndexControl;
 import org.bonitasoft.studio.businessobject.editor.model.BusinessObject;
 import org.bonitasoft.studio.businessobject.i18n.Messages;
-import org.bonitasoft.studio.ui.converter.ConverterBuilder;
 import org.bonitasoft.studio.ui.databinding.ComputedValueBuilder;
 import org.eclipse.core.databinding.DataBindingContext;
+import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
@@ -50,12 +50,8 @@ public class IndexFormPart extends AbstractFormPart {
         indexControl = new IndexControl(parent, formPage, ctx);
 
         ctx.bindValue(formPage.observeBusinessObjectSelected(), indexControl.observeSectionTitle(),
-                updateValueStrategy().withConverter(ConverterBuilder.<BusinessObject, String> newConverter()
-                        .fromType(BusinessObject.class)
-                        .toType(String.class)
-                        .withConvertFunction(
-                                bo -> bo == null ? "" : String.format(Messages.indexSectionTitle, bo.getSimpleName()))
-                        .create()).create(),
+                updateValueStrategy().withConverter(IConverter.<BusinessObject, String> create(
+                                bo -> bo == null ? "" : String.format(Messages.indexSectionTitle, bo.getSimpleName()))).create(),
                 neverUpdateValueStrategy().create());
 
         ctx.bindValue(indexControl.observeSectionVisible(), new ComputedValueBuilder<Boolean>()

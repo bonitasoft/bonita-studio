@@ -117,7 +117,7 @@ public class ExportBosArchiveHandler {
         final List<IBOSArchiveFileStoreProvider> fileStoreProvider = getFileStoreProviders();
 
         for (final Pool p : processes) {
-            final Configuration conf = getConfiguration(p, ConfigurationPreferenceConstants.LOCAL_CONFIGURAITON);
+            final Configuration conf = getConfiguration(p, ConfigurationPreferenceConstants.LOCAL_CONFIGURATION);
             for (final IBOSArchiveFileStoreProvider provider : fileStoreProvider) {
                 result.addAll(provider.getFileStoreForConfiguration(p, conf));
                 if (provider.distinctByConfiguration()) {
@@ -178,7 +178,7 @@ public class ExportBosArchiveHandler {
             configurationId = ConfigurationPlugin.getDefault().getPreferenceStore()
                     .getString(ConfigurationPreferenceConstants.DEFAULT_CONFIGURATION);
         }
-        if (configurationId.equals(ConfigurationPreferenceConstants.LOCAL_CONFIGURAITON)) {
+        if (configurationId.equals(ConfigurationPreferenceConstants.LOCAL_CONFIGURATION)) {
             final String id = ModelHelper.getEObjectID(process);
             IRepositoryFileStore file = processConfStore.getChild(id + ".conf", true);
             if (file == null) {

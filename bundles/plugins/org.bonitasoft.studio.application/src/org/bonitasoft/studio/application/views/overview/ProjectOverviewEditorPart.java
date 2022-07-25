@@ -20,6 +20,7 @@ import java.util.function.Consumer;
 
 import org.apache.maven.model.Model;
 import org.bonitasoft.studio.application.i18n.Messages;
+import org.bonitasoft.studio.application.views.BonitaProjectExplorer;
 import org.bonitasoft.studio.application.views.extension.ExtensionComposite;
 import org.bonitasoft.studio.common.CommandExecutor;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
@@ -66,6 +67,7 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
+import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.EditorPart;
@@ -424,7 +426,11 @@ public class ProjectOverviewEditorPart extends EditorPart implements EventHandle
 
     @Override
     public void setFocus() {
-        // do nothing
+        IWorkbenchPage page = getSite().getPage();
+        var explorerView = page.findView(BonitaProjectExplorer.ID);
+        if (explorerView != null && page.getActivePart() != explorerView) {
+            page.activate(explorerView);
+        }
     }
 
     @Override

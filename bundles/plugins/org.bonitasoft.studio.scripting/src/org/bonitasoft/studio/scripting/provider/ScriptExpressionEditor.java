@@ -31,9 +31,9 @@ import org.bonitasoft.studio.model.expression.ExpressionPackage;
 import org.bonitasoft.studio.scripting.extensions.IScriptLanguageProvider;
 import org.bonitasoft.studio.scripting.extensions.ScriptLanguageService;
 import org.bonitasoft.studio.scripting.i18n.Messages;
-import org.bonitasoft.studio.ui.converter.ConverterBuilder;
 import org.eclipse.core.databinding.Binding;
 import org.eclipse.core.databinding.UpdateValueStrategy;
+import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.IValueChangeListener;
 import org.eclipse.core.runtime.IStatus;
@@ -257,13 +257,9 @@ public class ScriptExpressionEditor extends SelectionAwareExpressionEditor imple
         }
         dataBindingContext.bindValue(ViewersObservables.observeSingleSelection(typeCombo), returnTypeModelObservable);
         dataBindingContext.bindValue(SWTObservables.observeText(typeCombo.getCombo()), returnTypeModelObservable,
-                updateValueStrategy().withConverter(ConverterBuilder.<String, String> newConverter()
-                        .withConvertFunction(this::toClassName)
-                        .create())
+                updateValueStrategy().withConverter(IConverter.<String, String> create(this::toClassName))
                         .create(),
-                updateValueStrategy().withConverter(ConverterBuilder.<String, String> newConverter()
-                        .withConvertFunction(this::toDisplayName)
-                        .create())
+                updateValueStrategy().withConverter(IConverter.<String, String> create(this::toDisplayName))
                         .create());
 
         typeCombo.getCombo().setEnabled(!inputExpression.isReturnTypeFixed());

@@ -47,7 +47,6 @@ import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
-import org.bonitasoft.studio.ui.converter.ConverterBuilder;
 import org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory;
 import org.bonitasoft.studio.ui.util.StatusCollectors;
 import org.bonitasoft.studio.ui.util.StringIncrementer;
@@ -56,6 +55,7 @@ import org.bonitasoft.studio.ui.viewer.LabelProviderBuilder;
 import org.bonitasoft.studio.ui.widget.SearchWidget;
 import org.bonitasoft.studio.ui.widget.TextWidget;
 import org.eclipse.core.databinding.DataBindingContext;
+import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.core.databinding.observable.value.ComputedValue;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.WritableValue;
@@ -127,11 +127,7 @@ public class BusinessObjectList {
         ctx.bindValue(businessObjectSelectionObservable, selectionObservable,
                 UpdateStrategyFactory.updateValueStrategy().create(),
                 UpdateStrategyFactory.updateValueStrategy()
-                        .withConverter(ConverterBuilder.<Object, BusinessObject> newConverter()
-                                .fromType(Object.class)
-                                .toType(BusinessObject.class)
-                                .withConvertFunction(o -> o instanceof BusinessObject ? (BusinessObject) o : null)
-                                .create())
+                        .withConverter(IConverter.<Object, BusinessObject> create(o -> o instanceof BusinessObject ? (BusinessObject) o : null))
                         .create());
         ctx.bindValue(businessObjectSelectionObservable, formPage.observeBusinessObjectSelected());
 
