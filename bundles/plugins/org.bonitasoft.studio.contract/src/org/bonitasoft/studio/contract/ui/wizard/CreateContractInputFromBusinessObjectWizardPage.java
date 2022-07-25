@@ -45,7 +45,6 @@ import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.model.process.Task;
 import org.bonitasoft.studio.preferences.browser.OpenBrowserOperation;
-import org.bonitasoft.studio.ui.converter.ConverterBuilder;
 import org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory;
 import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.core.databinding.observable.Realm;
@@ -369,18 +368,14 @@ public class CreateContractInputFromBusinessObjectWizardPage extends WizardPage 
         };
     }
 
-    private IConverter selectedDataToFieldMappings() {
-        return ConverterBuilder.<Object, List> newConverter()
-                .fromType(Object.class)
-                .toType(List.class)
-                .withConvertFunction(data -> {
-                    if (data == null || !(data instanceof BusinessObjectData)) {
+    private IConverter<Object, List> selectedDataToFieldMappings() {
+        return IConverter.<Object, List> create(data -> {
+                    if (!(data instanceof BusinessObjectData)) {
                         return Collections.emptyList();
                     }
                     createMapping((BusinessObjectData) data);
                     return mappings;
-                })
-                .create();
+                });
     }
 
     private void createMapping(BusinessObjectData data) {

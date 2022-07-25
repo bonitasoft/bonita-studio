@@ -46,7 +46,7 @@ public abstract class AbstractProcessRelatedURLBuilder extends AbstractBonitaURL
     protected Configuration getConfiguration() {
         if (process != null) {
             initConfigurationId();
-            if (ConfigurationPreferenceConstants.LOCAL_CONFIGURAITON.equals(configurationId)) {
+            if (ConfigurationPreferenceConstants.LOCAL_CONFIGURATION.equals(configurationId)) {
                 return retrieveConfigurationForLocalConf();
             } else {
                 return retrieveConfigurationInsideProcess();

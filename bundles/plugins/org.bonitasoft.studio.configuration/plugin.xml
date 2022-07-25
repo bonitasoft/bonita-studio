@@ -146,4 +146,36 @@
             provider="org.bonitasoft.studio.configuration.EnvironmentProvider">
       </environmentProvider>
    </extension>
+   <extension
+         point="org.eclipse.ui.handlers">
+      <handler
+            class="org.bonitasoft.studio.configuration.ui.handler.CreateEnvironmentHandler"
+            commandId="org.bonitasoft.studio.application.newWithWizard">
+         <activeWhen>
+            <with
+                  variable="activeMenuSelection">
+               <and>
+                  <count
+                        value="1">
+                  </count>
+                  <iterate>
+                     <test
+                           property="org.bonitasoft.studio.configuration.isEnvironmentFolder">
+                     </test>
+                  </iterate>
+               </and>
+            </with>
+         </activeWhen>
+      </handler>
+   </extension>
+   <extension
+         point="org.eclipse.core.expressions.propertyTesters">
+      <propertyTester
+            class="org.bonitasoft.studio.configuration.EnvironmentPropertyTester"
+            id="org.bonitasoft.studio.configuration.propertyTester"
+            namespace="org.bonitasoft.studio.configuration"
+            properties="isEnvironmentFolder"
+            type="org.eclipse.core.runtime.IAdaptable">
+      </propertyTester>
+   </extension>
 </plugin>

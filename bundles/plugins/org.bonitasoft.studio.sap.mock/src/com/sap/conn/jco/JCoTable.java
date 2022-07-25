@@ -21,8 +21,8 @@ package com.sap.conn.jco;
  */
 public interface JCoTable extends JCoRecord {
 
-    public String getString(int i);
+    String getString(int i);
 
-    public boolean nextRow();
+    boolean nextRow();
 
 }

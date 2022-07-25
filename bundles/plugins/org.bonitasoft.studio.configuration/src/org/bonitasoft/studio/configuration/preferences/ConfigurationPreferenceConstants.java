@@ -20,7 +20,7 @@ package org.bonitasoft.studio.configuration.preferences;
 public interface ConfigurationPreferenceConstants {
 
     public static final String DEFAULT_CONFIGURATION = "defaultConfiguration";
-    public static final String LOCAL_CONFIGURAITON = "Local";
-    public static final String NONE_CONFIGURAITON = "None";
+    public static final String LOCAL_CONFIGURATION = "Local";
+    public static final String NONE_CONFIGURATION = "None";
 
 }

@@ -23,7 +23,7 @@ import org.eclipse.core.runtime.IStatus;
 public class LocalEnvironmentFileStore extends EnvironmentFileStore {
 
     public LocalEnvironmentFileStore(IRepositoryStore<EnvironmentFileStore> store) {
-        super(ConfigurationPreferenceConstants.LOCAL_CONFIGURAITON + ".xml", store);
+        super(ConfigurationPreferenceConstants.LOCAL_CONFIGURATION + ".xml", store);
     }
 
     @Override
@@ -37,14 +37,14 @@ public class LocalEnvironmentFileStore extends EnvironmentFileStore {
     @Override
     protected Environment doGetContent() throws ReadFileStoreException {
         Environment environment = EnvironmentFactory.eINSTANCE.createEnvironment();
-        environment.setName(ConfigurationPreferenceConstants.LOCAL_CONFIGURAITON);
+        environment.setName(ConfigurationPreferenceConstants.LOCAL_CONFIGURATION);
         return environment;
     }
     
     
     @Override
     public String getDisplayName() {
-        return ConfigurationPreferenceConstants.LOCAL_CONFIGURAITON;
+        return ConfigurationPreferenceConstants.LOCAL_CONFIGURATION;
     }
     
     @Override

@@ -137,7 +137,7 @@ public class SelectArtifactToDeployPage implements ControlSupplier {
         String activeEnvironment = ConfigurationPlugin.getDefault().getPreferenceStore()
                 .getString(ConfigurationPreferenceConstants.DEFAULT_CONFIGURATION);
         environment = environmentProvider.getEnvironment().contains(activeEnvironment) ? activeEnvironment
-                : ConfigurationPreferenceConstants.LOCAL_CONFIGURAITON;
+                : ConfigurationPreferenceConstants.LOCAL_CONFIGURATION;
     }
 
     public void setDefaultSelectedElements(Set<Object> defaultSelectedElements) {

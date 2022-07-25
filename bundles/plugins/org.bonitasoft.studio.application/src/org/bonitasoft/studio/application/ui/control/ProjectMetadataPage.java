@@ -27,7 +27,6 @@ import org.bonitasoft.studio.common.repository.core.maven.contribution.InstallBo
 import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
 import org.bonitasoft.studio.common.repository.ui.validator.MavenIdValidator;
 import org.bonitasoft.studio.engine.BOSWebServerManager;
-import org.bonitasoft.studio.ui.converter.ConverterBuilder;
 import org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory;
 import org.bonitasoft.studio.ui.validator.MultiValidator;
 import org.bonitasoft.studio.ui.widget.ComboWidget;
@@ -36,6 +35,7 @@ import org.bonitasoft.studio.ui.widget.TextWidget;
 import org.bonitasoft.studio.ui.wizard.ControlSupplier;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.beans.typed.PojoProperties;
+import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.WritableValue;
 import org.eclipse.core.databinding.validation.IValidator;
@@ -125,11 +125,7 @@ public class ProjectMetadataPage implements ControlSupplier {
                 nameObservable,
                 UpdateStrategyFactory.neverUpdateValueStrategy().create(),
                 UpdateStrategyFactory.updateValueStrategy()
-                        .withConverter(ConverterBuilder.<String, String> newConverter()
-                                .fromType(String.class)
-                                .toType(String.class)
-                                .withConvertFunction(ProjectMetadata::toArtifactId)
-                                .create())
+                        .withConverter(IConverter.<String, String> create(ProjectMetadata::toArtifactId))
                         .create());
 
         new ComboWidget.Builder()

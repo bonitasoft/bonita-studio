@@ -80,12 +80,12 @@ import org.bonitasoft.studio.model.process.util.ProcessSwitch;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.preferences.BonitaThemeConstants;
-import org.bonitasoft.studio.ui.converter.ConverterBuilder;
 import org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory;
 import org.bonitasoft.studio.xml.repository.XSDFileStore;
 import org.bonitasoft.studio.xml.repository.XSDRepositoryStore;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.conversion.Converter;
+import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.core.databinding.observable.Realm;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.IValueChangeListener;
@@ -142,7 +142,6 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
@@ -669,14 +668,10 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
         emfDatabindingContext.bindValue(observeSingleSelectionTypeCombo,
                 modelObservable,
                 UpdateStrategyFactory.updateValueStrategy()
-                        .withConverter(ConverterBuilder.<DataType, DataType> newConverter()
-                                .fromType(DataType.class)
-                                .toType(DataType.class)
-                                .withConvertFunction(dataType -> {
+                        .withConverter(IConverter.<DataType, DataType> create(dataType -> {
                                     updateDataType = true;
                                     return dataType;
-                                })
-                                .create())
+                                }))
                         .create(),
                 null);
     }

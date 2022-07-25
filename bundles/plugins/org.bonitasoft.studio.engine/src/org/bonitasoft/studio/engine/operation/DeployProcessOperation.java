@@ -136,7 +136,7 @@ public class DeployProcessOperation {
         IStatus status = Status.CANCEL_STATUS;
         for (final Entry<AbstractProcess, Long> entry : processIdsMap.entrySet()) {
             final AbstractProcess process = entry.getKey();
-            monitor.subTask(Messages.bind(Messages.enablingProcess, getProcessLabel(process)));
+            monitor.subTask(NLS.bind(Messages.enablingProcess, getProcessLabel(process)));
             try {
                 status = enableProcess(process, monitor);
                 if (!status.isOK()) {

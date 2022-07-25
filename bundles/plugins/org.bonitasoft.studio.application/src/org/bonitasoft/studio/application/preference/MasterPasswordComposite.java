@@ -20,9 +20,9 @@ import static org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory.updateV
 import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.preferences.BonitaThemeConstants;
 import org.bonitasoft.studio.ui.browser.OpenSystemBrowserListener;
-import org.bonitasoft.studio.ui.converter.ConverterBuilder;
 import org.bonitasoft.studio.ui.widget.TextWidget;
 import org.eclipse.core.databinding.DataBindingContext;
+import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -56,11 +56,7 @@ public class MasterPasswordComposite extends Composite {
                 .transactionalEdit((oldValue, newValue) -> passwordManager.updateMasterPassword(newValue))
                 .bindTo(masterPwdObservable)
                 .withTargetToModelStrategy(convertUpdateValueStrategy()
-                        .withConverter(ConverterBuilder.<String, String> newConverter()
-                                .fromType(String.class)
-                                .toType(String.class)
-                                .withConvertFunction(passwordManager::encryptMasterPassword)
-                                .create())
+                        .withConverter(IConverter.<String, String> create(passwordManager::encryptMasterPassword))
                         .create())
                 .withModelToTargetStrategy(updateValueStrategy().create())
                 .inContext(ctx)

@@ -33,7 +33,7 @@ public class ConfigurationPreferenceInitializer extends
 	@Override
 	public void initializeDefaultPreferences() {
 		IPreferenceStore store = ConfigurationPlugin.getDefault().getPreferenceStore() ;
-		store.setDefault(ConfigurationPreferenceConstants.DEFAULT_CONFIGURATION, ConfigurationPreferenceConstants.LOCAL_CONFIGURAITON) ;
+		store.setDefault(ConfigurationPreferenceConstants.DEFAULT_CONFIGURATION, ConfigurationPreferenceConstants.LOCAL_CONFIGURATION) ;
 	}
 
 }

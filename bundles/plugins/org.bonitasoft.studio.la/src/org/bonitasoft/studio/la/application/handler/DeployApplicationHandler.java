@@ -39,6 +39,7 @@ import org.bonitasoft.studio.la.application.core.DeployApplicationAction;
 import org.bonitasoft.studio.la.application.core.DeployApplicationDescriptorOperation;
 import org.bonitasoft.studio.la.application.repository.ApplicationFileStore;
 import org.bonitasoft.studio.la.application.repository.ApplicationRepositoryStore;
+import org.bonitasoft.studio.ui.editors.DirtyEditorChecker;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -102,14 +103,14 @@ public class DeployApplicationHandler {
         Optional<ApplicationFileStore> applicationFileStore = findApplicationToDeploy(repositoryAccessor,
                 application);
         if (applicationFileStore.isPresent()) {
-            DeployArtifactsHandler deployArtifactsHandler = new DeployArtifactsHandler();
+            DeployArtifactsHandler deployArtifactsHandler = new DeployArtifactsHandler(new DirtyEditorChecker(), repositoryAccessor);
             List<IRepositoryFileStore<?>> defaultSelection = new ArrayList<>();
             ApplicationFileStore fileStore = applicationFileStore.get();
             defaultSelection.add(fileStore);
             defaultSelection.addAll(dependencyResolver.findDependencies(fileStore));
             deployArtifactsHandler.setDefaultSelection(defaultSelection);
             try {
-                deployArtifactsHandler.deploy(shell, repositoryAccessor, PlatformUI.getWorkbench().getProgressService());
+                deployArtifactsHandler.deploy(shell, PlatformUI.getWorkbench().getProgressService());
             } catch (InvocationTargetException | InterruptedException e) {
                 BonitaStudioLog.error(e);
             }

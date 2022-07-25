@@ -21,9 +21,9 @@ import org.bonitasoft.studio.businessobject.editor.editor.ui.control.businessObj
 import org.bonitasoft.studio.businessobject.editor.editor.ui.control.constraint.ConstraintEditionControl;
 import org.bonitasoft.studio.businessobject.editor.model.BusinessObject;
 import org.bonitasoft.studio.businessobject.i18n.Messages;
-import org.bonitasoft.studio.ui.converter.ConverterBuilder;
 import org.bonitasoft.studio.ui.databinding.ComputedValueBuilder;
 import org.eclipse.core.databinding.DataBindingContext;
+import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.layout.LayoutConstants;
@@ -53,12 +53,8 @@ public class ConstraintFormPart extends AbstractFormPart {
         constraintObjectEditionControl = new ConstraintEditionControl(parent, formPage, ctx);
 
         ctx.bindValue(formPage.observeBusinessObjectSelected(), constraintObjectEditionControl.observeSectionTitle(),
-                updateValueStrategy().withConverter(ConverterBuilder.<BusinessObject, String> newConverter()
-                        .fromType(BusinessObject.class)
-                        .toType(String.class)
-                        .withConvertFunction(
-                                bo -> bo == null ? "" : String.format(Messages.constraintsSectionTitle, bo.getSimpleName()))
-                        .create()).create(),
+                updateValueStrategy().withConverter(IConverter.<BusinessObject, String> create(
+                                bo -> bo == null ? "" : String.format(Messages.constraintsSectionTitle, bo.getSimpleName()))).create(),
                 neverUpdateValueStrategy().create());
 
         ctx.bindValue(constraintObjectEditionControl.observeSectionVisible(), new ComputedValueBuilder<Boolean>()

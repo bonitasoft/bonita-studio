@@ -24,11 +24,15 @@ import javax.xml.namespace.QName;
 
 import org.bonitasoft.studio.exporter.extension.IBonitaModelExporter;
 import org.bonitasoft.studio.model.process.BoundaryEvent;
+import org.bonitasoft.studio.model.process.Connection;
 import org.bonitasoft.studio.model.process.Element;
+import org.bonitasoft.studio.model.process.Event;
+import org.bonitasoft.studio.model.process.Gateway;
 import org.bonitasoft.studio.model.process.Lane;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.SequenceFlow;
 import org.bonitasoft.studio.model.process.SubProcessEvent;
+import org.bonitasoft.studio.model.process.TextAnnotationAttachment;
 import org.eclipse.draw2d.AbstractRouter;
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.IFigure;
@@ -45,6 +49,9 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.gmf.runtime.diagram.ui.internal.util.LabelViewConstants;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.BaseSlidableAnchor;
 import org.eclipse.gmf.runtime.draw2d.ui.geometry.PointListUtilities;
+import org.eclipse.gmf.runtime.draw2d.ui.internal.routers.ObliqueRouter;
+import org.eclipse.gmf.runtime.gef.ui.figures.DefaultSizeNodeFigure;
+import org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure;
 import org.eclipse.gmf.runtime.notation.Anchor;
 import org.eclipse.gmf.runtime.notation.BasicCompartment;
 import org.eclipse.gmf.runtime.notation.DecorationNode;
@@ -73,6 +80,12 @@ import org.omg.spec.dd.dc.Font;
 public class BPMNShapeFactory {
 
     private static final int HORIZONTAL_SPACING = 50;
+    private static final double TWO_PI = 2 * Math.PI;
+    private static final int NB_POINTS_DRAW_CIRCLE = 50;
+    private static final int GATEWAY_WIDTH = 43;
+    private static final int EVENT_WIDTH = 30;
+    private static final int BOUNDARY_EVENT_WIDTH = 25;
+
 
     private IBonitaModelExporter modelExporter;
 
@@ -289,14 +302,14 @@ public class BPMNShapeFactory {
     }
 
     @SuppressWarnings("unchecked")
-    public BPMNEdge createBPMNEdge(final String bpmnFlowId, EObject bonitaElement) {
-        Edge bonitaEdge = modelExporter.getElementNotationEdge(bonitaElement);
+    public BPMNEdge createBPMNEdge(final String bpmnFlowId, EObject semanticElement) {
+        Edge bonitaEdge = modelExporter.getElementNotationEdge(semanticElement);
         if (bonitaEdge != null) {
             final BPMNEdge edge = DiFactory.eINSTANCE.createBPMNEdge();
             edge.setBpmnElement(QName.valueOf(bpmnFlowId));
             edge.setId(modelExporter.getEObjectID(bonitaEdge));
 
-            PolylineConnection conn = createConnectorFigure(bonitaEdge);
+            PolylineConnection conn = createConnectorFigure(bonitaEdge, semanticElement);
             PointList points = conn.getPoints();
             for (int i = 0; i < points.size(); i++) {
                 final org.omg.spec.dd.dc.Point sourcePoint = DcFactory.eINSTANCE.createPoint();
@@ -306,13 +319,13 @@ public class BPMNShapeFactory {
                 edge.getWaypoint().add(sourcePoint);
             }
 
-            if (bonitaElement instanceof SequenceFlow) {
+            if (semanticElement instanceof SequenceFlow) {
                 bonitaEdge.getPersistedChildren().stream()
                         .filter(DecorationNode.class::isInstance)
                         .filter(decoNode -> ((DecorationNode) decoNode).isVisible())
                         .findFirst()
                         .ifPresent(decorationNode -> attachEdgeLabel((DecorationNode) decorationNode, edge,
-                                ((SequenceFlow) bonitaElement).getName(), bonitaEdge));
+                                ((SequenceFlow) semanticElement).getName(), bonitaEdge));
             }
             return edge;
         }
@@ -357,22 +370,37 @@ public class BPMNShapeFactory {
     }
 
     @SuppressWarnings("unchecked")
-    private PolylineConnection createConnectorFigure(Edge bonitaEdge) {
-        Bounds sourceLocation = getBPMNShapeBounds(modelExporter.getEObjectID(bonitaEdge.getSource()));
-        Bounds targetLocation = getBPMNShapeBounds(modelExporter.getEObjectID(bonitaEdge.getTarget()));
-
+    private PolylineConnection createConnectorFigure(Edge bonitaEdge, EObject bonitaConnection) {
         PolylineConnection conn = new PolylineConnection();
-        AbstractRouter router = new CustomRectilinearRouter();
+        AbstractRouter router = bonitaConnection instanceof TextAnnotationAttachment ? new ObliqueRouter() : new CustomRectilinearRouter();
         conn.setConnectionRouter(router);
+        
+        EObject source = null;
+        if(bonitaConnection instanceof Connection) {
+            source = ((Connection) bonitaConnection).getSource();
+        }else if(bonitaConnection instanceof TextAnnotationAttachment) {
+            source = ((TextAnnotationAttachment) bonitaConnection).getSource();
+        }
+        
+        EObject target = null;
+        if(bonitaConnection instanceof Connection) {
+            target = ((Connection) bonitaConnection).getTarget();
+        }else if(bonitaConnection instanceof TextAnnotationAttachment) {
+            target = ((TextAnnotationAttachment) bonitaConnection).getTarget();
+        }
+
+        IFigure sourceFigure = createAnchorFigure(
+                toRectangle(getBPMNShapeBounds(modelExporter.getEObjectID(bonitaEdge.getSource()))),
+                source);
+        IFigure targetFigure = createAnchorFigure(
+                toRectangle(getBPMNShapeBounds(modelExporter.getEObjectID(bonitaEdge.getTarget()))),
+                target);
+
         final List<RelativeBendpoint> pointList = ((RelativeBendpoints) bonitaEdge.getBendpoints()).getPoints();
         List<org.eclipse.draw2d.RelativeBendpoint> figureConstraint = new ArrayList<>();
+
         for (int i = 0; i < pointList.size(); i++) {
             RelativeBendpoint relativeBendpoint = (RelativeBendpoint) pointList.get(i);
-            IFigure sourceFigure = new Figure();
-            sourceFigure.setBounds(toRectangle(sourceLocation));
-            IFigure targetFigure = new Figure();
-            targetFigure.setBounds(toRectangle(targetLocation));
-
             Anchor sourceAnchor = bonitaEdge.getSourceAnchor();
             if (sourceAnchor instanceof IdentityAnchor) {
                 var referencePoint = BaseSlidableAnchor.parseTerminalString(((IdentityAnchor) sourceAnchor).getId());
@@ -405,6 +433,70 @@ public class BPMNShapeFactory {
         return conn;
     }
 
+    private IFigure createAnchorFigure(Rectangle bounds, EObject semanticElement) {
+        if (semanticElement instanceof BoundaryEvent) {
+            return createBoundaryEventFigure(bounds);
+        } else if (semanticElement instanceof Event) {
+           return createEventFigure(bounds);
+        } else if (semanticElement instanceof Gateway) {
+            return createGatewayFigure(bounds);
+        }
+        IFigure anchorFigure = new Figure();
+        anchorFigure.setBounds(bounds);
+        return anchorFigure;
+    }
+    
+    private NodeFigure createEventFigure(Rectangle nodeFigureBound) {
+        return new DefaultSizeNodeFigure(EVENT_WIDTH, EVENT_WIDTH) {
+
+            @Override
+            public Rectangle getHandleBounds() {
+                return nodeFigureBound;
+            }
+            @Override
+            public PointList getPolygonPoints() {
+                final Rectangle anchRect = getHandleBounds();
+                return circlePointList(anchRect);
+            }
+        };
+    }
+    
+    private NodeFigure createBoundaryEventFigure(Rectangle nodeFigureBound) {
+        return new DefaultSizeNodeFigure(BOUNDARY_EVENT_WIDTH, BOUNDARY_EVENT_WIDTH) {
+
+            @Override
+            public Rectangle getHandleBounds() {
+                return nodeFigureBound;
+            }
+            @Override
+            public PointList getPolygonPoints() {
+                final Rectangle anchRect = getHandleBounds();
+                return circlePointList(anchRect);
+            }
+        };
+    }
+    
+    private NodeFigure createGatewayFigure(Rectangle nodeFigureBound) {
+        return new DefaultSizeNodeFigure(GATEWAY_WIDTH, GATEWAY_WIDTH) {
+
+            @Override
+            public Rectangle getHandleBounds() {
+                return nodeFigureBound;
+            }
+            @Override
+            public PointList getPolygonPoints() {
+                PointList points = new PointList(5);
+                Rectangle anchRect = getHandleBounds();
+                points.addPoint(anchRect.x+anchRect.width/2,anchRect.y);                         
+                points.addPoint(anchRect.x + anchRect.width, anchRect.y+anchRect.height/2);                        
+                points.addPoint(anchRect.x+anchRect.width/2,anchRect.y+anchRect.height); 
+                points.addPoint(anchRect.x, anchRect.y+anchRect.height/2);       
+                points.addPoint(anchRect.x+ anchRect.width/2,anchRect.y);
+                return points;
+            }
+        };
+    }
+
     private Rectangle toRectangle(Bounds bounds) {
         return new PrecisionRectangle(bounds.getX(), bounds.getY(), bounds.getWidth(), bounds.getHeight());
     }
@@ -417,6 +509,26 @@ public class BPMNShapeFactory {
                 .map(BPMNShape::getBounds)
                 .findFirst()
                 .orElseThrow(() -> new IllegalStateException(String.format("No shape found with id %s", shapeUUID)));
+    }
+    
+    static PointList circlePointList(final Rectangle anchRect) {
+        final PointList points = new PointList(NB_POINTS_DRAW_CIRCLE);
+        final double angle = TWO_PI / NB_POINTS_DRAW_CIRCLE;
+        final Point center = anchRect.getCenter();
+        final int centerX = center.x;
+        final int centerY = center.y;
+
+        final int halfWidth = anchRect.width / 2;
+        final int halfHeight = anchRect.height / 2;
+
+        double angleT = 0;
+        while (angleT < TWO_PI) {
+            points.addPoint((int) (halfWidth * Math.cos(angleT) + centerX), (int) (halfHeight * Math.sin(angleT) + centerY));
+            angleT += angle;
+        }
+        // add last point, the same than the first point
+        points.addPoint((int) (halfWidth * Math.cos(0) + centerX), (int) (halfHeight * Math.sin(0) + centerY));
+        return points;
     }
 
 }

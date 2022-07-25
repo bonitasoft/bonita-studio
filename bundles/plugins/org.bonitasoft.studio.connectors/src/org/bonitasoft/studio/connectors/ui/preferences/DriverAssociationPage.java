@@ -37,10 +37,10 @@ import org.bonitasoft.studio.connectors.ui.provider.DatabaseDriversContentProvid
 import org.bonitasoft.studio.connectors.ui.provider.DatabaseDriversLabelProvider;
 import org.bonitasoft.studio.dependencies.repository.DependencyFileStore;
 import org.bonitasoft.studio.dependencies.ui.dialog.SelectJarsDialog;
-import org.bonitasoft.studio.ui.converter.ConverterBuilder;
 import org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory;
 import org.bonitasoft.studio.ui.wizard.ControlSupplier;
 import org.eclipse.core.databinding.DataBindingContext;
+import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.jface.databinding.viewers.typed.ViewerProperties;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -261,11 +261,7 @@ public class DriverAssociationPage implements ControlSupplier {
                 ViewerProperties.singleSelection().observe(viewer), 
                 null,
                 UpdateStrategyFactory.updateValueStrategy()
-                .withConverter(ConverterBuilder.<Object, Boolean>newConverter()
-                        .fromType(Object.class)
-                        .toType(Boolean.class)
-                        .withConvertFunction(Objects::nonNull)
-                        .create())
+                .withConverter(IConverter.<Object, Boolean>create(Objects::nonNull))
                 .create());
     }
 

@@ -74,7 +74,7 @@ public class ConfigurationSynchronizer implements Synchronizer {
         this();
         this.process = process;
         this.configuration = configuration;
-        synchronizeLocalConfiguraiton = ConfigurationPreferenceConstants.LOCAL_CONFIGURAITON
+        synchronizeLocalConfiguraiton = ConfigurationPreferenceConstants.LOCAL_CONFIGURATION
                 .equals(configuration.getName()) || configuration.getName() == null;
         editingDomain = (AdapterFactoryEditingDomain) TransactionUtil.getEditingDomain(process);
     }
@@ -141,7 +141,7 @@ public class ConfigurationSynchronizer implements Synchronizer {
     public void synchronize(Pool process, Configuration configuration) {
         this.process = process;
         this.configuration = configuration;
-        synchronizeLocalConfiguraiton = ConfigurationPreferenceConstants.LOCAL_CONFIGURAITON
+        synchronizeLocalConfiguraiton = ConfigurationPreferenceConstants.LOCAL_CONFIGURATION
                 .equals(configuration.getName()) || configuration.getName() == null;
         editingDomain = (AdapterFactoryEditingDomain) TransactionUtil.getEditingDomain(process);
         synchronize();
@@ -164,7 +164,7 @@ public class ConfigurationSynchronizer implements Synchronizer {
 
         if (configuration.getName() == null) {
             cc.append(SetCommand.create(editingDomain, configuration, ConfigurationPackage.Literals.CONFIGURATION__NAME,
-                    ConfigurationPreferenceConstants.LOCAL_CONFIGURAITON));
+                    ConfigurationPreferenceConstants.LOCAL_CONFIGURATION));
         }
 
         if (configuration.getVersion() == null

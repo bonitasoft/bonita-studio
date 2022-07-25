@@ -5,12 +5,10 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- * 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -20,9 +18,11 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import org.bonitasoft.engine.bpm.process.Problem;
 import org.bonitasoft.engine.bpm.process.Problem.Level;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.configuration.ConfigurationPlugin;
 import org.bonitasoft.studio.configuration.preferences.ConfigurationPreferenceConstants;
 import org.bonitasoft.studio.configuration.ui.handler.ConfigureHandler;
@@ -44,34 +44,31 @@ import org.eclipse.ui.commands.ICommandService;
 
 /**
  * @author Romain Bioteau
- * 
  */
 public class ProcessEnablementProblemsDialog extends ProblemsDialog<Problem> {
 
-    private AbstractProcess process;
+    private static final String BUSINESS_DATA_RESOURCE = "business data";
 
+    private AbstractProcess process;
     private List<Problem> processResolutionProblems;
 
-    public ProcessEnablementProblemsDialog(Shell parentShell, String dialogMessage, AbstractProcess process, List<Problem> processResolutionProblems) {
-        super(parentShell, Messages.processEnableFailedTitle,  dialogMessage, INFORMATION, new String[] { Messages.configure,
-                IDialogConstants.CANCEL_LABEL });
+    public ProcessEnablementProblemsDialog(Shell parentShell, String dialogMessage, AbstractProcess process,
+            List<Problem> processResolutionProblems) {
+        super(parentShell, Messages.processEnableFailedTitle, dialogMessage, INFORMATION,
+                new String[] { Messages.configure, IDialogConstants.CANCEL_LABEL });
         this.process = process;
         this.processResolutionProblems = processResolutionProblems;
     }
 
-
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.jface.dialogs.MessageDialog#buttonPressed(int)
-     */
     @Override
     protected void buttonPressed(int buttonId) {
         if (buttonId == 0) {
+            close();
             try {
-                close();
                 setReturnCode(openConfigureDialog().isOK() ? IDialogConstants.OK_ID : IDialogConstants.CANCEL_ID);
             } catch (ExecutionException e) {
-                throw new RuntimeException(e);
+                setReturnCode(IDialogConstants.CANCEL_ID);
+                BonitaStudioLog.error(e);
             }
         } else {
             super.buttonPressed(buttonId);
@@ -81,13 +78,12 @@ public class ProcessEnablementProblemsDialog extends ProblemsDialog<Problem> {
     protected IStatus openConfigureDialog() throws ExecutionException {
         ICommandService service = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
         Command cmd = service.getCommand("org.bonitasoft.studio.configuration.configure");
-        Map<String, Object> parameters = new HashMap<String, Object>();
+        Map<String, Object> parameters = new HashMap<>();
         String configuration = ConfigurationPlugin.getDefault().getPreferenceStore().getString(ConfigurationPreferenceConstants.DEFAULT_CONFIGURATION);
         parameters.put("configuration", configuration);
         parameters.put("process", process);
         return (IStatus) new ConfigureHandler().execute(new ExecutionEvent(cmd, parameters, null, null));
     }
-
 
     @Override
     protected Collection<Problem> getInput() {
@@ -100,13 +96,16 @@ public class ProcessEnablementProblemsDialog extends ProblemsDialog<Problem> {
 
             @Override
             public String getText(Problem element) {
-                return element.getDescription();
+                return Objects.equals(element.getResource(), BUSINESS_DATA_RESOURCE)
+                        ? String.format("%s: %s", element.getResourceId(), element.getDescription())
+                        : element.getDescription();
             }
 
             @Override
             public Image getImage(Problem element) {
-                return  element.getLevel() == Level.ERROR ? JFaceResources.getImage(Dialog.DLG_IMG_MESSAGE_ERROR) : JFaceResources
-                        .getImage(Dialog.DLG_IMG_MESSAGE_WARNING);
+                return element.getLevel() == Level.ERROR ? JFaceResources.getImage(Dialog.DLG_IMG_MESSAGE_ERROR)
+                        : JFaceResources
+                                .getImage(Dialog.DLG_IMG_MESSAGE_WARNING);
             }
         };
     }

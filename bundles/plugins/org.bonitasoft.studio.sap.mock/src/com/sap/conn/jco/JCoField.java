@@ -27,8 +27,8 @@ public interface JCoField {
 
     public boolean isStructure();
 
-    public JCoRecord getStructure();
+    public JCoStructure getStructure();
 
-    public JCoRecord getTable();
+    public JCoTable getTable();
 
 }

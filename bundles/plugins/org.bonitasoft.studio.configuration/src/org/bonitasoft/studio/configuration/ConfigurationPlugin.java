@@ -28,7 +28,7 @@ public class ConfigurationPlugin extends AbstractUIPlugin {
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		plugin = this;
-		ConfigurationPlugin.getDefault().getPreferenceStore().setDefault(ConfigurationPreferenceConstants.DEFAULT_CONFIGURATION, ConfigurationPreferenceConstants.LOCAL_CONFIGURAITON);
+		ConfigurationPlugin.getDefault().getPreferenceStore().setDefault(ConfigurationPreferenceConstants.DEFAULT_CONFIGURATION, ConfigurationPreferenceConstants.LOCAL_CONFIGURATION);
 	}
 
 	/*
