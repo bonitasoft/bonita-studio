@@ -121,10 +121,10 @@ public class CreateEnvironmentHandler extends AbstractHandler{
         try {
             progressService.run(true, false, diagStore::computeProcesses);
             progressService.run(true, false, monitor -> {
-                var allProcesses = diagStore.getAllProcesses();
+                var allProcesses = diagStore.getComputedProcesses();
                 monitor.beginTask(String.format(Messages.copyingProcessConfigurations, envNameToDuplicate),
                         allProcesses.size());
-                diagStore.getAllProcesses()
+                allProcesses
                         .forEach(process -> copyConfiguration(envNameToDuplicate, envName, process, monitor));
             });
         } catch (InvocationTargetException | InterruptedException e) {

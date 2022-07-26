@@ -49,8 +49,7 @@ public class EnvironmentDialogIT {
         var envDialog = envExplorerBot.open(newEnv);
         assertEquals(envDialog.getName(), newEnv);
 
-        envDialog.modify();
-
+        envDialog.close();
     }
 
     @Test

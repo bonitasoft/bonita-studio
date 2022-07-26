@@ -43,11 +43,7 @@ public class DetailsEnvironmentDialog extends Dialog {
         super(shell);
         this.env = env;
         this.nameEnv = env.getName();
-        if (env.getDescription() != null) {
-            this.descEnv = env.getDescription();
-        } else {
-            this.descEnv = Messages.localEnvironmentDesc;
-        }
+        this.descEnv = Objects.equals(ConfigurationPreferenceConstants.LOCAL_CONFIGURATION, env.getName()) ? Messages.localEnvironmentDesc :  env.getDescription();
     }
     
     @Override
