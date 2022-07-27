@@ -28,13 +28,13 @@ import java.nio.charset.Charset;
 import java.util.Enumeration;
 import java.util.Optional;
 import java.util.Properties;
+import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 import org.bonitasoft.studio.common.CommandExecutor;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.perspectives.BonitaPerspectivesUtils;
-import org.bonitasoft.studio.common.perspectives.ViewIds;
 import org.eclipse.core.filesystem.EFS;
 import org.eclipse.core.filesystem.IFileStore;
 import org.eclipse.core.filesystem.IFileSystem;
@@ -68,6 +68,7 @@ public class PlatformUtil {
     private static final String OPEN_DASHBOARD_COMMAND = "org.bonitasoft.studio.application.show.overview.command";
     private static final String INTROVIEW_ID = "org.eclipse.ui.internal.introview";
     private static IFileSystem fileSystem; // SINGLETON
+    private static boolean openingIntro;
 
     private PlatformUtil() {
 
@@ -196,17 +197,42 @@ public class PlatformUtil {
         final IIntroManager introManager = PlatformUI.getWorkbench().getIntroManager();
         //close intro to reload content if already opened
         hideIntroPart();
-        final IntroModelRoot model = IntroPlugin.getDefault().getIntroModelRoot();
-        if (model != null
-                && introManager.getIntro() != null
-                && ((CustomizableIntroPart) introManager.getIntro()).getControl() != null) {
-            model.getPresentation().navigateHome();
+        setOpeningIntro();
+        try {
+            final IntroModelRoot model = IntroPlugin.getDefault().getIntroModelRoot();
+            if (model != null
+                    && introManager.getIntro() != null
+                    && ((CustomizableIntroPart) introManager.getIntro()).getControl() != null) {
+                model.getPresentation().navigateHome();
+            }
+            IEditorReference overviewRef = Stream.of(page.getEditorReferences())
+                    .filter(ref -> ref.getId().equals("org.bonitasoft.studio.application.dashboard.editor"))
+                    .findFirst()
+                    .orElse(null);
+            if (overviewRef != null) {
+                page.closeEditors(new IEditorReference[] { overviewRef }, false);
+            }
+            BonitaPerspectivesUtils.switchToPerspective("org.bonitasoft.studio.perspective.welcomePage");
+            introManager.showIntro(
+                    page.getWorkbenchWindow(),
+                    false);
+
+            page.setPartState(page.findViewReference(INTROVIEW_ID), IWorkbenchPage.STATE_RESTORED);
+        } finally {
+            resetOpeningIntro();
         }
-        BonitaPerspectivesUtils.switchToPerspective("org.bonitasoft.studio.perspective.welcomePage");
-        introManager.showIntro(
-                page.getWorkbenchWindow(),
-                false);
-        page.setPartState(page.findViewReference(INTROVIEW_ID), IWorkbenchPage.STATE_RESTORED);
+    }
+
+    private static void setOpeningIntro() {
+        openingIntro = true;
+    }
+
+    private static void resetOpeningIntro() {
+        openingIntro = false;
+    }
+
+    public static boolean isOpeningIntro() {
+        return openingIntro;
     }
 
     /**

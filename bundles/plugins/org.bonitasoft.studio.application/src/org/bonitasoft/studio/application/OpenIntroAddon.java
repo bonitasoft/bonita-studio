@@ -14,13 +14,17 @@
  */
 package org.bonitasoft.studio.application;
 
+import java.util.Objects;
+
 import javax.annotation.PostConstruct;
 
 import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.eclipse.e4.core.services.events.IEventBroker;
+import org.eclipse.e4.ui.model.application.ui.advanced.MPlaceholder;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.e4.ui.workbench.UIEvents;
+import org.eclipse.ui.PlatformUI;
 import org.osgi.service.event.Event;
 
 /**
@@ -28,6 +32,7 @@ import org.osgi.service.event.Event;
  */
 public class OpenIntroAddon {
     
+    private static final String INTROVIEW_ID = "org.eclipse.ui.internal.introview";
     private RepositoryAccessor repositoryAccessor;
 
     @PostConstruct
@@ -40,9 +45,14 @@ public class OpenIntroAddon {
         Object part = event.getProperty(UIEvents.EventTags.ELEMENT);
         if (part instanceof MPart) {
             if (((MPart) part).getElementId().equals("org.eclipse.e4.ui.compatibility.editor")) {
-                if(repositoryAccessor.getCurrentRepository().isPresent() && repositoryAccessor.getCurrentRepository().orElseThrow().isOpenIntroListenerEnabled()) {
+                if(!PlatformUtil.isOpeningIntro() && repositoryAccessor.getCurrentRepository().isPresent() && repositoryAccessor.getCurrentRepository().orElseThrow().isOpenIntroListenerEnabled()) {
                     PlatformUtil.openDashboardIfNoOtherEditorOpen();
                 }
+            }
+        } else if(part instanceof MPlaceholder && Objects.equals(INTROVIEW_ID, ((MPlaceholder) part).getElementId())) {
+            var introView = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(INTROVIEW_ID);
+            if(introView == null) {
+                PlatformUtil.openDashboardIfNoOtherEditorOpen();
             }
         }
     }
