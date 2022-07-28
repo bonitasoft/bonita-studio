@@ -19,6 +19,7 @@ import java.util.Optional;
 import org.bonitasoft.studio.application.views.overview.ProjectOverviewEditorInput;
 import org.bonitasoft.studio.application.views.overview.ProjectOverviewEditorPart;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.eclipse.e4.core.di.annotations.CanExecute;
 import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.ui.IWorkbench;
@@ -43,8 +44,10 @@ public class OpenOverviewViewHandler {
     }
 
     @CanExecute
-    public boolean canExecute() {
-        return PlatformUI.isWorkbenchRunning() && PlatformUI.getWorkbench().getActiveWorkbenchWindow() != null;
+    public boolean canExecute(RepositoryAccessor repositoryAccessor) {
+        return PlatformUI.isWorkbenchRunning() 
+                && PlatformUI.getWorkbench().getActiveWorkbenchWindow() != null
+                && repositoryAccessor.hasActiveRepository();
     }
 
 }
