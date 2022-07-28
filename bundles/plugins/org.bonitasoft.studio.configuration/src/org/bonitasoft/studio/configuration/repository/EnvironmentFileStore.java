@@ -27,6 +27,7 @@ import org.bonitasoft.studio.configuration.preferences.ConfigurationPreferenceCo
 import org.bonitasoft.studio.configuration.ui.dialog.DetailsEnvironmentDialog;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.model.configuration.Configuration;
+import org.bonitasoft.studio.model.configuration.ConfigurationPackage;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
@@ -36,7 +37,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.xmi.XMLResource;
-import org.eclipse.emf.transaction.RecordingCommand;
+import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.jface.window.Window;
@@ -96,16 +97,16 @@ public class EnvironmentFileStore extends EMFFileStore<Environment> {
 
     private void updateEnv(DetailsEnvironmentDialog dialog, IRepositoryFileStore<Environment> envFile)
             throws ReadFileStoreException {
-        var env = envFile.getContent();
         var dirtyEditorChecker = new DirtyEditorChecker();
         var newEnvFile = store.getChild(dialog.getNameEnv() + "." + EnvironmentRepositoryStore.ENV_EXT, true);
-        env.setDescription(dialog.getDescEnv());
         if (newEnvFile == null && dirtyEditorChecker.checkDirtyState(getProgressService(), false)) {
             // Create and save new env file, delete the old one
             newEnvFile = store
                     .createRepositoryFileStore(dialog.getNameEnv() + "." + EnvironmentRepositoryStore.ENV_EXT);
+            var env = envFile.getContent();
             var oldEnvName = env.getName();
             env.setName(dialog.getNameEnv());
+            env.setDescription(dialog.getDescEnv());
             newEnvFile.save(env);
             envFile.delete();
             // Updating existing same name Configuration for each Process 
@@ -119,14 +120,14 @@ public class EnvironmentFileStore extends EMFFileStore<Environment> {
                     monitor.beginTask(String.format(Messages.renamingProcessConfigurations, oldEnvName, env.getName()),
                             allProcesses.size());
                     allProcesses
-                            .forEach(process -> updateConfiguration(process, env.getName(),  oldEnvName,monitor));
+                            .forEach(process -> updateConfiguration(process, env.getName(), oldEnvName, monitor));
                 });
             } catch (InvocationTargetException | InterruptedException e) {
                 BonitaStudioLog.error(e);
             } finally {
                 diagStore.resetComputedProcesses();
             }
-            
+
             // If the former env file was active, we need to put active the modified one
             if (ConfigurationPlugin.getDefault().getPreferenceStore()
                     .getString(ConfigurationPreferenceConstants.DEFAULT_CONFIGURATION).equals(oldEnvName)) {
@@ -134,8 +135,9 @@ public class EnvironmentFileStore extends EMFFileStore<Environment> {
                         .setValue(ConfigurationPreferenceConstants.DEFAULT_CONFIGURATION, newEnvFile.getDisplayName());
                 AbstractFileStore.refreshExplorerView();
             }
-
         } else {
+            var env = envFile.getContent();
+            env.setDescription(dialog.getDescEnv());
             envFile.save(env);
         }
     }
@@ -164,13 +166,8 @@ public class EnvironmentFileStore extends EMFFileStore<Environment> {
     private void updateConfigurationName(String newEnv, Configuration srcConfig, AbstractProcess process) {
         var editingDomain = TransactionUtil.getEditingDomain(process);
         editingDomain.getCommandStack()
-                .execute(new RecordingCommand(editingDomain) {
-
-                    @Override
-                    protected void doExecute() {
-                        srcConfig.setName(newEnv);
-                    }
-                });
+                .execute(SetCommand.create(editingDomain, srcConfig, ConfigurationPackage.Literals.CONFIGURATION__NAME,
+                        newEnv));
     }
 
     @Override

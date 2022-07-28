@@ -53,7 +53,6 @@ import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
@@ -85,7 +84,6 @@ public class ConfigurationWizardDialog extends WizardDialog implements ISelectio
     private ProgressMonitorPart progressMonitorPart;
     private final PageContainerFillLayout pageContainerLayout = new PageContainerFillLayout(10, 10, 400, 225);
     private TableViewer pageChooserViewer;
-    private Image image;
     private Group group;
     private boolean isSimpleMode;
     private IDialogSettings dialogSettings;
@@ -151,8 +149,7 @@ public class ConfigurationWizardDialog extends WizardDialog implements ISelectio
         AbstractProcess process = ((ConfigurationWizard) getWizard()).getProcess();
         if (process != null) {
             updateSelectedProcess(process);
-            image = Pics.getWizban().createImage();
-            setTitleImage(image);
+            setTitleImage(Pics.getImage(Pics.getWizban()));
         }
         return contents;
     }
@@ -164,14 +161,6 @@ public class ConfigurationWizardDialog extends WizardDialog implements ISelectio
         Point size = getInitialSize();
         Point location = getInitialLocation(size);
         getShell().setBounds(getConstrainedShellBounds(new Rectangle(location.x, location.y, size.x, size.y)));
-    }
-
-    @Override
-    public boolean close() {
-        if (image != null) {
-            image.dispose();
-        }
-        return super.close();
     }
 
     @Override
