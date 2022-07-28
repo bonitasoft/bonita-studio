@@ -39,7 +39,6 @@ import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPartListener;
 import org.eclipse.gef.EditPolicy;
@@ -206,7 +205,6 @@ public class CustomLaneEditPart extends LaneEditPart {
                 final CustomPoolEditPart parent = (CustomPoolEditPart) getParent().getParent();
 
                 int width = parent.getCurrentSize().width;
-                int modelHeight = ((Integer) getStructuralFeatureValue(NotationPackage.eINSTANCE.getSize_Height())).intValue();
                 int height = ((Integer) getStructuralFeatureValue(NotationPackage.eINSTANCE.getSize_Height())).intValue();
 
                 if (height == -1) {
@@ -227,11 +225,6 @@ public class CustomLaneEditPart extends LaneEditPart {
 
                 final int x = ((CustomPoolFigure) ((CustomPoolEditPart) poolCompartment.getParent()).getContentPane())
                         .getLabelGridData().widthHint;
-
-                if(modelHeight != height) {
-                    getEditingDomain().getCommandStack().execute(SetCommand.create(getEditingDomain(), getModel(), NotationPackage.eINSTANCE.getSize_Height(), height));
-                }
-                
                 final Dimension size = new Dimension(width - getMapMode().DPtoLP(x), height);
                 getFigure().setPreferredSize(size);
                 getFigure().setSize(size);

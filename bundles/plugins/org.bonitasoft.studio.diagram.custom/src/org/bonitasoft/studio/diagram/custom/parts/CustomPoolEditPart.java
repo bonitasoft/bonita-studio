@@ -28,7 +28,6 @@ import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.emf.common.notify.Notification;
-import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.gef.DragTracker;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.Request;
@@ -127,7 +126,6 @@ public class CustomPoolEditPart extends PoolEditPart {
             width = getSize().width;
         }
 
-        int modelHeight = ((Integer) getStructuralFeatureValue(NotationPackage.eINSTANCE.getSize_Height())).intValue();
         int height = ((Integer) getStructuralFeatureValue(NotationPackage.eINSTANCE.getSize_Height())).intValue();
 
         if (width == -1) {
@@ -146,15 +144,21 @@ public class CustomPoolEditPart extends PoolEditPart {
             for (final CustomLaneEditPart lane : compartment.getPoolLanes()) {
                 height = height + lane.getFigure().getPreferredSize().height;
             }
-            if (height != modelHeight) {
-                getEditingDomain().getCommandStack().execute(SetCommand.create(getEditingDomain(), getModel(), NotationPackage.eINSTANCE.getSize_Height(), height));
-            }
         }
 
         final Dimension size = new Dimension(width, height);
         getFigure().setPreferredSize(size);
         getFigure().setSize(size);
         currentSize = size;
+        
+        int x = ((Integer) getStructuralFeatureValue(NotationPackage.eINSTANCE.getLocation_X())).intValue();
+        int y = ((Integer) getStructuralFeatureValue(NotationPackage.eINSTANCE.getLocation_Y())).intValue();
+        Point loc = new Point(x, y);
+        
+        ((GraphicalEditPart) getParent()).setLayoutConstraint(
+                this,
+                getFigure(),
+                new Rectangle(loc, size));
 
         for (final Object o : getChildren()) {
             if (o instanceof CustomPoolCompartmentEditPart) {
