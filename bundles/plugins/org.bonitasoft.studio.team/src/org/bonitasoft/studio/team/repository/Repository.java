@@ -86,7 +86,7 @@ import org.eclipse.ui.PlatformUI;
  * @author Romain Bioteau
  */
 public class Repository extends AbstractRepository {
-
+    
     private static final long INTERVAL = 30000;
     private static final String GITIGNORE_TEMPLATE = ".gitignore.template";
 
@@ -115,7 +115,7 @@ public class Repository extends AbstractRepository {
     protected void initializeLockManager() {
         lockManagement = createLockManager();
     }
-
+    
     @Override
     protected void connect(IProject project) throws CoreException {
         File gitDir = new File(project.getLocation().toFile().getAbsolutePath(),
