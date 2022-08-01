@@ -43,8 +43,7 @@ import org.eclipse.team.core.RepositoryProvider;
  * @author Romain Bioteau
  */
 public class Repository extends AbstractRepository {
-
-    private static final long INTERVAL = 30000;
+    
     private static final String GITIGNORE_TEMPLATE = ".gitignore.template";
 
     public Repository(final IWorkspace workspace, final IProject project,
@@ -59,7 +58,7 @@ public class Repository extends AbstractRepository {
                 eventBroker,
                 migrationEnabled);
     }
-
+    
     @Override
     protected void connect(IProject project) throws CoreException {
         File gitDir = new File(project.getLocation().toFile().getAbsolutePath(),

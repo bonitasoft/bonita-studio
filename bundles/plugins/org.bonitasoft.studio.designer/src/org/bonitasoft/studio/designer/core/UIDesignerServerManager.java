@@ -217,7 +217,7 @@ public class UIDesignerServerManager implements IBonitaProjectListener {
                 .method("HEAD", HttpRequest.BodyPublishers.noBody())
                 .uri(url.toURI())
                 .build();
-        HttpResponse<Void> response = retriesUntil(httpClient, request, 200, 15, 2000);
+        HttpResponse<Void> response = retriesUntil(httpClient, request, 200, 30, 2000); // 1 minute timeout (30*2000ms)
         return response != null;
     }
 
