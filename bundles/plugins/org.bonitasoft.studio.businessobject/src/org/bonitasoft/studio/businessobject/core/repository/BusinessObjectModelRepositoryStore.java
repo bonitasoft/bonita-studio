@@ -89,12 +89,6 @@ public class BusinessObjectModelRepositoryStore<F extends AbstractBDMFileStore<?
     }
 
     @Override
-    public void createRepositoryStore(IRepository repository) {
-        super.createRepositoryStore(repository);
-        repository.addProjectListener(this);
-    }
-
-    @Override
     public AbstractBDMFileStore<?> createRepositoryFileStore(final String fileName) {
         return new BusinessObjectModelFileStore(fileName, this);
     }
