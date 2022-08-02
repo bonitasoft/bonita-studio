@@ -143,6 +143,8 @@ public abstract class AbstractRepository implements IRepository, IJavaContainer 
 
     private List<IBonitaProjectListener> projectListeners = new ArrayList<>();
 
+    private static Object openCloseLock = new Object();
+
     private boolean enableOpenIntroListener = true;
 
     private ProjectDependenciesStore projectDependenciesStore;
@@ -241,6 +243,7 @@ public abstract class AbstractRepository implements IRepository, IJavaContainer 
 
     @Override
     public AbstractRepository open(final IProgressMonitor monitor) {
+        synchronized (openCloseLock) {
         SubMonitor subMonitor = SubMonitor.convert(monitor)
                 .newChild(IProgressMonitor.UNKNOWN, SubMonitor.SUPPRESS_SUBTASK);
         try {
@@ -279,6 +282,7 @@ public abstract class AbstractRepository implements IRepository, IJavaContainer 
         hookResourceListeners();
         updateCurrentRepositoryPreference();
         return this;
+        }
     }
 
     private void updateProjectMavenConfiguration(final IProgressMonitor monitor) {
@@ -304,6 +308,7 @@ public abstract class AbstractRepository implements IRepository, IJavaContainer 
 
     @Override
     public void close() {
+        synchronized (openCloseLock) {
         try {
             BonitaStudioLog.debug("Closing repository " + project.getName(), CommonRepositoryPlugin.PLUGIN_ID);
             closeAllEditors();
@@ -327,6 +332,7 @@ public abstract class AbstractRepository implements IRepository, IJavaContainer 
         removeResourceListeners();
         for (IBonitaProjectListener listener : getProjectListeners()) {
             listener.projectClosed(this, NULL_PROGRESS_MONITOR);
+        }
         }
     }
 
@@ -372,21 +378,33 @@ public abstract class AbstractRepository implements IRepository, IJavaContainer 
     protected synchronized void initRepositoryStores(final IProgressMonitor monitor) {
         isLoaded = false;
         if (stores == null || stores.isEmpty()) {
-            stores = new TreeMap<>((o1, o2) -> o1.getName().compareTo(o2.getName()));
-            final IConfigurationElement[] repositoryStoreConfigurationElements = BonitaStudioExtensionRegistryManager
-                    .getInstance().getConfigurationElements(
-                            REPOSITORY_STORE_EXTENSION_POINT_ID);
-            for (final IConfigurationElement configuration : repositoryStoreConfigurationElements) {
-                try {
-                    final IRepositoryStore<? extends IRepositoryFileStore> store = createRepositoryStore(configuration,
-                            monitor);
-                    stores.put(store.getClass(), store);
-                } catch (final CoreException e) {
-                    BonitaStudioLog.error(e);
-                }
-            }
+            createStores(monitor);
+            registerBonitaProjectListeners();
         }
         isLoaded = true;
+    }
+    
+    protected void registerBonitaProjectListeners() {
+        getAllStores().stream()
+            .filter(IBonitaProjectListener.class::isInstance)
+            .map(IBonitaProjectListener.class::cast)
+            .forEach(this::addProjectListener);
+    }
+    
+    protected void createStores(IProgressMonitor monitor) {
+        stores = new TreeMap<>((o1, o2) -> o1.getName().compareTo(o2.getName()));
+        final IConfigurationElement[] repositoryStoreConfigurationElements = BonitaStudioExtensionRegistryManager
+                .getInstance().getConfigurationElements(
+                        REPOSITORY_STORE_EXTENSION_POINT_ID);
+        for (final IConfigurationElement configuration : repositoryStoreConfigurationElements) {
+            try {
+                final IRepositoryStore<? extends IRepositoryFileStore> store = createRepositoryStore(configuration,
+                        monitor);
+                stores.put(store.getClass(), store);
+            } catch (final CoreException e) {
+                BonitaStudioLog.error(e);
+            }
+        }
     }
 
     private boolean migrationEnabled() {
