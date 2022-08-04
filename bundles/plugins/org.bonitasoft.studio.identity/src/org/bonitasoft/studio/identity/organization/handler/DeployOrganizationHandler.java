@@ -17,7 +17,6 @@ package org.bonitasoft.studio.identity.organization.handler;
 import static org.bonitasoft.studio.ui.wizard.WizardPageBuilder.newPage;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.Objects;
 import java.util.Optional;
 
 import javax.inject.Named;
@@ -32,8 +31,6 @@ import org.bonitasoft.studio.identity.IdentityPlugin;
 import org.bonitasoft.studio.identity.i18n.Messages;
 import org.bonitasoft.studio.identity.organization.exception.OrganizationValidationException;
 import org.bonitasoft.studio.identity.organization.model.organization.Organization;
-import org.bonitasoft.studio.identity.organization.model.organization.PasswordType;
-import org.bonitasoft.studio.identity.organization.model.organization.User;
 import org.bonitasoft.studio.identity.organization.repository.OrganizationFileStore;
 import org.bonitasoft.studio.identity.organization.repository.OrganizationRepositoryStore;
 import org.bonitasoft.studio.identity.organization.ui.control.DeployOrganizationControlSupplier;
@@ -55,6 +52,7 @@ import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.wizard.IWizardContainer;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
@@ -105,7 +103,7 @@ public class DeployOrganizationHandler {
             final String organizationName = controlSupplier.getFileStore().getDisplayName();
             MessageDialog.openInformation(Display.getDefault().getActiveShell(),
                     Messages.deployInformationTitle,
-                    Messages.bind(getSuccessMessage(), organizationName));
+                    NLS.bind(getSuccessMessage(), organizationName));
         } else {
             exceptionDialogHandler.openErrorDialog(Display.getDefault().getActiveShell(), status.getMessage(),
                     status.getException());
@@ -179,29 +177,12 @@ public class DeployOrganizationHandler {
 
     protected void updateDefaultUserPreference(ActiveOrganizationProvider activeOrganizationProvider,
             DeployOrganizationControlSupplier controlSupplier) {
-        final String userName = controlSupplier.getUsername();
-        activeOrganizationProvider.saveDefaultUser(userName);
-        Organization organization = null;
-        try {
-            organization = controlSupplier.getFileStore().getContent();
-        } catch (ReadFileStoreException e) {
-            BonitaStudioLog.warning(e.getMessage(), IdentityPlugin.PLUGIN_ID);
-        }
-        if (organization != null) {
-            activeOrganizationProvider.saveDefaultPassword(organization.getUsers().getUser().stream()
-                    .filter(user -> Objects.equals(user.getUserName(), userName))
-                    .findFirst()
-                    .map(User::getPassword)
-                    .map(PasswordType::getValue)
-                    .orElse(""));
-        }
+        activeOrganizationProvider.saveDefaultUser(controlSupplier.getUsername());
     }
     
     @CanExecute
     public boolean isEnabled() {
-        if (RepositoryManager.getInstance().hasActiveRepository()) {
-            return true;
-        }
-        return false;
+        return RepositoryManager.getInstance().hasActiveRepository();
     }
+
 }

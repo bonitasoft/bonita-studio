@@ -192,11 +192,6 @@ public class ConfigurationSynchronizer implements Synchronizer {
             cc.append(SetCommand.create(editingDomain, configuration,
                     ConfigurationPackage.Literals.CONFIGURATION__USERNAME, defaultUserName));
         }
-        if (configuration.getPassword() == null || configuration.getPassword().isEmpty()) {
-            final String defaultPassword = activeOrganizationProvider.getDefaultPassword();
-            cc.append(SetCommand.create(editingDomain, configuration,
-                    ConfigurationPackage.Literals.CONFIGURATION__PASSWORD, defaultPassword));
-        }
 
         editingDomain.getCommandStack().execute(cc);
 
