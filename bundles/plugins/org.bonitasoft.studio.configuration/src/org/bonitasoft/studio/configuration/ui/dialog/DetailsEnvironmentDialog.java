@@ -12,6 +12,7 @@ import org.bonitasoft.studio.configuration.repository.EnvironmentFileStore;
 import org.bonitasoft.studio.configuration.repository.EnvironmentRepositoryStore;
 import org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory;
 import org.bonitasoft.studio.ui.validator.EmptyInputValidator;
+import org.bonitasoft.studio.ui.validator.LengthValidator;
 import org.bonitasoft.studio.ui.validator.MultiValidator;
 import org.bonitasoft.studio.ui.widget.TextAreaWidget;
 import org.bonitasoft.studio.ui.widget.TextWidget;
@@ -33,6 +34,7 @@ import org.eclipse.swt.widgets.Shell;
 
 public class DetailsEnvironmentDialog extends Dialog {
 
+    private static final int MAX_NAME_LENGTH = 80;
     private String nameEnv;
     private String descEnv;
     private Environment env;
@@ -81,11 +83,15 @@ public class DetailsEnvironmentDialog extends Dialog {
                 .fill()
                 .withTargetToModelStrategy(UpdateStrategyFactory.updateValueStrategy()
                         .withValidator(new MultiValidator.Builder()
-                                .havingValidators(new FileNameValidator(Messages.name), 
-                                        existingEnvValidator(RepositoryManager.getInstance().getRepositoryStore(EnvironmentRepositoryStore.class)),
+                                .havingValidators(new FileNameValidator(Messages.name),
+                                        existingEnvValidator(RepositoryManager.getInstance()
+                                                .getRepositoryStore(EnvironmentRepositoryStore.class)),
                                         new EmptyInputValidator.Builder()
-                                            .withMessage(org.bonitasoft.studio.ui.i18n.Messages.required)
-                                            .create())
+                                                .withMessage(org.bonitasoft.studio.ui.i18n.Messages.required)
+                                                .create(),
+                                        new LengthValidator.Builder().maxLength(MAX_NAME_LENGTH)
+                                                .withMessage(String.format(Messages.maxNameLength, MAX_NAME_LENGTH))
+                                                .create())
                                 .create())
                         .withConverter(IConverter.<String, String> create(text -> text != null ? text.trim() : null)))
                 .bindTo(nameObservable)
