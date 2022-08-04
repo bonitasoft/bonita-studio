@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+<semantic:definitions id="_1276094681360" targetNamespace="http://www.trisotech.com/definitions/_1276094681360" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:semantic="http://www.omg.org/spec/BPMN/20100524/MODEL">
+    <semantic:process isExecutable="false" id="WFP-6-1">
+        <semantic:laneSet id="ls_1276094688876">
+            <semantic:lane name="Lane 1" id="Lane_Lane1">
+                <semantic:flowNodeRef>Task_ManualTask</semantic:flowNodeRef>
+            </semantic:lane>
+            <semantic:lane name="Lane 2" id="Lane_Lane2">
+                <semantic:childLaneSet>
+                    <semantic:lane name="Lane 2 - 2" id="Lane_Lane2_2">
+                        <semantic:flowNodeRef>Task_UserTask</semantic:flowNodeRef>
+                        <semantic:flowNodeRef>DataObject_Document</semantic:flowNodeRef>
+                    </semantic:lane>
+                    <semantic:lane name="Lane 2 - 1" id="Lane_Lane2_1">
+                        <semantic:flowNodeRef>SubProcess_SubProcess</semantic:flowNodeRef>
+                    </semantic:lane>
+                </semantic:childLaneSet>
+            </semantic:lane>
+        </semantic:laneSet>
+        <semantic:dataObject name="Document" id="DO1276094698063"/>
+        <semantic:manualTask completionQuantity="1" isForCompensation="false" startQuantity="1" name="Manual Task" id="Task_ManualTask">
+            <semantic:outgoing>SequenceFlow_A</semantic:outgoing>
+        </semantic:manualTask>
+        <semantic:subProcess triggeredByEvent="false" completionQuantity="1" isForCompensation="false" startQuantity="1" name="Sub Process" id="SubProcess_SubProcess">
+            <semantic:incoming>SequenceFlow_A</semantic:incoming>
+            <semantic:outgoing>SequenceFlow_B</semantic:outgoing>
+        </semantic:subProcess>
+        <semantic:userTask implementation="##unspecified" completionQuantity="1" isForCompensation="false" startQuantity="1" name="User Task" id="Task_UserTask">
+            <semantic:incoming>SequenceFlow_B</semantic:incoming>
+            <semantic:ioSpecification>
+                <semantic:dataInput id="Din1276094698516"/>
+                <semantic:inputSet>
+                    <semantic:dataInputRefs>Din1276094698516</semantic:dataInputRefs>
+                </semantic:inputSet>
+                <semantic:outputSet/>
+            </semantic:ioSpecification>
+            <semantic:dataInputAssociation id="DataAssociation_C">
+                <semantic:sourceRef>DataObject_Document</semantic:sourceRef>
+                <semantic:targetRef>Din1276094698516</semantic:targetRef>
+            </semantic:dataInputAssociation>
+        </semantic:userTask>
+        <semantic:sequenceFlow sourceRef="Task_ManualTask" targetRef="SubProcess_SubProcess" name="a" id="SequenceFlow_A"/>
+        <semantic:sequenceFlow sourceRef="SubProcess_SubProcess" targetRef="Task_UserTask" name="b" id="SequenceFlow_B"/>
+        <semantic:dataObjectReference dataObjectRef="DO1276094698063" name="Document" id="DataObject_Document"/>
+    </semantic:process>
+    <bpmndi:BPMNDiagram documentation="" id="Trisotech.Visio-_6" name="Lanes and Nested Lanes" resolution="96.00000267028808">
+        <bpmndi:BPMNPlane bpmnElement="WFP-6-1">
+            <bpmndi:BPMNShape bpmnElement="Lane_Lane1" isHorizontal="true" id="Trisotech.Visio__6_Lane_Lane1">
+                <dc:Bounds height="144.0" width="498.0" x="87.0" y="144.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="Lane_Lane2" isHorizontal="true" id="Trisotech.Visio__6_Lane_Lane2">
+                <dc:Bounds height="162.0" width="498.0" x="87.0" y="288.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="Lane_Lane2_2" isHorizontal="true" id="Trisotech.Visio__6_Lane_Lane2_2">
+                <dc:Bounds height="78.0" width="474.0" x="111.0" y="372.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="Lane_Lane2_1" isHorizontal="true" id="Trisotech.Visio__6_Lane_Lane2_1">
+                <dc:Bounds height="84.0" width="474.0" x="111.0" y="288.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="Task_ManualTask" id="Trisotech.Visio__6_Task_ManualTask">
+                <dc:Bounds height="58.0" width="71.0" x="162.0" y="177.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="SubProcess_SubProcess" isExpanded="false" id="Trisotech.Visio__6_SubProcess_SubProcess">
+                <dc:Bounds height="68.0" width="83.0" x="258.0" y="300.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="Task_UserTask" id="Trisotech.Visio__6_Task_UserTask">
+                <dc:Bounds height="68.0" width="83.0" x="446.0" y="376.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="DataObject_Document" id="Trisotech.Visio__6_DataObject_Document">
+                <dc:Bounds height="38.0" width="30.0" x="204.0" y="389.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNEdge bpmnElement="DataAssociation_C" id="Trisotech.Visio__6_DataAssociation_C">
+                <di:waypoint x="234.0" y="408.0"/>
+                <di:waypoint x="252.0" y="408.0"/>
+                <di:waypoint x="252.0" y="430.0"/>
+                <di:waypoint x="446.0" y="430.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="SequenceFlow_B" id="Trisotech.Visio__6_SequenceFlow_B">
+                <di:waypoint x="342.0" y="334.0"/>
+                <di:waypoint x="387.0" y="334.0"/>
+                <di:waypoint x="387.0" y="410.0"/>
+                <di:waypoint x="446.0" y="410.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="SequenceFlow_A" id="Trisotech.Visio__6_SequenceFlow_A">
+                <di:waypoint x="233.0" y="206.0"/>
+                <di:waypoint x="300.0" y="206.0"/>
+                <di:waypoint x="300.0" y="300.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNEdge>
+        </bpmndi:BPMNPlane>
+    </bpmndi:BPMNDiagram>
+</semantic:definitions>
+
