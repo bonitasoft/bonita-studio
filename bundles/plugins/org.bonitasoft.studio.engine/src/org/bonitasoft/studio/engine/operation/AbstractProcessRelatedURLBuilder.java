@@ -14,16 +14,12 @@
  */
 package org.bonitasoft.studio.engine.operation;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-
-import org.bonitasoft.studio.common.CommandExecutor;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
+import org.bonitasoft.studio.common.repository.preferences.OrganizationPreferenceConstants;
 import org.bonitasoft.studio.configuration.ConfigurationPlugin;
 import org.bonitasoft.studio.configuration.preferences.ConfigurationPreferenceConstants;
 import org.bonitasoft.studio.diagram.custom.repository.ProcessConfigurationRepositoryStore;
@@ -32,11 +28,8 @@ import org.bonitasoft.studio.model.process.AbstractProcess;
 
 public abstract class AbstractProcessRelatedURLBuilder extends AbstractBonitaURLBuilder {
 
-    private static final String FIND_USER_PASSWORD_COMMAND = "org.bonitasoft.studio.actors.command.userPassword";
     protected final AbstractProcess process;
     protected String configurationId;
-
-    private CommandExecutor commandExecutor = new CommandExecutor();
 
     protected AbstractProcessRelatedURLBuilder(final AbstractProcess process, final String configurationId) {
         this.process = process;
@@ -58,7 +51,7 @@ public abstract class AbstractProcessRelatedURLBuilder extends AbstractBonitaURL
     @Override
     protected String buildLoginUrl() {
         String userName = getDefaultUsername();
-        String password = getDefaultPassword();
+        String password = retrieveUserPasswordFromActiveOrga(userName).orElse(OrganizationPreferenceConstants.DEFAULT_USER_PASSWORD);
 
         final Configuration conf = getConfiguration();
         if (conf != null && conf.getUsername() != null) {
@@ -70,13 +63,6 @@ public abstract class AbstractProcessRelatedURLBuilder extends AbstractBonitaURL
         }
 
         return buildLoginUrl(userName, password);
-    }
-
-    protected Optional<String> retrieveUserPasswordFromActiveOrga(String user) {
-        Map<String, Object> parameters = new HashMap<>();
-        parameters.put("userName", user);
-        Object result = commandExecutor.executeCommand(FIND_USER_PASSWORD_COMMAND, parameters);
-        return result instanceof Optional ? (Optional<String>) result : Optional.empty();
     }
 
     protected void initConfigurationId() {
