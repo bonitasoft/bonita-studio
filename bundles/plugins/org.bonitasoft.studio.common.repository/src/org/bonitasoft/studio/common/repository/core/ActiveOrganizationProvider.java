@@ -52,17 +52,10 @@ public class ActiveOrganizationProvider {
         return projectScope.getNode(PLUGIN_ID);
     }
 
-    public String getDefaultPassword() {
-        return getPreferenceNode().get(OrganizationPreferenceConstants.DEFAULT_PASSWORD,
-                OrganizationPreferenceConstants.DEFAULT_USER_PASSWORD);
-    }
+
 
     public void saveDefaultUser(final String userName) {
         getPreferenceNode().put(OrganizationPreferenceConstants.DEFAULT_USER, userName);
-    }
-
-    public void saveDefaultPassword(final String password) {
-        getPreferenceNode().put(OrganizationPreferenceConstants.DEFAULT_PASSWORD, password);
     }
 
     public void saveActiveOrganization(final String organizationName) {

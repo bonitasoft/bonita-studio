@@ -48,7 +48,6 @@ public class DirectoryAppURLBuilderTest {
         portalURLBuilder = spy(new DirectoryAppURLBuilder());
         doReturn("fr").when(portalURLBuilder).getWebLocale();
         doReturn("william.jobs").when(portalURLBuilder).getDefaultUsername();
-        doReturn("bpm").when(portalURLBuilder).getDefaultPassword();
         loginURL = "http://fakeLoginURL";
         doReturn(loginURL).when(portalURLBuilder).buildLoginUrl(anyString(),
                 anyString());

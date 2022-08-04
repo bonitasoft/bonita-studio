@@ -28,7 +28,6 @@ import org.bonitasoft.studio.identity.organization.editor.control.user.UserListR
 import org.bonitasoft.studio.identity.organization.editor.formpage.overview.OverviewFormPage;
 import org.bonitasoft.studio.identity.organization.model.organization.Organization;
 import org.bonitasoft.studio.identity.organization.model.organization.OrganizationPackage;
-import org.bonitasoft.studio.identity.organization.model.organization.PasswordType;
 import org.bonitasoft.studio.identity.organization.model.organization.User;
 import org.bonitasoft.studio.identity.organization.repository.OrganizationFileStore;
 import org.bonitasoft.studio.identity.organization.repository.OrganizationRepositoryStore;
@@ -182,12 +181,6 @@ public class OverviewEditionControl {
     protected void updateDefaultUserPreference(String newName) {
         if (!Objects.equals(newName, activeOrganizationProvider.getDefaultUser())) {
             activeOrganizationProvider.saveDefaultUser(newName);
-            activeOrganizationProvider.saveDefaultPassword(userListObservable.stream()
-                    .filter(user -> Objects.equals(user.getUserName(), newName))
-                    .findFirst()
-                    .map(User::getPassword)
-                    .map(PasswordType::getValue)
-                    .orElse(""));
             BonitaNotificator.openInfoNotification(Messages.defaultUserUpdatedTitle,
                     String.format(Messages.defaultUserUpdated, newName));
         }
