@@ -51,7 +51,6 @@ public class CaseDetailURLBuilderTest {
         caseDetailURLBuilder = spy(new CaseDetailURLBuilder(process, ConfigurationPreferenceConstants.DEFAULT_CONFIGURATION, 12L));
         doReturn("fr").when(caseDetailURLBuilder).getWebLocale();
         doReturn("william.jobs").when(caseDetailURLBuilder).getDefaultUsername();
-        doReturn("bpm").when(caseDetailURLBuilder).getDefaultPassword();
         loginURL = "http://fakeLoginURL";
         doReturn(loginURL).when(caseDetailURLBuilder).buildLoginUrl(anyString(), anyString());
     }
