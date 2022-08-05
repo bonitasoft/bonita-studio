@@ -19,8 +19,13 @@ import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
+import org.bonitasoft.studio.common.CommandExecutor;
 import org.bonitasoft.studio.common.repository.core.ActiveOrganizationProvider;
+import org.bonitasoft.studio.common.repository.preferences.OrganizationPreferenceConstants;
 import org.bonitasoft.studio.engine.BOSWebServerManager;
 import org.bonitasoft.studio.engine.EnginePlugin;
 import org.bonitasoft.studio.engine.preferences.EnginePreferenceConstants;
@@ -31,7 +36,10 @@ import org.eclipse.jface.preference.IPreferenceStore;
 
 public abstract class AbstractBonitaURLBuilder {
 
+    private static final String FIND_USER_PASSWORD_COMMAND = "org.bonitasoft.studio.actors.command.userPassword";
     protected static final String ENCODING_UTF8 = "UTF-8";
+    
+    private CommandExecutor commandExecutor = new CommandExecutor();
 
     protected abstract String getRedirectURL(final String locale, final IProgressMonitor monitor)
             throws UnsupportedEncodingException;
@@ -54,10 +62,6 @@ public abstract class AbstractBonitaURLBuilder {
 
     protected String getWebLocale() {
         return getPreferenceStore().getString(BonitaPreferenceConstants.CURRENT_UXP_LOCALE);
-    }
-
-    protected String getDefaultPassword() {
-        return getActiveOrganizationProvider().getDefaultPassword();
     }
 
     protected String getDefaultUsername() {
@@ -89,8 +93,16 @@ public abstract class AbstractBonitaURLBuilder {
 
     protected String buildLoginUrl() {
         final String userName = getDefaultUsername();
-        final String password = getDefaultPassword();
+        final String password = retrieveUserPasswordFromActiveOrga(userName).orElse(OrganizationPreferenceConstants.DEFAULT_USER_PASSWORD);
         return buildLoginUrl(userName, password);
     }
+    
+    protected Optional<String> retrieveUserPasswordFromActiveOrga(String user) {
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("userName", user);
+        Object result = commandExecutor.executeCommand(FIND_USER_PASSWORD_COMMAND, parameters);
+        return result instanceof Optional ? (Optional<String>) result : Optional.empty();
+    }
+
 
 }

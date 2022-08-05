@@ -58,19 +58,9 @@ public class ActiveOrganizationProvider {
                 .map(ctx -> ctx.getNode(PLUGIN_ID));
     }
 
-    public String getDefaultPassword() {
-        return getPreferenceNode()
-                .map(prefs -> prefs.get(OrganizationPreferenceConstants.DEFAULT_PASSWORD,
-                        OrganizationPreferenceConstants.DEFAULT_USER_PASSWORD))
-                .orElse(OrganizationPreferenceConstants.DEFAULT_USER_PASSWORD);
-    }
 
     public void saveDefaultUser(final String userName) {
         getPreferenceNode().ifPresent(prefs -> prefs.put(OrganizationPreferenceConstants.DEFAULT_USER, userName));
-    }
-
-    public void saveDefaultPassword(final String password) {
-        getPreferenceNode().ifPresent(prefs -> prefs.put(OrganizationPreferenceConstants.DEFAULT_PASSWORD, password));
     }
 
     public void saveActiveOrganization(final String organizationName) {

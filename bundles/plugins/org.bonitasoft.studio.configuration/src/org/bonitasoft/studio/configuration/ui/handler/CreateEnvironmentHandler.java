@@ -59,6 +59,7 @@ import org.eclipse.ui.progress.IProgressService;
 
 public class CreateEnvironmentHandler extends AbstractHandler{
 
+    private static final int MAX_NAME_LENGTH = 80;
     private DirtyEditorChecker dirtyEditorChecker;
     private RepositoryAccessor repositoryAccessor;
     
@@ -87,6 +88,11 @@ public class CreateEnvironmentHandler extends AbstractHandler{
                     if (input == null || input.isEmpty()) {
                         return Messages.emptyName;
                     }
+                    
+                    if (input.length() > MAX_NAME_LENGTH) {
+                        return String.format(Messages.maxNameLength, MAX_NAME_LENGTH);
+                    }
+                    
                     if (store.getChildren().stream().map(EnvironmentFileStore::getDisplayName).anyMatch(input::equalsIgnoreCase)) {
                         return Messages.alreadyExists;
                     }

@@ -39,7 +39,6 @@ import org.bonitasoft.studio.identity.organization.handler.DeployOrganizationHan
 import org.bonitasoft.studio.identity.organization.model.organization.DocumentRoot;
 import org.bonitasoft.studio.identity.organization.model.organization.Organization;
 import org.bonitasoft.studio.identity.organization.model.organization.OrganizationFactory;
-import org.bonitasoft.studio.identity.organization.model.organization.PasswordType;
 import org.bonitasoft.studio.identity.organization.model.organization.User;
 import org.bonitasoft.studio.identity.organization.model.organization.util.OrganizationXMLProcessor;
 import org.bonitasoft.studio.identity.organization.operation.CleanPublishOrganizationOperation;
@@ -331,18 +330,9 @@ public class OrganizationFileStore extends EMFFileStore<Organization>
             User user = organization.getUsers().getUser().get(0);
             userName = user.getUserName();
         }
-        String defaultUserName = userName;
         var oldDefaultUser = activeOrganizationProvider.getDefaultUser();
         if (!Objects.equals(oldDefaultUser, userName)) {
             activeOrganizationProvider.saveDefaultUser(userName);
-            if (organization != null) {
-                activeOrganizationProvider.saveDefaultPassword(organization.getUsers().getUser().stream()
-                        .filter(user -> Objects.equals(user.getUserName(), defaultUserName))
-                        .findFirst()
-                        .map(User::getPassword)
-                        .map(PasswordType::getValue)
-                        .orElse(""));
-            }
         }
     }
 

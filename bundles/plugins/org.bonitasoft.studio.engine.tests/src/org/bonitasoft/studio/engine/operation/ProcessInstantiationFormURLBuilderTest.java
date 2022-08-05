@@ -52,7 +52,6 @@ public class ProcessInstantiationFormURLBuilderTest {
                 ConfigurationPreferenceConstants.DEFAULT_CONFIGURATION));
         doReturn("fr").when(applicationURLBuilder).getWebLocale();
         doReturn("william.jobs").when(applicationURLBuilder).getDefaultUsername();
-        doReturn("bpm").when(applicationURLBuilder).getDefaultPassword();
         loginURL = "http://fakeLoginURL";
         doReturn(loginURL).when(applicationURLBuilder).buildLoginUrl(anyString(), anyString());
     }

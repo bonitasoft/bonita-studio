@@ -105,4 +105,5 @@ public class Messages extends NLS {
     public static String detailsEnvironment;
     public static String modify;
     public static String renamingProcessConfigurations;
+    public static String maxNameLength;
 }
