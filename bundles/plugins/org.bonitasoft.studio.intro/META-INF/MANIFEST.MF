@@ -1,0 +1,29 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Intro Plugin
+Bundle-Localization: plugin
+Bundle-SymbolicName: org.bonitasoft.studio.intro;singleton:=true
+Bundle-Version: 7.15.0.qualifier
+Bundle-Activator: org.bonitasoft.studio.intro.Activator
+Bundle-Vendor: BonitaSoft S.A.
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.eclipse.ui.intro,
+ org.bonitasoft.studio.application,
+ org.bonitasoft.studio.common,
+ org.eclipse.ui.forms,
+ org.eclipse.core.resources,
+ org.bonitasoft.studio.common.repository,
+ org.bonitasoft.studio.diagram.custom,
+ org.bonitasoft.studio.migration,
+ org.bonitasoft.studio.importer,
+ org.bonitasoft.studio.engine,
+ org.bonitasoft.studio.preferences,
+ org.eclipse.e4.ui.workbench
+Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-ActivationPolicy: lazy
+Export-Package: org.bonitasoft.studio.intro,
+ org.bonitasoft.studio.intro.configurer,
+ org.bonitasoft.studio.intro.content,
+ org.bonitasoft.studio.intro.content.actions,
+ org.bonitasoft.studio.intro.i18n
