@@ -1,0 +1,28 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Scripting Plug-in
+Bundle-SymbolicName: org.bonitasoft.studio.scripting;singleton:=true
+Bundle-Version: 7.16.0.qualifier
+Bundle-Activator: org.bonitasoft.studio.scripting.ScriptingPlugin
+Bundle-Vendor: BonitaSoft S.A.
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.bonitasoft.studio.expression.editor,
+ org.bonitasoft.studio.model,
+ org.bonitasoft.studio.common,
+ org.bonitasoft.studio.pics,
+ org.eclipse.core.databinding,
+ org.eclipse.emf.databinding,
+ org.eclipse.emf.databinding.edit,
+ org.eclipse.jface.databinding,
+ org.eclipse.emf.edit.ui,
+ org.eclipse.jdt.ui,
+ org.bonitasoft.studio.common.repository,
+ org.eclipse.jdt.core,
+ org.bonitasoft.studio.ui
+Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-ActivationPolicy: lazy
+Export-Package: org.bonitasoft.studio.scripting,org.bonitasoft.studio.
+ scripting.extensions,org.bonitasoft.studio.scripting.i18n;x-friends:=
+ "org.bonitasoft.studio.tests.ex",org.bonitasoft.studio.scripting.prov
+ ider

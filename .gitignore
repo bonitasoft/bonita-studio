@@ -1,0 +1,11 @@
+target
+bin
+/.project
+screenshots
+.pmd
+*.hprof
+
+*.orig
+*.tmp
+*.iml
+/workspace
