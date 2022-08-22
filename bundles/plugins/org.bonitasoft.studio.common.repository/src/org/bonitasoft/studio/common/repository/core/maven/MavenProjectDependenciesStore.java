@@ -126,7 +126,7 @@ public class MavenProjectDependenciesStore implements ProjectDependenciesStore {
                 .forEach(status::add);
             return status;
         }
-        return null;
+        return new MultiStatus(MavenProjectDependenciesStore.class, 0, null);
     }
 
     private String getArtifactId(Issue issue) {
@@ -259,9 +259,12 @@ public class MavenProjectDependenciesStore implements ProjectDependenciesStore {
     @Override
     public List<Issue> findIssues(Dependency dependency) {
         String artifactId = toArtifactId(dependency);
-        return getIssues().stream()
-                .filter(issue -> issue.getContext().stream().anyMatch(artifactId::equals))
-                .collect(Collectors.toList());
+        if(artifactId != null) {
+            return getIssues().stream()
+                    .filter(issue -> issue.getContext().stream().anyMatch(artifactId::equals))
+                    .collect(Collectors.toList());
+        }
+        return Collections.emptyList();
     }
     
     @Override
@@ -273,9 +276,12 @@ public class MavenProjectDependenciesStore implements ProjectDependenciesStore {
     }
 
     private static String toArtifactId(Dependency dependency) {
-        return new DefaultArtifact(dependency.getGroupId(), dependency.getArtifactId(), dependency.getVersion(),
-                "compile", dependency.getType(),
-                dependency.getClassifier(), new DefaultArtifactHandler()).getId();
+        if(dependency.getVersion() != null) {
+            return new DefaultArtifact(dependency.getGroupId(), dependency.getArtifactId(), dependency.getVersion(),
+                    "compile", dependency.getType(),
+                    dependency.getClassifier(), new DefaultArtifactHandler()).getId();
+        }
+        return null;
     }
 
 }
