@@ -18,7 +18,6 @@
 package org.bonitasoft.studio.application.actions;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
@@ -39,9 +38,6 @@ import org.eclipse.ui.ide.IDE;
  */
 public class OpenLogCommand extends AbstractHandler {
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
-	 */
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		IFileStore fileStore = EFS.getLocalFileSystem().getStore(Platform.getLogFileLocation());
@@ -62,10 +58,7 @@ public class OpenLogCommand extends AbstractHandler {
 	
     @CanExecute
     public boolean isEnabled() {
-        if (RepositoryManager.getInstance().hasActiveRepository()) {
-            return true;
-        }
-        return false;
+        return Platform.getLogFileLocation().toFile().exists();
     }
 
 }
