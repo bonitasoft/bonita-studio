@@ -52,12 +52,6 @@ import org.eclipse.ui.part.ResourceTransfer;
 public class BonitaStudioWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 
     private final IWorkbenchWindow window;
-    private static final Set<String> EDITOR_TYPE_TO_CLOSE_ON_EXIT = new HashSet<>();
-
-    static {
-        EDITOR_TYPE_TO_CLOSE_ON_EXIT.add("org.bonitasoft.studio.customProfile.editor");
-        EDITOR_TYPE_TO_CLOSE_ON_EXIT.add("org.bonitasoft.studio.la.editor");
-    }
 
     public BonitaStudioWorkbenchWindowAdvisor(final IWorkbenchWindowConfigurer configurer) {
         super(configurer);
@@ -134,56 +128,5 @@ public class BonitaStudioWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
         }
     }
 
-    @Override
-    public boolean preWindowShellClose() {
-        if (PlatformUI.getWorkbench().getWorkbenchWindowCount() > 1) {
-            return true;
-        }
-        // the user has asked to close the last window, while will cause the
-        // workbench to close in due course - prompt the user for confirmation
-        if (promptOnExit(getWindowConfigurer().getWindow().getShell())) {
-            return true;
-        }
-        return false;
-    }
-
-    private boolean promptOnExit(Shell parentShell) {
-        final IPreferenceStore store = IDEWorkbenchPlugin.getDefault()
-                .getPreferenceStore();
-        final boolean promptOnExit = store
-                .getBoolean(IDEInternalPreferences.EXIT_PROMPT_ON_CLOSE_LAST_WINDOW);
-
-        if (promptOnExit) {
-            if (parentShell == null) {
-                final IWorkbenchWindow workbenchWindow = window;
-                if (workbenchWindow != null) {
-                    parentShell = workbenchWindow.getShell();
-                }
-            }
-            if (parentShell != null) {
-                parentShell.setMinimized(false);
-                parentShell.forceActive();
-            }
-            final MessageDialogWithToggle dlg = ExitDialog.openExitDialog(parentShell);
-            if (dlg.getReturnCode() != IDialogConstants.OK_ID) {
-                return false;
-            }
-            if (dlg.getToggleState()) {
-                store
-                        .setValue(
-                                IDEInternalPreferences.EXIT_PROMPT_ON_CLOSE_LAST_WINDOW,
-                                false);
-                IDEWorkbenchPlugin.getDefault().savePluginPreferences();
-            }
-        }
-
-        IWorkbenchPage activePage = PlatformUI.getWorkbench()
-                .getActiveWorkbenchWindow()
-                .getActivePage();
-        IEditorReference[] editorReferences = activePage
-                .getEditorReferences();
-        return activePage.closeEditors(Stream.of(editorReferences)
-                .filter(ref -> EDITOR_TYPE_TO_CLOSE_ON_EXIT.contains(ref.getId()))
-                .toArray(IEditorReference[]::new), true);
-    }
+   
 }

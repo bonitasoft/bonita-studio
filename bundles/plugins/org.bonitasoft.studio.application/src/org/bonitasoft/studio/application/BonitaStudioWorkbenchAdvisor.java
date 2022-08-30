@@ -19,12 +19,15 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
 import java.net.URL;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Stream;
 
 import org.apache.maven.cli.configuration.SettingsXmlConfigurationProcessor;
 import org.bonitasoft.studio.application.contribution.IPreShutdownContribution;
 import org.bonitasoft.studio.application.contribution.RecoverWorkspaceContribution;
+import org.bonitasoft.studio.application.dialog.ExitDialog;
 import org.bonitasoft.studio.application.handler.OpenReleaseNoteHandler;
 import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.common.DateUtil;
@@ -78,6 +81,7 @@ import org.eclipse.e4.ui.css.swt.theme.IThemeEngine;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -87,8 +91,10 @@ import org.eclipse.m2e.core.repository.IRepository;
 import org.eclipse.m2e.core.repository.IRepositoryRegistry;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IStartup;
 import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.application.IWorkbenchConfigurer;
 import org.eclipse.ui.application.IWorkbenchWindowConfigurer;
@@ -98,6 +104,7 @@ import org.eclipse.ui.contexts.IContextService;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.internal.Workbench;
 import org.eclipse.ui.internal.browser.WebBrowserUtil;
+import org.eclipse.ui.internal.ide.IDEInternalPreferences;
 import org.eclipse.ui.internal.ide.IDEInternalWorkbenchImages;
 import org.eclipse.ui.internal.ide.IDEWorkbenchMessages;
 import org.eclipse.ui.internal.ide.IDEWorkbenchPlugin;
@@ -108,6 +115,12 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
 
     private static final String BONITA_STUDIO_SKIP_RELEASE_NOTE_SYSTEM_PROPERTY = "bonita.studio.skipReleaseNote";
     private static final String AWT_DRAW_STRING_AS_IMAGE = "drawStringAsImage";
+    private static final Set<String> EDITOR_TYPE_TO_CLOSE_ON_EXIT = new HashSet<>();
+
+    static {
+        EDITOR_TYPE_TO_CLOSE_ON_EXIT.add("org.bonitasoft.studio.customProfile.editor");
+        EDITOR_TYPE_TO_CLOSE_ON_EXIT.add("org.bonitasoft.studio.la.editor");
+    }
 
     private final class PreShutdownStudio implements IRunnableWithProgress {
 
@@ -616,27 +629,72 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
         disconnectFromWorkspace(AbstractRepository.NULL_PROGRESS_MONITOR);
     }
 
-    @Override
-    public boolean preShutdown() {
-        IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow()
-                .getActivePage();
-        Stream.of(activePage.getViewReferences())
-                .filter(vr -> Objects.equals("org.eclipse.ui.browser.view", vr.getId()))
-                .forEach(activePage::hideView);
-        Job.getJobManager().cancel(StartEngineJob.FAMILY);
-        final boolean returnValue = super.preShutdown();
-        if (returnValue) {
-            try {
-                if (PlatformUI.isWorkbenchRunning() && PlatformUI.getWorkbench().getActiveWorkbenchWindow() != null
-                        && PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage() != null) {
-                    PlatformUI.getWorkbench().getProgressService().run(true, false, new PreShutdownStudio());
-                    return true;
+    private boolean promptOnExit(Shell parentShell) {
+        final IPreferenceStore store = IDEWorkbenchPlugin.getDefault()
+                .getPreferenceStore();
+        final boolean promptOnExit = store
+                .getBoolean(IDEInternalPreferences.EXIT_PROMPT_ON_CLOSE_LAST_WINDOW);
+
+        if (promptOnExit) {
+            if (parentShell == null) {
+                final IWorkbenchWindow workbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+                if (workbenchWindow != null) {
+                    parentShell = workbenchWindow.getShell();
                 }
-            } catch (final Exception e) {
-                BonitaStudioLog.error(e);
+            }
+            if (parentShell != null) {
+                parentShell.setMinimized(false);
+                parentShell.forceActive();
+            }
+            final MessageDialogWithToggle dlg = ExitDialog.openExitDialog(parentShell);
+            if (dlg.getReturnCode() != IDialogConstants.OK_ID) {
+                return false;
+            }
+            if (dlg.getToggleState()) {
+                store
+                        .setValue(
+                                IDEInternalPreferences.EXIT_PROMPT_ON_CLOSE_LAST_WINDOW,
+                                false);
+                IDEWorkbenchPlugin.getDefault().savePluginPreferences();
             }
         }
-        return returnValue;
+
+        IWorkbenchPage activePage = PlatformUI.getWorkbench()
+                .getActiveWorkbenchWindow()
+                .getActivePage();
+        IEditorReference[] editorReferences = activePage
+                .getEditorReferences();
+        return activePage.closeEditors(Stream.of(editorReferences)
+                .filter(ref -> EDITOR_TYPE_TO_CLOSE_ON_EXIT.contains(ref.getId()))
+                .toArray(IEditorReference[]::new), true);
+    }
+
+    @Override
+    public boolean preShutdown() {
+        var shell = Display.getCurrent() != null ? Display.getCurrent().getActiveShell()
+                : Display.getDefault().getActiveShell();
+        if (promptOnExit(shell)) {
+            IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow()
+                    .getActivePage();
+            Stream.of(activePage.getViewReferences())
+                    .filter(vr -> Objects.equals("org.eclipse.ui.browser.view", vr.getId()))
+                    .forEach(activePage::hideView);
+            Job.getJobManager().cancel(StartEngineJob.FAMILY);
+            final boolean returnValue = super.preShutdown();
+            if (returnValue) {
+                try {
+                    if (PlatformUI.isWorkbenchRunning() && PlatformUI.getWorkbench().getActiveWorkbenchWindow() != null
+                            && PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage() != null) {
+                        PlatformUI.getWorkbench().getProgressService().run(true, false, new PreShutdownStudio());
+                        return true;
+                    }
+                } catch (final Exception e) {
+                    BonitaStudioLog.error(e);
+                }
+            }
+            return returnValue;
+        }
+        return false;
     }
 
     @Override
