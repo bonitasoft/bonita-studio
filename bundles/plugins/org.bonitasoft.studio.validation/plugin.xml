@@ -43,6 +43,36 @@
                </description>
             </constraint>
             <constraint
+                  class="org.bonitasoft.studio.validation.constraints.process.AbstractProcessVersionConstraint"
+                  id="org.bonitasoft.studio.validation.constraints.version"
+                  lang="Java"
+                  mode="Live"
+                  name="%VersionFormatConstraint"
+                  severity="ERROR"
+                  statusCode="2">
+               <message>
+                  {0}
+               </message>
+               <target
+                     class="AbstractProcess:http://www.bonitasoft.org/ns/studio/process">
+                  <event
+                        name="Set">
+                     <feature
+                           name="version">
+                     </feature>
+                  </event>
+                  <event
+                        name="Unset">
+                     <feature
+                           name="version">
+                     </feature>
+                  </event>
+               </target>
+               <description>
+                  %constraints.abstractprocess.version
+               </description>
+            </constraint>
+            <constraint
                   class="org.bonitasoft.studio.validation.constraints.process.AssignableConstraint"
                   id="org.bonitasoft.studio.validation.constraints.assignable"
                   lang="Java"
@@ -1413,5 +1443,15 @@
                commandId="org.bonitasoft.studio.validation.batchValidation"
                icon="icons/validate.png">
          </image>
+      </extension>
+      <extension
+            point="org.eclipse.core.runtime.adapters">
+         <factory
+               adaptableType="org.eclipse.emf.ecore.EAttribute"
+               class="org.bonitasoft.studio.validation.constraints.process.internal.PerAttributeValidatorAdapterFactory">
+            <adapter
+                  type="org.bonitasoft.studio.common.jface.databinding.validator.EAttributeValidatorFactory">
+            </adapter>
+         </factory>
       </extension>
 </plugin>

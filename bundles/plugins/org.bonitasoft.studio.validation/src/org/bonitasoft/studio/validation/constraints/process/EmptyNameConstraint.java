@@ -15,32 +15,109 @@
 package org.bonitasoft.studio.validation.constraints.process;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.fileNameValidator;
+import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.forbiddenCharacterSequenceValidator;
 import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.forbiddenCharactersValidator;
+import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.mandatoryValidator;
 import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.maxLengthValidator;
 import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.multiValidator;
+import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.utf8InputValidator;
 
+import org.bonitasoft.studio.common.jface.databinding.validator.MultiValidatorFactory;
 import org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory;
 import org.bonitasoft.studio.model.process.Element;
-import org.bonitasoft.studio.model.process.FlowElement;
-import org.bonitasoft.studio.model.process.SequenceFlow;
-import org.bonitasoft.studio.model.process.Task;
-import org.bonitasoft.studio.model.process.TextAnnotation;
+import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.validation.constraints.AbstractLiveValidationMarkerConstraint;
 import org.bonitasoft.studio.validation.i18n.Messages;
+import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.validation.IValidationContext;
 
 /**
  * @author Romain Bioteau
+ * @author Vincent Hemery
  */
 public class EmptyNameConstraint extends AbstractLiveValidationMarkerConstraint {
 
     private static final int MAX_NAME_LENGTH = 255;
+    public static final int MAX_FILE_NAME_LENGTH = 75;
 
-    @Override
-    protected IStatus performLiveValidation(final IValidationContext ctx) {
-        return doValidate(ctx);
+    /**
+     * Get the multi-validator that will check the name of an element
+     * 
+     * @param elementsEClass the element's EClass (to deduce validation rules)
+     * @return multi-validator to use
+     */
+    public static IValidator<String> nameValidator(EClass elementsEClass) {
+        checkArgument(ProcessPackage.Literals.ELEMENT.isSuperTypeOf(elementsEClass));
+        final String inputName = String.format("%s %s", elementsEClass.getName(), Messages.elementName);
+        MultiValidatorFactory factory = multiValidator();
+        if (!elementCanHaveEmptyName(elementsEClass)) {
+            factory.addValidator(mandatoryValidator(inputName));
+        }
+        boolean validFileName = elementMustHaveAValidFileName(elementsEClass);
+        if (validFileName) {
+            factory.addValidator(fileNameValidator(inputName))
+                    .addValidator(maxLengthValidator(inputName, MAX_FILE_NAME_LENGTH));
+        }
+        if (elementMustHaveARestrictedName(elementsEClass)) {
+            factory.addValidator(utf8InputValidator(inputName))
+                    .addValidator(forbiddenCharactersValidator(inputName, '#', '%', '$'))
+                    .addValidator(ValidatorFactory.reservedRESTAPIKeywordsValidator());
+            if (!validFileName) {
+                factory.addValidator(maxLengthValidator(inputName, MAX_NAME_LENGTH));
+            }
+            // else, file name has its own max length
+            if (ProcessPackage.Literals.TASK.isSuperTypeOf(elementsEClass)) {
+                factory.addValidator(forbiddenCharacterSequenceValidator(Messages.invalidColumnUsageInTaskName, " :"));
+            }
+        }
+        return factory.create();
+    }
+
+    private static boolean elementCanHaveEmptyName(final EClass elementsEClass) {
+        // note : SequenceFlow may have a non-empty name or an empty name
+        return ProcessPackage.Literals.SEQUENCE_FLOW.isSuperTypeOf(elementsEClass)
+                || ProcessPackage.Literals.TEXT_ANNOTATION.isSuperTypeOf(elementsEClass);
+    }
+
+    private static boolean elementMustHaveARestrictedName(final EClass elementsEClass) {
+        return ProcessPackage.Literals.SEQUENCE_FLOW.isSuperTypeOf(elementsEClass)
+                || ProcessPackage.Literals.FLOW_ELEMENT.isSuperTypeOf(elementsEClass)
+                /*
+                 * It looks like AbstractProcess also needs this validation, according to previous
+                 * org.bonitasoft.studio.common.diagram.dialog.OpenNameAndVersionDialog.nameUpdateStrategy() and
+                 * org.bonitasoft.studio.properties.sections.general.ProcessElementNameContribution.nameValidationStatusProvider(IObservableValue)
+                 * implementations.
+                 */
+                || ProcessPackage.Literals.ABSTRACT_PROCESS.isSuperTypeOf(elementsEClass);
+    }
+
+    /**
+     * Test whether the element must have a name which can correspond to a file name.<br/>
+     * This is usefull when name is used to export to a file.
+     * 
+     * @param elementsEClass the {@link EClass} of the model element
+     * @return true when name must be a valid file name
+     */
+    private static boolean elementMustHaveAValidFileName(final EClass elementsEClass) {
+        return ProcessPackage.Literals.ABSTRACT_PROCESS.isSuperTypeOf(elementsEClass);
+    }
+
+    protected IStatus doValidate(final IValidationContext ctx) {
+        final EObject eObj = ctx.getTarget();
+        checkArgument(eObj instanceof Element);
+        final Element element = (Element) eObj;
+        final String name = element.getName();
+        IValidator<String> validator = nameValidator(element.eClass());
+        final IStatus status = validator.validate(name);
+        if (!status.isOK()) {
+            return ctx.createFailureStatus(status.getMessage());
+        } else {
+            return ctx.createSuccessStatus();
+        }
     }
 
     @Override
@@ -53,51 +130,9 @@ public class EmptyNameConstraint extends AbstractLiveValidationMarkerConstraint 
         return doValidate(ctx);
     }
 
-    protected IStatus doValidate(final IValidationContext ctx) {
-        final EObject eObj = ctx.getTarget();
-        checkArgument(eObj instanceof Element);
-        final Element element = (Element) eObj;
-        final String name = element.getName();
-        if (isBlank(name)) {
-            return elementCanHaveEmptyName(eObj) ? ctx.createSuccessStatus() : ctx.createFailureStatus(Messages.bind(Messages.emptynameMessage,
-                    eClassName(eObj)));
-        }
-        return elementMustHaveARestrictedName(eObj) ? doValidateNameRestriction((Element) eObj, ctx) : ctx.createSuccessStatus();
+    @Override
+    protected IStatus performLiveValidation(final IValidationContext ctx) {
+        return doValidate(ctx);
     }
-
-    private String eClassName(final EObject eObj) {
-        return eObj
-                .eClass().getName();
-    }
-
-    private IStatus doValidateNameRestriction(final Element element, final IValidationContext ctx) {
-        final String inputName = String.format("%s %s", eClassName(element), Messages.elementName);
-        final IStatus status = multiValidator()
-                .addValidator(forbiddenCharactersValidator(inputName, '#', '%', '$'))
-                .addValidator(maxLengthValidator(inputName, MAX_NAME_LENGTH))
-                .addValidator(ValidatorFactory.reservedRESTAPIKeywordsValidator()).create().validate(element.getName());
-        if (!status.isOK()) {
-            return ctx.createFailureStatus(status.getMessage());
-        }
-        if (element instanceof Task && element.getName().contains(" :")) {
-            return ctx.createFailureStatus(Messages.invalidColumnUsageInTaskName);
-        }
-        return ctx.createSuccessStatus();
-    }
-
-    private boolean isBlank(final String name) {
-        return name == null || name.trim().isEmpty();
-    }
-
-    private boolean elementMustHaveARestrictedName(final EObject eObj) {
-        return eObj instanceof SequenceFlow
-                || eObj instanceof FlowElement;
-    }
-
-    private boolean elementCanHaveEmptyName(final EObject eObj) {
-        return eObj instanceof SequenceFlow
-                || eObj instanceof TextAnnotation;
-    }
-
 
 }

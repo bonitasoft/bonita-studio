@@ -62,6 +62,10 @@ public abstract class AbstractNamePropertySectionContribution implements IExtens
 
     @Override
     public boolean isRelevantFor(final EObject eObject) {
+        /*
+         * Note : MessageFlow does not display the name section, because name is synchronized with the Message.
+         * MessageFlow#name is still mandatory though.
+         */
         return eObject instanceof Element && !(eObject instanceof MessageFlow) && !(eObject instanceof TextAnnotation);
     }
 

@@ -14,13 +14,9 @@
  */
 package org.bonitasoft.studio.properties.sections.general;
 
-import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.forbiddenCharactersValidator;
-import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.minMaxLengthValidator;
-import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.multiValidator;
-import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.utf8InputValidator;
-
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
+import java.util.Optional;
 
 import org.bonitasoft.studio.common.diagram.Identifier;
 import org.bonitasoft.studio.common.diagram.dialog.OpenNameAndVersionDialog;
@@ -29,7 +25,7 @@ import org.bonitasoft.studio.common.diagram.dialog.ProcessesNameVersion;
 import org.bonitasoft.studio.common.emf.tools.EMFModelUpdater;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
-import org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory;
+import org.bonitasoft.studio.common.jface.databinding.validator.EAttributeValidatorFactory;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.properties.AbstractNamePropertySectionContribution;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
@@ -45,7 +41,6 @@ import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.Message;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessPackage;
-import org.bonitasoft.studio.model.process.SequenceFlow;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.LaneEditPart;
 import org.bonitasoft.studio.properties.i18n.Messages;
 import org.bonitasoft.studio.properties.operation.RenameDiagramOperation;
@@ -54,13 +49,14 @@ import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.IValueChangeListener;
 import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
+import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.databinding.validation.MultiValidator;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.edit.EMFEditObservables;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gmf.runtime.diagram.core.listener.DiagramEventBroker;
@@ -241,16 +237,15 @@ public class ProcessElementNameContribution extends AbstractNamePropertySectionC
     }
 
     protected MultiValidator nameValidationStatusProvider(final IObservableValue nameTextObservable) {
+        // rely on validator for name attribute contributed by the validation plugin
+        Optional<EAttributeValidatorFactory> validatorFactory = EAttributeValidatorFactory
+                .findForAttribute(ProcessPackage.Literals.ELEMENT__NAME);
         return new MultiValidator() {
 
             @Override
             protected IStatus validate() {
-                return multiValidator()
-                        .addValidator(minMaxLengthValidator(Messages.name, element instanceof SequenceFlow ? 0 : 1, 255))
-                        .addValidator(utf8InputValidator(Messages.name))
-                        .addValidator(forbiddenCharactersValidator(Messages.name, '#', '%', '$'))
-                        .addValidator(ValidatorFactory.reservedRESTAPIKeywordsValidator()).create()
-                        .validate(nameTextObservable.getValue());
+                Optional<IValidator> validator = validatorFactory.map(f -> f.create(element.eClass()));
+                return validator.map(v -> v.validate(nameTextObservable.getValue())).orElse(Status.OK_STATUS);
             }
         };
     }
@@ -323,7 +318,8 @@ public class ProcessElementNameContribution extends AbstractNamePropertySectionC
                 Display.getDefault().getActiveShell(), diagram,
                 diagramStore);
         if (nameDialog.open() == Dialog.OK) {
-            final DiagramEditor editor = (DiagramEditor) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
+            final DiagramEditor editor = (DiagramEditor) PlatformUI.getWorkbench().getActiveWorkbenchWindow()
+                    .getActivePage()
                     .getActiveEditor();
             final MainProcess newProcess = (MainProcess) editor.getDiagramEditPart().resolveSemanticElement();
             final String oldName = newProcess.getName();
@@ -358,7 +354,8 @@ public class ProcessElementNameContribution extends AbstractNamePropertySectionC
     protected void editSinglePoolNameAndVersion(final Pool pool) {
         final DiagramRepositoryStore diagramStore = RepositoryManager.getInstance()
                 .getRepositoryStore(DiagramRepositoryStore.class);
-        final OpenNameAndVersionDialog dialog1 = new OpenNameAndVersionDialog(Display.getDefault().getActiveShell(), pool,
+        final OpenNameAndVersionDialog dialog1 = new OpenNameAndVersionDialog(Display.getDefault().getActiveShell(),
+                pool,
                 diagramStore);
         if (dialog1.open() == Dialog.OK) {
             final String oldPoolName = element.getName();
@@ -375,7 +372,8 @@ public class ProcessElementNameContribution extends AbstractNamePropertySectionC
         final Identifier identifier = nameDialog.getIdentifier();
         processNamingTools.changeProcessNameAndVersion(newProcess, identifier.getName(), identifier.getVersion());
         for (final ProcessesNameVersion pnv : nameDialog.getPools()) {
-            processNamingTools.changeProcessNameAndVersion(pnv.getAbstractProcess(), pnv.getNewName(), pnv.getNewVersion());
+            processNamingTools.changeProcessNameAndVersion(pnv.getAbstractProcess(), pnv.getNewName(),
+                    pnv.getNewVersion());
         }
         try {
             final ICommandService service = PlatformUI.getWorkbench().getService(ICommandService.class);

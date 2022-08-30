@@ -164,6 +164,8 @@ public class Messages extends NLS {
 
     public static String elementName;
 
+    public static String processVersion;
+
     public static String invalidConditionExpression;
 
     public static String overviewFormCantHaveSubmitButton;

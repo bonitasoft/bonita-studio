@@ -35,11 +35,16 @@ public class ValidatorFactory {
     }
 
     public static IValidator<String> mandatoryValidator(final String inputName) {
-        return new EmptyInputValidator(inputName);
+        return new EmptyInputValidator(inputName, true);
     }
 
     public static IValidator regExpValidator(final String errorMessage, final String regExp) {
         return new RegExpValidator(errorMessage, regExp);
+    }
+
+    public static IValidator forbiddenCharacterSequenceValidator(final String errorMessage,
+            final String forbiddenSequence) {
+        return new ForbiddenCharacterSequenceValidator(errorMessage, forbiddenSequence);
     }
 
     public static IValidator forbiddenCharactersValidator(final String inputName, final char... forbiddenCharacters) {

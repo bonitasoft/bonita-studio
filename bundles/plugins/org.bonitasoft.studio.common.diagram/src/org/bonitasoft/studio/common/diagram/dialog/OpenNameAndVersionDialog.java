@@ -17,17 +17,11 @@ package org.bonitasoft.studio.common.diagram.dialog;
 import static com.google.common.collect.Iterables.transform;
 import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Sets.newHashSet;
-import static org.bonitasoft.studio.common.jface.databinding.UpdateStrategyFactory.updateValueStrategy;
-import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.fileNameValidator;
-import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.forbiddenCharactersValidator;
-import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.mandatoryValidator;
-import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.maxLengthValidator;
-import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.multiValidator;
-import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.reservedRESTAPIKeywordsValidator;
-import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.utf8InputValidator;
+import static org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory.updateValueStrategy;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import org.bonitasoft.studio.common.Messages;
@@ -35,6 +29,7 @@ import org.bonitasoft.studio.common.diagram.Identifier;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.jface.databinding.DialogSupport;
+import org.bonitasoft.studio.common.jface.databinding.validator.EAttributeValidatorFactory;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
@@ -42,9 +37,12 @@ import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.MainProcess;
+import org.bonitasoft.studio.model.process.ProcessPackage;
+import org.bonitasoft.studio.ui.databinding.UpdateValueStrategyFactory;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.beans.PojoProperties;
+import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.databinding.validation.MultiValidator;
 import org.eclipse.jface.databinding.fieldassist.ControlDecorationSupport;
 import org.eclipse.jface.databinding.swt.ISWTObservableValue;
@@ -168,7 +166,8 @@ public class OpenNameAndVersionDialog extends Dialog {
                 GridDataFactory.fillDefaults().grab(true, false).hint(200, SWT.DEFAULT).indent(10, 0).create());
         final ISWTObservableValue observeNameText = SWTObservables.observeText(nameText, SWT.Modify);
         ControlDecorationSupport.create(
-                dbc.bindValue(observeNameText, PojoProperties.value("name").observe(identifier), nameUpdateStrategy(), null),
+                dbc.bindValue(observeNameText, PojoProperties.value("name").observe(identifier), nameUpdateStrategy(),
+                        null),
                 SWT.LEFT);
 
         final Label versionLabel = new Label(res, SWT.NONE);
@@ -202,31 +201,24 @@ public class OpenNameAndVersionDialog extends Dialog {
                         existingProcessIdentifiers());
     }
 
-    private UpdateValueStrategy nameUpdateStrategy() {
-        return abstractProcess instanceof MainProcess ? diagramUpdateStrategy(Messages.name)
-                : poolUpdateStrategy(Messages.name);
+    protected UpdateValueStrategy nameUpdateStrategy() {
+        // rely on validator for name attribute contributed by the validation plugin
+        Optional<EAttributeValidatorFactory> validatorFactory = EAttributeValidatorFactory
+                .findForAttribute(ProcessPackage.Literals.ELEMENT__NAME);
+        Optional<IValidator> validator = validatorFactory.map(f -> f.create(abstractProcess.eClass()));
+        UpdateValueStrategyFactory updateStrategy = updateValueStrategy();
+        validator.ifPresent(v -> updateStrategy.withValidator(v));
+        return updateStrategy.create();
     }
 
-    private UpdateValueStrategy versionUpdateStrategy() {
-        return abstractProcess instanceof MainProcess ? diagramUpdateStrategy(Messages.version)
-                : poolUpdateStrategy(Messages.version);
-    }
-
-    protected UpdateValueStrategy diagramUpdateStrategy(final String fieldName) {
-        return updateValueStrategy().withValidator(multiValidator()
-                .addValidator(mandatoryValidator(Messages.name))
-                .addValidator(maxLengthValidator(Messages.name, MAX_LENGTH))
-                .addValidator(fileNameValidator(Messages.name))
-                .addValidator(utf8InputValidator(Messages.name))).create();
-    }
-
-    protected UpdateValueStrategy poolUpdateStrategy(final String fieldName) {
-        return updateValueStrategy().withValidator(multiValidator()
-                .addValidator(mandatoryValidator(Messages.name))
-                .addValidator(maxLengthValidator(Messages.name, MAX_LENGTH))
-                .addValidator(forbiddenCharactersValidator(Messages.name, '#', '%', '$'))
-                .addValidator(utf8InputValidator(Messages.name))
-                .addValidator(reservedRESTAPIKeywordsValidator())).create();
+    protected UpdateValueStrategy versionUpdateStrategy() {
+        // rely on validator for version attribute contributed by the validation plugin
+        Optional<EAttributeValidatorFactory> validatorFactory = EAttributeValidatorFactory
+                .findForAttribute(ProcessPackage.Literals.ABSTRACT_PROCESS__VERSION);
+        Optional<IValidator> validator = validatorFactory.map(f -> f.create(abstractProcess.eClass()));
+        UpdateValueStrategyFactory updateStrategy = updateValueStrategy();
+        validator.ifPresent(v -> updateStrategy.withValidator(v));
+        return updateStrategy.create();
     }
 
     public Identifier getIdentifier() {
