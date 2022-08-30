@@ -17,6 +17,7 @@ package org.bonitasoft.studio.common.jface.databinding.validator;
 import static com.google.common.base.Strings.isNullOrEmpty;
 
 import org.bonitasoft.studio.common.Messages;
+import org.codehaus.plexus.util.StringUtils;
 import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
@@ -26,13 +27,22 @@ public class EmptyInputValidator implements IValidator<String> {
 
     private final String inputName;
 
+    private final boolean raiseErrorForBlank;
+
     public EmptyInputValidator(final String inputName) {
+        this(inputName, false);
+    }
+
+    public EmptyInputValidator(final String inputName, final boolean raiseErrorForBlank) {
         this.inputName = inputName;
+        this.raiseErrorForBlank = raiseErrorForBlank;
     }
 
     @Override
     public IStatus validate(final String input) {
-        return input == null || isNullOrEmpty(input) ? ValidationStatus.error(NLS.bind(Messages.emptyField, inputName)) : ValidationStatus.ok();
+        boolean isInvalid = isNullOrEmpty(input) || this.raiseErrorForBlank && StringUtils.isBlank(input);
+        return isInvalid ? ValidationStatus.error(NLS.bind(Messages.emptyField, inputName))
+                : ValidationStatus.ok();
     }
 
 }

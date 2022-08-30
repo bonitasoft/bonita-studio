@@ -100,7 +100,7 @@ public class OpenNameAndVersionForDiagramDialog extends OpenNameAndVersionDialog
         final ISWTObservableValue observePoolNameText = SWTObservables.observeText(poolNameText, SWT.Modify);
         ControlDecorationSupport.create(dbc.bindValue(observePoolNameText,
                 PojoProperties.value("newName").observe(pnv),
-                poolUpdateStrategy(Messages.name),
+                nameUpdateStrategy(),
                 null), SWT.LEFT);
 
         final Label poolVersion = new Label(pnvCompo, SWT.NONE);
@@ -111,7 +111,7 @@ public class OpenNameAndVersionForDiagramDialog extends OpenNameAndVersionDialog
         final ISWTObservableValue observePoolVersionText = SWTObservables.observeText(poolVersionText, SWT.Modify);
         ControlDecorationSupport.create(dbc.bindValue(observePoolVersionText,
                 PojoProperties.value("newVersion").observe(pnv),
-                poolUpdateStrategy(Messages.version),
+                versionUpdateStrategy(),
                 null), SWT.LEFT);
 
         if (isForceNameUpdate()) {

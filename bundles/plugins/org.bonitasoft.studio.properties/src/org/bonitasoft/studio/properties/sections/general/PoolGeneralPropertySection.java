@@ -18,13 +18,12 @@ import static org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory.convert
 import static org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory.updateValueStrategy;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.Optional;
 
 import javax.inject.Inject;
 
 import org.bonitasoft.studio.common.jface.databinding.CustomEMFEditObservables;
-import org.bonitasoft.studio.common.jface.databinding.validator.ForbiddenCharactersValidator;
-import org.bonitasoft.studio.common.jface.databinding.validator.UTF8InputValidator;
-import org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory;
+import org.bonitasoft.studio.common.jface.databinding.validator.EAttributeValidatorFactory;
 import org.bonitasoft.studio.common.properties.AbstractBonitaDescriptionSection;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.data.ui.property.section.PoolAdaptableSelectionProvider;
@@ -33,13 +32,16 @@ import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.properties.i18n.Messages;
 import org.bonitasoft.studio.ui.dialog.ExceptionDialogHandler;
-import org.bonitasoft.studio.ui.validator.EmptyInputValidator;
 import org.bonitasoft.studio.ui.validator.LengthValidator;
 import org.bonitasoft.studio.ui.validator.MultiValidator;
 import org.bonitasoft.studio.ui.widget.TextAreaWidget;
 import org.bonitasoft.studio.ui.widget.TextWidget;
 import org.eclipse.core.databinding.observable.Realm;
+import org.eclipse.core.databinding.validation.IValidator;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
+import org.eclipse.emf.ecore.EAttribute;
+import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
@@ -110,14 +112,7 @@ public class PoolGeneralPropertySection extends AbstractBonitaDescriptionSection
                 })
                 .withTootltip(Messages.technicalNameTooltip)
                 .withTargetToModelStrategy(convertUpdateValueStrategy()
-                        .withValidator(new MultiValidator.Builder()
-                                .havingValidators(new EmptyInputValidator.Builder()
-                                        .withMessage(Messages.aNameMustBeSet).create())
-                                .havingValidators(new LengthValidator.Builder().maxLength(MAX_NAME_LENGTH)
-                                        .withMessage(String.format(Messages.maxNameLength, MAX_NAME_LENGTH)).create())
-                                .havingValidators(new UTF8InputValidator(Messages.name))
-                                .havingValidators(new ForbiddenCharactersValidator(Messages.name, '#', '%', '$'))
-                                .havingValidators(ValidatorFactory.reservedRESTAPIKeywordsValidator()).create())
+                        .withValidator(getEAttributeValidator(ProcessPackage.Literals.ELEMENT__NAME))
                         .create())
                 .widthHint(350)
                 .bindTo(CustomEMFEditObservables.observeDetailValue(Realm.getDefault(),
@@ -155,12 +150,7 @@ public class PoolGeneralPropertySection extends AbstractBonitaDescriptionSection
                 })
                 .alignTop()
                 .withTargetToModelStrategy(convertUpdateValueStrategy()
-                        .withValidator(new MultiValidator.Builder()
-                                .havingValidators(new EmptyInputValidator.Builder()
-                                        .withMessage(Messages.aVersionMustBeSet).create())
-                                .havingValidators(new LengthValidator.Builder().maxLength(MAX_VERSION_LENGTH)
-                                        .withMessage(String.format(Messages.maxVersionLength, MAX_VERSION_LENGTH))
-                                        .create())))
+                        .withValidator(getEAttributeValidator(ProcessPackage.Literals.ABSTRACT_PROCESS__VERSION)))
                 .widthHint(180)
                 .bindTo(CustomEMFEditObservables.observeDetailValue(Realm.getDefault(),
                         ViewersObservables.observeSingleSelection(selectionProvider),
@@ -178,7 +168,8 @@ public class PoolGeneralPropertySection extends AbstractBonitaDescriptionSection
                 .withMessage(Messages.displayNameCaption)
                 .withTargetToModelStrategy(updateValueStrategy().withValidator(new MultiValidator.Builder()
                         .havingValidators(new LengthValidator.Builder().maxLength(MAX_DISPLAYNAME_LENGTH)
-                                .withMessage(String.format(Messages.maxDisplayNameLength, MAX_DISPLAYNAME_LENGTH)).create()))
+                                .withMessage(String.format(Messages.maxDisplayNameLength, MAX_DISPLAYNAME_LENGTH))
+                                .create()))
                         .create())
                 .bindTo(CustomEMFEditObservables.observeDetailValue(Realm.getDefault(),
                         ViewersObservables.observeSingleSelection(selectionProvider),
@@ -187,6 +178,24 @@ public class PoolGeneralPropertySection extends AbstractBonitaDescriptionSection
                 .adapt(widgetFactory)
                 .createIn(container);
 
+    }
+
+    /**
+     * Get validator for a particular attribute
+     * 
+     * @param attribute the attribute to validate
+     * @return validator relying on attribute constraints
+     */
+    private IValidator getEAttributeValidator(EAttribute attribute) {
+        // rely on validator for attribute contributed by the validation plugin
+        Optional<EAttributeValidatorFactory> validatorFactory = EAttributeValidatorFactory
+                .findForAttribute(attribute);
+        return value -> {
+            // get actual EClass at validation time
+            EClass eClass = ((EObject) selectionProvider.getAdapter(EObject.class)).eClass();
+            Optional<IValidator> validator = validatorFactory.map(f -> f.create(eClass));
+            return validator.map(v -> v.validate(value)).orElse(Status.OK_STATUS);
+        };
     }
 
     private void updateProcessName(String oldName, String newName) {
