@@ -27,6 +27,7 @@ import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessFactory;
+import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
@@ -35,6 +36,7 @@ import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.waits.Conditions;
 import org.eclipse.ui.PlatformUI;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -42,6 +44,9 @@ import org.junit.runner.RunWith;
 public class OpenNameAndVersionForDiagramDialogTest {
 
     private SWTGefBot bot = new SWTGefBot();
+
+    @Rule
+    public SWTGefBotRule botRule = new SWTGefBotRule(bot);
 
     private static final int VALIDATION_DELAY = 100;
 
@@ -63,7 +68,8 @@ public class OpenNameAndVersionForDiagramDialogTest {
 
                 final DiagramRepositoryStore store = RepositoryManager.getInstance()
                         .getRepositoryStore(DiagramRepositoryStore.class);
-                final IRepositoryFileStore fileStore = store.createRepositoryFileStore(NamingUtils.toDiagramFilename(mp));
+                final IRepositoryFileStore fileStore = store
+                        .createRepositoryFileStore(NamingUtils.toDiagramFilename(mp));
                 fileStore.save(mp);
                 final OpenNameAndVersionForDiagramDialog dialog = new OpenNameAndVersionForDiagramDialog(shell, mp,
                         RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class));
@@ -111,11 +117,21 @@ public class OpenNameAndVersionForDiagramDialogTest {
     }
 
     @Test
-    public void testForbiddenInvalidCharacterInNameForPool() {
+    public void testAllowUtf8CharacterInNameForPool() {
+        setDiagramOk();
+        bot.text("Pool").setText("test†name+invalid");
+        bot.sleep(VALIDATION_DELAY);
+        assertTrue("We now allow UTF-8 characters in pool names",
+                bot.button(IDialogConstants.OK_LABEL).isEnabled());
+        bot.button(IDialogConstants.CANCEL_LABEL).click();
+    }
+
+    @Test
+    public void testForbiddenInvalidFileNameInNameForPool() {
         setDiagramOk();
         bot.text("Pool").setText("test:name/invalid");
         bot.sleep(VALIDATION_DELAY);
-        assertTrue("We now allow UTF-8 characters in pool names",
+        assertFalse("We forbid invalid file name in pool names",
                 bot.button(IDialogConstants.OK_LABEL).isEnabled());
         bot.button(IDialogConstants.CANCEL_LABEL).click();
     }
