@@ -27,6 +27,10 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
+/*
+ * org.bonitasoft.studio.validation has been added to dependencies to ensure
+ * correct validation rules are registered...
+ */
 @RunWith(MockitoJUnitRunner.class)
 public class OpenNameAndVersionDialogTest {
 

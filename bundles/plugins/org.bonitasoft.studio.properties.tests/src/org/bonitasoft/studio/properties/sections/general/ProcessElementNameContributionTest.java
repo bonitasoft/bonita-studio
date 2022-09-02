@@ -42,6 +42,10 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
+/*
+ * org.bonitasoft.studio.validation has been added to dependencies to ensure
+ * correct validation rules are registered...
+ */
 @RunWith(MockitoJUnitRunner.class)
 public class ProcessElementNameContributionTest {
 
@@ -60,6 +64,8 @@ public class ProcessElementNameContributionTest {
 
     private EMFDataBindingContext dbc;
 
+    private Task task;
+
     @Rule
     public RealmWithDisplay realm = new RealmWithDisplay();
 
@@ -67,6 +73,10 @@ public class ProcessElementNameContributionTest {
     public void setUp() throws Exception {
         dbc = new EMFDataBindingContext();
         nameGridPropertySectionContribution = new ProcessElementNameContribution(sheetPage);
+        // set the element, which is not supposed to be null.
+        // validation rules need to know which kind of element they are validating
+        task = aTask().build();
+        nameGridPropertySectionContribution.setEObject(task);
     }
 
     @After
@@ -95,7 +105,8 @@ public class ProcessElementNameContributionTest {
         final WritableValue targetValue = new WritableValue();
         final WritableValue modelValue = new WritableValue();
         dbc.bindValue(targetValue, modelValue);
-        final MultiValidator validationStatusProvider = nameGridPropertySectionContribution.nameValidationStatusProvider(targetValue);
+        final MultiValidator validationStatusProvider = nameGridPropertySectionContribution
+                .nameValidationStatusProvider(targetValue);
         dbc.addValidationStatusProvider(validationStatusProvider);
 
         targetValue.setValue("a valid name");
@@ -109,7 +120,8 @@ public class ProcessElementNameContributionTest {
         final WritableValue targetValue = new WritableValue();
         final WritableValue modelValue = new WritableValue();
         dbc.bindValue(targetValue, modelValue);
-        final MultiValidator validationStatusProvider = nameGridPropertySectionContribution.nameValidationStatusProvider(targetValue);
+        final MultiValidator validationStatusProvider = nameGridPropertySectionContribution
+                .nameValidationStatusProvider(targetValue);
         dbc.addValidationStatusProvider(validationStatusProvider);
 
         targetValue.setValue("a #invalid name");
@@ -123,7 +135,8 @@ public class ProcessElementNameContributionTest {
         final WritableValue targetValue = new WritableValue();
         final WritableValue modelValue = new WritableValue();
         dbc.bindValue(targetValue, modelValue);
-        final MultiValidator validationStatusProvider = nameGridPropertySectionContribution.nameValidationStatusProvider(targetValue);
+        final MultiValidator validationStatusProvider = nameGridPropertySectionContribution
+                .nameValidationStatusProvider(targetValue);
         dbc.addValidationStatusProvider(validationStatusProvider);
 
         targetValue.setValue("content");
