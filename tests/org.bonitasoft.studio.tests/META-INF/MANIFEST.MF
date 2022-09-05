@@ -99,7 +99,8 @@ Require-Bundle: org.eclipse.ui.workbench,
  org.eclipse.e4.core.di,
  org.eclipse.ui.browser,
  net.bytebuddy.byte-buddy,
- org.objenesis
+ org.objenesis,
+ org.bonitasoft.studio.team.git
 Export-Package: org.bonitasoft.studio.tests,
  org.bonitasoft.studio.tests.actors,
  org.bonitasoft.studio.tests.applicationDescriptor,

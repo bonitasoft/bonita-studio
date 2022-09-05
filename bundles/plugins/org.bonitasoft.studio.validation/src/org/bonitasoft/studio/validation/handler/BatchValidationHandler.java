@@ -19,6 +19,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 import java.util.stream.Stream;
 
+import org.bonitasoft.studio.common.core.IRunnableWithStatus;
 import org.bonitasoft.studio.common.jface.ValidationDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
@@ -35,6 +36,7 @@ import org.bonitasoft.studio.validation.ui.view.ValidationViewPart;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.runtime.Adapters;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
@@ -101,6 +103,12 @@ public class BatchValidationHandler extends AbstractHandler {
         MultiStatus aggregatedStatus = new MultiStatus(ValidationPlugin.PLUGIN_ID, -1, null, null);
         try {
             service.run(true, true, monitor -> {
+                // can the repository self-validate ? (e.g. for git constraints on .gitignore)
+                IRunnableWithStatus repositoryValidator = Adapters.adapt(currentRepository, IRunnableWithStatus.class);
+                if (repositoryValidator != null) {
+                    repositoryValidator.run(monitor);
+                    aggregatedStatus.add(repositoryValidator.getStatus());
+                }
                 validateModelCompatibility.run(monitor);
                 aggregatedStatus.addAll(validateModelCompatibility.getStatus());
                 if (!checkAllModelVersion && aggregatedStatus.getSeverity() == IStatus.ERROR) {
@@ -117,7 +125,7 @@ public class BatchValidationHandler extends AbstractHandler {
         } catch (final InterruptedException e) {
             //Validation cancelled
         } finally {
-            if(clearProcessComputedProcesses) {
+            if (clearProcessComputedProcesses) {
                 diagramRepositoryStore.resetComputedProcesses();
             }
         }
@@ -125,8 +133,8 @@ public class BatchValidationHandler extends AbstractHandler {
         if (!checkAllModelVersion && aggregatedStatus.getSeverity() == IStatus.ERROR) {
             MessageDialog.openError(Display.getDefault().getActiveShell(), Messages.validationFailedTitle,
                     Stream.of(aggregatedStatus.getChildren()).filter(s -> s.getSeverity() == IStatus.ERROR)
-                    .findFirst().map(IStatus::getMessage)
-                    .orElseThrow());
+                            .findFirst().map(IStatus::getMessage)
+                            .orElseThrow());
             if (currentDiagramStore != null && validateModelCompatibility.getStatus().getSeverity() == IStatus.ERROR) {
                 Display.getDefault()
                         .asyncExec(() -> PlatformUI.getWorkbench()
