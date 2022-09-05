@@ -76,6 +76,9 @@ public class Messages extends NLS {
     public static String commitBehind;
     public static String repoAlreadyExist;
     public static String gitButtonTooltip;
+    public static String gitValidationDirectoryNotIgnored;
+    public static String gitValidationFileNotIgnored;
+    public static String gitValidationIncorrectGitignore;
 
     static {
         // initialize resource bundle

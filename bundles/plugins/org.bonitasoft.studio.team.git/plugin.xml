@@ -88,5 +88,18 @@
             toolbarPosition="4">
       </coolbarItem>
    </extension>
+   <extension
+         point="org.eclipse.core.runtime.adapters">
+      <factory
+            adaptableType="org.bonitasoft.studio.team.repository.Repository"
+            class="org.bonitasoft.studio.team.git.validation.RepositoryValidationAdapterFactory">
+         <adapter
+               type="org.bonitasoft.studio.team.git.validation.RepositoryValidator">
+         </adapter>
+         <adapter
+               type="org.bonitasoft.studio.common.core.IRunnableWithStatus">
+         </adapter>
+      </factory>
+   </extension>
 
 </plugin>
