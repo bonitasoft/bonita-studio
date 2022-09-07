@@ -28,6 +28,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.Stack;
 import java.util.regex.Matcher;
@@ -499,6 +500,10 @@ public class BPMNToProc extends ToProcProcessor {
             throws ProcBuilderException {
         int nbActivities = 0;
         for (final TLane tLane : lanes) {
+            BPMNShape bpmnShape = getBPMNShapeForBpmnID(tLane.getId());
+            if(bpmnShape != null && !bpmnShape.isIsHorizontal()) {
+                status.add(Status.warning(String.format(Messages.verticalBPMMNLaneWarning, tLane.getName())));
+            }
             final Dimension sizeFor = getSizeFor(tLane.getId());
             if (sizeFor != null) {
                 sizeFor.width = -1;
@@ -535,6 +540,10 @@ public class BPMNToProc extends ToProcProcessor {
 
     private void createProcessWithoutLanes(final TProcess process,
             final EList<TFlowElement> flowElements) throws ProcBuilderException {
+        BPMNShape bpmnShape = getBPMNShapeForBpmnID(process.getId());
+        if(bpmnShape != null && !bpmnShape.isIsHorizontal()) {
+            status.add(Status.warning(String.format(Messages.verticalBPMMNPoolWarning, process.getName())));
+        }
         final int nbActivities = processActivities(flowElements, false);
         if (!useBpmnDiagram) {
             final Dimension newSize = new Dimension();
@@ -562,7 +571,7 @@ public class BPMNToProc extends ToProcProcessor {
     private BPMNLabelStyle getLabelStyle(final QName labelStyle) {
         for (final BPMNDiagram diagram : bpmnDiagrams) {
             for (final BPMNLabelStyle style : diagram.getBPMNLabelStyle()) {
-                if (style.getId().equals(labelStyle.getLocalPart())) {
+                if (Objects.equals(style.getId(), labelStyle.getLocalPart())) {
                     return style;
                 }
             }
@@ -619,8 +628,9 @@ public class BPMNToProc extends ToProcProcessor {
                         initializeLabelPositionOnEvent(flowNode.getId());
 
                     } else if (flowNode instanceof TBoundaryEvent) {
-                        status.add(new Status(IStatus.ERROR, ImporterPlugin.PLUGIN_ID, flowNode.eClass().getName() + ": "
-                                + flowNode.getName()));
+                        status.add(
+                                new Status(IStatus.ERROR, ImporterPlugin.PLUGIN_ID, flowNode.eClass().getName() + ": "
+                                        + flowNode.getName()));
                     }
                 }
             }
@@ -901,10 +911,7 @@ public class BPMNToProc extends ToProcProcessor {
             }
         }
         if (poolSize == null) {
-            //			location.translate(0, poolSize.height);
-            //		} else {
             poolSize = new Dimension(1200, 250);
-            //		location.translate(0, 250);// default size
         }
 
         builder.addPool(id, name, "1.0", location, poolSize);
@@ -1124,7 +1131,8 @@ public class BPMNToProc extends ToProcProcessor {
             final String targetRef = sequenceFlow.getTargetRef() != null ? sequenceFlow.getTargetRef()
                     : "<Unspecified Target>";
             BonitaStudioLog.log(
-                    "The model is not clean. There is a missing id on a SequenceFlow from " + sourceRef + "to " + targetRef);
+                    "The model is not clean. There is a missing id on a SequenceFlow from " + sourceRef + "to "
+                            + targetRef);
         }
         return isDefault;
     }
@@ -1268,8 +1276,9 @@ public class BPMNToProc extends ToProcProcessor {
 
                         }
                     } else if (!(flowNode instanceof TBoundaryEvent)) {
-                        status.add(new Status(IStatus.ERROR, ImporterPlugin.PLUGIN_ID, flowNode.eClass().getName() + ": "
-                                + flowNode.getName()));
+                        status.add(
+                                new Status(IStatus.ERROR, ImporterPlugin.PLUGIN_ID, flowNode.eClass().getName() + ": "
+                                        + flowNode.getName()));
                     }
                     addFontStyle(flowNode.getId());
                 }
@@ -1336,12 +1345,12 @@ public class BPMNToProc extends ToProcProcessor {
 
     private String subprocessName(TSubProcess bpmnSubProcess) {
         String name = bpmnSubProcess.getName();
-        if(name == null || name.isEmpty()) {
+        if (name == null || name.isEmpty()) {
             return "subProc_" + NamingUtils.convertToId(bpmnSubProcess.getId());
         }
-       return name;
+        return name;
     }
-    
+
     private void processSubProcess(final TSubProcess bpmnSubProcess) throws ProcBuilderException {
         builder.addCallActivityTargetProcess(subprocessName(bpmnSubProcess),
                 "1.0");
@@ -1528,7 +1537,8 @@ public class BPMNToProc extends ToProcProcessor {
                     rightOperand = getBonitaExpressionFromBPMNExpression(inputValue);
                 }
                 leftOperand = getBonitaExpressionFromBPMNExpression(outputAssignment.getTo());
-                if (leftOperand != null && leftOperand.hasContent() && rightOperand != null && rightOperand.hasContent()) {
+                if (leftOperand != null && leftOperand.hasContent() && rightOperand != null
+                        && rightOperand.hasContent()) {
                     outputOperations.put(leftOperand, rightOperand);
                 }
             }
@@ -1955,7 +1965,8 @@ public class BPMNToProc extends ToProcProcessor {
         String defaultValueReturnType = "";
         String defaultValueInterpreter = "";
         if (flowElement instanceof TActivity) {
-            for (final TDataInputAssociation dataInputAssociation : ((TActivity) flowElement).getDataInputAssociation()) {
+            for (final TDataInputAssociation dataInputAssociation : ((TActivity) flowElement)
+                    .getDataInputAssociation()) {
                 for (final TAssignment assignment : dataInputAssociation.getAssignment()) {
                     final TExpression to = assignment.getTo();
                     if (to != null) {
@@ -1976,8 +1987,10 @@ public class BPMNToProc extends ToProcProcessor {
 
                                         if (fromExpression instanceof TFormalExpression) {
                                             final TFormalExpression fromFormalExpression = (TFormalExpression) fromExpression;
-                                            defaultValueInterpreter = retrieveDefaultValueInterpreter(fromFormalExpression);
-                                            final QName evaluatesToTypeRef = fromFormalExpression.getEvaluatesToTypeRef();
+                                            defaultValueInterpreter = retrieveDefaultValueInterpreter(
+                                                    fromFormalExpression);
+                                            final QName evaluatesToTypeRef = fromFormalExpression
+                                                    .getEvaluatesToTypeRef();
                                             if (evaluatesToTypeRef != null) {
                                                 defaultValueReturnType = evaluatesToTypeRef.getLocalPart();
                                             }
@@ -2448,7 +2461,6 @@ public class BPMNToProc extends ToProcProcessor {
     private Point toLocation(final TFlowNode flowNode, final int activityNumber,
             final boolean fromSubProcess) {
         final Point location = new Point();
-
         if (useBpmnDiagram) {
             final Point loc = getLocationFor(flowNode.getId());
 
@@ -2536,8 +2548,12 @@ public class BPMNToProc extends ToProcProcessor {
                 .getDiagramElement()) {
             if (diagramElement instanceof BPMNShape) {
                 final BPMNShape bpmnShape = (BPMNShape) diagramElement;
-                if (bpmnShape.getBpmnElement().getLocalPart().equals(id)) {
+                QName bpmnElement = bpmnShape.getBpmnElement();
+                if (bpmnElement != null && Objects.equals(bpmnElement.getLocalPart(),id)) {
                     final Point containerLocation = getContainerLocationFor(id);
+                    if(containerLocation.y > 0) {
+                        System.out.println(containerLocation);
+                    }
                     final Bounds bounds = ((Shape) diagramElement)
                             .getBounds();
                     // 25 is for the margin
@@ -2755,35 +2771,38 @@ public class BPMNToProc extends ToProcProcessor {
             for (final DiagramElement diagramElement : processDiagram
                     .getDiagramElement()) {
                 if (diagramElement instanceof BPMNShape) {
-                    final String localPartId = ((BPMNShape) diagramElement)
-                            .getBpmnElement().getLocalPart();
-                    if (id.equals(localPartId)) {
-                        final Bounds bounds = ((BPMNShape) diagramElement)
-                                .getBounds();
-                        height = (int) bounds.getHeight();
-                        width = (int) bounds.getWidth();
-                        break;
-                    } else if (bpmnShapeId != null) {
-                        if (bpmnShapeId.equals(localPartId)) {
+                    QName bpmnElement = ((BPMNShape) diagramElement)
+                            .getBpmnElement();
+                    if (bpmnElement != null) {
+                        final String localPartId = bpmnElement.getLocalPart();
+                        if (id.equals(localPartId)) {
                             final Bounds bounds = ((BPMNShape) diagramElement)
                                     .getBounds();
                             height = (int) bounds.getHeight();
                             width = (int) bounds.getWidth();
                             break;
+                        } else if (bpmnShapeId != null) {
+                            if (bpmnShapeId.equals(localPartId)) {
+                                final Bounds bounds = ((BPMNShape) diagramElement)
+                                        .getBounds();
+                                height = (int) bounds.getHeight();
+                                width = (int) bounds.getWidth();
+                                break;
+                            }
+                        } else if (laneIds.contains(localPartId)) {
+                            final Bounds bounds = ((BPMNShape) diagramElement)
+                                    .getBounds();
+                            height += bounds.getHeight();
+                            width = Math.max(width, (int) bounds.getWidth());
+                        } else if (flowElementIds.contains(localPartId)
+                                || artifactIds.contains(localPartId)) {
+                            final Bounds bounds = ((BPMNShape) diagramElement)
+                                    .getBounds();
+                            maxX = Math.max(maxX,
+                                    (int) (bounds.getX() + bounds.getWidth()));
+                            maxY = Math.max(maxY,
+                                    (int) (bounds.getY() + bounds.getHeight()));
                         }
-                    } else if (laneIds.contains(localPartId)) {
-                        final Bounds bounds = ((BPMNShape) diagramElement)
-                                .getBounds();
-                        height += bounds.getHeight();
-                        width = Math.max(width, (int) bounds.getWidth());
-                    } else if (flowElementIds.contains(localPartId)
-                            || artifactIds.contains(localPartId)) {
-                        final Bounds bounds = ((BPMNShape) diagramElement)
-                                .getBounds();
-                        maxX = Math.max(maxX,
-                                (int) (bounds.getX() + bounds.getWidth()));
-                        maxY = Math.max(maxY,
-                                (int) (bounds.getY() + bounds.getHeight()));
                     }
                 }
             }
@@ -2823,8 +2842,8 @@ public class BPMNToProc extends ToProcProcessor {
             for (final DiagramElement diagramElement : processDiagram
                     .getDiagramElement()) {
                 if (diagramElement instanceof BPMNEdge) {
-                    if (((BPMNEdge) diagramElement).getBpmnElement()
-                            .getLocalPart().equals(id)) {
+                    QName bpmnElement = ((BPMNEdge) diagramElement).getBpmnElement();
+                    if (bpmnElement != null && Objects.equals(bpmnElement.getLocalPart(), id)) {
                         return (BPMNEdge) diagramElement;
                     }
                 }
@@ -2860,8 +2879,9 @@ public class BPMNToProc extends ToProcProcessor {
             for (final DiagramElement diagramElement : processDiagram
                     .getDiagramElement()) {
                 if (diagramElement instanceof BPMNShape) {
-                    if (((BPMNShape) diagramElement).getBpmnElement()
-                            .getLocalPart().equals(id)) {
+                    QName bpmnElement = ((BPMNShape) diagramElement).getBpmnElement();
+                    if (bpmnElement != null && Objects.equals(bpmnElement
+                            .getLocalPart(), id)) {
                         return (BPMNShape) diagramElement;
                     }
                 }

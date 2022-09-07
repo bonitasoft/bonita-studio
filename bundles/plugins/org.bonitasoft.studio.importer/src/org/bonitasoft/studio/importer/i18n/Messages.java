@@ -52,5 +52,7 @@ public class Messages extends NLS {
     public static String currentRepositoryName;
     public static String repositoryName;
     public static String selectRepository;
+    public static String verticalBPMMNPoolWarning;
+    public static String verticalBPMMNLaneWarning;
 
 }
