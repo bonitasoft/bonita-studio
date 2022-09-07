@@ -88,10 +88,7 @@ import org.bonitasoft.studio.model.process.ThrowMessageEvent;
 import org.bonitasoft.studio.model.process.XMLData;
 import org.bonitasoft.studio.model.process.decision.DecisionFactory;
 import org.bonitasoft.studio.model.process.decision.DecisionTable;
-import org.bonitasoft.studio.model.process.diagram.edit.parts.LaneEditPart;
-import org.bonitasoft.studio.model.process.diagram.edit.parts.LaneLaneCompartmentEditPart;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.MainProcessEditPart;
-import org.bonitasoft.studio.model.process.diagram.edit.parts.PoolPoolCompartmentEditPart;
 import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditorPlugin;
 import org.bonitasoft.studio.model.process.diagram.providers.ProcessElementTypes;
 import org.eclipse.core.commands.ExecutionException;
@@ -802,26 +799,6 @@ public class ProcBuilder implements IProcBuilder {
         diagramPart.refresh();
         final IGraphicalEditPart parentEditPart = GMFTools.findEditPart(diagramPart, container);
         final IGraphicalEditPart compartment = retrieveCompartmentEditPartFor(parentEditPart);
-        if (compartment instanceof LaneLaneCompartmentEditPart) {
-            int laneHeightOffset = 0;
-
-            final PoolPoolCompartmentEditPart poolCompartment = (PoolPoolCompartmentEditPart) compartment.getParent().getParent();
-            final int currentLaneIndex = ((Container) currentContainer.eContainer()).getElements().indexOf(currentContainer);
-            if (currentLaneIndex > 0) {
-                for (final Object object : poolCompartment.getChildren()) {
-                    if (object instanceof LaneEditPart) {
-                        final EObject semanticElement = ((LaneEditPart) object).resolveSemanticElement();
-                        final int laneIndex = ((Container) currentContainer.eContainer()).getElements().indexOf(semanticElement);
-                        if (laneIndex < currentLaneIndex) {
-                            laneHeightOffset = laneHeightOffset + ((LaneEditPart) object).getFigure().getSize().height;
-                        }
-                    }
-                }
-            }
-            if (laneHeightOffset != 0 && laneHeightOffset + 80 > location.y) {
-                location.y = location.y + laneHeightOffset + 20;
-            }
-        }
 
         final PreferencesHint hint = diagramPart.getDiagramPreferencesHint();
         final PreferenceStore store = (PreferenceStore) hint.getPreferenceStore();
