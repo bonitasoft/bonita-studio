@@ -12,9 +12,9 @@ import java.util.HashMap;
 
 import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.core.migration.report.MigrationReportWriter;
+import org.bonitasoft.studio.common.ui.PlatformUtil;
 import org.bonitasoft.studio.team.git.i18n.Messages;
 import org.bonitasoft.studio.team.git.ui.wizard.CustomGitCloneWizard;
 import org.eclipse.core.commands.AbstractHandler;

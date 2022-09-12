@@ -14,7 +14,7 @@
  */
 package org.bonitasoft.studio.swtbot.framework.diagram.data;
 
-import org.bonitasoft.studio.common.jface.SWTBotConstants;
+import org.bonitasoft.studio.common.ui.jface.SWTBotConstants;
 import org.bonitasoft.studio.swtbot.framework.BotPropertiesView;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.data.BotDataPropertySection;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.documents.BotDocumentsPropertySection;

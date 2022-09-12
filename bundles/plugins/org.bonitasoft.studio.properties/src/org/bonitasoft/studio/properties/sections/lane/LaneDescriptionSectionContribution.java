@@ -17,8 +17,8 @@
  */
 package org.bonitasoft.studio.properties.sections.lane;
 
-import org.bonitasoft.studio.common.properties.ExtensibleGridPropertySection;
-import org.bonitasoft.studio.common.properties.IExtensibleGridPropertySectionContribution;
+import org.bonitasoft.studio.common.ui.properties.ExtensibleGridPropertySection;
+import org.bonitasoft.studio.common.ui.properties.IExtensibleGridPropertySectionContribution;
 import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.properties.i18n.Messages;
@@ -118,7 +118,7 @@ public class LaneDescriptionSectionContribution implements IExtensibleGridProper
 	}
 
 	/* (non-Javadoc)
-	 * @see org.bonitasoft.studio.common.properties.IExtensibleGridPropertySectionContribution#dispose()
+	 * @see org.bonitasoft.studio.common.ui.properties.IExtensibleGridPropertySectionContribution#dispose()
 	 */
 	public void dispose() {
 		// TODO Auto-generated method stub

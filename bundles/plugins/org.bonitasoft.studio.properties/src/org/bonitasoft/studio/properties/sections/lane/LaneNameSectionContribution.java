@@ -18,8 +18,8 @@
 package org.bonitasoft.studio.properties.sections.lane;
 
 import org.bonitasoft.studio.common.gmf.tools.GMFTools;
-import org.bonitasoft.studio.common.properties.ExtensibleGridPropertySection;
-import org.bonitasoft.studio.common.properties.IExtensibleGridPropertySectionContribution;
+import org.bonitasoft.studio.common.ui.properties.ExtensibleGridPropertySection;
+import org.bonitasoft.studio.common.ui.properties.IExtensibleGridPropertySectionContribution;
 import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.Lane;
 import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditor;

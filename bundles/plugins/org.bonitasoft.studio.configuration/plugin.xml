@@ -20,7 +20,7 @@
       </command>
    </extension>
    <extension
-         point="org.bonitasoft.studio.coolbarContributionItem">
+         point="org.bonitasoft.studio.common.ui.coolbarContributionItem">
       <coolbarItem
             class="org.bonitasoft.studio.configuration.coolbar.ConfigureCoolbarItem"
             priority="0"

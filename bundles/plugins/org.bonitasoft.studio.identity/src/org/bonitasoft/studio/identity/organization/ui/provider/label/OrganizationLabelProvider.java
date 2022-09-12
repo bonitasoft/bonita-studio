@@ -14,8 +14,8 @@
  */
 package org.bonitasoft.studio.identity.organization.ui.provider.label;
 
-import org.bonitasoft.studio.common.jface.BonitaStudioFontRegistry;
 import org.bonitasoft.studio.common.repository.core.ActiveOrganizationProvider;
+import org.bonitasoft.studio.common.ui.jface.BonitaStudioFontRegistry;
 import org.bonitasoft.studio.identity.i18n.Messages;
 import org.bonitasoft.studio.identity.organization.model.organization.Organization;
 import org.bonitasoft.studio.identity.organization.repository.OrganizationFileStore;

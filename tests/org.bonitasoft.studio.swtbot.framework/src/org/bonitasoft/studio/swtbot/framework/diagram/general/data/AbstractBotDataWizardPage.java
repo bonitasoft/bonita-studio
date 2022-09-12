@@ -8,7 +8,7 @@
  *******************************************************************************/
 package org.bonitasoft.studio.swtbot.framework.diagram.general.data;
 
-import org.bonitasoft.studio.common.jface.SWTBotConstants;
+import org.bonitasoft.studio.common.ui.jface.SWTBotConstants;
 import org.bonitasoft.studio.data.i18n.Messages;
 import org.bonitasoft.studio.swtbot.framework.AbstractBotWizardPage;
 import org.bonitasoft.studio.swtbot.framework.expression.BotExpressionEditorDialog;

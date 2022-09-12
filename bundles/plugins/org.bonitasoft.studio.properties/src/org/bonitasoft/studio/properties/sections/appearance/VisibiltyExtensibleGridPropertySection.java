@@ -17,7 +17,7 @@
  */
 package org.bonitasoft.studio.properties.sections.appearance;
 
-import org.bonitasoft.studio.common.properties.ExtensibleGridPropertySection;
+import org.bonitasoft.studio.common.ui.properties.ExtensibleGridPropertySection;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Layout;
 

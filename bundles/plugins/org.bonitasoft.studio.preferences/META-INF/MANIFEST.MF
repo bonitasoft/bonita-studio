@@ -38,7 +38,8 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.e4.core.services,
  org.eclipse.e4.ui.workbench,
  org.eclipse.osgi.services,
- org.codehaus.groovy.eclipse.core
+ org.codehaus.groovy.eclipse.core,
+ org.bonitasoft.studio.common.ui
 Import-Package: org.eclipse.core.expressions
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-11

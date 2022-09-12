@@ -14,7 +14,7 @@
  */
 package org.bonitasoft.studio.application.views.overview;
 
-import org.bonitasoft.studio.common.perspectives.AbstractPerspectiveFactory;
+import org.bonitasoft.studio.common.ui.perspectives.AbstractPerspectiveFactory;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IFolderLayout;
 import org.eclipse.ui.IPageLayout;

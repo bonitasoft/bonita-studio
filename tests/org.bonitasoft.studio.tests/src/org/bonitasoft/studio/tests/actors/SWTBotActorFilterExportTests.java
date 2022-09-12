@@ -27,7 +27,7 @@ import java.util.Properties;
 import java.util.zip.ZipException;
 
 import org.bonitasoft.studio.common.ProjectUtil;
-import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
+import org.bonitasoft.studio.common.ui.PlatformUtil;
 import org.bonitasoft.studio.connectors.repository.ConnectorDefRepositoryStore;
 import org.bonitasoft.studio.connectors.repository.ConnectorImplRepositoryStore;
 import org.bonitasoft.studio.connectors.repository.ExportConnectorArchiveOperation;

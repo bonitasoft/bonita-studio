@@ -16,7 +16,7 @@ package org.bonitasoft.studio.identity.organization.editor.control.user;
 
 import java.util.Objects;
 
-import org.bonitasoft.studio.common.jface.SWTBotConstants;
+import org.bonitasoft.studio.common.ui.jface.SWTBotConstants;
 import org.bonitasoft.studio.identity.i18n.Messages;
 import org.bonitasoft.studio.identity.organization.editor.editingsupport.MembershipGroupEditingSupport;
 import org.bonitasoft.studio.identity.organization.editor.editingsupport.MembershipRoleEditingSupport;

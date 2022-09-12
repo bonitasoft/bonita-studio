@@ -24,7 +24,7 @@ import org.bonitasoft.studio.businessobject.editor.model.SimpleField;
 import org.bonitasoft.studio.businessobject.i18n.Messages;
 import org.bonitasoft.studio.businessobject.ui.DateTypeLabels;
 import org.bonitasoft.studio.businessobject.validator.StringLengthValidator;
-import org.bonitasoft.studio.common.widgets.CustomStackLayout;
+import org.bonitasoft.studio.common.ui.widgets.CustomStackLayout;
 import org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory;
 import org.bonitasoft.studio.ui.widget.ComboWidget;
 import org.bonitasoft.studio.ui.widget.TextAreaWidget;

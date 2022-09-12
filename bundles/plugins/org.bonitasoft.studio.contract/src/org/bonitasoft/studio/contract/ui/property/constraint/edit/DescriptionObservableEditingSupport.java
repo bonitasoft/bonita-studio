@@ -16,7 +16,7 @@ package org.bonitasoft.studio.contract.ui.property.constraint.edit;
 
 import static org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory.convertUpdateValueStrategy;
 
-import org.bonitasoft.studio.common.jface.databinding.CustomTextEMFObservableValueEditingSupport;
+import org.bonitasoft.studio.common.ui.jface.databinding.CustomTextEMFObservableValueEditingSupport;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;

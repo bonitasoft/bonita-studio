@@ -16,7 +16,7 @@
  */
 package org.bonitasoft.studio.contract.ui.property.input;
 
-import org.bonitasoft.studio.common.jface.databinding.CustomEMFEditObservables;
+import org.bonitasoft.studio.common.ui.jface.databinding.CustomEMFEditObservables;
 import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.eclipse.core.databinding.observable.IObservable;

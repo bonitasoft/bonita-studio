@@ -17,14 +17,14 @@
  */
 package org.bonitasoft.studio.connector.model.definition.wizard;
 
-import static org.bonitasoft.studio.common.jface.SWTBotConstants.SELECTION_CONNECTOR_CONFIGURATION_TREE_ID;
-import static org.bonitasoft.studio.common.jface.SWTBotConstants.SWTBOT_WIDGET_ID_KEY;
-import static org.bonitasoft.studio.common.jface.databinding.UpdateStrategyFactory.updateValueStrategy;
+import static org.bonitasoft.studio.common.ui.jface.SWTBotConstants.SELECTION_CONNECTOR_CONFIGURATION_TREE_ID;
+import static org.bonitasoft.studio.common.ui.jface.SWTBotConstants.SWTBOT_WIDGET_ID_KEY;
+import static org.bonitasoft.studio.common.ui.jface.databinding.UpdateStrategyFactory.updateValueStrategy;
 
-import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.repository.model.IDefinitionRepositoryStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
+import org.bonitasoft.studio.common.ui.jface.FileActionDialog;
 import org.bonitasoft.studio.connector.model.i18n.Messages;
 import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration;
 import org.bonitasoft.studio.model.connectorconfiguration.ConnectorParameter;

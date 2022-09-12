@@ -11,9 +11,9 @@ package org.bonitasoft.studio.maven.builder.validator;
 import java.io.IOException;
 import java.nio.charset.Charset;
 
-import org.bonitasoft.studio.common.jface.databinding.StatusToMarkerSeverity;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.ui.jface.databinding.StatusToMarkerSeverity;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IMarker;

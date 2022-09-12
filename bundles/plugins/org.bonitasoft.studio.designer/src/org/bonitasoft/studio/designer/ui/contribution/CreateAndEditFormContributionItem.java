@@ -17,8 +17,8 @@ package org.bonitasoft.studio.designer.ui.contribution;
 import javax.inject.Inject;
 
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
-import org.bonitasoft.studio.common.jface.MessageDialogWithPrompt;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.common.ui.jface.MessageDialogWithPrompt;
 import org.bonitasoft.studio.designer.UIDesignerPlugin;
 import org.bonitasoft.studio.designer.core.command.UpdateFormMappingCommand;
 import org.bonitasoft.studio.designer.core.expression.CreateNewFormProposalListener;

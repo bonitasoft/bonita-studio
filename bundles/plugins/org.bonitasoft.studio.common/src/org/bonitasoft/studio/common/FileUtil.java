@@ -15,10 +15,6 @@
 package org.bonitasoft.studio.common;
 
 import java.awt.image.BufferedImage;
-import java.awt.image.ColorModel;
-import java.awt.image.DirectColorModel;
-import java.awt.image.IndexColorModel;
-import java.awt.image.WritableRaster;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -32,7 +28,6 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.io.Reader;
 import java.io.StringWriter;
 import java.io.Writer;
@@ -44,11 +39,8 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
-import org.bonitasoft.studio.common.jface.databinding.validator.URLEncodableInputValidator;
+import org.bonitasoft.studio.common.databinding.validator.URLEncodableInputValidator;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.eclipse.swt.graphics.ImageData;
-import org.eclipse.swt.graphics.PaletteData;
-import org.eclipse.swt.graphics.RGB;
 
 import com.thebuzzmedia.imgscalr.Scalr;
 
@@ -65,7 +57,7 @@ public class FileUtil {
     public static void replaceStringInFile(File file, String match, String replacingString) {
         try {
             Files.writeString(file.toPath(),
-                    Files.readString(file.toPath(), StandardCharsets.UTF_8).replace(match, replacingString), 
+                    Files.readString(file.toPath(), StandardCharsets.UTF_8).replace(match, replacingString),
                     StandardCharsets.UTF_8);
         } catch (final IOException e) {
             BonitaStudioLog.error(e);
@@ -325,7 +317,8 @@ public class FileUtil {
             if (zipEntry == null) {
                 throw new FileNotFoundException("can't find entry " + entry + " in " + zipFile.getName()); //$NON-NLS-1$ //$NON-NLS-2$
             }
-            final File tempFile = new File(ProjectUtil.getBonitaStudioWorkFolder(), entry.substring(entry.lastIndexOf("/"))); //.createTempFile(entry.substring(entry.lastIndexOf("/")), ".tmp"); //$NON-NLS-1$
+            final File tempFile = new File(ProjectUtil.getBonitaStudioWorkFolder(),
+                    entry.substring(entry.lastIndexOf("/"))); //.createTempFile(entry.substring(entry.lastIndexOf("/")), ".tmp"); //$NON-NLS-1$
             final byte[] buf = new byte[1024];
             tempFile.delete();
             int len;
@@ -386,115 +379,6 @@ public class FileUtil {
 
     public static BufferedImage resizeImage(BufferedImage image, int maxSize) {
         return Scalr.resize(image, maxSize);
-    }
-
-    public static BufferedImage convertToAWT(ImageData data) {
-        ColorModel colorModel = null;
-        final PaletteData palette = data.palette;
-        if (palette.isDirect) {
-            colorModel = new DirectColorModel(data.depth, palette.redMask,
-                    palette.greenMask, palette.blueMask);
-            final BufferedImage bufferedImage = new BufferedImage(colorModel,
-                    colorModel.createCompatibleWritableRaster(data.width,
-                            data.height),
-                    false, null);
-            final WritableRaster raster = bufferedImage.getRaster();
-            final int[] pixelArray = new int[3];
-            for (int y = 0; y < data.height; y++) {
-                for (int x = 0; x < data.width; x++) {
-                    final int pixel = data.getPixel(x, y);
-                    final RGB rgb = palette.getRGB(pixel);
-                    pixelArray[0] = rgb.red;
-                    pixelArray[1] = rgb.green;
-                    pixelArray[2] = rgb.blue;
-                    raster.setPixels(x, y, 1, 1, pixelArray);
-                }
-            }
-            return bufferedImage;
-        } else {
-            final RGB[] rgbs = palette.getRGBs();
-            final byte[] red = new byte[rgbs.length];
-            final byte[] green = new byte[rgbs.length];
-            final byte[] blue = new byte[rgbs.length];
-            for (int i = 0; i < rgbs.length; i++) {
-                final RGB rgb = rgbs[i];
-                red[i] = (byte) rgb.red;
-                green[i] = (byte) rgb.green;
-                blue[i] = (byte) rgb.blue;
-            }
-            if (data.transparentPixel != -1) {
-                colorModel = new IndexColorModel(data.depth, rgbs.length, red,
-                        green, blue, data.transparentPixel);
-            } else {
-                colorModel = new IndexColorModel(data.depth, rgbs.length, red,
-                        green, blue);
-            }
-            final BufferedImage bufferedImage = new BufferedImage(colorModel,
-                    colorModel.createCompatibleWritableRaster(data.width,
-                            data.height),
-                    false, null);
-            final WritableRaster raster = bufferedImage.getRaster();
-            final int[] pixelArray = new int[1];
-            for (int y = 0; y < data.height; y++) {
-                for (int x = 0; x < data.width; x++) {
-                    final int pixel = data.getPixel(x, y);
-                    pixelArray[0] = pixel;
-                    raster.setPixel(x, y, pixelArray);
-                }
-            }
-            return bufferedImage;
-        }
-    }
-
-    public static ImageData convertToSWT(BufferedImage bufferedImage) {
-        if (bufferedImage.getColorModel() instanceof DirectColorModel) {
-            final DirectColorModel colorModel = (DirectColorModel) bufferedImage.getColorModel();
-            final PaletteData palette = new PaletteData(colorModel.getRedMask(),
-                    colorModel.getGreenMask(), colorModel.getBlueMask());
-            final ImageData data = new ImageData(bufferedImage.getWidth(),
-                    bufferedImage.getHeight(), colorModel.getPixelSize(),
-                    palette);
-            final WritableRaster raster = bufferedImage.getRaster();
-            final int[] pixelArray = new int[3];
-            for (int y = 0; y < data.height; y++) {
-                for (int x = 0; x < data.width; x++) {
-                    raster.getPixel(x, y, pixelArray);
-                    final int pixel = palette.getPixel(new RGB(pixelArray[0],
-                            pixelArray[1], pixelArray[2]));
-                    data.setPixel(x, y, pixel);
-                }
-            }
-            return data;
-        } else if (bufferedImage.getColorModel() instanceof IndexColorModel) {
-            final IndexColorModel colorModel = (IndexColorModel) bufferedImage.getColorModel();
-            final int size = colorModel.getMapSize();
-            final byte[] reds = new byte[size];
-            final byte[] greens = new byte[size];
-            final byte[] blues = new byte[size];
-            colorModel.getReds(reds);
-            colorModel.getGreens(greens);
-            colorModel.getBlues(blues);
-            final RGB[] rgbs = new RGB[size];
-            for (int i = 0; i < rgbs.length; i++) {
-                rgbs[i] = new RGB(reds[i] & 0xFF, greens[i] & 0xFF,
-                        blues[i] & 0xFF);
-            }
-            final PaletteData palette = new PaletteData(rgbs);
-            final ImageData data = new ImageData(bufferedImage.getWidth(),
-                    bufferedImage.getHeight(), colorModel.getPixelSize(),
-                    palette);
-            data.transparentPixel = colorModel.getTransparentPixel();
-            final WritableRaster raster = bufferedImage.getRaster();
-            final int[] pixelArray = new int[1];
-            for (int y = 0; y < data.height; y++) {
-                for (int x = 0; x < data.width; x++) {
-                    raster.getPixel(x, y, pixelArray);
-                    data.setPixel(x, y, pixelArray[0]);
-                }
-            }
-            return data;
-        }
-        return null;
     }
 
     public static boolean isValidName(String text) {

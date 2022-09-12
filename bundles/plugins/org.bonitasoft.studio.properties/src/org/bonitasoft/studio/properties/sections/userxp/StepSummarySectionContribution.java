@@ -18,8 +18,8 @@
 package org.bonitasoft.studio.properties.sections.userxp;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
-import org.bonitasoft.studio.common.properties.AbstractPropertySectionContribution;
-import org.bonitasoft.studio.common.properties.ExtensibleGridPropertySection;
+import org.bonitasoft.studio.common.ui.properties.AbstractPropertySectionContribution;
+import org.bonitasoft.studio.common.ui.properties.ExtensibleGridPropertySection;
 import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFilter;
 import org.bonitasoft.studio.expression.editor.viewer.DefaultExpressionNameResolver;
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
@@ -96,7 +96,7 @@ public class StepSummarySectionContribution extends AbstractPropertySectionContr
     }
 
     /* (non-Javadoc)
-     * @see org.bonitasoft.studio.common.properties.IExtensibleGridPropertySectionContribution#dispose()
+     * @see org.bonitasoft.studio.common.ui.properties.IExtensibleGridPropertySectionContribution#dispose()
      */
     @Override
     public void dispose() {

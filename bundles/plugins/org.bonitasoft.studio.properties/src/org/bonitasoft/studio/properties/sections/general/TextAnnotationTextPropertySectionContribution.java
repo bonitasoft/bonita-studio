@@ -18,9 +18,9 @@
 package org.bonitasoft.studio.properties.sections.general;
 
 import org.bonitasoft.studio.common.Messages;
-import org.bonitasoft.studio.common.properties.ExtensibleGridPropertySection;
-import org.bonitasoft.studio.common.properties.IExtensibleGridPropertySectionContribution;
-import org.bonitasoft.studio.common.widgets.GTKStyleHandler;
+import org.bonitasoft.studio.common.ui.properties.ExtensibleGridPropertySection;
+import org.bonitasoft.studio.common.ui.properties.IExtensibleGridPropertySectionContribution;
+import org.bonitasoft.studio.common.ui.widgets.GTKStyleHandler;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.model.process.TextAnnotation;
 import org.eclipse.emf.databinding.EMFDataBindingContext;

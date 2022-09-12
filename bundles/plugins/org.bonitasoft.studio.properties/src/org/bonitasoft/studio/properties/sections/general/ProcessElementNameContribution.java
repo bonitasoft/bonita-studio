@@ -18,6 +18,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Optional;
 
+import org.bonitasoft.studio.common.databinding.validator.EAttributeValidatorFactory;
 import org.bonitasoft.studio.common.diagram.Identifier;
 import org.bonitasoft.studio.common.diagram.dialog.OpenNameAndVersionDialog;
 import org.bonitasoft.studio.common.diagram.dialog.OpenNameAndVersionForDiagramDialog;
@@ -25,11 +26,10 @@ import org.bonitasoft.studio.common.diagram.dialog.ProcessesNameVersion;
 import org.bonitasoft.studio.common.emf.tools.EMFModelUpdater;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
-import org.bonitasoft.studio.common.jface.databinding.validator.EAttributeValidatorFactory;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.properties.AbstractNamePropertySectionContribution;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.ui.properties.AbstractNamePropertySectionContribution;
 import org.bonitasoft.studio.diagram.custom.parts.CustomPoolEditPart;
 import org.bonitasoft.studio.diagram.custom.refactoring.ProcessNamingTools;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
@@ -197,7 +197,7 @@ public class ProcessElementNameContribution extends AbstractNamePropertySectionC
 
     /*
      * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.properties.IExtensibleGridPropertySectionContribution#dispose()
+     * @see org.bonitasoft.studio.common.ui.properties.IExtensibleGridPropertySectionContribution#dispose()
      */
     @Override
     public void dispose() {

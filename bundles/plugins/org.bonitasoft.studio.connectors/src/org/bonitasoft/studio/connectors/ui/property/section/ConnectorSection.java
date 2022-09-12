@@ -28,13 +28,13 @@ import javax.inject.Inject;
 
 import org.bonitasoft.studio.common.CommandExecutor;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
-import org.bonitasoft.studio.common.jface.EMFListFeatureTreeContentProvider;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.properties.AbstractBonitaDescriptionSection;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.core.ProjectDependenciesStore;
-import org.bonitasoft.studio.common.widgets.GTKStyleHandler;
+import org.bonitasoft.studio.common.ui.jface.EMFListFeatureTreeContentProvider;
+import org.bonitasoft.studio.common.ui.properties.AbstractBonitaDescriptionSection;
+import org.bonitasoft.studio.common.ui.widgets.GTKStyleHandler;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
 import org.bonitasoft.studio.connector.model.definition.migration.ConnectorConfigurationMigrator;
 import org.bonitasoft.studio.connector.model.definition.migration.ConnectorConfigurationMigratorFactory;

@@ -26,9 +26,9 @@ import java.util.Objects;
 import javax.inject.Inject;
 
 import org.bonitasoft.studio.businessobject.ui.expression.CreateBusinessDataProposalListener;
-import org.bonitasoft.studio.common.jface.databinding.CustomEMFEditObservables;
-import org.bonitasoft.studio.common.properties.AbstractBonitaDescriptionSection;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.common.ui.jface.databinding.CustomEMFEditObservables;
+import org.bonitasoft.studio.common.ui.properties.AbstractBonitaDescriptionSection;
 import org.bonitasoft.studio.contract.core.mapping.ContractConstraintBuilder;
 import org.bonitasoft.studio.contract.core.mapping.expression.FieldToContractInputMappingExpressionBuilder;
 import org.bonitasoft.studio.contract.core.mapping.operation.FieldToContractInputMappingOperationBuilder;

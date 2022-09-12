@@ -16,7 +16,7 @@
 package org.bonitasoft.studio.properties.sections.message.wizards;
 
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
-import org.bonitasoft.studio.common.jface.EMFFeatureLabelProvider;
+import org.bonitasoft.studio.common.ui.jface.EMFFeatureLabelProvider;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.ProcessPackage;

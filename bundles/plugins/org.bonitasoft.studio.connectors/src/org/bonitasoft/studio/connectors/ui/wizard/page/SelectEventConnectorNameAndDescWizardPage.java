@@ -17,7 +17,7 @@ package org.bonitasoft.studio.connectors.ui.wizard.page;
 import java.util.Set;
 
 import org.bonitasoft.studio.common.repository.provider.ExtendedConnectorDefinition;
-import org.bonitasoft.studio.common.widgets.LifeCycleWidget;
+import org.bonitasoft.studio.common.ui.widgets.LifeCycleWidget;
 import org.bonitasoft.studio.connector.model.definition.wizard.SelectNameAndDescWizardPage;
 import org.bonitasoft.studio.connectors.i18n.Messages;
 import org.bonitasoft.studio.connectors.ui.wizard.ConnectorWizard;

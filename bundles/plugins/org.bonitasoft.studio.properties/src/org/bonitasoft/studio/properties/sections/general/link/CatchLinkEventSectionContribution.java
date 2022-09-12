@@ -15,8 +15,8 @@
 
 package org.bonitasoft.studio.properties.sections.general.link;
 
-import org.bonitasoft.studio.common.properties.ExtensibleGridPropertySection;
-import org.bonitasoft.studio.common.properties.IExtensibleGridPropertySectionContribution;
+import org.bonitasoft.studio.common.ui.properties.ExtensibleGridPropertySection;
+import org.bonitasoft.studio.common.ui.properties.IExtensibleGridPropertySectionContribution;
 import org.bonitasoft.studio.model.process.CatchLinkEvent;
 import org.bonitasoft.studio.properties.i18n.Messages;
 import org.eclipse.emf.ecore.EObject;
@@ -74,7 +74,7 @@ public class CatchLinkEventSectionContribution implements IExtensibleGridPropert
     /*
      * (non-Javadoc)
      * 
-     * @see org.bonitasoft.studio.common.properties.
+     * @see org.bonitasoft.studio.common.ui.properties.
      * IExtensibleGridPropertySectionContribution#setEditingDomain(org.eclipse.emf.
      * transaction.TransactionalEditingDomain )
      */
@@ -85,7 +85,7 @@ public class CatchLinkEventSectionContribution implements IExtensibleGridPropert
     /*
      * (non-Javadoc)
      * 
-     * @see org.bonitasoft.studio.common.properties.
+     * @see org.bonitasoft.studio.common.ui.properties.
      * IExtensibleGridPropertySectionContribution#setSelection(org.eclipse.jface.
      * viewers.ISelection)
      */

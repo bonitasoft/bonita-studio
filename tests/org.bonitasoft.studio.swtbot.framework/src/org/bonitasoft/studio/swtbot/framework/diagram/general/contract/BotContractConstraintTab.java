@@ -8,8 +8,8 @@
  *******************************************************************************/
 package org.bonitasoft.studio.swtbot.framework.diagram.general.contract;
 
-import org.bonitasoft.studio.common.jface.FileActionDialog;
-import org.bonitasoft.studio.common.jface.SWTBotConstants;
+import org.bonitasoft.studio.common.ui.jface.FileActionDialog;
+import org.bonitasoft.studio.common.ui.jface.SWTBotConstants;
 import org.bonitasoft.studio.contract.i18n.Messages;
 import org.bonitasoft.studio.swtbot.framework.BotBase;
 import org.bonitasoft.studio.swtbot.framework.widget.BotTableWidget;

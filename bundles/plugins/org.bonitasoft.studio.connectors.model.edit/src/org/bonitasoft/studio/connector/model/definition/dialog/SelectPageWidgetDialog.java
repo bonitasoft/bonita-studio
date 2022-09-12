@@ -25,7 +25,7 @@ import java.util.Set;
 import org.bonitasoft.studio.common.FileUtil;
 import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
-import org.bonitasoft.studio.common.jface.databinding.DialogSupport;
+import org.bonitasoft.studio.common.ui.jface.databinding.DialogSupport;
 import org.bonitasoft.studio.connector.model.definition.Array;
 import org.bonitasoft.studio.connector.model.definition.Component;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;

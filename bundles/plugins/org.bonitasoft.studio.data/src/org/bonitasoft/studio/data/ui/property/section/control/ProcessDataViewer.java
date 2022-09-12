@@ -16,10 +16,10 @@ package org.bonitasoft.studio.data.ui.property.section.control;
 
 import java.util.List;
 
-import org.bonitasoft.studio.common.jface.DataStyledTreeLabelProvider;
-import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.ui.jface.DataStyledTreeLabelProvider;
+import org.bonitasoft.studio.common.ui.jface.SWTBotConstants;
 import org.bonitasoft.studio.data.commands.MoveDataCommand;
 import org.bonitasoft.studio.data.i18n.Messages;
 import org.bonitasoft.studio.data.ui.property.section.IAddData;

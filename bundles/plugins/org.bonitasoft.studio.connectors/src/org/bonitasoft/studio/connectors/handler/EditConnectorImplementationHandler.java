@@ -17,7 +17,7 @@
  */
 package org.bonitasoft.studio.connectors.handler;
 
-import org.bonitasoft.studio.common.jface.CustomWizardDialog;
+import org.bonitasoft.studio.common.ui.jface.CustomWizardDialog;
 import org.bonitasoft.studio.connectors.i18n.Messages;
 import org.bonitasoft.studio.connectors.ui.wizard.ConnectorImplementationWizard;
 import org.bonitasoft.studio.connectors.ui.wizard.SelectUserConnectorImplementationWizard;

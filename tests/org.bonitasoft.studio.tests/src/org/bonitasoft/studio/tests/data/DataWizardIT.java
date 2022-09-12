@@ -21,7 +21,7 @@ import static org.junit.Assert.assertTrue;
 
 import org.assertj.core.api.Assertions;
 import org.bonitasoft.studio.common.DataTypeLabels;
-import org.bonitasoft.studio.common.jface.SWTBotConstants;
+import org.bonitasoft.studio.common.ui.jface.SWTBotConstants;
 import org.bonitasoft.studio.data.i18n.Messages;
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
 import org.bonitasoft.studio.model.process.Activity;

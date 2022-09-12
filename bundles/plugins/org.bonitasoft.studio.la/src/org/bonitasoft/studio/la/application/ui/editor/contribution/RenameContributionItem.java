@@ -14,8 +14,8 @@
  */
 package org.bonitasoft.studio.la.application.ui.editor.contribution;
 
-import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.ui.jface.SWTBotConstants;
 import org.bonitasoft.studio.la.application.repository.ApplicationFileStore;
 import org.bonitasoft.studio.la.application.repository.ApplicationRepositoryStore;
 import org.bonitasoft.studio.la.application.ui.editor.ApplicationFormPage;

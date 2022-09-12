@@ -25,9 +25,9 @@ import java.util.Set;
 
 import org.bonitasoft.studio.common.BonitaConstants;
 import org.bonitasoft.studio.common.ExpressionConstants;
-import org.bonitasoft.studio.common.jface.DataStyledTreeLabelProvider;
-import org.bonitasoft.studio.common.jface.TableColumnSorter;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.ui.jface.DataStyledTreeLabelProvider;
+import org.bonitasoft.studio.common.ui.jface.TableColumnSorter;
 import org.bonitasoft.studio.expression.editor.ExpressionProviderService;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionEditor;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionProvider;

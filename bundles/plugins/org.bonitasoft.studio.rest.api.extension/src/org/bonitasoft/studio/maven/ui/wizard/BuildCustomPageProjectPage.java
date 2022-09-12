@@ -8,11 +8,11 @@
  *******************************************************************************/
 package org.bonitasoft.studio.maven.ui.wizard;
 
-import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.pathValidator;
+import static org.bonitasoft.studio.common.databinding.validator.ValidatorFactory.pathValidator;
 
 import java.io.File;
 
-import org.bonitasoft.studio.common.jface.databinding.validator.TypedValidator;
+import org.bonitasoft.studio.common.databinding.validator.TypedValidator;
 import org.bonitasoft.studio.maven.CustomPageProjectFileStore;
 import org.bonitasoft.studio.maven.CustomPageProjectRepositoryStore;
 import org.bonitasoft.studio.maven.i18n.Messages;

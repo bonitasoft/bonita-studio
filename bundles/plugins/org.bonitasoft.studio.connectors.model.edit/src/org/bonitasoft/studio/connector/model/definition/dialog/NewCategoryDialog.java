@@ -19,8 +19,8 @@ import java.io.FileInputStream;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.bonitasoft.studio.common.jface.databinding.DialogSupport;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.ui.jface.databinding.DialogSupport;
 import org.bonitasoft.studio.connector.model.definition.Category;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinitionFactory;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinitionPackage;

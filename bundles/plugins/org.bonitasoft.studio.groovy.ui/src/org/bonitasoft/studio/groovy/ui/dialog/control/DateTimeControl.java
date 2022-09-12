@@ -16,7 +16,7 @@ package org.bonitasoft.studio.groovy.ui.dialog.control;
 
 import java.util.Date;
 
-import org.bonitasoft.studio.common.jface.databinding.DateTimeObservable;
+import org.bonitasoft.studio.common.ui.jface.databinding.DateTimeObservable;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.IValueChangeListener;

@@ -18,8 +18,8 @@ package org.bonitasoft.studio.engine.export.builder;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.engine.EnginePlugin;
 import org.bonitasoft.studio.engine.contribution.IEngineDefinitionBuilder;
 import org.eclipse.core.runtime.CoreException;

@@ -14,7 +14,7 @@
  */
 package org.bonitasoft.studio.connectors.ui.wizard.custom.twitter;
 
-import org.bonitasoft.studio.common.jface.BonitaErrorDialog;
+import org.bonitasoft.studio.common.ui.jface.BonitaErrorDialog;
 import org.bonitasoft.studio.connector.model.definition.Component;
 import org.bonitasoft.studio.connector.model.definition.Page;
 import org.bonitasoft.studio.connector.model.definition.wizard.PageComponentSwitch;

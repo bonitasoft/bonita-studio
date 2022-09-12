@@ -18,8 +18,8 @@
 package org.bonitasoft.studio.properties.sections.general.events;
 
 import org.bonitasoft.studio.common.gmf.tools.GMFTools;
-import org.bonitasoft.studio.common.properties.ExtensibleGridPropertySection;
-import org.bonitasoft.studio.common.properties.IExtensibleGridPropertySectionContribution;
+import org.bonitasoft.studio.common.ui.properties.ExtensibleGridPropertySection;
+import org.bonitasoft.studio.common.ui.properties.IExtensibleGridPropertySectionContribution;
 import org.bonitasoft.studio.diagram.custom.BonitaNodesElementTypeResolver;
 import org.bonitasoft.studio.model.process.MessageEvent;
 import org.bonitasoft.studio.model.process.ProcessPackage;
@@ -198,7 +198,7 @@ public class MessageEventTypeSelectionGridPropertySectionContribution
     /*
      * (non-Javadoc)
      * 
-     * @see org.bonitasoft.studio.common.properties.
+     * @see org.bonitasoft.studio.common.ui.properties.
      * IExtensibleGridPropertySectionContribution#dispose()
      */
     public void dispose() {

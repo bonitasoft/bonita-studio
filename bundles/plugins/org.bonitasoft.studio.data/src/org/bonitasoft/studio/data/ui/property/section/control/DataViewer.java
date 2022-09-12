@@ -17,9 +17,9 @@ package org.bonitasoft.studio.data.ui.property.section.control;
 import static org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory.neverUpdateValueStrategy;
 import static org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory.updateValueStrategy;
 
-import org.bonitasoft.studio.common.jface.CustomWizardDialog;
-import org.bonitasoft.studio.common.jface.SWTBotConstants;
-import org.bonitasoft.studio.common.jface.databinding.CustomEMFEditObservables;
+import org.bonitasoft.studio.common.ui.jface.CustomWizardDialog;
+import org.bonitasoft.studio.common.ui.jface.SWTBotConstants;
+import org.bonitasoft.studio.common.ui.jface.databinding.CustomEMFEditObservables;
 import org.bonitasoft.studio.data.i18n.Messages;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.pics.Pics;

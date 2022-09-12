@@ -21,8 +21,8 @@ import java.net.URL;
 import java.text.MessageFormat;
 
 import org.bonitasoft.studio.common.core.IRunnableWithStatus;
-import org.bonitasoft.studio.common.jface.databinding.StatusToMarkerSeverity;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.ui.jface.databinding.StatusToMarkerSeverity;
 import org.bonitasoft.studio.team.git.i18n.Messages;
 import org.bonitasoft.studio.team.repository.Repository;
 import org.eclipse.core.resources.IMarker;

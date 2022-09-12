@@ -19,15 +19,15 @@ import java.util.List;
 
 import org.bonitasoft.studio.common.FileUtil;
 import org.bonitasoft.studio.common.NamingUtils;
-import org.bonitasoft.studio.common.jface.SWTBotConstants;
-import org.bonitasoft.studio.common.jface.databinding.validator.EmptyInputValidator;
-import org.bonitasoft.studio.common.jface.databinding.validator.InputLengthValidator;
+import org.bonitasoft.studio.common.databinding.validator.EmptyInputValidator;
+import org.bonitasoft.studio.common.databinding.validator.InputLengthValidator;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.filestore.AbstractFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.provider.DefinitionResourceProvider;
 import org.bonitasoft.studio.common.repository.store.SourceRepositoryStore;
+import org.bonitasoft.studio.common.ui.jface.SWTBotConstants;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
 import org.bonitasoft.studio.connector.model.i18n.Messages;
 import org.bonitasoft.studio.connector.model.implementation.ConnectorImplementation;

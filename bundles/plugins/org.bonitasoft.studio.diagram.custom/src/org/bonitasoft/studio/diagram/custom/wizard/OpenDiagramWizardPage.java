@@ -14,8 +14,8 @@
  */
 package org.bonitasoft.studio.diagram.custom.wizard;
 
-import static org.bonitasoft.studio.common.jface.databinding.UpdateStrategyFactory.neverUpdateValueStrategy;
-import static org.bonitasoft.studio.common.jface.databinding.UpdateStrategyFactory.updateValueStrategy;
+import static org.bonitasoft.studio.common.ui.jface.databinding.UpdateStrategyFactory.neverUpdateValueStrategy;
+import static org.bonitasoft.studio.common.ui.jface.databinding.UpdateStrategyFactory.updateValueStrategy;
 import static org.eclipse.jface.layout.GridDataFactory.swtDefaults;
 
 import org.bonitasoft.studio.diagram.custom.i18n.Messages;

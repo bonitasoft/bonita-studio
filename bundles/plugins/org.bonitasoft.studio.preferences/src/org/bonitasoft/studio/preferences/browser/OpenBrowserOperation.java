@@ -17,8 +17,8 @@ package org.bonitasoft.studio.preferences.browser;
 import java.net.URL;
 import java.util.Objects;
 
-import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.ui.jface.FileActionDialog;
 import org.bonitasoft.studio.preferences.dialog.BonitaPreferenceDialog;
 import org.bonitasoft.studio.preferences.i18n.Messages;
 import org.eclipse.jface.dialogs.MessageDialog;

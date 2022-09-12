@@ -16,10 +16,10 @@ package org.bonitasoft.studio.tests.util;
 
 import java.lang.reflect.InvocationTargetException;
 
-import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.common.repository.Messages;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.core.maven.contribution.InstallBonitaMavenArtifactsOperation;
+import org.bonitasoft.studio.common.ui.PlatformUtil;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.m2e.core.MavenPlugin;
 import org.eclipse.ui.PlatformUI;

@@ -313,7 +313,7 @@
       </decorator>
    </extension>
    <extension
-         point="org.bonitasoft.studio.common.dashboardContribution">
+         point="org.bonitasoft.studio.common.ui.dashboardContribution">
       <dashboardContribution
             class="org.bonitasoft.studio.businessobject.overview.BdmOverviewContribution">
       </dashboardContribution>

@@ -8,7 +8,7 @@
  *******************************************************************************/
 package org.bonitasoft.studio.swtbot.framework.draw;
 
-import org.bonitasoft.studio.common.jface.SWTBotConstants;
+import org.bonitasoft.studio.common.ui.jface.SWTBotConstants;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
 

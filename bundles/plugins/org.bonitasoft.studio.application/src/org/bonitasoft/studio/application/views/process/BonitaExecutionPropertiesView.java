@@ -1,7 +1,7 @@
 package org.bonitasoft.studio.application.views.process;
 
 import org.bonitasoft.studio.application.views.BonitaPropertiesView;
-import org.bonitasoft.studio.common.views.BonitaPropertiesBrowserPage;
+import org.bonitasoft.studio.common.ui.views.BonitaPropertiesBrowserPage;
 import org.bonitasoft.studio.diagram.custom.part.BonitaExecutionPropertiesBrowserPage;
 import org.eclipse.ui.views.properties.tabbed.ITabbedPropertySheetPageContributor;
 

@@ -14,7 +14,7 @@
  */
 package org.bonitasoft.studio.swtbot.framework.diagram.general;
 
-import org.bonitasoft.studio.common.jface.SWTBotConstants;
+import org.bonitasoft.studio.common.ui.jface.SWTBotConstants;
 import org.bonitasoft.studio.model.process.InputMappingAssignationType;
 import org.bonitasoft.studio.properties.i18n.Messages;
 import org.bonitasoft.studio.swtbot.framework.BotBase;

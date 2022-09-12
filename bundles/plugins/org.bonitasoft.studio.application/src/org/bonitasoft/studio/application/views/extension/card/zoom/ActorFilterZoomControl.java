@@ -31,7 +31,7 @@ import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.provider.ConnectorDefinitionRegistry;
 import org.bonitasoft.studio.common.repository.provider.ExtendedConnectorDefinition;
-import org.bonitasoft.studio.common.views.BonitaPropertiesBrowserPage;
+import org.bonitasoft.studio.common.ui.views.BonitaPropertiesBrowserPage;
 import org.bonitasoft.studio.identity.actors.repository.ActorFilterDefRepositoryStore;
 import org.bonitasoft.studio.model.process.Element;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;

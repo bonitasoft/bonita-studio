@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.bonitasoft.studio.common.ui.properties.AbstractBonitaDescriptionSection;
 import org.eclipse.gmf.runtime.diagram.ui.properties.sections.AbstractModelerPropertySection;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.SWT;

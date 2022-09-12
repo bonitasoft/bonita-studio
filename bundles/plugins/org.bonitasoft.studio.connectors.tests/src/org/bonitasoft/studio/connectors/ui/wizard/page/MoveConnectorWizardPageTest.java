@@ -20,7 +20,7 @@ import static org.bonitasoft.studio.model.process.builders.TaskBuilder.aTask;
 
 import org.bonitasoft.engine.bpm.connector.ConnectorEvent;
 import org.bonitasoft.studio.assertions.StatusAssert;
-import org.bonitasoft.studio.common.jface.databinding.validator.MultiValidator;
+import org.bonitasoft.studio.common.databinding.validator.MultiValidator;
 import org.bonitasoft.studio.model.process.Connector;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.Task;

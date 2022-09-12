@@ -14,7 +14,7 @@
  */
 package org.bonitasoft.studio.connectors.ui.wizard.page;
 
-import org.bonitasoft.studio.common.jface.BonitaStudioFontRegistry;
+import org.bonitasoft.studio.common.ui.jface.BonitaStudioFontRegistry;
 import org.bonitasoft.studio.connector.model.definition.wizard.AbstractConnectorConfigurationWizardPage;
 import org.bonitasoft.studio.connectors.ConnectorPlugin;
 import org.bonitasoft.studio.connectors.i18n.Messages;

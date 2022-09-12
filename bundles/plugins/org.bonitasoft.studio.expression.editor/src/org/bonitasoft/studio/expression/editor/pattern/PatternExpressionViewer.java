@@ -21,9 +21,9 @@ import java.util.List;
 import java.util.Set;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.studio.common.databinding.validator.EmptyInputValidator;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
-import org.bonitasoft.studio.common.jface.databinding.validator.EmptyInputValidator;
-import org.bonitasoft.studio.common.widgets.MagicComposite;
+import org.bonitasoft.studio.common.ui.widgets.MagicComposite;
 import org.bonitasoft.studio.expression.editor.i18n.Messages;
 import org.bonitasoft.studio.expression.editor.pattern.contentAssist.ExpressionContentAssistProcessor;
 import org.bonitasoft.studio.expression.editor.pattern.contentAssist.PatternExpressionCompletionProcessor;

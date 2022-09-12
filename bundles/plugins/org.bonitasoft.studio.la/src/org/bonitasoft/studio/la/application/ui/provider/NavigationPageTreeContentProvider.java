@@ -8,7 +8,7 @@
  *******************************************************************************/
 package org.bonitasoft.studio.la.application.ui.provider;
 
-import org.bonitasoft.studio.common.jface.ArrayTreeContentProvider;
+import org.bonitasoft.studio.common.ui.jface.ArrayTreeContentProvider;
 import org.bonitasoft.studio.la.application.ui.editor.NavigationPageNode;
 
 public class NavigationPageTreeContentProvider extends ArrayTreeContentProvider {

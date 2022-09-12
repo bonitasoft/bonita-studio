@@ -26,7 +26,11 @@ import org.eclipse.core.commands.operations.OperationHistoryFactory;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.edit.domain.EditingDomain;
+import org.eclipse.emf.transaction.RunnableWithResult;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
+import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPartViewer;
 import org.eclipse.gef.SnapToGeometry;
@@ -47,6 +51,7 @@ import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramEditDomain;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateViewRequest;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateViewRequestFactory;
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
+import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.gmf.runtime.notation.Node;
 
 /**
@@ -207,7 +212,8 @@ public class GMFTools {
                     for (Object ep : ((IGraphicalEditPart) child).getSourceConnections()) {
                         final EObject resolveSemanticElement = ((IGraphicalEditPart) ep).resolveSemanticElement();
                         if (resolveSemanticElement != null && Objects.equals(
-                                ModelHelper.getEObjectID(resolveSemanticElement), ModelHelper.getEObjectID(elementToFind))) {
+                                ModelHelper.getEObjectID(resolveSemanticElement),
+                                ModelHelper.getEObjectID(elementToFind))) {
                             return (IGraphicalEditPart) ep;
                         }
                     }
@@ -277,6 +283,60 @@ public class GMFTools {
             }
         }
         return refNode;
+    }
+
+    /**
+     * @param form
+     * @return the diagram corresponding to the form.
+     */
+    public static Diagram getDiagramFor(final EObject element, final Resource resource) {
+        if (element == null) {
+            return null;
+        }
+        if (!resource.isLoaded()) {
+            throw new IllegalStateException("EMF Resource is not loaded.");
+        }
+
+        final RunnableWithResult<Diagram> runnableWithResult = new DiagramForElementRunnable(resource, element);
+        final TransactionalEditingDomain editingDomain = TransactionUtil.getEditingDomain(resource);
+        if (editingDomain != null) {
+            try {
+                editingDomain.runExclusive(runnableWithResult);
+            } catch (final InterruptedException e) {
+                BonitaStudioLog.error(e);
+            }
+        } else {
+            runnableWithResult.run();
+        }
+        return runnableWithResult.getResult();
+    }
+
+    public static Diagram getDiagramFor(final EObject element) {
+        if (element != null && element.eResource() != null) {
+            return getDiagramFor(element, TransactionUtil.getEditingDomain(element.eResource()));
+        }
+        return null;
+    }
+
+    public static Diagram getDiagramFor(final EObject element, EditingDomain domain) {
+        if (element == null) {
+            return null;
+        }
+        Resource resource = element.eResource();
+        if (resource == null) {
+            if (domain == null) {
+                domain = TransactionUtil.getEditingDomain(element);
+                if (domain != null) {
+                    resource = domain.getResourceSet().getResource(element.eResource().getURI(), true);
+                }
+            } else if (domain.getResourceSet() != null) {
+                resource = domain.getResourceSet().getResource(element.eResource().getURI(), true);
+            }
+        }
+        if (resource == null) {
+            throw new IllegalStateException(String.format("No resource attached to EObject %s", element));
+        }
+        return getDiagramFor(element, resource);
     }
 
 }

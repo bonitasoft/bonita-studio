@@ -16,7 +16,7 @@ package org.bonitasoft.studio.identity.organization.validator;
 
 import java.util.Objects;
 
-import org.bonitasoft.studio.common.jface.databinding.validator.EmptyInputValidator;
+import org.bonitasoft.studio.common.databinding.validator.EmptyInputValidator;
 import org.bonitasoft.studio.identity.i18n.Messages;
 import org.bonitasoft.studio.identity.organization.model.organization.Membership;
 import org.bonitasoft.studio.identity.organization.model.organization.Organization;

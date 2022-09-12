@@ -27,6 +27,7 @@
         <module>org.bonitasoft.studio.diagram</module>
         <module>org.bonitasoft.studio.businessobject</module>
         <module>org.bonitasoft.studio.common</module>
+        <module>org.bonitasoft.studio.common.ui</module>
         <module>org.bonitasoft.studio.common.diagram</module>
         <module>org.bonitasoft.studio.common.repository</module>
         <module>org.bonitasoft.studio.configuration</module>
@@ -86,6 +87,7 @@
         <module>org.bonitasoft.studio.application.tests</module>
         <module>org.bonitasoft.studio.businessobject.tests</module>
         <module>org.bonitasoft.studio.common.tests</module>
+        <module>org.bonitasoft.studio.common.ui.tests</module>
         <module>org.bonitasoft.studio.common.diagram.tests</module>
         <module>org.bonitasoft.studio.common.repository.tests</module>
         <module>org.bonitasoft.studio.configuration.tests</module>

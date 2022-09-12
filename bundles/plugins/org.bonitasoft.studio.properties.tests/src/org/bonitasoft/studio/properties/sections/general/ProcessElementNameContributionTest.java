@@ -22,7 +22,7 @@ import static org.mockito.Mockito.when;
 
 import java.util.Arrays;
 
-import org.bonitasoft.studio.common.properties.ExtensibleGridPropertySection;
+import org.bonitasoft.studio.common.ui.properties.ExtensibleGridPropertySection;
 import org.bonitasoft.studio.model.process.Task;
 import org.bonitasoft.studio.swt.rules.RealmWithDisplay;
 import org.eclipse.core.databinding.observable.value.WritableValue;

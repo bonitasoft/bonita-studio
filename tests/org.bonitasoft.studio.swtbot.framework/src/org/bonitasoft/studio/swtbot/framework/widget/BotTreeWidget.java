@@ -17,7 +17,7 @@ package org.bonitasoft.studio.swtbot.framework.widget;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.bonitasoft.studio.common.jface.SWTBotConstants;
+import org.bonitasoft.studio.common.ui.jface.SWTBotConstants;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.contract.BotContractInputRow;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.utils.TableCollection;

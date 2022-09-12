@@ -8,10 +8,10 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.zip.ZipFile;
 
-import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.ui.jface.SWTBotConstants;
 import org.bonitasoft.studio.designer.core.PageDesignerURLFactory;
 import org.bonitasoft.studio.designer.core.operation.CreateFormOperation;
 import org.bonitasoft.studio.designer.core.repository.WebPageRepositoryStore;

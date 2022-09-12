@@ -9,8 +9,8 @@
 package org.bonitasoft.studio.team.ui;
 
 import org.bonitasoft.studio.application.views.BonitaProjectExplorer;
-import org.bonitasoft.studio.common.perspectives.AbstractPerspectiveFactory;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.ui.perspectives.AbstractPerspectiveFactory;
 import org.eclipse.compare.internal.CompareEditor;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IFolderLayout;
@@ -39,7 +39,7 @@ public class ComparePerspectiveFactory extends AbstractPerspectiveFactory {
 
     /*
      * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.perspectives.AbstractPerspectiveFactory#isRelevantFor(org.eclipse.ui.IEditorPart)
+     * @see org.bonitasoft.studio.common.ui.perspectives.AbstractPerspectiveFactory#isRelevantFor(org.eclipse.ui.IEditorPart)
      */
     @Override
     public boolean isRelevantFor(IEditorPart part) {
@@ -48,7 +48,7 @@ public class ComparePerspectiveFactory extends AbstractPerspectiveFactory {
 
     /*
      * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.perspectives.AbstractPerspectiveFactory#getID()
+     * @see org.bonitasoft.studio.common.ui.perspectives.AbstractPerspectiveFactory#getID()
      */
     @Override
     public String getID() {

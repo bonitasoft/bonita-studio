@@ -20,8 +20,8 @@ import static com.google.common.base.Preconditions.checkArgument;
 import java.util.Collection;
 
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
-import org.bonitasoft.studio.common.jface.BonitaErrorDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.ui.jface.BonitaErrorDialog;
 import org.bonitasoft.studio.connectors.i18n.Messages;
 import org.bonitasoft.studio.connectors.ui.wizard.command.ChangeConnectorContainerCommand;
 import org.bonitasoft.studio.connectors.ui.wizard.page.MoveConnectorWizardPage;

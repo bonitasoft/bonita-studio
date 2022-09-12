@@ -34,7 +34,7 @@
        </commandParameterType>
   </extension>
   <extension
-        point="org.bonitasoft.studio.coolbarContributionItem">
+        point="org.bonitasoft.studio.common.ui.coolbarContributionItem">
      <coolbarItem
            class="org.bonitasoft.studio.engine.coolbar.OpenPortalCoolbarItem"
            priority="0"

@@ -1,6 +1,6 @@
 package org.bonitasoft.studio.tests.actors;
 
-import org.bonitasoft.studio.common.jface.FileActionDialog;
+import org.bonitasoft.studio.common.ui.jface.FileActionDialog;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.bonitasoft.studio.tests.util.BonitaSuite;

@@ -16,10 +16,10 @@ package org.bonitasoft.studio.data.ui.wizard;
 
 import static com.google.common.collect.Iterables.filter;
 import static com.google.common.collect.Iterables.transform;
-import static org.bonitasoft.studio.common.jface.databinding.UpdateStrategyFactory.updateValueStrategy;
-import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.groovyReferenceValidator;
-import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.maxLengthValidator;
-import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.multiValidator;
+import static org.bonitasoft.studio.common.databinding.validator.ValidatorFactory.groovyReferenceValidator;
+import static org.bonitasoft.studio.common.databinding.validator.ValidatorFactory.maxLengthValidator;
+import static org.bonitasoft.studio.common.databinding.validator.ValidatorFactory.multiValidator;
+import static org.bonitasoft.studio.common.ui.jface.databinding.UpdateStrategyFactory.updateValueStrategy;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
@@ -46,6 +46,7 @@ import org.bonitasoft.studio.common.extension.IWidgetContribtution;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
+import org.bonitasoft.studio.common.ui.DateWidgetUtil;
 import org.bonitasoft.studio.data.DataPlugin;
 import org.bonitasoft.studio.data.i18n.Messages;
 import org.bonitasoft.studio.data.ui.dialog.EnumDataTypeDialog;
@@ -142,6 +143,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
@@ -669,9 +671,9 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
                 modelObservable,
                 UpdateStrategyFactory.updateValueStrategy()
                         .withConverter(IConverter.<DataType, DataType> create(dataType -> {
-                                    updateDataType = true;
-                                    return dataType;
-                                }))
+                            updateDataType = true;
+                            return dataType;
+                        }))
                         .create(),
                 null);
     }
@@ -1212,7 +1214,7 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
             @Override
             public void widgetSelected(final SelectionEvent e) {
                 final Expression dateExpression = ExpressionFactory.eINSTANCE.createExpression();
-                final String displayDate = DateUtil.getWidgetDisplayDate(dateChooser, timeChooser);
+                final String displayDate = DateWidgetUtil.getWidgetDisplayDate(dateChooser, timeChooser);
                 dateExpression.setName(displayDate);
                 dateExpression.setContent(DateUtil.getDateExpressionContent(dateChooser.getYear(),
                         dateChooser.getMonth(),
@@ -1233,7 +1235,7 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
             @Override
             public void widgetSelected(final SelectionEvent e) {
                 final Expression dateExpression = ExpressionFactory.eINSTANCE.createExpression();
-                final String displayDate = DateUtil.getWidgetDisplayDate(dateChooser, timeChooser);
+                final String displayDate = DateWidgetUtil.getWidgetDisplayDate(dateChooser, timeChooser);
                 dateExpression.setName(displayDate);
                 dateExpression.setContent(DateUtil.getDateExpressionContent(dateChooser.getYear(),
                         dateChooser.getMonth(),

@@ -1,6 +1,6 @@
 package org.bonitasoft.studio.diagram.custom.part;
 
-import org.bonitasoft.studio.common.views.BonitaPropertiesBrowserPage;
+import org.bonitasoft.studio.common.ui.views.BonitaPropertiesBrowserPage;
 import org.eclipse.ui.views.properties.tabbed.ITabbedPropertySheetPageContributor;
 
 public class BonitaExecutionPropertiesBrowserPage extends

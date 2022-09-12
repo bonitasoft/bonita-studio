@@ -19,11 +19,13 @@ import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 
+import org.bonitasoft.studio.common.databinding.validator.URLEncodableInputValidator;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
-import org.bonitasoft.studio.common.jface.databinding.validator.URLEncodableInputValidator;
 import org.bonitasoft.studio.common.palette.DefaultElementNameProvider;
 import org.bonitasoft.studio.common.palette.ProcessPaletteLabelProvider;
 import org.bonitasoft.studio.connector.model.implementation.ConnectorImplementation;
@@ -34,13 +36,15 @@ import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.Message;
 import org.bonitasoft.studio.model.process.MessageFlow;
 import org.bonitasoft.studio.model.process.provider.ProcessItemProviderAdapterFactory;
+import org.eclipse.core.runtime.Adapters;
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.edit.provider.ItemProviderAdapter;
-import org.eclipse.gmf.runtime.emf.type.core.IElementType;
 
 /**
  * @author Mickael Istria
@@ -300,7 +304,8 @@ public class NamingUtils {
         }
     }
 
-    public static String toConnectorImplementationFilename(final String implementationId, final String implementationVersion,
+    public static String toConnectorImplementationFilename(final String implementationId,
+            final String implementationVersion,
             final boolean inculdeExtension) {
         if (!inculdeExtension) {
             return implementationId + VERSION_SEPARATOR + implementationVersion;
@@ -368,16 +373,20 @@ public class NamingUtils {
         return packageName;
     }
 
-    public static String getPaletteTitle(final List<IElementType> relationshipTypes) {
+    public static String getPaletteTitle(final List<? extends IAdaptable> relationshipTypes) {
         if (!relationshipTypes.isEmpty()) {
-            return new ProcessPaletteLabelProvider().getProcessPaletteText(relationshipTypes.get(0).getEClass());
+            Optional<EClass> ec = relationshipTypes.stream().map(t -> Adapters.adapt(t, EClass.class))
+                    .filter(Objects::nonNull).findFirst();
+            return ec.map(new ProcessPaletteLabelProvider()::getProcessPaletteText).orElse(null);
         }
         return null;
     }
 
-    public static String getPaletteDescription(final List<IElementType> relationshipTypes) {
+    public static String getPaletteDescription(final List<? extends IAdaptable> relationshipTypes) {
         if (!relationshipTypes.isEmpty()) {
-            return new ProcessPaletteLabelProvider().getProcessPaletteDescription(relationshipTypes.get(0).getEClass());
+            Optional<EClass> ec = relationshipTypes.stream().map(t -> Adapters.adapt(t, EClass.class))
+                    .filter(Objects::nonNull).findFirst();
+            return ec.map(new ProcessPaletteLabelProvider()::getProcessPaletteDescription).orElse(null);
         }
         return null;
     }

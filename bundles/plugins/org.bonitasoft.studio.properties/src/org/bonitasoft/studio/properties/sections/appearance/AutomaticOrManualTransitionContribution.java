@@ -18,8 +18,8 @@
 package org.bonitasoft.studio.properties.sections.appearance;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.properties.ExtensibleGridPropertySection;
-import org.bonitasoft.studio.common.properties.IExtensibleGridPropertySectionContribution;
+import org.bonitasoft.studio.common.ui.properties.ExtensibleGridPropertySection;
+import org.bonitasoft.studio.common.ui.properties.IExtensibleGridPropertySectionContribution;
 import org.bonitasoft.studio.model.process.Lane;
 import org.bonitasoft.studio.model.process.MessageFlow;
 import org.bonitasoft.studio.model.process.SequenceFlow;
@@ -250,7 +250,7 @@ public class AutomaticOrManualTransitionContribution implements IExtensibleGridP
     }
 
     /* (non-Javadoc)
-     * @see org.bonitasoft.studio.common.properties.IExtensibleGridPropertySectionContribution#dispose()
+     * @see org.bonitasoft.studio.common.ui.properties.IExtensibleGridPropertySectionContribution#dispose()
      */
     @Override
     public void dispose() {

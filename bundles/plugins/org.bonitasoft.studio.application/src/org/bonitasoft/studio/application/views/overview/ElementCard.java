@@ -17,7 +17,7 @@ package org.bonitasoft.studio.application.views.overview;
 import org.bonitasoft.studio.application.views.extension.card.zoom.Zoomable;
 import org.bonitasoft.studio.common.Messages;
 import org.bonitasoft.studio.common.extension.OverviewContribution;
-import org.bonitasoft.studio.common.jface.SWTBotConstants;
+import org.bonitasoft.studio.common.ui.jface.SWTBotConstants;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.preferences.BonitaThemeConstants;

@@ -14,10 +14,10 @@
  */
 package org.bonitasoft.studio.contract.ui.property.input.edit;
 
-import static org.bonitasoft.studio.common.jface.databinding.UpdateStrategyFactory.convertUpdateValueStrategy;
-import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.maxLengthValidator;
+import static org.bonitasoft.studio.common.databinding.validator.ValidatorFactory.maxLengthValidator;
+import static org.bonitasoft.studio.common.ui.jface.databinding.UpdateStrategyFactory.convertUpdateValueStrategy;
 
-import org.bonitasoft.studio.common.jface.databinding.CustomTextEMFObservableValueEditingSupport;
+import org.bonitasoft.studio.common.ui.jface.databinding.CustomTextEMFObservableValueEditingSupport;
 import org.bonitasoft.studio.contract.i18n.Messages;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.eclipse.core.databinding.DataBindingContext;
@@ -38,7 +38,7 @@ public class DescriptionObservableEditingSupport extends CustomTextEMFObservable
 
     /*
      * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.jface.databinding.CustomTextEMFObservableValueEditingSupport#taregtToModelConvertStrategy()
+     * @see org.bonitasoft.studio.common.ui.jface.databinding.CustomTextEMFObservableValueEditingSupport#taregtToModelConvertStrategy()
      */
     @Override
     protected UpdateValueStrategy targetToModelConvertStrategy(final EObject element) {

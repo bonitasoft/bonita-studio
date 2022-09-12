@@ -8,7 +8,7 @@
  *******************************************************************************/
 package org.bonitasoft.studio.maven.ui.wizard;
 
-import org.bonitasoft.studio.common.jface.FileActionDialog;
+import org.bonitasoft.studio.common.ui.jface.FileActionDialog;
 import org.bonitasoft.studio.maven.CustomPageProjectFileStore;
 import org.bonitasoft.studio.maven.CustomPageProjectRepositoryStore;
 import org.bonitasoft.studio.maven.i18n.Messages;

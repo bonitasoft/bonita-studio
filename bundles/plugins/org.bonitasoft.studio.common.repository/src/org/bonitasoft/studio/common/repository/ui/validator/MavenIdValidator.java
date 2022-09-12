@@ -15,8 +15,8 @@
 package org.bonitasoft.studio.common.repository.ui.validator;
 
 import org.bonitasoft.studio.common.Strings;
-import org.bonitasoft.studio.common.jface.databinding.validator.EmptyInputValidator;
-import org.bonitasoft.studio.common.jface.databinding.validator.RegExpValidator;
+import org.bonitasoft.studio.common.databinding.validator.EmptyInputValidator;
+import org.bonitasoft.studio.common.databinding.validator.RegExpValidator;
 import org.bonitasoft.studio.common.repository.Messages;
 import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;

@@ -17,11 +17,11 @@ package org.bonitasoft.studio.document.ui.control;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.collect.Iterables.removeIf;
 import static com.google.common.collect.Lists.newArrayList;
-import static org.bonitasoft.studio.common.jface.databinding.UpdateStrategyFactory.updateValueStrategy;
-import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.groovyReferenceValidator;
-import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.maxLengthValidator;
-import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.multiValidator;
-import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.uniqueValidator;
+import static org.bonitasoft.studio.common.databinding.validator.ValidatorFactory.groovyReferenceValidator;
+import static org.bonitasoft.studio.common.databinding.validator.ValidatorFactory.maxLengthValidator;
+import static org.bonitasoft.studio.common.databinding.validator.ValidatorFactory.multiValidator;
+import static org.bonitasoft.studio.common.databinding.validator.ValidatorFactory.uniqueValidator;
+import static org.bonitasoft.studio.common.ui.jface.databinding.UpdateStrategyFactory.updateValueStrategy;
 
 import java.util.List;
 import java.util.Objects;

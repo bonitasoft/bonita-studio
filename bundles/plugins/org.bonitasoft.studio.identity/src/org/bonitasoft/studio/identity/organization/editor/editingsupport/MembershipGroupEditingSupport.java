@@ -16,7 +16,7 @@ package org.bonitasoft.studio.identity.organization.editor.editingsupport;
 
 import java.util.Objects;
 
-import org.bonitasoft.studio.common.jface.SWTBotConstants;
+import org.bonitasoft.studio.common.ui.jface.SWTBotConstants;
 import org.bonitasoft.studio.identity.organization.editor.formpage.user.UserFormPage;
 import org.bonitasoft.studio.identity.organization.editor.provider.content.GroupContentProvider;
 import org.bonitasoft.studio.identity.organization.model.organization.Group;

@@ -16,10 +16,10 @@ package org.bonitasoft.studio.identity.organization.validator;
 
 import java.util.Objects;
 
-import org.bonitasoft.studio.common.jface.databinding.validator.EmptyInputValidator;
-import org.bonitasoft.studio.common.jface.databinding.validator.FileNameValidator;
-import org.bonitasoft.studio.common.jface.databinding.validator.MultiValidator;
-import org.bonitasoft.studio.common.jface.databinding.validator.MultiValidatorFactory;
+import org.bonitasoft.studio.common.databinding.validator.EmptyInputValidator;
+import org.bonitasoft.studio.common.databinding.validator.FileNameValidator;
+import org.bonitasoft.studio.common.databinding.validator.MultiValidator;
+import org.bonitasoft.studio.common.databinding.validator.MultiValidatorFactory;
 import org.bonitasoft.studio.identity.i18n.Messages;
 import org.bonitasoft.studio.identity.organization.editor.formpage.AbstractOrganizationFormPage;
 import org.bonitasoft.studio.identity.organization.repository.OrganizationFileStore;

@@ -19,7 +19,7 @@ import java.util.Objects;
 
 import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.common.RedirectURLBuilder;
-import org.bonitasoft.studio.common.jface.databinding.validator.EmptyInputValidator;
+import org.bonitasoft.studio.common.databinding.validator.EmptyInputValidator;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryNameValidator;
 import org.bonitasoft.studio.common.repository.core.maven.BonitaProjectBuilder.BonitaRuntimeVersionValidator;

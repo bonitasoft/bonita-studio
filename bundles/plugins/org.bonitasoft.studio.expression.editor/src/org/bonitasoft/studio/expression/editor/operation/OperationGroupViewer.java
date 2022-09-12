@@ -20,7 +20,7 @@ import java.util.Set;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.IBonitaVariableContext;
-import org.bonitasoft.studio.common.properties.BusyFormHandler;
+import org.bonitasoft.studio.common.ui.properties.BusyFormHandler;
 import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFilter;
 import org.bonitasoft.studio.expression.editor.i18n.Messages;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionNatureProvider;

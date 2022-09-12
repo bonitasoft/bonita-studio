@@ -14,7 +14,7 @@
  */
 package org.bonitasoft.studio.validation.constraints.process.internal;
 
-import org.bonitasoft.studio.common.jface.databinding.validator.EAttributeValidatorFactory;
+import org.bonitasoft.studio.common.databinding.validator.EAttributeValidatorFactory;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.validation.constraints.process.AbstractProcessVersionConstraint;
 import org.bonitasoft.studio.validation.constraints.process.EmptyNameConstraint;

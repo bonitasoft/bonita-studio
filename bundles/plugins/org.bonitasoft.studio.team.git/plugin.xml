@@ -80,8 +80,7 @@
             icon="icons/git.png">
       </image>
   icons/cloneGit.png </extension>
-   <extension
-         point="org.bonitasoft.studio.coolbarContributionItem">
+   <extension point="org.bonitasoft.studio.common.ui.coolbarContributionItem">
       <coolbarItem
             class="org.bonitasoft.studio.team.git.ui.GitCoolbarItem"
             priority="0"

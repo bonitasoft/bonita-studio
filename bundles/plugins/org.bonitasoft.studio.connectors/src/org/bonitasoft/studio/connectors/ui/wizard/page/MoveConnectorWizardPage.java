@@ -15,13 +15,13 @@
 
 package org.bonitasoft.studio.connectors.ui.wizard.page;
 
-import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.multiValidator;
+import static org.bonitasoft.studio.common.databinding.validator.ValidatorFactory.multiValidator;
 
 import java.util.Objects;
 
 import org.bonitasoft.engine.bpm.connector.ConnectorEvent;
+import org.bonitasoft.studio.common.databinding.validator.MultiValidator;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
-import org.bonitasoft.studio.common.jface.databinding.validator.MultiValidator;
 import org.bonitasoft.studio.connectors.i18n.Messages;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.Activity;

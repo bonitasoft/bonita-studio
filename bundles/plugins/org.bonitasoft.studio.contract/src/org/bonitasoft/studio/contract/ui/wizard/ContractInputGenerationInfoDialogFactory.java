@@ -16,7 +16,7 @@ package org.bonitasoft.studio.contract.ui.wizard;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
 
-import org.bonitasoft.studio.common.jface.MessageDialogWithPrompt;
+import org.bonitasoft.studio.common.ui.jface.MessageDialogWithPrompt;
 import org.bonitasoft.studio.contract.ContractPlugin;
 import org.bonitasoft.studio.contract.i18n.Messages;
 import org.bonitasoft.studio.model.process.ContractContainer;

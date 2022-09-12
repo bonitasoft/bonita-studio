@@ -23,12 +23,12 @@ import java.util.List;
 import java.util.Set;
 
 import org.bonitasoft.studio.common.NamingUtils;
-import org.bonitasoft.studio.common.dialog.OutlineDialog;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.properties.AbstractBonitaDescriptionSection;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
-import org.bonitasoft.studio.common.widgets.GTKStyleHandler;
+import org.bonitasoft.studio.common.ui.dialog.OutlineDialog;
+import org.bonitasoft.studio.common.ui.properties.AbstractBonitaDescriptionSection;
+import org.bonitasoft.studio.common.ui.widgets.GTKStyleHandler;
 import org.bonitasoft.studio.model.parameter.Parameter;
 import org.bonitasoft.studio.model.parameter.ParameterFactory;
 import org.bonitasoft.studio.model.parameter.ParameterPackage;

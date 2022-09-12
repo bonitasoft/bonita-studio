@@ -17,7 +17,7 @@
  */
 package org.bonitasoft.studio.identity.actors.ui.handler;
 
-import org.bonitasoft.studio.common.jface.CustomWizardDialog;
+import org.bonitasoft.studio.common.ui.jface.CustomWizardDialog;
 import org.bonitasoft.studio.identity.actors.ui.wizard.FilterImplementationWizard;
 import org.bonitasoft.studio.identity.actors.ui.wizard.SelectUserFilterImplementationWizard;
 import org.bonitasoft.studio.identity.i18n.Messages;

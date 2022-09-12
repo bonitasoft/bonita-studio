@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import org.bonitasoft.studio.common.jface.TableColumnSorter;
+import org.bonitasoft.studio.common.ui.jface.TableColumnSorter;
 import org.bonitasoft.studio.identity.i18n.Messages;
 import org.bonitasoft.studio.identity.organization.model.organization.Group;
 import org.bonitasoft.studio.identity.organization.model.organization.Organization;

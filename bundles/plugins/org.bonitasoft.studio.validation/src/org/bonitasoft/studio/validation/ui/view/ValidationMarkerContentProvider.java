@@ -16,7 +16,6 @@ package org.bonitasoft.studio.validation.ui.view;
 
 import java.util.stream.Stream;
 
-import org.bonitasoft.studio.common.editor.EditorUtil;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditor;
 import org.bonitasoft.studio.model.process.diagram.providers.ProcessMarkerNavigationProvider;
@@ -34,7 +33,7 @@ public class ValidationMarkerContentProvider extends ArrayContentProvider {
         try {
             if (inputElement instanceof IEditorPart) {
                 final IEditorInput editorInput = ((IEditorPart) inputElement).getEditorInput();
-                final IResource resource = EditorUtil.retrieveResourceFromEditorInput(editorInput);
+                final IResource resource = editorInput.getAdapter(IResource.class);
                 if (isProcessEditor(inputElement)) {
                     return processMarkers(resource);
                 }
@@ -51,12 +50,16 @@ public class ValidationMarkerContentProvider extends ArrayContentProvider {
 
     private Object[] processMarkers(final IResource resource) throws CoreException {
         if (resource != null && resource.exists()) {
-            Stream.of(resource.findMarkers(ProcessMarkerNavigationProvider.MARKER_TYPE, false, IResource.DEPTH_INFINITE));
-            return Stream.concat(Stream.of(resource.findMarkers(ProcessMarkerNavigationProvider.MARKER_TYPE, false, IResource.DEPTH_INFINITE)), 
-                    Stream.of(resource.findMarkers(ModelFileCompatibilityValidator.MODEL_VERSION_MARKER_TYPE, false, IResource.DEPTH_INFINITE))).toArray();
+            Stream.of(
+                    resource.findMarkers(ProcessMarkerNavigationProvider.MARKER_TYPE, false, IResource.DEPTH_INFINITE));
+            return Stream.concat(
+                    Stream.of(resource.findMarkers(ProcessMarkerNavigationProvider.MARKER_TYPE, false,
+                            IResource.DEPTH_INFINITE)),
+                    Stream.of(resource.findMarkers(ModelFileCompatibilityValidator.MODEL_VERSION_MARKER_TYPE, false,
+                            IResource.DEPTH_INFINITE)))
+                    .toArray();
         }
         return new Object[0];
     }
-
 
 }

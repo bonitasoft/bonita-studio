@@ -23,9 +23,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 import org.bonitasoft.engine.session.APISession;
-import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.core.ActiveOrganizationProvider;
 import org.bonitasoft.studio.common.repository.filestore.EMFFileStore;
@@ -34,6 +32,8 @@ import org.bonitasoft.studio.common.repository.model.IDeployable;
 import org.bonitasoft.studio.common.repository.model.IRenamable;
 import org.bonitasoft.studio.common.repository.model.ITenantResource;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
+import org.bonitasoft.studio.common.ui.PlatformUtil;
+import org.bonitasoft.studio.common.ui.jface.FileActionDialog;
 import org.bonitasoft.studio.identity.IdentityPlugin;
 import org.bonitasoft.studio.identity.organization.handler.DeployOrganizationHandler;
 import org.bonitasoft.studio.identity.organization.model.organization.DocumentRoot;

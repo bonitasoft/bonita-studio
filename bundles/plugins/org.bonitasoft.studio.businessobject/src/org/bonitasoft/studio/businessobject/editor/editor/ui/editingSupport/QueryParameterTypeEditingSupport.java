@@ -20,7 +20,7 @@ import java.util.function.Supplier;
 
 import org.bonitasoft.engine.bdm.model.QueryParameterTypes;
 import org.bonitasoft.studio.businessobject.editor.model.QueryParameter;
-import org.bonitasoft.studio.common.jface.SWTBotConstants;
+import org.bonitasoft.studio.common.ui.jface.SWTBotConstants;
 import org.bonitasoft.studio.ui.viewer.LabelProviderBuilder;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CellEditor;

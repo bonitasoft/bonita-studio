@@ -16,8 +16,8 @@ package org.bonitasoft.studio.parameters.wizard.page;
 
 import java.util.Set;
 
-import org.bonitasoft.studio.common.jface.databinding.validator.GroovyReferenceValidator;
-import org.bonitasoft.studio.common.jface.databinding.validator.InputLengthValidator;
+import org.bonitasoft.studio.common.databinding.validator.GroovyReferenceValidator;
+import org.bonitasoft.studio.common.databinding.validator.InputLengthValidator;
 import org.bonitasoft.studio.model.parameter.Parameter;
 import org.bonitasoft.studio.model.parameter.ParameterPackage;
 import org.bonitasoft.studio.parameters.i18n.Messages;

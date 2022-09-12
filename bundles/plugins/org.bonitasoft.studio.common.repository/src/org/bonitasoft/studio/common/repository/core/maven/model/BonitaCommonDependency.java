@@ -16,7 +16,7 @@
  */
 package org.bonitasoft.studio.common.repository.core.maven.model;
 
-import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
+import org.bonitasoft.studio.common.ui.PlatformUtil;
 
 public class BonitaCommonDependency extends MavenDependency {
 

@@ -13,9 +13,9 @@ import java.util.HashMap;
 import java.util.function.BooleanSupplier;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepository;
+import org.bonitasoft.studio.common.ui.PlatformUtil;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.team.git.TeamGitPlugin;
 import org.bonitasoft.studio.team.git.core.CloneGitProject;

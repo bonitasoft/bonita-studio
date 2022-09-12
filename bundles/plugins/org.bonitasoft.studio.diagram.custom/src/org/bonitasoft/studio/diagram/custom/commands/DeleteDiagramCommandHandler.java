@@ -14,9 +14,9 @@
  */
 package org.bonitasoft.studio.diagram.custom.commands;
 
-import org.bonitasoft.studio.common.jface.CustomWizardDialog;
-import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.ui.PlatformUtil;
+import org.bonitasoft.studio.common.ui.jface.CustomWizardDialog;
 import org.bonitasoft.studio.diagram.custom.i18n.Messages;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.diagram.custom.wizard.DeleteDiagramWizard;

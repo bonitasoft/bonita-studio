@@ -2,13 +2,13 @@ package org.bonitasoft.studio.common;
 
 import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.eclipse.core.runtime.Plugin;
 import org.osgi.framework.BundleContext;
 
 /**
  * The activator class controls the plug-in life cycle
  */
-public class Activator extends AbstractUIPlugin {
+public class Activator extends Plugin {
 
     // The plug-in ID
     public static final String PLUGIN_ID = "org.bonitasoft.studio.common"; //$NON-NLS-1$
@@ -51,7 +51,7 @@ public class Activator extends AbstractUIPlugin {
         return plugin;
     }
 
-    public ILog getLogger(){
+    public ILog getLogger() {
         return Platform.getLog(Platform.getBundle(Activator.PLUGIN_ID));
     }
 

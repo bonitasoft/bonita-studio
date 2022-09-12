@@ -17,9 +17,9 @@ package org.bonitasoft.studio.data.ui.property.section;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collections;
 
-import org.bonitasoft.studio.common.dialog.OutlineDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.ui.dialog.OutlineDialog;
 import org.bonitasoft.studio.data.DataPlugin;
 import org.bonitasoft.studio.data.i18n.Messages;
 import org.bonitasoft.studio.model.process.Data;

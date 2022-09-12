@@ -37,7 +37,6 @@ import org.bonitasoft.studio.common.DateUtil;
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.extension.ExtensionContextInjectionFactory;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.common.repository.core.ActiveOrganizationProvider;
 import org.bonitasoft.studio.common.repository.core.BonitaProjectMigrationOperation;
 import org.bonitasoft.studio.common.repository.core.CreateBonitaProjectOperation;
@@ -67,6 +66,7 @@ import org.bonitasoft.studio.common.repository.operation.ExportBosArchiveOperati
 import org.bonitasoft.studio.common.repository.preferences.RepositoryPreferenceConstant;
 import org.bonitasoft.studio.common.repository.store.LocalDependenciesStore;
 import org.bonitasoft.studio.common.repository.store.RepositoryStoreComparator;
+import org.bonitasoft.studio.common.ui.PlatformUtil;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.core.internal.resources.ProjectDescriptionReader;

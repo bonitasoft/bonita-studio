@@ -23,9 +23,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.bonitasoft.studio.application.actions.coolbar.NormalCoolBarHandler;
 import org.bonitasoft.studio.common.ConsoleColors;
-import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.ui.jface.FileActionDialog;
 import org.bonitasoft.studio.engine.BOSWebServerManager;
 import org.bonitasoft.studio.engine.EnginePlugin;
 import org.bonitasoft.studio.engine.preferences.EnginePreferenceConstants;

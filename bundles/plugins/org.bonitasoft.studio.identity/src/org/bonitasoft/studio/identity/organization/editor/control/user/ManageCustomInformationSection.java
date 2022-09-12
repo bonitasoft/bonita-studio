@@ -19,8 +19,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.bonitasoft.studio.common.NamingUtils;
-import org.bonitasoft.studio.common.jface.SWTBotConstants;
-import org.bonitasoft.studio.common.jface.databinding.validator.EmptyInputValidator;
+import org.bonitasoft.studio.common.databinding.validator.EmptyInputValidator;
+import org.bonitasoft.studio.common.ui.jface.SWTBotConstants;
 import org.bonitasoft.studio.identity.i18n.Messages;
 import org.bonitasoft.studio.identity.organization.editor.formpage.user.UserFormPage;
 import org.bonitasoft.studio.identity.organization.model.organization.CustomUserInfoDefinition;

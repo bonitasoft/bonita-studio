@@ -8,7 +8,7 @@
  *******************************************************************************/
 package org.bonitasoft.studio.maven.ui.wizard;
 
-import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.mandatoryValidator;
+import static org.bonitasoft.studio.common.databinding.validator.ValidatorFactory.mandatoryValidator;
 import static org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory.updateValueStrategy;
 
 import java.net.MalformedURLException;
@@ -16,9 +16,9 @@ import java.net.URL;
 
 import org.apache.maven.model.Model;
 import org.bonitasoft.studio.businessobject.ui.wizard.validator.GroupIdValidator;
-import org.bonitasoft.studio.common.jface.SWTBotConstants;
-import org.bonitasoft.studio.common.jface.databinding.validator.EmptyInputValidator;
+import org.bonitasoft.studio.common.databinding.validator.EmptyInputValidator;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.ui.jface.SWTBotConstants;
 import org.bonitasoft.studio.maven.MavenProjectConfiguration;
 import org.bonitasoft.studio.maven.i18n.Messages;
 import org.bonitasoft.studio.maven.model.CustomPageArchetypeConfiguration;

@@ -21,9 +21,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.bonitasoft.studio.common.FragmentTypes;
-import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.ui.jface.FileActionDialog;
 import org.bonitasoft.studio.configuration.extension.IConfigurationExportAction;
 import org.bonitasoft.studio.identity.actors.repository.ActorFilterImplRepositoryStore;
 import org.bonitasoft.studio.identity.actors.repository.ExportActorFilterArchiveOperation;

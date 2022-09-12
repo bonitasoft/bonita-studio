@@ -19,11 +19,11 @@ import java.util.List;
 import java.util.Set;
 
 import org.bonitasoft.studio.common.NamingUtils;
-import org.bonitasoft.studio.common.jface.CellEditorValidationStatusListener;
-import org.bonitasoft.studio.common.jface.SWTBotConstants;
-import org.bonitasoft.studio.common.jface.TableColumnSorter;
-import org.bonitasoft.studio.common.properties.AbstractBonitaDescriptionSection;
-import org.bonitasoft.studio.common.widgets.GTKStyleHandler;
+import org.bonitasoft.studio.common.ui.jface.CellEditorValidationStatusListener;
+import org.bonitasoft.studio.common.ui.jface.SWTBotConstants;
+import org.bonitasoft.studio.common.ui.jface.TableColumnSorter;
+import org.bonitasoft.studio.common.ui.properties.AbstractBonitaDescriptionSection;
+import org.bonitasoft.studio.common.ui.widgets.GTKStyleHandler;
 import org.bonitasoft.studio.identity.IdentityPlugin;
 import org.bonitasoft.studio.identity.actors.ui.section.editingsupport.ActorDescripitonEditingSupport;
 import org.bonitasoft.studio.identity.actors.ui.section.editingsupport.ActorNameEditingSupport;

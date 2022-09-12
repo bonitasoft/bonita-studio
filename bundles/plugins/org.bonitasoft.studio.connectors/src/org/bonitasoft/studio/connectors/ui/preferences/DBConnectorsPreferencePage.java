@@ -14,7 +14,7 @@
  */
 package org.bonitasoft.studio.connectors.ui.preferences;
 
-import org.bonitasoft.studio.common.jface.BonitaStudioFontRegistry;
+import org.bonitasoft.studio.common.ui.jface.BonitaStudioFontRegistry;
 import org.bonitasoft.studio.connectors.i18n.Messages;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;

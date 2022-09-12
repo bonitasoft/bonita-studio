@@ -20,8 +20,8 @@ import org.bonitasoft.studio.businessobject.ui.BusinessObjectDataStyledLabelProv
 import org.bonitasoft.studio.businessobject.ui.wizard.AddBusinessObjectDataWizard;
 import org.bonitasoft.studio.businessobject.ui.wizard.EditBusinessObjectDataWizard;
 import org.bonitasoft.studio.common.CommandExecutor;
-import org.bonitasoft.studio.common.jface.SWTBotConstants;
-import org.bonitasoft.studio.common.widgets.CustomStackLayout;
+import org.bonitasoft.studio.common.ui.jface.SWTBotConstants;
+import org.bonitasoft.studio.common.ui.widgets.CustomStackLayout;
 import org.bonitasoft.studio.data.DataPlugin;
 import org.bonitasoft.studio.data.i18n.Messages;
 import org.bonitasoft.studio.data.ui.property.section.RemoveDataHandler;

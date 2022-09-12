@@ -254,7 +254,7 @@
    </bosArchiveProvider>
 </extension>
 <extension
-      point="org.bonitasoft.studio.coolbarContributionItem">
+      point="org.bonitasoft.studio.common.ui.coolbarContributionItem">
    <coolbarItem
          class="org.bonitasoft.studio.designer.ui.contribution.OpenUIDesignerCoolBarItem"
          priority="0"
@@ -301,7 +301,7 @@
    </propertyTester>
 </extension>
 <extension
-      point="org.bonitasoft.studio.common.dashboardContribution">
+      point="org.bonitasoft.studio.common.ui.dashboardContribution">
    <dashboardContribution
          class="org.bonitasoft.studio.designer.ui.overview.PageAndFormOverviewContribution">
    </dashboardContribution>

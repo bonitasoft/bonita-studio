@@ -20,7 +20,8 @@ import java.util.Date;
 import org.bonitasoft.studio.common.DateUtil;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
-import org.bonitasoft.studio.common.widgets.DurationComposite;
+import org.bonitasoft.studio.common.ui.DateWidgetUtil;
+import org.bonitasoft.studio.common.ui.widgets.DurationComposite;
 import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFilter;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionValidator;
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
@@ -274,7 +275,7 @@ public class TimerConditionWizardPage extends WizardPage {
 
             @Override
             public void widgetSelected(final SelectionEvent e) {
-                final String displayDate = DateUtil.getWidgetDisplayDate(dateChooser, timeChooser);
+                final String displayDate = DateWidgetUtil.getWidgetDisplayDate(dateChooser, timeChooser);
                 condition.setName(displayDate);
                 condition.setContent(DateUtil.getDateExpressionContent(dateChooser.getYear(),
                         dateChooser.getMonth(),
@@ -301,7 +302,8 @@ public class TimerConditionWizardPage extends WizardPage {
         selectDurationLabel.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).span(4, 1).create());
         selectDurationLabel.setText(Messages.selectDurationLabel);
 
-        final DurationComposite durationWidget = new DurationComposite(durationControl, true, true, true, true, true, true,
+        final DurationComposite durationWidget = new DurationComposite(durationControl, true, true, true, true, true,
+                true,
                 null);
         durationWidget.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).indent(15, 0).create());
 

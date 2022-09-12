@@ -14,8 +14,8 @@
  */
 package org.bonitasoft.studio.application.views;
 
-import org.bonitasoft.studio.common.perspectives.BonitaPerspectivesUtils;
-import org.bonitasoft.studio.common.views.BonitaPropertiesBrowserPage;
+import org.bonitasoft.studio.common.ui.perspectives.BonitaPerspectivesUtils;
+import org.bonitasoft.studio.common.ui.views.BonitaPropertiesBrowserPage;
 import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditor;
 import org.eclipse.core.runtime.Adapters;
 import org.eclipse.ui.ISaveablePart;

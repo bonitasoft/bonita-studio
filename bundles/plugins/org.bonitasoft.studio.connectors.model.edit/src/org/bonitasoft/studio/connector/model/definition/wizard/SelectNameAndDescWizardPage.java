@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
-import org.bonitasoft.studio.common.jface.databinding.validator.InputLengthValidator;
+import org.bonitasoft.studio.common.databinding.validator.InputLengthValidator;
 import org.bonitasoft.studio.connector.model.i18n.Messages;
 import org.bonitasoft.studio.model.process.Connector;
 import org.bonitasoft.studio.model.process.ProcessPackage;

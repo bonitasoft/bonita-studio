@@ -14,12 +14,12 @@
  */
 package org.bonitasoft.studio.designer.ui.property.section.control;
 
-import static org.bonitasoft.studio.common.jface.databinding.UpdateStrategyFactory.neverUpdateValueStrategy;
-import static org.bonitasoft.studio.common.jface.databinding.UpdateStrategyFactory.updateValueStrategy;
+import static org.bonitasoft.studio.common.ui.jface.databinding.UpdateStrategyFactory.neverUpdateValueStrategy;
+import static org.bonitasoft.studio.common.ui.jface.databinding.UpdateStrategyFactory.updateValueStrategy;
 
-import org.bonitasoft.studio.common.jface.databinding.CustomEMFEditObservables;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
-import org.bonitasoft.studio.common.widgets.CustomStackLayout;
+import org.bonitasoft.studio.common.ui.jface.databinding.CustomEMFEditObservables;
+import org.bonitasoft.studio.common.ui.widgets.CustomStackLayout;
 import org.bonitasoft.studio.designer.i18n.Messages;
 import org.bonitasoft.studio.model.process.FormMappingType;
 import org.bonitasoft.studio.model.process.ProcessPackage;

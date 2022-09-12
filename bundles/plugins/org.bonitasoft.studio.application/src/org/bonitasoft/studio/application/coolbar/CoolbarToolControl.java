@@ -26,17 +26,15 @@ import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.extension.IBonitaContributionItem;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
+import org.bonitasoft.studio.common.ui.PlatformUtil;
 import org.bonitasoft.studio.preferences.BonitaCoolBarPreferenceConstant;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.e4.core.contexts.IEclipseContext;
-import org.eclipse.e4.core.services.events.IEventBroker;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.e4.ui.model.application.ui.basic.MTrimBar;
 import org.eclipse.e4.ui.model.application.ui.basic.MWindow;
-import org.eclipse.e4.ui.workbench.UIEvents.UIElement;
 import org.eclipse.e4.ui.workbench.modeling.EModelService;
 import org.eclipse.e4.ui.workbench.modeling.EPartService;
 import org.eclipse.e4.ui.workbench.modeling.ESelectionService;
@@ -59,8 +57,6 @@ import org.eclipse.ui.IPartListener;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.activities.IWorkbenchActivitySupport;
-import org.osgi.service.event.Event;
-import org.osgi.service.event.EventHandler;
 
 /**
  * @author Romain Bioteau
@@ -85,9 +81,9 @@ public class CoolbarToolControl
     private Font biggerFont;
 
     @PostConstruct
-    public void createControls( Composite parent, 
-            EPartService partService, 
-            ESelectionService selectionService, 
+    public void createControls(Composite parent,
+            EPartService partService,
+            ESelectionService selectionService,
             IEclipseContext context) {
         if (isRendered(context) && toolbarContainer == null && context.get(IWorkbenchPage.class) != null) {
             IWorkbenchPage page = context.get(IWorkbenchPage.class);
@@ -115,7 +111,7 @@ public class CoolbarToolControl
                 }
                 createToolbar(toolbarContainer, page);
 
-                if(!isRegistered) {
+                if (!isRegistered) {
                     partService.addPartListener(this);
                     selectionService.addSelectionListener(this);
                 }
@@ -195,7 +191,7 @@ public class CoolbarToolControl
 
         final IConfigurationElement[] elements = BonitaStudioExtensionRegistryManager.getInstance()
                 .getConfigurationElements(
-                        "org.bonitasoft.studio.coolbarContributionItem");
+                        "org.bonitasoft.studio.common.ui.coolbarContributionItem");
         if (elements.length >= MAX_CONTRIBUTION_SIZE) {
             throw new RuntimeException("Too many coolbar contributions defined");
         }
@@ -310,7 +306,6 @@ public class CoolbarToolControl
             isRegistered = true;
         }
     }
-
 
     @Override
     public void partActivated(final MPart part) {

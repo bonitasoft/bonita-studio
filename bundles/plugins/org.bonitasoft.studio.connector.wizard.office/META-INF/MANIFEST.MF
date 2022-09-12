@@ -19,7 +19,8 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.ui.forms,
  org.bonitasoft.studio.preferences,
  org.bonitasoft.studio.validation,
- org.eclipse.emf.validation
+ org.eclipse.emf.validation,
+ org.bonitasoft.studio.common.ui
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-ActivationPolicy: lazy
 Export-Package: org.bonitasoft.studio.connector.wizard.office,

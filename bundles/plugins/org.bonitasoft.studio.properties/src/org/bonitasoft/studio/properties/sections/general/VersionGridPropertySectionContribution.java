@@ -16,10 +16,10 @@ package org.bonitasoft.studio.properties.sections.general;
 
 import java.util.Optional;
 
-import org.bonitasoft.studio.common.jface.databinding.validator.EAttributeValidatorFactory;
-import org.bonitasoft.studio.common.properties.ExtensibleGridPropertySection;
-import org.bonitasoft.studio.common.properties.IExtensibleGridPropertySectionContribution;
-import org.bonitasoft.studio.common.widgets.GTKStyleHandler;
+import org.bonitasoft.studio.common.databinding.validator.EAttributeValidatorFactory;
+import org.bonitasoft.studio.common.ui.properties.ExtensibleGridPropertySection;
+import org.bonitasoft.studio.common.ui.properties.IExtensibleGridPropertySectionContribution;
+import org.bonitasoft.studio.common.ui.widgets.GTKStyleHandler;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.Lane;
 import org.bonitasoft.studio.model.process.ProcessPackage;

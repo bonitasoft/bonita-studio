@@ -20,7 +20,7 @@ import java.util.List;
 
 import org.bonitasoft.studio.common.Messages;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
-import org.bonitasoft.studio.common.jface.SWTBotConstants;
+import org.bonitasoft.studio.common.ui.jface.SWTBotConstants;
 import org.bonitasoft.studio.diagram.custom.editPolicies.ActivitySwitchEditPolicy;
 import org.bonitasoft.studio.diagram.custom.figures.SlideMenuBarFigure;
 import org.bonitasoft.studio.model.process.Activity;

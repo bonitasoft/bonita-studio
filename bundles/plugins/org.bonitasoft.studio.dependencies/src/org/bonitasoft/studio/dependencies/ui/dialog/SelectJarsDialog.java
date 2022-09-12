@@ -20,8 +20,8 @@ package org.bonitasoft.studio.dependencies.ui.dialog;
 
 import java.util.List;
 
-import org.bonitasoft.studio.common.jface.databinding.DialogSupport;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
+import org.bonitasoft.studio.common.ui.jface.databinding.DialogSupport;
 import org.bonitasoft.studio.dependencies.i18n.Messages;
 import org.bonitasoft.studio.dependencies.repository.DependencyFileStore;
 import org.eclipse.core.databinding.UpdateValueStrategy;

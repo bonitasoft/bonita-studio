@@ -21,9 +21,9 @@ import java.lang.reflect.Method;
 
 import org.bonitasoft.studio.application.actions.coolbar.NormalCoolBarHandler;
 import org.bonitasoft.studio.application.actions.coolbar.SmallCoolBarHandler;
-import org.bonitasoft.studio.common.jface.BonitaSashForm;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
+import org.bonitasoft.studio.common.ui.PlatformUtil;
+import org.bonitasoft.studio.common.ui.jface.BonitaSashForm;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;

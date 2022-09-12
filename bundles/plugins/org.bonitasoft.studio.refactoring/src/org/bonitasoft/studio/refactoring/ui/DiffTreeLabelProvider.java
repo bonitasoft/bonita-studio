@@ -16,7 +16,7 @@
  */
 package org.bonitasoft.studio.refactoring.ui;
 
-import org.bonitasoft.studio.common.jface.BonitaStudioFontRegistry;
+import org.bonitasoft.studio.common.ui.jface.BonitaStudioFontRegistry;
 import org.eclipse.compare.structuremergeviewer.DiffNode;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;

@@ -17,10 +17,10 @@ package org.bonitasoft.studio.la.application.handler;
 import static org.bonitasoft.engine.business.application.xml.ApplicationNodeBuilder.newApplicationContainer;
 
 import org.bonitasoft.engine.business.application.xml.ApplicationNodeContainer;
-import org.bonitasoft.studio.common.jface.MessageDialogWithPrompt;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
+import org.bonitasoft.studio.common.ui.jface.MessageDialogWithPrompt;
 import org.bonitasoft.studio.la.LivingApplicationPlugin;
 import org.bonitasoft.studio.la.application.repository.ApplicationFileStore;
 import org.bonitasoft.studio.la.application.repository.ApplicationRepositoryStore;

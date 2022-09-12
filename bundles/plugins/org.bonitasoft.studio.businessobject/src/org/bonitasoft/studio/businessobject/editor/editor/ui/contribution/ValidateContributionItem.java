@@ -21,7 +21,7 @@ import org.bonitasoft.studio.businessobject.editor.editor.ui.formpage.AbstractBd
 import org.bonitasoft.studio.businessobject.editor.model.Package;
 import org.bonitasoft.studio.businessobject.i18n.Messages;
 import org.bonitasoft.studio.businessobject.validator.BusinessObjectListValidator;
-import org.bonitasoft.studio.common.jface.SWTBotConstants;
+import org.bonitasoft.studio.common.ui.jface.SWTBotConstants;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.ui.dialog.MultiStatusDialog;

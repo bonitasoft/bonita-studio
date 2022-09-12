@@ -14,7 +14,7 @@
  */
 package org.bonitasoft.studio.properties.sections.operation;
 
-import org.bonitasoft.studio.common.jface.selection.EObjectAdaptableSelectionProvider;
+import org.bonitasoft.studio.common.ui.jface.selection.EObjectAdaptableSelectionProvider;
 import org.bonitasoft.studio.model.process.OperationContainer;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.e4.core.di.annotations.Creatable;

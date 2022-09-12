@@ -14,11 +14,11 @@
  */
 package org.bonitasoft.studio.properties.sections.iteration;
 
-import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.groovyReferenceValidator;
-import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.mandatoryValidator;
-import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.maxLengthValidator;
-import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.multiValidator;
-import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.uniqueValidator;
+import static org.bonitasoft.studio.common.databinding.validator.ValidatorFactory.groovyReferenceValidator;
+import static org.bonitasoft.studio.common.databinding.validator.ValidatorFactory.mandatoryValidator;
+import static org.bonitasoft.studio.common.databinding.validator.ValidatorFactory.maxLengthValidator;
+import static org.bonitasoft.studio.common.databinding.validator.ValidatorFactory.multiValidator;
+import static org.bonitasoft.studio.common.databinding.validator.ValidatorFactory.uniqueValidator;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Iterator;
@@ -29,12 +29,12 @@ import org.bonitasoft.studio.common.DataUtil;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
-import org.bonitasoft.studio.common.jface.SWTBotConstants;
-import org.bonitasoft.studio.common.jface.databinding.CustomEMFEditObservables;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.properties.AbstractBonitaDescriptionSection;
-import org.bonitasoft.studio.common.properties.Well;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.ui.jface.SWTBotConstants;
+import org.bonitasoft.studio.common.ui.jface.databinding.CustomEMFEditObservables;
+import org.bonitasoft.studio.common.ui.properties.AbstractBonitaDescriptionSection;
+import org.bonitasoft.studio.common.ui.properties.Well;
 import org.bonitasoft.studio.data.ui.property.section.DataLabelProvider;
 import org.bonitasoft.studio.expression.editor.constant.ExpressionReturnTypeContentProvider;
 import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFilter;

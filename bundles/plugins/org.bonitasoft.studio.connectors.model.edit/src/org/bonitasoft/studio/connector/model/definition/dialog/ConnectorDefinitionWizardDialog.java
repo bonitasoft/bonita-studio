@@ -19,9 +19,9 @@ package org.bonitasoft.studio.connector.model.definition.dialog;
 
 import java.util.List;
 
-import org.bonitasoft.studio.common.jface.ExtensibleWizard;
-import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.repository.provider.DefinitionResourceProvider;
+import org.bonitasoft.studio.common.ui.jface.ExtensibleWizard;
+import org.bonitasoft.studio.common.ui.jface.FileActionDialog;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
 import org.bonitasoft.studio.connector.model.definition.Page;
 import org.bonitasoft.studio.connector.model.definition.wizard.DefinitionPageWizardPage;

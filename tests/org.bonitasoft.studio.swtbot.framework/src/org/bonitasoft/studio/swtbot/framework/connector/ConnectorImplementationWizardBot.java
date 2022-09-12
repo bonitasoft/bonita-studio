@@ -18,7 +18,7 @@ public class ConnectorImplementationWizardBot extends BotWizardDialog {
     }
 
     public ConnectorImplementationWizardBot selectDefinition(String definitionId) {
-        bot.textWithId("org.bonitasoft.studio.common.jface.treeExplorer.searchFieldText").setText(definitionId);
+        bot.textWithId("org.bonitasoft.studio.common.ui.jface.treeExplorer.searchFieldText").setText(definitionId);
         bot.tableWithId(SWTBOT_ID_EXPLORER_RIGHT_TABLE).getTableItem(definitionId).select();
         return this;
     }

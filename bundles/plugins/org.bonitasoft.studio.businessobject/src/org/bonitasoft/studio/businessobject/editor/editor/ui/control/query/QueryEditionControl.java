@@ -28,7 +28,7 @@ import org.bonitasoft.studio.businessobject.editor.model.Query;
 import org.bonitasoft.studio.businessobject.editor.model.builder.QueryBuilder;
 import org.bonitasoft.studio.businessobject.i18n.Messages;
 import org.bonitasoft.studio.businessobject.validator.QueryValidator;
-import org.bonitasoft.studio.common.jface.SWTBotConstants;
+import org.bonitasoft.studio.common.ui.jface.SWTBotConstants;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.ui.databinding.ComputedValueBuilder;

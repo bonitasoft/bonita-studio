@@ -21,7 +21,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import org.bonitasoft.studio.common.Pair;
-import org.bonitasoft.studio.common.jface.BonitaStudioFontRegistry;
+import org.bonitasoft.studio.common.ui.jface.BonitaStudioFontRegistry;
 import org.bonitasoft.studio.connectors.i18n.Messages;
 import org.eclipse.jdt.core.IMember;
 import org.eclipse.jdt.core.IType;

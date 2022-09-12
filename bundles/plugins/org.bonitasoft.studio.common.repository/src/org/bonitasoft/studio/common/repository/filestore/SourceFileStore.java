@@ -21,16 +21,17 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Collections;
 import java.util.Optional;
 
-import org.bonitasoft.studio.common.editor.EditorUtil;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
+import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IJavaContainer;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.common.repository.store.SourceRepositoryStore;
+import org.bonitasoft.studio.common.ui.editor.EditorUtil;
 import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -272,8 +273,7 @@ public class SourceFileStore extends AbstractFileStore<InputStream> {
                 if (PlatformUI.isWorkbenchRunning()) {
                     for (final IEditorReference editorReference : activePage.get().getEditorReferences()) {
                         final IEditorInput editorInput = editorReference.getEditorInput();
-                        if (compilationUnit.getResource()
-                                .equals(EditorUtil.retrieveResourceFromEditorInput(editorInput))) {
+                        if (compilationUnit.getResource().equals(editorInput.getAdapter(IResource.class))) {
                             activePage.get().closeEditors(new IEditorReference[] { editorReference }, false);
                             break;
                         }

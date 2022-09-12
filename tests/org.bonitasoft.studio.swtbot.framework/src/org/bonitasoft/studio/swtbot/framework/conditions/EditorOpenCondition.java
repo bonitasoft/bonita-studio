@@ -14,11 +14,10 @@
  */
 package org.bonitasoft.studio.swtbot.framework.conditions;
 
-import org.bonitasoft.studio.common.editor.EditorUtil;
+import org.bonitasoft.studio.common.diagram.editor.EditorUtil;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.swtbot.swt.finder.finders.UIThreadRunnable;
 import org.eclipse.swtbot.swt.finder.results.BoolResult;
 import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
@@ -58,7 +57,7 @@ public class EditorOpenCondition extends DefaultCondition {
                     try {
                         final IEditorInput input = reference.getEditorInput();
                         final IResource resource = EditorUtil.retrieveResourceFromEditorInput(input);
-                        if(file.equals(resource)) {
+                        if (file.equals(resource)) {
                             return true;
                         }
                     } catch (final PartInitException e) {

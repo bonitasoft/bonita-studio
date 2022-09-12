@@ -17,8 +17,8 @@ package org.bonitasoft.studio.common.repository.core;
 import java.io.File;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
+import org.bonitasoft.studio.common.ui.PlatformUtil;
 import org.eclipse.core.resources.IProject;
 
 public class DatabaseHandler {

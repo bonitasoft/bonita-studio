@@ -14,9 +14,9 @@
  */
 package org.bonitasoft.studio.engine.command;
 
-import org.bonitasoft.studio.common.jface.MessageDialogWithPrompt;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.core.DatabaseHandler;
+import org.bonitasoft.studio.common.ui.jface.MessageDialogWithPrompt;
 import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.engine.EngineNotificationSemaphore;
 import org.bonitasoft.studio.engine.EnginePlugin;

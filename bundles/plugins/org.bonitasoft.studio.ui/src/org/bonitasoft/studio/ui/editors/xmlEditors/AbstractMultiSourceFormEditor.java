@@ -108,7 +108,8 @@ public abstract class AbstractMultiSourceFormEditor extends FormEditor {
      */
     public boolean setActiveContribution(String contributionId) {
         if (isContributionActive(contributionId)) {
-            getEditorContribution(contributionId).ifPresent(contribution -> setActivePage(contribution.getMainPageIndex()));
+            getEditorContribution(contributionId)
+                    .ifPresent(contribution -> setActivePage(contribution.getMainPageIndex()));
             return true;
         }
         return false;
@@ -172,7 +173,8 @@ public abstract class AbstractMultiSourceFormEditor extends FormEditor {
                         return configuratioElement.createExecutableExtension("class");
                     } catch (CoreException e) {
                         BonitaStudioLog.error(String.format(
-                                "An error occured while retrieving configuration element for editor %s", getEditorId()), e);
+                                "An error occured while retrieving configuration element for editor %s", getEditorId()),
+                                e);
                         return null;
                     }
                 })
@@ -197,10 +199,11 @@ public abstract class AbstractMultiSourceFormEditor extends FormEditor {
     }
 
     public abstract String getEditorId();
-    
+
     @Override
     public void dispose() {
-        IDocumentProvider documentProvider = DocumentProviderRegistry.getDefault().getDocumentProvider(getEditorInput());
+        IDocumentProvider documentProvider = DocumentProviderRegistry.getDefault()
+                .getDocumentProvider(getEditorInput());
         editorContributions.stream().forEach(documentProvider::removeElementStateListener);
         super.dispose();
     }

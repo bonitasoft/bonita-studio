@@ -10,13 +10,13 @@ package org.bonitasoft.studio.rest.api.extension.ui.wizard;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
 import static com.google.common.collect.Sets.newHashSet;
-import static org.bonitasoft.studio.common.jface.databinding.UpdateStrategyFactory.updateValueStrategy;
-import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.forbiddenCharactersValidator;
-import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.mandatoryValidator;
-import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.multiValidator;
+import static org.bonitasoft.studio.common.databinding.validator.ValidatorFactory.forbiddenCharactersValidator;
+import static org.bonitasoft.studio.common.databinding.validator.ValidatorFactory.mandatoryValidator;
+import static org.bonitasoft.studio.common.databinding.validator.ValidatorFactory.multiValidator;
+import static org.bonitasoft.studio.common.ui.jface.databinding.UpdateStrategyFactory.updateValueStrategy;
 
 import org.bonitasoft.studio.common.NamingUtils;
-import org.bonitasoft.studio.common.jface.SWTBotConstants;
+import org.bonitasoft.studio.common.ui.jface.SWTBotConstants;
 import org.bonitasoft.studio.maven.i18n.Messages;
 import org.bonitasoft.studio.maven.model.RestAPIExtensionArchetypeConfiguration;
 import org.bonitasoft.studio.maven.ui.WidgetFactory;

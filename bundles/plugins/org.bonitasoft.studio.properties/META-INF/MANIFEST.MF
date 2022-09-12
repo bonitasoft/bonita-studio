@@ -42,7 +42,8 @@ Require-Bundle: org.bonitasoft.studio.diagram,
  org.eclipse.e4.ui.model.workbench,
  org.eclipse.e4.ui.workbench,
  org.eclipse.e4.core.contexts,
- org.bonitasoft.studio.ui
+ org.bonitasoft.studio.ui,
+ org.bonitasoft.studio.common.ui
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-Localization: plugin
 Export-Package: org.bonitasoft.studio.properties.filters,

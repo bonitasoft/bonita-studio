@@ -20,8 +20,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.bonitasoft.studio.common.jface.TreeExplorer;
 import org.bonitasoft.studio.common.repository.provider.ExtendedConnectorDefinition;
+import org.bonitasoft.studio.common.ui.jface.TreeExplorer;
 import org.bonitasoft.studio.connector.model.definition.AbstractUniqueDefinitionContentProvider;
 import org.bonitasoft.studio.connector.model.definition.Category;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;

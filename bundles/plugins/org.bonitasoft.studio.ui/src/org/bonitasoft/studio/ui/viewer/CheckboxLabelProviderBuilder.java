@@ -11,7 +11,7 @@ package org.bonitasoft.studio.ui.viewer;
 import java.util.Optional;
 import java.util.function.Function;
 
-import org.bonitasoft.studio.common.jface.AbstractCheckboxLabelProvider;
+import org.bonitasoft.studio.common.ui.jface.AbstractCheckboxLabelProvider;
 import org.eclipse.jface.viewers.ColumnViewer;
 
 public class CheckboxLabelProviderBuilder<T> {

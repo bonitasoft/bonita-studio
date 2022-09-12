@@ -15,8 +15,8 @@
 package org.bonitasoft.studio.importer.ui.wizard;
 
 import static org.bonitasoft.studio.common.Messages.bonitaStudioModuleName;
-import static org.bonitasoft.studio.common.jface.databinding.UpdateStrategyFactory.updateValueStrategy;
-import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.pathValidator;
+import static org.bonitasoft.studio.common.databinding.validator.ValidatorFactory.pathValidator;
+import static org.bonitasoft.studio.common.ui.jface.databinding.UpdateStrategyFactory.updateValueStrategy;
 
 import java.io.File;
 import java.util.List;

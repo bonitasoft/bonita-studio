@@ -14,9 +14,9 @@
  */
 package org.bonitasoft.studio.groovy.ui.dialog;
 
-import static org.bonitasoft.studio.common.jface.databinding.UpdateStrategyFactory.updateValueStrategy;
-import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.mandatoryValidator;
-import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.multiValidator;
+import static org.bonitasoft.studio.common.databinding.validator.ValidatorFactory.mandatoryValidator;
+import static org.bonitasoft.studio.common.databinding.validator.ValidatorFactory.multiValidator;
+import static org.bonitasoft.studio.common.ui.jface.databinding.UpdateStrategyFactory.updateValueStrategy;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -26,10 +26,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.bonitasoft.studio.common.jface.BonitaErrorDialog;
-import org.bonitasoft.studio.common.jface.databinding.DialogSupport;
-import org.bonitasoft.studio.common.jface.databinding.UpdateValueStrategyFactory;
-import org.bonitasoft.studio.common.jface.databinding.validator.MultiValidatorFactory;
+import org.bonitasoft.studio.common.databinding.validator.MultiValidatorFactory;
+import org.bonitasoft.studio.common.ui.jface.BonitaErrorDialog;
+import org.bonitasoft.studio.common.ui.jface.databinding.DialogSupport;
+import org.bonitasoft.studio.common.ui.jface.databinding.UpdateValueStrategyFactory;
 import org.bonitasoft.studio.dependencies.ui.dialog.ManageConnectorJarDialog;
 import org.bonitasoft.studio.groovy.ScriptVariable;
 import org.bonitasoft.studio.groovy.ui.Messages;

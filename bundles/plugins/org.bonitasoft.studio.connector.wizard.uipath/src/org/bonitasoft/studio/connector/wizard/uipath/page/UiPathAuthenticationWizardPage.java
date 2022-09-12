@@ -17,8 +17,8 @@ package org.bonitasoft.studio.connector.wizard.uipath.page;
 import java.util.Objects;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
-import org.bonitasoft.studio.common.jface.databinding.validator.EmptyInputValidator;
-import org.bonitasoft.studio.common.widgets.CustomStackLayout;
+import org.bonitasoft.studio.common.databinding.validator.EmptyInputValidator;
+import org.bonitasoft.studio.common.ui.widgets.CustomStackLayout;
 import org.bonitasoft.studio.connector.model.definition.Checkbox;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinitionFactory;
 import org.bonitasoft.studio.connector.model.definition.Input;

@@ -20,13 +20,13 @@ import java.util.Set;
 
 import org.bonitasoft.studio.common.IBonitaVariableContext;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
-import org.bonitasoft.studio.common.jface.CustomWizardDialog;
-import org.bonitasoft.studio.common.jface.DataStyledTreeLabelProvider;
-import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.properties.AbstractBonitaDescriptionSection;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
-import org.bonitasoft.studio.common.widgets.GTKStyleHandler;
+import org.bonitasoft.studio.common.ui.jface.CustomWizardDialog;
+import org.bonitasoft.studio.common.ui.jface.DataStyledTreeLabelProvider;
+import org.bonitasoft.studio.common.ui.jface.SWTBotConstants;
+import org.bonitasoft.studio.common.ui.properties.AbstractBonitaDescriptionSection;
+import org.bonitasoft.studio.common.ui.widgets.GTKStyleHandler;
 import org.bonitasoft.studio.data.DataPlugin;
 import org.bonitasoft.studio.data.commands.MoveDataCommand;
 import org.bonitasoft.studio.data.i18n.Messages;

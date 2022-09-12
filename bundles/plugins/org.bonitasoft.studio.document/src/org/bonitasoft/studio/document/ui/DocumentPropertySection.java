@@ -19,13 +19,13 @@ import static org.bonitasoft.studio.common.Messages.removalConfirmationDialogTit
 import java.lang.reflect.InvocationTargetException;
 import java.util.Iterator;
 
-import org.bonitasoft.studio.common.dialog.OutlineDialog;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
-import org.bonitasoft.studio.common.jface.CustomWizardDialog;
-import org.bonitasoft.studio.common.jface.ElementForIdLabelProvider;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.properties.AbstractBonitaDescriptionSection;
-import org.bonitasoft.studio.common.widgets.GTKStyleHandler;
+import org.bonitasoft.studio.common.ui.dialog.OutlineDialog;
+import org.bonitasoft.studio.common.ui.jface.CustomWizardDialog;
+import org.bonitasoft.studio.common.ui.jface.ElementForIdLabelProvider;
+import org.bonitasoft.studio.common.ui.properties.AbstractBonitaDescriptionSection;
+import org.bonitasoft.studio.common.ui.widgets.GTKStyleHandler;
 import org.bonitasoft.studio.document.i18n.Messages;
 import org.bonitasoft.studio.document.refactoring.RefactorDocumentOperation;
 import org.bonitasoft.studio.document.ui.dialog.DocumentWizardDialog;

@@ -32,8 +32,7 @@ import java.util.stream.Collectors;
 
 import org.apache.maven.model.Model;
 import org.bonitasoft.studio.common.Strings;
-import org.bonitasoft.studio.common.jface.SWTBotConstants;
-import org.bonitasoft.studio.common.jface.databinding.validator.EmptyInputValidator;
+import org.bonitasoft.studio.common.databinding.validator.EmptyInputValidator;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.FakeRepository;
@@ -42,7 +41,8 @@ import org.bonitasoft.studio.common.repository.RepositoryNameValidator;
 import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
 import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.ui.validator.MavenIdValidator;
-import org.bonitasoft.studio.common.widgets.CustomStackLayout;
+import org.bonitasoft.studio.common.ui.jface.SWTBotConstants;
+import org.bonitasoft.studio.common.ui.widgets.CustomStackLayout;
 import org.bonitasoft.studio.importer.bos.handler.SwitchRepositoryStrategy;
 import org.bonitasoft.studio.importer.bos.i18n.Messages;
 import org.bonitasoft.studio.importer.bos.model.BosArchive;
@@ -508,7 +508,7 @@ public class ImportBosArchivePage implements ControlSupplier, Supplier<ImportArc
         }
         FetchRemoteBosArchiveOperation operation = new FetchRemoteBosArchiveOperation(filePath);
         try {
-            wizardContainer.run(true, false, operation);
+            wizardContainer.run(true, false, operation::run);
         } catch (InvocationTargetException | InterruptedException ex) {
             exceptionDialogHandler.openErrorDialog(Display.getDefault().getActiveShell(),
                     Messages.errorOccuredWhileParsingBosArchive, ex);

@@ -14,7 +14,7 @@
  */
 package org.bonitasoft.studio.data.ui.wizard;
 
-import org.bonitasoft.studio.common.jface.dialog.FinishAndAddCustomWizardDialog;
+import org.bonitasoft.studio.common.ui.jface.dialog.FinishAndAddCustomWizardDialog;
 import org.bonitasoft.studio.data.ui.property.section.IAddData;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.swt.graphics.Point;

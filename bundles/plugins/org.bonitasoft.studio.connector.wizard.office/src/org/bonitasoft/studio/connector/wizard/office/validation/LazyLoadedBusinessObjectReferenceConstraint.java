@@ -17,7 +17,7 @@ package org.bonitasoft.studio.connector.wizard.office.validation;
 import static org.bonitasoft.studio.common.predicate.ConnectorParameterPredicates.withInputName;
 
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
-import org.bonitasoft.studio.common.jface.databinding.validator.TypedValidator;
+import org.bonitasoft.studio.common.databinding.validator.TypedValidator;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.connector.wizard.office.templating.TableExpressionWithoutLazyLoadedRefs;
 import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration;

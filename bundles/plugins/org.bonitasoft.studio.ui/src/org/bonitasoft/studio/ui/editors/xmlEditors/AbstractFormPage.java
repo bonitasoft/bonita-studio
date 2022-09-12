@@ -17,9 +17,9 @@ package org.bonitasoft.studio.ui.editors.xmlEditors;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import org.bonitasoft.studio.common.jface.BonitaStudioFontRegistry;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.ui.jface.BonitaStudioFontRegistry;
 import org.bonitasoft.studio.preferences.BonitaThemeConstants;
 import org.bonitasoft.studio.preferences.PreferenceUtil;
 import org.bonitasoft.studio.ui.ColorConstants;

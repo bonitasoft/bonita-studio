@@ -31,12 +31,12 @@ import org.bonitasoft.studio.application.views.extension.UpdateExtensionListener
 import org.bonitasoft.studio.application.views.extension.card.zoom.Zoomable;
 import org.bonitasoft.studio.application.views.overview.ProjectOverviewEditorPart;
 import org.bonitasoft.studio.common.Strings;
-import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.core.maven.migration.model.DependencyLookup;
 import org.bonitasoft.studio.common.repository.extension.ExtensionActionRegistry;
 import org.bonitasoft.studio.common.repository.store.LocalDependenciesStore;
+import org.bonitasoft.studio.common.ui.jface.SWTBotConstants;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.preferences.BonitaThemeConstants;

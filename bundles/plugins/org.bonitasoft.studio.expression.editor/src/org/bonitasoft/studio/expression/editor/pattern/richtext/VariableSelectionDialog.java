@@ -18,7 +18,7 @@ import static org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory.updateV
 
 import java.util.List;
 
-import org.bonitasoft.studio.common.jface.databinding.DialogSupport;
+import org.bonitasoft.studio.common.ui.jface.databinding.DialogSupport;
 import org.bonitasoft.studio.expression.editor.i18n.Messages;
 import org.bonitasoft.studio.expression.editor.provider.ExpressionLabelProvider;
 import org.bonitasoft.studio.model.expression.Expression;

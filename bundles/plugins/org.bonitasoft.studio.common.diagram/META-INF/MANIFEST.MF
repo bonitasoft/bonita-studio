@@ -22,15 +22,21 @@ Require-Bundle: org.eclipse.gmf.runtime.lite.svg,
  org.eclipse.jdt.groovy.core,
  org.eclipse.core.databinding.property,
  org.bonitasoft.studio.preferences,
- org.bonitasoft.studio.ui
+ org.bonitasoft.studio.ui,
+ org.eclipse.gmf.runtime.diagram.ui,
+ org.eclipse.ui.ide,
+ org.bonitasoft.studio.common.ui,
+ org.bonitasoft.studio.connectors.model
 Export-Package: org.bonitasoft.studio.common.diagram,
  org.bonitasoft.studio.common.diagram.dialog,
  org.bonitasoft.studio.common.diagram.palette,
  org.bonitasoft.studio.common.diagram.tools,
+ org.bonitasoft.studio.common.editingdomain,
  org.bonitasoft.studio.common.figures,
  org.bonitasoft.studio.common.gmf,
  org.bonitasoft.studio.common.gmf.tools,
  org.bonitasoft.studio.common.gmf.tools.tree,
+ org.bonitasoft.studio.common.gmfgraph,
  org.bonitasoft.studio.common.handlers,
  org.bonitasoft.studio.common.preferences
 Import-Package: org.bonitasoft.engine.bpm.connector

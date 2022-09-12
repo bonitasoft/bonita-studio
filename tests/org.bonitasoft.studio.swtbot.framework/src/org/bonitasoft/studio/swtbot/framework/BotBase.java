@@ -13,7 +13,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.bonitasoft.studio.common.CommandExecutor;
-import org.bonitasoft.studio.common.jface.SWTBotConstants;
+import org.bonitasoft.studio.common.ui.jface.SWTBotConstants;
 import org.eclipse.jface.bindings.keys.KeyStroke;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.keyboard.Keyboard;
