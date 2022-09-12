@@ -18,10 +18,10 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 import org.bonitasoft.studio.application.handler.DeployArtifactsHandler;
-import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.model.DependencyResolver;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
+import org.bonitasoft.studio.common.ui.jface.SWTBotConstants;
 import org.bonitasoft.studio.la.application.repository.ApplicationFileStore;
 import org.bonitasoft.studio.la.application.repository.ApplicationRepositoryStore;
 import org.bonitasoft.studio.la.application.ui.editor.ApplicationFormPage;

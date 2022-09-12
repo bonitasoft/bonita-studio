@@ -14,9 +14,9 @@
  */
 package org.bonitasoft.studio.diagram.custom.perspective;
 
-import org.bonitasoft.studio.common.perspectives.AbstractPerspectiveFactory;
-import org.bonitasoft.studio.common.perspectives.BonitaPerspectivesUtils;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.ui.perspectives.AbstractPerspectiveFactory;
+import org.bonitasoft.studio.common.ui.perspectives.BonitaPerspectivesUtils;
 import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditor;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IFolderLayout;

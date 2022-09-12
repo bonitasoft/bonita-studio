@@ -16,7 +16,7 @@
 package org.bonitasoft.studio.properties.sections.timer.wizard;
 
 import org.bonitasoft.studio.common.emf.tools.EMFModelUpdater;
-import org.bonitasoft.studio.common.properties.IExtensibleGridPropertySectionContribution;
+import org.bonitasoft.studio.common.ui.properties.IExtensibleGridPropertySectionContribution;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
 import org.bonitasoft.studio.model.process.AbstractTimerEvent;

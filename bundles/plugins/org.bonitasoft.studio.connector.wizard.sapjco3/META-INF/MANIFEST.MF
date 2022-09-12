@@ -16,7 +16,8 @@ Require-Bundle: org.eclipse.ui,
  org.bonitasoft.studio.expression.editor,
  org.bonitasoft.studio.common,
  org.eclipse.core.resources,
- org.bonitasoft.studio.common.repository
+ org.bonitasoft.studio.common.repository,
+ org.bonitasoft.studio.common.ui
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-ActivationPolicy: lazy
 Bundle-Vendor: BonitaSoft S.A.

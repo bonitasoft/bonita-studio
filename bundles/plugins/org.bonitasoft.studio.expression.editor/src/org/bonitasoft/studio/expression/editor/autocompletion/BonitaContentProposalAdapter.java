@@ -18,8 +18,8 @@ import java.util.Set;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.extension.ExtensionContextInjectionFactory;
-import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.ui.jface.SWTBotConstants;
 import org.bonitasoft.studio.expression.editor.provider.DataExpressionNatureProvider;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionNatureProvider;
 import org.bonitasoft.studio.expression.editor.provider.IProposalListener;
@@ -120,7 +120,7 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
                 if (e.x >= width - 18 && e.x <= width - 12 && e.y >= 8 && e.y <= 12) {
                     return;
                 }
-                
+
                 // If focus is leaving an important widget or the field's
                 // shell is deactivating
                 if (e.type == SWT.FocusOut) {
@@ -2063,8 +2063,8 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
                     });
                     internalPopupOpened();
                     notifyPopupOpened();
-                    if(control instanceof Label) {
-                        popup.getShell().getDisplay().asyncExec(()-> popup.getShell().setFocus());
+                    if (control instanceof Label) {
+                        popup.getShell().getDisplay().asyncExec(() -> popup.getShell().setFocus());
                     }
                 } else if (!autoActivated) {
                     getControl().getDisplay().beep();
@@ -2405,7 +2405,7 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
                 if (selectedExpression.getFirstElement() instanceof Expression) {
                     exp = (Expression) selectedExpression.getFirstElement();
                     fixedReturnType = exp.getReturnType();
-                    if(ExpressionConstants.CONSTANT_TYPE.equals(exp.getType())){
+                    if (ExpressionConstants.CONSTANT_TYPE.equals(exp.getType())) {
                         defaultValue = exp.getContent();
                     }
                 }
@@ -2415,7 +2415,7 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
                     exp = ((SearchIndex) expViewer.getInput()).getValue();
                 } else if (expViewer.getInput() instanceof SequenceFlow) {
                     exp = ((SequenceFlow) expViewer.getInput()).getCondition();
-                }else if (expViewer.getInput() instanceof Operation) {
+                } else if (expViewer.getInput() instanceof Operation) {
                     exp = ((Operation) expViewer.getInput()).getLeftOperand();
                 }
                 if (exp != null) {

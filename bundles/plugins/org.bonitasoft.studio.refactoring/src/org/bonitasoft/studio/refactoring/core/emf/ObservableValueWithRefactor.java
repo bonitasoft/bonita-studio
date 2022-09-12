@@ -16,8 +16,8 @@ package org.bonitasoft.studio.refactoring.core.emf;
 
 import java.lang.reflect.InvocationTargetException;
 
-import org.bonitasoft.studio.common.jface.BonitaErrorDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.ui.jface.BonitaErrorDialog;
 import org.bonitasoft.studio.refactoring.core.AbstractRefactorOperation;
 import org.bonitasoft.studio.refactoring.core.RefactorPair;
 import org.bonitasoft.studio.refactoring.i18n.Messages;

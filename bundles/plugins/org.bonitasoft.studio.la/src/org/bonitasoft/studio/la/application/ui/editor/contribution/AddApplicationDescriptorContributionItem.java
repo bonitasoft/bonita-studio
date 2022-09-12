@@ -14,8 +14,8 @@
  */
 package org.bonitasoft.studio.la.application.ui.editor.contribution;
 
-import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.common.ui.jface.SWTBotConstants;
 import org.bonitasoft.studio.la.application.ui.editor.ApplicationFormPage;
 import org.bonitasoft.studio.la.application.ui.editor.listener.AddApplicationDescriptorListener;
 import org.bonitasoft.studio.la.i18n.Messages;

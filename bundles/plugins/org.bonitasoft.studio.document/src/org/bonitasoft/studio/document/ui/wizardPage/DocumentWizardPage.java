@@ -14,7 +14,7 @@
  */
 package org.bonitasoft.studio.document.ui.wizardPage;
 
-import static org.bonitasoft.studio.common.jface.databinding.UpdateStrategyFactory.updateValueStrategy;
+import static org.bonitasoft.studio.common.ui.jface.databinding.UpdateStrategyFactory.updateValueStrategy;
 
 import java.util.Iterator;
 

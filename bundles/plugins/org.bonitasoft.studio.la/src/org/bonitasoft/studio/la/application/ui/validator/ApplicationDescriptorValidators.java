@@ -16,7 +16,7 @@ import java.util.Set;
 import java.util.function.Function;
 
 import org.bonitasoft.studio.common.Strings;
-import org.bonitasoft.studio.common.jface.databinding.validator.InputLengthValidator;
+import org.bonitasoft.studio.common.databinding.validator.InputLengthValidator;
 import org.bonitasoft.studio.la.application.ui.control.model.AddApplicationMode;
 import org.bonitasoft.studio.la.application.ui.editor.NavigationPageNode;
 import org.bonitasoft.studio.la.application.ui.editor.customPage.CustomPageDescriptor;

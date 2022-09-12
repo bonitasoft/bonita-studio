@@ -62,10 +62,10 @@ public class DeployPageHandler {
                         new HttpClientFactory(),
                         new RestFormBuilder(PageDesignerURLFactory.INSTANCE),
                         fStore.get());
-                if(disablePopup == null || !Boolean.valueOf(disablePopup)) {
-                    PlatformUI.getWorkbench().getProgressService().run(true, false, operation);
+                if (disablePopup == null || !Boolean.valueOf(disablePopup)) {
+                    PlatformUI.getWorkbench().getProgressService().run(true, false, operation::run);
                     displayDeploymentResult(activeShell, operation);
-                }else {
+                } else {
                     operation.run(AbstractRepository.NULL_PROGRESS_MONITOR);
                     return operation.getStatus();
                 }
@@ -92,6 +92,7 @@ public class DeployPageHandler {
     }
 
     private Optional<WebPageFileStore> findFileStore(RepositoryAccessor repositoryAccessor, String pageName) {
-        return Optional.ofNullable(repositoryAccessor.getRepositoryStore(WebPageRepositoryStore.class).getChild(pageName, true));
+        return Optional.ofNullable(
+                repositoryAccessor.getRepositoryStore(WebPageRepositoryStore.class).getChild(pageName, true));
     }
 }

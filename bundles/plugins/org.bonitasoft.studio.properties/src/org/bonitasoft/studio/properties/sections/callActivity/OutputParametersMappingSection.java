@@ -14,8 +14,8 @@
  */
 package org.bonitasoft.studio.properties.sections.callActivity;
 
-import static org.bonitasoft.studio.common.jface.databinding.UpdateStrategyFactory.neverUpdateValueStrategy;
-import static org.bonitasoft.studio.common.jface.databinding.UpdateStrategyFactory.updateValueStrategy;
+import static org.bonitasoft.studio.common.ui.jface.databinding.UpdateStrategyFactory.neverUpdateValueStrategy;
+import static org.bonitasoft.studio.common.ui.jface.databinding.UpdateStrategyFactory.updateValueStrategy;
 
 import java.util.List;
 import java.util.Objects;
@@ -23,12 +23,12 @@ import java.util.Objects;
 import javax.inject.Inject;
 
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
-import org.bonitasoft.studio.common.jface.EMFFeatureLabelProvider;
-import org.bonitasoft.studio.common.jface.SWTBotConstants;
-import org.bonitasoft.studio.common.jface.databinding.CustomEMFEditObservables;
-import org.bonitasoft.studio.common.properties.AbstractBonitaDescriptionSection;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
-import org.bonitasoft.studio.common.widgets.MagicComposite;
+import org.bonitasoft.studio.common.ui.jface.EMFFeatureLabelProvider;
+import org.bonitasoft.studio.common.ui.jface.SWTBotConstants;
+import org.bonitasoft.studio.common.ui.jface.databinding.CustomEMFEditObservables;
+import org.bonitasoft.studio.common.ui.properties.AbstractBonitaDescriptionSection;
+import org.bonitasoft.studio.common.ui.widgets.MagicComposite;
 import org.bonitasoft.studio.model.process.CallActivity;
 import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.OutputMapping;
@@ -113,7 +113,7 @@ public class OutputParametersMappingSection extends AbstractBonitaDescriptionSec
 
     /*
      * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.properties.AbstractBonitaDescriptionSection#createContent(org.eclipse.swt.widgets.Composite)
+     * @see org.bonitasoft.studio.common.ui.properties.AbstractBonitaDescriptionSection#createContent(org.eclipse.swt.widgets.Composite)
      */
     @Override
     protected void createContent(Composite parent) {
@@ -318,7 +318,7 @@ public class OutputParametersMappingSection extends AbstractBonitaDescriptionSec
 
     /*
      * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.properties.AbstractBonitaDescriptionSection#getSectionDescription()
+     * @see org.bonitasoft.studio.common.ui.properties.AbstractBonitaDescriptionSection#getSectionDescription()
      */
     @Override
     public String getSectionDescription() {

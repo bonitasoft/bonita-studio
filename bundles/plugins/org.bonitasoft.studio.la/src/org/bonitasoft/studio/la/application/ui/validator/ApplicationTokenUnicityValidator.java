@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 
 import org.bonitasoft.engine.business.application.xml.ApplicationNode;
 import org.bonitasoft.engine.business.application.xml.ApplicationNodeContainer;
-import org.bonitasoft.studio.common.jface.databinding.validator.UniqueValidator;
+import org.bonitasoft.studio.common.databinding.validator.UniqueValidator;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
@@ -109,7 +109,7 @@ public class ApplicationTokenUnicityValidator extends UniqueValidator {
     }
 
     /**
-     * @see org.bonitasoft.studio.common.jface.databinding.validator.UniqueValidator#validate(java.lang.Object)
+     * @see org.bonitasoft.studio.common.databinding.validator.UniqueValidator#validate(java.lang.Object)
      */
     @Override
     public IStatus validate(Object value) {

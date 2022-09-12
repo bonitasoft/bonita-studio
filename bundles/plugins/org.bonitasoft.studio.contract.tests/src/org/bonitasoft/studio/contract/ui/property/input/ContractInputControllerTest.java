@@ -36,7 +36,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 
 import org.assertj.core.api.Assertions;
-import org.bonitasoft.studio.common.jface.FileActionDialog;
+import org.bonitasoft.studio.common.ui.jface.FileActionDialog;
 import org.bonitasoft.studio.model.process.Contract;
 import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.ContractInputType;

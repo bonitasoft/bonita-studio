@@ -17,9 +17,9 @@ package org.bonitasoft.studio.properties.sections.timer;
 
 import org.bonitasoft.studio.common.DateUtil;
 import org.bonitasoft.studio.common.gmf.tools.GMFTools;
-import org.bonitasoft.studio.common.properties.ExtensibleGridPropertySection;
-import org.bonitasoft.studio.common.properties.IExtensibleGridPropertySectionContribution;
-import org.bonitasoft.studio.common.widgets.GTKStyleHandler;
+import org.bonitasoft.studio.common.ui.properties.ExtensibleGridPropertySection;
+import org.bonitasoft.studio.common.ui.properties.IExtensibleGridPropertySectionContribution;
+import org.bonitasoft.studio.common.ui.widgets.GTKStyleHandler;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.process.AbstractTimerEvent;
 import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditor;

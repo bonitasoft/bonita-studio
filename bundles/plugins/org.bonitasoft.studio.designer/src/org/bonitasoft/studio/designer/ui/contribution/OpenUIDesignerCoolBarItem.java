@@ -14,10 +14,10 @@
  */
 package org.bonitasoft.studio.designer.ui.contribution;
 
-import org.bonitasoft.studio.common.extension.IBonitaContributionItem;
-import org.bonitasoft.studio.common.jface.MessageDialogWithPrompt;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.extension.IBonitaContributionItem;
+import org.bonitasoft.studio.common.ui.jface.MessageDialogWithPrompt;
 import org.bonitasoft.studio.designer.UIDesignerPlugin;
 import org.bonitasoft.studio.designer.i18n.Messages;
 import org.bonitasoft.studio.designer.ui.handler.OpenUIDesignerHandler;

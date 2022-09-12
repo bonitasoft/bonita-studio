@@ -17,7 +17,7 @@
  */
 package org.bonitasoft.studio.properties.sections.userxp;
 
-import org.bonitasoft.studio.common.properties.ExtensibleGridPropertySection;
+import org.bonitasoft.studio.common.ui.properties.ExtensibleGridPropertySection;
 import org.bonitasoft.studio.properties.i18n.Messages;
 import org.eclipse.e4.core.contexts.ContextInjectionFactory;
 import org.eclipse.e4.core.contexts.EclipseContextFactory;

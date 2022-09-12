@@ -4,7 +4,7 @@ import static com.google.common.base.Predicates.and;
 import static com.google.common.base.Predicates.instanceOf;
 import static com.google.common.base.Predicates.not;
 
-import org.bonitasoft.studio.common.views.BonitaPropertiesBrowserPage;
+import org.bonitasoft.studio.common.ui.views.BonitaPropertiesBrowserPage;
 import org.bonitasoft.studio.model.process.Activity;
 import org.bonitasoft.studio.model.process.SendTask;
 import org.eclipse.core.runtime.IAdaptable;
@@ -25,7 +25,7 @@ public class BonitaDataPropertiesBrowserPage extends
 
     /*
      * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.views.BonitaPropertiesBrowserPage#defaultSelectedTabIndex()
+     * @see org.bonitasoft.studio.common.ui.views.BonitaPropertiesBrowserPage#defaultSelectedTabIndex()
      */
     @Override
     protected int defaultSelectedTabIndex(final ISelection input) {

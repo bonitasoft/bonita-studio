@@ -14,9 +14,9 @@
  */
 package org.bonitasoft.studio.connectors.handler;
 
-import org.bonitasoft.studio.common.jface.CustomWizardDialog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.provider.DefinitionResourceProvider;
+import org.bonitasoft.studio.common.ui.jface.CustomWizardDialog;
 import org.bonitasoft.studio.connector.model.definition.dialog.ConnectorDefinitionWizardDialog;
 import org.bonitasoft.studio.connector.model.i18n.Messages;
 import org.bonitasoft.studio.connectors.ConnectorPlugin;

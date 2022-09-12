@@ -22,8 +22,8 @@ import java.util.List;
 import org.bonitasoft.studio.common.emf.tools.EMFModelUpdater;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
-import org.bonitasoft.studio.common.properties.ExtensibleGridPropertySection;
-import org.bonitasoft.studio.common.properties.IExtensibleGridPropertySectionContribution;
+import org.bonitasoft.studio.common.ui.properties.ExtensibleGridPropertySection;
+import org.bonitasoft.studio.common.ui.properties.IExtensibleGridPropertySectionContribution;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.process.AbstractCatchMessageEvent;
 import org.bonitasoft.studio.model.process.AbstractProcess;
@@ -223,7 +223,7 @@ public class CatchEventEventSelectionContribution implements
 
     /*
      * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.properties.IExtensibleGridPropertySectionContribution#dispose()
+     * @see org.bonitasoft.studio.common.ui.properties.IExtensibleGridPropertySectionContribution#dispose()
      */
     @Override
     public void dispose() {
@@ -240,7 +240,7 @@ public class CatchEventEventSelectionContribution implements
 
     /*
      * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.properties.IExtensibleGridPropertySectionContribution#getLabel()
+     * @see org.bonitasoft.studio.common.ui.properties.IExtensibleGridPropertySectionContribution#getLabel()
      */
     @Override
     public String getLabel() {
@@ -250,7 +250,7 @@ public class CatchEventEventSelectionContribution implements
     /*
      * (non-Javadoc)
      * @see
-     * org.bonitasoft.studio.common.properties.IExtensibleGridPropertySectionContribution#isRelevantFor(org.eclipse.emf.ecore
+     * org.bonitasoft.studio.common.ui.properties.IExtensibleGridPropertySectionContribution#isRelevantFor(org.eclipse.emf.ecore
      * .EObject)
      */
     @Override
@@ -260,7 +260,7 @@ public class CatchEventEventSelectionContribution implements
 
     /*
      * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.properties.IExtensibleGridPropertySectionContribution#refresh()
+     * @see org.bonitasoft.studio.common.ui.properties.IExtensibleGridPropertySectionContribution#refresh()
      */
     @Override
     public void refresh() {
@@ -272,7 +272,7 @@ public class CatchEventEventSelectionContribution implements
     /*
      * (non-Javadoc)
      * @see
-     * org.bonitasoft.studio.common.properties.IExtensibleGridPropertySectionContribution#setEObject(org.eclipse.emf.ecore.
+     * org.bonitasoft.studio.common.ui.properties.IExtensibleGridPropertySectionContribution#setEObject(org.eclipse.emf.ecore.
      * EObject)
      */
     @Override
@@ -289,7 +289,7 @@ public class CatchEventEventSelectionContribution implements
     /*
      * (non-Javadoc)
      * @see
-     * org.bonitasoft.studio.common.properties.IExtensibleGridPropertySectionContribution#setEditingDomain(org.eclipse.emf.
+     * org.bonitasoft.studio.common.ui.properties.IExtensibleGridPropertySectionContribution#setEditingDomain(org.eclipse.emf.
      * transaction.TransactionalEditingDomain
      * )
      */
@@ -301,7 +301,7 @@ public class CatchEventEventSelectionContribution implements
     /*
      * (non-Javadoc)
      * @see
-     * org.bonitasoft.studio.common.properties.IExtensibleGridPropertySectionContribution#setSelection(org.eclipse.jface.
+     * org.bonitasoft.studio.common.ui.properties.IExtensibleGridPropertySectionContribution#setSelection(org.eclipse.jface.
      * viewers.ISelection)
      */
     @Override

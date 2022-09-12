@@ -21,8 +21,8 @@ import static org.eclipse.swtbot.swt.finder.matchers.WidgetMatcherFactory.withSt
 
 import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelFileStore;
-import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.repository.core.ActiveOrganizationProvider;
+import org.bonitasoft.studio.common.ui.jface.SWTBotConstants;
 import org.bonitasoft.studio.swtbot.framework.ConditionBuilder;
 import org.bonitasoft.studio.swtbot.framework.application.editor.project.BotEditProjectMetadataWizard;
 import org.bonitasoft.studio.swtbot.framework.application.editor.project.BotExtensionCard;

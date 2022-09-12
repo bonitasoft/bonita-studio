@@ -17,7 +17,7 @@ package org.bonitasoft.studio.properties.sections.callActivity;
 import javax.inject.Inject;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
-import org.bonitasoft.studio.common.properties.AbstractBonitaDescriptionSection;
+import org.bonitasoft.studio.common.ui.properties.AbstractBonitaDescriptionSection;
 import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFilter;
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
 import org.bonitasoft.studio.model.process.CallActivity;
@@ -80,7 +80,7 @@ public class CallActivitySection extends AbstractBonitaDescriptionSection {
 
     /*
      * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.properties.AbstractBonitaDescriptionSection#createContent(org.eclipse.swt.widgets.Composite)
+     * @see org.bonitasoft.studio.common.ui.properties.AbstractBonitaDescriptionSection#createContent(org.eclipse.swt.widgets.Composite)
      */
     @Override
     protected void createContent(Composite composite) {

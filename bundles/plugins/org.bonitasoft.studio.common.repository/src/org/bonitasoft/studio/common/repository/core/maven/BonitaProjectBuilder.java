@@ -19,11 +19,11 @@ import java.util.Objects;
 
 import org.apache.maven.model.Model;
 import org.bonitasoft.studio.common.ProductVersion;
-import org.bonitasoft.studio.common.jface.databinding.StatusToMarkerSeverity;
 import org.bonitasoft.studio.common.repository.BonitaProjectNature;
 import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
 import org.bonitasoft.studio.common.repository.Messages;
 import org.bonitasoft.studio.common.repository.core.maven.model.ProjectDefaultConfiguration;
+import org.bonitasoft.studio.common.ui.jface.databinding.StatusToMarkerSeverity;
 import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.resources.IFile;

@@ -21,7 +21,6 @@ import java.util.List;
 import java.util.Set;
 
 import org.bonitasoft.studio.common.NamingUtils;
-import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
@@ -31,6 +30,7 @@ import org.bonitasoft.studio.common.repository.filestore.PackageFileStore;
 import org.bonitasoft.studio.common.repository.filestore.RepositoryFileStoreComparator;
 import org.bonitasoft.studio.common.repository.filestore.SourceFileStore;
 import org.bonitasoft.studio.common.repository.model.IJavaContainer;
+import org.bonitasoft.studio.common.ui.jface.FileActionDialog;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;

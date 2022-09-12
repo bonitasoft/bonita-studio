@@ -18,8 +18,8 @@
 package org.bonitasoft.studio.properties.sections.general.activities;
 
 import org.bonitasoft.studio.common.gmf.tools.GMFTools;
-import org.bonitasoft.studio.common.properties.ExtensibleGridPropertySection;
-import org.bonitasoft.studio.common.properties.IExtensibleGridPropertySectionContribution;
+import org.bonitasoft.studio.common.ui.properties.ExtensibleGridPropertySection;
+import org.bonitasoft.studio.common.ui.properties.IExtensibleGridPropertySectionContribution;
 import org.bonitasoft.studio.diagram.custom.BonitaNodesElementTypeResolver;
 import org.bonitasoft.studio.model.process.Activity;
 import org.bonitasoft.studio.model.process.ProcessPackage;
@@ -203,7 +203,7 @@ public class ActivityTypeSelectionGridPropertySectionContribution implements IEx
     }
 
     /* (non-Javadoc)
-     * @see org.bonitasoft.studio.common.properties.IExtensibleGridPropertySectionContribution#dispose()
+     * @see org.bonitasoft.studio.common.ui.properties.IExtensibleGridPropertySectionContribution#dispose()
      */
     @Override
     public void dispose() {

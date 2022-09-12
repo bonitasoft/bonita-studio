@@ -20,7 +20,7 @@ import org.bonitasoft.studio.common.gmf.tools.tree.selection.EditPartNotFoundExc
 import org.bonitasoft.studio.common.gmf.tools.tree.selection.EditPartResolver;
 import org.bonitasoft.studio.common.gmf.tools.tree.selection.TabbedPropertySelectionProviderRegistry;
 import org.bonitasoft.studio.common.gmf.tools.tree.selection.TabbedPropertySynchronizerListener;
-import org.bonitasoft.studio.common.jface.SWTBotConstants;
+import org.bonitasoft.studio.common.ui.jface.SWTBotConstants;
 import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.eclipse.draw2d.geometry.Point;

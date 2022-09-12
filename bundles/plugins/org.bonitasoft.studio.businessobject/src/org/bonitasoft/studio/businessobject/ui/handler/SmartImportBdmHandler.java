@@ -67,7 +67,8 @@ public class SmartImportBdmHandler extends AbstractHandler {
     }
 
     @Execute
-    public void execute(@Named(IServiceConstants.ACTIVE_SHELL) Shell activeShell, RepositoryAccessor repositoryAccessor) {
+    public void execute(@Named(IServiceConstants.ACTIVE_SHELL) Shell activeShell,
+            RepositoryAccessor repositoryAccessor) {
         SmartImportBdmPage page = new SmartImportBdmPage(repositoryAccessor);
         Optional<BusinessDataModelEditor> openedEditor = retrieveBdmFileStore(repositoryAccessor)
                 .map(BusinessObjectModelFileStore::getOpenedEditor);
@@ -85,7 +86,8 @@ public class SmartImportBdmHandler extends AbstractHandler {
         }
     }
 
-    private void updateWorkingCopy(Optional<BusinessDataModelEditor> openedEditor, RepositoryAccessor repositoryAccessor) {
+    private void updateWorkingCopy(Optional<BusinessDataModelEditor> openedEditor,
+            RepositoryAccessor repositoryAccessor) {
         openedEditor.ifPresent(
                 editor -> editor.getEditorContribution(BusinessDataModelEditorContribution.ID)
                         .filter(BusinessDataModelEditorContribution.class::isInstance)
@@ -93,13 +95,13 @@ public class SmartImportBdmHandler extends AbstractHandler {
                         .ifPresent(contribution -> {
                             retrieveBdmFileStore(repositoryAccessor).ifPresent(fStore -> {
                                 try {
-                                org.bonitasoft.engine.bdm.model.BusinessObjectModel model = fStore.getContent();
-                                BusinessObjectModel businessObjectModel = contribution.getConverter()
-                                        .toEmfModel(model, contribution.loadBdmArtifactDescriptor());
-                                IObservableValue<BusinessObjectModel> workingCopyObservable = contribution
-                                        .observeWorkingCopy();
-                                workingCopyObservable.getRealm()
-                                        .exec(() -> workingCopyObservable.setValue(businessObjectModel));
+                                    org.bonitasoft.engine.bdm.model.BusinessObjectModel model = fStore.getContent();
+                                    BusinessObjectModel businessObjectModel = contribution.getConverter()
+                                            .toEmfModel(model, contribution.loadBdmArtifactDescriptor());
+                                    IObservableValue<BusinessObjectModel> workingCopyObservable = contribution
+                                            .observeWorkingCopy();
+                                    workingCopyObservable.getRealm()
+                                            .exec(() -> workingCopyObservable.setValue(businessObjectModel));
                                 } catch (ReadFileStoreException e) {
                                     BonitaStudioLog.warning(e.getMessage(), BusinessObjectPlugin.PLUGIN_ID);
                                     return;
@@ -138,14 +140,15 @@ public class SmartImportBdmHandler extends AbstractHandler {
         smartImport = page.canPerformSmartImport();
         BusinessObjectModelRepositoryStore<BusinessObjectModelFileStore> repositoryStore = repositoryAccessor
                 .getRepositoryStore(BusinessObjectModelRepositoryStore.class);
-        BusinessObjectModelFileStore fileStore = repositoryStore.getChild(BusinessObjectModelFileStore.BOM_FILENAME, true);
+        BusinessObjectModelFileStore fileStore = repositoryStore.getChild(BusinessObjectModelFileStore.BOM_FILENAME,
+                true);
         if (fileStore == null) {
             fileStore = (BusinessObjectModelFileStore) repositoryStore
                     .createRepositoryFileStore(BusinessObjectModelFileStore.BOM_FILENAME);
         } else if (smartImport) {
             try {
                 SmartImportBDMOperation operation = new SmartImportBDMOperation(fileStore, page.getImportBdmModel());
-                PlatformUI.getWorkbench().getProgressService().run(true, false, operation);
+                PlatformUI.getWorkbench().getProgressService().run(true, false, operation::run);
                 return operation.getStatus();
             } catch (InvocationTargetException | InterruptedException e) {
                 return ValidationStatus.error(e.getMessage(), e.getCause());

@@ -17,8 +17,8 @@ package org.bonitasoft.studio.properties.sections.general;
 import java.util.List;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
-import org.bonitasoft.studio.common.properties.ExtensibleGridPropertySection;
-import org.bonitasoft.studio.common.properties.IExtensibleGridPropertySectionContribution;
+import org.bonitasoft.studio.common.ui.properties.ExtensibleGridPropertySection;
+import org.bonitasoft.studio.common.ui.properties.IExtensibleGridPropertySectionContribution;
 import org.bonitasoft.studio.decision.ui.DecisionTableWizard;
 import org.bonitasoft.studio.decision.ui.condition.MaximizableWizardDialog;
 import org.bonitasoft.studio.decision.ui.condition.TakeTransitionLabelProvider;

@@ -17,8 +17,8 @@ package org.bonitasoft.studio.tests.draw2d;
 import static org.junit.Assert.assertEquals;
 
 import org.bonitasoft.engine.bpm.connector.ConnectorEvent;
-import org.bonitasoft.studio.common.widgets.EventCircle;
-import org.bonitasoft.studio.common.widgets.LifeCycleWidget;
+import org.bonitasoft.studio.common.ui.widgets.EventCircle;
+import org.bonitasoft.studio.common.ui.widgets.LifeCycleWidget;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.widgets.Composite;

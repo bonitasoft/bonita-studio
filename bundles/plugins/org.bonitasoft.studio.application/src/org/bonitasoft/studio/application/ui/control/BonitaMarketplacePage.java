@@ -34,8 +34,8 @@ import org.bonitasoft.studio.application.ui.control.model.dependency.BonitaArtif
 import org.bonitasoft.studio.application.ui.control.model.dependency.BonitaMarketPlaceItem;
 import org.bonitasoft.studio.application.ui.control.model.dependency.BonitaMarketplace;
 import org.bonitasoft.studio.common.Strings;
-import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.repository.core.maven.MavenProjectHelper;
+import org.bonitasoft.studio.common.ui.jface.SWTBotConstants;
 import org.bonitasoft.studio.preferences.BonitaThemeConstants;
 import org.bonitasoft.studio.ui.dialog.ExceptionDialogHandler;
 import org.bonitasoft.studio.ui.widget.SearchWidget;

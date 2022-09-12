@@ -15,10 +15,10 @@
 package org.bonitasoft.studio.application.coolbar;
 
 import org.bonitasoft.studio.application.i18n.Messages;
-import org.bonitasoft.studio.common.extension.IBonitaContributionItem;
-import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.extension.IBonitaContributionItem;
+import org.bonitasoft.studio.common.ui.jface.SWTBotConstants;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.core.commands.Command;

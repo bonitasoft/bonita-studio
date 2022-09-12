@@ -40,7 +40,6 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredViewer;
-import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Button;
@@ -121,7 +120,8 @@ public class OperatorSelectionDialog extends Dialog implements ISelectionChanged
     protected Control createDialogArea(final Composite parent) {
         final Composite mainComposite = new Composite(parent, SWT.NONE);
         mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-        mainComposite.setLayout(GridLayoutFactory.fillDefaults().equalWidth(false).numColumns(2).margins(10, 10).create());
+        mainComposite
+                .setLayout(GridLayoutFactory.fillDefaults().equalWidth(false).numColumns(2).margins(10, 10).create());
         final Label operatorType = new Label(mainComposite, SWT.NONE);
         operatorType.setText(Messages.operatorType);
 
@@ -168,7 +168,8 @@ public class OperatorSelectionDialog extends Dialog implements ISelectionChanged
         final Expression exp = operation.getLeftOperand();
         final String operatorType = (String) ((IStructuredSelection) event.getSelection()).getFirstElement();
         createOperatorEditorFor(section, operatorType, operator, exp);
-        if (ExpressionConstants.CREATE_BUSINESS_DATA_OPERATOR.equals(operator.getType()) || ExpressionConstants.ASSIGNMENT_OPERATOR.equals(operator.getType())) {
+        if (ExpressionConstants.CREATE_BUSINESS_DATA_OPERATOR.equals(operator.getType())
+                || ExpressionConstants.ASSIGNMENT_OPERATOR.equals(operator.getType())) {
             enableOKButton(true);
         }
         relayout();
@@ -182,7 +183,8 @@ public class OperatorSelectionDialog extends Dialog implements ISelectionChanged
         shell.layout(true, true);
     }
 
-    protected void createOperatorEditorFor(final Section parentSection, final String operatorType, final Operator operator, final Expression sourceExpression) {
+    protected void createOperatorEditorFor(final Section parentSection, final String operatorType,
+            final Operator operator, final Expression sourceExpression) {
         Composite client = null;
         boolean expand = false;
         if (parentSection.getClient() != null) {
@@ -193,8 +195,12 @@ public class OperatorSelectionDialog extends Dialog implements ISelectionChanged
                 expand = true;
                 client = editor.createOpeartorEditor(parentSection, operator, sourceExpression);
                 StructuredViewer viewer = editor.getViewer();
-                if(viewer != null) {
-                    viewer.addDoubleClickListener(event -> {if(editor.canFinish()) {close();}});
+                if (viewer != null) {
+                    viewer.addDoubleClickListener(event -> {
+                        if (editor.canFinish()) {
+                            close();
+                        }
+                    });
                 }
                 editor.addSelectionChangedListener(new ISelectionChangedListener() {
 

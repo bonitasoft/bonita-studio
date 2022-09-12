@@ -22,8 +22,8 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import org.bonitasoft.engine.business.application.xml.ApplicationNode;
-import org.bonitasoft.studio.common.jface.ArrayTreeContentProvider;
-import org.bonitasoft.studio.common.jface.SWTBotConstants;
+import org.bonitasoft.studio.common.ui.jface.ArrayTreeContentProvider;
+import org.bonitasoft.studio.common.ui.jface.SWTBotConstants;
 import org.bonitasoft.studio.la.application.ui.editor.converter.ApplicationToNavigationConverter;
 import org.bonitasoft.studio.la.application.ui.editor.converter.UpdateApplicationNodeOperation;
 import org.bonitasoft.studio.la.application.ui.editor.customPage.ApplicationPageProposalProvider;

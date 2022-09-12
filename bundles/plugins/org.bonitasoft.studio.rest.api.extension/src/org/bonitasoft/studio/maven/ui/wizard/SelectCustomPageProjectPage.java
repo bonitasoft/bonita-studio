@@ -8,12 +8,12 @@
  *******************************************************************************/
 package org.bonitasoft.studio.maven.ui.wizard;
 
-import static org.bonitasoft.studio.common.jface.databinding.UpdateStrategyFactory.updateValueStrategy;
+import static org.bonitasoft.studio.common.ui.jface.databinding.UpdateStrategyFactory.updateValueStrategy;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.bonitasoft.studio.common.jface.databinding.validator.TypedValidator;
+import org.bonitasoft.studio.common.databinding.validator.TypedValidator;
 import org.bonitasoft.studio.maven.CustomPageProjectFileStore;
 import org.bonitasoft.studio.maven.CustomPageProjectRepositoryStore;
 import org.bonitasoft.studio.maven.i18n.Messages;

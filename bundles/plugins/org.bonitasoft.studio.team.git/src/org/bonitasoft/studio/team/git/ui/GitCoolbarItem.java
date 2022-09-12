@@ -17,9 +17,9 @@ package org.bonitasoft.studio.team.git.ui;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.bonitasoft.studio.common.extension.IBonitaContributionItem;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
+import org.bonitasoft.studio.common.extension.IBonitaContributionItem;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.team.git.TeamGitPlugin;

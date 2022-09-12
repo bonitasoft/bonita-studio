@@ -11,7 +11,8 @@ Require-Bundle: org.bonitasoft.studio.model,
  org.eclipse.core.runtime,
  org.eclipse.ui;bundle-version="3.106.0",
  org.bonitasoft.studio.pics,
- org.bonitasoft.studio.preferences
+ org.bonitasoft.studio.preferences,
+ org.bonitasoft.studio.common.ui
 Export-Package: org.bonitasoft.studio.decision.i18n,
  org.bonitasoft.studio.decision.ui,
  org.bonitasoft.studio.decision.ui.condition

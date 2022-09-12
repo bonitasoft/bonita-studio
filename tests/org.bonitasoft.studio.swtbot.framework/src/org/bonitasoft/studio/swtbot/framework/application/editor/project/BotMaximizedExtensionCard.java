@@ -14,7 +14,7 @@
  */
 package org.bonitasoft.studio.swtbot.framework.application.editor.project;
 
-import org.bonitasoft.studio.common.jface.SWTBotConstants;
+import org.bonitasoft.studio.common.ui.jface.SWTBotConstants;
 import org.bonitasoft.studio.swtbot.framework.application.editor.BotProjectOverviewEditor;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 

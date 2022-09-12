@@ -15,10 +15,10 @@
 package org.bonitasoft.studio.businessobject.ui.wizard;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
-import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.groovyReferenceValidator;
-import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.mandatoryValidator;
-import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.maxLengthValidator;
-import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.multiValidator;
+import static org.bonitasoft.studio.common.databinding.validator.ValidatorFactory.groovyReferenceValidator;
+import static org.bonitasoft.studio.common.databinding.validator.ValidatorFactory.mandatoryValidator;
+import static org.bonitasoft.studio.common.databinding.validator.ValidatorFactory.maxLengthValidator;
+import static org.bonitasoft.studio.common.databinding.validator.ValidatorFactory.multiValidator;
 import static org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory.neverUpdateValueStrategy;
 import static org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory.updateValueStrategy;
 import static org.eclipse.jface.layout.GridDataFactory.fillDefaults;

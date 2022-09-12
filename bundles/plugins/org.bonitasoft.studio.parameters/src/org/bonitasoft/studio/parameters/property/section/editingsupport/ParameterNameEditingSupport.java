@@ -14,9 +14,9 @@
  */
 package org.bonitasoft.studio.parameters.property.section.editingsupport;
 
-import org.bonitasoft.studio.common.jface.CellEditorValidationStatusListener;
-import org.bonitasoft.studio.common.jface.databinding.validator.GroovyReferenceValidator;
-import org.bonitasoft.studio.common.jface.databinding.validator.InputLengthValidator;
+import org.bonitasoft.studio.common.databinding.validator.GroovyReferenceValidator;
+import org.bonitasoft.studio.common.databinding.validator.InputLengthValidator;
+import org.bonitasoft.studio.common.ui.jface.CellEditorValidationStatusListener;
 import org.bonitasoft.studio.model.parameter.Parameter;
 import org.bonitasoft.studio.model.parameter.ParameterPackage;
 import org.bonitasoft.studio.model.process.AbstractProcess;

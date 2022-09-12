@@ -25,15 +25,15 @@ import java.util.Optional;
 import java.util.Set;
 
 import org.bonitasoft.studio.common.Messages;
+import org.bonitasoft.studio.common.databinding.validator.EAttributeValidatorFactory;
 import org.bonitasoft.studio.common.diagram.Identifier;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
-import org.bonitasoft.studio.common.jface.SWTBotConstants;
-import org.bonitasoft.studio.common.jface.databinding.DialogSupport;
-import org.bonitasoft.studio.common.jface.databinding.validator.EAttributeValidatorFactory;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
+import org.bonitasoft.studio.common.ui.jface.SWTBotConstants;
+import org.bonitasoft.studio.common.ui.jface.databinding.DialogSupport;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.MainProcess;

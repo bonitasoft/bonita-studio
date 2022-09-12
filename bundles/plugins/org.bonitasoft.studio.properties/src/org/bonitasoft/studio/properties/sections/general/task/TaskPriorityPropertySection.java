@@ -18,8 +18,8 @@
 package org.bonitasoft.studio.properties.sections.general.task;
 
 import org.bonitasoft.engine.bpm.flownode.TaskPriority;
-import org.bonitasoft.studio.common.properties.ExtensibleGridPropertySection;
-import org.bonitasoft.studio.common.properties.IExtensibleGridPropertySectionContribution;
+import org.bonitasoft.studio.common.ui.properties.ExtensibleGridPropertySection;
+import org.bonitasoft.studio.common.ui.properties.IExtensibleGridPropertySectionContribution;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.model.process.Task;
 import org.bonitasoft.studio.properties.i18n.Messages;
@@ -93,7 +93,7 @@ public class TaskPriorityPropertySection implements IExtensibleGridPropertySecti
     /*
      * (non-Javadoc)
      * 
-     * @see org.bonitasoft.studio.common.properties.
+     * @see org.bonitasoft.studio.common.ui.properties.
      * IExtensibleGridPropertySectionContribution#dispose()
      */
     public void dispose() {
@@ -108,7 +108,7 @@ public class TaskPriorityPropertySection implements IExtensibleGridPropertySecti
     /*
      * (non-Javadoc)
      * 
-     * @see org.bonitasoft.studio.common.properties.
+     * @see org.bonitasoft.studio.common.ui.properties.
      * IExtensibleGridPropertySectionContribution#getLabel()
      */
     public String getLabel() {
@@ -118,7 +118,7 @@ public class TaskPriorityPropertySection implements IExtensibleGridPropertySecti
     /*
      * (non-Javadoc)
      * 
-     * @see org.bonitasoft.studio.common.properties.
+     * @see org.bonitasoft.studio.common.ui.properties.
      * IExtensibleGridPropertySectionContribution#isRelevantFor(org.eclipse.emf.
      * ecore.EObject)
      */
@@ -129,7 +129,7 @@ public class TaskPriorityPropertySection implements IExtensibleGridPropertySecti
     /*
      * (non-Javadoc)
      * 
-     * @see org.bonitasoft.studio.common.properties.
+     * @see org.bonitasoft.studio.common.ui.properties.
      * IExtensibleGridPropertySectionContribution#refresh()
      */
     public void refresh() {
@@ -140,7 +140,7 @@ public class TaskPriorityPropertySection implements IExtensibleGridPropertySecti
     /*
      * (non-Javadoc)
      * 
-     * @see org.bonitasoft.studio.common.properties.
+     * @see org.bonitasoft.studio.common.ui.properties.
      * IExtensibleGridPropertySectionContribution#setEObject(org.eclipse.emf.ecore.
      * EObject)
      */
@@ -155,7 +155,7 @@ public class TaskPriorityPropertySection implements IExtensibleGridPropertySecti
     /*
      * (non-Javadoc)
      * 
-     * @see org.bonitasoft.studio.common.properties.
+     * @see org.bonitasoft.studio.common.ui.properties.
      * IExtensibleGridPropertySectionContribution#setEditingDomain(org.eclipse.emf.
      * transaction.TransactionalEditingDomain)
      */
@@ -166,7 +166,7 @@ public class TaskPriorityPropertySection implements IExtensibleGridPropertySecti
     /*
      * (non-Javadoc)
      * 
-     * @see org.bonitasoft.studio.common.properties.
+     * @see org.bonitasoft.studio.common.ui.properties.
      * IExtensibleGridPropertySectionContribution#setSelection(org.eclipse.jface.
      * viewers.ISelection)
      */

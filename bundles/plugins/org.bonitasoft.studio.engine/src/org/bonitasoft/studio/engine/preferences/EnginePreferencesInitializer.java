@@ -15,8 +15,8 @@
 
 package org.bonitasoft.studio.engine.preferences;
 
-import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.designer.core.preference.DesignerPreferenceConstants;
 import org.bonitasoft.studio.engine.EnginePlugin;
 import org.bonitasoft.studio.preferences.extension.IPreferenceInitializerExtension;

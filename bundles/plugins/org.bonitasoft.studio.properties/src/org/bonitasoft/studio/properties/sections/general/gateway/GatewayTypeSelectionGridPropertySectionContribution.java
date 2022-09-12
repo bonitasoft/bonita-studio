@@ -18,8 +18,8 @@
 package org.bonitasoft.studio.properties.sections.general.gateway;
 
 import org.bonitasoft.studio.common.gmf.tools.GMFTools;
-import org.bonitasoft.studio.common.properties.ExtensibleGridPropertySection;
-import org.bonitasoft.studio.common.properties.IExtensibleGridPropertySectionContribution;
+import org.bonitasoft.studio.common.ui.properties.ExtensibleGridPropertySection;
+import org.bonitasoft.studio.common.ui.properties.IExtensibleGridPropertySectionContribution;
 import org.bonitasoft.studio.diagram.custom.BonitaNodesElementTypeResolver;
 import org.bonitasoft.studio.model.process.Gateway;
 import org.bonitasoft.studio.model.process.ProcessPackage;
@@ -201,7 +201,7 @@ public class GatewayTypeSelectionGridPropertySectionContribution implements IExt
     /*
      * (non-Javadoc)
      * 
-     * @see org.bonitasoft.studio.common.properties.
+     * @see org.bonitasoft.studio.common.ui.properties.
      * IExtensibleGridPropertySectionContribution#dispose()
      */
     public void dispose() {

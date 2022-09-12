@@ -15,14 +15,14 @@
 package org.bonitasoft.studio.validation.constraints.process;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.fileNameValidator;
-import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.forbiddenCharactersValidator;
-import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.mandatoryValidator;
-import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.maxLengthValidator;
-import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.multiValidator;
-import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.utf8InputValidator;
+import static org.bonitasoft.studio.common.databinding.validator.ValidatorFactory.fileNameValidator;
+import static org.bonitasoft.studio.common.databinding.validator.ValidatorFactory.forbiddenCharactersValidator;
+import static org.bonitasoft.studio.common.databinding.validator.ValidatorFactory.mandatoryValidator;
+import static org.bonitasoft.studio.common.databinding.validator.ValidatorFactory.maxLengthValidator;
+import static org.bonitasoft.studio.common.databinding.validator.ValidatorFactory.multiValidator;
+import static org.bonitasoft.studio.common.databinding.validator.ValidatorFactory.utf8InputValidator;
 
-import org.bonitasoft.studio.common.jface.databinding.validator.MultiValidatorFactory;
+import org.bonitasoft.studio.common.databinding.validator.MultiValidatorFactory;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.validation.constraints.AbstractLiveValidationMarkerConstraint;

@@ -44,7 +44,7 @@ import org.bonitasoft.studio.businessobject.refactor.Event;
 import org.bonitasoft.studio.businessobject.ui.wizard.BusinessObjectTransfer;
 import org.bonitasoft.studio.businessobject.validator.BusinessObjectListValidator;
 import org.bonitasoft.studio.common.NamingUtils;
-import org.bonitasoft.studio.common.jface.SWTBotConstants;
+import org.bonitasoft.studio.common.ui.jface.SWTBotConstants;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory;

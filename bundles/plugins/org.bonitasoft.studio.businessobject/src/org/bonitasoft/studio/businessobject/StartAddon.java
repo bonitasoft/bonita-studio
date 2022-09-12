@@ -19,7 +19,7 @@ import javax.inject.Inject;
 import org.bonitasoft.studio.businessobject.core.operation.DeployBDMJob;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelFileStore;
 import org.bonitasoft.studio.businessobject.i18n.Messages;
-import org.bonitasoft.studio.common.jface.MessageDialogWithPrompt;
+import org.bonitasoft.studio.common.ui.jface.MessageDialogWithPrompt;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.Job;

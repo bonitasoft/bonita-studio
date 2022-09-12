@@ -21,7 +21,6 @@ import java.util.List;
 
 import org.bonitasoft.engine.connector.AbstractConnector;
 import org.bonitasoft.studio.common.NamingUtils;
-import org.bonitasoft.studio.common.jface.ExtensibleWizard;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.ClassGenerator;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
@@ -32,6 +31,7 @@ import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.common.repository.provider.DefinitionResourceProvider;
 import org.bonitasoft.studio.common.repository.store.SourceRepositoryStore;
+import org.bonitasoft.studio.common.ui.jface.ExtensibleWizard;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
 import org.bonitasoft.studio.connector.model.implementation.ConnectorImplementation;
 import org.bonitasoft.studio.connector.model.implementation.ConnectorImplementationFactory;

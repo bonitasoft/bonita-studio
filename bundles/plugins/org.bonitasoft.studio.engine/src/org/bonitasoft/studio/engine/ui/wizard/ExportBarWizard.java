@@ -17,8 +17,8 @@ package org.bonitasoft.studio.engine.ui.wizard;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
-import org.bonitasoft.studio.common.jface.BonitaErrorDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.ui.jface.BonitaErrorDialog;
 import org.bonitasoft.studio.engine.i18n.Messages;
 import org.bonitasoft.studio.engine.operation.ExportBarOperation;
 import org.bonitasoft.studio.model.process.MainProcess;

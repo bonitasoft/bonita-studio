@@ -16,11 +16,11 @@ package org.bonitasoft.studio.scripting.provider;
 
 import static org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory.updateValueStrategy;
 
-import org.bonitasoft.studio.common.jface.databinding.converter.BooleanInverserConverter;
-import org.bonitasoft.studio.common.jface.databinding.validator.EmptyInputValidator;
+import org.bonitasoft.studio.common.databinding.validator.EmptyInputValidator;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.ui.jface.databinding.converter.BooleanInverserConverter;
 import org.bonitasoft.studio.expression.editor.constant.ExpressionReturnTypeContentProvider;
 import org.bonitasoft.studio.expression.editor.filter.ExpressionReturnTypeFilter;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionEditor;

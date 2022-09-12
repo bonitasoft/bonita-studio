@@ -17,7 +17,7 @@ package org.bonitasoft.studio.swtbot.framework.application.editor.project;
 import static org.eclipse.swtbot.swt.finder.waits.Conditions.shellIsActive;
 
 import org.bonitasoft.studio.application.i18n.Messages;
-import org.bonitasoft.studio.common.jface.SWTBotConstants;
+import org.bonitasoft.studio.common.ui.jface.SWTBotConstants;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;

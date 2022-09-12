@@ -16,10 +16,10 @@ package org.bonitasoft.studio.rest.api.extension.ui.handler;
 
 import java.util.Optional;
 
-import org.bonitasoft.studio.common.jface.BonitaErrorDialog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.filestore.FileStoreFinder;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
+import org.bonitasoft.studio.common.ui.jface.BonitaErrorDialog;
 import org.bonitasoft.studio.maven.CustomPageProjectFileStore;
 import org.bonitasoft.studio.maven.ImportProjectException;
 import org.bonitasoft.studio.maven.i18n.Messages;

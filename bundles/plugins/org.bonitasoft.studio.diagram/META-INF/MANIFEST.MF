@@ -43,7 +43,8 @@ Require-Bundle: org.eclipse.core.runtime,
  org.bonitasoft.studio.model.edit;visibility:=reexport,
  org.eclipse.ocl.ecore;visibility:=reexport,
  org.eclipse.emf.validation;visibility:=reexport,
- org.eclipse.gef;visibility:=reexport
+ org.eclipse.gef;visibility:=reexport,
+ org.bonitasoft.studio.common.ui
 Bundle-ActivationPolicy: lazy
 Import-Package: org.bonitasoft.studio.common
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

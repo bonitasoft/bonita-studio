@@ -40,9 +40,9 @@ import org.bonitasoft.engine.profile.ProfileNotFoundException;
 import org.bonitasoft.engine.search.SearchOptionsBuilder;
 import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.core.ActiveOrganizationProvider;
+import org.bonitasoft.studio.common.ui.PlatformUtil;
 import org.bonitasoft.studio.engine.operation.ApplicationURLBuilder;
 import org.eclipse.core.runtime.IStatus;
 

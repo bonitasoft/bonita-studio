@@ -27,7 +27,7 @@ import java.util.function.Predicate;
 
 import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
+import org.bonitasoft.studio.common.ui.PlatformUtil;
 import org.bonitasoft.studio.intro.content.actions.ExecuteCommandContentProvider;
 import org.bonitasoft.studio.intro.i18n.Messages;
 import org.eclipse.swt.widgets.Composite;

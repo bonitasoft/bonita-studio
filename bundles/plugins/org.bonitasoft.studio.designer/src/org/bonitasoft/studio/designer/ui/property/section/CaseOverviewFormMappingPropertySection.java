@@ -30,7 +30,7 @@ public class CaseOverviewFormMappingPropertySection extends EntryFormMappingProp
 
     /*
      * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.properties.AbstractBonitaDescriptionSection#getSectionDescription()
+     * @see org.bonitasoft.studio.common.ui.properties.AbstractBonitaDescriptionSection#getSectionDescription()
      */
     @Override
     public String getSectionDescription() {

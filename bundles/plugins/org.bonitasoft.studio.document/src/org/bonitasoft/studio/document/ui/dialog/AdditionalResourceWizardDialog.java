@@ -14,7 +14,7 @@
  */
 package org.bonitasoft.studio.document.ui.dialog;
 
-import org.bonitasoft.studio.common.jface.dialog.FinishAndAddCustomWizardDialog;
+import org.bonitasoft.studio.common.ui.jface.dialog.FinishAndAddCustomWizardDialog;
 import org.bonitasoft.studio.document.i18n.Messages;
 import org.bonitasoft.studio.document.ui.wizard.AdditionalResourceWizard;
 import org.eclipse.swt.widgets.Shell;

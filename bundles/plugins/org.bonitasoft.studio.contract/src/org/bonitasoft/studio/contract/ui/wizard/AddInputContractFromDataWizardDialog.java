@@ -14,7 +14,7 @@
  */
 package org.bonitasoft.studio.contract.ui.wizard;
 
-import org.bonitasoft.studio.common.jface.dialog.FinishAndAddCustomWizardDialog;
+import org.bonitasoft.studio.common.ui.jface.dialog.FinishAndAddCustomWizardDialog;
 import org.bonitasoft.studio.contract.i18n.Messages;
 import org.bonitasoft.studio.contract.ui.property.ContractPropertySection;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -49,7 +49,7 @@ public class AddInputContractFromDataWizardDialog extends FinishAndAddCustomWiza
 
     /*
      * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.jface.dialog.FinishAndAddCustomWizardDialog#actionOnFinishAndAdd()
+     * @see org.bonitasoft.studio.common.ui.jface.dialog.FinishAndAddCustomWizardDialog#actionOnFinishAndAdd()
      */
     @Override
     protected void actionOnFinishAndAdd() {
@@ -60,7 +60,7 @@ public class AddInputContractFromDataWizardDialog extends FinishAndAddCustomWiza
 
     /*
      * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.jface.dialog.FinishAndAddCustomWizardDialog#updateButtons()
+     * @see org.bonitasoft.studio.common.ui.jface.dialog.FinishAndAddCustomWizardDialog#updateButtons()
      */
     @Override
     public void updateButtons() {

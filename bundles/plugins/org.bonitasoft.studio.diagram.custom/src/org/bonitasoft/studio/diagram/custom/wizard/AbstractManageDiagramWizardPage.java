@@ -19,8 +19,8 @@ import static org.eclipse.jface.layout.GridLayoutFactory.fillDefaults;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.repository.provider.FileStoreLabelProvider;
+import org.bonitasoft.studio.common.ui.jface.SWTBotConstants;
 import org.bonitasoft.studio.diagram.custom.i18n.Messages;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;

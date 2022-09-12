@@ -18,8 +18,8 @@
 package org.bonitasoft.studio.properties.sections.userxp;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
-import org.bonitasoft.studio.common.properties.AbstractPropertySectionContribution;
-import org.bonitasoft.studio.common.properties.ExtensibleGridPropertySection;
+import org.bonitasoft.studio.common.ui.properties.AbstractPropertySectionContribution;
+import org.bonitasoft.studio.common.ui.properties.ExtensibleGridPropertySection;
 import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFilter;
 import org.bonitasoft.studio.expression.editor.viewer.DefaultExpressionNameResolver;
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
@@ -65,7 +65,7 @@ public class DynamicLabelPropertySectionContribution extends AbstractPropertySec
     }
 
     /* (non-Javadoc)
-     * @see org.bonitasoft.studio.common.properties.IExtensibleGridPropertySectionContribution#dispose()
+     * @see org.bonitasoft.studio.common.ui.properties.IExtensibleGridPropertySectionContribution#dispose()
      */
     @Override
     public void dispose() {
@@ -91,7 +91,7 @@ public class DynamicLabelPropertySectionContribution extends AbstractPropertySec
     }
 
     /* (non-Javadoc)
-     * @see org.bonitasoft.studio.common.properties.IExtensibleGridPropertySectionContribution#getLabel()
+     * @see org.bonitasoft.studio.common.ui.properties.IExtensibleGridPropertySectionContribution#getLabel()
      */
     @Override
     public String getLabel() {
@@ -99,7 +99,7 @@ public class DynamicLabelPropertySectionContribution extends AbstractPropertySec
     }
 
     /* (non-Javadoc)
-     * @see org.bonitasoft.studio.common.properties.IExtensibleGridPropertySectionContribution#isRelevantFor(org.eclipse.emf.ecore.EObject)
+     * @see org.bonitasoft.studio.common.ui.properties.IExtensibleGridPropertySectionContribution#isRelevantFor(org.eclipse.emf.ecore.EObject)
      */
     @Override
     public boolean isRelevantFor(final EObject eObject) {
@@ -107,7 +107,7 @@ public class DynamicLabelPropertySectionContribution extends AbstractPropertySec
     }
 
     /* (non-Javadoc)
-     * @see org.bonitasoft.studio.common.properties.IExtensibleGridPropertySectionContribution#refresh()
+     * @see org.bonitasoft.studio.common.ui.properties.IExtensibleGridPropertySectionContribution#refresh()
      */
     @Override
     public void refresh() {

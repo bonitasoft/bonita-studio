@@ -73,7 +73,8 @@ public class ExpressionProviderService {
                 .getConfigurationElements(EXPRESSION_PROVIDER_ID);
         for (final IConfigurationElement element : elements) {
             try {
-                final IExpressionProvider provider = extensionContextInjectionFactory.make(element, PROVIDER_CLASS_ATTRIBUTE,
+                final IExpressionProvider provider = extensionContextInjectionFactory.make(element,
+                        PROVIDER_CLASS_ATTRIBUTE,
                         IExpressionProvider.class, context);
                 expressionProviderByType.put(provider.getExpressionType(), provider);
             } catch (final Exception e) {

@@ -2,9 +2,9 @@ package org.bonitasoft.studio.configuration.ui.dialog;
 
 import java.util.Objects;
 
-import org.bonitasoft.studio.common.jface.databinding.DialogSupport;
-import org.bonitasoft.studio.common.jface.databinding.validator.FileNameValidator;
+import org.bonitasoft.studio.common.databinding.validator.FileNameValidator;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.ui.jface.databinding.DialogSupport;
 import org.bonitasoft.studio.configuration.environment.Environment;
 import org.bonitasoft.studio.configuration.i18n.Messages;
 import org.bonitasoft.studio.configuration.preferences.ConfigurationPreferenceConstants;

@@ -21,8 +21,8 @@ import java.util.Objects;
 
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
 import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.studio.common.databinding.validator.TypedValidator;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
-import org.bonitasoft.studio.common.jface.databinding.validator.TypedValidator;
 import org.bonitasoft.studio.connector.wizard.office.i18n.Messages;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionPackage;
@@ -47,7 +47,7 @@ public class TableExpressionWithoutLazyLoadedRefs extends TypedValidator<TableEx
 
     /*
      * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.jface.databinding.validator.TypedValidator#doValidate(java.lang.Object)
+     * @see org.bonitasoft.studio.common.ui.jface.databinding.validator.TypedValidator#doValidate(java.lang.Object)
      */
     @Override
     protected IStatus doValidate(TableExpression table) {

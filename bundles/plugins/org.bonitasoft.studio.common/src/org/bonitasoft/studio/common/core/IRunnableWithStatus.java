@@ -15,7 +15,6 @@
 package org.bonitasoft.studio.common.core;
 
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.jface.operation.IRunnableWithProgress;
 
 public interface IRunnableWithStatus extends IRunnableWithProgress {
 

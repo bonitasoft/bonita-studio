@@ -19,8 +19,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Properties;
 
-import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.ui.jface.FileActionDialog;
 import org.bonitasoft.studio.configuration.extension.IConfigurationExportAction;
 import org.bonitasoft.studio.model.configuration.Configuration;
 import org.bonitasoft.studio.model.parameter.Parameter;

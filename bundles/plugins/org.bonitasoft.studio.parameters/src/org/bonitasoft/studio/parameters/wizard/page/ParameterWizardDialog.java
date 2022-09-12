@@ -14,7 +14,7 @@
  */
 package org.bonitasoft.studio.parameters.wizard.page;
 
-import org.bonitasoft.studio.common.jface.dialog.FinishAndAddCustomWizardDialog;
+import org.bonitasoft.studio.common.ui.jface.dialog.FinishAndAddCustomWizardDialog;
 import org.bonitasoft.studio.parameters.i18n.Messages;
 import org.bonitasoft.studio.parameters.property.section.ParameterPropertySection;
 import org.eclipse.jface.wizard.IWizard;

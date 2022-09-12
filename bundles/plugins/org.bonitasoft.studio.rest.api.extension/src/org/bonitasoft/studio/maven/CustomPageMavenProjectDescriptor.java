@@ -23,10 +23,10 @@ import java.util.Optional;
 import java.util.Properties;
 
 import org.apache.maven.project.MavenProject;
-import org.bonitasoft.studio.common.extension.properties.ExtensionPagePropertiesReader;
-import org.bonitasoft.studio.common.extension.properties.PagePropertyConstants;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
+import org.bonitasoft.studio.common.extension.properties.ExtensionPagePropertiesReader;
+import org.bonitasoft.studio.common.extension.properties.PagePropertyConstants;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;

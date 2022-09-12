@@ -15,7 +15,7 @@
 package org.bonitasoft.studio.document.ui;
 
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
-import org.bonitasoft.studio.common.properties.AbstractBonitaDescriptionSection;
+import org.bonitasoft.studio.common.ui.properties.AbstractBonitaDescriptionSection;
 import org.bonitasoft.studio.document.i18n.Messages;
 import org.bonitasoft.studio.document.ui.dialog.AdditionalResourceWizardDialog;
 import org.bonitasoft.studio.document.ui.styler.AdditionalResourceStyler;

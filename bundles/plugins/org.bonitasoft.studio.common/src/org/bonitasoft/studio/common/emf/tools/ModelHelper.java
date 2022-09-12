@@ -24,7 +24,6 @@ import java.util.Set;
 import org.bonitasoft.studio.common.DataTypeLabels;
 import org.bonitasoft.studio.common.Messages;
 import org.bonitasoft.studio.common.NamingUtils;
-import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionPackage;
 import org.bonitasoft.studio.model.parameter.Parameter;
@@ -76,11 +75,6 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.emf.edit.domain.EditingDomain;
-import org.eclipse.emf.transaction.RunnableWithResult;
-import org.eclipse.emf.transaction.TransactionalEditingDomain;
-import org.eclipse.emf.transaction.util.TransactionUtil;
-import org.eclipse.gmf.runtime.notation.Diagram;
 
 /**
  * @author Romain Bioteau
@@ -131,8 +125,8 @@ public class ModelHelper {
         return res;
     }
 
-
-    private static List<AbstractProcess> findAllProcesses(final Element element, final List<AbstractProcess> processes) {
+    private static List<AbstractProcess> findAllProcesses(final Element element,
+            final List<AbstractProcess> processes) {
         final List<AbstractProcess> oldwayFindProcesses = oldwayFindProcesses(element, processes);
         return oldwayFindProcesses;
     }
@@ -254,7 +248,6 @@ public class ModelHelper {
         return result;
     }
 
-
     public static List<Data> getAccessibleData(final EObject element) {
         return getAccessibleData(element, null);
     }
@@ -357,7 +350,6 @@ public class ModelHelper {
         }
         return null;
     }
-
 
     public static List<Data> getMessageSourceAccessibleData(final MessageFlow messageFlow) {
         final List<Data> datas = new ArrayList<Data>();
@@ -613,7 +605,6 @@ public class ModelHelper {
         return false;
     }
 
-
     /**
      * @param modelProcess2
      * @return
@@ -635,7 +626,8 @@ public class ModelHelper {
      * @param name
      * @return
      */
-    public static Element findElement(final Container container, final String name, final boolean includeSubContainers) {
+    public static Element findElement(final Container container, final String name,
+            final boolean includeSubContainers) {
         for (final Element el : container.getElements()) {
             if (el.getName().equals(name)) {
                 return el;
@@ -650,61 +642,6 @@ public class ModelHelper {
         return null;
     }
 
-    /**
-     * @param form
-     * @return the diagram corresponding to the form.
-     */
-    public static Diagram getDiagramFor(final EObject element, final Resource resource) {
-        if (element == null) {
-            return null;
-        }
-        if (!resource.isLoaded()) {
-            throw new IllegalStateException("EMF Resource is not loaded.");
-        }
-
-        final RunnableWithResult<Diagram> runnableWithResult = new DiagramForElementRunnable(resource, element);
-        final TransactionalEditingDomain editingDomain = TransactionUtil.getEditingDomain(resource);
-        if (editingDomain != null) {
-            try {
-                editingDomain.runExclusive(runnableWithResult);
-            } catch (final InterruptedException e) {
-                BonitaStudioLog.error(e);
-            }
-        } else {
-            runnableWithResult.run();
-        }
-        return runnableWithResult.getResult();
-    }
-
-    public static Diagram getDiagramFor(final EObject element) {
-        if (element != null && element.eResource() != null) {
-            return getDiagramFor(element, TransactionUtil.getEditingDomain(element.eResource()));
-        }
-        return null;
-    }
-
-    public static Diagram getDiagramFor(final EObject element, EditingDomain domain) {
-        if (element == null) {
-            return null;
-        }
-        Resource resource = element.eResource();
-        if (resource == null) {
-            if (domain == null) {
-                domain = TransactionUtil.getEditingDomain(element);
-                if (domain != null) {
-                    resource = domain.getResourceSet().getResource(element.eResource().getURI(), true);
-                }
-            } else if (domain.getResourceSet() != null) {
-                resource = domain.getResourceSet().getResource(element.eResource().getURI(), true);
-            }
-        }
-        if (resource == null) {
-            throw new IllegalStateException(String.format("No resource attached to EObject %s", element));
-        }
-        return getDiagramFor(element, resource);
-    }
-
-
     public static String getEObjectID(final EObject eObject) {
         if (eObject == null) {
             return null;
@@ -715,8 +652,6 @@ public class ModelHelper {
         }
         return null;
     }
-
-
 
     public static void findAllThrowLinks(final Element root, final List<ThrowLinkEvent> events) {
         if (root instanceof ThrowLinkEvent) {
@@ -1027,7 +962,6 @@ public class ModelHelper {
         }
         return processes;
     }
-
 
     public static Document getDocumentReferencedInExpression(final Expression expr) {
         final List<EObject> refs = expr.getReferencedElements();

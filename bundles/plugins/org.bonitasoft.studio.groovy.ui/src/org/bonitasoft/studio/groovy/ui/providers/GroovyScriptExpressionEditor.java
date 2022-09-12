@@ -27,12 +27,12 @@ import java.util.Set;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.ProductVersion;
-import org.bonitasoft.studio.common.jface.databinding.converter.BooleanInverserConverter;
-import org.bonitasoft.studio.common.jface.databinding.observables.DocumentObservable;
-import org.bonitasoft.studio.common.jface.databinding.validator.InputLengthValidator;
+import org.bonitasoft.studio.common.databinding.validator.InputLengthValidator;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.ui.jface.databinding.converter.BooleanInverserConverter;
+import org.bonitasoft.studio.common.ui.jface.databinding.observables.DocumentObservable;
 import org.bonitasoft.studio.dependencies.ui.dialog.ManageConnectorJarDialog;
 import org.bonitasoft.studio.expression.editor.provider.ExpressionContentProvider;
 import org.bonitasoft.studio.expression.editor.provider.SelectionAwareExpressionEditor;

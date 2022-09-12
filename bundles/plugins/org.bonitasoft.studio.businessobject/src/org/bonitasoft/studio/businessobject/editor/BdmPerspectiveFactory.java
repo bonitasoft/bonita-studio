@@ -15,8 +15,8 @@
 package org.bonitasoft.studio.businessobject.editor;
 
 import org.bonitasoft.studio.businessobject.editor.editor.BusinessDataModelEditor;
-import org.bonitasoft.studio.common.perspectives.AbstractPerspectiveFactory;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.ui.perspectives.AbstractPerspectiveFactory;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IFolderLayout;
 import org.eclipse.ui.IPageLayout;

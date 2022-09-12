@@ -8,7 +8,7 @@
  *******************************************************************************/
 package org.bonitasoft.studio.swtbot.framework.diagram.application.pageflow;
 
-import org.bonitasoft.studio.common.jface.SWTBotConstants;
+import org.bonitasoft.studio.common.ui.jface.SWTBotConstants;
 import org.bonitasoft.studio.properties.i18n.Messages;
 import org.bonitasoft.studio.swtbot.framework.BotBase;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;

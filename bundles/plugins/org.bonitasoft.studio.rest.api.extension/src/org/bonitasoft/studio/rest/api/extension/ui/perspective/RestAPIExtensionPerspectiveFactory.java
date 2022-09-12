@@ -9,8 +9,8 @@
 package org.bonitasoft.studio.rest.api.extension.ui.perspective;
 
 import org.bonitasoft.studio.application.views.BonitaProjectExplorer;
-import org.bonitasoft.studio.common.perspectives.AbstractPerspectiveFactory;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.ui.perspectives.AbstractPerspectiveFactory;
 import org.bonitasoft.studio.rest.api.extension.ui.view.MavenConsoleView;
 import org.eclipse.jdt.internal.junit.ui.TestRunnerViewPart;
 import org.eclipse.ui.IEditorPart;

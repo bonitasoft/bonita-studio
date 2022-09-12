@@ -1045,7 +1045,7 @@
       </excludeSources>
    </extension>
    <extension
-         point="org.bonitasoft.studio.common.poststartup">
+         point="org.bonitasoft.studio.common.ui.poststartup">
       <contribution
             class="org.bonitasoft.studio.application.contribution.CheckJavaVersionPostStartupContribution">
       </contribution>
@@ -1154,7 +1154,7 @@
       </viewerContribution>
    </extension>
    <extension
-         point="org.bonitasoft.studio.coolbarContributionItem">
+         point="org.bonitasoft.studio.common.ui.coolbarContributionItem">
       <coolbarItem
             class="org.bonitasoft.studio.application.coolbar.NewCoolbarItem"
             priority="0"
@@ -1611,7 +1611,7 @@
       </keyword>
    </extension>
       <extension
-         point="org.bonitasoft.studio.common.dashboardContribution">
+         point="org.bonitasoft.studio.common.ui.dashboardContribution">
       <dashboardContribution
             class="org.bonitasoft.studio.application.views.overview.DiagramOverviewContribution">
       </dashboardContribution>

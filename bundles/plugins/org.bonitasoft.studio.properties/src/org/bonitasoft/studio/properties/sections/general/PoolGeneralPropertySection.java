@@ -22,10 +22,10 @@ import java.util.Optional;
 
 import javax.inject.Inject;
 
-import org.bonitasoft.studio.common.jface.databinding.CustomEMFEditObservables;
-import org.bonitasoft.studio.common.jface.databinding.validator.EAttributeValidatorFactory;
-import org.bonitasoft.studio.common.properties.AbstractBonitaDescriptionSection;
+import org.bonitasoft.studio.common.databinding.validator.EAttributeValidatorFactory;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.common.ui.jface.databinding.CustomEMFEditObservables;
+import org.bonitasoft.studio.common.ui.properties.AbstractBonitaDescriptionSection;
 import org.bonitasoft.studio.data.ui.property.section.PoolAdaptableSelectionProvider;
 import org.bonitasoft.studio.diagram.custom.refactoring.ProcessNamingTools;
 import org.bonitasoft.studio.model.process.Pool;
@@ -87,7 +87,7 @@ public class PoolGeneralPropertySection extends AbstractBonitaDescriptionSection
 
     /*
      * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.properties.AbstractBonitaDescriptionSection#createContent(org.eclipse.swt.widgets.
+     * @see org.bonitasoft.studio.common.ui.properties.AbstractBonitaDescriptionSection#createContent(org.eclipse.swt.widgets.
      * Composite)
      */
     @Override
@@ -248,7 +248,7 @@ public class PoolGeneralPropertySection extends AbstractBonitaDescriptionSection
 
     /*
      * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.properties.AbstractBonitaDescriptionSection#dispose()
+     * @see org.bonitasoft.studio.common.ui.properties.AbstractBonitaDescriptionSection#dispose()
      */
     @Override
     public void dispose() {
@@ -260,7 +260,7 @@ public class PoolGeneralPropertySection extends AbstractBonitaDescriptionSection
 
     /*
      * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.properties.AbstractBonitaDescriptionSection#getSectionDescription()
+     * @see org.bonitasoft.studio.common.ui.properties.AbstractBonitaDescriptionSection#getSectionDescription()
      */
     @Override
     public String getSectionDescription() {

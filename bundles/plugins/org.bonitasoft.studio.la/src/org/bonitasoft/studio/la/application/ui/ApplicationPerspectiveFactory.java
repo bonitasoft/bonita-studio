@@ -15,8 +15,8 @@
 package org.bonitasoft.studio.la.application.ui;
 
 import org.bonitasoft.studio.application.views.BonitaProjectExplorer;
-import org.bonitasoft.studio.common.perspectives.AbstractPerspectiveFactory;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.ui.perspectives.AbstractPerspectiveFactory;
 import org.bonitasoft.studio.la.application.ui.editor.ApplicationEditor;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IFolderLayout;

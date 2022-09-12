@@ -16,7 +16,7 @@ package org.bonitasoft.studio.designer.ui.property.section.control;
 
 import static org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory.updateValueStrategy;
 
-import org.bonitasoft.studio.common.properties.Well;
+import org.bonitasoft.studio.common.ui.properties.Well;
 import org.bonitasoft.studio.model.process.FormMapping;
 import org.bonitasoft.studio.model.process.FormMappingType;
 import org.bonitasoft.studio.model.process.Task;

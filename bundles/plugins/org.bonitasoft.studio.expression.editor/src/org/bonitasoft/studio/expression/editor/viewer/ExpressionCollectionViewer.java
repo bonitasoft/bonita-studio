@@ -19,7 +19,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.bonitasoft.studio.common.IBonitaVariableContext;
-import org.bonitasoft.studio.common.widgets.MagicComposite;
+import org.bonitasoft.studio.common.ui.widgets.MagicComposite;
 import org.bonitasoft.studio.expression.editor.autocompletion.IExpressionProposalLabelProvider;
 import org.bonitasoft.studio.expression.editor.i18n.Messages;
 import org.bonitasoft.studio.expression.editor.provider.ExpressionColumnLabelProvider;

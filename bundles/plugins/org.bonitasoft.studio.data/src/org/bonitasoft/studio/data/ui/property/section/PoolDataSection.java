@@ -17,8 +17,8 @@ package org.bonitasoft.studio.data.ui.property.section;
 import javax.inject.Inject;
 
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
-import org.bonitasoft.studio.common.properties.AbstractBonitaDescriptionSection;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.common.ui.properties.AbstractBonitaDescriptionSection;
 import org.bonitasoft.studio.data.i18n.Messages;
 import org.bonitasoft.studio.data.ui.property.section.control.BusinessDataViewer;
 import org.bonitasoft.studio.data.ui.property.section.control.DataWizardFactory;
@@ -48,7 +48,7 @@ public class PoolDataSection extends AbstractBonitaDescriptionSection {
 
     /*
      * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.properties.AbstractBonitaDescriptionSection#createContent(org.eclipse.swt.widgets.Composite)
+     * @see org.bonitasoft.studio.common.ui.properties.AbstractBonitaDescriptionSection#createContent(org.eclipse.swt.widgets.Composite)
      */
     @Override
     protected void createContent(final Composite parent) {
@@ -97,7 +97,7 @@ public class PoolDataSection extends AbstractBonitaDescriptionSection {
 
     /*
      * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.properties.AbstractBonitaDescriptionSection#getSectionDescription()
+     * @see org.bonitasoft.studio.common.ui.properties.AbstractBonitaDescriptionSection#getSectionDescription()
      */
     @Override
     public String getSectionDescription() {

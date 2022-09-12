@@ -9,7 +9,7 @@
 package org.bonitasoft.studio.rest.api.extension.ui.wizard;
 
 import static com.google.common.collect.Sets.newHashSet;
-import static org.bonitasoft.studio.common.jface.databinding.UpdateStrategyFactory.updateValueStrategy;
+import static org.bonitasoft.studio.common.ui.jface.databinding.UpdateStrategyFactory.updateValueStrategy;
 
 import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.maven.i18n.Messages;

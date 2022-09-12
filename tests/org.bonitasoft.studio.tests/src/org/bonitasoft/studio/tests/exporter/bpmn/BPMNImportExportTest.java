@@ -36,6 +36,7 @@ import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.editingdomain.CustomDiagramEditingDomainFactory;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
+import org.bonitasoft.studio.common.gmf.tools.GMFTools;
 import org.bonitasoft.studio.common.model.IModelSearch;
 import org.bonitasoft.studio.common.model.ModelSearch;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
@@ -108,7 +109,7 @@ public class BPMNImportExportTest {
 
     @Rule
     public InitialProjectRule projectRule = InitialProjectRule.INSTANCE;
-    
+
     @Rule
     public TemporaryFolder tmpFolder = new TemporaryFolder();
 
@@ -125,7 +126,8 @@ public class BPMNImportExportTest {
     }
 
     @Test
-    public void testImportExportEasyBugFillingProcess() throws MalformedURLException, IOException, InterruptedException {
+    public void testImportExportEasyBugFillingProcess()
+            throws MalformedURLException, IOException, InterruptedException {
         final String bpmnFileName = "EasyBugFilingProcess.bpmn";
         doTest(bpmnFileName);
     }
@@ -241,7 +243,8 @@ public class BPMNImportExportTest {
     }
 
     @Test
-    public void testImportExportBPMN2SampleEmailVoting() throws MalformedURLException, IOException, InterruptedException {
+    public void testImportExportBPMN2SampleEmailVoting()
+            throws MalformedURLException, IOException, InterruptedException {
         final String bpmnFileName = "bpmn2sample/eMail Voting/Email Voting 2.bpmn";
         doTest(bpmnFileName, true, true, false);
     }
@@ -289,7 +292,8 @@ public class BPMNImportExportTest {
     }
 
     @Test
-    public void testImportExportBPMN2SampleNobelPrize() throws MalformedURLException, IOException, InterruptedException {
+    public void testImportExportBPMN2SampleNobelPrize()
+            throws MalformedURLException, IOException, InterruptedException {
         final String bpmnFileName = "bpmn2sample/Nobel Prize/Nobel Prize Process.bpmn";
         doTest(bpmnFileName, true, true, false);
     }
@@ -302,7 +306,8 @@ public class BPMNImportExportTest {
     }
 
     @Test
-    public void testImportExportBPMN2SampleTravelBooking() throws MalformedURLException, IOException, InterruptedException {
+    public void testImportExportBPMN2SampleTravelBooking()
+            throws MalformedURLException, IOException, InterruptedException {
         final String bpmnFileName = "bpmn2sample/Travel Booking/Tavel Booking.bpmn";
         doTest(bpmnFileName, false, false, true);
     }
@@ -315,7 +320,8 @@ public class BPMNImportExportTest {
     }
 
     @Test
-    public void testImportExportBruceSampleMyTaskMyPool() throws MalformedURLException, IOException, InterruptedException {
+    public void testImportExportBruceSampleMyTaskMyPool()
+            throws MalformedURLException, IOException, InterruptedException {
         final String bpmnFileName = "brucesample/myTaskMyPool.bpmn";
         doTest(bpmnFileName);
     }
@@ -334,7 +340,8 @@ public class BPMNImportExportTest {
     }
 
     @Test
-    public void testImportExportBruceSampleOurProcNoPool() throws MalformedURLException, IOException, InterruptedException {
+    public void testImportExportBruceSampleOurProcNoPool()
+            throws MalformedURLException, IOException, InterruptedException {
         final String bpmnFileName = "brucesample/ourProcNoPool.bpmn";
         doTest(bpmnFileName);
     }
@@ -347,7 +354,8 @@ public class BPMNImportExportTest {
     }
 
     @Test
-    public void testImportExportBruceSampleOurReusable() throws MalformedURLException, IOException, InterruptedException {
+    public void testImportExportBruceSampleOurReusable()
+            throws MalformedURLException, IOException, InterruptedException {
         final String bpmnFileName = "brucesample/ourReusable.bpmn";
         doTest(bpmnFileName);
     }
@@ -373,7 +381,8 @@ public class BPMNImportExportTest {
     }
 
     @Test
-    public void testImportExportBruceSampleOurSubsNoPool() throws MalformedURLException, IOException, InterruptedException {
+    public void testImportExportBruceSampleOurSubsNoPool()
+            throws MalformedURLException, IOException, InterruptedException {
         final String bpmnFileName = "brucesample/ourSubsNoPool.bpmn";
         doTest(bpmnFileName);
     }
@@ -430,7 +439,8 @@ public class BPMNImportExportTest {
             final boolean checkActivities, final boolean checkEvents,
             final boolean checkMessageFlow, final MainProcess mainProcess)
             throws IOException {
-        DiagramRepositoryStore dStore = RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
+        DiagramRepositoryStore dStore = RepositoryManager.getInstance()
+                .getRepositoryStore(DiagramRepositoryStore.class);
         ConnectorDefRepositoryStore connectorDefStore = RepositoryManager.getInstance()
                 .getRepositoryStore(ConnectorDefRepositoryStore.class);
         List<AbstractProcess> allProcesses = dStore.getAllProcesses();
@@ -438,7 +448,8 @@ public class BPMNImportExportTest {
         final IBonitaModelExporter exporter = new BonitaModelExporterImpl(mainProcess.eResource(), modelSearch);
         final File bpmnFileExported = tmpFolder.newFile("withAllExported.bpmn");
         BonitaToBPMNExporter bonitaToBPMNExporter = new BonitaToBPMNExporter();
-        bonitaToBPMNExporter.export(exporter, modelSearch, bpmnFileExported, new OSGIConnectorTransformationXSLProvider(), ProductVersion.CURRENT_VERSION);
+        bonitaToBPMNExporter.export(exporter, modelSearch, bpmnFileExported,
+                new OSGIConnectorTransformationXSLProvider(), ProductVersion.CURRENT_VERSION);
         StatusAssert.assertThat(bonitaToBPMNExporter.getStatus()).hasSeverity(IStatus.INFO);
 
         //compare bpmn before import and after import/export
@@ -658,7 +669,7 @@ public class BPMNImportExportTest {
         resource1.load(Collections.emptyMap());
         new File(resource1.getURI().toFileString()).deleteOnExit();
 
-        final Diagram diagramFor = ModelHelper.getDiagramFor(mainProcess);
+        final Diagram diagramFor = GMFTools.getDiagramFor(mainProcess);
         DiagramEditPart dep;
         try {
             dep = OffscreenEditPartFactory.getInstance().createDiagramEditPart(diagramFor,
@@ -781,7 +792,8 @@ public class BPMNImportExportTest {
                             || localPart.equals(id)
                             || NamingUtils.convertToId("subProc_" + localPart).equals(id)
                             || ("subProc_" + localPart).equals(id)) {
-                        final Point containerLocation = getContainerLocationFor(tDefinition, tDefinition.getRootElement(),
+                        final Point containerLocation = getContainerLocationFor(tDefinition,
+                                tDefinition.getRootElement(),
                                 id);
                         final Bounds bounds = ((Shape) diagramElement).getBounds();
                         return new Point(bounds.getX() - containerLocation.x,
@@ -884,7 +896,8 @@ public class BPMNImportExportTest {
         return containerLocation != null ? containerLocation : new Point();
     }
 
-    private Point getContainerLocationFor(final TSubProcess subProcess, final String id, final TDefinitions tDefinitions) {
+    private Point getContainerLocationFor(final TSubProcess subProcess, final String id,
+            final TDefinitions tDefinitions) {
         final BPMNShape bpmnShapeForBpmnID = getBPMNShapeForBpmnID(tDefinitions, subProcess.getId());
         if (bpmnShapeForBpmnID != null && bpmnShapeForBpmnID.isIsExpanded()) {
             for (final TFlowElement subProcFlowElement : subProcess.getFlowElement()) {

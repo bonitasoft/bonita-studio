@@ -19,7 +19,7 @@
 package org.bonitasoft.studio.data.ui.wizard;
 
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
-import org.bonitasoft.studio.common.jface.DataAwareElementViewerFilter;
+import org.bonitasoft.studio.common.ui.jface.DataAwareElementViewerFilter;
 import org.bonitasoft.studio.data.i18n.Messages;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.DataAware;

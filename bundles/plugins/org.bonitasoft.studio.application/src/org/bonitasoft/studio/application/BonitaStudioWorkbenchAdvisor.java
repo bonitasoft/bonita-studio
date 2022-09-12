@@ -36,10 +36,8 @@ import org.bonitasoft.studio.common.ProjectUtil;
 import org.bonitasoft.studio.common.RedirectURLBuilder;
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.extension.IPostStartupContribution;
-import org.bonitasoft.studio.common.jface.MessageDialogWithLink;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.net.PortSelector;
-import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.core.ActiveOrganizationProvider;
@@ -47,6 +45,8 @@ import org.bonitasoft.studio.common.repository.core.maven.DependencyGetOperation
 import org.bonitasoft.studio.common.repository.core.maven.contribution.InstallBonitaMavenArtifactsOperation;
 import org.bonitasoft.studio.common.repository.core.maven.migration.model.GAV;
 import org.bonitasoft.studio.common.repository.core.maven.repository.MavenRepositories;
+import org.bonitasoft.studio.common.ui.PlatformUtil;
+import org.bonitasoft.studio.common.ui.jface.MessageDialogWithLink;
 import org.bonitasoft.studio.designer.core.UIDesignerServerManager;
 import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.engine.BOSWebServerManager;
@@ -795,7 +795,7 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
     private void executePostStartupContributions() {
         final IConfigurationElement[] elements = BonitaStudioExtensionRegistryManager.getInstance()
                 .getConfigurationElements(
-                        "org.bonitasoft.studio.common.poststartup"); //$NON-NLS-1$
+                        "org.bonitasoft.studio.common.ui.poststartup"); //$NON-NLS-1$
         for (final IConfigurationElement elem : elements) {
             final Workbench workbench = (Workbench) PlatformUI.getWorkbench();
             try {

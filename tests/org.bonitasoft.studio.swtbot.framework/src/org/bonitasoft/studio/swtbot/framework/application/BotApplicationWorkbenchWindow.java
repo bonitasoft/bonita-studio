@@ -17,7 +17,7 @@ package org.bonitasoft.studio.swtbot.framework.application;
 import org.bonitasoft.studio.application.coolbar.PreferenceCoolbarItem;
 import org.bonitasoft.studio.application.views.overview.ProjectOverviewEditorPart;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
-import org.bonitasoft.studio.common.jface.SWTBotConstants;
+import org.bonitasoft.studio.common.ui.jface.SWTBotConstants;
 import org.bonitasoft.studio.la.i18n.Messages;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.swtbot.framework.application.editor.BotProjectOverviewEditor;

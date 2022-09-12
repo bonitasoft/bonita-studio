@@ -19,7 +19,7 @@ package org.bonitasoft.studio.connector.model.definition.wizard;
 import java.util.Locale;
 import java.util.Set;
 
-import org.bonitasoft.studio.common.jface.TableColumnSorter;
+import org.bonitasoft.studio.common.ui.jface.TableColumnSorter;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
 import org.bonitasoft.studio.connector.model.i18n.Messages;
 import org.eclipse.core.databinding.beans.PojoObservables;

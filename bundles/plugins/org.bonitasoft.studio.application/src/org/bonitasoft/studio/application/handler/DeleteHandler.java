@@ -21,13 +21,13 @@ import java.util.Objects;
 import java.util.Set;
 
 import org.bonitasoft.studio.application.views.BonitaProjectExplorer;
-import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.filestore.AbstractFileStore;
 import org.bonitasoft.studio.common.repository.filestore.FileStoreFinder;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
+import org.bonitasoft.studio.common.ui.jface.FileActionDialog;
 import org.bonitasoft.studio.dependencies.repository.DependencyRepositoryStore;
 import org.bonitasoft.studio.designer.core.operation.DeleteUIDArtifactOperation;
 import org.bonitasoft.studio.designer.core.repository.InFolderJSONFileStore;

@@ -17,7 +17,7 @@ package org.bonitasoft.studio.ui.widget;
 import java.util.Optional;
 import java.util.function.Consumer;
 
-import org.bonitasoft.studio.common.jface.SWTBotConstants;
+import org.bonitasoft.studio.common.ui.jface.SWTBotConstants;
 import org.bonitasoft.studio.preferences.BonitaThemeConstants;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.e4.ui.css.swt.theme.IThemeEngine;

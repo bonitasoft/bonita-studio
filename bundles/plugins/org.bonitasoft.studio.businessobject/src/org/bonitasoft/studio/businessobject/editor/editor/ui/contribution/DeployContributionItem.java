@@ -20,7 +20,7 @@ import org.bonitasoft.studio.businessobject.editor.editor.ui.formpage.AbstractBd
 import org.bonitasoft.studio.businessobject.i18n.Messages;
 import org.bonitasoft.studio.businessobject.ui.handler.CleanDeployBDMHandler;
 import org.bonitasoft.studio.businessobject.ui.handler.DeployBDMHandler;
-import org.bonitasoft.studio.common.jface.SWTBotConstants;
+import org.bonitasoft.studio.common.ui.jface.SWTBotConstants;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.ui.dialog.SaveBeforeDeployDialog;

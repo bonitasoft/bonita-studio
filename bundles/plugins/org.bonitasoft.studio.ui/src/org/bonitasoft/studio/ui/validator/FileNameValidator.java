@@ -19,7 +19,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.bonitasoft.studio.common.jface.databinding.validator.UniqueValidatorFactory;
+import org.bonitasoft.studio.common.databinding.validator.UniqueValidatorFactory;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.ui.i18n.Messages;

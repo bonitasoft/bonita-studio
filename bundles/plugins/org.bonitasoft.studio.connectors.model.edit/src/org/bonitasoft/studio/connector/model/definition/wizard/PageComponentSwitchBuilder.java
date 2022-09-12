@@ -18,10 +18,10 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
-import org.bonitasoft.studio.common.jface.BonitaStudioFontRegistry;
-import org.bonitasoft.studio.common.jface.databinding.validator.EmptyInputValidator;
+import org.bonitasoft.studio.common.databinding.validator.EmptyInputValidator;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.provider.ExtendedConnectorDefinition;
+import org.bonitasoft.studio.common.ui.jface.BonitaStudioFontRegistry;
 import org.bonitasoft.studio.connector.model.definition.Array;
 import org.bonitasoft.studio.connector.model.definition.Checkbox;
 import org.bonitasoft.studio.connector.model.definition.Group;

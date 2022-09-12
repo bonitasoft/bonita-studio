@@ -16,27 +16,86 @@ package org.bonitasoft.studio.common;
 
 import java.util.Map;
 
+import javax.annotation.PostConstruct;
+
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.eclipse.core.commands.ParameterizedCommand;
 import org.eclipse.core.commands.common.NotDefinedException;
 import org.eclipse.e4.core.commands.ECommandService;
 import org.eclipse.e4.core.commands.EHandlerService;
 import org.eclipse.e4.core.di.annotations.Creatable;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.internal.Workbench;
+
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 @Creatable
 public class CommandExecutor {
 
-    private ECommandService eCommandService;
-    private EHandlerService eHandlerService;
-    
+    /**
+     * This class gives access to E4 services to command executors which are not instanciated with DI.
+     * 
+     * @author Vincent Hemery
+     */
+    @Creatable
+    @Singleton
+    private static final class ServicesAccess {
+
+        @Inject
+        private ECommandService eCommandService;
+
+        @Inject
+        private EHandlerService eHandlerService;
+
+        /** the singleton instance exposed */
+        private static ServicesAccess instance;
+
+        /**
+         * Default Constructor.
+         */
+        @Inject
+        public ServicesAccess() {
+        }
+
+        @PostConstruct
+        private void exposeSingleton() {
+            instance = this;
+        }
+
+        /**
+         * Get singleton instance
+         * 
+         * @return the instance
+         */
+        public static ServicesAccess getInstance() {
+            return instance;
+        }
+
+        /**
+         * Get command service
+         * 
+         * @return the ECommandService
+         */
+        public ECommandService getCommandService() {
+            return eCommandService;
+        }
+
+        /**
+         * Get handler service
+         * 
+         * @return the EHandlerService
+         */
+        public EHandlerService getHandlerService() {
+            return eHandlerService;
+        }
+    }
+
     public Object executeCommand(String command, Map<String, Object> parameters) {
-        if (Workbench.getInstance() != null) {
-            initServices();
-            ParameterizedCommand parameterizedCommand = eCommandService.createCommand(command, parameters);
-            if (eHandlerService.canExecute(parameterizedCommand)) {
-                return eHandlerService.executeHandler(parameterizedCommand);
+        ServicesAccess serviceAccess = ServicesAccess.getInstance();
+        if (serviceAccess != null) {
+            ParameterizedCommand parameterizedCommand = serviceAccess.getCommandService().createCommand(command,
+                    parameters);
+            if (serviceAccess.getHandlerService().canExecute(parameterizedCommand)) {
+                return serviceAccess.getHandlerService().executeHandler(parameterizedCommand);
             }
             throw new RuntimeException(String.format("Can't execute command %s", parameterizedCommand.getId()));
         }
@@ -44,26 +103,20 @@ public class CommandExecutor {
     }
 
     public boolean canExecute(String command, Map<String, Object> parameters) {
-        if (Workbench.getInstance() != null) {
-            initServices();
-            ParameterizedCommand parameterizedCommand = eCommandService.createCommand(command, parameters);
-            return eHandlerService.canExecute(parameterizedCommand);
+        ServicesAccess serviceAccess = ServicesAccess.getInstance();
+        if (serviceAccess != null) {
+            ParameterizedCommand parameterizedCommand = serviceAccess.getCommandService().createCommand(command,
+                    parameters);
+            return serviceAccess.getHandlerService().canExecute(parameterizedCommand);
         }
         return false;
     }
 
-    protected void initServices() {
-        if (eCommandService == null || eHandlerService == null) {
-            eCommandService = PlatformUI.getWorkbench().getService(ECommandService.class);
-            eHandlerService = PlatformUI.getWorkbench().getService(EHandlerService.class);
-        }
-    }
-
     public String getCommandName(String commandId) {
-        if (Workbench.getInstance() != null) {
-            initServices();
+        ServicesAccess serviceAccess = ServicesAccess.getInstance();
+        if (serviceAccess != null) {
             try {
-                return eCommandService.getCommand(commandId).getName();
+                return serviceAccess.getCommandService().getCommand(commandId).getName();
             } catch (NotDefinedException e) {
                 BonitaStudioLog.error(e);
                 return null;

@@ -14,10 +14,10 @@
  */
 package org.bonitasoft.studio.team.repository;
 
-import org.bonitasoft.studio.common.extension.ExtensionContextInjectionFactory;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.IRepositoryFactory;
 import org.bonitasoft.studio.common.repository.jdt.JDTTypeHierarchyManager;
+import org.bonitasoft.studio.common.extension.ExtensionContextInjectionFactory;
 import org.bonitasoft.studio.team.TeamPlugin;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;

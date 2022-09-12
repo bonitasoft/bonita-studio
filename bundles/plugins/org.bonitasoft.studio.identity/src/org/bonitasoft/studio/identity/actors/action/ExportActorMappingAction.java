@@ -21,8 +21,8 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.bonitasoft.studio.common.jface.BonitaErrorDialog;
-import org.bonitasoft.studio.common.jface.FileActionDialog;
+import org.bonitasoft.studio.common.ui.jface.BonitaErrorDialog;
+import org.bonitasoft.studio.common.ui.jface.FileActionDialog;
 import org.bonitasoft.studio.configuration.extension.IConfigurationExportAction;
 import org.bonitasoft.studio.identity.i18n.Messages;
 import org.bonitasoft.studio.model.actormapping.ActorMappingFactory;

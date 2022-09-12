@@ -1,19 +1,16 @@
 /**
  * Copyright (C) 2011 BonitaSoft S.A.
  * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
- *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.preferences.pages;
 
@@ -24,8 +21,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
-import org.bonitasoft.studio.common.jface.BonitaStudioFontRegistry;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.ui.jface.BonitaStudioFontRegistry;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.bonitasoft.studio.preferences.extension.IPreferenceFieldEditorContribution;
 import org.eclipse.core.runtime.CoreException;
@@ -43,7 +40,8 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
-public abstract class AbstractBonitaPreferencePage extends FieldEditorPreferencePage implements IWorkbenchPreferencePage {
+public abstract class AbstractBonitaPreferencePage extends FieldEditorPreferencePage
+        implements IWorkbenchPreferencePage {
 
     private static final String FIELD_EDITOR_CONTRIBUTION_ID = "org.bonitasoft.studio.preferences.preferenceFieldEditorContribution";
     private final List<IPreferenceFieldEditorContribution> contributions = new ArrayList<IPreferenceFieldEditorContribution>();
@@ -103,11 +101,13 @@ public abstract class AbstractBonitaPreferencePage extends FieldEditorPreference
 
     protected List<IPreferenceFieldEditorContribution> getFieldEditorContibutions() {
         final List<IPreferenceFieldEditorContribution> result = new ArrayList<IPreferenceFieldEditorContribution>();
-        final IConfigurationElement[] elems = BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements(
-                FIELD_EDITOR_CONTRIBUTION_ID);
+        final IConfigurationElement[] elems = BonitaStudioExtensionRegistryManager.getInstance()
+                .getConfigurationElements(
+                        FIELD_EDITOR_CONTRIBUTION_ID);
         for (final IConfigurationElement elem : elems) {
             try {
-                final IPreferenceFieldEditorContribution prefEditorContrib = (IPreferenceFieldEditorContribution) elem.createExecutableExtension("class");
+                final IPreferenceFieldEditorContribution prefEditorContrib = (IPreferenceFieldEditorContribution) elem
+                        .createExecutableExtension("class");
                 result.add(prefEditorContrib);
             } catch (final CoreException e) {
                 BonitaStudioLog.error(e, BonitaStudioPreferencesPlugin.PLUGIN_ID);
@@ -126,7 +126,7 @@ public abstract class AbstractBonitaPreferencePage extends FieldEditorPreference
 
     @Override
     public void init(final IWorkbench workbench) {
-        
+
     }
 
     @Override

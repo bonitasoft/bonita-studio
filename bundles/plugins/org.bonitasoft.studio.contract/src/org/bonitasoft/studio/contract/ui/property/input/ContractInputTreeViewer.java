@@ -14,8 +14,8 @@
  */
 package org.bonitasoft.studio.contract.ui.property.input;
 
-import org.bonitasoft.studio.common.jface.SWTBotConstants;
-import org.bonitasoft.studio.common.widgets.GTKStyleHandler;
+import org.bonitasoft.studio.common.ui.jface.SWTBotConstants;
+import org.bonitasoft.studio.common.ui.widgets.GTKStyleHandler;
 import org.bonitasoft.studio.contract.core.refactoring.ContractInputRefactorOperationFactory;
 import org.bonitasoft.studio.contract.i18n.Messages;
 import org.bonitasoft.studio.contract.ui.property.input.edit.ContractInputCardinalityEditingSupport;

@@ -30,7 +30,7 @@ import org.bonitasoft.studio.businessobject.editor.model.builder.UniqueConstrain
 import org.bonitasoft.studio.businessobject.i18n.Messages;
 import org.bonitasoft.studio.businessobject.validator.UniqueConstraintFieldsValidator;
 import org.bonitasoft.studio.businessobject.validator.UniqueConstraintNameValidator;
-import org.bonitasoft.studio.common.jface.SWTBotConstants;
+import org.bonitasoft.studio.common.ui.jface.SWTBotConstants;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.ui.ColorConstants;

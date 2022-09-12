@@ -20,9 +20,9 @@ import java.util.stream.Stream;
 
 import org.bonitasoft.studio.application.dialog.ExitDialog;
 import org.bonitasoft.studio.application.views.CustomObjectActionContributorManager;
-import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.perspectives.AutomaticSwitchPerspectivePartListener;
+import org.bonitasoft.studio.common.ui.jface.SWTBotConstants;
+import org.bonitasoft.studio.common.ui.perspectives.AutomaticSwitchPerspectivePartListener;
 import org.eclipse.e4.ui.model.application.ui.basic.MWindow;
 import org.eclipse.e4.ui.workbench.modeling.EPartService;
 import org.eclipse.jface.dialogs.IDialogConstants;

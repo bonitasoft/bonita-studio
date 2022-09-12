@@ -25,7 +25,7 @@ import org.bonitasoft.studio.businessobject.editor.model.RelationType;
 import org.bonitasoft.studio.businessobject.i18n.Messages;
 import org.bonitasoft.studio.businessobject.refactor.DiffElement;
 import org.bonitasoft.studio.businessobject.refactor.Event;
-import org.bonitasoft.studio.common.properties.Well;
+import org.bonitasoft.studio.common.ui.properties.Well;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.ui.viewer.LabelProviderBuilder;

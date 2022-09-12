@@ -14,7 +14,7 @@
  */
 package org.bonitasoft.studio.parameters.wizard.page;
 
-import org.bonitasoft.studio.common.jface.TableColumnSorter;
+import org.bonitasoft.studio.common.ui.jface.TableColumnSorter;
 import org.bonitasoft.studio.configuration.ConfigurationValidator;
 import org.bonitasoft.studio.configuration.extension.IProcessConfigurationWizardPage;
 import org.bonitasoft.studio.model.configuration.Configuration;

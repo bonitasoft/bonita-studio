@@ -28,8 +28,8 @@ import javax.inject.Inject;
 
 import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.application.views.provider.UIDArtifactFilters;
-import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.common.ui.jface.SWTBotConstants;
 import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.NotEnabledException;

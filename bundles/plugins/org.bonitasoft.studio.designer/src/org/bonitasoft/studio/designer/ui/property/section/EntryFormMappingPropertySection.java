@@ -16,9 +16,9 @@ package org.bonitasoft.studio.designer.ui.property.section;
 
 import javax.inject.Inject;
 
-import org.bonitasoft.studio.common.jface.databinding.CustomEMFEditObservables;
-import org.bonitasoft.studio.common.properties.AbstractBonitaDescriptionSection;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.common.ui.jface.databinding.CustomEMFEditObservables;
+import org.bonitasoft.studio.common.ui.properties.AbstractBonitaDescriptionSection;
 import org.bonitasoft.studio.designer.i18n.Messages;
 import org.bonitasoft.studio.designer.ui.property.section.control.CreateOrEditFormProposalListener;
 import org.bonitasoft.studio.designer.ui.property.section.control.FormMappingRadioGroup;

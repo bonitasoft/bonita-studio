@@ -14,8 +14,8 @@
  */
 package org.bonitasoft.studio.application.perspective;
 
-import org.bonitasoft.studio.common.perspectives.AbstractPerspectiveFactory;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.ui.perspectives.AbstractPerspectiveFactory;
 import org.eclipse.jdt.internal.ui.javaeditor.JavaEditor;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IFolderLayout;
@@ -51,7 +51,7 @@ public class PerspectiveJavaFactory extends AbstractPerspectiveFactory {
 
     /*
      * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.perspectives.AbstractPerspectiveFactory#isRelevantFor(org.eclipse.ui.IEditorPart)
+     * @see org.bonitasoft.studio.common.ui.perspectives.AbstractPerspectiveFactory#isRelevantFor(org.eclipse.ui.IEditorPart)
      */
     @Override
     public boolean isRelevantFor(final IEditorPart part) {
@@ -60,7 +60,7 @@ public class PerspectiveJavaFactory extends AbstractPerspectiveFactory {
 
     /*
      * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.perspectives.AbstractPerspectiveFactory#getID()
+     * @see org.bonitasoft.studio.common.ui.perspectives.AbstractPerspectiveFactory#getID()
      */
     @Override
     public String getID() {

@@ -14,7 +14,7 @@
  */
 package org.bonitasoft.studio.properties.sections.general;
 
-import org.bonitasoft.studio.common.properties.ExtensibleGridPropertySection;
+import org.bonitasoft.studio.common.ui.properties.ExtensibleGridPropertySection;
 import org.bonitasoft.studio.properties.i18n.Messages;
 import org.bonitasoft.studio.properties.sections.general.activities.ActivityTypeSelectionGridPropertySectionContribution;
 import org.bonitasoft.studio.properties.sections.general.events.ErrorEventSectionContribution;

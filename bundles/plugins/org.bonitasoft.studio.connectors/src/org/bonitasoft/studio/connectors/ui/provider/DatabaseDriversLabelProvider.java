@@ -19,7 +19,7 @@ package org.bonitasoft.studio.connectors.ui.provider;
 
 import java.util.Objects;
 
-import org.bonitasoft.studio.common.jface.BonitaStudioFontRegistry;
+import org.bonitasoft.studio.common.ui.jface.BonitaStudioFontRegistry;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.StyledCellLabelProvider;
 import org.eclipse.jface.viewers.StyledString;

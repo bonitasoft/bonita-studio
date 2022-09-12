@@ -19,7 +19,7 @@ package org.bonitasoft.studio.sqlbuilder.ex.builder.viewer;
 
 import java.util.List;
 
-import org.bonitasoft.studio.common.jface.SWTBotConstants;
+import org.bonitasoft.studio.common.ui.jface.SWTBotConstants;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.sqlbuilder.ex.builder.BonitaBuilderUtility;
 import org.bonitasoft.studio.sqlbuilder.ex.builder.viewer.element.BonitaCriteriaElement;

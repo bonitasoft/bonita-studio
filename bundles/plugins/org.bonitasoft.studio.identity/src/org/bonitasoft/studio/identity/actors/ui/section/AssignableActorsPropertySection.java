@@ -19,9 +19,9 @@ package org.bonitasoft.studio.identity.actors.ui.section;
 import javax.inject.Inject;
 
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
-import org.bonitasoft.studio.common.jface.BonitaStudioFontRegistry;
-import org.bonitasoft.studio.common.jface.databinding.converter.BooleanInverserConverter;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.common.ui.jface.BonitaStudioFontRegistry;
+import org.bonitasoft.studio.common.ui.jface.databinding.converter.BooleanInverserConverter;
 import org.bonitasoft.studio.connector.model.definition.migration.ConnectorConfigurationMigratorFactory;
 import org.bonitasoft.studio.connector.model.definition.migration.ConnectorConfigurationToConnectorDefinitionConverter;
 import org.bonitasoft.studio.identity.i18n.Messages;

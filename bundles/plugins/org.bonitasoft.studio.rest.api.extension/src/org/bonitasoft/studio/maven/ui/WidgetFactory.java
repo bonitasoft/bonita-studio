@@ -8,7 +8,7 @@
  *******************************************************************************/
 package org.bonitasoft.studio.maven.ui;
 
-import org.bonitasoft.studio.common.jface.SWTBotConstants;
+import org.bonitasoft.studio.common.ui.jface.SWTBotConstants;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.e4.core.di.annotations.Creatable;

@@ -16,7 +16,8 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.jface.databinding,
  org.bonitasoft.studio.expression.editor,
  org.bonitasoft.studio.common,
- org.bonitasoft.studio.common.repository
+ org.bonitasoft.studio.common.repository,
+ org.bonitasoft.studio.common.ui
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: .,

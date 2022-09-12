@@ -17,7 +17,7 @@ package org.bonitasoft.studio.validation.ui.view;
 import java.util.Arrays;
 import java.util.Map;
 
-import org.bonitasoft.studio.common.jface.TableColumnSorter;
+import org.bonitasoft.studio.common.ui.jface.TableColumnSorter;
 import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditorUtil;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;

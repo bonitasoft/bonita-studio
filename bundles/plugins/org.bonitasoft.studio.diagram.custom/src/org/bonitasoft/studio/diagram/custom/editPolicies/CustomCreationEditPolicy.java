@@ -27,7 +27,7 @@ import java.util.Map;
 
 import org.bonitasoft.studio.common.diagram.tools.BonitaUnspecifiedTypeProcessCreationTool;
 import org.bonitasoft.studio.common.diagram.tools.FiguresHelper;
-import org.bonitasoft.studio.common.emf.tools.EMFtoGEFCommandWrapper;
+import org.bonitasoft.studio.common.gmf.tools.EMFtoGEFCommandWrapper;
 import org.bonitasoft.studio.diagram.custom.figures.IEventSelectionListener;
 import org.bonitasoft.studio.diagram.custom.figures.MenuEventFigure;
 import org.bonitasoft.studio.diagram.custom.parts.CustomLaneCompartmentEditPart;

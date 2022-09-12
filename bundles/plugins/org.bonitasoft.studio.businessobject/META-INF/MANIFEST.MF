@@ -85,7 +85,8 @@ Require-Bundle: org.bonitasoft.studio.model,
  org.eclipse.debug.ui,
  org.eclipse.debug.core,
  org.bonitasoft.studio.engine,
- org.eclipse.wst.sse.ui
+ org.eclipse.wst.sse.ui,
+ org.bonitasoft.studio.common.ui
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-ActivationPolicy: lazy
 Import-Package: javax.activation;version="1.1.0",

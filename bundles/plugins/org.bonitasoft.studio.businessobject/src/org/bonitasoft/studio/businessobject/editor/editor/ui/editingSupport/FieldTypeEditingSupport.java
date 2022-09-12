@@ -36,7 +36,7 @@ import org.bonitasoft.studio.businessobject.editor.model.builder.RelationFieldBu
 import org.bonitasoft.studio.businessobject.editor.model.builder.SimpleFieldBuilder;
 import org.bonitasoft.studio.businessobject.refactor.DiffElement;
 import org.bonitasoft.studio.businessobject.refactor.Event;
-import org.bonitasoft.studio.common.jface.SWTBotConstants;
+import org.bonitasoft.studio.common.ui.jface.SWTBotConstants;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;

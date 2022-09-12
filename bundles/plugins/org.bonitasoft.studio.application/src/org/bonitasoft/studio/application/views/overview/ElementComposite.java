@@ -41,7 +41,7 @@ import org.eclipse.swt.widgets.Label;
 public class ElementComposite extends Composite {
 
     private static final String CLASS_EXECUTABLE_EXTENSION = "class";
-    private static final String DASHBOARD_CONTRIBUTION_EXTENSION_POINT = "org.bonitasoft.studio.common.dashboardContribution";
+    private static final String DASHBOARD_CONTRIBUTION_EXTENSION_POINT = "org.bonitasoft.studio.common.ui.dashboardContribution";
 
     private ScrolledComposite scrolledComposite;
     private Composite cardComposite;
@@ -81,7 +81,8 @@ public class ElementComposite extends Composite {
         ElementsLabel.setToolTipText(Messages.projectElementsTooltip);
         ElementsLabel.setFont(JFaceResources.getFont(ProjectOverviewEditorPart.BOLD_8_FONT_ID));
         ElementsLabel.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME, BonitaThemeConstants.TITLE_TEXT_COLOR);
-        ElementsLabel.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, BonitaThemeConstants.EXTENSION_VIEW_BACKGROUND);
+        ElementsLabel.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME,
+                BonitaThemeConstants.EXTENSION_VIEW_BACKGROUND);
 
         var separator = new Label(titleComposite, SWT.SEPARATOR | SWT.HORIZONTAL);
         separator.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).span(2, 1).create());
@@ -113,7 +114,8 @@ public class ElementComposite extends Composite {
                     ((Zoomable) contribution).createZoomedControl(cardComposite);
                     cardComposite.layout();
                     scrolledComposite
-                            .setMinHeight(cardComposite.computeSize(cardComposite.getClientArea().width, SWT.DEFAULT).y);
+                            .setMinHeight(
+                                    cardComposite.computeSize(cardComposite.getClientArea().width, SWT.DEFAULT).y);
                 }
 
                 @Override

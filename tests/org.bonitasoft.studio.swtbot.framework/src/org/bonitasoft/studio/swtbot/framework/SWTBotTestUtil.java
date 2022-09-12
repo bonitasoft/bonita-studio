@@ -32,8 +32,8 @@ import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.core.IRunnableWithStatus;
 import org.bonitasoft.studio.common.diagram.tools.FiguresHelper;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
-import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.ui.jface.SWTBotConstants;
 import org.bonitasoft.studio.diagram.custom.editPolicies.NextElementEditPolicy;
 import org.bonitasoft.studio.diagram.custom.editPolicies.UpdateSizePoolSelectionEditPolicy;
 import org.bonitasoft.studio.engine.command.RunProcessCommand;
@@ -106,8 +106,8 @@ public class SWTBotTestUtil implements SWTBotConstants {
                 Conditions.widgetIsEnabled(wBot.toolbarDropDownButtonWithId("org.bonitasoft.studio.coolbar.new")),
                 40000);
         wBot.toolbarDropDownButtonWithId("org.bonitasoft.studio.coolbar.new")
-            .menuItem(Messages.processDiagram)
-            .click();
+                .menuItem(Messages.processDiagram)
+                .click();
         wBot.waitUntil(new DefaultCondition() {
 
             @Override
@@ -172,7 +172,7 @@ public class SWTBotTestUtil implements SWTBotConstants {
         };
         Display.getDefault().syncExec(() -> {
             try {
-                PlatformUI.getWorkbench().getProgressService().run(true, false, runnable);
+                PlatformUI.getWorkbench().getProgressService().run(true, false, runnable::run);
             } catch (InvocationTargetException | InterruptedException e) {
                 throw new RuntimeException(e);
             }
@@ -605,7 +605,7 @@ public class SWTBotTestUtil implements SWTBotConstants {
 
         bot.textWithLabel(org.bonitasoft.studio.common.Messages.name, 0).setText(newDiagramName);
         bot.button(IDialogConstants.OK_LABEL).click();
-        bot.waitUntil(BonitaBPMConditions.noPopupActive(),10000);
+        bot.waitUntil(BonitaBPMConditions.noPopupActive(), 10000);
     }
 
     /**

@@ -19,8 +19,8 @@ package org.bonitasoft.studio.identity.actors.ui.section.editingsupport;
 import java.lang.reflect.InvocationTargetException;
 
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
-import org.bonitasoft.studio.common.jface.CellEditorValidationStatusListener;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.ui.jface.CellEditorValidationStatusListener;
 import org.bonitasoft.studio.identity.actors.action.RefactorActorOperation;
 import org.bonitasoft.studio.identity.i18n.Messages;
 import org.bonitasoft.studio.model.process.AbstractProcess;
