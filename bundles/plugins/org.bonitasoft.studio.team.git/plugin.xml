@@ -101,5 +101,30 @@
          </adapter>
       </factory>
    </extension>
+   <extension 
+   		id="validation.committedIgnoredMarker"
+    	point="org.eclipse.core.resources.markers"
+    	name="Repository validation">
+        <super type="org.eclipse.core.resources.problemmarker"/>
+        <persistent value="true"/>
+    </extension>
+   <extension 
+   		id="validation.ignoreNotAlignedMarker"
+    	point="org.eclipse.core.resources.markers"
+    	name="Repository validation">
+        <super type="org.eclipse.core.resources.problemmarker"/>
+        <persistent value="true"/>
+    </extension>
+   <extension
+         point="org.eclipse.ui.ide.markerResolution">
+      <markerResolutionGenerator
+            markerType="org.bonitasoft.studio.team.git.validation.committedIgnoredMarker"
+            class="org.bonitasoft.studio.team.git.ui.CommittedIgnoredResolutionGenerator">
+      </markerResolutionGenerator>
+      <markerResolutionGenerator
+            markerType="org.bonitasoft.studio.team.git.validation.ignoreNotAlignedMarker"
+            class="org.bonitasoft.studio.team.git.ui.IgnoredNotAlignedResolutionGenerator">
+      </markerResolutionGenerator>
+   </extension>
 
 </plugin>
