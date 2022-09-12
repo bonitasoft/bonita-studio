@@ -78,7 +78,12 @@ public class Messages extends NLS {
     public static String gitButtonTooltip;
     public static String gitValidationDirectoryNotIgnored;
     public static String gitValidationFileNotIgnored;
-    public static String gitValidationIncorrectGitignore;
+    public static String gitValidationCommitedIgnoredFile;
+    public static String gitValidation;
+    public static String committedIgnoredResolutionDescription;
+    public static String committedIgnoredResolutionLabel;
+    public static String ignoredNotAlignedResolutionDescription;
+    public static String ignoredNotAlignedResolutionLabel;
 
     static {
         // initialize resource bundle

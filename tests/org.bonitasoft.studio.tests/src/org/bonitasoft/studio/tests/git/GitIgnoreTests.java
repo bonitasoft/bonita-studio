@@ -43,6 +43,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.egit.core.RepositoryUtil;
 import org.eclipse.egit.core.op.ConnectProviderOperation;
 import org.eclipse.egit.core.project.RepositoryMapping;
+import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
@@ -113,6 +114,40 @@ public class GitIgnoreTests {
     }
 
     /**
+     * Test that a committed and ignored file makes the validation fail
+     * 
+     * @throws Exception exception during test
+     */
+    @Test
+    public void testCommittedIgnoredFile() throws Exception {
+        // .classpath file is in gitignore template and will probably always be...
+        // alter .gitignore
+        removeGitIgnoreLine(".classpath");
+        IFile file = sharedProject.getFile(".classpath");
+        if (!file.exists()) {
+            file.create(new NullInputStream(), true, null);
+        }
+        // commit the file
+        try (var git = Git.open(sharedProject.getLocation().toFile())) {
+            git.add().addFilepattern(".classpath").call();
+            git.commit().setMessage("Commit .classpath").call();
+        }
+        // have .gitignore file corresponding back to template
+        var gitIgnore = sharedProject.getFile(Constants.GITIGNORE_FILENAME);
+        URL gitIgnoreTemplateUrl = org.bonitasoft.studio.team.repository.Repository.getGitignoreTemplateFileURL();
+        try (var templateStream = gitIgnoreTemplateUrl.openStream()) {
+            // just restore it from template
+            gitIgnore.setContents(templateStream, true, true, new NullProgressMonitor());
+        }
+        // self-validate the repository with git constraints on .gitignore
+        IRunnableWithStatus repositoryValidator = Adapters.adapt(
+                repositoryAccessor.getCurrentRepository().orElseThrow(), IRunnableWithStatus.class);
+        assertNotNull(repositoryValidator);
+        repositoryValidator.run(new NullProgressMonitor());
+        StatusAssert.assertThat(repositoryValidator.getStatus()).isError();
+    }
+
+    /**
      * Test that a file in the template-ignored target directory makes the validation fail when not ignored
      * 
      * @throws Exception exception during test
@@ -133,7 +168,7 @@ public class GitIgnoreTests {
                 repositoryAccessor.getCurrentRepository().orElseThrow(), IRunnableWithStatus.class);
         assertNotNull(repositoryValidator);
         repositoryValidator.run(new NullProgressMonitor());
-        StatusAssert.assertThat(repositoryValidator.getStatus()).isError();
+        StatusAssert.assertThat(repositoryValidator.getStatus()).isWarning();
     }
 
     /**
@@ -155,7 +190,7 @@ public class GitIgnoreTests {
                 repositoryAccessor.getCurrentRepository().orElseThrow(), IRunnableWithStatus.class);
         assertNotNull(repositoryValidator);
         repositoryValidator.run(new NullProgressMonitor());
-        StatusAssert.assertThat(repositoryValidator.getStatus()).isError();
+        StatusAssert.assertThat(repositoryValidator.getStatus()).isWarning();
     }
 
     /**

@@ -21,8 +21,13 @@ import java.net.URL;
 import java.text.MessageFormat;
 
 import org.bonitasoft.studio.common.core.IRunnableWithStatus;
+import org.bonitasoft.studio.common.jface.databinding.StatusToMarkerSeverity;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.team.git.i18n.Messages;
 import org.bonitasoft.studio.team.repository.Repository;
+import org.eclipse.core.resources.IMarker;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
@@ -35,7 +40,6 @@ import org.eclipse.jgit.ignore.IgnoreNode;
 import org.eclipse.jgit.ignore.IgnoreNode.MatchResult;
 import org.eclipse.jgit.treewalk.TreeWalk;
 import org.eclipse.jgit.treewalk.WorkingTreeIterator;
-import org.eclipse.team.core.RepositoryProvider;
 
 /**
  * A runnable which validates the repositories team aspects
@@ -43,6 +47,11 @@ import org.eclipse.team.core.RepositoryProvider;
  * @author Vincent Hemery
  */
 public class RepositoryValidator implements IRunnableWithStatus {
+
+    /** The type of marker for repository validation when an ignored file is committed */
+    public static final String GIT_COMMITTED_IGNORED_MARKER_TYPE = "org.bonitasoft.studio.team.git.validation.committedIgnoredMarker";
+    /** The type of marker for repository validation when .gitignore file is not aligned with the template */
+    public static final String GIT_IGNORE_NOT_ALIGNED_MARKER_TYPE = "org.bonitasoft.studio.team.git.validation.ignoreNotAlignedMarker";
 
     /** repo to validate */
     private Repository repository;
@@ -67,10 +76,17 @@ public class RepositoryValidator implements IRunnableWithStatus {
     public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
         // reinitialize status
         status = Status.OK_STATUS;
+        // try and remove old markers
+        try {
+            repository.getProject().deleteMarkers(GIT_COMMITTED_IGNORED_MARKER_TYPE, true, IResource.DEPTH_INFINITE);
+            repository.getProject().deleteMarkers(GIT_IGNORE_NOT_ALIGNED_MARKER_TYPE, true, IResource.DEPTH_INFINITE);
+        } catch (CoreException e) {
+            BonitaStudioLog.error(e);
+        }
         if (repository.isShared(GitProvider.ID)) {
             try {
+                // load template gitignore
                 URL gitIgnoreTemplateUrl = Repository.getGitignoreTemplateFileURL();
-                GitProvider gitProvider = (GitProvider) RepositoryProvider.getProvider(repository.getProject());
                 IgnoreNode ignoreByTemplate = new IgnoreNode();
                 try (InputStream templateStream = gitIgnoreTemplateUrl.openStream()) {
                     ignoreByTemplate.parse(templateStream);
@@ -86,29 +102,35 @@ public class RepositoryValidator implements IRunnableWithStatus {
                         String pathStr = walk.getPathString();
                         Path path = new Path(pathStr);
                         boolean isDir = walk.isSubtree();
+                        // check when a file should be ignored by template but is actually not by current gitignore
                         MatchResult shouldBeIgnored = ignoreByTemplate.isIgnored(pathStr, isDir);
-                        if (MatchResult.IGNORED.equals(shouldBeIgnored)) {
-                            boolean actuallyIgnored;
-                            if (!it.getEntryPathString().equals(pathStr)) {
-                                /*
-                                 * it is not always on the same entry as the walker...
-                                 * See https://bugs.eclipse.org/bugs/show_bug.cgi?id=580692
-                                 * Hence, we can not use it directly for some directories.
-                                 */
-                                WorkingTreeIterator workingTreeIterator = walk.getTree(0, WorkingTreeIterator.class);
-                                actuallyIgnored = workingTreeIterator.isEntryIgnored();
-                            } else {
-                                actuallyIgnored = it.isEntryIgnored();
+                        boolean actuallyIgnored;
+                        if (!it.getEntryPathString().equals(pathStr)) {
+                            /*
+                             * it is not always on the same entry as the walker...
+                             * See https://bugs.eclipse.org/bugs/show_bug.cgi?id=580692
+                             * Hence, we can not use it directly for some directories.
+                             */
+                            WorkingTreeIterator workingTreeIterator = walk.getTree(0, WorkingTreeIterator.class);
+                            actuallyIgnored = workingTreeIterator.isEntryIgnored();
+                        } else {
+                            actuallyIgnored = it.isEntryIgnored();
+                        }
+                        if (MatchResult.IGNORED.equals(shouldBeIgnored) && !actuallyIgnored) {
+                            //log error
+                            String format = isDir ? Messages.gitValidationDirectoryNotIgnored
+                                    : Messages.gitValidationFileNotIgnored;
+                            IStatus warn = Status.warning(MessageFormat.format(format, path));
+                            appendStatus(warn, GIT_IGNORE_NOT_ALIGNED_MARKER_TYPE, path, isDir);
+                        }
+                        // check that ignored files are not committed
+                        if (!isDir && actuallyIgnored) {
+                            boolean isCommitted = repo.getObjectDatabase().has(walk.getObjectId(0));
+                            if (isCommitted) {
+                                IStatus error = Status.error(MessageFormat.format(
+                                        Messages.gitValidationCommitedIgnoredFile, path));
+                                appendStatus(error, GIT_COMMITTED_IGNORED_MARKER_TYPE, path, isDir);
                             }
-                            if (!actuallyIgnored) {
-                                //log error
-                                String format = isDir ? Messages.gitValidationDirectoryNotIgnored
-                                        : Messages.gitValidationFileNotIgnored;
-                                IStatus error = Status.error(MessageFormat.format(format, path));
-                                appendStatus(error);
-                                continue;
-                            }
-                            continue;
                         }
                         if (isDir) {
                             // enter subtree even when ignored : specific sub-files may be not ignored in an ignored folder...
@@ -126,8 +148,11 @@ public class RepositoryValidator implements IRunnableWithStatus {
      * Add the sub-status to the general status
      * 
      * @param newStatus status to add
+     * @param markerType the type of marker
+     * @param path the concerned resource path
+     * @param isDir true when concerned resource is a directory
      */
-    private synchronized void appendStatus(IStatus newStatus) {
+    private synchronized void appendStatus(IStatus newStatus, String markerType, Path path, boolean isDir) {
         if (!newStatus.isOK()) {
             if (this.status.isOK()) {
                 // just replace
@@ -137,11 +162,20 @@ public class RepositoryValidator implements IRunnableWithStatus {
                 ((MultiStatus) this.status).add(newStatus);
             } else {
                 // make multi-status
-                MultiStatus multi = new MultiStatus(RepositoryValidator.class, 0,
-                        Messages.gitValidationIncorrectGitignore);
+                MultiStatus multi = new MultiStatus(RepositoryValidator.class, 0, Messages.gitValidation);
                 multi.add(this.status);
                 multi.add(newStatus);
                 this.status = multi;
+            }
+            // create marker
+            try {
+                var resource = isDir ? repository.getProject().getFolder(path) : repository.getProject().getFile(path);
+                IMarker marker = resource.createMarker(markerType);
+                marker.setAttribute(IMarker.SEVERITY, new StatusToMarkerSeverity(newStatus).toMarkerSeverity());
+                marker.setAttribute(IMarker.MESSAGE, newStatus.getMessage());
+                marker.setAttribute(IMarker.LOCATION, path.toString());
+            } catch (CoreException e) {
+                BonitaStudioLog.error(e);
             }
         }
     }
