@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<!-- Generator: Adobe Illustrator 13.0.2, SVG Export Plug-In . SVG Version: 6.00 Build 14948)  -->
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Calque_1" x="0px" y="0px" width="14.995px" height="14.995px" viewBox="0 0 14.995 14.995" enable-background="new 0 0 14.995 14.995" xml:space="preserve" preserveAspectRatio="xMidYMid meet" zoomAndPan="magnify" contentScriptType="text/ecmascript" contentStyleType="text/css">
+
+<g>
+	<linearGradient id="SVGID_1_" gradientUnits="userSpaceOnUse" x1="7.4976" y1="24.7061" x2="7.4976" y2="-12.5085" xlink:type="simple" xlink:show="other" xlink:actuate="onLoad">
+		<stop offset="0" style="stop-color:#FFFFFF"/>
+		<stop offset="1" style="stop-color:#B5B4B6"/>
+	</linearGradient>
+	<polygon fill="url(#SVGID_1_)" points="14.495,14.496 0.5,14.496 0.5,0.5 14.495,0.5 14.495,14.496  "/>
+	<g>
+		<path fill="#8A939D" d="M14.995,0v14.995H0V0H14.995 M13.995,1H1v12.995h12.995V1L13.995,1z"/>
+	</g>
+</g>
+<path fill="#656E76" d="M6.302,8.602L3.946,5.872c0,0-0.29,0.875-0.75,1.688c0,0,1.73,1.292,3.125,3.25c0,0,2.293-3,5.625-6.125  c0,0-0.728-0.625-1.385-1.531C10.562,3.153,8.135,6.685,6.302,8.602z"/>
+</svg>

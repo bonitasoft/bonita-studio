@@ -1,0 +1,36 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Diagram Utils
+Bundle-SymbolicName: org.bonitasoft.studio.common.diagram;singleton:=true
+Bundle-Version: 7.16.0.qualifier
+Bundle-Vendor: BonitaSoft S.A.
+Bundle-RequiredExecutionEnvironment: JavaSE-11
+Require-Bundle: org.eclipse.gmf.runtime.lite.svg,
+ org.bonitasoft.studio.model,
+ org.bonitasoft.studio.common,
+ org.eclipse.gmf.runtime.diagram.ui.render,
+ org.eclipse.gmf.runtime.diagram.ui.providers,
+ org.bonitasoft.studio.pics,
+ org.bonitasoft.studio.common.repository,
+ org.eclipse.gmf.runtime.diagram.ui.properties,
+ org.eclipse.core.databinding,
+ org.eclipse.core.databinding.beans,
+ org.eclipse.jface.databinding,
+ org.eclipse.gmf.runtime.draw2d.ui.render.awt,
+ org.eclipse.gmf.runtime.diagram.ui.actions,
+ org.bonitasoft.studio.refactoring,
+ org.eclipse.jdt.groovy.core,
+ org.eclipse.core.databinding.property,
+ org.bonitasoft.studio.preferences,
+ org.bonitasoft.studio.ui
+Export-Package: org.bonitasoft.studio.common.diagram,
+ org.bonitasoft.studio.common.diagram.dialog,
+ org.bonitasoft.studio.common.diagram.palette,
+ org.bonitasoft.studio.common.diagram.tools,
+ org.bonitasoft.studio.common.figures,
+ org.bonitasoft.studio.common.gmf,
+ org.bonitasoft.studio.common.gmf.tools,
+ org.bonitasoft.studio.common.gmf.tools.tree,
+ org.bonitasoft.studio.common.handlers,
+ org.bonitasoft.studio.common.preferences
+Import-Package: org.bonitasoft.engine.bpm.connector
