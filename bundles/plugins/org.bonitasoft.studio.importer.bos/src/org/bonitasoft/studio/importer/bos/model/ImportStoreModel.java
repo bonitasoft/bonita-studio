@@ -5,7 +5,6 @@ import java.util.stream.Stream;
 
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
-import org.eclipse.swt.graphics.Image;
 
 public class ImportStoreModel extends AbstractFolderModel {
 
@@ -29,11 +28,6 @@ public class ImportStoreModel extends AbstractFolderModel {
     @Override
     protected Optional<IRepositoryStore<IRepositoryFileStore>> getParentRepositoryStore() {
         return Optional.ofNullable(getRepositoryStore());
-    }
-
-    @Override
-    public Image getImage() {
-        return repositoryStore.getIcon();
     }
 
     public Stream<ImportableUnit> importableUnits() {

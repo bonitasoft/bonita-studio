@@ -21,8 +21,6 @@ import java.net.URISyntaxException;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
-import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IWorkbenchPart;
 
 /**
@@ -32,11 +30,6 @@ public class WebFragmentFileStore extends InFolderJSONFileStore implements WebRe
 
     public WebFragmentFileStore(final String fileName, final IRepositoryStore<? extends IRepositoryFileStore> parentStore) {
         super(fileName, parentStore);
-    }
-
-    @Override
-    public Image getIcon() {
-        return getParentStore().getIcon();
     }
 
     /*

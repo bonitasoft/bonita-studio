@@ -40,13 +40,7 @@ public class LocalEnvironmentFileStore extends EnvironmentFileStore {
         environment.setName(ConfigurationPreferenceConstants.LOCAL_CONFIGURATION);
         return environment;
     }
-    
-    
-    @Override
-    public String getDisplayName() {
-        return ConfigurationPreferenceConstants.LOCAL_CONFIGURATION;
-    }
-    
+
     @Override
     public IStatus validate() {
         return ValidationStatus.ok();

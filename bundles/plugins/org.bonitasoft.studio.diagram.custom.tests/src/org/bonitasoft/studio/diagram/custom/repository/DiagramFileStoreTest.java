@@ -26,8 +26,10 @@ import java.util.Set;
 
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
+import org.bonitasoft.studio.common.ui.IDisplayable;
 import org.bonitasoft.studio.model.process.Pool;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.Adapters;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceImpl;
@@ -62,7 +64,6 @@ public class DiagramFileStoreTest {
     @Mock
     private ProcessConfigurationFileStore processConfFStore;
 
-
     /**
      * @throws java.lang.Exception
      */
@@ -89,7 +90,8 @@ public class DiagramFileStoreTest {
     public void should_have_related_fileStores_for_process_config() throws Exception {
         //Given
         doReturn(repository).when(diagramFileStore).getRepository();
-        doReturn(Collections.singletonList(aPoolInAResourceWithUUID("aProcessUUID"))).when(diagramFileStore).getProcesses(false);
+        doReturn(Collections.singletonList(aPoolInAResourceWithUUID("aProcessUUID"))).when(diagramFileStore)
+                .getProcesses(false);
         when(repository.getRepositoryStore(ProcessConfigurationRepositoryStore.class)).thenReturn(processConfStore);
         when(processConfStore.getChild("aProcessUUID.conf", true)).thenReturn(processConfFStore);
 
@@ -104,7 +106,8 @@ public class DiagramFileStoreTest {
     public void should_not_contains_null_refrences_in_related_fileStores() throws Exception {
         //Given
         doReturn(repository).when(diagramFileStore).getRepository();
-        doReturn(Collections.singletonList(aPoolInAResourceWithUUID("aProcessUUID"))).when(diagramFileStore).getProcesses(false);
+        doReturn(Collections.singletonList(aPoolInAResourceWithUUID("aProcessUUID"))).when(diagramFileStore)
+                .getProcesses(false);
         when(repository.getRepositoryStore(ProcessConfigurationRepositoryStore.class)).thenReturn(processConfStore);
         when(processConfStore.getChild("aProcessUUID.conf", true)).thenReturn(null);
 
@@ -122,7 +125,8 @@ public class DiagramFileStoreTest {
         doReturn(resource).when(diagramFileStore).getResource();
 
         //When
-        final String displayName = diagramFileStore.getDisplayName();
+        IDisplayable display = Adapters.adapt(diagramFileStore, IDisplayable.class);
+        final String displayName = display.getDisplayName();
 
         //Then
         assertThat(displayName).isEqualTo("My Diagram (1.0)");
@@ -135,6 +139,5 @@ public class DiagramFileStoreTest {
         xmiResourceImpl.setID(pool, uuid);
         return pool;
     }
-
 
 }

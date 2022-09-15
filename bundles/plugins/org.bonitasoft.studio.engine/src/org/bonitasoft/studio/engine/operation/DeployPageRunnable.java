@@ -20,6 +20,7 @@ import java.io.File;
 import java.io.IOException;
 
 import org.bonitasoft.engine.api.PageAPI;
+import org.bonitasoft.studio.common.ui.IDisplayable;
 import org.bonitasoft.studio.designer.core.bar.FormBuilder;
 import org.bonitasoft.studio.designer.core.exception.PageIncompatibleException;
 import org.bonitasoft.studio.designer.core.repository.WebPageFileStore;
@@ -74,9 +75,7 @@ public class DeployPageRunnable extends DeployCustomPageOperation {
     }
 
     private String pageLabel() {
-        return pageFileStore.getDisplayName() != null && !pageFileStore.getDisplayName().isEmpty()
-                ? pageFileStore.getDisplayName()
-                : pageFileStore.getName();
+        return IDisplayable.toDisplayName(pageFileStore).orElseGet(pageFileStore::getName);
     }
 
     @Override

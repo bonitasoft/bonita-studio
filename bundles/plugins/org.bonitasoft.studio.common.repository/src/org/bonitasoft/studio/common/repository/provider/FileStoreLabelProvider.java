@@ -14,8 +14,10 @@
  */
 package org.bonitasoft.studio.common.repository.provider;
 
-import org.bonitasoft.studio.common.repository.model.IDisplayable;
+import org.bonitasoft.studio.common.Strings;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
+import org.bonitasoft.studio.common.ui.IDisplayable;
+import org.eclipse.core.runtime.Adapters;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
 
@@ -26,9 +28,10 @@ public class FileStoreLabelProvider extends LabelProvider {
 
     @Override
     public String getText(final Object element) {
-        if (element instanceof IDisplayable) {
-            String displayName = ((IDisplayable) element).getDisplayName();
-            if(displayName == null || displayName.isEmpty()) {
+        IDisplayable displayable = Adapters.adapt(element, IDisplayable.class);
+        if (displayable != null) {
+            String displayName = displayable.getDisplayName();
+            if (Strings.isNullOrEmpty(displayName) && element instanceof IRepositoryFileStore<?>) {
                 displayName = ((IRepositoryFileStore) element).getName();
             }
             return displayName;
@@ -38,8 +41,9 @@ public class FileStoreLabelProvider extends LabelProvider {
 
     @Override
     public Image getImage(final Object element) {
-        if (element instanceof IDisplayable) {
-            return ((IDisplayable) element).getIcon();
+        IDisplayable displayable = Adapters.adapt(element, IDisplayable.class);
+        if (displayable != null) {
+            return displayable.getIcon();
         }
         return super.getImage(element);
     }

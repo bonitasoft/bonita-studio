@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.ui.IDisplayable;
 import org.bonitasoft.studio.designer.core.repository.WebPageFileStore;
 import org.bonitasoft.studio.designer.core.repository.WebPageRepositoryStore;
 import org.bonitasoft.studio.la.application.core.BonitaPagesRegistry;
@@ -55,9 +56,11 @@ public class CustomPageProvider implements IResourceChangeListener {
                     .stream()
                     .filter(webPageFileStore -> Objects.equals(webPageFileStore.getType(),
                             WebPageFileStore.LAYOUT_TYPE))
-                    .map(fileStore -> new CustomPageDescriptor(
-                            CustomPageDescriptor.CUSTOMPAGE_PREFIX + fileStore.getCustomPageName(),
-                            fileStore.getDisplayName(), fileStore.getDescription()))
+                    .map(fileStore -> {
+                        return new CustomPageDescriptor(
+                                CustomPageDescriptor.CUSTOMPAGE_PREFIX + fileStore.getCustomPageName(),
+                                IDisplayable.toDisplayName(fileStore).orElse(""), fileStore.getDescription());
+                    })
                     .forEach(layouts::add);
         }
         return layouts;
@@ -68,9 +71,11 @@ public class CustomPageProvider implements IResourceChangeListener {
             pages = Stream.concat(webPageStore.getChildren()
                     .stream()
                     .filter(webPageFileStore -> Objects.equals(webPageFileStore.getType(), WebPageFileStore.PAGE_TYPE))
-                    .map(fileStore -> new CustomPageDescriptor(
-                            CustomPageDescriptor.CUSTOMPAGE_PREFIX + fileStore.getCustomPageName(),
-                            fileStore.getDisplayName(), fileStore.getDescription())),
+                    .map(fileStore -> {
+                        return new CustomPageDescriptor(
+                                CustomPageDescriptor.CUSTOMPAGE_PREFIX + fileStore.getCustomPageName(),
+                                IDisplayable.toDisplayName(fileStore).orElse(""), fileStore.getDescription());
+                    }),
                     BonitaPagesRegistry.getInstance().getCustomPages().stream()
                             .map(p -> new CustomPageDescriptor(p.getPageId(), p.getDisplayName(), p.getDescription())))
                     .collect(Collectors.toList());

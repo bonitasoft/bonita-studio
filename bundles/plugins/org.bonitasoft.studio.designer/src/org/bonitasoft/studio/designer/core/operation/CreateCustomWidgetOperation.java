@@ -79,7 +79,7 @@ public class CreateCustomWidgetOperation extends CreateUIDArtifactOperation {
         List<String> existingWidgets = repositoryAccessor.getRepositoryStore(WebWidgetRepositoryStore.class)
                 .getChildren()
                 .stream()
-                .map(WebWidgetFileStore::getDisplayName)
+                .map(WebWidgetFileStore::getCustomPageName)
                 .collect(Collectors.toList());
         return StringIncrementer.getNextIncrement(DEFAULT_WIDGET_NAME, existingWidgets);
     }

@@ -18,10 +18,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.bonitasoft.studio.designer.i18n.Messages;
-import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.swt.graphics.Image;
 
 /**
  * @author Romain Bioteau
@@ -47,8 +45,8 @@ public class WebFragmentRepositoryStore extends WebArtifactRepositoryStore<WebFr
     }
 
     @Override
-    public Image getIcon() {
-        return Pics.getImage(PicsConstants.fragment);
+    public String getPathIcon() {
+        return PicsConstants.fragment;
     }
 
     @Override

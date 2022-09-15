@@ -54,8 +54,8 @@ public class ActorFilterImplRepositoryStore extends AbstractConnectorImplReposit
     }
 
     @Override
-    public Image getIcon() {
-        return Pics.getImage(PicsConstants.filterImpl);
+    public String getPathIcon() {
+        return PicsConstants.filterImpl;
     }
 
     @Override

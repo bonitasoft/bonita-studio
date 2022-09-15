@@ -110,8 +110,8 @@ public class ConnectorDefRepositoryStore extends AbstractDefinitionRepositorySto
     }
 
     @Override
-    public Image getIcon() {
-        return Pics.getImage(PicsConstants.connectorDef);
+    public String getPathIcon() {
+        return PicsConstants.connectorDef;
     }
 
     @Override

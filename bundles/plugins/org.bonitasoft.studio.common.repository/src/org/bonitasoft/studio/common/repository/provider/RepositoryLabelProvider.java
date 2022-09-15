@@ -4,6 +4,7 @@ import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.repository.Messages;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepository;
+import org.bonitasoft.studio.common.ui.IDisplayable;
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.jface.viewers.StyledCellLabelProvider;
 import org.eclipse.jface.viewers.StyledString;
@@ -45,7 +46,7 @@ public class RepositoryLabelProvider extends StyledCellLabelProvider {
     }
 
     public String getText(final IRepository element) {
-        return element.getDisplayName();
+        return IDisplayable.toDisplayName(element).orElseGet(element::getName);
     }
 
     /*
@@ -53,15 +54,15 @@ public class RepositoryLabelProvider extends StyledCellLabelProvider {
      * @see org.eclipse.jface.viewers.LabelProvider#getImage(java.lang.Object)
      */
     public Image getImage(final IRepository element) {
-        return element.getIcon();
+        return IDisplayable.adapt(element).map(IDisplayable::getIcon).orElse(null);
     }
 
     @Override
     public String getToolTipText(Object element) {
         IRepository repo = (IRepository) element;
         return repo.isShared()
-                        ? Messages.sharedWithGit
-                        : Messages.localRepository;
+                ? Messages.sharedWithGit
+                : Messages.localRepository;
     }
 
     @Override

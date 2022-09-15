@@ -26,11 +26,8 @@ import org.apache.maven.artifact.Artifact;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.core.maven.ProjectDependenciesResolver;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
-import org.bonitasoft.studio.dependencies.DependenciesPlugin;
-import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IWorkbenchPart;
 
 public class MavenDependencyFileStore extends DependencyFileStore {
@@ -42,11 +39,6 @@ public class MavenDependencyFileStore extends DependencyFileStore {
         super(artifact.getFile().getName(), parentStore);
         this.artifact = artifact;
         this.projectDependenciesResolver = new ProjectDependenciesResolver(getRepositoryAccessor());
-    }
-
-    @Override
-    public Image getIcon() {
-        return Pics.getImage("jar.gif", DependenciesPlugin.getDefault());
     }
 
     @Override

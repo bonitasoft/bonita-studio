@@ -26,7 +26,6 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.xmi.XMLResource;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IWorkbenchPart;
 
 /**
@@ -69,16 +68,6 @@ public class ProcessConfigurationFileStore extends EMFFileStore<Configuration> {
     @Override
     public IFile getResource() {
         return getParentStore().getResource().getFile(getName());
-    }
-
-    @Override
-    public String getDisplayName() {
-        return getName();
-    }
-
-    @Override
-    public Image getIcon() {
-        return getParentStore().getIcon();
     }
 
 }

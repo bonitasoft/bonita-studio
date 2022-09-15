@@ -6,8 +6,6 @@ import java.util.Objects;
 
 import org.bonitasoft.studio.common.model.ConflictStatus;
 import org.bonitasoft.studio.common.model.ImportAction;
-import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
-import org.eclipse.swt.graphics.Image;
 
 public abstract class AbstractFileModel extends AbstractImportModel {
 
@@ -52,11 +50,6 @@ public abstract class AbstractFileModel extends AbstractImportModel {
         return displayName.orElse(getFileName());
     }
 
-    @Override
-    public Image getImage() {
-        return getParentRepositoryStore().map(IRepositoryStore::getIcon).orElse(null);
-    }
-
     public void resetStatus() {
         this.status = ConflictStatus.NONE;
     }
@@ -64,12 +57,12 @@ public abstract class AbstractFileModel extends AbstractImportModel {
     public boolean shouldBeImported() {
         return importAction != ImportAction.KEEP;
     }
-    
+
     @Override
     public void setStatus(ConflictStatus status) {
-        if(!isArtifactDescriptor()) {
+        if (!isArtifactDescriptor()) {
             super.setStatus(status);
-        }else {
+        } else {
             this.status = status;
         }
     }

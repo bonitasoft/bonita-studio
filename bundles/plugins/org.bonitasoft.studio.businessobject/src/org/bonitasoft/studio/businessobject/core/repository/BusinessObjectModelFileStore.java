@@ -61,8 +61,6 @@ import org.bonitasoft.studio.common.ui.PlatformUtil;
 import org.bonitasoft.studio.common.ui.jface.FileActionDialog;
 import org.bonitasoft.studio.common.ui.jface.MessageDialogWithPrompt;
 import org.bonitasoft.studio.dependencies.repository.DependencyRepositoryStore;
-import org.bonitasoft.studio.pics.Pics;
-import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
@@ -80,7 +78,6 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPart;
@@ -89,7 +86,6 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
 
 import com.google.common.io.ByteSource;
-import com.google.common.io.ByteStreams;
 
 /**
  * @author Romain Bioteau
@@ -141,7 +137,8 @@ public class BusinessObjectModelFileStore extends AbstractBDMFileStore<BusinessO
         }
         final long modificationStamp = resource.getModificationStamp();
         try {
-            final BusinessObjectModel bom = getConverter().unmarshall(Files.readAllBytes(resource.getLocation().toFile().toPath()));
+            final BusinessObjectModel bom = getConverter()
+                    .unmarshall(Files.readAllBytes(resource.getLocation().toFile().toPath()));
             cachedBusinessObjectModel.clear();
             daoTypes = null;
             cachedBusinessObjectModel.put(modificationStamp, bom);
@@ -164,11 +161,6 @@ public class BusinessObjectModelFileStore extends AbstractBDMFileStore<BusinessO
 
     protected BusinessObjectModelConverter getConverter() {
         return ((BusinessObjectModelRepositoryStore) getParentStore()).getConverter();
-    }
-
-    @Override
-    public String getDisplayName() {
-        return Messages.businessDataModel;
     }
 
     @Override
@@ -256,7 +248,7 @@ public class BusinessObjectModelFileStore extends AbstractBDMFileStore<BusinessO
             BDMArtifactDescriptor descriptor = loadArtifactDescriptor();
             var operation = new RemoveDependencyOperation(descriptor.getGroupId(),
                     GenerateBDMOperation.BDM_CLIENT, descriptor.getVersion(), Artifact.SCOPE_PROVIDED)
-                    .disableAnalyze();
+                            .disableAnalyze();
             new WorkspaceJob("Remove Project BDM dependency") {
 
                 @Override
@@ -338,11 +330,6 @@ public class BusinessObjectModelFileStore extends AbstractBDMFileStore<BusinessO
         }
         Assert.isNotNull(content);
         return content.getBusinessObjects();
-    }
-
-    @Override
-    public Image getIcon() {
-        return Pics.getImage(PicsConstants.bdm);
     }
 
     @Override

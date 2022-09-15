@@ -104,8 +104,8 @@ public class BusinessObjectModelRepositoryStore<F extends AbstractBDMFileStore<?
     }
 
     @Override
-    public Image getIcon() {
-        return Pics.getImage(PicsConstants.bdm);
+    public String getPathIcon() {
+        return PicsConstants.bdm;
     }
 
     @Override

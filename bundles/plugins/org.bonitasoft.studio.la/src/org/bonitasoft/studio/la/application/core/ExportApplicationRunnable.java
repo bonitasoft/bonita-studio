@@ -19,6 +19,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
+import org.bonitasoft.studio.common.ui.IDisplayable;
 import org.bonitasoft.studio.la.i18n.Messages;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
@@ -37,7 +38,7 @@ public class ExportApplicationRunnable implements IRunnableWithProgress {
     public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
         monitor.beginTask(Messages.exportOperation, applicationFileStoreList.size());
         for (final IRepositoryFileStore fStore : applicationFileStoreList) {
-            monitor.setTaskName(String.format(Messages.exporting, fStore.getDisplayName()));
+            monitor.setTaskName(String.format(Messages.exporting, IDisplayable.toDisplayName(fStore).orElse("")));
             try {
                 fStore.export(path);
             } catch (final IOException e) {

@@ -37,6 +37,7 @@ import org.bonitasoft.studio.common.repository.model.IDeployable;
 import org.bonitasoft.studio.common.repository.model.IRenamable;
 import org.bonitasoft.studio.common.repository.model.IValidable;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
+import org.bonitasoft.studio.common.ui.IDisplayable;
 import org.bonitasoft.studio.la.LivingApplicationPlugin;
 import org.bonitasoft.studio.la.application.handler.DeployApplicationHandler;
 import org.bonitasoft.studio.la.validator.ApplicationHomepageValidator;
@@ -57,7 +58,6 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.InputDialog;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
@@ -70,7 +70,8 @@ import org.xml.sax.SAXException;
 
 import com.google.common.io.ByteStreams;
 
-public class ApplicationFileStore extends AbstractFileStore<ApplicationNodeContainer> implements IDeployable, IBuildable, IRenamable, IValidable {
+public class ApplicationFileStore extends AbstractFileStore<ApplicationNodeContainer>
+        implements IDeployable, IBuildable, IRenamable, IValidable {
 
     public static final String DEPLOY_COMMAND = "org.bonitasoft.studio.la.deploy.command";
 
@@ -153,15 +154,6 @@ public class ApplicationFileStore extends AbstractFileStore<ApplicationNodeConta
 
     /*
      * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.repository.model.IDisplayable#getIcon()
-     */
-    @Override
-    public Image getIcon() {
-        return getParentStore().getIcon();
-    }
-
-    /*
-     * (non-Javadoc)
      * @see org.bonitasoft.studio.common.repository.filestore.AbstractFileStore#doOpen()
      */
     @Override
@@ -202,6 +194,15 @@ public class ApplicationFileStore extends AbstractFileStore<ApplicationNodeConta
         return Optional.empty();
     }
 
+    /**
+     * Get name to display for artifact
+     * 
+     * @return displayable name
+     */
+    private String getDisplayName() {
+        return IDisplayable.toDisplayName(this).orElse("");
+    }
+
     @Override
     @SuppressWarnings("unchecked")
     protected Optional<IEditorPart> findOpenedEditor() {
@@ -220,7 +221,8 @@ public class ApplicationFileStore extends AbstractFileStore<ApplicationNodeConta
         if (!applicationFolder.exists()) {
             try {
                 applicationFolder.create(true, true, new NullProgressMonitor());
-                getResource().copy(applicationFolder.getFile(getName()).getFullPath(), false, new NullProgressMonitor());
+                getResource().copy(applicationFolder.getFile(getName()).getFullPath(), false,
+                        new NullProgressMonitor());
             } catch (CoreException e) {
                 return e.getStatus();
             }

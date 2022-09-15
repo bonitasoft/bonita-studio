@@ -17,12 +17,10 @@ package org.bonitasoft.studio.document.core.repository;
 import org.bonitasoft.studio.common.repository.core.migration.report.MigrationReport;
 import org.bonitasoft.studio.common.repository.store.AbstractRepositoryStore;
 import org.bonitasoft.studio.document.i18n.Messages;
-import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.edapt.migration.MigrationException;
-import org.eclipse.swt.graphics.Image;
 
 /**
  * @author Romain Bioteau
@@ -48,8 +46,8 @@ public class DocumentRepositoryStore extends AbstractRepositoryStore<DocumentFil
     }
 
     @Override
-    public Image getIcon() {
-        return Pics.getImage(PicsConstants.attachmentData);
+    public String getPathIcon() {
+        return PicsConstants.attachmentData;
     }
 
     @Override

@@ -30,7 +30,7 @@ import org.eclipse.emf.edapt.migration.MigrationException;
 /**
  * @author Romain Bioteau
  */
-public interface IRepositoryStore<T extends IRepositoryFileStore<?>> extends IDisplayable {
+public interface IRepositoryStore<T extends IRepositoryFileStore<?>> {
 
     void createRepositoryStore(IRepository repository);
 
@@ -78,5 +78,10 @@ public interface IRepositoryStore<T extends IRepositoryFileStore<?>> extends IDi
     default IStatus validate(String filename, InputStream inputStream) {
         return ValidationStatus.ok();
     }
+    
+    String getDisplayName();
+
+    String getPathIcon();
+    
 
 }

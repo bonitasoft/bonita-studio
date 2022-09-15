@@ -15,6 +15,7 @@
 package org.bonitasoft.studio.businessobject.core.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doReturn;
@@ -29,10 +30,12 @@ import org.bonitasoft.engine.bdm.model.BusinessObjectModel;
 import org.bonitasoft.engine.bdm.model.field.FieldType;
 import org.bonitasoft.engine.bdm.model.field.SimpleField;
 import org.bonitasoft.studio.businessobject.i18n.Messages;
+import org.bonitasoft.studio.common.ui.IDisplayable;
 import org.bonitasoft.studio.dependencies.repository.DependencyFileStore;
 import org.bonitasoft.studio.dependencies.repository.DependencyRepositoryStore;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.Adapters;
 import org.eclipse.core.runtime.AssertionFailedException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.junit.AfterClass;
@@ -102,7 +105,9 @@ public class BusinessObjectModelFileStoreTest {
 
     @Test
     public void shouldGetDisplayName_ReturnBDMLabel() throws Exception {
-        assertThat(fileStoreUnderTest.getDisplayName()).isEqualTo(Messages.businessDataModel);
+        IDisplayable displayable = Adapters.adapt(fileStoreUnderTest, IDisplayable.class);
+        assertNotNull(displayable);
+        assertThat(displayable.getDisplayName()).isEqualTo(Messages.businessDataModel);
     }
 
     @Test(expected = AssertionFailedException.class)

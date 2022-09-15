@@ -29,12 +29,9 @@ import java.util.Set;
 
 import org.bonitasoft.studio.common.repository.core.maven.migration.BonitaJarDependencyReplacement;
 import org.bonitasoft.studio.common.repository.store.AbstractRepositoryStore;
-import org.bonitasoft.studio.connectors.ConnectorPlugin;
 import org.bonitasoft.studio.connectors.i18n.Messages;
 import org.bonitasoft.studio.connectors.util.DriverConstants;
-import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.emf.edapt.migration.MigrationException;
-import org.eclipse.swt.graphics.Image;
 
 public class DatabaseConnectorPropertiesRepositoryStore
         extends AbstractRepositoryStore<DatabaseConnectorPropertiesFileStore> {
@@ -74,8 +71,8 @@ public class DatabaseConnectorPropertiesRepositoryStore
     }
 
     @Override
-    public Image getIcon() {
-        return Pics.getImage("databases_driver.png", ConnectorPlugin.getDefault());
+    public String getPathIcon() {
+        return "databases_driver.png";
     }
 
     @Override

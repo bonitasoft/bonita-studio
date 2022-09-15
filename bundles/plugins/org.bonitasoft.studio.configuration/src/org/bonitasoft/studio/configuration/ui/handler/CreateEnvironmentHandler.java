@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -27,6 +28,7 @@ import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
+import org.bonitasoft.studio.common.ui.IDisplayable;
 import org.bonitasoft.studio.configuration.environment.Environment;
 import org.bonitasoft.studio.configuration.environment.EnvironmentFactory;
 import org.bonitasoft.studio.configuration.i18n.Messages;
@@ -57,13 +59,12 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.IProgressService;
 
-public class CreateEnvironmentHandler extends AbstractHandler{
+public class CreateEnvironmentHandler extends AbstractHandler {
 
     private static final int MAX_NAME_LENGTH = 80;
     private DirtyEditorChecker dirtyEditorChecker;
     private RepositoryAccessor repositoryAccessor;
-    
-    
+
     public CreateEnvironmentHandler() {
         this.dirtyEditorChecker = new DirtyEditorChecker();
         this.repositoryAccessor = RepositoryManager.getInstance().getAccessor();
@@ -88,12 +89,13 @@ public class CreateEnvironmentHandler extends AbstractHandler{
                     if (input == null || input.isEmpty()) {
                         return Messages.emptyName;
                     }
-                    
+
                     if (input.length() > MAX_NAME_LENGTH) {
                         return String.format(Messages.maxNameLength, MAX_NAME_LENGTH);
                     }
-                    
-                    if (store.getChildren().stream().map(EnvironmentFileStore::getDisplayName).anyMatch(input::equalsIgnoreCase)) {
+
+                    if (store.getChildren().stream().map(IDisplayable::toDisplayName).filter(Optional::isPresent)
+                            .map(Optional::get).anyMatch(input::equalsIgnoreCase)) {
                         return Messages.alreadyExists;
                     }
                     return null;
@@ -201,7 +203,7 @@ public class CreateEnvironmentHandler extends AbstractHandler{
         execute(Display.getDefault().getActiveShell(), PlatformUI.getWorkbench().getProgressService());
         return null;
     }
-    
+
     @Override
     public boolean isEnabled() {
         return canExecute(repositoryAccessor);

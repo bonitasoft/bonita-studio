@@ -15,6 +15,7 @@ import java.util.Objects;
 import java.util.Set;
 
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
+import org.bonitasoft.studio.common.ui.IDisplayable;
 import org.bonitasoft.studio.maven.i18n.Messages;
 import org.bonitasoft.studio.rest.api.extension.RestAPIExtensionActivator;
 import org.bonitasoft.studio.rest.api.extension.core.repository.PathTemplate;
@@ -44,7 +45,7 @@ public class UniquePathTemplateValidator implements IValidator {
         }
         return null;
     }
-    
+
     protected List<PathTemplate> pathTemplates(RestAPIExtensionFileStore fileStore) {
         try {
             return fileStore.getContent().getPathTemplates();
@@ -57,7 +58,7 @@ public class UniquePathTemplateValidator implements IValidator {
         final StringBuilder sb = new StringBuilder("[");
         for (final RestAPIExtensionFileStore fileStore : repositoryStore.getChildren()) {
             if (pathTemplates(fileStore).contains(new PathTemplate(pathTemplate, "GET"))) {
-                sb.append(fileStore.getDisplayName());
+                sb.append(IDisplayable.toDisplayName(fileStore).orElse(""));
                 sb.append(",");
             }
         }
@@ -74,8 +75,11 @@ public class UniquePathTemplateValidator implements IValidator {
         final MultiStatus status = new MultiStatus(RestAPIExtensionActivator.PLUGIN_ID, IStatus.OK, "", null);
         final List<PathTemplate> templates = pathTemplates(fileStore);
         final Set<PathTemplate> duplicates = findDuplicates(templates);
+        String displayName = IDisplayable.toDisplayName(fileStore).orElse("");
         for (final PathTemplate duplicatedTemplate : duplicates) {
-            status.add(new PathTemplateErrorStatus(NLS.bind(Messages.pathTemplateAlreadyExists, duplicatedTemplate.getPath(), fileStore.getDisplayName()),
+            status.add(new PathTemplateErrorStatus(
+                    NLS.bind(Messages.pathTemplateAlreadyExists, duplicatedTemplate.getPath(),
+                            displayName),
                     duplicatedTemplate));
         }
         for (final PathTemplate t : templates) {
@@ -83,7 +87,7 @@ public class UniquePathTemplateValidator implements IValidator {
             for (final RestAPIExtensionFileStore f : repositoryStore.getChildren()) {
                 if (!Objects.equals(fileStore.getName(), f.getName())) {
                     if (pathTemplates(f).contains(t)) {
-                        sb.append(f.getDisplayName());
+                        sb.append(IDisplayable.toDisplayName(f).orElse(""));
                         sb.append(",");
                     }
                 }
@@ -91,7 +95,8 @@ public class UniquePathTemplateValidator implements IValidator {
             sb.deleteCharAt(sb.length() - 1);
             sb.append("]");
             if (sb.length() > 1) {
-                status.add(new PathTemplateErrorStatus(NLS.bind(Messages.pathTemplateAlreadyExists, t.getPath(), sb.toString()), t));
+                status.add(new PathTemplateErrorStatus(
+                        NLS.bind(Messages.pathTemplateAlreadyExists, t.getPath(), sb.toString()), t));
             }
         }
         return status;

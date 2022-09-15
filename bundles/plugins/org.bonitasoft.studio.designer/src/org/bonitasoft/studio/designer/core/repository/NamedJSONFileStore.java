@@ -62,9 +62,4 @@ public class NamedJSONFileStore extends JSONFileStore {
         }
     }
 
-    @Override
-    public String getDisplayName() {
-        return getCustomPageName();
-    }
-
 }

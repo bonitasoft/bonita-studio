@@ -16,17 +16,18 @@ package org.bonitasoft.studio.configuration.coolbar;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.bonitasoft.studio.common.CommandExecutor;
+import org.bonitasoft.studio.common.extension.IBonitaContributionItem;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.filestore.AbstractFileStore;
-import org.bonitasoft.studio.common.extension.IBonitaContributionItem;
+import org.bonitasoft.studio.common.ui.IDisplayable;
 import org.bonitasoft.studio.common.ui.jface.SWTBotConstants;
 import org.bonitasoft.studio.configuration.ConfigurationPlugin;
 import org.bonitasoft.studio.configuration.i18n.Messages;
 import org.bonitasoft.studio.configuration.preferences.ConfigurationPreferenceConstants;
-import org.bonitasoft.studio.configuration.repository.EnvironmentFileStore;
 import org.bonitasoft.studio.configuration.repository.EnvironmentRepositoryStore;
 import org.bonitasoft.studio.configuration.ui.handler.ConfigureHandler;
 import org.bonitasoft.studio.pics.Pics;
@@ -182,7 +183,7 @@ public class ConfigureCoolbarItem extends ContributionItem implements IBonitaCon
                             .map(repo -> repo.getRepositoryStore(EnvironmentRepositoryStore.class))
                             .map(environmentStore -> environmentStore.getChildren().stream())
                             .ifPresent(environements -> environements
-                                    .map(EnvironmentFileStore::getDisplayName)
+                                    .map(IDisplayable::toDisplayName).filter(Optional::isPresent).map(Optional::get)
                                     .peek(confName::add)
                                     .forEach(listener::add));
 

@@ -14,7 +14,8 @@
  */
 package org.bonitasoft.studio.application.ui.control;
 
-import org.bonitasoft.studio.common.repository.model.IDisplayable;
+import org.bonitasoft.studio.common.ui.IDisplayable;
+import org.eclipse.core.runtime.Adapters;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.StyledCellLabelProvider;
 import org.eclipse.jface.viewers.StyledString;
@@ -25,8 +26,8 @@ public class DeployTreeLabelProvider extends StyledCellLabelProvider implements 
 
     @Override
     public void update(ViewerCell cell) {
-        if (cell.getElement() instanceof IDisplayable) {
-            final IDisplayable displayable = (IDisplayable) cell.getElement();
+        IDisplayable displayable = Adapters.adapt(cell.getElement(), IDisplayable.class);
+        if (displayable != null) {
             final StyledString styledString = displayable.getStyledString();
             cell.setText(styledString.getString());
             cell.setImage(displayable.getIcon());

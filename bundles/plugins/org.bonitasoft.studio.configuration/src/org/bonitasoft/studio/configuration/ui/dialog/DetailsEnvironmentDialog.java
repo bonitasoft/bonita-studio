@@ -1,14 +1,15 @@
 package org.bonitasoft.studio.configuration.ui.dialog;
 
 import java.util.Objects;
+import java.util.Optional;
 
 import org.bonitasoft.studio.common.databinding.validator.FileNameValidator;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.ui.IDisplayable;
 import org.bonitasoft.studio.common.ui.jface.databinding.DialogSupport;
 import org.bonitasoft.studio.configuration.environment.Environment;
 import org.bonitasoft.studio.configuration.i18n.Messages;
 import org.bonitasoft.studio.configuration.preferences.ConfigurationPreferenceConstants;
-import org.bonitasoft.studio.configuration.repository.EnvironmentFileStore;
 import org.bonitasoft.studio.configuration.repository.EnvironmentRepositoryStore;
 import org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory;
 import org.bonitasoft.studio.ui.validator.EmptyInputValidator;
@@ -45,36 +46,40 @@ public class DetailsEnvironmentDialog extends Dialog {
         super(shell);
         this.env = env;
         this.nameEnv = env.getName();
-        this.descEnv = Objects.equals(ConfigurationPreferenceConstants.LOCAL_CONFIGURATION, env.getName()) ? Messages.localEnvironmentDesc :  env.getDescription();
+        this.descEnv = Objects.equals(ConfigurationPreferenceConstants.LOCAL_CONFIGURATION, env.getName())
+                ? Messages.localEnvironmentDesc : env.getDescription();
     }
-    
+
     @Override
     protected Control createContents(Composite parent) {
         Control control = super.createContents(parent);
         DialogSupport.create(this, dbc);
         return control;
     }
-    
+
     @Override
     protected Control createDialogArea(Composite parent) {
         var composite = (Composite) super.createDialogArea(parent);
         dbc = new DataBindingContext();
-       
+
         composite.setLayout(GridLayoutFactory.swtDefaults().margins(20, 20).create());
 
-        notLocalEnvObservable = new WritableValue<>(!Objects.equals(ConfigurationPreferenceConstants.LOCAL_CONFIGURATION, env.getName()), Boolean.class);
+        notLocalEnvObservable = new WritableValue<>(
+                !Objects.equals(ConfigurationPreferenceConstants.LOCAL_CONFIGURATION, env.getName()), Boolean.class);
         var nameObservable = PojoProperties.value("nameEnv", String.class).observe(this);
         var descriptionObservable = PojoProperties.value("descEnv", String.class).observe(this);
         var changeValidationStatusProvider = new org.eclipse.core.databinding.validation.MultiValidator() {
 
             @Override
             protected IStatus validate() {
-                return Objects.equals(nameObservable.getValue(),env.getName()) && Objects.equals(descriptionObservable.getValue(),env.getDescription()) ? ValidationStatus.error("No changes") 
-                        : ValidationStatus.ok();
+                return Objects.equals(nameObservable.getValue(), env.getName())
+                        && Objects.equals(descriptionObservable.getValue(), env.getDescription())
+                                ? ValidationStatus.error("No changes")
+                                : ValidationStatus.ok();
             }
         };
         dbc.addValidationStatusProvider(changeValidationStatusProvider);
-        
+
         var nameWidget = new TextWidget.Builder()
                 .labelAbove()
                 .withLabel(Messages.name)
@@ -110,32 +115,35 @@ public class DetailsEnvironmentDialog extends Dialog {
                 .bindTo(descriptionObservable)
                 .inContext(dbc)
                 .createIn(composite);
-        
+
         dbc.bindValue(WidgetProperties.editable().observe(nameWidget.getTextControl()), notLocalEnvObservable);
         dbc.bindValue(WidgetProperties.editable().observe(descriptionWidget.getTextControl()), notLocalEnvObservable);
 
         return composite;
     }
-    
+
     /**
-     * Validate if there is only 1 environment with the same name in the current existing environments. 
+     * Validate if there is only 1 environment with the same name in the current existing environments.
+     * 
      * @return A {@link IStatus}
      */
-    IValidator<String> existingEnvValidator(EnvironmentRepositoryStore environmentRepositoryStore ) {
-        return envName -> (environmentRepositoryStore.getChild(envName+".xml", false) == null && !existsInDifferentCase(envName, environmentRepositoryStore)) 
-                || Objects.equals(envName, env.getName()) ? ValidationStatus.ok() : ValidationStatus.error(Messages.alreadyExists);
+    IValidator<String> existingEnvValidator(EnvironmentRepositoryStore environmentRepositoryStore) {
+        return envName -> (environmentRepositoryStore.getChild(envName + ".xml", false) == null
+                && !existsInDifferentCase(envName, environmentRepositoryStore))
+                || Objects.equals(envName, env.getName()) ? ValidationStatus.ok()
+                        : ValidationStatus.error(Messages.alreadyExists);
     }
 
     private boolean existsInDifferentCase(String envName, EnvironmentRepositoryStore environmentRepositoryStore) {
         return environmentRepositoryStore.getChildren().stream()
-                .map(EnvironmentFileStore::getDisplayName)
+                .map(IDisplayable::toDisplayName).filter(Optional::isPresent).map(Optional::get)
                 .map(String::toLowerCase)
                 .anyMatch(envName::equalsIgnoreCase);
     }
 
     @Override
     protected void createButtonsForButtonBar(Composite parent) {
-        if(Boolean.TRUE.equals(notLocalEnvObservable.getValue())) {
+        if (Boolean.TRUE.equals(notLocalEnvObservable.getValue())) {
             createButton(parent, IDialogConstants.OK_ID, Messages.modify, true);
         }
         createButton(parent, IDialogConstants.CANCEL_ID, IDialogConstants.CLOSE_LABEL, false);

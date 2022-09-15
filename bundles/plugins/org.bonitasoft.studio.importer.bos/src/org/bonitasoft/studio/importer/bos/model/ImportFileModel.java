@@ -1,9 +1,6 @@
 package org.bonitasoft.studio.importer.bos.model;
 
 import org.bonitasoft.studio.common.model.ConflictStatus;
-import org.eclipse.swt.graphics.Image;
-import org.eclipse.ui.ISharedImages;
-import org.eclipse.ui.PlatformUI;
 
 public class ImportFileModel extends AbstractFileModel {
 
@@ -14,10 +11,4 @@ public class ImportFileModel extends AbstractFileModel {
     public ImportFileModel(String filePath, ImportStoreModel parent, ConflictStatus status) {
         super(filePath, parent, status);
     }
-
-    @Override
-    public Image getImage() {
-        return PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJ_FILE);
-    }
-
 }

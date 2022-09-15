@@ -22,7 +22,6 @@ import java.io.InputStream;
 import java.util.Properties;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.eclipse.core.resources.IFile;
 

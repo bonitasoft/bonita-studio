@@ -26,5 +26,15 @@
             icon="icons/import.png">
       </image>
    </extension>
+  <extension
+        point="org.eclipse.core.runtime.adapters">
+     <factory
+           adaptableType="org.bonitasoft.studio.importer.bos.model.AbstractImportModel"
+           class="org.bonitasoft.studio.importer.bos.internal.DisplayableAdapterFactory">
+        <adapter
+              type="org.bonitasoft.studio.common.ui.IDisplayable">
+        </adapter>
+     </factory>
+  </extension>
 
 </plugin>

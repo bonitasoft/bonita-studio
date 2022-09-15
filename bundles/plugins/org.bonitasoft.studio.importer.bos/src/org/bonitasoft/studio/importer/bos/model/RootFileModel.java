@@ -27,9 +27,6 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.swt.graphics.Image;
-import org.eclipse.ui.ISharedImages;
-import org.eclipse.ui.PlatformUI;
 
 public class RootFileModel extends ImportStoreModel {
 
@@ -38,11 +35,6 @@ public class RootFileModel extends ImportStoreModel {
     public RootFileModel(String fileName, String path) {
         super(path, null);
         this.fileName = fileName;
-    }
-
-    @Override
-    public Image getImage() {
-        return PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJ_FILE);
     }
 
     @Override
@@ -57,7 +49,8 @@ public class RootFileModel extends ImportStoreModel {
             @Override
             public IRepositoryFileStore doImport(ZipFile archive, IProgressMonitor monitor) {
                 ImportArchiveData data = new ImportArchiveData(archive, archive.getEntry(path), true);
-                IFile file = RepositoryManager.getInstance().getCurrentRepository().orElseThrow().getProject().getFile(getName());
+                IFile file = RepositoryManager.getInstance().getCurrentRepository().orElseThrow().getProject()
+                        .getFile(getName());
                 try {
                     if (file.exists()) {
                         file.setContents(data.getInputStream(), IResource.KEEP_HISTORY, new NullProgressMonitor());

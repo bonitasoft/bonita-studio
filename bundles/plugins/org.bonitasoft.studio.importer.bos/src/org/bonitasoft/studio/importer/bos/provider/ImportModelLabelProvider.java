@@ -9,8 +9,8 @@ import java.util.Objects;
 import java.util.stream.Stream;
 
 import org.bonitasoft.studio.common.model.ConflictStatus;
-import org.bonitasoft.studio.common.repository.model.IPresentable;
 import org.bonitasoft.studio.common.repository.model.smartImport.SmartImportableUnit;
+import org.bonitasoft.studio.common.ui.IDisplayable;
 import org.bonitasoft.studio.importer.bos.BosArchiveImporterPlugin;
 import org.bonitasoft.studio.importer.bos.i18n.Messages;
 import org.bonitasoft.studio.importer.bos.model.AbstractFileModel;
@@ -18,6 +18,7 @@ import org.bonitasoft.studio.importer.bos.model.AbstractImportModel;
 import org.bonitasoft.studio.importer.bos.model.LegacyStoreModel;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.ui.ColorConstants;
+import org.eclipse.core.runtime.Adapters;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.jface.fieldassist.FieldDecorationRegistry;
@@ -113,14 +114,16 @@ public class ImportModelLabelProvider extends ColumnLabelProvider {
 
     @Override
     public String getText(Object element) {
-        checkArgument(element instanceof IPresentable);
-        return ((IPresentable) element).getText();
+        IDisplayable displayable = Adapters.adapt(element, IDisplayable.class);
+        checkArgument(displayable != null);
+        return displayable.getDisplayName();
     }
 
     @Override
     public Image getImage(Object element) {
-        checkArgument(element instanceof IPresentable);
-        Image image = ((IPresentable) element).getImage();
+        IDisplayable displayable = Adapters.adapt(element, IDisplayable.class);
+        checkArgument(displayable != null);
+        Image image = displayable.getIcon();
         if (image != null && element instanceof AbstractImportModel) {
             AbstractImportModel modelElement = (AbstractImportModel) element;
             if (modelElement.isConflicting()) {
@@ -153,9 +156,11 @@ public class ImportModelLabelProvider extends ColumnLabelProvider {
         FieldDecorationRegistry.getDefault();
         switch (status.getSeverity()) {
             case IStatus.ERROR:
-                return JFaceResources.getImageRegistry().getDescriptor("org.eclipse.jface.fieldassist.IMG_DEC_FIELD_ERROR");
+                return JFaceResources.getImageRegistry()
+                        .getDescriptor("org.eclipse.jface.fieldassist.IMG_DEC_FIELD_ERROR");
             case IStatus.WARNING:
-                return JFaceResources.getImageRegistry().getDescriptor("org.eclipse.jface.fieldassist.IMG_DEC_FIELD_WARNING");
+                return JFaceResources.getImageRegistry()
+                        .getDescriptor("org.eclipse.jface.fieldassist.IMG_DEC_FIELD_WARNING");
             default:
                 return null;
         }
@@ -167,30 +172,31 @@ public class ImportModelLabelProvider extends ColumnLabelProvider {
             AbstractImportModel importModel = (AbstractImportModel) element;
             IStatus validationStatus = importModel.getValidationStatus();
             if (!validationStatus.isOK()) {
-                if(validationStatus instanceof MultiStatus) {
+                if (validationStatus instanceof MultiStatus) {
                     StringBuilder sb = new StringBuilder();
                     Stream.of(validationStatus.getChildren())
-                    .filter(s -> !s.isOK())
-                    .map(s -> s.getMessage())
-                    .filter(Objects::nonNull)
-                    .filter(s -> !s.isEmpty())
-                    .forEach(message -> {
-                        sb.append(message);
-                        sb.append(System.lineSeparator());
-                        });
+                            .filter(s -> !s.isOK())
+                            .map(s -> s.getMessage())
+                            .filter(Objects::nonNull)
+                            .filter(s -> !s.isEmpty())
+                            .forEach(message -> {
+                                sb.append(message);
+                                sb.append(System.lineSeparator());
+                            });
                     sb.delete(sb.lastIndexOf(System.lineSeparator()), sb.length());
                     return sb.toString();
                 }
                 return validationStatus.getMessage();
             }
             if (element instanceof AbstractFileModel) {
+                String displayName = IDisplayable.toDisplayName(importModel).orElse("");
                 if (importModel.isConflicting()) {
-                    return String.format(Messages.conflictingArtifactTooltip, importModel.getText());
+                    return String.format(Messages.conflictingArtifactTooltip, displayName);
                 }
                 if (importModel.hasSameContent()) {
-                    return String.format(Messages.identicalArtifactTooltip, importModel.getText());
+                    return String.format(Messages.identicalArtifactTooltip, displayName);
                 }
-                return String.format(Messages.importedArtifactTooltip, importModel.getText());
+                return String.format(Messages.importedArtifactTooltip, displayName);
             }
         } else if (element instanceof SmartImportableUnit) {
             return ((SmartImportableUnit) element).getToolTipText();

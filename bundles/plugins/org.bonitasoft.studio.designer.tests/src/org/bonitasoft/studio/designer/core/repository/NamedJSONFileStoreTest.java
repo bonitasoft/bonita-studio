@@ -26,7 +26,9 @@ import java.io.FileInputStream;
 import java.nio.file.Paths;
 
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
+import org.bonitasoft.studio.common.ui.IDisplayable;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.Adapters;
 import org.eclipse.core.runtime.FileLocator;
 import org.junit.Before;
 import org.junit.Test;
@@ -48,9 +50,12 @@ public class NamedJSONFileStoreTest {
     @Before
     public void setUp() throws Exception {
         jsonFileStore = spy(new NamedJSONFileStore("myJson.json", parentStore));
-        jsonFile = Paths.get(FileLocator.toFileURL(JSONFileStoreTest.class.getResource("/myJson.json")).toURI()).toFile();
-        jsonFileWithoutName = Paths.get(FileLocator.toFileURL(JSONFileStoreTest.class.getResource("/noNameJson.json")).toURI()).toFile();
-        jsonFileWithoutId = Paths.get(FileLocator.toFileURL(JSONFileStoreTest.class.getResource("/noIdJson.json")).toURI()).toFile();
+        jsonFile = Paths.get(FileLocator.toFileURL(JSONFileStoreTest.class.getResource("/myJson.json")).toURI())
+                .toFile();
+        jsonFileWithoutName = Paths
+                .get(FileLocator.toFileURL(JSONFileStoreTest.class.getResource("/noNameJson.json")).toURI()).toFile();
+        jsonFileWithoutId = Paths
+                .get(FileLocator.toFileURL(JSONFileStoreTest.class.getResource("/noIdJson.json")).toURI()).toFile();
         iResource = mock(IFile.class, RETURNS_DEEP_STUBS);
         doReturn(iResource).when(jsonFileStore).getResource();
     }
@@ -61,7 +66,8 @@ public class NamedJSONFileStoreTest {
         when(iResource.getLocation().toFile()).thenReturn(jsonFileWithoutName);
         when(iResource.getContents()).thenReturn(new FileInputStream(jsonFileWithoutName));
 
-        assertThat(jsonFileStore.getDisplayName()).isNull();
+        IDisplayable displayable = Adapters.adapt(jsonFileStore, IDisplayable.class);
+        assertThat(displayable.getDisplayName()).isNull();
     }
 
     @Test
@@ -79,7 +85,8 @@ public class NamedJSONFileStoreTest {
         when(iResource.getLocation().toFile()).thenReturn(jsonFile);
         when(iResource.getContents()).thenReturn(new FileInputStream(jsonFile));
 
-        final String name = jsonFileStore.getDisplayName();
+        IDisplayable displayable = Adapters.adapt(jsonFileStore, IDisplayable.class);
+        final String name = displayable.getDisplayName();
 
         assertThat(name).isEqualTo("Step1");
     }

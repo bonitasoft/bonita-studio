@@ -22,7 +22,6 @@ import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.common.repository.provider.DefinitionResourceProvider;
 import org.bonitasoft.studio.common.repository.store.AbstractEMFRepositoryStore;
 import org.bonitasoft.studio.connector.model.definition.AbstractDefFileStore;
-import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
 import org.bonitasoft.studio.connector.model.definition.dialog.ConnectorDefinitionWizardDialog;
 import org.bonitasoft.studio.identity.IdentityPlugin;
 import org.bonitasoft.studio.identity.actors.ui.wizard.FilterDefinitionWizard;
@@ -44,25 +43,6 @@ public class ActorFilterDefFileStore extends AbstractDefFileStore implements IRe
     @Override
     protected Bundle getBundle() {
         return IdentityPlugin.getDefault().getBundle();
-    }
-
-    @Override
-    public String getDisplayName() {
-        ActorFilterDefRepositoryStore store = (ActorFilterDefRepositoryStore) getParentStore();
-        ConnectorDefinition def;
-        try {
-            def = getContent();
-        } catch (ReadFileStoreException e) {
-            return getName();
-        }
-        if (def != null) {
-            String defName = store.getResourceProvider().getConnectorDefinitionLabel(def);
-            if (defName == null) {
-                defName = def.getId();
-            }
-            return defName + " (" + def.getVersion() + ")";
-        }
-        return super.getDisplayName();
     }
 
     @Override

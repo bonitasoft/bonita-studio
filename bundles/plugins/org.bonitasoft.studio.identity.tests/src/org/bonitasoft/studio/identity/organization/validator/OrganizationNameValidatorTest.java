@@ -7,6 +7,7 @@ import java.util.Arrays;
 
 import org.bonitasoft.studio.assertions.StatusAssert;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.common.ui.IDisplayable;
 import org.bonitasoft.studio.identity.organization.editor.formpage.AbstractOrganizationFormPage;
 import org.bonitasoft.studio.identity.organization.model.organization.Organization;
 import org.bonitasoft.studio.identity.organization.repository.OrganizationFileStore;
@@ -32,10 +33,10 @@ public class OrganizationNameValidatorTest {
     @Before
     public void init() {
         OrganizationFileStore fileStore1 = mock(OrganizationFileStore.class);
-        when(fileStore1.getDisplayName()).thenReturn(CURRENT_ORGA_NAME);
+        when(fileStore1.getAdapter(IDisplayable.class)).thenReturn(() -> CURRENT_ORGA_NAME);
 
         OrganizationFileStore fileStore2 = mock(OrganizationFileStore.class);
-        when(fileStore2.getDisplayName()).thenReturn(OTHER_ORGA_NAME);
+        when(fileStore2.getAdapter(IDisplayable.class)).thenReturn(() -> OTHER_ORGA_NAME);
 
         OrganizationRepositoryStore repositoryStore = mock(OrganizationRepositoryStore.class);
         when(repositoryStore.getChildren()).thenReturn(Arrays.asList(fileStore1, fileStore2));

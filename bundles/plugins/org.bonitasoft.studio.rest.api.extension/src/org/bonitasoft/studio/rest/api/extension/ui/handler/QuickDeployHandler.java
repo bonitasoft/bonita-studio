@@ -21,6 +21,7 @@ import org.bonitasoft.studio.common.repository.filestore.FileStoreFinder;
 import org.bonitasoft.studio.common.repository.model.IDeployable;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
+import org.bonitasoft.studio.common.ui.IDisplayable;
 import org.bonitasoft.studio.common.ui.jface.BonitaErrorDialog;
 import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.engine.http.HttpClientFactory;
@@ -82,10 +83,12 @@ public class QuickDeployHandler {
             }
 
             if (customPageFilseStore != null) {
-                if(!customPageFilseStore.isReadOnly()) {
+                String displayName = IDisplayable.toDisplayName(customPageFilseStore).orElse("");
+                if (!customPageFilseStore.isReadOnly()) {
                     IStatus buildStatus = build(customPageFilseStore);
                     if (!buildStatus.isOK()) {
-                        return ValidationStatus.error(String.format(Messages.buildHasFailed, customPageFilseStore.getDisplayName()));
+                        return ValidationStatus
+                                .error(String.format(Messages.buildHasFailed, displayName));
                     }
                 }
                 final DeployCustomPageOperation deployRestAPIExtensionOperation = new DeployCustomPageOperation(
@@ -97,7 +100,7 @@ public class QuickDeployHandler {
                             deployRestAPIExtensionOperation);
                     final IStatus status = deployRestAPIExtensionOperation.getStatus();
                     if (status.isOK()) {
-                        openDeploySuccessDialog(customPageFilseStore.getDisplayName());
+                        openDeploySuccessDialog(displayName);
                     } else {
                         showDeployErrorDialog(status);
                     }
@@ -116,10 +119,10 @@ public class QuickDeployHandler {
     protected IStatus build(CustomPageProjectFileStore selectedRestApiExtension) {
         try {
             final BuildCustomPageOperation operation = selectedRestApiExtension.newBuildOperation();
-            if(showInUI) {
+            if (showInUI) {
                 ModalContext.run(operation.asWorkspaceModifyOperation(), true, AbstractRepository.NULL_PROGRESS_MONITOR,
                         Display.getDefault());
-            }else {
+            } else {
                 operation.run(AbstractRepository.NULL_PROGRESS_MONITOR);
             }
             return operation.getStatus();

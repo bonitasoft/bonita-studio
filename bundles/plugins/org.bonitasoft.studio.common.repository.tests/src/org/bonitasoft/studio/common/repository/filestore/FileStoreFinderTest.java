@@ -40,8 +40,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.jface.viewers.StyledString;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IWorkbenchPart;
 import org.junit.Test;
 
@@ -109,310 +107,272 @@ public class FileStoreFinderTest {
         assertThat(elementToDeploy).isEmpty();
     }
 
-}
+    private static class NotDeployableFileStore implements IRepositoryFileStore {
 
-class NotDeployableFileStore implements IRepositoryFileStore {
+        private String name;
 
-    
-    private String name;
+        public NotDeployableFileStore(String name) {
+            this.name = name;
+        }
 
-    public NotDeployableFileStore(String name) {
-        this.name = name;
-    }
-    @Override
-    public String getDisplayName() {
-        // TODO Auto-generated method stub
-        return null;
-    }
+        @Override
+        public String getName() {
+            return name;
+        }
 
-    @Override
-    public Image getIcon() {
-        // TODO Auto-generated method stub
-        return null;
-    }
+        @Override
+        public IRepositoryStore getParentStore() {
+            // TODO Auto-generated method stub
+            return null;
+        }
 
-    @Override
-    public StyledString getStyledString() {
-        // TODO Auto-generated method stub
-        return null;
-    }
+        @Override
+        public Object getContent() throws ReadFileStoreException {
+            // TODO Auto-generated method stub
+            return null;
+        }
 
-    @Override
-    public String getName() {
-        return name;
-    }
+        @Override
+        public IResource getResource() {
+            // TODO Auto-generated method stub
+            return null;
+        }
 
-    @Override
-    public IRepositoryStore getParentStore() {
-        // TODO Auto-generated method stub
-        return null;
-    }
+        @Override
+        public Set getRelatedResources() {
+            // TODO Auto-generated method stub
+            return null;
+        }
 
-    @Override
-    public Object getContent() throws ReadFileStoreException {
-        // TODO Auto-generated method stub
-        return null;
-    }
+        @Override
+        public Set getRelatedFileStore() {
+            // TODO Auto-generated method stub
+            return null;
+        }
 
-    @Override
-    public IResource getResource() {
-        // TODO Auto-generated method stub
-        return null;
-    }
+        @Override
+        public boolean isShared() {
+            // TODO Auto-generated method stub
+            return false;
+        }
 
-    @Override
-    public Set getRelatedResources() {
-        // TODO Auto-generated method stub
-        return null;
-    }
+        @Override
+        public boolean isReadOnly() {
+            // TODO Auto-generated method stub
+            return false;
+        }
 
-    @Override
-    public Set getRelatedFileStore() {
-        // TODO Auto-generated method stub
-        return null;
-    }
+        @Override
+        public void setReadOnly(boolean readOnly) {
+            // TODO Auto-generated method stub
 
-    @Override
-    public boolean isShared() {
-        // TODO Auto-generated method stub
-        return false;
-    }
+        }
 
-    @Override
-    public boolean isReadOnly() {
-        // TODO Auto-generated method stub
-        return false;
-    }
+        @Override
+        public IWorkbenchPart open() {
+            // TODO Auto-generated method stub
+            return null;
+        }
 
-    @Override
-    public void setReadOnly(boolean readOnly) {
-        // TODO Auto-generated method stub
-        
-    }
+        @Override
+        public void close() {
+            // TODO Auto-generated method stub
 
-    @Override
-    public IWorkbenchPart open() {
-        // TODO Auto-generated method stub
-        return null;
-    }
+        }
 
-    @Override
-    public void close() {
-        // TODO Auto-generated method stub
-        
-    }
+        @Override
+        public void delete() {
+            // TODO Auto-generated method stub
 
-    @Override
-    public void delete() {
-        // TODO Auto-generated method stub
-        
-    }
+        }
 
-    @Override
-    public void renameLegacy(String newName) {
-        // TODO Auto-generated method stub
-        
-    }
+        @Override
+        public void renameLegacy(String newName) {
+            // TODO Auto-generated method stub
 
-    @Override
-    public void save(Object content) {
-        // TODO Auto-generated method stub
-        
-    }
+        }
 
-    @Override
-    public boolean canBeShared() {
-        // TODO Auto-generated method stub
-        return false;
-    }
+        @Override
+        public void save(Object content) {
+            // TODO Auto-generated method stub
 
-    @Override
-    public boolean canBeExported() {
-        // TODO Auto-generated method stub
-        return false;
-    }
+        }
 
-    @Override
-    public IStatus export(String targetAbsoluteFilePath) throws IOException {
-        // TODO Auto-generated method stub
-        return null;
+        @Override
+        public boolean canBeShared() {
+            // TODO Auto-generated method stub
+            return false;
+        }
+
+        @Override
+        public boolean canBeExported() {
+            // TODO Auto-generated method stub
+            return false;
+        }
+
+        @Override
+        public IStatus export(String targetAbsoluteFilePath) throws IOException {
+            // TODO Auto-generated method stub
+            return null;
+        }
+
+        @Override
+        public byte[] toByteArray() throws IOException {
+            // TODO Auto-generated method stub
+            return null;
+        }
+
+        @Override
+        public boolean canBeDeleted() {
+            // TODO Auto-generated method stub
+            return false;
+        }
     }
 
-    @Override
-    public byte[] toByteArray() throws IOException {
-        // TODO Auto-generated method stub
-        return null;
+    private static class DeployableFileStore implements IRepositoryFileStore, IDeployable, IRenamable {
+
+        private String name;
+
+        public DeployableFileStore(String name) {
+            this.name = name;
+        }
+
+        @Override
+        public void rename(String newName) {
+            // TODO Auto-generated method stub
+
+        }
+
+        @Override
+        public Optional<String> retrieveNewName() {
+            // TODO Auto-generated method stub
+            return null;
+        }
+
+        @Override
+        public void deployInUI() {
+            // TODO Auto-generated method stub
+
+        }
+
+        @Override
+        public IStatus deploy(APISession session, Map<String, Object> options, IProgressMonitor monitor) {
+            // TODO Auto-generated method stub
+            return null;
+        }
+
+        @Override
+        public String getName() {
+            return name;
+        }
+
+        @Override
+        public IRepositoryStore getParentStore() {
+            // TODO Auto-generated method stub
+            return null;
+        }
+
+        @Override
+        public Object getContent() throws ReadFileStoreException {
+            // TODO Auto-generated method stub
+            return null;
+        }
+
+        @Override
+        public IResource getResource() {
+            // TODO Auto-generated method stub
+            return null;
+        }
+
+        @Override
+        public Set getRelatedResources() {
+            // TODO Auto-generated method stub
+            return null;
+        }
+
+        @Override
+        public Set getRelatedFileStore() {
+            // TODO Auto-generated method stub
+            return null;
+        }
+
+        @Override
+        public boolean isShared() {
+            // TODO Auto-generated method stub
+            return false;
+        }
+
+        @Override
+        public boolean isReadOnly() {
+            // TODO Auto-generated method stub
+            return false;
+        }
+
+        @Override
+        public void setReadOnly(boolean readOnly) {
+            // TODO Auto-generated method stub
+
+        }
+
+        @Override
+        public IWorkbenchPart open() {
+            // TODO Auto-generated method stub
+            return null;
+        }
+
+        @Override
+        public void close() {
+            // TODO Auto-generated method stub
+
+        }
+
+        @Override
+        public void delete() {
+            // TODO Auto-generated method stub
+
+        }
+
+        @Override
+        public void renameLegacy(String newName) {
+            // TODO Auto-generated method stub
+
+        }
+
+        @Override
+        public void save(Object content) {
+            // TODO Auto-generated method stub
+
+        }
+
+        @Override
+        public boolean canBeShared() {
+            // TODO Auto-generated method stub
+            return false;
+        }
+
+        @Override
+        public boolean canBeExported() {
+            // TODO Auto-generated method stub
+            return false;
+        }
+
+        @Override
+        public IStatus export(String targetAbsoluteFilePath) throws IOException {
+            // TODO Auto-generated method stub
+            return null;
+        }
+
+        @Override
+        public byte[] toByteArray() throws IOException {
+            // TODO Auto-generated method stub
+            return null;
+        }
+
+        @Override
+        public boolean canBeDeleted() {
+            // TODO Auto-generated method stub
+            return false;
+        }
+
     }
-
-    @Override
-    public boolean canBeDeleted() {
-        // TODO Auto-generated method stub
-        return false;
-    }
-}
-
-class DeployableFileStore implements IRepositoryFileStore, IDeployable, IRenamable {
-
-    
-    private String name;
-
-    public DeployableFileStore(String name) {
-        this.name = name;
-    }
-    
-    @Override
-    public String getDisplayName() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public Image getIcon() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public StyledString getStyledString() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public void rename(String newName) {
-        // TODO Auto-generated method stub
-        
-    }
-
-    @Override
-    public Optional<String> retrieveNewName() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public void deployInUI() {
-        // TODO Auto-generated method stub
-        
-    }
-
-    @Override
-    public IStatus deploy(APISession session, Map<String, Object> options, IProgressMonitor monitor) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public String getName() {
-        return name;
-    }
-
-    @Override
-    public IRepositoryStore getParentStore() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public Object getContent() throws ReadFileStoreException {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public IResource getResource() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public Set getRelatedResources() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public Set getRelatedFileStore() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public boolean isShared() {
-        // TODO Auto-generated method stub
-        return false;
-    }
-
-    @Override
-    public boolean isReadOnly() {
-        // TODO Auto-generated method stub
-        return false;
-    }
-
-    @Override
-    public void setReadOnly(boolean readOnly) {
-        // TODO Auto-generated method stub
-        
-    }
-
-    @Override
-    public IWorkbenchPart open() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public void close() {
-        // TODO Auto-generated method stub
-        
-    }
-
-    @Override
-    public void delete() {
-        // TODO Auto-generated method stub
-        
-    }
-
-    @Override
-    public void renameLegacy(String newName) {
-        // TODO Auto-generated method stub
-        
-    }
-
-    @Override
-    public void save(Object content) {
-        // TODO Auto-generated method stub
-        
-    }
-
-    @Override
-    public boolean canBeShared() {
-        // TODO Auto-generated method stub
-        return false;
-    }
-
-    @Override
-    public boolean canBeExported() {
-        // TODO Auto-generated method stub
-        return false;
-    }
-
-    @Override
-    public IStatus export(String targetAbsoluteFilePath) throws IOException {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public byte[] toByteArray() throws IOException {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public boolean canBeDeleted() {
-        // TODO Auto-generated method stub
-        return false;
-    }
-
 }

@@ -22,6 +22,7 @@ import java.util.stream.Collectors;
 
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.ui.IDisplayable;
 import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.identity.i18n.Messages;
 import org.bonitasoft.studio.identity.organization.model.organization.CustomUserInfoDefinition;
@@ -152,7 +153,8 @@ public class OrganizationIT {
                 .save();
 
         // Configure users
-        String userDisplayName = botOrganizationEditor.userPage().toUserDisplayName(toFirstName(USER), toLastName(USER));
+        String userDisplayName = botOrganizationEditor.userPage().toUserDisplayName(toFirstName(USER),
+                toLastName(USER));
 
         botOrganizationEditor.userPage()
                 .addUser(USER, toFirstName(USER), toLastName(USER))
@@ -296,12 +298,14 @@ public class OrganizationIT {
                 .containsExactlyInAnyOrder(toDisplayName(GROUP1), toDisplayName(GROUP2), toDisplayName(SUBGROUP));
         assertThat(groups.stream()).extracting(Group::getDescription)
                 .containsExactlyInAnyOrder(toDescription(GROUP1), toDescription(GROUP2), toDescription(SUBGROUP));
-        assertThat(groups.stream()).extracting(Group::getParentPath).containsExactlyInAnyOrder(null, null, "/" + GROUP1);
+        assertThat(groups.stream()).extracting(Group::getParentPath).containsExactlyInAnyOrder(null, null,
+                "/" + GROUP1);
     }
 
     private String findNewOrgaName() {
         List<String> existingOrgaNameList = repositoryAccessor.getRepositoryStore(OrganizationRepositoryStore.class)
-                .getChildren().stream().map(OrganizationFileStore::getDisplayName).collect(Collectors.toList());
+                .getChildren().stream().map(IDisplayable::toDisplayName).filter(Optional::isPresent).map(Optional::get)
+                .collect(Collectors.toList());
         String newName = StringIncrementer.getNextIncrement(Messages.defaultOrganizationName,
                 existingOrgaNameList);
         return newName;

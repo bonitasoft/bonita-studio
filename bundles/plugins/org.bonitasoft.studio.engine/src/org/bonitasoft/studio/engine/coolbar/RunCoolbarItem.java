@@ -19,11 +19,12 @@ import java.util.List;
 import java.util.Optional;
 
 import org.bonitasoft.studio.common.CommandExecutor;
+import org.bonitasoft.studio.common.extension.IBonitaContributionItem;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
+import org.bonitasoft.studio.common.ui.IDisplayable;
 import org.bonitasoft.studio.common.ui.PlatformUtil;
-import org.bonitasoft.studio.common.ui.extension.IBonitaContributionItem;
 import org.bonitasoft.studio.configuration.ConfigurationPlugin;
 import org.bonitasoft.studio.configuration.preferences.ConfigurationPreferenceConstants;
 import org.bonitasoft.studio.configuration.repository.EnvironmentRepositoryStore;
@@ -179,7 +180,7 @@ public class RunCoolbarItem extends ContributionItem implements IBonitaContribut
                             .orElseThrow()
                             .getRepositoryStore(EnvironmentRepositoryStore.class);
                     for (final IRepositoryFileStore file : environmentStore.getChildren()) {
-                        confName.add(file.getDisplayName());
+                        confName.add(IDisplayable.toDisplayName(file).orElse(""));
                     }
                     for (final String c : confName) {
                         listener.add(c);

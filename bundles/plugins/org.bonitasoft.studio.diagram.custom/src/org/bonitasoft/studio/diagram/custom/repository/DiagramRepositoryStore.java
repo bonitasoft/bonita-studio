@@ -124,8 +124,8 @@ public class DiagramRepositoryStore extends AbstractEMFRepositoryStore<DiagramFi
     }
 
     @Override
-    public Image getIcon() {
-        return Pics.getImage(PicsConstants.diagram);
+    public String getPathIcon() {
+        return PicsConstants.diagram;
     }
 
     @Override

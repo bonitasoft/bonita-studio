@@ -15,14 +15,15 @@
 package org.bonitasoft.studio.identity.organization.validator;
 
 import java.util.Objects;
+import java.util.Optional;
 
 import org.bonitasoft.studio.common.databinding.validator.EmptyInputValidator;
 import org.bonitasoft.studio.common.databinding.validator.FileNameValidator;
 import org.bonitasoft.studio.common.databinding.validator.MultiValidator;
 import org.bonitasoft.studio.common.databinding.validator.MultiValidatorFactory;
+import org.bonitasoft.studio.common.ui.IDisplayable;
 import org.bonitasoft.studio.identity.i18n.Messages;
 import org.bonitasoft.studio.identity.organization.editor.formpage.AbstractOrganizationFormPage;
-import org.bonitasoft.studio.identity.organization.repository.OrganizationFileStore;
 import org.bonitasoft.studio.identity.organization.repository.OrganizationRepositoryStore;
 import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
@@ -51,7 +52,7 @@ public class OrganizationNameValidator implements IValidator<String> {
 
     private IStatus validateUnicity(Object newName) {
         boolean alreadyExists = repositoryStore.getChildren().stream()
-                .map(OrganizationFileStore::getDisplayName)
+                .map(IDisplayable::toDisplayName).filter(Optional::isPresent).map(Optional::get)
                 .filter(anOrgaName -> !Objects.equals(anOrgaName, formPage.observeWorkingCopy().getValue().getName()))
                 .anyMatch(anOrgaName -> Objects.equals(anOrgaName, newName));
         return alreadyExists

@@ -20,9 +20,12 @@ import org.bonitasoft.studio.application.ApplicationPlugin;
 import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepository;
+import org.bonitasoft.studio.common.ui.IDisplayable;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
+import org.eclipse.core.runtime.Adapters;
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.action.ContributionItem;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MenuAdapter;
@@ -56,8 +59,15 @@ public class RecentlyModifiedContribution extends ContributionItem {
                 Stream.of(modifiedResourcesMenu.getItems()).forEach(MenuItem::dispose);
                 var diagramStore = RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
                 diagramStore.getRecentChildren(10).stream().forEach(diagram -> {
+                    IDisplayable display = Adapters.adapt(diagram, IDisplayable.class);
+                    Assert.isNotNull(display);
                     var item = new MenuItem(modifiedResourcesMenu, SWT.PUSH);
-                    item.setText(diagram.getDisplayName());
+                    item.setText(display.getDisplayName());
+                    /*
+                     * FIXME : old code was using Pics.getImage(PicsConstants.diagram)
+                     * why not using display.getIcon() ?
+                     */
+                    item.setImage(display.getIcon());
                     item.setImage(Pics.getImage(PicsConstants.diagram));
                     item.addSelectionListener(new SelectionAdapter() {
 

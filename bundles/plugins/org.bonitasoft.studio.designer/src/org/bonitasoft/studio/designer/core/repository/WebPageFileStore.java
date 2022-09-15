@@ -27,7 +27,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -39,6 +38,7 @@ import org.bonitasoft.studio.common.repository.model.IDeployable;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
+import org.bonitasoft.studio.common.ui.IDisplayable;
 import org.bonitasoft.studio.designer.UIDesignerPlugin;
 import org.bonitasoft.studio.designer.core.PageDesignerURLFactory;
 import org.bonitasoft.studio.designer.core.bar.FormBuilder;
@@ -53,8 +53,6 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.jface.viewers.StyledString;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IWorkbenchPart;
 
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -83,11 +81,6 @@ public class WebPageFileStore extends InFolderJSONFileStore
     }
 
     @Override
-    public Image getIcon() {
-        return getParentStore().getIcon();
-    }
-
-    @Override
     protected IWorkbenchPart doOpen() {
         try {
             openBrowserOperation(urlFactory().openPage(getId())).execute();
@@ -108,15 +101,6 @@ public class WebPageFileStore extends InFolderJSONFileStore
         }
     }
 
-    @Override
-    public String getDisplayName() {
-        try {
-            return getStringAttribute(DISPLAY_NAME_KEY);
-        } catch (ReadFileStoreException e) {
-            return super.getDisplayName();
-        }
-    }
-
     public String getDescription() {
         try {
             return getStringAttribute(DESCRIPTION_KEY);
@@ -127,22 +111,6 @@ public class WebPageFileStore extends InFolderJSONFileStore
                     UIDesignerPlugin.PLUGIN_ID);
             return "";
         }
-    }
-
-    @Override
-    public StyledString getStyledString() {
-        StyledString styledString = new StyledString();
-        String displayName = getDisplayName();
-        String name = displayName == null || displayName.isEmpty() ? getName() : displayName;
-        styledString.append(name);
-        if (!Objects.equals(getCustomPageName(), name)) {
-            styledString.append(String.format(" (%s)", getCustomPageName()), StyledString.COUNTER_STYLER);
-        }
-        String type = getType();
-        if (type != null) {
-            styledString.append(String.format(" %s", type.toUpperCase()), StyledString.QUALIFIER_STYLER);
-        }
-        return styledString;
     }
 
     @Override
@@ -198,10 +166,8 @@ public class WebPageFileStore extends InFolderJSONFileStore
             if (res != 0) {
                 return res;
             }
-            String myDisplayName = getDisplayName();
-            String otherDisplayName = o.getDisplayName() ;
-            String myName = myDisplayName!= null ? myDisplayName : getName();
-            String otherName = otherDisplayName != null ? otherDisplayName : o.getName();
+            String myName = IDisplayable.toDisplayName(this).orElseGet(this::getName);
+            String otherName = IDisplayable.toDisplayName(o).orElseGet(o::getName);
             return myName.compareTo(otherName);
         }
         return 0;
@@ -222,8 +188,9 @@ public class WebPageFileStore extends InFolderJSONFileStore
 
     public Collection<String> getPageResources() {
         try {
-            HttpResponse<InputStream> response = HttpClientFactory.INSTANCE.send(HttpRequest.newBuilder(PageDesignerURLFactory.INSTANCE.resources(getId()).toURI())
-                    .GET().build(), BodyHandlers.ofInputStream());
+            HttpResponse<InputStream> response = HttpClientFactory.INSTANCE
+                    .send(HttpRequest.newBuilder(PageDesignerURLFactory.INSTANCE.resources(getId()).toURI())
+                            .GET().build(), BodyHandlers.ofInputStream());
             return response != null ? parseExtensionResources(response) : Collections.emptyList();
         } catch (URISyntaxException | IOException | InterruptedException e) {
             BonitaStudioLog.error(e);
@@ -233,12 +200,13 @@ public class WebPageFileStore extends InFolderJSONFileStore
 
     private Collection<String> parseExtensionResources(HttpResponse<InputStream> response) {
         if (response != null) {
-            try(var is = response.body()){
+            try (var is = response.body()) {
                 List<String> resources = objectMapper.readValue(is, new TypeReference<List<String>>() {
                 });
-                return resources.stream().filter(r -> r.contains(EXTENSION_RESOURCE_PREFIX)).collect(Collectors.toSet());
+                return resources.stream().filter(r -> r.contains(EXTENSION_RESOURCE_PREFIX))
+                        .collect(Collectors.toSet());
             } catch (IOException e) {
-               BonitaStudioLog.error(e);
+                BonitaStudioLog.error(e);
             }
         }
         return Set.of();

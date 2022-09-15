@@ -103,8 +103,8 @@ public class ConnectorConfRepositoryStore extends AbstractEMFRepositoryStore<Def
      * @see org.bonitasoft.studio.common.repository.model.IRepositoryStore#getIcon()
      */
     @Override
-    public Image getIcon() {
-        return Pics.getImage("conf.png", ConnectorPlugin.getDefault());
+    public String getPathIcon() {
+        return "conf.png";
     }
 
     /*

@@ -21,6 +21,7 @@ import javax.inject.Named;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.common.ui.IDisplayable;
 import org.bonitasoft.studio.common.ui.jface.BonitaErrorDialog;
 import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.engine.http.HttpClientFactory;
@@ -65,6 +66,7 @@ public class DeployRestApiExtensionFromDependencyHandler {
         final DeployCustomPageOperation operation = new DeployCustomPageOperation(BOSEngineManager.getInstance(),
                 httpClientFactory,
                 fileStore);
+        String displayName = IDisplayable.toDisplayName(fileStore).orElse("");
         try {
             PlatformUI.getWorkbench().getProgressService().run(true, false, operation);
             IStatus status = operation.getStatus();
@@ -73,11 +75,11 @@ public class DeployRestApiExtensionFromDependencyHandler {
             }
         } catch (InvocationTargetException | InterruptedException e) {
             new BonitaErrorDialog(Display.getDefault().getActiveShell(), Messages.errorTitle,
-                    NLS.bind(Messages.deployFailedMessage, fileStore.getDisplayName()), e).open();
+                    NLS.bind(Messages.deployFailedMessage, displayName), e).open();
             BonitaStudioLog.error(e);
             return false;
         }
-        return openDeploySuccessDialog(fileStore.getDisplayName());
+        return openDeploySuccessDialog(displayName);
     }
 
     protected boolean openDeploySuccessDialog(final String restApiName) {

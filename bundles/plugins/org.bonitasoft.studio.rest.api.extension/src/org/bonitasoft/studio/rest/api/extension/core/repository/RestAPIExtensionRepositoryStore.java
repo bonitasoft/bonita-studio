@@ -87,8 +87,8 @@ public class RestAPIExtensionRepositoryStore extends CustomPageProjectRepository
     }
 
     @Override
-    public Image getIcon() {
-        return Pics.getImage(PicsConstants.restApi);
+    public String getPathIcon() {
+        return PicsConstants.restApi;
     }
 
     @Override

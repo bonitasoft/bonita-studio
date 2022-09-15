@@ -43,8 +43,6 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.xmi.XMLResource;
-import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IWorkbenchPart;
 import org.osgi.framework.Bundle;
 
@@ -52,7 +50,8 @@ import org.osgi.framework.Bundle;
  * @author Romain Bioteau
  * @author Baptiste Mesta
  */
-public abstract class AbstractDefFileStore extends EMFFileStore<ConnectorDefinition> implements DefinitionResourceLoaderProvider {
+public abstract class AbstractDefFileStore extends EMFFileStore<ConnectorDefinition>
+        implements DefinitionResourceLoaderProvider {
 
     public AbstractDefFileStore(final String fileName,
             final AbstractEMFRepositoryStore<? extends AbstractDefFileStore> store) {
@@ -120,31 +119,18 @@ public abstract class AbstractDefFileStore extends EMFFileStore<ConnectorDefinit
     }
 
     private void rebuildConnectorRegistry() {
-        ((IDefinitionRepositoryStore<IRepositoryFileStore<?>>) store).getResourceProvider().loadDefinitionsCategories(null);
+        ((IDefinitionRepositoryStore<IRepositoryFileStore<?>>) store).getResourceProvider()
+                .loadDefinitionsCategories(null);
     }
-    
+
     @Override
     public BundleResourceLoader getBundleResourceLoader() {
         return new OSGIBundleResourceLoader(getEMFResource(), getBundle(), store);
     }
-    
+
     @Override
     public DefinitionImageResourceLoader getDefinitionImageResourceLoader() {
-         return new BundleDefinitionImageResourceLoader(getBundle(), getParentStore());
-    }
-    
-    @Override
-    public Image getIcon() {
-        try {
-            var definition = getContent();
-            ImageDescriptor descriptor = getDefinitionImageResourceLoader().getIcon(definition);
-            if(descriptor != null) {
-                return descriptor.createImage();
-            }
-        } catch (ReadFileStoreException e) {
-            return null;
-        }
-        return null;
+        return new BundleDefinitionImageResourceLoader(getBundle(), getParentStore());
     }
 
     protected abstract Bundle getBundle();

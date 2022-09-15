@@ -185,4 +185,14 @@
             class="org.bonitasoft.studio.la.application.ui.overview.ApplicationOverviewContribution">
       </dashboardContribution>
    </extension>
+   <extension
+         point="org.eclipse.core.runtime.adapters">
+     <factory
+           adaptableType="org.bonitasoft.studio.la.application.repository.ApplicationFileStore"
+           class="org.bonitasoft.studio.la.internal.DisplayableAdapterFactory">
+        <adapter
+              type="org.bonitasoft.studio.common.ui.IDisplayable">
+        </adapter>
+     </factory>
+   </extension>
 </plugin>

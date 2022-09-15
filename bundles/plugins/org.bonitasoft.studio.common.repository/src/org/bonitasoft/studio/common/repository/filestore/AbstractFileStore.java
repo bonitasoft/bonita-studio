@@ -57,7 +57,6 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.edapt.migration.MigrationException;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorPart;
@@ -148,25 +147,8 @@ public abstract class AbstractFileStore<T>
     }
 
     @Override
-    public String getDisplayName() {
-        if (getName().indexOf('.') != -1) {
-            return getName().substring(0, getName().lastIndexOf('.'));
-        }
-        return getName();
-    }
-
-    @Override
     public boolean canBeDeleted() {
         return !isReadOnly();
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.repository.model.IDisplayable#getStyledString()
-     */
-    @Override
-    public StyledString getStyledString() {
-        return new StyledString(getName());
     }
 
     public AbstractRepository getRepository() {
@@ -253,7 +235,7 @@ public abstract class AbstractFileStore<T>
         } else {
             Display.getDefault().syncExec(
                     () -> MessageDialog.openWarning(Display.getDefault().getActiveShell(), Messages.readOnlyFileTitle,
-                            Messages.bind(Messages.readOnlyFileWarning, getDisplayName())));
+                            Messages.bind(Messages.readOnlyFileWarning, getName())));
         }
     }
 

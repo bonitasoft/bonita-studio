@@ -20,9 +20,12 @@ import static org.mockito.Mockito.when;
 
 import java.util.List;
 
+import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
+import org.bonitasoft.studio.common.ui.IDisplayable;
 import org.bonitasoft.studio.configuration.environment.EnvironmentFactory;
 import org.bonitasoft.studio.configuration.repository.EnvironmentFileStore;
 import org.bonitasoft.studio.configuration.repository.EnvironmentRepositoryStore;
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.swt.widgets.Shell;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -32,6 +35,13 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 public class DetailsEnvironmentDialogTest {
+
+    public static class AdaptableEnvironmentFileStore extends EnvironmentFileStore implements IAdaptable {
+
+        public AdaptableEnvironmentFileStore(String fileName, IRepositoryStore<EnvironmentFileStore> store) {
+            super(fileName, store);
+        }
+    }
 
     @Mock
     private EnvironmentRepositoryStore envStore;
@@ -55,8 +65,9 @@ public class DetailsEnvironmentDialogTest {
     }
 
     private EnvironmentFileStore env(String envDisplayName) {
-        var env = mock(EnvironmentFileStore.class);
-        when(env.getDisplayName()).thenReturn(envDisplayName);
+        var env = mock(AdaptableEnvironmentFileStore.class);
+        IDisplayable displayable = () -> envDisplayName;
+        when(env.getAdapter(IDisplayable.class)).thenReturn(displayable);
         return env;
     }
 

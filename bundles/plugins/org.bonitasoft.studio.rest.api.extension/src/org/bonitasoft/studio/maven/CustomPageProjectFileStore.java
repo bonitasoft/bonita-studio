@@ -36,10 +36,8 @@ import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.common.ui.PlatformUtil;
 import org.bonitasoft.studio.common.ui.jface.FileActionDialog;
 import org.bonitasoft.studio.common.ui.perspectives.BonitaPerspectivesUtils;
-import org.bonitasoft.studio.maven.i18n.Messages;
 import org.bonitasoft.studio.maven.operation.BuildCustomPageOperation;
 import org.bonitasoft.studio.maven.operation.ImportCustomPageProjectOperation;
-import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.rest.api.extension.RestAPIExtensionActivator;
 import org.bonitasoft.studio.rest.api.extension.ui.perspective.RestAPIExtensionPerspectiveFactory;
 import org.eclipse.core.databinding.validation.ValidationStatus;
@@ -56,12 +54,9 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.debug.core.DebugPlugin;
-import org.eclipse.jdt.internal.ui.viewsupport.JavaUILabelProvider;
-import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.m2e.core.MavenPlugin;
 import org.eclipse.m2e.core.project.MavenProjectInfo;
 import org.eclipse.m2e.core.project.ProjectImportConfiguration;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
@@ -71,37 +66,22 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.internal.wizards.datatransfer.ArchiveFileExportOperation;
 
-public abstract class CustomPageProjectFileStore<T extends CustomPageMavenProjectDescriptor> extends AbstractFileStore<T> implements IDeployable, IBuildable {
+public abstract class CustomPageProjectFileStore<T extends CustomPageMavenProjectDescriptor>
+        extends AbstractFileStore<T> implements IDeployable, IBuildable {
 
     public static final String QUICK_DEPLOY_COMMAND = "org.bonitasoft.studio.rest.api.extension.quickDeployCommand";
-    private JavaUILabelProvider javaUILabelProvider;
 
     public CustomPageProjectFileStore(String fileName, CustomPageProjectRepositoryStore parentStore) {
         super(fileName, parentStore);
     }
 
-    JavaUILabelProvider createJavaUILabelProvider() {
-        return new JavaUILabelProvider();
-    }
-    
     @Override
     public T getContent() throws ReadFileStoreException {
         return doGetContent();
     }
 
-
     public IProject getProject() {
         return getParentStore().getResource().getWorkspace().getRoot().getProject(getName());
-    }
-
-    @Override
-    public String getDisplayName() {
-        try {
-            final CustomPageMavenProjectDescriptor content = getContent();
-            return String.format("%s (%s)", content.getArtifactId(), content.getVersion());
-        } catch (final ReadFileStoreException e) {
-            return super.getDisplayName();
-        }
     }
 
     public String getPageDisplayName() {
@@ -122,31 +102,8 @@ public abstract class CustomPageProjectFileStore<T extends CustomPageMavenProjec
         }
     }
 
-    @Override
-    public StyledString getStyledString() {
-        StyledString styledString = new StyledString(getName());
-
-        if ((getProject() == null || !getProject().exists()) && canBeImported()) {
-            styledString.append("  ");
-            styledString.append(Messages.rightClickToConvert, StyledString.DECORATIONS_STYLER);
-        }
-        return styledString;
-    }
-
     public boolean canBeImported() {
         return getResource().getFile("pom.xml").exists();
-    }
-
-    @Override
-    public Image getIcon() {
-        IProject project = getProject();
-        if(javaUILabelProvider == null) {
-            javaUILabelProvider = createJavaUILabelProvider();
-        }
-        if(javaUILabelProvider != null && project.isAccessible() && project.isOpen()) {
-            return javaUILabelProvider.getImage(project);
-        }
-        return Pics.getImage("prj_obj.gif", RestAPIExtensionActivator.getDefault());
     }
 
     @Override
@@ -307,7 +264,8 @@ public abstract class CustomPageProjectFileStore<T extends CustomPageMavenProjec
         MavenProject mavenProject;
         try {
             mavenProject = getContent().getMavenProject()
-                    .orElseThrow(() -> new ReadFileStoreException(String.format("Maven project not found for %s", getName())));
+                    .orElseThrow(() -> new ReadFileStoreException(
+                            String.format("Maven project not found for %s", getName())));
         } catch (ReadFileStoreException e) {
             throw new IOException("Failed to retrieve maven project", e);
         }

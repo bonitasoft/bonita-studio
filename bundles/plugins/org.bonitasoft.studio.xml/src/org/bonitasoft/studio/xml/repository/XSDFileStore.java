@@ -24,12 +24,9 @@ import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.filestore.EMFFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
-import org.bonitasoft.studio.pics.Pics;
-import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.xmi.XMLResource;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
@@ -47,15 +44,6 @@ public class XSDFileStore extends EMFFileStore<XSDSchema> {
 
     public XSDFileStore(String fileName, IRepositoryStore parentStore) {
         super(fileName, parentStore);
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.repository.model.IRepositoryFileStore#getIcon()
-     */
-    @Override
-    public Image getIcon() {
-        return Pics.getImage(PicsConstants.xml);
     }
 
     /*
@@ -103,7 +91,7 @@ public class XSDFileStore extends EMFFileStore<XSDSchema> {
         try {
             schema = getContent();
         } catch (ReadFileStoreException e) {
-           return null;
+            return null;
         }
         // check namespace
         if (namespace == null) {

@@ -52,7 +52,7 @@ public class CreateFragmentOperation extends CreateUIDArtifactOperation {
         List<String> existingFragments = repositoryAccessor.getRepositoryStore(WebFragmentRepositoryStore.class)
                 .getChildren()
                 .stream()
-                .map(WebFragmentFileStore::getDisplayName)
+                .map(WebFragmentFileStore::getCustomPageName)
                 .collect(Collectors.toList());
         return StringIncrementer.getNextIncrement(DEFAULT_FRAGMENT_NAME, existingFragments);
     }

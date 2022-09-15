@@ -15,6 +15,7 @@
 package org.bonitasoft.studio.ui.dialog;
 
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
+import org.bonitasoft.studio.common.ui.IDisplayable;
 import org.bonitasoft.studio.ui.i18n.Messages;
 import org.bonitasoft.studio.ui.validator.InputValidatorWrapper;
 import org.bonitasoft.studio.ui.validator.TypedValidator;
@@ -28,14 +29,14 @@ import com.google.common.base.Objects;
 public class RenameXMLFileDialog {
 
     public static boolean open(Shell shell, IRepositoryFileStore fileStore, TypedValidator<String, IStatus> validator) {
-        String currentFileName = fileStore.getDisplayName();
+        String currentFileName = IDisplayable.toDisplayName(fileStore).orElse("");
         final InputDialog dialog = new InputDialog(shell, Messages.rename, Messages.renameFile,
                 currentFileName, new InputValidatorWrapper(validator));
         if (dialog.open() == Dialog.OK && !currentFileName.equals(stripXmlExtension(dialog.getValue()))) {
             fileStore.renameLegacy(stripXmlExtension(dialog.getValue()) + ".xml");
         }
 
-        return !Objects.equal(currentFileName, fileStore.getDisplayName());
+        return !Objects.equal(currentFileName, IDisplayable.toDisplayName(fileStore).orElse(""));
     }
 
     private static String stripXmlExtension(String name) {

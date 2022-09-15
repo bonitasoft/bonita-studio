@@ -23,6 +23,7 @@ import org.bonitasoft.engine.platform.LoginException;
 import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
+import org.bonitasoft.studio.common.ui.IDisplayable;
 import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.engine.http.HttpClientFactory;
 import org.bonitasoft.studio.maven.CustomPageProjectFileStore;
@@ -55,15 +56,16 @@ public class DeployCustomPageOperation implements IRunnableWithProgress {
         final Page existingPage = findCustomPage(pageId);
         httpClientFactory.newLoginRequest().execute();
         final String uploadedFileToken = httpClientFactory.newUploadCustomPageRequest(file).execute();
+        String displayName = IDisplayable.toDisplayName(fileStore).orElse("");
         if (existingPage != null) {
             httpClientFactory.newUpdateCustomPageRequest(uploadedFileToken, existingPage).execute();
             BonitaStudioLog.info(
-                    String.format("%s has been updated in portal.", fileStore.getDisplayName()),
+                    String.format("%s has been updated in portal.", displayName),
                     RestAPIExtensionActivator.PLUGIN_ID);
         } else {
             httpClientFactory.newAddCustomPageRequest(uploadedFileToken).execute();
             BonitaStudioLog.info(
-                    String.format("%s has been added in portal.", fileStore.getDisplayName()),
+                    String.format("%s has been added in portal.", displayName),
                     RestAPIExtensionActivator.PLUGIN_ID);
         }
         return findCustomPage(pageId);
@@ -90,10 +92,9 @@ public class DeployCustomPageOperation implements IRunnableWithProgress {
         return existingPage;
     }
 
-
     @Override
     public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-        monitor.beginTask(NLS.bind(Messages.deployingCustomPage, fileStore.getDisplayName()),
+        monitor.beginTask(NLS.bind(Messages.deployingCustomPage, IDisplayable.toDisplayName(fileStore).orElse("")),
                 IProgressMonitor.UNKNOWN);
         try {
             deployedPage = deploy();

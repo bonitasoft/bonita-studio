@@ -37,8 +37,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.viewers.StyledString;
-import org.eclipse.swt.graphics.Image;
 
 public class ProcessVersion extends BuildableArtifact implements ArtifactVersion {
 
@@ -80,19 +78,20 @@ public class ProcessVersion extends BuildableArtifact implements ArtifactVersion
         parameters.put("destinationPath", processFolder.getLocation().toOSString());
         parameters.put("process", ModelHelper.getEObjectID(getModel()));
         monitor.subTask(String.format(Messages.buildingProcess, getName()));
-        IStatus buildStatus = (IStatus) ((DiagramFileStore)getFileStore()).executeCommand(DiagramFileStore.BUILD_DIAGRAM_COMMAND, parameters);
+        IStatus buildStatus = (IStatus) ((DiagramFileStore) getFileStore())
+                .executeCommand(DiagramFileStore.BUILD_DIAGRAM_COMMAND, parameters);
         if (Objects.equals(buildStatus.getSeverity(), ValidationStatus.ERROR)) {
             return parseStatus(buildStatus);
         }
         return Status.OK_STATUS;
     }
-    
+
     @Override
     public IStatus deploy(APISession session, Map<String, Object> options, IProgressMonitor monitor) {
         options.put("process", ModelHelper.getEObjectID(getModel()));
         return super.deploy(session, options, monitor);
     }
-    
+
     private IStatus parseStatus(IStatus status) {
         if (status instanceof MultiStatus) {
             MultiStatus multiStatus = ((MultiStatus) status);
@@ -113,7 +112,7 @@ public class ProcessVersion extends BuildableArtifact implements ArtifactVersion
     public String getName() {
         return String.format("%s (%s)", process.getName(), version.toString());
     }
-    
+
     @Override
     public String getVersion() {
         return version.toString();
@@ -122,35 +121,18 @@ public class ProcessVersion extends BuildableArtifact implements ArtifactVersion
     public Pool getModel() {
         return model;
     }
-    
+
     @Override
     public boolean equals(Object obj) {
-        if(obj instanceof ProcessVersion) {
+        if (obj instanceof ProcessVersion) {
             return Objects.equals(getVersion(), ((ProcessVersion) obj).getVersion());
         }
         return super.equals(obj);
     }
-    
+
     @Override
     public int hashCode() {
         return Objects.hash(toString());
-    }
-    
-    @Override
-    public String getDisplayName() {
-        return getVersion();
-    }
-
-    @Override
-    public Image getIcon() {
-        return null;
-    }
-
-    @Override
-    public StyledString getStyledString() {
-        StyledString styledString = new StyledString(getVersion());
-        styledString.append("  "+ getFileStore().getResource().getName(), StyledString.DECORATIONS_STYLER);
-        return styledString;
     }
 
     @Override
@@ -162,5 +144,5 @@ public class ProcessVersion extends BuildableArtifact implements ArtifactVersion
     public boolean isLatest() {
         return Objects.equals(getParent().getLatestVersion(), this);
     }
-    
+
 }

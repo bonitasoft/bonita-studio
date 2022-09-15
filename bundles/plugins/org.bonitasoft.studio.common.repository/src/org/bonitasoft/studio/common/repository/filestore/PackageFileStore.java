@@ -21,13 +21,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.jdt.CreateJarOperation;
 import org.bonitasoft.studio.common.repository.model.IJavaContainer;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
-import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
@@ -36,7 +34,6 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.JavaModelException;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IWorkbenchPart;
 
 /**
@@ -54,20 +51,6 @@ public class PackageFileStore extends AbstractFileStore<IFolder> {
     @Override
     public String getName() {
         return packageName;
-    }
-
-    @Override
-    public String getDisplayName() {
-        return getName();
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.repository.model.IRepositoryFileStore#getIcon()
-     */
-    @Override
-    public Image getIcon() {
-        return Pics.getImage("package.gif", CommonRepositoryPlugin.getDefault());
     }
 
     @Override

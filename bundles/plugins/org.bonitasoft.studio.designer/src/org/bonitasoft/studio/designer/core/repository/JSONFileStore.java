@@ -24,7 +24,6 @@ import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IWorkbenchPart;
 
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -50,7 +49,7 @@ public class JSONFileStore extends AbstractFileStore<Map<String, Object>> {
         return content;
     }
 
-    protected String getStringAttribute(final String attribute) throws ReadFileStoreException {
+    public String getStringAttribute(final String attribute) throws ReadFileStoreException {
         Object value = getUnsafeContent().get(attribute);
         if(value != null) {
             return String.valueOf(value);
@@ -64,11 +63,6 @@ public class JSONFileStore extends AbstractFileStore<Map<String, Object>> {
             return (boolean) value;
         }
         throw new ReadFileStoreException(String.format("No boolean attribute '%s' found.", attribute));
-    }
-
-    @Override
-    public Image getIcon() {
-        return null;
     }
 
     @Override
