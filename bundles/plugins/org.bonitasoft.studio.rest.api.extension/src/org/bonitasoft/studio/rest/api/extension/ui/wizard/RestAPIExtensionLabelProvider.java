@@ -12,6 +12,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
+import org.bonitasoft.studio.common.ui.IDisplayable;
 import org.bonitasoft.studio.maven.CustomPageProjectFileStore;
 import org.bonitasoft.studio.rest.api.extension.core.repository.PathTemplate;
 import org.bonitasoft.studio.rest.api.extension.core.repository.RestAPIExtensionFileStore;
@@ -33,13 +34,13 @@ public class RestAPIExtensionLabelProvider extends StyledCellLabelProvider imple
         if (cell.getElement() instanceof CustomPageProjectFileStore) {
             final CustomPageProjectFileStore fileStore = (CustomPageProjectFileStore) cell.getElement();
             final StyledString styledString = new StyledString();
-            styledString.append(fileStore.getDisplayName());
+            styledString.append(IDisplayable.toDisplayName(fileStore).orElse(""));
             if (cell.getElement() instanceof RestAPIExtensionFileStore) {
                 styledString.append(" ");
 
                 List<PathTemplate> pathTemplates;
                 try {
-                    pathTemplates = ((RestAPIExtensionFileStore)fileStore).getContent().getPathTemplates();
+                    pathTemplates = ((RestAPIExtensionFileStore) fileStore).getContent().getPathTemplates();
                 } catch (ReadFileStoreException e) {
                     pathTemplates = Collections.emptyList();
                 }
@@ -73,7 +74,7 @@ public class RestAPIExtensionLabelProvider extends StyledCellLabelProvider imple
     @Override
     public String getText(final Object element) {
         // only for filtered Tree
-        return ((RestAPIExtensionFileStore) element).getDisplayName();
+        return IDisplayable.toDisplayName(element).orElse("");
     }
 
 }

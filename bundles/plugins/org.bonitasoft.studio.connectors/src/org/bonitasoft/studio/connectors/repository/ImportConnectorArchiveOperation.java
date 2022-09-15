@@ -33,6 +33,7 @@ import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.common.repository.store.SourceRepositoryStore;
+import org.bonitasoft.studio.common.ui.IDisplayable;
 import org.bonitasoft.studio.common.ui.PlatformUtil;
 import org.bonitasoft.studio.common.ui.jface.FileActionDialog;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
@@ -137,17 +138,17 @@ public class ImportConnectorArchiveOperation implements IRunnableWithProgress {
         if (files != null) {
             for (final File implFile : files) {
                 final IRepositoryStore implStore = getImplementationStore();
-                
+
                 try (final FileInputStream fis = new FileInputStream(implFile)) {
                     IStatus validationStatus = implStore.validate(implFile.getName(), fis);
-                    if(validationStatus.getSeverity() == IStatus.ERROR) {
+                    if (validationStatus.getSeverity() == IStatus.ERROR) {
                         status = validationStatus;
                         return;
                     }
                 } catch (IOException e1) {
                     BonitaStudioLog.error(e1);
-                } 
-                
+                }
+
                 try (final FileInputStream fis = new FileInputStream(implFile);) {
                     implStore.importInputStream(implFile.getName(), fis);
                 } catch (final Exception e) {
@@ -182,17 +183,17 @@ public class ImportConnectorArchiveOperation implements IRunnableWithProgress {
             for (final File defFile : files) {
                 final IRepositoryStore defStore = getDefinitionStore();
                 IRepositoryFileStore fileStore = null;
-                
+
                 try (final FileInputStream fis = new FileInputStream(defFile)) {
                     IStatus validationStatus = defStore.validate(defFile.getName(), fis);
-                    if(validationStatus.getSeverity() == IStatus.ERROR) {
+                    if (validationStatus.getSeverity() == IStatus.ERROR) {
                         status = validationStatus;
                         return;
                     }
                 } catch (IOException e1) {
                     BonitaStudioLog.error(e1);
-                } 
-                
+                }
+
                 try (final FileInputStream fis = new FileInputStream(defFile)) {
                     final ConnectorDefinition connectorDefinition = toConnectorDefinition(defFile);
                     if (connectorDefinition == null) {
@@ -204,8 +205,8 @@ public class ImportConnectorArchiveOperation implements IRunnableWithProgress {
                                         connectorDefinition.getVersion())) {
                             fileStore = defStore.importInputStream(defFile.getName(), fis);
                         } else {
-                            status = ValidationStatus.warning(
-                                    Messages.bind(Messages.providedDefinitionAlreadyExists, existingDef.getDisplayName()));
+                            status = ValidationStatus.warning(Messages.bind(Messages.providedDefinitionAlreadyExists,
+                                    IDisplayable.toDisplayName(existingDef).orElse("")));
                         }
                     }
                 } catch (final Exception e) {
@@ -381,7 +382,8 @@ public class ImportConnectorArchiveOperation implements IRunnableWithProgress {
 
     protected boolean isImplementationJar(final String jarName,
             final ConnectorImplementation impl) {
-        return (NamingUtils.toConnectorImplementationFilename(impl.getImplementationId(), impl.getImplementationVersion(),
+        return (NamingUtils.toConnectorImplementationFilename(impl.getImplementationId(),
+                impl.getImplementationVersion(),
                 false) + ".jar").equals(jarName);
     }
 }

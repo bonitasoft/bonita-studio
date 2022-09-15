@@ -18,6 +18,7 @@ import static com.google.common.base.Predicates.instanceOf;
 import static com.google.common.collect.Iterables.filter;
 
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
+import org.bonitasoft.studio.common.ui.IDisplayable;
 import org.bonitasoft.studio.importer.bos.operation.ImportBosArchiveOperation;
 import org.bonitasoft.studio.importer.bos.status.ImportBosArchiveStatusBuilder;
 import org.bonitasoft.studio.importer.bos.validator.BosImporterStatusProvider;
@@ -38,7 +39,9 @@ public class RestAPIExtensionBosValidator implements BosImporterStatusProvider {
                 instanceOf(RestAPIExtensionFileStore.class))) {
             if (!monitor.isCanceled()) {
                 RestAPIExtensionFileStore restApiFileStore = (RestAPIExtensionFileStore) fs;
-                monitor.beginTask(String.format(Messages.validatingRestAPIExtension, restApiFileStore.getDisplayName()),
+                monitor.beginTask(
+                        String.format(Messages.validatingRestAPIExtension,
+                                IDisplayable.toDisplayName(restApiFileStore).orElse("")),
                         IProgressMonitor.UNKNOWN);
                 try {
                     for (IStatus status : new RestAPIExtensionPomValidator().validate(restApiFileStore)) {

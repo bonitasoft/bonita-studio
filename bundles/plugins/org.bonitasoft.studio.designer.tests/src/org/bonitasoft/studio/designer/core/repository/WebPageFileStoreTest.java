@@ -23,6 +23,7 @@ import java.net.URL;
 
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
+import org.bonitasoft.studio.common.ui.IDisplayable;
 import org.bonitasoft.studio.designer.core.PageDesignerURLFactory;
 import org.bonitasoft.studio.preferences.browser.OpenBrowserOperation;
 import org.junit.Before;
@@ -53,7 +54,8 @@ public class WebPageFileStoreTest {
         webPageFileStore = spy(new WebPageFileStore("myPageId.json", parentStore));
         doReturn("myPageId").when(webPageFileStore).getId();
         doReturn(urlFactory).when(webPageFileStore).urlFactory();
-        doReturn(new URL("http://localhost:8080/page-designer/#/en/pages/myPageId")).when(urlFactory).openPage("myPageId");
+        doReturn(new URL("http://localhost:8080/page-designer/#/en/pages/myPageId")).when(urlFactory)
+                .openPage("myPageId");
         doReturn(operationBrowser).when(webPageFileStore)
                 .openBrowserOperation(new URL("http://localhost:8080/page-designer/#/en/pages/myPageId"));
     }
@@ -68,6 +70,8 @@ public class WebPageFileStoreTest {
 
     @Test
     public void should_compare_web_pages() {
+        IDisplayable nullDisplayer = () -> null;
+
         WebPageFileStore form = spy(new WebPageFileStore("myform.json", parentStore));
         WebPageFileStore form2 = spy(new WebPageFileStore("myform2.json", parentStore));
         WebPageFileStore page = spy(new WebPageFileStore("mypage.json", parentStore));
@@ -76,10 +80,10 @@ public class WebPageFileStoreTest {
         doReturn(WebPageFileStore.FORM_TYPE).when(form2).getType();
         doReturn(WebPageFileStore.PAGE_TYPE).when(page).getType();
         doReturn(WebPageFileStore.LAYOUT_TYPE).when(layout).getType();
-        doReturn(null).when(form).getDisplayName();
-        doReturn(null).when(form2).getDisplayName();
-        doReturn(null).when(page).getDisplayName();
-        doReturn(null).when(layout).getDisplayName();
+        doReturn(nullDisplayer).when(form).getAdapter(IDisplayable.class);
+        doReturn(nullDisplayer).when(form2).getAdapter(IDisplayable.class);
+        doReturn(nullDisplayer).when(page).getAdapter(IDisplayable.class);
+        doReturn(nullDisplayer).when(layout).getAdapter(IDisplayable.class);
 
         assertThat(form.compareTo(page)).isLessThan(0);
         assertThat(form.compareTo(layout)).isLessThan(0);
@@ -94,9 +98,11 @@ public class WebPageFileStoreTest {
         assertThat(layout.compareTo(page)).isGreaterThan(0);
         assertThat(layout.compareTo(layout)).isEqualTo(0);
 
-        doReturn("B - My form").when(form2).getDisplayName();
+        IDisplayable bDisplayer = () -> "B - My form";
+        doReturn(bDisplayer).when(form2).getAdapter(IDisplayable.class);
         assertThat(form.compareTo(form2)).isGreaterThan(0);
-        doReturn("A - My form").when(form).getDisplayName();
+        IDisplayable aDisplayer = () -> "B - My form";
+        doReturn(aDisplayer).when(form).getAdapter(IDisplayable.class);
         assertThat(form.compareTo(form2)).isLessThan(0);
     }
 }

@@ -1635,5 +1635,43 @@
                icon="icons/find.png">
          </image>
       </extension>
+      <extension
+            point="org.eclipse.core.runtime.adapters">
+         <factory
+               adaptableType="org.bonitasoft.studio.application.ui.control.model.RepositoryStore"
+               class="org.bonitasoft.studio.application.ui.control.model.DisplayableAdapterFactory">
+            <adapter
+                  type="org.bonitasoft.studio.common.ui.IDisplayable">
+            </adapter>
+         </factory>
+                  <factory
+               adaptableType="org.bonitasoft.studio.application.ui.control.model.Artifact"
+               class="org.bonitasoft.studio.application.ui.control.model.DisplayableAdapterFactory">
+            <adapter
+                  type="org.bonitasoft.studio.common.ui.IDisplayable">
+            </adapter>
+         </factory>
+         <factory
+               adaptableType="org.bonitasoft.studio.common.repository.model.IRepositoryFileStore"
+               class="org.bonitasoft.studio.application.ui.control.model.DisplayableAdapterFactory">
+            <adapter
+                  type="org.bonitasoft.studio.common.ui.IDisplayable">
+            </adapter>
+         </factory>
+         <factory
+               adaptableType="org.bonitasoft.studio.common.repository.model.smartImport.SmartImportableModel"
+               class="org.bonitasoft.studio.application.ui.control.model.DisplayableAdapterFactory">
+            <adapter
+                  type="org.bonitasoft.studio.common.ui.IDisplayable">
+            </adapter>
+         </factory>
+         <factory
+               adaptableType="org.bonitasoft.studio.common.repository.model.smartImport.SmartImportableUnit"
+               class="org.bonitasoft.studio.application.ui.control.model.DisplayableAdapterFactory">
+            <adapter
+                  type="org.bonitasoft.studio.common.ui.IDisplayable">
+            </adapter>
+         </factory>
+      </extension>
 
 </plugin>

@@ -16,7 +16,9 @@ package org.bonitasoft.studio.ui.provider;
 
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
+import org.bonitasoft.studio.common.ui.IDisplayable;
 import org.bonitasoft.studio.ui.i18n.Messages;
+import org.eclipse.core.runtime.Adapters;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.StyledCellLabelProvider;
 import org.eclipse.jface.viewers.StyledString;
@@ -41,7 +43,7 @@ public class FileStoreLabelProvider extends StyledCellLabelProvider implements I
 
     protected void contentValidation(IRepositoryFileStore fileStore, StyledString styledString, ViewerCell cell) {
         // Default implementation doesn't perform any content validation.
-    };
+    }
 
     @Override
     public String getToolTipText(Object element) {
@@ -56,12 +58,13 @@ public class FileStoreLabelProvider extends StyledCellLabelProvider implements I
 
     @Override
     public Image getImage(Object element) {
-        return ((IRepositoryFileStore) element).getIcon();
+        IDisplayable displayable = Adapters.adapt(element, IDisplayable.class);
+        return displayable.getIcon();
     }
 
     @Override
     public String getText(Object element) {
-        return ((IRepositoryFileStore) element).getDisplayName();
+        return IDisplayable.toDisplayName(element).orElse("");
     }
 
 }

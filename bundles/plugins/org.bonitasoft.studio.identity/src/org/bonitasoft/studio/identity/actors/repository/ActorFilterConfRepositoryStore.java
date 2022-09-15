@@ -96,8 +96,8 @@ public class ActorFilterConfRepositoryStore extends AbstractEMFRepositoryStore<D
      * @see org.bonitasoft.studio.common.repository.model.IRepositoryStore#getIcon()
      */
     @Override
-    public Image getIcon() {
-        return Pics.getImage("conf.png", IdentityPlugin.getDefault());
+    public String getPathIcon() {
+        return "conf.png";
     }
 
     /*

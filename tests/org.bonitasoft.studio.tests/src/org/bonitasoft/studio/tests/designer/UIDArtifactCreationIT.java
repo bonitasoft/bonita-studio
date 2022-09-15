@@ -12,19 +12,19 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.ui.IDisplayable;
 import org.bonitasoft.studio.designer.core.PageDesignerURLFactory;
 import org.bonitasoft.studio.designer.core.UIDesignerServerManager;
 import org.bonitasoft.studio.designer.core.operation.CreateCustomWidgetOperation;
 import org.bonitasoft.studio.designer.core.operation.CreateLayoutOperation;
 import org.bonitasoft.studio.designer.core.operation.CreatePageOperation;
 import org.bonitasoft.studio.designer.core.operation.CreateUIDArtifactOperation;
-import org.bonitasoft.studio.designer.core.repository.WebPageFileStore;
 import org.bonitasoft.studio.designer.core.repository.WebPageRepositoryStore;
-import org.bonitasoft.studio.designer.core.repository.WebWidgetFileStore;
 import org.bonitasoft.studio.designer.core.repository.WebWidgetRepositoryStore;
 import org.bonitasoft.studio.tests.util.InitialProjectRule;
 import org.bonitasoft.studio.ui.util.StringIncrementer;
@@ -37,13 +37,14 @@ public class UIDArtifactCreationIT {
 
     @Rule
     public InitialProjectRule projectRule = InitialProjectRule.INSTANCE;
-    
+
     private RepositoryAccessor repositoryAccessor;
 
     @Before
     public void init() {
         repositoryAccessor = RepositoryManager.getInstance().getAccessor();
-        UIDesignerServerManager.getInstance().start(repositoryAccessor.getCurrentRepository().orElseThrow(), new NullProgressMonitor());
+        UIDesignerServerManager.getInstance().start(repositoryAccessor.getCurrentRepository().orElseThrow(),
+                new NullProgressMonitor());
     }
 
     @Test
@@ -52,7 +53,8 @@ public class UIDArtifactCreationIT {
                 repositoryAccessor);
         String newName = getPageNewName("page", CreateUIDArtifactOperation.DEFAULT_PAGE_NAME);
         createPageOperation.run(new NullProgressMonitor());
-        assertThat(repositoryAccessor.getRepositoryStore(WebPageRepositoryStore.class).getChild(newName, true)).isNotNull();
+        assertThat(repositoryAccessor.getRepositoryStore(WebPageRepositoryStore.class).getChild(newName, true))
+                .isNotNull();
     }
 
     @Test
@@ -81,15 +83,15 @@ public class UIDArtifactCreationIT {
         List<String> existingPages = repositoryAccessor.getRepositoryStore(WebPageRepositoryStore.class).getChildren()
                 .stream()
                 .filter(store -> Objects.equals(store.getType(), artifactType))
-                .map(WebPageFileStore::getDisplayName)
+                .map(IDisplayable::toDisplayName).filter(Optional::isPresent).map(Optional::get)
                 .collect(Collectors.toList());
         return StringIncrementer.getNextIncrement(defaultName, existingPages);
     }
 
     private String getCustomWidgetNewName() {
-        List<String> existingWidgets = repositoryAccessor.getRepositoryStore(WebWidgetRepositoryStore.class).getChildren()
-                .stream()
-                .map(WebWidgetFileStore::getDisplayName)
+        List<String> existingWidgets = repositoryAccessor.getRepositoryStore(WebWidgetRepositoryStore.class)
+                .getChildren().stream()
+                .map(IDisplayable::toDisplayName).filter(Optional::isPresent).map(Optional::get)
                 .collect(Collectors.toList());
         return StringIncrementer.getNextIncrement(CreateUIDArtifactOperation.DEFAULT_WIDGET_NAME, existingWidgets);
     }

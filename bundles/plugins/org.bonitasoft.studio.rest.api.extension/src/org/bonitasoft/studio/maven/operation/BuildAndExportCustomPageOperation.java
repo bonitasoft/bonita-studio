@@ -23,6 +23,7 @@ import java.util.Collection;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
+import org.bonitasoft.studio.common.ui.IDisplayable;
 import org.bonitasoft.studio.common.ui.jface.BonitaErrorDialog;
 import org.bonitasoft.studio.common.ui.jface.FileActionDialog;
 import org.bonitasoft.studio.maven.CustomPageProjectFileStore;
@@ -45,13 +46,15 @@ public class BuildAndExportCustomPageOperation {
             for (CustomPageProjectFileStore fileStore : customPageFileStores) {
                 buildCustomPage(fileStore, targetDir, runnableContext);
             }
-        } catch (CoreException | ReadFileStoreException | InvocationTargetException | InterruptedException | IOException e) {
+        } catch (CoreException | ReadFileStoreException | InvocationTargetException | InterruptedException
+                | IOException e) {
             BonitaStudioLog.error(e);
             showErrorDialog(e);
         }
     }
 
-    private void buildCustomPage(CustomPageProjectFileStore fileStore, String targetDir, IRunnableContext runnableContext)
+    private void buildCustomPage(CustomPageProjectFileStore fileStore, String targetDir,
+            IRunnableContext runnableContext)
             throws ReadFileStoreException, CoreException, InvocationTargetException, InterruptedException, IOException {
         BuildCustomPageOperation operation = fileStore.newBuildOperation();
         String archiveName = operation.getArchiveName();
@@ -59,7 +62,8 @@ public class BuildAndExportCustomPageOperation {
         final File file = new File(targetDir, archiveName);
         if (file.exists()) {
             if (!FileActionDialog.overwriteQuestion(file.getAbsolutePath())) {
-                status.add(ValidationStatus.cancel(String.format(Messages.buildCancel, fileStore.getDisplayName())));
+                status.add(ValidationStatus
+                        .cancel(String.format(Messages.buildCancel, IDisplayable.toDisplayName(fileStore).orElse(""))));
                 return;
             }
         }
@@ -74,7 +78,8 @@ public class BuildAndExportCustomPageOperation {
 
     protected void showErrorDialog(final Throwable e) {
         BonitaStudioLog.error("Failed to build custom page project.", e, RestAPIExtensionActivator.PLUGIN_ID);
-        new BonitaErrorDialog(Display.getDefault().getActiveShell(), Messages.errorTitle, Messages.errorDuringProjectBuild,
+        new BonitaErrorDialog(Display.getDefault().getActiveShell(), Messages.errorTitle,
+                Messages.errorDuringProjectBuild,
                 e).open();
     }
 

@@ -15,17 +15,12 @@
 package org.bonitasoft.studio.designer.core.repository;
 
 import java.io.InputStream;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.store.AbstractFolderRepositoryStore;
-import org.bonitasoft.studio.designer.core.UIDesignerServerManager;
-import org.bonitasoft.studio.designer.core.operation.MigrateUIDOperation;
-import org.bonitasoft.studio.designer.i18n.Messages;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;

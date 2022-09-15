@@ -20,11 +20,7 @@ import java.util.List;
 import java.util.Objects;
 
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
-import org.bonitasoft.studio.model.edit.ProcessEditPlugin;
 import org.bonitasoft.studio.model.process.Pool;
-import org.eclipse.emf.edit.ui.provider.ExtendedImageRegistry;
-import org.eclipse.jface.viewers.StyledString;
-import org.eclipse.swt.graphics.Image;
 
 public class ProcessArtifact implements VersionedArtifact {
 
@@ -55,45 +51,27 @@ public class ProcessArtifact implements VersionedArtifact {
     public String toString() {
         return name;
     }
-    
+
     @Override
     public boolean equals(Object obj) {
-        if(obj instanceof ProcessArtifact) {
+        if (obj instanceof ProcessArtifact) {
             return Objects.equals(((ProcessArtifact) obj).getName(), getName());
         }
         return super.equals(obj);
     }
-    
+
     @Override
     public RepositoryStore getParent() {
         return parent;
     }
-    
+
     @Override
     public int hashCode() {
-        return Objects.hash(getName(),getParent().getResource().getLocation().toString());
-    }
-
-    public String getDisplayName() {
-        return toString();
-    }
-
-    @Override
-    public Image getIcon() {
-        return ExtendedImageRegistry.INSTANCE.getImage(ProcessEditPlugin.INSTANCE.getPluginResourceLocator().getImage("full/obj16/Pool"));
-    }
-
-    @Override
-    public StyledString getStyledString() {
-        StyledString styledString = new StyledString(getDisplayName());
-        if(hasSingleVersion()) {
-            styledString.append("  "+ ((ProcessVersion) getLatestVersion()).getFileStore().getResource().getName(), StyledString.DECORATIONS_STYLER);
-        }
-        return styledString;
+        return Objects.hash(getName(), getParent().getResource().getLocation().toString());
     }
 
     public ArtifactVersion getLatestVersion() {
-        if(processVerions.isEmpty()) {
+        if (processVerions.isEmpty()) {
             throw new IllegalStateException(String.format("No version found for process %s", getName()));
         }
         return processVerions.get(0);

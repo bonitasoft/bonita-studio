@@ -50,8 +50,8 @@ public class ThemeRepositoryStore extends CustomPageProjectRepositoryStore<Theme
     }
 
     @Override
-    public Image getIcon() {
-        return Pics.getImage("theme.png", RestAPIExtensionActivator.getDefault());
+    public String getPathIcon() {
+        return "theme.png";
     }
 
     @Override

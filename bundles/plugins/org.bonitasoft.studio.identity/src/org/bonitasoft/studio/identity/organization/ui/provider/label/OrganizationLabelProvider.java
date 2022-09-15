@@ -15,10 +15,11 @@
 package org.bonitasoft.studio.identity.organization.ui.provider.label;
 
 import org.bonitasoft.studio.common.repository.core.ActiveOrganizationProvider;
+import org.bonitasoft.studio.common.ui.IDisplayable;
 import org.bonitasoft.studio.common.ui.jface.BonitaStudioFontRegistry;
 import org.bonitasoft.studio.identity.i18n.Messages;
 import org.bonitasoft.studio.identity.organization.model.organization.Organization;
-import org.bonitasoft.studio.identity.organization.repository.OrganizationFileStore;
+import org.eclipse.core.runtime.Adapters;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.StyledCellLabelProvider;
 import org.eclipse.jface.viewers.StyledString;
@@ -48,8 +49,9 @@ public class OrganizationLabelProvider extends StyledCellLabelProvider implement
 
     @Override
     public String getText(final Object element) {
-        if (element instanceof OrganizationFileStore) {
-            return ((OrganizationFileStore) element).getDisplayName();
+        IDisplayable display = Adapters.adapt(element, IDisplayable.class);
+        if (display != null) {
+            return display.getDisplayName();
         } else if (element instanceof Organization) {
             return ((Organization) element).getName();
         }

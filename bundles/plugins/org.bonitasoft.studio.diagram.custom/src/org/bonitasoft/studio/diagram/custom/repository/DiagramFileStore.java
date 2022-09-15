@@ -97,20 +97,10 @@ public class DiagramFileStore extends EMFFileStore<MainProcess> implements IDepl
     public static final String RENAME_DIAGRAM_COMMAND = "org.bonitasoft.studio.application.command.rename";
     public static final String BUILD_DIAGRAM_COMMAND = "org.bonitasoft.studio.engine.command.buildDiagram";
 
-    private static final Pattern diagramNamePattern = Pattern.compile("(.*)-(.*)");
+
 
     public DiagramFileStore(final String fileName, IRepositoryStore<? extends EMFFileStore<MainProcess>> store) {
         super(fileName, store);
-    }
-
-    @Override
-    public String getDisplayName() {
-        final String displayName = getResource().getLocation().removeFileExtension().lastSegment();
-        final Matcher matcher = diagramNamePattern.matcher(displayName);
-        if (matcher.matches()) {
-            return String.format("%s (%s)", matcher.group(1), matcher.group(2));
-        }
-        return displayName;
     }
 
     @Override
@@ -122,11 +112,6 @@ public class DiagramFileStore extends EMFFileStore<MainProcess> implements IDepl
     protected URI getResourceURI() {
         final IPath fullPath = getResource().getFullPath();
         return URI.createPlatformResourceURI(fullPath.toOSString(), true);
-    }
-
-    @Override
-    public Image getIcon() {
-        return getParentStore().getIcon();
     }
 
     @Override
@@ -367,7 +352,7 @@ public class DiagramFileStore extends EMFFileStore<MainProcess> implements IDepl
         parameters.put("fileName", getName());
         parameters.put("destinationPath", processFolder.getLocation().toOSString());
         parameters.put("process", null);
-        monitor.subTask(String.format(Messages.buildingDiagram, getDisplayName()));
+        monitor.subTask(String.format(Messages.buildingDiagram, store.getDisplayName()));
         IStatus buildStatus = (IStatus) executeCommand(BUILD_DIAGRAM_COMMAND, parameters);
         if (Objects.equals(buildStatus.getSeverity(), IStatus.ERROR)) {
             return parseStatus(buildStatus);

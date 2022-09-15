@@ -25,13 +25,10 @@ import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.engine.http.HttpClientFactory;
 import org.bonitasoft.studio.maven.ImportProjectException;
 import org.bonitasoft.studio.maven.operation.DeployCustomPageOperation;
-import org.bonitasoft.studio.pics.Pics;
-import org.bonitasoft.studio.rest.api.extension.RestAPIExtensionActivator;
 import org.bonitasoft.studio.theme.DependencyThemeFileStore;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.swt.graphics.Image;
 
 public class DependencyRestAPIExtensionFileStore extends RestAPIExtensionFileStore {
 
@@ -54,11 +51,6 @@ public class DependencyRestAPIExtensionFileStore extends RestAPIExtensionFileSto
     }
 
     @Override
-    public String getDisplayName() {
-        return extension.getDisplayName();
-    }
-
-    @Override
     public String getDescription() {
         return extension.getDescription();
     }
@@ -74,13 +66,8 @@ public class DependencyRestAPIExtensionFileStore extends RestAPIExtensionFileSto
     }
 
     @Override
-    public Image getIcon() {
-        return Pics.getImage("binary.png", RestAPIExtensionActivator.getDefault());
-    }
-    
-    @Override
     public void importProject() throws ImportProjectException {
-      // Nothing to import
+        // Nothing to import
     }
 
     @Override
@@ -92,8 +79,21 @@ public class DependencyRestAPIExtensionFileStore extends RestAPIExtensionFileSto
         try {
             deployOperation.run(monitor);
         } catch (InvocationTargetException | InterruptedException e) {
-            return new Status(IStatus.ERROR, DependencyThemeFileStore.class, "Failed to deployed rest api extension", e);
+            return new Status(IStatus.ERROR, DependencyThemeFileStore.class, "Failed to deployed rest api extension",
+                    e);
         }
         return deployOperation.getStatus();
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see org.bonitasoft.studio.common.repository.model.IRepositoryFileStore#getAdapter(java.lang.Class)
+     */
+    @Override
+    public <X> X getAdapter(Class<X> adapter) {
+        if (adapter.isAssignableFrom(RestAPIExtension.class)) {
+            return (X) extension;
+        }
+        return super.getAdapter(adapter);
     }
 }

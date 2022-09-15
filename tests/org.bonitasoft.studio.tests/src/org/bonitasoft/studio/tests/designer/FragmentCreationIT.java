@@ -11,13 +11,14 @@ package org.bonitasoft.studio.tests.designer;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.ui.IDisplayable;
 import org.bonitasoft.studio.designer.core.PageDesignerURLFactory;
 import org.bonitasoft.studio.designer.core.operation.CreateFragmentOperation;
-import org.bonitasoft.studio.designer.core.repository.WebFragmentFileStore;
 import org.bonitasoft.studio.designer.core.repository.WebFragmentRepositoryStore;
 import org.bonitasoft.studio.tests.util.InitialProjectRule;
 import org.bonitasoft.studio.ui.util.StringIncrementer;
@@ -27,9 +28,10 @@ import org.junit.Rule;
 import org.junit.Test;
 
 public class FragmentCreationIT {
+
     @Rule
     public InitialProjectRule projectRule = InitialProjectRule.INSTANCE;
-    
+
     private RepositoryAccessor repositoryAccessor;
 
     @Before
@@ -51,7 +53,7 @@ public class FragmentCreationIT {
         List<String> existingFragments = repositoryAccessor.getRepositoryStore(WebFragmentRepositoryStore.class)
                 .getChildren()
                 .stream()
-                .map(WebFragmentFileStore::getDisplayName)
+                .map(IDisplayable::toDisplayName).filter(Optional::isPresent).map(Optional::get)
                 .collect(Collectors.toList());
         return StringIncrementer.getNextIncrement(CreateFragmentOperation.DEFAULT_FRAGMENT_NAME, existingFragments);
     }

@@ -23,6 +23,7 @@ import org.bonitasoft.studio.common.core.IRunnableWithStatus;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.ui.IDisplayable;
 import org.bonitasoft.studio.common.ui.jface.ValidationDialog;
 import org.bonitasoft.studio.designer.core.operation.IndexingUIDOperation;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
@@ -277,11 +278,10 @@ public class BatchValidationHandler extends AbstractHandler {
             }
         } else if (statusContainsError(aggregatedStatus)) {
             final String errorMessage = Messages.validationErrorFoundMessage + " "
-                    + currentDiagramStore.getDisplayName();
+                    + IDisplayable.toDisplayName(currentDiagramStore).orElse("");
             final int result = new ValidationDialog(Display.getDefault().getActiveShell(),
                     Messages.validationFailedTitle, errorMessage,
                     ValidationDialog.OK_SEEDETAILS).open();
-
             if (result == ValidationDialog.SEE_DETAILS) {
                 IWorkbenchPart openedEditor = currentDiagramStore.getOpenedEditor();
                 if (openedEditor == null) {

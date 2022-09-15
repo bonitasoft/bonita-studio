@@ -15,23 +15,13 @@
 package org.bonitasoft.studio.application.ui.control.model;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
-import org.bonitasoft.studio.application.i18n.Messages;
-import org.bonitasoft.studio.application.views.ProjectExplorerViewerComparator;
-import org.bonitasoft.studio.common.repository.model.IDisplayable;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.common.repository.store.AbstractRepositoryStore;
-import org.bonitasoft.studio.designer.core.repository.WebPageRepositoryStore;
-import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.jface.viewers.StyledString;
-import org.eclipse.swt.graphics.Image;
 
-public class RepositoryStore implements IDisplayable, Comparable<RepositoryStore> {
+public class RepositoryStore implements Comparable<RepositoryStore> {
 
     List<Artifact> artifacts = new ArrayList<>();
     private IRepositoryStore<? extends IRepositoryFileStore> store;
@@ -52,33 +42,17 @@ public class RepositoryStore implements IDisplayable, Comparable<RepositoryStore
         return artifacts;
     }
 
-    @Override
-    public String getDisplayName() {
-        if(store instanceof DiagramRepositoryStore) {
-            return Messages.processes;
-        }
-        if(store instanceof WebPageRepositoryStore) {
-            return Messages.pagesAndLayouts;
-        }
-        return store.getDisplayName();
-    }
-
-    @Override
-    public Image getIcon() {
-        return store.getIcon();
-    }
-
-    @Override
-    public StyledString getStyledString() {
-        return new StyledString(getDisplayName());
-    }
-    
     public String getName() {
         return store.getName();
+    }
+    
+    public IRepositoryStore<? extends IRepositoryFileStore> getStore() {
+        return store;
     }
 
     @Override
     public int compareTo(RepositoryStore o) {
         return Integer.compare(AbstractRepositoryStore.REPO_STORE_ORDER.get(getName()), AbstractRepositoryStore.REPO_STORE_ORDER.get(o.getName()));
     }
+
 }

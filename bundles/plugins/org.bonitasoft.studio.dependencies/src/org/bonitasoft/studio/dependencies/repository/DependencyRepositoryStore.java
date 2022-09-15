@@ -35,13 +35,11 @@ import org.bonitasoft.studio.common.repository.core.migration.report.MigrationRe
 import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.store.AbstractRepositoryStore;
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.edapt.migration.MigrationException;
-import org.eclipse.swt.graphics.Image;
 
 public class DependencyRepositoryStore extends AbstractRepositoryStore<DependencyFileStore> {
 
@@ -158,7 +156,7 @@ public class DependencyRepositoryStore extends AbstractRepositoryStore<Dependenc
     }
 
     @Override
-    public Image getIcon() {
+    public String getPathIcon() {
         return null;
     }
 

@@ -27,7 +27,7 @@ import org.eclipse.ui.IWorkbenchPart;
 /**
  * @author Romain Bioteau
  */
-public interface IRepositoryFileStore<T> extends IDisplayable, IAdaptable {
+public interface IRepositoryFileStore<T> extends IAdaptable {
 
     String getName();
 

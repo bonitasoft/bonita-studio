@@ -18,10 +18,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.ui.IDisplayable;
 import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.identity.i18n.Messages;
 import org.bonitasoft.studio.identity.organization.repository.OrganizationFileStore;
@@ -89,20 +91,23 @@ public class ProjectExplorerOrganizationIT {
     }
 
     private void validateOrgaExists(String name) {
+        Function<OrganizationFileStore, String> toDisplayName = s -> IDisplayable.toDisplayName(s).orElse("");
         assertThat(repositoryAccessor.getRepositoryStore(OrganizationRepositoryStore.class).getChildren())
-                .flatExtracting(OrganizationFileStore::getDisplayName)
+                .flatExtracting(toDisplayName)
                 .contains(name);
     }
 
     private void validateOrgaDoesntExists(String name) {
+        Function<OrganizationFileStore, String> toDisplayName = s -> IDisplayable.toDisplayName(s).orElse("");
         assertThat(repositoryAccessor.getRepositoryStore(OrganizationRepositoryStore.class).getChildren())
-                .flatExtracting(OrganizationFileStore::getDisplayName)
+                .flatExtracting(toDisplayName)
                 .doesNotContain(name);
     }
 
     private String findNewOrgaName() {
+        Function<OrganizationFileStore, String> toDisplayName = s -> IDisplayable.toDisplayName(s).orElse("");
         List<String> existingOrgaNameList = repositoryAccessor.getRepositoryStore(OrganizationRepositoryStore.class)
-                .getChildren().stream().map(OrganizationFileStore::getDisplayName).collect(Collectors.toList());
+                .getChildren().stream().map(toDisplayName).collect(Collectors.toList());
         String newName = StringIncrementer.getNextIncrement(Messages.defaultOrganizationName,
                 existingOrgaNameList);
         return newName;

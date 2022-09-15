@@ -5,9 +5,6 @@ import java.util.Optional;
 import org.bonitasoft.studio.common.model.ConflictStatus;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
-import org.eclipse.jface.dialogs.Dialog;
-import org.eclipse.jface.resource.JFaceResources;
-import org.eclipse.swt.graphics.Image;
 
 public class LegacyStoreModel extends ImportStoreModel {
 
@@ -18,15 +15,6 @@ public class LegacyStoreModel extends ImportStoreModel {
     @Override
     protected Optional<IRepositoryStore<IRepositoryFileStore>> getParentRepositoryStore() {
         return Optional.empty();
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.importer.bos.model.AbstractFolderModel#getImage()
-     */
-    @Override
-    public Image getImage() {
-        return JFaceResources.getImage(Dialog.DLG_IMG_MESSAGE_WARNING);
     }
 
     /*

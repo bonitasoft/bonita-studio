@@ -35,7 +35,6 @@ import org.bonitasoft.studio.common.repository.store.AbstractEMFRepositoryStore;
 import org.bonitasoft.studio.diagram.custom.i18n.Messages;
 import org.bonitasoft.studio.model.configuration.Configuration;
 import org.bonitasoft.studio.model.configuration.util.ConfigurationAdapterFactory;
-import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.emf.ecore.EObject;
@@ -48,7 +47,6 @@ import org.eclipse.emf.edapt.migration.MigrationException;
 import org.eclipse.emf.edapt.migration.execution.Migrator;
 import org.eclipse.emf.edapt.spi.history.Release;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
-import org.eclipse.swt.graphics.Image;
 
 /**
  * @author Romain Bioteau
@@ -79,8 +77,8 @@ public class ProcessConfigurationRepositoryStore extends AbstractEMFRepositorySt
     }
 
     @Override
-    public Image getIcon() {
-        return Pics.getImage(PicsConstants.configuration);
+    public String getPathIcon() {
+        return PicsConstants.configuration;
     }
 
     @Override

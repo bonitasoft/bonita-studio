@@ -11,6 +11,7 @@ package org.bonitasoft.studio.configuration.ui.handler;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.filestore.AbstractFileStore;
 import org.bonitasoft.studio.common.repository.filestore.FileStoreFinder;
+import org.bonitasoft.studio.common.ui.IDisplayable;
 import org.bonitasoft.studio.configuration.ConfigurationPlugin;
 import org.bonitasoft.studio.configuration.preferences.ConfigurationPreferenceConstants;
 import org.bonitasoft.studio.configuration.repository.EnvironmentFileStore;
@@ -30,10 +31,10 @@ public class SetSelectionAsDefaultConfigurationHandler {
         repositoryAccessor.getCurrentRepository().ifPresent(repo -> {
             fileStoreFinder.findSelectedFileStore(repo)
                     .filter(EnvironmentFileStore.class::isInstance)
-                    .map(EnvironmentFileStore.class::cast)
-                    .ifPresent(env -> {
+                    .flatMap(IDisplayable::toDisplayName)
+                    .ifPresent(displayName -> {
                         ConfigurationPlugin.getDefault().getPreferenceStore()
-                                .setValue(ConfigurationPreferenceConstants.DEFAULT_CONFIGURATION, env.getDisplayName());
+                                .setValue(ConfigurationPreferenceConstants.DEFAULT_CONFIGURATION, displayName);
                         AbstractFileStore.refreshExplorerView();
                     });
         });
@@ -41,10 +42,10 @@ public class SetSelectionAsDefaultConfigurationHandler {
 
     @CanExecute
     public boolean canExecute(RepositoryAccessor repositoryAccessor) {
-        return repositoryAccessor.getCurrentRepository().isPresent() 
+        return repositoryAccessor.getCurrentRepository().isPresent()
                 && fileStoreFinder.findSelectedFileStore(repositoryAccessor.getCurrentRepository().orElse(null))
-                .filter(EnvironmentFileStore.class::isInstance)
-                .isPresent();
+                        .filter(EnvironmentFileStore.class::isInstance)
+                        .isPresent();
     }
 
 }

@@ -56,8 +56,8 @@ public class ConnectorImplRepositoryStore extends AbstractConnectorImplRepositor
     }
 
     @Override
-    public Image getIcon() {
-        return Pics.getImage(PicsConstants.connectorImpl);
+    public String getPathIcon() {
+        return PicsConstants.connectorImpl;
     }
 
     @Override

@@ -1,8 +1,10 @@
 package org.bonitasoft.studio.configuration.ui.dialog;
 
+import java.util.Optional;
+
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.ui.IDisplayable;
 import org.bonitasoft.studio.configuration.i18n.Messages;
-import org.bonitasoft.studio.configuration.repository.EnvironmentFileStore;
 import org.bonitasoft.studio.configuration.repository.EnvironmentRepositoryStore;
 import org.bonitasoft.studio.ui.widget.ComboWidget;
 import org.eclipse.core.databinding.DataBindingContext;
@@ -11,11 +13,11 @@ import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.jface.dialogs.IInputValidator;
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.layout.GridLayout;
 
 /**
  * Dialog extending the {@link InputDialog} to have a checkbox allowing to duplicate or not an environment specific.
@@ -42,8 +44,8 @@ public class NewEnvironmentDialog extends InputDialog {
         var envStore = RepositoryManager.getInstance().getRepositoryStore(EnvironmentRepositoryStore.class);
 
         var comboWidget = new ComboWidget.Builder()
-                .withItems(envStore.getChildren().stream().map(EnvironmentFileStore::getDisplayName)
-                        .toArray(String[]::new))
+                .withItems(envStore.getChildren().stream().map(IDisplayable::toDisplayName).filter(Optional::isPresent)
+                        .map(Optional::get).toArray(String[]::new))
                 .readOnly()
                 .bindTo(PojoProperties.value("selectedEnv", String.class).observe(this))
                 .inContext(dbc)

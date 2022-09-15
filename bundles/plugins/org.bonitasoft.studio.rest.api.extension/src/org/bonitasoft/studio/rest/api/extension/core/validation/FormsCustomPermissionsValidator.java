@@ -35,6 +35,7 @@ import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
+import org.bonitasoft.studio.common.ui.IDisplayable;
 import org.bonitasoft.studio.designer.core.repository.WebPageFileStore;
 import org.bonitasoft.studio.designer.core.repository.WebPageRepositoryStore;
 import org.bonitasoft.studio.engine.BOSEngineManager;
@@ -56,7 +57,7 @@ public class FormsCustomPermissionsValidator implements IValidator<BusinessArchi
     public void register() {
         BusinessArchiveValidatorProvider.getInstance().addValidator(this);
     }
-    
+
     private Set<String> listPermissions(Properties properties) {
         Set<String> permissionsValues = new HashSet<String>();
         for (Object value : properties.values()) {
@@ -147,13 +148,12 @@ public class FormsCustomPermissionsValidator implements IValidator<BusinessArchi
                                         missingPermissionMapping.add(p);
                                     }
                                 }
-                                if(!missingPermissionMapping.isEmpty()) {
-                                    String displayName = pageFileStore.getDisplayName();
-                                    String formName = displayName == null || displayName.isEmpty()
-                                            ? pageFileStore.getName()
-                                            : displayName;
-                                    status.add(ValidationStatus.warning(String.format(Messages.formPermissionNotConfigured,
-                                                formName, missingPermissionMapping.toString())));
+                                if (!missingPermissionMapping.isEmpty()) {
+                                    String formName = IDisplayable.toDisplayName(pageFileStore)
+                                            .orElseGet(pageFileStore::getName);
+                                    status.add(
+                                            ValidationStatus.warning(String.format(Messages.formPermissionNotConfigured,
+                                                    formName, missingPermissionMapping.toString())));
                                 }
                             } catch (ReadFileStoreException e) {
                                 BonitaStudioLog.error(e);

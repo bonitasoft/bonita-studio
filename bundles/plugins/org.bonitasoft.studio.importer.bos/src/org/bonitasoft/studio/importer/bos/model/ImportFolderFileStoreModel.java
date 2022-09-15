@@ -8,24 +8,13 @@ import java.util.zip.ZipFile;
 import org.bonitasoft.studio.common.model.ImportAction;
 import org.bonitasoft.studio.common.repository.ImportArchiveData;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
-import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.swt.graphics.Image;
-import org.eclipse.ui.ISharedImages;
-import org.eclipse.ui.PlatformUI;
 
 public class ImportFolderFileStoreModel extends AbstractFolderModel implements ImportableUnit {
 
     public ImportFolderFileStoreModel(String folderPath, AbstractFolderModel parent) {
         super(folderPath, parent);
-    }
-
-    @Override
-    public Image getImage() {
-        return getParentRepositoryStore()
-                .map(IRepositoryStore::getIcon)
-                .orElse(PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJ_FOLDER));
     }
 
     @Override
@@ -59,7 +48,7 @@ public class ImportFolderFileStoreModel extends AbstractFolderModel implements I
 
     @Override
     public String getName() {
-        return getText();
+        return displayName.orElse(getFolderName());
     }
 
     @Override

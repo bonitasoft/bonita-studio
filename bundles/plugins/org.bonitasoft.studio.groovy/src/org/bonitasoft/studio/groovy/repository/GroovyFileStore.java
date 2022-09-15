@@ -27,8 +27,6 @@ import org.bonitasoft.studio.common.repository.filestore.AbstractFileStore;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.common.ui.jface.FileActionDialog;
 import org.bonitasoft.studio.groovy.GroovyPlugin;
-import org.bonitasoft.studio.pics.Pics;
-import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -36,7 +34,6 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.JavaCore;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
@@ -55,15 +52,6 @@ public class GroovyFileStore extends AbstractFileStore<String> {
         super(fileName, parentStore);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.repository.model.IRepositoryFileStore#getIcon()
-     */
-    @Override
-    public Image getIcon() {
-        return Pics.getImage(PicsConstants.groovyScript);
-    }
-    
     @Override
     protected String doGetContent() throws ReadFileStoreException {
         try {

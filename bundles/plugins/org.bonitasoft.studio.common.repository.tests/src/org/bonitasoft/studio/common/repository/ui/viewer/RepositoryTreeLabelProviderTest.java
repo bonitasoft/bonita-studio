@@ -5,12 +5,10 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -19,6 +17,8 @@ package org.bonitasoft.studio.common.repository.ui.viewer;
 import org.assertj.core.api.Assertions;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
+import org.bonitasoft.studio.common.ui.IDisplayable;
+import org.eclipse.core.runtime.IAdaptable;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -28,21 +28,29 @@ import org.mockito.junit.MockitoJUnitRunner;
 @RunWith(MockitoJUnitRunner.class)
 public class RepositoryTreeLabelProviderTest {
 
-    @Mock
-    IRepositoryStore<?> repoStore;
+    public static interface AdaptableRepositoryStore extends IRepositoryStore, IAdaptable {
+    }
+
+    public static interface AdaptableRepositoryFileStore extends IRepositoryFileStore, IAdaptable {
+    }
 
     @Mock
-    IRepositoryFileStore<?> repoFileStore;
+    AdaptableRepositoryStore repoStore;
+
+    @Mock
+    AdaptableRepositoryFileStore repoFileStore;
 
     @Test
     public void testGetTextForIRepositoryStore() {
-        Mockito.doReturn("myName").when(repoStore).getDisplayName();
+        IDisplayable displayable = () -> "myName";
+        Mockito.doReturn(displayable).when(repoStore).getAdapter(IDisplayable.class);
         Assertions.assertThat(new RepositoryTreeLabelProvider().getText(repoStore)).isEqualTo("myName");
     }
 
     @Test
     public void testGetTextForIRepositoryFileStore() {
-        Mockito.doReturn("myName").when(repoFileStore).getDisplayName();
+        IDisplayable displayable = () -> "myName";
+        Mockito.doReturn(displayable).when(repoFileStore).getAdapter(IDisplayable.class);
         Assertions.assertThat(new RepositoryTreeLabelProvider().getText(repoFileStore)).isEqualTo("myName");
     }
 

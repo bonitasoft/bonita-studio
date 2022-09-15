@@ -36,19 +36,21 @@ public class ImportFileStoreModel extends AbstractFileModel implements Importabl
                 })
                 .orElse(null);
     }
-    
+
     public boolean isStoreResource() {
         int lastIndexOf = getName().lastIndexOf(".");
-        if(lastIndexOf != -1 &&  getName().length() > lastIndexOf + 1 &&  getParentRepositoryStore().isPresent()) {
-            String fileExtension = getName().substring(lastIndexOf+1,getName().length());
-            return getParentRepositoryStore().get().getCompatibleExtensions().stream().anyMatch( supportedExtension -> Objects.equals(fileExtension.toLowerCase(),supportedExtension.toLowerCase()));
+        if (lastIndexOf != -1 && getName().length() > lastIndexOf + 1 && getParentRepositoryStore().isPresent()) {
+            String fileExtension = getName().substring(lastIndexOf + 1, getName().length());
+            return getParentRepositoryStore().get().getCompatibleExtensions().stream()
+                    .anyMatch(supportedExtension -> Objects.equals(fileExtension.toLowerCase(),
+                            supportedExtension.toLowerCase()));
         }
         return false;
     }
 
     @Override
     public String getName() {
-        return getText();
+        return displayName.orElse(getFileName());
     }
 
 }

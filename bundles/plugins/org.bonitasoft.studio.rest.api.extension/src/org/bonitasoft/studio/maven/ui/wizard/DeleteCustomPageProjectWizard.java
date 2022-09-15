@@ -8,6 +8,7 @@
  *******************************************************************************/
 package org.bonitasoft.studio.maven.ui.wizard;
 
+import org.bonitasoft.studio.common.ui.IDisplayable;
 import org.bonitasoft.studio.common.ui.jface.FileActionDialog;
 import org.bonitasoft.studio.maven.CustomPageProjectFileStore;
 import org.bonitasoft.studio.maven.CustomPageProjectRepositoryStore;
@@ -27,11 +28,14 @@ public abstract class DeleteCustomPageProjectWizard extends Wizard {
     private final CustomPageProjectRepositoryStore<? extends CustomPageProjectFileStore> repositoryStore;
     private final WidgetFactory widgetFactory;
 
-    public DeleteCustomPageProjectWizard(final CustomPageProjectRepositoryStore<? extends CustomPageProjectFileStore> repositoryStore, final WidgetFactory widgetFactory,
+    public DeleteCustomPageProjectWizard(
+            final CustomPageProjectRepositoryStore<? extends CustomPageProjectFileStore> repositoryStore,
+            final WidgetFactory widgetFactory,
             final CustomPageProjectSelectionProvider selectionProvider) {
         this.repositoryStore = repositoryStore;
         this.widgetFactory = widgetFactory;
-        fileStoreObservable = new WritableValue<CustomPageProjectFileStore>(selectionProvider.getSelection(), CustomPageProjectFileStore.class);
+        fileStoreObservable = new WritableValue<CustomPageProjectFileStore>(selectionProvider.getSelection(),
+                CustomPageProjectFileStore.class);
         setDefaultPageImageDescriptor(Pics.getWizban());
         setWindowTitle(Messages.delete);
     }
@@ -39,19 +43,21 @@ public abstract class DeleteCustomPageProjectWizard extends Wizard {
     @Override
     public void addPages() {
         super.addPages();
-        final SelectCustomPageProjectPage selectionPage = new SelectCustomPageProjectPage(repositoryStore, widgetFactory, fileStoreObservable);
+        final SelectCustomPageProjectPage selectionPage = new SelectCustomPageProjectPage(repositoryStore,
+                widgetFactory, fileStoreObservable);
         selectionPage.addFilter(new ViewerFilter() {
-            
+
             @Override
             public boolean select(Viewer viewer, Object parentElement, Object element) {
-                return element instanceof CustomPageProjectFileStore && !((CustomPageProjectFileStore)element).isReadOnly();
+                return element instanceof CustomPageProjectFileStore
+                        && !((CustomPageProjectFileStore) element).isReadOnly();
             }
         });
         selectionPage.setTitle(getSelectionPageTitle());
         selectionPage.setDescription(getSelectionPageDeleteDescription());
         addPage(selectionPage);
     }
-    
+
     protected abstract String getSelectionPageDeleteDescription();
 
     protected abstract String getSelectionPageTitle();
@@ -59,7 +65,7 @@ public abstract class DeleteCustomPageProjectWizard extends Wizard {
     @Override
     public boolean performFinish() {
         final CustomPageProjectFileStore fileStore = fileStoreObservable.getValue();
-        if (FileActionDialog.confirmDeletionQuestion(fileStore.getDisplayName())) {
+        if (FileActionDialog.confirmDeletionQuestion(IDisplayable.toDisplayName(fileStore).orElse(""))) {
             fileStore.delete();
             return true;
         }

@@ -100,6 +100,7 @@ Export-Package: org.bonitasoft.studio.identity;uses:="org.osgi.framework,org.ecl
  org.bonitasoft.studio.identity.organization.model.organization.validation,
  org.bonitasoft.studio.identity.organization.operation,
  org.bonitasoft.studio.identity.organization.repository,
+ org.bonitasoft.studio.identity.organization.styler,
  org.bonitasoft.studio.identity.organization.ui.control,
  org.bonitasoft.studio.identity.organization.ui.provider.content,
  org.bonitasoft.studio.identity.organization.ui.provider.label,

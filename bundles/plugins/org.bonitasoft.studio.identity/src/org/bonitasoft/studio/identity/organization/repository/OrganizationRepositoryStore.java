@@ -44,7 +44,6 @@ import org.bonitasoft.studio.identity.organization.model.organization.util.Organ
 import org.bonitasoft.studio.identity.organization.model.organization.util.OrganizationResourceFactoryImpl;
 import org.bonitasoft.studio.identity.organization.model.organization.util.OrganizationResourceImpl;
 import org.bonitasoft.studio.identity.organization.model.organization.util.OrganizationXMLProcessor;
-import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IStatus;
@@ -59,8 +58,6 @@ import org.eclipse.emf.edapt.migration.MigrationException;
 import org.eclipse.emf.edapt.migration.execution.Migrator;
 import org.eclipse.emf.edapt.spi.history.Release;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
-import org.eclipse.swt.graphics.Image;
-
 import com.google.common.io.Files;
 
 /**
@@ -117,8 +114,8 @@ public class OrganizationRepositoryStore extends AbstractEMFRepositoryStore<Orga
      * @see org.bonitasoft.studio.common.repository.model.IRepositoryStore#getIcon()
      */
     @Override
-    public Image getIcon() {
-        return Pics.getImage(PicsConstants.organization);
+    public String getPathIcon() {
+        return PicsConstants.organization;
     }
 
     /*

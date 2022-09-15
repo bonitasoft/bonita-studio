@@ -5,13 +5,13 @@ import static java.util.Objects.requireNonNull;
 import java.util.Optional;
 
 import org.bonitasoft.studio.common.model.ConflictStatus;
-import org.bonitasoft.studio.common.repository.model.IPresentable;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 
-public abstract class AbstractImportModel implements IPresentable {
+public abstract class AbstractImportModel implements IAdaptable {
 
     protected ConflictStatus status = ConflictStatus.NONE;
     protected Optional<AbstractFolderModel> parent;
@@ -84,4 +84,23 @@ public abstract class AbstractImportModel implements IPresentable {
         this.validationStatus = validationStatus;
     }
 
+    /*
+     * (non-Javadoc)
+     * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
+     */
+    @Override
+    public <T> T getAdapter(Class<T> adapter) {
+        if (adapter.isAssignableFrom(IRepositoryStore.class)) {
+            // adapt to IRepositoryStore
+            return (T) getParentRepositoryStore().orElse(null);
+        }
+        return null;
+    }
+
+    /**
+     * Get name to display
+     * 
+     * @return the name to display with an eventual alternative when displayName is empty
+     */
+    public abstract String getText();
 }

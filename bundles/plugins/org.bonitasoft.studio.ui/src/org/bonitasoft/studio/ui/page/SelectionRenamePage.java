@@ -19,6 +19,7 @@ import java.util.Optional;
 
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
+import org.bonitasoft.studio.common.ui.IDisplayable;
 import org.bonitasoft.studio.ui.dialog.RenameXMLFileDialog;
 import org.bonitasoft.studio.ui.provider.FileStoreLabelProvider;
 import org.bonitasoft.studio.ui.validator.ExtensionSupported;
@@ -74,8 +75,9 @@ public class SelectionRenamePage<T extends IRepositoryStore<? extends IRepositor
     }
 
     public void rename(Event e) {
-        nameValidator.setCurrentFileName(getSelection().findFirst().get().getDisplayName());
-        if (RenameXMLFileDialog.open(currentShell, getSelection().findFirst().get(), nameValidator)) {
+        IRepositoryFileStore<?> selected = getSelection().findFirst().get();
+        nameValidator.setCurrentFileName(IDisplayable.toDisplayName(selected).orElse(""));
+        if (RenameXMLFileDialog.open(currentShell, selected, nameValidator)) {
             tableViewer.refresh();
         }
     }

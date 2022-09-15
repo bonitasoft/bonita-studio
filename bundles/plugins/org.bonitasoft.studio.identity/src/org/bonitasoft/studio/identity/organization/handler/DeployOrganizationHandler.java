@@ -27,6 +27,7 @@ import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.core.ActiveOrganizationProvider;
 import org.bonitasoft.studio.common.repository.filestore.AbstractFileStore;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
+import org.bonitasoft.studio.common.ui.IDisplayable;
 import org.bonitasoft.studio.identity.IdentityPlugin;
 import org.bonitasoft.studio.identity.i18n.Messages;
 import org.bonitasoft.studio.identity.organization.exception.OrganizationValidationException;
@@ -84,9 +85,11 @@ public class DeployOrganizationHandler {
                 .ifPresent(status -> openResultDialog(exceptionDialogHandler, controlSupplier, status));
     }
 
-    private Optional<Organization> findOrganizationToDeploy(RepositoryAccessor repositoryAccessor, String organization) {
+    private Optional<Organization> findOrganizationToDeploy(RepositoryAccessor repositoryAccessor,
+            String organization) {
         return Optional.ofNullable(organization)
-                .map(orga -> repositoryAccessor.getRepositoryStore(OrganizationRepositoryStore.class).getChild(orga, true))
+                .map(orga -> repositoryAccessor.getRepositoryStore(OrganizationRepositoryStore.class).getChild(orga,
+                        true))
                 .map(t -> {
                     try {
                         return t.getContent();
@@ -100,7 +103,7 @@ public class DeployOrganizationHandler {
     protected void openResultDialog(ExceptionDialogHandler exceptionDialogHandler,
             DeployOrganizationControlSupplier controlSupplier, IStatus status) {
         if (status.isOK()) {
-            final String organizationName = controlSupplier.getFileStore().getDisplayName();
+            final String organizationName = IDisplayable.toDisplayName(controlSupplier).orElse("");
             MessageDialog.openInformation(Display.getDefault().getActiveShell(),
                     Messages.deployInformationTitle,
                     NLS.bind(getSuccessMessage(), organizationName));
@@ -135,13 +138,13 @@ public class DeployOrganizationHandler {
                     monitor.beginTask(Messages.validatingOrganizationContent, IProgressMonitor.UNKNOWN);
                     IStatus status;
                     try {
-                         status = new OrganizationValidator().validate(fileStore.getContent());
+                        status = new OrganizationValidator().validate(fileStore.getContent());
                     } catch (ReadFileStoreException e1) {
                         status = ValidationStatus.error(e1.getMessage());
                     }
                     if (!status.isOK()) {
-                        throw new InvocationTargetException(
-                                new OrganizationValidationException((MultiStatus) status, fileStore.getDisplayName()));
+                        throw new InvocationTargetException(new OrganizationValidationException((MultiStatus) status,
+                                IDisplayable.toDisplayName(fileStore).orElse("")));
                     }
                     monitor.beginTask(Messages.deployOrganization, IProgressMonitor.UNKNOWN);
                     final ICommandService service = PlatformUI.getWorkbench()
@@ -150,8 +153,10 @@ public class DeployOrganizationHandler {
                             .getService(IHandlerService.class);
                     final Command cmd = service.getCommand("org.bonitasoft.studio.engine.installOrganization");
                     try {
-                        final Parameterization p = new Parameterization(cmd.getParameter("artifact"), fileStore.getName());
-                        handlerService.executeCommand(new ParameterizedCommand(cmd, new Parameterization[] { p }), null);
+                        final Parameterization p = new Parameterization(cmd.getParameter("artifact"),
+                                fileStore.getName());
+                        handlerService.executeCommand(new ParameterizedCommand(cmd, new Parameterization[] { p }),
+                                null);
                         AbstractFileStore.refreshExplorerView();
                     } catch (final Exception e) {
                         throw new InvocationTargetException(e);
@@ -179,7 +184,7 @@ public class DeployOrganizationHandler {
             DeployOrganizationControlSupplier controlSupplier) {
         activeOrganizationProvider.saveDefaultUser(controlSupplier.getUsername());
     }
-    
+
     @CanExecute
     public boolean isEnabled() {
         return RepositoryManager.getInstance().hasActiveRepository();

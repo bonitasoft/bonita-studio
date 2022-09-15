@@ -22,7 +22,6 @@ import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.common.repository.provider.DefinitionResourceProvider;
 import org.bonitasoft.studio.common.repository.store.AbstractEMFRepositoryStore;
 import org.bonitasoft.studio.connector.model.definition.AbstractDefFileStore;
-import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
 import org.bonitasoft.studio.connector.model.definition.dialog.ConnectorDefinitionWizardDialog;
 import org.bonitasoft.studio.connectors.ConnectorPlugin;
 import org.bonitasoft.studio.connectors.ui.wizard.ConnectorDefinitionWizard;
@@ -44,25 +43,6 @@ public class ConnectorDefFileStore extends AbstractDefFileStore implements IRena
     @Override
     protected Bundle getBundle() {
         return ConnectorPlugin.getDefault().getBundle();
-    }
-
-    @Override
-    public String getDisplayName() {
-        ConnectorDefRepositoryStore store = (ConnectorDefRepositoryStore) getParentStore();
-        ConnectorDefinition def;
-        try {
-            def = getContent();
-        } catch (ReadFileStoreException e) {
-            return getName();
-        }
-        if (def != null) {
-            String defName = store.getResourceProvider().getConnectorDefinitionLabel(def);
-            if (defName == null) {
-                defName = def.getId();
-            }
-            return defName + " (" + def.getVersion() + ")";
-        }
-        return super.getDisplayName();
     }
 
     @Override

@@ -23,13 +23,10 @@ import java.util.Optional;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
-import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IJavaContainer;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.common.repository.store.SourceRepositoryStore;
-import org.bonitasoft.studio.common.ui.editor.EditorUtil;
-import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
@@ -44,7 +41,6 @@ import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.ui.jarpackager.IJarExportRunnable;
 import org.eclipse.jdt.ui.jarpackager.JarPackageData;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
@@ -78,20 +74,6 @@ public class SourceFileStore extends AbstractFileStore<InputStream> {
             return qualifiedClassName;
         }
 
-    }
-
-    @Override
-    public String getDisplayName() {
-        return getName();
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.repository.model.IRepositoryFileStore#getIcon()
-     */
-    @Override
-    public Image getIcon() {
-        return Pics.getImage("java.gif", CommonRepositoryPlugin.getDefault());
     }
 
     @Override

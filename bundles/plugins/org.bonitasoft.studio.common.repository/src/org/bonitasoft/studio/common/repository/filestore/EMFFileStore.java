@@ -32,7 +32,6 @@ import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.transaction.util.TransactionUtil;
-import org.eclipse.swt.graphics.Image;
 
 /**
  * @author Romain Bioteau
@@ -138,26 +137,8 @@ public abstract class EMFFileStore<T extends EObject> extends AbstractFileStore<
     }
 
     @Override
-    public String getDisplayName() {
-        try {
-            return getLabelProvider().getText(getContent());
-        } catch (ReadFileStoreException e) {
-            return getName();
-        }
-    }
-
-    @Override
     public AbstractEMFRepositoryStore<? extends IRepositoryFileStore<T>> getParentStore() {
         return (AbstractEMFRepositoryStore<? extends IRepositoryFileStore<T>>) super.getParentStore();
-    }
-
-    @Override
-    public Image getIcon() {
-        try {
-            return getLabelProvider().getImage(getContent());
-        } catch (ReadFileStoreException e) {
-            return null;
-        }
     }
 
     @Override

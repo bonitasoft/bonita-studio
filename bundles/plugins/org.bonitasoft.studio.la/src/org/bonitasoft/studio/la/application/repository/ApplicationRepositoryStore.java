@@ -73,8 +73,8 @@ public class ApplicationRepositoryStore extends AbstractRepositoryStore<Applicat
      * @see org.bonitasoft.studio.common.repository.model.IDisplayable#getIcon()
      */
     @Override
-    public Image getIcon() {
-        return Pics.getImage(PicsConstants.application);
+    public String getPathIcon() {
+        return PicsConstants.application;
     }
 
     /*

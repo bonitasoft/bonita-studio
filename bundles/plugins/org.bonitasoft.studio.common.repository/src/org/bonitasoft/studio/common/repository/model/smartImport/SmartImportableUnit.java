@@ -13,10 +13,8 @@ import java.util.List;
 
 import org.bonitasoft.studio.common.model.ConflictStatus;
 import org.bonitasoft.studio.common.model.ImportAction;
-import org.bonitasoft.studio.common.repository.model.IPresentable;
-import org.eclipse.swt.graphics.Image;
 
-public abstract class SmartImportableUnit implements IPresentable {
+public abstract class SmartImportableUnit {
 
     private ImportAction importAction = ImportAction.OVERWRITE;
     private ConflictStatus conflictStatus = ConflictStatus.NONE;
@@ -37,11 +35,11 @@ public abstract class SmartImportableUnit implements IPresentable {
     public void setConflictStatus(ConflictStatus conflictStatus) {
         this.conflictStatus = conflictStatus;
     }
-    
+
     public void setConflictingObjectName(String conflictingObjectName) {
         this.conflictingObjectName = conflictingObjectName;
     }
-    
+
     public String getConflictingObjectName() {
         return conflictingObjectName;
     }
@@ -88,14 +86,4 @@ public abstract class SmartImportableUnit implements IPresentable {
     public abstract String getName();
 
     public abstract String getToolTipText();
-
-    @Override
-    public String getText() {
-        return getName();
-    }
-
-    @Override
-    public Image getImage() {
-        return null;
-    }
 }

@@ -32,6 +32,7 @@ import org.bonitasoft.studio.common.repository.model.IDeployable;
 import org.bonitasoft.studio.common.repository.model.IRenamable;
 import org.bonitasoft.studio.common.repository.model.ITenantResource;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
+import org.bonitasoft.studio.common.ui.IDisplayable;
 import org.bonitasoft.studio.common.ui.PlatformUtil;
 import org.bonitasoft.studio.common.ui.jface.FileActionDialog;
 import org.bonitasoft.studio.identity.IdentityPlugin;
@@ -44,7 +45,6 @@ import org.bonitasoft.studio.identity.organization.model.organization.util.Organ
 import org.bonitasoft.studio.identity.organization.operation.CleanPublishOrganizationOperation;
 import org.bonitasoft.studio.identity.organization.operation.PublishOrganizationOperation;
 import org.bonitasoft.studio.identity.organization.operation.UpdateOrganizationOperation;
-import org.bonitasoft.studio.identity.organization.styler.ActiveOrganizationStyler;
 import org.bonitasoft.studio.ui.i18n.Messages;
 import org.bonitasoft.studio.ui.validator.ExtensionSupported;
 import org.bonitasoft.studio.ui.validator.FileNameValidator;
@@ -63,8 +63,6 @@ import org.eclipse.emf.ecore.xmi.impl.XMLResourceImpl;
 import org.eclipse.emf.ecore.xmi.util.XMLProcessor;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.InputDialog;
-import org.eclipse.jface.viewers.StyledString;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
@@ -83,27 +81,10 @@ public class OrganizationFileStore extends EMFFileStore<Organization>
     private static final String DEPLOY_ORGA_CMD = "org.bonitasoft.studio.organization.publish";
     public static final String ORGANIZATION_EXT = ".organization";
     private ActiveOrganizationProvider activeOrganizationProvider;
-    private ActiveOrganizationStyler activeOrganizationStyler;
 
     public OrganizationFileStore(final String fileName, final OrganizationRepositoryStore store) {
         super(fileName, store);
         activeOrganizationProvider = new ActiveOrganizationProvider();
-        activeOrganizationStyler = new ActiveOrganizationStyler();
-    }
-
-    @Override
-    public String getDisplayName() {
-        try {
-            return getContent().getName();
-        } catch (ReadFileStoreException e) {
-            BonitaStudioLog.warning(e.getMessage(), IdentityPlugin.PLUGIN_ID);
-            return getName();
-        }
-    }
-
-    @Override
-    public Image getIcon() {
-        return getParentStore().getIcon();
     }
 
     @Override
@@ -266,16 +247,6 @@ public class OrganizationFileStore extends EMFFileStore<Organization>
         return Optional.empty();
     }
 
-    @Override
-    public StyledString getStyledString() {
-        StyledString styledString = super.getStyledString();
-        if (isActiveOrganization()) {
-            styledString.append(String.format("  (%s)", org.bonitasoft.studio.identity.i18n.Messages.active),
-                    activeOrganizationStyler);
-        }
-        return styledString;
-    }
-
     public boolean isActiveOrganization() {
         Organization organization = null;
         try {
@@ -344,6 +315,15 @@ public class OrganizationFileStore extends EMFFileStore<Organization>
     public boolean canBeDeleted() {
         var activeOrganization = activeOrganizationProvider.getActiveOrganization();
         return !Objects.equals(activeOrganization, getDisplayName()) && super.canBeDeleted();
+    }
+
+    /**
+     * Get UI display name
+     * 
+     * @return display name
+     */
+    private String getDisplayName() {
+        return IDisplayable.toDisplayName(this).orElse("");
     }
 
 }

@@ -29,6 +29,7 @@ Require-Bundle: org.eclipse.gmf.runtime.lite.svg,
  org.bonitasoft.studio.connectors.model
 Export-Package: org.bonitasoft.studio.common.diagram,
  org.bonitasoft.studio.common.diagram.dialog,
+ org.bonitasoft.studio.common.diagram.editor,
  org.bonitasoft.studio.common.diagram.palette,
  org.bonitasoft.studio.common.diagram.tools,
  org.bonitasoft.studio.common.editingdomain,

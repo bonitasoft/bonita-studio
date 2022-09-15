@@ -24,6 +24,7 @@ import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.application.ui.control.model.TenantArtifact;
 import org.bonitasoft.studio.common.core.IRunnableWithStatus;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
+import org.bonitasoft.studio.common.ui.IDisplayable;
 import org.bonitasoft.studio.ui.util.StatusCollectors;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -37,7 +38,8 @@ public class DeployTenantResourcesOperation implements IRunnableWithStatus {
     private APISession apiSession;
     private Map<String, Object> deployOptions = new HashMap<String, Object>();
 
-    public DeployTenantResourcesOperation(Collection<TenantArtifact> artifactsToDeploy, APISession apiSession, Map<String, Object> deployOptions) {
+    public DeployTenantResourcesOperation(Collection<TenantArtifact> artifactsToDeploy, APISession apiSession,
+            Map<String, Object> deployOptions) {
         this.artifactsToDeploy = artifactsToDeploy;
         this.apiSession = apiSession;
         this.deployOptions = deployOptions;
@@ -47,10 +49,22 @@ public class DeployTenantResourcesOperation implements IRunnableWithStatus {
     public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
         status = artifactsToDeploy.stream()
                 .sorted()
-                .peek(artifact -> monitor.setTaskName(String.format(Messages.deploying, artifact.getDisplayName())))
-                .map(artifact ->  !monitor.isCanceled() ? artifact.deploy(apiSession, deployOptions, AbstractRepository.NULL_PROGRESS_MONITOR) : Status.CANCEL_STATUS)
+                .peek(artifact -> monitor.setTaskName(String.format(Messages.deploying, getDisplayName(artifact))))
+                .map(artifact -> !monitor.isCanceled()
+                        ? artifact.deploy(apiSession, deployOptions, AbstractRepository.NULL_PROGRESS_MONITOR)
+                        : Status.CANCEL_STATUS)
                 .peek(status -> monitor.worked(1))
                 .collect(StatusCollectors.toMultiStatus());
+    }
+
+    /**
+     * Get name to display for artifact
+     * 
+     * @param artifact artifact to display
+     * @return displayable name
+     */
+    private String getDisplayName(TenantArtifact artifact) {
+        return IDisplayable.adapt(artifact).map(IDisplayable::getDisplayName).orElseGet(artifact::getName);
     }
 
     @Override

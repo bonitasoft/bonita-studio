@@ -26,13 +26,10 @@ import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.store.SourceRepositoryStore;
 import org.bonitasoft.studio.groovy.Messages;
-import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.swt.graphics.Image;
-
 import com.google.common.base.Function;
 
 /**
@@ -88,8 +85,8 @@ public class GroovyRepositoryStore extends SourceRepositoryStore<GroovyFileStore
      * @see org.bonitasoft.studio.common.repository.model.IRepositoryStore#getIcon()
      */
     @Override
-    public Image getIcon() {
-        return Pics.getImage(PicsConstants.groovyScript);
+    public String getPathIcon() {
+        return PicsConstants.groovyScript;
     }
 
     /* (non-Javadoc)

@@ -99,8 +99,8 @@ public class ActorFilterDefRepositoryStore extends AbstractDefinitionRepositoryS
     }
 
     @Override
-    public Image getIcon() {
-        return Pics.getImage(PicsConstants.filterDef);
+    public String getPathIcon() {
+        return PicsConstants.filterDef;
     }
 
     @Override

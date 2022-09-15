@@ -22,6 +22,7 @@ import java.util.List;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
+import org.bonitasoft.studio.common.ui.IDisplayable;
 import org.bonitasoft.studio.groovy.library.FunctionsRepositoryFactory;
 import org.bonitasoft.studio.groovy.library.GroovyFunction;
 import org.bonitasoft.studio.groovy.repository.GroovyRepositoryStore;
@@ -36,6 +37,7 @@ import org.codehaus.groovy.eclipse.codeassist.requestor.CompletionNodeFinder;
 import org.codehaus.groovy.eclipse.codeassist.requestor.ContentAssistContext;
 import org.codehaus.groovy.runtime.DefaultGroovyMethods;
 import org.codehaus.jdt.groovy.model.GroovyCompilationUnit;
+import org.eclipse.core.runtime.Adapters;
 import org.eclipse.jdt.core.Flags;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IMethod;
@@ -144,7 +146,8 @@ public class GroovyDocumentUtil {
                 GroovyRepositoryStore store = repository.getRepositoryStore(GroovyRepositoryStore.class);
                 IJavaProject javaProject = repository.getJavaProject();
                 for (IRepositoryFileStore artifact : store.getChildren()) {
-                    IType type = javaProject.findType(artifact.getDisplayName().replace("/", "."));
+                    IDisplayable display = Adapters.adapt(artifact, IDisplayable.class);
+                    IType type = javaProject.findType(display.getDisplayName().replace("/", "."));
                     if (type != null) {
                         for (IMethod m : type.getMethods()) {
                             if (m.getFlags() == (Flags.AccStatic | Flags.AccPublic)) {

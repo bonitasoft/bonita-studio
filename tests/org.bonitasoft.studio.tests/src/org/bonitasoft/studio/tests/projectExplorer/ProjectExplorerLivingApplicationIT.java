@@ -19,6 +19,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.io.File;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.bonitasoft.engine.api.ApplicationAPI;
@@ -30,6 +31,7 @@ import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
+import org.bonitasoft.studio.common.ui.IDisplayable;
 import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.identity.organization.repository.OrganizationRepositoryStore;
 import org.bonitasoft.studio.la.LivingApplicationPlugin;
@@ -126,21 +128,24 @@ public class ProjectExplorerLivingApplicationIT {
     }
 
     private void validateApplicatonDoesntExist(String name) {
+        Function<ApplicationFileStore, String> toDisplayName = s -> IDisplayable.toDisplayName(s).orElse("");
         assertThat(repositoryAccessor.getRepositoryStore(ApplicationRepositoryStore.class).getChildren())
-                .flatExtracting(ApplicationFileStore::getDisplayName)
+                .flatExtracting(toDisplayName)
                 .doesNotContain(name);
     }
 
     private void validateApplicatonExists(String name) {
+        Function<ApplicationFileStore, String> toDisplayName = s -> IDisplayable.toDisplayName(s).orElse("");
         assertThat(repositoryAccessor.getRepositoryStore(ApplicationRepositoryStore.class).getChildren())
-                .flatExtracting(ApplicationFileStore::getDisplayName)
+                .flatExtracting(toDisplayName)
                 .contains(name);
     }
 
     private String findNewApplicationName() {
+        Function<ApplicationFileStore, String> toDisplayName = s -> IDisplayable.toDisplayName(s).orElse("");
         List<String> existingApplicationNameList = repositoryAccessor
                 .getRepositoryStore(ApplicationRepositoryStore.class)
-                .getChildren().stream().map(ApplicationFileStore::getDisplayName).collect(Collectors.toList());
+                .getChildren().stream().map(toDisplayName).collect(Collectors.toList());
         return StringIncrementer.getNextIncrement(NewApplicationHandler.DEFAULT_FILE_NAME,
                 existingApplicationNameList);
     }
