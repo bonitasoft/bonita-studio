@@ -11,5 +11,5 @@
 			<attribute name="test" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="output" path="bin"/>
+	<classpathentry kind="output" path="target/classes"/>
 </classpath>
