@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<!-- Generator: Adobe Illustrator 13.0.2, SVG Export Plug-In . SVG Version: 6.00 Build 14948)  -->
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Calque_1" x="0px" y="0px" width="33.875px" height="33.876px" viewBox="0 0 33.875 33.876" enable-background="new 0 0 33.875 33.876" xml:space="preserve" preserveAspectRatio="xMidYMid meet" zoomAndPan="magnify" contentScriptType="text/ecmascript" contentStyleType="text/css">
+
+<rect opacity="0" fill="#FFFFFF" width="33.875" height="33.876"/>
+<g>
+	<linearGradient id="SVGID_1_" gradientUnits="userSpaceOnUse" x1="26.1924" y1="26.7393" x2="7.4484" y2="6.8874" xlink:type="simple" xlink:show="other" xlink:actuate="onLoad">
+		<stop offset="0" style="stop-color:#B8B9DA"/>
+		<stop offset="1" style="stop-color:#FBFBEE"/>
+	</linearGradient>
+	<circle fill="url(#SVGID_1_)" stroke="#2C6DA3" stroke-width="2.7" cx="16.938" cy="16.938" r="15.333"/>
+	<polygon fill="#2C6DA3" points="16.938,28.456 13.588,22.738 6.962,22.697 10.239,16.938 6.962,11.178 13.588,11.137 16.938,5.419    20.287,11.137 26.913,11.178 23.636,16.938 26.913,22.697 20.287,22.738  "/>
+</g>
+</svg>

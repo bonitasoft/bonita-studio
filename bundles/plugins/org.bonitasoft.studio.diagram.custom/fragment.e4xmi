@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="ASCII"?>
+<fragment:ModelFragments xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:commands="http://www.eclipse.org/ui/2010/UIModel/application/commands" xmlns:fragment="http://www.eclipse.org/ui/2010/UIModel/fragment" xmi:id="_U2BRYNEgEeiZw5b_HoiMJA">
+  <fragments xsi:type="fragment:StringModelFragment" xmi:id="_WCqqsNEgEeiZw5b_HoiMJA" featurename="commands" parentElementId="org.eclipse.e4.legacy.ide.application">
+    <elements xsi:type="commands:Command" xmi:id="_YUdHINEgEeiZw5b_HoiMJA" elementId="org.bonitasoft.studio.diagram.custom.command.duplicate" commandName="%duplicateDiagram"/>
+  </fragments>
+  <fragments xsi:type="fragment:StringModelFragment" xmi:id="_cp_kANEgEeiZw5b_HoiMJA" featurename="handlers" parentElementId="org.eclipse.e4.legacy.ide.application">
+    <elements xsi:type="commands:Handler" xmi:id="_ecdAINEgEeiZw5b_HoiMJA" elementId="org.bonitasoft.studio.diagram.custom.handler.duplicateDiagram" contributionURI="bundleclass://org.bonitasoft.studio.diagram.custom/org.bonitasoft.studio.diagram.custom.handlers.DuplicateDiagramHandler" command="_YUdHINEgEeiZw5b_HoiMJA"/>
+  </fragments>
+</fragment:ModelFragments>

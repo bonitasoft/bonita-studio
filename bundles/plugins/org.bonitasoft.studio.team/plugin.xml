@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin>
+
+   <extension
+         point="org.eclipse.core.runtime.preferences">
+      <initializer
+            class="org.bonitasoft.studio.team.preferences.TeamPreferenceInitializer">
+      </initializer>
+   </extension>
+   <extension
+         point="org.eclipse.team.core.fileTypes">
+      <fileTypes
+            extension="proc"
+            type="text">
+      </fileTypes>
+      <extension
+            point="org.eclipse.team.core.ignore">
+         <ignore
+               enabled="true"
+               pattern="provided-libs">
+         </ignore>
+         <ignore
+               enabled="true"
+               pattern="bin">
+         </ignore>
+         <ignore
+               enabled="true"
+               pattern="DefaultUserScript.groovy">
+         </ignore>
+         <ignore
+               enabled="true"
+               pattern=".settings">
+         </ignore>
+         <ignore
+               enabled="true"
+               pattern="providedscripts">
+         </ignore>
+         <ignore
+               enabled="true"
+               pattern=".classpath">
+         </ignore>
+         <ignore
+               enabled="true"
+               pattern="Provided">
+         </ignore>
+      </extension>
+   </extension>
+   <extension
+         point="org.bonitasoft.studio.repositoryFactory">
+      <repositoryFactory
+            class="org.bonitasoft.studio.team.repository.RepositoryFactory"
+            priority="0">
+      </repositoryFactory>
+   </extension>
+   <extension
+         point="org.eclipse.ui.perspectives">
+      <perspective
+            class="org.bonitasoft.studio.team.ui.ComparePerspectiveFactory"
+            id="org.bonitasoft.studio.team.compare.perspective"
+            name="Comapre perspective">
+      </perspective>
+   </extension>
+
+</plugin>
