@@ -14,6 +14,9 @@
  */
 package org.bonitasoft.studio.maven.ui.internal;
 
+import java.util.Optional;
+import java.util.function.Supplier;
+
 import org.bonitasoft.plugin.analyze.report.model.CustomPage;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.common.ui.IDisplayable;
@@ -55,14 +58,19 @@ public class DisplayableAdapterFactory implements IAdapterFactory {
                             return customPage.getDisplayName();
                         }
                     }
-                    try {
-                        final CustomPageMavenProjectDescriptor content = store.getContent();
-                        return String.format("%s (%s)", content.getArtifactId(), content.getVersion());
-                    } catch (final ReadFileStoreException e) {
-                        if (store.getName().indexOf('.') != -1) {
+                    Supplier<String> getFromName = () -> {
+                        if (store.getName() != null && store.getName().indexOf('.') != -1) {
                             return store.getName().substring(0, store.getName().lastIndexOf('.'));
                         }
                         return store.getName();
+                    };
+                    try {
+                        final CustomPageMavenProjectDescriptor content = store.getContent();
+                        return Optional.ofNullable(content)
+                                .map(c -> String.format("%s (%s)", c.getArtifactId(), c.getVersion()))
+                                .orElseGet(getFromName);
+                    } catch (final ReadFileStoreException e) {
+                        return getFromName.get();
                     }
                 }
 

@@ -1450,7 +1450,7 @@
                adaptableType="org.eclipse.emf.ecore.EAttribute"
                class="org.bonitasoft.studio.validation.constraints.process.internal.PerAttributeValidatorAdapterFactory">
             <adapter
-                  type="org.bonitasoft.studio.common.ui.jface.databinding.validator.EAttributeValidatorFactory">
+                  type="org.bonitasoft.studio.common.databinding.validator.EAttributeValidatorFactory">
             </adapter>
          </factory>
       </extension>

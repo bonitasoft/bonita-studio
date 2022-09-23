@@ -56,64 +56,66 @@ public class RepositoryFileStoreDisplayable implements IDisplayable {
     @Override
     public String getDisplayName() {
         if (store instanceof EMFFileStore) {
-            try {
-                return ((EMFFileStore) store).getLabelProvider().getText(store.getContent());
-            } catch (ReadFileStoreException e) {
-                return store.getName();
-            }
-        } else if (store instanceof BusinessObjectModelFileStore) {
-            return Messages.businessDataModel;
-        } else if (store instanceof NamedJSONFileStore) {
-            return ((NamedJSONFileStore) store).getCustomPageName();
-        } else if (store instanceof WebPageFileStore) {
-            try {
-                return ((WebPageFileStore) store).getStringAttribute(DISPLAY_NAME_KEY);
-            } catch (ReadFileStoreException e) {
-                return store.getName();
-            }
-        } else if (store instanceof DiagramFileStore) {
-            final String displayName = store.getResource().getLocation().removeFileExtension().lastSegment();
-            final Matcher matcher = diagramNamePattern.matcher(displayName);
-            if (matcher.matches()) {
-                return String.format("%s (%s)", matcher.group(1), matcher.group(2));
-            }
-            return displayName;
-        } else if (store instanceof AbstractDefFileStore) {
-            // ActorFilterDefFileStore or ConnectorDefFileStore
-            AbstractDefinitionRepositoryStore parentStore = (AbstractDefinitionRepositoryStore) ((AbstractDefFileStore) store)
-                    .getParentStore();
-            ConnectorDefinition def;
-            try {
-                def = ((ActorFilterDefFileStore) store).getContent();
-            } catch (ReadFileStoreException e) {
-                return store.getName();
-            }
-            if (def != null) {
-                String defName = parentStore.getResourceProvider().getConnectorDefinitionLabel(def);
-                if (defName == null) {
-                    defName = def.getId();
-                }
-                return defName + " (" + def.getVersion() + ")";
-            }
-            // else, let defaut behavior do the job
-        } else if (store instanceof EnvironmentFileStore) {
-            if (store instanceof LocalEnvironmentFileStore) {
-                return ConfigurationPreferenceConstants.LOCAL_CONFIGURATION;
-            } else {
+            if (store instanceof AbstractDefFileStore) {
+                // ActorFilterDefFileStore or ConnectorDefFileStore
+                AbstractDefinitionRepositoryStore parentStore = (AbstractDefinitionRepositoryStore) ((AbstractDefFileStore) store)
+                        .getParentStore();
+                ConnectorDefinition def;
                 try {
-                    return ((EnvironmentFileStore) store).getContent().getName();
+                    def = ((ActorFilterDefFileStore) store).getContent();
+                } catch (ReadFileStoreException e) {
+                    return store.getName();
+                }
+                if (def != null) {
+                    String defName = parentStore.getResourceProvider().getConnectorDefinitionLabel(def);
+                    if (defName == null) {
+                        defName = def.getId();
+                    }
+                    return defName + " (" + def.getVersion() + ")";
+                }
+                // else, let defaut behavior do the job
+            } else if (store instanceof DiagramFileStore) {
+                final String displayName = store.getResource().getLocation().removeFileExtension().lastSegment();
+                final Matcher matcher = diagramNamePattern.matcher(displayName);
+                if (matcher.matches()) {
+                    return String.format("%s (%s)", matcher.group(1), matcher.group(2));
+                }
+                return displayName;
+            } else if (store instanceof EnvironmentFileStore) {
+                if (store instanceof LocalEnvironmentFileStore) {
+                    return ConfigurationPreferenceConstants.LOCAL_CONFIGURATION;
+                } else {
+                    try {
+                        return ((EnvironmentFileStore) store).getContent().getName();
+                    } catch (ReadFileStoreException e) {
+                        BonitaStudioLog.warning(e.getMessage(), getClass());
+                        return store.getName();
+                    }
+                }
+            } else if (store instanceof OrganizationFileStore) {
+                try {
+                    return ((OrganizationFileStore) store).getContent().getName();
                 } catch (ReadFileStoreException e) {
                     BonitaStudioLog.warning(e.getMessage(), getClass());
                     return store.getName();
                 }
-            }
-        } else if (store instanceof OrganizationFileStore) {
-            try {
-                return ((OrganizationFileStore) store).getContent().getName();
-            } catch (ReadFileStoreException e) {
-                BonitaStudioLog.warning(e.getMessage(), getClass());
-                return store.getName();
-            }
+            } else
+                try {
+                    return ((EMFFileStore) store).getLabelProvider().getText(store.getContent());
+                } catch (ReadFileStoreException e) {
+                    return store.getName();
+                }
+        } else if (store instanceof BusinessObjectModelFileStore) {
+            return Messages.businessDataModel;
+        } else if (store instanceof NamedJSONFileStore) {
+            if (store instanceof WebPageFileStore) {
+                try {
+                    return ((WebPageFileStore) store).getStringAttribute(DISPLAY_NAME_KEY);
+                } catch (ReadFileStoreException e) {
+                    return store.getName();
+                }
+            } else
+                return ((NamedJSONFileStore) store).getCustomPageName();
         } else if (store instanceof DatabaseConnectorPropertiesFileStore) {
             // rely on default behavior
         }
@@ -131,37 +133,38 @@ public class RepositoryFileStoreDisplayable implements IDisplayable {
             return Pics.getImage("package.gif", CommonRepositoryPlugin.getDefault());
         } else if (store instanceof SourceFileStore) {
             return Pics.getImage("java.gif", CommonRepositoryPlugin.getDefault());
-        } else if (store instanceof DefinitionConfigurationFileStore) {
-            return Pics.getImage("conf.png", CommonRepositoryPlugin.getDefault());
         } else if (store instanceof GroovyFileStore) {
             return Pics.getImage(PicsConstants.groovyScript);
         } else if (store instanceof EMFFileStore) {
-            try {
-                return ((EMFFileStore) store).getLabelProvider().getImage(store.getContent());
-            } catch (ReadFileStoreException e) {
+            if (store instanceof AbstractDefFileStore) {
+                // ActorFilterDefFileStore or ConnectorDefFileStore
+                try {
+                    var definition = ((AbstractDefFileStore) store).getContent();
+                    ImageDescriptor descriptor = ((AbstractDefFileStore) store).getDefinitionImageResourceLoader()
+                            .getIcon(definition);
+                    if (descriptor != null) {
+                        return descriptor.createImage();
+                    }
+                } catch (ReadFileStoreException e) {
+                    BonitaStudioLog.debug(e.getMessage(), e, getClass());
+                }
                 return null;
-            }
+            } else if (store instanceof DefinitionConfigurationFileStore) {
+                return Pics.getImage("conf.png", CommonRepositoryPlugin.getDefault());
+            } else if (store instanceof EnvironmentFileStore) {
+                return Pics.getImage(PicsConstants.environment);
+            } else if (store instanceof OrganizationFileStore) {
+                // rely on default behavior
+            } else
+                try {
+                    return ((EMFFileStore) store).getLabelProvider().getImage(store.getContent());
+                } catch (ReadFileStoreException e) {
+                    return null;
+                }
         } else if (store instanceof BusinessObjectModelFileStore) {
             return Pics.getImage(PicsConstants.bdm);
         } else if (store instanceof MavenDependencyFileStore) {
             return Pics.getImage("jar.gif", DependenciesPlugin.getDefault());
-        } else if (store instanceof AbstractDefFileStore) {
-            // ActorFilterDefFileStore or ConnectorDefFileStore
-            try {
-                var definition = ((AbstractDefFileStore) store).getContent();
-                ImageDescriptor descriptor = ((AbstractDefFileStore) store).getDefinitionImageResourceLoader()
-                        .getIcon(definition);
-                if (descriptor != null) {
-                    return descriptor.createImage();
-                }
-            } catch (ReadFileStoreException e) {
-                BonitaStudioLog.debug(e.getMessage(), e, getClass());
-            }
-            return null;
-        } else if (store instanceof EnvironmentFileStore) {
-            return Pics.getImage(PicsConstants.environment);
-        } else if (store instanceof OrganizationFileStore) {
-            // rely on default behavior
         } else if (store instanceof DatabaseConnectorPropertiesFileStore) {
             return Pics.getImage("databases_driver.png", ConnectorPlugin.getDefault());
         }

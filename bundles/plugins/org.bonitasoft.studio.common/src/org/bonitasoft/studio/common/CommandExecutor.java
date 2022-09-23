@@ -17,6 +17,9 @@ package org.bonitasoft.studio.common;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
+import javax.inject.Inject;
+import javax.inject.Provider;
+import javax.inject.Singleton;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.eclipse.core.commands.ParameterizedCommand;
@@ -24,9 +27,6 @@ import org.eclipse.core.commands.common.NotDefinedException;
 import org.eclipse.e4.core.commands.ECommandService;
 import org.eclipse.e4.core.commands.EHandlerService;
 import org.eclipse.e4.core.di.annotations.Creatable;
-
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
 
 @Creatable
 public class CommandExecutor {

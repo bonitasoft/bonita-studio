@@ -13,4 +13,5 @@ Require-Bundle: org.junit,
  org.bonitasoft.studio.tests-utils,
  net.bytebuddy.byte-buddy,
  org.objenesis,
- org.bonitasoft.studio.common.ui
+ org.bonitasoft.studio.common.ui,
+ org.bonitasoft.studio.application
