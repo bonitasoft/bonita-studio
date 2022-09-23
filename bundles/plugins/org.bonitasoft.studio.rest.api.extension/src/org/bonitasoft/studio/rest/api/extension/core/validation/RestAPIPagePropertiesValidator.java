@@ -93,7 +93,7 @@ public class RestAPIPagePropertiesValidator extends TypedValidator<IFile, MultiS
 
     /*
      * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.ui.jface.databinding.validator.TypedValidator#doValidate(java.lang.Object)
+     * @see org.bonitasoft.studio.common.databinding.validator.TypedValidator#doValidate(java.lang.Object)
      */
     @Override
     protected MultiStatus doValidate(final IFile pagePropertyFile) {

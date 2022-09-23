@@ -56,16 +56,15 @@ public class DeployCustomPageOperation implements IRunnableWithProgress {
         final Page existingPage = findCustomPage(pageId);
         httpClientFactory.newLoginRequest().execute();
         final String uploadedFileToken = httpClientFactory.newUploadCustomPageRequest(file).execute();
-        String displayName = IDisplayable.toDisplayName(fileStore).orElse("");
         if (existingPage != null) {
             httpClientFactory.newUpdateCustomPageRequest(uploadedFileToken, existingPage).execute();
             BonitaStudioLog.info(
-                    String.format("%s has been updated in portal.", displayName),
+                    String.format("%s has been updated in portal.", IDisplayable.toDisplayName(fileStore).orElse("")),
                     RestAPIExtensionActivator.PLUGIN_ID);
         } else {
             httpClientFactory.newAddCustomPageRequest(uploadedFileToken).execute();
             BonitaStudioLog.info(
-                    String.format("%s has been added in portal.", displayName),
+                    String.format("%s has been added in portal.", IDisplayable.toDisplayName(fileStore).orElse("")),
                     RestAPIExtensionActivator.PLUGIN_ID);
         }
         return findCustomPage(pageId);

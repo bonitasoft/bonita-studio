@@ -46,7 +46,14 @@ public class BonitaStudioLogger {
      */
     public static Logger getLogger(final Class<?> clazz) {
         // loggerProvider should be initialized by DI, but may be null e.g. in unit tests
-        return Optional.ofNullable(loggerProvider).map(p -> p.getClassLogger(clazz)).orElse(null);
+        return Optional.ofNullable(loggerProvider).map(p -> {
+            try {
+                return p.getClassLogger(clazz);
+            } catch (Exception e) {
+                // may happen on disposal
+                return null;
+            }
+        }).orElse(null);
     }
 
     /**
@@ -56,14 +63,16 @@ public class BonitaStudioLogger {
      * @return logger
      */
     public static Logger getLogger(final String bundleName) {
-        Bundle bundle = Platform.getBundle(bundleName);
-        String activator = bundle.getHeaders().get(Constants.BUNDLE_ACTIVATOR);
         Class<?> clazz = BonitaStudioLogger.class;
-        if (activator != null) {
-            try {
-                clazz = bundle.loadClass(activator);
-            } catch (ClassNotFoundException e) {
-                getLogger(BonitaStudioLogger.class).error(e);
+        Bundle bundle = Platform.getBundle(bundleName);
+        if (bundle != null) {
+            String activator = bundle.getHeaders().get(Constants.BUNDLE_ACTIVATOR);
+            if (activator != null) {
+                try {
+                    clazz = bundle.loadClass(activator);
+                } catch (ClassNotFoundException e) {
+                    getLogger(BonitaStudioLogger.class).error(e);
+                }
             }
         }
         return getLogger(clazz);

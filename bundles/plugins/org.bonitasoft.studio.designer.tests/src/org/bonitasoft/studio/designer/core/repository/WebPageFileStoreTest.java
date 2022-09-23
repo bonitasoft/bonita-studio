@@ -101,7 +101,7 @@ public class WebPageFileStoreTest {
         IDisplayable bDisplayer = () -> "B - My form";
         doReturn(bDisplayer).when(form2).getAdapter(IDisplayable.class);
         assertThat(form.compareTo(form2)).isGreaterThan(0);
-        IDisplayable aDisplayer = () -> "B - My form";
+        IDisplayable aDisplayer = () -> "A - My form";
         doReturn(aDisplayer).when(form).getAdapter(IDisplayable.class);
         assertThat(form.compareTo(form2)).isLessThan(0);
     }

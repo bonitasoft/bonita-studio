@@ -47,7 +47,7 @@ public class TableExpressionWithoutLazyLoadedRefs extends TypedValidator<TableEx
 
     /*
      * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.ui.jface.databinding.validator.TypedValidator#doValidate(java.lang.Object)
+     * @see org.bonitasoft.studio.common.databinding.validator.TypedValidator#doValidate(java.lang.Object)
      */
     @Override
     protected IStatus doValidate(TableExpression table) {

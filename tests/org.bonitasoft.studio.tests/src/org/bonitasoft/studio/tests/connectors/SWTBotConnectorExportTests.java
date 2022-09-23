@@ -35,6 +35,7 @@ import org.bonitasoft.studio.connectors.repository.ConnectorDefRepositoryStore;
 import org.bonitasoft.studio.connectors.repository.ConnectorImplRepositoryStore;
 import org.bonitasoft.studio.connectors.repository.ExportConnectorArchiveOperation;
 import org.bonitasoft.studio.swtbot.framework.SWTBotConnectorTestUtil;
+import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
@@ -43,14 +44,17 @@ import org.eclipse.swtbot.swt.finder.SWTBot;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.waits.ICondition;
 import org.junit.After;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(SWTBotJunit4ClassRunner.class)
 public class SWTBotConnectorExportTests {
-    
+
     private SWTGefBot bot = new SWTGefBot();
 
+    @Rule
+    public SWTGefBotRule rule = new SWTGefBotRule(bot);
 
     private void exportConnector(final String connector, final String fileName,
             final boolean hasDependencies, final boolean hasSources) throws Exception {
