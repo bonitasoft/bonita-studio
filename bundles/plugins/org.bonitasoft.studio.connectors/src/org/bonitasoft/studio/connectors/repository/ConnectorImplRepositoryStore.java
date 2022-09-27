@@ -5,12 +5,10 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- * 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -27,11 +25,7 @@ import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.connector.model.implementation.AbstractConnectorImplRepositoryStore;
-import org.bonitasoft.studio.connectors.i18n.Messages;
-import org.bonitasoft.studio.pics.Pics;
-import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.swt.graphics.Image;
 
 public class ConnectorImplRepositoryStore extends AbstractConnectorImplRepositoryStore<ConnectorImplFileStore> {
 
@@ -48,16 +42,6 @@ public class ConnectorImplRepositoryStore extends AbstractConnectorImplRepositor
     @Override
     public String getName() {
         return STORE_NAME;
-    }
-
-    @Override
-    public String getDisplayName() {
-        return Messages.connectorImplRepositoryName;
-    }
-
-    @Override
-    public String getPathIcon() {
-        return PicsConstants.connectorImpl;
     }
 
     @Override
@@ -89,8 +73,9 @@ public class ConnectorImplRepositoryStore extends AbstractConnectorImplRepositor
             return new XMLModelCompatibilityValidator(new ModelNamespaceValidator(
                     ModelVersion.CURRENT_CONNECTOR_IMPLEMENTATION_NAMESPACE,
                     String.format(org.bonitasoft.studio.common.Messages.incompatibleModelVersion, filename),
-                    String.format(org.bonitasoft.studio.common.Messages.migrationWillBreakRetroCompatibility, filename)))
-                            .validate(inputStream);
+                    String.format(org.bonitasoft.studio.common.Messages.migrationWillBreakRetroCompatibility,
+                            filename)))
+                                    .validate(inputStream);
         }
         return super.validate(filename, inputStream);
     }

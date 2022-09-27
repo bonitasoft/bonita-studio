@@ -64,13 +64,14 @@ public interface IRepositoryStore<T extends IRepositoryFileStore<?>> {
     void refresh();
 
     MigrationReport migrate(IProgressMonitor monitor) throws CoreException, MigrationException;
-    
-    void migrate(IRepositoryFileStore<?> fileStore, final IProgressMonitor monitor) throws CoreException, MigrationException;
+
+    void migrate(IRepositoryFileStore<?> fileStore, final IProgressMonitor monitor)
+            throws CoreException, MigrationException;
 
     void close();
 
     void repositoryUpdated();
-    
+
     default int getImportOrder() {
         return 99;
     }
@@ -78,10 +79,5 @@ public interface IRepositoryStore<T extends IRepositoryFileStore<?>> {
     default IStatus validate(String filename, InputStream inputStream) {
         return ValidationStatus.ok();
     }
-    
-    String getDisplayName();
-
-    String getPathIcon();
-    
 
 }

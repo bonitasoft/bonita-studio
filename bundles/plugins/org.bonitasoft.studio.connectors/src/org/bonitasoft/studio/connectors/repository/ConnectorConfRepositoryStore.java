@@ -36,13 +36,10 @@ import org.bonitasoft.studio.common.repository.filestore.DefinitionConfiguration
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.common.repository.store.AbstractEMFRepositoryStore;
-import org.bonitasoft.studio.connectors.ConnectorPlugin;
-import org.bonitasoft.studio.connectors.i18n.Messages;
 import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration;
 import org.bonitasoft.studio.model.connectorconfiguration.util.ConnectorConfigurationAdapterFactory;
 import org.bonitasoft.studio.model.connectorconfiguration.util.ConnectorConfigurationResourceFactoryImpl;
 import org.bonitasoft.studio.model.connectorconfiguration.util.ConnectorConfigurationResourceImpl;
-import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -54,7 +51,6 @@ import org.eclipse.emf.edapt.migration.MigrationException;
 import org.eclipse.emf.edapt.migration.execution.Migrator;
 import org.eclipse.emf.edapt.spi.history.Release;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
-import org.eclipse.swt.graphics.Image;
 
 import com.google.common.io.Files;
 
@@ -91,24 +87,6 @@ public class ConnectorConfRepositoryStore extends AbstractEMFRepositoryStore<Def
 
     /*
      * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.repository.model.IRepositoryStore#getDisplayName()
-     */
-    @Override
-    public String getDisplayName() {
-        return Messages.connectorConfRepositoryName;
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.repository.model.IRepositoryStore#getIcon()
-     */
-    @Override
-    public String getPathIcon() {
-        return "conf.png";
-    }
-
-    /*
-     * (non-Javadoc)
      * @see org.bonitasoft.studio.common.repository.model.IRepositoryStore#getCompatibleExtensions()
      */
     @Override
@@ -128,7 +106,8 @@ public class ConnectorConfRepositoryStore extends AbstractEMFRepositoryStore<Def
         return result;
     }
 
-    public List<ConnectorConfiguration> getConnectorConfigurationsFor(final String defintionId, final String definitionVersion) {
+    public List<ConnectorConfiguration> getConnectorConfigurationsFor(final String defintionId,
+            final String definitionVersion) {
         final List<ConnectorConfiguration> result = new ArrayList<ConnectorConfiguration>();
         for (final ConnectorConfiguration child : getConnectorConfigurations()) {
             if (child.getDefinitionId().equals(defintionId) && child.getVersion().equals(definitionVersion)) {
@@ -188,12 +167,14 @@ public class ConnectorConfRepositoryStore extends AbstractEMFRepositoryStore<Def
     }
 
     @Override
-    protected InputStream handlePreImport(final String fileName, final InputStream inputStream) throws MigrationException, IOException {
+    protected InputStream handlePreImport(final String fileName, final InputStream inputStream)
+            throws MigrationException, IOException {
         CopyInputStream copyIs = null;
         try {
             final InputStream is = super.handlePreImport(fileName, inputStream);
             copyIs = new CopyInputStream(is);
-            final ConnectorConfigurationResourceImpl r = (ConnectorConfigurationResourceImpl) getTmpEMFResource("beforeImport",
+            final ConnectorConfigurationResourceImpl r = (ConnectorConfigurationResourceImpl) getTmpEMFResource(
+                    "beforeImport",
                     copyIs.getFile());
             try {
                 r.load(r.getDefaultLoadOptions());
@@ -208,9 +189,9 @@ public class ConnectorConfRepositoryStore extends AbstractEMFRepositoryStore<Def
                     if (!ModelVersion.CURRENT_DIAGRAM_VERSION.equals(mVersion)) {
                         configuration.setModelVersion(ModelVersion.CURRENT_DIAGRAM_VERSION);
                     }
-                    
+
                     applyTransformations(configuration);
-                    
+
                     try {
                         r.save(r.getDefaultSaveOptions());
                     } catch (final IOException e) {

@@ -50,8 +50,8 @@ import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 /**
  * @author Romain Bioteau
  */
-public abstract class AbstractConnectorImplRepositoryStore<T extends EMFFileStore> extends AbstractEMFRepositoryStore<T> implements IRepositoryStore<T>,
-        IImplementationRepositoryStore {
+public abstract class AbstractConnectorImplRepositoryStore<T extends EMFFileStore> extends AbstractEMFRepositoryStore<T>
+        implements IImplementationRepositoryStore {
 
     @Override
     protected void addAdapterFactory(final ComposedAdapterFactory adapterFactory) {
@@ -84,7 +84,7 @@ public abstract class AbstractConnectorImplRepositoryStore<T extends EMFFileStor
     @Override
     public List<ConnectorImplementation> getImplementations(String definitionId, String definitionVersion) {
         return getImplementations().stream()
-                .filter(impl -> Objects.equals(impl.getDefinitionId(), definitionId) 
+                .filter(impl -> Objects.equals(impl.getDefinitionId(), definitionId)
                         && Objects.equals(impl.getDefinitionVersion(), definitionVersion))
                 .collect(Collectors.toList());
     }
@@ -116,11 +116,14 @@ public abstract class AbstractConnectorImplRepositoryStore<T extends EMFFileStor
         if (!rSet.getResources().isEmpty()) {
             FileOutputStream fos = null;
             try {
-                final ConnectorImplementationResourceImpl r = (ConnectorImplementationResourceImpl) rSet.getResources().get(0);
+                final ConnectorImplementationResourceImpl r = (ConnectorImplementationResourceImpl) rSet.getResources()
+                        .get(0);
                 final Resource resource = new XMLResourceImpl(resourceURI);
-                final org.bonitasoft.studio.connector.model.implementation.DocumentRoot root = ConnectorImplementationFactory.eINSTANCE.createDocumentRoot();
-                final ConnectorImplementation definition = EcoreUtil.copy(((org.bonitasoft.studio.connector.model.implementation.DocumentRoot) r.getContents()
-                        .get(0)).getConnectorImplementation());
+                final org.bonitasoft.studio.connector.model.implementation.DocumentRoot root = ConnectorImplementationFactory.eINSTANCE
+                        .createDocumentRoot();
+                final ConnectorImplementation definition = EcoreUtil
+                        .copy(((org.bonitasoft.studio.connector.model.implementation.DocumentRoot) r.getContents()
+                                .get(0)).getConnectorImplementation());
                 root.setConnectorImplementation(definition);
                 resource.getContents().add(root);
                 final Map<String, String> options = new HashMap<String, String>();

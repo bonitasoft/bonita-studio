@@ -16,10 +16,15 @@ package org.bonitasoft.studio.document.ui.internal;
 
 import org.bonitasoft.studio.common.ui.IDisplayable;
 import org.bonitasoft.studio.document.core.repository.DocumentFileStore;
+import org.bonitasoft.studio.document.core.repository.DocumentRepositoryStore;
+import org.bonitasoft.studio.document.i18n.Messages;
+import org.bonitasoft.studio.pics.Pics;
+import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.core.runtime.IAdapterFactory;
+import org.eclipse.swt.graphics.Image;
 
 /**
- * Adapts {@link DocumentFileStore} to {@link IDisplayable}
+ * Adapts {@link DocumentFileStore} or {@link DocumentRepositoryStore} to {@link IDisplayable}
  * 
  * @author Vincent Hemery
  */
@@ -27,10 +32,26 @@ public class DisplayableAdapterFactory implements IAdapterFactory {
 
     @Override
     public <T> T getAdapter(Object adaptableObject, Class<T> adapterType) {
-        if (adapterType.isAssignableFrom(IDisplayable.class) && adaptableObject instanceof DocumentFileStore) {
-            DocumentFileStore store = (DocumentFileStore) adaptableObject;
-            IDisplayable display = store::getName;
-            return (T) display;
+        if (adapterType.isAssignableFrom(IDisplayable.class)) {
+            if (adaptableObject instanceof DocumentFileStore) {
+                DocumentFileStore store = (DocumentFileStore) adaptableObject;
+                IDisplayable display = store::getName;
+                return (T) display;
+            } else if (adaptableObject instanceof DocumentRepositoryStore) {
+                IDisplayable display = new IDisplayable() {
+
+                    @Override
+                    public String getDisplayName() {
+                        return Messages.documentRepository;
+                    }
+
+                    @Override
+                    public Image getIcon() {
+                        return Pics.getImage(PicsConstants.attachmentData);
+                    }
+                };
+                return (T) display;
+            }
         }
         return null;
     }

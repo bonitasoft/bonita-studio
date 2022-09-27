@@ -17,8 +17,6 @@ package org.bonitasoft.studio.designer.core.repository;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.bonitasoft.studio.designer.i18n.Messages;
-import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.core.resources.IFolder;
 
 /**
@@ -37,16 +35,6 @@ public class WebFragmentRepositoryStore extends WebArtifactRepositoryStore<WebFr
     @Override
     public String getName() {
         return WEB_FRAGMENT_REPOSITORY_NAME;
-    }
-
-    @Override
-    public String getDisplayName() {
-        return Messages.fragmentRepository;
-    }
-
-    @Override
-    public String getPathIcon() {
-        return PicsConstants.fragment;
     }
 
     @Override

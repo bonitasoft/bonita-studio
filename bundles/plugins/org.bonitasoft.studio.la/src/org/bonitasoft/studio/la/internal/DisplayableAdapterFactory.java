@@ -17,11 +17,15 @@ package org.bonitasoft.studio.la.internal;
 import org.bonitasoft.studio.application.ui.control.model.RepositoryFileStoreDisplayable;
 import org.bonitasoft.studio.common.ui.IDisplayable;
 import org.bonitasoft.studio.la.application.repository.ApplicationFileStore;
+import org.bonitasoft.studio.la.application.repository.ApplicationRepositoryStore;
+import org.bonitasoft.studio.la.i18n.Messages;
+import org.bonitasoft.studio.pics.Pics;
+import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.core.runtime.IAdapterFactory;
 import org.eclipse.swt.graphics.Image;
 
 /**
- * Adapts {@link ApplicationFileStore} to {@link IDisplayable}
+ * Adapts {@link ApplicationFileStore} or {@link ApplicationRepositoryStore} to {@link IDisplayable}
  * 
  * @author Vincent Hemery
  */
@@ -29,16 +33,32 @@ public class DisplayableAdapterFactory implements IAdapterFactory {
 
     @Override
     public <T> T getAdapter(Object adaptableObject, Class<T> adapterType) {
-        if (adapterType.isAssignableFrom(IDisplayable.class) && adaptableObject instanceof ApplicationFileStore) {
-            ApplicationFileStore store = (ApplicationFileStore) adaptableObject;
-            IDisplayable display = new RepositoryFileStoreDisplayable(store) {
+        if (adapterType.isAssignableFrom(IDisplayable.class)) {
+            if (adaptableObject instanceof ApplicationFileStore) {
+                ApplicationFileStore store = (ApplicationFileStore) adaptableObject;
+                IDisplayable display = new RepositoryFileStoreDisplayable(store) {
 
-                @Override
-                public Image getIcon() {
-                    return IDisplayable.adapt(store.getParentStore()).map(IDisplayable::getIcon).orElse(null);
-                }
-            };
-            return (T) display;
+                    @Override
+                    public Image getIcon() {
+                        return IDisplayable.adapt(store.getParentStore()).map(IDisplayable::getIcon).orElse(null);
+                    }
+                };
+                return (T) display;
+            } else if (adaptableObject instanceof ApplicationRepositoryStore) {
+                IDisplayable display = new IDisplayable() {
+
+                    @Override
+                    public String getDisplayName() {
+                        return Messages.applicationStoreName;
+                    }
+
+                    @Override
+                    public Image getIcon() {
+                        return Pics.getImage(PicsConstants.application);
+                    }
+                };
+                return (T) display;
+            }
         }
         return null;
     }

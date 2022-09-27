@@ -28,8 +28,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import org.bonitasoft.engine.session.APISession;
@@ -44,6 +42,7 @@ import org.bonitasoft.studio.common.repository.model.IRenamable;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
+import org.bonitasoft.studio.common.ui.IDisplayable;
 import org.bonitasoft.studio.diagram.custom.i18n.Messages;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.MainProcess;
@@ -75,7 +74,6 @@ import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.parts.DiagramDocumentEditor;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
@@ -96,8 +94,6 @@ public class DiagramFileStore extends EMFFileStore<MainProcess> implements IDepl
     public static final String DEPLOY_DIAGRAM_COMMAND = "org.bonitasoft.studio.engine.deployDiagramCommand";
     public static final String RENAME_DIAGRAM_COMMAND = "org.bonitasoft.studio.application.command.rename";
     public static final String BUILD_DIAGRAM_COMMAND = "org.bonitasoft.studio.engine.command.buildDiagram";
-
-
 
     public DiagramFileStore(final String fileName, IRepositoryStore<? extends EMFFileStore<MainProcess>> store) {
         super(fileName, store);
@@ -352,7 +348,7 @@ public class DiagramFileStore extends EMFFileStore<MainProcess> implements IDepl
         parameters.put("fileName", getName());
         parameters.put("destinationPath", processFolder.getLocation().toOSString());
         parameters.put("process", null);
-        monitor.subTask(String.format(Messages.buildingDiagram, store.getDisplayName()));
+        monitor.subTask(String.format(Messages.buildingDiagram, IDisplayable.toDisplayName(store)));
         IStatus buildStatus = (IStatus) executeCommand(BUILD_DIAGRAM_COMMAND, parameters);
         if (Objects.equals(buildStatus.getSeverity(), IStatus.ERROR)) {
             return parseStatus(buildStatus);

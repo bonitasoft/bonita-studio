@@ -54,7 +54,6 @@ public class DependencyRepositoryStore extends AbstractRepositoryStore<Dependenc
     private Map<String, String> runtimeDependencies;
     private ProjectDependenciesResolver projectDependenciesResolver = new ProjectDependenciesResolver(
             RepositoryManager.getInstance().getAccessor());
-  
 
     @Override
     public void createRepositoryStore(IRepository repository) {
@@ -63,7 +62,7 @@ public class DependencyRepositoryStore extends AbstractRepositoryStore<Dependenc
 
     @Override
     public IFolder getResource() {
-        if(repository != null && repository.getProject() != null) {
+        if (repository != null && repository.getProject() != null) {
             return repository.getProject().getFolder(getName());
         }
         return null;
@@ -151,16 +150,6 @@ public class DependencyRepositoryStore extends AbstractRepositoryStore<Dependenc
     }
 
     @Override
-    public String getDisplayName() {
-        return STORE_NAME;
-    }
-
-    @Override
-    public String getPathIcon() {
-        return null;
-    }
-
-    @Override
     public Set<String> getCompatibleExtensions() {
         return extensions;
     }
@@ -222,8 +211,6 @@ public class DependencyRepositoryStore extends AbstractRepositoryStore<Dependenc
     public MigrationReport migrate(IProgressMonitor monitor) throws CoreException, MigrationException {
         return MigrationReport.emptyReport();
     }
-
-    
 
     public Optional<DependencyFileStore> findDependencyByName(String jarName) {
         return getChildren().stream()

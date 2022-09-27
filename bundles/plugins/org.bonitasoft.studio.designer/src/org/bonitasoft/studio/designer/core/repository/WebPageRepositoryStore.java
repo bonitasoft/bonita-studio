@@ -32,13 +32,13 @@ import org.bonitasoft.studio.designer.core.UIDesignerServerManager;
 import org.bonitasoft.studio.designer.core.operation.IndexingUIDOperation;
 import org.bonitasoft.studio.designer.core.operation.MigrateUIDOperation;
 import org.bonitasoft.studio.designer.i18n.Messages;
-import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.edapt.migration.MigrationException;
+
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -59,16 +59,6 @@ public class WebPageRepositoryStore extends WebArtifactRepositoryStore<WebPageFi
     @Override
     public String getName() {
         return WEB_FORM_REPOSITORY_NAME;
-    }
-
-    @Override
-    public String getDisplayName() {
-        return Messages.formRepository;
-    }
-
-    @Override
-    public String getPathIcon() {
-        return PicsConstants.page;
     }
 
     @Override
@@ -137,7 +127,7 @@ public class WebPageRepositoryStore extends WebArtifactRepositoryStore<WebPageFi
                         }
                     })
                     .filter(Objects::nonNull)
-                    .map(json ->json.get("name"))
+                    .map(json -> json.get("name"))
                     .filter(Objects::nonNull)
                     .findFirst()
                     .orElse("");

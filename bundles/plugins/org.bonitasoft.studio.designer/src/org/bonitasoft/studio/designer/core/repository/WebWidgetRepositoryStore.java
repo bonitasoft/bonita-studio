@@ -14,8 +14,6 @@
  */
 package org.bonitasoft.studio.designer.core.repository;
 
-import org.bonitasoft.studio.designer.i18n.Messages;
-import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.core.resources.IFolder;
 
 /**
@@ -28,16 +26,6 @@ public class WebWidgetRepositoryStore extends WebArtifactRepositoryStore<WebWidg
     @Override
     public String getName() {
         return WEB_WIDGET_REPOSITORY_NAME;
-    }
-
-    @Override
-    public String getDisplayName() {
-        return Messages.widgetRepository;
-    }
-
-    @Override
-    public String getPathIcon() {
-        return PicsConstants.widget;
     }
 
     @Override

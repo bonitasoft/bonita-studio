@@ -449,6 +449,20 @@
               type="org.bonitasoft.studio.common.ui.IDisplayable">
         </adapter>
      </factory>
+     <factory
+           adaptableType="org.bonitasoft.studio.rest.api.extension.core.repository.RestAPIExtensionRepositoryStore"
+           class="org.bonitasoft.studio.maven.ui.internal.DisplayableAdapterFactory">
+        <adapter
+              type="org.bonitasoft.studio.common.ui.IDisplayable">
+        </adapter>
+     </factory>
+     <factory
+           adaptableType="org.bonitasoft.studio.theme.ThemeRepositoryStore"
+           class="org.bonitasoft.studio.maven.ui.internal.DisplayableAdapterFactory">
+        <adapter
+              type="org.bonitasoft.studio.common.ui.IDisplayable">
+        </adapter>
+     </factory>
    </extension>
 
 </plugin>

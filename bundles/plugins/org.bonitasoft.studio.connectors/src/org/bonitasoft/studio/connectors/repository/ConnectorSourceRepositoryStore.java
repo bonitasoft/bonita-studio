@@ -17,7 +17,6 @@ package org.bonitasoft.studio.connectors.repository;
 import org.bonitasoft.studio.common.repository.filestore.AbstractFileStore;
 import org.bonitasoft.studio.common.repository.filestore.PackageFileStore;
 import org.bonitasoft.studio.common.repository.store.SourceRepositoryStore;
-import org.bonitasoft.studio.connectors.i18n.Messages;
 
 /**
  * @author Romain Bioteau
@@ -42,24 +41,6 @@ public class ConnectorSourceRepositoryStore extends SourceRepositoryStore<Abstra
     @Override
     public String getName() {
         return STORE_NAME;
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.repository.model.IRepositoryStore#getDisplayName()
-     */
-    @Override
-    public String getDisplayName() {
-        return Messages.connectorSourceRepositoryName;
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.repository.model.IRepositoryStore#getIcon()
-     */
-    @Override
-    public String getPathIcon() {
-        return "java.gif";
     }
 
 }

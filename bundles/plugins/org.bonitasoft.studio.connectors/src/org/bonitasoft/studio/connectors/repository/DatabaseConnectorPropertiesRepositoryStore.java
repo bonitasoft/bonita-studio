@@ -29,7 +29,6 @@ import java.util.Set;
 
 import org.bonitasoft.studio.common.repository.core.maven.migration.BonitaJarDependencyReplacement;
 import org.bonitasoft.studio.common.repository.store.AbstractRepositoryStore;
-import org.bonitasoft.studio.connectors.i18n.Messages;
 import org.bonitasoft.studio.connectors.util.DriverConstants;
 import org.eclipse.emf.edapt.migration.MigrationException;
 
@@ -63,16 +62,6 @@ public class DatabaseConnectorPropertiesRepositoryStore
     @Override
     public boolean canBeExported() {
         return super.canBeExported();
-    }
-
-    @Override
-    public String getDisplayName() {
-        return Messages.databaseConnectorsProperties;
-    }
-
-    @Override
-    public String getPathIcon() {
-        return "databases_driver.png";
     }
 
     @Override

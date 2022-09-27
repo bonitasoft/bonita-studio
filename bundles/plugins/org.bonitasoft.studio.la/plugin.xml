@@ -194,5 +194,12 @@
               type="org.bonitasoft.studio.common.ui.IDisplayable">
         </adapter>
      </factory>
+     <factory
+           adaptableType="org.bonitasoft.studio.la.application.repository.ApplicationRepositoryStore"
+           class="org.bonitasoft.studio.la.internal.DisplayableAdapterFactory">
+        <adapter
+              type="org.bonitasoft.studio.common.ui.IDisplayable">
+        </adapter>
+     </factory>
    </extension>
 </plugin>
