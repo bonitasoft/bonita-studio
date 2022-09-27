@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<!-- Generator: Adobe Illustrator 13.0.2, SVG Export Plug-In . SVG Version: 6.00 Build 14948)  -->
+<svg xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" version="1.1" id="Calque_1" x="0px" y="0px" width="91.96875" height="45.947647" viewBox="0 0 91.968747 45.947648" enable-background="new 0 0 91.952 45.932" xml:space="preserve" inkscape:version="0.48.0 r9654" sodipodi:docname="SubProcessEvent_selected.svgz"><metadata id="metadata254"><rdf:RDF><cc:Work rdf:about=""><dc:format>image/svg+xml</dc:format><dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/><dc:title/></cc:Work></rdf:RDF></metadata><defs id="defs252"><linearGradient id="SVGID_1_-1" gradientUnits="userSpaceOnUse" x1="475.24509" y1="533.65527" x2="282.20001" y2="389.3956" gradientTransform="translate(-275.41601,-395.717)"><stop offset="0" style="stop-color:#B9B9DA" id="stop4"/><stop offset="1" style="stop-color:#FBFBEE" id="stop6"/></linearGradient><linearGradient y2="389.3956" x2="282.20001" y1="533.65527" x1="475.24509" gradientTransform="translate(-275.416,-395.717)" gradientUnits="userSpaceOnUse" id="linearGradient2999" xlink:href="#SVGID_1_-1" inkscape:collect="always"/><linearGradient inkscape:collect="always" xlink:href="#SVGID_1_-1" id="linearGradient3278" gradientUnits="userSpaceOnUse" gradientTransform="translate(-275.40824,-395.71535)" x1="475.24509" y1="533.65527" x2="282.20001" y2="389.3956"/></defs><sodipodi:namedview pagecolor="#ffffff" bordercolor="#666666" borderopacity="1" objecttolerance="10" gridtolerance="10" guidetolerance="10" inkscape:pageopacity="0" inkscape:pageshadow="2" inkscape:window-width="640" inkscape:window-height="480" id="namedview250" showgrid="false" fit-margin-top="0" fit-margin-left="0" fit-margin-right="0" fit-margin-bottom="0" inkscape:zoom="3.7519574" inkscape:cx="12.801583" inkscape:cy="23.200397" inkscape:current-layer="Calque_1"/>
+
+
+	<linearGradient id="SVGID_1_" opacity="0.31" gradientUnits="userSpaceOnUse" x1="199.8271" y1="137.936" x2="6.7841001" y2="-6.3221002">
+		<stop offset="0" style="stop-color:#B8B9DA" id="stop237"/>
+		<stop offset="1" style="stop-color:#FBFBEE" id="stop239"/>
+	</linearGradient>
+	
+	
+
+<path d="m 90.960761,37.315646 c 0,4.207 -3.412,7.619 -7.619,7.619 H 8.6267603 c -4.207,0 -7.6189998,-3.412 -7.6189998,-7.619 V 8.6206453 c 0,-4.208 3.4119998,-7.619 7.6189998,-7.619 H 83.341761 c 4.207,0 7.619,3.411 7.619,7.619 V 37.315646 z" id="BORDER" stroke="#2c6da3" inkscape:connector-curvature="0" style="fill:url(#linearGradient3278);stroke-width:2;stroke-dasharray:6.0000001, 4.00000007"/>
+</svg>
