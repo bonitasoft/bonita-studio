@@ -18,7 +18,9 @@ import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.jface.fieldassist.IContentProposal;
 import org.eclipse.jface.viewers.ColumnViewer;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
 
@@ -44,6 +46,8 @@ public class CellExpressionViewer extends ExpressionViewer {
     protected void openEditDialog(final EditExpressionDialog dialog) {
         super.openEditDialog(dialog);
         columnViewer.refresh(null);
+        // Force selection event listeners to be notified
+        columnViewer.getControl().notifyListeners(SWT.Selection, new Event());
     }
 
     public void setColumnViewer(final ColumnViewer columnViewer) {
