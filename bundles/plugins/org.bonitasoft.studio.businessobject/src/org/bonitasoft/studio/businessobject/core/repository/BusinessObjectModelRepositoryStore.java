@@ -43,11 +43,8 @@ import org.bonitasoft.studio.common.model.validator.XMLModelCompatibilityValidat
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.IBonitaProjectListener;
 import org.bonitasoft.studio.common.repository.core.migration.report.MigrationReport;
-import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.common.repository.store.AbstractRepositoryStore;
-import org.bonitasoft.studio.pics.Pics;
-import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -56,7 +53,6 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.emf.edapt.migration.MigrationException;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IType;
-import org.eclipse.swt.graphics.Image;
 import org.xml.sax.SAXException;
 
 import com.google.common.io.ByteSource;
@@ -99,16 +95,6 @@ public class BusinessObjectModelRepositoryStore<F extends AbstractBDMFileStore<?
     }
 
     @Override
-    public String getDisplayName() {
-        return Messages.businessObjectRepositoryStoreName;
-    }
-
-    @Override
-    public String getPathIcon() {
-        return PicsConstants.bdm;
-    }
-
-    @Override
     public Set<String> getCompatibleExtensions() {
         return extensions;
     }
@@ -142,7 +128,7 @@ public class BusinessObjectModelRepositoryStore<F extends AbstractBDMFileStore<?
         } else {
             fileStore = superDoImportInputStream(fileName, inputStream);
         }
-        if (fileStore instanceof BusinessObjectModelFileStore 
+        if (fileStore instanceof BusinessObjectModelFileStore
                 && Objects.equals(fileStore.getName(), BusinessObjectModelFileStore.BOM_FILENAME)) {
             try {
                 BDMArtifactDescriptor descriptor = ((BusinessObjectModelFileStore) fileStore).loadArtifactDescriptor();

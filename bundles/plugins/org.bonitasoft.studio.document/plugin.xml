@@ -156,6 +156,13 @@
                type="org.bonitasoft.studio.common.ui.IDisplayable">
          </adapter>
       </factory>
+      <factory
+            adaptableType="org.bonitasoft.studio.document.core.repository.DocumentRepositoryStore"
+            class="org.bonitasoft.studio.document.ui.internal.DisplayableAdapterFactory">
+         <adapter
+               type="org.bonitasoft.studio.common.ui.IDisplayable">
+         </adapter>
+      </factory>
    </extension>
 
 </plugin>

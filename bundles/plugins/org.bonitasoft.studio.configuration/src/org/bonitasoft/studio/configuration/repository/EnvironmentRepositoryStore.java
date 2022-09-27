@@ -16,8 +16,6 @@ import java.util.Set;
 
 import org.bonitasoft.studio.common.repository.store.AbstractEMFRepositoryStore;
 import org.bonitasoft.studio.configuration.environment.util.EnvironmentAdapterFactory;
-import org.bonitasoft.studio.configuration.i18n.Messages;
-import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 
 /**
@@ -54,24 +52,6 @@ public class EnvironmentRepositoryStore extends AbstractEMFRepositoryStore<Envir
     @Override
     public String getName() {
         return STORE_NAME;
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.repository.model.IRepositoryStore#getDisplayName()
-     */
-    @Override
-    public String getDisplayName() {
-        return Messages.environments;
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.repository.model.IRepositoryStore#getIcon()
-     */
-    @Override
-    public String getPathIcon() {
-        return PicsConstants.environment;
     }
 
     /*

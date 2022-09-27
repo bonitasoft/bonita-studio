@@ -55,6 +55,13 @@
               type="org.bonitasoft.studio.common.ui.IDisplayable">
         </adapter>
      </factory>
+     <factory
+           adaptableType="org.bonitasoft.studio.xml.repository.XSDRepositoryStore"
+           class="org.bonitasoft.studio.xml.ui.internal.DisplayableAdapterFactory">
+        <adapter
+              type="org.bonitasoft.studio.common.ui.IDisplayable">
+        </adapter>
+     </factory>
    </extension>
 
 </plugin>

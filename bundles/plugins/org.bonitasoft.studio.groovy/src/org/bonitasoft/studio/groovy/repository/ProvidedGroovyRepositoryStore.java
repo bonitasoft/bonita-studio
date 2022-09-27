@@ -5,39 +5,35 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.groovy.repository;
 
-import org.bonitasoft.studio.groovy.Messages;
-
 /**
  * @author Romain Bioteau
- *
  */
 public class ProvidedGroovyRepositoryStore extends GroovyRepositoryStore {
 
-    private static final String STORE_NAME = "src-providedGroovy" ;
+    private static final String STORE_NAME = "src-providedGroovy";
     public static final String EXPORTED_PROVIDED_JAR_NAME = "providedscripts.jar";
 
     @Override
     public boolean isShared() {
-        return false ;
+        return false;
     }
 
     @Override
     public boolean canBeShared() {
-        return false ;
+        return false;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
      * @see org.bonitasoft.studio.common.repository.model.IRepositoryStore#getName()
      */
     @Override
@@ -45,18 +41,9 @@ public class ProvidedGroovyRepositoryStore extends GroovyRepositoryStore {
         return STORE_NAME;
     }
 
-    /* (non-Javadoc)
-     * @see org.bonitasoft.studio.common.repository.model.IRepositoryStore#getDisplayName()
-     */
-    @Override
-    public String getDisplayName() {
-        return Messages.groovyProvidedScriptRepository;
-    }
-
     @Override
     public boolean canBeExported() {
-        return false ;
+        return false;
     }
-
 
 }

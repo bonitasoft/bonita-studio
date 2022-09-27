@@ -35,14 +35,10 @@ import org.bonitasoft.studio.common.model.validator.XMLModelCompatibilityValidat
 import org.bonitasoft.studio.common.repository.core.migration.report.MigrationReport;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.common.repository.store.AbstractRepositoryStore;
-import org.bonitasoft.studio.la.i18n.Messages;
-import org.bonitasoft.studio.pics.Pics;
-import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.edapt.migration.MigrationException;
-import org.eclipse.swt.graphics.Image;
 
 public class ApplicationRepositoryStore extends AbstractRepositoryStore<ApplicationFileStore> {
 
@@ -57,24 +53,6 @@ public class ApplicationRepositoryStore extends AbstractRepositoryStore<Applicat
     @Override
     public String getName() {
         return "applications";
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.repository.model.IDisplayable#getDisplayName()
-     */
-    @Override
-    public String getDisplayName() {
-        return Messages.applicationStoreName;
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.repository.model.IDisplayable#getIcon()
-     */
-    @Override
-    public String getPathIcon() {
-        return PicsConstants.application;
     }
 
     /*
@@ -129,18 +107,17 @@ public class ApplicationRepositoryStore extends AbstractRepositoryStore<Applicat
             }
         };
     }
-    
+
     @Override
     protected ApplicationFileStore doImportInputStream(String fileName, InputStream inputStream) {
         var fileStore = super.doImportInputStream(fileName, inputStream);
-        if(fileStore != null) {
+        if (fileStore != null) {
             var report = MigrationReport.emptyReport();
             doMigrateFileStore(fileStore, report);
             fileStore.setMigrationReport(report);
         }
         return fileStore;
     }
-
 
     private void doMigrateFileStore(ApplicationFileStore fileStore, MigrationReport report) {
         try {
@@ -167,14 +144,16 @@ public class ApplicationRepositoryStore extends AbstractRepositoryStore<Applicat
         if (Objects.equals(application.getTheme(), "custompage_bonitadefaulttheme")
                 || Objects.equals(application.getTheme(), "custompage_bootstrapdefaulttheme")) {
             application.setTheme("custompage_themeBonita");
-            report.updated(String.format("%s application theme has been updated to Bonita default theme.", application.getToken()));
+            report.updated(String.format("%s application theme has been updated to Bonita default theme.",
+                    application.getToken()));
         }
     }
-    
-    private void updateBonitaLayout(ApplicationNode application,  MigrationReport report) {
+
+    private void updateBonitaLayout(ApplicationNode application, MigrationReport report) {
         if (Objects.equals(application.getLayout(), "custompage_defaultlayout")) {
             application.setLayout("custompage_layoutBonita");
-            report.updated(String.format("%s application layout has been updated to Bonita default layout.", application.getToken()));
+            report.updated(String.format("%s application layout has been updated to Bonita default layout.",
+                    application.getToken()));
         }
     }
 
@@ -184,8 +163,9 @@ public class ApplicationRepositoryStore extends AbstractRepositoryStore<Applicat
             return new XMLModelCompatibilityValidator(new ModelNamespaceValidator(
                     ModelVersion.CURRENT_APPLICATION_DESCRIPTOR_NAMESPACE,
                     String.format(org.bonitasoft.studio.common.Messages.incompatibleModelVersion, filename),
-                    String.format(org.bonitasoft.studio.common.Messages.migrationWillBreakRetroCompatibility, filename)))
-                            .validate(inputStream);
+                    String.format(org.bonitasoft.studio.common.Messages.migrationWillBreakRetroCompatibility,
+                            filename)))
+                                    .validate(inputStream);
         }
         return super.validate(filename, inputStream);
     }

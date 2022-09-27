@@ -15,6 +15,7 @@
 package org.bonitasoft.studio.application.ui.control.model;
 
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
+import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.common.repository.model.smartImport.SmartImportableModel;
 import org.bonitasoft.studio.common.repository.model.smartImport.SmartImportableUnit;
 import org.bonitasoft.studio.common.ui.IDisplayable;
@@ -28,12 +29,7 @@ public class DisplayableAdapterFactory implements IAdapterFactory {
     @Override
     public <T> T getAdapter(Object adaptableObject, Class<T> adapterType) {
         if (adapterType.isAssignableFrom(IDisplayable.class)) {
-            if (adaptableObject instanceof RepositoryStore) {
-                RepositoryStore repository = (RepositoryStore) adaptableObject;
-                RepositoryStoreDisplayable repositoryDisplayable = new RepositoryStoreDisplayable(repository);
-                return (T) repositoryDisplayable;
-
-            } else if (adaptableObject instanceof Artifact) {
+            if (adaptableObject instanceof Artifact) {
                 Artifact artifact = (Artifact) adaptableObject;
                 ArtifactDisplayable artifactDisplayable = new ArtifactDisplayable(artifact);
                 return (T) artifactDisplayable;
@@ -41,6 +37,10 @@ public class DisplayableAdapterFactory implements IAdapterFactory {
                 IRepositoryFileStore repositoryFileStore = (IRepositoryFileStore) adaptableObject;
                 RepositoryFileStoreDisplayable repositoryfileDisplayable = new RepositoryFileStoreDisplayable(
                         repositoryFileStore);
+                return (T) repositoryfileDisplayable;
+            } else if (adaptableObject instanceof IRepositoryStore<?>) {
+                RepositoryStoreDisplayable repositoryfileDisplayable = new RepositoryStoreDisplayable(
+                        (IRepositoryStore<?>) adaptableObject);
                 return (T) repositoryfileDisplayable;
             }
             // these classes used to implement IPresentable, now replaced by IDisplayable

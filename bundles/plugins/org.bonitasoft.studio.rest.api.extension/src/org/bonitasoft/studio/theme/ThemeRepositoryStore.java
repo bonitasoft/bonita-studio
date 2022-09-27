@@ -24,16 +24,12 @@ import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.maven.CustomPageProjectFileStore;
 import org.bonitasoft.studio.maven.CustomPageProjectRepositoryStore;
 import org.bonitasoft.studio.maven.builder.validator.AbstractCustomPageValidator;
-import org.bonitasoft.studio.maven.i18n.Messages;
 import org.bonitasoft.studio.maven.model.ThemeArchetype;
-import org.bonitasoft.studio.pics.Pics;
-import org.bonitasoft.studio.rest.api.extension.RestAPIExtensionActivator;
 import org.bonitasoft.studio.theme.builder.ThemeProjectBuilder;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.swt.graphics.Image;
 
 public class ThemeRepositoryStore extends CustomPageProjectRepositoryStore<ThemeFileStore> {
 
@@ -42,16 +38,6 @@ public class ThemeRepositoryStore extends CustomPageProjectRepositoryStore<Theme
     @Override
     public String getName() {
         return STORE_NAME;
-    }
-
-    @Override
-    public String getDisplayName() {
-        return Messages.themesRepositoryName;
-    }
-
-    @Override
-    public String getPathIcon() {
-        return "theme.png";
     }
 
     @Override

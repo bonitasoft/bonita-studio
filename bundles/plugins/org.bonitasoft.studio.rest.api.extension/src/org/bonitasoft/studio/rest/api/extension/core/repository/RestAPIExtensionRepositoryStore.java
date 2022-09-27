@@ -36,10 +36,7 @@ import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.maven.CustomPageProjectFileStore;
 import org.bonitasoft.studio.maven.CustomPageProjectRepositoryStore;
 import org.bonitasoft.studio.maven.builder.validator.AbstractCustomPageValidator;
-import org.bonitasoft.studio.maven.i18n.Messages;
 import org.bonitasoft.studio.maven.model.RestAPIExtensionArchetype;
-import org.bonitasoft.studio.pics.Pics;
-import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.rest.api.extension.core.builder.RestAPIBuilder;
 import org.bonitasoft.studio.rest.api.extension.core.repository.migration.BonitaVersionMigrationStep;
 import org.bonitasoft.studio.rest.api.extension.core.repository.migration.Groovy3MigrationStep;
@@ -54,7 +51,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.edapt.migration.MigrationException;
-import org.eclipse.swt.graphics.Image;
 import org.jdom2.Document;
 import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
@@ -79,16 +75,6 @@ public class RestAPIExtensionRepositoryStore extends CustomPageProjectRepository
     @Override
     public String getName() {
         return STORE_NAME;
-    }
-
-    @Override
-    public String getDisplayName() {
-        return Messages.restApiExtensionRepositoryName;
-    }
-
-    @Override
-    public String getPathIcon() {
-        return PicsConstants.restApi;
     }
 
     @Override
@@ -186,7 +172,8 @@ public class RestAPIExtensionRepositoryStore extends CustomPageProjectRepository
                     }
                 }
                 if (hasBeenMigrated) {
-                    var file = getResource().getFolder(projectName).getFile(MigrationReportWriter.DEFAULT_REPORT_FILE_NAME);
+                    var file = getResource().getFolder(projectName)
+                            .getFile(MigrationReportWriter.DEFAULT_REPORT_FILE_NAME);
                     asciidocMigrationReportWriter.write(report, file.getLocation().toFile().toPath());
                     file.refreshLocal(IResource.DEPTH_ONE, new NullProgressMonitor());
 
@@ -264,7 +251,7 @@ public class RestAPIExtensionRepositoryStore extends CustomPageProjectRepository
             }
         }
     }
-    
+
     @Override
     public IRepository getRepository() {
         return super.getRepository();

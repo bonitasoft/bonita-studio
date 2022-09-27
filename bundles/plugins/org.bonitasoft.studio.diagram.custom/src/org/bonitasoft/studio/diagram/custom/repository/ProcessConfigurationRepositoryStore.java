@@ -32,10 +32,8 @@ import org.bonitasoft.studio.common.platform.tools.CopyInputStream;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
 import org.bonitasoft.studio.common.repository.store.AbstractEMFRepositoryStore;
-import org.bonitasoft.studio.diagram.custom.i18n.Messages;
 import org.bonitasoft.studio.model.configuration.Configuration;
 import org.bonitasoft.studio.model.configuration.util.ConfigurationAdapterFactory;
-import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -72,16 +70,6 @@ public class ProcessConfigurationRepositoryStore extends AbstractEMFRepositorySt
     }
 
     @Override
-    public String getDisplayName() {
-        return Messages.configurations;
-    }
-
-    @Override
-    public String getPathIcon() {
-        return PicsConstants.configuration;
-    }
-
-    @Override
     public ProcessConfigurationFileStore createRepositoryFileStore(final String fileName) {
         return new ProcessConfigurationFileStore(fileName, this);
     }
@@ -101,7 +89,7 @@ public class ProcessConfigurationRepositoryStore extends AbstractEMFRepositorySt
         final IFile file = getResource().getFile(fileName);
         try {
             if (file.exists()) {
-               file.setContents(inputStream, true, false, AbstractRepository.NULL_PROGRESS_MONITOR);
+                file.setContents(inputStream, true, false, AbstractRepository.NULL_PROGRESS_MONITOR);
             } else {
                 final File f = file.getLocation().toFile();
                 if (!f.getParentFile().exists()) {
@@ -161,7 +149,7 @@ public class ProcessConfigurationRepositoryStore extends AbstractEMFRepositorySt
         try {
             final InputStream is = super.handlePreImport(fileName, inputStream);
             copyIs = new CopyInputStream(is);
-            final Resource r = getTmpEMFResource("beforeImport.conf",  copyIs.getFile());
+            final Resource r = getTmpEMFResource("beforeImport.conf", copyIs.getFile());
             try {
                 r.load(Collections.emptyMap());
             } catch (final IOException e) {
@@ -172,7 +160,7 @@ public class ProcessConfigurationRepositoryStore extends AbstractEMFRepositorySt
                         .get(0);
                 if (configuration != null) {
                     applyTransformations(configuration);
-                    
+
                     final String mVersion = configuration.getVersion();
                     if (!ModelVersion.CURRENT_DIAGRAM_VERSION.equals(mVersion)) {
                         configuration.setVersion(ModelVersion.CURRENT_DIAGRAM_VERSION);
@@ -215,7 +203,7 @@ public class ProcessConfigurationRepositoryStore extends AbstractEMFRepositorySt
     protected void addAdapterFactory(final ComposedAdapterFactory adapterFactory) {
         adapterFactory.addAdapterFactory(new ConfigurationAdapterFactory());
     }
-    
+
     @Override
     public int getImportOrder() {
         return 10;

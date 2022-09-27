@@ -25,7 +25,6 @@ import org.bonitasoft.studio.common.repository.core.migration.report.MigrationRe
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.common.repository.store.AbstractEMFRepositoryStore;
-import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.xml.Messages;
 import org.bonitasoft.studio.xml.XMLPlugin;
 import org.eclipse.core.runtime.CoreException;
@@ -76,24 +75,6 @@ public class XSDRepositoryStore extends AbstractEMFRepositoryStore<XSDFileStore>
     @Override
     public String getName() {
         return STORE_NAME;
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.repository.model.IRepositoryStore#getDisplayName()
-     */
-    @Override
-    public String getDisplayName() {
-        return Messages.xsdRepositoryName;
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.repository.model.IRepositoryStore#getIcon()
-     */
-    @Override
-    public String getPathIcon() {
-        return PicsConstants.xml;
     }
 
     /*
@@ -177,7 +158,6 @@ public class XSDRepositoryStore extends AbstractEMFRepositoryStore<XSDFileStore>
     protected void addAdapterFactory(final ComposedAdapterFactory adapterFactory) {
         adapterFactory.addAdapterFactory(new XSDAdapterFactory());
     }
-
 
     @Override
     public MigrationReport migrate(IProgressMonitor monitor) throws CoreException, MigrationException {

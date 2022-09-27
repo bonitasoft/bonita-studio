@@ -17,13 +17,15 @@ package org.bonitasoft.studio.xml.ui.internal;
 import org.bonitasoft.studio.common.ui.IDisplayable;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
+import org.bonitasoft.studio.xml.Messages;
 import org.bonitasoft.studio.xml.repository.XSDFileStore;
+import org.bonitasoft.studio.xml.repository.XSDRepositoryStore;
 import org.eclipse.core.runtime.IAdapterFactory;
 import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.swt.graphics.Image;
 
 /**
- * Adapts {@link XSDFileStore} to {@link IDisplayable}
+ * Adapts {@link XSDFileStore} or {@link XSDRepositoryStore} to {@link IDisplayable}
  * 
  * @author Vincent Hemery
  */
@@ -31,29 +33,46 @@ public class DisplayableAdapterFactory implements IAdapterFactory {
 
     @Override
     public <T> T getAdapter(Object adaptableObject, Class<T> adapterType) {
-        if (adapterType.isAssignableFrom(IDisplayable.class) && adaptableObject instanceof XSDFileStore) {
-            XSDFileStore store = (XSDFileStore) adaptableObject;
-            IDisplayable display = new IDisplayable() {
+        if (adapterType.isAssignableFrom(IDisplayable.class)) {
+            if (adaptableObject instanceof XSDFileStore) {
+                XSDFileStore store = (XSDFileStore) adaptableObject;
+                IDisplayable display = new IDisplayable() {
 
-                @Override
-                public String getDisplayName() {
-                    if (store.getName().indexOf('.') != -1) {
-                        return store.getName().substring(0, store.getName().lastIndexOf('.'));
+                    @Override
+                    public String getDisplayName() {
+                        if (store.getName().indexOf('.') != -1) {
+                            return store.getName().substring(0, store.getName().lastIndexOf('.'));
+                        }
+                        return store.getName();
                     }
-                    return store.getName();
-                }
 
-                @Override
-                public Image getIcon() {
-                    return Pics.getImage(PicsConstants.xml);
-                }
+                    @Override
+                    public Image getIcon() {
+                        return Pics.getImage(PicsConstants.xml);
+                    }
 
-                @Override
-                public StyledString getStyledString() {
-                    return new StyledString(store.getName());
-                }
-            };
-            return (T) display;
+                    @Override
+                    public StyledString getStyledString() {
+                        return new StyledString(store.getName());
+                    }
+                };
+                return (T) display;
+            } else if (adaptableObject instanceof XSDRepositoryStore) {
+
+                IDisplayable display = new IDisplayable() {
+
+                    @Override
+                    public String getDisplayName() {
+                        return Messages.xsdRepositoryName;
+                    }
+
+                    @Override
+                    public Image getIcon() {
+                        return Pics.getImage(PicsConstants.xml);
+                    }
+                };
+                return (T) display;
+            }
         }
         return null;
     }
