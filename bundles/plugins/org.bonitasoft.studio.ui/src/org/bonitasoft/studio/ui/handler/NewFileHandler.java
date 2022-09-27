@@ -15,6 +15,7 @@
 package org.bonitasoft.studio.ui.handler;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.inject.Named;
@@ -23,6 +24,7 @@ import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
+import org.bonitasoft.studio.common.ui.IDisplayable;
 import org.bonitasoft.studio.ui.util.StringIncrementer;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -36,10 +38,12 @@ import org.eclipse.swt.widgets.Shell;
 public abstract class NewFileHandler extends AbstractHandler {
 
     @Execute
-    public void execute(@Named(IServiceConstants.ACTIVE_SHELL) Shell activeShell, RepositoryAccessor repositoryAccessor) {
+    public void execute(@Named(IServiceConstants.ACTIVE_SHELL) Shell activeShell,
+            RepositoryAccessor repositoryAccessor) {
         openHelpDialog(activeShell);
         List<String> existingFileNameList = getRepositoryStore(repositoryAccessor).getChildren().stream()
-                .map(IRepositoryFileStore::getName).collect(Collectors.toList());
+                .map(IDisplayable::toDisplayName).filter(Optional::isPresent).map(Optional::get)
+                .collect(Collectors.toList());
         createFileStore(repositoryAccessor,
                 StringIncrementer.getNextIncrement(getDefaultFileName(), existingFileNameList)).open();
     }
@@ -58,7 +62,7 @@ public abstract class NewFileHandler extends AbstractHandler {
         execute(Display.getDefault().getActiveShell(), RepositoryManager.getInstance().getAccessor());
         return null;
     }
-    
+
     @CanExecute
     public boolean isEnabled() {
         if (RepositoryManager.getInstance().hasActiveRepository()) {
