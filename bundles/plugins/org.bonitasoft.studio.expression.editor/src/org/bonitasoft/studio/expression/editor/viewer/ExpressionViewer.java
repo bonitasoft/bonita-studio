@@ -153,13 +153,7 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
     private AbstractRefactorOperation removeOperation;
     final ExpressionViewerValidator expressionViewerValidator = new ExpressionViewerValidator();
     private Optional<IValidator> mandatoryFieldValidator = Optional.empty();
-    protected final DisposeListener disposeListener = new DisposeListener() {
-
-        @Override
-        public void widgetDisposed(final DisposeEvent e) {
-            handleDispose(e);
-        }
-    };
+    protected final DisposeListener disposeListener = e -> handleDispose(e);
 
     protected IExpressionNatureProvider expressionNatureProvider = ExpressionContentProvider.getInstance();
     protected DataBindingContext externalDataBindingContext;
@@ -265,6 +259,9 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
             }
         }
         clearExpression(selectedExpression);
+        if (expressionBinding != null) {
+            expressionBinding.validateTargetToModel();
+        }
         validate();
         refresh();
     }
@@ -864,12 +861,12 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
     }
 
     private String matchingExpressionType(final String input, String expressionType) {
-       return getFilteredExpressions().stream()
-                   .filter(expr -> Objects.equals(expr.getName(), input))
-                   .filter(expr -> Objects.equals(expr.getType(), expressionType))
-                   .findFirst()
-                   .map(Expression::getType)
-                   .orElse(CONSTANT_TYPE);
+        return getFilteredExpressions().stream()
+                .filter(expr -> Objects.equals(expr.getName(), input))
+                .filter(expr -> Objects.equals(expr.getType(), expressionType))
+                .findFirst()
+                .map(Expression::getType)
+                .orElse(CONSTANT_TYPE);
     }
 
     protected void internalRefresh() {
@@ -883,7 +880,8 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 
     private void refreshEraseEnablement() {
         Expression selectedExpression = getSelectedExpression();
-        contentAssistText.setEraseEnabled(selectedExpression != null && (selectedExpression.hasName() || selectedExpression.hasContent()));
+        contentAssistText.setEraseEnabled(
+                selectedExpression != null && (selectedExpression.hasName() || selectedExpression.hasContent()));
     }
 
     private void refreshTypeDecoration() {
@@ -1031,14 +1029,13 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
         return contentAssistText.getEraseControl();
     }
 
-    protected Converter getNameConverter() {
-        final Converter nameConverter = new Converter(String.class, String.class) {
+    protected Converter<String, String> getNameConverter() {
+        return new Converter<>(String.class, String.class) {
 
             @Override
-            public Object convert(final Object fromObject) {
+            public String convert(final String input) {
                 if (textControl instanceof Text) {
                     final int caretPosition = ((Text) textControl).getCaretPosition();
-                    final String input = (String) fromObject;
                     final String contentTypeFromInput = getContentTypeFromInput(input);
                     if (!Objects.equals(getSelectedExpression().getType(), contentTypeFromInput)) {
                         updateContentType(contentTypeFromInput);
@@ -1056,10 +1053,9 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
                         ((Text) textControl).setSelection(caretPosition, caretPosition);
                     }
                 }
-                return fromObject;
+                return input;
             }
         };
-        return nameConverter;
     }
 
     public void addExpressionValidator(final IExpressionValidator validator) {

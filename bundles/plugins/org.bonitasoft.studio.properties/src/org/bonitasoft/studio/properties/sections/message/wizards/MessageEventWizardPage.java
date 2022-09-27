@@ -51,28 +51,24 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.databinding.EMFObservables;
-import org.eclipse.jface.databinding.swt.ISWTObservableValue;
-import org.eclipse.jface.databinding.swt.SWTObservables;
-import org.eclipse.jface.databinding.viewers.ViewersObservables;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
+import org.eclipse.jface.databinding.viewers.typed.ViewerProperties;
 import org.eclipse.jface.databinding.wizard.WizardPageSupport;
 import org.eclipse.jface.fieldassist.ControlDecoration;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardPage;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Text;
@@ -84,7 +80,7 @@ import org.eclipse.ui.PlatformUI;
  * @author Aurelien Pupier - integrate Correlation andf use databinding
  * @author Aurelie Zara -integrate MessageContent Id and validation
  */
-public class AddMessageEventWizardPage extends WizardPage implements
+public class MessageEventWizardPage extends WizardPage implements
         IWizardPage {
 
     private final ThrowMessageEvent element;
@@ -108,7 +104,7 @@ public class AddMessageEventWizardPage extends WizardPage implements
      * @param performer
      * @param pageName
      */
-    protected AddMessageEventWizardPage(final MainProcess diagram,
+    protected MessageEventWizardPage(final MainProcess diagram,
             final ThrowMessageEvent element, final Message originalMessage,
             Message workingCopyMessage) {
         super(Messages.messageEventAddWizardPageName,
@@ -116,11 +112,9 @@ public class AddMessageEventWizardPage extends WizardPage implements
         setDescription(Messages.messageEventAddWizardPageDesc);
         this.element = element;
         this.originalMessage = originalMessage;
-        if (originalMessage != null) {
-            if (originalMessage.getCorrelation() == null) {
-                originalMessage.setCorrelation(ProcessFactory.eINSTANCE
-                        .createCorrelation());
-            }
+        if (originalMessage != null && originalMessage.getCorrelation() == null) {
+            originalMessage.setCorrelation(ProcessFactory.eINSTANCE
+                    .createCorrelation());
         }
         if (workingCopyMessage == null) {
             workingCopyMessage = ProcessFactory.eINSTANCE.createMessage();
@@ -133,12 +127,6 @@ public class AddMessageEventWizardPage extends WizardPage implements
         this.diagram = diagram;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see
-     * org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets
-     * .Composite)
-     */
     @Override
     public void createControl(final Composite parent) {
         databindingContext = new DataBindingContext();
@@ -203,7 +191,8 @@ public class AddMessageEventWizardPage extends WizardPage implements
         captions.add(Messages.messageContentID);
         captions.add(Messages.expressionName);
 
-        final ExpressionCollectionViewer ecv = new ExpressionCollectionViewer(composite, 0, false, 2, true, captions, false,
+        final ExpressionCollectionViewer ecv = new ExpressionCollectionViewer(composite, 0, false, 2, true, captions,
+                false,
                 false);
         ecv.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         ecv.setAddRowLabel(Messages.addMessageContentButton);
@@ -227,35 +216,28 @@ public class AddMessageEventWizardPage extends WizardPage implements
         addMessageContentFilters(ecv);
         ecv.setContext(element);
         ecv.setInput(element);
+        
+        
 
         final TableExpression messageContent = getMessageContentTable();
         ecv.setSelection(messageContent);
 
-        ecv.addModifyListener(new Listener() {
-
-            @Override
-            public void handleEvent(final Event event) {
-                final IStatus status = AddMessageEventWizardPage.this
-                        .validateId(workingCopyMessage.getMessageContent(),
-                                Messages.addMessageContent);
-                updateValidationStatus(status);
-            }
-        });
+        ecv.addModifyListener(event -> updateValidationStatus(MessageEventWizardPage.this
+                .validateId(workingCopyMessage.getMessageContent(),
+                        Messages.addMessageContent)));
         ecv.setLayoutData(GridDataFactory.fillDefaults().grab(true, true)
                 .create());
     }
 
     private void addMessageContentFilters(final ExpressionCollectionViewer ecv) {
         final List<ViewerFilter> filters = new ArrayList<>(2);
-        filters.add(new AvailableExpressionTypeFilter(
-                new String[] { ExpressionConstants.CONSTANT_TYPE }) {
+        filters.add(new AvailableExpressionTypeFilter(ExpressionConstants.CONSTANT_TYPE) {
 
         });
-        filters.add(new AvailableExpressionTypeFilter(new String[] {
-                ExpressionConstants.CONSTANT_TYPE,
+        filters.add(new AvailableExpressionTypeFilter(ExpressionConstants.CONSTANT_TYPE,
                 ExpressionConstants.SCRIPT_TYPE,
                 ExpressionConstants.PARAMETER_TYPE,
-                ExpressionConstants.VARIABLE_TYPE }));
+                ExpressionConstants.VARIABLE_TYPE ));
         ecv.setViewerFilters(filters);
     }
 
@@ -292,7 +274,7 @@ public class AddMessageEventWizardPage extends WizardPage implements
                 } else {
                     workingCopyMessage.getCorrelation().setCorrelationType(
                             CorrelationTypeActive.KEYS);
-                    updateValidationStatus(AddMessageEventWizardPage.this
+                    updateValidationStatus(MessageEventWizardPage.this
                             .hasAtLeastOneCorrelation(workingCopyMessage
                                     .getCorrelation()
                                     .getCorrelationAssociation()));
@@ -302,7 +284,7 @@ public class AddMessageEventWizardPage extends WizardPage implements
         if (CorrelationTypeActive.KEYS.equals(workingCopyMessage
                 .getCorrelation().getCorrelationType())) {
             useCorrelationCheckbox.setSelection(true);
-            updateValidationStatus(AddMessageEventWizardPage.this
+            updateValidationStatus(MessageEventWizardPage.this
                     .hasAtLeastOneCorrelation(workingCopyMessage
                             .getCorrelation().getCorrelationAssociation()));
         } else {
@@ -323,49 +305,39 @@ public class AddMessageEventWizardPage extends WizardPage implements
         final ExpressionCollectionViewer ecv = new ExpressionCollectionViewer(
                 correlationComposite, 5, false, 2, true, captions, false, true);
         ecv.setLayoutData(GridDataFactory.fillDefaults().grab(true, false)
-                .hint(SWT.DEFAULT, 140).create());
+                .hint(SWT.DEFAULT, 200).create());
 
         ecv.setAddRowLabel(Messages.AddCorrelation);
         ecv.setRemoveRowLabel(Messages.removeCorrelation);
         final List<ViewerFilter> filters = new ArrayList<>(2);
-        filters.add(new AvailableExpressionTypeFilter(
-                new String[] { ExpressionConstants.CONSTANT_TYPE }));
-        filters.add(new AvailableExpressionTypeFilter(new String[] {
-                ExpressionConstants.CONSTANT_TYPE,
+        // First column filter
+        filters.add(new AvailableExpressionTypeFilter(ExpressionConstants.CONSTANT_TYPE));
+        // Second column filters
+        filters.add(new AvailableExpressionTypeFilter(ExpressionConstants.CONSTANT_TYPE,
                 ExpressionConstants.PARAMETER_TYPE,
                 ExpressionConstants.SCRIPT_TYPE,
-                ExpressionConstants.VARIABLE_TYPE })); // Second column has
-                                                                                                                                                                                                                            // everything except
-                                                                                                                                                                                                                            // Form field and
-                                                                                                                                                                                                                            // simulation type
+                ExpressionConstants.VARIABLE_TYPE));
         ecv.setViewerFilters(filters);
         ecv.setContext(element);
         ecv.setInput(element);
-
+        
         final TableExpression correlationAssociation = getCorrelationTable();
         ecv.setSelection(correlationAssociation);
-        ecv.addModifyListener(new Listener() {
+        ecv.addModifyListener(event ->
+            updateValidationStatus(MessageEventWizardPage.this.validateId(
+                    workingCopyMessage.getCorrelation()
+                    .getCorrelationAssociation(),
+            Messages.correlation)));
 
-            @Override
-            public void handleEvent(final Event event) {
-                final IStatus status = AddMessageEventWizardPage.this.validateId(
-                        workingCopyMessage.getCorrelation()
-                                .getCorrelationAssociation(),
-                        Messages.correlation);
-                updateValidationStatus(status);
-            }
-        });
-
-        final ISWTObservableValue observeSelectionUseCorrelation = SWTObservables
-                .observeSelection(useCorrelationCheckbox);
+        var observeSelectionUseCorrelation = WidgetProperties.buttonSelection().observe(useCorrelationCheckbox);
         databindingContext.bindValue(
-                SWTObservables.observeEnabled(ecv.getViewer().getControl()),
+                WidgetProperties.enabled().observe(ecv.getViewer().getControl()),
                 observeSelectionUseCorrelation);
         databindingContext.bindValue(
-                SWTObservables.observeEnabled(ecv.getAddRowButton()),
+                WidgetProperties.enabled().observe(ecv.getAddRowButton()),
                 observeSelectionUseCorrelation);
         databindingContext.bindValue(
-                SWTObservables.observeEnabled(ecv.getRemoveRowButton()),
+                WidgetProperties.enabled().observe(ecv.getRemoveRowButton()),
                 observeSelectionUseCorrelation);
     }
 
@@ -389,7 +361,7 @@ public class AddMessageEventWizardPage extends WizardPage implements
             while (it.hasNext()) {
                 final ValidationStatusProvider provider = (ValidationStatusProvider) it
                         .next();
-                final IStatus iStatus = (IStatus) provider
+                final IStatus iStatus = provider
                         .getValidationStatus().getValue();
                 if (!iStatus.isOK()) {
                     setErrorMessage(iStatus.getMessage());
@@ -415,9 +387,7 @@ public class AddMessageEventWizardPage extends WizardPage implements
     }
 
     protected IStatus hasAtLeastOneCorrelation(final TableExpression expTable) {
-        if (expTable == null) {
-            return ValidationStatus.error(Messages.oneCorrelationAtLeastNeeded);
-        } else if (expTable.getExpressions().isEmpty()) {
+        if (expTable == null || expTable.getExpressions().isEmpty()) {
             return ValidationStatus.error(Messages.oneCorrelationAtLeastNeeded);
         }
         return Status.OK_STATUS;
@@ -428,14 +398,14 @@ public class AddMessageEventWizardPage extends WizardPage implements
         String duplicateId = null;
 
         for (final ListExpression row : expTable.getExpressions()) {
-            if (row.getExpressions().size() > 0) {
+            if (!row.getExpressions().isEmpty()) {
                 final Expression expr = row.getExpressions().get(0);
                 final Expression value = row.getExpressions().get(1);
                 if (ExpressionConstants.CONSTANT_TYPE.equals(expr.getType())) {
                     final String id = expr.getName();
                     if (id != null && ids.contains(id)) {
                         duplicateId = id;
-                        return ValidationStatus.error(Messages.bind(
+                        return ValidationStatus.error(NLS.bind(
                                 Messages.dublicateIdErrorMessage, duplicateId,
                                 tableName));
                     } else {
@@ -444,27 +414,23 @@ public class AddMessageEventWizardPage extends WizardPage implements
                         }
                         if (id != null && !id.isEmpty()
                                 && value.getName() == null) {
-                            return ValidationStatus.error(Messages.bind(
+                            return ValidationStatus.error(NLS.bind(
                                     Messages.valueShouldBeDefined, id));
                         }
                         if ((id == null || id.isEmpty())
                                 && value.getName() != null) {
                             return ValidationStatus
-                                    .error(Messages.bind(
+                                    .error(NLS.bind(
                                             Messages.idShouldBeDefined,
                                             value.getName()));
                         }
                     }
                 }
             }
-            if (tableName.equals(Messages.correlation)) {
-                if (CorrelationTypeActive.KEYS.equals(workingCopyMessage
-                        .getCorrelation().getCorrelationType())) {
-                    if (ids.isEmpty()) {
-                        return ValidationStatus
-                                .error(Messages.oneCorrelationAtLeastNeeded);
-                    }
-                }
+            if (tableName.equals(Messages.correlation) && CorrelationTypeActive.KEYS.equals(workingCopyMessage
+                    .getCorrelation().getCorrelationType()) && ids.isEmpty()) {
+               return ValidationStatus
+                .error(Messages.oneCorrelationAtLeastNeeded);
             }
             Text textControl = (Text) elementExpressionViewer.getTextControl();
             if (elementExpressionViewer == null
@@ -494,11 +460,10 @@ public class AddMessageEventWizardPage extends WizardPage implements
         elementExpressionViewer = new ExpressionViewer(composite, SWT.BORDER,
                 ProcessPackage.Literals.MESSAGE__TARGET_ELEMENT_EXPRESSION);
         elementExpressionViewer.getControl().setLayoutData(gd);
-        elementExpressionViewer.addFilter(new AvailableExpressionTypeFilter(
-                new String[] { ExpressionConstants.CONSTANT_TYPE,
+        elementExpressionViewer.addFilter(new AvailableExpressionTypeFilter(ExpressionConstants.CONSTANT_TYPE,
                         ExpressionConstants.SCRIPT_TYPE,
                         ExpressionConstants.PARAMETER_TYPE,
-                        ExpressionConstants.VARIABLE_TYPE }));
+                        ExpressionConstants.VARIABLE_TYPE));
         elementExpressionViewer.setMessage(Messages.targetEventMessageHint);
         elementExpressionViewer.setMandatoryField(Messages.eventNameLabel,
                 databindingContext);
@@ -521,8 +486,8 @@ public class AddMessageEventWizardPage extends WizardPage implements
 
         databindingContext
                 .bindValue(
-                        ViewersObservables
-                                .observeSingleSelection(elementExpressionViewer),
+                        ViewerProperties.singleSelection()
+                                .observe(elementExpressionViewer),
                         EMFObservables
                                 .observeValue(
                                         workingCopyMessage,
@@ -540,11 +505,10 @@ public class AddMessageEventWizardPage extends WizardPage implements
                 ProcessPackage.Literals.MESSAGE__TARGET_PROCESS_EXPRESSION);
         gd = new GridData(GridData.FILL_HORIZONTAL);
         processExpressionViewer.getControl().setLayoutData(gd);
-        processExpressionViewer.addFilter(new AvailableExpressionTypeFilter(
-                new String[] { ExpressionConstants.CONSTANT_TYPE,
-                        ExpressionConstants.SCRIPT_TYPE,
-                        ExpressionConstants.PARAMETER_TYPE,
-                        ExpressionConstants.VARIABLE_TYPE }));
+        processExpressionViewer.addFilter(new AvailableExpressionTypeFilter(ExpressionConstants.CONSTANT_TYPE,
+                ExpressionConstants.SCRIPT_TYPE,
+                ExpressionConstants.PARAMETER_TYPE,
+                ExpressionConstants.VARIABLE_TYPE));
         processExpressionViewer.setMandatoryField(Messages.processNameLabel,
                 databindingContext);
         processExpressionViewer.setMessage(Messages.targetProcessMessageHint);
@@ -562,20 +526,13 @@ public class AddMessageEventWizardPage extends WizardPage implements
 
         databindingContext
                 .bindValue(
-                        ViewersObservables
-                                .observeSingleSelection(processExpressionViewer),
+                        ViewerProperties.singleSelection().observe(processExpressionViewer),
                         EMFObservables
                                 .observeValue(
                                         workingCopyMessage,
                                         ProcessPackage.Literals.MESSAGE__TARGET_PROCESS_EXPRESSION));
         processExpressionViewer
-                .addSelectionChangedListener(new ISelectionChangedListener() {
-
-                    @Override
-                    public void selectionChanged(final SelectionChangedEvent event) {
-                        refreshTargetEventContent();
-                    }
-                });
+                .addSelectionChangedListener(event -> refreshTargetEventContent());
     }
 
     private Text createDescriptionLine(final Composite composite) {
@@ -587,8 +544,7 @@ public class AddMessageEventWizardPage extends WizardPage implements
         gd = new GridData(SWT.FILL, SWT.CENTER, true, false);
         gd.heightHint = 45;
         descText.setLayoutData(gd);
-        databindingContext.bindValue(SWTObservables.observeDelayedValue(200,
-                SWTObservables.observeText(descText, SWT.Modify)),
+        databindingContext.bindValue(WidgetProperties.text(SWT.Modify).observeDelayed(200, descText),
                 EMFObservables.observeValue(workingCopyMessage,
                         ProcessPackage.Literals.ELEMENT__DOCUMENTATION));
         return descText;
@@ -604,13 +560,13 @@ public class AddMessageEventWizardPage extends WizardPage implements
         nameText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false)
                 .create());
 
-        final IValidator nameValidator = new IValidator() {
+        final IValidator nameValidator = new IValidator<String>() {
 
             @Override
-            public IStatus validate(final Object arg0) {
+            public IStatus validate(final String arg0) {
                 if (arg0 instanceof String) {
                     final String s = (String) arg0;
-                    if (s == null || s.isEmpty()) {
+                    if (s.isEmpty()) {
                         return ValidationStatus.error(Messages.emptyName);
                     } else {
                         final List<Message> events = ModelHelper.getAllItemsOfType(
@@ -634,8 +590,8 @@ public class AddMessageEventWizardPage extends WizardPage implements
                                                                  * POLICY_CONVERT
                                                                  */);
         uvs.setBeforeSetValidator(nameValidator);
-        databindingContext.bindValue(SWTObservables.observeDelayedValue(200,
-                SWTObservables.observeText(nameText, SWT.Modify)),
+        databindingContext.bindValue(
+                WidgetProperties.text(SWT.Modify).observeDelayed(200,nameText),
                 EMFObservables.observeValue(workingCopyMessage,
                         ProcessPackage.Literals.ELEMENT__NAME),
                 uvs, null);

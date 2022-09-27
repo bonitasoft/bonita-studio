@@ -36,7 +36,7 @@ import org.eclipse.ui.views.properties.tabbed.ISection;
 public class UpdateMessageEventWizard extends Wizard implements IWizard {
 
     private final TransactionalEditingDomain editingDomain;
-    private AddMessageEventWizardPage page;
+    private MessageEventWizardPage page;
     protected ThrowMessageEvent element;
     private final ISection callingSection;
     protected Message originalMessage;
@@ -67,12 +67,12 @@ public class UpdateMessageEventWizard extends Wizard implements IWizard {
             originalMessage = ProcessFactory.eINSTANCE.createMessage();
         }
         workingCopyMessage = emfModelUpdater.from(originalMessage).getWorkingCopy();
-        page = createAddMessageEventWizardPage();
+        page = createMessageEventWizardPage();
         addPage(page);
     }
 
-    protected AddMessageEventWizardPage createAddMessageEventWizardPage() {
-        return new AddMessageEventWizardPage(diagram, element, originalMessage, workingCopyMessage);
+    protected MessageEventWizardPage createMessageEventWizardPage() {
+        return new MessageEventWizardPage(diagram, element, originalMessage, workingCopyMessage);
     }
 
     @Override
