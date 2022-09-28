@@ -55,7 +55,7 @@
                   
                </documentation>
                <appinfo>
-                  <meta.attribute kind="java" basedOn=":org.bonitasoft.studio.application.actions.barresource.BARResourcesProvider"/>
+                  <meta.attribute kind="java" basedOn=":org.bonitasoft.studio.common.extension.BARResourcesProvider"/>
                </appinfo>
             </annotation>
          </attribute>
