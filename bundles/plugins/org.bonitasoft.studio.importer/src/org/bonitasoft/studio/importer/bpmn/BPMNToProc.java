@@ -2551,9 +2551,6 @@ public class BPMNToProc extends ToProcProcessor {
                 QName bpmnElement = bpmnShape.getBpmnElement();
                 if (bpmnElement != null && Objects.equals(bpmnElement.getLocalPart(),id)) {
                     final Point containerLocation = getContainerLocationFor(id);
-                    if(containerLocation.y > 0) {
-                        System.out.println(containerLocation);
-                    }
                     final Bounds bounds = ((Shape) diagramElement)
                             .getBounds();
                     // 25 is for the margin
