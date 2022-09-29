@@ -67,85 +67,36 @@ public class DisplayableAdapterFactory implements IAdapterFactory {
      * @param importModel the import model to get icon
      * @return icon image
      */
-    protected Image getIconFor(AbstractImportModel importModel) {
-        return null;
-    }
-
-    /**
-     * Get appropriate icon
-     * 
-     * @param importModel the import model to get icon
-     * @return icon image
-     */
-    protected Image getIconFor(AbstractFileModel importModel) {
-        Optional<IRepositoryStore> store = Optional.ofNullable(importModel.getAdapter(IRepositoryStore.class));
-        Optional<IDisplayable> display = store.flatMap(IDisplayable::adapt);
-        return display.map(IDisplayable::getIcon).orElse(null);
-    }
-
-    /**
-     * Get appropriate icon
-     * 
-     * @param importModel the import model to get icon
-     * @return icon image
-     */
-    protected Image getIconFor(ImportFileModel importModel) {
-        return PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJ_FILE);
-    }
-
-    /**
-     * Get appropriate icon
-     * 
-     * @param importModel the import model to get icon
-     * @return icon image
-     */
-    protected Image getIconFor(ImportFolderModel importModel) {
-        return PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJ_FOLDER);
-    }
-
-    /**
-     * Get appropriate icon
-     * 
-     * @param importModel the import model to get icon
-     * @return icon image
-     */
-    protected Image getIconFor(ImportFolderFileStoreModel importModel) {
-        Optional<IRepositoryStore> store = Optional.ofNullable(importModel.getAdapter(IRepositoryStore.class));
-        Optional<IDisplayable> display = store.flatMap(IDisplayable::adapt);
-        return display.map(IDisplayable::getIcon)
-                .orElse(PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJ_FOLDER));
-    }
-
-    /**
-     * Get appropriate icon
-     * 
-     * @param importModel the import model to get icon
-     * @return icon image
-     */
-    protected Image getIconFor(ImportStoreModel importModel) {
-        Optional<IRepositoryStore> store = Optional.ofNullable(importModel.getRepositoryStore());
-        Optional<IDisplayable> display = store.flatMap(IDisplayable::adapt);
-        return display.map(IDisplayable::getIcon).orElse(null);
-    }
-
-    /**
-     * Get appropriate icon
-     * 
-     * @param importModel the import model to get icon
-     * @return icon image
-     */
-    protected Image getIconFor(LegacyStoreModel importModel) {
-        return JFaceResources.getImage(Dialog.DLG_IMG_MESSAGE_WARNING);
-    }
-
-    /**
-     * Get appropriate icon
-     * 
-     * @param importModel the import model to get icon
-     * @return icon image
-     */
-    protected Image getIconFor(RootFileModel importModel) {
-        return PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJ_FILE);
+    private Image getIconFor(AbstractImportModel importModel) {
+        if (importModel instanceof AbstractFileModel) {
+            if (importModel instanceof ImportFileModel) {
+                return PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJ_FILE);
+            } else {
+                Optional<IRepositoryStore> store = Optional.ofNullable(importModel.getAdapter(IRepositoryStore.class));
+                Optional<IDisplayable> display = store.flatMap(IDisplayable::adapt);
+                return display.map(IDisplayable::getIcon).orElse(null);
+            }
+        } else if (importModel instanceof ImportFolderModel) {
+            return PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJ_FOLDER);
+        } else if (importModel instanceof ImportFolderFileStoreModel) {
+            Optional<IRepositoryStore> store = Optional.ofNullable(importModel.getAdapter(IRepositoryStore.class));
+            Optional<IDisplayable> display = store.flatMap(IDisplayable::adapt);
+            return display.map(IDisplayable::getIcon)
+                    .orElse(PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJ_FOLDER));
+        } else if (importModel instanceof ImportStoreModel) {
+            if (importModel instanceof LegacyStoreModel) {
+                return JFaceResources.getImage(Dialog.DLG_IMG_MESSAGE_WARNING);
+            } else if (importModel instanceof RootFileModel) {
+                return PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJ_FILE);
+            } else {
+                Optional<IRepositoryStore> store = Optional
+                        .ofNullable(((ImportStoreModel) importModel).getRepositoryStore());
+                Optional<IDisplayable> display = store.flatMap(IDisplayable::adapt);
+                return display.map(IDisplayable::getIcon).orElse(null);
+            }
+        } else {
+            return null;
+        }
     }
 
     @Override
