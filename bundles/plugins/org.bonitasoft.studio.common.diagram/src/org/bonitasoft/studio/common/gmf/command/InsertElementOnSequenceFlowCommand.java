@@ -19,6 +19,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Supplier;
 
 import org.bonitasoft.studio.common.diagram.tools.BonitaConnectionTypes;
 import org.bonitasoft.studio.common.diagram.tools.FiguresHelper;
@@ -66,7 +67,7 @@ import org.eclipse.gmf.runtime.notation.View;
 public class InsertElementOnSequenceFlowCommand extends AbstractCommand {
 
     private final boolean correctOffset;
-    private final Collection objects;
+    private final Supplier<Collection> objectsSupplier;
     private final IGraphicalEditPart targetEditPart;
     private final Map epRegistry;
     private EditPart originalTargetEditPart;
@@ -82,7 +83,8 @@ public class InsertElementOnSequenceFlowCommand extends AbstractCommand {
         super("Insert element on SequenceFlow");
         this.correctOffset = correctOffset;
         creationCommand = command;
-        objects = DiagramCommandStack.getReturnValues(creationCommand);
+        // use a supplier, as creation command may have not yet been executed at construction
+        objectsSupplier = () -> DiagramCommandStack.getReturnValues(creationCommand);
         this.targetEditPart = targetEditPart;
         epRegistry = viewer.getEditPartRegistry();
     }
@@ -93,13 +95,14 @@ public class InsertElementOnSequenceFlowCommand extends AbstractCommand {
             throws ExecutionException {
         if (targetEditPart instanceof ConnectionEditPart) {
             final ConnectionEditPart targetConnectionEditPart = (ConnectionEditPart) targetEditPart;
-            for (final Iterator i = objects.iterator(); i.hasNext();) {
+            for (final Iterator i = objectsSupplier.get().iterator(); i.hasNext();) {
                 final Object object = i.next();
                 if (object instanceof ViewAndElementDescriptor) {
                     final ViewAndElementDescriptor descriptor = (ViewAndElementDescriptor) object;
                     final ShapeEditPart editPart = (ShapeEditPart) epRegistry.get(descriptor.getAdapter(View.class));
                     final Bounds b = (Bounds) ((Node) editPart.getNotationView()).getLayoutConstraint();
-                    correctOffsetCmd = new SetBoundsCommand(editPart.getEditingDomain(), "", descriptor, new Point(b.getX() - 25, b.getY() - 25));
+                    correctOffsetCmd = new SetBoundsCommand(editPart.getEditingDomain(), "", descriptor,
+                            new Point(b.getX() - 25, b.getY() - 25));
 
                     final ReconnectRequest reconnect = new ReconnectRequest(RequestConstants.REQ_RECONNECT_TARGET);
                     reconnect.setConnectionEditPart(targetConnectionEditPart);
@@ -108,10 +111,13 @@ public class InsertElementOnSequenceFlowCommand extends AbstractCommand {
 
                     final CreateConnectionViewAndElementRequest connectionRequest = new CreateConnectionViewAndElementRequest(
                             BonitaConnectionTypes.getElementType("org.bonitasoft.studio.diagram.SequenceFlow_4001"),
-                            ((IHintedType) BonitaConnectionTypes.getElementType("org.bonitasoft.studio.diagram.SequenceFlow_4001")).getSemanticHint(),
+                            ((IHintedType) BonitaConnectionTypes
+                                    .getElementType("org.bonitasoft.studio.diagram.SequenceFlow_4001"))
+                                            .getSemanticHint(),
                             new PreferencesHint("org.bonitasoft.studio.diagram"));
                     originalTargetEditPart = targetConnectionEditPart.getTarget();
-                    createConnectionCommand = new DeferredCreateConnectionViewAndElementCommand(connectionRequest, descriptor, originalTargetEditPart,
+                    createConnectionCommand = new DeferredCreateConnectionViewAndElementCommand(connectionRequest,
+                            descriptor, originalTargetEditPart,
                             editPart.getViewer());
                     if (correctOffset) {
                         correctOffsetCmd.execute(monitor, info);
@@ -128,7 +134,8 @@ public class InsertElementOnSequenceFlowCommand extends AbstractCommand {
                     createConnectionCommand.execute(monitor, info);
 
                     if (connectionRequest != null) {
-                        final ConnectionViewAndElementDescriptor connectionDescriptor = (ConnectionViewAndElementDescriptor) connectionRequest.getNewObject();
+                        final ConnectionViewAndElementDescriptor connectionDescriptor = (ConnectionViewAndElementDescriptor) connectionRequest
+                                .getNewObject();
                         final Connector edge = (Connector) connectionDescriptor.getAdapter(Edge.class);
                         final org.eclipse.gmf.runtime.diagram.ui.editparts.ConnectionEditPart connectionEP = (org.eclipse.gmf.runtime.diagram.ui.editparts.ConnectionEditPart) editPart
                                 .getViewer().getEditPartRegistry().get(edge);
@@ -136,7 +143,8 @@ public class InsertElementOnSequenceFlowCommand extends AbstractCommand {
                             final TransactionalEditingDomain editingDomain = connectionEP.getEditingDomain();
                             setBendpointsCmdForNewEdge = createSetBendpointsCommand(monitor, info, edge, editingDomain);
                             setBendpointsCmdForNewEdge.execute(monitor, info);
-                            setBendpointsCmdForOriginalEdge = createSetBendpointsCommand(monitor, info, (Connector) targetEditPart.getNotationView(),
+                            setBendpointsCmdForOriginalEdge = createSetBendpointsCommand(monitor, info,
+                                    (Connector) targetEditPart.getNotationView(),
                                     editingDomain);
                             setBendpointsCmdForOriginalEdge.execute(monitor, info);
                         }
@@ -154,19 +162,21 @@ public class InsertElementOnSequenceFlowCommand extends AbstractCommand {
             final IAdaptable info,
             final Connector edge,
             final TransactionalEditingDomain domain) {
-        final SetConnectionBendpointsCommand setConnectionBendPointsCommand = new SetConnectionBendpointsCommand(domain);
+        final SetConnectionBendpointsCommand setConnectionBendPointsCommand = new SetConnectionBendpointsCommand(
+                domain);
         setConnectionBendPointsCommand.setEdgeAdapter(new EObjectAdapter(edge));
         final PointList bendpoints = new PointList();
         bendpoints.addPoint(0, 0);
         bendpoints.addPoint(0, 0);
-        setConnectionBendPointsCommand.setNewPointList(bendpoints, bendpoints.getFirstPoint(), bendpoints.getLastPoint());
+        setConnectionBendPointsCommand.setNewPointList(bendpoints, bendpoints.getFirstPoint(),
+                bendpoints.getLastPoint());
         return setConnectionBendPointsCommand;
     }
 
     protected void correctBoundsToAvoidCollisions(final IProgressMonitor monitor,
             final IAdaptable info) throws ExecutionException {
         final List editparts = new ArrayList();
-        for (final Iterator i = objects.iterator(); i.hasNext();) {
+        for (final Iterator i = objectsSupplier.get().iterator(); i.hasNext();) {
             final Object object = i.next();
             if (object instanceof IAdaptable) {
                 final Object editPart = epRegistry.get(((IAdaptable) object).getAdapter(View.class));
@@ -178,12 +188,16 @@ public class InsertElementOnSequenceFlowCommand extends AbstractCommand {
 
         for (final Object ep : editparts) {
             if (ep instanceof IGraphicalEditPart) {
-                final Location loc = (Location) ((Node) ((IGraphicalEditPart) ep).getNotationView()).getLayoutConstraint();
-                final Point newLoc = FiguresHelper.handleCompartmentMargin((IGraphicalEditPart) ep, loc.getX(), loc.getY(),
+                final Location loc = (Location) ((Node) ((IGraphicalEditPart) ep).getNotationView())
+                        .getLayoutConstraint();
+                final Point newLoc = FiguresHelper.handleCompartmentMargin((IGraphicalEditPart) ep, loc.getX(),
+                        loc.getY(),
                         ((IGraphicalEditPart) ep).resolveSemanticElement() instanceof SubProcessEvent);
                 if (((IGraphicalEditPart) ep).getParent() instanceof ShapeCompartmentEditPart
-                        && !(((IGraphicalEditPart) ((IGraphicalEditPart) ep).getParent()).resolveSemanticElement() instanceof SubProcessEvent)) {
-                    final ShapeCompartmentEditPart compartment = (ShapeCompartmentEditPart) ((IGraphicalEditPart) ep).getParent();
+                        && !(((IGraphicalEditPart) ((IGraphicalEditPart) ep).getParent())
+                                .resolveSemanticElement() instanceof SubProcessEvent)) {
+                    final ShapeCompartmentEditPart compartment = (ShapeCompartmentEditPart) ((IGraphicalEditPart) ep)
+                            .getParent();
                     while (newLoc.y + 65 > compartment.getFigure().getBounds().height) {
                         newLoc.y = newLoc.y - 10;
                     }

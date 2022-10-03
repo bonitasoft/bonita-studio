@@ -65,8 +65,10 @@ public class PaletteToolTransferDropTargetListenerWithSelection extends PaletteT
         if (getTargetEditPart() != null) {
             final Command command = getCommand();
             if (command != null && command.canExecute()) {
-                getViewer().getEditDomain().getCommandStack().execute(command);
-                insertOnSequenceFlow(command, getTargetEditPart(), getViewer(), true);
+                // execute both commands at once
+                var insert = new InsertElementOnSequenceFlowCommand(command, (IGraphicalEditPart) getTargetEditPart(),
+                        getViewer(), true);
+                getViewer().getEditDomain().getCommandStack().execute(command.chain(new ICommandProxy(insert)));
                 selectAddedObject(getViewer(), DiagramCommandStack.getReturnValues(command));
                 getViewer().getEditDomain().loadDefaultTool();
             } else {
@@ -98,8 +100,10 @@ public class PaletteToolTransferDropTargetListenerWithSelection extends PaletteT
         return loc;
     }
 
-    public static void insertOnSequenceFlow(final Command command, final EditPart targetEditPart, final EditPartViewer viewer, final boolean correctOffset) {
-        final InsertElementOnSequenceFlowCommand cmd = new InsertElementOnSequenceFlowCommand(command, (IGraphicalEditPart) targetEditPart, viewer,
+    public static void insertOnSequenceFlow(final Command command, final EditPart targetEditPart,
+            final EditPartViewer viewer, final boolean correctOffset) {
+        final InsertElementOnSequenceFlowCommand cmd = new InsertElementOnSequenceFlowCommand(command,
+                (IGraphicalEditPart) targetEditPart, viewer,
                 correctOffset);
         final ICommandProxy iCommandProxy = new ICommandProxy(cmd);
         if (iCommandProxy.canExecute()) {
@@ -119,9 +123,8 @@ public class PaletteToolTransferDropTargetListenerWithSelection extends PaletteT
         for (final Iterator i = objects.iterator(); i.hasNext();) {
             final Object object = i.next();
             if (object instanceof IAdaptable) {
-                final Object editPart =
-                        viewer.getEditPartRegistry().get(
-                                ((IAdaptable) object).getAdapter(View.class));
+                final Object editPart = viewer.getEditPartRegistry().get(
+                        ((IAdaptable) object).getAdapter(View.class));
                 if (editPart != null) {
                     editparts.add(editPart);
                 }

@@ -14,7 +14,11 @@
  */
 package org.bonitasoft.studio.common.diagram.tools;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import java.util.HashSet;
+import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 import org.bonitasoft.studio.common.figures.CustomSVGFigure;
@@ -113,13 +117,15 @@ public class FiguresHelper {
 
     public static boolean AVOID_OVERLAP_ENABLE = true;
 
-    public static IFigure getSelectedFigure(final EClass eClass, final int width, final int height, final Color foreground, final Color background) {
+    public static IFigure getSelectedFigure(final EClass eClass, final int width, final int height,
+            final Color foreground, final Color background) {
 
         final String eclassName = eClass.getName();
         final CustomSVGFigure svgFigure = new CustomSVGFigure();
         svgFigure.setURI("platform:/plugin/org.bonitasoft.studio.pics/icons/figures/" + eclassName + "_selected.svgz"); //$NON-NLS-1$ //$NON-NLS-2$
 
-        if (ProcessPackage.Literals.ACTIVITY.isSuperTypeOf(eClass) || ProcessPackage.Literals.SUB_PROCESS_EVENT.equals(eClass)) {
+        if (ProcessPackage.Literals.ACTIVITY.isSuperTypeOf(eClass)
+                || ProcessPackage.Literals.SUB_PROCESS_EVENT.equals(eClass)) {
             if (height != 0 && width != -1) {
                 svgFigure.setSize(width, height);
             } else {
@@ -162,8 +168,7 @@ public class FiguresHelper {
                         viewport.getHorizontalRangeModel().getValue(),
                         viewport.getVerticalRangeModel().getValue());
                 parentFigure = parentFigure.getParent();
-            }
-            else {
+            } else {
                 parentFigure = parentFigure.getParent();
             }
         }
@@ -183,36 +188,71 @@ public class FiguresHelper {
                         viewport.getHorizontalRangeModel().getValue(),
                         viewport.getVerticalRangeModel().getValue());
                 owner = owner.getParent();
-            }
-            else {
+            } else {
                 owner = owner.getParent();
             }
         }
     }
 
-    public static Point handleCompartmentMargin(final IGraphicalEditPart ep, final int x, final int y, final boolean notAllowExentedMargins) {
+    public static Point handleCompartmentMargin(final IGraphicalEditPart ep, final int x, final int y,
+            final boolean notAllowExentedMargins) {
+        Node node = (Node) ep.getNotationView();
         final IFigure editPartFigure = ep.getFigure();
-        if (ep.getParent() instanceof ShapeCompartmentEditPart) {
-            final GraphicalEditPart epCompartment = (GraphicalEditPart) ep.getParent();
-            final Dimension parentSize = ((GraphicalEditPart) ep.getParent()).getFigure().getSize().getCopy();
-            final Point parentLoc = ((GraphicalEditPart) ep.getParent()).getFigure().getBounds().getCopy().getLocation();
+        return doHandleCompartmentMargin(node, editPartFigure, (IGraphicalEditPart) ep.getParent(), x, y,
+                notAllowExentedMargins);
+    }
+
+    /**
+     * Handle compartment margins in the parent edit part to adapt the location of a view (which edit part is not created yet)
+     * 
+     * @param node the node view without an edit part yet
+     * @param feedbackFigure the figure used for creation feedback
+     * @param parentEditPart the parent edit part that will host the view's edit part
+     * @param x the originally intended location's x
+     * @param y the originally intended location's y
+     * @param notAllowExtentedMargins whether margins can't be extended
+     * @return
+     */
+    public static Point handleCompartmentMargin(final Node node, final IFigure feedbackFigure,
+            final IGraphicalEditPart parentEditPart, final int x,
+            final int y, final boolean notAllowExentedMargins) {
+        List<?> parentChildren = parentEditPart.getChildren();
+        boolean editPartAlreadyExists = parentChildren.stream()
+                .filter(IGraphicalEditPart.class::isInstance).map(IGraphicalEditPart.class::cast)
+                .anyMatch(p -> Objects.equals(p.getNotationView(), node));
+        checkArgument(!editPartAlreadyExists);
+
+        return doHandleCompartmentMargin(node, feedbackFigure, parentEditPart, x, y, notAllowExentedMargins);
+    }
+
+    private static Point doHandleCompartmentMargin(final Node node, final IFigure figure,
+            final IGraphicalEditPart parentEditPart, final int x,
+            final int y, final boolean notAllowExentedMargins) {
+
+        if (parentEditPart instanceof ShapeCompartmentEditPart) {
+            final GraphicalEditPart epCompartment = (GraphicalEditPart) parentEditPart;
+            final Dimension parentSize = epCompartment.getFigure().getSize().getCopy();
+            final Point parentLoc = epCompartment.getFigure().getBounds().getCopy()
+                    .getLocation();
             if (!(parentSize.height == 0 && parentSize.width == 0)) {
                 Rectangle newBounds = null;
-                if (editPartFigure.getSize().width == 0 && editPartFigure.getSize().height == 0) {
-                    newBounds = new Rectangle(new Point(x, y), editPartFigure.getPreferredSize());
+                if (figure.getSize().width == 0 && figure.getSize().height == 0) {
+                    newBounds = new Rectangle(new Point(x, y), figure.getPreferredSize());
                 } else {
-                    newBounds = new Rectangle(new Point(x, y), editPartFigure.getSize());
+                    newBounds = new Rectangle(new Point(x, y), figure.getSize());
                 }
-                final EditPart parent = ep.getParent().getParent();
+                final EditPart parent = parentEditPart.getParent();
 
                 for (final Object child : epCompartment.getChildren()) {
 
-                    if (child instanceof IGraphicalEditPart && !child.equals(ep)) {
+                    if (child instanceof IGraphicalEditPart
+                            && !Objects.equals(((IGraphicalEditPart) child).getNotationView(), node)) {
                         boolean compartment = false;
                         for (final Object o : ((IGraphicalEditPart) child).getChildren()) {
                             if (o instanceof ShapeCompartmentEditPart) {
-                                if (((ShapeCompartmentEditPart) o).getCompartmentFigure().isExpanded() && ep.getTargetConnections().isEmpty()
-                                        && ep.getSourceConnections().isEmpty()) {
+                                if (((ShapeCompartmentEditPart) o).getCompartmentFigure().isExpanded()
+                                        && node.getTargetEdges().isEmpty()
+                                        && node.getSourceEdges().isEmpty()) {
                                     compartment = true;
                                 }
 
@@ -230,36 +270,37 @@ public class FiguresHelper {
                 /*
                  * Handle Pool and Lanes inner margins
                  */
-                if (editPartFigure.getBounds().height == 0) {
-                    if (parentSize.height + parentLoc.y < newBounds.y + editPartFigure.getPreferredSize().height) {
+                if (figure.getBounds().height == 0) {
+                    if (parentSize.height + parentLoc.y < newBounds.y + figure.getPreferredSize().height) {
                         if (notAllowExentedMargins) {
-                            newBounds.y = parentSize.height + parentLoc.y - editPartFigure.getPreferredSize().height - 10;
+                            newBounds.y = parentSize.height + parentLoc.y - figure.getPreferredSize().height
+                                    - 10;
                         }
                     } else if (newBounds.y - parentLoc.y - 10 <= 0) {
                         newBounds.y = 10 + parentLoc.y;
                     }
                 } else {
-                    if (parentSize.height + parentLoc.y < newBounds.y + editPartFigure.getBounds().height) {
+                    if (parentSize.height + parentLoc.y < newBounds.y + figure.getBounds().height) {
                         if (notAllowExentedMargins) {
-                            newBounds.y = parentSize.height + parentLoc.y - editPartFigure.getBounds().height - 10;
+                            newBounds.y = parentSize.height + parentLoc.y - figure.getBounds().height - 10;
                         }
                     } else if (newBounds.y - parentLoc.y - 10 <= 0) {
                         newBounds.y = 10 + parentLoc.y;
                     }
                 }
 
-                if (editPartFigure.getBounds().width == 0) {
-                    if (parentSize.width + parentLoc.x < editPartFigure.getPreferredSize().width + newBounds.x) {
+                if (figure.getBounds().width == 0) {
+                    if (parentSize.width + parentLoc.x < figure.getPreferredSize().width + newBounds.x) {
                         if (notAllowExentedMargins) {
-                            newBounds.x = parentSize.width + parentLoc.x - editPartFigure.getPreferredSize().width - 10;
+                            newBounds.x = parentSize.width + parentLoc.x - figure.getPreferredSize().width - 10;
                         }
                     } else if (x - parentLoc.x - 10 <= 0) {
                         newBounds.x = 25 + parentLoc.x;
                     }
                 } else {
-                    if (parentSize.width + parentLoc.x < editPartFigure.getBounds().width + newBounds.x) {
+                    if (parentSize.width + parentLoc.x < figure.getBounds().width + newBounds.x) {
                         if (notAllowExentedMargins) {
-                            newBounds.x = parentSize.width + parentLoc.x - editPartFigure.getBounds().width - 10;
+                            newBounds.x = parentSize.width + parentLoc.x - figure.getBounds().width - 10;
                         }
                     } else if (x - parentLoc.x - 10 <= 0) {
                         newBounds.x = 25 + parentLoc.x;
@@ -326,7 +367,8 @@ public class FiguresHelper {
 
         for (final Object child : ep.getChildren()) {
             if (child instanceof GraphicalEditPart) {
-                final int y = ((Integer) ((GraphicalEditPart) child).getStructuralFeatureValue(NotationPackage.eINSTANCE.getLocation_Y())).intValue();
+                final int y = ((Integer) ((GraphicalEditPart) child)
+                        .getStructuralFeatureValue(NotationPackage.eINSTANCE.getLocation_Y())).intValue();
                 int h = ((GraphicalEditPart) child).getFigure().getPreferredSize().height + y;
                 if (h < 100) {
                     h = 100;
@@ -365,7 +407,8 @@ public class FiguresHelper {
         final int defaultHeight = parentEp.getFigure().getPreferredSize().height;
         final int heightDeltaFromDefault = currentHeight - defaultHeight;
 
-        req.setSizeDelta(new Dimension(20 * lineNumber - withDeltaFromDefault, 10 * lineNumber - heightDeltaFromDefault));
+        req.setSizeDelta(
+                new Dimension(20 * lineNumber - withDeltaFromDefault, 10 * lineNumber - heightDeltaFromDefault));
         req.setConstrainedResize(true);
         req.setCenteredResize(true);
         req.setResizeDirection(PositionConstants.CENTER);
@@ -451,7 +494,8 @@ public class FiguresHelper {
 
         double angleT = 0;
         while (angleT < TWO_PI) {
-            points.addPoint((int) (halfWidth * Math.cos(angleT) + centerX), (int) (halfHeight * Math.sin(angleT) + centerY));
+            points.addPoint((int) (halfWidth * Math.cos(angleT) + centerX),
+                    (int) (halfHeight * Math.sin(angleT) + centerY));
             angleT += angle;
         }
         // add last point, the same than the first point
