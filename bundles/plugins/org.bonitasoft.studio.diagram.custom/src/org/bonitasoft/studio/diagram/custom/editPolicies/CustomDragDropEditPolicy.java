@@ -28,7 +28,6 @@ import org.bonitasoft.studio.model.process.SubProcessEvent;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.LaneEditPart;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.MainProcessEditPart;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.PoolEditPart;
-import org.bonitasoft.studio.model.process.diagram.edit.parts.SubProcessEvent2EditPart;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.SubProcessEventSubProcessCompartment2EditPart;
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.IFigure;
@@ -109,7 +108,8 @@ public class CustomDragDropEditPolicy extends DragDropEditPolicy {
     private boolean isAnIllegalMove(final ChangeBoundsRequest request) {
         //STart event can't be moved to SubProcessEvent
         if (getHost().getViewer().findObjectAt(request.getLocation()) instanceof IGraphicalEditPart) {
-            final IGraphicalEditPart target = (IGraphicalEditPart) getHost().getViewer().findObjectAt(request.getLocation());
+            final IGraphicalEditPart target = (IGraphicalEditPart) getHost().getViewer()
+                    .findObjectAt(request.getLocation());
             if (target.resolveSemanticElement() instanceof SubProcessEvent) {
                 for (final Object ep : request.getEditParts()) {
                     if (ep instanceof IGraphicalEditPart) {
@@ -230,11 +230,13 @@ public class CustomDragDropEditPolicy extends DragDropEditPolicy {
                     if (parent != null && parentNotationView != null
                             && parentNotationView.getStyle(NotationPackage.eINSTANCE.getLineStyle()) != null) {
                         final Color foreground = ColorRegistry.getInstance()
-                                .getColor(((LineStyle) parentNotationView.getStyle(NotationPackage.eINSTANCE.getLineStyle()))
-                                        .getLineColor());
+                                .getColor(((LineStyle) parentNotationView
+                                        .getStyle(NotationPackage.eINSTANCE.getLineStyle()))
+                                                .getLineColor());
                         final Color background = ColorRegistry.getInstance()
-                                .getColor(((FillStyle) parentNotationView.getStyle(NotationPackage.eINSTANCE.getFillStyle()))
-                                        .getFillColor());
+                                .getColor(((FillStyle) parentNotationView
+                                        .getStyle(NotationPackage.eINSTANCE.getFillStyle()))
+                                                .getFillColor());
                         parentHostFigure.setForegroundColor(FigureUtilities.lighter(foreground));
                         parentHostFigure.setBackgroundColor(FigureUtilities.lighter(background));
                     }
@@ -242,8 +244,9 @@ public class CustomDragDropEditPolicy extends DragDropEditPolicy {
                     if (parent != null && parentNotationView != null
                             && parentNotationView.getStyle(NotationPackage.eINSTANCE.getLineStyle()) != null) {
                         final Color background = ColorRegistry.getInstance()
-                                .getColor(((FillStyle) parentNotationView.getStyle(NotationPackage.eINSTANCE.getFillStyle()))
-                                        .getFillColor());
+                                .getColor(((FillStyle) parentNotationView
+                                        .getStyle(NotationPackage.eINSTANCE.getFillStyle()))
+                                                .getFillColor());
                         parentHostFigure.setForegroundColor(ColorConstants.red);
                         parentHostFigure.setBackgroundColor(FigureUtilities.lighter(background));
                     }
@@ -255,20 +258,28 @@ public class CustomDragDropEditPolicy extends DragDropEditPolicy {
 
     @Override
     public void eraseTargetFeedback(final Request request) {
-        if(((IGraphicalEditPart) getHost()).resolveSemanticElement() instanceof SubProcessEvent){
-            if(getHost().getParent() != null && ((IGraphicalEditPart)getHost().getParent()).getNotationView() != null &&  ((IGraphicalEditPart)getHost().getParent()).getNotationView().getStyle(NotationPackage.eINSTANCE.getLineStyle()) != null){
-                 Color foreground = ColorRegistry.getInstance().getColor(((LineStyle) ((IGraphicalEditPart)getHost().getParent()).getNotationView().getStyle(NotationPackage.eINSTANCE.getLineStyle())).getLineColor()) ;
-                 Color background = ColorRegistry.getInstance().getColor(((FillStyle) ((IGraphicalEditPart)getHost().getParent()).getNotationView().getStyle(NotationPackage.eINSTANCE.getFillStyle())).getFillColor()) ;
-                Object preferenceStore = ((SubProcessEventSubProcessCompartment2EditPart)getHost()).getDiagramPreferencesHint().getPreferenceStore();
+        if (getHost() instanceof SubProcessEventSubProcessCompartment2EditPart
+                && ((IGraphicalEditPart) getHost()).resolveSemanticElement() instanceof SubProcessEvent) {
+            if (getHost().getParent() != null && ((IGraphicalEditPart) getHost().getParent()).getNotationView() != null
+                    && ((IGraphicalEditPart) getHost().getParent()).getNotationView()
+                            .getStyle(NotationPackage.eINSTANCE.getLineStyle()) != null) {
+                Color foreground = ColorRegistry.getInstance()
+                        .getColor(((LineStyle) ((IGraphicalEditPart) getHost().getParent()).getNotationView()
+                                .getStyle(NotationPackage.eINSTANCE.getLineStyle())).getLineColor());
+                Color background = ColorRegistry.getInstance()
+                        .getColor(((FillStyle) ((IGraphicalEditPart) getHost().getParent()).getNotationView()
+                                .getStyle(NotationPackage.eINSTANCE.getFillStyle())).getFillColor());
+                Object preferenceStore = ((SubProcessEventSubProcessCompartment2EditPart) getHost())
+                        .getDiagramPreferencesHint().getPreferenceStore();
                 if (preferenceStore instanceof IPreferenceStore) {
-                    foreground = DiagramColorProvider.getFontColor((IPreferenceStore)preferenceStore, foreground);
-                    background = DiagramColorProvider.getBackgroundColor((IPreferenceStore)preferenceStore, background);
+                    foreground = DiagramColorProvider.getFontColor((IPreferenceStore) preferenceStore, foreground);
+                    background = DiagramColorProvider.getBackgroundColor((IPreferenceStore) preferenceStore,
+                            background);
                 }
-                getHostFigure().getParent().setForegroundColor(foreground) ;
-                getHostFigure().getParent().setBackgroundColor(background) ;
+                getHostFigure().getParent().setForegroundColor(foreground);
+                getHostFigure().getParent().setBackgroundColor(background);
             }
         }
-        return; // DO NOTHING
     }
 
 }
