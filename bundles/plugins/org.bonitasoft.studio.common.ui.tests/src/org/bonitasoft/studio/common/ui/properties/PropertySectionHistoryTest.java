@@ -16,7 +16,6 @@ package org.bonitasoft.studio.common.ui.properties;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.bonitasoft.studio.common.ui.properties.PropertySectionHistory;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

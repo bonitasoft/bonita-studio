@@ -17,7 +17,6 @@
 package org.bonitasoft.studio.common.ui.jface.databinding.converter;
 
 import org.assertj.core.api.Assertions;
-import org.bonitasoft.studio.common.ui.jface.databinding.converter.BooleanInverserConverter;
 import org.junit.Test;
 
 

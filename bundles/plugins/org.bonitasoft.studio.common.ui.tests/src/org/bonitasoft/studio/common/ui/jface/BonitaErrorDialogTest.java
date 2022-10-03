@@ -19,7 +19,6 @@ import static org.mockito.Mockito.doCallRealMethod;
 import java.lang.reflect.InvocationTargetException;
 
 import org.assertj.core.api.Assertions;
-import org.bonitasoft.studio.common.ui.jface.BonitaErrorDialog;
 import org.bonitasoft.studio.swt.rules.RealmWithDisplay;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.List;

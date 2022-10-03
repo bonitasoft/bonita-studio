@@ -16,7 +16,6 @@ package org.bonitasoft.studio.common.ui.properties;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.bonitasoft.studio.common.ui.properties.Well;
 import org.bonitasoft.studio.swt.rules.RealmWithDisplay;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.swt.SWT;

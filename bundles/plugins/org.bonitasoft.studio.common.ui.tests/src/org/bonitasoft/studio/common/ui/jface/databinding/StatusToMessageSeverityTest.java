@@ -15,19 +15,14 @@
 package org.bonitasoft.studio.common.ui.jface.databinding;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertThrows;
 
-import org.bonitasoft.studio.common.ui.jface.databinding.StatusToMessageSeverity;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.forms.IMessage;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 public class StatusToMessageSeverityTest {
-
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
 
     @Test
     public void should_convert_error_status_severity_to_error_message_severity() throws Exception {
@@ -53,9 +48,7 @@ public class StatusToMessageSeverityTest {
     public void should_throw_an_IllegalArgumentException_if_severity_code_is_unknown() throws Exception {
         final StatusToMessageSeverity status2MessageSeverity = new StatusToMessageSeverity(Status.CANCEL_STATUS);
 
-        thrown.expect(IllegalArgumentException.class);
-
-        status2MessageSeverity.toMessageSeverity();
+        assertThrows(IllegalArgumentException.class, () -> status2MessageSeverity.toMessageSeverity());
     }
 
 }
