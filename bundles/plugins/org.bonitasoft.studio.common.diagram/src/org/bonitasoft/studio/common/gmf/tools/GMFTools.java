@@ -17,6 +17,7 @@ package org.bonitasoft.studio.common.gmf.tools;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Stream;
 
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.gmf.tools.convert.ConvertBPMNTypeCommand;
@@ -33,6 +34,7 @@ import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPartViewer;
+import org.eclipse.gef.RootEditPart;
 import org.eclipse.gef.SnapToGeometry;
 import org.eclipse.gef.SnapToGrid;
 import org.eclipse.gef.SnapToHelper;
@@ -40,6 +42,7 @@ import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.rulers.RulerProvider;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.BorderedBorderItemEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ConnectionEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.INodeEditPart;
@@ -283,6 +286,29 @@ public class GMFTools {
             }
         }
         return refNode;
+    }
+
+    /**
+     * Get the diagram edit part
+     * 
+     * @param editPart an edit part
+     * @return diagram edit part
+     */
+    public static DiagramEditPart getDiagramEditPart(GraphicalEditPart editPart) {
+        EditPart part = editPart;
+        while (part != null && !(part instanceof RootEditPart)) {
+            if (part instanceof DiagramEditPart) {
+                return (DiagramEditPart) part;
+            }
+            part = part.getParent();
+        }
+        if (part instanceof RootEditPart) {
+            // was a special edit part in the root
+            Stream<?> children = part.getChildren().stream();
+            return children.filter(DiagramEditPart.class::isInstance).map(DiagramEditPart.class::cast).findFirst()
+                    .orElse(null);
+        }
+        return null;
     }
 
     /**
