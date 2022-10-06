@@ -33,7 +33,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.edapt.migration.MigrationException;
-import org.eclipse.swt.graphics.Image;
 
 /**
  * @author Romain Bioteau
@@ -69,10 +68,6 @@ public interface IRepository extends IFileStoreChangeListener {
     List<IRepositoryStore<? extends IRepositoryFileStore>> getAllSharedStores();
 
     List<IRepositoryStore<? extends IRepositoryFileStore>> getAllExportableStores();
-
-    String getDisplayName();
-
-    Image getIcon();
 
     IStatus exportToArchive(String file);
 
