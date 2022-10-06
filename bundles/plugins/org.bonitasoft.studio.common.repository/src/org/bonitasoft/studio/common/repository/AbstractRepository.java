@@ -531,20 +531,6 @@ public abstract class AbstractRepository implements IRepository, IJavaContainer 
     }
 
     @Override
-    public String getDisplayName() {
-        return getName();
-    }
-
-    @Override
-    public Image getIcon() {
-        if (isShared()) {
-            return Pics.getImage("git.png", CommonRepositoryPlugin.getDefault());
-        } else {
-            return Pics.getImage(PicsConstants.project);
-        }
-    }
-
-    @Override
     public IStatus exportToArchive(final String fileName) {
         final ExportBosArchiveOperation operation = new ExportBosArchiveOperation();
         operation.setDestinationPath(fileName);

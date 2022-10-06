@@ -102,5 +102,15 @@
              value="true">
        </persistent>
     </extension>
+    <extension
+          point="org.eclipse.core.runtime.adapters">
+       <factory
+             adaptableType="org.bonitasoft.studio.common.repository.model.IRepository"
+             class="org.bonitasoft.studio.common.repository.ui.internal.DisplayableAdapterFactory">
+          <adapter
+                type="org.bonitasoft.studio.common.ui.IDisplayable">
+          </adapter>
+       </factory>
+    </extension>
    
 </plugin>
