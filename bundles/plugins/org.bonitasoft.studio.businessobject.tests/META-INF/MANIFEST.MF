@@ -4,7 +4,7 @@ Bundle-Name: BDM Plugin Tests Fragment
 Bundle-SymbolicName: org.bonitasoft.studio.businessobject.tests
 Bundle-Version: 7.16.0.qualifier
 Bundle-Vendor: Bonitasoft S.A.
-Fragment-Host: org.bonitasoft.studio.businessobject;bundle-version="7.15.0"
+Fragment-Host: org.bonitasoft.studio.businessobject;bundle-version="7.16.0"
 Automatic-Module-Name: org.bonitasoft.studio.businessobject.tests
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Require-Bundle: org.junit,
