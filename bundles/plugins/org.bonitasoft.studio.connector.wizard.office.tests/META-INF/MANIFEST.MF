@@ -4,7 +4,7 @@ Bundle-Name: Office Connector Wizard Tests Fragment
 Bundle-SymbolicName: org.bonitasoft.studio.connector.wizard.office.tests
 Bundle-Version: 7.16.0.qualifier
 Bundle-Vendor: Bonitasoft S.A.
-Fragment-Host: org.bonitasoft.studio.connector.wizard.office;bundle-version="7.15.0"
+Fragment-Host: org.bonitasoft.studio.connector.wizard.office;bundle-version="7.16.0"
 Automatic-Module-Name: org.bonitasoft.studio.connector.wizard.office.tests
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Require-Bundle: org.junit,
