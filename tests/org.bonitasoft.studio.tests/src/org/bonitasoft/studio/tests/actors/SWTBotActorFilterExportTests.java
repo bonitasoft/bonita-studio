@@ -26,7 +26,6 @@ import java.io.IOException;
 import java.util.Properties;
 import java.util.zip.ZipException;
 
-import org.bonitasoft.studio.common.ProjectUtil;
 import org.bonitasoft.studio.common.ui.PlatformUtil;
 import org.bonitasoft.studio.connectors.repository.ConnectorDefRepositoryStore;
 import org.bonitasoft.studio.connectors.repository.ConnectorImplRepositoryStore;
@@ -40,7 +39,6 @@ import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
-import org.junit.After;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -72,14 +70,15 @@ public class SWTBotActorFilterExportTests {
         } else {
             bot.checkBoxWithLabel("Add dependencies").deselect();
         }
-        bot.textWithLabel("Destination *").setText(ProjectUtil.getBonitaStudioWorkFolder().getAbsolutePath());
+        var targetFolder = temporaryFolder.newFolder();
+        bot.textWithLabel("Destination *").setText(targetFolder.getAbsolutePath());
         bot.waitUntil(Conditions.widgetIsEnabled(bot.button(IDialogConstants.FINISH_LABEL)), 5000);
         bot.button(IDialogConstants.FINISH_LABEL).click();
         bot.waitUntil(
                 new ShellIsActiveWithThreadSTacksOnFailure(org.bonitasoft.studio.common.repository.Messages.exportLabel),
                 15000);
         bot.button(IDialogConstants.OK_LABEL).click();
-        checkExportedFile(ProjectUtil.getBonitaStudioWorkFolder().getAbsolutePath(), fileName, hasDependencies, hasSources);
+        checkExportedFile(targetFolder.getAbsolutePath(), fileName, hasDependencies, hasSources);
     }
 
 
@@ -101,8 +100,7 @@ public class SWTBotActorFilterExportTests {
             final boolean hasSources) throws Exception {
         final File zipFile = new File(path + File.separator + fileName);
         assertTrue("actor filter zip file was not created", zipFile.exists());
-        final File destDir = new File(ProjectUtil.getBonitaStudioWorkFolder().getAbsolutePath());
-        destDir.deleteOnExit();
+        var destDir =  temporaryFolder.newFolder();
         final IProgressMonitor monitor = new NullProgressMonitor();
         try {
             PlatformUtil.unzipZipFiles(zipFile, destDir, monitor);
@@ -228,9 +226,4 @@ public class SWTBotActorFilterExportTests {
                 messageFiles);
     }
 
-    @After
-    public void deleteFiles() {
-        PlatformUtil.delete(ProjectUtil.getBonitaStudioWorkFolder(), null);
-        ProjectUtil.getBonitaStudioWorkFolder().mkdir();
-    }
 }

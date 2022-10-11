@@ -22,7 +22,6 @@ import java.net.URL;
 import java.util.Properties;
 
 import org.bonitasoft.engine.bpm.bar.BusinessArchive;
-import org.bonitasoft.studio.common.ProjectUtil;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.configuration.ConfigurationSynchronizer;
 import org.bonitasoft.studio.diagram.custom.commands.NewDiagramCommandHandler;
@@ -46,6 +45,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 
 /**
  * @author Romain Bioteau
@@ -54,6 +54,9 @@ public class TestProcessParameters {
 
     @Rule
     public InitialProjectRule projectRule = InitialProjectRule.INSTANCE;
+    
+    @Rule
+    public TemporaryFolder tmpFolder = new TemporaryFolder();
     
     private static final String CONF_NAME = "TestConfiguration";
     private static AbstractProcess pool;
@@ -140,12 +143,12 @@ public class TestProcessParameters {
     public void testExportProperties() throws Exception {
         Assert.assertNotNull(pool);
         importParamters();
-        final File exportedFile = new File(ProjectUtil.getBonitaStudioWorkFolder(), "parameters.properties");
-        exportedFile.delete();
+        File destFolder = tmpFolder.newFolder();
+        final File exportedFile = new File(destFolder, "parameters.properties");
         final ExportParametersAction action = new ExportParametersAction();
         action.setProcess(pool);
         action.setConfiguration(pool.getConfigurations().get(0));
-        action.setTargetPath(ProjectUtil.getBonitaStudioWorkFolder().getAbsolutePath());
+        action.setTargetPath(destFolder.getAbsolutePath());
         action.run();
 
         Assert.assertTrue("Exported file doesn't exists", exportedFile.exists() && exportedFile.length() > 0);

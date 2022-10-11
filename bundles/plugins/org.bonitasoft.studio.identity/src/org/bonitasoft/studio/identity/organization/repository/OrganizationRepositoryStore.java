@@ -18,6 +18,9 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -27,7 +30,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.bonitasoft.studio.common.ModelVersion;
-import org.bonitasoft.studio.common.ProjectUtil;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.model.NamespaceUtil;
 import org.bonitasoft.studio.common.model.validator.ModelNamespaceValidator;
@@ -56,8 +58,6 @@ import org.eclipse.emf.edapt.migration.MigrationException;
 import org.eclipse.emf.edapt.migration.execution.Migrator;
 import org.eclipse.emf.edapt.spi.history.Release;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
-
-import com.google.common.io.Files;
 
 /**
  * @author Romain Bioteau
@@ -146,9 +146,9 @@ public class OrganizationRepositoryStore extends AbstractEMFRepositoryStore<Orga
     @Override
     protected Resource getTmpEMFResource(String fileName, final File originalFile) throws IOException {
         fileName = fileName.replaceAll(".xml", ".organization");
-        final File tmpFile = File.createTempFile("tmp", fileName, ProjectUtil.getBonitaStudioWorkFolder());
-        Files.copy(originalFile, tmpFile);
-        return new OrganizationResourceFactoryImpl().createResource(URI.createFileURI(tmpFile.getAbsolutePath()));
+        var tmpFile = Files.createTempFile(null, fileName);
+        Files.copy(originalFile.toPath(), tmpFile, StandardCopyOption.REPLACE_EXISTING);
+        return new OrganizationResourceFactoryImpl().createResource(URI.createFileURI(tmpFile.toFile().getAbsolutePath()));
     }
 
     @Override

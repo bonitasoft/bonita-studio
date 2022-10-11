@@ -21,6 +21,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -33,14 +34,13 @@ import org.bonitasoft.engine.bpm.bar.BarResource;
 import org.bonitasoft.engine.bpm.bar.BusinessArchiveBuilder;
 import org.bonitasoft.studio.common.FragmentTypes;
 import org.bonitasoft.studio.common.NamingUtils;
-import org.bonitasoft.studio.common.ProjectUtil;
+import org.bonitasoft.studio.common.extension.BARResourcesProvider;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.filestore.EMFFileStore;
 import org.bonitasoft.studio.common.repository.filestore.PackageFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.common.repository.store.SourceRepositoryStore;
-import org.bonitasoft.studio.common.extension.BARResourcesProvider;
 import org.bonitasoft.studio.connector.model.implementation.ConnectorImplementation;
 import org.bonitasoft.studio.connector.model.implementation.ConnectorImplementationFactory;
 import org.bonitasoft.studio.connector.model.implementation.IImplementationRepositoryStore;
@@ -111,7 +111,7 @@ public class ConnectorBarResourceProvider implements BARResourcesProvider {
             try {
                 addImplementation(builder, connectorImplementationFilename, implementationFileStore, configuration);
                 ConnectorImplementation connectorImplementation = (ConnectorImplementation) implementationFileStore
-                    .getContent();
+                        .getContent();
                 addProcessDependencies(builder, configuration, resources, connectorImplementation,
                         implementationFileStore.canBeShared());
             } catch (JavaModelException | ReadFileStoreException e) {
@@ -213,11 +213,11 @@ public class ConnectorBarResourceProvider implements BARResourcesProvider {
     }
 
     protected File exportJar(final String connectorJarName, final PackageFileStore file)
-            throws InvocationTargetException, InterruptedException {
-        final File tmpFile = new File(ProjectUtil.getBonitaStudioWorkFolder(), connectorJarName);
-        tmpFile.delete();
-        file.exportAsJar(tmpFile.getAbsolutePath(), false);
-        return tmpFile;
+            throws InvocationTargetException, InterruptedException, IOException {
+        var tmpFile = Files.createTempFile(null, connectorJarName);
+        Files.delete(tmpFile);
+        file.exportAsJar(tmpFile.toFile().getAbsolutePath(), false);
+        return tmpFile.toFile();
     }
 
     protected SourceRepositoryStore<?> getSourceStore() {
@@ -233,7 +233,8 @@ public class ConnectorBarResourceProvider implements BARResourcesProvider {
 
     protected BarResource newBarResource(final String connectorImplementationFilename,
             final EMFFileStore implementationFileStore,
-            final Configuration configuration) throws UnsupportedEncodingException, IOException, ReadFileStoreException {
+            final Configuration configuration)
+            throws UnsupportedEncodingException, IOException, ReadFileStoreException {
         return new BarResource(connectorImplementationFilename,
                 toXMLString(implemetationWithSelfDep(implementationFileStore, configuration)).getBytes("UTF-8"));
     }

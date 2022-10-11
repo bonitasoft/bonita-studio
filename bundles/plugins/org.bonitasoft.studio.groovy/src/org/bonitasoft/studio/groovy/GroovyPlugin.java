@@ -4,7 +4,6 @@ package org.bonitasoft.studio.groovy;
 import java.lang.reflect.Field;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.codehaus.jdt.groovy.integration.LanguageSupport;
 import org.codehaus.jdt.groovy.integration.LanguageSupportFactory;
 import org.eclipse.core.runtime.Plugin;
 import org.osgi.framework.BundleContext;

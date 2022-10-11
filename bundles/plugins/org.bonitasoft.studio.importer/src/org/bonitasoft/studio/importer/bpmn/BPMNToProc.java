@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLDecoder;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -43,7 +44,6 @@ import javax.xml.transform.stream.StreamResult;
 import org.bonitasoft.engine.bpm.connector.ConnectorEvent;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.NamingUtils;
-import org.bonitasoft.studio.common.ProjectUtil;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinitionFactory;
@@ -268,15 +268,14 @@ public class BPMNToProc extends ToProcProcessor {
             hadBeenPreProcessed = replaceBadQNames(document) || hadBeenPreProcessed;
 
             if (hadBeenPreProcessed) {
-                final File file = File.createTempFile("importBPMN", ".bpmn",
-                        ProjectUtil.getBonitaStudioWorkFolder());
-                file.deleteOnExit();
+                var file = Files.createTempFile("importBPMN", ".bpmn");
+                file.toFile().deleteOnExit();
                 TransformerFactory
                         .newInstance()
                         .newTransformer()
                         .transform(new DOMSource(document),
-                                new StreamResult(file));
-                sourceBPMNUrl = file.toURI().toURL();
+                                new StreamResult(file.toFile()));
+                sourceBPMNUrl = file.toFile().toURI().toURL();
             }
 
         } catch (final Exception ex) {

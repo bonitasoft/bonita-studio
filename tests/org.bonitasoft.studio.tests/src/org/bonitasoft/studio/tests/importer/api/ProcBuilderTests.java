@@ -24,7 +24,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.bonitasoft.studio.assertions.StatusAssert;
-import org.bonitasoft.studio.common.ProjectUtil;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.engine.operation.DeployProcessOperation;
 import org.bonitasoft.studio.importer.builder.IProcBuilder;
@@ -45,6 +44,7 @@ import org.eclipse.emf.workspace.WorkspaceEditingDomainFactory;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 
 /**
  * @author Romain Bioteau
@@ -53,6 +53,9 @@ public class ProcBuilderTests {
 
     @Rule
     public InitialProjectRule projectRule = InitialProjectRule.INSTANCE;
+    
+    @Rule
+    public TemporaryFolder tmpFolder = new TemporaryFolder();
     
     private IProcBuilder procBuilder;
 
@@ -70,8 +73,7 @@ public class ProcBuilderTests {
         final List<String> categories = new ArrayList<>();
         categories.add("R&D");
         categories.add("Service");
-        final File diagramFile = new File(ProjectUtil.getBonitaStudioWorkFolder(), diagamFileName);
-        diagramFile.deleteOnExit();
+        final File diagramFile = tmpFolder.newFile(diagamFileName);
         final URI targetURI = URI.createFileURI(diagramFile.getAbsolutePath());
 
         initProcBuilderWithDefaultContent(diagramName, poolName, description, categories, diagramFile);
@@ -115,8 +117,7 @@ public class ProcBuilderTests {
         final List<String> categories = new ArrayList<String>(2);
         categories.add("R&D");
         categories.add("Service");
-        final File diagramFile = new File(ProjectUtil.getBonitaStudioWorkFolder(), diagamFileName);
-        diagramFile.deleteOnExit();
+        final File diagramFile = tmpFolder.newFile(diagamFileName);
         final URI targetURI = URI.createFileURI(diagramFile.getAbsolutePath());
         initProcBuilderWithDefaultContent(diagramName, poolName, description, categories, diagramFile);
 

@@ -19,10 +19,11 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.bonitasoft.studio.common.ProjectUtil;
 import org.bonitasoft.studio.common.ui.jface.SWTBotConstants;
 import org.bonitasoft.studio.engine.i18n.Messages;
 import org.bonitasoft.studio.swtbot.framework.SWTBotTestUtil;
@@ -57,7 +58,7 @@ public class BarExporterTest {
     public SWTGefBotRule gefBotRule = new SWTGefBotRule(bot);
 
     @Test
-    public void testServerBuild() {
+    public void testServerBuild() throws IOException {
 
         SWTBotTestUtil.createNewDiagram(bot);
         final SWTBotEditor activeEditor = bot.activeEditor();
@@ -127,11 +128,9 @@ public class BarExporterTest {
             assertFalse("Error: Pool selected is not the good one.", !poolName.equals("Pool" + i));
         }
         // create tmp directory to write diagrams
-        final File tmpBarFolder = new File(ProjectUtil.getBonitaStudioWorkFolder(), "testExportBar");
-        tmpBarFolder.deleteOnExit();
-        tmpBarFolder.mkdirs();
+        var tmpBarFolder = Files.createTempDirectory("testExportBar");
         //set the path where files are saved
-        final String tmpBarFolderPath = tmpBarFolder.getAbsolutePath();
+        final String tmpBarFolderPath = tmpBarFolder.toFile().getAbsolutePath();
         bot.comboBoxWithLabel(Messages.destinationPath + " *").setText(tmpBarFolderPath);
 
         // click 'Finish' button to close 'Build' shell

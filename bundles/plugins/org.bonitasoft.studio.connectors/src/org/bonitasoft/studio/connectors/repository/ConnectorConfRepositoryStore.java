@@ -19,6 +19,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -28,7 +30,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.bonitasoft.studio.common.ModelVersion;
-import org.bonitasoft.studio.common.ProjectUtil;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.platform.tools.CopyInputStream;
 import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
@@ -52,15 +53,13 @@ import org.eclipse.emf.edapt.migration.execution.Migrator;
 import org.eclipse.emf.edapt.spi.history.Release;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 
-import com.google.common.io.Files;
-
 /**
  * @author Romain Bioteau
  */
 public class ConnectorConfRepositoryStore extends AbstractEMFRepositoryStore<DefinitionConfigurationFileStore> {
 
     private static final String STORE_NAME = "connectors-conf";
-    private static final Set<String> extensions = new HashSet<String>();
+    private static final Set<String> extensions = new HashSet<>();
     public static final String CONF_EXT = "connectorconfig";
 
     static {
@@ -159,11 +158,10 @@ public class ConnectorConfRepositoryStore extends AbstractEMFRepositoryStore<Def
 
     @Override
     protected Resource getTmpEMFResource(final String fileName, final File originalFile) throws IOException {
-        final File tmpFile = File.createTempFile("tmp", fileName,
-                ProjectUtil.getBonitaStudioWorkFolder());
-        Files.copy(originalFile, tmpFile);
+        var tmpFile = Files.createTempFile(null, fileName);
+        Files.copy(originalFile.toPath(), tmpFile, StandardCopyOption.REPLACE_EXISTING);
         return new ConnectorConfigurationResourceFactoryImpl()
-                .createResource(URI.createFileURI(tmpFile.getAbsolutePath()));
+                .createResource(URI.createFileURI(tmpFile.toFile().getAbsolutePath()));
     }
 
     @Override

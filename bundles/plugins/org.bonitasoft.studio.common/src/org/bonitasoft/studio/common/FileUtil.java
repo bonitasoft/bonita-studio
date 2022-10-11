@@ -299,41 +299,6 @@ public class FileUtil {
         return null;
     }
 
-    /**
-     * get a file from a zip file
-     * 
-     * @param zipFile
-     *        where to get the file
-     * @param entry
-     *        the location of the file in the zipFile
-     * @return a file in temp directory
-     */
-    public static File getFileFromZip(File zipFile, String entry) {
-        try (final ZipInputStream zin = new ZipInputStream(new FileInputStream(zipFile));) {
-            ZipEntry zipEntry = zin.getNextEntry();
-            while (zipEntry != null && !entry.equals(zipEntry.getName())) {
-                zipEntry = zin.getNextEntry();
-            }
-            if (zipEntry == null) {
-                throw new FileNotFoundException("can't find entry " + entry + " in " + zipFile.getName()); //$NON-NLS-1$ //$NON-NLS-2$
-            }
-            final File tempFile = new File(ProjectUtil.getBonitaStudioWorkFolder(),
-                    entry.substring(entry.lastIndexOf("/"))); //.createTempFile(entry.substring(entry.lastIndexOf("/")), ".tmp"); //$NON-NLS-1$
-            final byte[] buf = new byte[1024];
-            tempFile.delete();
-            int len;
-            try (final FileOutputStream out = new FileOutputStream(tempFile);) {
-                while ((len = zin.read(buf)) > 0) {
-                    out.write(buf, 0, len);
-                }
-            }
-            return tempFile;
-        } catch (final Exception e) {
-            BonitaStudioLog.error(e);
-        }
-        return null;
-    }
-
     public static InputStream replaceStringInFile(InputStream is, String match, String replacement) {
         try {
             final Writer writer = new StringWriter();

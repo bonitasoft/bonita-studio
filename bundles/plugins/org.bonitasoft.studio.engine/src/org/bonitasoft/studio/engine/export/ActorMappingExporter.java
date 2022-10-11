@@ -5,25 +5,22 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.engine.export;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.bonitasoft.studio.common.ProjectUtil;
 import org.bonitasoft.studio.model.actormapping.ActorMapping;
 import org.bonitasoft.studio.model.actormapping.ActorMappingFactory;
 import org.bonitasoft.studio.model.actormapping.ActorMappingsType;
@@ -39,13 +36,16 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.eclipse.emf.ecore.xmi.util.XMLProcessor;
 
-
 public class ActorMappingExporter {
 
     public byte[] toByteArray(final Configuration configuration) throws ActorMappingExportException {
-        if (containsActorMapping(configuration)) {
-            final File tmpFile = new File(getTempFolder(), EcoreUtil.generateUUID() + ".xml");
-            final org.eclipse.emf.common.util.URI uri = org.eclipse.emf.common.util.URI.createFileURI(tmpFile.getAbsolutePath());
+        if (!containsActorMapping(configuration)) {
+            return null;
+        }
+        try (var byteArrayOutputStream = new ByteArrayOutputStream()) {
+            var tmpFile = Files.createTempFile(EcoreUtil.generateUUID(), ".xml");
+            final org.eclipse.emf.common.util.URI uri = org.eclipse.emf.common.util.URI
+                    .createFileURI(tmpFile.toFile().getAbsolutePath());
             final Resource resource = new ActorMappingResourceFactoryImpl().createResource(uri);
             final DocumentRoot root = ActorMappingFactory.eINSTANCE.createDocumentRoot();
             final ActorMappingsType mapping = EcoreUtil.copy(configuration.getActorMappings());
@@ -55,28 +55,13 @@ public class ActorMappingExporter {
             final Map<String, String> options = new HashMap<>();
             options.put(XMLResource.OPTION_ENCODING, "UTF-8");
             options.put(XMLResource.OPTION_XML_VERSION, "1.0");
-            ByteArrayOutputStream byteArrayOutputStream = null;
-            try {
-                byteArrayOutputStream = new ByteArrayOutputStream();
-                resource.save(options);
-                new XMLProcessor().save(byteArrayOutputStream, resource, options);
-                resource.delete(Collections.EMPTY_MAP);
-                return byteArrayOutputStream.toByteArray();
-            } catch (final IOException e) {
-                throw new ActorMappingExportException("Failed to save actor mapping", e);
-            } finally {
-                try {
-                    byteArrayOutputStream.close();
-                } catch (final IOException e) {
-
-                }
-            }
+            resource.save(options);
+            new XMLProcessor().save(byteArrayOutputStream, resource, options);
+            resource.delete(Collections.emptyMap());
+            return byteArrayOutputStream.toByteArray();
+        } catch (final IOException e) {
+            throw new ActorMappingExportException("Failed to save actor mapping", e);
         }
-        return null;
-    }
-
-    protected File getTempFolder() {
-        return ProjectUtil.getBonitaStudioWorkFolder();
     }
 
     protected boolean containsActorMapping(final Configuration configuration) {

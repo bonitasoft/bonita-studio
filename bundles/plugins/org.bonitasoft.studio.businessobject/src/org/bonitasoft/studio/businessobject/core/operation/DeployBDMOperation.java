@@ -35,7 +35,6 @@ import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.studio.businessobject.BusinessObjectPlugin;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelFileStore;
 import org.bonitasoft.studio.businessobject.i18n.Messages;
-import org.bonitasoft.studio.common.ProjectUtil;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
@@ -241,10 +240,6 @@ public class DeployBDMOperation implements IRunnableWithProgress {
 
     protected boolean dropDBOnInstall() {
         return dropDatabase;
-    }
-
-    protected File getTargetFolder() {
-        return ProjectUtil.getBonitaStudioWorkFolder();
     }
 
     protected BOSEngineManager getEngineManager() {

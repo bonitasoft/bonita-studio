@@ -19,13 +19,13 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
 import org.bonitasoft.studio.common.NamingUtils;
-import org.bonitasoft.studio.common.ProjectUtil;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
@@ -109,21 +109,16 @@ public class ImportConnectorArchiveOperation implements IRunnableWithProgress {
             status = ValidationStatus.error("input file not set");
             return;
         }
-        final File tmp = new File(ProjectUtil.getBonitaStudioWorkFolder(), "tmpImportConnectorDir");
-        tmp.delete();
-        tmp.mkdir();
         try {
-            PlatformUtil.unzipZipFiles(zipFile, tmp, monitor);
+            var tmp = Files.createTempDirectory("tmpImportConnectorDir");
+            PlatformUtil.unzipZipFiles(zipFile, tmp.toFile(), monitor);
+            FileActionDialog.activateYesNoToAll();
+            importConnectorDefinition(tmp.toFile());
+            importConnectorImplementation(tmp.toFile());
+            PlatformUtil.delete(tmp.toFile(), monitor);
+            RepositoryManager.getInstance().getCurrentRepository().orElseThrow().build(monitor);
         } catch (final Exception e) {
             BonitaStudioLog.error(e);
-        }
-
-        try {
-            FileActionDialog.activateYesNoToAll();
-            importConnectorDefinition(tmp);
-            importConnectorImplementation(tmp);
-            PlatformUtil.delete(tmp, monitor);
-            RepositoryManager.getInstance().getCurrentRepository().orElseThrow().build(monitor);
         } finally {
             FileActionDialog.deactivateYesNoToAll();
         }

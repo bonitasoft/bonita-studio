@@ -27,16 +27,16 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Stream;
 
+import org.bonitasoft.engine.api.APIClient;
 import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.studio.common.BonitaHomeUtil;
-import org.bonitasoft.studio.common.ProjectUtil;
+import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.IBonitaProjectListener;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.ui.PlatformUtil;
-import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.designer.core.UIDesignerServerManager;
 import org.bonitasoft.studio.engine.i18n.Messages;
 import org.bonitasoft.studio.engine.preferences.EnginePreferenceConstants;
@@ -45,10 +45,6 @@ import org.bonitasoft.studio.engine.server.StartEngineJob;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.bonitasoft.studio.ui.notification.BonitaNotificator;
-import org.eclipse.core.filesystem.EFS;
-import org.eclipse.core.filesystem.IFileInfo;
-import org.eclipse.core.filesystem.IFileStore;
-import org.eclipse.core.filesystem.IFileSystem;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -88,6 +84,8 @@ import org.eclipse.wst.server.core.IServerWorkingCopy;
 import org.eclipse.wst.server.core.ServerCore;
 import org.eclipse.wst.server.core.internal.ProjectProperties;
 import org.eclipse.wst.server.core.internal.ServerType;
+import org.osgi.framework.Bundle;
+import org.osgi.framework.FrameworkUtil;
 
 public class BOSWebServerManager implements IBonitaProjectListener {
 
@@ -101,7 +99,6 @@ public class BOSWebServerManager implements IBonitaProjectListener {
     protected static final String TOMCAT_RUNTIME_TYPE = "org.eclipse.jst.server.tomcat.runtime.90";
     protected static final String START_TIMEOUT = "start-timeout";
 
-    protected static final String TMP_DIR = ProjectUtil.getBonitaStudioWorkFolder().getAbsolutePath();
     protected final String tomcatInstanceLocation = new File(new File(ResourcesPlugin
             .getWorkspace().getRoot().getLocation().toFile(), "tomcat"), "server")
                     .getAbsolutePath();
@@ -148,7 +145,7 @@ public class BOSWebServerManager implements IBonitaProjectListener {
             final File tomcatLib = new File(tomcatFolderInWorkspace, "lib");
             if (!tomcatLib.exists()) {
                 BonitaStudioLog.debug("Copying tomcat bundle in workspace...", EnginePlugin.PLUGIN_ID);
-                final URL url = ProjectUtil.getConsoleLibsBundle().getResource("tomcat");
+                final URL url = getTomcatBundle().getResource("tomcat");
                 tomcatFolder = new File(FileLocator.toFileURL(url).getFile());
                 PlatformUtil.copyResource(new File(bundleLocation), tomcatFolder, monitor);
                 BonitaStudioLog.debug("Tomcat bundle copied in workspace.",
@@ -165,7 +162,7 @@ public class BOSWebServerManager implements IBonitaProjectListener {
         final File targetBonitaWarFile = new File(webappDir, "bonita.war");
         if (!targetBonitaWarFile.exists()) {
             BonitaStudioLog.debug("Copying Bonita war in tomcat/server/webapps...", EnginePlugin.PLUGIN_ID);
-            final URL url = ProjectUtil.getConsoleLibsBundle().getResource("tomcat/server/webapp");
+            final URL url = getTomcatBundle().getResource("tomcat/server/webapp");
             final File bonitaWarFile = new File(FileLocator.toFileURL(url).getFile(), "bonita.war");
             PlatformUtil.copyResource(webappDir, bonitaWarFile, monitor);
             BonitaStudioLog.debug("Bonita war copied in tomcat/server/webapps.",
@@ -559,6 +556,10 @@ public class BOSWebServerManager implements IBonitaProjectListener {
     @Override
     public void projectClosed(AbstractRepository repository, IProgressMonitor monitor) {
         stopServer(monitor);
+    }
+    
+    private static Bundle getTomcatBundle() {
+        return FrameworkUtil.getBundle(APIClient.class);
     }
 
 }
