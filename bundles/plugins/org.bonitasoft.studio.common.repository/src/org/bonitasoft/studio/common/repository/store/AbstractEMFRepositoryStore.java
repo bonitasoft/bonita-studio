@@ -29,7 +29,6 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.bonitasoft.studio.common.ProjectUtil;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.platform.tools.CopyInputStream;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
@@ -256,12 +255,11 @@ public abstract class AbstractEMFRepositoryStore<T extends EMFFileStore<?>>
     protected Resource getTmpEMFResource(final String fileName,
             final File originalFile) throws IOException {
         final EditingDomain editingDomain = getEditingDomain();
-        final File tmpFile = File.createTempFile("tmp", fileName,
-                ProjectUtil.getBonitaStudioWorkFolder());
-        Files.copy(originalFile.toPath(), tmpFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+        var tmpFile = Files.createTempFile(null,fileName);
+        Files.copy(originalFile.toPath(), tmpFile, StandardCopyOption.REPLACE_EXISTING);
         return editingDomain.getResourceSet()
                 .createResource(
-                        URI.createFileURI(tmpFile.getAbsolutePath()));
+                        URI.createFileURI(tmpFile.toFile().getAbsolutePath()));
     }
 
     protected void applyTransformations(EObject modelObject) {

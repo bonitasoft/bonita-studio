@@ -17,13 +17,13 @@ package org.bonitasoft.studio.engine.command;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.zip.ZipOutputStream;
 
 import org.bonitasoft.engine.bpm.bar.BusinessArchive;
 import org.bonitasoft.engine.bpm.bar.BusinessArchiveFactory;
 import org.bonitasoft.studio.common.FileUtil;
 import org.bonitasoft.studio.common.NamingUtils;
-import org.bonitasoft.studio.common.ProjectUtil;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
@@ -63,7 +63,6 @@ import org.eclipse.ui.PlatformUI;
  */
 public class ExportAsBosArchiveHandler extends AbstractHandler {
 
-    private static final String TMP_DIR = ProjectUtil.getBonitaStudioWorkFolder().getAbsolutePath();
     public static final String CONFIGURATION_PARAMETER_NAME = "__PROCESS_CONFIGURATION__";
     public static String DEST_FILE_PARAMETER_NAME = "__EXPORT_DEST_FILE__"; //$NON-NLS-1$
     private String configurationId;
@@ -122,11 +121,12 @@ public class ExportAsBosArchiveHandler extends AbstractHandler {
         Assert.isNotNull(diagramFile, "Diagram not found in repository");
 
         final String archiveName = mainProcess.getName() + "_" + mainProcess.getVersion();
-        final File tmpDir = new File(TMP_DIR, archiveName);
-        PlatformUtil.delete(tmpDir, AbstractRepository.NULL_PROGRESS_MONITOR);
-        tmpDir.mkdirs();
-
+       
+        File tmpDir = null;
         try {
+            tmpDir = Files.createTempDirectory(archiveName).toFile();
+            PlatformUtil.delete(tmpDir, AbstractRepository.NULL_PROGRESS_MONITOR);
+            tmpDir.mkdirs();
             diagramFile.export(tmpDir.getAbsolutePath());
         } catch (IOException e1) {
             throw new ExecutionException(e1.getMessage());

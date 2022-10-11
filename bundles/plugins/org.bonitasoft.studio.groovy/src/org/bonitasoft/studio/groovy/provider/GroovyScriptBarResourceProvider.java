@@ -15,11 +15,10 @@
 package org.bonitasoft.studio.groovy.provider;
 
 import static com.google.common.collect.Iterables.toArray;
-import static com.google.common.io.Files.toByteArray;
 
-import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -31,7 +30,6 @@ import javax.inject.Inject;
 import org.bonitasoft.engine.bpm.bar.BarResource;
 import org.bonitasoft.engine.bpm.bar.BusinessArchiveBuilder;
 import org.bonitasoft.studio.common.FragmentTypes;
-import org.bonitasoft.studio.common.ProjectUtil;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.extension.BARResourcesProvider;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
@@ -132,13 +130,13 @@ public class GroovyScriptBarResourceProvider implements BARResourcesProvider {
         }
 
         if (!compilationUnits.isEmpty()) {
-            final File targetJar = new File(ProjectUtil.getBonitaStudioWorkFolder(), exportedProvidedJarName);
-            final CreateJarOperation createJarOperation = new CreateJarOperation(targetJar,
+            var targetJar = Files.createTempFile(null, exportedProvidedJarName);
+            final CreateJarOperation createJarOperation = new CreateJarOperation(targetJar.toFile(),
                     toArray(compilationUnits, ICompilationUnit.class));
             createJarOperation.run(AbstractRepository.NULL_PROGRESS_MONITOR);
             final IStatus status = createJarOperation.getStatus();
             if (status.getSeverity() == IStatus.ERROR || status.getSeverity() == IStatus.CANCEL) {
-                targetJar.delete();
+                Files.delete(targetJar);
                 if (GroovyRepositoryStore.EXPORTED_JAR_NAME.equals(exportedProvidedJarName)) {
                     throw new JarExportFailedException(
                             Messages.errorBuildingJarForGroovyScriptsForProcess + " ",
@@ -150,8 +148,8 @@ public class GroovyScriptBarResourceProvider implements BARResourcesProvider {
                             status);
                 }
             }
-            builder.addClasspathResource(new BarResource(targetJar.getName(), toByteArray(targetJar)));
-            targetJar.delete();
+            builder.addClasspathResource(new BarResource(targetJar.getFileName().toString(), Files.readAllBytes(targetJar)));
+            Files.delete(targetJar);
         }
     }
 

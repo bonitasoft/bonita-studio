@@ -19,7 +19,6 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 
-import org.bonitasoft.studio.common.ProjectUtil;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
@@ -27,11 +26,15 @@ import org.bonitasoft.studio.identity.organization.repository.OrganizationReposi
 import org.bonitasoft.studio.tests.util.InitialProjectRule;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 
 public class TestExportOrganization {
     
     @Rule
     public InitialProjectRule projectRule = InitialProjectRule.INSTANCE;
+    
+    @Rule
+    public TemporaryFolder tmpFolder = new TemporaryFolder();
     
     @Test
     public void testExportDefaultOrganization() throws Exception {
@@ -39,8 +42,9 @@ public class TestExportOrganization {
                 .getRepositoryStore(OrganizationRepositoryStore.class);
         final String fileName = "ACME." + OrganizationRepositoryStore.ORGANIZATION_EXT;
         IRepositoryFileStore organization = organizationStore.getChild(fileName, true);
+        File destFolder = tmpFolder.newFolder();
         assertNotNull("organization " + fileName + " does not exist in repository", organization);
-        File f = new File(ProjectUtil.getBonitaStudioWorkFolder(), "ACME.XML");
+        File f = new File(destFolder, "ACME.XML");
         final String exportPath = f.getAbsolutePath();
         organization.export(exportPath);
         File export = new File(exportPath);

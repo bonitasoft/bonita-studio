@@ -32,7 +32,6 @@ import org.bonitasoft.studio.application.handler.OpenReleaseNoteHandler;
 import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.common.DateUtil;
 import org.bonitasoft.studio.common.FileUtil;
-import org.bonitasoft.studio.common.ProjectUtil;
 import org.bonitasoft.studio.common.RedirectURLBuilder;
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.extension.IPostStartupContribution;
@@ -137,7 +136,6 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
                 BOSEngineManager.getInstance().stop();
             }
             deleteH2DatabasesFiles();
-            FileUtil.deleteDir(ProjectUtil.getBonitaStudioWorkFolder());
             deleteTomcatTempDir();
             monitor.done();
         }

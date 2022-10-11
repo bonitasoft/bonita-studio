@@ -27,7 +27,6 @@ import org.bonitasoft.studio.connector.model.definition.Category;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
 import org.bonitasoft.studio.connector.model.definition.UnloadableConnectorDefinition;
 import org.bonitasoft.studio.connector.model.definition.dialog.DefinitionCategoryContentProvider;
-import org.bonitasoft.studio.connector.model.i18n.Messages;
 import org.bonitasoft.studio.connectors.ConnectorPlugin;
 import org.bonitasoft.studio.connectors.repository.ConnectorConfRepositoryStore;
 import org.bonitasoft.studio.connectors.repository.ConnectorDefRepositoryStore;

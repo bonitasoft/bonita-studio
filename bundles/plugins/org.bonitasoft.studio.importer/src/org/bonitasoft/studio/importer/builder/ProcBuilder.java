@@ -31,7 +31,6 @@ import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.ModelVersion;
 import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.Pair;
-import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.databinding.validator.URLEncodableInputValidator;
 import org.bonitasoft.studio.common.editingdomain.CustomDiagramEditingDomainFactory;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;

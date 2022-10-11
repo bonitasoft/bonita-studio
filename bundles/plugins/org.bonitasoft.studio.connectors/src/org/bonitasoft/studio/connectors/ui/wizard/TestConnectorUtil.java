@@ -17,7 +17,6 @@
 package org.bonitasoft.studio.connectors.ui.wizard;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;

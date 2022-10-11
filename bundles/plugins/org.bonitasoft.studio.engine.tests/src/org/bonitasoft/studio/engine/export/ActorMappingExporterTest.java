@@ -59,7 +59,6 @@ public class ActorMappingExporterTest {
         actorMapping.setGroups(ActorMappingFactory.eINSTANCE.createGroups());
         mappingType.getActorMapping().add(actorMapping);
         configuration.setActorMappings(mappingType);
-        doReturn(folder.newFolder()).when(actorMappingExporter).getTempFolder();
     }
 
     /**

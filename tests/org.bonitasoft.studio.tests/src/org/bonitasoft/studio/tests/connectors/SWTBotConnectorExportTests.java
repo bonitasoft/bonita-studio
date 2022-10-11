@@ -28,7 +28,6 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.zip.ZipException;
 
-import org.bonitasoft.studio.common.ProjectUtil;
 import org.bonitasoft.studio.common.ui.PlatformUtil;
 import org.bonitasoft.studio.connector.model.i18n.Messages;
 import org.bonitasoft.studio.connectors.repository.ConnectorDefRepositoryStore;
@@ -43,9 +42,9 @@ import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.SWTBot;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.waits.ICondition;
-import org.junit.After;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 
 @RunWith(SWTBotJunit4ClassRunner.class)
@@ -55,10 +54,13 @@ public class SWTBotConnectorExportTests {
 
     @Rule
     public SWTGefBotRule rule = new SWTGefBotRule(bot);
+    
+    @Rule
+    public TemporaryFolder tmpFolder = new TemporaryFolder();
 
-    private void exportConnector(final String connector, final String fileName,
+    private void exportConnector(File exportFolder, final String connector, final String fileName,
             final boolean hasDependencies, final boolean hasSources) throws Exception {
-        final String exportPath = ProjectUtil.getBonitaStudioWorkFolder().getAbsolutePath();
+        final String exportPath = exportFolder.getAbsolutePath();
         SWTBotConnectorTestUtil.activateExportConnectorShell(bot);
         bot.table().select(connector);
         assertFalse("Finish button should be disabled",
@@ -89,7 +91,8 @@ public class SWTBotConnectorExportTests {
         final String userConnector = id + "-impl (" + version + ")" + " -- " + packageName + "." + className;
         final String fileName = "connectorTest1-impl-1.0.0.zip";
         SWTBotConnectorTestUtil.createConnectorDefAndImpl(bot, id, version, className, packageName);
-        exportConnector(userConnector, fileName, false, true);
+        File exportFolder = tmpFolder.newFolder();
+        exportConnector(exportFolder, userConnector, fileName, false, true);
     }
 
     @Test
@@ -133,16 +136,15 @@ public class SWTBotConnectorExportTests {
                 return "Editor for implementation has not been opened.";
             }
         }, 30000);
-        exportConnector(userConnector, fileName, false, true);
-        final File destDir = new File(ProjectUtil.getBonitaStudioWorkFolder().getAbsolutePath());
-        destDir.deleteOnExit();
-        assertNotNull(" unzip exported connector dir does not exist", destDir);
-        assertTrue("dest dir doesn't exist", destDir.exists());
-        final Set<String> fileNames = new HashSet<String>();
+        File exportFolder = tmpFolder.newFolder();
+        exportConnector(exportFolder, userConnector, fileName, false, true);
+        assertNotNull(" unzip exported connector dir does not exist", exportFolder);
+        assertTrue("dest dir doesn't exist", exportFolder.exists());
+        final Set<String> fileNames = new HashSet<>();
         fileNames.add("connectorTest2-1.0.0.properties");
         fileNames.add("connectorTest2-1.0.0_sq.properties");
         fileNames.add("connectorTest2-1.0.0_de.properties");
-        checkMessageFiles(destDir, fileNames);
+        checkMessageFiles(exportFolder, fileNames);
     }
 
     private void checkMessageFiles(final File destDir, final Set<String> fileNames) {
@@ -167,9 +169,9 @@ public class SWTBotConnectorExportTests {
 
     private void checkExportedFile(final String path, final String fileName, final boolean hasDependencies,
             final boolean hasSources) throws Exception {
-        final File zipFile = new File(path + File.separator + fileName);
+        var destDir = new File(path);
+        final File zipFile = new File(destDir, fileName);
         zipFile.deleteOnExit();
-        final File destDir = new File(ProjectUtil.getBonitaStudioWorkFolder().getAbsolutePath());
         try {
             PlatformUtil.unzipZipFiles(zipFile, destDir, new NullProgressMonitor());
         } catch (final Exception e) {
@@ -265,12 +267,6 @@ public class SWTBotConnectorExportTests {
         };
         final File[] messageFiles = destDir.listFiles(messageFilter);
         assertNotNull("message property file(s) should exist in exported connector zip file", messageFiles);
-    }
-
-    @After
-    public void deleteFiles() {
-        PlatformUtil.delete(ProjectUtil.getBonitaStudioWorkFolder(), null);
-        ProjectUtil.getBonitaStudioWorkFolder().mkdir();
     }
 
 }
