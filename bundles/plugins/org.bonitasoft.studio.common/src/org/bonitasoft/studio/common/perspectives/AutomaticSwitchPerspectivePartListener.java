@@ -14,6 +14,7 @@
  */
 package org.bonitasoft.studio.common.perspectives;
 
+import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.eclipse.e4.ui.model.application.ui.advanced.MPerspective;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.e4.ui.model.application.ui.basic.MWindow;
@@ -23,7 +24,7 @@ import org.eclipse.ui.internal.e4.compatibility.CompatibilityEditor;
 
 public final class AutomaticSwitchPerspectivePartListener implements IPartListener {
 
-    private boolean isSwitching;
+    private static Object lock = new Object();
 
     @Override
     public void partActivated(final MPart part) {
@@ -51,22 +52,17 @@ public final class AutomaticSwitchPerspectivePartListener implements IPartListen
     }
 
     protected void switchPerspective(final MPart part) {
-        if (!isSwitching) {
-            isSwitching = true;
-            try {
+        synchronized (lock) {
                 final String activePerspective = getActivePerspectiveId(part);
                 if (part != null && "org.eclipse.e4.ui.compatibility.editor".equals(part.getElementId())) {
                     final CompatibilityEditor compatibilityEditor = (CompatibilityEditor) part.getObject();
                     if (compatibilityEditor != null && activePerspective != null) {
                         final String id = BonitaPerspectivesUtils.getPerspectiveId(compatibilityEditor.getEditor());
-                        if (id != null && !id.equals(activePerspective)) {
+                        if (id != null && !id.equals(activePerspective) && !PlatformUtil.isOpeningIntro()) {
                             BonitaPerspectivesUtils.switchToPerspective(id);
                         }
                     }
                 }
-            } finally {
-                isSwitching = false;
-            }
         }
     }
 
