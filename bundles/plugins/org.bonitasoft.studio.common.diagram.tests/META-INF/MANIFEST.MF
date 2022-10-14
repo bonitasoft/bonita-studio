@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Common Diagram Tests Fragment
 Bundle-SymbolicName: org.bonitasoft.studio.common.diagram.tests
-Bundle-Version: 7.16.0.qualifier
+Bundle-Version: 7.16.0.W42
 Fragment-Host: org.bonitasoft.studio.common.diagram;bundle-version="7.16.0"
 Automatic-Module-Name: org.bonitasoft.studio.common.diagram.tests
 Bundle-RequiredExecutionEnvironment: JavaSE-11
