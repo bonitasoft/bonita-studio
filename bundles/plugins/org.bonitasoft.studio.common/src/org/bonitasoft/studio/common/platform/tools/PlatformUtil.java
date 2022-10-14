@@ -205,13 +205,6 @@ public class PlatformUtil {
                     && ((CustomizableIntroPart) introManager.getIntro()).getControl() != null) {
                 model.getPresentation().navigateHome();
             }
-            IEditorReference overviewRef = Stream.of(page.getEditorReferences())
-                    .filter(ref -> ref.getId().equals("org.bonitasoft.studio.application.dashboard.editor"))
-                    .findFirst()
-                    .orElse(null);
-            if (overviewRef != null) {
-                page.closeEditors(new IEditorReference[] { overviewRef }, false);
-            }
             BonitaPerspectivesUtils.switchToPerspective("org.bonitasoft.studio.perspective.welcomePage");
             introManager.showIntro(
                     page.getWorkbenchWindow(),
