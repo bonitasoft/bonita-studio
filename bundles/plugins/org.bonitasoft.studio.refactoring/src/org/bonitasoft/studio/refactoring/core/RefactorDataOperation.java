@@ -174,8 +174,14 @@ public class RefactorDataOperation extends AbstractRefactorOperation<Data, Data,
                 cc.append(
                         SetCommand.create(getEditingDomain(), exp, ExpressionPackage.Literals.EXPRESSION__CONTENT, ""));
                 // update return type
-                cc.append(SetCommand.create(getEditingDomain(), exp, ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE,
-                        String.class.getName()));
+                if(exp.isReturnTypeFixed()) {
+                    cc.append(SetCommand.create(getEditingDomain(), exp, ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE,
+                            exp.getReturnType()));
+                } else {
+                    cc.append(SetCommand.create(getEditingDomain(), exp, ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE,
+                            String.class.getName()));
+                }
+               
                 cc.append(SetCommand.create(getEditingDomain(), exp, ExpressionPackage.Literals.EXPRESSION__TYPE,
                         ExpressionConstants.CONSTANT_TYPE));
                 // update referenced data
