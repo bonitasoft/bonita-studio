@@ -55,7 +55,7 @@ public class JarUpdatedChange
     @Override
     public String getDescription() {
         String updateMessage = String.format(Messages.jarFileUpdatedChangeDescription, artifact.getArtifactId(),
-                previousArtifact.getVersion(), artifact.getVersion());
+                previousArtifact.getBaseVersion(), artifact.getBaseVersion());
         if (configurations != null) {
             return updateMessage + ": " + String.format(Messages.configurationToUpdateFound, configurations.size());
         }

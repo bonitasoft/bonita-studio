@@ -3,6 +3,7 @@ package org.bonitasoft.studio.swtbot.framework.conditions;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.SWTBot;
 import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 
 public class NoPopupCondition extends DefaultCondition {
 
@@ -17,8 +18,9 @@ public class NoPopupCondition extends DefaultCondition {
 
     @Override
     public boolean test() throws Exception {
-        shellText = swtGefBot.activeShell().getText();
-        return shellText != null && shellText.startsWith("Bonita Studio");
+        SWTBotShell activeShell = swtGefBot.activeShell();
+        shellText = activeShell.getText();
+        return shellText != null && shellText.startsWith("Bonita Studio") && activeShell.isActive();
     }
 
     @Override
