@@ -68,7 +68,7 @@ public class ProjectDependenciesResolver {
         return dependencies.stream()
                 .anyMatch(dep -> Objects.equals(dep.getGroupId(), artifact.getGroupId())
                         && Objects.equals(dep.getArtifactId(), artifact.getArtifactId())
-                        && Objects.equals(dep.getVersion(), artifact.getVersion())
+                        && Objects.equals(dep.getVersion(), artifact.getBaseVersion())
                         && Objects.equals(dep.getType(), artifact.getType())
                         && Objects.equals(dep.getClassifier(), artifact.getClassifier())
                         && Objects.equals(dep.getScope(), artifact.getScope()));

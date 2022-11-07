@@ -14,7 +14,7 @@ public class NoPopupCondition extends DefaultCondition {
     public boolean test() throws Exception {
         try {
             final SWTBotShell shell = Stream.of(bot.shells())
-                    .filter(s -> s.getText() != null && s.getText().startsWith("Bonita Studio"))
+                    .filter(s -> s.getText() != null && s.getText().startsWith("Bonita Studio") && s.isActive())
                     .findFirst().orElse(null);
             if (shell != null) {
                 return UIThreadRunnable.syncExec(new BoolResult() {
