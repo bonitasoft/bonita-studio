@@ -22,6 +22,7 @@ import java.util.stream.Collectors;
 import org.apache.maven.model.Dependency;
 import org.assertj.core.api.Assertions;
 import org.bonitasoft.studio.application.i18n.Messages;
+import org.bonitasoft.studio.application.ui.control.model.dependency.BonitaMarketplace;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
@@ -44,6 +45,7 @@ import org.bonitasoft.studio.tests.util.ProjectUtil;
 import org.bonitasoft.studio.tests.util.ResourceMarkerHelper;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.osgi.util.NLS;
@@ -76,6 +78,7 @@ public class ProjectCompositionIT {
         repositoryAccessor = RepositoryManager.getInstance().getAccessor();
         mavenProjectHelper = new MavenProjectHelper();
         ProjectUtil.removeUserExtensions();
+        BonitaMarketplace.getInstance().loadDependencies(new NullProgressMonitor());
     }
 
     @After
