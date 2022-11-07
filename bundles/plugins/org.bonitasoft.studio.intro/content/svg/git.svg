@@ -1,0 +1,10 @@
+<svg width="53" height="82" viewBox="0 0 53 82" xmlns="http://www.w3.org/2000/svg">
+<line x1="8" y1="12.9956" x2="8" y2="70.0044"  stroke-width="5"/>
+<circle cx="8" cy="74" r="10" />
+<path d="M39 50C15.5 49 7.99997 57 8 14.5" fill="none"  stroke-width="5"/>
+<circle cx="8" cy="8" r="10" />
+<circle cx="45" cy="50" r="10" />
+<circle cx="8" cy="8" r="3" />
+<circle cx="45" cy="50" r="3" />
+<circle cx="8" cy="74" r="3" />
+</svg>
