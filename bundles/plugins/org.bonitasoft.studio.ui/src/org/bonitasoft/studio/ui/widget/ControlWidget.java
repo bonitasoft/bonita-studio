@@ -67,7 +67,7 @@ public abstract class ControlWidget extends Composite {
             String message,
             Optional<String> buttonLabel,
             Optional<FormToolkit> toolkit) {
-        super(parent, SWT.NONE);
+        super(parent, SWT.NO_FOCUS);
         this.id = id;
         this.buttonLabel = buttonLabel;
         this.readOnly = readOnly;

@@ -17,6 +17,7 @@ package org.bonitasoft.studio.datatools;
 import java.util.Optional;
 import java.util.Properties;
 
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.connectors.repository.DatabaseConnectorPropertiesFileStore;
 import org.bonitasoft.studio.connectors.repository.DatabaseConnectorPropertiesRepositoryStore;
@@ -256,10 +257,12 @@ public class ConnectionProfileUtil {
         final DatabaseConnectorPropertiesRepositoryStore dbStore = RepositoryManager.getInstance()
                 .getRepositoryStore(DatabaseConnectorPropertiesRepositoryStore.class);
         Optional<DatabaseConnectorPropertiesFileStore> fileStore = dbStore.findByDriverClassName(driverClassname);
+        BonitaStudioLog.info(String.format("Driver properties found for %s: %s", driverClassname, fileStore));
         final DependencyRepositoryStore depStore = RepositoryManager.getInstance()
                 .getRepositoryStore(DependencyRepositoryStore.class);
         String defaultDriverJar = fileStore.map(DatabaseConnectorPropertiesFileStore::getDefault)
                 .orElse(null);
+        BonitaStudioLog.info(String.format("Default driver for %s: %s", fileStore, defaultDriverJar));
         final StringBuilder sb = new StringBuilder();
         for (final DependencyFileStore f : depStore.getChildren()) {
             if (!DriverConstants.DB2_DRIVER_CLASSNAME.equals(driverClassname) && defaultDriverJar != null && defaultDriverJar.equals(f.getName())) {

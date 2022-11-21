@@ -22,9 +22,10 @@ import java.text.MessageFormat;
 
 import org.bonitasoft.studio.common.core.IRunnableWithStatus;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.repository.core.internal.RepositoryImpl;
+import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.ui.jface.databinding.StatusToMarkerSeverity;
 import org.bonitasoft.studio.team.git.i18n.Messages;
-import org.bonitasoft.studio.team.repository.Repository;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
@@ -54,7 +55,7 @@ public class RepositoryValidator implements IRunnableWithStatus {
     public static final String GIT_IGNORE_NOT_ALIGNED_MARKER_TYPE = "org.bonitasoft.studio.team.git.validation.ignoreNotAlignedMarker";
 
     /** repo to validate */
-    private Repository repository;
+    private IRepository repository;
 
     /** the internal status */
     private IStatus status = Status.CANCEL_STATUS;
@@ -64,7 +65,7 @@ public class RepositoryValidator implements IRunnableWithStatus {
      * 
      * @param repository repository to validate
      */
-    public RepositoryValidator(Repository repository) {
+    public RepositoryValidator(IRepository repository) {
         this.repository = repository;
     }
 
@@ -86,7 +87,7 @@ public class RepositoryValidator implements IRunnableWithStatus {
         if (repository.isShared(GitProvider.ID)) {
             try {
                 // load template gitignore
-                URL gitIgnoreTemplateUrl = Repository.getGitignoreTemplateFileURL();
+                URL gitIgnoreTemplateUrl = RepositoryImpl.getGitignoreTemplateFileURL();
                 IgnoreNode ignoreByTemplate = new IgnoreNode();
                 try (InputStream templateStream = gitIgnoreTemplateUrl.openStream()) {
                     ignoreByTemplate.parse(templateStream);

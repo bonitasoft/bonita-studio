@@ -46,7 +46,7 @@ public class TestSeveralLocalRepositories {
 
     @After
     public void tearDown() throws Exception {
-        if (!RepositoryManager.getInstance().getCurrentRepository().equals(currentRepo)) {
+        if (!RepositoryManager.getInstance().getCurrentRepository().filter(currentRepo::equals).isPresent()) {
             RepositoryManager.getInstance().switchToRepository(currentRepo.getName(), new NullProgressMonitor());
         }
         SWTBotTestUtil.waitUntilRootShellIsActive(bot);
@@ -67,9 +67,9 @@ public class TestSeveralLocalRepositories {
 
         ICondition condition = new ConditionBuilder()
                 .withTest(() -> Objects.equals(testRepoName,
-                        RepositoryManager.getInstance().getCurrentRepository().orElseThrow().getName()))
+                        RepositoryManager.getInstance().getCurrentProject().orElseThrow().getDisplayName()))
                 .withFailureMessage(() -> String.format("The project name should be %s, but is %s", testRepoName,
-                        RepositoryManager.getInstance().getCurrentRepository().orElseThrow().getName()))
+                        RepositoryManager.getInstance().getCurrentProject().orElseThrow().getDisplayName()))
                 .create();
         bot.waitUntil(condition, 120000);
 

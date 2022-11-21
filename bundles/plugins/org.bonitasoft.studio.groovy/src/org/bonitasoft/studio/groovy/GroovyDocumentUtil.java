@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.AbstractRepository;
+import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.ui.IDisplayable;
 import org.bonitasoft.studio.groovy.library.FunctionsRepositoryFactory;
@@ -42,6 +42,7 @@ import org.eclipse.jdt.core.Flags;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IType;
+import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 
 /**
@@ -139,12 +140,12 @@ public class GroovyDocumentUtil {
         }
     }
 
-    public static void refreshUserLibrary(AbstractRepository repository) {
+    public static void refreshUserLibrary(IRepository repository) {
         if (repository.isLoaded()) {
             try {
                 FunctionsRepositoryFactory.getUserFunctionCatgory().removeAllFunctions();
                 GroovyRepositoryStore store = repository.getRepositoryStore(GroovyRepositoryStore.class);
-                IJavaProject javaProject = repository.getJavaProject();
+                IJavaProject javaProject = JavaCore.create(repository.getProject());
                 for (IRepositoryFileStore artifact : store.getChildren()) {
                     IDisplayable display = Adapters.adapt(artifact, IDisplayable.class);
                     IType type = javaProject.findType(display.getDisplayName().replace("/", "."));

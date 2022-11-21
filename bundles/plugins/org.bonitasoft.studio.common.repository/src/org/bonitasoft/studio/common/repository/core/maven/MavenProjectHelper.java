@@ -28,12 +28,11 @@ import java.util.Optional;
 import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Model;
-import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
-import org.apache.maven.model.io.xpp3.MavenXpp3Writer;
 import org.apache.maven.project.MavenProject;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
-import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -48,9 +47,6 @@ import org.eclipse.m2e.core.project.MavenUpdateRequest;
 @Creatable
 public class MavenProjectHelper {
 
-    private static final MavenXpp3Reader POM_READER = new MavenXpp3Reader();
-    private MavenXpp3Writer pomWriter = new MavenXpp3Writer();
-
     public Model getMavenModel(IProject project) throws CoreException {
         var pomFile = project.getFile(IMavenConstants.POM_FILE_NAME);
         if (!pomFile.exists()) {
@@ -61,22 +57,36 @@ public class MavenProjectHelper {
 
     public static Model readModel(File pomFile) throws CoreException {
         try (InputStream is = Files.newInputStream(pomFile.toPath())) {
-            return POM_READER.read(is);
-        } catch (IOException | XmlPullParserException e) {
-            throw new CoreException(new Status(IStatus.ERROR, MavenModelOperation.class, String.format("Failed to parse %s", pomFile), e));
+            return MavenPlugin.getMaven().readModel(is);
+        } catch (IOException  e) {
+            throw new CoreException(new Status(IStatus.ERROR, MavenModelOperation.class, String.format("Failed to read %s", pomFile), e));
         }
     }
 
     public void saveModel(IProject project, Model model, boolean updateConfiguration, IProgressMonitor monitor) throws CoreException {
+        saveModel(project, model, monitor);
+        ((ProjectConfigurationManager) MavenPlugin.getProjectConfigurationManager())
+            .updateProjectConfiguration(new MavenUpdateRequest(project, false, false),updateConfiguration,false,true, monitor);
+    }
+    
+    public void saveModel(IProject project, Model model, IProgressMonitor monitor) throws CoreException {
         var pomFile = project.getFile(IMavenConstants.POM_FILE_NAME);
         try (OutputStream stream = new FileOutputStream(pomFile.getLocation().toFile())) {
-            pomWriter.write(stream, model);
+            MavenPlugin.getMaven().writeModel(model, stream);
         } catch (IOException e) {
             throw new CoreException(
                     new Status(IStatus.ERROR, getClass(), "Failed to write maven model in pom.xml file.", e));
         }
-        ((ProjectConfigurationManager) MavenPlugin.getProjectConfigurationManager())
-            .updateProjectConfiguration(new MavenUpdateRequest(project, false, false),updateConfiguration,false,true, monitor);
+    }
+    
+    public void saveModel(IFile pomFile, Model model, IProgressMonitor monitor) throws CoreException {
+        try (OutputStream stream = new FileOutputStream(pomFile.getLocation().toFile())) {
+            MavenPlugin.getMaven().writeModel(model, stream);
+            pomFile.refreshLocal(IResource.DEPTH_ONE, monitor);
+        } catch (IOException e) {
+            throw new CoreException(
+                    new Status(IStatus.ERROR, getClass(), "Failed to write maven model in pom.xml file.", e));
+        }
     }
 
     public List<ArtifactRepository> getProjectMavenRepositories(IProject project) throws CoreException {

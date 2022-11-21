@@ -18,10 +18,7 @@ import java.lang.reflect.InvocationTargetException;
 
 import org.bonitasoft.studio.common.repository.Messages;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
-import org.bonitasoft.studio.common.repository.core.maven.contribution.InstallBonitaMavenArtifactsOperation;
-import org.bonitasoft.studio.common.ui.PlatformUtil;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.m2e.core.MavenPlugin;
+import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
 import org.eclipse.ui.PlatformUI;
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;
@@ -45,19 +42,11 @@ public class InitialProjectRule implements TestRule {
 
     public static void ensureDefaultProjectExists() throws InvocationTargetException, InterruptedException {
         var repositoryManager = RepositoryManager.getInstance();
-        if (repositoryManager.getRepository(Messages.defaultRepositoryName) == null
-                || !repositoryManager.getRepository(Messages.defaultRepositoryName).exists()) {
+        var defaultProjectMetadta = ProjectMetadata.defaultMetadata();
+        if (repositoryManager.getRepository(defaultProjectMetadta.getArtifactId()) == null
+                || !repositoryManager.getRepository(defaultProjectMetadta.getArtifactId()).exists()) {
             PlatformUI.getWorkbench().getProgressService().run(true, false, monitor -> {
-                try {
-                    new InstallBonitaMavenArtifactsOperation(MavenPlugin.getMaven().getLocalRepository())
-                            .execute(monitor);
-                } catch (CoreException e) {
-                    throw new InvocationTargetException(e);
-                }
-                repositoryManager.setCurrentRepository(
-                        repositoryManager.createRepository(Messages.defaultRepositoryName, false));
-                repositoryManager.getAccessor().start(monitor);
-                PlatformUtil.openDashboardIfNoOtherEditorOpen();
+                repositoryManager.getAccessor().createNewRepository(defaultProjectMetadta, monitor);
             });
         }
     }

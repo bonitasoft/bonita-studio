@@ -22,6 +22,7 @@ import javax.annotation.PostConstruct;
 import javax.inject.Singleton;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.repository.core.BonitaProject;
 import org.bonitasoft.studio.common.repository.core.maven.contribution.InstallBonitaMavenArtifactsOperation;
 import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
 import org.bonitasoft.studio.common.repository.model.IRepository;
@@ -29,6 +30,7 @@ import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.common.ui.PlatformUtil;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.Adapters;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.e4.core.di.annotations.Creatable;
@@ -117,7 +119,6 @@ public class RepositoryAccessor {
         monitor.beginTask(Messages.creatingNewProject, IProgressMonitor.UNKNOWN);
         BonitaStudioLog.info(String.format("Creating new project %s...", metadata.getName()),
                 CommonRepositoryPlugin.PLUGIN_ID);
-        getCurrentRepository().ifPresent(IRepository::close);
         try {
             WorkspaceModifyOperation workspaceModifyOperation = new WorkspaceModifyOperation() {
 
@@ -125,18 +126,18 @@ public class RepositoryAccessor {
                 protected void execute(final IProgressMonitor monitor)
                         throws CoreException, InvocationTargetException, InterruptedException {
                     var currentRepository = getCurrentRepository().orElse(null);
-                    if (currentRepository != null && currentRepository.getName().equals(metadata.getName())) {
+                    String projectName = metadata.getProjectName();
+                    if (currentRepository != null && currentRepository.getName().equals(projectName)) {
                         return;
                     } else if (currentRepository != null) {
-                        currentRepository.close();
+                        getCurrentProject().orElseThrow().close(monitor);
                     }
-                    currentRepository = RepositoryManager.getInstance().getRepository(metadata.getName(), false);
+                    currentRepository = RepositoryManager.getInstance().getRepository(projectName);
                     if (currentRepository == null) {
-                        currentRepository = RepositoryManager.getInstance().createRepository(metadata.getName(), false);
+                        currentRepository = RepositoryManager.getInstance().newRepository(projectName);
                     }
                     currentRepository.create(metadata, AbstractRepository.NULL_PROGRESS_MONITOR);
                     currentRepository.open(AbstractRepository.NULL_PROGRESS_MONITOR);
-                    RepositoryManager.getInstance().setCurrentRepository(currentRepository);
                     BonitaStudioLog.info(String.format("%s project created.", currentRepository.getName()),
                             CommonRepositoryPlugin.PLUGIN_ID);
                 }
@@ -155,8 +156,11 @@ public class RepositoryAccessor {
     }
 
     public AbstractRepository fakeRepository() {
-        var repository = repositoryManagerInstance.createRepository("fake_repo_tmp_for_import", false);
-        return repository;
+        return repositoryManagerInstance.newRepository("fake_repo_tmp_for_import");
+    }
+
+    public Optional<BonitaProject> getCurrentProject() {
+        return getCurrentRepository().map(repo -> Adapters.adapt(repo, BonitaProject.class));
     }
 
 }

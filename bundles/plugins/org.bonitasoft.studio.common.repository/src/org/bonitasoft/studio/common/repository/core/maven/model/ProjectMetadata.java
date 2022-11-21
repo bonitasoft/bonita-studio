@@ -14,10 +14,13 @@
  */
 package org.bonitasoft.studio.common.repository.core.maven.model;
 
+import java.io.File;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.maven.model.Model;
+import org.apache.maven.project.MavenProject;
 import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.Strings;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
@@ -27,6 +30,8 @@ import org.bonitasoft.studio.common.repository.core.maven.MavenProjectHelper;
 import org.bonitasoft.studio.common.repository.preferences.RepositoryPreferenceConstant;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.SubMonitor;
 
 public class ProjectMetadata {
 
@@ -39,6 +44,7 @@ public class ProjectMetadata {
     private String artifactId;
     private String version;
     private String bonitaRuntimeVersion;
+    private boolean isMultiModule;
 
     public String getName() {
         return name;
@@ -79,68 +85,21 @@ public class ProjectMetadata {
     public void setVersion(String version) {
         this.version = version;
     }
-    
+
+    public boolean getIsMultiModule() {
+        return isMultiModule;
+    }
+
+    public void setIsMultiModule(boolean isMultiModule) {
+        this.isMultiModule = isMultiModule;
+    }
+
     public String getBonitaRuntimeVersion() {
         return bonitaRuntimeVersion;
     }
 
     public void setBonitaRuntimeVersion(String bonitaRuntimeVersion) {
         this.bonitaRuntimeVersion = bonitaRuntimeVersion;
-    }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((artifactId == null) ? 0 : artifactId.hashCode());
-        result = prime * result + ((bonitaRuntimeVersion == null) ? 0 : bonitaRuntimeVersion.hashCode());
-        result = prime * result + ((description == null) ? 0 : description.hashCode());
-        result = prime * result + ((groupId == null) ? 0 : groupId.hashCode());
-        result = prime * result + ((name == null) ? 0 : name.hashCode());
-        result = prime * result + ((version == null) ? 0 : version.hashCode());
-        return result;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        ProjectMetadata other = (ProjectMetadata) obj;
-        if (artifactId == null) {
-            if (other.artifactId != null)
-                return false;
-        } else if (!artifactId.equals(other.artifactId))
-            return false;
-        if (bonitaRuntimeVersion == null) {
-            if (other.bonitaRuntimeVersion != null)
-                return false;
-        } else if (!bonitaRuntimeVersion.equals(other.bonitaRuntimeVersion))
-            return false;
-        if (description == null) {
-            if (other.description != null)
-                return false;
-        } else if (!description.equals(other.description))
-            return false;
-        if (groupId == null) {
-            if (other.groupId != null)
-                return false;
-        } else if (!groupId.equals(other.groupId))
-            return false;
-        if (name == null) {
-            if (other.name != null)
-                return false;
-        } else if (!name.equals(other.name))
-            return false;
-        if (version == null) {
-            if (other.version != null)
-                return false;
-        } else if (!version.equals(other.version))
-            return false;
-        return true;
     }
 
     public static ProjectMetadata defaultMetadata() {
@@ -150,18 +109,20 @@ public class ProjectMetadata {
         metadata.setGroupId(defaultGroupId());
         metadata.setVersion(DEFAULT_VERSION);
         metadata.setBonitaRuntimeVersion(ProductVersion.BONITA_RUNTIME_VERSION);
+        metadata.setIsMultiModule(true);
         return metadata;
     }
 
     private static String defaultGroupId() {
-        if(CommonRepositoryPlugin.getDefault() == null) {
+        if (CommonRepositoryPlugin.getDefault() == null) {
             return RepositoryPreferenceConstant.DEFAULT_GROUPID_VALUE;
         }
-        return CommonRepositoryPlugin.getDefault().getPreferenceStore().getString(RepositoryPreferenceConstant.DEFAULT_GROUPID);
+        return CommonRepositoryPlugin.getDefault().getPreferenceStore()
+                .getString(RepositoryPreferenceConstant.DEFAULT_GROUPID);
     }
 
     public static String toArtifactId(String displayName) {
-        if(Strings.isNullOrEmpty(displayName)) {
+        if (Strings.isNullOrEmpty(displayName)) {
             return displayName;
         }
         String artifactId = Strings.slugify(displayName);
@@ -171,30 +132,66 @@ public class ProjectMetadata {
         return artifactId;
     }
 
-    public static ProjectMetadata read(IProject project) {
-        try {
-            Model model = new MavenProjectHelper().getMavenModel(project);
-            if(model == null) {
-                return defaultMetadata();
+    public static ProjectMetadata read(IProject project, IProgressMonitor monitor) {
+        var projectFacade = org.eclipse.m2e.core.MavenPlugin.getMavenProjectRegistry().getProject(project);
+        if (projectFacade == null) {
+            if (project.getLocation() != null) {
+                var pomFile = project.getLocation().toFile().toPath().resolve("pom.xml").toFile();
+                return read(pomFile);
             }
-            return read(model);
-        } catch (CoreException e) {
-            BonitaStudioLog.error(e);
+            return defaultMetadata();
         }
-        return null;
+        var projectPom = project.getLocation().toFile().toPath().resolve("pom.xml").toFile();
+        var mavenProject = projectFacade.getMavenProject();
+        if (mavenProject == null) {
+            try {
+                mavenProject = projectFacade.getMavenProject(
+                        SubMonitor.convert(monitor).newChild(IProgressMonitor.UNKNOWN, SubMonitor.SUPPRESS_SUBTASK));
+            } catch (CoreException e) {
+                BonitaStudioLog.error(e);
+                return read(projectPom);
+            }
+        }
+        return mavenProject != null ? read(mavenProject) : read(projectPom);
+    }
+
+    public static ProjectMetadata read(MavenProject mavenProject) {
+        ProjectMetadata projectMetadata = new ProjectMetadata();
+        projectMetadata.setName(mavenProject.getName());
+        projectMetadata.setDescription(mavenProject.getDescription());
+        projectMetadata.setGroupId(mavenProject.getGroupId());
+        projectMetadata.setArtifactId(mavenProject.getArtifactId());
+        projectMetadata.setVersion(mavenProject.getVersion());
+        projectMetadata.setBonitaRuntimeVersion(mavenProject.getProperties().getProperty(
+                ProjectDefaultConfiguration.BONITA_RUNTIME_VERSION, ProductVersion.BONITA_RUNTIME_VERSION));
+        projectMetadata.setIsMultiModule(mavenProject.getParent() != null);
+        return projectMetadata;
     }
 
     public static ProjectMetadata read(Model model) {
         ProjectMetadata projectMetadata = new ProjectMetadata();
         projectMetadata.setName(model.getName());
         projectMetadata.setDescription(model.getDescription());
-        projectMetadata.setGroupId(model.getGroupId());
+        projectMetadata.setGroupId(model.getGroupId() == null && model.getParent() != null
+                ? model.getParent().getGroupId() : model.getGroupId());
         projectMetadata.setArtifactId(model.getArtifactId());
-        projectMetadata.setVersion(model.getVersion());
-        projectMetadata.setBonitaRuntimeVersion(model.getProperties().getProperty(ProjectDefaultConfiguration.BONITA_RUNTIME_VERSION, ProductVersion.BONITA_RUNTIME_VERSION));
+        projectMetadata.setVersion(model.getVersion() == null && model.getParent() != null
+                ? model.getParent().getVersion() : model.getVersion());
+        projectMetadata.setBonitaRuntimeVersion(model.getProperties().getProperty(
+                ProjectDefaultConfiguration.BONITA_RUNTIME_VERSION, ProductVersion.BONITA_RUNTIME_VERSION));
+        projectMetadata.setIsMultiModule(model.getParent() != null);
         return projectMetadata;
     }
-    
+
+    public static ProjectMetadata read(File pomFile) {
+        try {
+            return read(MavenProjectHelper.readModel(pomFile));
+        } catch (CoreException e) {
+            BonitaStudioLog.error(e);
+            return null;
+        }
+    }
+
     public static ProjectMetadata fromBosFileName(String fileName) {
         ProjectMetadata projectMetadata = defaultMetadata();
         fileName = removeBosExtension(fileName);
@@ -220,7 +217,7 @@ public class ProjectMetadata {
         }
         return projectMetadata;
     }
-    
+
     static String removeBosExtension(String name) {
         if (name.toLowerCase().endsWith(".bos")) {
             name = name.substring(0, name.lastIndexOf("."));
@@ -245,5 +242,30 @@ public class ProjectMetadata {
         }
         return null;
     }
- 
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(artifactId, bonitaRuntimeVersion, description, groupId, isMultiModule, name, version);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        ProjectMetadata other = (ProjectMetadata) obj;
+        return Objects.equals(artifactId, other.artifactId)
+                && Objects.equals(bonitaRuntimeVersion, other.bonitaRuntimeVersion)
+                && Objects.equals(description, other.description) && Objects.equals(groupId, other.groupId)
+                && isMultiModule == other.isMultiModule && Objects.equals(name, other.name)
+                && Objects.equals(version, other.version);
+    }
+
+    public String getProjectName() {
+        return isMultiModule ? artifactId + "-app" : artifactId;
+    }
+
 }

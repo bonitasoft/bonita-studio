@@ -33,17 +33,20 @@ import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
-import org.bonitasoft.studio.common.repository.model.IRepository;
+import org.bonitasoft.studio.common.repository.core.BonitaProject;
+import org.bonitasoft.studio.common.repository.core.MultiModuleProject;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.ui.PlatformUtil;
 import org.bonitasoft.studio.common.ui.jface.FileActionDialog;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.internal.wizards.datatransfer.ArchiveFileExportOperation;
 
@@ -63,6 +66,7 @@ public class ExportBosArchiveOperation {
     private String destPath;
     private IFile manifestFile;
     private Set<IResource> resourcesToReOpen;
+    private BonitaProject project;
 
     public IStatus run(final IProgressMonitor monitor) {
         status = Status.OK_STATUS;
@@ -88,33 +92,33 @@ public class ExportBosArchiveOperation {
             return status;
         }
 
-        final ArchiveFileExportOperation op = new ArchiveFileExportOperation(null, new ArrayList<>(resources),
-                destPath);
-        op.setCreateLeadupStructure(true);
-        op.setUseCompression(true);
-        op.setUseTarFormat(false);
         try {
+            final ArchiveFileExportOperation op = new ArchiveFileExportOperation(null, makeRelative(resources),
+                    destPath);
+            op.setCreateLeadupStructure(true);
+            op.setUseCompression(true);
+            op.setUseTarFormat(false);
             op.run(monitor);
             if (manifestFile != null && manifestFile.exists()) {
                 manifestFile.delete(true, AbstractRepository.NULL_PROGRESS_MONITOR);
             }
+            status = op.getStatus();
+            return status;
         } catch (final CoreException | InterruptedException | InvocationTargetException e) {
             status = new Status(IStatus.ERROR, CommonRepositoryPlugin.PLUGIN_ID, e.getMessage(), e);
             return status;
         }
-
-        status = op.getStatus();
-        return status;
     }
 
     protected IStatus addManifest() {
-        var project = RepositoryManager.getInstance().getCurrentRepository()
-                .map(IRepository::getProject)
-                .orElse(null);
         if (project == null) {
             return Status.error("No active project.");
         }
-        manifestFile = project.getFile(BOS_ARCHIVE_MANIFEST);
+        var root = RepositoryManager.getInstance().getCurrentRepository().orElseThrow().getProject();
+        if (project instanceof MultiModuleProject) {
+            root = ((MultiModuleProject) project).getParentProject();
+        }
+        manifestFile = root.getFile(BOS_ARCHIVE_MANIFEST);
         if (manifestFile.exists()) {
             try {
                 manifestFile.delete(true, AbstractRepository.NULL_PROGRESS_MONITOR);
@@ -156,6 +160,25 @@ public class ExportBosArchiveOperation {
         }
         resources.add(manifestFile);
         return Status.OK_STATUS;
+    }
+
+    private IResource makeRelative(IResource resource) throws CoreException {
+        if (project instanceof MultiModuleProject) {
+            IProject parentProject = ((MultiModuleProject) project).getParentProject();
+            return parentProject.findMember(resource.getLocation().makeRelativeTo(parentProject.getLocation()));
+        }
+        return resource;
+    }
+
+    private List<IResource> makeRelative(Set<IResource> resources) throws CoreException {
+        var result = new ArrayList<IResource>();
+        if(project instanceof MultiModuleProject) {
+            ((MultiModuleProject) project).getParentProject().refreshLocal(IResource.DEPTH_INFINITE, new NullProgressMonitor());
+        }
+        for (IResource r : resources) {
+            result.add(makeRelative(r));
+        }
+        return result;
     }
 
     public IStatus getStatus() {
@@ -210,6 +233,10 @@ public class ExportBosArchiveOperation {
 
     public void setFileStores(Set<IRepositoryFileStore> fileStores) {
         resources.addAll(computeResourcesToExport(fileStores));
+    }
+
+    public void setBonitaProject(BonitaProject project) {
+        this.project = project;
     }
 
     public Set<IResource> getResources() {

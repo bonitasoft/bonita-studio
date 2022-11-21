@@ -16,8 +16,11 @@ import org.bonitasoft.studio.common.CommandExecutor;
 import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.core.BonitaProject;
 import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.provider.RepositoryLabelProvider;
+import org.eclipse.core.runtime.Adapters;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -149,9 +152,10 @@ public class SwitchRepositoryDialog extends Dialog {
     private void deleteRepository(Shell shell) {
         final IRepository repository = (IRepository) ((StructuredSelection) repositoryList.getSelection())
                 .getFirstElement();
+        var project = Adapters.adapt(repository,BonitaProject.class);
         if (MessageDialog
                 .openConfirm(shell, Messages.confirmDeleteRepositoryTitle,
-                        String.format(Messages.confirmDeleteRepository, repository.getName()))) {
+                        String.format(Messages.confirmDeleteRepository, project.getId()))) {
             try {
                 final IProgressService progressManager = PlatformUI.getWorkbench().getProgressService();
                 progressManager.run(false, false, new IRunnableWithProgress() {
@@ -160,7 +164,11 @@ public class SwitchRepositoryDialog extends Dialog {
                     public void run(final IProgressMonitor monitor)
                             throws InvocationTargetException, InterruptedException {
                         monitor.beginTask(Messages.removeRepository, IProgressMonitor.UNKNOWN);
-                        repository.delete(monitor);
+                        try {
+                            project.delete(monitor);
+                        } catch (CoreException e) {
+                            throw new InvocationTargetException(e);
+                        }
                     }
                 });
 

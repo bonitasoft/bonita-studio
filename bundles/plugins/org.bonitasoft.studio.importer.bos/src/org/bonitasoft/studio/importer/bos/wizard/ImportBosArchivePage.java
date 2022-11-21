@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -36,10 +37,10 @@ import org.bonitasoft.studio.common.databinding.validator.EmptyInputValidator;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.FakeRepository;
+import org.bonitasoft.studio.common.repository.ProjectIdValidator;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
-import org.bonitasoft.studio.common.repository.RepositoryNameValidator;
+import org.bonitasoft.studio.common.repository.core.BonitaProject;
 import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
-import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.ui.validator.MavenIdValidator;
 import org.bonitasoft.studio.common.ui.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.ui.widgets.CustomStackLayout;
@@ -68,6 +69,8 @@ import org.eclipse.core.databinding.observable.value.SelectObservableValue;
 import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
 import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
+import org.eclipse.core.runtime.Adapters;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
@@ -95,14 +98,13 @@ public class ImportBosArchivePage implements ControlSupplier, Supplier<ImportArc
 
     private static final String BOS_EXTENSION = "*.bos";
 
-    protected String filePath;
+    private String filePath;
+    private ImportArchiveModel archiveModel;
+    private TextWidget fileLocationText;
 
-    protected ImportArchiveModel archiveModel;
-    protected TextWidget fileLocationText;
-
-    protected RepositoryAccessor repositoryAccessor;
-    protected IWizardContainer wizardContainer;
-    protected final ExceptionDialogHandler exceptionDialogHandler;
+    private RepositoryAccessor repositoryAccessor;
+    private IWizardContainer wizardContainer;
+    private final ExceptionDialogHandler exceptionDialogHandler;
     private IObservableValue<String> filePathObserveValue;
     private URLTempPath urlTempPath;
     private SelectObservableValue<RepositoryMode> repositoryModeObservable;
@@ -111,12 +113,12 @@ public class ImportBosArchivePage implements ControlSupplier, Supplier<ImportArc
     private IObservableValue<ProjectMetadata> projectMetadataObservable;
     private Composite newRepositoryComposite;
     private Composite existingRepositoryComposite;
-    private TextWidget newProjectNameText;
+    private TextWidget newProjectIdText;
     private SwitchRepositoryStrategy switchRepositoryStrategy;
     private RepositoryMode mode = RepositoryMode.CURRENT;
     private IObservableValue<Boolean> visibleTargetProjectObservable;
-
     private Map<String, ImportArchiveModel> parsedModels = new HashMap<>();
+
 
     public ImportBosArchivePage(RepositoryAccessor repositoryAccessor,
             SwitchRepositoryStrategy switchRepositoryStrategy,
@@ -245,16 +247,38 @@ public class ImportBosArchivePage implements ControlSupplier, Supplier<ImportArc
         var projectArtifactIdObservable = PojoProperties.value("artifactId", String.class)
                 .observeDetail(projectMetadataObservable);
 
-        newProjectNameText = new TextWidget.Builder()
-                .widthHint(500)
+        new TextWidget.Builder()
+                .widthHint(250)
                 .labelAbove()
                 .alignTop()
                 .fill()
                 .withLabel(org.bonitasoft.studio.common.Messages.name)
                 .withId(SWTBotConstants.SWTBOT_ID_NEW_PROJECT_NAME_TEXT)
                 .bindTo(projectNameObservable)
-                .withTargetToModelStrategy(convertUpdateValueStrategy()
-                        .withValidator(wrap(new RepositoryNameValidator(newProjectSupplier()))))
+                .withTargetToModelStrategy(updateValueStrategy()
+                        .withValidator(conditionalValidator(
+                                new EmptyInputValidator(org.bonitasoft.studio.common.Messages.name), whenNewProject())))
+                .inContext(ctx)
+                .useNativeRender()
+                .createIn(newRepositoryComposite);
+
+        newProjectIdText = new TextWidget.Builder()
+                .widthHint(250)
+                .labelAbove()
+                .alignTop()
+                .fill()
+                .withLabel("Project ID")
+                .withId(SWTBotConstants.SWTBOT_ID_NEW_PROJECT_ARTIFACTID_TEXT)
+                .bindTo(projectArtifactIdObservable)
+                .withTargetToModelStrategy(
+                        convertUpdateValueStrategy().withValidator(new MultiValidator.Builder()
+                                .havingValidators(
+                                        conditionalValidator(new MavenIdValidator("Project ID"),
+                                                whenNewProject()),
+                                        conditionalValidator(
+                                                new ProjectIdValidator(() -> projectNameObservable.getValue(), null,
+                                                        whenNewProject()),
+                                                whenNewProject()))))
                 .inContext(ctx)
                 .transactionalEdit()
                 .useNativeRender()
@@ -262,17 +286,39 @@ public class ImportBosArchivePage implements ControlSupplier, Supplier<ImportArc
 
         projectNameObservable.addValueChangeListener(event -> {
             String newProjectName = event.diff.getNewValue();
-            if (newProjectName != null && !newProjectName.isBlank() && archiveModel != null
+            if (newProjectName != null && !newProjectName.isBlank()
+                    && archiveModel != null
+                    && mode == RepositoryMode.NEW
+                    && Strings.isNullOrEmpty(projectArtifactIdObservable.getValue())) {
+                projectArtifactIdObservable.setValue(ProjectMetadata.toArtifactId(newProjectName));
+            }
+        });
+
+        projectArtifactIdObservable.addValueChangeListener(event -> {
+            String newProjectId = event.diff.getNewValue();
+            if (Strings.hasText(newProjectId)
+                    && archiveModel != null
                     && mode == RepositoryMode.NEW) {
-                updateTargetRepository(newProjectName);
-                if (Strings.isNullOrEmpty(projectArtifactIdObservable.getValue())) {
-                    projectArtifactIdObservable.setValue(ProjectMetadata.toArtifactId(newProjectName));
-                }
+                updateTargetRepository(projectMetadataObservable.getValue().getProjectName());
             }
         });
 
         new TextWidget.Builder()
-                .widthHint(200)
+                .widthHint(350)
+                .labelAbove()
+                .alignTop()
+                .fill()
+                .withLabel("Group ID")
+                .withId(SWTBotConstants.SWTBOT_ID_NEW_PROJECT_GROUPID_TEXT)
+                .bindTo(PojoProperties.value("groupId", String.class).observeDetail(projectMetadataObservable))
+                .withTargetToModelStrategy(updateValueStrategy()
+                        .withValidator(conditionalValidator(new MavenIdValidator("Group ID"), whenNewProject())))
+                .inContext(ctx)
+                .useNativeRender()
+                .createIn(newRepositoryComposite);
+
+        new TextWidget.Builder()
+                .widthHint(150)
                 .labelAbove()
                 .alignTop()
                 .fill()
@@ -280,36 +326,9 @@ public class ImportBosArchivePage implements ControlSupplier, Supplier<ImportArc
                 .withId(SWTBotConstants.SWTBOT_ID_NEW_PROJECT_VERSION_TEXT)
                 .bindTo(PojoProperties.value("version", String.class).observeDetail(projectMetadataObservable))
                 .withTargetToModelStrategy(updateValueStrategy()
-                        .withValidator(wrap(new EmptyInputValidator(org.bonitasoft.studio.common.Messages.version))))
-                .inContext(ctx)
-                .useNativeRender()
-                .createIn(newRepositoryComposite);
-
-        new TextWidget.Builder()
-                .widthHint(700)
-                .horizontalSpan(2)
-                .labelAbove()
-                .alignTop()
-                .fill()
-                .withLabel("Group ID")
-                .withId(SWTBotConstants.SWTBOT_ID_NEW_PROJECT_GROUPID_TEXT)
-                .bindTo(PojoProperties.value("groupId", String.class).observeDetail(projectMetadataObservable))
-                .withTargetToModelStrategy(updateValueStrategy().withValidator(wrap(new MavenIdValidator("Group ID"))))
-                .inContext(ctx)
-                .useNativeRender()
-                .createIn(newRepositoryComposite);
-
-        new TextWidget.Builder()
-                .widthHint(700)
-                .horizontalSpan(2)
-                .labelAbove()
-                .alignTop()
-                .fill()
-                .withLabel("Artifact ID")
-                .withId(SWTBotConstants.SWTBOT_ID_NEW_PROJECT_ARTIFACTID_TEXT)
-                .bindTo(projectArtifactIdObservable)
-                .withTargetToModelStrategy(
-                        updateValueStrategy().withValidator(wrap(new MavenIdValidator("Artifact ID"))))
+                        .withValidator(conditionalValidator(
+                                new EmptyInputValidator(org.bonitasoft.studio.common.Messages.version),
+                                whenNewProject())))
                 .inContext(ctx)
                 .useNativeRender()
                 .createIn(newRepositoryComposite);
@@ -319,7 +338,6 @@ public class ImportBosArchivePage implements ControlSupplier, Supplier<ImportArc
                 .withId(SWTBotConstants.SWTBOT_ID_NEW_PROJECT_DESCRIPTION_TEXT)
                 .labelAbove()
                 .heightHint(110)
-                .widthHint(700)
                 .grabHorizontalSpace()
                 .fill()
                 .bindTo(PojoProperties.value("description").observeDetail(projectMetadataObservable))
@@ -336,12 +354,13 @@ public class ImportBosArchivePage implements ControlSupplier, Supplier<ImportArc
 
     }
 
-    private IValidator<String> wrap(IValidator<String> validator) {
-        return new ValidatorWrapper<>(validator, () -> repositoryModeObservable.getValue() == RepositoryMode.NEW);
+    private BooleanSupplier whenNewProject() {
+        return () -> repositoryModeObservable.getValue() == RepositoryMode.NEW;
     }
 
-    private Supplier<Boolean> newProjectSupplier() {
-        return () -> repositoryModeObservable.getValue() == RepositoryMode.NEW;
+    private IValidator<String> conditionalValidator(IValidator<String> validator,
+            BooleanSupplier validateConditionSupplier) {
+        return new ValidatorWrapper<>(validator, validateConditionSupplier);
     }
 
     private Composite doCreateRadioButtons(Composite parent) {
@@ -369,7 +388,7 @@ public class ImportBosArchivePage implements ControlSupplier, Supplier<ImportArc
     }
 
     private void repositoryModeChanged(ValueChangeEvent<? extends RepositoryMode> event) {
-        newProjectNameText.getValueBinding().validateTargetToModel();
+        newProjectIdText.getValueBinding().validateTargetToModel();
         mode = event.diff.getNewValue();
         switchRepositoryStrategy.setCreateNewProject(mode == RepositoryMode.NEW);
         updateTargetRepository(targetRepository(mode));
@@ -388,9 +407,14 @@ public class ImportBosArchivePage implements ControlSupplier, Supplier<ImportArc
     protected void updateArchiveModel(String targetRepository, IProgressMonitor monitor) {
         if (repositoryAccessor.getRepository(targetRepository) != null && archiveModel != null) {
             final AbstractRepository newRepository = repositoryAccessor.getRepository(targetRepository);
+            var project = Adapters.adapt(newRepository, BonitaProject.class);
             if (repositoryAccessor.getCurrentRepository().filter(repo -> Objects.equals(repo.getName(),
                     newRepository.getName())).isEmpty()) {
-                newRepository.open(monitor);
+                try {
+                    project.open(monitor);
+                } catch (CoreException e) {
+                    BonitaStudioLog.error(e);
+                }
             }
             final ImportConflictsChecker conflictChecker = new ImportConflictsChecker(newRepository);
             try {
@@ -402,7 +426,11 @@ public class ImportBosArchivePage implements ControlSupplier, Supplier<ImportArc
             } finally {
                 if (repositoryAccessor.getCurrentRepository().filter(repo -> Objects.equals(repo.getName(),
                         newRepository.getName())).isEmpty()) {
-                    newRepository.close();
+                    try {
+                        project.close(monitor);
+                    } catch (CoreException e) {
+                        BonitaStudioLog.error(e);
+                    }
                 }
             }
         } else if (archiveModel != null) {
@@ -419,11 +447,11 @@ public class ImportBosArchivePage implements ControlSupplier, Supplier<ImportArc
     }
 
     private String targetRepository(RepositoryMode mode) {
-        String name = projectMetadataObservable.getValue().getName();
+        var metadata = projectMetadataObservable.getValue();
         switch (mode) {
             case NEW:
-                return newProjectNameText.getStatus().isOK()
-                        ? name
+                return newProjectIdText.getStatus().isOK()
+                        ? metadata.getProjectName()
                         : switchRepositoryStrategy.getTargetRepository();
             case CURRENT:
             default:
@@ -543,18 +571,18 @@ public class ImportBosArchivePage implements ControlSupplier, Supplier<ImportArc
         Model mavenProject = bosArchive.getMavenProject();
         ProjectMetadata metadata = mavenProject != null ? ProjectMetadata.read(mavenProject)
                 : ProjectMetadata.fromBosFileName(selectedFile.getName());
-        List<String> existingProjectName = repositoryAccessor.getAllRepositories().stream()
-                .map(IRepository::getName)
+        List<String> existingProjectNames = repositoryAccessor.getAllRepositories().stream()
+                .map(r -> Adapters.adapt(r, BonitaProject.class))
+                .map(BonitaProject::getId)
                 .collect(Collectors.toList());
-        if (existingProjectName.contains(metadata.getName())) {
-            metadata.setName(StringIncrementer.getNextIncrement(metadata.getName(), existingProjectName));
+        if (existingProjectNames.contains(metadata.getArtifactId())) {
+            metadata.setArtifactId(StringIncrementer.getNextIncrement(metadata.getArtifactId(), existingProjectNames));
         }
         projectMetadataObservable.setValue(metadata);
-        newProjectNameText.getValueBinding().validateTargetToModel();
-        String newTargetProjectName = projectMetadataObservable.getValue().getName();
+        newProjectIdText.getValueBinding().validateTargetToModel();
         if (repositoryModeObservable.getValue() == RepositoryMode.NEW
-                && !newTargetProjectName.isEmpty()) {
-            switchRepositoryStrategy.setTargetRepository(newTargetProjectName);
+                && !metadata.getArtifactId().isEmpty()) {
+            switchRepositoryStrategy.setTargetRepository(metadata.getProjectName());
             importArchiveModel.resetStatus();
         }
         return importArchiveModel;

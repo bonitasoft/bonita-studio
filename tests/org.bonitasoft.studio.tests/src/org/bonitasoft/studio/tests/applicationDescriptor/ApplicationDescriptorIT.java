@@ -34,6 +34,7 @@ import org.bonitasoft.studio.swtbot.framework.application.BotApplicationWorkbenc
 import org.bonitasoft.studio.swtbot.framework.la.BotApplicationEditor;
 import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.junit.AfterClass;
@@ -56,6 +57,7 @@ public class ApplicationDescriptorIT {
 
     @BeforeClass
     public static void init() throws Exception {
+        Display.getDefault().syncExec(SWTGefBotRule::ensureDefaultProjectExists);
         repositoryAccessor = RepositoryManager.getInstance().getAccessor();
         engineManager = BOSEngineManager.getInstance();
         session = engineManager.loginDefaultTenant(new NullProgressMonitor());
@@ -83,7 +85,7 @@ public class ApplicationDescriptorIT {
                 .add()
                 .withToken("tokenB")
                 .withDisplayName("My App B")
-                .withVersion("1.0.0")
+                .withVersion("1.0. 0")
                 .create();
 
         botApplicationEditor.selectDescriptor("tokenB")

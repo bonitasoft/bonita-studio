@@ -27,8 +27,8 @@ import javax.inject.Named;
 import org.bonitasoft.studio.application.operation.SetProjectMetadataOperation;
 import org.bonitasoft.studio.application.ui.control.ProjectMetadataPage;
 import org.bonitasoft.studio.common.CommandExecutor;
+import org.bonitasoft.studio.common.Strings;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.core.maven.MavenProjectHelper;
 import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
@@ -51,7 +51,6 @@ public abstract class AbstractProjectMetadataHandler {
             ExceptionDialogHandler exceptionDialogHandler) {
 
         ProjectMetadata metadata = initialMetadata(repositoryAccessor);
-
         List<WizardPageBuilder> pages = createPages(repositoryAccessor, metadata);
 
         createWizard(repositoryAccessor, mavenProjectHelper, exceptionDialogHandler, metadata, pages)
@@ -102,6 +101,9 @@ public abstract class AbstractProjectMetadataHandler {
             RepositoryAccessor repositoryAccessor,
             MavenProjectHelper mavenProjectHelper,
             ExceptionDialogHandler exceptionDialogHandler) {
+        if (Strings.isNullOrEmpty(metadata.getArtifactId())) {
+            metadata.setArtifactId(ProjectMetadata.toArtifactId(metadata.getName()));
+        }
         SetProjectMetadataOperation operation = createOperation(mavenProjectHelper, metadata, repositoryAccessor);
         try {
             container.run(true, false, operation);

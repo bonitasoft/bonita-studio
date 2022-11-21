@@ -14,12 +14,13 @@
  */
 package org.bonitasoft.studio.common.repository;
 
+import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.eclipse.core.runtime.IProgressMonitor;
 
 public interface IBonitaProjectListener {
 
-    void projectOpened(AbstractRepository repository, IProgressMonitor monitor);
+    void projectOpened(IRepository repository, IProgressMonitor monitor);
 
-    void projectClosed(AbstractRepository repository, IProgressMonitor monitor);
+    void projectClosed(IRepository repository, IProgressMonitor monitor);
 
 }

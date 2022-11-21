@@ -59,6 +59,7 @@ import org.bonitasoft.studio.preferences.BonitaThemeConstants;
 import org.bonitasoft.studio.preferences.dialog.BonitaPreferenceDialog;
 import org.codehaus.groovy.eclipse.GroovyPlugin;
 import org.eclipse.core.internal.resources.Workspace;
+import org.eclipse.core.resources.IWorkspaceDescription;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.FileLocator;
@@ -444,6 +445,9 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
         disableInternalWebBrowser();
         setSystemProperties();
         configureGradleScriptContentType();
+        var description = ResourcesPlugin.getWorkspace().getDescription();
+        description.setAutoBuilding(false);
+        ResourcesPlugin.getPlugin().getPluginPreferences().setValue(ResourcesPlugin.PREF_AUTO_BUILDING, false);
     }
 
     private void configureGradleScriptContentType() {

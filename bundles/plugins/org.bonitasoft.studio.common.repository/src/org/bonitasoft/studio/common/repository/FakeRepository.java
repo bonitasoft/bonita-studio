@@ -16,6 +16,7 @@ import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.core.DatabaseHandler;
 import org.bonitasoft.studio.common.repository.core.ProjectDependenciesStore;
 import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
+import org.bonitasoft.studio.common.repository.core.migration.report.MigrationReport;
 import org.bonitasoft.studio.common.repository.filestore.FileStoreChangeEvent;
 import org.bonitasoft.studio.common.repository.migration.ProcessModelTransformation;
 import org.bonitasoft.studio.common.repository.model.IRepository;
@@ -87,7 +88,7 @@ public class FakeRepository implements IRepository {
     }
 
     @Override
-    public void close() {
+    public void close(IProgressMonitor monitor) {
 
     }
 
@@ -184,7 +185,7 @@ public class FakeRepository implements IRepository {
     }
 
     @Override
-    public void migrate(IProgressMonitor monitor) throws CoreException, MigrationException {
+    public void migrate(MigrationReport report, IProgressMonitor monitor) throws CoreException, MigrationException {
 
     }
 
@@ -230,6 +231,11 @@ public class FakeRepository implements IRepository {
 
     @Override
     public String getBonitaRuntimeVersion() {
+        return null;
+    }
+
+    @Override
+    public List<IBonitaProjectListener> getProjectListeners() {
         return null;
     }
 

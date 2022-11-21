@@ -31,8 +31,14 @@ import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.internal.core.IInternalDebugCoreConstants;
 import org.eclipse.debug.internal.ui.DebugUIPlugin;
 import org.eclipse.debug.internal.ui.preferences.IDebugPreferenceConstants;
+import org.eclipse.egit.core.Activator;
+import org.eclipse.egit.core.GitCorePreferences;
 import org.eclipse.jdt.ui.PreferenceConstants;
+import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.team.internal.ui.IPreferenceIds;
+import org.eclipse.team.internal.ui.TeamUIPlugin;
+import org.eclipse.team.internal.ui.history.IFileHistoryConstants;
 import org.eclipse.ui.IWorkbenchPreferenceConstants;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.IPreferenceConstants;
@@ -40,6 +46,7 @@ import org.eclipse.ui.internal.WorkbenchPlugin;
 import org.eclipse.ui.internal.browser.WebBrowserUIPlugin;
 import org.eclipse.ui.internal.ide.IDEWorkbenchPlugin;
 import org.eclipse.ui.internal.util.PrefUtil;
+import org.eclipse.ui.preferences.ScopedPreferenceStore;
 import org.osgi.service.prefs.BackingStoreException;
 
 import com.google.common.io.Files;
@@ -90,25 +97,36 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer impleme
         } catch (IOException e) {
             BonitaStudioLog.error(e);
         }
-        
+
         IEclipsePreferences groovyCorePreferenceStore = getGroovyCorePreferenceStore();
-        groovyCorePreferenceStore.putBoolean(org.eclipse.jdt.groovy.core.Activator.GROOVY_CHECK_FOR_COMPILER_MISMATCH, false);
-        groovyCorePreferenceStore.putBoolean(org.eclipse.jdt.groovy.core.Activator.GROOVY_SCRIPT_FILTERS_ENABLED, false);
+        groovyCorePreferenceStore.putBoolean(org.eclipse.jdt.groovy.core.Activator.GROOVY_CHECK_FOR_COMPILER_MISMATCH,
+                false);
+        groovyCorePreferenceStore.putBoolean(org.eclipse.jdt.groovy.core.Activator.GROOVY_SCRIPT_FILTERS_ENABLED,
+                false);
         try {
             groovyCorePreferenceStore.flush();
         } catch (BackingStoreException e) {
-           BonitaStudioLog.error(e);
+            BonitaStudioLog.error(e);
         }
+
+        TeamUIPlugin.getPlugin().getPreferenceStore()
+                .setValue(IFileHistoryConstants.PREF_GENERIC_HISTORYVIEW_EDITOR_LINKING,
+                        true);
+        TeamUIPlugin.getPlugin().getPreferenceStore().setValue(IPreferenceIds.SYNCHRONIZING_COMPLETE_PERSPECTIVE,
+                MessageDialogWithToggle.NEVER);
+
+        IPreferenceStore gitPreferenceStore = new ScopedPreferenceStore(InstanceScope.INSTANCE,
+                Activator.PLUGIN_ID);
+        gitPreferenceStore.setDefault(GitCorePreferences.core_autoShareProjects, false);
     }
 
     protected IPreferenceStore getIDEPreferenceStore() {
         return IDEWorkbenchPlugin.getDefault().getPreferenceStore();
     }
-    
+
     protected IEclipsePreferences getGroovyCorePreferenceStore() {
         return InstanceScope.INSTANCE.getNode(org.eclipse.jdt.groovy.core.Activator.PLUGIN_ID);
     }
-    
 
     protected void initializeWorkbenchPreferences() {
         IScopeContext context = DefaultScope.INSTANCE;
@@ -190,8 +208,10 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer impleme
 
     protected void initDefaultDebugPreferences() {
         if (PlatformUI.isWorkbenchRunning()) {
-            DebugUIPlugin.getDefault().getPreferenceStore().setDefault(IDebugPreferenceConstants.CONSOLE_OPEN_ON_OUT, false);
-            DebugUIPlugin.getDefault().getPreferenceStore().setDefault(IDebugPreferenceConstants.CONSOLE_OPEN_ON_ERR, false);
+            DebugUIPlugin.getDefault().getPreferenceStore().setDefault(IDebugPreferenceConstants.CONSOLE_OPEN_ON_OUT,
+                    false);
+            DebugUIPlugin.getDefault().getPreferenceStore().setDefault(IDebugPreferenceConstants.CONSOLE_OPEN_ON_ERR,
+                    false);
             DebugPlugin.getDefault().getPluginPreferences().setDefault(
                     IInternalDebugCoreConstants.PREF_ENABLE_STATUS_HANDLERS,
                     false);

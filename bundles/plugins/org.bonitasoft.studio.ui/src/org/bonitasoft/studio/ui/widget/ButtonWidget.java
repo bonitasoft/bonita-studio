@@ -57,6 +57,12 @@ public class ButtonWidget extends ControlWidget {
             if (listener != null) {
                 control.onClick(listener);
             }
+            if (ctx != null && modelObservable != null) {
+                ctx.bindValue(control.observeSelection(),
+                        modelObservable, 
+                        targetToModelStrategy, 
+                        modelToTargetStrategy);
+            }
             return control;
         }
     }
@@ -100,6 +106,10 @@ public class ButtonWidget extends ControlWidget {
         return WidgetProperties.enabled().observe(button);
     }
 
+    public IObservableValue<Boolean> observeSelection() {
+        return WidgetProperties.buttonSelection().observe(button);
+    }
+    
     @Override
     protected Control createControl() {
         button = new Button(this, style);

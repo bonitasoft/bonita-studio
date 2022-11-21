@@ -17,22 +17,16 @@ package org.bonitasoft.studio.application.operation;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-import java.util.Properties;
-import java.util.stream.Stream;
 
 import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Model;
 import org.bonitasoft.studio.application.i18n.Messages;
-import org.bonitasoft.studio.common.RestAPIExtensionNature;
-import org.bonitasoft.studio.common.Strings;
-import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.core.ProjectDependenciesStore;
 import org.bonitasoft.studio.common.repository.core.maven.MavenProjectHelper;
-import org.bonitasoft.studio.common.repository.core.maven.model.ProjectDefaultConfiguration;
 import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
+import org.bonitasoft.studio.common.repository.filestore.AbstractFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.preferences.RepositoryPreferenceConstant;
 import org.eclipse.core.resources.IProject;
@@ -47,11 +41,9 @@ public class SetProjectMetadataOperation implements IRunnableWithProgress {
     private MavenProjectHelper mavenProjectHelper;
     private IStatus status = Status.OK_STATUS;
     private boolean createNewProject = false;
-    private RepositoryAccessor repositoryAccessor;
     private ProjectMetadata metadata;
     private List<Dependency> dependencies = new ArrayList<>();
-    private static final String BONITA_VERSION_PROPERTY = "bonita.version";
-    private static final String BONITA_RUNTIME_VERSION_PROPERTY = "bonita-runtime.version";
+    private RepositoryAccessor repositoryAccessor;
 
     public SetProjectMetadataOperation(ProjectMetadata metadata,
             RepositoryAccessor repositoryAccessor,
@@ -78,69 +70,14 @@ public class SetProjectMetadataOperation implements IRunnableWithProgress {
             if (createNewProject) {
                 createNewProject(monitor);
             } else {
-                editProject(monitor);
+                repositoryAccessor.getCurrentProject().orElseThrow().update(metadata, monitor);
+                AbstractFileStore.refreshExplorerView();
             }
             CommonRepositoryPlugin.getDefault().getPreferenceStore()
                     .setValue(RepositoryPreferenceConstant.DEFAULT_GROUPID, metadata.getGroupId());
         } catch (CoreException e) {
             status = e.getStatus();
         }
-
-    }
-
-    private void editProject(IProgressMonitor monitor)
-            throws CoreException, InvocationTargetException, InterruptedException {
-        var repository = repositoryAccessor.getCurrentRepository().orElseThrow();
-        IProject project = repository.getProject();
-        Model model = mavenProjectHelper.getMavenModel(project);
-        boolean nameChanged = !Objects.equals(model.getName(), metadata.getName());
-        model.setName(metadata.getName());
-        model.setDescription(metadata.getDescription());
-        model.setGroupId(metadata.getGroupId());
-        String artifactId = metadata.getArtifactId();
-        if (Strings.isNullOrEmpty(artifactId)) {
-            artifactId = ProjectMetadata.toArtifactId(metadata.getName());
-        }
-        model.setArtifactId(artifactId);
-        model.setVersion(metadata.getVersion());
-        model.getProperties().setProperty(ProjectDefaultConfiguration.BONITA_RUNTIME_VERSION,
-                metadata.getBonitaRuntimeVersion());
-        mavenProjectHelper.saveModel(project, model, false, monitor);
-        updateRestApiExtensionProjects(project, monitor);
-
-        if (nameChanged) {
-            repository.rename(model.getName(), monitor);
-        }
-    }
-
-    private void updateRestApiExtensionProjects(IProject project, IProgressMonitor monitor) {
-        Stream.of(project.getWorkspace().getRoot().getProjects())
-                .filter(IProject::isOpen)
-                .filter(p -> {
-                    try {
-                        return p.hasNature(RestAPIExtensionNature.NATURE_ID);
-                    } catch (CoreException e) {
-                        BonitaStudioLog.error(e);
-                        return false;
-                    }
-                })
-                .forEach(p -> {
-                    try {
-                        var mavenModel = mavenProjectHelper.getMavenModel(p);
-                        Properties properties = mavenModel.getProperties();
-                        if (properties.containsKey(BONITA_RUNTIME_VERSION_PROPERTY)) {
-                            properties.setProperty(BONITA_RUNTIME_VERSION_PROPERTY,
-                                    metadata.getBonitaRuntimeVersion());
-                        }
-                        if (properties.containsKey(BONITA_VERSION_PROPERTY)) {
-                            properties.setProperty(BONITA_VERSION_PROPERTY,
-                                    metadata.getBonitaRuntimeVersion());
-                        }
-                        mavenProjectHelper.saveModel(p, mavenModel, false, monitor);
-                    } catch (CoreException e) {
-                        BonitaStudioLog.error(e);
-                    }
-                });
     }
 
     private void createNewProject(IProgressMonitor monitor) throws CoreException {

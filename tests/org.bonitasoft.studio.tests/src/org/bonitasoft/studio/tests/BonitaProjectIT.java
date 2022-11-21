@@ -20,6 +20,7 @@ import static org.junit.Assert.assertNotSame;
 
 import org.apache.maven.model.Model;
 import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
+import org.apache.maven.project.MavenProject;
 import org.bonitasoft.engine.connector.AbstractConnector;
 import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
@@ -27,6 +28,7 @@ import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.BonitaProjectNature;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.core.maven.BonitaProjectBuilder;
+import org.bonitasoft.studio.common.repository.core.maven.model.MavenPlugin;
 import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
 import org.bonitasoft.studio.groovy.repository.ProvidedGroovyRepositoryStore;
 import org.bonitasoft.studio.identity.organization.repository.OrganizationRepositoryStore;
@@ -35,6 +37,7 @@ import org.eclipse.core.resources.ICommand;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.m2e.core.internal.IMavenConstants;
@@ -51,7 +54,7 @@ public class BonitaProjectIT {
     public void should_create_a_bonita_project() throws Exception {
         // Validate the default maven model
         AbstractRepository currentRepository = RepositoryManager.getInstance().getCurrentRepository().orElseThrow();
-        
+
         IProject project = currentRepository.getProject();
         assertThat(project.getFile("pom.xml").exists()).isTrue();
 
@@ -61,7 +64,8 @@ public class BonitaProjectIT {
         }
 
         ProjectMetadata defaultMetadata = ProjectMetadata.defaultMetadata();
-        Model model = reader.read(project.getFile("pom.xml").getContents());
+        MavenProject model = org.eclipse.m2e.core.MavenPlugin.getMavenProjectRegistry().getProject(project)
+                .getMavenProject(new NullProgressMonitor());
         assertThat(model.getGroupId()).isEqualTo(defaultMetadata.getGroupId());
         assertThat(model.getArtifactId()).isEqualTo(defaultMetadata.getArtifactId());
         assertThat(model.getVersion()).isEqualTo(defaultMetadata.getVersion());

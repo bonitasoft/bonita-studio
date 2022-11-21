@@ -9,7 +9,6 @@ import javax.inject.Inject;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.ProjectFileChangeListener;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
-import org.bonitasoft.studio.team.TeamPlugin;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
@@ -54,7 +53,7 @@ public class StartAddon {
             public void done(IJobChangeEvent event) {
                 Job job = event.getJob(); // CheckoutJob
                 if (job.belongsTo(JobFamilies.CHECKOUT)) {
-                    IPreferenceStore teamPluginPrefStore = TeamPlugin.getDefault().getPreferenceStore();
+                    IPreferenceStore teamPluginPrefStore = TeamGitPlugin.getDefault().getPreferenceStore();
                     if (teamPluginPrefStore
                             .getBoolean(ProjectFileChangeListener.VALIDATE_REPO_VERSION_AFTER_SWITCH_BRANCH)) {
                         teamPluginPrefStore.setValue(ProjectFileChangeListener.VALIDATE_REPO_VERSION_AFTER_SWITCH_BRANCH,

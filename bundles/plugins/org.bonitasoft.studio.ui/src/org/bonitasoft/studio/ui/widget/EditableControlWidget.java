@@ -191,7 +191,7 @@ public abstract class EditableControlWidget extends ControlWidget {
         return controlMessageSupport;
     }
 
-    protected void statusChanged(IStatus status) {
+    public void statusChanged(IStatus status) {
         EditableControlWidget.this.status = status;
         if (status.getException() != null) {
             status.getException().printStackTrace();
@@ -234,4 +234,5 @@ public abstract class EditableControlWidget extends ControlWidget {
     public IStatus getStatus() {
         return status;
     }
+    
 }

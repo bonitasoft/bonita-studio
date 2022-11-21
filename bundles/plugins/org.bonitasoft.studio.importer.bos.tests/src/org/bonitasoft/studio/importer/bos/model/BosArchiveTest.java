@@ -116,7 +116,9 @@ public class BosArchiveTest {
     private BosArchive newBosArchive(File archiveFile) throws ZipException, IOException {
         final BosArchive bosArchive = spy(new BosArchive(archiveFile));
         doReturn(true).when(bosArchive).canImport(notNull());
-        doReturn(Status.OK_STATUS).when(bosArchive).validateFile(any(), any());
+        var entryHandler = spy(new DefaultBosArchiveEntryHandler(archiveFile));
+        doReturn(entryHandler).when(bosArchive).getBosArchiveEntryHandler();
+        doReturn(Status.OK_STATUS).when(entryHandler).validateFile(any(), any());
         return bosArchive;
     }
 

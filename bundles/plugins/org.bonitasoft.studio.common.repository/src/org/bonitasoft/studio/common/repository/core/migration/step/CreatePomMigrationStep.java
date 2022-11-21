@@ -32,17 +32,15 @@ public class CreatePomMigrationStep implements MigrationStep {
         var pomFile = project.getFile(IMavenConstants.POM_FILE_NAME);
         var report = new MigrationReport();
         if (pomFile.exists()) {
-            var currentMetadata = ProjectMetadata.read(project);
-            CreateBonitaProjectOperation.createDefaultPomFile(project,
-                    CreateBonitaProjectOperation.newProjectBuilder(currentMetadata));
+            var currentMetadata = ProjectMetadata.read(project, monitor);
+            CreateBonitaProjectOperation.createDefaultPomFile(project, currentMetadata);
             report.removed(
                     "Existing `pom.xml` has been backed up as `pom.xml.old`. Bonita projects are now Maven project and the `pom.xml` file is *reserved for internal use*.");
         } else {
             var defaultMetadata = ProjectMetadata.defaultMetadata();
             defaultMetadata.setName(project.getName());
             defaultMetadata.setArtifactId(ProjectMetadata.toArtifactId(project.getName()));
-            CreateBonitaProjectOperation.createDefaultPomFile(project,
-                    CreateBonitaProjectOperation.newProjectBuilder(defaultMetadata));
+            CreateBonitaProjectOperation.createDefaultPomFile(project, defaultMetadata);
         }
         report.updated("Groovy version has been updated from `2.4.x` to `3.0.x`");
         report.updated(

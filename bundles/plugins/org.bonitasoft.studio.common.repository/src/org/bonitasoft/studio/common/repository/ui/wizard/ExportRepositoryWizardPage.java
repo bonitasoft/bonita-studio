@@ -28,7 +28,6 @@ import java.util.stream.Stream;
 
 import org.bonitasoft.studio.common.databinding.validator.EmptyInputValidator;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
 import org.bonitasoft.studio.common.repository.Messages;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
@@ -36,7 +35,6 @@ import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.common.repository.model.IResourceContainer;
 import org.bonitasoft.studio.common.repository.operation.ExportBosArchiveOperation;
-import org.bonitasoft.studio.common.repository.store.LocalDependenciesStore;
 import org.bonitasoft.studio.common.repository.ui.viewer.CheckboxRepositoryTreeViewer;
 import org.bonitasoft.studio.common.ui.jface.FileActionDialog;
 import org.eclipse.core.databinding.DataBindingContext;
@@ -45,9 +43,6 @@ import org.eclipse.core.databinding.beans.typed.PojoProperties;
 import org.eclipse.core.databinding.observable.set.IObservableSet;
 import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -63,7 +58,6 @@ import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.wizard.WizardPage;
-import org.eclipse.m2e.core.internal.IMavenConstants;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -287,6 +281,7 @@ public class ExportRepositoryWizardPage extends WizardPage {
             List<IResource> selectedResoureContainer = getSelectedResoureContainer();
             getContainer().run(true, false, monitor -> {
                 monitor.beginTask(Messages.exporting, IProgressMonitor.UNKNOWN);
+                operation.setBonitaProject(RepositoryManager.getInstance().getCurrentProject().orElseThrow());
                 operation.setDestinationPath(getDetinationPath());
                 operation.setFileStores(selectedFileStores);
                 operation.addResources(selectedResoureContainer);
@@ -326,21 +321,8 @@ public class ExportRepositoryWizardPage extends WizardPage {
                     }
                 }
                 if (isZip) {
-                    var currentRepository = RepositoryManager.getInstance().getCurrentRepository().orElse(null);
-                    IProject project = currentRepository.getProject();
-                    IFile pomFile = project
-                            .getFile(IMavenConstants.POM_FILE_NAME);
-                    if (pomFile.exists()) {
-                        resources.add(pomFile);
-                    }
-                    IFolder depStore = project.getFolder(LocalDependenciesStore.NAME);
-                    if (depStore.exists()) {
-                        resources.add(depStore);
-                    }
-                    IFolder resourcesFolder = project.getFolder("src/main/resources");
-                    if(resourcesFolder.exists()) {
-                        resources.add(resourcesFolder);
-                    }
+                    var bonitaProject = RepositoryManager.getInstance().getCurrentProject().orElseThrow();
+                    resources.addAll(bonitaProject.getExportableResources());
                 }
             });
         } catch (InvocationTargetException | InterruptedException e) {

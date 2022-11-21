@@ -14,6 +14,9 @@
  */
 package org.bonitasoft.studio.designer.core.repository;
 
+import static java.util.function.Predicate.not;
+
+import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.eclipse.core.resources.IFolder;
 
 /**
@@ -26,6 +29,11 @@ public class WebWidgetRepositoryStore extends WebArtifactRepositoryStore<WebWidg
     @Override
     public String getName() {
         return WEB_WIDGET_REPOSITORY_NAME;
+    }
+    
+    @Override
+    public boolean canBeExported() {
+        return getChildren().stream().anyMatch(IRepositoryFileStore::canBeExported);
     }
 
     @Override

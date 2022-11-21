@@ -22,7 +22,7 @@ import org.bonitasoft.studio.common.repository.core.maven.model.MavenDependency;
 import org.bonitasoft.studio.common.repository.core.maven.model.MavenPlugin;
 import org.bonitasoft.studio.common.repository.core.maven.model.ProjectDefaultConfiguration;
 
-public class MavenProjectModelBuilder {
+public class MavenProjectModelBuilder implements MavenModelBuilder {
 
     private String artifactId;
     private String groupId;
@@ -79,6 +79,7 @@ public class MavenProjectModelBuilder {
         this.bonitaVersion = bonitaVersion;
     }
 
+    @Override
     public Model toMavenModel() {
         Model model = new Model();
         model.setModelVersion("4.0.0");

@@ -37,6 +37,7 @@ import javax.xml.xpath.XPathFactory;
 
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.repository.core.BonitaProject;
 import org.bonitasoft.studio.common.repository.core.IBonitaProjectListenerProvider;
 import org.bonitasoft.studio.common.repository.core.maven.contribution.InstallBonitaMavenArtifactsOperation;
 import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
@@ -50,6 +51,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.Adapters;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -105,7 +107,7 @@ public class RepositoryManager {
             }
             String currentRepository = preferenceStore.getString(RepositoryPreferenceConstant.CURRENT_REPOSITORY);
             if (currentRepository != null && !currentRepository.isEmpty()) {
-                repository = createRepository(currentRepository, false);
+                repository = newRepository(currentRepository);
             }
 
         }
@@ -136,11 +138,11 @@ public class RepositoryManager {
 
     }
 
-    public AbstractRepository createRepository(final String name, final boolean migrationEnabled) {
+    public AbstractRepository newRepository(final String name) {
         try {
             final IRepositoryFactory repositoryFactory = (IRepositoryFactory) repositoryImplementationElement
                     .createExecutableExtension(CLASS);
-            AbstractRepository newRepository = repositoryFactory.newRepository(name, migrationEnabled);
+            AbstractRepository newRepository = repositoryFactory.newRepository(name);
             for (IBonitaProjectListener listener : projectListeners) {
                 newRepository.addProjectListener(listener);
             }
@@ -174,10 +176,6 @@ public class RepositoryManager {
     }
 
     public AbstractRepository getRepository(final String repositoryName) {
-        return getRepository(repositoryName, false);
-    }
-
-    public AbstractRepository getRepository(final String repositoryName, final boolean migrationEnabled) {
         var currentRepository = getCurrentRepository()
                 .filter(repo -> Objects.equals(repo.getName(), repositoryName))
                 .orElse(null);
@@ -197,7 +195,7 @@ public class RepositoryManager {
                         .resolve(IProjectDescription.DESCRIPTION_FILE_NAME).toFile())
                 .map(descriptorFile -> {
                     if (hasNature(descriptorFile, BonitaProjectNature.NATURE_ID)) {
-                        return createRepository(repositoryName, migrationEnabled);
+                        return newRepository(repositoryName);
                     }
                     return null;
                 })
@@ -219,7 +217,7 @@ public class RepositoryManager {
                     if (hasNature(descriptorFile, BonitaProjectNature.NATURE_ID)) {
                         String projectName = projectName(descriptorFile);
                         if (!projectName.equals(repository.getName())) {
-                            return createRepository(projectName, false);
+                            return newRepository(projectName);
                         } else {
                             return repository;
                         }
@@ -283,10 +281,14 @@ public class RepositoryManager {
                 .orElse(null);
         if (currentRepository != null && currentRepository.getName().equals(repositoryName)) {
             return;
-        } else if (currentRepository != null) {
-            currentRepository.close();
+        } else if (currentRepository != null && currentRepository.getProject().isOpen()) {
+            try {
+                getCurrentProject().orElseThrow().close(monitor);
+            } catch (CoreException e) {
+                BonitaStudioLog.error(e);
+            }
         }
-        currentRepository = getRepository(repositoryName, migrationEnabled);
+        currentRepository = getRepository(repositoryName);
         if (currentRepository == null) {
             // Ensure Bonita artifacts are properly installed in user local repository before creating a project
             try {
@@ -296,13 +298,17 @@ public class RepositoryManager {
             } catch (CoreException e1) {
                 BonitaStudioLog.error(e1);
             }
-            currentRepository = createRepository(repositoryName, migrationEnabled);
+            currentRepository = newRepository(repositoryName);
         }
-        ProjectMetadata metadata = ProjectMetadata.read(currentRepository.getProject());
-        metadata.setName(repositoryName);
+        ProjectMetadata metadata = ProjectMetadata.read(currentRepository.getProject(), monitor);
+        metadata.setArtifactId(repositoryName);
         monitor.setTaskName(Messages.creatingNewProject);
-        currentRepository.create(metadata, monitor);
-        currentRepository.open(monitor);
+        var project = Adapters.adapt(currentRepository.create(metadata, monitor), BonitaProject.class);
+        try {
+            project.open(monitor);
+        } catch (CoreException e) {
+            BonitaStudioLog.error(e);
+        }
         setCurrentRepository(currentRepository);
     }
 
@@ -341,15 +347,9 @@ public class RepositoryManager {
     public void setRepositoryAccessor(RepositoryAccessor repositoryAccessor) {
         this.repositoryAccessor = repositoryAccessor;
     }
-    
-    public void switchToRepository(final String newWorkspaceFolder,
-            final IProgressMonitor monitor) {
-        switchToRepository(newWorkspaceFolder, false, monitor);
-    }
 
-    public synchronized void switchToRepository(
+    public synchronized IRepository switchToRepository(
             final String repositoryName,
-            final boolean migrateExistingContent,
             IProgressMonitor monitor) {
         if (monitor == null) {
             monitor = new NullProgressMonitor();
@@ -357,9 +357,15 @@ public class RepositoryManager {
         var currentRepository = RepositoryManager.getInstance()
                 .getCurrentRepository();
         if (currentRepository.filter(repo -> Objects.equals(repo.getName(), repositoryName)).isPresent()) {
-            return;
+            return currentRepository.get();
         }
-        currentRepository.ifPresent(IRepository::close);
+        //        getCurrentProject().ifPresent(project -> {
+        //            try {
+        //                project.close(new NullProgressMonitor());
+        //            } catch (CoreException e) {
+        //                BonitaStudioLog.error(e);
+        //            }
+        //        });
         try {
             WorkspaceModifyOperation workspaceModifyOperation = new WorkspaceModifyOperation() {
 
@@ -370,7 +376,7 @@ public class RepositoryManager {
                             IProgressMonitor.UNKNOWN);
                     BonitaStudioLog.info("Switching project to "
                             + repositoryName, CommonRepositoryPlugin.PLUGIN_ID);
-                    RepositoryManager.getInstance().setRepository(repositoryName, migrateExistingContent, monitor);
+                    RepositoryManager.getInstance().setRepository(repositoryName, monitor);
                     BonitaStudioLog.info(
                             "Project switched to " + repositoryName,
                             CommonRepositoryPlugin.PLUGIN_ID);
@@ -383,8 +389,14 @@ public class RepositoryManager {
                     AbstractFileStore::refreshExplorerView);
         } catch (final InvocationTargetException | InterruptedException e) {
             BonitaStudioLog.error(e);
-        } 
+        }
+        
+        return RepositoryManager.getInstance()
+                .getCurrentRepository().orElseThrow();
 
     }
 
+    public Optional<BonitaProject> getCurrentProject() {
+        return getCurrentRepository().map(repo -> Adapters.adapt(repo, BonitaProject.class));
+    }
 }

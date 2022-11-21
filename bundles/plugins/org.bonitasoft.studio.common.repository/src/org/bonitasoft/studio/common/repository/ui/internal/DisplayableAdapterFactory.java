@@ -14,11 +14,15 @@
  */
 package org.bonitasoft.studio.common.repository.ui.internal;
 
+import java.util.Optional;
+
 import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
+import org.bonitasoft.studio.common.repository.core.BonitaProject;
 import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.ui.IDisplayable;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
+import org.eclipse.core.runtime.Adapters;
 import org.eclipse.core.runtime.IAdapterFactory;
 import org.eclipse.swt.graphics.Image;
 
@@ -45,7 +49,9 @@ public class DisplayableAdapterFactory implements IAdapterFactory {
 
                 @Override
                 public String getDisplayName() {
-                    return repository.getName();
+                    return Optional.ofNullable(Adapters.adapt(repository, BonitaProject.class))
+                                .map(BonitaProject::getDisplayName)
+                                .orElse(repository.getName());
                 }
             };
             return (T) display;

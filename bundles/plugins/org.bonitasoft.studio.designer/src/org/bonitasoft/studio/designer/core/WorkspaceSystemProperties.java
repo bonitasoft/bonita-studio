@@ -19,7 +19,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
-import org.bonitasoft.studio.common.repository.AbstractRepository;
+import org.bonitasoft.studio.common.repository.model.IRepository;
 
 import com.google.common.base.Joiner;
 
@@ -29,9 +29,9 @@ public class WorkspaceSystemProperties {
     private static final String WORKSPACE_API_REST_URL = "designer.workspace.apiUrl";
     private static final String SPRING_PROFILES_ACTIVE = "spring.profiles.active";
 
-    private AbstractRepository repository;
+    private IRepository repository;
 
-    public WorkspaceSystemProperties(final AbstractRepository repository) {
+    public WorkspaceSystemProperties(final IRepository repository) {
         this.repository = repository;
     }
 

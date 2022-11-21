@@ -15,7 +15,7 @@
 package org.bonitasoft.studio.team.git.validation;
 
 import org.bonitasoft.studio.common.core.IRunnableWithStatus;
-import org.bonitasoft.studio.team.repository.Repository;
+import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.eclipse.core.runtime.IAdapterFactory;
 import org.eclipse.egit.core.GitProvider;
 
@@ -32,8 +32,8 @@ public class RepositoryValidationAdapterFactory implements IAdapterFactory {
      */
     @Override
     public <T> T getAdapter(Object adaptableObject, Class<T> adapterType) {
-        if (adaptableObject instanceof Repository && adapterType.isAssignableFrom(RepositoryValidator.class)) {
-            Repository repository = (Repository) adaptableObject;
+        if (adaptableObject instanceof IRepository && adapterType.isAssignableFrom(RepositoryValidator.class)) {
+            IRepository repository = (IRepository) adaptableObject;
             if (repository.isShared(GitProvider.ID)) {
                 // adapt the repository to provide the validation process
                 IRunnableWithStatus validator = new RepositoryValidator(repository);

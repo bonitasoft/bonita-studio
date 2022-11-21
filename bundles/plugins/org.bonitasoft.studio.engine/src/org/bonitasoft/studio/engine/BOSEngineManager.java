@@ -136,7 +136,7 @@ public class BOSEngineManager {
         return new BOSEngineManager(monitor);
     }
 
-    public synchronized void start(AbstractRepository repository) {
+    public synchronized void start(IRepository repository) {
         if (!isRunning() || !BOSWebServerManager.getInstance().serverIsStarted()) {
             boolean notifying = notifyStartServer();
             monitor.beginTask(Messages.initializingProcessEngine, IProgressMonitor.UNKNOWN);
