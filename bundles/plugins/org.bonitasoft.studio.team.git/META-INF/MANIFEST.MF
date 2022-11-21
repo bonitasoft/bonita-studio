@@ -22,7 +22,6 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.jgit,
  org.bonitasoft.studio.ui,
  org.eclipse.emf.compare.egit,
- org.bonitasoft.studio.team,
  org.eclipse.core.databinding,
  org.eclipse.core.databinding.beans,
  org.eclipse.core.databinding.property,
@@ -40,7 +39,8 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.ui.forms,
  org.bonitasoft.studio.validation,
  org.eclipse.jsch.core;bundle-version="1.3.900",
- org.bonitasoft.studio.pics
+ org.bonitasoft.studio.pics,
+ org.eclipse.m2e.maven.runtime
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-ActivationPolicy: lazy
 Import-Package: javax.inject;version="1.0.0",

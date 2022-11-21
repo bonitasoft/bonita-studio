@@ -18,9 +18,9 @@ import java.io.IOException;
 import java.net.URL;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.repository.core.internal.RepositoryImpl;
 import org.bonitasoft.studio.team.git.i18n.Messages;
 import org.bonitasoft.studio.team.git.validation.RepositoryValidator;
-import org.bonitasoft.studio.team.repository.Repository;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
@@ -51,7 +51,7 @@ public class IgnoredNotAlignedResolutionGenerator implements IMarkerResolutionGe
                         // have .gitignore file corresponding to template
                         try {
                             var gitIgnore = project.getFile(Constants.GITIGNORE_FILENAME);
-                            URL gitIgnoreTemplateUrl = Repository.getGitignoreTemplateFileURL();
+                            URL gitIgnoreTemplateUrl = RepositoryImpl.getGitignoreTemplateFileURL();
                             try (var templateStream = gitIgnoreTemplateUrl.openStream()) {
                                 if (!gitIgnore.exists()) {
                                     // create new gile from template

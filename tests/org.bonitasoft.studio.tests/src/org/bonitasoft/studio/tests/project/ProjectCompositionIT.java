@@ -87,7 +87,7 @@ public class ProjectCompositionIT {
     }
 
     @Test
-    public void shouldEditProjectMetadata() {
+    public void shouldEditProjectMetadata() throws CoreException {
         var worbenchBot = new BotApplicationWorkbenchWindow(bot);
 
         var description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.";
@@ -98,7 +98,7 @@ public class ProjectCompositionIT {
                 .setDescription(description)
                 .modify();
 
-        var metadata = ProjectMetadata.read(repositoryAccessor.getCurrentRepository().orElseThrow().getProject());
+        var metadata = ProjectMetadata.read(repositoryAccessor.getCurrentRepository().orElseThrow().getProject(), new NullProgressMonitor());
         assertThat(metadata.getVersion()).isEqualTo("2.0.0-SNAPSHOT");
         assertThat(metadata.getDescription()).isEqualTo(description);
         assertThat(bot.styledTextWithId(SWTBotConstants.SWTBOT_ID_PROJECT_DETAILS_TITLE).getText())

@@ -3,8 +3,10 @@ package org.bonitasoft.studio.common.repository.provider;
 import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.repository.Messages;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.core.BonitaProject;
 import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.ui.IDisplayable;
+import org.eclipse.core.runtime.Adapters;
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.jface.viewers.StyledCellLabelProvider;
 import org.eclipse.jface.viewers.StyledString;
@@ -71,6 +73,9 @@ public class RepositoryLabelProvider extends StyledCellLabelProvider {
         final StyledString styledString = new StyledString();
 
         styledString.append(getText(element), null);
+        var project = Adapters.adapt(element, BonitaProject.class);
+        styledString.append(String.format(" (Project Id: %s)", project.getId()), StyledString.COUNTER_STYLER);
+        
         if (RepositoryManager.getInstance().getCurrentRepository().filter(element::equals).isPresent()) {
             styledString.append(" -- ", StyledString.QUALIFIER_STYLER);
             styledString.append(Messages.current, StyledString.DECORATIONS_STYLER);

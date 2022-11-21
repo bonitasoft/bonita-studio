@@ -118,8 +118,7 @@ public class AbstractRepositoryTest {
         return spy(new TestRepository(workspace, project,
                 extensionContextInjectionFactory,
                 jdtTypeHierarchyManager, 
-                eventBroker,
-                true));
+                eventBroker));
     }
     
 }

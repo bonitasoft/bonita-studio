@@ -11,14 +11,12 @@ import java.util.zip.ZipFile;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
-import org.bonitasoft.studio.common.ui.jface.SWTBotConstants;
 import org.bonitasoft.studio.designer.core.PageDesignerURLFactory;
 import org.bonitasoft.studio.designer.core.operation.CreateFormOperation;
 import org.bonitasoft.studio.designer.core.repository.WebPageRepositoryStore;
 import org.bonitasoft.studio.exporter.Messages;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.PoolEditPart;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
-import org.bonitasoft.studio.swtbot.framework.SWTBotTestUtil;
 import org.bonitasoft.studio.swtbot.framework.application.BotApplicationWorkbenchWindow;
 import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
 import org.bonitasoft.studio.tests.util.ProjectUtil;
@@ -27,10 +25,8 @@ import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.gef.EditPart;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotEditor;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditPart;
-import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditor;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.waits.Conditions;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotButton;
@@ -88,14 +84,17 @@ public class ExportBosArchiveIT {
         RepositoryAccessor repositoryAccessor = RepositoryManager.getInstance().getAccessor();
         try (var zipFile = new ZipFile(bosFile)) {
             assertThat(
-                    zipFile.getEntry(String.format("%s/pom.xml", repositoryAccessor.getCurrentRepository().orElseThrow().getName())))
+                    zipFile.getEntry(String.format("%s/app/pom.xml", repositoryAccessor.getCurrentProject().orElseThrow().getId())))
+                            .isNotNull();
+            assertThat(
+                    zipFile.getEntry(String.format("%s/pom.xml", repositoryAccessor.getCurrentProject().orElseThrow().getId())))
                             .isNotNull();
             assertThat(zipFile.getEntry(
-                    String.format("%s/.store/org/bonitasoft/theme/my-darkly-theme/1.0.0/my-darkly-theme-1.0.0.zip",
-                            repositoryAccessor.getCurrentRepository().orElseThrow().getName()))).isNotNull();
+                    String.format("%s/app/.store/org/bonitasoft/theme/my-darkly-theme/1.0.0/my-darkly-theme-1.0.0.zip",
+                            repositoryAccessor.getCurrentProject().orElseThrow().getId()))).isNotNull();
             assertThat(zipFile.getEntry(
-                    String.format("%s/.store/org/bonitasoft/restapi/extension/task-candidates-rest-api/1.0.1-SNAPSHOT/task-candidates-rest-api-1.0.1-SNAPSHOT.zip",
-                            repositoryAccessor.getCurrentRepository().orElseThrow().getName()))).isNotNull();
+                    String.format("%s/app/.store/org/bonitasoft/restapi/extension/task-candidates-rest-api/1.0.1-SNAPSHOT/task-candidates-rest-api-1.0.1-SNAPSHOT.zip",
+                            repositoryAccessor.getCurrentProject().orElseThrow().getId()))).isNotNull();
         }
     }
 
@@ -131,10 +130,10 @@ public class ExportBosArchiveIT {
 
         assertThat(bosFile).exists();
         try (ZipFile zipFile = new ZipFile(bosFile);) {
-            assertThat(zipFile.getEntry(String.format("%s/web_page/%s/%s.json",
-                    repositoryAccessor.getCurrentRepository().orElseThrow().getName(), pageId, pageId))).isNotNull();
-            assertThat(zipFile.getEntry(String.format("%s/web_page/.metadata",
-                    repositoryAccessor.getCurrentRepository().orElseThrow().getName()))).isNull();
+            assertThat(zipFile.getEntry(String.format("%s/app/web_page/%s/%s.json",
+                    repositoryAccessor.getCurrentProject().orElseThrow().getId() , pageId, pageId))).isNotNull();
+            assertThat(zipFile.getEntry(String.format("%s/app/web_page/.metadata",
+                    repositoryAccessor.getCurrentProject().orElseThrow().getId()))).isNull();
         }
     }
 

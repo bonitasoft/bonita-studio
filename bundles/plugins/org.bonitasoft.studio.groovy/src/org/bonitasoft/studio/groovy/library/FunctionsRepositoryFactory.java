@@ -18,7 +18,7 @@
 
 package org.bonitasoft.studio.groovy.library;
 
-import org.bonitasoft.studio.common.repository.AbstractRepository;
+import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.groovy.GroovyDocumentUtil;
 import org.bonitasoft.studio.groovy.Messages;
 
@@ -32,7 +32,7 @@ public class FunctionsRepositoryFactory {
     private static FunctionsCategories categories;
     private static FunctionCategory userCat;
 
-    private static synchronized void createFunctionCatgories(AbstractRepository repository) {
+    private static synchronized void createFunctionCatgories(IRepository repository) {
         categories = new FunctionsCategories();
         categories.addCategory(getUserFunctionCatgory());
 
@@ -40,7 +40,7 @@ public class FunctionsRepositoryFactory {
 
     }
 
-    public static synchronized IFunctionsCategories getFunctionCatgories(AbstractRepository repository) {
+    public static synchronized IFunctionsCategories getFunctionCatgories(IRepository repository) {
         if(categories == null){
             createFunctionCatgories(repository);
         }

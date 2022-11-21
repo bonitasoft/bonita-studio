@@ -14,7 +14,7 @@
  */
 package org.bonitasoft.studio.importer.bos.validator;
 
-import java.util.function.Supplier;
+import java.util.function.BooleanSupplier;
 
 import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
@@ -23,16 +23,16 @@ import org.eclipse.core.runtime.IStatus;
 public class ValidatorWrapper<T> implements IValidator<T> {
 
     private IValidator<T> validatorDelegate;
-    private Supplier<Boolean> applyValidator;
+    private BooleanSupplier applyValidator;
 
-    public ValidatorWrapper(IValidator<T> validator, Supplier<Boolean> applyValidator) {
+    public ValidatorWrapper(IValidator<T> validator,BooleanSupplier applyValidator) {
         this.validatorDelegate = validator;
         this.applyValidator = applyValidator;
     }
 
     @Override
     public IStatus validate(T value) {
-        if (Boolean.TRUE.equals(applyValidator.get())) {
+        if (applyValidator.getAsBoolean()) {
             return validatorDelegate.validate(value);
         }
         return ValidationStatus.ok();

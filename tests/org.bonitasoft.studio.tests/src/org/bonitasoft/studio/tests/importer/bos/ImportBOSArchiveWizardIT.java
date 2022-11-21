@@ -76,7 +76,7 @@ public class ImportBOSArchiveWizardIT {
         assertThat(diagramNodeItem.cell(1)).isEqualTo(Messages.keepAction);
 
         botImport.back();
-        botImport.newProject("new repo");
+        botImport.newProject("new-repo", "new repo");
 
         botImport.currentRepository();
 

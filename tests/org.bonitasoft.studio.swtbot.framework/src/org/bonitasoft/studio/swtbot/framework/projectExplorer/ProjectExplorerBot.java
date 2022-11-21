@@ -51,7 +51,7 @@ public class ProjectExplorerBot extends BotBase {
 
     public ProjectExplorerBot(SWTGefBot bot) {
         super(bot);
-        projectName = RepositoryManager.getInstance().getCurrentRepository().orElseThrow().getName();
+        projectName = RepositoryManager.getInstance().getCurrentProject().orElseThrow().getDisplayName();
         showExplorerView();
     }
 

@@ -18,10 +18,8 @@ import java.lang.reflect.InvocationTargetException;
 
 import org.bonitasoft.studio.application.actions.coolbar.NormalCoolBarHandler;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.Messages;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
-import org.bonitasoft.studio.common.repository.core.maven.contribution.InstallBonitaMavenArtifactsOperation;
-import org.bonitasoft.studio.common.ui.PlatformUtil;
+import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
 import org.bonitasoft.studio.common.ui.jface.FileActionDialog;
 import org.bonitasoft.studio.engine.EnginePlugin;
 import org.bonitasoft.studio.engine.preferences.EnginePreferenceConstants;
@@ -31,10 +29,8 @@ import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.bonitasoft.studio.preferences.pages.BonitaAdvancedPreferencePage;
 import org.bonitasoft.studio.swtbot.framework.conditions.BonitaBPMConditions;
 import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.m2e.core.MavenPlugin;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swtbot.eclipse.finder.SWTWorkbenchBot;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
@@ -156,29 +152,21 @@ public class SWTGefBotRule implements TestRule {
     }
 
     protected void beforeStatement() {
-        Display.getDefault().syncExec(this::ensureDefaultProjectExists);
+        Display.getDefault().syncExec(SWTGefBotRule::ensureDefaultProjectExists);
         initPreferences();
         bot.saveAllEditors();
         bot.closeAllEditors();
         bot.waitUntil(BonitaBPMConditions.noPopupActive(), 10000);
     }
 
-    private void ensureDefaultProjectExists() {
+    public static void ensureDefaultProjectExists() {
         var repositoryManager = RepositoryManager.getInstance();
-        if (repositoryManager.getRepository(Messages.defaultRepositoryName) == null
-                || !repositoryManager.getRepository(Messages.defaultRepositoryName).exists()) {
+        var defaultProjectMetadta = ProjectMetadata.defaultMetadata();
+        if (repositoryManager.getRepository(defaultProjectMetadta.getArtifactId()) == null
+                || !repositoryManager.getRepository(defaultProjectMetadta.getArtifactId()).exists()) {
             try {
                 PlatformUI.getWorkbench().getProgressService().run(true, false, monitor -> {
-                    try {
-                        new InstallBonitaMavenArtifactsOperation(MavenPlugin.getMaven().getLocalRepository())
-                                .execute(monitor);
-                    } catch (CoreException e) {
-                        throw new InvocationTargetException(e);
-                    }
-                    repositoryManager.setCurrentRepository(
-                            repositoryManager.createRepository(Messages.defaultRepositoryName, false));
-                    repositoryManager.getAccessor().start(monitor);
-                    PlatformUtil.openDashboardIfNoOtherEditorOpen();
+                    repositoryManager.getAccessor().createNewRepository(defaultProjectMetadta, monitor);
                 });
             } catch (InvocationTargetException | InterruptedException e) {
                 throw new RuntimeException(e);

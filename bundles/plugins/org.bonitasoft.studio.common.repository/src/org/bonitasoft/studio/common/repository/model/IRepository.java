@@ -25,11 +25,13 @@ import org.bonitasoft.studio.common.repository.IBonitaProjectListener;
 import org.bonitasoft.studio.common.repository.core.DatabaseHandler;
 import org.bonitasoft.studio.common.repository.core.ProjectDependenciesStore;
 import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
+import org.bonitasoft.studio.common.repository.core.migration.report.MigrationReport;
 import org.bonitasoft.studio.common.repository.migration.ProcessModelTransformation;
 import org.bonitasoft.studio.common.repository.store.LocalDependenciesStore;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.edapt.migration.MigrationException;
@@ -55,7 +57,7 @@ public interface IRepository extends IFileStoreChangeListener {
 
     AbstractRepository open(IProgressMonitor monitor);
 
-    void close();
+    void close(IProgressMonitor monitor);
 
     <T> T getRepositoryStore(final Class<T> repositoryStoreClass);
 
@@ -81,7 +83,7 @@ public interface IRepository extends IFileStoreChangeListener {
 
     IRepositoryFileStore asRepositoryFileStore(Path path, boolean force) throws IOException, CoreException;
 
-    void migrate(IProgressMonitor monitor) throws CoreException, MigrationException;
+    void migrate(MigrationReport report, IProgressMonitor monitor) throws CoreException, MigrationException;
 
     IRepository create(ProjectMetadata metadata, IProgressMonitor monitor);
 
@@ -101,5 +103,7 @@ public interface IRepository extends IFileStoreChangeListener {
     boolean closeAllEditors();
     
     String getBonitaRuntimeVersion();
+
+    List<IBonitaProjectListener> getProjectListeners();
     
 }

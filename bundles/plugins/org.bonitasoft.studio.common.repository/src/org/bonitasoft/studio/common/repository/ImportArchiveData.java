@@ -28,8 +28,17 @@ public class ImportArchiveData {
     public InputStream getInputStream() throws IOException {
         return archive.getInputStream(entry);
     }
+    
+    public String getProjectRelativePath() {
+        var segments = entry.getName().split("/");
+        if(segments.length > 2 && segments[1].equals("app")) {
+            return entry.getName().split("/", 4)[3];
+        }
+        return entry.getName().split("/", 3)[2];
+    }
 
     public String getName() {
-        return entry.getName();
+        var segments = entry.getName().split("/");
+        return segments[segments.length -1];
     }
 }

@@ -8,7 +8,7 @@
  *******************************************************************************/
 package org.bonitasoft.studio.team.git.ui.wizard;
 
-import org.bonitasoft.studio.common.repository.RepositoryNameValidator;
+import org.bonitasoft.studio.common.repository.ProjectIdValidator;
 import org.bonitasoft.studio.team.git.i18n.Messages;
 import org.bonitasoft.studio.ui.widget.TextWidget;
 import org.bonitasoft.studio.ui.wizard.ControlSupplier;
@@ -41,7 +41,7 @@ public class RepositoryNameControlSupplier implements ControlSupplier {
                 .grabHorizontalSpace()
                 .withMessage(Messages.workspaceLocationHint)
                 .bindTo(repositoryNameObservable)
-                .withValidator(new RepositoryNameValidator(() -> true))
+                .withValidator(new ProjectIdValidator(() -> repositoryNameObservable.getValue(), null, () -> true))
                 .inContext(ctx)
                 .createIn(composite);
         return composite;

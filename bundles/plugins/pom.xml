@@ -74,7 +74,6 @@
         <module>org.bonitasoft.studio.sap.mock</module>
         <module>org.bonitasoft.studio.scripting</module>
         <module>org.bonitasoft.studio.sqlbuilder.ex</module>
-        <module>org.bonitasoft.studio.team</module>
         <module>org.bonitasoft.studio.team.git</module>
         <module>org.bonitasoft.studio.ui</module>
         <module>org.bonitasoft.studio.validation</module>

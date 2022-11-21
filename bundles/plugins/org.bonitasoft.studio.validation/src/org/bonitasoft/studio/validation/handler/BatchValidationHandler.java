@@ -23,6 +23,7 @@ import org.bonitasoft.studio.common.core.IRunnableWithStatus;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.core.migration.report.MigrationReport;
 import org.bonitasoft.studio.common.ui.IDisplayable;
 import org.bonitasoft.studio.common.ui.jface.ValidationDialog;
 import org.bonitasoft.studio.designer.core.operation.IndexingUIDOperation;
@@ -259,7 +260,7 @@ public class BatchValidationHandler extends AbstractHandler {
                     try {
                         service.run(true, false, monitor -> {
                             try {
-                                RepositoryManager.getInstance().getCurrentRepository().orElseThrow().migrate(monitor);
+                                RepositoryManager.getInstance().getCurrentRepository().orElseThrow().migrate(MigrationReport.emptyReport(), monitor);
                             } catch (CoreException | MigrationException e) {
                                 throw new InvocationTargetException(e);
                             }

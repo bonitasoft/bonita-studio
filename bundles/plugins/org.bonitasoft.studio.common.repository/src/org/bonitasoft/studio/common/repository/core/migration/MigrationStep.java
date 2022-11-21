@@ -14,6 +14,7 @@
  */
 package org.bonitasoft.studio.common.repository.core.migration;
 
+import java.io.File;
 import java.util.Objects;
 import java.util.function.Predicate;
 
@@ -36,6 +37,17 @@ public interface MigrationStep {
 
     default Model loadMavenModel(IProject project) throws CoreException {
         var model = new MavenProjectHelper().getMavenModel(project);
+        if (model == null) {
+            throw new CoreException(new Status(IStatus.ERROR, MigrationStep.class,
+                    String.format("Cannot load maven model (%s file not found)",
+                            project.getFile("pom.xml").getLocation().toFile().getAbsolutePath())));
+        }
+        return model;
+    }
+    
+    default Model loadParentMavenModel(IProject project) throws CoreException {
+        File parentPomFile = project.getLocation().toFile().getParentFile().toPath().resolve("pom.xml").toFile();
+        var model = parentPomFile.exists() ? MavenProjectHelper.readModel(parentPomFile) : loadMavenModel(project);
         if (model == null) {
             throw new CoreException(new Status(IStatus.ERROR, MigrationStep.class,
                     String.format("Cannot load maven model (%s file not found)",

@@ -68,8 +68,6 @@ import org.bonitasoft.studio.common.repository.store.LocalDependenciesStore;
 import org.bonitasoft.studio.common.repository.store.RepositoryStoreComparator;
 import org.bonitasoft.studio.common.ui.IDisplayable;
 import org.bonitasoft.studio.common.ui.PlatformUtil;
-import org.bonitasoft.studio.pics.Pics;
-import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.core.internal.resources.ProjectDescriptionReader;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
@@ -102,7 +100,6 @@ import org.eclipse.m2e.core.internal.project.ProjectConfigurationManager;
 import org.eclipse.m2e.core.project.IMavenProjectFacade;
 import org.eclipse.m2e.core.project.MavenUpdateRequest;
 import org.eclipse.osgi.util.NLS;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
@@ -126,13 +123,11 @@ public abstract class AbstractRepository implements IRepository, IJavaContainer 
 
     private static final String CLASS = "class";
 
-    private final IProject project;
+    private IProject project;
 
     protected SortedMap<Class<?>, IRepositoryStore<? extends IRepositoryFileStore>> stores;
 
     private final JDTTypeHierarchyManager jdtTypeHierarchyManager;
-
-    private boolean migrationEnabled = false;
 
     private final ExtensionContextInjectionFactory extensionContextInjectionFactory;
 
@@ -154,18 +149,14 @@ public abstract class AbstractRepository implements IRepository, IJavaContainer 
 
     private MigrationReportWriter reportWriter = new AsciidocMigrationReportWriter();
 
-    private MigrationReport report = MigrationReport.emptyReport();
-
     protected AbstractRepository(final IWorkspace workspace,
             final IProject project,
             final ExtensionContextInjectionFactory extensionContextInjectionFactory,
             final JDTTypeHierarchyManager jdtTypeHierarchyManager,
-            IEventBroker eventBroker,
-            final boolean migrationEnabled) {
+            IEventBroker eventBroker) {
         this.workspace = workspace;
         this.project = project;
         this.jdtTypeHierarchyManager = jdtTypeHierarchyManager;
-        this.migrationEnabled = migrationEnabled;
         this.extensionContextInjectionFactory = extensionContextInjectionFactory;
         this.eventBroker = eventBroker;
         this.projectFileListener = createProjectFileChangeListener();
@@ -186,7 +177,6 @@ public abstract class AbstractRepository implements IRepository, IJavaContainer 
                 CreateBonitaProjectOperation createBonitaProjectOperation = newProjectWorkspaceOperation(metadata,
                         workspace);
                 workspace.run(createBonitaProjectOperation, monitor);
-                report = createBonitaProjectOperation.getReport();
             } else {
                 updateProjectMavenConfiguration(monitor);
             }
@@ -217,14 +207,7 @@ public abstract class AbstractRepository implements IRepository, IJavaContainer 
 
     protected CreateBonitaProjectOperation newProjectWorkspaceOperation(ProjectMetadata metadata,
             IWorkspace workspace) {
-        return new CreateBonitaProjectOperation(workspace, metadata, migrationEnabled)
-                .addNature(BonitaProjectNature.NATURE_ID)
-                .addNature(JavaCore.NATURE_ID)
-                .addNature("org.eclipse.jdt.groovy.core.groovyNature")
-                .addNature(IMavenConstants.NATURE_ID)
-                .addBuilder(IMavenConstants.BUILDER_ID)
-                .addBuilder("org.eclipse.jdt.core.javabuilder")
-                .addBuilder(BonitaProjectBuilder.ID);
+        return new CreateBonitaProjectOperation(workspace, metadata);
     }
 
     @Override
@@ -273,13 +256,6 @@ public abstract class AbstractRepository implements IRepository, IJavaContainer 
             this.projectDependenciesStore
                     .analyze(subMonitor);
 
-            if (migrationEnabled()) {
-                try {
-                    migrate(subMonitor);
-                } catch (final MigrationException | CoreException e) {
-                    BonitaStudioLog.error(e, CommonRepositoryPlugin.PLUGIN_ID);
-                }
-            }
             hookResourceListeners();
             updateCurrentRepositoryPreference();
             return this;
@@ -308,7 +284,7 @@ public abstract class AbstractRepository implements IRepository, IJavaContainer 
     }
 
     @Override
-    public void close() {
+    public void close(IProgressMonitor monitor) {
         synchronized (openCloseLock) {
             try {
                 BonitaStudioLog.debug("Closing repository " + project.getName(), CommonRepositoryPlugin.PLUGIN_ID);
@@ -320,7 +296,7 @@ public abstract class AbstractRepository implements IRepository, IJavaContainer 
                             store.close();
                         }
                     }
-                    project.close(NULL_PROGRESS_MONITOR);
+                    project.close(monitor);
                 }
             } catch (final CoreException e) {
                 BonitaStudioLog.error(e);
@@ -332,7 +308,7 @@ public abstract class AbstractRepository implements IRepository, IJavaContainer 
             isLoaded = false;
             removeResourceListeners();
             for (IBonitaProjectListener listener : getProjectListeners()) {
-                listener.projectClosed(this, NULL_PROGRESS_MONITOR);
+                listener.projectClosed(this, monitor);
             }
         }
     }
@@ -406,10 +382,6 @@ public abstract class AbstractRepository implements IRepository, IJavaContainer 
                 BonitaStudioLog.error(e);
             }
         }
-    }
-
-    private boolean migrationEnabled() {
-        return migrationEnabled;
     }
 
     @SuppressWarnings("unchecked")
@@ -534,6 +506,7 @@ public abstract class AbstractRepository implements IRepository, IJavaContainer 
     public IStatus exportToArchive(final String fileName) {
         final ExportBosArchiveOperation operation = new ExportBosArchiveOperation();
         operation.setDestinationPath(fileName);
+        operation.setBonitaProject(RepositoryManager.getInstance().getCurrentProject().orElseThrow());
         final Set<IRepositoryFileStore> fileStores = new HashSet<>();
         for (final IRepositoryStore<?> store : getAllExportableStores()) {
             for (final IRepositoryFileStore fs : store.getChildren()) {
@@ -712,9 +685,9 @@ public abstract class AbstractRepository implements IRepository, IJavaContainer 
         }
         return current != null && parentFolder.equals(current);
     }
-
+    
     @Override
-    public void migrate(final IProgressMonitor monitor) throws CoreException, MigrationException {
+    public void migrate(MigrationReport report, IProgressMonitor monitor) throws CoreException, MigrationException {
         Assert.isNotNull(project);
         var migrationOperation = newProjectMigrationOperation();
         workspace.run(migrationOperation, monitor);
@@ -724,6 +697,7 @@ public abstract class AbstractRepository implements IRepository, IJavaContainer 
         } catch (InvocationTargetException | InterruptedException e) {
             throw new CoreException(new Status(IStatus.ERROR, BonitaProjectMigrationOperation.class, e.getMessage()));
         }
+        MavenPlugin.getProjectConfigurationManager().updateProjectConfiguration(project, monitor);
         if (!report.isEmpty()) {
             try {
                 reportWriter.write(report, reportPath());
@@ -734,19 +708,11 @@ public abstract class AbstractRepository implements IRepository, IJavaContainer 
             } finally {
                 report = MigrationReport.emptyReport();
             }
-
         }
     }
 
     protected BonitaProjectMigrationOperation newProjectMigrationOperation() {
-        return new BonitaProjectMigrationOperation(this)
-                .addNature(BonitaProjectNature.NATURE_ID)
-                .addNature(JavaCore.NATURE_ID)
-                .addNature("org.eclipse.jdt.groovy.core.groovyNature")
-                .addNature(IMavenConstants.NATURE_ID)
-                .addBuilder(IMavenConstants.BUILDER_ID)
-                .addBuilder("org.eclipse.jdt.core.javabuilder")
-                .addBuilder(BonitaProjectBuilder.ID);
+        return new BonitaProjectMigrationOperation(this);
     }
 
     @Override
@@ -793,7 +759,7 @@ public abstract class AbstractRepository implements IRepository, IJavaContainer 
                     Display.getDefault().getActiveShell())
                             .run(true, false, monitor -> {
                                 try {
-                                    migrate(monitor);
+                                    migrate(MigrationReport.emptyReport(), monitor);
                                 } catch (CoreException | MigrationException e) {
                                     throw new InvocationTargetException(e);
                                 }
@@ -840,7 +806,8 @@ public abstract class AbstractRepository implements IRepository, IJavaContainer 
         return PROCESS_MODEL_TRANSFORMATIONS;
     }
 
-    private List<IBonitaProjectListener> getProjectListeners() {
+    @Override
+    public List<IBonitaProjectListener> getProjectListeners() {
         return Collections.unmodifiableList(projectListeners);
     }
 
@@ -855,4 +822,5 @@ public abstract class AbstractRepository implements IRepository, IJavaContainer 
         return projectFacade.getMavenProject().getProperties()
                 .getProperty(ProjectDefaultConfiguration.BONITA_RUNTIME_VERSION);
     }
+    
 }

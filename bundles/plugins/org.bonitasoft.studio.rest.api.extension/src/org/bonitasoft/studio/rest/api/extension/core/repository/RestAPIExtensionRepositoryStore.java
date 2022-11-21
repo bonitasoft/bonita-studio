@@ -136,10 +136,9 @@ public class RestAPIExtensionRepositoryStore extends CustomPageProjectRepository
     @Override
     protected RestAPIExtensionFileStore doImportArchiveData(ImportArchiveData importArchiveData,
             IProgressMonitor monitor) throws CoreException {
-        var fileName = importArchiveData.getName().split("/", 3)[2];
-        if (fileName.endsWith("/pom.xml")) {
-            var segments = fileName.split("/");
-            var projectName = segments[segments.length - 2];
+        var fileName = importArchiveData.getName();
+        if (fileName.equals("pom.xml")) {
+            var projectName = importArchiveData.getProjectRelativePath().split("/")[0];
             var file = getResource().getFolder(projectName).getFile(MigrationReportWriter.DEFAULT_REPORT_FILE_NAME);
             if (file.exists()) {
                 file.delete(true, new NullProgressMonitor());

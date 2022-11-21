@@ -17,9 +17,9 @@ public class BotGitMenu extends AbstractBotMenu {
         super(bot);
     }
 
-    public BotShareRepoDialog shareWithGit() {
+    public BotGitInitDialog shareWithGit() {
         openMenu("Share with Git");
-        return new BotShareRepoDialog(bot);
+        return new BotGitInitDialog(bot);
     }
 
     public BotGitCloneDialog gitClone() {

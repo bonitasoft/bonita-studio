@@ -369,7 +369,7 @@ public class Messages extends NLS {
     public static String returnToElementsView;
     public static String returnToExtensionView;
     public static String addExtensionMenuLabel;
-    public static String artifactIdTootltip;
+    public static String projectIdTootltip;
     public static String groupIdTootltip;
     public static String projectElements;
     public static String bonitaExtensions;
@@ -407,6 +407,7 @@ public class Messages extends NLS {
     public static String removeRepository;
     public static String switchRepositoryDialogTitle;
     public static String switchRepository;
+    public static String loadingProjectOverview;
 
     static {
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);

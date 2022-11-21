@@ -24,8 +24,8 @@ public class TestRepository extends AbstractRepository{
 
     public TestRepository(IWorkspace workspace, IProject project,
             ExtensionContextInjectionFactory extensionContextInjectionFactory,
-            JDTTypeHierarchyManager jdtTypeHierarchyManager, IEventBroker eventBroker, boolean migrationEnabled) {
-        super(workspace, project, extensionContextInjectionFactory, jdtTypeHierarchyManager, eventBroker, migrationEnabled);
+            JDTTypeHierarchyManager jdtTypeHierarchyManager, IEventBroker eventBroker) {
+        super(workspace, project, extensionContextInjectionFactory, jdtTypeHierarchyManager, eventBroker);
     }
 
 }

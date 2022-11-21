@@ -19,6 +19,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
+import org.bonitasoft.studio.common.repository.core.BonitaProject;
 import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.ui.IDisplayable;
 import org.bonitasoft.studio.pics.Pics;
@@ -30,6 +31,7 @@ public class DisplayableAdapterFactoryTest {
     @Test
     public void should_adapt_repository_as_displayable() throws Exception {
         var repository = mock(IRepository.class); 
+        var project =  mock(BonitaProject.class); 
         when(repository.getName()).thenReturn("my project");
         when(repository.isShared()).thenReturn(true);
         

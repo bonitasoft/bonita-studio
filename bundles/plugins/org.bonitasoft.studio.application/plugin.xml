@@ -1497,6 +1497,11 @@
             id="org.bonitasoft.studio.application.extension.perspective"
             name="%projectExtensionPerspective">
       </perspective>
+      <perspective
+            class="org.bonitasoft.studio.application.perspective.ComparePerspectiveFactory"
+            id="org.bonitasoft.studio.perspective.compare"
+            name="Comapre perspective">
+      </perspective>
    </extension>
    <extension
          point="org.eclipse.ui.perspectiveExtensions">
@@ -1672,6 +1677,44 @@
                   type="org.bonitasoft.studio.common.ui.IDisplayable">
             </adapter>
          </factory>
+      </extension>
+      <extension
+            point="org.eclipse.team.core.fileTypes">
+         <fileTypes
+               extension="proc"
+               type="text">
+         </fileTypes>
+         <extension
+               point="org.eclipse.team.core.ignore">
+            <ignore
+                  enabled="true"
+                  pattern="provided-libs">
+            </ignore>
+            <ignore
+                  enabled="true"
+                  pattern="bin">
+            </ignore>
+            <ignore
+                  enabled="true"
+                  pattern="DefaultUserScript.groovy">
+            </ignore>
+            <ignore
+                  enabled="true"
+                  pattern=".settings">
+            </ignore>
+            <ignore
+                  enabled="true"
+                  pattern="providedscripts">
+            </ignore>
+            <ignore
+                  enabled="true"
+                  pattern=".classpath">
+            </ignore>
+            <ignore
+                  enabled="true"
+                  pattern="Provided">
+            </ignore>
+         </extension>
       </extension>
 
 </plugin>

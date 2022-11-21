@@ -11,6 +11,7 @@ Bundle-Localization: plugin
 Export-Package: org.bonitasoft.plugin.analyze.report.model,
  org.bonitasoft.studio.common.repository,
  org.bonitasoft.studio.common.repository.core,
+ org.bonitasoft.studio.common.repository.core.internal,
  org.bonitasoft.studio.common.repository.core.job,
  org.bonitasoft.studio.common.repository.core.maven,
  org.bonitasoft.studio.common.repository.core.maven.contribution,

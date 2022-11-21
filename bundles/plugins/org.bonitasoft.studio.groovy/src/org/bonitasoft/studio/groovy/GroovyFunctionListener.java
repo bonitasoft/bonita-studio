@@ -14,8 +14,8 @@
  */
 package org.bonitasoft.studio.groovy;
 
-import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.IBonitaProjectListener;
+import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.groovy.library.FunctionsRepositoryFactory;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -25,7 +25,7 @@ import org.eclipse.core.runtime.jobs.Job;
 public class GroovyFunctionListener implements IBonitaProjectListener {
 
     @Override
-    public void projectOpened(AbstractRepository repository, IProgressMonitor monitor) {
+    public void projectOpened(IRepository repository, IProgressMonitor monitor) {
         new Job("Build Groovy code proposals...") {
 
             @Override
@@ -38,7 +38,7 @@ public class GroovyFunctionListener implements IBonitaProjectListener {
     }
 
     @Override
-    public void projectClosed(AbstractRepository repository, IProgressMonitor monitor) {
+    public void projectClosed(IRepository repository, IProgressMonitor monitor) {
 
     }
 

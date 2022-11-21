@@ -18,7 +18,9 @@ import java.util.Objects;
 
 import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
 import org.bonitasoft.studio.common.ProductVersion;
+import org.bonitasoft.studio.common.Strings;
 import org.bonitasoft.studio.common.repository.core.maven.model.ProjectDefaultConfiguration;
+import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
 import org.bonitasoft.studio.common.repository.core.migration.MigrationStep;
 import org.bonitasoft.studio.common.repository.core.migration.report.MigrationReport;
 import org.eclipse.core.resources.IProject;
@@ -32,18 +34,19 @@ public class UpdateBonitaRuntimeVersionInPomStep implements MigrationStep {
 
     @Override
     public MigrationReport run(IProject project, IProgressMonitor monitor) throws CoreException {
-        var model = loadMavenModel(project);
-        var properties = model.getProperties();
-        if (!properties.containsKey(ProjectDefaultConfiguration.BONITA_RUNTIME_VERSION)) {
+        var metadata = ProjectMetadata.read(project, monitor);
+        String bonitaRuntimeVersion = metadata.getBonitaRuntimeVersion();
+        if (Strings.isNullOrEmpty(bonitaRuntimeVersion)) {
             throw new CoreException(new Status(IStatus.ERROR,
                     UpdateBonitaRuntimeVersionInPomStep.class,
                     String.format("The %s property has not been found and cannot be updated.",
                             ProjectDefaultConfiguration.BONITA_RUNTIME_VERSION)));
         }
-        var bonitaRuntimeVersion = properties.getProperty(ProjectDefaultConfiguration.BONITA_RUNTIME_VERSION);
         var currentBonitaMinorVersion = ProductVersion.minorVersion();
         if (!Objects.equals(minorVersion(bonitaRuntimeVersion), currentBonitaMinorVersion)) {
             var report = new MigrationReport();
+            var model = loadParentMavenModel(project);
+            var properties = model.getProperties();
             properties.setProperty(ProjectDefaultConfiguration.BONITA_RUNTIME_VERSION, ProductVersion.BONITA_RUNTIME_VERSION);
             saveMavenModel(model, project);
             report.updated(String.format("`%s` has been updated from `%s` to `%s`.",

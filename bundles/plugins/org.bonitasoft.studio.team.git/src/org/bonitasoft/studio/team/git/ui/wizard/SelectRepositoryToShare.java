@@ -9,13 +9,14 @@
 package org.bonitasoft.studio.team.git.ui.wizard;
 
 import org.bonitasoft.studio.common.repository.RepositoryManager;
-import org.bonitasoft.studio.common.repository.model.IRepository;
+import org.bonitasoft.studio.common.repository.core.BonitaProject;
+import org.bonitasoft.studio.common.repository.core.MultiModuleProject;
 import org.bonitasoft.studio.team.git.i18n.Messages;
 import org.bonitasoft.studio.ui.widget.TextWidget;
 import org.bonitasoft.studio.ui.wizard.ControlSupplier;
 import org.eclipse.core.databinding.DataBindingContext;
-import org.eclipse.core.databinding.beans.PojoProperties;
-import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.core.databinding.beans.typed.PojoProperties;
+import org.eclipse.core.runtime.Adapters;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.wizard.IWizardContainer;
@@ -25,7 +26,12 @@ import org.eclipse.swt.widgets.Control;
 
 public class SelectRepositoryToShare implements ControlSupplier {
 
-    private String repositoryName;
+    private String projectId;
+    private BonitaProject project;
+
+    public SelectRepositoryToShare(BonitaProject project) {
+        this.project = project;
+    }
 
     /*
      * (non-Javadoc)
@@ -39,35 +45,37 @@ public class SelectRepositoryToShare implements ControlSupplier {
         composite.setLayout(GridLayoutFactory.swtDefaults().create());
         composite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 
-        IObservableValue repositoryNameObservable = PojoProperties.value("repositoryName").observe(this);
-        String[] listAvailableRepositories = listAvailableRepositories();
+        var repositoryNameObservable = PojoProperties.value("projectId").observe(this);
+        repositoryNameObservable.setValue(project.getId());
         new TextWidget.Builder()
                 .withLabel(Messages.repository)
                 .labelAbove()
                 .fill()
                 .useNativeRender()
                 .grabHorizontalSpace()
+                .readOnly(project instanceof MultiModuleProject)
                 .bindTo(repositoryNameObservable)
-                .withValidator(new ShareableRepositoryValidator(listAvailableRepositories))
+                .withValidator(new ShareableRepositoryValidator(existingProjectIds()))
                 .inContext(ctx)
                 .createIn(composite);
 
         return composite;
     }
 
-    private String[] listAvailableRepositories() {
+    private String[] existingProjectIds() {
         return RepositoryManager.getInstance().getAllRepositories().stream()
                 .filter(repo -> !repo.isShared())
-                .map(IRepository::getName)
+                .map(repo -> Adapters.adapt(repo,BonitaProject.class))
+                .map(BonitaProject::getId)
                 .toArray(String[]::new);
     }
 
-    public String getRepositoryName() {
-        return repositoryName;
+    public String getProjectId() {
+        return projectId;
     }
 
-    public void setRepositoryName(String repositoryName) {
-        this.repositoryName = repositoryName;
+    public void setProjectId(String projectId) {
+        this.projectId = projectId;
     }
 
 }

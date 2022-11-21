@@ -17,6 +17,7 @@ import org.bonitasoft.studio.common.repository.core.DatabaseHandler;
 import org.bonitasoft.studio.common.repository.core.maven.AddDependencyOperation;
 import org.bonitasoft.studio.connectors.repository.DatabaseConnectorPropertiesFileStore;
 import org.bonitasoft.studio.connectors.repository.DatabaseConnectorPropertiesRepositoryStore;
+import org.bonitasoft.studio.connectors.util.DriverConstants;
 import org.bonitasoft.studio.dependencies.repository.DependencyRepositoryStore;
 import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.swtbot.framework.application.BotApplicationWorkbenchWindow;
@@ -71,7 +72,8 @@ public class AdvancedDBConnectorsTest {
         conf.setAutoAddDriver(true);
         var dependencyRepositoryStore = RepositoryManager.getInstance().getRepositoryStore(DependencyRepositoryStore.class);
         Await.waitUntil(() -> {
-            return dependencyRepositoryStore.findDependencyByName("h2-1.4.199.jar").isPresent();
+            return dependencyRepositoryStore.findDependencyByName("h2-1.4.199.jar").isPresent() 
+                    && repositoryStore.findByDriverClassName(DriverConstants.H2_DRIVER_CLASSNAME).isPresent();
         },10000, 500);
     }
 

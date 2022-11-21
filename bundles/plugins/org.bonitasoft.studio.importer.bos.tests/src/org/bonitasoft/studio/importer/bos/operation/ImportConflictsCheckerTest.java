@@ -36,6 +36,7 @@ import org.bonitasoft.studio.importer.bos.model.AbstractFileModel;
 import org.bonitasoft.studio.importer.bos.model.AbstractFolderModel;
 import org.bonitasoft.studio.importer.bos.model.BosArchive;
 import org.bonitasoft.studio.importer.bos.model.BosArchiveTest;
+import org.bonitasoft.studio.importer.bos.model.DefaultBosArchiveEntryHandler;
 import org.bonitasoft.studio.importer.bos.model.ImportArchiveModel;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -165,7 +166,9 @@ public class ImportConflictsCheckerTest {
     private BosArchive newBosArchive(File archiveFile) throws ZipException, IOException {
         final BosArchive bosArchive = spy(new BosArchive(archiveFile));
         doReturn(true).when(bosArchive).canImport(notNull());
-        doReturn(Status.OK_STATUS).when(bosArchive).validateFile(any(), any());
+        var entryHandler = spy(new DefaultBosArchiveEntryHandler(archiveFile));
+        doReturn(entryHandler).when(bosArchive).getBosArchiveEntryHandler();
+        doReturn(Status.OK_STATUS).when(entryHandler).validateFile(any(), any());
         return bosArchive;
     }
 

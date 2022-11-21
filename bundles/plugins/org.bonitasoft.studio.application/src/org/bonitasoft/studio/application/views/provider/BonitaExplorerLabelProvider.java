@@ -118,9 +118,16 @@ public class BonitaExplorerLabelProvider extends JavaNavigatorLabelProvider {
     @Override
     public StyledString getStyledText(Object element) {
         RepositoryManager repositoryManager = RepositoryManager.getInstance();
-        if (RepositoryManager.getInstance().getCurrentRepository().filter(IRepository::isLoaded).isEmpty()) {
+        if (repositoryManager.getCurrentRepository().filter(IRepository::isLoaded).isEmpty()) {
             return super.getStyledText(element);
         }
+        if (repositoryManager.getCurrentRepository()
+                .map(IRepository::getProject)
+                .filter(currentProject -> Objects.equals(currentProject, element))
+                .isPresent()) {
+            return Adapters.adapt(repositoryManager.getCurrentRepository().get(), IDisplayable.class).getStyledString();
+        }
+
         if (!(element instanceof IPackageFragment)) {
             Optional<IRepositoryStore<? extends IRepositoryFileStore>> repositoryStore = repositoryManager
                     .getRepositoryStore(element);

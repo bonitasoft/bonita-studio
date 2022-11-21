@@ -112,13 +112,14 @@ public class BotImportBOSDialog extends BotWizardDialog {
         return new File(FileLocator.toFileURL(bosURLInClasspath).getFile()).getAbsolutePath();
     }
 
-    public BotImportBOSDialog newProject(String repoName) {
+    public BotImportBOSDialog newProject(String id, String name) {
         bot.waitUntil(
                 Conditions.widgetIsEnabled(bot.radio(org.bonitasoft.studio.importer.i18n.Messages.aNewRepository)));
         bot.radio(org.bonitasoft.studio.importer.i18n.Messages.aNewRepository).click();
+        bot.textWithId(SWTBOT_ID_NEW_PROJECT_NAME_TEXT).setText(name);
         bot.waitUntil(Conditions.widgetIsEnabled(bot.toolbarButtonWithId(SWTBOT_ID_TRANSACTIONAL_TEXT_EDIT_BUTTON)));
         bot.toolbarButtonWithId(SWTBOT_ID_TRANSACTIONAL_TEXT_EDIT_BUTTON).click();
-        bot.textWithId(SWTBOT_ID_NEW_PROJECT_NAME_TEXT).setText(repoName);
+        bot.textWithId(SWTBOT_ID_NEW_PROJECT_ARTIFACTID_TEXT).setText(id);
         bot.toolbarButtonWithId(SWTBOT_ID_TRANSACTIONAL_TEXT_OK_BUTTON).click();
         return this;
     }

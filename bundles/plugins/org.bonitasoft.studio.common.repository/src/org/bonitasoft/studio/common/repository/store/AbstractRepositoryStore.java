@@ -233,7 +233,7 @@ public abstract class AbstractRepositoryStore<T extends IRepositoryFileStore<?>>
     protected T doImportArchiveData(ImportArchiveData importArchiveData, IProgressMonitor monitor)
             throws CoreException {
         try {
-            return importInputStream(importArchiveData.getName().split("/", 3)[2], importArchiveData.getInputStream());
+            return importInputStream(importArchiveData.getProjectRelativePath(), importArchiveData.getInputStream());
         } catch (final IOException e) {
             throw new CoreException(new Status(IStatus.ERROR, CommonRepositoryPlugin.PLUGIN_ID, e.getMessage(), e));
         }

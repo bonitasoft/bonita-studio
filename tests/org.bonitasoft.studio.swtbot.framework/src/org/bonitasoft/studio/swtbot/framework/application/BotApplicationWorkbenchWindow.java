@@ -34,7 +34,7 @@ import org.bonitasoft.studio.swtbot.framework.la.OpenApplicationWizardBot;
 import org.bonitasoft.studio.swtbot.framework.la.SelectApplicationToDeployWizardBot;
 import org.bonitasoft.studio.swtbot.framework.preferences.BotPreferencesDialog;
 import org.bonitasoft.studio.swtbot.framework.team.git.BotGitCloneDialog;
-import org.bonitasoft.studio.swtbot.framework.team.git.BotShareRepoDialog;
+import org.bonitasoft.studio.swtbot.framework.team.git.BotGitInitDialog;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
 import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
@@ -240,10 +240,10 @@ public class BotApplicationWorkbenchWindow extends AbstractBotMenu {
         return new BotProjectOverviewEditor(bot);
     }
 
-    public BotShareRepoDialog shareWithGit() {
+    public BotGitInitDialog shareWithGit() {
         waitForMainShell(bot);
         bot.menu("File").menu("Share with Git").click();
-        return new BotShareRepoDialog(bot);
+        return new BotGitInitDialog(bot);
     }
     
     public BotGitCloneDialog gitClone() {

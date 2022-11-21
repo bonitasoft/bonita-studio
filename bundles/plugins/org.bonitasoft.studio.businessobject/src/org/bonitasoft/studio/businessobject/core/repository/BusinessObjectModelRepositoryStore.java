@@ -43,6 +43,7 @@ import org.bonitasoft.studio.common.model.validator.XMLModelCompatibilityValidat
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.IBonitaProjectListener;
 import org.bonitasoft.studio.common.repository.core.migration.report.MigrationReport;
+import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.common.repository.store.AbstractRepositoryStore;
 import org.eclipse.core.runtime.CoreException;
@@ -246,7 +247,7 @@ public class BusinessObjectModelRepositoryStore<F extends AbstractBDMFileStore<?
     }
 
     @Override
-    public void projectOpened(AbstractRepository repository, IProgressMonitor monitor) {
+    public void projectOpened(IRepository repository, IProgressMonitor monitor) {
         monitor.setTaskName(Messages.generatingJarFromBDMModel);
         F fStore = getChild(BusinessObjectModelFileStore.BOM_FILENAME, true);
         if (fStore != null) {
@@ -255,7 +256,7 @@ public class BusinessObjectModelRepositoryStore<F extends AbstractBDMFileStore<?
     }
 
     @Override
-    public void projectClosed(AbstractRepository repository, IProgressMonitor monitor) {
+    public void projectClosed(IRepository repository, IProgressMonitor monitor) {
         //Nothing to do
     }
 

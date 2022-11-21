@@ -34,6 +34,7 @@ import org.bonitasoft.studio.swtbot.framework.la.BotApplicationEditor;
 import org.bonitasoft.studio.swtbot.framework.organization.BotOrganizationEditor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.ToolItem;
+import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.exceptions.WidgetNotFoundException;
 
@@ -72,6 +73,8 @@ public class BotProjectOverviewEditor {
     }
 
     public BotExtensionWizard addConnectorExtension() {
+        bot.waitUntilWidgetAppears(Conditions.waitForWidget(allOf(widgetOfType(ToolItem.class),
+                withId(SWTBotConstants.SWTBOT_ID_ADD_EXTENSION_DROPDOWN), withStyle(SWT.DROP_DOWN, "SWT.DROP_DOWN"))));
         bot.toolbarDropDownButtonWithId(SWTBotConstants.SWTBOT_ID_ADD_EXTENSION_DROPDOWN)
                 .menuItem(Messages.addConnector)
                 .click();
@@ -87,14 +90,16 @@ public class BotProjectOverviewEditor {
     public BotProcessDiagramPerspective createDiagram() {
         int nbEditorBefore = bot.editors().size();
         bot.toolbarButtonWithId(SWTBotConstants
-                .createArtifactButtonId(org.bonitasoft.studio.diagram.custom.i18n.Messages.dashboardDiagramName)).click();
+                .createArtifactButtonId(org.bonitasoft.studio.diagram.custom.i18n.Messages.dashboardDiagramName))
+                .click();
         waitForEditor(nbEditorBefore, 30000, 100);
         return new BotProcessDiagramPerspective(bot);
     }
 
     public BotProcessDiagramPerspective openDiagram(String diagramFileName) {
         bot.toolbarButtonWithId(
-                SWTBotConstants.extensionCardId(org.bonitasoft.studio.diagram.custom.i18n.Messages.dashboardDiagramName))
+                SWTBotConstants
+                        .extensionCardId(org.bonitasoft.studio.diagram.custom.i18n.Messages.dashboardDiagramName))
                 .click();
         waitForToolbarButton(SWTBotConstants.openArtifactButtonId(diagramFileName));
         int nbEditorBefore = bot.editors().size();
@@ -113,7 +118,8 @@ public class BotProjectOverviewEditor {
 
     public BotBdmEditor openBdm() {
         int nbEditorBefore = bot.editors().size();
-        bot.toolbarButtonWithId(SWTBotConstants.openArtifactButtonId(BusinessObjectModelFileStore.BOM_FILENAME)).click();
+        bot.toolbarButtonWithId(SWTBotConstants.openArtifactButtonId(BusinessObjectModelFileStore.BOM_FILENAME))
+                .click();
         waitForEditor(nbEditorBefore, 10000, 100);
         return new BotBdmEditor(bot);
     }

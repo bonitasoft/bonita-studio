@@ -14,6 +14,7 @@ import java.util.function.BooleanSupplier;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.core.BonitaProject;
 import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.ui.PlatformUtil;
 import org.bonitasoft.studio.pics.Pics;
@@ -294,7 +295,7 @@ public class MenuContributionItem extends ContributionItem {
         ShareGitProject shareGitProject = new ShareGitProject();
         createMenu(menu,
                 Messages.shareWithGit,
-                e -> shareGitProject.execute(getProject()),
+                e -> shareGitProject.execute(getProject().getAdapter(BonitaProject.class)),
                 () -> shareGitProject.canExecute(getProject()),
                 Pics.getImage("git.png", TeamGitPlugin.getDefault()));
     }
