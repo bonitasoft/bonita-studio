@@ -26,6 +26,7 @@ import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.store.LocalDependenciesStore;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Adapters;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
@@ -40,10 +41,12 @@ public class MultiModuleBonitaProjectImplTest {
     private NullProgressMonitor monitor = new NullProgressMonitor();
     private ProjectMetadata metadata;
     private MultiModuleBonitaProjectImpl project;
+    private String projectId;
 
     @Before
     public void createRepository() throws Exception {
         metadata = ProjectMetadata.defaultMetadata();
+        projectId = metadata.getArtifactId();
         repository = RepositoryManager.getInstance().newRepository(metadata.getProjectName());
         repository.create(metadata, monitor);
         project = (MultiModuleBonitaProjectImpl) Adapters.adapt(repository, BonitaProject.class);
@@ -89,7 +92,7 @@ public class MultiModuleBonitaProjectImplTest {
 
         var eclipseProject = project.getAdapter(IProject.class);
         assertThat(eclipseProject.exists()).isFalse();
-        assertThat(project.getParentProject().exists()).isFalse();
+        assertThat(ResourcesPlugin.getWorkspace().getRoot().getProject(projectId).exists()).isFalse();
     }
 
     @Test
@@ -101,6 +104,7 @@ public class MultiModuleBonitaProjectImplTest {
 
         var currentMetadata = project.getProjectMetadata(monitor);
         assertThat(currentMetadata.getArtifactId()).isEqualTo("some-new-id");
+        assertThat(ResourcesPlugin.getWorkspace().getRoot().getProject(projectId).exists()).isFalse();
     }
 
     @Test
