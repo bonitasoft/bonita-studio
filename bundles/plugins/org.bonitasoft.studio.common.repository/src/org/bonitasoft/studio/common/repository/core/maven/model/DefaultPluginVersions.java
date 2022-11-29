@@ -29,13 +29,38 @@ public interface DefaultPluginVersions {
     
     static final String MAVEN_INSTALL_PLUGIN = "maven-install-plugin";
     static final String MAVEN_INSTALL_PLUGIN_VERSION = "3.0.0-M1";
-
+    
+    static final String MAVEN_COMPILER_PLUGIN = "maven-compiler-plugin";
+    static final String MAVEN_COMPILER_PLUGIN_VERSION = "3.10.1";
+    
+    static final String MAVEN_SHADE_PLUGIN = "maven-shade-plugin";
+    static final String MAVEN_SHADE_PLUGIN_VERSION = "3.4.1";
+    
+    static final String MAVEN_SOURCE_PLUGIN = "maven-source-plugin";
+    static final String MAVEN_SOURCE_PLUGIN_VERSION = "3.2.1";
+    
+    static final String MAVEN_DEPLOY_PLUGIN = "maven-deploy-plugin";
+    static final String MAVEN_DEPLOY_PLUGIN_VERSION = "3.0.0";
+    
+    static final String MAVEN_CLEAN_PLUGIN = "maven-clean-plugin";
+    static final String MAVEN_CLEAN_PLUGIN_VERSION = "3.2.0";
+    
+    static final String MAVEN_RESOURCES_PLUGIN = "maven-resources-plugin";
+    static final String MAVEN_RESOURCES_PLUGIN_VERSION = "3.3.0";
+    
+    static final String MAVEN_JAR_PLUGIN = "maven-jar-plugin";
+    static final String MAVEN_JAR_PLUGIN_VERSION = "3.3.0";
+    
+    static final String FLATTEN_MAVEN_PLUGIN = "flatten-maven-plugin";
+    static final String FLATTEN_MAVEN_PLUGIN_VERSION = "1.3.0";
+    
     static final String BONITA_PROJECT_MAVEN_PLUGIN_ARTIFACT_ID = "bonita-project-maven-plugin";
-    static final String BONITA_PROJECT_MAVEN_PLUGIN_DEFAULT_VERSION = "0.0.6";
+    static final String BONITA_PROJECT_MAVEN_PLUGIN_DEFAULT_VERSION = "0.1.0-SNAPSHOT";
 
     static final String BUILD_HELPER_MAVEN_PLUGIN = "build-helper-maven-plugin";
-    static final String BUILD_HELPER_MAVEN_PLUGIN_VERSION = "3.2.0";
-    static final String MAVEN_DEPENDENCY_PLUGIN_VERSION = "3.1.2";
+    static final String BUILD_HELPER_MAVEN_PLUGIN_VERSION = "3.3.0";
+    
+    static final String MAVEN_DEPENDENCY_PLUGIN_VERSION = "3.3.0";
     
     static final String RUNTIME_BOM_GROUP_ID = "org.bonitasoft.runtime";
     static final String RUNTIME_BOM_ARTIFACT_ID = "bonita-runtime-bom";

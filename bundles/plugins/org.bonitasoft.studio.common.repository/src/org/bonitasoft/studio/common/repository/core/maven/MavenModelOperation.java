@@ -38,6 +38,12 @@ public abstract class MavenModelOperation implements IWorkspaceRunnable {
     private boolean disableAnalyze;
 
     protected boolean modelUpdated = false;
+    
+    private IProject project;
+    
+    public void setProject(IProject project) {
+        this.project = project;
+    }
 
     protected Model readModel(IProject project) throws CoreException {
         return helper.getMavenModel(project);
@@ -84,7 +90,7 @@ public abstract class MavenModelOperation implements IWorkspaceRunnable {
     }
 
     protected IProject getCurrentProject() {
-        return RepositoryManager.getInstance().getCurrentRepository().map(IRepository::getProject).orElse(null);
+        return project != null ? project : RepositoryManager.getInstance().getCurrentRepository().map(IRepository::getProject).orElse(null);
     }
 
     protected RepositoryAccessor getRepositoryAccessor() {

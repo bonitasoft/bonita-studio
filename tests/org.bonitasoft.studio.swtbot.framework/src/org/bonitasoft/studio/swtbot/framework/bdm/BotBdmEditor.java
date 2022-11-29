@@ -14,6 +14,8 @@
  */
 package org.bonitasoft.studio.swtbot.framework.bdm;
 
+import static org.eclipse.swtbot.eclipse.finder.matchers.WidgetMatcherFactory.withPartId;
+
 import org.bonitasoft.studio.businessobject.editor.editor.ui.contribution.DeployContributionItem;
 import org.bonitasoft.studio.businessobject.i18n.Messages;
 import org.bonitasoft.studio.swtbot.framework.BotBase;
@@ -36,7 +38,8 @@ public class BotBdmEditor extends BotBase {
 
     public BotBdmEditor(SWTGefBot bot) {
         super(bot);
-        this.editor = bot.multipageEditorById(BDM_EDITOR_ID);
+        bot.waitUntil(Conditions.waitForEditor(withPartId(BDM_EDITOR_ID)), 15000); 
+        this.editor = bot.multipageEditorById(BDM_EDITOR_ID); 
         new ProjectExplorerBot(bot).bdm();
         this.botBdmModelEditor = new BotBdmModelEditor(bot, editor, this);
         this.botBdmConstraintsEditor = new BotBdmConstraintsEditor(bot, editor, this);

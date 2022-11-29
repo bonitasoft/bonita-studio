@@ -18,7 +18,7 @@ package org.bonitasoft.studio.common.repository.core;
 
 import java.util.Optional;
 
-import org.bonitasoft.studio.common.repository.core.maven.migration.model.GAV;
+import org.bonitasoft.studio.common.repository.core.maven.model.GAV;
 
 public interface LocalDependencyInputStreamSupplier {
 

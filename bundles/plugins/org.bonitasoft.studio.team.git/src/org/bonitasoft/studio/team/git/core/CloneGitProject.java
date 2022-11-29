@@ -23,6 +23,7 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.ParameterizedCommand;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.e4.core.commands.ECommandService;
 import org.eclipse.e4.core.commands.EHandlerService;
@@ -74,7 +75,13 @@ public class CloneGitProject extends AbstractHandler {
                         BonitaStudioLog.error(e);
                     }
                 }
-                var metadata = ProjectMetadata.read(project, new NullProgressMonitor());
+                ProjectMetadata metadata;
+                try {
+                    metadata = ProjectMetadata.read(project, new NullProgressMonitor());
+                } catch (CoreException e) {
+                    BonitaStudioLog.error(e);
+                    return;
+                }
                 if (new MessageDialog(activeShell, Messages.repositoryClonedTitle, null,
                         !wizard.hasBeenMigrated() ? String.format(Messages.repositoryClonedMsg, metadata.getName())
                                 : migrationAfterCloneMessage(wizard, metadata.getName()),

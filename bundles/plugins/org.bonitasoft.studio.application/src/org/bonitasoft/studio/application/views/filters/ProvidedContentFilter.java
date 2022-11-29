@@ -14,7 +14,6 @@
  */
 package org.bonitasoft.studio.application.views.filters;
 
-import java.io.IOException;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -23,8 +22,6 @@ import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.BonitaProjectNature;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepository;
-import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
-import org.bonitasoft.studio.designer.core.repository.WebWidgetFileStore;
 import org.bonitasoft.studio.designer.core.repository.WebWidgetRepositoryStore;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -57,6 +54,7 @@ public class ProvidedContentFilter extends ViewerFilter {
         HIDDEN_RESOURCES.add(Path.fromOSString("bin"));
         HIDDEN_RESOURCES.add(Path.fromOSString("target"));
         HIDDEN_RESOURCES.add(Path.fromOSString("pom.xml"));
+        HIDDEN_RESOURCES.add(Path.fromOSString("bdm/pom.xml"));
     }
 
     @Override

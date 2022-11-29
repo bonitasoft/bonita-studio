@@ -20,19 +20,19 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.Collection;
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.apache.maven.model.Model;
 import org.bonitasoft.studio.common.ProductVersion;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.core.maven.MavenProjectHelper;
 import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
 import org.bonitasoft.studio.common.repository.core.migration.BonitaProjectMigrator;
 import org.bonitasoft.studio.common.repository.core.migration.report.MigrationReport;
-import org.bonitasoft.studio.common.ui.PlatformUtil;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspaceRunnable;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -40,17 +40,15 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.m2e.core.MavenPlugin;
-import org.eclipse.m2e.core.project.IMavenProjectImportResult;
 import org.eclipse.m2e.core.project.IProjectConfigurationManager;
+import org.eclipse.m2e.core.project.LocalProjectScanner;
 import org.eclipse.m2e.core.project.MavenProjectInfo;
 import org.eclipse.m2e.core.project.ProjectImportConfiguration;
 
 public class ImportBonitaProjectOperation implements IWorkspaceRunnable {
 
     // AVOID IMPORTING NO SUPPORTED MODULES
-    private static final Set<String> MODULES_TO_IMPORT = Set.of("app");
-    private final Set<String> builders = new HashSet<>();
-    private final List<String> natures = new ArrayList<>();
+    private static final Set<String> MODULES_TO_IMPORT = Set.of("app", "bdm");
     private MigrationReport report = MigrationReport.emptyReport();
     private File projectRoot;
     private IProject project;
@@ -63,7 +61,8 @@ public class ImportBonitaProjectOperation implements IWorkspaceRunnable {
 
     @Override
     public void run(final IProgressMonitor monitor) throws CoreException {
-        if (projectRoot == null || !projectRoot.exists() || !projectRoot.toPath().resolve("pom.xml").toFile().exists()) {
+        if (projectRoot == null || !projectRoot.exists()
+                || !projectRoot.toPath().resolve("pom.xml").toFile().exists()) {
             throw new CoreException(Status.error(String.format("No project found at %s", projectRoot)));
         }
         var originalPomFile = projectRoot.toPath().resolve("pom.xml").toFile();
@@ -77,16 +76,28 @@ public class ImportBonitaProjectOperation implements IWorkspaceRunnable {
         metadata.setIsMultiModule(!modules.isEmpty() && modules.stream().anyMatch(this::shouldImportModule));
         var projectId = projectId(modules, metadata.getArtifactId());
         IProject targetProject = ResourcesPlugin.getWorkspace().getRoot().getProject(projectId);
-        if(targetProject.exists()) {
-            throw new CoreException(Status.error(String.format("A project with id %s already exists in the workspace.", projectId)));
+        if (targetProject.exists()) {
+            throw new CoreException(
+                    Status.error(String.format("A project with id %s already exists in the workspace.", projectId)));
         }
         File projectInWs = ResourcesPlugin.getWorkspace().getRoot().getLocation().append(projectId).toFile();
         try {
             copyDirectory(projectRoot.getAbsolutePath(), projectInWs.getAbsolutePath());
         } catch (IOException e) {
-            throw new CoreException(Status.error("Failed to copy project in workspace.",e));
+            throw new CoreException(Status.error("Failed to copy project in workspace.", e));
         }
         var pomFile = projectInWs.toPath().resolve("pom.xml").toFile();
+        var localProjectScanner = new LocalProjectScanner(
+                ResourcesPlugin.getWorkspace().getRoot().getLocation().toFile(),
+                pomFile.getParentFile().getAbsolutePath(),
+                false,
+                MavenPlugin.getMavenModelManager());
+
+        try {
+            localProjectScanner.run(monitor);
+        } catch (InterruptedException e1) {
+            BonitaStudioLog.error(e1);
+        }
         modules = mavenModel.getModules().stream()
                 .map(module -> pomFile.getParentFile().toPath().resolve(module).resolve("pom.xml").toFile())
                 .filter(File::exists)
@@ -111,30 +122,11 @@ public class ImportBonitaProjectOperation implements IWorkspaceRunnable {
                             .build(),
                     AbstractRepository.NULL_PROGRESS_MONITOR);
         } else {
-            var results = new ArrayList<IMavenProjectImportResult>();
-
-            // Import parent project
-            var projectImportConfiguration = new ProjectImportConfiguration();
-            projectImportConfiguration.setProjectNameTemplate(projectId);
-            results.addAll(projectConfigurationManager.importProjects(
-                    List.of(new MavenProjectInfo(null, pomFile, null, null)),
-                    projectImportConfiguration, monitor));
-
-            // Import modules projects
-            for (var module : modules) {
-                if (shouldImportModule(module)) {
-                    var moduleMetadata = ProjectMetadata.read(module.getPomFile());
-                    projectImportConfiguration = new ProjectImportConfiguration();
-                    if (Objects.equals(projectId, moduleMetadata.getArtifactId())) {
-                        projectImportConfiguration.setProjectNameTemplate(moduleMetadata.getProjectName());
-                    }
-                    results.addAll(projectConfigurationManager.importProjects(
-                            List.of(module),
-                            projectImportConfiguration, monitor));
-                }
-            }
-
-            for (var res : results) {
+            var projectImportConfiguration = new BonitaProjectImportConfiguration(projectId);
+            var importResult = projectConfigurationManager.importProjects(
+                    flatten(localProjectScanner.getProjects()),
+                    projectImportConfiguration, monitor);
+            for (var res : importResult) {
                 if (res.getProject() != null && res.getProject().getName().endsWith("-app")) {
                     project = res.getProject();
                     // TODO
@@ -168,19 +160,30 @@ public class ImportBonitaProjectOperation implements IWorkspaceRunnable {
         }
     }
     
-    private static void copyDirectory(String sourceDirectoryLocation, String destinationDirectoryLocation) 
+    private static Collection<MavenProjectInfo> flatten(Collection<MavenProjectInfo> projects) {
+        var flatList = new ArrayList<MavenProjectInfo>();
+        for (MavenProjectInfo t : projects) {
+            flatList.add(t);
+            if (t.getProjects() != null) {
+                flatList.addAll((List<MavenProjectInfo>) flatten(t.getProjects()));
+            }
+        }
+        return flatList;
+    }
+
+    private static void copyDirectory(String sourceDirectoryLocation, String destinationDirectoryLocation)
             throws IOException {
-              Files.walk(Paths.get(sourceDirectoryLocation))
+        Files.walk(Paths.get(sourceDirectoryLocation))
                 .forEach(source -> {
                     Path destination = Paths.get(destinationDirectoryLocation, source.toString()
-                      .substring(sourceDirectoryLocation.length()));
+                            .substring(sourceDirectoryLocation.length()));
                     try {
                         Files.copy(source, destination);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
                 });
-          }
+    }
 
     private boolean shouldImportModule(MavenProjectInfo module) {
         return MODULES_TO_IMPORT.contains(module.getPomFile().getParentFile().getName());
@@ -201,14 +204,26 @@ public class ImportBonitaProjectOperation implements IWorkspaceRunnable {
         return project;
     }
 
-    public ImportBonitaProjectOperation addBuilder(final String builderId) {
-        builders.add(builderId);
-        return this;
-    }
+    class BonitaProjectImportConfiguration extends ProjectImportConfiguration {
+        
+        private String projectId;
 
-    public ImportBonitaProjectOperation addNature(final String natureId) {
-        natures.add(natureId);
-        return this;
+        public BonitaProjectImportConfiguration(String projectId) {
+           this.projectId = projectId;
+        }
+        
+        @Override
+        public String getProjectName(Model model) {
+            if(projectId.equals(model.getArtifactId())){
+                setProjectNameTemplate(projectId+"-app");
+            }else if((projectId+"-parent").equals(model.getArtifactId())) {
+                setProjectNameTemplate(projectId);
+            }else {
+                setProjectNameTemplate("[artifactId]");
+            }
+            return super.getProjectName(model);
+        }
+        
     }
 
 }

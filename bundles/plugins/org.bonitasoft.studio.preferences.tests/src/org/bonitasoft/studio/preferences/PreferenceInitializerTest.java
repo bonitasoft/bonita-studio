@@ -14,60 +14,46 @@
  */
 package org.bonitasoft.studio.preferences;
 
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.verify;
+import static org.assertj.core.api.Assertions.assertThat;
 
-import java.util.Locale;
-
-import org.eclipse.core.runtime.preferences.IEclipsePreferences;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.ui.PreferenceConstants;
-import org.eclipse.jface.preference.IPreferenceStore;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
 
-@RunWith(MockitoJUnitRunner.class)
 public class PreferenceInitializerTest {
-
-    @Mock
-    public IPreferenceStore apiPrefStore, webPrefStore, bonitaPrefStore, jdtPrefStore, dslPreferenceStore, workbenchStore, idePreferenceStore;
-    @Mock
-    private IEclipsePreferences groovyPreferences;
 
     @Test
     public void testLegacyModeDeactivatedByDefault() throws Exception {
-        final PreferenceInitializer preferenceInitializer = spy(new PreferenceInitializer());
-        setupMocks(preferenceInitializer);
-
+        final PreferenceInitializer preferenceInitializer = new PreferenceInitializer();
         preferenceInitializer.initializeDefaultPreferences();
-
-        verify(bonitaPrefStore).setDefault(BonitaPreferenceConstants.SHOW_LEGACY_6X_MODE, false);
+        
+        assertThat(preferenceInitializer.getBonitaPreferenceStore().getDefaultBoolean(BonitaPreferenceConstants.SHOW_LEGACY_6X_MODE)).isFalse();
     }
 
     @Test
     public void should_disable_mark_occurence() throws Exception {
-        final PreferenceInitializer preferenceInitializer = spy(new PreferenceInitializer());
-        setupMocks(preferenceInitializer);
-
+        final PreferenceInitializer preferenceInitializer = new PreferenceInitializer();
         preferenceInitializer.initializeDefaultPreferences();
 
-        verify(jdtPrefStore).setValue(PreferenceConstants.EDITOR_MARK_OCCURRENCES, Boolean.FALSE);
+        assertThat(preferenceInitializer.getJdtUiPreferenceStore().getBoolean(PreferenceConstants.EDITOR_MARK_OCCURRENCES)).isFalse();
+    }
+    
+    @Test
+    public void should_ignore_missingSerialUID() throws Exception {
+        final PreferenceInitializer preferenceInitializer = new PreferenceInitializer();
+        preferenceInitializer.initializeDefaultPreferences();
+
+        assertThat(JavaCore.getOption(JavaCore.COMPILER_PB_MISSING_SERIAL_VERSION)).isEqualTo(JavaCore.IGNORE);
+    }
+    
+    @Test
+    public void should_disable_autobuild() throws Exception {
+        final PreferenceInitializer preferenceInitializer = new PreferenceInitializer();
+        preferenceInitializer.initializeDefaultPreferences();
+
+        assertThat( ResourcesPlugin.getPlugin().getPluginPreferences().getBoolean(ResourcesPlugin.PREF_AUTO_BUILDING)).isFalse();
     }
 
-
-    private void setupMocks(final PreferenceInitializer preferenceInitializer) {
-        doReturn(apiPrefStore).when(preferenceInitializer).getAPIPreferenceStore();
-        doReturn(webPrefStore).when(preferenceInitializer).getWebBrowserPreferenceStore();
-        doReturn(bonitaPrefStore).when(preferenceInitializer).getBonitaPreferenceStore();
-        doReturn(jdtPrefStore).when(preferenceInitializer).getJDTPreferenceStore();
-        doReturn(new Locale[] {}).when(preferenceInitializer).getStudioLocales();
-        doReturn(idePreferenceStore).when(preferenceInitializer).getIDEPreferenceStore();
-        doNothing().when(preferenceInitializer).setUTF8DefaultEncoding();
-        doNothing().when(preferenceInitializer).initDefaultDebugPreferences();
-        doNothing().when(preferenceInitializer).initializeWorkbenchPreferences();
-        doReturn(groovyPreferences).when(preferenceInitializer).getGroovyCorePreferenceStore();
-    }
+  
 }

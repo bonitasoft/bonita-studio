@@ -42,7 +42,7 @@ import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.core.ActiveOrganizationProvider;
 import org.bonitasoft.studio.common.repository.core.maven.DependencyGetOperation;
 import org.bonitasoft.studio.common.repository.core.maven.contribution.InstallBonitaMavenArtifactsOperation;
-import org.bonitasoft.studio.common.repository.core.maven.migration.model.GAV;
+import org.bonitasoft.studio.common.repository.core.maven.model.GAV;
 import org.bonitasoft.studio.common.repository.core.maven.repository.MavenRepositories;
 import org.bonitasoft.studio.common.ui.PlatformUtil;
 import org.bonitasoft.studio.common.ui.jface.MessageDialogWithLink;
@@ -59,7 +59,6 @@ import org.bonitasoft.studio.preferences.BonitaThemeConstants;
 import org.bonitasoft.studio.preferences.dialog.BonitaPreferenceDialog;
 import org.codehaus.groovy.eclipse.GroovyPlugin;
 import org.eclipse.core.internal.resources.Workspace;
-import org.eclipse.core.resources.IWorkspaceDescription;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.FileLocator;
@@ -445,10 +444,7 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
         disableInternalWebBrowser();
         setSystemProperties();
         configureGradleScriptContentType();
-        var description = ResourcesPlugin.getWorkspace().getDescription();
-        description.setAutoBuilding(false);
-        ResourcesPlugin.getPlugin().getPluginPreferences().setValue(ResourcesPlugin.PREF_AUTO_BUILDING, false);
-    }
+     }
 
     private void configureGradleScriptContentType() {
         // Avoid error logs to be written by the groovy eclipse editor plugin

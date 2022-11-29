@@ -21,7 +21,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import javax.inject.Inject;
@@ -76,7 +75,6 @@ import org.eclipse.ui.internal.navigator.NavigatorDecoratingLabelProvider;
 import org.eclipse.ui.internal.navigator.actions.LinkEditorAction;
 import org.eclipse.ui.navigator.CommonNavigator;
 import org.eclipse.ui.navigator.CommonViewer;
-import org.eclipse.ui.navigator.ICommonFilterDescriptor;
 import org.eclipse.ui.navigator.NavigatorActionService;
 import org.eclipse.ui.views.properties.IPropertySheetPage;
 
@@ -195,13 +193,6 @@ public class BonitaProjectExplorer extends CommonNavigator {
     private void activateNestedProjectsState() {
         getNavigatorContentService().getActivationService().activateExtensions(
                 new String[] { "org.eclipse.ui.navigator.resources.nested.nestedProjectContentProvider" }, false);
-        List<String> activeFilters = Arrays
-                .asList(getNavigatorContentService().getFilterService().getVisibleFilterDescriptors()).stream()
-                .filter(ICommonFilterDescriptor::isActiveByDefault).map(ICommonFilterDescriptor::getId)
-                .collect(Collectors.toList());
-        activeFilters.add("org.eclipse.ui.navigator.resources.nested.HideFolderWhenProjectIsShownAsNested");
-        getNavigatorContentService().getFilterService()
-                .activateFilterIdsAndUpdateViewer((activeFilters.toArray(new String[activeFilters.size()])));
     }
 
     @Override

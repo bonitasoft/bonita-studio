@@ -31,7 +31,7 @@ import org.bonitasoft.studio.common.FileUtil;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.core.maven.MavenInstallFileOperation;
-import org.bonitasoft.studio.common.repository.model.IRepository;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.CoreException;
@@ -58,35 +58,39 @@ public class InstallBDMDependenciesEventHandler implements EventHandler {
     }
 
     private void execute(final Event event) {
-        var installFileCommand = newInstallOperation();
-        BDMArtifactDescriptor artifactDescriptor = (BDMArtifactDescriptor) event.getProperty(BDM_ARTIFACT_DESCRIPTOR);
-        String groupId = artifactDescriptor.getGroupId();
-        String version = artifactDescriptor.getVersion();
-        final byte[] bdmClientJarContent = (byte[]) event.getProperty(GenerateBDMOperation.BDM_CLIENT);
-        File tmpFile = null;
-        try {
-            tmpFile = tmpFile(GenerateBDMOperation.BDM_CLIENT, bdmClientJarContent);
-            installFileCommand.installFile(groupId, GenerateBDMOperation.BDM_CLIENT, version, JAR_TYPE, null, tmpFile, new NullProgressMonitor());
-        } catch (final CoreException | IOException e) {
-            BonitaStudioLog.error(e);
-        } finally {
-            if (tmpFile != null) {
-                tmpFile.delete();
+        if (event == null || event.getProperty(GenerateBDMOperation.BDM_CLIENT) != null) {
+            var installFileCommand = newInstallOperation();
+            BDMArtifactDescriptor artifactDescriptor = (BDMArtifactDescriptor) event
+                    .getProperty(BDM_ARTIFACT_DESCRIPTOR);
+            String groupId = artifactDescriptor.getGroupId();
+            String version = artifactDescriptor.getVersion();
+            final byte[] bdmClientJarContent = (byte[]) event.getProperty(GenerateBDMOperation.BDM_CLIENT);
+            File tmpFile = null;
+            try {
+                tmpFile = tmpFile(GenerateBDMOperation.BDM_CLIENT, bdmClientJarContent);
+                installFileCommand.installFile(groupId, GenerateBDMOperation.BDM_CLIENT, version, JAR_TYPE, null,
+                        tmpFile, new NullProgressMonitor());
+            } catch (final CoreException | IOException e) {
+                BonitaStudioLog.error(e);
+            } finally {
+                if (tmpFile != null) {
+                    tmpFile.delete();
+                }
             }
-        }
 
-        final byte[] bdmDaoJarContent = (byte[]) event.getProperty(GenerateBDMOperation.BDM_DAO);
-        try {
-            tmpFile = tmpFile(GenerateBDMOperation.BDM_DAO, bdmDaoJarContent);
-            installFileCommand.installFile(groupId, GenerateBDMOperation.BDM_DAO, version, JAR_TYPE, null, tmpFile,
-                    daoPomFile(groupId, version), new NullProgressMonitor());
-        } catch (final IOException | CoreException e) {
-            BonitaStudioLog.error(e);
-        } finally {
-            if (tmpFile != null) {
-                tmpFile.delete();
+            final byte[] bdmDaoJarContent = (byte[]) event.getProperty(GenerateBDMOperation.BDM_DAO);
+            try {
+                tmpFile = tmpFile(GenerateBDMOperation.BDM_DAO, bdmDaoJarContent);
+                installFileCommand.installFile(groupId, GenerateBDMOperation.BDM_DAO, version, JAR_TYPE, null, tmpFile,
+                        daoPomFile(groupId, version), new NullProgressMonitor());
+            } catch (final IOException | CoreException e) {
+                BonitaStudioLog.error(e);
+            } finally {
+                if (tmpFile != null) {
+                    tmpFile.delete();
+                }
             }
-        }
+        } 
 
         if (shouldRunProjectUpateJob()) {
             buildProject();
@@ -111,10 +115,10 @@ public class InstallBDMDependenciesEventHandler implements EventHandler {
 
             @Override
             public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
-                var project = RepositoryManager.getInstance().getCurrentRepository().map(IRepository::getProject)
-                        .orElse(null);
-                if (project != null) {
-                    project.build(IncrementalProjectBuilder.INCREMENTAL_BUILD, monitor);
+                var project = RepositoryManager.getInstance().getCurrentProject().orElseThrow();
+                IProject eclipseProject = project.getAdapter(IProject.class);
+                if (eclipseProject != null) {
+                    eclipseProject.build(IncrementalProjectBuilder.INCREMENTAL_BUILD, monitor);
                 }
                 return Status.OK_STATUS;
             }

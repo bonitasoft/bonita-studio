@@ -8,12 +8,12 @@
  *******************************************************************************/
 package org.bonitasoft.studio.rest.api.extension.ui.wizard;
 
-import static com.google.common.base.Strings.isNullOrEmpty;
-import static com.google.common.collect.Sets.newHashSet;
 import static org.bonitasoft.studio.common.databinding.validator.ValidatorFactory.forbiddenCharactersValidator;
 import static org.bonitasoft.studio.common.databinding.validator.ValidatorFactory.mandatoryValidator;
 import static org.bonitasoft.studio.common.databinding.validator.ValidatorFactory.multiValidator;
 import static org.bonitasoft.studio.common.ui.jface.databinding.UpdateStrategyFactory.updateValueStrategy;
+
+import java.util.Set;
 
 import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.ui.jface.SWTBotConstants;
@@ -28,8 +28,7 @@ import org.bonitasoft.studio.rest.api.extension.core.RestAPIAddressResolver;
 import org.bonitasoft.studio.rest.api.extension.core.repository.RestAPIExtensionRepositoryStore;
 import org.bonitasoft.studio.rest.api.extension.core.validation.UniquePathTemplateValidator;
 import org.eclipse.core.databinding.DataBindingContext;
-import org.eclipse.core.databinding.beans.PojoObservables;
-import org.eclipse.core.databinding.beans.PojoProperties;
+import org.eclipse.core.databinding.beans.typed.PojoProperties;
 import org.eclipse.core.databinding.conversion.Converter;
 import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.core.databinding.observable.list.IObservableList;
@@ -158,7 +157,7 @@ public class NewRestAPIProjectAdvancedConfigurationPage extends WizardPage {
 
     private void addPermission(final IObservableList input, final StringListViewer permissionViewer) {
         final String[] existingPermissions = (String[]) input.toArray(new String[input.size()]);
-        final String newName = NamingUtils.generateNewName(newHashSet(existingPermissions), "newPermission", 1);
+        final String newName = NamingUtils.generateNewName(Set.of(existingPermissions), "newPermission", 1);
         input.add(newName);
         permissionViewer.editElement(newName);
     }
@@ -178,7 +177,7 @@ public class NewRestAPIProjectAdvancedConfigurationPage extends WizardPage {
 
         final ISWTObservableValue templateTextObservable = SWTObservables.observeText(pathTemplateText, SWT.Modify);
         context.bindValue(templateTextObservable,
-                PojoObservables.observeValue(configuration, "pathTemplate"),
+                PojoProperties.value("pathTemplate", String.class).observe(configuration),
                 updateValueStrategy().withValidator(multiValidator()
                         .addValidator(mandatoryValidator(Messages.pathTemplate))
                         .addValidator(forbiddenCharactersValidator(Messages.pathTemplate, '#', '%', '$', ' '))
@@ -194,9 +193,9 @@ public class NewRestAPIProjectAdvancedConfigurationPage extends WizardPage {
     private void createBDMDependencyOptionControl(final Composite mainComposite, final DataBindingContext context) {
         widgetFactory.newLabel(mainComposite, "");
         final Button bdmOptionButton = widgetFactory.newCheckbox(mainComposite, Messages.addBDMDependencies);
-        bdmOptionButton.setEnabled(!isNullOrEmpty(configuration.getBdmGroupId()));
-        context.bindValue(SWTObservables.observeSelection(bdmOptionButton),
-                PojoObservables.observeValue(configuration, "enableBDMDependencies"));
+        bdmOptionButton.setEnabled(configuration.isEnableBDMDependencies());
+        context.bindValue(org.eclipse.jface.databinding.swt.typed.WidgetProperties.buttonSelection().observe(bdmOptionButton),
+                PojoProperties.value("enableBDMDependencies", Boolean.class).observe(configuration));
         final ControlDecoration decoration = new ControlDecoration(bdmOptionButton, SWT.RIGHT);
         decoration.setMarginWidth(0);
         decoration.setDescriptionText(Messages.bdmDependenciesHint);

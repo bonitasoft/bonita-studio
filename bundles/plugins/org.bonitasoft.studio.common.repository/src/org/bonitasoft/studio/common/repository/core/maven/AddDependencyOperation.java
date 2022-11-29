@@ -18,7 +18,7 @@ import java.util.List;
 
 import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Model;
-import org.bonitasoft.studio.common.repository.core.maven.migration.model.GAV;
+import org.bonitasoft.studio.common.repository.core.maven.model.GAV;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 

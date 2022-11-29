@@ -14,25 +14,24 @@
  */
 package org.bonitasoft.studio.common.repository.core.internal;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.Objects;
 import java.util.Properties;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.apache.maven.model.Model;
 import org.bonitasoft.studio.common.RestAPIExtensionNature;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.core.BonitaProject;
+import org.bonitasoft.studio.common.repository.core.internal.team.GitProjectImpl;
 import org.bonitasoft.studio.common.repository.core.maven.MavenProjectHelper;
+import org.bonitasoft.studio.common.repository.core.maven.model.GAV;
 import org.bonitasoft.studio.common.repository.core.maven.model.ProjectDefaultConfiguration;
 import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
+import org.bonitasoft.studio.common.repository.core.team.GitProject;
 import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.store.LocalDependenciesStore;
 import org.eclipse.core.resources.IFile;
@@ -40,36 +39,27 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.FileLocator;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.egit.core.RepositoryUtil;
-import org.eclipse.egit.core.internal.util.ResourceUtil;
-import org.eclipse.egit.core.op.ConnectProviderOperation;
 import org.eclipse.jface.operation.IRunnableWithProgress;
-import org.eclipse.jgit.lib.Constants;
-import org.eclipse.jgit.lib.Repository;
-import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
+import org.eclipse.m2e.core.MavenPlugin;
 import org.eclipse.m2e.core.internal.IMavenConstants;
+import org.eclipse.m2e.core.ui.internal.UpdateMavenProjectJob;
 
 public class BonitaProjectImpl implements BonitaProject {
 
     private static final String BONITA_VERSION_PROPERTY = "bonita.version";
     private static final String BONITA_RUNTIME_VERSION_PROPERTY = "bonita-runtime.version";
-    private static final String GITIGNORE_TEMPLATE = ".gitignore.template";
+
 
     protected IRepository repository;
     private MavenProjectHelper mavenProjectHelper = new MavenProjectHelper();
+    protected GitProject gitProjectDelegate;
 
     public BonitaProjectImpl(IRepository repository) {
         this.repository = repository;
-    }
-
-    @Override
-    public String getName() {
-        return repository.getName();
+        gitProjectDelegate = new GitProjectImpl(repository.getProject());
     }
 
     @Override
@@ -78,7 +68,7 @@ public class BonitaProjectImpl implements BonitaProject {
             return getMavenModel().getArtifactId();
         } catch (CoreException e) {
             BonitaStudioLog.error(e);
-            return getName();
+            return repository.getName();
         }
     }
 
@@ -88,22 +78,33 @@ public class BonitaProjectImpl implements BonitaProject {
             return getMavenModel().getName();
         } catch (CoreException e) {
             BonitaStudioLog.error(e);
-            return getName();
+            return repository.getName();
         }
     }
 
     private Model getMavenModel() throws CoreException {
-        return MavenProjectHelper.readModel(repository.getProject().getFile("pom.xml").getLocation().toFile());
+        var mavenFacade = MavenPlugin.getMavenProjectRegistry().create(repository.getProject()
+                .getFile(IMavenConstants.POM_FILE_NAME), true, new NullProgressMonitor());
+        if (mavenFacade != null && mavenFacade.getMavenProject() != null) {
+            return mavenFacade.getMavenProject().getModel();
+        }
+        if (repository.getProject().exists()) {
+            return MavenProjectHelper
+                    .readModel(repository.getProject().getFile(IMavenConstants.POM_FILE_NAME).getLocation().toFile());
+        }
+        throw new CoreException(
+                Status.error(String.format("Project '%s' does not exists.", repository.getProject().getName())));
     }
 
     @Override
-    public ProjectMetadata getProjectMetadata(IProgressMonitor monitor) {
+    public ProjectMetadata getProjectMetadata(IProgressMonitor monitor) throws CoreException {
         return ProjectMetadata.read(repository.getProject(), monitor);
     }
 
     @Override
     public void open(IProgressMonitor monitor) throws CoreException {
         repository.open(monitor);
+        refresh(monitor);
     }
 
     @Override
@@ -117,9 +118,17 @@ public class BonitaProjectImpl implements BonitaProject {
     }
 
     @Override
+    public void refresh(IProgressMonitor monitor) throws CoreException {
+        var project = repository.getProject();
+        new UpdateMavenProjectJob(new IProject[] { project }, false, false, false, true, true).run(monitor);
+        repository.getProjectDependenciesStore().analyze(monitor);
+    }
+
+    @Override
     public void update(ProjectMetadata metadata, IProgressMonitor monitor) throws CoreException {
         var project = repository.getProject();
         var model = mavenProjectHelper.getMavenModel(project);
+        var oldMetadata = getProjectMetadata(monitor);
         var artifactId = metadata.getArtifactId();
         model.setGroupId(metadata.getGroupId());
         model.setArtifactId(artifactId);
@@ -130,7 +139,7 @@ public class BonitaProjectImpl implements BonitaProject {
                 metadata.getBonitaRuntimeVersion());
         mavenProjectHelper.saveModel(project, model, false, monitor);
 
-        updateRestApiExtensionBontitaRuntimeVersion(metadata.getBonitaRuntimeVersion(), monitor);
+        updateRestApiExtension(oldMetadata, metadata, monitor);
         if (!Objects.equals(project.getName(), metadata.getArtifactId())) {
             try {
                 repository.rename(model.getArtifactId(), monitor);
@@ -140,8 +149,8 @@ public class BonitaProjectImpl implements BonitaProject {
         }
     }
 
-    protected void updateRestApiExtensionBontitaRuntimeVersion(String newBonitaRuntimeVersion,
-            IProgressMonitor monitor) {
+    protected void updateRestApiExtension(ProjectMetadata oldMetadata,
+            ProjectMetadata metadata, IProgressMonitor monitor) {
         Stream.of(repository.getProject().getWorkspace().getRoot().getProjects())
                 .filter(IProject::isOpen)
                 .filter(p -> {
@@ -158,12 +167,26 @@ public class BonitaProjectImpl implements BonitaProject {
                         Properties properties = mavenModel.getProperties();
                         if (properties.containsKey(BONITA_RUNTIME_VERSION_PROPERTY)) {
                             properties.setProperty(BONITA_RUNTIME_VERSION_PROPERTY,
-                                    newBonitaRuntimeVersion);
+                                    metadata.getBonitaRuntimeVersion());
                         }
                         if (properties.containsKey(BONITA_VERSION_PROPERTY)) {
                             properties.setProperty(BONITA_VERSION_PROPERTY,
-                                    newBonitaRuntimeVersion);
+                                    metadata.getBonitaRuntimeVersion());
                         }
+                        var oldBdmClientDao = new GAV(oldMetadata.getGroupId(),
+                                oldMetadata.getArtifactId() + "-bdm-model",
+                                oldMetadata.getVersion(),
+                                null,
+                                "jar",
+                                "provided");
+                        mavenModel.getDependencies().stream()
+                                .filter(d -> new GAV(d).isSameAs(oldBdmClientDao))
+                                .findFirst()
+                                .ifPresent(d -> {
+                                    d.setGroupId(metadata.getGroupId());
+                                    d.setArtifactId(metadata.getArtifactId() + "-bdm-model");
+                                    d.setVersion(metadata.getVersion());
+                                });
                         mavenProjectHelper.saveModel(p, mavenModel, false, monitor);
                     } catch (CoreException e) {
                         BonitaStudioLog.error(e);
@@ -173,79 +196,29 @@ public class BonitaProjectImpl implements BonitaProject {
 
     @Override
     public IRunnableWithProgress newConnectProviderOperation() throws CoreException {
-        return connectProviderOperation(repository.getProject());
+        return gitProjectDelegate.newConnectProviderOperation();
     }
 
-    protected IRunnableWithProgress connectProviderOperation(IProject project) {
-        var op = new ConnectProviderOperation(project);
-        List<IProject> embeddedProjects = findEmbeddedProjects(project);
-        return new IRunnableWithProgress() {
-
-            @Override
-            public void run(final IProgressMonitor monitor)
-                    throws InvocationTargetException {
-                File gitDir = new File(project.getLocation().toFile().getAbsolutePath(),
-                        Constants.DOT_GIT);
-                try (Repository repository = FileRepositoryBuilder
-                        .create(gitDir)) {
-                    repository.create();
-                    if (!gitDir.toString().contains("..")) //$NON-NLS-1$
-                        project.refreshLocal(IResource.DEPTH_ONE,
-                                new NullProgressMonitor());
-                    RepositoryUtil.INSTANCE.addConfiguredRepository(gitDir);
-                    var gitIgnore = project.getFile(Constants.GITIGNORE_FILENAME);
-                    if (!gitIgnore.exists()) {
-                        gitIgnore.create(new ByteArrayInputStream(new byte[0]), true, new NullProgressMonitor());
-                    }
-                    op.execute(monitor);
-                    for (IProject project : embeddedProjects) {
-                        ConnectProviderOperation connectProviderOperation = new ConnectProviderOperation(project,
-                                gitDir);
-                        connectProviderOperation.execute(monitor);
-                    }
-                } catch (CoreException | IOException ce) {
-                    throw new InvocationTargetException(ce);
-                }
-            }
-        };
+    @Override
+    public File getGitDir() {
+        return gitProjectDelegate.getGitDir();
     }
 
-    protected List<IProject> findEmbeddedProjects(IProject project) {
-        IPath parentLocation = project.getLocation();
-        return Stream.of(project.getWorkspace().getRoot().getProjects())
-                .filter(Objects::nonNull)
-                .filter(p -> !project.equals(p))
-                .filter(p -> p.getLocation() != null)
-                .filter(p -> parentLocation.isPrefixOf(p.getLocation()))
-                .collect(Collectors.toList());
-    }
+    
 
     @SuppressWarnings("unchecked")
     @Override
     public <T> T getAdapter(Class<T> adapter) {
-        if (Repository.class.equals(adapter)) {
-            return (T) ResourceUtil.getRepository(repository.getProject());
-        }else if(IProject.class.equals(adapter)) {
+        if (IProject.class.equals(adapter)) {
             return (T) repository.getProject();
+        } else {
+            return gitProjectDelegate.getAdapter(adapter);
         }
-        return null;
     }
 
     @Override
     public void createDefaultIgnoreFile() throws CoreException {
-        var project = repository.getProject();
-        IFile gitIgnoreFile = project.getFile(Constants.DOT_GIT_IGNORE);
-        try (var content = FileLocator
-                .toFileURL(BonitaProjectImpl.class.getResource(GITIGNORE_TEMPLATE)).openStream()) {
-        if (gitIgnoreFile.exists()) {
-            gitIgnoreFile.setContents(content, true, true, new NullProgressMonitor());
-        } else {
-            gitIgnoreFile.create(content, true, new NullProgressMonitor());
-        }
-        }catch (IOException e) {
-            throw new CoreException(Status.error("Failed create parent project .gitignore file.", e));
-        }
-        
+        gitProjectDelegate.createDefaultIgnoreFile();
     }
 
     @Override
@@ -262,7 +235,7 @@ public class BonitaProjectImpl implements BonitaProject {
             resources.add(depStore);
         }
         IFolder resourcesFolder = project.getFolder("src/main/resources");
-        if(resourcesFolder.exists()) {
+        if (resourcesFolder.exists()) {
             resources.add(resourcesFolder);
         }
         return resources;

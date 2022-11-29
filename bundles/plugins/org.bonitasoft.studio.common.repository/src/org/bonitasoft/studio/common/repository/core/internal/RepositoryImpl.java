@@ -10,10 +10,10 @@ package org.bonitasoft.studio.common.repository.core.internal;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -21,20 +21,23 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bonitasoft.studio.common.extension.ExtensionContextInjectionFactory;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
+import org.bonitasoft.studio.common.repository.core.BonitaProject;
+import org.bonitasoft.studio.common.repository.core.internal.team.GitProjectImpl;
 import org.bonitasoft.studio.common.repository.core.migration.report.MigrationReport;
+import org.bonitasoft.studio.common.repository.core.team.GitProject;
 import org.bonitasoft.studio.common.repository.jdt.JDTTypeHierarchyManager;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspace;
+import org.eclipse.core.runtime.Adapters;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.e4.core.services.events.IEventBroker;
-import org.eclipse.egit.core.GitProvider;
-import org.eclipse.egit.core.op.ConnectProviderOperation;
 import org.eclipse.emf.edapt.migration.MigrationException;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.team.core.RepositoryProvider;
@@ -60,12 +63,14 @@ public class RepositoryImpl extends AbstractRepository {
     @Override
     protected void connect(IProject project) throws CoreException {
         if (project.isOpen()) {
-            File gitDir = new File(project.getLocation().toFile().getAbsolutePath(),
-                    Constants.DOT_GIT);
-            if (gitDir.exists() && !isShared(GitProvider.ID)) {
-                ConnectProviderOperation op = new ConnectProviderOperation(project);
-                op.setRefreshResources(false);
-                op.execute(AbstractRepository.NULL_PROGRESS_MONITOR);
+            var bonitaProject = Adapters.adapt(this, BonitaProject.class);
+            var gitDir = bonitaProject.getGitDir();
+            if (gitDir.exists()) {
+                try {
+                    bonitaProject.newConnectProviderOperation().run(new NullProgressMonitor());
+                } catch (InvocationTargetException | InterruptedException e) {
+                    BonitaStudioLog.error(e);
+                }
             }
         }
     }
@@ -78,10 +83,8 @@ public class RepositoryImpl extends AbstractRepository {
         if (getProject().isAccessible()) {
             return RepositoryProvider.getProvider(getProject()) != null;
         } else {
-            var projectFolder = getProject().getLocation().toFile();
-            var gitFolder = projectFolder.toPath().resolve(".git").toFile();
-            var parentGitFolder = projectFolder.getParentFile().toPath().resolve(".git").toFile();
-            return gitFolder.exists() || parentGitFolder.exists();
+            var bonitaProject = Adapters.adapt(this, BonitaProject.class);
+            return bonitaProject.getGitDir().exists();
         }
     }
 
@@ -129,7 +132,7 @@ public class RepositoryImpl extends AbstractRepository {
     }
 
     private List<String> retrieveEntriesToAdd(List<String> existingEntries) throws IOException {
-        URL gitignoreTemplateUrl = getGitignoreTemplateFileURL();
+        URL gitignoreTemplateUrl = GitProject.getGitignoreTemplateFileURL();
         try (BufferedReader br = new BufferedReader(
                 new InputStreamReader(gitignoreTemplateUrl.openStream(), StandardCharsets.UTF_8))) {
             List<String> entries = new ArrayList<>();
@@ -158,8 +161,5 @@ public class RepositoryImpl extends AbstractRepository {
         }
     }
 
-    public static URL getGitignoreTemplateFileURL() throws IOException {
-        return FileLocator.toFileURL(RepositoryImpl.class.getResource(GITIGNORE_TEMPLATE));
-    }
 
 }

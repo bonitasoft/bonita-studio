@@ -29,7 +29,7 @@ import org.bonitasoft.studio.common.repository.core.maven.DependencyGetOperation
 import org.bonitasoft.studio.common.repository.core.maven.FileDependencyLookupOperation;
 import org.bonitasoft.studio.common.repository.core.maven.migration.model.DependencyLookup;
 import org.bonitasoft.studio.common.repository.core.maven.migration.model.DependencyLookup.Status;
-import org.bonitasoft.studio.common.repository.core.maven.migration.model.GAV;
+import org.bonitasoft.studio.common.repository.core.maven.model.GAV;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 

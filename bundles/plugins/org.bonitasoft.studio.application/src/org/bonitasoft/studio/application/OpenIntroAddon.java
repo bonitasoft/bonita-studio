@@ -15,9 +15,11 @@
 package org.bonitasoft.studio.application;
 
 import java.util.Objects;
+import java.util.Optional;
 
 import javax.annotation.PostConstruct;
 
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.ui.PlatformUtil;
 import org.eclipse.e4.core.services.events.IEventBroker;
@@ -45,7 +47,10 @@ public class OpenIntroAddon {
         Object part = event.getProperty(UIEvents.EventTags.ELEMENT);
         if (part instanceof MPart) {
             if (((MPart) part).getElementId().equals("org.eclipse.e4.ui.compatibility.editor")) {
-                if(!PlatformUtil.isOpeningIntro() && repositoryAccessor.getCurrentRepository().isPresent() && repositoryAccessor.getCurrentRepository().orElseThrow().isOpenIntroListenerEnabled()) {
+                var currentRepository = repositoryAccessor.getCurrentRepository();
+                if(!PlatformUtil.isOpeningIntro() 
+                        && currentRepository.isPresent() 
+                        && currentRepository.orElseThrow().isOpenIntroListenerEnabled()) {
                     PlatformUtil.openDashboardIfNoOtherEditorOpen();
                 }
             }

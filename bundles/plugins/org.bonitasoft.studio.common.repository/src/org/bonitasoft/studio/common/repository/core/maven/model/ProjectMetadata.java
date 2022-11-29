@@ -31,7 +31,7 @@ import org.bonitasoft.studio.common.repository.preferences.RepositoryPreferenceC
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.SubMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
 
 public class ProjectMetadata {
 
@@ -132,8 +132,8 @@ public class ProjectMetadata {
         return artifactId;
     }
 
-    public static ProjectMetadata read(IProject project, IProgressMonitor monitor) {
-        var projectFacade = org.eclipse.m2e.core.MavenPlugin.getMavenProjectRegistry().getProject(project);
+    public static ProjectMetadata read(IProject project, IProgressMonitor monitor) throws CoreException {
+        var projectFacade = org.eclipse.m2e.core.MavenPlugin.getMavenProjectRegistry().create(project, new NullProgressMonitor());
         if (projectFacade == null) {
             if (project.getLocation() != null) {
                 var pomFile = project.getLocation().toFile().toPath().resolve("pom.xml").toFile();
@@ -142,17 +142,11 @@ public class ProjectMetadata {
             return defaultMetadata();
         }
         var projectPom = project.getLocation().toFile().toPath().resolve("pom.xml").toFile();
-        var mavenProject = projectFacade.getMavenProject();
+        var mavenProject = projectFacade.getMavenProject(monitor);
         if (mavenProject == null) {
-            try {
-                mavenProject = projectFacade.getMavenProject(
-                        SubMonitor.convert(monitor).newChild(IProgressMonitor.UNKNOWN, SubMonitor.SUPPRESS_SUBTASK));
-            } catch (CoreException e) {
-                BonitaStudioLog.error(e);
-                return read(projectPom);
-            }
+            return read(projectPom);
         }
-        return mavenProject != null ? read(mavenProject) : read(projectPom);
+        return read(projectPom);
     }
 
     public static ProjectMetadata read(MavenProject mavenProject) {

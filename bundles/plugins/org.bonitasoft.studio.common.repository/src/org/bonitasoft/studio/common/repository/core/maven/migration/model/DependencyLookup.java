@@ -31,6 +31,7 @@ import org.apache.maven.model.Dependency;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
 import org.bonitasoft.studio.common.repository.core.InputStreamSupplier;
+import org.bonitasoft.studio.common.repository.core.maven.model.GAV;
 import org.bonitasoft.studio.common.repository.preferences.RepositoryPreferenceConstant;
 import org.bonitasoft.studio.common.repository.store.LocalDependenciesStore;
 

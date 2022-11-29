@@ -75,11 +75,11 @@ public class BusinessObjectModelRepositoryStoreTest {
     public void import_should_generate_jar() {
         doReturn(businessObjectFileStore).when(storeUnderTest).superDoImportInputStream("bom.xml", inputStream);
         when(businessObjectFileStore.getName()).thenReturn("bom.xml");
-        doReturn(Status.OK_STATUS).when(storeUnderTest).generateJar(businessObjectFileStore);
+        doReturn(Status.OK_STATUS).when(storeUnderTest).installArtifact(businessObjectFileStore);
 
         storeUnderTest.doImportInputStream("bom.xml", inputStream);
 
-        verify(storeUnderTest).generateJar(businessObjectFileStore);
+        verify(storeUnderTest).installArtifact(businessObjectFileStore);
     }
     
     @Test
@@ -89,7 +89,7 @@ public class BusinessObjectModelRepositoryStoreTest {
 
         storeUnderTest.doImportInputStream(".artifact-descriptor.properties", inputStream);
 
-        verify(storeUnderTest, never()).generateJar(businessObjectFileStore);
+        verify(storeUnderTest, never()).installArtifact(businessObjectFileStore);
     }
 
 }

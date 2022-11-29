@@ -20,12 +20,14 @@ import java.util.Optional;
 import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.application.operation.SetProjectMetadataOperation;
 import org.bonitasoft.studio.common.RedirectURLBuilder;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.core.BonitaProject;
 import org.bonitasoft.studio.common.repository.core.maven.MavenProjectHelper;
 import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
 import org.bonitasoft.studio.common.ui.jface.MessageDialogWithLink;
 import org.bonitasoft.studio.ui.dialog.ExceptionDialogHandler;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -59,7 +61,7 @@ public class EditProjectMetadataHandler extends AbstractProjectMetadataHandler {
     }
 
     @Override
-    protected ProjectMetadata initialMetadata(RepositoryAccessor repositoryAccessor) {
+    protected ProjectMetadata initialMetadata(RepositoryAccessor repositoryAccessor) throws CoreException {
         var currentRepository = repositoryAccessor.getCurrentRepository().orElseThrow();
         return ProjectMetadata.read(currentRepository.getProject(), new NullProgressMonitor());
     }
@@ -84,10 +86,16 @@ public class EditProjectMetadataHandler extends AbstractProjectMetadataHandler {
     }
 
     private boolean targetRuntimeVersionChanged(ProjectMetadata metadata, BonitaProject project) {
-        var currentMetadata = project.getProjectMetadata(new NullProgressMonitor());
-        return !Objects.equals(
-                currentMetadata.getBonitaRuntimeVersion(),
-                metadata.getBonitaRuntimeVersion());
+        try {
+            var currentMetadata = project.getProjectMetadata(new NullProgressMonitor());
+            return !Objects.equals(
+                    currentMetadata.getBonitaRuntimeVersion(),
+                    metadata.getBonitaRuntimeVersion());
+        } catch (CoreException e) {
+            BonitaStudioLog.error(e);
+            return false;
+        }
+       
     }
 
 }

@@ -102,7 +102,7 @@ public class MavenAppModuleModelBuilder implements MavenModelBuilder {
 
         Build build = new Build();
         defaultConfiguration.getPlugins().stream()
-                .filter(MavenPlugin::hasExecutions)
+                .filter(plugin -> plugin.hasExecutions() || plugin.hasConfiguration())
                 .map(MavenPlugin::toPlugin)
                 .forEach(build::addPlugin);
 

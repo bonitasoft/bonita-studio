@@ -69,32 +69,21 @@ public class NewRestAPIExtensionHandler extends AbstractHandler {
         return new NewRestAPIExtensionWizard(
                 repositoryAccessor.getRepositoryStore(RestAPIExtensionRepositoryStore.class),
                 MavenPlugin.getProjectConfigurationManager(), new MavenProjectConfiguration(), workspace, widgetFactory,
-                currentBDMGroupId(repositoryAccessor),currentBDMVersion(repositoryAccessor), addressReolver);
+                bdmExists(repositoryAccessor), addressReolver);
     }
 
     protected WizardDialog newWizardDialog(final NewRestAPIExtensionWizard wizard, String finishLabel) {
         return new CustomWizardDialog(Display.getDefault().getActiveShell(), wizard, finishLabel);
     }
 
-    private String currentBDMGroupId(RepositoryAccessor repositoryAccessor) throws CoreException {
+    private boolean bdmExists(RepositoryAccessor repositoryAccessor) throws CoreException {
         BusinessObjectModelRepositoryStore<BusinessObjectModelFileStore> repositoryStore = repositoryAccessor
                 .getRepositoryStore(BusinessObjectModelRepositoryStore.class);
         final BusinessObjectModelFileStore bdmFilsStore = repositoryStore
                 .getChild(BusinessObjectModelFileStore.BOM_FILENAME, true);
-        return bdmFilsStore != null
-                ? bdmFilsStore.loadArtifactDescriptor().getGroupId()
-                : null;
+        return bdmFilsStore != null;
     }
     
-    private String currentBDMVersion(RepositoryAccessor repositoryAccessor) throws CoreException {
-        BusinessObjectModelRepositoryStore<BusinessObjectModelFileStore> repositoryStore = repositoryAccessor
-                .getRepositoryStore(BusinessObjectModelRepositoryStore.class);
-        final BusinessObjectModelFileStore bdmFilsStore = repositoryStore
-                .getChild(BusinessObjectModelFileStore.BOM_FILENAME, true);
-        return bdmFilsStore != null
-                ? bdmFilsStore.loadArtifactDescriptor().getVersion()
-                : null;
-    }
 
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {

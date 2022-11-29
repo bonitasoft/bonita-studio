@@ -11,11 +11,13 @@ package org.bonitasoft.studio.maven.operation;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.collect.Sets.newHashSet;
 
+import java.io.File;
 import java.util.List;
 import java.util.Set;
 
 import org.bonitasoft.studio.common.RestAPIExtensionNature;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.core.ProjectDescriptionBuilder;
 import org.bonitasoft.studio.common.repository.filestore.AbstractFileStore;
 import org.bonitasoft.studio.maven.CustomPageProjectRepositoryStore;
@@ -30,6 +32,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.egit.core.op.ConnectProviderOperation;
 import org.eclipse.m2e.core.internal.IMavenConstants;
 import org.eclipse.m2e.core.project.IProjectConfigurationManager;
 import org.eclipse.m2e.core.project.IProjectCreationListener;
@@ -107,6 +110,18 @@ public class CreateCustomPageProjectOperation extends AbstractMavenProjectUpdate
                 .havingBuilders(projectBuilders(description)).build();
         project.setDescription(description, monitor);
         project.getFile(getPagePropertyPath()).setCharset(UTF_8, monitor);
+        RepositoryManager.getInstance().getCurrentProject().ifPresent( bonitaProject -> {
+            File gitDir = bonitaProject.getGitDir();
+            if(gitDir.exists()) {
+                try {
+                    new ConnectProviderOperation(project, gitDir).execute(monitor);
+                } catch (CoreException e) {
+                   BonitaStudioLog.error(e);
+                }
+            }
+        });
+        
+       
     }
 
     protected String getPagePropertyPath() {

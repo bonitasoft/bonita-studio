@@ -99,7 +99,7 @@ public class NewRestAPIProjectAdvancedConfigurationPageTest {
 
     @Test
     public void should_select_add_bdm_checkbox_if_bdmPackage_in_configuration_exists() throws Exception {
-        final RestAPIExtensionArchetypeConfiguration configuration = RestAPIExtensionArchetypeConfiguration.defaultArchetypeConfiguration("com.company.model", "1.0.0");
+        final RestAPIExtensionArchetypeConfiguration configuration = RestAPIExtensionArchetypeConfiguration.defaultArchetypeConfiguration(true);
 
         final NewRestAPIProjectAdvancedConfigurationPage page = new NewRestAPIProjectAdvancedConfigurationPage(new WidgetFactory(), configuration,
                 repositoryStore, addressResolver);

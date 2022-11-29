@@ -12,10 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bonitasoft.studio.businessobject.maven.UpdateMavenProjectConfiguration;
-import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.model.IRepository;
-import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.rest.api.extension.core.repository.RestAPIExtensionFileStore;
 import org.bonitasoft.studio.rest.api.extension.core.repository.RestAPIExtensionRepositoryStore;
 import org.eclipse.core.resources.IProject;
@@ -39,7 +37,8 @@ public class UpdateMavenProjectsHandler {
             new UpdateMavenProjectJob(projects.toArray(new IProject[projects.size()]),
                     UpdateMavenProjectConfiguration.IS_OFFLINE,
                     UpdateMavenProjectConfiguration.FORCE_UPDATE_DEPENDENCIES,
-                    UpdateMavenProjectConfiguration.UPDATE_CONFIGURATION, UpdateMavenProjectConfiguration.CLEAN_PROJECT,
+                    UpdateMavenProjectConfiguration.UPDATE_CONFIGURATION,
+                    UpdateMavenProjectConfiguration.CLEAN_PROJECT,
                     UpdateMavenProjectConfiguration.REFRESH_FROM_LOCAL).schedule();
         }
     }

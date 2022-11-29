@@ -50,6 +50,7 @@ import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.core.MultiModuleProject;
 import org.bonitasoft.studio.common.repository.core.maven.RemoveDependencyOperation;
 import org.bonitasoft.studio.common.repository.filestore.EditorFinder;
 import org.bonitasoft.studio.common.repository.model.DeployOptions;
@@ -65,10 +66,12 @@ import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.WorkspaceJob;
+import org.eclipse.core.runtime.Adapters;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.e4.core.services.events.IEventBroker;
 import org.eclipse.jdt.core.IJavaProject;
@@ -220,15 +223,41 @@ public class BusinessObjectModelFileStore extends AbstractBDMFileStore<BusinessO
         return defaultGroupId + ".model";
     }
 
-    public Dependency getClientMavenDependency() throws CoreException {
-        var descriptor = loadArtifactDescriptor();
-        Dependency dependency = new Dependency();
-        dependency.setGroupId(descriptor.getGroupId());
-        dependency.setArtifactId(GenerateBDMOperation.BDM_CLIENT);
-        dependency.setVersion("1.0.0");
-        dependency.setType("jar");
-        dependency.setScope(Artifact.SCOPE_PROVIDED);
-        return dependency;
+    public Dependency getParametrizedModelMavenDependency() throws CoreException {
+        var project = Adapters.adapt(getRepository(), MultiModuleProject.class);
+        if (project == null) {
+            return getModelMavenDependency();
+        }
+        return parametrized(getModelMavenDependency());
+    }
+
+    private static Dependency parametrized(Dependency modelMavenDependency) {
+        modelMavenDependency.setGroupId("${project.groupId}");
+        modelMavenDependency.setVersion("${project.version}");
+        return modelMavenDependency;
+    }
+
+    public Dependency getModelMavenDependency() throws CoreException {
+        var project = Adapters.adapt(getRepository(), MultiModuleProject.class);
+        if (project == null) {
+            var descriptor = loadArtifactDescriptor();
+            Dependency dependency = new Dependency();
+            dependency.setGroupId(descriptor.getGroupId());
+            dependency.setArtifactId(GenerateBDMOperation.BDM_CLIENT);
+            dependency.setVersion("1.0.0");
+            dependency.setType("jar");
+            dependency.setScope(Artifact.SCOPE_PROVIDED);
+            return dependency;
+        } else {
+            var metadata = project.getProjectMetadata(new NullProgressMonitor());
+            Dependency dependency = new Dependency();
+            dependency.setGroupId(metadata.getGroupId());
+            dependency.setArtifactId(project.getId() + "-bdm-model");
+            dependency.setVersion(metadata.getVersion());
+            dependency.setType("jar");
+            dependency.setScope(Artifact.SCOPE_PROVIDED);
+            return dependency;
+        }
     }
 
     @Override
@@ -241,14 +270,21 @@ public class BusinessObjectModelFileStore extends AbstractBDMFileStore<BusinessO
         if (commandExecutor.canExecute(CLEAN_ACCESS_CONTROL_CMD, null)) {
             commandExecutor.executeCommand(CLEAN_ACCESS_CONTROL_CMD, null);
         }
+        var project = getRepositoryAccessor().getCurrentProject().orElseThrow();
+        if (project instanceof MultiModuleProject) {
+            try {
+             ((MultiModuleProject) project).removeBdmProjects(new NullProgressMonitor());
+            } catch (CoreException e) {
+                BonitaStudioLog.error(e);
+            }
+        }
+
     }
 
     private void removePomDependency() {
         try {
-            BDMArtifactDescriptor descriptor = loadArtifactDescriptor();
-            var operation = new RemoveDependencyOperation(descriptor.getGroupId(),
-                    GenerateBDMOperation.BDM_CLIENT, descriptor.getVersion(), Artifact.SCOPE_PROVIDED)
-                            .disableAnalyze();
+            var operation = new RemoveDependencyOperation(getParametrizedModelMavenDependency())
+                    .disableAnalyze();
             new WorkspaceJob("Remove Project BDM dependency") {
 
                 @Override

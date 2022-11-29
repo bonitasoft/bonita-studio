@@ -10,7 +10,11 @@ package org.bonitasoft.studio.rest.api.extension.core.maven;
 
 import java.util.Set;
 
+import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelFileStore;
+import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.core.maven.AddDependencyOperation;
 import org.bonitasoft.studio.maven.CustomPageProjectRepositoryStore;
 import org.bonitasoft.studio.maven.model.RestAPIExtensionArchetypeConfiguration;
 import org.bonitasoft.studio.maven.operation.CreateCustomPageProjectOperation;
@@ -19,7 +23,9 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.m2e.core.MavenPlugin;
 import org.eclipse.m2e.core.project.IProjectConfigurationManager;
 import org.eclipse.m2e.core.project.ProjectImportConfiguration;
 
@@ -46,6 +52,14 @@ public class CreateRestAPIExtensionProjectOperation extends CreateCustomPageProj
             cleanJavaResources(AbstractRepository.NULL_PROGRESS_MONITOR, project);
             project.getFile("groovy-pom.xml").move(Path.fromOSString("pom.xml"), true,
                     AbstractRepository.NULL_PROGRESS_MONITOR);
+        }
+        if(archetypeConfiguration.isEnableBDMDependencies()) {
+            var bdmStore = RepositoryManager.getInstance().getAccessor().getRepositoryStore(BusinessObjectModelRepositoryStore.class);
+            BusinessObjectModelFileStore bdmFileStore = (BusinessObjectModelFileStore) bdmStore.getChild(BusinessObjectModelFileStore.BOM_FILENAME, false);
+            var op = new AddDependencyOperation(bdmFileStore.getModelMavenDependency());
+            op.setProject(project);
+            op.run(new NullProgressMonitor());
+            MavenPlugin.getProjectConfigurationManager().updateProjectConfiguration(project, new NullProgressMonitor());
         }
     }
 

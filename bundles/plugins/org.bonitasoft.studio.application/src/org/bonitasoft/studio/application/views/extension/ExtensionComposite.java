@@ -24,6 +24,7 @@ import java.util.Optional;
 
 import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Model;
+import org.apache.maven.project.MavenProject;
 import org.bonitasoft.studio.application.handler.ImportExtensionHandler;
 import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.application.ui.control.model.dependency.ArtifactType;
@@ -41,7 +42,7 @@ import org.bonitasoft.studio.common.CommandExecutor;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.core.maven.MavenProjectHelper;
-import org.bonitasoft.studio.common.repository.core.maven.migration.model.GAV;
+import org.bonitasoft.studio.common.repository.core.maven.model.GAV;
 import org.bonitasoft.studio.common.repository.core.maven.model.ProjectDefaultConfiguration;
 import org.bonitasoft.studio.common.ui.jface.SWTBotConstants;
 import org.bonitasoft.studio.pics.Pics;
@@ -242,7 +243,7 @@ public class ExtensionComposite extends Composite {
         container.setLayout(GridLayoutFactory.fillDefaults()
                 .margins(20, 5).spacing(20, 10).create());
         container.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
-        
+
         new ProblemSection(container, Messages.problemInExtensionsMessage);
     }
 
@@ -250,10 +251,11 @@ public class ExtensionComposite extends Composite {
             List<Dependency> otherDependencies) {
         var result = new DependencyResolution();
         try {
-            Model mavenModel = mavenHelper
-                    .getMavenModel(repositoryAccessor.getCurrentRepository().orElseThrow().getProject());
-            if (mavenModel != null) {
-                List<Dependency> modelDependencies = mavenModel.getDependencies();
+            MavenProject mavenProject = mavenHelper
+                    .getMavenProject(repositoryAccessor.getCurrentRepository().orElseThrow().getProject());
+            if (mavenProject != null) {
+                List<Dependency> modelDependencies = mavenProject.getDependencies();
+                var currentBdmModelDependency = currentBdmModelDependency();
                 modelDependencies.forEach(dep -> {
                     Optional<BonitaArtifactDependency> bonitaDependency = allDependencies.stream()
                             .filter(bonitaDep -> sameDependency(dep, bonitaDep))
@@ -265,21 +267,22 @@ public class ExtensionComposite extends Composite {
                         BonitaArtifactDependency artifactDependency = bonitaArtifactDependencyConverter
                                 .toBonitaArtifactDependency(dep);
                         bonitaArtifactDependency.setSCMUrl(artifactDependency.getScmUrl());
-                        if(!result.hasExtensionIssues() && !bonitaDependency.get().getStatus().isOK()) {
+                        if (!result.hasExtensionIssues() && !bonitaDependency.get().getStatus().isOK()) {
                             result.setHasExtensionIssues(true);
                         }
                         bonitaDependencies.add(new BonitaDependencyTuple(dep, bonitaDependency.get()));
-                    } else if (!ProjectDefaultConfiguration.isInternalDependency(dep) && !isBDMDependency(dep)) {
+                    } else if (!ProjectDefaultConfiguration.isInternalDependency(dep)
+                            && currentBdmModelDependency.map(GAV::new).filter(new GAV(dep)::equals).isEmpty()) {
                         BonitaArtifactDependency bonitaDep = bonitaArtifactDependencyConverter
                                 .toBonitaArtifactDependency(dep);
                         if (Objects.equals(bonitaDep.getArtifactType(), ArtifactType.OTHER)) {
-                            if(!bonitaDep.getStatus().isOK()) {
+                            if (!bonitaDep.getStatus().isOK()) {
                                 result.setHasOtherDependenciesIssues(true);
                                 result.addOtherDependencyProblem(bonitaDep.getStatus());
                             }
                             otherDependencies.add(dep);
                         } else {
-                            if(!result.hasExtensionIssues() && !bonitaDep.getStatus().isOK()) {
+                            if (!result.hasExtensionIssues() && !bonitaDep.getStatus().isOK()) {
                                 result.setHasExtensionIssues(true);
                             }
                             bonitaDependencies.add(new BonitaDependencyTuple(dep, bonitaDep));
@@ -291,6 +294,22 @@ public class ExtensionComposite extends Composite {
             errorHandler.openErrorDialog(Display.getDefault().getActiveShell(), e.getMessage(), e);
         }
         return result;
+    }
+
+    private Optional<Dependency> currentBdmModelDependency() {
+        var businessObjectModelRepositoryStore = repositoryAccessor
+                .getRepositoryStore(BusinessObjectModelRepositoryStore.class);
+        BusinessObjectModelFileStore businessObjectModelFileStore = (BusinessObjectModelFileStore) businessObjectModelRepositoryStore
+                .getChild(BusinessObjectModelFileStore.BOM_FILENAME, true);
+        if (businessObjectModelFileStore != null) {
+            try {
+                return Optional.ofNullable(businessObjectModelFileStore.getModelMavenDependency());
+            } catch (CoreException e) {
+                BonitaStudioLog.error(e);
+                return Optional.empty();
+            }
+        }
+        return Optional.empty();
     }
 
     private void createExtensionTitleComposite(Composite parent) {
@@ -355,22 +374,6 @@ public class ExtensionComposite extends Composite {
         }
     }
 
-    private boolean isBDMDependency(Dependency dep) {
-        var businessObjectModelRepositoryStore = repositoryAccessor
-                .getRepositoryStore(BusinessObjectModelRepositoryStore.class);
-        BusinessObjectModelFileStore businessObjectModelFileStore = (BusinessObjectModelFileStore) businessObjectModelRepositoryStore
-                .getChild(BusinessObjectModelFileStore.BOM_FILENAME, true);
-        if (businessObjectModelFileStore != null) {
-            try {
-                return Objects.equals(new GAV(businessObjectModelFileStore.getClientMavenDependency()), new GAV(dep));
-            } catch (CoreException e) {
-                BonitaStudioLog.error(e);
-                return false;
-            }
-        }
-        return false;
-    }
-
     private boolean sameDependency(Dependency dep, BonitaArtifactDependency bonitaDep) {
         return Objects.equals(dep.getGroupId(), bonitaDep.getGroupId())
                 && Objects.equals(dep.getArtifactId(), bonitaDep.getArtifactId());
@@ -405,15 +408,15 @@ public class ExtensionComposite extends Composite {
         public void setHasOtherDependenciesIssues(boolean hasOtherDependenciesIssues) {
             this.hasOtherDependenciesIssues = hasOtherDependenciesIssues;
         }
-        
+
         public boolean hasExtensionIssues() {
             return hasExtensionIssues;
         }
-        
+
         public boolean hasOtherDependenciesIssues() {
             return hasOtherDependenciesIssues;
         }
-        
+
         public void addOtherDependencyProblem(MultiStatus status) {
             otherDependenciesProblems.add(status);
         }

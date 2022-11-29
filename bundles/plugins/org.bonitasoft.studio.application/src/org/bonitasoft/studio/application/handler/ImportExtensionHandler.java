@@ -42,7 +42,7 @@ import org.bonitasoft.studio.common.repository.core.maven.MavenRepositoryRegistr
 import org.bonitasoft.studio.common.repository.core.maven.UpdateDependencyVersionOperation;
 import org.bonitasoft.studio.common.repository.core.maven.migration.model.DependencyLookup;
 import org.bonitasoft.studio.common.repository.core.maven.migration.model.DependencyLookup.Status;
-import org.bonitasoft.studio.common.repository.core.maven.migration.model.GAV;
+import org.bonitasoft.studio.common.repository.core.maven.model.GAV;
 import org.bonitasoft.studio.common.repository.extension.update.DependencyUpdate;
 import org.bonitasoft.studio.common.repository.store.LocalDependenciesStore;
 import org.bonitasoft.studio.ui.dialog.ExceptionDialogHandler;
