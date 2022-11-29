@@ -31,6 +31,7 @@ import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelF
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
 import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.tests.util.InitialProjectRule;
 import org.eclipse.core.resources.IProject;
@@ -46,7 +47,6 @@ import org.eclipse.m2e.core.MavenPlugin;
 import org.eclipse.m2e.core.embedder.ICallable;
 import org.eclipse.m2e.core.embedder.IMaven;
 import org.eclipse.m2e.core.embedder.IMavenExecutionContext;
-import org.eclipse.m2e.core.internal.embedder.MavenImpl;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -111,13 +111,14 @@ public class DeployBDMOperationIT {
         assertThat(tenantManagementAPI.getBusinessDataModelResource().getState()).isEqualTo(TenantResourceState.INSTALLED);
         assertThat(tenantManagementAPI.isPaused()).isFalse();
 
-        MavenExecutionResult executionResult = resolveMavenDependency("org.bonita","bdm-client","1.0.0");
+        var metadata = ProjectMetadata.defaultMetadata();
+        MavenExecutionResult executionResult = resolveMavenDependency(metadata.getGroupId(),metadata.getArtifactId() + "-bdm-model", metadata.getVersion());
         assertThat(executionResult.hasExceptions())
-            .overridingErrorMessage("BDM client maven dependency not installed in local repository:\n%s", getException(executionResult))
+            .overridingErrorMessage("BDM model maven dependency not installed in local repository:\n%s", getException(executionResult))
             .isFalse();
-        executionResult = resolveMavenDependency("org.bonita","bdm-dao","1.0.0");
+        executionResult = resolveMavenDependency(metadata.getGroupId(), metadata.getArtifactId() + "-bdm-dao-client", metadata.getVersion());
         assertThat(executionResult.hasExceptions())
-            .overridingErrorMessage("BDM dao maven dependency not installed in local repository:\n%s", getException(executionResult))
+            .overridingErrorMessage("BDM dao client maven dependency not installed in local repository:\n%s", getException(executionResult))
             .isFalse();
     }
 
@@ -147,8 +148,7 @@ public class DeployBDMOperationIT {
                 systemProperties.setProperty("version", version);
                 systemProperties.setProperty("packaging", "jar");
                 request.setSystemProperties(systemProperties);
-                return ((MavenImpl) maven).lookupComponent(Maven.class)
-                        .execute(request);
+                return maven.lookup(Maven.class).execute(request);
             }
         }, new NullProgressMonitor());
     }

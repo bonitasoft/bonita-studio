@@ -36,6 +36,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.e4.core.di.annotations.Creatable;
 import org.eclipse.m2e.core.MavenPlugin;
@@ -46,6 +47,7 @@ import org.eclipse.m2e.core.project.MavenUpdateRequest;
 
 @Creatable
 public class MavenProjectHelper {
+    
 
     public Model getMavenModel(IProject project) throws CoreException {
         var pomFile = project.getFile(IMavenConstants.POM_FILE_NAME);
@@ -90,7 +92,7 @@ public class MavenProjectHelper {
     }
 
     public List<ArtifactRepository> getProjectMavenRepositories(IProject project) throws CoreException {
-        IMavenProjectFacade mavenFacade = getMavenProject(project);
+        IMavenProjectFacade mavenFacade = getMavenProjectFacade(project);
         if (mavenFacade != null) {
             MavenProject mavenProject = mavenFacade.getMavenProject(AbstractRepository.NULL_PROGRESS_MONITOR);
             if (mavenProject != null) {
@@ -100,7 +102,16 @@ public class MavenProjectHelper {
         return Collections.emptyList();
     }
 
-    private IMavenProjectFacade getMavenProject(IProject project) throws CoreException {
+    public MavenProject getMavenProject(IProject project) throws CoreException {
+        var mavenProjectFacade = getMavenProjectFacade(project);
+        var mavenProject = mavenProjectFacade.getMavenProject();
+        if(mavenProject == null) {
+            return mavenProjectFacade.getMavenProject(new NullProgressMonitor());
+        }
+        return mavenProject;
+    }
+    
+    private IMavenProjectFacade getMavenProjectFacade(IProject project) throws CoreException {
         return MavenPlugin.getMavenProjectRegistry().getProject(project);
     }
 

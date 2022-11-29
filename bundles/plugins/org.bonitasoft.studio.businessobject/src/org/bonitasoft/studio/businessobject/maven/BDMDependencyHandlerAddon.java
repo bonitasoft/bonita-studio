@@ -16,16 +16,15 @@ package org.bonitasoft.studio.businessobject.maven;
 
 import javax.annotation.PostConstruct;
 
+import org.bonitasoft.studio.businessobject.core.operation.GenerateBDMOperation;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.eclipse.e4.core.services.events.IEventBroker;
 
 public class BDMDependencyHandlerAddon {
 
-    private static final String BDM_DEPLOYED_TOPIC = "bdm/deployed";
-
     @PostConstruct
     public void registerHandler(IEventBroker eventBroker, RepositoryAccessor repositoryAccessor) {
-        eventBroker.subscribe(BDM_DEPLOYED_TOPIC, new InstallBDMDependenciesEventHandler());
+        eventBroker.subscribe(GenerateBDMOperation.BDM_DEPLOYED_TOPIC, new InstallBDMDependenciesEventHandler());
     }
 
 }

@@ -30,7 +30,8 @@ public class RestAPIExtensionArchetypeConfigurationTest {
         assertThat(configuration.getPathTemplate()).isEqualTo("resourceName");
         assertThat(configuration.getPermissions()).containsOnly("myPermission");
         assertThat(configuration.getUrlParameters()).contains("p", "c");
-        assertThat(configuration.getBdmGroupId()).isNullOrEmpty();
+        assertThat(configuration.getBdmGroupId()).isEqualTo("!");
+        assertThat(configuration.isEnableBDMDependencies()).isFalse();
     }
 
     @Test
@@ -71,12 +72,9 @@ public class RestAPIExtensionArchetypeConfigurationTest {
     }
 
     @Test
-    public void should_set_bdmPackage_properties() throws Exception {
-        final RestAPIExtensionArchetypeConfiguration configuration = RestAPIExtensionArchetypeConfiguration.defaultArchetypeConfiguration("org.test","1.1.0");
+    public void should_enable_bdmDependencies_properties() throws Exception {
+        final RestAPIExtensionArchetypeConfiguration configuration = RestAPIExtensionArchetypeConfiguration.defaultArchetypeConfiguration(true);
 
-        final Properties properties = configuration.toProperties();
-
-        assertThat(properties).containsEntry("bdmGroupId", "org.test");
-        assertThat(properties).containsEntry("bdmVersion", "1.1.0");
+        assertThat(configuration.isEnableBDMDependencies()).isTrue();
     }
 }

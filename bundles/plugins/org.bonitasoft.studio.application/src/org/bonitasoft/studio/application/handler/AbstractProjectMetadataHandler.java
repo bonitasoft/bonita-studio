@@ -35,6 +35,7 @@ import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
 import org.bonitasoft.studio.ui.dialog.ExceptionDialogHandler;
 import org.bonitasoft.studio.ui.wizard.WizardBuilder;
 import org.bonitasoft.studio.ui.wizard.WizardPageBuilder;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.e4.ui.services.IServiceConstants;
@@ -50,12 +51,19 @@ public abstract class AbstractProjectMetadataHandler {
             MavenProjectHelper mavenProjectHelper,
             ExceptionDialogHandler exceptionDialogHandler) {
 
-        ProjectMetadata metadata = initialMetadata(repositoryAccessor);
+        ProjectMetadata metadata;
+        try {
+            metadata = initialMetadata(repositoryAccessor);
+        } catch (CoreException e) {
+            exceptionDialogHandler.openErrorDialog(activeShell, e);
+            return;
+        }
         List<WizardPageBuilder> pages = createPages(repositoryAccessor, metadata);
 
         createWizard(repositoryAccessor, mavenProjectHelper, exceptionDialogHandler, metadata, pages)
                 .open(activeShell, getFinishLabel())
-                .ifPresent(s ->  new CommandExecutor().executeCommand("org.bonitasoft.studio.application.show.overview.command", Collections.emptyMap()));
+                .ifPresent(s -> new CommandExecutor().executeCommand(
+                        "org.bonitasoft.studio.application.show.overview.command", Collections.emptyMap()));
     }
 
     protected WizardBuilder<IStatus> createWizard(RepositoryAccessor repositoryAccessor,
@@ -88,7 +96,7 @@ public abstract class AbstractProjectMetadataHandler {
         return IDialogConstants.FINISH_LABEL;
     }
 
-    protected abstract ProjectMetadata initialMetadata(RepositoryAccessor repositoryAccessor);
+    protected abstract ProjectMetadata initialMetadata(RepositoryAccessor repositoryAccessor) throws CoreException;
 
     protected abstract boolean isNewProject();
 

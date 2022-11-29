@@ -26,8 +26,11 @@ import org.bonitasoft.studio.rest.api.extension.RestAPIExtensionActivator;
 import org.bonitasoft.studio.rest.api.extension.core.repository.RestAPIExtensionRepositoryStore;
 import org.bonitasoft.studio.rest.api.extension.ui.view.MavenConsoleView;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IncrementalProjectBuilder;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.e4.core.di.annotations.CanExecute;
 import org.eclipse.e4.core.di.annotations.Execute;
@@ -55,9 +58,16 @@ public class QuickBuildHandler {
 
     protected IStatus build(CustomPageProjectFileStore selectedRestApiExtension) {
         try {
+            ModalContext.run(monitor -> {
+                try {
+                    selectedRestApiExtension.getProject().build(IncrementalProjectBuilder.INCREMENTAL_BUILD, monitor);
+                } catch (CoreException e) {
+                  throw new InvocationTargetException(e);
+                }
+            }, false, new NullProgressMonitor(), Display.getDefault());
             final BuildCustomPageOperation operation = selectedRestApiExtension.newBuildOperation();
             operation.setGoals("clean install");
-            ModalContext.run(operation.asWorkspaceModifyOperation(), true, AbstractRepository.NULL_PROGRESS_MONITOR,
+            ModalContext.run(operation.asWorkspaceModifyOperation(), true, new NullProgressMonitor(),
                     Display.getDefault());
             return operation.getStatus();
         } catch (InvocationTargetException | InterruptedException | ReadFileStoreException e) {

@@ -14,11 +14,26 @@
  */
 package org.bonitasoft.studio.common.repository.core;
 
+import java.util.List;
+
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 
-public interface MultiModuleProject {
+public interface MultiModuleProject extends BonitaProject {
 
     IProject getParentProject();
+
+    IProject getBdmParentProject();
+    
+    IProject getBdmModelProject();
+    
+    IProject getBdmDaoClientProject();
+    
+    IProject getAppProject();
+    
+    List<IProject> getRelatedProjects();
+    
+    void removeBdmProjects(IProgressMonitor monitor) throws CoreException;
     
 }

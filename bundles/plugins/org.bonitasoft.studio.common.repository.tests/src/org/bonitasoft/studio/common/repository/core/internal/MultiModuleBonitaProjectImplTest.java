@@ -20,8 +20,9 @@ import java.io.File;
 import java.nio.file.Files;
 
 import org.bonitasoft.studio.common.repository.RepositoryManager;
-import org.bonitasoft.studio.common.repository.core.BonitaProject;
+import org.bonitasoft.studio.common.repository.core.MultiModuleProject;
 import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
+import org.bonitasoft.studio.common.repository.core.team.GitProject;
 import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.store.LocalDependenciesStore;
 import org.eclipse.core.resources.IProject;
@@ -40,7 +41,7 @@ public class MultiModuleBonitaProjectImplTest {
     private IRepository repository;
     private NullProgressMonitor monitor = new NullProgressMonitor();
     private ProjectMetadata metadata;
-    private MultiModuleBonitaProjectImpl project;
+    private MultiModuleProject project;
     private String projectId;
 
     @Before
@@ -49,7 +50,7 @@ public class MultiModuleBonitaProjectImplTest {
         projectId = metadata.getArtifactId();
         repository = RepositoryManager.getInstance().newRepository(metadata.getProjectName());
         repository.create(metadata, monitor);
-        project = (MultiModuleBonitaProjectImpl) Adapters.adapt(repository, BonitaProject.class);
+        project = Adapters.adapt(repository, MultiModuleProject.class);
     }
 
     @After
@@ -140,13 +141,13 @@ public class MultiModuleBonitaProjectImplTest {
         var gitignore = project.getAdapter(IProject.class).getFile(".gitignore");
         assertThat(gitignore.exists()).isTrue();
         assertThat(Files.readString(gitignore.getLocation().toFile().toPath()))
-                .isEqualTo(Files.readString(new File(RepositoryImpl.getGitignoreTemplateFileURL().getFile()).toPath()));
+                .isEqualTo(Files.readString(new File(GitProject.getGitignoreTemplateFileURL().getFile()).toPath()));
 
         var parentGitignore = project.getParentProject().getFile(".gitignore");
         assertThat(parentGitignore.exists()).isTrue();
         assertThat(Files.readString(parentGitignore.getLocation().toFile().toPath()))
                 .isEqualTo(Files.readString(
-                        new File(MultiModuleBonitaProjectImpl.getParentGitIgnoreTemplate().getFile()).toPath()));
+                        new File(GitProject.getParentGitIgnoreTemplate().getFile()).toPath()));
     }
 
     @Test

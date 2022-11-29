@@ -143,7 +143,7 @@ public class RepositoryManager {
             final IRepositoryFactory repositoryFactory = (IRepositoryFactory) repositoryImplementationElement
                     .createExecutableExtension(CLASS);
             AbstractRepository newRepository = repositoryFactory.newRepository(name);
-            for (IBonitaProjectListener listener : projectListeners) {
+            for (IBonitaProjectListener listener : getBonitaProjectListeners()) {
                 newRepository.addProjectListener(listener);
             }
             return newRepository;
@@ -300,11 +300,11 @@ public class RepositoryManager {
             }
             currentRepository = newRepository(repositoryName);
         }
-        ProjectMetadata metadata = ProjectMetadata.read(currentRepository.getProject(), monitor);
-        metadata.setArtifactId(repositoryName);
-        monitor.setTaskName(Messages.creatingNewProject);
-        var project = Adapters.adapt(currentRepository.create(metadata, monitor), BonitaProject.class);
         try {
+            var metadata = ProjectMetadata.read(currentRepository.getProject(), monitor);
+            metadata.setArtifactId(repositoryName);
+            monitor.setTaskName(Messages.creatingNewProject);
+            var project = Adapters.adapt(currentRepository.create(metadata, monitor), BonitaProject.class);
             project.open(monitor);
         } catch (CoreException e) {
             BonitaStudioLog.error(e);
@@ -329,7 +329,7 @@ public class RepositoryManager {
     }
 
     public List<IBonitaProjectListener> getBonitaProjectListeners() {
-        return projectListeners;
+        return Collections.unmodifiableList(projectListeners);
     }
 
     public boolean hasActiveRepository() {
@@ -359,13 +359,6 @@ public class RepositoryManager {
         if (currentRepository.filter(repo -> Objects.equals(repo.getName(), repositoryName)).isPresent()) {
             return currentRepository.get();
         }
-        //        getCurrentProject().ifPresent(project -> {
-        //            try {
-        //                project.close(new NullProgressMonitor());
-        //            } catch (CoreException e) {
-        //                BonitaStudioLog.error(e);
-        //            }
-        //        });
         try {
             WorkspaceModifyOperation workspaceModifyOperation = new WorkspaceModifyOperation() {
 
@@ -390,7 +383,7 @@ public class RepositoryManager {
         } catch (final InvocationTargetException | InterruptedException e) {
             BonitaStudioLog.error(e);
         }
-        
+
         return RepositoryManager.getInstance()
                 .getCurrentRepository().orElseThrow();
 

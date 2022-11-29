@@ -69,7 +69,7 @@ public abstract class AbstractRepositoryStore<T extends IRepositoryFileStore<?>>
 
     private static final String CLASS = "class";
     public static final IValidator<InputStream> DEFAULT_MODEL_VALIDATOR = is -> ValidationStatus.ok();
-    private IFolder folder;
+    protected IFolder folder;
     protected IRepository repository;
     
     public static final Map<String, Integer> REPO_STORE_ORDER = new HashMap<>();
@@ -138,7 +138,7 @@ public abstract class AbstractRepositoryStore<T extends IRepositoryFileStore<?>>
     }
 
     @Override
-    public final T importInputStream(final String fileName, final InputStream inputStream) {
+    public T importInputStream(final String fileName, final InputStream inputStream) {
         Assert.isNotNull(inputStream);
         Assert.isNotNull(fileName);
         InputStream newIs = null;
@@ -417,12 +417,16 @@ public abstract class AbstractRepositoryStore<T extends IRepositoryFileStore<?>>
     protected List<IResource> listChildren() throws CoreException {
         refresh();
         final IFolder folder = getResource();
-        final FileStoreCollector collector = new FileStoreCollector(folder,
-                toArray(getCompatibleExtensions(), String.class));
+        final FileStoreCollector collector = fileStoreCollector();
         if (folder.exists()) {
             folder.accept(collector);
         }
         return collector.toList();
+    }
+    
+    protected FileStoreCollector fileStoreCollector() {
+        return new FileStoreCollector(folder,
+                toArray(getCompatibleExtensions(), String.class));
     }
 
     @Override

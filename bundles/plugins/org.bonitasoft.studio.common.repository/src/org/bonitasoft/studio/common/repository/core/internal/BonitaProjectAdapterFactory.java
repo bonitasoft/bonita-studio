@@ -14,25 +14,59 @@
  */
 package org.bonitasoft.studio.common.repository.core.internal;
 
+import org.apache.maven.model.Model;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.core.BonitaProject;
+import org.bonitasoft.studio.common.repository.core.MultiModuleProject;
 import org.bonitasoft.studio.common.repository.core.maven.MavenProjectHelper;
 import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdapterFactory;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.m2e.core.MavenPlugin;
 
 public class BonitaProjectAdapterFactory implements IAdapterFactory {
 
     @SuppressWarnings("unchecked")
     @Override
     public <T> T getAdapter(Object adaptableObject, Class<T> adapterType) {
-        if (adapterType.isAssignableFrom(BonitaProject.class)) {
+        if (adapterType.equals(MultiModuleProject.class)) {
             if (adaptableObject instanceof IRepository) {
                 var repository = (IRepository) adaptableObject;
                 IProject project = repository.getProject();
-                if(project == null || project.getLocation() == null || !project.getLocation().toFile().exists()) {
+                if (project == null || project.getLocation() == null || !project.getLocation().toFile().exists()) {
+                    return null;
+                }
+                Model model = null;
+                var mavenFacade = MavenPlugin.getMavenProjectRegistry().create(project, new NullProgressMonitor());
+                if (mavenFacade == null) {
+                    var pomFile = project.getLocation().toFile().toPath().resolve("pom.xml");
+                    try {
+                        model = MavenProjectHelper.readModel(pomFile.toFile());
+                    } catch (CoreException e) {
+                        BonitaStudioLog.error(e);
+                        return null;
+                    }
+                } else {
+                    try {
+                        model = mavenFacade.getMavenProject(new NullProgressMonitor()).getModel();
+                    } catch (CoreException e) {
+                        BonitaStudioLog.error(e);
+                        return null;
+                    }
+                }
+                if (model.getParent() != null) {
+                    return (T) new MultiModuleBonitaProjectImpl(repository);
+                }
+                return null;
+            }
+        } else if (adapterType.equals(BonitaProject.class)) {
+            if (adaptableObject instanceof IRepository) {
+                var repository = (IRepository) adaptableObject;
+                IProject project = repository.getProject();
+                if (project == null || project.getLocation() == null || !project.getLocation().toFile().exists()) {
                     return null;
                 }
                 var pomFile = project.getLocation().toFile().toPath().resolve("pom.xml");
@@ -46,7 +80,7 @@ public class BonitaProjectAdapterFactory implements IAdapterFactory {
                     BonitaStudioLog.error(e1);
                     return null;
                 }
-            }else if(adaptableObject instanceof IProject) {
+            } else if (adaptableObject instanceof IProject) {
                 var repository = RepositoryManager.getInstance().getRepository(((IProject) adaptableObject).getName());
                 return getAdapter(repository, adapterType);
             }
@@ -56,7 +90,7 @@ public class BonitaProjectAdapterFactory implements IAdapterFactory {
 
     @Override
     public Class<?>[] getAdapterList() {
-        return new Class[] { BonitaProject.class };
+        return new Class[] { BonitaProject.class, MultiModuleProject.class };
     }
 
 }

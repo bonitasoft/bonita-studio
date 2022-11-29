@@ -22,7 +22,7 @@ import java.text.MessageFormat;
 
 import org.bonitasoft.studio.common.core.IRunnableWithStatus;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.core.internal.RepositoryImpl;
+import org.bonitasoft.studio.common.repository.core.team.GitProject;
 import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.ui.jface.databinding.StatusToMarkerSeverity;
 import org.bonitasoft.studio.team.git.i18n.Messages;
@@ -37,6 +37,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.egit.core.GitProvider;
 import org.eclipse.egit.core.IteratorService;
 import org.eclipse.egit.core.project.RepositoryMapping;
+import org.eclipse.egit.ui.internal.clone.GitProjectsImportPage;
 import org.eclipse.jgit.ignore.IgnoreNode;
 import org.eclipse.jgit.ignore.IgnoreNode.MatchResult;
 import org.eclipse.jgit.treewalk.TreeWalk;
@@ -87,7 +88,7 @@ public class RepositoryValidator implements IRunnableWithStatus {
         if (repository.isShared(GitProvider.ID)) {
             try {
                 // load template gitignore
-                URL gitIgnoreTemplateUrl = RepositoryImpl.getGitignoreTemplateFileURL();
+                URL gitIgnoreTemplateUrl = GitProject.getGitignoreTemplateFileURL();
                 IgnoreNode ignoreByTemplate = new IgnoreNode();
                 try (InputStream templateStream = gitIgnoreTemplateUrl.openStream()) {
                     ignoreByTemplate.parse(templateStream);

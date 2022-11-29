@@ -40,7 +40,7 @@ import org.eclipse.m2e.core.internal.project.ProjectConfigurationManager;
 import org.eclipse.m2e.core.project.IMavenProjectFacade;
 import org.eclipse.m2e.core.project.MavenUpdateRequest;
 
-public class BonitaProjectPlugin {
+public class AnalyzeBonitaProjectDependenciesPlugin {
 
     private static final String DEAULT_REPORT_OUTPUT_FILE = "target/bonita-dependencies.json";
 
@@ -48,11 +48,11 @@ public class BonitaProjectPlugin {
 
     private static Object lock = new Object();
 
-    public BonitaProjectPlugin(IProject project) {
+    public AnalyzeBonitaProjectDependenciesPlugin(IProject project) {
         this.project = project;
     }
 
-    public IStatus execute(IProject project, IProgressMonitor monitor) throws CoreException {
+    public IStatus execute(IProgressMonitor monitor) throws CoreException {
         synchronized (lock) {
             monitor.beginTask(Messages.analyzeProjectDependencies, IProgressMonitor.UNKNOWN);
 
@@ -62,17 +62,9 @@ public class BonitaProjectPlugin {
                 return new Status(IStatus.ERROR, getClass(),
                         "An error occured while executing bonita project plugin. Cannot resolve the Maven project.");
             }
-            List<String> goals = List.of(String.format("%s:%s:%s",
-                    DefaultPluginVersions.BONITA_PROJECT_MAVEN_PLUGIN_GROUP_ID,
-                    DefaultPluginVersions.BONITA_PROJECT_MAVEN_PLUGIN_ARTIFACT_ID,
-                    "install"),
-                    String.format("%s:%s:%s",
-                            DefaultPluginVersions.BONITA_PROJECT_MAVEN_PLUGIN_GROUP_ID,
-                            DefaultPluginVersions.BONITA_PROJECT_MAVEN_PLUGIN_ARTIFACT_ID,
-                            "analyze"));
             var ctx = maven.createExecutionContext();
             var request = ctx.getExecutionRequest();
-            request.setGoals(goals);
+            request.setGoals(List.of("bonita-project:install", "bonita-project:analyze"));
             request.setPom(mavenProject.getFile());
             MavenExecutionResult executionResult = ctx.execute(mavenProject, new ICallable<MavenExecutionResult>() {
 

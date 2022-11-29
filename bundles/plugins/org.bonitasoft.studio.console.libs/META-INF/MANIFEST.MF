@@ -1,13 +1,13 @@
 Manifest-Version: 1.0
 Automatic-Module-Name: org.bonitasoft.studio.console.libs
-Bundle-ClassPath: .,lib/bonita-client.jar,lib/jaxb-api.jar,lib/javax.act
- ivation-api.jar,lib/jaxb-runtime.jar,lib/txw2.jar,lib/istack-commons-ru
- ntime.jar,lib/stax-ex.jar,lib/FastInfoset.jar,lib/httpclient.jar,lib/ht
- tpcore.jar,lib/commons-logging.jar,lib/commons-codec.jar,lib/xstream.ja
- r,lib/mxparser.jar,lib/xmlpull.jar,lib/httpmime.jar,lib/bonita-common.j
- ar,lib/jakarta.activation.jar,lib/commons-io.jar,lib/jackson-databind.j
- ar,lib/jackson-core.jar,lib/slf4j-api.jar,lib/commons-lang3.jar,lib/jac
- kson-annotations.jar
+Bundle-ClassPath: .,lib/bonita-client.jar,lib/httpclient.jar,lib/httpcor
+ e.jar,lib/commons-logging.jar,lib/commons-codec.jar,lib/xstream.jar,lib
+ /mxparser.jar,lib/xmlpull.jar,lib/httpmime.jar,lib/jaxb-api.jar,lib/jav
+ ax.activation-api.jar,lib/jaxb-runtime.jar,lib/txw2.jar,lib/istack-comm
+ ons-runtime.jar,lib/stax-ex.jar,lib/FastInfoset.jar,lib/bonita-common.j
+ ar,lib/commons-io.jar,lib/jackson-databind.jar,lib/jackson-core.jar,lib
+ /slf4j-api.jar,lib/commons-lang3.jar,lib/jackson-annotations.jar,lib/ja
+ karta.activation.jar
 Bundle-ManifestVersion: 2
 Bundle-Name: Bonita Community Tomcat Bundle
 Bundle-RequiredExecutionEnvironment: JavaSE-11
@@ -22,7 +22,6 @@ Export-Package:
  org.bonitasoft.engine.api.internal;version="0.0.0",
  org.bonitasoft.engine.api.permission;version="0.0.0",
  org.bonitasoft.engine.api.result;version="0.0.0",
- org.bonitasoft.engine.bar;version="0.0.0",
  org.bonitasoft.engine.bdm;version="0.0.0",
  org.bonitasoft.engine.bdm.dao;version="0.0.0",
  org.bonitasoft.engine.bdm.lazy;version="0.0.0",

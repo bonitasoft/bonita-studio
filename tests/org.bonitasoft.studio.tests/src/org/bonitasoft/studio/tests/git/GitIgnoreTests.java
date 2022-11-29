@@ -32,7 +32,7 @@ import org.bonitasoft.studio.common.core.IRunnableWithStatus;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
-import org.bonitasoft.studio.common.repository.core.internal.RepositoryImpl;
+import org.bonitasoft.studio.common.repository.core.team.GitProject;
 import org.bonitasoft.studio.tests.util.InitialProjectRule;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -86,7 +86,7 @@ public class GitIgnoreTests {
         }
         // have .gitignore file corresponding to template
         var gitIgnore = sharedProject.getFile(Constants.GITIGNORE_FILENAME);
-        URL gitIgnoreTemplateUrl = RepositoryImpl.getGitignoreTemplateFileURL();
+        URL gitIgnoreTemplateUrl = GitProject.getGitignoreTemplateFileURL();
         try (var templateStream = gitIgnoreTemplateUrl.openStream()) {
             if (!gitIgnore.exists()) {
                 // create new gile from template
@@ -135,7 +135,7 @@ public class GitIgnoreTests {
         }
         // have .gitignore file corresponding back to template
         var gitIgnore = sharedProject.getFile(Constants.GITIGNORE_FILENAME);
-        URL gitIgnoreTemplateUrl = RepositoryImpl.getGitignoreTemplateFileURL();
+        URL gitIgnoreTemplateUrl = GitProject.getGitignoreTemplateFileURL();
         try (var templateStream = gitIgnoreTemplateUrl.openStream()) {
             // just restore it from template
             gitIgnore.setContents(templateStream, true, true, new NullProgressMonitor());

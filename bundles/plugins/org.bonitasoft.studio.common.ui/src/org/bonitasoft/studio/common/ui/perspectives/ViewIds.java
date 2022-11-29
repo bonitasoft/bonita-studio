@@ -17,6 +17,6 @@ package org.bonitasoft.studio.common.ui.perspectives;
 
 public interface ViewIds {
     
-    public static final String PROBLEM_VIEW_ID = "org.eclipse.ui.views.ProblemView"; 
+    public static final String PROBLEM_VIEW_ID = "org.bonitasoft.studio.rest.api.extension.problemView"; 
 
 }

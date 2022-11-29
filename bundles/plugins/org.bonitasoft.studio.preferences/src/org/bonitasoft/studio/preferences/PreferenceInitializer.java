@@ -33,6 +33,7 @@ import org.eclipse.debug.internal.ui.DebugUIPlugin;
 import org.eclipse.debug.internal.ui.preferences.IDebugPreferenceConstants;
 import org.eclipse.egit.core.Activator;
 import org.eclipse.egit.core.GitCorePreferences;
+import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.ui.PreferenceConstants;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -83,9 +84,13 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer impleme
 
         initDefaultDebugPreferences();
 
-        final IPreferenceStore jdtUIStore = getJDTPreferenceStore();
+        var jdtUIStore = getJdtUiPreferenceStore();
         jdtUIStore.setValue(PreferenceConstants.EDITOR_MARK_OCCURRENCES, Boolean.FALSE);
-
+        
+        var coreOptions= JavaCore.getOptions();
+        coreOptions.put(JavaCore.COMPILER_PB_MISSING_SERIAL_VERSION, JavaCore.IGNORE);
+        JavaCore.setOptions(coreOptions);
+        
         IPreferenceStore preferenceStore = getIDEPreferenceStore();
         try {
             preferenceStore.setDefault(
@@ -120,11 +125,11 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer impleme
         gitPreferenceStore.setDefault(GitCorePreferences.core_autoShareProjects, false);
     }
 
-    protected IPreferenceStore getIDEPreferenceStore() {
+    IPreferenceStore getIDEPreferenceStore() {
         return IDEWorkbenchPlugin.getDefault().getPreferenceStore();
     }
 
-    protected IEclipsePreferences getGroovyCorePreferenceStore() {
+    IEclipsePreferences getGroovyCorePreferenceStore() {
         return InstanceScope.INSTANCE.getNode(org.eclipse.jdt.groovy.core.Activator.PLUGIN_ID);
     }
 
@@ -134,13 +139,17 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer impleme
                 .getDefault().getBundle().getSymbolicName());
 
         node.putBoolean(IPreferenceConstants.RUN_IN_BACKGROUND, false);
+        
+        var description = ResourcesPlugin.getWorkspace().getDescription();
+        description.setAutoBuilding(false);
+        ResourcesPlugin.getPlugin().getPluginPreferences().setValue(ResourcesPlugin.PREF_AUTO_BUILDING, false);
     }
 
-    protected IPreferenceStore getJDTPreferenceStore() {
+    IPreferenceStore getJdtUiPreferenceStore() {
         return PreferenceConstants.getPreferenceStore();
     }
-
-    protected IPreferenceStore getAPIPreferenceStore() {
+   
+    IPreferenceStore getAPIPreferenceStore() {
         return PrefUtil.getAPIPreferenceStore();
     }
 
@@ -149,11 +158,11 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer impleme
         node.put(ResourcesPlugin.PREF_ENCODING, "UTF-8");
     }
 
-    protected IPreferenceStore getWebBrowserPreferenceStore() {
+    IPreferenceStore getWebBrowserPreferenceStore() {
         return WebBrowserUIPlugin.getInstance().getPreferenceStore();
     }
 
-    protected IPreferenceStore getBonitaPreferenceStore() {
+    IPreferenceStore getBonitaPreferenceStore() {
         return BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore();
     }
 

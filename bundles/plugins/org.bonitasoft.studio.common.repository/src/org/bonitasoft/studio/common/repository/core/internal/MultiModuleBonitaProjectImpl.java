@@ -14,17 +14,14 @@
  */
 package org.bonitasoft.studio.common.repository.core.internal;
 
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
 import org.bonitasoft.studio.common.repository.RepositoryManager;
-import org.bonitasoft.studio.common.repository.core.BonitaProject;
 import org.bonitasoft.studio.common.repository.core.MultiModuleProject;
+import org.bonitasoft.studio.common.repository.core.internal.team.GitProjectImpl;
 import org.bonitasoft.studio.common.repository.core.maven.MavenProjectHelper;
 import org.bonitasoft.studio.common.repository.core.maven.model.ProjectDefaultConfiguration;
 import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
@@ -35,61 +32,115 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IWorkspaceRunnable;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.SubMonitor;
-import org.eclipse.egit.core.internal.util.ResourceUtil;
-import org.eclipse.jface.operation.IRunnableWithProgress;
-import org.eclipse.jgit.lib.Constants;
-import org.eclipse.jgit.lib.Repository;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.m2e.core.MavenPlugin;
 import org.eclipse.m2e.core.internal.IMavenConstants;
 import org.eclipse.m2e.core.internal.project.ProjectConfigurationManager;
+import org.eclipse.m2e.core.project.IMavenProjectImportResult;
 import org.eclipse.m2e.core.project.MavenProjectInfo;
 import org.eclipse.m2e.core.project.MavenUpdateRequest;
 import org.eclipse.m2e.core.project.ProjectImportConfiguration;
-import org.eclipse.ui.actions.WorkspaceModifyOperation;
+import org.eclipse.m2e.core.ui.internal.UpdateMavenProjectJob;
 
-public class MultiModuleBonitaProjectImpl extends BonitaProjectImpl implements BonitaProject, MultiModuleProject {
+public class MultiModuleBonitaProjectImpl extends BonitaProjectImpl implements MultiModuleProject {
 
     private static final String APP_MODULE_SUFFIX = "-app";
     private static final String PARENT_SUFFIX = "-parent";
-    private static final String PARENT_GITIGNORE_TEMPLATE = ".gitignore.parent.template";
     private static final String APP_MODULE = "app";
     private MavenProjectHelper mavenProjectHelper = new MavenProjectHelper();
 
     public MultiModuleBonitaProjectImpl(IRepository repository) {
         super(repository);
+        gitProjectDelegate = new GitProjectImpl(getParentProject());
     }
 
     @Override
     public void open(IProgressMonitor monitor) throws CoreException {
+        for(var project : getRelatedProjects()) {
+            project.open(monitor);
+        }
         super.open(monitor);
-        getParentProject().open(monitor);
     }
 
     @Override
     public void close(IProgressMonitor monitor) throws CoreException {
-        getParentProject().close(monitor);
         super.close(monitor);
+        for(var project : getRelatedProjects()) {
+            project.close(monitor);
+        }
     }
 
     @Override
     public void delete(IProgressMonitor monitor) throws CoreException {
+       for(var project : getRelatedProjects()) {
+           project.delete(true,  true, monitor);
+       }
+    }
+
+    @Override
+    public List<IProject> getRelatedProjects() {
+        var relatedProjects = new ArrayList<IProject>();
+        var bdmParentProject = getBdmParentProject();
+        if(bdmParentProject.exists()) {
+            relatedProjects.add(bdmParentProject);
+        }
+        var bdmModelProject = getBdmModelProject();
+        if(bdmModelProject.exists()) {
+            relatedProjects.add(bdmModelProject);
+        }
+        var bdmDaoClientProject = getBdmDaoClientProject();
+        if(bdmDaoClientProject.exists()) {
+            relatedProjects.add(bdmDaoClientProject);
+        }
         var parentProject = getParentProject();
-        var subMonitor = SubMonitor.convert(monitor)
-                .newChild(IProgressMonitor.UNKNOWN, SubMonitor.SUPPRESS_SUBTASK);
-        repository.getProject().delete(false, true, monitor);
-        parentProject.delete(true, true, subMonitor);
+        if(parentProject.exists()) {
+            relatedProjects.add(parentProject);
+        }
+        var appProject = getAppProject();
+        if(appProject.exists()) {
+            relatedProjects.add(appProject);
+        }
+        return relatedProjects;
     }
 
     @Override
     public IProject getParentProject() {
-        var metadata = getProjectMetadata(new NullProgressMonitor());
-        return repository.getProject().getWorkspace().getRoot().getProject(metadata.getArtifactId());
+        return getProject(getId());
+    }
+
+    @Override
+    public IProject getBdmParentProject() {
+        return getProject(getId() + "-bdm-parent");
+    }
+
+    @Override
+    public IProject getBdmDaoClientProject() {
+        return getProject(getId() + "-bdm-dao-client");
+    }
+
+    @Override
+    public IProject getBdmModelProject() {
+        return getProject(getId() + "-bdm-model");
+    }
+
+    @Override
+    public IProject getAppProject() {
+        return repository.getProject();
+    }
+
+    private IProject getProject(String name) {
+        return ResourcesPlugin.getWorkspace().getRoot().getProject(name);
+    }
+
+    @Override
+    public void refresh(IProgressMonitor monitor) throws CoreException {
+        new UpdateMavenProjectJob(getRelatedProjects().toArray(IProject[]::new), false, false, false, true, true).run(monitor);
+        repository.getProjectDependenciesStore().analyze(monitor);
     }
 
     @Override
@@ -110,7 +161,8 @@ public class MultiModuleBonitaProjectImpl extends BonitaProjectImpl implements B
         model.setDescription(metadata.getDescription());
 
         var parentProject = getParentProject();
-        var parentModel = MavenProjectHelper.readModel(parentProject.getFile(IMavenConstants.POM_FILE_NAME).getLocation().toFile());
+        var parentModel = MavenProjectHelper
+                .readModel(parentProject.getFile(IMavenConstants.POM_FILE_NAME).getLocation().toFile());
         parentModel.setGroupId(metadata.getGroupId());
         parentModel.setVersion(metadata.getVersion());
         parentModel.setArtifactId(newProjectId + PARENT_SUFFIX);
@@ -119,15 +171,55 @@ public class MultiModuleBonitaProjectImpl extends BonitaProjectImpl implements B
 
         mavenProjectHelper.saveModel(parentProject, parentModel, monitor);
 
+        var bdmParentProject = getBdmParentProject();
+        if (bdmParentProject.exists()) {
+            var bdmParentModel = mavenProjectHelper.getMavenModel(bdmParentProject);
+            bdmParentModel.getParent().setGroupId(metadata.getGroupId());
+            bdmParentModel.getParent().setArtifactId(newProjectId + PARENT_SUFFIX);
+            bdmParentModel.getParent().setVersion(metadata.getVersion());
+            bdmParentModel.setArtifactId(newProjectId + "-bdm-parent");
+            mavenProjectHelper.saveModel(bdmParentProject, bdmParentModel, monitor);
+
+            var bdmModelProject = getBdmModelProject();
+            var bdmModelModel = mavenProjectHelper.getMavenModel(bdmModelProject);
+            bdmModelModel.getParent().setGroupId(metadata.getGroupId());
+            bdmModelModel.getParent().setArtifactId(newProjectId + "-bdm-parent");
+            bdmModelModel.getParent().setVersion(metadata.getVersion());
+            bdmModelModel.setArtifactId(newProjectId + "-bdm-model");
+            mavenProjectHelper.saveModel(bdmModelProject, bdmModelModel, monitor);
+
+            var bdmDaoClientProject = getBdmDaoClientProject();
+            var bdmDaoClientModel = mavenProjectHelper.getMavenModel(bdmDaoClientProject);
+            bdmDaoClientModel.getParent().setGroupId(metadata.getGroupId());
+            bdmDaoClientModel.getParent().setArtifactId(newProjectId + "-bdm-parent");
+            bdmDaoClientModel.getParent().setVersion(metadata.getVersion());
+            bdmDaoClientModel.setArtifactId(newProjectId + "-bdm-dao-client");
+
+            bdmDaoClientModel.getDependencies().stream()
+                    .filter(d -> Objects.equals(projectId + "-bdm-model", d.getArtifactId()))
+                    .findFirst()
+                    .ifPresent(d -> d.setArtifactId(newProjectId + "-bdm-model"));
+            
+            model.getDependencies().stream()
+                .filter(d -> Objects.equals(projectId + "-bdm-model", d.getArtifactId()))
+                .findFirst()
+                .ifPresent(d -> d.setArtifactId(newProjectId + "-bdm-model"));
+
+            mavenProjectHelper.saveModel(bdmDaoClientProject, bdmDaoClientModel, monitor);
+            if (Objects.equals(projectId, newProjectId)) {
+                new UpdateMavenProjectJob(new IProject[] { bdmParentProject, bdmModelProject, bdmDaoClientProject },
+                        false,
+                        false,
+                        false,
+                        true,
+                        true).run(monitor);
+            }
+        }
+
         if (!Objects.equals(projectId, newProjectId)) {
             mavenProjectHelper.saveModel(project, model, monitor);
-            if (repository.closeAllEditors()) {
-                WorkspaceModifyOperation operation = renameProjectsOperation(project, newProjectId, parentProject);
-                try {
-                    operation.run(monitor);
-                } catch (InvocationTargetException | InterruptedException e) {
-                    throw new CoreException(Status.error("Failed to update project metadata", e));
-                }
+            if (repository.closeAllEditors(false)) {
+                ResourcesPlugin.getWorkspace().run(renameProjectsOperation(project, projectId, newProjectId), monitor);
                 PlatformUtil.openIntroIfNoOtherEditorOpen();
             }
         } else {
@@ -139,76 +231,115 @@ public class MultiModuleBonitaProjectImpl extends BonitaProjectImpl implements B
                     .updateProjectConfiguration(new MavenUpdateRequest(parentProject, false, false), false, false, true,
                             monitor);
         }
-        if (!Objects.equals(oldMetadata.getBonitaRuntimeVersion(), metadata.getBonitaRuntimeVersion())) {
-            updateRestApiExtensionBontitaRuntimeVersion(metadata.getBonitaRuntimeVersion(), monitor);
-        }
+        updateRestApiExtension(oldMetadata, metadata, monitor);
     }
 
-    private WorkspaceModifyOperation renameProjectsOperation(IProject project, String newProjectId, IProject parentProject) {
-        WorkspaceModifyOperation operation = new WorkspaceModifyOperation() {
+    @Override
+    public void removeBdmProjects(IProgressMonitor monitor) throws CoreException {
+        var mavenProjectHelper = new MavenProjectHelper();
+        var parentProject = getParentProject();
+        var parentModel = mavenProjectHelper.getMavenModel(parentProject);
+        parentModel.getModules().removeIf("bdm"::equals);
+        mavenProjectHelper.saveModel(parentProject, parentModel, new NullProgressMonitor());
+
+        getBdmModelProject().delete(true, true, new NullProgressMonitor());
+        getBdmDaoClientProject().delete(true, true, new NullProgressMonitor());
+        getBdmParentProject().delete(true, true, new NullProgressMonitor());
+
+        parentProject.getFolder("bdm").delete(true, new NullProgressMonitor());
+    }
+
+    private IWorkspaceRunnable renameProjectsOperation(IProject project, String oldProjectId, String newProjectId) {
+        return new IWorkspaceRunnable() {
 
             @Override
-            protected void execute(IProgressMonitor monitor)
-                    throws CoreException, InvocationTargetException, InterruptedException {
-                repository.close(SubMonitor.convert(monitor).newChild(IProgressMonitor.UNKNOWN,
-                        SubMonitor.SUPPRESS_SUBTASK));
-                repository.getProject().delete(false, true, SubMonitor.convert(monitor)
-                        .newChild(IProgressMonitor.UNKNOWN, SubMonitor.SUPPRESS_SUBTASK));
+            public void run(IProgressMonitor monitor)
+                    throws CoreException {
+
+                repository.close(monitor);
+
+                var appProject = getProject(oldProjectId + "-app");
+                appProject.delete(false, true, monitor);
+
+                var bdmParentProject = getProject(oldProjectId + "-bdm-parent");
+                if (bdmParentProject.exists()) {
+                    IProject bdmModelProject = getProject(oldProjectId + "-bdm-model");
+                    var descriptorFile = bdmModelProject.getFile(".project").getLocation().toFile();
+                    descriptorFile.delete();
+                    bdmModelProject.delete(false, true, monitor);
+
+                    var bdmDaoClientProject = getProject(oldProjectId + "-bdm-dao-client");
+                    descriptorFile = bdmDaoClientProject.getFile(".project").getLocation().toFile();
+                    descriptorFile.delete();
+                    bdmDaoClientProject.delete(false, true, monitor);
+
+                    descriptorFile = bdmParentProject.getFile(".project").getLocation().toFile();
+                    descriptorFile.delete();
+                    bdmParentProject.delete(false, true, monitor);
+                }
+
+                var parentProject = getProject(oldProjectId);
                 var description = parentProject.getDescription();
                 description.setName(newProjectId);
-                parentProject.move(description, IResource.FORCE | IResource.SHALLOW, SubMonitor.convert(monitor)
-                        .newChild(IProgressMonitor.UNKNOWN, SubMonitor.SUPPRESS_SUBTASK));
-                var newParentProject = project.getWorkspace().getRoot().getProject(newProjectId);
+                parentProject.move(description, IResource.FORCE | IResource.SHALLOW, monitor);
+                var newParentProject = getProject(newProjectId);
+
+                var projectsToUpdate = new ArrayList<>();
+                projectsToUpdate.add(newParentProject);
+
                 var appModule = newParentProject.getFolder(APP_MODULE);
-                var pomFile = appModule.getFile(IMavenConstants.POM_FILE_NAME);
                 var projectImportConfiguration = new ProjectImportConfiguration();
                 projectImportConfiguration.setProjectNameTemplate(newProjectId + APP_MODULE_SUFFIX);
-                var projectInfo = new MavenProjectInfo(null, pomFile.getLocation().toFile(), null, null);
-                var importProjects = MavenPlugin.getProjectConfigurationManager().importProjects(
-                        List.of(projectInfo),
-                        projectImportConfiguration, SubMonitor.convert(monitor)
-                                .newChild(IProgressMonitor.UNKNOWN, SubMonitor.SUPPRESS_SUBTASK));
-                var appProject = importProjects.get(0).getProject();
-                var appProjectDesc = appProject.getDescription();
-                appProjectDesc.setName(newProjectId + APP_MODULE_SUFFIX);
-                appProject.move(appProjectDesc, IResource.FORCE | IResource.SHALLOW, SubMonitor.convert(monitor)
-                        .newChild(IProgressMonitor.UNKNOWN, SubMonitor.SUPPRESS_SUBTASK));
-                repository = RepositoryManager.getInstance().getRepository(newProjectId + APP_MODULE_SUFFIX);
+                var importResults = MavenPlugin.getProjectConfigurationManager().importProjects(
+                        List.of(projectInfo(appModule)),
+                        projectImportConfiguration, monitor);
+                appProject = importResults.get(0).getProject();
+                description = appProject.getDescription();
+                description.setName(newProjectId + APP_MODULE_SUFFIX);
+                appProject.move(description, IResource.FORCE | IResource.SHALLOW, monitor);
+
+                // Reimport bdm modules
+                var bdmModule = newParentProject.getFolder("bdm");
+                if (bdmModule.exists()) {
+                    var projectInfoToImport = new ArrayList<MavenProjectInfo>();
+                    projectInfoToImport.add(projectInfo(bdmModule));
+                    projectInfoToImport.add(projectInfo(bdmModule.getFolder("model")));
+                    projectInfoToImport.add(projectInfo(bdmModule.getFolder("dao-client")));
+                    projectImportConfiguration = new ProjectImportConfiguration();
+                    projectImportConfiguration.setProjectNameTemplate("[artifactId]");
+                    importResults = MavenPlugin.getProjectConfigurationManager().importProjects(
+                            projectInfoToImport,
+                            projectImportConfiguration, monitor);
+                    importResults.stream()
+                            .map(IMavenProjectImportResult::getProject)
+                            .filter(Objects::nonNull)
+                            .forEach(projectsToUpdate::add);
+                    IFolder bdmFolder = appProject.getFolder("bdm");
+                    if (bdmFolder.exists()) {
+                        bdmFolder.delete(true, monitor);
+                    }
+                    bdmFolder.createLink(Path.fromOSString("PARENT-1-PROJECT_LOC/bdm"),
+                            IResource.REPLACE | IResource.ALLOW_MISSING_LOCAL, monitor);
+                }
+
+                repository = RepositoryManager.getInstance().getRepository(appProject.getName());
                 repository.open(monitor);
+
+                new UpdateMavenProjectJob(projectsToUpdate.toArray(IProject[]::new),
+                        false,
+                        false,
+                        false,
+                        false,
+                        true).run(monitor);
+
             }
+
         };
-        return operation;
     }
 
-    @Override
-    public IRunnableWithProgress newConnectProviderOperation() throws CoreException {
-        return connectProviderOperation(getParentProject());
-    }
-
-    @Override
-    public void createDefaultIgnoreFile() throws CoreException {
-        super.createDefaultIgnoreFile();
-        var parentGitIgnoreFile = getParentProject().getFile(Constants.DOT_GIT_IGNORE);
-        try (var is = getParentGitIgnoreTemplate().openStream()) {
-            if (parentGitIgnoreFile.exists()) {
-                parentGitIgnoreFile.setContents(is, true, true, new NullProgressMonitor());
-            } else {
-                parentGitIgnoreFile.create(is, true, new NullProgressMonitor());
-            }
-        } catch (IOException e) {
-            throw new CoreException(Status.error("Failed create parent project .gitignore file.", e));
-        }
-    }
-
-    @SuppressWarnings("unchecked")
-    @Override
-    public <T> T getAdapter(Class<T> adapter) {
-        if (Repository.class.equals(adapter)) {
-            return (T) ResourceUtil.getRepository(getParentProject());
-        }else if(IProject.class.equals(adapter)) {
-            return (T) repository.getProject();
-        }
-        return null;
+    private MavenProjectInfo projectInfo(IFolder bdmModule) {
+        return new MavenProjectInfo(null, bdmModule.getFile(IMavenConstants.POM_FILE_NAME).getLocation().toFile(), null,
+                null);
     }
 
     @Override
@@ -236,10 +367,7 @@ public class MultiModuleBonitaProjectImpl extends BonitaProjectImpl implements B
         }
         return resources;
     }
-    
-    static URL getParentGitIgnoreTemplate() throws IOException {
-        return FileLocator
-                .toFileURL(MultiModuleBonitaProjectImpl.class.getResource(PARENT_GITIGNORE_TEMPLATE));
-    }
+
+
 
 }

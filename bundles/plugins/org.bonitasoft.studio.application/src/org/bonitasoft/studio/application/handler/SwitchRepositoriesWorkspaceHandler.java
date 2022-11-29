@@ -56,9 +56,8 @@ public class SwitchRepositoriesWorkspaceHandler extends AbstractHandler {
             final IProgressService progressManager = PlatformUI.getWorkbench().getProgressService();
             final IRepository repo = dialog.getRepository();
             if (repo != null) {
-                final boolean closed = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
-                        .closeAllEditors(true);
-                if (closed) {
+                var currentRepo = RepositoryManager.getInstance().getCurrentRepository().orElse(null);
+                if (currentRepo == null || currentRepo.closeAllEditors(true)) {
                     final IRunnableWithProgress runnable = new IRunnableWithProgress() {
 
                         @Override

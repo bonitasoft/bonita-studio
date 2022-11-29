@@ -45,11 +45,10 @@ public class NewRestAPIExtensionWizard extends Wizard {
             MavenProjectConfiguration projectConfiguration,
             IWorkspace workspace,
             WidgetFactory widgetFactory,
-            String bdmPackage,
-            String bdmVersion,
+            boolean addBdmDependency,
             RestAPIAddressResolver addressReolver) {
         this.repositoryStore = repositoryStore;
-        this.configuration = RestAPIExtensionArchetypeConfiguration.defaultArchetypeConfiguration(bdmPackage, bdmVersion);
+        this.configuration = RestAPIExtensionArchetypeConfiguration.defaultArchetypeConfiguration(addBdmDependency);
         this.configuration.setBonitaVersion(repositoryStore.getRepository().getBonitaRuntimeVersion());
         this.projectConfigurationManager = projectConfigurationManager;
         this.widgetFactory = widgetFactory;

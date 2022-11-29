@@ -20,6 +20,7 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.bonitasoft.studio.businessobject.core.operation.GenerateBDMOperation;
 import org.bonitasoft.studio.businessobject.core.repository.BDMArtifactDescriptor;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.core.maven.MavenInstallFileOperation;
@@ -53,6 +54,7 @@ public class InstallBDMDependenciesEventHandlerTest {
         BDMArtifactDescriptor bdmArtifactDescriptor = new BDMArtifactDescriptor();
         bdmArtifactDescriptor.setGroupId("com.company.test");
         properties.put("artifactDescriptor", bdmArtifactDescriptor);
+        properties.put(GenerateBDMOperation.BDM_CLIENT, new byte[0]);
         event = new Event("bdm/deployed", properties);
         doReturn(file).when(handler).tmpFile(any(), any());
         doReturn(installCommand).when(handler).newInstallOperation();

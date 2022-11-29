@@ -22,7 +22,7 @@ import java.util.Optional;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.core.InputStreamSupplier;
 import org.bonitasoft.studio.common.repository.core.LocalDependencyInputStreamSupplier;
-import org.bonitasoft.studio.common.repository.core.maven.migration.model.GAV;
+import org.bonitasoft.studio.common.repository.core.maven.model.GAV;
 import org.bonitasoft.studio.importer.bos.model.ArchiveInputStreamSupplier;
 import org.bonitasoft.studio.importer.bos.model.BosArchive;
 

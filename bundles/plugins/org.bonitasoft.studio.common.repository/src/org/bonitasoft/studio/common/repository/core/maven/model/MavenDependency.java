@@ -18,7 +18,6 @@ package org.bonitasoft.studio.common.repository.core.maven.model;
 
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.model.Dependency;
-import org.bonitasoft.studio.common.repository.core.maven.migration.model.GAV;
 
 public class MavenDependency {
     

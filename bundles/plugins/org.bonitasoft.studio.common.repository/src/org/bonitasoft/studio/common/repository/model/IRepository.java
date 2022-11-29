@@ -55,10 +55,10 @@ public interface IRepository extends IFileStoreChangeListener {
 
     void delete(IProgressMonitor monitor);
 
-    AbstractRepository open(IProgressMonitor monitor);
+    IRepository open(IProgressMonitor monitor);
 
     void close(IProgressMonitor monitor);
-
+    
     <T> T getRepositoryStore(final Class<T> repositoryStoreClass);
 
     Optional<IRepositoryStore<? extends IRepositoryFileStore>> getRepositoryStoreByName(String storeName);
@@ -100,7 +100,7 @@ public interface IRepository extends IFileStoreChangeListener {
     void rename(String name, IProgressMonitor monitor) 
             throws InvocationTargetException, InterruptedException;
     
-    boolean closeAllEditors();
+    boolean closeAllEditors(boolean save);
     
     String getBonitaRuntimeVersion();
 

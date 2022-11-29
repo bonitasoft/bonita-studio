@@ -18,7 +18,6 @@ import org.bonitasoft.studio.common.repository.preferences.RepositoryPreferenceC
 import org.bonitasoft.studio.maven.i18n.Messages;
 
 import com.google.common.base.Joiner;
-import com.google.common.base.Strings;
 
 public class RestAPIExtensionArchetypeConfiguration extends CustomPageArchetypeConfiguration {
 
@@ -43,8 +42,7 @@ public class RestAPIExtensionArchetypeConfiguration extends CustomPageArchetypeC
 
     private String bdmVersion;
 
-    public static RestAPIExtensionArchetypeConfiguration defaultArchetypeConfiguration(final String bdmGroupId,
-            String bdmVersion) {
+    public static RestAPIExtensionArchetypeConfiguration defaultArchetypeConfiguration(boolean addBdmDependency) {
         final RestAPIExtensionArchetypeConfiguration configuration = new RestAPIExtensionArchetypeConfiguration();
         configuration.setBonitaVersion(ProductVersion.BONITA_RUNTIME_VERSION);
         configuration.setPageName("resourceNameRestAPI");
@@ -58,9 +56,9 @@ public class RestAPIExtensionArchetypeConfiguration extends CustomPageArchetypeC
         configuration.getPermissions().add("myPermission");
         configuration.getUrlParameters().add("p");
         configuration.getUrlParameters().add("c");
-        configuration.setBdmGroupId(bdmGroupId);
-        configuration.setBdmVersion(bdmVersion);
-        configuration.setEnableBDMDependencies(bdmGroupId != null);
+        configuration.setBdmGroupId("!");
+        configuration.setBdmVersion("!");
+        configuration.setEnableBDMDependencies(addBdmDependency);
         return configuration;
     }
 
@@ -73,7 +71,7 @@ public class RestAPIExtensionArchetypeConfiguration extends CustomPageArchetypeC
     }
 
     public static RestAPIExtensionArchetypeConfiguration defaultArchetypeConfiguration() {
-        return defaultArchetypeConfiguration(null, null);
+        return defaultArchetypeConfiguration(false);
     }
 
     public void setBonitaVersion(final String bonitaVersion) {
@@ -157,10 +155,8 @@ public class RestAPIExtensionArchetypeConfiguration extends CustomPageArchetypeC
         properties.setProperty("pathTemplate", pathTemplate);
         properties.setProperty("permissionNames", Joiner.on(",").join(permissions));
         properties.setProperty("urlParameters", urlParameters.isEmpty() ? "!" : Joiner.on(",").join(urlParameters));
-        properties.setProperty("bdmGroupId",
-                !Strings.isNullOrEmpty(bdmGroupId) && isEnableBDMDependencies() ? bdmGroupId : "!");
-        properties.setProperty("bdmVersion",
-                !Strings.isNullOrEmpty(bdmVersion) && isEnableBDMDependencies() ? bdmVersion : "!");
+        properties.setProperty("bdmGroupId", "!");
+        properties.setProperty("bdmVersion", "!");
         properties.setProperty("wrapper", "false");
         return properties;
     }

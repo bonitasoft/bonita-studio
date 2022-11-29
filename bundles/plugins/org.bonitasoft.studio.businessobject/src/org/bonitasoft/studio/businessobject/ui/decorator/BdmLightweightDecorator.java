@@ -17,7 +17,6 @@ package org.bonitasoft.studio.businessobject.ui.decorator;
 import java.util.Objects;
 
 import org.bonitasoft.studio.businessobject.BusinessObjectPlugin;
-import org.bonitasoft.studio.businessobject.core.repository.AbstractBDMFileStore;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelFileStore;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
 import org.bonitasoft.studio.businessobject.i18n.Messages;
@@ -62,31 +61,36 @@ public class BdmLightweightDecorator extends LabelProvider
 
     @Override
     public void decorate(Object element, IDecoration decoration) {
-        if (!PlatformUI.isWorkbenchRunning() 
+        if (!PlatformUI.isWorkbenchRunning()
                 || ResourcesPlugin.getWorkspace() == null
-                || !repositoryAccessor.hasActiveRepository() 
+                || !repositoryAccessor.hasActiveRepository()
                 || repositoryAccessor.getCurrentRepository().filter(IRepository::isLoaded).isEmpty()) {
             return;
         }
 
         IResource resource = getResource(element);
         if (resource != null && isBdmResource(resource)) {
-            if (BusinessObjectPlugin.getDefault() != null 
-                    && BusinessObjectPlugin.getDefault().getPreferenceStore() != null 
+            if (BusinessObjectPlugin.getDefault() != null
+                    && BusinessObjectPlugin.getDefault().getPreferenceStore() != null
                     && BusinessObjectPlugin.getDefault().getPreferenceStore()
-                    .getBoolean(BusinessObjectModelFileStore.BDM_DEPLOY_REQUIRED_PROPERTY)) {
+                            .getBoolean(BusinessObjectModelFileStore.BDM_DEPLOY_REQUIRED_PROPERTY)) {
                 decoration.addSuffix(" - " + Messages.bdmDeployMarker);
             }
         }
     }
 
     private boolean isBdmResource(IResource resource) {
-        BusinessObjectModelRepositoryStore bdmRepositoryStore = getBdmRepositoryStore();
-        AbstractBDMFileStore bdmFileStore = bdmRepositoryStore.getChild(BusinessObjectModelFileStore.BOM_FILENAME,
-                false);
-        if (bdmFileStore != null) {
-            return Objects.equals(bdmRepositoryStore.getResource(), resource)
-                    || Objects.equals(bdmFileStore.getResource(), resource);
+        if (RepositoryManager.getInstance().getCurrentRepository().filter(IRepository::isLoaded).isPresent()) {
+            var bdmStore = getBdmRepositoryStore();
+            if (!bdmStore.getResource().exists()) {
+                return false;
+            }
+            var bdmFileStore = bdmStore.getChild(BusinessObjectModelFileStore.BOM_FILENAME,
+                    false);
+            if (bdmFileStore != null) {
+                return Objects.equals(bdmStore.getResource(), resource)
+                        || Objects.equals(bdmFileStore.getResource(), resource);
+            }
         }
         return false;
     }
@@ -114,7 +118,7 @@ public class BdmLightweightDecorator extends LabelProvider
         return resource;
     }
 
-    private BusinessObjectModelRepositoryStore getBdmRepositoryStore() {
+    private BusinessObjectModelRepositoryStore<?> getBdmRepositoryStore() {
         return repositoryAccessor.getRepositoryStore(BusinessObjectModelRepositoryStore.class);
     }
 
@@ -156,21 +160,29 @@ public class BdmLightweightDecorator extends LabelProvider
     }
 
     private boolean updateDeployRequiredProperty(IResourceDelta delta) {
-        if (Objects.equals(delta.getResource().getName(), BusinessObjectModelFileStore.BOM_FILENAME)) {
-            switch (delta.getKind()) {
-                case IResourceDelta.CHANGED:
-                case IResourceDelta.ADDED:
-                    notifyDeployRequired(delta);
-                    break;
-                case IResourceDelta.REMOVED:
-                    cleanDeployRequiredState();
-                    break;
-                default:
-                    break;
+        if (RepositoryManager.getInstance().getCurrentRepository().filter(IRepository::isLoaded).isPresent()) {
+            var bdmStore = getBdmRepositoryStore();
+            if (!bdmStore.getResource().exists()) {
+                return false;
             }
-            return false;
+            var bdmFileStore = bdmStore.getChild(BusinessObjectModelFileStore.BOM_FILENAME, false);
+            if (bdmFileStore != null && Objects.equals(delta.getResource(), bdmFileStore.getResource())) {
+                switch (delta.getKind()) {
+                    case IResourceDelta.CHANGED:
+                    case IResourceDelta.ADDED:
+                        notifyDeployRequired(delta);
+                        break;
+                    case IResourceDelta.REMOVED:
+                        cleanDeployRequiredState();
+                        break;
+                    default:
+                        break;
+                }
+                return false;
+            }
+            return true;
         }
-        return true;
+        return false;
     }
 
     private void cleanDeployRequiredState() {

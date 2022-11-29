@@ -41,8 +41,9 @@ import org.bonitasoft.plugin.analyze.report.model.Theme;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
 import org.bonitasoft.studio.common.repository.Messages;
+import org.bonitasoft.studio.common.repository.core.BonitaProject;
 import org.bonitasoft.studio.common.repository.core.ProjectDependenciesStore;
-import org.bonitasoft.studio.common.repository.core.maven.plugin.BonitaProjectPlugin;
+import org.bonitasoft.studio.common.repository.core.maven.plugin.AnalyzeBonitaProjectDependenciesPlugin;
 import org.bonitasoft.studio.common.ui.jface.databinding.StatusToMarkerSeverity;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
@@ -65,7 +66,7 @@ public class MavenProjectDependenciesStore implements ProjectDependenciesStore {
     private static final String ANALYZE_PLUGIN_MARKER_TYPE = CommonRepositoryPlugin.PLUGIN_ID
             + ".analyzePluginMarkerType";
 
-    private IProject project;
+    private BonitaProject project;
     private DependencyReport dependencyReport;
     private ObjectMapper mapper = new ObjectMapper().findAndRegisterModules()
             .enable(SerializationFeature.INDENT_OUTPUT)
@@ -73,7 +74,7 @@ public class MavenProjectDependenciesStore implements ProjectDependenciesStore {
             .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     private IEventBroker eventBroker;
 
-    public MavenProjectDependenciesStore(IProject project, IEventBroker eventBroker) {
+    public MavenProjectDependenciesStore(BonitaProject project, IEventBroker eventBroker) {
         this.project = project;
         this.eventBroker = eventBroker;
     }
@@ -81,9 +82,10 @@ public class MavenProjectDependenciesStore implements ProjectDependenciesStore {
     @Override
     public Optional<DependencyReport> analyze(IProgressMonitor monitor) {
         try {
-            project.deleteMarkers(ANALYZE_PLUGIN_MARKER_TYPE, true, IResource.DEPTH_INFINITE);
-            BonitaProjectPlugin bonitaProjectPlugin = new BonitaProjectPlugin(project);
-            IStatus status = bonitaProjectPlugin.execute(project, monitor);
+            var eclipseProject = project.getAdapter(IProject.class);
+            eclipseProject.deleteMarkers(ANALYZE_PLUGIN_MARKER_TYPE, true, IResource.DEPTH_INFINITE);
+            AnalyzeBonitaProjectDependenciesPlugin bonitaProjectPlugin = new AnalyzeBonitaProjectDependenciesPlugin(project.getAdapter(IProject.class));
+            IStatus status = bonitaProjectPlugin.execute(monitor);
             if (!status.isOK()) {
                 throw new CoreException(status);
             }
@@ -91,7 +93,7 @@ public class MavenProjectDependenciesStore implements ProjectDependenciesStore {
             String reportPath = bonitaProjectPlugin.getReportPath();
             var path = Paths.get(reportPath);
             File reportFile = Paths.get(reportPath).isAbsolute() ? path.toFile()
-                    : project.getLocation().toFile().toPath().resolve(reportPath).toFile();
+                    : eclipseProject.getLocation().toFile().toPath().resolve(reportPath).toFile();
             if (reportFile.isFile()) {
                 dependencyReport = mapper.readValue(reportFile, DependencyReport.class);
                 eventBroker.send(PROJECT_DEPENDENCIES_ANALYZED_TOPIC, Map.of());
@@ -173,8 +175,9 @@ public class MavenProjectDependenciesStore implements ProjectDependenciesStore {
 
     private void addMarker(IStatus status) {
         try {
-            if (project.isAccessible()) {
-                IMarker marker = project.createMarker(ANALYZE_PLUGIN_MARKER_TYPE);
+            var eclipseProject = project.getAdapter(IProject.class);
+            if (eclipseProject.isAccessible()) {
+                IMarker marker = eclipseProject.createMarker(ANALYZE_PLUGIN_MARKER_TYPE);
                 marker.setAttribute(IMarker.SEVERITY, new StatusToMarkerSeverity(status).toMarkerSeverity());
                 marker.setAttribute(IMarker.MESSAGE, status.getException() != null
                         ? status.getMessage() + ". See details in Studio logs." : status.getMessage());

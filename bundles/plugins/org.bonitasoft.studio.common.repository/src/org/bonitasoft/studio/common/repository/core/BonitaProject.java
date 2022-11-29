@@ -14,12 +14,14 @@
  */
 package org.bonitasoft.studio.common.repository.core;
 
+import java.io.File;
 import java.util.Collection;
-import java.util.Set;
+import java.util.List;
 
 import org.bonitasoft.studio.common.repository.BonitaProjectNature;
 import org.bonitasoft.studio.common.repository.core.maven.BonitaProjectBuilder;
 import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
+import org.bonitasoft.studio.common.repository.core.team.GitProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
@@ -28,18 +30,16 @@ import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.m2e.core.internal.IMavenConstants;
 
-public interface BonitaProject extends IAdaptable {
+public interface BonitaProject extends GitProject, IAdaptable {
 
-    Collection<String> NATRUES = Set.of(IMavenConstants.NATURE_ID, BonitaProjectNature.NATURE_ID, JavaCore.NATURE_ID, "org.eclipse.jdt.groovy.core.groovyNature");
-    Collection<String> BUILDERS = Set.of(IMavenConstants.BUILDER_ID, BonitaProjectBuilder.ID, JavaCore.BUILDER_ID);
+    Collection<String> NATRUES = List.of(IMavenConstants.NATURE_ID, BonitaProjectNature.NATURE_ID, JavaCore.NATURE_ID, "org.eclipse.jdt.groovy.core.groovyNature");
+    Collection<String> BUILDERS = List.of(IMavenConstants.BUILDER_ID, BonitaProjectBuilder.ID, JavaCore.BUILDER_ID);
 
-    String getName();
-    
     String getId();
     
     String getDisplayName();
     
-    ProjectMetadata getProjectMetadata(IProgressMonitor monitor);
+    ProjectMetadata getProjectMetadata(IProgressMonitor monitor) throws CoreException;
 
     void update(ProjectMetadata metadata, IProgressMonitor monitor) throws CoreException;
     
@@ -49,10 +49,10 @@ public interface BonitaProject extends IAdaptable {
     
     void delete(IProgressMonitor monitor) throws CoreException;
 
-    IRunnableWithProgress newConnectProviderOperation() throws CoreException;
-
-    void createDefaultIgnoreFile() throws CoreException;
-
     Collection<? extends IResource> getExportableResources();
+
+    void refresh(IProgressMonitor monitor) throws CoreException;
+
+
 
 }

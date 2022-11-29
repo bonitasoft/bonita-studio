@@ -225,7 +225,7 @@ public class FakeRepository implements IRepository {
     }
 
     @Override
-    public boolean closeAllEditors() {
+    public boolean closeAllEditors(boolean save) {
         return false;
     }
 

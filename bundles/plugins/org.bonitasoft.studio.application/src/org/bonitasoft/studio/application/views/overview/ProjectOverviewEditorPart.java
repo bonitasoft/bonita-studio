@@ -16,7 +16,6 @@ package org.bonitasoft.studio.application.views.overview;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Objects;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 
 import org.bonitasoft.studio.application.i18n.Messages;
@@ -26,7 +25,6 @@ import org.bonitasoft.studio.common.CommandExecutor;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
-import org.bonitasoft.studio.common.repository.core.BonitaProject;
 import org.bonitasoft.studio.common.repository.core.maven.MavenProjectDependenciesStore;
 import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
 import org.bonitasoft.studio.common.repository.model.IRepository;
@@ -42,6 +40,7 @@ import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.e4.core.contexts.ContextInjectionFactory;
 import org.eclipse.e4.core.contexts.EclipseContextFactory;
 import org.eclipse.e4.core.services.events.IEventBroker;
@@ -114,6 +113,8 @@ public class ProjectOverviewEditorPart extends EditorPart implements EventHandle
     private DynamicButtonWidget toExtensionViewButton;
 
     private IProgressService progressService;
+
+    private ProjectMetadata metadata;
 
     private static Object lock = new Object();
 
@@ -342,16 +343,22 @@ public class ProjectOverviewEditorPart extends EditorPart implements EventHandle
         synchronized (lock) {
             repositoryAccessor.getCurrentProject().ifPresent(bonitaProject -> {
                 Display.getDefault().asyncExec(() -> {
-                    if (title == null || title.isDisposed()) {
-                        return;
+                    if(metadata == null) {
+                        try {
+                            metadata = bonitaProject.getProjectMetadata(new NullProgressMonitor());
+                        } catch (CoreException e) {
+                           BonitaStudioLog.error(e);
+                        }
                     }
-                    var metadata = reloadMetadata(bonitaProject);
                     if(metadata == null) {
                         return;
                     }
                     String name = metadata.getName();
                     String version = metadata.getVersion();
                     String descriptionContent = metadata.getDescription();
+                    if (title == null || title.isDisposed()) {
+                        return;
+                    }
                     title.setText(String.format("%s %s", name, version));
 
                     StyleRange titleStyle = new StyleRange(0, name.length(), title.getForeground(),
@@ -371,25 +378,6 @@ public class ProjectOverviewEditorPart extends EditorPart implements EventHandle
                 });
             });
         }
-    }
-
-    private ProjectMetadata reloadMetadata(BonitaProject bonitaProject) {
-        var metadataRef = new AtomicReference<ProjectMetadata>();
-        try {
-            progressService.busyCursorWhile(monitor -> metadataRef.set(bonitaProject.getProjectMetadata(monitor)));
-        } catch (InvocationTargetException e) {
-            if (e.getTargetException() instanceof CoreException) {
-                errorHandler.openErrorDialog(Display.getCurrent().getActiveShell(),
-                        (CoreException) e.getTargetException());
-            } else {
-                errorHandler.openErrorDialog(Display.getCurrent().getActiveShell(),
-                        "Failed to retrieve project metadata", e);
-            }
-        } catch (InterruptedException e) {
-            errorHandler.openErrorDialog(Display.getCurrent().getActiveShell(),
-                    "Failed to retrieve project metadata", e);
-        }
-        return metadataRef.get();
     }
 
     private boolean refreshDescription(String descriptionContent) {
@@ -484,6 +472,7 @@ public class ProjectOverviewEditorPart extends EditorPart implements EventHandle
                 IResource r = delta.getResource();
                 if (Objects.equals(r, repositoryAccessor.getCurrentRepository().orElseThrow().getProject()
                         .getFile(IMavenConstants.POM_FILE_NAME))) {
+                    metadata = null;
                     refreshContent();
                     return false;
                 }
@@ -496,6 +485,7 @@ public class ProjectOverviewEditorPart extends EditorPart implements EventHandle
 
     @Override
     public void handleEvent(org.osgi.service.event.Event event) {
+        metadata = null;
         refreshContent();
     }
 

@@ -125,6 +125,13 @@
                 type="org.bonitasoft.studio.common.repository.core.BonitaProject">
           </adapter>
        </factory>
+       <factory
+             adaptableType="org.bonitasoft.studio.common.repository.model.IRepository"
+             class="org.bonitasoft.studio.common.repository.core.internal.BonitaProjectAdapterFactory">
+          <adapter
+                type="org.bonitasoft.studio.common.repository.core.MultiModuleProject">
+          </adapter>
+       </factory>
     </extension>
     <extension
          point="org.bonitasoft.studio.repositoryFactory">

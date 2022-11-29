@@ -9,13 +9,11 @@
 package org.bonitasoft.studio.team.git.core;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.core.BonitaProject;
-import org.bonitasoft.studio.common.repository.core.internal.RepositoryImpl;
 import org.bonitasoft.studio.common.ui.PlatformUtil;
 import org.bonitasoft.studio.team.git.ui.wizard.FirstCommitDialog;
 import org.bonitasoft.studio.team.git.ui.wizard.FirstPushAbortedDialog;
@@ -78,14 +76,14 @@ public class ShareGitProject extends AbstractHandler {
         BasicConfigurationDialog.show(repository);//ask for username, email if not set in gitconfig
         try (Git git = new Git(repository)) {
             git.add().addFilepattern(".").call();
-            String commitMessage = String.format("Initial commit of '%s'", project.getName());
+            String commitMessage = String.format("Initial commit of '%s'", project.getId());
             FirstCommitDialog commitDialog = new FirstCommitDialog(activeShell, commitMessage);
             commitDialog.create();
             if (commitDialog.open() == FirstCommitDialog.COMMIT_AND_PUSH_ID) {
                 commitMessage = commitDialog.getCommitMessage();
             }
-            CommitHelper commitHelper = new CommitHelper(repository);
-            CommitOperation commitOperation = new CommitOperation(repository,
+            var commitHelper = new CommitHelper(repository);
+            var commitOperation = new CommitOperation(repository,
                     commitHelper.getAuthor(),
                     commitHelper.getCommitter(),
                     commitMessage);

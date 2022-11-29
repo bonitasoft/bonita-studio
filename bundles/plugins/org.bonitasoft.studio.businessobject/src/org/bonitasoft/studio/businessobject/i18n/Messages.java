@@ -504,6 +504,7 @@ public class Messages extends NLS {
     public static String openH2Console;
     public static String eagerRelationWarning;
     public static String errorMessageNoWhitespaceInAttributeNames;
+    public static String creatingBusinessDataModel;
 
     private Messages() {
     }
