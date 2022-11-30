@@ -158,7 +158,8 @@ public class BusinessObjectModelRepositoryStore<F extends AbstractBDMFileStore<?
     
     @Override
     public AbstractBDMFileStore<?> importInputStream(String fileName, InputStream inputStream) {
-        if(!getResource().exists()|| !getResource().getFile("pom.xml").exists()) {
+        var multiModuleProject = asMultiModuleProject();
+        if(multiModuleProject != null && (!getResource().exists()|| !getResource().getFile("pom.xml").exists())) {
             try {
                var bdmFolder = createBdmModule(asMultiModuleProject(), new NullProgressMonitor());
                var bomFile = bdmFolder.getFile(BusinessObjectModelFileStore.BOM_FILENAME);
@@ -175,8 +176,9 @@ public class BusinessObjectModelRepositoryStore<F extends AbstractBDMFileStore<?
     @Override
     protected AbstractBDMFileStore<?> doImportArchiveData(ImportArchiveData importArchiveData, IProgressMonitor monitor)
             throws CoreException {
-        if(!getResource().exists() || !getResource().getFile("pom.xml").exists()) {
-            var bdmFolder = createBdmModule(asMultiModuleProject(), new NullProgressMonitor());
+        var multiModuleProject = asMultiModuleProject();
+        if(multiModuleProject != null && (!getResource().exists() || !getResource().getFile("pom.xml").exists())) {
+            var bdmFolder = createBdmModule(multiModuleProject, new NullProgressMonitor());
             var bomFile = bdmFolder.getFile(BusinessObjectModelFileStore.BOM_FILENAME);
             if(bomFile.exists()) {
                 bomFile.delete(true, new NullProgressMonitor());

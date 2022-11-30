@@ -15,6 +15,7 @@
 package org.bonitasoft.studio.common.repository;
 
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.lenient;
 
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -23,13 +24,13 @@ import org.assertj.core.api.Assertions;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRoot;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class RepositoryNameValidatorTest {
 
     @Mock
@@ -45,10 +46,10 @@ public class RepositoryNameValidatorTest {
 
     public RepositoryNameValidator createFixture(Supplier<Boolean> newProjectSupplier) throws Exception {
         RepositoryNameValidator rnv = Mockito.spy(new RepositoryNameValidator(newProjectSupplier));
-        doReturn("existing").when(repo).getName();
-        doReturn(repoManager).when(rnv).getRepositoryManager();
-        doReturn(repo).when(repoManager).getRepository("existing");
-        doReturn(Optional.of(repo)).when(repoManager).getCurrentRepository();
+        lenient().doReturn("existing").when(repo).getName();
+        lenient().doReturn(repoManager).when(rnv).getRepositoryManager();
+        lenient().doReturn(repo).when(repoManager).getRepository("existing");
+        lenient().doReturn(Optional.of(repo)).when(repoManager).getCurrentRepository();
         return rnv;
     }
 

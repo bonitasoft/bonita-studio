@@ -23,16 +23,15 @@ import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.m2e.core.MavenPlugin;
 import org.eclipse.m2e.core.internal.IMavenConstants;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class CreateBonitaProjectOperationTest {
 
-    @Before
+    @BeforeEach
     public void cleanWorkspace() throws Exception {
         Stream.of(ResourcesPlugin.getWorkspace().getRoot().getProjects()).forEach(p -> {
             try {

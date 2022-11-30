@@ -13,5 +13,4 @@ Require-Bundle: assertj-core,
  net.bytebuddy.byte-buddy,
  org.objenesis,
  org.junit.jupiter.api,
- org.junit.vintage.engine,
- org.junit
+ org.mockito.junit-jupiter

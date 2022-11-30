@@ -24,7 +24,7 @@ import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.ui.IDisplayable;
 import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.core.runtime.Adapters;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class DisplayableAdapterFactoryTest {
 

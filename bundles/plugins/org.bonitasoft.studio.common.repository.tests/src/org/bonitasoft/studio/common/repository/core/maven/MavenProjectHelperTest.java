@@ -6,8 +6,8 @@ import java.util.Optional;
 
 import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Model;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class MavenProjectHelperTest {
 
@@ -21,7 +21,7 @@ public class MavenProjectHelperTest {
     Model mavenModel;
     MavenProjectHelper helper = new MavenProjectHelper();
 
-    @Before
+    @BeforeEach
     public void init() {
         mavenModel = new Model();
         Dependency existingDependency = new Dependency();

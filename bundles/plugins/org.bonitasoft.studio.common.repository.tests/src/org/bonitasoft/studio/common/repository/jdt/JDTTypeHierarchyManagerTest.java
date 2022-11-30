@@ -18,6 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
@@ -30,15 +31,15 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.ITypeHierarchy;
 import org.eclipse.jdt.core.JavaModelException;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class JDTTypeHierarchyManagerTest {
 
     @Mock
@@ -53,16 +54,12 @@ public class JDTTypeHierarchyManagerTest {
     @Mock
     private IResource notAJarResource;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
-        Mockito.doReturn(typeHierarchy).when(type).newTypeHierarchy(Mockito.any());
+        lenient().doReturn(typeHierarchy).when(type).newTypeHierarchy(Mockito.any());
         new JDTTypeHierarchyManager().clearCache();
-        doReturn("jar").when(jarResource).getFileExtension();
-        doReturn("whatever").when(notAJarResource).getFileExtension();
-    }
-
-    @After
-    public void tearDown() throws Exception {
+        lenient().doReturn("jar").when(jarResource).getFileExtension();
+        lenient().doReturn("whatever").when(notAJarResource).getFileExtension();
     }
 
     @Test

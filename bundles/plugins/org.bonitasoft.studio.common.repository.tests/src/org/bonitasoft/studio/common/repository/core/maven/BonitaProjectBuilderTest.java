@@ -17,7 +17,7 @@ package org.bonitasoft.studio.common.repository.core.maven;
 import static org.bonitasoft.studio.assertions.StatusAssert.assertThat;
 
 import org.bonitasoft.studio.common.ProductVersion;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class BonitaProjectBuilderTest {
 
