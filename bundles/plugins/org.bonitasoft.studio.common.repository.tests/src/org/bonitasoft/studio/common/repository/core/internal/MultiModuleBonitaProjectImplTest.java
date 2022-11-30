@@ -32,11 +32,10 @@ import org.eclipse.core.runtime.Adapters;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jgit.lib.Repository;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-public class MultiModuleBonitaProjectImplTest {
+class MultiModuleBonitaProjectImplTest {
 
     private IRepository repository;
     private NullProgressMonitor monitor = new NullProgressMonitor();
@@ -44,22 +43,21 @@ public class MultiModuleBonitaProjectImplTest {
     private MultiModuleProject project;
     private String projectId;
 
-    @Before
-    public void createRepository() throws Exception {
+    @BeforeEach
+    void setupDefaultProject() throws Exception {
         metadata = ProjectMetadata.defaultMetadata();
         projectId = metadata.getArtifactId();
         repository = RepositoryManager.getInstance().newRepository(metadata.getProjectName());
+        project = Adapters.adapt(repository, MultiModuleProject.class);
+        if(repository.getProject().exists()) {
+            project.delete(monitor);
+        }
         repository.create(metadata, monitor);
         project = Adapters.adapt(repository, MultiModuleProject.class);
     }
 
-    @After
-    public void deleteRepository() throws Exception {
-        project.delete(monitor);
-    }
-
     @Test
-    public void projectReferences() throws Exception {
+    void projectReferences() throws Exception {
         var parentProject = project.getParentProject();
 
         assertThat(parentProject.exists()).isTrue();
@@ -73,7 +71,7 @@ public class MultiModuleBonitaProjectImplTest {
     }
 
     @Test
-    public void openCloseAllRelatedProjects() throws Exception {
+    void openCloseAllRelatedProjects() throws Exception {
         project.close(monitor);
 
         var eclipseProject = project.getAdapter(IProject.class);
@@ -88,7 +86,7 @@ public class MultiModuleBonitaProjectImplTest {
     }
 
     @Test
-    public void deleteAllRelatedProjects() throws Exception {
+    void deleteAllRelatedProjects() throws Exception {
         project.delete(monitor);
 
         var eclipseProject = project.getAdapter(IProject.class);
@@ -97,7 +95,7 @@ public class MultiModuleBonitaProjectImplTest {
     }
 
     @Test
-    public void updateIdOfAllRelatedProjects() throws Exception {
+    void updateIdOfAllRelatedProjects() throws Exception {
         var updatedMetadata = metadata;
         updatedMetadata.setArtifactId("some-new-id");
 
@@ -109,7 +107,7 @@ public class MultiModuleBonitaProjectImplTest {
     }
 
     @Test
-    public void updateVersionOfAllRelatedProjects() throws Exception {
+    void updateVersionOfAllRelatedProjects() throws Exception {
         var updatedMetadata = metadata;
         updatedMetadata.setVersion("2.0.0");
 

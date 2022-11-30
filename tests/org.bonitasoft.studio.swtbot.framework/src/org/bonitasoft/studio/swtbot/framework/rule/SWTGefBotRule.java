@@ -51,7 +51,6 @@ import org.junit.runners.model.Statement;
  */
 public class SWTGefBotRule implements TestRule {
 
-    private boolean disablePopup;
     protected final SWTGefBot bot;
 
     public SWTGefBotRule(final SWTGefBot bot) {
@@ -177,7 +176,7 @@ public class SWTGefBotRule implements TestRule {
     protected void closeAllAndReturnToWelcomePage() {
         bot.saveAllEditors();
         bot.closeAllEditors();
-        FileActionDialog.setDisablePopup(disablePopup);
+        FileActionDialog.setDisablePopup(false);
     }
 
     protected void initPreferences() {
