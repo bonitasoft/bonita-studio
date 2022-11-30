@@ -41,7 +41,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.ui.IWorkbenchPart;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class FileStoreFinderTest {
 

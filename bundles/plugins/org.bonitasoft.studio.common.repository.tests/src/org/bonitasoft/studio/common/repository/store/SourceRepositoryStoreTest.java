@@ -25,7 +25,7 @@ import java.util.Collections;
 
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class SourceRepositoryStoreTest {
 

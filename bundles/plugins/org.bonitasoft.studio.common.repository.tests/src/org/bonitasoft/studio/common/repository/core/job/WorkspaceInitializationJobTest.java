@@ -24,21 +24,22 @@ import static org.mockito.Mockito.when;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.Mock.Strictness;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 
 /**
  * @author Romain Bioteau
  */
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class WorkspaceInitializationJobTest {
 
-    @Mock
+    @Mock(strictness = Strictness.LENIENT)
     private WorkspaceInitializationJob workspaceInitializationJob;
     @Mock
     private BundleContext context;
@@ -52,7 +53,7 @@ public class WorkspaceInitializationJobTest {
     /**
      * @throws java.lang.Exception
      */
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         when(workspaceInitializationJob.runInWorkspace(monitor)).thenCallRealMethod();
         when(workspaceInitializationJob.belongsTo(any(Object.class))).thenCallRealMethod();

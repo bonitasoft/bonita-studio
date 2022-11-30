@@ -18,7 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 
 import org.bonitasoft.studio.common.repository.core.InputStreamSupplier;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class JarLookupOperationTest {
 

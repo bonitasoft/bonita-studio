@@ -15,12 +15,15 @@
 package org.bonitasoft.studio.common.repository.jdt;
 
 import static org.bonitasoft.studio.assertions.StatusAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.io.File;
+import java.nio.file.Files;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
@@ -29,22 +32,19 @@ import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.ui.jarpackager.IJarExportRunnable;
 import org.eclipse.jdt.ui.jarpackager.JarPackageData;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.Mock.Strictness;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 /**
  * @author Romain Bioteau
  */
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class CreateJarOperationTest {
-
-    @Rule
-    public TemporaryFolder tmpFolder = new TemporaryFolder();
 
     @Mock
     private IPackageFragment packageFragment;
@@ -52,10 +52,10 @@ public class CreateJarOperationTest {
     @Mock
     private IProgressMonitor monitor;
 
-    @Mock
+    @Mock(strictness = Strictness.LENIENT)
     private JarPackageData jarPackageData;
 
-    @Mock
+    @Mock(strictness = Strictness.LENIENT)
     private IJarExportRunnable exportRunnable;
 
     private CreateJarOperation operation;
@@ -65,17 +65,19 @@ public class CreateJarOperationTest {
     @Mock
     private ICompilationUnit cu;
 
-    /**
-     * @throws java.lang.Exception
-     */
-    @Before
-    public void setUp() throws Exception {
+    @BeforeEach
+    void setUp() throws Exception {
         when(packageFragment.getCompilationUnits()).thenReturn(new ICompilationUnit[] { cu });
         when(jarPackageData.createJarExportRunnable(null)).thenReturn(exportRunnable);
         when(exportRunnable.getStatus()).thenReturn(Status.OK_STATUS);
-        toFile = tmpFolder.newFile();
+        toFile = Files.createTempFile("test", ".jar").toFile();
         operation = spy(new CreateJarOperation(toFile, packageFragment.getCompilationUnits()));
-        doReturn(jarPackageData).when(operation).newJarPackageData();
+        lenient().doReturn(jarPackageData).when(operation).newJarPackageData();
+    }
+    
+    @AfterEach
+    void deleteTmpFile() throws Exception {
+        Files.delete(toFile.toPath());
     }
 
     @Test
@@ -159,15 +161,13 @@ public class CreateJarOperationTest {
         assertThat(operation.getStatus()).isNotOK();
     }
 
-    @Test(expected = IllegalArgumentException.class)
     public void should_throw_an_IllegalArgumentException_if_file_is_null() throws Exception {
         //When
-        new CreateJarOperation(null, packageFragment.getCompilationUnits());
+        assertThrows(IllegalArgumentException.class, () -> new CreateJarOperation(null, packageFragment.getCompilationUnits()));
     }
 
-    @Test(expected = IllegalArgumentException.class)
     public void should_throw_an_IllegalArgumentException_if_no_compilation_unit() throws Exception {
         //When
-        new CreateJarOperation(toFile, null);
+        assertThrows(IllegalArgumentException.class, () -> new CreateJarOperation(toFile, null));
     }
 }
