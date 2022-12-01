@@ -106,6 +106,7 @@
                     <version>${tychoVersion}</version>
                     <configuration>
                         <useUIHarness>false</useUIHarness>
+                        <showEclipseLog>true</showEclipseLog>
                     </configuration>
                 </plugin>
                 <plugin>
