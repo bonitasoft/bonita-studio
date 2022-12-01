@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+    xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.bonitasoft.studio</groupId>
+        <artifactId>bundles</artifactId>
+        <version>7.16.0-SNAPSHOT</version>
+    </parent>
+    <name>Bonita Studio Community Plugins</name>
+    <groupId>org.bonitasoft.studio.bundles</groupId>
+    <artifactId>plugins</artifactId>
+    <packaging>pom</packaging>
+
+
+    <modules>
+        <module>bonita-business-data-generator</module>
+        <module>bonita-studio-watchdog</module>
+        <module>org.bonitasoft.studio-models</module>
+        <module>org.bonitasoft.studio.application</module>
+        <module>org.bonitasoft.studio.console.libs</module>
+        <module>org.bonitasoft.studio.model</module>
+        <module>org.bonitasoft.studio.model.edit</module>
+        <module>org.bonitasoft.studio.tests-utils</module>
+        <module>org.bonitasoft.studio.diagram</module>
+        <module>org.bonitasoft.studio.businessobject</module>
+        <module>org.bonitasoft.studio.common</module>
+        <module>org.bonitasoft.studio.common.ui</module>
+        <module>org.bonitasoft.studio.common.diagram</module>
+        <module>org.bonitasoft.studio.common.repository</module>
+        <module>org.bonitasoft.studio.configuration</module>
+        <module>org.bonitasoft.studio.connector.wizard.office</module>
+        <module>org.bonitasoft.studio.connector.wizard.sapjco3</module>
+        <module>org.bonitasoft.studio.connector.wizard.sforce</module>
+        <module>org.bonitasoft.studio.connector.wizard.uipath</module>
+        <module>org.bonitasoft.studio.connectors</module>
+        <module>org.bonitasoft.studio.connectors.model</module>
+        <module>org.bonitasoft.studio.connectors.model.edit</module>
+        <module>org.bonitasoft.studio.contract</module>
+        <module>org.bonitasoft.studio.data</module>
+        <module>org.bonitasoft.studio.datatools</module>
+        <module>org.bonitasoft.studio.decision.table</module>
+        <module>org.bonitasoft.studio.dependencies</module>
+        <module>org.bonitasoft.studio.designer</module>
+        <module>org.bonitasoft.studio.designer.linux</module>
+        <module>org.bonitasoft.studio.designer.macosx</module>
+        <module>org.bonitasoft.studio.designer.war</module>
+        <module>org.bonitasoft.studio.designer.win32</module>
+        <module>org.bonitasoft.studio.diagram.custom</module>
+        <module>org.bonitasoft.studio.document</module>
+        <module>org.bonitasoft.studio.engine</module>
+        <module>org.bonitasoft.studio.exporter</module>
+        <module>org.bonitasoft.studio.expression.editor</module>
+        <module>org.bonitasoft.studio.groovy</module>
+        <module>org.bonitasoft.studio.groovy.ui</module>
+        <module>org.bonitasoft.studio.identity</module>
+        <module>org.bonitasoft.studio.importer</module>
+        <module>org.bonitasoft.studio.importer.bos</module>
+        <module>org.bonitasoft.studio.intro</module>
+        <module>org.bonitasoft.studio.la</module>
+        <module>org.bonitasoft.studio.local.repository</module>
+        <module>org.bonitasoft.studio.migration</module>
+        <module>org.bonitasoft.studio.model.edit.custom</module>
+        <module>org.bonitasoft.studio.refactoring</module>
+        <module>org.bonitasoft.studio.parameters</module>
+        <module>org.bonitasoft.studio.pics</module>
+        <module>org.bonitasoft.studio.pics.bonitasoft</module>
+        <module>org.bonitasoft.studio.preferences</module>
+        <module>org.bonitasoft.studio.properties</module>
+        <module>org.bonitasoft.studio.rest.api.extension</module>
+        <module>org.bonitasoft.studio.sap.dependency</module>
+        <module>org.bonitasoft.studio.sap.mock</module>
+        <module>org.bonitasoft.studio.scripting</module>
+        <module>org.bonitasoft.studio.sqlbuilder.ex</module>
+        <module>org.bonitasoft.studio.team.git</module>
+        <module>org.bonitasoft.studio.ui</module>
+        <module>org.bonitasoft.studio.validation</module>
+        <module>org.bonitasoft.studio.validation.common</module>
+        <module>org.bonitasoft.studio.xml</module>
+        <module>org.omg.schema.spec.bpmn</module>
+        <module>org.bonitasoft.studio-product</module>
+        
+        <!-- Test fragments -->
+        <module>org.bonitasoft.studio.application.tests</module>
+        <module>org.bonitasoft.studio.businessobject.tests</module>
+        <module>org.bonitasoft.studio.common.tests</module>
+        <module>org.bonitasoft.studio.common.ui.tests</module>
+        <module>org.bonitasoft.studio.common.diagram.tests</module>
+        <module>org.bonitasoft.studio.common.repository.tests</module>
+        <module>org.bonitasoft.studio.configuration.tests</module>
+        <module>org.bonitasoft.studio.connector.wizard.office.tests</module>
+        <module>org.bonitasoft.studio.connectors.model.edit.tests</module>
+        <module>org.bonitasoft.studio.connectors.tests</module>
+        <module>org.bonitasoft.studio.contract.tests</module>
+        <module>org.bonitasoft.studio.data.tests</module>
+        <module>org.bonitasoft.studio.dependencies.tests</module>
+        <module>org.bonitasoft.studio.designer.tests</module>
+        <module>org.bonitasoft.studio.diagram.custom.tests</module>
+        <module>org.bonitasoft.studio.document.tests</module>
+        <module>org.bonitasoft.studio.engine.tests</module>
+        <module>org.bonitasoft.studio.exporter.tests</module>
+        <module>org.bonitasoft.studio.expression.editor.tests</module>
+        <module>org.bonitasoft.studio.groovy.tests</module>
+        <module>org.bonitasoft.studio.groovy.ui.tests</module>
+        <module>org.bonitasoft.studio.identity.tests</module>
+        <module>org.bonitasoft.studio.importer.tests</module>
+        <module>org.bonitasoft.studio.importer.bos.tests</module>
+        <module>org.bonitasoft.studio.la.tests</module>
+        <module>org.bonitasoft.studio.migration.tests</module>
+        <module>org.bonitasoft.studio.model.edit.custom.tests</module>
+        <module>org.bonitasoft.studio.refactoring.tests</module>
+        <module>org.bonitasoft.studio.parameters.tests</module>
+        <module>org.bonitasoft.studio.preferences.tests</module>
+        <module>org.bonitasoft.studio.properties.tests</module>
+        <module>org.bonitasoft.studio.rest.api.extension.tests</module>
+        <module>org.bonitasoft.studio.ui.tests</module>
+        <module>org.bonitasoft.studio.validation.tests</module>
+        
+    </modules>
+    
+</project>

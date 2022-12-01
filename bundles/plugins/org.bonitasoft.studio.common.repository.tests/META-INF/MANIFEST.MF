@@ -1,0 +1,16 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Common Repository Tests
+Bundle-SymbolicName: org.bonitasoft.studio.common.repository.tests
+Bundle-Version: 7.16.0.qualifier
+Bundle-Vendor: Bonitasoft S.A.
+Fragment-Host: org.bonitasoft.studio.common.repository;bundle-version="7.16.0"
+Automatic-Module-Name: org.bonitasoft.studio.common.repository.tests
+Bundle-RequiredExecutionEnvironment: JavaSE-11
+Require-Bundle: assertj-core,
+ org.mockito.mockito-core,
+ org.bonitasoft.studio.tests-utils,
+ net.bytebuddy.byte-buddy,
+ org.objenesis,
+ org.junit.jupiter.api,
+ org.mockito.junit-jupiter
