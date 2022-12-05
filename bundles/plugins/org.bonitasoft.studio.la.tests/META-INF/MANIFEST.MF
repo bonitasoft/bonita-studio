@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: LA TestsFragment
 Bundle-SymbolicName: org.bonitasoft.studio.la.tests
-Bundle-Version: 7.15.1.qualifier
+Bundle-Version: 7.15.2.qualifier
 Bundle-Vendor: Bonitasoft S.A.
 Fragment-Host: org.bonitasoft.studio.la;bundle-version="7.15.0"
 Automatic-Module-Name: org.bonitasoft.studio.la.tests
