@@ -20,12 +20,17 @@ import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.observable.value.ComputedValue;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseTrackAdapter;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.widgets.ToolBar;
+import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 
 public class TextAreaWidget extends TextWidget {
@@ -34,13 +39,15 @@ public class TextAreaWidget extends TextWidget {
 
         @Override
         public TextAreaWidget createIn(Composite container) {
-            final TextAreaWidget control = useNativeRender ? 
-                    new NativeTextAreaWidget(container, id, labelAbove, horizontalLabelAlignment,
-                            verticalLabelAlignment, labelWidth, readOnly, label, message, useCompositeMessageDecorator, labelButton,
-                            imageButton, tooltipButton, toolkit, editableStrategy, Optional.ofNullable(ctx), style)
+            final TextAreaWidget control = useNativeRender
+                    ? new NativeTextAreaWidget(container, id, labelAbove, horizontalLabelAlignment,
+                            verticalLabelAlignment, labelWidth, readOnly, label, message, useCompositeMessageDecorator,
+                            labelButton, imageButton, tooltipButton, toolkit, editableStrategy, Optional.ofNullable(ctx), 
+                            style, editable)
                     : new TextAreaWidget(container, id, labelAbove, horizontalLabelAlignment,
-                    verticalLabelAlignment, labelWidth, readOnly, label, message, useCompositeMessageDecorator, labelButton,
-                    imageButton, tooltipButton, toolkit, editableStrategy, Optional.ofNullable(ctx), style);
+                            verticalLabelAlignment, labelWidth, readOnly, label, message, useCompositeMessageDecorator,
+                            labelButton, imageButton, tooltipButton, toolkit, editableStrategy, Optional.ofNullable(ctx), 
+                            style, editable);
             control.init();
             control.setLayoutData(layoutData != null ? layoutData : gridData);
             placeholder.ifPresent(control::setPlaceholder);
@@ -56,9 +63,9 @@ public class TextAreaWidget extends TextWidget {
         }
     }
 
-    protected TextAreaWidget(Composite container, 
-            String id, 
-            boolean topLabel, 
+    protected TextAreaWidget(Composite container,
+            String id,
+            boolean topLabel,
             int horizontalLabelAlignment,
             int verticalLabelAlignment,
             int labelWidth,
@@ -72,10 +79,45 @@ public class TextAreaWidget extends TextWidget {
             Optional<FormToolkit> toolkit,
             Optional<ComputedValue<Boolean>> editableStrategy,
             Optional<DataBindingContext> ctx,
-            int style) {
+            int style,
+            boolean editable) {
         super(container, id, topLabel, horizontalLabelAlignment, verticalLabelAlignment, labelWidth, readOnly, label,
-                message, useCompositeMessageDecorator, labelButton, imageButton, tooltipButton, false, null, null, toolkit,
-                Optional.empty(), editableStrategy, ctx, style);
+                message, useCompositeMessageDecorator, labelButton, imageButton, tooltipButton, false, null, null,
+                toolkit, Optional.empty(), editableStrategy, ctx, style, editable);
+    }
+
+    @Override
+    protected void createButton() {
+        if (buttonLabel.isPresent()) {
+            Button b = new Button(this, SWT.PUSH);
+            b.setText(buttonLabel.get());
+            toolkit.ifPresent(toolkit -> toolkit.adapt(b, true, true));
+            GridDataFactory.swtDefaults().align(SWT.FILL, SWT.TOP).applyTo(b);
+            tooltipButton.ifPresent(b::setToolTipText);
+            button = Optional.of(b);
+        } else if (imageButton.isPresent()) {
+            toolBar = new ToolBar(this, SWT.INHERIT_DEFAULT | SWT.NO_FOCUS | SWT.RIGHT);
+            toolBar.setLayoutData(
+                    GridDataFactory.swtDefaults().align(SWT.FILL, SWT.TOP).create());
+            toolkit.ifPresent(toolkit -> toolkit.adapt(toolBar, true, true));
+            ToolItem bWithImage = new ToolItem(toolBar, SWT.FLAT);
+            imageButton.ifPresent(bWithImage::setImage);
+            tooltipButton.ifPresent(bWithImage::setToolTipText);
+            buttonWithImage = Optional.of(bWithImage);
+
+            toolBar.addMouseTrackListener(new MouseTrackAdapter() {
+
+                @Override
+                public void mouseExit(MouseEvent e) {
+                    toolBar.setCursor(cursorArrow);
+                }
+
+                @Override
+                public void mouseEnter(MouseEvent e) {
+                    toolBar.setCursor(cursorHand);
+                }
+            });
+        }
     }
 
     @Override
@@ -105,6 +147,7 @@ public class TextAreaWidget extends TextWidget {
         };
         text.addListener(SWT.Resize, scrollBarListener);
         text.addListener(SWT.Modify, scrollBarListener);
+        text.setEditable(editable);
         return text;
     }
 

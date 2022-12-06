@@ -82,6 +82,7 @@ public class TextWidget extends EditableControlWidget {
         private Optional<String> tooltip = Optional.empty();
         protected Optional<ComputedValue<Boolean>> editableStrategy = Optional.empty();
         protected int style = SWT.NONE;
+        protected boolean editable = true;
 
         public Builder withEditableStrategy(ComputedValue<Boolean> viewerObservableValue) {
             this.editableStrategy = Optional.ofNullable(viewerObservableValue);
@@ -106,6 +107,15 @@ public class TextWidget extends EditableControlWidget {
          */
         public Builder withButton(String labelButton) {
             this.labelButton = Optional.ofNullable(labelButton);
+            return this;
+        }
+
+        /**
+         * Create a button after the Text, with a label
+         */
+        public Builder withButton(String labelButton, String tooltip) {
+            this.labelButton = Optional.ofNullable(labelButton);
+            this.tooltipButton = Optional.ofNullable(tooltip);
             return this;
         }
 
@@ -155,6 +165,15 @@ public class TextWidget extends EditableControlWidget {
             return this;
         }
 
+        /**
+         * @param is editable
+         * @return
+         */
+        public Builder editable(boolean editable) {
+            this.editable = editable;
+            return this;
+        }
+
         @Override
         public TextWidget createIn(Composite container) {
             if (transactionalEdit && targetToModelStrategy == null) {
@@ -170,13 +189,13 @@ public class TextWidget extends EditableControlWidget {
                             imageButton,
                             tooltipButton, transactionalEdit, onEdit, canEdit, toolkit, proposalProvider,
                             editableStrategy,
-                            Optional.ofNullable(ctx), style)
+                            Optional.ofNullable(ctx), style, editable)
                     : new TextWidget(container, id, labelAbove, horizontalLabelAlignment, verticalLabelAlignment,
                             labelWidth, readOnly, label, message, useCompositeMessageDecorator, labelButton,
                             imageButton,
                             tooltipButton, transactionalEdit, onEdit, canEdit, toolkit, proposalProvider,
                             editableStrategy,
-                            Optional.ofNullable(ctx), style);
+                            Optional.ofNullable(ctx), style, editable);
             control.init();
             control.setLayoutData(layoutData != null ? layoutData : gridData);
             buttonListner.ifPresent(control::onClickButton);
@@ -197,8 +216,8 @@ public class TextWidget extends EditableControlWidget {
     }
 
     private Text text;
-    private Optional<Button> button = Optional.empty();
-    private Optional<ToolItem> buttonWithImage = Optional.empty();
+    protected Optional<Button> button = Optional.empty();
+    protected Optional<ToolItem> buttonWithImage = Optional.empty();
     private final boolean transactionalEdit;
     private final Optional<BiConsumer<String, String>> onEdit;
     private Optional<Supplier<IStatus>> canEdit;
@@ -207,13 +226,14 @@ public class TextWidget extends EditableControlWidget {
     private final Optional<IContentProposalProvider> proposalProvider;
     private Optional<ComputedValue<Boolean>> enableStrategy;
     private Optional<DataBindingContext> ctx;
-    private Optional<Image> imageButton;
-    private Optional<String> tooltipButton;
+    protected Optional<Image> imageButton;
+    protected Optional<String> tooltipButton;
     private IThemeEngine themeEngine;
     protected int style;
-    private ToolBar toolBar;
-    private Cursor cursorArrow;
-    private Cursor cursorHand;
+    protected ToolBar toolBar;
+    Cursor cursorArrow;
+    Cursor cursorHand;
+    protected boolean editable;
 
     protected TextWidget(Composite container, String id, boolean topLabel, int horizontalLabelAlignment,
             int verticalLabelAlignment, int labelWidth, boolean readOnly, String label, String message,
@@ -221,7 +241,8 @@ public class TextWidget extends EditableControlWidget {
             Optional<String> labelButton, Optional<Image> imageButton, Optional<String> tooltipButton,
             boolean transactionalEdit, BiConsumer<String, String> onEdit, Supplier<IStatus> canEdit,
             Optional<FormToolkit> toolkit, Optional<IContentProposalProvider> proposalProvider,
-            Optional<ComputedValue<Boolean>> enableStrategy, Optional<DataBindingContext> ctx, int style) {
+            Optional<ComputedValue<Boolean>> enableStrategy, Optional<DataBindingContext> ctx, int style,
+            boolean editable) {
         super(container, id, topLabel, horizontalLabelAlignment, verticalLabelAlignment, labelWidth, readOnly, label,
                 message, useCompositeMessageDecorator, labelButton, toolkit);
         this.transactionalEdit = transactionalEdit;
@@ -233,6 +254,7 @@ public class TextWidget extends EditableControlWidget {
         this.ctx = ctx;
         this.imageButton = imageButton;
         this.tooltipButton = tooltipButton;
+        this.editable = editable;
         if (PlatformUI.isWorkbenchRunning()) {
             this.themeEngine = PlatformUI.getWorkbench().getService(IThemeEngine.class);
         }
@@ -268,9 +290,9 @@ public class TextWidget extends EditableControlWidget {
     public void setTooltip(String tooltip) {
         ControlDecoration controlDecoration = null;
         if (label.isPresent()) {
-            controlDecoration = new ControlDecoration(label.get(), SWT.RIGHT);
+            controlDecoration = new ControlDecoration(label.get(), SWT.RIGHT, this);
         } else {
-            controlDecoration = new ControlDecoration(text, SWT.TOP | SWT.LEFT);
+            controlDecoration = new ControlDecoration(text, SWT.TOP | SWT.LEFT, this);
         }
         controlDecoration.setMarginWidth(labelAbove ? 5 : 2);
         controlDecoration.setShowOnlyOnFocus(false);
@@ -374,7 +396,7 @@ public class TextWidget extends EditableControlWidget {
         return textContainer;
     }
 
-    private void createButton() {
+    protected void createButton() {
         if (buttonLabel.isPresent()) {
             Button b = new Button(this, SWT.PUSH);
             b.setText(buttonLabel.get());
@@ -403,6 +425,10 @@ public class TextWidget extends EditableControlWidget {
                 }
             });
         }
+    }
+
+    public Optional<Button> getButton() {
+        return button;
     }
 
     public Optional<ToolBar> getToolBar() {
@@ -551,6 +577,7 @@ public class TextWidget extends EditableControlWidget {
         final Text newText = new Text(textContainer, SWT.SINGLE | style);
         newText.setLayoutData(
                 GridDataFactory.fillDefaults().grab(true, true).align(SWT.FILL, verticalAlignment()).create());
+        newText.setEditable(editable);
         return newText;
     }
 
@@ -580,6 +607,10 @@ public class TextWidget extends EditableControlWidget {
 
     public Optional<ToolItem> getButtonWithImage() {
         return buttonWithImage;
+    }
+
+    public Optional<String> getButtonLabel() {
+        return buttonLabel;
     }
 
     public Text getTextControl() {
