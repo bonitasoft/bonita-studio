@@ -29,9 +29,9 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 
 public class NativeTextAreaWidget extends TextAreaWidget {
 
-    protected NativeTextAreaWidget(Composite container, 
-            String id, 
-            boolean topLabel, 
+    protected NativeTextAreaWidget(Composite container,
+            String id,
+            boolean topLabel,
             int horizontalLabelAlignment,
             int verticalLabelAlignment,
             int labelWidth,
@@ -45,10 +45,11 @@ public class NativeTextAreaWidget extends TextAreaWidget {
             Optional<FormToolkit> toolkit,
             Optional<ComputedValue<Boolean>> editableStrategy,
             Optional<DataBindingContext> ctx,
-            int style) {
+            int style,
+            boolean editable) {
         super(container, id, topLabel, horizontalLabelAlignment, verticalLabelAlignment, labelWidth, readOnly, label,
                 message, useCompositeMessageDecorator, labelButton, imageButton, tooltipButton, toolkit,
-                editableStrategy, ctx, style);
+                editableStrategy, ctx, style, editable);
     }
 
     @Override
@@ -58,7 +59,7 @@ public class NativeTextAreaWidget extends TextAreaWidget {
 
     @Override
     protected Text newText(final Composite textContainer) {
-        final Text newText = new Text(textContainer,   SWT.BORDER |  SWT.MULTI | SWT.V_SCROLL | SWT.WRAP | style);
+        final Text newText = new Text(textContainer, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL | SWT.WRAP | style);
         newText.setLayoutData(
                 GridDataFactory.fillDefaults().grab(true, true).align(SWT.FILL, verticalAlignment()).create());
         return newText;

@@ -36,9 +36,9 @@ public class SearchWidget extends TextWidget {
         @Override
         public SearchWidget createIn(Composite container) {
             final SearchWidget control = new SearchWidget(container, id, labelAbove, horizontalLabelAlignment,
-                    verticalLabelAlignment, labelWidth, readOnly, label, message, useCompositeMessageDecorator, labelButton,
-                    imageButton, tooltipButton, toolkit, proposalProvider, editableStrategy, Optional.ofNullable(ctx),
-                    style);
+                    verticalLabelAlignment, labelWidth, readOnly, label, message, useCompositeMessageDecorator,
+                    labelButton, imageButton, tooltipButton, toolkit, proposalProvider, editableStrategy, 
+                    Optional.ofNullable(ctx), style);
             control.init();
             control.setLayoutData(layoutData != null ? layoutData : gridData);
             placeholder.ifPresent(control::setPlaceholder);
@@ -71,8 +71,8 @@ public class SearchWidget extends TextWidget {
             Optional<DataBindingContext> ctx,
             int style) {
         super(container, id, topLabel, horizontalLabelAlignment, verticalLabelAlignment, labelWidth, readOnly, label,
-                message, useCompositeMessageDecorator, labelButton, imageButton, tooltipButton, false, null, null, toolkit,
-                proposalProvider, editableStrategy, ctx, style);
+                message, useCompositeMessageDecorator, labelButton, imageButton, tooltipButton, false, null, null,
+                toolkit, proposalProvider, editableStrategy, ctx, style, true);
     }
 
     @Override

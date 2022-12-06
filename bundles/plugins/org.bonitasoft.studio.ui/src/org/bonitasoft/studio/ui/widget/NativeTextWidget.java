@@ -40,10 +40,10 @@ public class NativeTextWidget extends TextWidget {
             boolean transactionalEdit, BiConsumer<String, String> onEdit, Supplier<IStatus> canEdit,
             Optional<FormToolkit> toolkit, Optional<IContentProposalProvider> proposalProvider,
             Optional<ComputedValue<Boolean>> editableStrategy,
-            Optional<DataBindingContext> ctx, int style) {
+            Optional<DataBindingContext> ctx, int style, boolean editable) {
         super(container, id, topLabel, horizontalLabelAlignment, verticalLabelAlignment, labelWidth, readOnly, label,
-                message, useCompositeMessageDecorator, labelButton, imageButton, tooltipButton, transactionalEdit, onEdit,
-                canEdit, toolkit, proposalProvider, editableStrategy, ctx, style);
+                message, useCompositeMessageDecorator, labelButton, imageButton, tooltipButton, transactionalEdit,
+                onEdit, canEdit, toolkit, proposalProvider, editableStrategy, ctx, style, editable);
     }
 
     @Override
