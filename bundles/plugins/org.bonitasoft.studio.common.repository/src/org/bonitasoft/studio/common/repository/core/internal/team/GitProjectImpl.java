@@ -36,8 +36,12 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.egit.core.RepositoryUtil;
 import org.eclipse.egit.core.internal.util.ResourceUtil;
+import org.eclipse.egit.core.op.CommitOperation;
 import org.eclipse.egit.core.op.ConnectProviderOperation;
+import org.eclipse.egit.ui.internal.commit.CommitHelper;
 import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
@@ -53,7 +57,37 @@ public class GitProjectImpl implements GitProject {
 
     @Override
     public IRunnableWithProgress newConnectProviderOperation() throws CoreException {
-        return connectProviderOperation(project);
+        return new IRunnableWithProgress() {
+
+            @Override
+            public void run(final IProgressMonitor monitor)
+                    throws InvocationTargetException {
+                File gitDir = getGitDir();
+                try (Repository repository = FileRepositoryBuilder
+                        .create(gitDir)) {
+                    if (!repository.getDirectory().exists()) {
+                        repository.create();
+                        if (!gitDir.toString().contains("..")) //$NON-NLS-1$
+                            project.refreshLocal(IResource.DEPTH_ONE,
+                                    new NullProgressMonitor());
+                        RepositoryUtil.INSTANCE.addConfiguredRepository(gitDir);
+                        var gitIgnore = project.getFile(Constants.GITIGNORE_FILENAME);
+                        if (!gitIgnore.exists()) {
+                            gitIgnore.create(new ByteArrayInputStream(new byte[0]), true, new NullProgressMonitor());
+                        }
+                    }
+                    var op = new ConnectProviderOperation(project);
+                    op.execute(monitor);
+                    for (var project : findEmbeddedProjects(project)) {
+                        ConnectProviderOperation connectProviderOperation = new ConnectProviderOperation(project,
+                                gitDir);
+                        connectProviderOperation.execute(monitor);
+                    }
+                } catch (CoreException | IOException ce) {
+                    throw new InvocationTargetException(ce);
+                }
+            }
+        };
     }
 
     @Override
@@ -75,8 +109,7 @@ public class GitProjectImpl implements GitProject {
 
     private CharSequence projectIdOf(MavenProject mavenProject) {
         var parentArtifact = mavenProject.getArtifactId();
-        var projectId = parentArtifact.subSequence(0, parentArtifact.length() - "-parent".length());
-        return projectId;
+        return parentArtifact.subSequence(0, parentArtifact.length() - "-parent".length());
     }
 
     private void createDefaultParentIgnoreFile() throws CoreException {
@@ -111,40 +144,21 @@ public class GitProjectImpl implements GitProject {
                 Constants.DOT_GIT);
     }
 
-    @SuppressWarnings("restriction")
-    private IRunnableWithProgress connectProviderOperation(IProject project) {
-        var op = new ConnectProviderOperation(project);
-        List<IProject> embeddedProjects = findEmbeddedProjects(project);
-        return new IRunnableWithProgress() {
-
-            @Override
-            public void run(final IProgressMonitor monitor)
-                    throws InvocationTargetException {
-                File gitDir = getGitDir();
-                try (Repository repository = FileRepositoryBuilder
-                        .create(gitDir)) {
-                    if (!repository.getDirectory().exists()) {
-                        repository.create();
-                        if (!gitDir.toString().contains("..")) //$NON-NLS-1$
-                            project.refreshLocal(IResource.DEPTH_ONE,
-                                    new NullProgressMonitor());
-                        RepositoryUtil.INSTANCE.addConfiguredRepository(gitDir);
-                        var gitIgnore = project.getFile(Constants.GITIGNORE_FILENAME);
-                        if (!gitIgnore.exists()) {
-                            gitIgnore.create(new ByteArrayInputStream(new byte[0]), true, new NullProgressMonitor());
-                        }
-                    }
-                    op.execute(monitor);
-                    for (IProject project : embeddedProjects) {
-                        ConnectProviderOperation connectProviderOperation = new ConnectProviderOperation(project,
-                                gitDir);
-                        connectProviderOperation.execute(monitor);
-                    }
-                } catch (CoreException | IOException ce) {
-                    throw new InvocationTargetException(ce);
-                }
-            }
-        };
+    @Override
+    public void commitAll(String commitMessage, IProgressMonitor monitor) throws CoreException {
+        var repository = getAdapter(Repository.class);
+        try (Git git = new Git(repository)) {
+            git.add().addFilepattern(".").call();
+            var commitHelper = new CommitHelper(repository);
+            var commitOperation = new CommitOperation(repository,
+                    commitHelper.getAuthor(),
+                    commitHelper.getCommitter(),
+                    commitMessage);
+            commitOperation.setCommitAll(true);
+            commitOperation.execute(monitor);
+        } catch (GitAPIException e) {
+            throw new CoreException(Status.error("Failed to commit", e));
+        }
     }
 
     protected List<IProject> findEmbeddedProjects(IProject project) {
@@ -158,14 +172,12 @@ public class GitProjectImpl implements GitProject {
                 .collect(Collectors.toList());
     }
 
-
-
     @SuppressWarnings({ "unchecked", "restriction" })
     @Override
     public <T> T getAdapter(Class<T> adapter) {
         if (Repository.class.equals(adapter)) {
             return (T) ResourceUtil.getRepository(project);
-        } 
+        }
         return null;
     }
 

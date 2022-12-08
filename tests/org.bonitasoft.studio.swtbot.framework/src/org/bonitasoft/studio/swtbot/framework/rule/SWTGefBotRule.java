@@ -52,9 +52,15 @@ import org.junit.runners.model.Statement;
 public class SWTGefBotRule implements TestRule {
 
     protected final SWTGefBot bot;
+    private boolean requireExistingProject;
 
     public SWTGefBotRule(final SWTGefBot bot) {
+        this(bot, true);
+    }
+    
+    public SWTGefBotRule(final SWTGefBot bot, boolean requireExistingProject) {
         this.bot = bot;
+        this.requireExistingProject = requireExistingProject;
     }
 
     @Override
@@ -131,6 +137,12 @@ public class SWTGefBotRule implements TestRule {
                     // not in a dialog
                 }
                 try {
+                    bot.button(IDialogConstants.NO_LABEL).click();
+                    break;
+                } catch (Throwable t) {
+                    // not in a dialog
+                }
+                try {
                     shell.close();
                 } catch (TimeoutException e1) {
                     System.out.println(String.format("Failed to close shell %s: %s", shell.getText(), e1));
@@ -151,7 +163,9 @@ public class SWTGefBotRule implements TestRule {
     }
 
     protected void beforeStatement() {
-        Display.getDefault().syncExec(SWTGefBotRule::ensureDefaultProjectExists);
+        if(requireExistingProject) {
+            Display.getDefault().syncExec(SWTGefBotRule::ensureDefaultProjectExists);
+        }
         initPreferences();
         bot.saveAllEditors();
         bot.closeAllEditors();

@@ -23,7 +23,6 @@ import java.util.Objects;
 import java.util.Optional;
 
 import org.apache.maven.model.Dependency;
-import org.apache.maven.model.Model;
 import org.apache.maven.project.MavenProject;
 import org.bonitasoft.studio.application.handler.ImportExtensionHandler;
 import org.bonitasoft.studio.application.i18n.Messages;

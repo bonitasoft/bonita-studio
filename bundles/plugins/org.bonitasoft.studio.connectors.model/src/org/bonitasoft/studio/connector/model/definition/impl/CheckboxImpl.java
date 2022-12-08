@@ -8,7 +8,6 @@ package org.bonitasoft.studio.connector.model.definition.impl;
 
 import org.bonitasoft.studio.connector.model.definition.Checkbox;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinitionPackage;
-
 import org.eclipse.emf.ecore.EClass;
 
 /**

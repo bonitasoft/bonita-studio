@@ -29,6 +29,7 @@ import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.Plugin;
 import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
+import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 import org.junit.Before;
 import org.junit.Test;
@@ -37,6 +38,7 @@ public class Groovy3MigrationStepTest {
 
     private MavenXpp3Reader modelReader = new MavenXpp3Reader();
     private Groovy3MigrationStep migrationStep;
+    private ProjectMetadata metadata;
 
     @Before
     public void createFixture() throws Exception {
@@ -59,7 +61,7 @@ public class Groovy3MigrationStepTest {
                         "provided"));
 
         // When
-        migrationStep.migrate(model);
+        migrationStep.migrate(model, metadata);
 
         // Then
         assertThat(model.getDependencies()).extracting("groupId",
@@ -95,7 +97,7 @@ public class Groovy3MigrationStepTest {
                         "test"));
 
         // When
-        migrationStep.migrate(model);
+        migrationStep.migrate(model, metadata);
 
         // Then
         assertThat(model.getDependencies()).extracting("groupId",
@@ -116,7 +118,7 @@ public class Groovy3MigrationStepTest {
         Model model = loadModel("pom_from_1_0_5.xml");
 
         // When
-        migrationStep.migrate(model);
+        migrationStep.migrate(model, metadata);
 
         // Then
         assertThat(model.getProperties()).contains(entry("groovy-all.version", "3.0.8"));
@@ -128,7 +130,7 @@ public class Groovy3MigrationStepTest {
         Model model = loadModel("pom_from_1_0_5.xml");
 
         // When
-        migrationStep.migrate(model);
+        migrationStep.migrate(model, metadata);
 
         // Then
         assertThat(model.getProperties()).contains(entry("spock.version", "2.0-groovy-3.0"));
@@ -141,7 +143,7 @@ public class Groovy3MigrationStepTest {
         assertThat(model.getProperties()).containsKey("groovy.version");
 
         // When
-        migrationStep.migrate(model);
+        migrationStep.migrate(model, metadata);
 
         // Then
         assertThat(model.getProperties()).doesNotContainKey("groovy.version");
@@ -157,7 +159,7 @@ public class Groovy3MigrationStepTest {
                 .contains(tuple("org.apache.maven.plugins", "maven-compiler-plugin", "3.6.0"));
 
         // When
-        migrationStep.migrate(model);
+        migrationStep.migrate(model, metadata);
 
         // Then
         assertThat(model.getBuild().getPlugins()).extracting("groupId",
@@ -183,7 +185,7 @@ public class Groovy3MigrationStepTest {
                         "${groovy.version}"));
 
         // When
-        migrationStep.migrate(model);
+        migrationStep.migrate(model, metadata);
 
         // Then
         assertThat(findPluginDependencies(model, "org.apache.maven.plugins", "maven-compiler-plugin"))
@@ -204,7 +206,7 @@ public class Groovy3MigrationStepTest {
         Model model = loadModel("pom_from_1_0_5.xml");
 
         // When
-        migrationStep.migrate(model);
+        migrationStep.migrate(model, metadata);
 
         // Then
         assertThat(model.getProperties()).contains(entry("groovy-eclipse-compiler.version", "3.7.0"));
@@ -216,7 +218,7 @@ public class Groovy3MigrationStepTest {
         Model model = loadModel("pom_from_1_0_5.xml");
 
         // When
-        migrationStep.migrate(model);
+        migrationStep.migrate(model, metadata);
 
         // Then
         assertThat(model.getProperties()).contains(entry("groovy-eclipse-batch.version", "3.0.8-01"));
@@ -228,7 +230,7 @@ public class Groovy3MigrationStepTest {
         Model model = loadModel("pom_from_1_0_5.xml");
 
         // When
-        migrationStep.migrate(model);
+        migrationStep.migrate(model, metadata);
 
         // Then
         assertThat(model.getProperties()).contains(entry("maven-compiler-plugin.version", "3.8.1"));
@@ -243,7 +245,7 @@ public class Groovy3MigrationStepTest {
                 .containsOnly(tuple("bintray", "https://dl.bintray.com/groovy/maven"));
 
         // When
-        migrationStep.migrate(model);
+        migrationStep.migrate(model, metadata);
 
         // Then
         assertThat(model.getPluginRepositories()).isEmpty();
@@ -255,7 +257,7 @@ public class Groovy3MigrationStepTest {
         Model model = loadModel("pom_from_1_1_1.xml");
 
         // When
-        migrationStep.migrate(model);
+        migrationStep.migrate(model, metadata);
 
         // Then
         assertThat(model.getBuild().getPluginManagement().getPlugins())
@@ -269,7 +271,7 @@ public class Groovy3MigrationStepTest {
         Model model = loadModel("pom_from_1_0_5.xml");
 
         // When
-        migrationStep.migrate(model);
+        migrationStep.migrate(model, metadata);
 
         // Then
         assertThat(model.getProperties()).contains(entry("maven-surefire-plugin.version", "2.22.2"));
@@ -278,14 +280,15 @@ public class Groovy3MigrationStepTest {
     @Test
     public void should_migration_step_applies_on_groovy_project() throws Exception {
         // Given
-        Model model = loadModel("pom_from_1_0_5.xml");
-        Model model2 = loadModel("pom_from_1_1_1.xml");
-        Model model3 = loadModel("pom_from_1_3_1.xml");
+        var model = loadModel("pom_from_1_0_5.xml");
+        var model2 = loadModel("pom_from_1_1_1.xml");
+        var model3 = loadModel("pom_from_1_3_1.xml");
+        metadata = ProjectMetadata.defaultMetadata();
 
         // Expect
-        assertThat(migrationStep.appliesTo(model)).isTrue();
-        assertThat(migrationStep.appliesTo(model2)).isTrue();
-        assertThat(migrationStep.appliesTo(model3)).isTrue();
+        assertThat(migrationStep.appliesTo(model, metadata)).isTrue();
+        assertThat(migrationStep.appliesTo(model2, metadata)).isTrue();
+        assertThat(migrationStep.appliesTo(model3, metadata)).isTrue();
     }
 
     @Test
@@ -294,7 +297,7 @@ public class Groovy3MigrationStepTest {
         Model model = loadModel("pom_java.xml");
 
         // Expect
-        assertThat(migrationStep.appliesTo(model)).isFalse();
+        assertThat(migrationStep.appliesTo(model, metadata)).isFalse();
     }
 
     @Test
@@ -303,7 +306,7 @@ public class Groovy3MigrationStepTest {
         Model model = loadModel("pom_groovy3.xml");
 
         // Expect
-        assertThat(migrationStep.appliesTo(model)).isFalse();
+        assertThat(migrationStep.appliesTo(model, metadata)).isFalse();
     }
 
     private Model loadModel(String resourceName) throws IOException, XmlPullParserException {

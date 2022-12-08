@@ -26,11 +26,13 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.m2e.core.MavenPlugin;
 import org.eclipse.m2e.core.internal.IMavenConstants;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class CreateBonitaProjectOperationTest {
 
+    @AfterEach
     @BeforeEach
     public void cleanWorkspace() throws Exception {
         Stream.of(ResourcesPlugin.getWorkspace().getRoot().getProjects()).forEach(p -> {
@@ -50,36 +52,6 @@ public class CreateBonitaProjectOperationTest {
         metadata.setGroupId("com.company");
         metadata.setVersion("1.0.0-SNAPSHOT");
         metadata.setBonitaRuntimeVersion("7.15.0");
-        var workspace = ResourcesPlugin.getWorkspace();
-        var operation = new CreateBonitaProjectOperation(workspace, metadata);
-
-        operation.run(new NullProgressMonitor());
-
-        var project = workspace.getRoot().getProject("procurement");
-        assertThat(project.exists()).isTrue();
-      
-        assertThat(project.isNatureEnabled(BonitaProjectNature.NATURE_ID)).isTrue();
-        assertThat(project.isNatureEnabled(JavaCore.NATURE_ID)).isTrue();
-        assertThat(project.isNatureEnabled(IMavenConstants.NATURE_ID)).isTrue();
-        assertThat(project.isNatureEnabled("org.eclipse.jdt.groovy.core.groovyNature")).isTrue();
-
-        var mavenProjectFacade = MavenPlugin.getMavenProjectRegistry().getProject(project);
-        assertThat(mavenProjectFacade).isNotNull();
-        var mavenProject = mavenProjectFacade.getMavenProject(new NullProgressMonitor());
-        assertThat(mavenProject.getArtifactId()).isEqualTo("procurement");
-        assertThat(mavenProject.getVersion()).isEqualTo("1.0.0-SNAPSHOT");
-        assertThat(mavenProject.getGroupId()).isEqualTo("com.company");
-    }
-
-    @Test
-    public void createMultiModuleBonitaProject() throws Exception {
-        var metadata = new ProjectMetadata();
-        metadata.setName("procurement");
-        metadata.setArtifactId("procurement");
-        metadata.setGroupId("com.company");
-        metadata.setVersion("1.0.0-SNAPSHOT");
-        metadata.setBonitaRuntimeVersion("7.15.0");
-        metadata.setIsMultiModule(true);
         var workspace = ResourcesPlugin.getWorkspace();
         var operation = new CreateBonitaProjectOperation(workspace, metadata);
 

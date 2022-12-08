@@ -27,6 +27,7 @@ import org.apache.maven.model.Exclusion;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.Plugin;
 import org.apache.maven.model.PluginManagement;
+import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
 import org.bonitasoft.studio.common.repository.core.migration.MavenModelMigration;
 import org.bonitasoft.studio.common.repository.core.migration.report.MigrationReport;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
@@ -43,7 +44,7 @@ public class Groovy3MigrationStep implements MavenModelMigration {
     private static final ComparableVersion _3_0_0 = new ComparableVersion("3.0.0");
 
     @Override
-    public MigrationReport migrate(Model model) {
+    public MigrationReport migrate(Model model, ProjectMetadata metadata) {
         MigrationReport report = new MigrationReport();
         Properties properties = model.getProperties();
 
@@ -171,7 +172,7 @@ public class Groovy3MigrationStep implements MavenModelMigration {
     }
 
     @Override
-    public boolean appliesTo(Model model) {
+    public boolean appliesTo(Model model, ProjectMetadata metadata) {
         if (model.getBuild() != null) {
             String groovyVersion = model.getProperties().getProperty(GROOVY_VERSION_PROPERTY);
             String groovyAllVersion = model.getProperties().getProperty(GROOVY_ALL_VERSION_PROPERTY);

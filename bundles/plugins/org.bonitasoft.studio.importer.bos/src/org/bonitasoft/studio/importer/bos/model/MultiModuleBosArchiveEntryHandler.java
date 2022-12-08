@@ -38,4 +38,13 @@ public class MultiModuleBosArchiveEntryHandler extends DefaultBosArchiveEntryHan
         return entryPrefix + "/" + super.toEntryPath(parentSegments);
     }
     
+    @Override
+    protected int getStoreDepth(List<String> segments) {
+        if(segments.size() == 2 && 
+                segments.get(0).equals("bdm")) {
+            return 1;
+        }
+        return super.getStoreDepth(segments);
+    }
+    
 }

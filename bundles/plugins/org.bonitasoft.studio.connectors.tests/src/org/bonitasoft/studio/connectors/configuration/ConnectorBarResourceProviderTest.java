@@ -20,8 +20,8 @@ import static org.bonitasoft.studio.model.configuration.builders.DefinitionMappi
 import static org.bonitasoft.studio.model.configuration.builders.FragmentBuilder.aFragment;
 import static org.bonitasoft.studio.model.configuration.builders.FragmentContainerBuilder.aFragmentContainer;
 import static org.bonitasoft.studio.model.process.builders.PoolBuilder.aPool;
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.anyString;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;

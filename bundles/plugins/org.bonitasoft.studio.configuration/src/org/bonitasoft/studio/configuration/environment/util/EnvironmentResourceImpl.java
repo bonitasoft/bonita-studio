@@ -9,7 +9,6 @@
 package org.bonitasoft.studio.configuration.environment.util;
 
 import org.eclipse.emf.common.util.URI;
-
 import org.eclipse.emf.ecore.xmi.impl.XMLResourceImpl;
 
 /**

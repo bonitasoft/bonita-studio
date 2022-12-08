@@ -54,7 +54,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class CreateFormFromContractOperation extends CreateUIDArtifactOperation {
 

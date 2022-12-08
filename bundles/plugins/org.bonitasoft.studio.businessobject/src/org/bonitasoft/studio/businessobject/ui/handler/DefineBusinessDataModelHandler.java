@@ -16,20 +16,11 @@ package org.bonitasoft.studio.businessobject.ui.handler;
 
 import java.lang.reflect.InvocationTargetException;
 
-import org.bonitasoft.engine.bdm.model.BusinessObject;
-import org.bonitasoft.engine.bdm.model.BusinessObjectModel;
-import org.bonitasoft.engine.bdm.model.field.FieldType;
-import org.bonitasoft.engine.bdm.model.field.SimpleField;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelFileStore;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
-import org.bonitasoft.studio.businessobject.editor.editor.ui.control.attribute.AttributeEditionControl;
-import org.bonitasoft.studio.businessobject.editor.editor.ui.control.businessObject.BusinessObjectList;
-import org.bonitasoft.studio.businessobject.helper.PackageHelper;
 import org.bonitasoft.studio.businessobject.i18n.Messages;
-import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
-import org.bonitasoft.studio.common.repository.core.MultiModuleProject;
-import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
+import org.bonitasoft.studio.common.repository.core.BonitaProject;
 import org.bonitasoft.studio.ui.dialog.ExceptionDialogHandler;
 import org.eclipse.core.runtime.Adapters;
 import org.eclipse.core.runtime.CoreException;
@@ -71,32 +62,10 @@ public class DefineBusinessDataModelHandler {
             IProgressMonitor monitor) throws CoreException {
         monitor.beginTask(Messages.creatingBusinessDataModel, IProgressMonitor.UNKNOWN);
         var bdmStore = repositoryAccessor.getRepositoryStore(BusinessObjectModelRepositoryStore.class);
-        var project = Adapters.adapt(repositoryAccessor.getCurrentRepository().orElseThrow(), MultiModuleProject.class);
+        var project = Adapters.adapt(repositoryAccessor.getCurrentRepository().orElseThrow(), BonitaProject.class);
         if (project != null && !project.getBdmParentProject().exists()) {
             bdmStore.createBdmModule(project, monitor);
         }
-        BusinessObjectModelFileStore fileStore = (BusinessObjectModelFileStore) bdmStore.createRepositoryFileStore(BusinessObjectModelFileStore.BOM_FILENAME);
-        try {
-            if (fileStore.getContent() == null) {
-                BusinessObjectModel bdm = new BusinessObjectModel();
-                bdm.getBusinessObjects().add(createFirstBusinessObject());
-                fileStore.save(bdm);
-            }
-        } catch (ReadFileStoreException e) {
-            BonitaStudioLog.error(e);
-        }
-    }
-
-    private BusinessObject createFirstBusinessObject() {
-        String defaultName = String.format("%s.%s", PackageHelper.defaultPackageName(),
-                BusinessObjectList.DEFAULT_BO_NAME);
-        var bo = new BusinessObject(defaultName);
-        SimpleField stringField = new SimpleField();
-        stringField.setType(FieldType.STRING);
-        stringField.setName(AttributeEditionControl.DEFAULT_FIELD_NAME);
-        stringField.setLength(255);
-        bo.addField(stringField);
-        return bo;
     }
 
 }

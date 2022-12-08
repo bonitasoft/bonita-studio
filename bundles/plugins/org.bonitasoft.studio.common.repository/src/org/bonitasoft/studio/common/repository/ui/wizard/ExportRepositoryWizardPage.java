@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
@@ -31,10 +32,12 @@ import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
 import org.bonitasoft.studio.common.repository.Messages;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.core.BonitaProject;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.common.repository.model.IResourceContainer;
 import org.bonitasoft.studio.common.repository.operation.ExportBosArchiveOperation;
+import org.bonitasoft.studio.common.repository.store.LocalDependenciesStore;
 import org.bonitasoft.studio.common.repository.ui.viewer.CheckboxRepositoryTreeViewer;
 import org.bonitasoft.studio.common.ui.jface.FileActionDialog;
 import org.eclipse.core.databinding.DataBindingContext;
@@ -43,6 +46,9 @@ import org.eclipse.core.databinding.beans.typed.PojoProperties;
 import org.eclipse.core.databinding.observable.set.IObservableSet;
 import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -58,6 +64,7 @@ import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.wizard.WizardPage;
+import org.eclipse.m2e.core.internal.IMavenConstants;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -322,7 +329,7 @@ public class ExportRepositoryWizardPage extends WizardPage {
                 }
                 if (isZip) {
                     var bonitaProject = RepositoryManager.getInstance().getCurrentProject().orElseThrow();
-                    resources.addAll(bonitaProject.getExportableResources());
+                    resources.addAll(getExportableResources(bonitaProject));
                 }
             });
         } catch (InvocationTargetException | InterruptedException e) {
@@ -330,6 +337,32 @@ public class ExportRepositoryWizardPage extends WizardPage {
         }
         return resources;
     }
+    
+    Collection<? extends IResource> getExportableResources(BonitaProject project) {
+        var resources = new ArrayList<IResource>();
+        IProject parentProject = project.getParentProject();
+        IFile pomFile = parentProject
+                .getFile(IMavenConstants.POM_FILE_NAME);
+        if (pomFile.exists()) {
+            resources.add(pomFile);
+        }
+        IFolder appModule = parentProject.getFolder(BonitaProject.APP_MODULE);
+        IFile appPomFile = appModule
+                .getFile(IMavenConstants.POM_FILE_NAME);
+        if (appPomFile.exists()) {
+            resources.add(appPomFile);
+        }
+        IFolder depStore = appModule.getFolder(LocalDependenciesStore.NAME);
+        if (depStore.exists()) {
+            resources.add(depStore);
+        }
+        IFolder resourcesFolder = appModule.getFolder("src/main/resources");
+        if (resourcesFolder.exists()) {
+            resources.add(resourcesFolder);
+        }
+        return resources;
+    }
+    
 
     protected void createDestination(final Composite group) {
         final Label destPath = new Label(group, SWT.NONE);

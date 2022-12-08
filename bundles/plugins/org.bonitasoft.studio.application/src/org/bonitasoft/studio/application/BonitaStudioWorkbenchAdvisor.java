@@ -60,6 +60,7 @@ import org.bonitasoft.studio.preferences.dialog.BonitaPreferenceDialog;
 import org.codehaus.groovy.eclipse.GroovyPlugin;
 import org.eclipse.core.internal.resources.Workspace;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -129,7 +130,7 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
             UIDesignerServerManager.getInstance().stop();
             Job.getJobManager().cancel(StartEngineJob.FAMILY);
             RepositoryManager.getInstance().getCurrentRepository()
-                    .ifPresent(AbstractRepository::disableOpenIntroListener);
+                    .ifPresent(org.bonitasoft.studio.common.repository.model.IRepository::disableOpenIntroListener);
             executePreShutdownContribution();
             new ActiveOrganizationProvider().flush();
             if (BOSWebServerManager.getInstance().serverIsStarted() && BOSEngineManager.getInstance().isRunning()) {
@@ -482,10 +483,15 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
         } catch (IOException e) {
             BonitaStudioLog.error(e);
         }
-        var initializeProjectJob = new Job("Initialize project") {
+        var initializeProjectJob = new WorkspaceJob("Initialize project") {
 
             @Override
-            protected IStatus run(IProgressMonitor monitor) {
+            public boolean belongsTo(Object family) {
+                return RepositoryManager.class.equals(family);
+            }
+
+            @Override
+            public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
                 // Ensure the local repository contains Bonita artifacts
                 try {
                     new InstallBonitaMavenArtifactsOperation(MavenPlugin.getMaven().getLocalRepository())
@@ -495,11 +501,6 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
                 }
                 RepositoryManager.getInstance().getAccessor().start(monitor);
                 return Status.OK_STATUS;
-            }
-
-            @Override
-            public boolean belongsTo(Object family) {
-                return RepositoryManager.class.equals(family);
             }
         };
         initializeProjectJob.addJobChangeListener(new JobChangeAdapter() {

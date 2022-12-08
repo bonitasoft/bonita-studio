@@ -18,7 +18,6 @@ import static com.google.common.collect.Lists.newArrayList;
 import static org.bonitasoft.studio.assertions.StatusAssert.assertThat;
 import static org.bonitasoft.studio.common.databinding.validator.ValidatorFactory.uniqueValidator;
 
-import org.bonitasoft.studio.common.databinding.validator.UniqueValidator;
 import org.eclipse.core.runtime.IStatus;
 import org.junit.Test;
 

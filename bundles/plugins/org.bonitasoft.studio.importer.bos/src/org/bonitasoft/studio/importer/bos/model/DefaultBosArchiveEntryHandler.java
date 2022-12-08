@@ -99,20 +99,21 @@ public class DefaultBosArchiveEntryHandler implements BosArchiveEntryHandler {
 
     private void handleSegment(ImportArchiveModel archiveModel, String segment, final List<String> segments,
             IRepository repository, Set<String> resourcesToOpen) {
-        final List<String> parentSegments = segments.subList(0, 2);
+        int storeDepth = getStoreDepth(segments);
+        final List<String> parentSegments = segments.subList(0, storeDepth);
         Optional<IRepositoryStore<? extends IRepositoryFileStore>> repositoryStoreByName = repository
                 .getRepositoryStoreByName(segment);
         if (repositoryStoreByName.isPresent()) {
             final ImportStoreModel store = new ImportStoreModel(toEntryPath(parentSegments),
                     (IRepositoryStore<IRepositoryFileStore>) repositoryStoreByName.get());
 
-            parseFolder(archiveModel.addStore(store), segments.subList(2, segments.size()), parentSegments,
+            parseFolder(archiveModel.addStore(store), segments.subList(storeDepth, segments.size()), parentSegments,
                     resourcesToOpen,
                     true, archiveModel, repository);
             if (store.getChildren().length == 0) {
                 archiveModel.removeStore(store);
             }
-        } else if (segments.size() >= 2 && segments.get(1).equals("src")) {
+        } else if (segments.size() >= storeDepth && segments.get(1).equals("src")) {
             parseFolder(archiveModel.addStore(new SourceFolderStoreModel(toEntryPath(parentSegments))),
                     segments.subList(2, segments.size()),
                     parentSegments,
@@ -122,9 +123,13 @@ public class DefaultBosArchiveEntryHandler implements BosArchiveEntryHandler {
                     repository);
         } else if (RemoveLegacyFolderStep.LEGACY_REPOSITORIES.contains(segment)) {
             archiveModel.addStore(new LegacyStoreModel(toEntryPath(parentSegments)));
-        } else if (segments.size() == 2) { // Only root files should be added as RootFileModel
+        } else if (segments.size() == storeDepth) { // Only root files should be added as RootFileModel
             archiveModel.addStore(new RootFileModel(segment, toEntryPath(parentSegments)));
         }
+    }
+
+    protected int getStoreDepth(List<String> segments) {
+        return 2;
     }
 
     private void parseFolder(AbstractFolderModel store, List<String> segments, List<String> parentSegments,

@@ -14,12 +14,13 @@
  */
 package org.bonitasoft.studio.common.repository.core.migration.step;
 
+import java.nio.file.Path;
+
 import org.bonitasoft.studio.common.repository.core.maven.model.DefaultPluginVersions;
 import org.bonitasoft.studio.common.repository.core.maven.model.MavenDependency;
 import org.bonitasoft.studio.common.repository.core.maven.model.ProjectDefaultConfiguration;
 import org.bonitasoft.studio.common.repository.core.migration.MigrationStep;
 import org.bonitasoft.studio.common.repository.core.migration.report.MigrationReport;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.osgi.framework.Version;
@@ -27,7 +28,7 @@ import org.osgi.framework.Version;
 public class SplitGroovyAllIntoModulesStep implements MigrationStep {
 
     @Override
-    public MigrationReport run(IProject project, IProgressMonitor monitor) throws CoreException {
+    public MigrationReport run(Path project, IProgressMonitor monitor) throws CoreException {
         var model = loadMavenModel(project);
 
         if (model.getDependencies().removeIf(has(DefaultPluginVersions.CODEHAUS_GROOVY_GROUPID, "groovy-all"))) {

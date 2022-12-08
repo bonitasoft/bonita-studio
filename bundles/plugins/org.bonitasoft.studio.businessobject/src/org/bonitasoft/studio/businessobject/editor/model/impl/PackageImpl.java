@@ -6,18 +6,13 @@ import java.util.Collection;
 
 import org.bonitasoft.studio.businessobject.editor.model.BusinessDataModelPackage;
 import org.bonitasoft.studio.businessobject.editor.model.BusinessObject;
-
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
-
 import org.eclipse.emf.common.util.EList;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
-
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
@@ -89,6 +84,7 @@ public class PackageImpl extends MinimalEObjectImpl.Container implements org.bon
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public EList<BusinessObject> getBusinessObjects() {
         if (businessObjects == null) {
             businessObjects = new EObjectContainmentEList<BusinessObject>(BusinessObject.class, this, BusinessDataModelPackage.PACKAGE__BUSINESS_OBJECTS);
@@ -101,6 +97,7 @@ public class PackageImpl extends MinimalEObjectImpl.Container implements org.bon
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public String getName() {
         return name;
     }
@@ -110,6 +107,7 @@ public class PackageImpl extends MinimalEObjectImpl.Container implements org.bon
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public void setName(String newName) {
         String oldName = name;
         name = newName;

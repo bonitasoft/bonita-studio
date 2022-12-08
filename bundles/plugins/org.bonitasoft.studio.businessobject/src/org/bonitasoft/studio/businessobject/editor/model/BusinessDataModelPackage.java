@@ -76,14 +76,6 @@ public interface BusinessDataModelPackage extends EPackage {
      */
     int BUSINESS_OBJECT_MODEL__PACKAGES = 0;
 
-    /**
-     * The feature id for the '<em><b>Group Id</b></em>' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     * @ordered
-     */
-    int BUSINESS_OBJECT_MODEL__GROUP_ID = 1;
 
     /**
      * The number of structural features of the '<em>Business Object Model</em>' class.
@@ -92,7 +84,7 @@ public interface BusinessDataModelPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int BUSINESS_OBJECT_MODEL_FEATURE_COUNT = 2;
+    int BUSINESS_OBJECT_MODEL_FEATURE_COUNT = 1;
 
     /**
      * The number of operations of the '<em>Business Object Model</em>' class.
@@ -777,17 +769,6 @@ public interface BusinessDataModelPackage extends EPackage {
     EReference getBusinessObjectModel_Packages();
 
     /**
-     * Returns the meta object for the attribute '{@link org.bonitasoft.studio.businessobject.editor.model.BusinessObjectModel#getGroupId <em>Group Id</em>}'.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @return the meta object for the attribute '<em>Group Id</em>'.
-     * @see org.bonitasoft.studio.businessobject.editor.model.BusinessObjectModel#getGroupId()
-     * @see #getBusinessObjectModel()
-     * @generated
-     */
-    EAttribute getBusinessObjectModel_GroupId();
-
-    /**
      * Returns the meta object for class '{@link org.bonitasoft.studio.businessobject.editor.model.Package <em>Package</em>}'.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -1310,14 +1291,6 @@ public interface BusinessDataModelPackage extends EPackage {
          * @generated
          */
         EReference BUSINESS_OBJECT_MODEL__PACKAGES = eINSTANCE.getBusinessObjectModel_Packages();
-
-        /**
-         * The meta object literal for the '<em><b>Group Id</b></em>' attribute feature.
-         * <!-- begin-user-doc -->
-         * <!-- end-user-doc -->
-         * @generated
-         */
-        EAttribute BUSINESS_OBJECT_MODEL__GROUP_ID = eINSTANCE.getBusinessObjectModel_GroupId();
 
         /**
          * The meta object literal for the '{@link org.bonitasoft.studio.businessobject.editor.model.impl.PackageImpl <em>Package</em>}' class.

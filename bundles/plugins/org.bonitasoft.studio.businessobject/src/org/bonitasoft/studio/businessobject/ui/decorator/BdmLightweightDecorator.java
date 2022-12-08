@@ -82,7 +82,7 @@ public class BdmLightweightDecorator extends LabelProvider
     private boolean isBdmResource(IResource resource) {
         if (RepositoryManager.getInstance().getCurrentRepository().filter(IRepository::isLoaded).isPresent()) {
             var bdmStore = getBdmRepositoryStore();
-            if (!bdmStore.getResource().exists()) {
+            if (bdmStore == null || bdmStore.getResource() == null || !bdmStore.getResource().exists()) {
                 return false;
             }
             var bdmFileStore = bdmStore.getChild(BusinessObjectModelFileStore.BOM_FILENAME,
@@ -162,7 +162,7 @@ public class BdmLightweightDecorator extends LabelProvider
     private boolean updateDeployRequiredProperty(IResourceDelta delta) {
         if (RepositoryManager.getInstance().getCurrentRepository().filter(IRepository::isLoaded).isPresent()) {
             var bdmStore = getBdmRepositoryStore();
-            if (!bdmStore.getResource().exists()) {
+            if (bdmStore == null || bdmStore.getResource() == null || !bdmStore.getResource().exists()) {
                 return false;
             }
             var bdmFileStore = bdmStore.getChild(BusinessObjectModelFileStore.BOM_FILENAME, false);

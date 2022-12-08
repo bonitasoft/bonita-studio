@@ -2,7 +2,11 @@ package org.bonitasoft.studio.common.repository.core.migration.step;
 
 import static java.util.function.Predicate.not;
 
+import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -10,9 +14,9 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.apache.maven.model.Model;
+import org.bonitasoft.studio.common.FileUtil;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.core.IFileInputStreamSupplier;
+import org.bonitasoft.studio.common.repository.core.FileInputStreamSupplier;
 import org.bonitasoft.studio.common.repository.core.InputStreamSupplier;
 import org.bonitasoft.studio.common.repository.core.maven.DefinitionUsageOperation;
 import org.bonitasoft.studio.common.repository.core.maven.DependencyUsageOperation;
@@ -25,9 +29,6 @@ import org.bonitasoft.studio.common.repository.core.migration.MigrationStep;
 import org.bonitasoft.studio.common.repository.core.migration.dependencies.operation.DependenciesUpdateOperationFactory;
 import org.bonitasoft.studio.common.repository.core.migration.report.MigrationReport;
 import org.bonitasoft.studio.common.repository.store.LocalDependenciesStore;
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -47,7 +48,7 @@ public class JavaDependenciesMigrationStep implements MigrationStep {
     }
 
     @Override
-    public MigrationReport run(IProject project, IProgressMonitor monitor) throws CoreException {
+    public MigrationReport run(Path project, IProgressMonitor monitor) throws CoreException {
         MigrationReport report = MigrationReport.emptyReport();
         try {
             Set<DependencyLookup> dependencyLookups = doMigrateToMavenDependencies(project, monitor);
@@ -83,8 +84,7 @@ public class JavaDependenciesMigrationStep implements MigrationStep {
                 report.updated(dependenciesUpdatesReport.toString());
             }
             var localDependencyStore = new LocalDependenciesStore(project);
-            MavenProjectHelper mavenProjectHelper = new MavenProjectHelper();
-            Model mavenModel = mavenProjectHelper.getMavenModel(project);
+            var mavenModel = MavenProjectHelper.readModel(project.resolve(POM_FILE_NAME).toFile());
             var dependenciesToInstall = dependencyLookups.stream()
                     .filter(DependencyLookup::isSelected)
                     .collect(Collectors.toSet());
@@ -104,7 +104,7 @@ public class JavaDependenciesMigrationStep implements MigrationStep {
                                     dl.dependencyFileName()));
                 }
                 var newDependeny = dl.toMavenDependency();
-                mavenProjectHelper.findDependency(mavenModel,
+                MavenProjectHelper.findDependency(mavenModel,
                         newDependeny.getGroupId(),
                         newDependeny.getArtifactId())
                         .ifPresentOrElse(existingDep -> {
@@ -113,7 +113,7 @@ public class JavaDependenciesMigrationStep implements MigrationStep {
                         }, () -> mavenModel.addDependency(newDependeny));
             }
 
-            mavenProjectHelper.saveModel(project, mavenModel, false, monitor);
+            MavenProjectHelper.saveModel(project.resolve(POM_FILE_NAME), mavenModel);
 
             dependencyLookups.stream()
                     .filter(not(DependencyLookup::isSelected))
@@ -122,9 +122,9 @@ public class JavaDependenciesMigrationStep implements MigrationStep {
 
             report.addPostMigrationOperation(processConfigurationUpdateOperation);
 
-            var libFolder = project.getFolder("lib");
-            if (libFolder.exists()) {
-                libFolder.delete(true, monitor);
+            var libFolder = project.resolve("lib");
+            if (Files.exists(libFolder)) {
+                FileUtil.deleteDir(libFolder);
                 report.removed("`lib` folder and its content has been removed.");
             }
         } catch (InvocationTargetException e) {
@@ -132,18 +132,20 @@ public class JavaDependenciesMigrationStep implements MigrationStep {
                     e.getTargetException().getMessage(), e.getTargetException()));
         } catch (InterruptedException e) {
             BonitaStudioLog.error(e);
+        } catch (IOException e) {
+            throw new CoreException(org.eclipse.core.runtime.Status.error("Failed to delete lib folder", e));
         }
         return report;
     }
 
-    protected Set<DependencyLookup> doMigrateToMavenDependencies(IProject project, IProgressMonitor monitor)
+    protected Set<DependencyLookup> doMigrateToMavenDependencies(Path project, IProgressMonitor monitor)
             throws InvocationTargetException, InterruptedException, CoreException {
         Set<String> usedDependencies = dependencyUsageAnalysis(project, monitor);
         Set<String> usedDefinitions = definitionUsageAnalysis(project, monitor);
         // Automatic dependency lookup
         List<InputStreamSupplier> jars = new ArrayList<>();
         try {
-            jars = createJarInputStreamSuppliers(project.getFolder("lib"));
+            jars = createJarInputStreamSuppliers(project.resolve("lib"));
             var projectDependenciesMigrationOperation = new ProjectDependenciesMigrationOperation(jars)
                     .addUsedDependencies(usedDependencies)
                     .addUsedDefinitions(usedDefinitions);
@@ -166,58 +168,58 @@ public class JavaDependenciesMigrationStep implements MigrationStep {
         }
     }
 
-    private List<InputStreamSupplier> createJarInputStreamSuppliers(IFolder libFolder) throws CoreException {
-        return libFolder.exists() ? Stream.of(libFolder.members())
-                .filter(IFile.class::isInstance)
-                .map(IFile.class::cast)
-                .filter(file -> Objects.equals(file.getFileExtension(), "jar"))
-                .map(IFileInputStreamSupplier::new)
+    private List<InputStreamSupplier> createJarInputStreamSuppliers(Path libFolder) throws CoreException {
+        return  Files.exists(libFolder) ? Stream.of(libFolder.toFile().listFiles())
+                .filter(File.class::isInstance)
+                .map(File.class::cast)
+                .filter(file -> file.getName().toLowerCase().endsWith(".jar"))
+                .map(FileInputStreamSupplier::new)
                 .collect(Collectors.toList()) : List.of();
     }
 
-    private Set<String> definitionUsageAnalysis(IProject project, IProgressMonitor monitor)
+    private Set<String> definitionUsageAnalysis(Path project, IProgressMonitor monitor)
             throws CoreException, InvocationTargetException, InterruptedException {
-        IFolder diagrams = project.getFolder("diagrams");
-        if(!diagrams.exists()) {
+        var diagrams = project.resolve("diagrams");
+        if (!Files.exists(diagrams)) {
             return Set.of();
         }
-        List<InputStreamSupplier> files = Stream.of(diagrams.members())
-                .filter(IFile.class::isInstance)
-                .map(IFile.class::cast)
-                .filter(file -> Objects.equals("proc", file.getFileExtension()))
-                .map(IFileInputStreamSupplier::new)
+        List<InputStreamSupplier> files = Stream.of(diagrams.toFile().listFiles())
+                .filter(File.class::isInstance)
+                .map(File.class::cast)
+                .filter(file -> file.getName().toLowerCase().endsWith(".proc"))
+                .map(FileInputStreamSupplier::new)
                 .collect(Collectors.toList());
         DefinitionUsageOperation dependencyUsageOperation = new DefinitionUsageOperation(files);
         dependencyUsageOperation.run(monitor);
         return dependencyUsageOperation.getUsedDefinitions();
     }
 
-    private Set<String> dependencyUsageAnalysis(IProject project, IProgressMonitor monitor)
+    private Set<String> dependencyUsageAnalysis(Path project, IProgressMonitor monitor)
             throws CoreException, InvocationTargetException, InterruptedException {
-        IFolder diagrams = project.getFolder("diagrams");
-        IFolder processConfiguration = project.getFolder("process_configurations");
-        IFolder connectorsImplConfiguration = project.getFolder("connectors-impl");
-        IFolder filtersImplConfiguration = project.getFolder("filters-impl");
+        var diagrams = project.resolve("diagrams");
+        var processConfiguration = project.resolve("process_configurations");
+        var connectorsImplConfiguration = project.resolve("connectors-impl");
+        var filtersImplConfiguration = project.resolve("filters-impl");
 
         List<InputStreamSupplier> files = new ArrayList<>();
-        collectFileCandidates(diagrams, "proc", files);
-        collectFileCandidates(processConfiguration, "conf", files);
-        collectFileCandidates(connectorsImplConfiguration, "impl", files);
-        collectFileCandidates(filtersImplConfiguration, "impl", files);
+        collectFileCandidates(diagrams, ".proc", files);
+        collectFileCandidates(processConfiguration, ".conf", files);
+        collectFileCandidates(connectorsImplConfiguration, ".impl", files);
+        collectFileCandidates(filtersImplConfiguration, ".impl", files);
 
         DependencyUsageOperation dependencyUsageOperation = new DependencyUsageOperation(files);
         dependencyUsageOperation.run(monitor);
         return dependencyUsageOperation.getUsedDependencies();
     }
 
-    private void collectFileCandidates(IFolder folder, String fileExtension, List<InputStreamSupplier> candidates)
+    private void collectFileCandidates(Path folder, String fileExtension, List<InputStreamSupplier> candidates)
             throws CoreException {
-        if (folder.exists()) {
-            Stream.of(folder.members())
-                    .filter(IFile.class::isInstance)
-                    .map(IFile.class::cast)
-                    .filter(file -> Objects.equals(fileExtension, file.getFileExtension()))
-                    .map(IFileInputStreamSupplier::new)
+        if (Files.exists(folder)) {
+            Stream.of(folder.toFile().listFiles())
+                    .filter(File.class::isInstance)
+                    .map(File.class::cast)
+                    .filter(file -> file.getName().toLowerCase().endsWith(fileExtension))
+                    .map(FileInputStreamSupplier::new)
                     .forEach(candidates::add);
         }
     }

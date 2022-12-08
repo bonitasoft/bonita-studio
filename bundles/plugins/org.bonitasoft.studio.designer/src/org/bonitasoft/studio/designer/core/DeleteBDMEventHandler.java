@@ -17,6 +17,7 @@ import java.time.Duration;
 
 import javax.annotation.PostConstruct;
 
+import org.bonitasoft.studio.common.event.BdmEvents;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.net.HttpClientFactory;
 import org.bonitasoft.studio.designer.UIDesignerPlugin;
@@ -29,11 +30,9 @@ import org.osgi.service.event.EventHandler;
 
 public class DeleteBDMEventHandler implements EventHandler {
 
-    private static final String BDM_DELETED_TOPIC = "bdm/deleted";
-
     @PostConstruct
     public void registerHandler(IEventBroker eventBroker) {
-        eventBroker.subscribe(BDM_DELETED_TOPIC, this);
+        eventBroker.subscribe(BdmEvents.BDM_DELETED_TOPIC, this);
     }
 
     @Override

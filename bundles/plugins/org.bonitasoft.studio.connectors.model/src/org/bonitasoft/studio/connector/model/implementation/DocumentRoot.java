@@ -7,9 +7,7 @@
 package org.bonitasoft.studio.connector.model.implementation;
 
 import org.eclipse.emf.common.util.EMap;
-
 import org.eclipse.emf.ecore.EObject;
-
 import org.eclipse.emf.ecore.util.FeatureMap;
 
 /**

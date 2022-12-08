@@ -14,7 +14,6 @@ import org.bonitasoft.studio.businessobject.editor.model.SimpleField;
 import org.bonitasoft.studio.businessobject.editor.model.UniqueConstraint;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
-
 import org.eclipse.emf.ecore.util.Switch;
 
 /**

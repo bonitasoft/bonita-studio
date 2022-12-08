@@ -24,6 +24,7 @@ import org.apache.maven.model.Dependency;
 import org.apache.maven.model.DependencyManagement;
 import org.apache.maven.model.Model;
 import org.bonitasoft.studio.common.repository.core.maven.model.ProjectDefaultConfiguration;
+import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
 import org.bonitasoft.studio.common.repository.core.migration.MavenModelMigration;
 import org.bonitasoft.studio.common.repository.core.migration.report.MigrationReport;
 
@@ -34,7 +35,7 @@ public class RuntimeBOMMigrationStep implements MavenModelMigration {
     private static final String SLF4J_API_VERSION_PROPERTY = "slf4j-api.version";
 
     @Override
-    public MigrationReport migrate(Model model) {
+    public MigrationReport migrate(Model model, ProjectMetadata metadata) {
         MigrationReport report = new MigrationReport();
         Properties properties = model.getProperties();
 
@@ -117,7 +118,7 @@ public class RuntimeBOMMigrationStep implements MavenModelMigration {
     }
 
     @Override
-    public boolean appliesTo(Model model) {
+    public boolean appliesTo(Model model, ProjectMetadata metadata) {
         if (model.getDependencyManagement() != null) {
             return model.getDependencyManagement().getDependencies()
                     .stream()

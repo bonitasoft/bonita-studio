@@ -11,9 +11,7 @@ package org.bonitasoft.studio.configuration.environment.impl;
 import org.bonitasoft.studio.configuration.environment.Environment;
 import org.bonitasoft.studio.configuration.environment.EnvironmentPackage;
 import org.eclipse.emf.common.notify.Notification;
-
 import org.eclipse.emf.ecore.EClass;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
 

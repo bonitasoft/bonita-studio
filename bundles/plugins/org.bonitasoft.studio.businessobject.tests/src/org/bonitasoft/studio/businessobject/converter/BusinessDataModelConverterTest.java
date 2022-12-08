@@ -6,7 +6,6 @@ import java.util.Arrays;
 import java.util.Collection;
 
 import org.bonitasoft.engine.bdm.model.field.RelationField.Type;
-import org.bonitasoft.studio.businessobject.core.repository.BDMArtifactDescriptor;
 import org.bonitasoft.studio.businessobject.editor.model.BusinessObject;
 import org.bonitasoft.studio.businessobject.editor.model.BusinessObjectModel;
 import org.bonitasoft.studio.businessobject.editor.model.FetchType;
@@ -50,11 +49,8 @@ public class BusinessDataModelConverterTest {
     @Test
     public void should_convert_into_emf_model() {
         org.bonitasoft.engine.bdm.model.BusinessObjectModel engineModel = createEngineModel();
-        BDMArtifactDescriptor bdmArtifactDescriptor = new BDMArtifactDescriptor();
-        bdmArtifactDescriptor.setGroupId("groupId");
         BusinessDataModelConverter converter = new BusinessDataModelConverter();
-        BusinessObjectModel emfModel = converter.toEmfModel(engineModel, bdmArtifactDescriptor);
-        assertThat(emfModel.getGroupId()).isEqualTo("groupId");
+        BusinessObjectModel emfModel = converter.toEmfModel(engineModel);
         assertThat(emfModel.getPackages()).hasSize(2);
         assertThat(emfModel.getPackages()).extracting(Package::getName)
                 .containsExactlyInAnyOrder("org.bonitasoft", "com.bonitasoft");

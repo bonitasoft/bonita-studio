@@ -14,33 +14,37 @@
  */
 package org.bonitasoft.studio.common.repository.core.migration.step;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+
 import org.bonitasoft.studio.common.RedirectURLBuilder;
 import org.bonitasoft.studio.common.repository.core.CreateBonitaProjectOperation;
+import org.bonitasoft.studio.common.repository.core.MavenProjectModelBuilder;
+import org.bonitasoft.studio.common.repository.core.maven.MavenProjectHelper;
 import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
 import org.bonitasoft.studio.common.repository.core.migration.MigrationStep;
 import org.bonitasoft.studio.common.repository.core.migration.report.MigrationReport;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.m2e.core.internal.IMavenConstants;
 import org.osgi.framework.Version;
 
 public class CreatePomMigrationStep implements MigrationStep {
 
     @Override
-    public MigrationReport run(IProject project, IProgressMonitor monitor) throws CoreException {
-        var pomFile = project.getFile(IMavenConstants.POM_FILE_NAME);
+    public MigrationReport run(Path project, IProgressMonitor monitor) throws CoreException {
+        var pomFile = project.resolve(POM_FILE_NAME);
         var report = new MigrationReport();
-        if (pomFile.exists()) {
-            var currentMetadata = ProjectMetadata.read(project, monitor);
-            CreateBonitaProjectOperation.createDefaultPomFile(project, currentMetadata);
+        if (Files.exists(pomFile)) {
+            var currentMetadata = ProjectMetadata.read(pomFile.toFile());
+            createDefaultPomFile(project, currentMetadata);
             report.removed(
                     "Existing `pom.xml` has been backed up as `pom.xml.old`. Bonita projects are now Maven project and the `pom.xml` file is *reserved for internal use*.");
         } else {
             var defaultMetadata = ProjectMetadata.defaultMetadata();
-            defaultMetadata.setName(project.getName());
-            defaultMetadata.setArtifactId(ProjectMetadata.toArtifactId(project.getName()));
-            CreateBonitaProjectOperation.createDefaultPomFile(project, defaultMetadata);
+            var name = project.getFileName().toString();
+            defaultMetadata.setName(name);
+            defaultMetadata.setArtifactId(ProjectMetadata.toArtifactId(name));
+            createDefaultPomFile(project, defaultMetadata);
         }
         report.updated("Groovy version has been updated from `2.4.x` to `3.0.x`");
         report.updated(
@@ -49,6 +53,16 @@ public class CreatePomMigrationStep implements MigrationStep {
                 "Bonita projects are now Maven projects and rely on the https://maven.apache.org/guides/introduction/introduction-to-dependency-mechanism.html[Maven dependency mechanism] to manage their dependencies. Check the documentation for more information about %s[Project composition].",
                 RedirectURLBuilder.create("727")));
         return report;
+    }
+    
+    private static void createDefaultPomFile(Path project,
+            ProjectMetadata metadata) throws CoreException {
+        var pomFile = project.resolve("pom.xml");
+        if (Files.exists(pomFile)) {
+            CreateBonitaProjectOperation.backupExistingPomFile(pomFile, metadata);
+        }
+        var builder = CreateBonitaProjectOperation.newProjectBuilder(metadata, new MavenProjectModelBuilder());
+        MavenProjectHelper.saveModel(project.resolve("pom.xml"), builder.toMavenModel());
     }
 
     @Override

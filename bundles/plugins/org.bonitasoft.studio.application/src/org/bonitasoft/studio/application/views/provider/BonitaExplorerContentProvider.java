@@ -20,17 +20,13 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
-import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.jdt.core.IJavaProject;
-import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.internal.ui.navigator.JavaNavigatorContentProvider;
-import org.eclipse.jdt.ui.text.IJavaPartitions;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 
@@ -92,7 +88,7 @@ public class BonitaExplorerContentProvider extends JavaNavigatorContentProvider 
     @Override
     protected void postAdd(Object parent, Object element, Collection<Runnable> runnables) {
         super.postAdd(parent, element, runnables);
-        AbstractRepository currentRepository = RepositoryManager.getInstance()
+        var currentRepository = RepositoryManager.getInstance()
                 .getCurrentRepository().orElse(null);
         if (currentRepository != null 
                 && viewer.testFindItem(parent) == null

@@ -18,7 +18,6 @@ package org.bonitasoft.studio.common.databinding.validator;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.bonitasoft.studio.common.databinding.validator.ForbiddenCharactersValidator;
 import org.junit.Test;
 
 

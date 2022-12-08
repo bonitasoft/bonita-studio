@@ -37,6 +37,11 @@
 									<artifactId>bonita-project-report-model</artifactId>
 									<version>${bonita-project-report-model.version}</version>
 								</artifactItem>
+								<artifactItem>
+                                    <groupId>org.commonjava.maven</groupId>
+                                    <artifactId>maven3-model-jdom-support</artifactId>
+                                    <version>${maven3-model-jdom-support.version}</version>
+                                </artifactItem>
 							</artifactItems>
 							<outputDirectory>${lib.dir}</outputDirectory>
 							<stripVersion>true</stripVersion>
@@ -59,6 +64,6 @@
 				</configuration>
 			</plugin>
 		</plugins>
-	</build>
+    </build>
 
 </project>

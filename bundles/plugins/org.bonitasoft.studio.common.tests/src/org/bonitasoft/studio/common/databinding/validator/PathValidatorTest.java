@@ -19,7 +19,6 @@ import static org.bonitasoft.studio.assertions.StatusAssert.assertThat;
 import java.io.File;
 import java.nio.file.InvalidPathException;
 
-import org.bonitasoft.studio.common.databinding.validator.PathValidator;
 import org.eclipse.core.runtime.IStatus;
 import org.junit.Assume;
 import org.junit.Rule;

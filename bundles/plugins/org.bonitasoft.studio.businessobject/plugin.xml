@@ -140,12 +140,6 @@
       </bosArchiveProvider>
    </extension>
    <extension
-         point="org.bonitasoft.studio.engine.postEngineAction">
-      <action
-            class="org.bonitasoft.studio.businessobject.core.operation.DeployBDMOnStartup">
-      </action>
-   </extension>
-   <extension
          point="org.bonitasoft.studio.expression.expressionProvider">
       <expressionProvider
             providerClass="org.bonitasoft.studio.businessobject.core.expression.QueryExpressionProvider">

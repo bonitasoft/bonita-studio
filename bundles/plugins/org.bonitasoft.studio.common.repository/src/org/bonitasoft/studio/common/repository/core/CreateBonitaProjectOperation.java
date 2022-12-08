@@ -14,8 +14,9 @@
  */
 package org.bonitasoft.studio.common.repository.core;
 
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -47,6 +48,7 @@ import org.eclipse.m2e.core.internal.IMavenConstants;
 import org.eclipse.m2e.core.project.IMavenProjectImportResult;
 import org.eclipse.m2e.core.project.MavenProjectInfo;
 import org.eclipse.m2e.core.project.ProjectImportConfiguration;
+import org.eclipse.m2e.core.ui.internal.UpdateMavenProjectJob;
 
 public class CreateBonitaProjectOperation implements IWorkspaceRunnable {
 
@@ -61,7 +63,7 @@ public class CreateBonitaProjectOperation implements IWorkspaceRunnable {
         this.workspace = workspace;
         this.metadata = metadata;
     }
-    
+
     @Override
     public void run(final IProgressMonitor monitor) throws CoreException {
         var projectId = metadata.getArtifactId();
@@ -79,28 +81,27 @@ public class CreateBonitaProjectOperation implements IWorkspaceRunnable {
                 new ProjectDescriptionBuilder()
                         .withProjectName(project.getName())
                         .withComment(ProductVersion.CURRENT_VERSION)
-                        .havingNatures(rootProjectNatures())
-                        .havingBuilders(rootProjectBuilders())
+                        .havingNatures(List.of(IMavenConstants.NATURE_ID))
+                        .havingBuilders(List.of(IMavenConstants.BUILDER_ID))
                         .build(),
                 AbstractRepository.NULL_PROGRESS_MONITOR);
-        createDefaultPomFile(project, metadata);
-    
-        if (metadata.getIsMultiModule()) {
-            IFolder appModule = project.getFolder(APP_MODULE);
-            appModule.create(true, true, monitor);
-            var pomFile = appModule.getFile(IMavenConstants.POM_FILE_NAME);
-            var mavenProjectHelper = new MavenProjectHelper();
-            Model appModel = newProjectBuilder(metadata, new MavenAppModuleModelBuilder()).toMavenModel();
-            mavenProjectHelper.saveModel(pomFile, appModel, new NullProgressMonitor());
-            IProject appProject = importAppModuleProject(pomFile, appModel.getArtifactId() + "-app", monitor);
-            appProject.setDescription(new ProjectDescriptionBuilder()
-                    .withProjectName(appProject.getName())
-                    .withComment(ProductVersion.CURRENT_VERSION)
-                    .havingNatures(appProjectNatures())
-                    .havingBuilders(appProjectBuilders())
-                    .build(), monitor);
+        createDefaultPomFile(project.getLocation().toFile().toPath(), metadata);
 
-        }
+        IFolder appModule = project.getFolder(APP_MODULE);
+        appModule.create(true, true, monitor);
+        var pomFile = appModule.getFile(IMavenConstants.POM_FILE_NAME);
+        var mavenProjectHelper = new MavenProjectHelper();
+        Model appModel = newProjectBuilder(metadata, new MavenAppModuleModelBuilder()).toMavenModel();
+        mavenProjectHelper.saveModel(pomFile, appModel, new NullProgressMonitor());
+        IProject appProject = importAppModuleProject(pomFile, appModel.getArtifactId() + "-app", monitor);
+        appProject.setDescription(new ProjectDescriptionBuilder()
+                .withProjectName(appProject.getName())
+                .withComment(ProductVersion.CURRENT_VERSION)
+                .havingNatures(appProjectNatures())
+                .havingBuilders(appProjectBuilders())
+                .build(), monitor);
+
+        new UpdateMavenProjectJob(new IProject[] { project }, false, false, true, true, true).run(monitor);
     }
 
     private IProject importAppModuleProject(IFile pomFile, String nameTemplate, IProgressMonitor monitor)
@@ -115,27 +116,6 @@ public class CreateBonitaProjectOperation implements IWorkspaceRunnable {
         return appProject;
     }
 
-    private Collection<String> rootProjectNatures() {
-        var natures = new ArrayList<String>();
-        natures.add(IMavenConstants.NATURE_ID);
-        if (!metadata.getIsMultiModule()) {
-            natures.add(BonitaProjectNature.NATURE_ID);
-            natures.add("org.eclipse.jdt.groovy.core.groovyNature");
-            natures.add(JavaCore.NATURE_ID);
-        }
-        return natures;
-    }
-
-    private Collection<String> rootProjectBuilders() {
-        var builders = new ArrayList<String>();
-        builders.add(IMavenConstants.BUILDER_ID);
-        if (!metadata.getIsMultiModule()) {
-            builders.add(BonitaProjectBuilder.ID);
-            builders.add(JavaCore.BUILDER_ID);
-        }
-        return builders;
-    }
-    
     private Collection<String> appProjectNatures() {
         return List.of(BonitaProjectNature.NATURE_ID,
                 JavaCore.NATURE_ID,
@@ -144,9 +124,9 @@ public class CreateBonitaProjectOperation implements IWorkspaceRunnable {
     }
 
     private Collection<String> appProjectBuilders() {
-       return List.of(BonitaProjectBuilder.ID,
-               JavaCore.BUILDER_ID,
-               IMavenConstants.BUILDER_ID);
+        return List.of(BonitaProjectBuilder.ID,
+                JavaCore.BUILDER_ID,
+                IMavenConstants.BUILDER_ID);
     }
 
     public static MavenModelBuilder newProjectBuilder(ProjectMetadata metadata, MavenModelBuilder mavenProjectBuilder) {
@@ -168,52 +148,42 @@ public class CreateBonitaProjectOperation implements IWorkspaceRunnable {
         return mavenProjectBuilder;
     }
 
-    public static void createDefaultPomFile(IProject project,
+    public static void createDefaultPomFile(Path project,
             ProjectMetadata metadata) throws CoreException {
-        var mavenProjectHelper = new MavenProjectHelper();
-        IFile pomFile = project.getFile("pom.xml");
-        if (pomFile.exists()) {
-            backupExistingPomFile(project, metadata, mavenProjectHelper, pomFile);
+        var pomFile = project.resolve("pom.xml");
+        if (Files.exists(pomFile)) {
+            backupExistingPomFile(pomFile, metadata);
         }
-        File pom = pomFile.getLocation().toFile();
-        try {
-            if (!pom.exists() && !pom.createNewFile()) {
-                throw new CoreException(new Status(IStatus.ERROR, CreateBonitaProjectOperation.class,
-                        "Failed to create pom.xml file.",
-                        new IOException("Failed to create pom.xml file.")));
-            }
-        } catch (IOException e) {
-            throw new CoreException(
-                    new Status(IStatus.ERROR, CreateBonitaProjectOperation.class, "Failed to create pom.xml file.", e));
-        }
-        mavenProjectHelper.saveModel(project, newProjectBuilder(metadata,
-                metadata.getIsMultiModule() ? new MavenParentProjectModelBuilder() : new MavenProjectModelBuilder())
-                        .toMavenModel(),
-                true,
-                new NullProgressMonitor());
+        var builder = newProjectBuilder(metadata, new MavenParentProjectModelBuilder());
+        MavenProjectHelper.saveModel(project.resolve("pom.xml"), builder.toMavenModel());
     }
 
-    public static void backupExistingPomFile(IProject project,
-            ProjectMetadata metadata,
-            MavenProjectHelper mavenProjectHelper,
-            IFile pomFile) throws CoreException {
-        Model model = mavenProjectHelper.getMavenModel(project);
+    public static void backupExistingPomFile(Path pomFile,
+            ProjectMetadata metadata) throws CoreException {
+        var model = MavenProjectHelper.readModel(pomFile.toFile());
         metadata.setGroupId(model.getGroupId());
         metadata.setArtifactId(model.getArtifactId());
         metadata.setVersion(model.getVersion());
         if (model.getName() != null && !model.getName().isBlank()) {
             metadata.setName(model.getName());
+        }else {
+            metadata.setName(model.getArtifactId());
         }
         if (model.getDescription() != null && !model.getDescription().isBlank()) {
             metadata.setDescription(model.getDescription());
         }
         String backupFileName = "pom.xml.old";
-        IFile backupFile = project.getFile(backupFileName);
-        while (backupFile.exists()) {
+        var project = pomFile.getParent();
+        var backupFile = project.resolve(backupFileName);
+        while (Files.exists(backupFile)) {
             backupFileName = nextBackupFileName(backupFileName);
-            backupFile = project.getFile(nextBackupFileName(backupFileName));
+            backupFile = project.resolve(nextBackupFileName(backupFileName));
         }
-        pomFile.copy(backupFile.getProjectRelativePath(), true, new NullProgressMonitor());
+        try {
+            Files.copy(pomFile, backupFile);
+        } catch (IOException e) {
+            throw new CoreException(Status.error("Failed to backup existing pom.xml", e));
+        }
     }
 
     private static String nextBackupFileName(String backupFileName) {

@@ -33,7 +33,6 @@ import org.bonitasoft.studio.application.ui.control.ImportExtensionPage;
 import org.bonitasoft.studio.application.ui.control.UpdateGavPage;
 import org.bonitasoft.studio.application.ui.control.model.dependency.ArtifactType;
 import org.bonitasoft.studio.common.CommandExecutor;
-import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.core.maven.MavenProjectHelper;
 import org.bonitasoft.studio.common.repository.core.maven.MavenRepositoryRegistry;
@@ -72,7 +71,7 @@ public class UpdateGavHandler extends ImportExtensionHandler {
             @org.eclipse.e4.core.di.annotations.Optional @Named("type") String type,
             @org.eclipse.e4.core.di.annotations.Optional @Named("classifier") String classifier) {
 
-        AbstractRepository currentRepository = repositoryAccessor.getCurrentRepository().orElseThrow();
+        var currentRepository = repositoryAccessor.getCurrentRepository().orElseThrow();
         Model mavenModel = loadMavenModel(mavenProjectHelper, currentRepository);
         if (mavenModel == null) {
             return;

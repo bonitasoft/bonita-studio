@@ -69,7 +69,7 @@ public class GitIgnoreTests {
     public void setUp() throws Exception {
         // create a project shared with git
         repositoryAccessor = RepositoryManager.getInstance().getAccessor();
-        AbstractRepository repo = repositoryAccessor.getCurrentRepository().orElseThrow();
+        var repo = repositoryAccessor.getCurrentRepository().orElseThrow();
         sharedProject = repo.getProject();
         File gitDir = new File(sharedProject.getLocation().toFile().getAbsolutePath(),
                 Constants.DOT_GIT);

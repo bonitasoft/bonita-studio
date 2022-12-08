@@ -74,7 +74,9 @@ Require-Bundle: org.bonitasoft.studio.diagram,
  wrapped.org.jdom.jdom2,
  org.bonitasoft.studio.common.ui,
  org.eclipse.compare,
- org.eclipse.m2e.core.ui
+ org.eclipse.m2e.core.ui,
+ ch.qos.logback.classic,
+ ch.qos.logback.core
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-ActivationPolicy: lazy
 Import-Package: javax.annotation;version="1.2.0",
@@ -93,10 +95,9 @@ Import-Package: javax.annotation;version="1.2.0",
  org.bonitasoft.engine.session,
  org.eclipse.e4.core.di.annotations,
  org.eclipse.e4.ui.workbench.renderers.swt,
- org.osgi.service.event;version="1.3.0"
-Export-Package: org.apache.maven.io.util,
- org.apache.maven.model.io.jdom,
- org.bonitasoft.studio.application,
+ org.osgi.service.event;version="1.3.0",
+ org.slf4j;version="1.7.30"
+Export-Package: org.bonitasoft.studio.application,
  org.bonitasoft.studio.application.actions,
  org.bonitasoft.studio.application.actions.coolbar,
  org.bonitasoft.studio.application.contribution,
@@ -117,5 +118,4 @@ Export-Package: org.apache.maven.io.util,
  org.bonitasoft.studio.application.views.overview,
  org.bonitasoft.studio.application.views.process,
  org.bonitasoft.studio.application.views.provider
-Bundle-ClassPath: .,
- lib/maven3-model-jdom-support.jar
+Bundle-ClassPath: .

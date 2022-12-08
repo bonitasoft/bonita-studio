@@ -46,14 +46,12 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.m2e.core.MavenPlugin;
 import org.eclipse.m2e.core.project.MavenProjectInfo;
@@ -122,6 +120,7 @@ public abstract class CustomPageProjectFileStore<T extends CustomPageMavenProjec
         final IWorkbenchPage page = getActivePage();
         try {
             final CustomPageMavenProjectDescriptor raed = getContent();
+            AbstractFileStore.refreshExplorerView();
             return openEditors(page, raed);
         } catch (final PartInitException | ReadFileStoreException e) {
             BonitaStudioLog.error(String.format("Failed to open editors of project %s", getName()), e,
@@ -298,16 +297,6 @@ public abstract class CustomPageProjectFileStore<T extends CustomPageMavenProjec
         } catch (CoreException e) {
            throw new ImportProjectException("Failed to import project", e);
         }
-//        Job job = new WorkspaceJob(String.format("Import %s Project", project.getName())) {
-//
-//            @Override
-//            public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
-//                importRestAPIExtensionProjectOperation.run(monitor);
-//                return importRestAPIExtensionProjectOperation.getStatus();
-//            }
-//        };
-//        job.setRule(getResource().getWorkspace().getRoot());
-//        job.schedule();
     }
 
     public void removeProject() {

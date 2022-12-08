@@ -24,6 +24,7 @@ import org.apache.maven.archetype.catalog.Archetype;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.ImportArchiveData;
+import org.bonitasoft.studio.common.repository.core.migration.report.MigrationReportWriter;
 import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.store.AbstractFolderRepositoryStore;
 import org.eclipse.core.resources.IFolder;
@@ -61,6 +62,8 @@ public abstract class CustomPageProjectRepositoryStore<T extends CustomPageProje
     @Override
     public T importArchiveData(String folderName, List<ImportArchiveData> importArchiveData,
             IProgressMonitor monitor) throws CoreException {
+        importArchiveData
+                .sort((d1, d2) -> d1.getName().contains(MigrationReportWriter.DEFAULT_REPORT_FILE_NAME) ? -1 : 1);
         final T fileStore = super.importArchiveData(folderName, importArchiveData, monitor);
         try {
             if (!fileStore.getProject().exists()) {
@@ -80,7 +83,7 @@ public abstract class CustomPageProjectRepositoryStore<T extends CustomPageProje
             child.removeProject();
         }
     }
-    
+
     @Override
     public void repositoryUpdated() {
         importProjects();
@@ -105,9 +108,12 @@ public abstract class CustomPageProjectRepositoryStore<T extends CustomPageProje
         final List<T> result = new ArrayList<>();
         final IFolder folder = getResource();
         try {
-            for (final IResource r : folder.members()) {
-                if (r instanceof IFolder && !r.isHidden() && ((IFolder) r).getFile(IMavenConstants.POM_FILE_NAME).exists()) {
-                    result.add(createRepositoryFileStore(r.getName()));
+            if (folder.isAccessible()) {
+                for (final IResource r : folder.members()) {
+                    if (r instanceof IFolder && !r.isHidden()
+                            && ((IFolder) r).getFile(IMavenConstants.POM_FILE_NAME).exists()) {
+                        result.add(createRepositoryFileStore(r.getName()));
+                    }
                 }
             }
         } catch (final CoreException e) {
@@ -115,7 +121,7 @@ public abstract class CustomPageProjectRepositoryStore<T extends CustomPageProje
         }
         return result;
     }
-    
+
     @Override
     protected List<IResource> listChildren() throws CoreException {
         return super.listChildren().stream()

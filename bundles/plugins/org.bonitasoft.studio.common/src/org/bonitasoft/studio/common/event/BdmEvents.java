@@ -12,28 +12,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.common.repository.core;
+package org.bonitasoft.studio.common.event;
 
-import java.util.List;
+public class BdmEvents {
 
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
-
-public interface MultiModuleProject extends BonitaProject {
-
-    IProject getParentProject();
-
-    IProject getBdmParentProject();
+    public static final String BDM_DEPLOYED_TOPIC = "bdm/deployed";
+    public static final String BDM_DELETED_TOPIC = "bdm/deleted";
+    public static final String DEPENDENCY_PROPERTY = "dependency";
+    public static final String MODEL_PROPERTY = "model";
+    public static final String FILE_CONTENT_PROPERTY = "fileContent";
     
-    IProject getBdmModelProject();
-    
-    IProject getBdmDaoClientProject();
-    
-    IProject getAppProject();
-    
-    List<IProject> getRelatedProjects();
-    
-    void removeBdmProjects(IProgressMonitor monitor) throws CoreException;
-    
+    private BdmEvents() {
+        // private constructor
+    }
 }

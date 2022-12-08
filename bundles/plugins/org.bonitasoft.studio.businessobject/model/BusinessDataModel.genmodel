@@ -35,7 +35,6 @@
     </genEnums>
     <genClasses ecoreClass="BusinessDataModel.ecore#//BusinessObjectModel">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference BusinessDataModel.ecore#//BusinessObjectModel/packages"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute BusinessDataModel.ecore#//BusinessObjectModel/groupId"/>
     </genClasses>
     <genClasses ecoreClass="BusinessDataModel.ecore#//Package">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference BusinessDataModel.ecore#//Package/businessObjects"/>

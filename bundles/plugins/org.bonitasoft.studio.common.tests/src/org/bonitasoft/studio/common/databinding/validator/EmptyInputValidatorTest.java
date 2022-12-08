@@ -16,7 +16,6 @@ package org.bonitasoft.studio.common.databinding.validator;
 
 import static org.bonitasoft.studio.assertions.StatusAssert.assertThat;
 
-import org.bonitasoft.studio.common.databinding.validator.EmptyInputValidator;
 import org.eclipse.core.runtime.IStatus;
 import org.junit.Test;
 

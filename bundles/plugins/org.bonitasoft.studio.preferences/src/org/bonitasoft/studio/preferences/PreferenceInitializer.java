@@ -139,10 +139,6 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer impleme
                 .getDefault().getBundle().getSymbolicName());
 
         node.putBoolean(IPreferenceConstants.RUN_IN_BACKGROUND, false);
-        
-        var description = ResourcesPlugin.getWorkspace().getDescription();
-        description.setAutoBuilding(false);
-        ResourcesPlugin.getPlugin().getPluginPreferences().setValue(ResourcesPlugin.PREF_AUTO_BUILDING, false);
     }
 
     IPreferenceStore getJdtUiPreferenceStore() {

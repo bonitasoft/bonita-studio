@@ -36,7 +36,8 @@ public class AsciidocMigrationReportWriter implements MigrationReportWriter {
         Files.writeString(reportFile, 
                 content,
                 StandardCharsets.UTF_8,
-                StandardOpenOption.CREATE, StandardOpenOption.WRITE);
+                StandardOpenOption.CREATE, 
+                StandardOpenOption.WRITE);
     }
 
     private String buildReport(MigrationReport report) {

@@ -14,14 +14,16 @@
  */
 package org.bonitasoft.studio.common.repository.core.migration.step;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Set;
 
+import org.bonitasoft.studio.common.FileUtil;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
 import org.bonitasoft.studio.common.repository.core.migration.MigrationStep;
 import org.bonitasoft.studio.common.repository.core.migration.report.MigrationReport;
-import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.osgi.framework.Version;
@@ -39,17 +41,17 @@ public class RemoveLegacyFolderStep implements MigrationStep {
             "src-customTypes");
     
     @Override
-    public MigrationReport run(IProject project, IProgressMonitor monitor) throws CoreException {
+    public MigrationReport run(Path project, IProgressMonitor monitor) throws CoreException {
         LEGACY_REPOSITORIES.stream().forEach(folderName -> removeFolder(project, folderName, monitor));
         return MigrationReport.emptyReport();
     }
     
-    private void removeFolder(IProject project, String folderName, final IProgressMonitor monitor) {
-        IFolder resourceFolder = project.getFolder(folderName);
-        if (resourceFolder.exists()) {
+    private void removeFolder(Path project, String folderName, final IProgressMonitor monitor) {
+        var resourceFolder = project.resolve(folderName);
+        if (Files.exists(resourceFolder)) {
             try {
-                resourceFolder.delete(true, monitor);
-            } catch (CoreException e) {
+              FileUtil.deleteDir(resourceFolder);
+            } catch (IOException e) {
                 BonitaStudioLog.error(String.format("Failed to delete folder %s during migration", folderName),
                         CommonRepositoryPlugin.PLUGIN_ID);
             }

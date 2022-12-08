@@ -14,9 +14,20 @@
  */
 package org.bonitasoft.studio.application;
 
+import java.io.IOException;
+
+import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
+import org.slf4j.LoggerFactory;
+
+import ch.qos.logback.classic.LoggerContext;
+import ch.qos.logback.classic.joran.JoranConfigurator;
+import ch.qos.logback.core.joran.spi.JoranException;
 
 /**
  * The activator class controls the plug-in life cycle
@@ -40,9 +51,9 @@ public class ApplicationPlugin extends AbstractUIPlugin {
     @Override
     public void start(final BundleContext context) throws Exception {
         super.start(context);
+        configureLogbackInBundle(context.getBundle());
         plugin = this;
     }
-
 
     @Override
     public void stop(final BundleContext context) throws Exception {
@@ -68,6 +79,26 @@ public class ApplicationPlugin extends AbstractUIPlugin {
      */
     public static ImageDescriptor getImageDescriptor(final String path) {
         return imageDescriptorFromPlugin(PLUGIN_ID, path);
+    }
+
+    private void configureLogbackInBundle(Bundle bundle) throws JoranException, IOException {
+        var context = LoggerFactory.getILoggerFactory();
+        if (context instanceof LoggerContext) {
+            JoranConfigurator jc = new JoranConfigurator();
+            jc.setContext((LoggerContext) context);
+            ((LoggerContext) context).reset();
+
+            // overriding the log directory property programmatically
+            String logDirProperty = System.getProperty("org.bonitasoft.studio.logdir",
+                    Platform.getLogFileLocation().toFile().getParentFile().getAbsolutePath());
+            ((LoggerContext) context).putProperty("LOG_DIR", logDirProperty);
+
+            // this assumes that the logback.xml file is in the root of the bundle.
+            var logbackConfigFileUrl = FileLocator.find(bundle, new Path("logback.xml"), null);
+            try (var is = logbackConfigFileUrl.openStream()) {
+                jc.doConfigure(logbackConfigFileUrl.openStream());
+            }
+        }
     }
 
 }

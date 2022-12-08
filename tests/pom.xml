@@ -22,6 +22,20 @@
         <module>tests-common-feature</module>
         <module>tests-feature</module>
     </modules>
+    
+    <build>
+        <pluginManagement>
+            <plugins>
+                 <plugin>
+                        <groupId>org.eclipse.tycho</groupId>
+                        <artifactId>tycho-surefire-plugin</artifactId>
+                        <configuration>
+                            <showEclipseLog>false</showEclipseLog>
+                        </configuration>
+                    </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
 
     <profiles>
         <profile>

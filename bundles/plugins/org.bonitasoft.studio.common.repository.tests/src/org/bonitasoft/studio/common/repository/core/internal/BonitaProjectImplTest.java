@@ -20,27 +20,27 @@ import java.io.File;
 import java.nio.file.Files;
 
 import org.bonitasoft.studio.common.repository.RepositoryManager;
-import org.bonitasoft.studio.common.repository.core.MultiModuleProject;
+import org.bonitasoft.studio.common.repository.core.BonitaProject;
 import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
 import org.bonitasoft.studio.common.repository.core.team.GitProject;
 import org.bonitasoft.studio.common.repository.model.IRepository;
-import org.bonitasoft.studio.common.repository.store.LocalDependenciesStore;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Adapters;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.Path;
+import org.eclipse.egit.core.GitProvider;
+import org.eclipse.egit.core.op.DisconnectProviderOperation;
 import org.eclipse.jgit.lib.Repository;
+import org.eclipse.team.core.RepositoryProvider;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-class MultiModuleBonitaProjectImplTest {
+class BonitaProjectImplTest {
 
     private IRepository repository;
     private NullProgressMonitor monitor = new NullProgressMonitor();
     private ProjectMetadata metadata;
-    private MultiModuleProject project;
+    private BonitaProject project;
     private String projectId;
 
     @BeforeEach
@@ -48,12 +48,13 @@ class MultiModuleBonitaProjectImplTest {
         metadata = ProjectMetadata.defaultMetadata();
         projectId = metadata.getArtifactId();
         repository = RepositoryManager.getInstance().newRepository(metadata.getProjectName());
-        project = Adapters.adapt(repository, MultiModuleProject.class);
-        if(repository.getProject().exists()) {
+        RepositoryManager.getInstance().setCurrentRepository(repository);
+        project = Adapters.adapt(repository, BonitaProject.class);
+        if (project != null && repository.getProject().exists()) {
             project.delete(monitor);
         }
         repository.create(metadata, monitor);
-        project = Adapters.adapt(repository, MultiModuleProject.class);
+        project = Adapters.adapt(repository, BonitaProject.class);
     }
 
     @Test
@@ -62,10 +63,10 @@ class MultiModuleBonitaProjectImplTest {
 
         assertThat(parentProject.exists()).isTrue();
         assertThat(parentProject.getName()).isEqualTo(metadata.getArtifactId());
-        
+
         var appProject = project.getAdapter(IProject.class);
         assertThat(appProject.exists()).isTrue();
-        
+
         assertThat(project.getDisplayName()).isEqualTo(metadata.getName());
         assertThat(project.getId()).isEqualTo(metadata.getArtifactId());
     }
@@ -116,17 +117,23 @@ class MultiModuleBonitaProjectImplTest {
         var currentMetadata = project.getProjectMetadata(monitor);
         assertThat(currentMetadata.getVersion()).isEqualTo("2.0.0");
     }
-    
+
     @Test
     public void gitConnect() throws Exception {
         var op = project.newConnectProviderOperation();
 
         op.run(monitor);
-        
+
         var gitRepository = project.getAdapter(Repository.class);
         assertThat(gitRepository).isNotNull();
         assertThat(gitRepository.getDirectory())
-            .isEqualTo(project.getParentProject().getLocation().append(".git").toFile());
+                .isEqualTo(project.getParentProject().getLocation().append(".git").toFile());
+        assertThat(RepositoryProvider.getProvider(project.getParentProject(), GitProvider.ID)).isNotNull();
+
+        new DisconnectProviderOperation(project.getRelatedProjects())
+                .execute(new NullProgressMonitor());
+
+        assertThat(RepositoryProvider.getProvider(project.getParentProject(), GitProvider.ID)).isNull();
     }
 
     @Test
@@ -146,30 +153,6 @@ class MultiModuleBonitaProjectImplTest {
         assertThat(Files.readString(parentGitignore.getLocation().toFile().toPath()))
                 .isEqualTo(Files.readString(
                         new File(GitProject.getParentGitIgnoreTemplate().getFile()).toPath()));
-    }
-
-    @Test
-    public void getExportableResources() throws Exception {
-        IProject container = project.getAdapter(IProject.class);
-        // Create local store folder
-        var storeFolder = container.getFolder(LocalDependenciesStore.NAME);
-        storeFolder.create(true, true, monitor);  
-        
-       // Create src/main/resources
-        container.getFolder("src").create(true, true, monitor);
-        container.getFolder("src/main").create(true, true, monitor);
-        var resourcesFolder = container.getFolder("src/main/resources");
-        resourcesFolder.create(true, true, monitor);  
-       
-        var resources = project.getExportableResources();
-       
-        assertThat(resources.stream()
-                .map(IResource::getLocation)
-                .map(path -> path.makeRelativeTo(project.getParentProject().getLocation())))
-                        .containsOnly(Path.fromOSString("pom.xml"),
-                                      Path.fromOSString("app/pom.xml"),
-                                      Path.fromOSString("app/.store"),
-                                      Path.fromOSString("app/src/main/resources"));
     }
 
 }

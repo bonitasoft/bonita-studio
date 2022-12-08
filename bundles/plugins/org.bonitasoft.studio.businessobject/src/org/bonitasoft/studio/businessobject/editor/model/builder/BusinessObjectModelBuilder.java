@@ -28,11 +28,6 @@ public class BusinessObjectModelBuilder {
         return this;
     }
 
-    public BusinessObjectModelBuilder withGroupId(String groupId) {
-        businessObjectModel.setGroupId(groupId);
-        return this;
-    }
-
     public BusinessObjectModel create() {
         return businessObjectModel;
     }

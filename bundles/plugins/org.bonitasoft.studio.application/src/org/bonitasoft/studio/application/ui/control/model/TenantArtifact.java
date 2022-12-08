@@ -14,7 +14,6 @@
  */
 package org.bonitasoft.studio.application.ui.control.model;
 
-import org.bonitasoft.studio.application.views.ProjectExplorerViewerComparator;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.ITenantResource;
 import org.bonitasoft.studio.common.repository.store.AbstractRepositoryStore;

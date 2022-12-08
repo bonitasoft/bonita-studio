@@ -37,7 +37,6 @@ import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
 import org.bonitasoft.studio.common.repository.ImportArchiveData;
 import org.bonitasoft.studio.common.repository.Messages;
 import org.bonitasoft.studio.common.repository.core.migration.report.MigrationReport;
-import org.bonitasoft.studio.common.repository.filestore.AbstractFileStore;
 import org.bonitasoft.studio.common.repository.filestore.RepositoryFileStoreComparator;
 import org.bonitasoft.studio.common.repository.model.IFileStoreContribution;
 import org.bonitasoft.studio.common.repository.model.IRepository;
@@ -150,17 +149,7 @@ public abstract class AbstractRepositoryStore<T extends IRepositoryFileStore<?>>
             if (newIs == null) {
                 return null;
             }
-            boolean exists = false;
-            try {
-                exists = getResource().members().length > 0;
-            } catch (CoreException e) {
-                BonitaStudioLog.error(e);
-            }
-            final T store = doImportInputStream(fileName, newIs);
-            if (!exists) {
-                AbstractFileStore.refreshExplorerView();
-            }
-            return store;
+            return doImportInputStream(fileName, newIs);
         } catch (final MigrationException e) {
             BonitaStudioLog.error(e);
             if (!FileActionDialog.getDisablePopup()) {
@@ -204,7 +193,7 @@ public abstract class AbstractRepositoryStore<T extends IRepositoryFileStore<?>>
     @Override
     public T importArchiveData(String folderName, List<ImportArchiveData> importArchiveData, IProgressMonitor monitor)
             throws CoreException {
-        importArchiveData.stream().forEach(data -> {
+        importArchiveData.forEach(data -> {
             setUserChoice(data);
             try {
                 importArchiveData(data, monitor);

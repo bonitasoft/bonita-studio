@@ -48,7 +48,6 @@ public class ImportLegacyBDMIT {
     public InitialProjectRule projectRule = InitialProjectRule.INSTANCE;
     
     private BusinessObjectModelRepositoryStore<BusinessObjectModelFileStore> defStore;
-    private DependencyRepositoryStore depStore;
     private RepositoryAccessor repositoryAccessor;
 
     @After
@@ -60,7 +59,6 @@ public class ImportLegacyBDMIT {
     public void setUp() throws Exception {
         BOSEngineManager.getInstance().start();
         repositoryAccessor = RepositoryManager.getInstance().getAccessor();
-        depStore = repositoryAccessor.getRepositoryStore(DependencyRepositoryStore.class);
         defStore = repositoryAccessor.getRepositoryStore(BusinessObjectModelRepositoryStore.class);
     }
 
@@ -94,7 +92,7 @@ public class ImportLegacyBDMIT {
         StatusAssert.assertThat(operation.getStatus()).hasSeverity(IStatus.INFO);
 
         IFile iFile = defStore.getChild(BusinessObjectModelFileStore.BOM_FILENAME, true).getResource();
-        String bomFileContent = Files.readString(iFile.getLocation().toFile().toPath(), Charset.defaultCharset());
+        String bomFileContent = Files.readString(iFile.getLocation().toFile().toPath());
         assertThat(bomFileContent).contains("xmlns=\"http://documentation.bonitasoft.com/bdm-xml-schema/1.0\"");
     }
 

@@ -100,7 +100,7 @@ public class DependencyFileStore extends AbstractFileStore<InputStream> {
             final IResource r = getResource();
             if (r != null && r.exists()) {
                 r.delete(true, AbstractRepository.NULL_PROGRESS_MONITOR);
-                final AbstractRepository repository = getRepository();
+                var repository = getRepository();
                 final IProject project = repository.getProject();
                 project.refreshLocal(IResource.DEPTH_ONE, AbstractRepository.NULL_PROGRESS_MONITOR);
                 project.build(IncrementalProjectBuilder.INCREMENTAL_BUILD,

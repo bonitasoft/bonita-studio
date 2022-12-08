@@ -4,11 +4,8 @@ package org.bonitasoft.studio.businessobject.editor.model.impl;
 
 import org.bonitasoft.studio.businessobject.editor.model.BusinessDataModelPackage;
 import org.bonitasoft.studio.businessobject.editor.model.Field;
-
 import org.eclipse.emf.common.notify.Notification;
-
 import org.eclipse.emf.ecore.EClass;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
 
@@ -133,6 +130,7 @@ public abstract class FieldImpl extends MinimalEObjectImpl.Container implements 
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public String getName() {
         return name;
     }
@@ -142,6 +140,7 @@ public abstract class FieldImpl extends MinimalEObjectImpl.Container implements 
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public void setName(String newName) {
         String oldName = name;
         name = newName;
@@ -154,6 +153,7 @@ public abstract class FieldImpl extends MinimalEObjectImpl.Container implements 
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public String getDescription() {
         return description;
     }
@@ -163,6 +163,7 @@ public abstract class FieldImpl extends MinimalEObjectImpl.Container implements 
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public void setDescription(String newDescription) {
         String oldDescription = description;
         description = newDescription;
@@ -175,6 +176,7 @@ public abstract class FieldImpl extends MinimalEObjectImpl.Container implements 
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public boolean isNullable() {
         return nullable;
     }
@@ -184,6 +186,7 @@ public abstract class FieldImpl extends MinimalEObjectImpl.Container implements 
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public void setNullable(boolean newNullable) {
         boolean oldNullable = nullable;
         nullable = newNullable;
@@ -196,6 +199,7 @@ public abstract class FieldImpl extends MinimalEObjectImpl.Container implements 
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public boolean isCollection() {
         return collection;
     }
@@ -205,6 +209,7 @@ public abstract class FieldImpl extends MinimalEObjectImpl.Container implements 
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public void setCollection(boolean newCollection) {
         boolean oldCollection = collection;
         collection = newCollection;

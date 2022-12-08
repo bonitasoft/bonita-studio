@@ -15,7 +15,7 @@
 package org.bonitasoft.studio.application.views.filters;
 
 import org.bonitasoft.studio.common.repository.RepositoryManager;
-import org.bonitasoft.studio.common.repository.core.MultiModuleProject;
+import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.eclipse.jface.viewers.Viewer;
 
 public class HideFolderWhenProjectIsShownAsNested
@@ -23,22 +23,24 @@ public class HideFolderWhenProjectIsShownAsNested
 
     @Override
     public boolean select(Viewer viewer, Object parentElement, Object element) {
-        var currentProject = RepositoryManager.getInstance().getCurrentProject();
-        if (currentProject.isPresent()) {
-            var project = currentProject.get();
-            if (project instanceof MultiModuleProject) {
-                var multiModuleProject = (MultiModuleProject) project;
-                var appProject = multiModuleProject.getAppProject();
-                var bdmFolder = appProject.getFolder("bdm");
-                if (bdmFolder.exists() && element.equals(bdmFolder)) {
-                    return true;
-                }
-                // Hide generated submodules in Project explorer
-                if(multiModuleProject.getBdmModelProject().equals(element)) {
-                    return false;
-                }
-                if(multiModuleProject.getBdmDaoClientProject().equals(element)) {
-                    return false;
+        var repositoryManager = RepositoryManager.getInstance();
+        if (repositoryManager.hasActiveRepository()
+                && repositoryManager.getCurrentRepository().filter(IRepository::isLoaded).isPresent()) {
+            var project = repositoryManager.getCurrentProject().orElse(null);
+            if (project != null && project.exists()) {
+                var appProject = project.getAppProject();
+                if (appProject.exists()) {
+                    var bdmFolder = appProject.getFolder("bdm");
+                    if (bdmFolder.exists() && element.equals(bdmFolder)) {
+                        return true;
+                    }
+                    // Hide generated submodules in Project explorer
+                    if (project.getBdmModelProject().equals(element)) {
+                        return false;
+                    }
+                    if (project.getBdmDaoClientProject().equals(element)) {
+                        return false;
+                    }
                 }
             }
         }

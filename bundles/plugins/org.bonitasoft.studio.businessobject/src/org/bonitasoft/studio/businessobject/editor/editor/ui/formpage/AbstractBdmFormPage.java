@@ -102,8 +102,7 @@ public abstract class AbstractBdmFormPage extends AbstractFormPage<BusinessObjec
     public void updateWorkingCopy() {
         try {
             BusinessObjectModel businessObjectModel = getConverter()
-                    .toEmfModel(getParser().unmarshall((getDocument().get().getBytes())),
-                            editorContribution.loadBdmArtifactDescriptor());
+                    .toEmfModel(getParser().unmarshall((getDocument().get().getBytes())));
             if (isErrorState()) {
                 setErrorState(false);
             }

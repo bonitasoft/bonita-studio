@@ -1049,9 +1049,6 @@
       <contribution
             class="org.bonitasoft.studio.application.contribution.CheckJavaVersionPostStartupContribution">
       </contribution>
-      <contribution
-            class="org.bonitasoft.studio.application.contribution.CheckCurrentRepositoryState">
-      </contribution>
    </extension>
    <extension
          id="id1"

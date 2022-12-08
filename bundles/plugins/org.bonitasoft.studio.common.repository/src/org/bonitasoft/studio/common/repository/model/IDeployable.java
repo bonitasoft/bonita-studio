@@ -15,6 +15,7 @@
 package org.bonitasoft.studio.common.repository.model;
 
 import java.util.Map;
+
 import org.bonitasoft.engine.session.APISession;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;

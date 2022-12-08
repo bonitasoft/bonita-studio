@@ -14,6 +14,8 @@
  */
 package org.bonitasoft.studio.businessobject.core.repository;
 
+import static java.util.Map.entry;
+
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
@@ -22,12 +24,10 @@ import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.apache.maven.artifact.Artifact;
@@ -45,19 +45,16 @@ import org.bonitasoft.studio.businessobject.i18n.Messages;
 import org.bonitasoft.studio.businessobject.model.SmartImportBdmModel;
 import org.bonitasoft.studio.businessobject.ui.wizard.validator.SmartImportBdmValidator;
 import org.bonitasoft.studio.common.CommandExecutor;
-import org.bonitasoft.studio.common.NamingUtils;
+import org.bonitasoft.studio.common.event.BdmEvents;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
-import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
-import org.bonitasoft.studio.common.repository.core.MultiModuleProject;
-import org.bonitasoft.studio.common.repository.core.maven.RemoveDependencyOperation;
+import org.bonitasoft.studio.common.repository.core.BonitaProject;
 import org.bonitasoft.studio.common.repository.filestore.EditorFinder;
 import org.bonitasoft.studio.common.repository.model.DeployOptions;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.common.repository.model.smartImport.ISmartImportable;
-import org.bonitasoft.studio.common.repository.preferences.RepositoryPreferenceConstant;
 import org.bonitasoft.studio.common.ui.PlatformUtil;
 import org.bonitasoft.studio.common.ui.jface.FileActionDialog;
 import org.bonitasoft.studio.common.ui.jface.MessageDialogWithPrompt;
@@ -65,7 +62,6 @@ import org.bonitasoft.studio.dependencies.repository.DependencyRepositoryStore;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.Adapters;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
@@ -99,10 +95,7 @@ public class BusinessObjectModelFileStore extends AbstractBDMFileStore<BusinessO
     public static final String DO_NOT_SHOW_INSTALL_MESSAGE_DIALOG = "DO_NOT_SHOW_INSTALL_MESSAGE_DIALOG";
     public static final String ZIP_FILENAME = "bdm.zip";
     public static final String BOM_FILENAME = "bom.xml";
-    public static final String BDM_ARTIFACT_DESCRIPTOR = ".artifact-descriptor.properties";
     public static final String BDM_DEPLOY_REQUIRED_PROPERTY = "bdmDeployRequired";
-
-    private static final String BDM_DELETED_TOPIC = "bdm/deleted";
     private static final String CLEAN_ACCESS_CONTROL_CMD = "org.bonitasoft.studio.bdm.access.control.command.clean";
 
     private final Map<Long, BusinessObjectModel> cachedBusinessObjectModel = new HashMap<>();
@@ -152,16 +145,6 @@ public class BusinessObjectModelFileStore extends AbstractBDMFileStore<BusinessO
         return null;
     }
 
-    @Override
-    public Set<IResource> getRelatedResources() {
-        Set<IResource> resources = new HashSet<>();
-        IFile artifactDecriptorFile = getArtifactDecriptorFile();
-        if (artifactDecriptorFile.exists()) {
-            resources.add(getArtifactDecriptorFile());
-        }
-        return resources;
-    }
-
     protected BusinessObjectModelConverter getConverter() {
         return ((BusinessObjectModelRepositoryStore) getParentStore()).getConverter();
     }
@@ -187,128 +170,40 @@ public class BusinessObjectModelFileStore extends AbstractBDMFileStore<BusinessO
         }
     }
 
-    public void saveArtifactDescriptor(BDMArtifactDescriptor descriptor) throws CoreException {
-        descriptor.save(getArtifactDecriptorFile());
-    }
-
-    private IFile getArtifactDecriptorFile() {
-        return getParentStore().getResource().getFile(BDM_ARTIFACT_DESCRIPTOR);
-    }
-
-    public BDMArtifactDescriptor loadArtifactDescriptor() throws CoreException {
-        IFile descriptor = getParentStore().getResource().getFile(BDM_ARTIFACT_DESCRIPTOR);
-        if (!descriptor.exists()) {
-            BDMArtifactDescriptor defautDescriptor = new BDMArtifactDescriptor();
-            String groupId = defaultGroupId();
-            try {
-                BusinessObjectModel businessObjectModel = getContent();
-                if (businessObjectModel != null && !businessObjectModel.getBusinessObjectsClassNames().isEmpty()) {
-                    groupId = NamingUtils
-                            .getPackageName(businessObjectModel.getBusinessObjectsClassNames().iterator().next());
-                }
-            } catch (ReadFileStoreException e) {
-                BonitaStudioLog.warning(e.getMessage(), BusinessObjectPlugin.PLUGIN_ID);
-            }
-            defautDescriptor.setGroupId(groupId);
-            saveArtifactDescriptor(defautDescriptor);
-            return defautDescriptor;
-        }
-        return new BDMArtifactDescriptor()
-                .load(descriptor.getLocation().toFile());
-    }
-
-    String defaultGroupId() {
-        var defaultGroupId = CommonRepositoryPlugin.getDefault().getPreferenceStore()
-                .getString(RepositoryPreferenceConstant.DEFAULT_GROUPID);
-        return defaultGroupId + ".model";
-    }
-
-    public Dependency getParametrizedModelMavenDependency() throws CoreException {
-        var project = Adapters.adapt(getRepository(), MultiModuleProject.class);
-        if (project == null) {
-            return getModelMavenDependency();
-        }
-        return parametrized(getModelMavenDependency());
-    }
-
-    private static Dependency parametrized(Dependency modelMavenDependency) {
-        modelMavenDependency.setGroupId("${project.groupId}");
-        modelMavenDependency.setVersion("${project.version}");
-        return modelMavenDependency;
-    }
-
     public Dependency getModelMavenDependency() throws CoreException {
-        var project = Adapters.adapt(getRepository(), MultiModuleProject.class);
-        if (project == null) {
-            var descriptor = loadArtifactDescriptor();
-            Dependency dependency = new Dependency();
-            dependency.setGroupId(descriptor.getGroupId());
-            dependency.setArtifactId(GenerateBDMOperation.BDM_CLIENT);
-            dependency.setVersion("1.0.0");
-            dependency.setType("jar");
-            dependency.setScope(Artifact.SCOPE_PROVIDED);
-            return dependency;
-        } else {
-            var metadata = project.getProjectMetadata(new NullProgressMonitor());
-            Dependency dependency = new Dependency();
-            dependency.setGroupId(metadata.getGroupId());
-            dependency.setArtifactId(project.getId() + "-bdm-model");
-            dependency.setVersion(metadata.getVersion());
-            dependency.setType("jar");
-            dependency.setScope(Artifact.SCOPE_PROVIDED);
-            return dependency;
-        }
+        var project = Adapters.adapt(getRepository(), BonitaProject.class);
+        var metadata = project.getProjectMetadata(new NullProgressMonitor());
+        Dependency dependency = new Dependency();
+        dependency.setGroupId(metadata.getGroupId());
+        dependency.setArtifactId(project.getId() + "-bdm-model");
+        dependency.setVersion(metadata.getVersion());
+        dependency.setType("jar");
+        dependency.setScope(Artifact.SCOPE_PROVIDED);
+        return dependency;
     }
 
     @Override
     protected void doDelete() {
-        removePomDependency();
-        deleteArtifactDescriptor();
+        try {
+            var dependency = getModelMavenDependency();
+            eventBroker().ifPresent(broker -> broker.send(BdmEvents.BDM_DELETED_TOPIC, Map.ofEntries(entry(BdmEvents.DEPENDENCY_PROPERTY, dependency))));
+        } catch (CoreException e) {
+           BonitaStudioLog.error(e);
+        }
         super.doDelete();
         cachedBusinessObjectModel.clear();
-        eventBroker().ifPresent(broker -> broker.send(BDM_DELETED_TOPIC, null));
+       
         if (commandExecutor.canExecute(CLEAN_ACCESS_CONTROL_CMD, null)) {
             commandExecutor.executeCommand(CLEAN_ACCESS_CONTROL_CMD, null);
         }
-        var project = getRepositoryAccessor().getCurrentProject().orElseThrow();
-        if (project instanceof MultiModuleProject) {
+        getRepositoryAccessor().getCurrentProject().ifPresent(p -> {
             try {
-             ((MultiModuleProject) project).removeBdmProjects(new NullProgressMonitor());
+                p.removeBdmProjects(new NullProgressMonitor());
             } catch (CoreException e) {
                 BonitaStudioLog.error(e);
             }
-        }
-
+        });
     }
-
-    private void removePomDependency() {
-        try {
-            var operation = new RemoveDependencyOperation(getParametrizedModelMavenDependency())
-                    .disableAnalyze();
-            new WorkspaceJob("Remove Project BDM dependency") {
-
-                @Override
-                public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
-                    operation.run(monitor);
-                    return Status.OK_STATUS;
-                }
-            }.schedule();
-        } catch (CoreException e) {
-            BonitaStudioLog.error(e);
-        }
-    }
-
-    public void deleteArtifactDescriptor() {
-        IFile artifactDescriptor = getParentStore().getResource().getFile(BDM_ARTIFACT_DESCRIPTOR);
-        if (artifactDescriptor.exists()) {
-            try {
-                artifactDescriptor.delete(true, AbstractRepository.NULL_PROGRESS_MONITOR);
-            } catch (CoreException e) {
-                BonitaStudioLog.error(e);
-            }
-        }
-    }
-
     protected Optional<IEventBroker> eventBroker() {
         if (PlatformUI.isWorkbenchRunning()) {
             return Optional.of(PlatformUI.getWorkbench().getService(IEventBroker.class));

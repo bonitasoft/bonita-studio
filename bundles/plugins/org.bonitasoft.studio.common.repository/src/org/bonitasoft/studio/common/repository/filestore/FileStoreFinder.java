@@ -16,9 +16,9 @@ package org.bonitasoft.studio.common.repository.filestore;
 
 import java.util.Optional;
 
-import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.model.IDeployable;
 import org.bonitasoft.studio.common.repository.model.IRenamable;
+import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -33,7 +33,7 @@ public class FileStoreFinder {
 
     private static final String BONITA_PROJECT_EXPLORER_ID = "org.bonitasoft.studio.application.project.explorer";
 
-    public Optional<IRenamable> findElementToRename(AbstractRepository currentRepository) {
+    public Optional<IRenamable> findElementToRename(IRepository currentRepository) {
         return getCurrentStructuredSelection()
                 .map(selection -> {
                     Object element = selection.getFirstElement();
@@ -44,14 +44,14 @@ public class FileStoreFinder {
                 });
     }
 
-    public Optional<IRenamable> findElementToRename(IResource resource, AbstractRepository currentRepository) {
+    public Optional<IRenamable> findElementToRename(IResource resource, IRepository currentRepository) {
         return findFileStore(resource, currentRepository)
                 .filter(IRenamable.class::isInstance)
                 .map(IRenamable.class::cast)
                 .filter(IRenamable::canBeRenamed);
     }
 
-    public Optional<IDeployable> findElementToDeploy(AbstractRepository currentRepository) {
+    public Optional<IDeployable> findElementToDeploy(IRepository currentRepository) {
         return getCurrentStructuredSelection()
                 .map(selection -> {
                     Object element = selection.getFirstElement();
@@ -72,13 +72,13 @@ public class FileStoreFinder {
                 });
     }
 
-    public Optional<IDeployable> findElementToDeploy(IResource resource, AbstractRepository currentRepository) {
+    public Optional<IDeployable> findElementToDeploy(IResource resource, IRepository currentRepository) {
         return findFileStore(resource, currentRepository)
                 .filter(IDeployable.class::isInstance)
                 .map(IDeployable.class::cast);
     }
 
-    public Optional<? extends IRepositoryFileStore> findSelectedFileStore(AbstractRepository currentRepository) {
+    public Optional<? extends IRepositoryFileStore> findSelectedFileStore(IRepository currentRepository) {
         return getCurrentStructuredSelection()
                 .map(selection -> {
                     Object element = selection.getFirstElement();
@@ -101,7 +101,7 @@ public class FileStoreFinder {
                 PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(BONITA_PROJECT_EXPLORER_ID));
     }
 
-    public Optional<? extends IRepositoryFileStore> findFileStore(IResource resource, AbstractRepository currentRepository) {
+    public Optional<? extends IRepositoryFileStore> findFileStore(IResource resource, IRepository currentRepository) {
         return Optional.ofNullable(currentRepository.getFileStore(resource));
     }
 

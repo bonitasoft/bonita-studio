@@ -22,13 +22,9 @@ import java.nio.file.StandardCopyOption;
 
 import org.apache.maven.model.Dependency;
 import org.bonitasoft.studio.common.Strings;
-import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.core.maven.migration.model.DependencyLookup;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 
 public class LocalDependenciesStore {
@@ -36,9 +32,9 @@ public class LocalDependenciesStore {
     private static final String BACKUP_EXT = ".backup";
     public static final String NAME = ".store";
 
-    private IProject project;
+    private Path project;
 
-    public LocalDependenciesStore(IProject project) {
+    public LocalDependenciesStore(Path project) {
         this.project = project;
     }
 
@@ -52,12 +48,6 @@ public class LocalDependenciesStore {
                     String.format("Cannot install %s dependency. %s is not a file.",
                             dependencyFile.getName(),
                             dependencyLookup.getFile().toPath())));
-        }
-        if (!project.isAccessible()) {
-            throw new CoreException(new Status(IStatus.ERROR, getClass(),
-                    String.format("Cannot install %s dependency. %s is not accessible.",
-                            dependencyFile.getName(),
-                            project.getName())));
         }
         Dependency dependency = dependencyLookup.toMavenDependency();
         Path targetFolder = dependencyPath(dependency);
@@ -79,7 +69,6 @@ public class LocalDependenciesStore {
         } finally {
             dependencyLookup.deleteCopy();
         }
-        project.getFolder(NAME).refreshLocal(IResource.DEPTH_INFINITE, new NullProgressMonitor());
         return dependencyLookup;
     }
 
@@ -97,7 +86,7 @@ public class LocalDependenciesStore {
     }
 
     public Path dependencyPath(Dependency dependency) {
-        return project.getLocation().toFile().toPath()
+        return project
                 .resolve(NAME)
                 .resolve(dependency.getGroupId().replace(".", "/"))
                 .resolve(dependency.getArtifactId())
@@ -136,9 +125,7 @@ public class LocalDependenciesStore {
                 }
                 parent = parent.getParent();
             }
-            project.getFolder(NAME).refreshLocal(IResource.DEPTH_INFINITE, new NullProgressMonitor());
         }
-        
     }
 
     // Use the backup file if exists to revert install
@@ -148,8 +135,6 @@ public class LocalDependenciesStore {
             File backupFile = toBackupFile(dependencyPath);
             if (backupFile.exists()) {
                 Files.move(backupFile.toPath(), dependencyPath, StandardCopyOption.REPLACE_EXISTING);
-                project.getFolder(NAME).refreshLocal(IResource.DEPTH_INFINITE,
-                        AbstractRepository.NULL_PROGRESS_MONITOR);
             }
         } catch (IOException e) {
             throw new CoreException(new Status(IStatus.ERROR, getClass(),
@@ -174,7 +159,6 @@ public class LocalDependenciesStore {
                 }
                 parent = parent.getParent();
             }
-            project.getFolder(NAME).refreshLocal(IResource.DEPTH_INFINITE, new NullProgressMonitor());
         } catch (IOException e) {
             throw new CoreException(new Status(IStatus.ERROR, getClass(),
                     String.format("Cannot delete backup of %s dependency.", dependencyPath), e));

@@ -21,9 +21,9 @@ import java.util.stream.Stream;
 
 import org.bonitasoft.studio.common.core.IRunnableWithStatus;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.core.migration.report.MigrationReport;
+import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.ui.IDisplayable;
 import org.bonitasoft.studio.common.ui.jface.ValidationDialog;
 import org.bonitasoft.studio.designer.core.operation.IndexingUIDOperation;
@@ -74,7 +74,7 @@ public class BatchValidationHandler extends AbstractHandler {
         }
         final IProgressService service = PlatformUI.getWorkbench().getProgressService();
         final Map<?, ?> parameters = event.getParameters();
-        AbstractRepository currentRepository = RepositoryManager.getInstance().getCurrentRepository().orElseThrow();
+        var currentRepository = RepositoryManager.getInstance().getCurrentRepository().orElseThrow();
         DiagramRepositoryStore diagramRepositoryStore = currentRepository
                 .getRepositoryStore(DiagramRepositoryStore.class);
         boolean clearProcessComputedProcesses = !diagramRepositoryStore.hasComputedProcesses();
@@ -195,7 +195,7 @@ public class BatchValidationHandler extends AbstractHandler {
     }
 
     private void addAllProjectDiagrams(final ProcessValidationOperation validateOperation,
-            AbstractRepository currentRepository) {
+            IRepository currentRepository) {
         DiagramRepositoryStore diagramRepositoryStore = currentRepository
                 .getRepositoryStore(DiagramRepositoryStore.class);
         diagramRepositoryStore.getChildren().stream()

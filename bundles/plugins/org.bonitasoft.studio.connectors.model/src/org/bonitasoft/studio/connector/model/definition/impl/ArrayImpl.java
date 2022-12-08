@@ -7,20 +7,14 @@
 package org.bonitasoft.studio.connector.model.definition.impl;
 
 import java.math.BigInteger;
-
 import java.util.Collection;
 
 import org.bonitasoft.studio.connector.model.definition.Array;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinitionPackage;
-
 import org.eclipse.emf.common.notify.Notification;
-
 import org.eclipse.emf.common.util.EList;
-
 import org.eclipse.emf.ecore.EClass;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-
 import org.eclipse.emf.ecore.util.EDataTypeEList;
 
 /**

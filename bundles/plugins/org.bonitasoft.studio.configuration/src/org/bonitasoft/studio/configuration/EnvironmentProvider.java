@@ -13,10 +13,8 @@ import java.util.stream.Collectors;
 
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
-import org.bonitasoft.studio.configuration.DefaultEnvironmentProvider;
 import org.bonitasoft.studio.configuration.environment.Environment;
 import org.bonitasoft.studio.configuration.extension.IEnvironmentProvider;
-import org.bonitasoft.studio.configuration.repository.EnvironmentFileStore;
 import org.bonitasoft.studio.configuration.repository.EnvironmentRepositoryStore;
 
 public class EnvironmentProvider extends DefaultEnvironmentProvider implements IEnvironmentProvider {

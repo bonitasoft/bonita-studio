@@ -103,7 +103,7 @@ public class AttributeEditionControl extends Composite {
             BusinessDataModelFormPage formPage,
             IObservableValue<BusinessObject> selectedBoObservable,
             DataBindingContext ctx) {
-        super(parent, SWT.None);
+        super(parent, SWT.NONE);
         setLayout(GridLayoutFactory.fillDefaults().create());
         setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         formPage.getToolkit().adapt(this);

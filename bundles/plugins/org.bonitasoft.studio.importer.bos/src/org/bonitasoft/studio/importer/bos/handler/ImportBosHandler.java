@@ -144,7 +144,7 @@ public class ImportBosHandler {
                 BonitaStudioLog.error(e);
             }
             mavenRepositories.addAll(mavenRepositoryRegistry.getGlobalRepositories());
-            AbstractRepository repository = repositoryAccessor.getRepository(targetRepository);
+            var repository = repositoryAccessor.getRepository(targetRepository);
             if (repository != null && repository.exists()) {
                 mavenRepositories.addAll(mavenRepositoryRegistry.getProjectRepositories(repository.getProject()));
             }
@@ -181,9 +181,9 @@ public class ImportBosHandler {
 
     }
 
-    private AbstractRepository getTargetRepository(RepositoryAccessor repositoryAccessor) {
+    private org.bonitasoft.studio.common.repository.model.IRepository getTargetRepository(RepositoryAccessor repositoryAccessor) {
         String targetRepository = switchRepositoryStrategy.getTargetRepository();
-        AbstractRepository currentRepository = repositoryAccessor.getCurrentRepository().orElseThrow();
+        var currentRepository = repositoryAccessor.getCurrentRepository().orElseThrow();
         if (Objects.equals(targetRepository, currentRepository.getName())) {
             return currentRepository;
         }

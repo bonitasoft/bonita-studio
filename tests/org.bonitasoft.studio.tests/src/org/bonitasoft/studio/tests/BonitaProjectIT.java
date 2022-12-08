@@ -53,7 +53,7 @@ public class BonitaProjectIT {
     @Test
     public void should_create_a_bonita_project() throws Exception {
         // Validate the default maven model
-        AbstractRepository currentRepository = RepositoryManager.getInstance().getCurrentRepository().orElseThrow();
+        var currentRepository = RepositoryManager.getInstance().getCurrentRepository().orElseThrow();
 
         IProject project = currentRepository.getProject();
         assertThat(project.getFile("pom.xml").exists()).isTrue();

@@ -143,6 +143,8 @@ public final class Messages extends NLS {
 
     public static String switchIntoNewbranch;
 
+    public static String migrating;
+
     private Messages() {
         // Do not instantiate
     }

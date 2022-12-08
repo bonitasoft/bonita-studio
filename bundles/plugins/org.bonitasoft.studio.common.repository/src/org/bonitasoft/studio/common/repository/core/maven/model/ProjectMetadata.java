@@ -44,7 +44,6 @@ public class ProjectMetadata {
     private String artifactId;
     private String version;
     private String bonitaRuntimeVersion;
-    private boolean isMultiModule;
 
     public String getName() {
         return name;
@@ -86,14 +85,6 @@ public class ProjectMetadata {
         this.version = version;
     }
 
-    public boolean getIsMultiModule() {
-        return isMultiModule;
-    }
-
-    public void setIsMultiModule(boolean isMultiModule) {
-        this.isMultiModule = isMultiModule;
-    }
-
     public String getBonitaRuntimeVersion() {
         return bonitaRuntimeVersion;
     }
@@ -109,7 +100,6 @@ public class ProjectMetadata {
         metadata.setGroupId(defaultGroupId());
         metadata.setVersion(DEFAULT_VERSION);
         metadata.setBonitaRuntimeVersion(ProductVersion.BONITA_RUNTIME_VERSION);
-        metadata.setIsMultiModule(true);
         return metadata;
     }
 
@@ -158,7 +148,6 @@ public class ProjectMetadata {
         projectMetadata.setVersion(mavenProject.getVersion());
         projectMetadata.setBonitaRuntimeVersion(mavenProject.getProperties().getProperty(
                 ProjectDefaultConfiguration.BONITA_RUNTIME_VERSION, ProductVersion.BONITA_RUNTIME_VERSION));
-        projectMetadata.setIsMultiModule(mavenProject.getParent() != null);
         return projectMetadata;
     }
 
@@ -173,7 +162,6 @@ public class ProjectMetadata {
                 ? model.getParent().getVersion() : model.getVersion());
         projectMetadata.setBonitaRuntimeVersion(model.getProperties().getProperty(
                 ProjectDefaultConfiguration.BONITA_RUNTIME_VERSION, ProductVersion.BONITA_RUNTIME_VERSION));
-        projectMetadata.setIsMultiModule(model.getParent() != null);
         return projectMetadata;
     }
 
@@ -239,7 +227,7 @@ public class ProjectMetadata {
 
     @Override
     public int hashCode() {
-        return Objects.hash(artifactId, bonitaRuntimeVersion, description, groupId, isMultiModule, name, version);
+        return Objects.hash(artifactId, bonitaRuntimeVersion, description, groupId, name, version);
     }
 
     @Override
@@ -254,12 +242,16 @@ public class ProjectMetadata {
         return Objects.equals(artifactId, other.artifactId)
                 && Objects.equals(bonitaRuntimeVersion, other.bonitaRuntimeVersion)
                 && Objects.equals(description, other.description) && Objects.equals(groupId, other.groupId)
-                && isMultiModule == other.isMultiModule && Objects.equals(name, other.name)
+                && Objects.equals(name, other.name)
                 && Objects.equals(version, other.version);
     }
 
     public String getProjectName() {
-        return isMultiModule ? artifactId + "-app" : artifactId;
+        return artifactId + "-app";
+    }
+
+    public String getProjectId() {
+        return artifactId;
     }
 
 }

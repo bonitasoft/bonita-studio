@@ -14,6 +14,7 @@
  */
 package org.bonitasoft.studio.common.repository.core.maven.plugin;
 
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Properties;
 
@@ -21,42 +22,39 @@ import org.apache.maven.Maven;
 import org.apache.maven.execution.BuildSuccess;
 import org.apache.maven.execution.MavenExecutionResult;
 import org.apache.maven.project.MavenProject;
-import org.bonitasoft.studio.common.repository.core.MultiModuleProject;
-import org.eclipse.core.resources.IProject;
+import org.apache.maven.project.ProjectBuilder;
+import org.apache.maven.project.ProjectBuildingException;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.m2e.core.MavenPlugin;
 import org.eclipse.m2e.core.embedder.ICallable;
 import org.eclipse.m2e.core.embedder.IMaven;
 import org.eclipse.m2e.core.embedder.IMavenExecutionContext;
-import org.eclipse.m2e.core.internal.project.ProjectConfigurationManager;
-import org.eclipse.m2e.core.project.IMavenProjectFacade;
-import org.eclipse.m2e.core.project.MavenUpdateRequest;
 
 public class CreateBdmModulePlugin {
 
-    private MultiModuleProject project;
+    private Path project;
+    private String projectId;
 
-    public CreateBdmModulePlugin(MultiModuleProject project) {
+    public CreateBdmModulePlugin(Path project, String projectId) {
         this.project = project;
+        this.projectId = projectId;
     }
 
     public IStatus execute(IProgressMonitor monitor) throws CoreException {
         IMaven maven = maven();
-        var mavenProject = getMavenProject(project.getParentProject(), monitor);
-        if (mavenProject == null) {
-            return new Status(IStatus.ERROR, getClass(),
-                    "An error occured while executing bonita project plugin. Cannot resolve the Maven project.");
-        }
+        var mavenProject = getMavenProject(project);
         var ctx = maven.createExecutionContext();
         var request = ctx.getExecutionRequest();
         request.setGoals(List.of("bonita-project:create-bdm-module"));
         var properties = new Properties();
-        properties.setProperty("bonitaProjectId", project.getId());
+        properties.setProperty("bonitaProjectId", projectId);
         request.setUserProperties(properties);
         request.setPom(mavenProject.getFile());
+        request.getProjectBuildingRequest();
         MavenExecutionResult executionResult = ctx.execute(mavenProject, new ICallable<MavenExecutionResult>() {
 
             @Override
@@ -68,27 +66,35 @@ public class CreateBdmModulePlugin {
         }, monitor);
 
         if (executionResult.getBuildSummary(executionResult.getProject()) instanceof BuildSuccess) {
-            var importBdmModules = new ImportBdmModuleOperation(
-                    project.getParentProject().getLocation().toFile().toPath().resolve("bdm").toFile());
-            importBdmModules.run(monitor);
-            ((ProjectConfigurationManager) MavenPlugin.getProjectConfigurationManager())
-                    .updateProjectConfiguration(new MavenUpdateRequest(project.getParentProject(), true, false), false,
-                            false,
-                            monitor);
             return Status.OK_STATUS;
         } else {
             throw new CoreException(
-                    new Status(IStatus.ERROR, getClass(), "Failed to execute bonita-project-maven-plugin",
+                    new Status(IStatus.ERROR, getClass(),
+                            "Failed to execute bonita-project-maven-plugin:create-bdm-module",
                             executionResult.hasExceptions() ? executionResult.getExceptions().get(0) : null));
         }
     }
 
-    private MavenProject getMavenProject(IProject project, IProgressMonitor monitor) throws CoreException {
-        IMavenProjectFacade projectFacade = MavenPlugin.getMavenProjectRegistry().getProject(project);
-        if (projectFacade == null) {
-            return null;
-        }
-        return projectFacade.getMavenProject(monitor);
+    private MavenProject getMavenProject(Path project) throws CoreException {
+        var maven = maven();
+        var projectBuilder = maven.lookup(ProjectBuilder.class);
+        var context = maven.createExecutionContext();
+        return context.execute(new ICallable<MavenProject>() {
+
+            @Override
+            public MavenProject call(IMavenExecutionContext context, IProgressMonitor monitor)
+                    throws CoreException {
+                var buildRequest = context.newProjectBuildingRequest();
+                try {
+                    var result = projectBuilder.build(project.resolve("pom.xml").toFile(), buildRequest);
+                    return result.getProject();
+                } catch (ProjectBuildingException e) {
+                    throw new CoreException(Status.error("Failed to build Maven project ", e));
+                }
+            }
+
+        }, new NullProgressMonitor());
+        
     }
 
     IMaven maven() {

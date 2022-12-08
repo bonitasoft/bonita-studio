@@ -10,18 +10,13 @@ import org.bonitasoft.studio.businessobject.editor.model.Field;
 import org.bonitasoft.studio.businessobject.editor.model.Index;
 import org.bonitasoft.studio.businessobject.editor.model.Query;
 import org.bonitasoft.studio.businessobject.editor.model.UniqueConstraint;
-
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
-
 import org.eclipse.emf.common.util.EList;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
-
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
@@ -180,6 +175,7 @@ public class BusinessObjectImpl extends MinimalEObjectImpl.Container implements 
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public String getQualifiedName() {
         return qualifiedName;
     }
@@ -189,6 +185,7 @@ public class BusinessObjectImpl extends MinimalEObjectImpl.Container implements 
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public void setQualifiedName(String newQualifiedName) {
         String oldQualifiedName = qualifiedName;
         qualifiedName = newQualifiedName;
@@ -201,6 +198,7 @@ public class BusinessObjectImpl extends MinimalEObjectImpl.Container implements 
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public String getSimpleName() {
         return simpleName;
     }
@@ -210,6 +208,7 @@ public class BusinessObjectImpl extends MinimalEObjectImpl.Container implements 
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public void setSimpleName(String newSimpleName) {
         String oldSimpleName = simpleName;
         simpleName = newSimpleName;
@@ -222,6 +221,7 @@ public class BusinessObjectImpl extends MinimalEObjectImpl.Container implements 
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public String getDescription() {
         return description;
     }
@@ -231,6 +231,7 @@ public class BusinessObjectImpl extends MinimalEObjectImpl.Container implements 
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public void setDescription(String newDescription) {
         String oldDescription = description;
         description = newDescription;
@@ -243,6 +244,7 @@ public class BusinessObjectImpl extends MinimalEObjectImpl.Container implements 
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public EList<Field> getFields() {
         if (fields == null) {
             fields = new EObjectContainmentEList<Field>(Field.class, this, BusinessDataModelPackage.BUSINESS_OBJECT__FIELDS);
@@ -255,6 +257,7 @@ public class BusinessObjectImpl extends MinimalEObjectImpl.Container implements 
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public EList<UniqueConstraint> getUniqueConstraints() {
         if (uniqueConstraints == null) {
             uniqueConstraints = new EObjectContainmentEList<UniqueConstraint>(UniqueConstraint.class, this, BusinessDataModelPackage.BUSINESS_OBJECT__UNIQUE_CONSTRAINTS);
@@ -267,6 +270,7 @@ public class BusinessObjectImpl extends MinimalEObjectImpl.Container implements 
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public EList<Index> getIndexes() {
         if (indexes == null) {
             indexes = new EObjectContainmentEList<Index>(Index.class, this, BusinessDataModelPackage.BUSINESS_OBJECT__INDEXES);
@@ -279,6 +283,7 @@ public class BusinessObjectImpl extends MinimalEObjectImpl.Container implements 
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public EList<Query> getQueries() {
         if (queries == null) {
             queries = new EObjectContainmentEList<Query>(Query.class, this, BusinessDataModelPackage.BUSINESS_OBJECT__QUERIES);
@@ -291,6 +296,7 @@ public class BusinessObjectImpl extends MinimalEObjectImpl.Container implements 
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public EList<Query> getDefaultQueries() {
         if (defaultQueries == null) {
             defaultQueries = new EObjectContainmentEList<Query>(Query.class, this, BusinessDataModelPackage.BUSINESS_OBJECT__DEFAULT_QUERIES);

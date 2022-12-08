@@ -80,7 +80,7 @@ public class RepositoryManager {
     private static RepositoryManager INSTANCE;
 
     private List<IBonitaProjectListener> projectListeners = new ArrayList<>();
-    private AbstractRepository repository;
+    private IRepository repository;
     private IPreferenceStore preferenceStore;
     private IConfigurationElement repositoryImplementationElement;
     private RepositoryAccessor repositoryAccessor;
@@ -164,7 +164,7 @@ public class RepositoryManager {
         return preferenceStore;
     }
 
-    public Optional<AbstractRepository> getCurrentRepository() {
+    public Optional<IRepository> getCurrentRepository() {
         return Optional.ofNullable(repository);
     }
 
@@ -175,7 +175,7 @@ public class RepositoryManager {
                 .orElse(null);
     }
 
-    public AbstractRepository getRepository(final String repositoryName) {
+    public IRepository getRepository(final String repositoryName) {
         var currentRepository = getCurrentRepository()
                 .filter(repo -> Objects.equals(repo.getName(), repositoryName))
                 .orElse(null);
@@ -270,12 +270,7 @@ public class RepositoryManager {
         }
     }
 
-    public void setRepository(final String repositoryName, final IProgressMonitor monitor) {
-        setRepository(repositoryName, false, monitor);
-    }
-
     public void setRepository(final String repositoryName,
-            final boolean migrationEnabled,
             final IProgressMonitor monitor) {
         var currentRepository = getCurrentRepository()
                 .orElse(null);
@@ -305,11 +300,11 @@ public class RepositoryManager {
             metadata.setArtifactId(repositoryName);
             monitor.setTaskName(Messages.creatingNewProject);
             var project = Adapters.adapt(currentRepository.create(metadata, monitor), BonitaProject.class);
+            setCurrentRepository(currentRepository);
             project.open(monitor);
         } catch (CoreException e) {
             BonitaStudioLog.error(e);
         }
-        setCurrentRepository(currentRepository);
     }
 
     public Optional<IRepositoryStore<? extends IRepositoryFileStore>> getRepositoryStore(Object element) {
@@ -336,7 +331,7 @@ public class RepositoryManager {
         return repository != null;
     }
 
-    public void setCurrentRepository(AbstractRepository repository) {
+    public void setCurrentRepository(IRepository repository) {
         this.repository = repository;
     }
 
@@ -390,6 +385,8 @@ public class RepositoryManager {
     }
 
     public Optional<BonitaProject> getCurrentProject() {
-        return getCurrentRepository().map(repo -> Adapters.adapt(repo, BonitaProject.class));
+        return getCurrentRepository()
+                .map(repo -> Adapters.adapt(repo, BonitaProject.class))
+                .filter(Objects::nonNull);
     }
 }

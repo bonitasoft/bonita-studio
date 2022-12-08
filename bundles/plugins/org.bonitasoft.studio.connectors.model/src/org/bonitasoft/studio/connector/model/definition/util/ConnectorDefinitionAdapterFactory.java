@@ -6,13 +6,30 @@
  */
 package org.bonitasoft.studio.connector.model.definition.util;
 
-import org.bonitasoft.studio.connector.model.definition.*;
-
+import org.bonitasoft.studio.connector.model.definition.Array;
+import org.bonitasoft.studio.connector.model.definition.Category;
+import org.bonitasoft.studio.connector.model.definition.Checkbox;
+import org.bonitasoft.studio.connector.model.definition.Component;
+import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
+import org.bonitasoft.studio.connector.model.definition.ConnectorDefinitionPackage;
+import org.bonitasoft.studio.connector.model.definition.DocumentRoot;
+import org.bonitasoft.studio.connector.model.definition.Group;
+import org.bonitasoft.studio.connector.model.definition.Input;
+import org.bonitasoft.studio.connector.model.definition.List;
+import org.bonitasoft.studio.connector.model.definition.Output;
+import org.bonitasoft.studio.connector.model.definition.Page;
+import org.bonitasoft.studio.connector.model.definition.Password;
+import org.bonitasoft.studio.connector.model.definition.RadioGroup;
+import org.bonitasoft.studio.connector.model.definition.ScriptEditor;
+import org.bonitasoft.studio.connector.model.definition.Select;
+import org.bonitasoft.studio.connector.model.definition.Text;
+import org.bonitasoft.studio.connector.model.definition.TextArea;
+import org.bonitasoft.studio.connector.model.definition.UnloadableConnectorDefinition;
+import org.bonitasoft.studio.connector.model.definition.Widget;
+import org.bonitasoft.studio.connector.model.definition.WidgetComponent;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
-
 import org.eclipse.emf.common.notify.impl.AdapterFactoryImpl;
-
 import org.eclipse.emf.ecore.EObject;
 
 /**

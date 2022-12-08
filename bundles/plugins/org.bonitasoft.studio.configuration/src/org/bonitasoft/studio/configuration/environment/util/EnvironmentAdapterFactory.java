@@ -8,12 +8,11 @@
  *******************************************************************************/
 package org.bonitasoft.studio.configuration.environment.util;
 
-import org.bonitasoft.studio.configuration.environment.*;
+import org.bonitasoft.studio.configuration.environment.Environment;
+import org.bonitasoft.studio.configuration.environment.EnvironmentPackage;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
-
 import org.eclipse.emf.common.notify.impl.AdapterFactoryImpl;
-
 import org.eclipse.emf.ecore.EObject;
 
 /**
