@@ -35,11 +35,19 @@ public class BotGitCloneDialog extends BotWizardDialog {
     public BotGitCloneDialog next() {
         return (BotGitCloneDialog) super.next();
     }
+    
+    public void finishWithMigration() {
+        bot.waitUntil(Conditions.widgetIsEnabled(bot.button(IDialogConstants.FINISH_LABEL)), 5000);
+        final SWTBotShell activeShell = bot.activeShell();
+        bot.button(IDialogConstants.FINISH_LABEL).click();
+        bot.waitUntil(Conditions.shellIsActive(Messages.confirmMigratonTitle), 30000);
+        bot.button(IDialogConstants.YES_LABEL).click();
+        bot.waitUntil(Conditions.shellCloses(activeShell), 120000);
+        bot.waitUntil(Conditions.shellIsActive(Messages.repositoryClonedTitle));
+        bot.shell(Messages.repositoryClonedTitle).activate();
+        bot.button(IDialogConstants.CLOSE_LABEL).click();
+    }
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.swtbot.framework.BotWizardDialog#finish()
-     */
     @Override
     public void finish() {
         bot.waitUntil(Conditions.widgetIsEnabled(bot.button(IDialogConstants.FINISH_LABEL)), 5000);

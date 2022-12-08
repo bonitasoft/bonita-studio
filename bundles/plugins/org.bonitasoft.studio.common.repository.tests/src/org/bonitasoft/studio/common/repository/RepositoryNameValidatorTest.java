@@ -14,7 +14,6 @@
  */
 package org.bonitasoft.studio.common.repository;
 
-import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.lenient;
 
 import java.util.Optional;

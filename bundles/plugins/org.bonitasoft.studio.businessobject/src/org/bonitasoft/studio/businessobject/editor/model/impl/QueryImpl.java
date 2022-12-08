@@ -7,18 +7,13 @@ import java.util.Collection;
 import org.bonitasoft.studio.businessobject.editor.model.BusinessDataModelPackage;
 import org.bonitasoft.studio.businessobject.editor.model.Query;
 import org.bonitasoft.studio.businessobject.editor.model.QueryParameter;
-
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
-
 import org.eclipse.emf.common.util.EList;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
-
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
@@ -154,6 +149,7 @@ public class QueryImpl extends MinimalEObjectImpl.Container implements Query {
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public String getName() {
         return name;
     }
@@ -163,6 +159,7 @@ public class QueryImpl extends MinimalEObjectImpl.Container implements Query {
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public void setName(String newName) {
         String oldName = name;
         name = newName;
@@ -175,6 +172,7 @@ public class QueryImpl extends MinimalEObjectImpl.Container implements Query {
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public String getDescription() {
         return description;
     }
@@ -184,6 +182,7 @@ public class QueryImpl extends MinimalEObjectImpl.Container implements Query {
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public void setDescription(String newDescription) {
         String oldDescription = description;
         description = newDescription;
@@ -196,6 +195,7 @@ public class QueryImpl extends MinimalEObjectImpl.Container implements Query {
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public String getContent() {
         return content;
     }
@@ -205,6 +205,7 @@ public class QueryImpl extends MinimalEObjectImpl.Container implements Query {
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public void setContent(String newContent) {
         String oldContent = content;
         content = newContent;
@@ -217,6 +218,7 @@ public class QueryImpl extends MinimalEObjectImpl.Container implements Query {
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public String getReturnType() {
         return returnType;
     }
@@ -226,6 +228,7 @@ public class QueryImpl extends MinimalEObjectImpl.Container implements Query {
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public void setReturnType(String newReturnType) {
         String oldReturnType = returnType;
         returnType = newReturnType;
@@ -238,6 +241,7 @@ public class QueryImpl extends MinimalEObjectImpl.Container implements Query {
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public EList<QueryParameter> getQueryParameters() {
         if (queryParameters == null) {
             queryParameters = new EObjectContainmentEList<QueryParameter>(QueryParameter.class, this, BusinessDataModelPackage.QUERY__QUERY_PARAMETERS);

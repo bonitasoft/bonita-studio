@@ -27,6 +27,7 @@ import java.util.Optional;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.Plugin;
 import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
+import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 import org.junit.Before;
@@ -36,6 +37,7 @@ public class Java11MigrationStepTest {
     
     private MavenXpp3Reader modelReader = new MavenXpp3Reader();
     private Java11MigrationStep migrationStep;
+    private ProjectMetadata metadata = ProjectMetadata.defaultMetadata();
 
     @Before
     public void createFixture() throws Exception {
@@ -48,7 +50,7 @@ public class Java11MigrationStepTest {
         Model model = loadModel("pom_from_1_0_5.xml");
 
         // When
-        migrationStep.migrate(model);
+        migrationStep.migrate(model, metadata);
 
         // Then
         assertThat(model.getProperties()).contains(entry("java.version", "11"));
@@ -66,7 +68,7 @@ public class Java11MigrationStepTest {
                 });
 
         // When
-        migrationStep.migrate(model);
+        migrationStep.migrate(model, metadata);
 
         // Then
         assertThat(findPluginConfiguration(model, "org.apache.maven.plugins", "maven-compiler-plugin"))

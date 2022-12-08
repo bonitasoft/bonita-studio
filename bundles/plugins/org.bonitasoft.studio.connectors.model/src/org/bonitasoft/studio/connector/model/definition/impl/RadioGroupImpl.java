@@ -11,15 +11,10 @@ import java.util.Collection;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinitionPackage;
 import org.bonitasoft.studio.connector.model.definition.Orientation;
 import org.bonitasoft.studio.connector.model.definition.RadioGroup;
-
 import org.eclipse.emf.common.notify.Notification;
-
 import org.eclipse.emf.common.util.EList;
-
 import org.eclipse.emf.ecore.EClass;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-
 import org.eclipse.emf.ecore.util.EDataTypeEList;
 
 /**

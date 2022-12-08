@@ -19,9 +19,7 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
-
 import org.eclipse.emf.ecore.impl.EFactoryImpl;
-
 import org.eclipse.emf.ecore.plugin.EcorePlugin;
 
 /**
@@ -125,6 +123,7 @@ public class BusinessDataModelFactoryImpl extends EFactoryImpl implements Busine
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public BusinessObjectModel createBusinessObjectModel() {
         BusinessObjectModelImpl businessObjectModel = new BusinessObjectModelImpl();
         return businessObjectModel;
@@ -135,6 +134,7 @@ public class BusinessDataModelFactoryImpl extends EFactoryImpl implements Busine
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public org.bonitasoft.studio.businessobject.editor.model.Package createPackage() {
         PackageImpl package_ = new PackageImpl();
         return package_;
@@ -145,6 +145,7 @@ public class BusinessDataModelFactoryImpl extends EFactoryImpl implements Busine
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public BusinessObject createBusinessObject() {
         BusinessObjectImpl businessObject = new BusinessObjectImpl();
         return businessObject;
@@ -155,6 +156,7 @@ public class BusinessDataModelFactoryImpl extends EFactoryImpl implements Busine
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public UniqueConstraint createUniqueConstraint() {
         UniqueConstraintImpl uniqueConstraint = new UniqueConstraintImpl();
         return uniqueConstraint;
@@ -165,6 +167,7 @@ public class BusinessDataModelFactoryImpl extends EFactoryImpl implements Busine
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public Index createIndex() {
         IndexImpl index = new IndexImpl();
         return index;
@@ -175,6 +178,7 @@ public class BusinessDataModelFactoryImpl extends EFactoryImpl implements Busine
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public Query createQuery() {
         QueryImpl query = new QueryImpl();
         return query;
@@ -185,6 +189,7 @@ public class BusinessDataModelFactoryImpl extends EFactoryImpl implements Busine
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public QueryParameter createQueryParameter() {
         QueryParameterImpl queryParameter = new QueryParameterImpl();
         return queryParameter;
@@ -195,6 +200,7 @@ public class BusinessDataModelFactoryImpl extends EFactoryImpl implements Busine
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public SimpleField createSimpleField() {
         SimpleFieldImpl simpleField = new SimpleFieldImpl();
         return simpleField;
@@ -205,6 +211,7 @@ public class BusinessDataModelFactoryImpl extends EFactoryImpl implements Busine
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public RelationField createRelationField() {
         RelationFieldImpl relationField = new RelationFieldImpl();
         return relationField;
@@ -275,6 +282,7 @@ public class BusinessDataModelFactoryImpl extends EFactoryImpl implements Busine
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public BusinessDataModelPackage getBusinessDataModelPackage() {
         return (BusinessDataModelPackage)getEPackage();
     }

@@ -14,13 +14,13 @@
  */
 package org.bonitasoft.studio.common.repository.core.migration.step;
 
+import java.nio.file.Path;
 import java.util.Objects;
 import java.util.Properties;
 
 import org.bonitasoft.studio.common.repository.core.maven.model.DefaultPluginVersions;
 import org.bonitasoft.studio.common.repository.core.migration.MigrationStep;
 import org.bonitasoft.studio.common.repository.core.migration.report.MigrationReport;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -30,7 +30,7 @@ import org.osgi.framework.Version;
 public class UpdateBonitaProjectMavenPluginVersionInPomStep implements MigrationStep {
 
     @Override
-    public MigrationReport run(IProject project, IProgressMonitor monitor) throws CoreException {
+    public MigrationReport run(Path project, IProgressMonitor monitor) throws CoreException {
         var model = loadParentMavenModel(project);
         Properties properties = model.getProperties();
         String pluginVersionPropertyName = DefaultPluginVersions.BONITA_PROJECT_MAVEN_PLUGIN_ARTIFACT_ID + ".version";

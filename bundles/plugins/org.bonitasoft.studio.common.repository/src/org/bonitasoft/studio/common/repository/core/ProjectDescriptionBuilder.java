@@ -24,27 +24,25 @@ import java.util.Set;
 
 import org.eclipse.core.internal.resources.ProjectDescription;
 import org.eclipse.core.resources.ICommand;
+import org.eclipse.core.resources.IProjectDescription;
 
 /**
  * @author Romain Bioteau
  */
 public class ProjectDescriptionBuilder {
 
-    private final ProjectDescription projectDescription;
     private final List<String> natureIds = new ArrayList<>();
     private final Set<String> builderIds = new HashSet<>();
-
-    public ProjectDescriptionBuilder() {
-        projectDescription = new ProjectDescription();
-    }
+    private String comment;
+    private String name;
 
     public ProjectDescriptionBuilder withProjectName(final String name) {
-        projectDescription.setName(name);
+        this.name = name;
         return this;
     }
 
     public ProjectDescriptionBuilder withComment(final String comment) {
-        projectDescription.setComment(comment);
+        this.comment = comment;
         return this;
     }
 
@@ -68,15 +66,28 @@ public class ProjectDescriptionBuilder {
         return this;
     }
 
-    public ProjectDescription build() {
-        projectDescription.setNatureIds(natureIds.stream().distinct().toArray(String[]::new));
+    public IProjectDescription build() {
+        return build(new ProjectDescription());
+    }
+
+    public IProjectDescription build(IProjectDescription existingDescriptor) {
+        if (name != null) {
+            existingDescriptor.setName(name);
+        }
+        existingDescriptor.setComment(comment);
+        existingDescriptor.setNatureIds(natureIds.stream().distinct().toArray(String[]::new));
         final Map<String, ICommand> builderCommmands = new HashMap<>();
         for (final String builderId : builderIds) {
-            final ICommand command = projectDescription.newCommand();
+            final ICommand command = existingDescriptor.newCommand();
             command.setBuilderName(builderId);
             builderCommmands.put(builderId, command);
         }
-        projectDescription.setBuildSpec(builderCommmands.values().toArray(new ICommand[builderCommmands.values().size()]));
-        return projectDescription;
+        existingDescriptor
+                .setBuildSpec(builderCommmands.values().toArray(new ICommand[builderCommmands.values().size()]));
+        // Clear filters
+        if(existingDescriptor instanceof ProjectDescription) {
+            ((ProjectDescription) existingDescriptor).setFilterDescriptions(null);
+        }
+        return existingDescriptor;
     }
 }

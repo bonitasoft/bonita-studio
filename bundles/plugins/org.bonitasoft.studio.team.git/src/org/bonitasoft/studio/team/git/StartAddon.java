@@ -7,17 +7,13 @@ import java.util.Objects;
 import javax.inject.Inject;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.ProjectFileChangeListener;
-import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.core.di.extensions.EventTopic;
 import org.eclipse.e4.ui.workbench.UIEvents;
-import org.eclipse.egit.ui.JobFamilies;
 import org.eclipse.egit.ui.internal.push.PushJob;
-import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jsch.internal.core.JSchCorePlugin;
 import org.osgi.service.event.Event;
 
@@ -49,19 +45,6 @@ public class StartAddon {
                 }
             }
 
-            @Override
-            public void done(IJobChangeEvent event) {
-                Job job = event.getJob(); // CheckoutJob
-                if (job.belongsTo(JobFamilies.CHECKOUT)) {
-                    IPreferenceStore teamPluginPrefStore = TeamGitPlugin.getDefault().getPreferenceStore();
-                    if (teamPluginPrefStore
-                            .getBoolean(ProjectFileChangeListener.VALIDATE_REPO_VERSION_AFTER_SWITCH_BRANCH)) {
-                        teamPluginPrefStore.setValue(ProjectFileChangeListener.VALIDATE_REPO_VERSION_AFTER_SWITCH_BRANCH,
-                                false);
-                        RepositoryManager.getInstance().getCurrentRepository().orElseThrow().validateRepositoryVersion();
-                    }
-                }
-            }
         });
     }
 

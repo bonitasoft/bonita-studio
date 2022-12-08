@@ -33,7 +33,6 @@ import org.bonitasoft.studio.application.ui.control.ImportExtensionPage.ImportMo
 import org.bonitasoft.studio.application.ui.control.model.dependency.ArtifactType;
 import org.bonitasoft.studio.common.CommandExecutor;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.core.maven.AddDependencyOperation;
 import org.bonitasoft.studio.common.repository.core.maven.DependencyGetOperation;
@@ -147,7 +146,7 @@ public class ImportExtensionHandler {
         return Optional.of(dependency);
     }
 
-    protected Model loadMavenModel(MavenProjectHelper mavenProjectHelper, AbstractRepository currentRepository) {
+    protected Model loadMavenModel(MavenProjectHelper mavenProjectHelper, org.bonitasoft.studio.common.repository.model.IRepository currentRepository) {
         try {
             return mavenProjectHelper.getMavenModel(currentRepository.getProject());
         } catch (CoreException e) {

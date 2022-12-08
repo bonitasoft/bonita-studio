@@ -8,46 +8,23 @@
  *******************************************************************************/
 package org.bonitasoft.studio.common.repository.core.internal;
 
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.lang.reflect.InvocationTargetException;
-import java.net.URL;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.bonitasoft.studio.common.extension.ExtensionContextInjectionFactory;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.core.BonitaProject;
-import org.bonitasoft.studio.common.repository.core.internal.team.GitProjectImpl;
-import org.bonitasoft.studio.common.repository.core.migration.report.MigrationReport;
-import org.bonitasoft.studio.common.repository.core.team.GitProject;
 import org.bonitasoft.studio.common.repository.jdt.JDTTypeHierarchyManager;
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.runtime.Adapters;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.e4.core.services.events.IEventBroker;
-import org.eclipse.emf.edapt.migration.MigrationException;
-import org.eclipse.jgit.lib.Constants;
 import org.eclipse.team.core.RepositoryProvider;
 
-/**
- * @author Romain Bioteau
- */
 public class RepositoryImpl extends AbstractRepository {
-
-    private static final String GITIGNORE_TEMPLATE = ".gitignore.template";
 
     public RepositoryImpl(final IWorkspace workspace, final IProject project,
             final ExtensionContextInjectionFactory extensionContextInjectionFactory,
@@ -103,62 +80,6 @@ public class RepositoryImpl extends AbstractRepository {
             }
         }
         return false;
-    }
-
-    @Override
-    public void migrate(MigrationReport report, IProgressMonitor monitor) throws CoreException, MigrationException {
-        migrateGitIgnoreFile(monitor);
-        super.migrate(report, monitor);
-    }
-
-    private void migrateGitIgnoreFile(IProgressMonitor monitor) throws CoreException, MigrationException {
-        IFile gitIgnore = getProject().getFile(Constants.GITIGNORE_FILENAME);
-        if (gitIgnore.exists()) {
-            try (InputStream is = gitIgnore.getContents()) {
-                List<String> existingEntries = retrieveGitignoreEntries(is, StandardCharsets.UTF_8);
-                List<String> entriesToAdd = retrieveEntriesToAdd(existingEntries);
-                if (!entriesToAdd.isEmpty()) {
-                    existingEntries.add(System.lineSeparator());
-                    existingEntries.addAll(entriesToAdd);
-                    String newContent = existingEntries.stream().reduce("",
-                            (s1, s2) -> s1 + System.lineSeparator() + s2);
-                    gitIgnore.setContents(new ByteArrayInputStream(newContent.getBytes(StandardCharsets.UTF_8)),
-                            IResource.KEEP_HISTORY | IResource.FORCE, monitor);
-                }
-            } catch (IOException e) {
-                throw new MigrationException("Failed to update .gitignore file.", e);
-            }
-        }
-    }
-
-    private List<String> retrieveEntriesToAdd(List<String> existingEntries) throws IOException {
-        URL gitignoreTemplateUrl = GitProject.getGitignoreTemplateFileURL();
-        try (BufferedReader br = new BufferedReader(
-                new InputStreamReader(gitignoreTemplateUrl.openStream(), StandardCharsets.UTF_8))) {
-            List<String> entries = new ArrayList<>();
-            String line;
-            while ((line = br.readLine()) != null) {
-                if (lineIsValid(line) && !existingEntries.contains(line)) {
-                    entries.add(line);
-                }
-            }
-            return entries;
-        }
-    }
-
-    private boolean lineIsValid(String line) {
-        return line != null && !line.isEmpty() && !line.startsWith("#");
-    }
-
-    private static List<String> retrieveGitignoreEntries(InputStream is, Charset encoding) throws IOException {
-        try (BufferedReader br = new BufferedReader(new InputStreamReader(is, encoding))) {
-            List<String> entries = new ArrayList<>();
-            String line;
-            while ((line = br.readLine()) != null) {
-                entries.add(line);
-            }
-            return entries;
-        }
     }
 
 

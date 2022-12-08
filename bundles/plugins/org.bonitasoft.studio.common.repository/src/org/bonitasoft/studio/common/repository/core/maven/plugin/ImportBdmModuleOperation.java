@@ -33,7 +33,6 @@ import org.eclipse.m2e.core.project.ProjectImportConfiguration;
 public class ImportBdmModuleOperation implements IWorkspaceRunnable {
 
     private File projectRoot;
-    private IProject project;
     private IProjectConfigurationManager projectConfigurationManager;
 
     public ImportBdmModuleOperation(File projectRoot) {
@@ -64,19 +63,10 @@ public class ImportBdmModuleOperation implements IWorkspaceRunnable {
         projectsToImport.addAll(modules);
         var projectImportConfiguration = new ProjectImportConfiguration();
         projectImportConfiguration.setProjectNameTemplate("[artifactId]");
-        var results = projectConfigurationManager.importProjects(
+        projectConfigurationManager.importProjects(
                 projectsToImport,
                 projectImportConfiguration, monitor);
-
-        for (var res : results) {
-            if (res.getProject() != null && res.getProject().getName().endsWith("bdm-parent")) {
-                project = res.getProject();
-            }
-        }
     }
 
-    public IProject getProject() {
-        return project;
-    }
 
 }

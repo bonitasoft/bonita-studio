@@ -22,13 +22,15 @@ import java.util.function.Consumer;
 
 import javax.xml.bind.JAXBException;
 
-import org.bonitasoft.studio.businessobject.core.repository.BDMArtifactDescriptor;
+import org.apache.maven.model.Dependency;
+import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelFileStore;
+import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
 import org.bonitasoft.studio.businessobject.editor.editor.ui.control.businessObject.BusinessObjectEditionControl;
 import org.bonitasoft.studio.businessobject.editor.editor.ui.control.businessObject.BusinessObjectList;
-import org.bonitasoft.studio.businessobject.editor.model.BusinessDataModelPackage;
 import org.bonitasoft.studio.businessobject.editor.model.BusinessObject;
 import org.bonitasoft.studio.businessobject.editor.model.BusinessObjectModel;
 import org.bonitasoft.studio.businessobject.i18n.Messages;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.ui.jface.BonitaStudioFontRegistry;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
@@ -36,11 +38,10 @@ import org.bonitasoft.studio.ui.widget.TextAreaWidget;
 import org.bonitasoft.studio.ui.widget.TextWidget;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.conversion.IConverter;
-import org.eclipse.core.databinding.observable.Realm;
 import org.eclipse.core.databinding.observable.value.ComputedValue;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.WritableValue;
-import org.eclipse.emf.databinding.EMFObservables;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.text.DocumentRewriteSession;
@@ -51,6 +52,8 @@ import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.ToolItem;
@@ -99,15 +102,22 @@ public class BusinessDataModelFormPart extends AbstractFormPart {
         client.setLayout(GridLayoutFactory.fillDefaults().margins(5, 10).create());
 
         IObservableValue<BusinessObjectModel> workingCopyObservable = formPage.observeWorkingCopy();
+        var bdmStore = formPage.getRepositoryAccessor().getRepositoryStore(BusinessObjectModelRepositoryStore.class);
+        BusinessObjectModelFileStore store = (BusinessObjectModelFileStore) bdmStore
+                .getChild(BusinessObjectModelFileStore.BOM_FILENAME, false);
+        Dependency dep = null;
+        try {
+            dep = store.getModelMavenDependency();
+        } catch (CoreException e) {
+            BonitaStudioLog.error(e);
+            dep = new Dependency();
+        }
         String modelDependencyGav = String.format("<dependency>" + System.lineSeparator()
                 + "    <groupId>%s</groupId>" + System.lineSeparator()
-                + "    <artifactId>bdm-client</artifactId>" + System.lineSeparator()
-                + "    <version>1.0.0</version>" + System.lineSeparator()
+                + "    <artifactId>%s</artifactId>" + System.lineSeparator()
+                + "    <version>%s</version>" + System.lineSeparator()
                 + "    <scope>provided</scope>" + System.lineSeparator()
-                + "</dependency>",
-                EMFObservables.observeDetailValue(Realm.getDefault(), workingCopyObservable,
-                        BusinessDataModelPackage.Literals.BUSINESS_OBJECT_MODEL__GROUP_ID).getValue());
-
+                + "</dependency>", dep.getGroupId(), dep.getArtifactId(), dep.getVersion());
         var textAreaWidget = new TextAreaWidget.Builder()
                 .labelAbove()
                 .fill()
@@ -118,7 +128,7 @@ public class BusinessDataModelFormPart extends AbstractFormPart {
                 .editable(false)
                 .inContext(ctx)
                 .adapt(formPage.getToolkit())
-                .withButton(Pics.getImage(PicsConstants.copyToClipboard), "Copy to clipboard")
+                .withButton(Pics.getImage(PicsConstants.copyToClipboard), Messages.copyToClipboard)
                 .createIn(client);
 
         textAreaWidget.onClickButton(e -> {
@@ -126,15 +136,17 @@ public class BusinessDataModelFormPart extends AbstractFormPart {
         });
 
         var textControl = textAreaWidget.getTextControl();
+        textControl.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_TEXT_DISABLED_BACKGROUND));
+        textControl.getParent().setBackground(Display.getDefault().getSystemColor(SWT.COLOR_TEXT_DISABLED_BACKGROUND));
         textControl.setFont(BonitaStudioFontRegistry.getMonospaceFont());
         textControl.addFocusListener(new FocusAdapter() {
 
             @Override
             public void focusGained(FocusEvent e) {
-                textControl.selectAll();
+                textControl.getDisplay().timerExec(100, () -> textControl.selectAll());
                 copyToClipboard(modelDependencyGav, textAreaWidget);
             }
-
+            
         });
 
         section.setClient(client);
@@ -152,7 +164,11 @@ public class BusinessDataModelFormPart extends AbstractFormPart {
         return b -> Display.getDefault().asyncExec(() -> {
             var originalImage = b.getImage();
             b.setImage(Pics.getImage(PicsConstants.checkmark));
-            Display.getDefault().timerExec(4000, () -> b.setImage(originalImage));
+            Display.getDefault().timerExec(4000, () -> {
+                if (!b.isDisposed() && !originalImage.isDisposed()) {
+                    b.setImage(originalImage);
+                }
+            });
         });
     }
 
@@ -187,9 +203,6 @@ public class BusinessDataModelFormPart extends AbstractFormPart {
         try {
             session = document.startRewriteSession(DocumentRewriteSessionType.STRICTLY_SEQUENTIAL);
             document.set(new String(formPage.getParser().marshall(formPage.getConverter().toEngineModel(workingCopy))));
-            BDMArtifactDescriptor bdmArtifactDescriptor = new BDMArtifactDescriptor();
-            bdmArtifactDescriptor.setGroupId(workingCopy.getGroupId());
-            formPage.getEditorContribution().saveBdmArtifactDescriptor(bdmArtifactDescriptor);
         } catch (final JAXBException | IOException | SAXException e) {
             throw new RuntimeException("Fail to update the document", e);
         } finally {

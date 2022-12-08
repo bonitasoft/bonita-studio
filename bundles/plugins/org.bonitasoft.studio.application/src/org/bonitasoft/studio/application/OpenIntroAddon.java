@@ -15,11 +15,9 @@
 package org.bonitasoft.studio.application;
 
 import java.util.Objects;
-import java.util.Optional;
 
 import javax.annotation.PostConstruct;
 
-import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.ui.PlatformUtil;
 import org.eclipse.e4.core.services.events.IEventBroker;

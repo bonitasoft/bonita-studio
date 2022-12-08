@@ -16,7 +16,6 @@ package org.bonitasoft.studio.application.handler;
 
 import java.util.Optional;
 
-import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.core.BonitaProject;
 import org.bonitasoft.studio.common.repository.filestore.AbstractFileStore;
@@ -32,7 +31,6 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jdt.ui.actions.RefreshAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.m2e.core.MavenPlugin;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;

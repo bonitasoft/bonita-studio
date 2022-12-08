@@ -12,9 +12,7 @@ import java.util.Map;
 
 import org.bonitasoft.studio.configuration.environment.EnvironmentPackage;
 import org.eclipse.emf.ecore.EPackage;
-
 import org.eclipse.emf.ecore.resource.Resource;
-
 import org.eclipse.emf.ecore.xmi.util.XMLProcessor;
 
 /**

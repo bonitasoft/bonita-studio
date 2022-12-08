@@ -22,6 +22,7 @@ import org.bonitasoft.studio.common.repository.core.internal.team.GitProjectImpl
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 
 public interface GitProject extends IAdaptable {
@@ -34,6 +35,8 @@ public interface GitProject extends IAdaptable {
     void createDefaultIgnoreFile() throws CoreException;
     
     File getGitDir();
+    
+    void commitAll(String commitMessage, IProgressMonitor monitor) throws CoreException;
     
     public static URL getGitignoreTemplateFileURL() throws IOException {
         return FileLocator.toFileURL(GitProjectImpl.class.getResource(GITIGNORE_TEMPLATE));

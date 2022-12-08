@@ -25,8 +25,6 @@ import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.Adapters;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.jface.viewers.StyledString;
-import org.eclipse.swt.graphics.Image;
 
 public class FileStoreArtifact implements Artifact, IValidable {
 

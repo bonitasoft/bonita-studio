@@ -15,12 +15,15 @@
 package org.bonitasoft.studio.common.repository.core.migration;
 
 import org.apache.maven.model.Model;
+import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
 import org.bonitasoft.studio.common.repository.core.migration.report.MigrationReport;
 
 public interface MavenModelMigration {
 
-    MigrationReport migrate(Model model);
+    MigrationReport migrate(Model model, ProjectMetadata metadata);
     
-    boolean appliesTo(Model model);
+    boolean appliesTo(Model model, ProjectMetadata metadata);
+    
+    
     
 }

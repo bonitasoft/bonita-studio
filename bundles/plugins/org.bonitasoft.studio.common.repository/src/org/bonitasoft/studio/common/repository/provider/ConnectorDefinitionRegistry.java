@@ -31,7 +31,6 @@ import org.bonitasoft.studio.connector.model.definition.Category;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.swt.graphics.Image;
 
 public class ConnectorDefinitionRegistry {
 

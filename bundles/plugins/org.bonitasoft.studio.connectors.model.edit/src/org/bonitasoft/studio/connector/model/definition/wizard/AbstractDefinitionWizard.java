@@ -36,7 +36,6 @@ import org.bonitasoft.studio.common.repository.provider.DefinitionResourceProvid
 import org.bonitasoft.studio.common.ui.jface.ExtensibleWizard;
 import org.bonitasoft.studio.common.ui.jface.MessageDialogWithPrompt;
 import org.bonitasoft.studio.connector.model.definition.AbstractDefinitionRepositoryStore;
-import org.bonitasoft.studio.connector.model.definition.Category;
 import org.bonitasoft.studio.connector.model.definition.Component;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinitionFactory;

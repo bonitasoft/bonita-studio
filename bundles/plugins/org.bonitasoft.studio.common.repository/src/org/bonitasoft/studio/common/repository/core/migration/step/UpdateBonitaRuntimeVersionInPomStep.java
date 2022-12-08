@@ -14,6 +14,7 @@
  */
 package org.bonitasoft.studio.common.repository.core.migration.step;
 
+import java.nio.file.Path;
 import java.util.Objects;
 
 import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
@@ -23,7 +24,6 @@ import org.bonitasoft.studio.common.repository.core.maven.model.ProjectDefaultCo
 import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
 import org.bonitasoft.studio.common.repository.core.migration.MigrationStep;
 import org.bonitasoft.studio.common.repository.core.migration.report.MigrationReport;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -33,8 +33,8 @@ import org.osgi.framework.Version;
 public class UpdateBonitaRuntimeVersionInPomStep implements MigrationStep {
 
     @Override
-    public MigrationReport run(IProject project, IProgressMonitor monitor) throws CoreException {
-        var metadata = ProjectMetadata.read(project, monitor);
+    public MigrationReport run(Path project, IProgressMonitor monitor) throws CoreException {
+        var metadata = ProjectMetadata.read(project.resolve(POM_FILE_NAME).toFile());
         String bonitaRuntimeVersion = metadata.getBonitaRuntimeVersion();
         if (Strings.isNullOrEmpty(bonitaRuntimeVersion)) {
             throw new CoreException(new Status(IStatus.ERROR,

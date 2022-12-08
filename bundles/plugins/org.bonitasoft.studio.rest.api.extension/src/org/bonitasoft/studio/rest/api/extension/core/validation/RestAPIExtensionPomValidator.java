@@ -52,7 +52,11 @@ public class RestAPIExtensionPomValidator {
     private static final String COM_BONITASOFT_WEB_GROUP_ID = "com.bonitasoft.web";
     public static final String BONITA_WEB_EXTENSIONS_SP_ARTIFACT_ID = "bonita-web-extensions-sp";
 
-    RestAPIDependencyVersionToUpdateFinder dependencyVersionToUpdateFinder = new RestAPIDependencyVersionToUpdateFinder();
+    private RestAPIDependencyVersionToUpdateFinder dependencyVersionToUpdateFinder;
+    
+    public RestAPIExtensionPomValidator(RestAPIDependencyVersionToUpdateFinder dependencyVersionToUpdateFinder) {
+        this.dependencyVersionToUpdateFinder = dependencyVersionToUpdateFinder;
+    }
 
     public List<IStatus> validate(final RestAPIExtensionFileStore restApiFileStore) throws CoreException {
         List<IStatus> result = newArrayList();

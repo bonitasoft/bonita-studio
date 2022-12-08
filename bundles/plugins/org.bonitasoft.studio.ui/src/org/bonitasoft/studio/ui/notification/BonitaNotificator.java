@@ -13,6 +13,7 @@ import java.util.Optional;
 import org.bonitasoft.studio.ui.UIPlugin;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Listener;
+import org.eclipse.ui.PlatformUI;
 
 public class BonitaNotificator {
 
@@ -47,7 +48,7 @@ public class BonitaNotificator {
     private static void openNotification(String title, String content, NOTIFICATION_LEVEL level,
             Listener selectionListener) {
         if (UIPlugin.getDefault().isNotificationEnabled()) {
-            Display display = Display.getDefault();
+            var display = PlatformUI.getWorkbench().getDisplay();
             display.asyncExec(() -> new BonitaNotificationPopup(display, title, content, level,
                     Optional.ofNullable(selectionListener)).open());
         }

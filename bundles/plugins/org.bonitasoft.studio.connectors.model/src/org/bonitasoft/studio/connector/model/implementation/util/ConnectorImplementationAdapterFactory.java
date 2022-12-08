@@ -6,13 +6,14 @@
  */
 package org.bonitasoft.studio.connector.model.implementation.util;
 
-import org.bonitasoft.studio.connector.model.implementation.*;
-
+import org.bonitasoft.studio.connector.model.implementation.ConnectorImplementation;
+import org.bonitasoft.studio.connector.model.implementation.ConnectorImplementationPackage;
+import org.bonitasoft.studio.connector.model.implementation.DocumentRoot;
+import org.bonitasoft.studio.connector.model.implementation.JarDependencies;
+import org.bonitasoft.studio.connector.model.implementation.UnloadableConnectorImplementation;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
-
 import org.eclipse.emf.common.notify.impl.AdapterFactoryImpl;
-
 import org.eclipse.emf.ecore.EObject;
 
 /**

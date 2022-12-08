@@ -15,11 +15,12 @@
 package org.bonitasoft.studio.common.repository.core.maven;
 
 import java.io.File;
-import java.io.FileOutputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -28,8 +29,11 @@ import java.util.Optional;
 import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Model;
+import org.apache.maven.model.io.jdom.MavenJDOMWriter;
 import org.apache.maven.project.MavenProject;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
+import org.codehaus.plexus.util.WriterFactory;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -44,10 +48,14 @@ import org.eclipse.m2e.core.internal.IMavenConstants;
 import org.eclipse.m2e.core.internal.project.ProjectConfigurationManager;
 import org.eclipse.m2e.core.project.IMavenProjectFacade;
 import org.eclipse.m2e.core.project.MavenUpdateRequest;
+import org.jdom2.Document;
+import org.jdom2.JDOMException;
+import org.jdom2.input.SAXBuilder;
+import org.jdom2.output.Format;
+import org.jdom2.output.Format.TextMode;
 
 @Creatable
 public class MavenProjectHelper {
-    
 
     public Model getMavenModel(IProject project) throws CoreException {
         var pomFile = project.getFile(IMavenConstants.POM_FILE_NAME);
@@ -60,34 +68,43 @@ public class MavenProjectHelper {
     public static Model readModel(File pomFile) throws CoreException {
         try (InputStream is = Files.newInputStream(pomFile.toPath())) {
             return MavenPlugin.getMaven().readModel(is);
-        } catch (IOException  e) {
-            throw new CoreException(new Status(IStatus.ERROR, MavenModelOperation.class, String.format("Failed to read %s", pomFile), e));
+        } catch (IOException e) {
+            throw new CoreException(new Status(IStatus.ERROR, MavenModelOperation.class,
+                    String.format("Failed to read %s", pomFile), e));
         }
     }
 
-    public void saveModel(IProject project, Model model, boolean updateConfiguration, IProgressMonitor monitor) throws CoreException {
+    public void saveModel(IProject project, Model model, boolean updateConfiguration, IProgressMonitor monitor)
+            throws CoreException {
         saveModel(project, model, monitor);
         ((ProjectConfigurationManager) MavenPlugin.getProjectConfigurationManager())
-            .updateProjectConfiguration(new MavenUpdateRequest(project, false, false),updateConfiguration,false,true, monitor);
+                .updateProjectConfiguration(new MavenUpdateRequest(project, false, false), updateConfiguration, false,
+                        true, monitor);
     }
-    
+
     public void saveModel(IProject project, Model model, IProgressMonitor monitor) throws CoreException {
         var pomFile = project.getFile(IMavenConstants.POM_FILE_NAME);
-        try (OutputStream stream = new FileOutputStream(pomFile.getLocation().toFile())) {
-            MavenPlugin.getMaven().writeModel(model, stream);
-        } catch (IOException e) {
-            throw new CoreException(
-                    new Status(IStatus.ERROR, getClass(), "Failed to write maven model in pom.xml file.", e));
-        }
+        saveModel(pomFile, model, monitor);
     }
-    
+
     public void saveModel(IFile pomFile, Model model, IProgressMonitor monitor) throws CoreException {
-        try (OutputStream stream = new FileOutputStream(pomFile.getLocation().toFile())) {
-            MavenPlugin.getMaven().writeModel(model, stream);
-            pomFile.refreshLocal(IResource.DEPTH_ONE, monitor);
+        saveModel(pomFile.getLocation().toFile().toPath(), model);
+        pomFile.refreshLocal(IResource.DEPTH_ONE, monitor);
+    }
+
+    public static void saveModel(Path pomFile, Model model) throws CoreException {
+        try {
+            if (Files.exists(pomFile)) {
+                update(pomFile.toFile(), model);
+            } else {
+                try (var os = Files.newOutputStream(pomFile)) {
+                    MavenPlugin.getMaven().writeModel(model, os);
+                }
+            }
         } catch (IOException e) {
             throw new CoreException(
-                    new Status(IStatus.ERROR, getClass(), "Failed to write maven model in pom.xml file.", e));
+                    new Status(IStatus.ERROR, MavenProjectHelper.class, "Failed to write maven model in pom.xml file.",
+                            e));
         }
     }
 
@@ -105,22 +122,58 @@ public class MavenProjectHelper {
     public MavenProject getMavenProject(IProject project) throws CoreException {
         var mavenProjectFacade = getMavenProjectFacade(project);
         var mavenProject = mavenProjectFacade.getMavenProject();
-        if(mavenProject == null) {
+        if (mavenProject == null) {
             return mavenProjectFacade.getMavenProject(new NullProgressMonitor());
         }
         return mavenProject;
     }
-    
+
     private IMavenProjectFacade getMavenProjectFacade(IProject project) throws CoreException {
         return MavenPlugin.getMavenProjectRegistry().getProject(project);
     }
 
-    public Optional<Dependency> findDependency(Model model, String groupId, String artifactId) {
+    public static Optional<Dependency> findDependency(Model model, String groupId, String artifactId) {
         return model.getDependencies()
                 .stream()
                 .filter(dep -> Objects.equals(dep.getGroupId(), groupId))
                 .filter(dep -> Objects.equals(dep.getArtifactId(), artifactId))
                 .findFirst();
+    }
+
+    public static void update(File pom, Model model) throws IOException, CoreException {
+        if (!pom.exists()) {
+            throw new FileNotFoundException(pom.getAbsolutePath());
+        }
+        var mavenModelJDOMWriter = new MavenJDOMWriter();
+        SAXBuilder builder = new SAXBuilder();
+        builder.setIgnoringBoundaryWhitespace(false);
+        builder.setIgnoringElementContentWhitespace(false);
+
+        Document doc = null;
+        try {
+            doc = builder.build(pom);
+        } catch (JDOMException e) {
+            BonitaStudioLog.error(e);
+        }
+        try (var outputStream = Files.newOutputStream(pom.toPath());
+                var writer = WriterFactory.newWriter(outputStream, StandardCharsets.UTF_8.name());) {
+            if (doc != null) {
+                mavenModelJDOMWriter.write(model,
+                        doc,
+                        writer,
+                        Format.getRawFormat()
+                                .setEncoding("UTF-8")
+                                .setTextMode(TextMode.PRESERVE));
+            } else {
+                try {
+                    mavenModelJDOMWriter.write(model,
+                            pom);
+                } catch (IOException | JDOMException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
     public Optional<Dependency> findDependency(Model model, Dependency dependency) {

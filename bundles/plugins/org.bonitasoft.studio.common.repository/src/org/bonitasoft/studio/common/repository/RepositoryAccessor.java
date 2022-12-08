@@ -33,6 +33,7 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Adapters;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.e4.core.di.annotations.Creatable;
 import org.eclipse.m2e.core.MavenPlugin;
 import org.eclipse.swt.widgets.Display;
@@ -67,18 +68,20 @@ public class RepositoryAccessor {
         return repositoryManagerInstance.getRepositoryStore(storeClass);
     }
 
-    public Optional<AbstractRepository> getCurrentRepository() {
+    public Optional<IRepository> getCurrentRepository() {
         return repositoryManagerInstance.getCurrentRepository();
     }
 
-    public IRepository start(final IProgressMonitor monitor) {
+    public IRepository start(final IProgressMonitor monitor) throws CoreException {
         monitor.beginTask(Messages.loadingCurrentProject, IProgressMonitor.UNKNOWN);
         var repository = getCurrentRepository().orElse(null);
         if (repository != null) {
             if (!repository.exists()) {
                 repository.create(ProjectMetadata.defaultMetadata(), AbstractRepository.NULL_PROGRESS_MONITOR);
             }
-            return repository.open(AbstractRepository.NULL_PROGRESS_MONITOR);
+            var project = Adapters.adapt(repository, BonitaProject.class);
+            project.open(new NullProgressMonitor());
+            return repository;
         }
         return null;
     }
@@ -87,12 +90,12 @@ public class RepositoryAccessor {
         return ResourcesPlugin.getWorkspace();
     }
 
-    public AbstractRepository getRepository(String targetRepository) {
+    public IRepository getRepository(String targetRepository) {
         return repositoryManagerInstance.getRepository(targetRepository);
     }
 
     public void setRepository(final String repositoryName) {
-        repositoryManagerInstance.setRepository(repositoryName, false, AbstractRepository.NULL_PROGRESS_MONITOR);
+        repositoryManagerInstance.setRepository(repositoryName, AbstractRepository.NULL_PROGRESS_MONITOR);
     }
 
     public boolean hasActiveRepository() {

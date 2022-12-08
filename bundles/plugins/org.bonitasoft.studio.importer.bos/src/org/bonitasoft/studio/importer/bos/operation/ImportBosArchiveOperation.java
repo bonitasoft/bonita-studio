@@ -34,9 +34,8 @@ import java.util.zip.ZipFile;
 
 import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Model;
-import org.bonitasoft.studio.businessobject.maven.InstallBDMDependenciesEventHandler;
+import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.core.InputStreamSupplier;
@@ -56,7 +55,6 @@ import org.bonitasoft.studio.common.repository.filestore.FileStoreChangeEvent.Ev
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.store.LocalDependenciesStore;
 import org.bonitasoft.studio.common.ui.PlatformUtil;
-import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.ui.jface.FileActionDialog;
 import org.bonitasoft.studio.connectors.repository.ConnectorImplRepositoryStore;
 import org.bonitasoft.studio.dependencies.repository.DependencyFileStore;
@@ -96,7 +94,7 @@ import org.eclipse.swt.widgets.Display;
 public class ImportBosArchiveOperation implements IRunnableWithProgress {
 
     private File archive;
-    private AbstractRepository currentRepository;
+    private org.bonitasoft.studio.common.repository.model.IRepository currentRepository;
     private final boolean launchValidationafterImport;
 
     private boolean validate = true;
@@ -169,7 +167,6 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
         Assert.isNotNull(archive);
         Assert.isNotNull(currentRepository);
 
-        InstallBDMDependenciesEventHandler.disableProjectUpateJob();
         ImportBosArchiveStatusBuilder statusBuilder = createStatusBuilder();
         monitor.beginTask(Messages.retrivingDataToImport, IProgressMonitor.UNKNOWN);
         status = new MultiStatus(CommonRepositoryPlugin.PLUGIN_ID, 0, null, null);
@@ -252,7 +249,6 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
         if (status.getSeverity() != IStatus.ERROR) {
             status = statusBuilder.done();
         }
-        InstallBDMDependenciesEventHandler.enableProjectUpateJob();
     }
 
     protected Model existingMavenModel(final ImportArchiveModel importArchiveModel) {
@@ -480,7 +476,7 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
         }
     }
 
-    private Supplier<? extends ImportArchiveModel> parseArchive(final File archive, final AbstractRepository repository,
+    private Supplier<? extends ImportArchiveModel> parseArchive(final File archive, org.bonitasoft.studio.common.repository.model.IRepository repository,
             final IProgressMonitor monitor) {
         return () -> {
             final ParseBosArchiveOperation parseBosArchiveOperation = newParseBosOperation(archive, repository);
@@ -493,7 +489,7 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
         };
     }
 
-    protected ParseBosArchiveOperation newParseBosOperation(final File archive, final AbstractRepository repository) {
+    protected ParseBosArchiveOperation newParseBosOperation(final File archive, org.bonitasoft.studio.common.repository.model.IRepository repository) {
         return new ParseBosArchiveOperation(archive, repository);
     }
 
@@ -536,12 +532,12 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
         return validators;
     }
 
-    public void setCurrentRepository(final AbstractRepository currentRepository) {
+    public void setCurrentRepository(org.bonitasoft.studio.common.repository.model.IRepository currentRepository) {
         this.currentRepository = currentRepository;
     }
     
     @Deprecated
-    public void setCurrentRepository(Optional<AbstractRepository> currentRepository) {
+    public void setCurrentRepository(Optional<org.bonitasoft.studio.common.repository.model.IRepository> currentRepository) {
         this.currentRepository = currentRepository.orElseThrow();
     }
 

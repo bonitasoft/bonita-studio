@@ -59,8 +59,8 @@ import org.bonitasoft.studio.common.repository.core.maven.migration.driver.MySQL
 import org.bonitasoft.studio.common.repository.core.maven.migration.driver.Oracle5JDBCDriverDependenciesReplacement;
 import org.bonitasoft.studio.common.repository.core.maven.migration.driver.Oracle6JDBCDriverDependenciesReplacement;
 import org.bonitasoft.studio.common.repository.core.maven.migration.driver.PostgresJDBCDriverDependenciesReplacement;
-import org.bonitasoft.studio.common.repository.core.maven.migration.driver.SQLiteJDBCDriverDependenciesReplacement;
 import org.bonitasoft.studio.common.repository.core.maven.migration.driver.SQLServerJDBCDriverDependenciesReplacement;
+import org.bonitasoft.studio.common.repository.core.maven.migration.driver.SQLiteJDBCDriverDependenciesReplacement;
 import org.bonitasoft.studio.common.repository.core.maven.migration.filter.CustomUserInfoActorFilterDependenciesReplacement;
 import org.bonitasoft.studio.common.repository.core.maven.migration.filter.InitiatorActorFilterDependenciesReplacement;
 import org.bonitasoft.studio.common.repository.core.maven.migration.filter.InitiatorManagerActorFilterDependenciesReplacement;

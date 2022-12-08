@@ -97,7 +97,7 @@ public class SmartImportBdmHandler extends AbstractHandler {
                                 try {
                                     org.bonitasoft.engine.bdm.model.BusinessObjectModel model = fStore.getContent();
                                     BusinessObjectModel businessObjectModel = contribution.getConverter()
-                                            .toEmfModel(model, contribution.loadBdmArtifactDescriptor());
+                                            .toEmfModel(model);
                                     IObservableValue<BusinessObjectModel> workingCopyObservable = contribution
                                             .observeWorkingCopy();
                                     workingCopyObservable.getRealm()

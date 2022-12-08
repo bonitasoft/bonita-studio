@@ -128,7 +128,7 @@ public abstract class SourceRepositoryStore<T extends AbstractFileStore<?>> exte
     }
 
     private void addChildren(final IResource r, final List<T> result) throws CoreException {
-        final AbstractRepository currentRepository = RepositoryManager.getInstance().getCurrentRepository().orElse(null);
+        var currentRepository = RepositoryManager.getInstance().getCurrentRepository().orElse(null);
         if (r instanceof IFolder && !r.isHidden() && !r.getName().startsWith(".")) {
             if (containsSourceFile((IFolder) r)) {
                 final IPackageFragment pk = currentRepository.getJavaProject().findPackageFragment(r.getFullPath());

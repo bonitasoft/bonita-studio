@@ -4,11 +4,8 @@ package org.bonitasoft.studio.businessobject.editor.model.impl;
 
 import org.bonitasoft.studio.businessobject.editor.model.BusinessDataModelPackage;
 import org.bonitasoft.studio.businessobject.editor.model.QueryParameter;
-
 import org.eclipse.emf.common.notify.Notification;
-
 import org.eclipse.emf.ecore.EClass;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
 
@@ -112,6 +109,7 @@ public class QueryParameterImpl extends MinimalEObjectImpl.Container implements 
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public String getName() {
         return name;
     }
@@ -121,6 +119,7 @@ public class QueryParameterImpl extends MinimalEObjectImpl.Container implements 
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public void setName(String newName) {
         String oldName = name;
         name = newName;
@@ -133,6 +132,7 @@ public class QueryParameterImpl extends MinimalEObjectImpl.Container implements 
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public String getDescription() {
         return description;
     }
@@ -142,6 +142,7 @@ public class QueryParameterImpl extends MinimalEObjectImpl.Container implements 
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public void setDescription(String newDescription) {
         String oldDescription = description;
         description = newDescription;
@@ -154,6 +155,7 @@ public class QueryParameterImpl extends MinimalEObjectImpl.Container implements 
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public String getClassName() {
         return className;
     }
@@ -163,6 +165,7 @@ public class QueryParameterImpl extends MinimalEObjectImpl.Container implements 
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public void setClassName(String newClassName) {
         String oldClassName = className;
         className = newClassName;

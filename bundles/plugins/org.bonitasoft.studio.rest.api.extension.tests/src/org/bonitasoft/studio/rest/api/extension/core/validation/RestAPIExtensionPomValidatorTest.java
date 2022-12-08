@@ -43,19 +43,18 @@ public class RestAPIExtensionPomValidatorTest {
 
     @Test
     public void should_add_an_error_status_for_missing_dependency() throws Exception {
-        final RestAPIExtensionPomValidator validator = spy(new RestAPIExtensionPomValidator());
-        final RestAPIDependencyVersionToUpdateFinder finder = spy(new RestAPIDependencyVersionToUpdateFinder());
-        final RestAPIExtensionFileStore restApiFileStore = mock(RestAPIExtensionFileStore.class);
-        final MavenExecutionResult mavenResult = new DefaultMavenExecutionResult();
+        var finder = spy(new RestAPIDependencyVersionToUpdateFinder());
+        doReturn(null).when(finder).currentBDMGroupId();
+        doReturn(false).when(finder).isUsingJava11();
+        doReturn(new Document()).when(finder).toDocument(any());
+        var validator = spy(new RestAPIExtensionPomValidator(finder));
+        var restApiFileStore = mock(RestAPIExtensionFileStore.class);
+        var mavenResult = new DefaultMavenExecutionResult();
         mavenResult.setDependencyResolutionResult(
                 expectedResolutionResult(Collections.<Dependency> emptyList(),
                         newArrayList(dependency("g", "a", "1.0.0"))));
         mavenResult.setProject(new MavenProject());
         doReturn(mavenResult).when(validator).build(restApiFileStore);
-        doReturn(null).when(finder).currentBDMGroupId();
-        validator.dependencyVersionToUpdateFinder = finder;
-        doReturn(false).when(finder).isUsingJava11();
-        doReturn(new Document()).when(finder).toDocument(any());
 
         final List<IStatus> result = validator.validate(restApiFileStore);
 
@@ -64,17 +63,17 @@ public class RestAPIExtensionPomValidatorTest {
 
     @Test
     public void should_add_an_info_status_when_web_extension_dependency_is_missing() throws Exception {
-        final RestAPIExtensionPomValidator validator = spy(new RestAPIExtensionPomValidator());
-        final RestAPIDependencyVersionToUpdateFinder finder = spy(new RestAPIDependencyVersionToUpdateFinder());
-        final RestAPIExtensionFileStore restApiFileStore = mock(RestAPIExtensionFileStore.class);
-        final MavenExecutionResult mavenResult = new DefaultMavenExecutionResult();
+        var finder = spy(new RestAPIDependencyVersionToUpdateFinder());
+        var validator = spy(new RestAPIExtensionPomValidator(finder));
+  
+        var restApiFileStore = mock(RestAPIExtensionFileStore.class);
+        var mavenResult = new DefaultMavenExecutionResult();
         mavenResult.setDependencyResolutionResult(
                 expectedResolutionResult(Collections.<Dependency> emptyList(),
                         newArrayList(dependency("com.bonitasoft.web", "bonita-web-extensions-sp", "1.0.0"))));
         mavenResult.setProject(new MavenProject());
         doReturn(mavenResult).when(validator).build(restApiFileStore);
         doReturn(null).when(finder).currentBDMGroupId();
-        validator.dependencyVersionToUpdateFinder = finder;
         doReturn(false).when(finder).isUsingJava11();
         doReturn(new Document()).when(finder).toDocument(any());
 
@@ -85,8 +84,9 @@ public class RestAPIExtensionPomValidatorTest {
 
     @Test
     public void should_add_a_warning_status_when_web_extension_dependency_is_older() throws Exception {
-        final RestAPIExtensionPomValidator validator = spy(new RestAPIExtensionPomValidator());
-        final RestAPIDependencyVersionToUpdateFinder finder = spy(new RestAPIDependencyVersionToUpdateFinder());
+        var finder = spy(new RestAPIDependencyVersionToUpdateFinder());
+        var validator = spy(new RestAPIExtensionPomValidator(finder));
+
         final RestAPIExtensionFileStore restApiFileStore = mock(RestAPIExtensionFileStore.class);
         final MavenExecutionResult mavenResult = new DefaultMavenExecutionResult();
         mavenResult.setDependencyResolutionResult(
@@ -96,7 +96,6 @@ public class RestAPIExtensionPomValidatorTest {
         mavenResult.setProject(new MavenProject());
         doReturn(mavenResult).when(validator).build(restApiFileStore);
         doReturn(null).when(finder).currentBDMGroupId();
-        validator.dependencyVersionToUpdateFinder = finder;
         doReturn(false).when(finder).isUsingJava11();
         doReturn(new Document()).when(finder).toDocument(any());
 
@@ -107,8 +106,9 @@ public class RestAPIExtensionPomValidatorTest {
 
     @Test
     public void should_not_add_a_warning_status_when_web_extension_dependency_is_in_range() throws Exception {
-        final RestAPIExtensionPomValidator validator = spy(new RestAPIExtensionPomValidator());
-        final RestAPIDependencyVersionToUpdateFinder finder = spy(new RestAPIDependencyVersionToUpdateFinder());
+        var finder = spy(new RestAPIDependencyVersionToUpdateFinder());
+        var validator = spy(new RestAPIExtensionPomValidator(finder));
+       
         final RestAPIExtensionFileStore restApiFileStore = mock(RestAPIExtensionFileStore.class);
         final MavenExecutionResult mavenResult = new DefaultMavenExecutionResult();
         mavenResult.setDependencyResolutionResult(
@@ -118,7 +118,6 @@ public class RestAPIExtensionPomValidatorTest {
         mavenResult.setProject(new MavenProject());
         doReturn(mavenResult).when(validator).build(restApiFileStore);
         doReturn(null).when(finder).currentBDMGroupId();
-        validator.dependencyVersionToUpdateFinder = finder;
         doReturn(false).when(finder).isUsingJava11();
         doReturn(new Document()).when(finder).toDocument(any());
 

@@ -43,8 +43,9 @@ import org.bonitasoft.studio.common.model.validator.XMLModelCompatibilityValidat
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.IBonitaProjectListener;
 import org.bonitasoft.studio.common.repository.ImportArchiveData;
-import org.bonitasoft.studio.common.repository.core.MultiModuleProject;
+import org.bonitasoft.studio.common.repository.core.BonitaProject;
 import org.bonitasoft.studio.common.repository.core.maven.plugin.CreateBdmModulePlugin;
+import org.bonitasoft.studio.common.repository.core.maven.plugin.ImportBdmModuleOperation;
 import org.bonitasoft.studio.common.repository.core.migration.report.MigrationReport;
 import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
@@ -52,6 +53,7 @@ import org.bonitasoft.studio.common.repository.store.AbstractRepositoryStore;
 import org.bonitasoft.studio.common.repository.store.FileStoreCollector;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.runtime.Adapters;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -97,22 +99,19 @@ public class BusinessObjectModelRepositoryStore<F extends AbstractBDMFileStore<?
     @Override
     public void createRepositoryStore(IRepository repository) {
         this.repository = repository;
-        if (asMultiModuleProject() == null) {
-            super.createRepositoryStore(repository);
-        }
     }
 
     @Override
     public IFolder getResource() {
-        var project = asMultiModuleProject();
-        if (project == null) {
-            return super.getResource();
+        var project = getBonitaProject();
+        if(project != null && project.exists()) {
+            return project.getAppProject().getFolder(STORE_NAME);
         }
-        return project.getAppProject().getFolder(STORE_NAME);
+        return super.getResource();
     }
 
-    private MultiModuleProject asMultiModuleProject() {
-        return Adapters.adapt(getRepository(), MultiModuleProject.class);
+    private BonitaProject getBonitaProject() {
+        return Adapters.adapt(getRepository(), BonitaProject.class);
     }
 
     @Override
@@ -158,10 +157,9 @@ public class BusinessObjectModelRepositoryStore<F extends AbstractBDMFileStore<?
     
     @Override
     public AbstractBDMFileStore<?> importInputStream(String fileName, InputStream inputStream) {
-        var multiModuleProject = asMultiModuleProject();
-        if(multiModuleProject != null && (!getResource().exists()|| !getResource().getFile("pom.xml").exists())) {
+        if(!getResource().exists()|| !getResource().getFile("pom.xml").exists()) {
             try {
-               var bdmFolder = createBdmModule(asMultiModuleProject(), new NullProgressMonitor());
+               var bdmFolder = createBdmModule(getBonitaProject(), new NullProgressMonitor());
                var bomFile = bdmFolder.getFile(BusinessObjectModelFileStore.BOM_FILENAME);
                if(bomFile.exists()) {
                    bomFile.delete(true, new NullProgressMonitor());
@@ -176,9 +174,8 @@ public class BusinessObjectModelRepositoryStore<F extends AbstractBDMFileStore<?
     @Override
     protected AbstractBDMFileStore<?> doImportArchiveData(ImportArchiveData importArchiveData, IProgressMonitor monitor)
             throws CoreException {
-        var multiModuleProject = asMultiModuleProject();
-        if(multiModuleProject != null && (!getResource().exists() || !getResource().getFile("pom.xml").exists())) {
-            var bdmFolder = createBdmModule(multiModuleProject, new NullProgressMonitor());
+        if (!getResource().exists() || !getResource().getFile("pom.xml").exists()) {
+            var bdmFolder = createBdmModule(getBonitaProject(), new NullProgressMonitor());
             var bomFile = bdmFolder.getFile(BusinessObjectModelFileStore.BOM_FILENAME);
             if(bomFile.exists()) {
                 bomFile.delete(true, new NullProgressMonitor());
@@ -205,21 +202,25 @@ public class BusinessObjectModelRepositoryStore<F extends AbstractBDMFileStore<?
         }
         if (fileStore instanceof BusinessObjectModelFileStore
                 && Objects.equals(fileStore.getName(), BusinessObjectModelFileStore.BOM_FILENAME)) {
-            try {
-                BDMArtifactDescriptor descriptor = ((BusinessObjectModelFileStore) fileStore).loadArtifactDescriptor();
-                ((BusinessObjectModelFileStore) fileStore).saveArtifactDescriptor(descriptor);
-            } catch (CoreException e) {
-                BonitaStudioLog.error("Failed to import Business data model artifact descriptor", e);
-            }
             addNamespace((BusinessObjectModelFileStore) fileStore);
             installArtifact(fileStore);
         }
         return fileStore;
     }
     
-    public IFolder createBdmModule(MultiModuleProject project, IProgressMonitor monitor) throws CoreException{
-        var plugin = new CreateBdmModulePlugin(project);
+    public IFolder createBdmModule(BonitaProject project, IProgressMonitor monitor) throws CoreException{
+        var parentProject = project.getParentProject();
+        var parentProjectPath = parentProject.getLocation().toFile().toPath();
+        var plugin = new CreateBdmModulePlugin(parentProjectPath, project.getId());
         plugin.execute(new NullProgressMonitor());
+        var importBdmModules = new ImportBdmModuleOperation(parentProjectPath.resolve("bdm").toFile());
+        importBdmModules.run(monitor);
+        project.getBdmModelProject().refreshLocal(IResource.DEPTH_INFINITE, monitor);
+        project.getBdmModelProject().build(IncrementalProjectBuilder.INCREMENTAL_BUILD, monitor);
+        return createBdmFolderLinkInAppProject(project);
+    }
+
+    private IFolder createBdmFolderLinkInAppProject(BonitaProject project) {
         IFolder bdmLinkedFolder = project.getAppProject().getFolder("bdm");
         try {
             if (!bdmLinkedFolder.exists()) {
@@ -264,6 +265,10 @@ public class BusinessObjectModelRepositoryStore<F extends AbstractBDMFileStore<?
     public MigrationReport migrate(IProgressMonitor monitor)
             throws CoreException, MigrationException {
         MigrationReport report = super.migrate(monitor);
+        var project = getBonitaProject();
+        if(project != null) {
+            createBdmFolderLinkInAppProject(project);
+        }
         BusinessObjectModelFileStore fStore = (BusinessObjectModelFileStore) getChild(
                 BusinessObjectModelFileStore.ZIP_FILENAME, true);
         BusinessObjectModelConverter converter = getConverter();
@@ -321,9 +326,6 @@ public class BusinessObjectModelRepositoryStore<F extends AbstractBDMFileStore<?
 
     @Override
     public F getChild(String fileName, boolean force) {
-        if (Objects.equals(fileName, BusinessObjectModelFileStore.BDM_ARTIFACT_DESCRIPTOR)) {
-            return null;
-        }
         if (Objects.equals(fileName, BusinessObjectModelFileStore.BOM_FILENAME)) {
             BusinessObjectModelFileStore fStore = (BusinessObjectModelFileStore) super.getChild(fileName, force);
             if (fStore != null && fStore.getResource().exists() && bdmFileStore != null) {

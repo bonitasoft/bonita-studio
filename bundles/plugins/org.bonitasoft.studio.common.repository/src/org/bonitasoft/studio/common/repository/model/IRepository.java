@@ -20,7 +20,6 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
 
-import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.IBonitaProjectListener;
 import org.bonitasoft.studio.common.repository.core.DatabaseHandler;
 import org.bonitasoft.studio.common.repository.core.ProjectDependenciesStore;
@@ -31,7 +30,6 @@ import org.bonitasoft.studio.common.repository.store.LocalDependenciesStore;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.edapt.migration.MigrationException;
@@ -39,7 +37,7 @@ import org.eclipse.emf.edapt.migration.MigrationException;
 /**
  * @author Romain Bioteau
  */
-public interface IRepository extends IFileStoreChangeListener {
+public interface IRepository extends IFileStoreChangeListener, IJavaContainer {
 
     boolean exists();
 
@@ -105,5 +103,9 @@ public interface IRepository extends IFileStoreChangeListener {
     String getBonitaRuntimeVersion();
 
     List<IBonitaProjectListener> getProjectListeners();
+    
+    void disableOpenIntroListener();
+    
+    boolean isOpenIntroListenerEnabled();
     
 }

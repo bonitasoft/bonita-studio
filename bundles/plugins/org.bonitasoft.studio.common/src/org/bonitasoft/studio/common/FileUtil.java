@@ -30,11 +30,14 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringWriter;
+import java.io.UncheckedIOException;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Comparator;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
@@ -98,6 +101,16 @@ public class FileUtil {
 
         // The directory is now empty so delete it
         return dir.delete();
+    }
+
+    public static void deleteDir(Path dir) throws IOException {
+        if (Files.exists(dir)) {
+            try (var files = Files.walk(dir)) {
+                files.sorted(Comparator.reverseOrder())
+                        .map(Path::toFile)
+                        .forEach(File::delete);
+            }
+        }
     }
 
     public static boolean compareStream(InputStream stream1, InputStream stream2) throws IOException {
@@ -348,5 +361,18 @@ public class FileUtil {
 
     public static boolean isValidName(String text) {
         return new URLEncodableInputValidator("").validate(text).isOK();
+    }
+
+    public static void copyDirectory(Path sourceDirectory, Path destinationDirectory)
+            throws IOException {
+        Files.walk(sourceDirectory)
+                .forEach(source -> {
+                    Path destination = destinationDirectory.resolve(destinationDirectory).resolve(sourceDirectory.relativize(source));
+                    try {
+                        Files.copy(source, destination);
+                    } catch (IOException e) {
+                        throw new UncheckedIOException(e);
+                    }
+                });
     }
 }

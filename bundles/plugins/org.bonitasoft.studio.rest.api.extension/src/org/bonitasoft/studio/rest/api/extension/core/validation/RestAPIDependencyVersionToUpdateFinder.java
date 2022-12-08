@@ -264,22 +264,6 @@ public class RestAPIDependencyVersionToUpdateFinder extends DependencyVersionToU
                 IStatus.WARNING);
     }
 
-    String currentBDMVersion() {
-        BusinessObjectModelRepositoryStore repositoryStore = RepositoryManager.getInstance().getCurrentRepository()
-                .orElseThrow()
-                .getRepositoryStore(BusinessObjectModelRepositoryStore.class);
-        BusinessObjectModelFileStore bdmFileStore = (BusinessObjectModelFileStore) repositoryStore
-                .getChild(BusinessObjectModelFileStore.BOM_FILENAME, false);
-        if (bdmFileStore != null) {
-            try {
-                return bdmFileStore.loadArtifactDescriptor().getVersion();
-            } catch (CoreException e) {
-                BonitaStudioLog.error(e);
-            }
-        }
-        return null;
-    }
-
     private DependencyToUpdate createBDMGroupIdToUpdate(Location location) {
         return new DependencyToUpdate(location,
                 GROUPID_TAG,
@@ -290,14 +274,30 @@ public class RestAPIDependencyVersionToUpdateFinder extends DependencyVersionToU
     }
 
     protected String currentBDMGroupId() {
-        BusinessObjectModelRepositoryStore repositoryStore = RepositoryManager.getInstance().getCurrentRepository()
+        var repositoryStore = RepositoryManager.getInstance().getCurrentRepository()
                 .orElseThrow()
                 .getRepositoryStore(BusinessObjectModelRepositoryStore.class);
         BusinessObjectModelFileStore bdmFileStore = (BusinessObjectModelFileStore) repositoryStore
                 .getChild(BusinessObjectModelFileStore.BOM_FILENAME, false);
         if (bdmFileStore != null) {
             try {
-                return bdmFileStore.loadArtifactDescriptor().getGroupId();
+                return bdmFileStore.getModelMavenDependency().getGroupId();
+            } catch (CoreException e) {
+                BonitaStudioLog.error(e);
+            }
+        }
+        return null;
+    }
+    
+    protected String currentBDMVersion() {
+        var repositoryStore = RepositoryManager.getInstance().getCurrentRepository()
+                .orElseThrow()
+                .getRepositoryStore(BusinessObjectModelRepositoryStore.class);
+        BusinessObjectModelFileStore bdmFileStore = (BusinessObjectModelFileStore) repositoryStore
+                .getChild(BusinessObjectModelFileStore.BOM_FILENAME, false);
+        if (bdmFileStore != null) {
+            try {
+                return bdmFileStore.getModelMavenDependency().getVersion();
             } catch (CoreException e) {
                 BonitaStudioLog.error(e);
             }

@@ -7,23 +7,18 @@
 package org.bonitasoft.studio.connector.model.implementation.impl;
 
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinitionPackage;
-
 import org.bonitasoft.studio.connector.model.definition.impl.ConnectorDefinitionPackageImpl;
-
 import org.bonitasoft.studio.connector.model.implementation.ConnectorImplementation;
 import org.bonitasoft.studio.connector.model.implementation.ConnectorImplementationFactory;
 import org.bonitasoft.studio.connector.model.implementation.ConnectorImplementationPackage;
 import org.bonitasoft.studio.connector.model.implementation.DocumentRoot;
 import org.bonitasoft.studio.connector.model.implementation.JarDependencies;
-
 import org.bonitasoft.studio.connector.model.implementation.UnloadableConnectorImplementation;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
-
 import org.eclipse.emf.ecore.impl.EPackageImpl;
-
 import org.eclipse.emf.ecore.xml.type.XMLTypePackage;
 
 /**

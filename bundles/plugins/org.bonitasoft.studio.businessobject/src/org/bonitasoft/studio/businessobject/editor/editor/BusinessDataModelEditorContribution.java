@@ -27,7 +27,6 @@ import org.bonitasoft.engine.bdm.BusinessObjectModelConverter;
 import org.bonitasoft.studio.businessobject.BusinessObjectPlugin;
 import org.bonitasoft.studio.businessobject.converter.BusinessDataModelConverter;
 import org.bonitasoft.studio.businessobject.core.repository.AbstractBDMFileStore;
-import org.bonitasoft.studio.businessobject.core.repository.BDMArtifactDescriptor;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelFileStore;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
 import org.bonitasoft.studio.businessobject.editor.editor.ui.formpage.constraint.ConstraintFormPage;
@@ -49,7 +48,6 @@ import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.WritableValue;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -136,29 +134,12 @@ public class BusinessDataModelEditorContribution extends AbstractEditorContribut
                     dirtyStateAdapter.setIgnore(false);
                 }
             });
-            BDMArtifactDescriptor artifactDescriptor = loadBdmArtifactDescriptor();
             workingCopyObservable
-                    .setValue(converter.toEmfModel(parser.unmarshall(document.get().getBytes()), artifactDescriptor));
+                    .setValue(converter.toEmfModel(parser.unmarshall(document.get().getBytes())));
         } catch (JAXBException | IOException | SAXException e) {
             workingCopyObservable.setValue(BusinessDataModelFactory.eINSTANCE.createBusinessObjectModel());
             modelFormPage.init(workingCopyObservable, new WritableValue<>(), document);
             modelFormPage.setErrorState(true);
-        }
-    }
-
-    public BDMArtifactDescriptor loadBdmArtifactDescriptor() {
-        try {
-            return retrieveBdmFileStore().loadArtifactDescriptor();
-        } catch (CoreException e) {
-            throw new RuntimeException("An error occured while loading BDM artifact descriptor", e);
-        }
-    }
-
-    public void saveBdmArtifactDescriptor(BDMArtifactDescriptor descriptor) {
-        try {
-            retrieveBdmFileStore().saveArtifactDescriptor(descriptor);
-        } catch (CoreException e) {
-            throw new RuntimeException("An error occured while saving BDM artifact descriptor", e);
         }
     }
 
@@ -315,12 +296,11 @@ public class BusinessDataModelEditorContribution extends AbstractEditorContribut
     @Override
     protected void editorFileInputChanged(IFileEditorInput input) {
         if (BusinessObjectModelFileStore.BOM_FILENAME.equals(input.getName())) {
-            BDMArtifactDescriptor artifactDescriptor = loadBdmArtifactDescriptor();
             workingCopyObservable.getRealm().asyncExec(() -> {
                 try {
                     String stringContent = Files.readString(input.getAdapter(IFile.class).getLocation().toFile().toPath(), StandardCharsets.UTF_8);
                     workingCopyObservable
-                            .setValue(converter.toEmfModel(parser.unmarshall(stringContent.getBytes()), artifactDescriptor));
+                            .setValue(converter.toEmfModel(parser.unmarshall(stringContent.getBytes())));
                 } catch (JAXBException | IOException | SAXException e) {
                     throw new RuntimeException("An error ocurred while updating Business Data Model working copy.", e);
                 }

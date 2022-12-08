@@ -23,6 +23,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import org.apache.maven.model.Build;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.Plugin;
+import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
 import org.bonitasoft.studio.common.repository.core.migration.MavenModelMigration;
 import org.bonitasoft.studio.common.repository.core.migration.report.MigrationReport;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
@@ -33,7 +34,7 @@ public class Java11MigrationStep implements MavenModelMigration {
     private static final String JAVA_VERSION = "11";
 
     @Override
-    public MigrationReport migrate(Model model) {
+    public MigrationReport migrate(Model model, ProjectMetadata metadata) {
         MigrationReport report = new MigrationReport();
         Properties properties = model.getProperties();
 
@@ -92,7 +93,7 @@ public class Java11MigrationStep implements MavenModelMigration {
     }
 
     @Override
-    public boolean appliesTo(Model model) {
+    public boolean appliesTo(Model model, ProjectMetadata metadata) {
         var hasJava8Source = findPlugin(model.getBuild().getPlugins(), "org.apache.maven.plugins",
                 "maven-compiler-plugin")
                         .map(Plugin::getConfiguration)

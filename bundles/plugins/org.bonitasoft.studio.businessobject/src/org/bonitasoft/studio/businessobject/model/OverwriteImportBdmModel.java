@@ -20,7 +20,6 @@ import java.util.List;
 import org.bonitasoft.engine.bdm.BusinessObjectModelConverter;
 import org.bonitasoft.engine.bdm.model.BusinessObject;
 import org.bonitasoft.engine.bdm.model.BusinessObjectModel;
-import org.bonitasoft.studio.businessobject.helper.PackageHelper;
 import org.bonitasoft.studio.common.repository.model.smartImport.ISmartImportable;
 import org.eclipse.core.databinding.validation.IValidator;
 

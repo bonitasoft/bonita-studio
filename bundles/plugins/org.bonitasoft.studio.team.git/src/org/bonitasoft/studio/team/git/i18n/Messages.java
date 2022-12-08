@@ -84,6 +84,7 @@ public class Messages extends NLS {
     public static String committedIgnoredResolutionLabel;
     public static String ignoredNotAlignedResolutionDescription;
     public static String ignoredNotAlignedResolutionLabel;
+    public static String importingProject;
 
     static {
         // initialize resource bundle

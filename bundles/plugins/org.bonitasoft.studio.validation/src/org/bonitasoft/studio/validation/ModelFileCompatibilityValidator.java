@@ -31,7 +31,6 @@ import java.util.Objects;
 
 import org.bonitasoft.studio.common.core.IRunnableWithStatus;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
@@ -64,7 +63,7 @@ public class ModelFileCompatibilityValidator implements IRunnableWithStatus {
         this.repository = repository;
     }
 
-    public ModelFileCompatibilityValidator(AbstractRepository currentRepository) {
+    public ModelFileCompatibilityValidator(IRepository currentRepository) {
         this(currentRepository.getProject().getLocation().toFile(), currentRepository);
     }
 

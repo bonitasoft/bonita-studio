@@ -16,13 +16,11 @@ import org.bonitasoft.studio.businessobject.editor.model.RelationField;
 import org.bonitasoft.studio.businessobject.editor.model.RelationType;
 import org.bonitasoft.studio.businessobject.editor.model.SimpleField;
 import org.bonitasoft.studio.businessobject.editor.model.UniqueConstraint;
-
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EEnum;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
-
 import org.eclipse.emf.ecore.impl.EPackageImpl;
 
 /**
@@ -189,6 +187,7 @@ public class BusinessDataModelPackageImpl extends EPackageImpl implements Busine
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public EClass getBusinessObjectModel() {
         return businessObjectModelEClass;
     }
@@ -198,6 +197,7 @@ public class BusinessDataModelPackageImpl extends EPackageImpl implements Busine
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public EReference getBusinessObjectModel_Packages() {
         return (EReference)businessObjectModelEClass.getEStructuralFeatures().get(0);
     }
@@ -207,15 +207,7 @@ public class BusinessDataModelPackageImpl extends EPackageImpl implements Busine
      * <!-- end-user-doc -->
      * @generated
      */
-    public EAttribute getBusinessObjectModel_GroupId() {
-        return (EAttribute)businessObjectModelEClass.getEStructuralFeatures().get(1);
-    }
-
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
+    @Override
     public EClass getPackage() {
         return packageEClass;
     }
@@ -225,6 +217,7 @@ public class BusinessDataModelPackageImpl extends EPackageImpl implements Busine
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public EReference getPackage_BusinessObjects() {
         return (EReference)packageEClass.getEStructuralFeatures().get(0);
     }
@@ -234,6 +227,7 @@ public class BusinessDataModelPackageImpl extends EPackageImpl implements Busine
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public EAttribute getPackage_Name() {
         return (EAttribute)packageEClass.getEStructuralFeatures().get(1);
     }
@@ -243,6 +237,7 @@ public class BusinessDataModelPackageImpl extends EPackageImpl implements Busine
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public EClass getBusinessObject() {
         return businessObjectEClass;
     }
@@ -252,6 +247,7 @@ public class BusinessDataModelPackageImpl extends EPackageImpl implements Busine
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public EAttribute getBusinessObject_QualifiedName() {
         return (EAttribute)businessObjectEClass.getEStructuralFeatures().get(0);
     }
@@ -261,6 +257,7 @@ public class BusinessDataModelPackageImpl extends EPackageImpl implements Busine
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public EAttribute getBusinessObject_SimpleName() {
         return (EAttribute)businessObjectEClass.getEStructuralFeatures().get(1);
     }
@@ -270,6 +267,7 @@ public class BusinessDataModelPackageImpl extends EPackageImpl implements Busine
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public EAttribute getBusinessObject_Description() {
         return (EAttribute)businessObjectEClass.getEStructuralFeatures().get(2);
     }
@@ -279,6 +277,7 @@ public class BusinessDataModelPackageImpl extends EPackageImpl implements Busine
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public EReference getBusinessObject_Fields() {
         return (EReference)businessObjectEClass.getEStructuralFeatures().get(3);
     }
@@ -288,6 +287,7 @@ public class BusinessDataModelPackageImpl extends EPackageImpl implements Busine
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public EReference getBusinessObject_UniqueConstraints() {
         return (EReference)businessObjectEClass.getEStructuralFeatures().get(4);
     }
@@ -297,6 +297,7 @@ public class BusinessDataModelPackageImpl extends EPackageImpl implements Busine
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public EReference getBusinessObject_Indexes() {
         return (EReference)businessObjectEClass.getEStructuralFeatures().get(5);
     }
@@ -306,6 +307,7 @@ public class BusinessDataModelPackageImpl extends EPackageImpl implements Busine
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public EReference getBusinessObject_Queries() {
         return (EReference)businessObjectEClass.getEStructuralFeatures().get(6);
     }
@@ -315,6 +317,7 @@ public class BusinessDataModelPackageImpl extends EPackageImpl implements Busine
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public EReference getBusinessObject_DefaultQueries() {
         return (EReference)businessObjectEClass.getEStructuralFeatures().get(7);
     }
@@ -324,6 +327,7 @@ public class BusinessDataModelPackageImpl extends EPackageImpl implements Busine
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public EClass getField() {
         return fieldEClass;
     }
@@ -333,6 +337,7 @@ public class BusinessDataModelPackageImpl extends EPackageImpl implements Busine
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public EAttribute getField_Name() {
         return (EAttribute)fieldEClass.getEStructuralFeatures().get(0);
     }
@@ -342,6 +347,7 @@ public class BusinessDataModelPackageImpl extends EPackageImpl implements Busine
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public EAttribute getField_Description() {
         return (EAttribute)fieldEClass.getEStructuralFeatures().get(1);
     }
@@ -351,6 +357,7 @@ public class BusinessDataModelPackageImpl extends EPackageImpl implements Busine
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public EAttribute getField_Nullable() {
         return (EAttribute)fieldEClass.getEStructuralFeatures().get(2);
     }
@@ -360,6 +367,7 @@ public class BusinessDataModelPackageImpl extends EPackageImpl implements Busine
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public EAttribute getField_Collection() {
         return (EAttribute)fieldEClass.getEStructuralFeatures().get(3);
     }
@@ -369,6 +377,7 @@ public class BusinessDataModelPackageImpl extends EPackageImpl implements Busine
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public EClass getUniqueConstraint() {
         return uniqueConstraintEClass;
     }
@@ -378,6 +387,7 @@ public class BusinessDataModelPackageImpl extends EPackageImpl implements Busine
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public EAttribute getUniqueConstraint_Name() {
         return (EAttribute)uniqueConstraintEClass.getEStructuralFeatures().get(0);
     }
@@ -387,6 +397,7 @@ public class BusinessDataModelPackageImpl extends EPackageImpl implements Busine
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public EAttribute getUniqueConstraint_Description() {
         return (EAttribute)uniqueConstraintEClass.getEStructuralFeatures().get(1);
     }
@@ -396,6 +407,7 @@ public class BusinessDataModelPackageImpl extends EPackageImpl implements Busine
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public EAttribute getUniqueConstraint_FieldNames() {
         return (EAttribute)uniqueConstraintEClass.getEStructuralFeatures().get(2);
     }
@@ -405,6 +417,7 @@ public class BusinessDataModelPackageImpl extends EPackageImpl implements Busine
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public EClass getIndex() {
         return indexEClass;
     }
@@ -414,6 +427,7 @@ public class BusinessDataModelPackageImpl extends EPackageImpl implements Busine
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public EAttribute getIndex_Name() {
         return (EAttribute)indexEClass.getEStructuralFeatures().get(0);
     }
@@ -423,6 +437,7 @@ public class BusinessDataModelPackageImpl extends EPackageImpl implements Busine
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public EAttribute getIndex_Description() {
         return (EAttribute)indexEClass.getEStructuralFeatures().get(1);
     }
@@ -432,6 +447,7 @@ public class BusinessDataModelPackageImpl extends EPackageImpl implements Busine
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public EAttribute getIndex_FieldNames() {
         return (EAttribute)indexEClass.getEStructuralFeatures().get(2);
     }
@@ -441,6 +457,7 @@ public class BusinessDataModelPackageImpl extends EPackageImpl implements Busine
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public EClass getQuery() {
         return queryEClass;
     }
@@ -450,6 +467,7 @@ public class BusinessDataModelPackageImpl extends EPackageImpl implements Busine
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public EAttribute getQuery_Name() {
         return (EAttribute)queryEClass.getEStructuralFeatures().get(0);
     }
@@ -459,6 +477,7 @@ public class BusinessDataModelPackageImpl extends EPackageImpl implements Busine
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public EAttribute getQuery_Description() {
         return (EAttribute)queryEClass.getEStructuralFeatures().get(1);
     }
@@ -468,6 +487,7 @@ public class BusinessDataModelPackageImpl extends EPackageImpl implements Busine
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public EAttribute getQuery_Content() {
         return (EAttribute)queryEClass.getEStructuralFeatures().get(2);
     }
@@ -477,6 +497,7 @@ public class BusinessDataModelPackageImpl extends EPackageImpl implements Busine
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public EAttribute getQuery_ReturnType() {
         return (EAttribute)queryEClass.getEStructuralFeatures().get(3);
     }
@@ -486,6 +507,7 @@ public class BusinessDataModelPackageImpl extends EPackageImpl implements Busine
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public EReference getQuery_QueryParameters() {
         return (EReference)queryEClass.getEStructuralFeatures().get(4);
     }
@@ -495,6 +517,7 @@ public class BusinessDataModelPackageImpl extends EPackageImpl implements Busine
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public EClass getQueryParameter() {
         return queryParameterEClass;
     }
@@ -504,6 +527,7 @@ public class BusinessDataModelPackageImpl extends EPackageImpl implements Busine
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public EAttribute getQueryParameter_Name() {
         return (EAttribute)queryParameterEClass.getEStructuralFeatures().get(0);
     }
@@ -513,6 +537,7 @@ public class BusinessDataModelPackageImpl extends EPackageImpl implements Busine
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public EAttribute getQueryParameter_Description() {
         return (EAttribute)queryParameterEClass.getEStructuralFeatures().get(1);
     }
@@ -522,6 +547,7 @@ public class BusinessDataModelPackageImpl extends EPackageImpl implements Busine
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public EAttribute getQueryParameter_ClassName() {
         return (EAttribute)queryParameterEClass.getEStructuralFeatures().get(2);
     }
@@ -531,6 +557,7 @@ public class BusinessDataModelPackageImpl extends EPackageImpl implements Busine
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public EClass getSimpleField() {
         return simpleFieldEClass;
     }
@@ -540,6 +567,7 @@ public class BusinessDataModelPackageImpl extends EPackageImpl implements Busine
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public EAttribute getSimpleField_Type() {
         return (EAttribute)simpleFieldEClass.getEStructuralFeatures().get(0);
     }
@@ -549,6 +577,7 @@ public class BusinessDataModelPackageImpl extends EPackageImpl implements Busine
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public EAttribute getSimpleField_Length() {
         return (EAttribute)simpleFieldEClass.getEStructuralFeatures().get(1);
     }
@@ -558,6 +587,7 @@ public class BusinessDataModelPackageImpl extends EPackageImpl implements Busine
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public EClass getRelationField() {
         return relationFieldEClass;
     }
@@ -567,6 +597,7 @@ public class BusinessDataModelPackageImpl extends EPackageImpl implements Busine
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public EReference getRelationField_Reference() {
         return (EReference)relationFieldEClass.getEStructuralFeatures().get(0);
     }
@@ -576,6 +607,7 @@ public class BusinessDataModelPackageImpl extends EPackageImpl implements Busine
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public EAttribute getRelationField_Type() {
         return (EAttribute)relationFieldEClass.getEStructuralFeatures().get(1);
     }
@@ -585,6 +617,7 @@ public class BusinessDataModelPackageImpl extends EPackageImpl implements Busine
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public EAttribute getRelationField_FetchType() {
         return (EAttribute)relationFieldEClass.getEStructuralFeatures().get(2);
     }
@@ -594,6 +627,7 @@ public class BusinessDataModelPackageImpl extends EPackageImpl implements Busine
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public EEnum getFieldType() {
         return fieldTypeEEnum;
     }
@@ -603,6 +637,7 @@ public class BusinessDataModelPackageImpl extends EPackageImpl implements Busine
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public EEnum getRelationType() {
         return relationTypeEEnum;
     }
@@ -612,6 +647,7 @@ public class BusinessDataModelPackageImpl extends EPackageImpl implements Busine
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public EEnum getFetchType() {
         return fetchTypeEEnum;
     }
@@ -621,6 +657,7 @@ public class BusinessDataModelPackageImpl extends EPackageImpl implements Busine
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public BusinessDataModelFactory getBusinessDataModelFactory() {
         return (BusinessDataModelFactory)getEFactoryInstance();
     }
@@ -646,7 +683,6 @@ public class BusinessDataModelPackageImpl extends EPackageImpl implements Busine
         // Create classes and their features
         businessObjectModelEClass = createEClass(BUSINESS_OBJECT_MODEL);
         createEReference(businessObjectModelEClass, BUSINESS_OBJECT_MODEL__PACKAGES);
-        createEAttribute(businessObjectModelEClass, BUSINESS_OBJECT_MODEL__GROUP_ID);
 
         packageEClass = createEClass(PACKAGE);
         createEReference(packageEClass, PACKAGE__BUSINESS_OBJECTS);
@@ -739,7 +775,6 @@ public class BusinessDataModelPackageImpl extends EPackageImpl implements Busine
         // Initialize classes, features, and operations; add parameters
         initEClass(businessObjectModelEClass, BusinessObjectModel.class, "BusinessObjectModel", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
         initEReference(getBusinessObjectModel_Packages(), this.getPackage(), null, "packages", null, 0, -1, BusinessObjectModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-        initEAttribute(getBusinessObjectModel_GroupId(), ecorePackage.getEString(), "groupId", null, 0, 1, BusinessObjectModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
         initEClass(packageEClass, org.bonitasoft.studio.businessobject.editor.model.Package.class, "Package", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
         initEReference(getPackage_BusinessObjects(), this.getBusinessObject(), null, "businessObjects", null, 0, -1, org.bonitasoft.studio.businessobject.editor.model.Package.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

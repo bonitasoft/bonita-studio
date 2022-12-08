@@ -14,7 +14,7 @@
  */
 package org.bonitasoft.studio.common.repository.core.migration;
 
-import java.io.File;
+import java.nio.file.Path;
 import java.util.Objects;
 import java.util.function.Predicate;
 
@@ -22,49 +22,40 @@ import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Model;
 import org.bonitasoft.studio.common.repository.core.maven.MavenProjectHelper;
 import org.bonitasoft.studio.common.repository.core.migration.report.MigrationReport;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.Status;
 
 public interface MigrationStep {
 
-    MigrationReport run(IProject project, IProgressMonitor monitor) throws CoreException;
-    
+    public static String POM_FILE_NAME = "pom.xml";
+
+    MigrationReport run(Path projectRoot, IProgressMonitor monitor) throws CoreException;
+
     boolean appliesTo(String sourceVersion);
-
-    default Model loadMavenModel(IProject project) throws CoreException {
-        var model = new MavenProjectHelper().getMavenModel(project);
-        if (model == null) {
-            throw new CoreException(new Status(IStatus.ERROR, MigrationStep.class,
-                    String.format("Cannot load maven model (%s file not found)",
-                            project.getFile("pom.xml").getLocation().toFile().getAbsolutePath())));
-        }
-        return model;
-    }
     
-    default Model loadParentMavenModel(IProject project) throws CoreException {
-        File parentPomFile = project.getLocation().toFile().getParentFile().toPath().resolve("pom.xml").toFile();
-        var model = parentPomFile.exists() ? MavenProjectHelper.readModel(parentPomFile) : loadMavenModel(project);
-        if (model == null) {
-            throw new CoreException(new Status(IStatus.ERROR, MigrationStep.class,
-                    String.format("Cannot load maven model (%s file not found)",
-                            project.getFile("pom.xml").getLocation().toFile().getAbsolutePath())));
-        }
-        return model;
+    default boolean requireCleanImport() {
+        return false;
     }
 
-    default void saveMavenModel(Model model, IProject project) throws CoreException {
-        new MavenProjectHelper().saveModel(project, model, false, new NullProgressMonitor());
+    default Model loadMavenModel(Path project) throws CoreException {
+        var pomFile = project.resolve(POM_FILE_NAME).toFile();
+        return MavenProjectHelper.readModel(pomFile);
+    }
+
+    default Model loadParentMavenModel(Path project) throws CoreException {
+        var parentPomFile = project.getParent().resolve(POM_FILE_NAME).toFile();
+        return parentPomFile.exists() ? MavenProjectHelper.readModel(parentPomFile) : loadMavenModel(project);
+    }
+
+    default void saveMavenModel(Model model, Path project) throws CoreException {
+         MavenProjectHelper.saveModel(project.resolve(POM_FILE_NAME), model);
     }
 
     default Predicate<Dependency> has(String groupId, String artifactId) {
         return dep -> Objects.equals(dep.getGroupId(), groupId) &&
                 Objects.equals(dep.getArtifactId(), artifactId);
     }
-    
+
     default Predicate<Dependency> has(String groupId) {
         return dep -> Objects.equals(dep.getGroupId(), groupId);
     }

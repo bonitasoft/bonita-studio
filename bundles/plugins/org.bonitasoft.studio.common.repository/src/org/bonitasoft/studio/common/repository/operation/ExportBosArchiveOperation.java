@@ -32,9 +32,7 @@ import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
-import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.core.BonitaProject;
-import org.bonitasoft.studio.common.repository.core.MultiModuleProject;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.ui.PlatformUtil;
 import org.bonitasoft.studio.common.ui.jface.FileActionDialog;
@@ -114,10 +112,7 @@ public class ExportBosArchiveOperation {
         if (project == null) {
             return Status.error("No active project.");
         }
-        var root = RepositoryManager.getInstance().getCurrentRepository().orElseThrow().getProject();
-        if (project instanceof MultiModuleProject) {
-            root = ((MultiModuleProject) project).getParentProject();
-        }
+        var root = project.getParentProject();
         manifestFile = root.getFile(BOS_ARCHIVE_MANIFEST);
         if (manifestFile.exists()) {
             try {
@@ -163,18 +158,14 @@ public class ExportBosArchiveOperation {
     }
 
     private IResource makeRelative(IResource resource) throws CoreException {
-        if (project instanceof MultiModuleProject) {
-            IProject parentProject = ((MultiModuleProject) project).getParentProject();
-            return parentProject.findMember(resource.getLocation().makeRelativeTo(parentProject.getLocation()));
-        }
-        return resource;
+        IProject parentProject = project.getParentProject();
+        return parentProject.findMember(resource.getLocation().makeRelativeTo(parentProject.getLocation()));
     }
 
     private List<IResource> makeRelative(Set<IResource> resources) throws CoreException {
         var result = new ArrayList<IResource>();
-        if(project instanceof MultiModuleProject) {
-            ((MultiModuleProject) project).getParentProject().refreshLocal(IResource.DEPTH_INFINITE, new NullProgressMonitor());
-        }
+        project.getParentProject().refreshLocal(IResource.DEPTH_INFINITE,
+                new NullProgressMonitor());
         for (IResource r : resources) {
             result.add(makeRelative(r));
         }

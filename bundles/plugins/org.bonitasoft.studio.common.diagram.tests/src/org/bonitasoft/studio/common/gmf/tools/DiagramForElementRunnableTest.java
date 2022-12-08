@@ -18,7 +18,6 @@ package org.bonitasoft.studio.common.gmf.tools;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.bonitasoft.studio.common.gmf.tools.DiagramForElementRunnable;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.eclipse.emf.ecore.resource.Resource;

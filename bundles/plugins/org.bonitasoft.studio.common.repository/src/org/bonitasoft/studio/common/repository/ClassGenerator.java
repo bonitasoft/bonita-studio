@@ -444,7 +444,10 @@ public class ClassGenerator {
     }
 
     private static IJavaProject getJavaProject() {
-        return RepositoryManager.getInstance().getCurrentRepository().map(IJavaContainer::getJavaProject).orElse(null);
+        return RepositoryManager.getInstance().getCurrentRepository()
+                .map(IJavaContainer.class::cast)
+                .map(IJavaContainer::getJavaProject)
+                .orElse(null);
     }
 
 }

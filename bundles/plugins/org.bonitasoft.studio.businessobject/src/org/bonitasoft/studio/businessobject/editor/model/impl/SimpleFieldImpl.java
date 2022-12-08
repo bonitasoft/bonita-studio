@@ -5,11 +5,8 @@ package org.bonitasoft.studio.businessobject.editor.model.impl;
 import org.bonitasoft.studio.businessobject.editor.model.BusinessDataModelPackage;
 import org.bonitasoft.studio.businessobject.editor.model.FieldType;
 import org.bonitasoft.studio.businessobject.editor.model.SimpleField;
-
 import org.eclipse.emf.common.notify.Notification;
-
 import org.eclipse.emf.ecore.EClass;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 /**
@@ -91,6 +88,7 @@ public class SimpleFieldImpl extends FieldImpl implements SimpleField {
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public FieldType getType() {
         return type;
     }
@@ -100,6 +98,7 @@ public class SimpleFieldImpl extends FieldImpl implements SimpleField {
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public void setType(FieldType newType) {
         FieldType oldType = type;
         type = newType == null ? TYPE_EDEFAULT : newType;
@@ -112,6 +111,7 @@ public class SimpleFieldImpl extends FieldImpl implements SimpleField {
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public int getLength() {
         return length;
     }
@@ -121,6 +121,7 @@ public class SimpleFieldImpl extends FieldImpl implements SimpleField {
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public void setLength(int newLength) {
         int oldLength = length;
         length = newLength;

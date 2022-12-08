@@ -17,7 +17,6 @@ package org.bonitasoft.studio.application.handler;
 import java.util.Objects;
 import java.util.Optional;
 
-import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.filestore.FileStoreFinder;
 import org.bonitasoft.studio.common.repository.model.IRenamable;
@@ -38,7 +37,7 @@ public class RenameHandler extends AbstractHandler {
 
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
-        AbstractRepository repo = RepositoryManager.getInstance().getCurrentRepository().orElseThrow();
+        var repo = RepositoryManager.getInstance().getCurrentRepository().orElseThrow();
         Optional<IRenamable> renamable = selectionFinder.findElementToRename(repo);
         if (renamable.isPresent()) {
             renamable

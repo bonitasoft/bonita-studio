@@ -29,20 +29,15 @@ import org.bonitasoft.studio.connector.model.definition.TextArea;
 import org.bonitasoft.studio.connector.model.definition.UnloadableConnectorDefinition;
 import org.bonitasoft.studio.connector.model.definition.Widget;
 import org.bonitasoft.studio.connector.model.definition.WidgetComponent;
-
 import org.bonitasoft.studio.connector.model.implementation.ConnectorImplementationPackage;
-
 import org.bonitasoft.studio.connector.model.implementation.impl.ConnectorImplementationPackageImpl;
-
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EEnum;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
-
 import org.eclipse.emf.ecore.impl.EPackageImpl;
-
 import org.eclipse.emf.ecore.xml.type.XMLTypePackage;
 
 /**

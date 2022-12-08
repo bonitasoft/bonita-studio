@@ -17,7 +17,6 @@ package org.bonitasoft.studio.common.repository.core;
 import java.util.Optional;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.preferences.OrganizationPreferenceConstants;
@@ -53,8 +52,8 @@ public class ActiveOrganizationProvider {
     }
 
     private Optional<IEclipsePreferences> getPreferenceNode() {
-        return RepositoryManager.getInstance().getCurrentRepository()
-                .map(AbstractRepository::getScopeContext)
+        return RepositoryManager.getInstance().getCurrentProject()
+                .map(BonitaProject::getScopeContext)
                 .map(ctx -> ctx.getNode(PLUGIN_ID));
     }
 

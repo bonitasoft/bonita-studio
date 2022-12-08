@@ -7,12 +7,9 @@ import org.bonitasoft.studio.businessobject.editor.model.BusinessObject;
 import org.bonitasoft.studio.businessobject.editor.model.FetchType;
 import org.bonitasoft.studio.businessobject.editor.model.RelationField;
 import org.bonitasoft.studio.businessobject.editor.model.RelationType;
-
 import org.eclipse.emf.common.notify.Notification;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 /**
@@ -105,6 +102,7 @@ public class RelationFieldImpl extends FieldImpl implements RelationField {
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public BusinessObject getReference() {
         if (reference != null && reference.eIsProxy()) {
             InternalEObject oldReference = (InternalEObject)reference;
@@ -131,6 +129,7 @@ public class RelationFieldImpl extends FieldImpl implements RelationField {
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public void setReference(BusinessObject newReference) {
         BusinessObject oldReference = reference;
         reference = newReference;
@@ -143,6 +142,7 @@ public class RelationFieldImpl extends FieldImpl implements RelationField {
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public RelationType getType() {
         return type;
     }
@@ -152,6 +152,7 @@ public class RelationFieldImpl extends FieldImpl implements RelationField {
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public void setType(RelationType newType) {
         RelationType oldType = type;
         type = newType == null ? TYPE_EDEFAULT : newType;
@@ -164,6 +165,7 @@ public class RelationFieldImpl extends FieldImpl implements RelationField {
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public FetchType getFetchType() {
         return fetchType;
     }
@@ -173,6 +175,7 @@ public class RelationFieldImpl extends FieldImpl implements RelationField {
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public void setFetchType(FetchType newFetchType) {
         FetchType oldFetchType = fetchType;
         fetchType = newFetchType == null ? FETCH_TYPE_EDEFAULT : newFetchType;

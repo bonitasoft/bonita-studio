@@ -10,8 +10,8 @@ import static org.eclipse.swtbot.swt.finder.waits.Conditions.shellIsActive;
 import java.util.Objects;
 
 import org.bonitasoft.studio.application.i18n.Messages;
-import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.swtbot.framework.ConditionBuilder;
 import org.bonitasoft.studio.swtbot.framework.SWTBotTestUtil;
@@ -31,7 +31,7 @@ import org.junit.runner.RunWith;
 @RunWith(SWTBotJunit4ClassRunner.class)
 public class TestSeveralLocalRepositories {
 
-    private AbstractRepository currentRepo;
+    private IRepository currentRepo;
 
     private final SWTGefBot bot = new SWTGefBot();
 

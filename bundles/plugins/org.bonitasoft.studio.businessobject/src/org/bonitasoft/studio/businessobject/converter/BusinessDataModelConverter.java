@@ -21,7 +21,6 @@ import java.util.stream.Stream;
 
 import org.bonitasoft.engine.bdm.BDMQueryUtil;
 import org.bonitasoft.engine.bdm.model.field.RelationField.Type;
-import org.bonitasoft.studio.businessobject.core.repository.BDMArtifactDescriptor;
 import org.bonitasoft.studio.businessobject.editor.model.BusinessDataModelFactory;
 import org.bonitasoft.studio.businessobject.editor.model.BusinessObject;
 import org.bonitasoft.studio.businessobject.editor.model.BusinessObjectModel;
@@ -50,10 +49,8 @@ public class BusinessDataModelConverter {
 
     private BusinessDataModelFactory factory = BusinessDataModelFactory.eINSTANCE;
 
-    public BusinessObjectModel toEmfModel(org.bonitasoft.engine.bdm.model.BusinessObjectModel engineBusinessObjectModel,
-            BDMArtifactDescriptor artifactDescriptor) {
+    public BusinessObjectModel toEmfModel(org.bonitasoft.engine.bdm.model.BusinessObjectModel engineBusinessObjectModel) {
         BusinessObjectModel emfBusinessObjectModel = factory.createBusinessObjectModel();
-        emfBusinessObjectModel.setGroupId(artifactDescriptor.getGroupId());
 
         PackageHelper.getAllPackages(engineBusinessObjectModel)
                 .stream()

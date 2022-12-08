@@ -35,7 +35,6 @@ import org.apache.maven.model.Model;
 import org.bonitasoft.studio.common.Strings;
 import org.bonitasoft.studio.common.databinding.validator.EmptyInputValidator;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.FakeRepository;
 import org.bonitasoft.studio.common.repository.ProjectIdValidator;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
@@ -406,7 +405,7 @@ public class ImportBosArchivePage implements ControlSupplier, Supplier<ImportArc
 
     protected void updateArchiveModel(String targetRepository, IProgressMonitor monitor) {
         if (repositoryAccessor.getRepository(targetRepository) != null && archiveModel != null) {
-            final AbstractRepository newRepository = repositoryAccessor.getRepository(targetRepository);
+            var newRepository = repositoryAccessor.getRepository(targetRepository);
             var project = Adapters.adapt(newRepository, BonitaProject.class);
             if (repositoryAccessor.getCurrentRepository().filter(repo -> Objects.equals(repo.getName(),
                     newRepository.getName())).isEmpty()) {

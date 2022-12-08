@@ -48,11 +48,11 @@ public class PreferenceInitializerTest {
     }
     
     @Test
-    public void should_disable_autobuild() throws Exception {
+    public void should_enable_autobuild() throws Exception {
         final PreferenceInitializer preferenceInitializer = new PreferenceInitializer();
         preferenceInitializer.initializeDefaultPreferences();
 
-        assertThat( ResourcesPlugin.getPlugin().getPluginPreferences().getBoolean(ResourcesPlugin.PREF_AUTO_BUILDING)).isFalse();
+        assertThat(ResourcesPlugin.getPlugin().getPluginPreferences().getBoolean(ResourcesPlugin.PREF_AUTO_BUILDING)).isTrue();
     }
 
   

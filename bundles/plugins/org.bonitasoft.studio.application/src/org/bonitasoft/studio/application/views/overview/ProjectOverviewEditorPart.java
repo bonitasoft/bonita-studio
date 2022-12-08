@@ -145,7 +145,7 @@ public class ProjectOverviewEditorPart extends EditorPart implements EventHandle
         try {
             PlatformUI.getWorkbench().getProgressService().busyCursorWhile(monitor -> {
                 monitor.beginTask(Messages.loadingProjectOverview, IProgressMonitor.UNKNOWN);
-                while (repositoryAccessor.getCurrentRepository().filter(IRepository::isLoaded).isEmpty()) {
+                while (repositoryAccessor.getCurrentRepository().isPresent() && repositoryAccessor.getCurrentRepository().filter(IRepository::isLoaded).isEmpty()) {
                     Thread.sleep(20);
                 }
             });
@@ -354,6 +354,7 @@ public class ProjectOverviewEditorPart extends EditorPart implements EventHandle
                         return;
                     }
                     String name = metadata.getName();
+                    name = name == null ? "" : name;
                     String version = metadata.getVersion();
                     String descriptionContent = metadata.getDescription();
                     if (title == null || title.isDisposed()) {
@@ -470,12 +471,13 @@ public class ProjectOverviewEditorPart extends EditorPart implements EventHandle
         try {
             event.getDelta().accept(delta -> {
                 IResource r = delta.getResource();
-                if (Objects.equals(r, repositoryAccessor.getCurrentRepository().orElseThrow().getProject()
-                        .getFile(IMavenConstants.POM_FILE_NAME))) {
+                if(repositoryAccessor.getCurrentRepository()
+                        .filter(current -> Objects.equals(r , current.getProject()
+                        .getFile(IMavenConstants.POM_FILE_NAME))).isPresent()) {
                     metadata = null;
                     refreshContent();
                     return false;
-                }
+                };
                 return true;
             });
         } catch (CoreException e) {

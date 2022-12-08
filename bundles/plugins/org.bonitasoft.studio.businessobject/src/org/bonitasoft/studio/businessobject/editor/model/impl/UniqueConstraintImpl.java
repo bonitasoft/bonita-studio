@@ -6,16 +6,11 @@ import java.util.Collection;
 
 import org.bonitasoft.studio.businessobject.editor.model.BusinessDataModelPackage;
 import org.bonitasoft.studio.businessobject.editor.model.UniqueConstraint;
-
 import org.eclipse.emf.common.notify.Notification;
-
 import org.eclipse.emf.common.util.EList;
-
 import org.eclipse.emf.ecore.EClass;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
-
 import org.eclipse.emf.ecore.util.EDataTypeEList;
 
 /**
@@ -108,6 +103,7 @@ public class UniqueConstraintImpl extends MinimalEObjectImpl.Container implement
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public String getName() {
         return name;
     }
@@ -117,6 +113,7 @@ public class UniqueConstraintImpl extends MinimalEObjectImpl.Container implement
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public void setName(String newName) {
         String oldName = name;
         name = newName;
@@ -129,6 +126,7 @@ public class UniqueConstraintImpl extends MinimalEObjectImpl.Container implement
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public String getDescription() {
         return description;
     }
@@ -138,6 +136,7 @@ public class UniqueConstraintImpl extends MinimalEObjectImpl.Container implement
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public void setDescription(String newDescription) {
         String oldDescription = description;
         description = newDescription;
@@ -150,6 +149,7 @@ public class UniqueConstraintImpl extends MinimalEObjectImpl.Container implement
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public EList<String> getFieldNames() {
         if (fieldNames == null) {
             fieldNames = new EDataTypeEList<String>(String.class, this, BusinessDataModelPackage.UNIQUE_CONSTRAINT__FIELD_NAMES);

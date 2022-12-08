@@ -31,7 +31,6 @@ import org.bonitasoft.studio.common.repository.ui.validator.MavenIdValidator;
 import org.bonitasoft.studio.engine.BOSWebServerManager;
 import org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory;
 import org.bonitasoft.studio.ui.validator.MultiValidator;
-import org.bonitasoft.studio.ui.widget.ButtonWidget;
 import org.bonitasoft.studio.ui.widget.ComboWidget;
 import org.bonitasoft.studio.ui.widget.TextAreaWidget;
 import org.bonitasoft.studio.ui.widget.TextWidget;
@@ -207,19 +206,6 @@ public class ProjectMetadataPage implements ControlSupplier {
                 event.doit = true;
             }
         });
-
-        if (createProject) {
-            new ButtonWidget.Builder()
-                    .withLabel("Multi-module project (experimental)")
-                    .withStyle(SWT.CHECK | SWT.NO_FOCUS)
-                    .grabVerticalSpace()
-                    .grabHorizontalSpace()
-                    .fill()
-                    .horizontalSpan(2)
-                    .bindTo(PojoProperties.value("isMultiModule", Boolean.class).observeDetail(metadataObservale))
-                    .inContext(ctx)
-                    .createIn(composite);
-        }
 
         return composite;
     }

@@ -151,7 +151,7 @@ public abstract class AbstractFileStore<T>
         return !isReadOnly();
     }
 
-    public AbstractRepository getRepository() {
+    public IRepository getRepository() {
         return RepositoryManager.getInstance().getCurrentRepository().orElse(null);
     }
 
@@ -215,7 +215,6 @@ public abstract class AbstractFileStore<T>
         if (!isReadOnly()) {
             fireFileStoreEvent(new FileStoreChangeEvent(EventType.PRE_SAVE, this));
             IResource resource = getResource();
-            boolean exists = resource.exists();
             checkParentExists(resource);
             doSave(content);
             if (PlatformUI.isWorkbenchRunning()) {
@@ -224,9 +223,6 @@ public abstract class AbstractFileStore<T>
                     @Override
                     public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
                         getResource().refreshLocal(IResource.DEPTH_ZERO, monitor);
-                        if (!exists) {
-                            refreshExplorerView();
-                        }
                         return Status.OK_STATUS;
                     }
                 }.schedule();

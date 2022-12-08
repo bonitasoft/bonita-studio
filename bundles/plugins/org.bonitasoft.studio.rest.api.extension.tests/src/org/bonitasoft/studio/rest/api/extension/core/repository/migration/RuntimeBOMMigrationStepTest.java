@@ -22,6 +22,7 @@ import java.io.InputStream;
 
 import org.apache.maven.model.Model;
 import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
+import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 import org.junit.Before;
 import org.junit.Test;
@@ -30,6 +31,7 @@ public class RuntimeBOMMigrationStepTest {
 
     private MavenXpp3Reader modelReader = new MavenXpp3Reader();
     private RuntimeBOMMigrationStep migrationStep;
+    private ProjectMetadata metadata = ProjectMetadata.defaultMetadata();
 
     @Before
     public void createFixture() throws Exception {
@@ -42,7 +44,7 @@ public class RuntimeBOMMigrationStepTest {
         Model model = loadModel("pom_from_1_0_5.xml");
 
         // When
-        migrationStep.migrate(model);
+        migrationStep.migrate(model, metadata);
 
         // Then
         assertThat(model.getDependencyManagement().getDependencies()).extracting("groupId",
@@ -63,7 +65,7 @@ public class RuntimeBOMMigrationStepTest {
         Model model = loadModel("pom_from_1_0_5.xml");
 
         // When
-        migrationStep.migrate(model);
+        migrationStep.migrate(model, metadata);
 
         // Then
         assertThat(model.getDependencies()).extracting("groupId",
@@ -86,7 +88,7 @@ public class RuntimeBOMMigrationStepTest {
         Model model = loadModel("pom_from_1_0_5.xml");
 
         // When
-        migrationStep.migrate(model);
+        migrationStep.migrate(model, metadata);
 
         // Then
         assertThat(model.getDependencies()).extracting("groupId",

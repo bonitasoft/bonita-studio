@@ -20,6 +20,7 @@
   </fragments>
   <fragments xsi:type="fragment:StringModelFragment" xmi:id="_RV8qICDcEeqEWZYzWPZlqg" featurename="addons" parentElementId="org.eclipse.e4.legacy.ide.application">
     <elements xsi:type="application:Addon" xmi:id="_UtjfICDcEeqEWZYzWPZlqg" elementId="org.bonitasoft.studio.businessobject.startAddon" contributionURI="bundleclass://org.bonitasoft.studio.businessobject/org.bonitasoft.studio.businessobject.StartAddon"/>
-    <elements xsi:type="application:Addon" xmi:id="_yJs2INI7EeqTs8GlxYwpfA" elementId="org.bonitasoft.studio.businessobject.install.bdm.addon" contributionURI="bundleclass://org.bonitasoft.studio.businessobject/org.bonitasoft.studio.businessobject.maven.BDMDependencyHandlerAddon"/>
+    <elements xsi:type="application:Addon" xmi:id="_MwZ2UHYxEe2kLZLcMbKrEA" elementId="org.bonitasoft.studio.businessobject.deployed.addon" contributionURI="bundleclass://org.bonitasoft.studio.businessobject/org.bonitasoft.studio.businessobject.core.DeployedBDMEventHandler"/>
+    <elements xsi:type="application:Addon" xmi:id="_QjTgMHYxEe2kLZLcMbKrEA" elementId="org.bonitasoft.studio.businessobject.deleted.addon" contributionURI="bundleclass://org.bonitasoft.studio.businessobject/org.bonitasoft.studio.businessobject.core.DeleteBDMEventHandler"/>
   </fragments>
 </fragment:ModelFragments>

@@ -44,7 +44,8 @@ public class RestAPIExtensionBosValidator implements BosImporterStatusProvider {
                                 IDisplayable.toDisplayName(restApiFileStore).orElse("")),
                         IProgressMonitor.UNKNOWN);
                 try {
-                    for (IStatus status : new RestAPIExtensionPomValidator().validate(restApiFileStore)) {
+                    var restAPIExtensionPomValidator = new RestAPIExtensionPomValidator(new RestAPIDependencyVersionToUpdateFinder());
+                    for (IStatus status : restAPIExtensionPomValidator.validate(restApiFileStore)) {
                         statusBuilder.addStatus(status);
                     }
                 } catch (CoreException e) {

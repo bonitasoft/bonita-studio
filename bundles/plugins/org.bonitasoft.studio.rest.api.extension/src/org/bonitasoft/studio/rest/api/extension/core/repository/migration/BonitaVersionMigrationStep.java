@@ -20,6 +20,7 @@ import java.util.Properties;
 import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
 import org.apache.maven.model.Model;
 import org.bonitasoft.studio.common.ProductVersion;
+import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
 import org.bonitasoft.studio.common.repository.core.migration.MavenModelMigration;
 import org.bonitasoft.studio.common.repository.core.migration.report.MigrationReport;
 
@@ -29,7 +30,7 @@ public class BonitaVersionMigrationStep implements MavenModelMigration {
     private static final String BONITA_RUNTIME_VERSION_PROPERTY = "bonita-runtime.version";
 
     @Override
-    public MigrationReport migrate(Model model) {
+    public MigrationReport migrate(Model model, ProjectMetadata metadata) {
         var report = new MigrationReport();
         var properties = model.getProperties();
         updateProperty(BONITA_VERSION_PROPERTY, report, properties);
@@ -56,7 +57,7 @@ public class BonitaVersionMigrationStep implements MavenModelMigration {
     }
 
     @Override
-    public boolean appliesTo(Model model) {
+    public boolean appliesTo(Model model, ProjectMetadata metadata) {
         var properties = model.getProperties();
         if (properties.containsKey(BONITA_VERSION_PROPERTY)) {
             return !Objects.equals(minorVersion(properties.getProperty(BONITA_VERSION_PROPERTY)), ProductVersion.minorVersion());

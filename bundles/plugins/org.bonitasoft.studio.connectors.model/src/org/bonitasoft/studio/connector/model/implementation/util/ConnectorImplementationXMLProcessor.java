@@ -9,11 +9,8 @@ package org.bonitasoft.studio.connector.model.implementation.util;
 import java.util.Map;
 
 import org.bonitasoft.studio.connector.model.implementation.ConnectorImplementationPackage;
-
 import org.eclipse.emf.ecore.EPackage;
-
 import org.eclipse.emf.ecore.resource.Resource;
-
 import org.eclipse.emf.ecore.xmi.util.XMLProcessor;
 
 /**

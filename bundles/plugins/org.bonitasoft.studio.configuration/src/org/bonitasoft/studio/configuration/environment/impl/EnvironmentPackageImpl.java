@@ -14,7 +14,6 @@ import org.bonitasoft.studio.configuration.environment.EnvironmentPackage;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EPackage;
-
 import org.eclipse.emf.ecore.impl.EPackageImpl;
 
 /**

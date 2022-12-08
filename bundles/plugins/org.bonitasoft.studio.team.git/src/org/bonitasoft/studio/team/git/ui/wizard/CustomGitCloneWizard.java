@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -20,6 +21,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.bonitasoft.studio.common.FileUtil;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.team.git.core.ImportClonedRepository;
 import org.bonitasoft.studio.team.git.core.RetrieveHEADRefOperation;
@@ -145,6 +147,14 @@ public class CustomGitCloneWizard extends GitCloneWizard {
                 return false;
             } catch (InterruptedException e) {
                 // nothing to do
+            } finally {
+                if (cloneOperation != null && cloneOperation.getGitDir().exists()) {
+                    try {
+                        FileUtil.deleteDir(cloneOperation.getGitDir().getParentFile().toPath());
+                    } catch (IOException e) {
+                        BonitaStudioLog.error("Failed to delete cloned repository tmp folder.", e);
+                    }
+                }
             }
             return true;
         }
@@ -190,9 +200,14 @@ public class CustomGitCloneWizard extends GitCloneWizard {
             allSelected = sourceBranchPage.isAllSelected();
             selectedBranches = sourceBranchPage.getSelectedBranches();
         }
-        File workdir = null; 
+        File workdir = null;
         try {
-            workdir = Files.createTempDirectory("clone").toFile();
+            var name = uri.getHumanishName();
+            var workdirPath = Files.createDirectory(Paths.get(System.getProperty("java.io.tmpdir")).resolve(name));
+            if (Files.isDirectory(workdirPath)) {
+                FileUtil.deleteDir(workdirPath);
+            }
+            workdir = workdirPath.toFile();
         } catch (IOException e1) {
             BonitaStudioLog.error(e1);
             return null;
@@ -321,5 +336,5 @@ public class CustomGitCloneWizard extends GitCloneWizard {
     public String getOldVersion() {
         return validateRepoTask.getVersion();
     }
-    
+
 }

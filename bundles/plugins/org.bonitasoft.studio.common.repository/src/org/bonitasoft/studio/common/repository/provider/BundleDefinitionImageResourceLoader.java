@@ -27,7 +27,6 @@ import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.swt.graphics.Image;
 import org.osgi.framework.Bundle;
 
 public class BundleDefinitionImageResourceLoader implements DefinitionImageResourceLoader {
