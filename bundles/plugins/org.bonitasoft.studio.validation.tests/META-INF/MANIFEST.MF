@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Validation Tests Fragment
 Bundle-SymbolicName: org.bonitasoft.studio.validation.tests
-Bundle-Version: 7.16.0.qualifier
+Bundle-Version: 7.16.0.W50
 Bundle-Vendor: Bonitasoft S.A.
 Fragment-Host: org.bonitasoft.studio.validation;bundle-version="7.16.0"
 Automatic-Module-Name: org.bonitasoft.studio.validation.tests
