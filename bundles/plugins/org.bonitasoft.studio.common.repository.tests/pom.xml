@@ -24,6 +24,7 @@
                     <groupId>org.eclipse.tycho</groupId>
                     <artifactId>tycho-surefire-plugin</artifactId>
                     <configuration>
+                        <showEclipseLog>true</showEclipseLog>
                         <useUIHarness>true</useUIHarness>
                         <useUIThread>true</useUIThread>
                     </configuration>
