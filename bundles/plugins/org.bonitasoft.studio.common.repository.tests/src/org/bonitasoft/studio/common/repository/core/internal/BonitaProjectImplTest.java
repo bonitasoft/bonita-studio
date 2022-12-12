@@ -19,6 +19,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.io.File;
 import java.nio.file.Files;
 
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.core.BonitaProject;
 import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
@@ -26,6 +27,7 @@ import org.bonitasoft.studio.common.repository.core.team.GitProject;
 import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.egit.core.GitProvider;
 import org.eclipse.egit.core.op.DisconnectProviderOperation;
@@ -50,7 +52,13 @@ class BonitaProjectImplTest {
         repository = RepositoryManager.getInstance().newRepository(metadata.getProjectName());
         RepositoryManager.getInstance().setCurrentRepository(repository);
         project = BonitaProject.create(projectId);
-        project.delete(monitor);
+        if (project.exists()) {
+            try {
+                project.delete(monitor);
+            } catch (CoreException e) {
+                BonitaStudioLog.error(e);
+            }
+        }
         repository.create(metadata, monitor);
     }
 
