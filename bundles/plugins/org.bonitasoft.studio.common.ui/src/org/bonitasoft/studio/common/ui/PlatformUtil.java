@@ -140,10 +140,12 @@ public class PlatformUtil {
                     .filter(nbEditors -> nbEditors == 0)
                     .ifPresent(nbEditors -> {
                         // and that we are in BOS or BOS-SP
-                        if (isABonitaProduct(Platform.getProduct().getId())) {
-                            showIntroPart();
-                        } else {
-                            hideIntroPart();
+                        if (Platform.isRunning() && Platform.getProduct() != null) {
+                            if (isABonitaProduct(Platform.getProduct().getId())) {
+                                showIntroPart();
+                            } else {
+                                hideIntroPart();
+                            }
                         }
                     }));
         }
@@ -204,7 +206,7 @@ public class PlatformUtil {
                     && ((CustomizableIntroPart) introManager.getIntro()).getControl() != null) {
                 model.getPresentation().navigateHome();
             }
-            
+
             BonitaPerspectivesUtils.switchToPerspective("org.bonitasoft.studio.perspective.welcomePage");
             introManager.showIntro(
                     page.getWorkbenchWindow(),

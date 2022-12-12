@@ -63,8 +63,6 @@ public interface IRepository extends IFileStoreChangeListener, IJavaContainer {
 
     List<IRepositoryStore<? extends IRepositoryFileStore>> getAllStores();
 
-    String getVersion();
-
     List<IRepositoryStore<? extends IRepositoryFileStore>> getAllSharedStores();
 
     List<IRepositoryStore<? extends IRepositoryFileStore>> getAllExportableStores();

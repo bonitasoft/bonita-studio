@@ -14,9 +14,13 @@
  */
 package org.bonitasoft.studio.common.repository.core;
 
+import java.util.List;
+
 import org.apache.maven.model.Build;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.PluginManagement;
+import org.apache.maven.model.Repository;
+import org.apache.maven.model.RepositoryPolicy;
 import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.repository.core.maven.model.MavenPlugin;
 import org.bonitasoft.studio.common.repository.core.maven.model.ProjectDefaultConfiguration;
@@ -30,6 +34,15 @@ public class MavenParentProjectModelBuilder implements MavenModelBuilder{
     private String displayName;
     private String description;
     private String bonitaVersion;
+    private boolean useSnapshotRepository;
+    
+    public MavenParentProjectModelBuilder() {
+        this(false);
+    }
+
+    public MavenParentProjectModelBuilder(boolean useSnapshotRepository) {
+      this.useSnapshotRepository = useSnapshotRepository;
+    }
 
     public String getArtifactId() {
         return artifactId;
@@ -78,6 +91,7 @@ public class MavenParentProjectModelBuilder implements MavenModelBuilder{
     public void setBonitaVersion(String bonitaVersion) {
         this.bonitaVersion = bonitaVersion;
     }
+    
 
     @Override
     public Model toMavenModel() {
@@ -106,7 +120,20 @@ public class MavenParentProjectModelBuilder implements MavenModelBuilder{
 
         build.setPluginManagement(pluginManagement);
         model.setBuild(build);
+        if(useSnapshotRepository) {
+            var pluginRepository = new Repository();
+            pluginRepository.setId("ossrh-snapshots");
+            pluginRepository.setUrl("https://oss.sonatype.org/content/repositories/snapshots");
+            var disableRelease = new RepositoryPolicy();
+            disableRelease.setEnabled(false);
+            pluginRepository.setReleases(disableRelease);
+            var enableSnapshot = new RepositoryPolicy();
+            enableSnapshot.setEnabled(true);
+            pluginRepository.setSnapshots(enableSnapshot);
+            model.setPluginRepositories(List.of(pluginRepository));
+        }
         return model;
     }
+
 
 }

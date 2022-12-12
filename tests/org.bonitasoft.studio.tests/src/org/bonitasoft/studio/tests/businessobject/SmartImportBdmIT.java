@@ -62,7 +62,7 @@ public class SmartImportBdmIT {
     @Before
     public void initBdm() throws Exception {
         repositoryStore = RepositoryManager.getInstance().getRepositoryStore(BusinessObjectModelRepositoryStore.class);
-        AbstractBDMFileStore bdmFileStore = repositoryStore.getChild("bom.xml", true);
+        var bdmFileStore = repositoryStore.getChild("bom.xml", true);
         if (bdmFileStore != null) {
             bdmFileStore.delete();
         }

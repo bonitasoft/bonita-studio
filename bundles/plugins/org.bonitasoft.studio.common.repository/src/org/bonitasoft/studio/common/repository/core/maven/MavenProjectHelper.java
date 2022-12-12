@@ -67,7 +67,11 @@ public class MavenProjectHelper {
 
     public static Model readModel(File pomFile) throws CoreException {
         try (InputStream is = Files.newInputStream(pomFile.toPath())) {
-            return MavenPlugin.getMaven().readModel(is);
+            var maven = MavenPlugin.getMaven();
+            if(maven == null) {
+                throw new CoreException(Status.error("IMaven singleton is null"));
+            }
+            return maven.readModel(is);
         } catch (IOException e) {
             throw new CoreException(new Status(IStatus.ERROR, MavenModelOperation.class,
                     String.format("Failed to read %s", pomFile), e));
@@ -119,17 +123,24 @@ public class MavenProjectHelper {
         return Collections.emptyList();
     }
 
-    public MavenProject getMavenProject(IProject project) throws CoreException {
+    public static MavenProject getMavenProject(IProject project) throws CoreException {
         var mavenProjectFacade = getMavenProjectFacade(project);
-        var mavenProject = mavenProjectFacade.getMavenProject();
-        if (mavenProject == null) {
-            return mavenProjectFacade.getMavenProject(new NullProgressMonitor());
+        if (mavenProjectFacade != null) {
+            var mavenProject = mavenProjectFacade.getMavenProject();
+            if (mavenProject == null) {
+                return mavenProjectFacade.getMavenProject(new NullProgressMonitor());
+            }
+            return mavenProject;
         }
-        return mavenProject;
+        return null;
     }
 
-    private IMavenProjectFacade getMavenProjectFacade(IProject project) throws CoreException {
-        return MavenPlugin.getMavenProjectRegistry().getProject(project);
+    private static IMavenProjectFacade getMavenProjectFacade(IProject project) throws CoreException {
+        var facade =  MavenPlugin.getMavenProjectRegistry().getProject(project);
+        if(facade == null) {
+            facade = MavenPlugin.getMavenProjectRegistry().create(project.getFile(IMavenConstants.POM_FILE_NAME),true,  new NullProgressMonitor());
+        }
+        return facade;
     }
 
     public static Optional<Dependency> findDependency(Model model, String groupId, String artifactId) {

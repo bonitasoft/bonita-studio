@@ -50,7 +50,7 @@ public class RefreshProjectHandler extends AbstractHandler {
                     @Override
                     public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
                         BonitaProject project = RepositoryManager.getInstance().getCurrentProject().orElseThrow();
-                        project.refresh(monitor);
+                        project.refresh(true, monitor);
                         return Status.OK_STATUS;
                     }
                 };

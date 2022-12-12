@@ -16,8 +16,6 @@ package org.bonitasoft.studio.common.repository;
 
 import static org.eclipse.core.runtime.Path.fromOSString;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -67,12 +65,10 @@ import org.bonitasoft.studio.common.repository.store.LocalDependenciesStore;
 import org.bonitasoft.studio.common.repository.store.RepositoryStoreComparator;
 import org.bonitasoft.studio.common.ui.IDisplayable;
 import org.bonitasoft.studio.common.ui.PlatformUtil;
-import org.eclipse.core.internal.resources.ProjectDescriptionReader;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IncrementalProjectBuilder;
@@ -99,7 +95,6 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.eclipse.ui.internal.ViewIntroAdapterPart;
 import org.eclipse.ui.preferences.ScopedPreferenceStore;
-import org.xml.sax.InputSource;
 
 public abstract class AbstractRepository implements IRepository {
 
@@ -418,40 +413,6 @@ public abstract class AbstractRepository implements IRepository {
     }
 
     @Override
-    public String getVersion() {
-        if (project.isOpen()) {
-            try {
-                return project.getDescription().getComment();
-            } catch (final CoreException e) {
-                BonitaStudioLog.error(e);
-            }
-        } else if (project.getLocation() != null) {
-            final File projectFile = new File(project.getLocation().toFile(), ".project");
-            if (projectFile.exists()) {
-                FileInputStream fis = null;
-                try {
-                    fis = new FileInputStream(projectFile);
-                    final InputSource source = new InputSource(fis);
-                    final ProjectDescriptionReader reader = new ProjectDescriptionReader(project);
-                    final IProjectDescription desc = reader.read(source);
-                    return desc.getComment();
-                } catch (final FileNotFoundException e) {
-                    BonitaStudioLog.error(e);
-                } finally {
-                    if (fis != null) {
-                        try {
-                            fis.close();
-                        } catch (final IOException e) {
-                            BonitaStudioLog.error(e);
-                        }
-                    }
-                }
-            }
-        }
-        return null;
-    }
-
-    @Override
     public synchronized List<IRepositoryStore<? extends IRepositoryFileStore>> getAllStores() {
         if (stores == null) {
             initRepositoryStores(NULL_PROGRESS_MONITOR);
@@ -689,9 +650,9 @@ public abstract class AbstractRepository implements IRepository {
                 report = MigrationReport.emptyReport();
             }
         }
-        build(monitor);
         var bonitaProject = Adapters.adapt(this, BonitaProject.class);
         bonitaProject.refresh(monitor);
+        build(monitor);
     }
 
     @Override

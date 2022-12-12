@@ -17,6 +17,7 @@ package org.bonitasoft.studio.common.repository.core.migration.step;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -28,18 +29,17 @@ import org.bonitasoft.studio.common.repository.core.CreateBonitaProjectOperation
 import org.bonitasoft.studio.common.repository.core.MavenAppModuleModelBuilder;
 import org.bonitasoft.studio.common.repository.core.maven.MavenProjectHelper;
 import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
-import org.eclipse.core.internal.resources.ProjectDescriptionReader;
 import org.eclipse.core.resources.ICommand;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.m2e.core.internal.IMavenConstants;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.osgi.framework.Version;
-import org.xml.sax.InputSource;
 
 class UpdateProjectDescriptionMigrationStepTest {
 
@@ -92,10 +92,11 @@ class UpdateProjectDescriptionMigrationStepTest {
         var step = new UpdateProjectDescriptionMigrationStep();
         var descriptor = tmpDir.resolve(IProjectDescription.DESCRIPTION_FILE_NAME);
         var appDescriptor = tmpDir.resolve("app").resolve(IProjectDescription.DESCRIPTION_FILE_NAME);
-        try (var is = UpdateProjectDescriptionMigrationStepTest.class.getResourceAsStream("/testProjectDescriptor")) {
+        var testDescriptor = new File(FileLocator.toFileURL(UpdateProjectDescriptionMigrationStepTest.class.getResource("/testProjectDescriptor")).getFile()).toPath();
+        try (var is = Files.newInputStream(testDescriptor)) {
             Files.copy(is, descriptor);
         } 
-        try (var is = UpdateProjectDescriptionMigrationStepTest.class.getResourceAsStream("/testProjectDescriptor")) {
+        try (var is = Files.newInputStream(testDescriptor)) {
             Files.copy(is, appDescriptor);
         }
         var defaultMetadata = ProjectMetadata.defaultMetadata();
@@ -117,10 +118,9 @@ class UpdateProjectDescriptionMigrationStepTest {
         assertThat(appDesc.getBuildSpec()).extracting(ICommand::getBuilderName).containsExactlyInAnyOrderElementsOf(BonitaProject.BUILDERS);
     }
 
-    private static IProjectDescription readDescriptor(Path descriptor) throws IOException {
-        var descriptionReader = new ProjectDescriptionReader(ResourcesPlugin.getWorkspace());
+    private static IProjectDescription readDescriptor(Path descriptor) throws IOException, CoreException {
         try (var is = Files.newInputStream(descriptor)) {
-           return descriptionReader.read(new InputSource(is));
+           return ResourcesPlugin.getWorkspace().loadProjectDescription(is);
         }
     }
 

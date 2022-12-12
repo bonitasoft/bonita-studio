@@ -101,7 +101,7 @@ public class GenerateBDMOperation implements IRunnableWithProgress {
 
     private IStatus mavenInstall(IProject bdmModelProject, IProgressMonitor monitor) throws CoreException {
         IMaven maven = MavenPlugin.getMaven();
-        var mavenProject = new MavenProjectHelper().getMavenProject(bdmModelProject);
+        var mavenProject = MavenProjectHelper.getMavenProject(bdmModelProject);
         if (mavenProject == null) {
             return new Status(IStatus.ERROR, getClass(),
                     "An error occured while installing the bdm artifacts. Cannot resolve the Maven project.");

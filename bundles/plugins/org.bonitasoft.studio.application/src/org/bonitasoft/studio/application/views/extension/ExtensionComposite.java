@@ -250,7 +250,7 @@ public class ExtensionComposite extends Composite {
             List<Dependency> otherDependencies) {
         var result = new DependencyResolution();
         try {
-            MavenProject mavenProject = mavenHelper
+            MavenProject mavenProject = MavenProjectHelper
                     .getMavenProject(repositoryAccessor.getCurrentRepository().orElseThrow().getProject());
             if (mavenProject != null) {
                 List<Dependency> modelDependencies = mavenProject.getDependencies();

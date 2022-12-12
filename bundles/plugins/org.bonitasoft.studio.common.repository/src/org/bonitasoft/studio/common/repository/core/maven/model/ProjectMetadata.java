@@ -44,6 +44,7 @@ public class ProjectMetadata {
     private String artifactId;
     private String version;
     private String bonitaRuntimeVersion;
+    private boolean useSnapshotRepository;
 
     public String getName() {
         return name;
@@ -227,7 +228,7 @@ public class ProjectMetadata {
 
     @Override
     public int hashCode() {
-        return Objects.hash(artifactId, bonitaRuntimeVersion, description, groupId, name, version);
+        return Objects.hash(artifactId, bonitaRuntimeVersion, description, groupId, name, version, useSnapshotRepository);
     }
 
     @Override
@@ -243,7 +244,8 @@ public class ProjectMetadata {
                 && Objects.equals(bonitaRuntimeVersion, other.bonitaRuntimeVersion)
                 && Objects.equals(description, other.description) && Objects.equals(groupId, other.groupId)
                 && Objects.equals(name, other.name)
-                && Objects.equals(version, other.version);
+                && Objects.equals(version, other.version)
+                && Objects.equals(useSnapshotRepository, other.useSnapshotRepository);
     }
 
     public String getProjectName() {
@@ -252,6 +254,14 @@ public class ProjectMetadata {
 
     public String getProjectId() {
         return artifactId;
+    }
+
+    public boolean isUseSnapshotRepository() {
+        return useSnapshotRepository;
+    }
+
+    public void setUseSnapshotRepository(boolean useSnapshotRepository) {
+        this.useSnapshotRepository = useSnapshotRepository;
     }
 
 }

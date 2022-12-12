@@ -15,6 +15,8 @@
 package org.bonitasoft.studio.common.repository.core.internal;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -173,8 +175,14 @@ public class BonitaProjectImpl implements BonitaProject {
 
     @Override
     public void refresh(IProgressMonitor monitor) throws CoreException {
-        new UpdateMavenProjectJob(getRelatedProjects().toArray(IProject[]::new), false, false, false, true, true)
-                .run(monitor);
+        refresh(false, monitor);
+    }
+
+    @Override
+    public void refresh(boolean updateConfiguration, IProgressMonitor monitor) throws CoreException {
+        new UpdateMavenProjectJob(getRelatedProjects().toArray(IProject[]::new), false, false, updateConfiguration,
+                true, true)
+                        .run(monitor);
         currentRepository().getProjectDependenciesStore().analyze(monitor);
     }
 
@@ -456,5 +464,28 @@ public class BonitaProjectImpl implements BonitaProject {
     @Override
     public IScopeContext getScopeContext() {
         return new ProjectScope(getAppProject());
+    }
+
+    @Override
+    public String getBonitaVersion() {
+        var parentProject = getParentProject();
+        if (parentProject.isOpen()) {
+            try {
+                return parentProject.getDescription().getComment();
+            } catch (final CoreException e) {
+                BonitaStudioLog.error(e);
+            }
+        } else if (parentProject.getLocation() != null) {
+            var projectFile = new File(parentProject.getLocation().toFile(), ".project");
+            if (projectFile.exists()) {
+                try (var fis = new FileInputStream(projectFile)) {
+                    var description = ResourcesPlugin.getWorkspace().loadProjectDescription(fis);
+                    return description.getComment();
+                } catch (final IOException | CoreException e) {
+                    BonitaStudioLog.error(e);
+                }
+            }
+        }
+        return null;
     }
 }

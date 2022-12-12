@@ -22,6 +22,7 @@ import java.util.stream.Stream;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.BonitaProjectNature;
+import org.bonitasoft.studio.common.repository.core.internal.BonitaProjectImpl;
 import org.bonitasoft.studio.common.repository.core.maven.BonitaProjectBuilder;
 import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
 import org.bonitasoft.studio.common.repository.core.team.GitProject;
@@ -59,6 +60,8 @@ public interface BonitaProject extends GitProject, IAdaptable {
 
     void delete(IProgressMonitor monitor) throws CoreException;
 
+    String getBonitaVersion();
+    
     IProject getParentProject();
 
     IProject getBdmParentProject();
@@ -76,6 +79,8 @@ public interface BonitaProject extends GitProject, IAdaptable {
     void removeBdmProjects(IProgressMonitor monitor) throws CoreException;
 
     void refresh(IProgressMonitor monitor) throws CoreException;
+    
+    void refresh(boolean updateConfiguration, IProgressMonitor monitor) throws CoreException;
 
     static List<IProject> getRelatedProjects(String id) {
         var relatedProjects = new ArrayList<IProject>();
@@ -159,5 +164,9 @@ public interface BonitaProject extends GitProject, IAdaptable {
     }
 
     boolean exists();
+
+    static BonitaProject create(String projectId) {
+        return new BonitaProjectImpl(projectId);
+    }
 
 }
