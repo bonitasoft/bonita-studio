@@ -322,7 +322,6 @@ public abstract class AbstractRepositoryStore<T extends IRepositoryFileStore<?>>
         if (file.exists()) {
             return createRepositoryFileStore(fileName);
         }
-
         return null;
     }
 

@@ -142,11 +142,6 @@ public class FakeRepository implements IRepository {
     }
 
     @Override
-    public String getVersion() {
-        return null;
-    }
-
-    @Override
     public List<IRepositoryStore<? extends IRepositoryFileStore>> getAllSharedStores() {
         return null;
     }

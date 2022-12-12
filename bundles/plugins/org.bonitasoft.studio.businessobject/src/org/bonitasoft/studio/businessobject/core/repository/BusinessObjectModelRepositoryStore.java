@@ -213,18 +213,22 @@ public class BusinessObjectModelRepositoryStore<F extends AbstractBDMFileStore<?
         var parentProjectPath = parentProject.getLocation().toFile().toPath();
         var plugin = new CreateBdmModulePlugin(parentProjectPath, project.getId());
         plugin.execute(new NullProgressMonitor());
-        var importBdmModules = new ImportBdmModuleOperation(parentProjectPath.resolve("bdm").toFile());
+        var importBdmModules = new ImportBdmModuleOperation(parentProjectPath.resolve(STORE_NAME).toFile());
         importBdmModules.run(monitor);
-        project.getBdmModelProject().refreshLocal(IResource.DEPTH_INFINITE, monitor);
+        project.getBdmParentProject().refreshLocal(IResource.DEPTH_INFINITE, monitor);
         project.getBdmModelProject().build(IncrementalProjectBuilder.INCREMENTAL_BUILD, monitor);
         return createBdmFolderLinkInAppProject(project);
     }
 
-    private IFolder createBdmFolderLinkInAppProject(BonitaProject project) {
-        IFolder bdmLinkedFolder = project.getAppProject().getFolder("bdm");
+    public IFolder createBdmFolderLinkInAppProject(BonitaProject project) {
+        var bdmFolder = project.getParentProject().getFolder(STORE_NAME);
+        var bdmLinkedFolder = project.getAppProject().getFolder(STORE_NAME);
         try {
+            if(!bdmFolder.exists()) {
+                bdmFolder.create(false, true, new NullProgressMonitor());
+            }
             if (!bdmLinkedFolder.exists()) {
-                bdmLinkedFolder.createLink(Path.fromOSString("PARENT-1-PROJECT_LOC/bdm"),
+                bdmLinkedFolder.createLink(Path.fromOSString("PARENT-1-PROJECT_LOC/" + STORE_NAME),
                         IResource.REPLACE | IResource.ALLOW_MISSING_LOCAL,
                         new NullProgressMonitor());
             }

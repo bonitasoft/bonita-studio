@@ -26,7 +26,6 @@ import org.bonitasoft.studio.common.repository.core.team.GitProject;
 import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.Adapters;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.egit.core.GitProvider;
 import org.eclipse.egit.core.op.DisconnectProviderOperation;
@@ -46,15 +45,13 @@ class BonitaProjectImplTest {
     @BeforeEach
     void setupDefaultProject() throws Exception {
         metadata = ProjectMetadata.defaultMetadata();
+        metadata.setUseSnapshotRepository(true);
         projectId = metadata.getArtifactId();
         repository = RepositoryManager.getInstance().newRepository(metadata.getProjectName());
         RepositoryManager.getInstance().setCurrentRepository(repository);
-        project = Adapters.adapt(repository, BonitaProject.class);
-        if (project != null && repository.getProject().exists()) {
-            project.delete(monitor);
-        }
+        project = BonitaProject.create(projectId);
+        project.delete(monitor);
         repository.create(metadata, monitor);
-        project = Adapters.adapt(repository, BonitaProject.class);
     }
 
     @Test

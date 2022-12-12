@@ -42,7 +42,7 @@ public class ExceptionDialogHandler {
         if(t instanceof CoreException) {
             openErrorDialog(shell, (CoreException) t);
         }else {
-            final Status status = createErrorStatus(t);
+            var status = createErrorStatus(t);
             LOG.log(status);
             var dialog = new InternalErrorDialog(shell,
                     Messages.errorTitle,
@@ -58,10 +58,11 @@ public class ExceptionDialogHandler {
       
     }
 
-    private Status createErrorStatus(Throwable t) {
-        Throwable exception = t instanceof InvocationTargetException
+    private IStatus createErrorStatus(Throwable t) {
+        Throwable exception = t instanceof InvocationTargetException 
+                && ((InvocationTargetException) t).getTargetException() != null
                 ? ((InvocationTargetException) t).getTargetException() : t;
-        return new Status(IStatus.ERROR, PLUGIN_ID, exception.getMessage(), exception);
+        return Status.error(exception.getMessage(), exception);
     }
 
     public void openErrorDialog(Shell shell, CoreException e) {

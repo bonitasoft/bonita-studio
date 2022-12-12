@@ -16,7 +16,11 @@ package org.bonitasoft.studio.common.repository.preferences;
 
 import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
+import org.eclipse.core.runtime.preferences.InstanceScope;
+import org.eclipse.egit.core.Activator;
+import org.eclipse.egit.core.GitCorePreferences;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.ui.preferences.ScopedPreferenceStore;
 
 public class RepositoryPreferenceInitializer extends AbstractPreferenceInitializer
         implements RepositoryPreferenceConstant {
@@ -26,6 +30,10 @@ public class RepositoryPreferenceInitializer extends AbstractPreferenceInitializ
         IPreferenceStore store = CommonRepositoryPlugin.getDefault().getPreferenceStore();
         store.setDefault(BUILD_ENABLE, true);
         store.setDefault(DEFAULT_GROUPID, DEFAULT_GROUPID_VALUE);
+
+        IPreferenceStore gitPreferenceStore = new ScopedPreferenceStore(InstanceScope.INSTANCE,
+                Activator.PLUGIN_ID);
+        gitPreferenceStore.setDefault(GitCorePreferences.core_autoShareProjects, false);
     }
 
 }

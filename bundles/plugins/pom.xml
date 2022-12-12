@@ -16,7 +16,6 @@
 
 
     <modules>
-        <module>bonita-business-data-generator</module>
         <module>bonita-studio-watchdog</module>
         <module>org.bonitasoft.studio-models</module>
         <module>org.bonitasoft.studio.application</module>

@@ -12,20 +12,17 @@ import java.util.Objects;
 
 import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
-import org.bonitasoft.studio.common.repository.core.BonitaProject;
 import org.bonitasoft.studio.common.repository.core.ImportBonitaProjectOperation;
 import org.bonitasoft.studio.common.repository.core.migration.BonitaProjectMigrator;
 import org.bonitasoft.studio.team.git.i18n.Messages;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IncrementalProjectBuilder;
-import org.eclipse.core.runtime.Adapters;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
-import org.eclipse.egit.core.internal.util.ResourceUtil;
 import org.eclipse.egit.core.op.CloneOperation.PostCloneTask;
 import org.eclipse.egit.ui.internal.dialogs.BasicConfigurationDialog;
 import org.eclipse.emf.edapt.migration.MigrationException;
@@ -45,9 +42,9 @@ public class ImportClonedRepository implements PostCloneTask {
         var importBonitaProjectOperation = new ImportBonitaProjectOperation(projectRoot);
         importBonitaProjectOperation.run(new NullProgressMonitor());
         var report = importBonitaProjectOperation.getReport();
-        var project = importBonitaProjectOperation.getProject();
+        var bonitaProject = importBonitaProjectOperation.getBonitaProject();
         var currentRepo = RepositoryManager.getInstance().switchToRepository(
-                project.getName(),
+                bonitaProject.getAppProject().getName(),
                 new NullProgressMonitor());
         try {
             subMonitor = SubMonitor.convert(monitor)
@@ -56,13 +53,11 @@ public class ImportClonedRepository implements PostCloneTask {
         } catch (MigrationException e) {
             throw new CoreException(Status.error("An error occured while migrating cloned project.", e));
         }
-        BasicConfigurationDialog.show(ResourceUtil.getRepository(project));
-        var bonitaProject = Adapters.adapt(currentRepo, BonitaProject.class);
+        BasicConfigurationDialog.show(bonitaProject.getAdapter(Repository.class));
         if (!Objects.equals(clonedVersion, ProductVersion.CURRENT_VERSION)) {
             bonitaProject.commitAll(String.format("Bonita '%s' to '%s' automated migration", clonedVersion, ProductVersion.CURRENT_VERSION),
                     monitor);
         }
-
         var bdmProject = bonitaProject.getBdmModelProject();
         if (bdmProject.exists()) {
             bdmProject.refreshLocal(IResource.DEPTH_INFINITE, new NullProgressMonitor());

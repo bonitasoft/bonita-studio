@@ -35,6 +35,11 @@ public class OpenOverviewViewHandler {
                 .map(IWorkbench::getActiveWorkbenchWindow)
                 .map(IWorkbenchWindow::getActivePage)
                 .ifPresent(activePage -> {
+                    if(PlatformUI.getWorkbench().isClosing()
+                             || PlatformUI.getWorkbench().getDisplay() == null
+                             || PlatformUI.getWorkbench().getDisplay().isDisposed()) {
+                        return;
+                    }
                     try {
                         activePage.openEditor(ProjectOverviewEditorInput.getInstance(), ProjectOverviewEditorPart.ID);
                     } catch (PartInitException e) {

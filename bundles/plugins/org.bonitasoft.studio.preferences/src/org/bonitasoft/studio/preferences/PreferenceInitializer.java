@@ -31,8 +31,6 @@ import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.internal.core.IInternalDebugCoreConstants;
 import org.eclipse.debug.internal.ui.DebugUIPlugin;
 import org.eclipse.debug.internal.ui.preferences.IDebugPreferenceConstants;
-import org.eclipse.egit.core.Activator;
-import org.eclipse.egit.core.GitCorePreferences;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.ui.PreferenceConstants;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
@@ -47,7 +45,6 @@ import org.eclipse.ui.internal.WorkbenchPlugin;
 import org.eclipse.ui.internal.browser.WebBrowserUIPlugin;
 import org.eclipse.ui.internal.ide.IDEWorkbenchPlugin;
 import org.eclipse.ui.internal.util.PrefUtil;
-import org.eclipse.ui.preferences.ScopedPreferenceStore;
 import org.osgi.service.prefs.BackingStoreException;
 
 import com.google.common.io.Files;
@@ -119,10 +116,6 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer impleme
                         true);
         TeamUIPlugin.getPlugin().getPreferenceStore().setValue(IPreferenceIds.SYNCHRONIZING_COMPLETE_PERSPECTIVE,
                 MessageDialogWithToggle.NEVER);
-
-        IPreferenceStore gitPreferenceStore = new ScopedPreferenceStore(InstanceScope.INSTANCE,
-                Activator.PLUGIN_ID);
-        gitPreferenceStore.setDefault(GitCorePreferences.core_autoShareProjects, false);
     }
 
     IPreferenceStore getIDEPreferenceStore() {

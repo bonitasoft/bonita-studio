@@ -31,9 +31,10 @@ public class RepositoryLabelProvider extends StyledCellLabelProvider {
      */
     public Color getForeground(final Object element) {
         final IRepository repository = (IRepository) element;
+        var project = Adapters.adapt(repository, BonitaProject.class);
         if (RepositoryManager.getInstance().getCurrentRepository().filter(element::equals).isPresent()) {
             return ColorConstants.gray;
-        } else if (!ProductVersion.sameMinorVersion(repository.getVersion())) {
+        } else if (!ProductVersion.sameMinorVersion(project.getBonitaVersion())) {
             return ColorConstants.red;
         }
         return null;

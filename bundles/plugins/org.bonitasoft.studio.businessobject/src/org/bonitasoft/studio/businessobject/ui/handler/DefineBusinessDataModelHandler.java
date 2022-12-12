@@ -20,11 +20,10 @@ import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelF
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
 import org.bonitasoft.studio.businessobject.i18n.Messages;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
-import org.bonitasoft.studio.common.repository.core.BonitaProject;
 import org.bonitasoft.studio.ui.dialog.ExceptionDialogHandler;
-import org.eclipse.core.runtime.Adapters;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.progress.IProgressService;
@@ -33,10 +32,9 @@ public class DefineBusinessDataModelHandler {
 
     @Execute
     public void defineBusinessDataModel(RepositoryAccessor repositoryAccessor, IProgressService progressService) {
-        BusinessObjectModelRepositoryStore<BusinessObjectModelFileStore> bomRepositoryStore = repositoryAccessor
+        var bomRepositoryStore = repositoryAccessor
                 .getRepositoryStore(BusinessObjectModelRepositoryStore.class);
-        BusinessObjectModelFileStore bdmFileStore = bomRepositoryStore.getChild(
-                BusinessObjectModelFileStore.BOM_FILENAME,
+        var bdmFileStore = bomRepositoryStore.getChild(BusinessObjectModelFileStore.BOM_FILENAME,
                 false);
         if (bdmFileStore == null) {
             try {
@@ -44,16 +42,21 @@ public class DefineBusinessDataModelHandler {
                     try {
                         createBdmFileStore(repositoryAccessor, monitor);
                     } catch (CoreException e) {
-                       throw new InvocationTargetException(e);
+                        throw new InvocationTargetException(e);
                     }
                 });
             } catch (InvocationTargetException | InterruptedException e) {
-                new ExceptionDialogHandler().openErrorDialog(Display.getCurrent().getActiveShell(), "Failed to create the BDM.", e);
+                new ExceptionDialogHandler().openErrorDialog(Display.getCurrent().getActiveShell(),
+                       new CoreException(Status.error("Failed to create the BDM.", e)));
                 return;
             }
             bdmFileStore = bomRepositoryStore.getChild(
                     BusinessObjectModelFileStore.BOM_FILENAME,
-                    false);
+                    true);
+            if (bdmFileStore == null) {
+                new ExceptionDialogHandler().openErrorDialog(Display.getCurrent().getActiveShell(),
+                        new CoreException(Status.error("Failed to create the BDM.")));
+            }
         }
         bdmFileStore.open();
     }
@@ -62,7 +65,7 @@ public class DefineBusinessDataModelHandler {
             IProgressMonitor monitor) throws CoreException {
         monitor.beginTask(Messages.creatingBusinessDataModel, IProgressMonitor.UNKNOWN);
         var bdmStore = repositoryAccessor.getRepositoryStore(BusinessObjectModelRepositoryStore.class);
-        var project = Adapters.adapt(repositoryAccessor.getCurrentRepository().orElseThrow(), BonitaProject.class);
+        var project = repositoryAccessor.getCurrentProject().orElseThrow();
         if (project != null && !project.getBdmParentProject().exists()) {
             bdmStore.createBdmModule(project, monitor);
         }

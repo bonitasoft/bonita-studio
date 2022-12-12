@@ -116,7 +116,8 @@ public class SwitchRepositoryDialog extends Dialog {
                 if (!((StructuredSelection) event.getSelection()).isEmpty()) {
                     final IRepository repository = (IRepository) ((StructuredSelection) event.getSelection())
                             .getFirstElement();
-                    if (ProductVersion.sameMinorVersion(repository.getVersion())
+                    var project = Adapters.adapt(repository, BonitaProject.class);
+                    if (ProductVersion.sameMinorVersion(project.getBonitaVersion())
                             && (force || RepositoryManager.getInstance().getCurrentRepository().filter(repository::equals).isEmpty())) {
                         updateOKButton(true);
                     } else {

@@ -20,13 +20,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import org.apache.maven.model.Model;
 import org.bonitasoft.studio.common.FileUtil;
-import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.core.maven.MavenProjectHelper;
-import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
 import org.bonitasoft.studio.common.repository.core.migration.BonitaProjectMigrator;
 import org.bonitasoft.studio.common.repository.core.migration.report.MigrationReport;
 import org.eclipse.core.resources.IProject;
@@ -36,7 +35,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.m2e.core.MavenPlugin;
-import org.eclipse.m2e.core.project.IMavenProjectImportResult;
 import org.eclipse.m2e.core.project.IProjectConfigurationManager;
 import org.eclipse.m2e.core.project.LocalProjectScanner;
 import org.eclipse.m2e.core.project.MavenProjectInfo;
@@ -46,8 +44,8 @@ public class ImportBonitaProjectOperation implements IWorkspaceRunnable {
 
     private MigrationReport report = MigrationReport.emptyReport();
     private File projectRoot;
-    private IProject project;
     private IProjectConfigurationManager projectConfigurationManager;
+    private String projectId;
 
     public ImportBonitaProjectOperation(File projectRoot) {
         this.projectRoot = projectRoot;
@@ -61,15 +59,9 @@ public class ImportBonitaProjectOperation implements IWorkspaceRunnable {
             throw new CoreException(Status.error(String.format("No project found at %s", projectRoot)));
         }
         report = new BonitaProjectMigrator(projectRoot.toPath()).run(monitor);
-        var originalPomFile = projectRoot.toPath().resolve("pom.xml").toFile();
-        var mavenModel = MavenProjectHelper.readModel(originalPomFile);
-        var metadata = ProjectMetadata.read(mavenModel);
-        var modules = mavenModel.getModules().stream()
-                .map(module -> originalPomFile.getParentFile().toPath().resolve(module).resolve("pom.xml").toFile())
-                .filter(File::exists)
-                .map(f -> new MavenProjectInfo(null, f, null, null))
-                .collect(Collectors.toList());
-        var projectId = projectId(modules, metadata.getArtifactId());
+        var appPomFile = projectRoot.toPath().resolve("app").resolve("pom.xml").toFile();
+        var mavenModel = MavenProjectHelper.readModel(appPomFile);
+        projectId = mavenModel.getArtifactId();
         IProject targetProject = ResourcesPlugin.getWorkspace().getRoot().getProject(projectId);
         if (targetProject.exists()) {
             throw new CoreException(
@@ -90,29 +82,33 @@ public class ImportBonitaProjectOperation implements IWorkspaceRunnable {
                 pomFile.getParentFile().getAbsolutePath(),
                 false,
                 MavenPlugin.getMavenModelManager());
-
         try {
             localProjectScanner.run(monitor);
-        } catch (InterruptedException e1) {
-            BonitaStudioLog.error(e1);
+        } catch (InterruptedException e) {
+            throw new CoreException(Status.error("Failed to scan local projects", e));
         }
-        modules = mavenModel.getModules().stream()
-                .map(module -> pomFile.getParentFile().toPath().resolve(module).resolve("pom.xml").toFile())
-                .filter(File::exists)
-                .map(f -> new MavenProjectInfo(null, f, null, null))
-                .collect(Collectors.toList());
 
         var projectImportConfiguration = new BonitaProjectImportConfiguration(projectId);
-        var importResult = projectConfigurationManager.importProjects(
-                flatten(localProjectScanner.getProjects()),
+        projectConfigurationManager.importProjects(
+                flatten(localProjectScanner.getProjects()).stream()
+                    .filter(bdmProjects()).collect(Collectors.toList()),
                 projectImportConfiguration, monitor);
+        
+        projectConfigurationManager.importProjects(
+                flatten(localProjectScanner.getProjects()).stream()
+                    .filter(Predicate.not(bdmProjects())).collect(Collectors.toList()),
+                projectImportConfiguration, monitor);
+    }
+    
+    private Predicate<? super MavenProjectInfo> bdmProjects() {
+        return mpf -> mpf.getPomFile().toPath().toString().contains("/model/pom.xml")
+                || mpf.getPomFile().toPath().toString().contains("/dao-client/pom.xml")
+                || mpf.getPomFile().toPath().toString().contains("bdm/pom.xml");
+    }
+    
 
-        project = importResult.stream()
-                .map(IMavenProjectImportResult::getProject)
-                .filter(Objects::nonNull)
-                .filter(p -> Objects.equals(p.getName(), projectId + "-app"))
-                .findFirst()
-                .orElseThrow();
+    public BonitaProject getBonitaProject() {
+        return BonitaProject.create(projectId);
     }
 
     private static Collection<MavenProjectInfo> flatten(Collection<MavenProjectInfo> projects) {
@@ -126,19 +122,8 @@ public class ImportBonitaProjectOperation implements IWorkspaceRunnable {
         return flatList;
     }
 
-    private String projectId(List<MavenProjectInfo> modules, String artifactId) {
-        if (!modules.isEmpty() && artifactId.endsWith("-parent")) {
-            return artifactId.substring(0, artifactId.length() - "-parent".length());
-        }
-        return artifactId;
-    }
-
     public MigrationReport getReport() {
         return report;
-    }
-
-    public IProject getProject() {
-        return project;
     }
 
     class BonitaProjectImportConfiguration extends ProjectImportConfiguration {

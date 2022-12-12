@@ -59,10 +59,10 @@ public abstract class AbstractSforceTest implements SWTBotConstants {
     @Rule
     public SWTGefBotRule rule = new SWTGefBotRule(bot);
     
-    @BeforeClass
-    public static void installSalesForceConnector() throws CoreException {
+    @Before
+    public void installSalesForceConnector() throws CoreException {
         new AddDependencyOperation("org.bonitasoft.connectors", "bonita-connector-salesforce", "1.1.3")
-        .run(AbstractRepository.NULL_PROGRESS_MONITOR);
+            .run(AbstractRepository.NULL_PROGRESS_MONITOR);
     }
 
     @Before

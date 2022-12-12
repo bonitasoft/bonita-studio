@@ -35,6 +35,7 @@ import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRunnable;
 import org.eclipse.core.runtime.CoreException;
@@ -100,8 +101,7 @@ public class CreateBonitaProjectOperation implements IWorkspaceRunnable {
                 .havingNatures(appProjectNatures())
                 .havingBuilders(appProjectBuilders())
                 .build(), monitor);
-
-        new UpdateMavenProjectJob(new IProject[] { project }, false, false, true, true, true).run(monitor);
+        new UpdateMavenProjectJob(new IProject[] { project }, false, false, false, true, true).run(monitor);
     }
 
     private IProject importAppModuleProject(IFile pomFile, String nameTemplate, IProgressMonitor monitor)
@@ -154,7 +154,7 @@ public class CreateBonitaProjectOperation implements IWorkspaceRunnable {
         if (Files.exists(pomFile)) {
             backupExistingPomFile(pomFile, metadata);
         }
-        var builder = newProjectBuilder(metadata, new MavenParentProjectModelBuilder());
+        var builder = newProjectBuilder(metadata, new MavenParentProjectModelBuilder(metadata.isUseSnapshotRepository()));
         MavenProjectHelper.saveModel(project.resolve("pom.xml"), builder.toMavenModel());
     }
 

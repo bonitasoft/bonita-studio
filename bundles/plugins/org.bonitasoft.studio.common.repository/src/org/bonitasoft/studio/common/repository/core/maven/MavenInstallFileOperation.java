@@ -65,6 +65,7 @@ public class MavenInstallFileOperation {
         request.setUpdateSnapshots(internalRepository == null);
         request.setInteractiveMode(false);
         request.setCacheNotFound(true);
+        var maven = mavenEngine.lookup(Maven.class);
         return context.execute(new ICallable<MavenExecutionResult>() {
 
             @Override
@@ -75,7 +76,6 @@ public class MavenInstallFileOperation {
                     systemProperties.setProperty((String) key, configuration.getProperty((String) key));
                 }
                 request.setSystemProperties(systemProperties);
-                Maven maven = mavenEngine.lookup(Maven.class);
                 innerMonitor.setTaskName(String.format("Installing %s:%s:%s in %s repository",
                         configuration.getProperty("groupId"), 
                         configuration.getProperty("artifactId"), 
