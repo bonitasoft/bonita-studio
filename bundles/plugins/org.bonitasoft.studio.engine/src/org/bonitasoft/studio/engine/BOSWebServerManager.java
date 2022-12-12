@@ -437,8 +437,9 @@ public class BOSWebServerManager implements IBonitaProjectListener {
                     projectProperties.setServerProject(true, monitor);
                 }
             }, monitor);
+        } else if(!confProject.isOpen()) {
+            confProject.open(AbstractRepository.NULL_PROGRESS_MONITOR);
         }
-        confProject.open(AbstractRepository.NULL_PROGRESS_MONITOR);
         return confProject;
     }
 
