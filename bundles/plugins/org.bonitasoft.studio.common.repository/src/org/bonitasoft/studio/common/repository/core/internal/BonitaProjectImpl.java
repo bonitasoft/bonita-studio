@@ -51,10 +51,8 @@ import org.eclipse.core.runtime.preferences.IScopeContext;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.m2e.core.MavenPlugin;
 import org.eclipse.m2e.core.internal.IMavenConstants;
-import org.eclipse.m2e.core.internal.project.ProjectConfigurationManager;
 import org.eclipse.m2e.core.project.IMavenProjectImportResult;
 import org.eclipse.m2e.core.project.MavenProjectInfo;
-import org.eclipse.m2e.core.project.MavenUpdateRequest;
 import org.eclipse.m2e.core.project.ProjectImportConfiguration;
 import org.eclipse.m2e.core.ui.internal.UpdateMavenProjectJob;
 
@@ -117,7 +115,6 @@ public class BonitaProjectImpl implements BonitaProject {
             project.open(monitor);
         }
         currentRepository().open(monitor);
-        refresh(monitor);
     }
 
     private IRepository currentRepository() {
@@ -189,7 +186,7 @@ public class BonitaProjectImpl implements BonitaProject {
     @Override
     public void update(ProjectMetadata metadata, IProgressMonitor monitor) throws CoreException {
         var project = getAppProject();
-        var oldMetadata = getProjectMetadata(monitor);
+        var oldMetadata = getProjectMetadata(new NullProgressMonitor());
         var projectId = oldMetadata.getArtifactId();
         var model = mavenProjectHelper.getMavenModel(project);
         boolean nameChanged = !Objects.equals(project.getName(), metadata.getName());
@@ -212,7 +209,7 @@ public class BonitaProjectImpl implements BonitaProject {
         parentModel.getProperties().setProperty(ProjectDefaultConfiguration.BONITA_RUNTIME_VERSION,
                 metadata.getBonitaRuntimeVersion());
 
-        mavenProjectHelper.saveModel(parentProject, parentModel, monitor);
+        mavenProjectHelper.saveModel(parentProject, parentModel, new NullProgressMonitor());
 
         var bdmParentProject = getBdmParentProject();
         if (bdmParentProject.exists()) {
@@ -221,7 +218,7 @@ public class BonitaProjectImpl implements BonitaProject {
             bdmParentModel.getParent().setArtifactId(newProjectId + PARENT_SUFFIX);
             bdmParentModel.getParent().setVersion(metadata.getVersion());
             bdmParentModel.setArtifactId(newProjectId + "-bdm-parent");
-            mavenProjectHelper.saveModel(bdmParentProject, bdmParentModel, monitor);
+            mavenProjectHelper.saveModel(bdmParentProject, bdmParentModel, new NullProgressMonitor());
 
             var bdmModelProject = getBdmModelProject();
             var bdmModelModel = mavenProjectHelper.getMavenModel(bdmModelProject);
@@ -229,7 +226,7 @@ public class BonitaProjectImpl implements BonitaProject {
             bdmModelModel.getParent().setArtifactId(newProjectId + "-bdm-parent");
             bdmModelModel.getParent().setVersion(metadata.getVersion());
             bdmModelModel.setArtifactId(newProjectId + "-bdm-model");
-            mavenProjectHelper.saveModel(bdmModelProject, bdmModelModel, monitor);
+            mavenProjectHelper.saveModel(bdmModelProject, bdmModelModel, new NullProgressMonitor());
 
             var bdmDaoClientProject = getBdmDaoClientProject();
             var bdmDaoClientModel = mavenProjectHelper.getMavenModel(bdmDaoClientProject);
@@ -248,33 +245,32 @@ public class BonitaProjectImpl implements BonitaProject {
                     .findFirst()
                     .ifPresent(d -> d.setArtifactId(newProjectId + "-bdm-model"));
 
-            mavenProjectHelper.saveModel(bdmDaoClientProject, bdmDaoClientModel, monitor);
+            mavenProjectHelper.saveModel(bdmDaoClientProject, bdmDaoClientModel, new NullProgressMonitor());
             if (Objects.equals(projectId, newProjectId)) {
                 new UpdateMavenProjectJob(new IProject[] { bdmParentProject, bdmModelProject, bdmDaoClientProject },
                         false,
                         false,
                         false,
                         true,
-                        true).run(monitor);
+                        true).run(new NullProgressMonitor());
             }
         }
 
         if (!Objects.equals(projectId, newProjectId)) {
-            mavenProjectHelper.saveModel(project, model, monitor);
+            mavenProjectHelper.saveModel(project, model, new NullProgressMonitor());
             if (currentRepository().closeAllEditors(false)) {
                 ResourcesPlugin.getWorkspace().run(renameProjectsOperation(project, projectId, newProjectId), monitor);
                 PlatformUtil.openIntroIfNoOtherEditorOpen();
             }
         } else {
             if (nameChanged) {
-                mavenProjectHelper.saveModel(project, model, false, monitor);
+                mavenProjectHelper.saveModel(project, model, false, new NullProgressMonitor());
             }
-            parentProject = project.getWorkspace().getRoot().getProject(newProjectId + "-parent");
-            ((ProjectConfigurationManager) MavenPlugin.getProjectConfigurationManager())
-                    .updateProjectConfiguration(new MavenUpdateRequest(parentProject, false, false), false, false, true,
-                            monitor);
+            new UpdateMavenProjectJob(getRelatedProjects().toArray(IProject[]::new), false, false, false,
+                    false, true)
+                            .run(monitor);
         }
-        updateRestApiExtension(oldMetadata, metadata, monitor);
+        updateRestApiExtension(oldMetadata, metadata, new NullProgressMonitor());
     }
 
     private void updateRestApiExtension(ProjectMetadata oldMetadata,
@@ -376,26 +372,26 @@ public class BonitaProjectImpl implements BonitaProject {
             public void run(IProgressMonitor monitor)
                     throws CoreException {
 
-                currentRepository().close(monitor);
+                currentRepository().close(new NullProgressMonitor());
 
                 var appProject = getProject(oldProjectId + "-app");
-                appProject.delete(false, true, monitor);
+                appProject.delete(false, true, new NullProgressMonitor());
 
                 var bdmParentProject = getProject(oldProjectId + "-bdm-parent");
                 if (bdmParentProject.exists()) {
                     IProject bdmModelProject = getProject(oldProjectId + "-bdm-model");
                     var descriptorFile = bdmModelProject.getFile(".project").getLocation().toFile();
                     descriptorFile.delete();
-                    bdmModelProject.delete(false, true, monitor);
+                    bdmModelProject.delete(false, true, new NullProgressMonitor());
 
                     var bdmDaoClientProject = getProject(oldProjectId + "-bdm-dao-client");
                     descriptorFile = bdmDaoClientProject.getFile(".project").getLocation().toFile();
                     descriptorFile.delete();
-                    bdmDaoClientProject.delete(false, true, monitor);
+                    bdmDaoClientProject.delete(false, true, new NullProgressMonitor());
 
                     descriptorFile = bdmParentProject.getFile(".project").getLocation().toFile();
                     descriptorFile.delete();
-                    bdmParentProject.delete(false, true, monitor);
+                    bdmParentProject.delete(false, true, new NullProgressMonitor());
                 }
 
                 var parentProject = getProject(oldProjectId);
@@ -429,28 +425,21 @@ public class BonitaProjectImpl implements BonitaProject {
                     projectImportConfiguration.setProjectNameTemplate("[artifactId]");
                     importResults = MavenPlugin.getProjectConfigurationManager().importProjects(
                             projectInfoToImport,
-                            projectImportConfiguration, monitor);
+                            projectImportConfiguration, new NullProgressMonitor());
                     importResults.stream()
                             .map(IMavenProjectImportResult::getProject)
                             .filter(Objects::nonNull)
                             .forEach(projectsToUpdate::add);
                     IFolder bdmFolder = appProject.getFolder("bdm");
                     if (bdmFolder.exists()) {
-                        bdmFolder.delete(true, monitor);
+                        bdmFolder.delete(true, new NullProgressMonitor());
                     }
                     bdmFolder.createLink(Path.fromOSString("PARENT-1-PROJECT_LOC/bdm"),
-                            IResource.REPLACE | IResource.ALLOW_MISSING_LOCAL, monitor);
+                            IResource.REPLACE | IResource.ALLOW_MISSING_LOCAL, new NullProgressMonitor());
                 }
                 BonitaProjectImpl.this.id = newProjectId;
-                var repository = RepositoryManager.getInstance().getRepository(appProject.getName());
+                var repository = RepositoryManager.getInstance().getRepository(newProjectId);
                 repository.open(monitor);
-
-                new UpdateMavenProjectJob(projectsToUpdate.toArray(IProject[]::new),
-                        false,
-                        false,
-                        false,
-                        false,
-                        true).run(monitor);
             }
 
         };

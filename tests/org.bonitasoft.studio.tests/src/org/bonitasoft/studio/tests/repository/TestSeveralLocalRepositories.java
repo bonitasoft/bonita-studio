@@ -47,7 +47,7 @@ public class TestSeveralLocalRepositories {
     @After
     public void tearDown() throws Exception {
         if (!RepositoryManager.getInstance().getCurrentRepository().filter(currentRepo::equals).isPresent()) {
-            RepositoryManager.getInstance().switchToRepository(currentRepo.getName(), new NullProgressMonitor());
+            RepositoryManager.getInstance().switchToRepository(currentRepo.getProjectId(), new NullProgressMonitor());
         }
         SWTBotTestUtil.waitUntilRootShellIsActive(bot);
     }

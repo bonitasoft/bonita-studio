@@ -111,7 +111,7 @@ public class ImportBosArchivePageTest {
         when(repo.getRepositoryStoreByName("diagrams")).thenReturn(Optional.of(diagramStore));
         when(repo.getRepositoryStoreByName("application_resources")).thenReturn(Optional.of(appRessourcesStore));
         when(repo.getRepositoryStoreByName("lib")).thenReturn(Optional.of(libStore));
-        when(repo.getName()).thenReturn(name);
+        when(repo.getProjectId()).thenReturn(name);
         when(repo.getProject()).thenReturn(mock(IProject.class));
         return repo;
     }

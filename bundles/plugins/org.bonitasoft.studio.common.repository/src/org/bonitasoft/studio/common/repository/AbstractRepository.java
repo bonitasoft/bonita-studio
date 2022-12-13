@@ -81,6 +81,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.e4.core.services.events.IEventBroker;
 import org.eclipse.emf.edapt.migration.MigrationException;
 import org.eclipse.jdt.core.IJavaProject;
@@ -111,7 +112,7 @@ public abstract class AbstractRepository implements IRepository {
 
     private static final String CLASS = "class";
 
-    private IProject project;
+    private BonitaProject project;
 
     protected SortedMap<Class<?>, IRepositoryStore<? extends IRepositoryFileStore>> stores;
 
@@ -136,7 +137,7 @@ public abstract class AbstractRepository implements IRepository {
     private MigrationReportWriter reportWriter = new AsciidocMigrationReportWriter();
 
     protected AbstractRepository(final IWorkspace workspace,
-            final IProject project,
+            BonitaProject project,
             final ExtensionContextInjectionFactory extensionContextInjectionFactory,
             final JDTTypeHierarchyManager jdtTypeHierarchyManager,
             IEventBroker eventBroker) {
@@ -146,44 +147,39 @@ public abstract class AbstractRepository implements IRepository {
         this.extensionContextInjectionFactory = extensionContextInjectionFactory;
         this.eventBroker = eventBroker;
     }
+    
+    @Override
+    public String getProjectId() {
+        return project.getId();
+    }
 
     @Override
     public AbstractRepository create(ProjectMetadata metadata, final IProgressMonitor monitor) {
         final long init = System.currentTimeMillis();
-        BonitaStudioLog.debug("Creating repository " + project.getName() + "...", CommonRepositoryPlugin.PLUGIN_ID);
+        BonitaStudioLog.debug("Creating project " + project.getId() + "...", CommonRepositoryPlugin.PLUGIN_ID);
         try {
             if (!project.exists()) {
                 CreateBonitaProjectOperation createBonitaProjectOperation = newProjectWorkspaceOperation(metadata,
                         workspace);
                 workspace.run(createBonitaProjectOperation, monitor);
-            } else {
-                updateProjectMavenConfiguration(monitor);
-            }
-        } catch (final Exception e) {
-            BonitaStudioLog.error(e);
-        } finally {
-            if (BonitaStudioLog.isLoggable(IStatus.OK)) {
                 final long duration = System.currentTimeMillis() - init;
                 BonitaStudioLog.debug(
-                        "Repository " + project.getName() + " created in " + DateUtil.getDisplayDuration(duration),
+                        "Project " + project.getId() + " created in " + DateUtil.getDisplayDuration(duration),
                         CommonRepositoryPlugin.PLUGIN_ID);
-            }
-        }
+            } 
+        } catch (final Exception e) {
+            BonitaStudioLog.error(e);
+        } 
         return this;
     }
 
     private Path reportPath() {
-        return project.getFile(MigrationReportWriter.DEFAULT_REPORT_FILE_NAME).getLocation().toFile().toPath();
+        return project.getAppProject().getFile(MigrationReportWriter.DEFAULT_REPORT_FILE_NAME).getLocation().toFile().toPath();
     }
 
     protected CreateBonitaProjectOperation newProjectWorkspaceOperation(ProjectMetadata metadata,
             IWorkspace workspace) {
         return new CreateBonitaProjectOperation(workspace, metadata);
-    }
-
-    @Override
-    public String getName() {
-        return project.getName();
     }
 
     @Override
@@ -193,28 +189,33 @@ public abstract class AbstractRepository implements IRepository {
 
     @Override
     public IProject getProject() {
-        return project;
+        return project.getAppProject();
     }
 
     @Override
     public AbstractRepository open(final IProgressMonitor monitor) {
         synchronized (openCloseLock) {
             try {
-                if (!project.isOpen()) {
-                    BonitaStudioLog.log("Opening project: " + project.getName());
-                    project.open(NULL_PROGRESS_MONITOR);
+                if (!project.getAppProject().isOpen()) {
+                    BonitaStudioLog.log("Opening project: " + project.getId());
+                    project.getAppProject().open(NULL_PROGRESS_MONITOR);
                 }
             } catch (final CoreException e) {
                 BonitaStudioLog.error(e);
             }
             try {
                 initRepositoryStores(NULL_PROGRESS_MONITOR);
-                connect(project);
-                this.projectDependenciesStore = new MavenProjectDependenciesStore(
-                        Adapters.adapt(this, BonitaProject.class), eventBroker);
+                connect(project.getAppProject());
+                this.projectDependenciesStore = new MavenProjectDependenciesStore(project, eventBroker);
                 RepositoryManager.getInstance().setCurrentRepository(this);
                 AbstractFileStore.refreshExplorerView();
             } catch (final CoreException e) {
+                BonitaStudioLog.error(e);
+            }
+            
+            try {
+                project.refresh(new NullProgressMonitor());
+            } catch (CoreException e) {
                 BonitaStudioLog.error(e);
             }
 
@@ -230,9 +231,13 @@ public abstract class AbstractRepository implements IRepository {
     public void close(IProgressMonitor monitor) {
         synchronized (openCloseLock) {
             try {
-                BonitaStudioLog.debug("Closing repository " + project.getName(), CommonRepositoryPlugin.PLUGIN_ID);
+                BonitaStudioLog.debug("Closing repository " + project.getId(), CommonRepositoryPlugin.PLUGIN_ID);
                 closeAllEditors(false);
-                if (project.exists() && project.isOpen()) {
+                for (IBonitaProjectListener listener : getProjectListeners()) {
+                    listener.projectClosed(this, monitor);
+                }
+                var appProject = project.getAppProject();
+                if (appProject.exists() && appProject.isOpen()) {
                     new ActiveOrganizationProvider().flush();
                 }
                 if (stores != null) {
@@ -240,8 +245,8 @@ public abstract class AbstractRepository implements IRepository {
                         store.close();
                     }
                 }
-                if (project.exists() && project.isOpen()) {
-                    project.close(monitor);
+                if (appProject.exists() && appProject.isOpen()) {
+                    appProject.close(monitor);
                 }
             } catch (final CoreException e) {
                 BonitaStudioLog.error(e);
@@ -251,16 +256,7 @@ public abstract class AbstractRepository implements IRepository {
                 stores = null;
             }
             isLoaded = false;
-            for (IBonitaProjectListener listener : getProjectListeners()) {
-                listener.projectClosed(this, monitor);
-            }
         }
-    }
-
-    private void updateProjectMavenConfiguration(final IProgressMonitor monitor) {
-        ((ProjectConfigurationManager) MavenPlugin.getProjectConfigurationManager())
-                .updateProjectConfiguration(new MavenUpdateRequest(project, true, false), false, false,
-                        monitor);
     }
 
     protected void connect(IProject project) throws CoreException {
@@ -270,7 +266,7 @@ public abstract class AbstractRepository implements IRepository {
     protected void updateCurrentRepositoryPreference() {
         CommonRepositoryPlugin.getDefault().getPreferenceStore().setValue(
                 RepositoryPreferenceConstant.CURRENT_REPOSITORY,
-                getName());
+                project.getId());
         try {
             ((ScopedPreferenceStore) CommonRepositoryPlugin.getDefault().getPreferenceStore()).save();
         } catch (final IOException e) {
@@ -377,7 +373,7 @@ public abstract class AbstractRepository implements IRepository {
             if (!getProject().isSynchronized(IResource.DEPTH_ONE)) {
                 getProject().refreshLocal(IResource.DEPTH_ONE, monitor);
             }
-            project.build(IncrementalProjectBuilder.INCREMENTAL_BUILD, monitor);
+            project.getAppProject().build(IncrementalProjectBuilder.INCREMENTAL_BUILD, monitor);
         } catch (final Exception ex) {
             BonitaStudioLog.error(ex);
         }
@@ -386,19 +382,19 @@ public abstract class AbstractRepository implements IRepository {
     @Override
     public IJavaProject getJavaProject() {
         if (getProject() != null && getProject().isAccessible()) {
-            return JavaCore.create(project);
+            return JavaCore.create(project.getAppProject());
         }
         return null;
     }
 
     @Override
     public void delete(final IProgressMonitor monitor) {
-        BonitaStudioLog.debug("Deleting repository " + project.getName(), CommonRepositoryPlugin.PLUGIN_ID);
+        BonitaStudioLog.debug("Deleting project " + project.getId(), CommonRepositoryPlugin.PLUGIN_ID);
         try {
-            if (project.isOpen()) {
+            if (project.getAppProject().isOpen()) {
                 build(NULL_PROGRESS_MONITOR);
             }
-            project.delete(true, true, NULL_PROGRESS_MONITOR);
+            project.getAppProject().delete(true, true, NULL_PROGRESS_MONITOR);
         } catch (final CoreException e) {
             BonitaStudioLog.error(e);
         }
@@ -556,17 +552,18 @@ public abstract class AbstractRepository implements IRepository {
     @Override
     public IRepositoryFileStore asRepositoryFileStore(final Path path, boolean force)
             throws IOException, CoreException {
-        if (!project.isAccessible() || project.getLocation() == null) {
+        var appProject = project.getAppProject();
+        if (!appProject.isAccessible() || appProject.getLocation() == null) {
             return null;
         }
-        final IPath resourcePath = fromOSString(path.toString()).makeRelativeTo(project.getLocation());
+        final IPath resourcePath = fromOSString(path.toString()).makeRelativeTo(appProject.getLocation());
         if (resourcePath.isRoot() || resourcePath.isEmpty()
                 || Objects.equals(org.eclipse.core.runtime.Path.fromOSString(".."), resourcePath)) {
             return null;
         }
         IResource iResource = null;
         try {
-            iResource = isFile(resourcePath) ? project.getFile(resourcePath) : project.getFolder(resourcePath);
+            iResource = isFile(resourcePath) ? appProject.getFile(resourcePath) : appProject.getFolder(resourcePath);
         } catch (IllegalArgumentException e) {
             return null;
         }
@@ -642,7 +639,7 @@ public abstract class AbstractRepository implements IRepository {
         if (!report.isEmpty()) {
             try {
                 reportWriter.write(report, reportPath());
-                project.getFile(MigrationReportWriter.DEFAULT_REPORT_FILE_NAME).refreshLocal(IResource.DEPTH_ONE,
+                project.getAppProject().getFile(MigrationReportWriter.DEFAULT_REPORT_FILE_NAME).refreshLocal(IResource.DEPTH_ONE,
                         new NullProgressMonitor());
             } catch (IOException e) {
                 throw new CoreException(new Status(IStatus.ERROR, AbstractRepository.class, e.getMessage(), e));

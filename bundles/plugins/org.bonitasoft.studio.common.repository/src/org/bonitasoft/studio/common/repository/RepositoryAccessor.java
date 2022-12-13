@@ -40,6 +40,8 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 
+import com.google.common.base.Objects;
+
 /**
  * @author Romain Bioteau
  */
@@ -129,19 +131,19 @@ public class RepositoryAccessor {
                 protected void execute(final IProgressMonitor monitor)
                         throws CoreException, InvocationTargetException, InterruptedException {
                     var currentRepository = getCurrentRepository().orElse(null);
-                    String projectName = metadata.getProjectName();
-                    if (currentRepository != null && currentRepository.getName().equals(projectName)) {
+                    String projectId = metadata.getProjectId();
+                    if (currentRepository != null && Objects.equal(currentRepository.getProjectId(), projectId)) {
                         return;
                     } else if (currentRepository != null) {
                         getCurrentProject().orElseThrow().close(monitor);
                     }
-                    currentRepository = RepositoryManager.getInstance().getRepository(projectName);
+                    currentRepository = RepositoryManager.getInstance().getRepository(projectId);
                     if (currentRepository == null) {
-                        currentRepository = RepositoryManager.getInstance().newRepository(projectName);
+                        currentRepository = RepositoryManager.getInstance().newRepository(projectId);
                     }
                     currentRepository.create(metadata, AbstractRepository.NULL_PROGRESS_MONITOR);
                     currentRepository.open(AbstractRepository.NULL_PROGRESS_MONITOR);
-                    BonitaStudioLog.info(String.format("%s project created.", currentRepository.getName()),
+                    BonitaStudioLog.info(String.format("%s project created.", currentRepository.getProjectId()),
                             CommonRepositoryPlugin.PLUGIN_ID);
                 }
             };

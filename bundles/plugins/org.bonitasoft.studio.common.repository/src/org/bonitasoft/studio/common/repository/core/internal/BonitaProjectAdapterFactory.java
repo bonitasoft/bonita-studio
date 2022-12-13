@@ -37,21 +37,7 @@ public class BonitaProjectAdapterFactory implements IAdapterFactory {
                         || !project.exists()) {
                     return null;
                 }
-                try {
-                    var pomFile = project.getLocation()
-                            .toFile()
-                            .toPath()
-                            .resolve(IMavenConstants.POM_FILE_NAME)
-                            .toFile();
-                    if(pomFile.exists()) {
-                        var model = MavenProjectHelper.readModel(pomFile);
-                        return (T) new BonitaProjectImpl(model.getArtifactId());
-                    }
-                } catch (CoreException e) {
-                    BonitaStudioLog.error(e);
-                    return null;
-                }
-
+                return (T) BonitaProject.create(repository.getProjectId());
             } else if (adaptableObject instanceof IProject) {
                 var repository = RepositoryManager.getInstance().getRepository(((IProject) adaptableObject).getName());
                 return getAdapter(repository, adapterType);

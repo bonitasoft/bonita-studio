@@ -29,12 +29,12 @@ import org.eclipse.e4.core.services.events.IEventBroker;
 public class RepositoryFactory implements IRepositoryFactory {
 
     @Override
-    public AbstractRepository newRepository(final String name) {
+    public AbstractRepository newRepository(final String projectId) {
         final IWorkspace workspace = ResourcesPlugin.getWorkspace();
         IEclipseContext context = EclipseContextFactory.getServiceContext(CommonRepositoryPlugin.getDefault().getBundle().getBundleContext());
         IEventBroker eventBroker = context.get(IEventBroker.class);
         return new RepositoryImpl(workspace,
-                workspace.getRoot().getProject(name),
+                BonitaProject.create(projectId),
                 new ExtensionContextInjectionFactory(),
                 new JDTTypeHierarchyManager(),
                 eventBroker);

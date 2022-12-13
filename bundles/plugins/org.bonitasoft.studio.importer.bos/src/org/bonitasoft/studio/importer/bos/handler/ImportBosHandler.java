@@ -184,7 +184,7 @@ public class ImportBosHandler {
     private org.bonitasoft.studio.common.repository.model.IRepository getTargetRepository(RepositoryAccessor repositoryAccessor) {
         String targetRepository = switchRepositoryStrategy.getTargetRepository();
         var currentRepository = repositoryAccessor.getCurrentRepository().orElseThrow();
-        if (Objects.equals(targetRepository, currentRepository.getName())) {
+        if (Objects.equals(targetRepository, currentRepository.getProjectId())) {
             return currentRepository;
         }
         return repositoryAccessor.getRepository(targetRepository);
@@ -217,7 +217,7 @@ public class ImportBosHandler {
 
         activeShell.getDisplay().asyncExec(() -> openEndImportDialog(operation,
                 repositoryAccessor.getRepositoryStore(DiagramRepositoryStore.class), activeShell,
-                repositoryAccessor.getCurrentRepository().orElseThrow().getName()));
+                repositoryAccessor.getCurrentRepository().orElseThrow().getProjectId()));
     }
 
     protected void openEndImportDialog(ImportBosArchiveOperation operation, DiagramRepositoryStore store,

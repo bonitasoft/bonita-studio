@@ -27,6 +27,7 @@ import org.bonitasoft.studio.common.model.ImportAction;
 import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.core.BonitaProject;
 import org.bonitasoft.studio.common.repository.core.maven.MavenProjectHelper;
 import org.bonitasoft.studio.common.repository.core.migration.dependencies.operation.DependenciesUpdateOperationFactory;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
@@ -218,8 +219,8 @@ public class ImportBOSArchiveIT {
         operation.run(new NullProgressMonitor());
         assertThat(operation.getStatus()).isNotNull();
 
-        final boolean javaFileExists = ResourcesPlugin.getWorkspace().getRoot()
-                .getProject(CommonRepositoryPlugin.getCurrentRepository())
+        final boolean javaFileExists = BonitaProject.create(CommonRepositoryPlugin.getCurrentRepository())
+                .getAppProject()
                 .getFolder("src-connectors").getFolder("org").getFolder("bonitasoft").getFolder("connector")
                 .getFolder("demo").getFile("FillDBImpl.java")
                 .exists();

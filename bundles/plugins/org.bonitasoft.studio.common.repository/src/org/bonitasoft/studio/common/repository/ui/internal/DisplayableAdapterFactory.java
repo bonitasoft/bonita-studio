@@ -51,7 +51,7 @@ public class DisplayableAdapterFactory implements IAdapterFactory {
                 public String getDisplayName() {
                     return Optional.ofNullable(Adapters.adapt(repository, BonitaProject.class))
                                 .map(BonitaProject::getDisplayName)
-                                .orElse(repository.getName());
+                                .orElse(repository.getProjectId());
                 }
             };
             return (T) display;

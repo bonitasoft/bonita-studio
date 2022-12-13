@@ -45,7 +45,7 @@ public class RepositoryNameValidatorTest {
 
     public RepositoryNameValidator createFixture(Supplier<Boolean> newProjectSupplier) throws Exception {
         RepositoryNameValidator rnv = Mockito.spy(new RepositoryNameValidator(newProjectSupplier));
-        lenient().doReturn("existing").when(repo).getName();
+        lenient().doReturn("existing").when(repo).getProjectId();
         lenient().doReturn(repoManager).when(rnv).getRepositoryManager();
         lenient().doReturn(repo).when(repoManager).getRepository("existing");
         lenient().doReturn(Optional.of(repo)).when(repoManager).getCurrentRepository();

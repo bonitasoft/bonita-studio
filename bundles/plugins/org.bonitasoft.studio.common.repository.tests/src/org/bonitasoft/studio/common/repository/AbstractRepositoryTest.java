@@ -18,6 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
@@ -27,6 +28,7 @@ import static org.mockito.Mockito.when;
 import java.util.Arrays;
 
 import org.bonitasoft.studio.common.extension.ExtensionContextInjectionFactory;
+import org.bonitasoft.studio.common.repository.core.BonitaProject;
 import org.bonitasoft.studio.common.repository.core.DatabaseHandler;
 import org.bonitasoft.studio.common.repository.jdt.JDTTypeHierarchyManager;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
@@ -52,6 +54,8 @@ public class AbstractRepositoryTest {
     private IWorkspace workspace;
     @Mock
     private IProject project;
+    @Mock
+    private BonitaProject bonitaProject;
     @Mock
     private ExtensionContextInjectionFactory extensionContextInjectionFactory;
     @Mock
@@ -115,7 +119,8 @@ public class AbstractRepositoryTest {
     }
 
     private AbstractRepository newRepository() throws CoreException, MigrationException {
-        return spy(new TestRepository(workspace, project,
+        lenient().doReturn(project).when(bonitaProject).getAppProject();
+        return spy(new TestRepository(workspace, bonitaProject,
                 extensionContextInjectionFactory,
                 jdtTypeHierarchyManager, 
                 eventBroker));

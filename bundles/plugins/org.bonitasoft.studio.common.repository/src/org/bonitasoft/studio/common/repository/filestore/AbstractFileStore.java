@@ -96,7 +96,7 @@ public abstract class AbstractFileStore<T>
         doCheckModelVersion();
         return doGetContent();
     }
-    
+
     /**
      * Retrieve content without checking model compatibility
      */
@@ -189,7 +189,7 @@ public abstract class AbstractFileStore<T>
         if (canBeDeleted()) {
             fireFileStoreEvent(new FileStoreChangeEvent(EventType.PRE_DELETE, this));
             doDelete();
-            if(getParentStore() != null) {
+            if (getParentStore() != null) {
                 getParentStore().refresh();
             }
             refreshExplorerView();
@@ -217,15 +217,10 @@ public abstract class AbstractFileStore<T>
             IResource resource = getResource();
             checkParentExists(resource);
             doSave(content);
-            if (PlatformUI.isWorkbenchRunning()) {
-                new WorkspaceJob("Refresh resources...") {
-
-                    @Override
-                    public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
-                        getResource().refreshLocal(IResource.DEPTH_ZERO, monitor);
-                        return Status.OK_STATUS;
-                    }
-                }.schedule();
+            try {
+                getResource().refreshLocal(IResource.DEPTH_ZERO, new NullProgressMonitor());
+            } catch (CoreException e) {
+                BonitaStudioLog.error(e);
             }
             fireFileStoreEvent(new FileStoreChangeEvent(EventType.POST_SAVE, this));
         } else {
@@ -549,12 +544,11 @@ public abstract class AbstractFileStore<T>
         }
         return ValidationStatus.ok();
     }
-    
 
     public void setMigrationReport(MigrationReport report) {
         this.report = report;
     }
-    
+
     @Override
     public MigrationReport getMigrationReport() {
         return report;
