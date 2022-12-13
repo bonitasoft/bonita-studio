@@ -60,11 +60,6 @@ public class FakeRepository implements IRepository {
     }
 
     @Override
-    public String getName() {
-        return null;
-    }
-
-    @Override
     public boolean isShared() {
         return false;
     }
@@ -257,6 +252,11 @@ public class FakeRepository implements IRepository {
     @Override
     public boolean isOpenIntroListenerEnabled() {
         return false;
+    }
+
+    @Override
+    public String getProjectId() {
+        return null;
     }
 
 }

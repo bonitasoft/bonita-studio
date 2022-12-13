@@ -49,7 +49,7 @@ class BonitaProjectImplTest {
         metadata = ProjectMetadata.defaultMetadata();
         metadata.setUseSnapshotRepository(true);
         projectId = metadata.getArtifactId();
-        repository = RepositoryManager.getInstance().newRepository(metadata.getProjectName());
+        repository = RepositoryManager.getInstance().newRepository(metadata.getProjectId());
         RepositoryManager.getInstance().setCurrentRepository(repository);
         project = BonitaProject.create(projectId);
         if (project.exists()) {

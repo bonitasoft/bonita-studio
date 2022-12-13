@@ -36,7 +36,7 @@ public class ExportArtifactsToZip extends AbstractHandler {
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
         var currentRepository = RepositoryManager.getInstance().getCurrentRepository().orElse(null);
-        String defaultName = currentRepository.getName() + "_" + new SimpleDateFormat("ddMMyy_HHmm").format(new Date()) + ".bos";
+        String defaultName = currentRepository.getProjectId() + "_" + new SimpleDateFormat("ddMMyy_HHmm").format(new Date()) + ".bos";
         Set<Object> selectedFiles = new HashSet<Object>() ;
         for(IRepositoryStore store : currentRepository.getAllExportableStores()){
             List<IRepositoryFileStore> files = store.getChildren() ;

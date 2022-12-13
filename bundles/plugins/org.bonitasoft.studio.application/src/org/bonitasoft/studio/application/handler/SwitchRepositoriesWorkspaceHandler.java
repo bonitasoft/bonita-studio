@@ -64,13 +64,13 @@ public class SwitchRepositoriesWorkspaceHandler extends AbstractHandler {
                         public void run(final IProgressMonitor monitor)
                                 throws InvocationTargetException, InterruptedException {
                             try {
-                                RepositoryManager.getInstance().switchToRepository(repo.getName(), monitor);
+                                RepositoryManager.getInstance().switchToRepository(repo.getProjectId(), monitor);
                                 Display.getDefault().asyncExec(new Runnable() {
 
                                     @Override
                                     public void run() {
                                         BonitaNotificator.openInfoNotification(Messages.switchRepositorySuccessful_Title,
-                                                NLS.bind(Messages.switchRepositorySuccessful_Message, repo.getName()));
+                                                NLS.bind(Messages.switchRepositorySuccessful_Message, repo.getProjectId()));
                                     }
                                 });
                             } catch (final Exception e) {

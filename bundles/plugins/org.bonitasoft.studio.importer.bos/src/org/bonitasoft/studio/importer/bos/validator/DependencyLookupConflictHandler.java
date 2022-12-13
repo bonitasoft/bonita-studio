@@ -23,9 +23,9 @@ import java.util.Optional;
 
 import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Model;
-import org.bonitasoft.studio.common.Strings;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.common.repository.core.BonitaProject;
 import org.bonitasoft.studio.common.repository.core.maven.MavenProjectHelper;
 import org.bonitasoft.studio.common.repository.core.maven.migration.model.ConflictVersion;
 import org.bonitasoft.studio.common.repository.core.maven.migration.model.ConflictVersion.Status;
@@ -67,7 +67,8 @@ public class DependencyLookupConflictHandler implements IValidator<DependencyLoo
     public void resolve() {
         dependencies.stream().forEach(d -> d.setConflict(null));
         if (targetProject != null) {
-            findPomFile(targetProject).ifPresent(pomFile -> {
+            var project = BonitaProject.create(targetProject);
+            findPomFile(project.getAppProject()).ifPresent(pomFile -> {
                 try {
                     var targetProjectModel = MavenProjectHelper.readModel(pomFile);
                     computeDependenciesConflicts(targetProjectModel, dependencies);
@@ -98,11 +99,11 @@ public class DependencyLookupConflictHandler implements IValidator<DependencyLoo
         return false;
     }
 
-    private Optional<File> findPomFile(String projectName) {
-        if (Strings.isNullOrEmpty(projectName)) {
+    private Optional<File> findPomFile(IProject project) {
+        if (!project.exists()) {
             return Optional.empty();
         }
-        return Optional.ofNullable(getProject(projectName))
+        return Optional.ofNullable(project)
                 .filter(IProject::exists)
                 .map(p -> p.getFile(IMavenConstants.POM_FILE_NAME).getLocation().toFile())
                 .filter(File::exists);

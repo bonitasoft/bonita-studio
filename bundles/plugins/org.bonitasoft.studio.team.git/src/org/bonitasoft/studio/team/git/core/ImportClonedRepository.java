@@ -44,7 +44,7 @@ public class ImportClonedRepository implements PostCloneTask {
         var report = importBonitaProjectOperation.getReport();
         var bonitaProject = importBonitaProjectOperation.getBonitaProject();
         var currentRepo = RepositoryManager.getInstance().switchToRepository(
-                bonitaProject.getAppProject().getName(),
+                bonitaProject.getId(),
                 new NullProgressMonitor());
         try {
             subMonitor = SubMonitor.convert(monitor)

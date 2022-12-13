@@ -26,15 +26,19 @@ import org.eclipse.team.core.RepositoryProvider;
 
 public class RepositoryImpl extends AbstractRepository {
 
-    public RepositoryImpl(final IWorkspace workspace, final IProject project,
+    private BonitaProject bonitaProject;
+
+    public RepositoryImpl(final IWorkspace workspace,
+            BonitaProject bonitaProject,
             final ExtensionContextInjectionFactory extensionContextInjectionFactory,
             final JDTTypeHierarchyManager jdtTypeHierarchyManager,
             IEventBroker eventBroker) {
         super(workspace,
-                project,
+                bonitaProject,
                 extensionContextInjectionFactory,
                 jdtTypeHierarchyManager,
                 eventBroker);
+        this.bonitaProject = bonitaProject;
     }
 
     @Override
@@ -60,7 +64,6 @@ public class RepositoryImpl extends AbstractRepository {
         if (getProject().isAccessible()) {
             return RepositoryProvider.getProvider(getProject()) != null;
         } else {
-            var bonitaProject = Adapters.adapt(this, BonitaProject.class);
             return bonitaProject.getGitDir().exists();
         }
     }

@@ -43,8 +43,6 @@ public interface IRepository extends IFileStoreChangeListener, IJavaContainer {
 
     boolean isLoaded();
 
-    String getName();
-
     boolean isShared();
 
     boolean isShared(String providerId);
@@ -105,5 +103,7 @@ public interface IRepository extends IFileStoreChangeListener, IJavaContainer {
     void disableOpenIntroListener();
     
     boolean isOpenIntroListenerEnabled();
+
+    String getProjectId();
     
 }

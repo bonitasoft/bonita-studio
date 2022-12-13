@@ -31,14 +31,13 @@ public class DisplayableAdapterFactoryTest {
     @Test
     public void should_adapt_repository_as_displayable() throws Exception {
         var repository = mock(IRepository.class); 
-        var project =  mock(BonitaProject.class); 
-        when(repository.getName()).thenReturn("my project");
+        when(repository.getProjectId()).thenReturn("my-project");
         when(repository.isShared()).thenReturn(true);
         
         var displayable = Adapters.adapt(repository, IDisplayable.class);
         
         assertThat(displayable).isNotNull();
-        assertThat(displayable.getDisplayName()).isEqualTo("my project");
+        assertThat(displayable.getDisplayName()).isEqualTo("my-project");
         assertThat(displayable.getIcon()).isEqualTo(Pics.getImage("git.png", CommonRepositoryPlugin.getDefault()));
     }
     

@@ -49,7 +49,7 @@ public class RepositoryLabelProvider extends StyledCellLabelProvider {
     }
 
     public String getText(final IRepository element) {
-        return IDisplayable.toDisplayName(element).orElseGet(element::getName);
+        return IDisplayable.toDisplayName(element).orElseGet(element::getProjectId);
     }
 
     /*

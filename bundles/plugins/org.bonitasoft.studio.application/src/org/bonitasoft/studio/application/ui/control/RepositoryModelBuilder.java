@@ -47,7 +47,7 @@ public class RepositoryModelBuilder {
         if (currentRepository != null) {
             currentRepository.getAllStores();
             List<RepositoryStore> stores = createStore(currentRepository);
-            return new RepositoryModel(currentRepository.getName(), stores);
+            return new RepositoryModel(currentRepository.getProjectId(), stores);
         }
         return null;
     }
@@ -55,7 +55,7 @@ public class RepositoryModelBuilder {
     public RepositoryModel create(IRepository currentRepository,
             List<IRepositoryStore<? extends IRepositoryFileStore>> repositoryStores) {
         List<RepositoryStore> stores = repositoryStores.stream().map(this::fillStore).collect(Collectors.toList());
-        return new RepositoryModel(currentRepository.getName(), stores);
+        return new RepositoryModel(currentRepository.getProjectId(), stores);
     }
 
     private List<RepositoryStore> createStore(IRepository repository) {

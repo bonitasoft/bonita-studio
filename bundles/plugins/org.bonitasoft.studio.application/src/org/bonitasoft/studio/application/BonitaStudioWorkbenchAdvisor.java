@@ -128,7 +128,7 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
         public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
             monitor.beginTask(Messages.shuttingDown, IProgressMonitor.UNKNOWN);
             UIDesignerServerManager.getInstance().stop();
-            Job.getJobManager().cancel(StartEngineJob.FAMILY);
+            Job.getJobManager().cancel(RepositoryManager.class);
             RepositoryManager.getInstance().getCurrentRepository()
                     .ifPresent(org.bonitasoft.studio.common.repository.model.IRepository::disableOpenIntroListener);
             executePreShutdownContribution();
@@ -678,7 +678,7 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
             Stream.of(activePage.getViewReferences())
                     .filter(vr -> Objects.equals("org.eclipse.ui.browser.view", vr.getId()))
                     .forEach(activePage::hideView);
-            Job.getJobManager().cancel(StartEngineJob.FAMILY);
+            Job.getJobManager().cancel(RepositoryManager.class);
             final boolean returnValue = super.preShutdown();
             if (returnValue) {
                 try {

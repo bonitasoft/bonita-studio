@@ -69,7 +69,7 @@ public class RepositoryNameValidator implements IInputValidator, IValidator<Stri
 
     private boolean isCurrentName(String newText) {
         return getRepositoryManager().getCurrentRepository()
-                .filter(repo -> Objects.equals(newText,repo.getName())).isPresent();
+                .filter(repo -> Objects.equals(newText,repo.getProjectId())).isPresent();
     }
 
     protected Optional<String> isValidFileName(final String newText) {

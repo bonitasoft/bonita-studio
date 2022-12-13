@@ -66,16 +66,12 @@ public class ImportFileOperation implements IRunnableWithProgress {
         this.progressDialog = progressDialog;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.jface.operation.IRunnableWithProgress#run(org.eclipse.core.runtime.IProgressMonitor)
-     */
     @Override
     public void run(final IProgressMonitor monitor) throws InvocationTargetException,
             InterruptedException {
         monitor.beginTask(Messages.importProcessProgressDialog, IProgressMonitor.UNKNOWN);
         processor = importerFactory.createProcessor(fileToImport.getName());
-        processor.setRepository(RepositoryManager.getInstance().getCurrentRepository().orElseThrow().getName());
+        processor.setRepository(RepositoryManager.getInstance().getCurrentRepository().orElseThrow().getProjectId());
         processor.setProgressDialog(progressDialog);
         try {
             processor.createDiagram(fileToImport.toURI().toURL(), monitor);

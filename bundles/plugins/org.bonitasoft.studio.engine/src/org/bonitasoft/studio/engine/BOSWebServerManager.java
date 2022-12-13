@@ -22,9 +22,11 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Stream;
 
 import org.bonitasoft.engine.api.APIClient;
@@ -90,7 +92,6 @@ import org.osgi.framework.FrameworkUtil;
 
 public class BOSWebServerManager implements IBonitaProjectListener {
 
-    private static final Charset UTF8_CHARSET = Charset.forName("UTF-8");
     private static final String BONITA_TOMCAT_SERVER_ID = "bonita-tomcat-server-id";
     private static final String BONITA_TOMCAT_RUNTIME_ID = "bonita-tomcat-runtime-id";
     public static final String SERVER_CONFIGURATION_PROJECT = "server_configuration";
@@ -114,6 +115,7 @@ public class BOSWebServerManager implements IBonitaProjectListener {
     private IServer tomcat;
     private PortConfigurator portConfigurator;
     private IStatus startResult;
+    private final ReentrantLock startStoplock = new ReentrantLock();
 
     public static synchronized BOSWebServerManager getInstance() {
         if (INSTANCE == null) {
@@ -171,45 +173,50 @@ public class BOSWebServerManager implements IBonitaProjectListener {
         }
     }
 
-    public synchronized void startServer(IRepository repository, IProgressMonitor monitor) {
-        if (!serverIsStarted()) {
-            BonitaHomeUtil.configureBonitaClient();
-            copyTomcatBundleInWorkspace(monitor);
-            monitor.subTask(Messages.startingWebServer);
-            if (BonitaStudioLog.isLoggable(IStatus.OK)) {
-                BonitaStudioLog.debug("Starting tomcat...",
-                        EnginePlugin.PLUGIN_ID);
-            }
-            updateRuntimeLocationIfNeeded();
-            final IRuntimeType type = ServerCore.findRuntimeType(TOMCAT_RUNTIME_TYPE);
-
-            try {
-                final IProject confProject = createServerConfigurationProject(AbstractRepository.NULL_PROGRESS_MONITOR);
-                final IRuntime runtime = createServerRuntime(type, AbstractRepository.NULL_PROGRESS_MONITOR);
-                tomcat = createServer(monitor, confProject, runtime);
-                UIDesignerServerManager uidManager = UIDesignerServerManager.getInstance();
-                if (uidManager.getPortalPort() != portConfigurator.getHttpPort()) {
-                    uidManager.setPortalPort(portConfigurator.getHttpPort());
-                    uidManager.stop();
-                    uidManager.start(repository, monitor);
+    public void startServer(IRepository repository, IProgressMonitor monitor) {
+        startStoplock.lock();
+        try {
+            if (!serverIsStarted()) {
+                BonitaHomeUtil.configureBonitaClient();
+                copyTomcatBundleInWorkspace(monitor);
+                monitor.subTask(Messages.startingWebServer);
+                if (BonitaStudioLog.isLoggable(IStatus.OK)) {
+                    BonitaStudioLog.debug("Starting tomcat...",
+                            EnginePlugin.PLUGIN_ID);
                 }
-                createLaunchConfiguration(tomcat, AbstractRepository.NULL_PROGRESS_MONITOR);
-                confProject.build(IncrementalProjectBuilder.INCREMENTAL_BUILD,
-                        AbstractRepository.NULL_PROGRESS_MONITOR);
-                startResult = null;
-                tomcat.start(ILaunchManager.RUN_MODE, result -> startResult = result);
-                waitServerRunning();
-            } catch (final CoreException e) {
-                if (tomcat != null) {
-                    try {
-                        tomcat.delete();
-                        tomcat = null;
-                    } catch (CoreException e1) {
-                        BonitaStudioLog.error(e1);
+                updateRuntimeLocationIfNeeded();
+                final IRuntimeType type = ServerCore.findRuntimeType(TOMCAT_RUNTIME_TYPE);
+                try {
+                    final IProject confProject = createServerConfigurationProject(
+                            AbstractRepository.NULL_PROGRESS_MONITOR);
+                    final IRuntime runtime = createServerRuntime(type, AbstractRepository.NULL_PROGRESS_MONITOR);
+                    tomcat = createServer(monitor, confProject, runtime);
+                    UIDesignerServerManager uidManager = UIDesignerServerManager.getInstance();
+                    if (uidManager.getPortalPort() != portConfigurator.getHttpPort()) {
+                        uidManager.setPortalPort(portConfigurator.getHttpPort());
+                        uidManager.stop();
+                        uidManager.start(repository, monitor);
                     }
+                    createLaunchConfiguration(tomcat, AbstractRepository.NULL_PROGRESS_MONITOR);
+                    confProject.build(IncrementalProjectBuilder.INCREMENTAL_BUILD,
+                            AbstractRepository.NULL_PROGRESS_MONITOR);
+                    startResult = null;
+                    tomcat.start(ILaunchManager.RUN_MODE, result -> startResult = result);
+                    waitServerRunning();
+                } catch (final CoreException e) {
+                    if (tomcat != null) {
+                        try {
+                            tomcat.delete();
+                            tomcat = null;
+                        } catch (CoreException e1) {
+                            BonitaStudioLog.error(e1);
+                        }
+                    }
+                    handleCoreExceptionWhileStartingTomcat(e);
                 }
-                handleCoreExceptionWhileStartingTomcat(e);
             }
+        } finally {
+            startStoplock.unlock();
         }
     }
 
@@ -230,11 +237,10 @@ public class BOSWebServerManager implements IBonitaProjectListener {
                 copy.setLocation(Path.fromOSString(tomcatInstanceLocation));
                 final File serverXmlFile = new File(tomcatInstanceLocation, "conf" + File.separatorChar + "server.xml");
                 try {
-                    com.google.common.io.Files.write(
-                            com.google.common.io.Files.toString(serverXmlFile, UTF8_CHARSET).replace(oldLocation,
+                    Files.writeString(serverXmlFile.toPath(),
+                            Files.readString(serverXmlFile.toPath(), Charset.forName("UTF-8")).replace(oldLocation,
                                     tomcatInstanceLocation),
-                            serverXmlFile,
-                            UTF8_CHARSET);
+                            Charset.forName("UTF-8"));
                 } catch (final IOException e1) {
                     BonitaStudioLog.error(e1, EnginePlugin.PLUGIN_ID);
                 }
@@ -437,7 +443,7 @@ public class BOSWebServerManager implements IBonitaProjectListener {
                     projectProperties.setServerProject(true, monitor);
                 }
             }, monitor);
-        } else if(!confProject.isOpen()) {
+        } else if (!confProject.isOpen()) {
             confProject.open(AbstractRepository.NULL_PROGRESS_MONITOR);
         }
         return confProject;
@@ -484,23 +490,26 @@ public class BOSWebServerManager implements IBonitaProjectListener {
         return false;
     }
 
-    public synchronized void stopServer(final IProgressMonitor monitor) {
-        if (serverIsStarted()) {
-            monitor.subTask(Messages.stoppingWebServer);
-            if (BonitaStudioLog.isLoggable(IStatus.OK)) {
-                BonitaStudioLog.debug("Stopping tomcat server...", EnginePlugin.PLUGIN_ID);
-            }
-            tomcat.stop(true);
-            try {
-                waitServerStopped(monitor);
-                tomcat.delete();
-            } catch (final CoreException e) {
-                BonitaStudioLog.error(e, EnginePlugin.PLUGIN_ID);
-            }
-            if (BonitaStudioLog.isLoggable(IStatus.OK)) {
+    public void stopServer(final IProgressMonitor monitor) {
+        startStoplock.lock();
+        try {
+            if (serverIsStarted()) {
+                monitor.subTask(Messages.stoppingWebServer);
+                if (BonitaStudioLog.isLoggable(IStatus.OK)) {
+                    BonitaStudioLog.debug("Stopping tomcat server...", EnginePlugin.PLUGIN_ID);
+                }
+                tomcat.stop(true);
+                try {
+                    waitServerStopped(monitor);
+                    tomcat.delete();
+                } catch (final CoreException e) {
+                    BonitaStudioLog.error(e, EnginePlugin.PLUGIN_ID);
+                }
                 BonitaStudioLog.debug("Tomcat server stopped",
                         EnginePlugin.PLUGIN_ID);
             }
+        } finally {
+            startStoplock.unlock();
         }
     }
 
@@ -559,7 +568,7 @@ public class BOSWebServerManager implements IBonitaProjectListener {
     public void projectClosed(IRepository repository, IProgressMonitor monitor) {
         stopServer(monitor);
     }
-    
+
     private static Bundle getTomcatBundle() {
         return FrameworkUtil.getBundle(APIClient.class);
     }

@@ -23,6 +23,7 @@ import org.apache.maven.model.Model;
 import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.core.ProjectDependenciesStore;
 import org.bonitasoft.studio.common.repository.core.maven.MavenProjectHelper;
 import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
@@ -33,7 +34,9 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 
 public class SetProjectMetadataOperation implements IRunnableWithProgress {
@@ -66,6 +69,9 @@ public class SetProjectMetadataOperation implements IRunnableWithProgress {
     @Override
     public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
         monitor.beginTask(Messages.updatingProjectMetadata, IProgressMonitor.UNKNOWN);
+        // Wait for Project initialization job to avoid locking the workspace
+        Job.getJobManager()
+                .join(RepositoryManager.class, new NullProgressMonitor());
         try {
             if (createNewProject) {
                 createNewProject(monitor);
@@ -86,10 +92,10 @@ public class SetProjectMetadataOperation implements IRunnableWithProgress {
             IProject project = newRepository.getProject();
             Model model = mavenProjectHelper.getMavenModel(project);
             dependencies.stream().forEach(model.getDependencies()::add);
-            mavenProjectHelper.saveModel(project, model, false, monitor);
-            ProjectDependenciesStore projectDependenciesStore = newRepository.getProjectDependenciesStore();
+            mavenProjectHelper.saveModel(project, model, false, new NullProgressMonitor());
+            var projectDependenciesStore = newRepository.getProjectDependenciesStore();
             if (projectDependenciesStore != null) {
-                projectDependenciesStore.analyze(monitor);
+                projectDependenciesStore.analyze(new NullProgressMonitor());
             }
         }
     }

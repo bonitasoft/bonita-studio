@@ -92,9 +92,9 @@ public class ShareWithGitIT {
         BotApplicationWorkbenchWindow botApplicationWorkbenchWindow = new BotApplicationWorkbenchWindow(bot);
 
         var currentRepository = RepositoryManager.getInstance().getCurrentRepository().orElseThrow();
-        assertThat(currentRepository.getName()).isEqualTo(ProjectMetadata.defaultMetadata().getProjectName());
+        assertThat(currentRepository.getProjectId()).isEqualTo(ProjectMetadata.defaultMetadata().getProjectId());
         assertThat(currentRepository.isShared(GitProvider.ID))
-                .as("%s repository should not be connected", currentRepository.getName())
+                .as("%s repository should not be connected", currentRepository.getProjectId())
                 .isFalse();
 
         botApplicationWorkbenchWindow.shareWithGit()
@@ -113,13 +113,13 @@ public class ShareWithGitIT {
         //Check that the current repo is connected to Git and clean
         currentRepository = RepositoryManager.getInstance().getCurrentRepository().orElseThrow();
         assertThat(currentRepository.isShared(GitProvider.ID))
-                .as("%s repository should be connected", currentRepository.getName())
+                .as("%s repository should be connected", currentRepository.getProjectId())
                 .isTrue();
         org.eclipse.jgit.lib.Repository localRepository = ResourceUtil.getRepository(currentRepository.getProject());
         try (Git git = new Git(localRepository)) {
             Status status = git.status().call();
             assertThat(status.isClean()).as("%s project should have a clean Git status",
-                    currentRepository.getName()).isTrue();
+                    currentRepository.getProjectId()).isTrue();
         }
 
         //Check that the commit has been pushed properly

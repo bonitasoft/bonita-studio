@@ -298,7 +298,7 @@ public class ImportBosArchivePage implements ControlSupplier, Supplier<ImportArc
             if (Strings.hasText(newProjectId)
                     && archiveModel != null
                     && mode == RepositoryMode.NEW) {
-                updateTargetRepository(projectMetadataObservable.getValue().getProjectName());
+                updateTargetRepository(projectMetadataObservable.getValue().getProjectId());
             }
         });
 
@@ -407,8 +407,8 @@ public class ImportBosArchivePage implements ControlSupplier, Supplier<ImportArc
         if (repositoryAccessor.getRepository(targetRepository) != null && archiveModel != null) {
             var newRepository = repositoryAccessor.getRepository(targetRepository);
             var project = Adapters.adapt(newRepository, BonitaProject.class);
-            if (repositoryAccessor.getCurrentRepository().filter(repo -> Objects.equals(repo.getName(),
-                    newRepository.getName())).isEmpty()) {
+            if (repositoryAccessor.getCurrentRepository().filter(repo -> Objects.equals(repo.getProjectId(),
+                    newRepository.getProjectId())).isEmpty()) {
                 try {
                     project.open(monitor);
                 } catch (CoreException e) {
@@ -423,8 +423,8 @@ public class ImportBosArchivePage implements ControlSupplier, Supplier<ImportArc
                         Messages.errorReadArchive,
                         e);
             } finally {
-                if (repositoryAccessor.getCurrentRepository().filter(repo -> Objects.equals(repo.getName(),
-                        newRepository.getName())).isEmpty()) {
+                if (repositoryAccessor.getCurrentRepository().filter(repo -> Objects.equals(repo.getProjectId(),
+                        newRepository.getProjectId())).isEmpty()) {
                     try {
                         project.close(monitor);
                     } catch (CoreException e) {
@@ -437,11 +437,11 @@ public class ImportBosArchivePage implements ControlSupplier, Supplier<ImportArc
         }
     }
 
-    public void updateTargetRepository(String targetProjectName) {
-        final boolean repoChanged = !Objects.equals(switchRepositoryStrategy.getTargetRepository(), targetProjectName);
-        switchRepositoryStrategy.setTargetRepository(targetProjectName);
-        if (Strings.hasText(targetProjectName) && archiveModel != null && repoChanged) {
-            refreshArchiveModel(targetProjectName);
+    public void updateTargetRepository(String targetProjectId) {
+        final boolean repoChanged = !Objects.equals(switchRepositoryStrategy.getTargetRepository(), targetProjectId);
+        switchRepositoryStrategy.setTargetRepository(targetProjectId);
+        if (Strings.hasText(targetProjectId) && archiveModel != null && repoChanged) {
+            refreshArchiveModel(targetProjectId);
         }
     }
 
@@ -450,11 +450,11 @@ public class ImportBosArchivePage implements ControlSupplier, Supplier<ImportArc
         switch (mode) {
             case NEW:
                 return newProjectIdText.getStatus().isOK()
-                        ? metadata.getProjectName()
+                        ? metadata.getProjectId()
                         : switchRepositoryStrategy.getTargetRepository();
             case CURRENT:
             default:
-                return repositoryAccessor.getCurrentRepository().orElseThrow().getName();
+                return repositoryAccessor.getCurrentRepository().orElseThrow().getProjectId();
         }
     }
 
@@ -581,7 +581,7 @@ public class ImportBosArchivePage implements ControlSupplier, Supplier<ImportArc
         newProjectIdText.getValueBinding().validateTargetToModel();
         if (repositoryModeObservable.getValue() == RepositoryMode.NEW
                 && !metadata.getArtifactId().isEmpty()) {
-            switchRepositoryStrategy.setTargetRepository(metadata.getProjectName());
+            switchRepositoryStrategy.setTargetRepository(metadata.getProjectId());
             importArchiveModel.resetStatus();
         }
         return importArchiveModel;

@@ -248,10 +248,6 @@ public class ProjectMetadata {
                 && Objects.equals(useSnapshotRepository, other.useSnapshotRepository);
     }
 
-    public String getProjectName() {
-        return artifactId + "-app";
-    }
-
     public String getProjectId() {
         return artifactId;
     }
