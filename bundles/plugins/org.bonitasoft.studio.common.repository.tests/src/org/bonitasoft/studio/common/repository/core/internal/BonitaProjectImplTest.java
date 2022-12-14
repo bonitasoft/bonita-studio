@@ -49,9 +49,9 @@ class BonitaProjectImplTest {
         metadata = ProjectMetadata.defaultMetadata();
         metadata.setUseSnapshotRepository(true);
         projectId = metadata.getArtifactId();
-        repository = RepositoryManager.getInstance().newRepository(metadata.getProjectId());
-        RepositoryManager.getInstance().setCurrentRepository(repository);
         project = BonitaProject.create(projectId);
+        repository = RepositoryManager.getInstance().newRepository(projectId);
+        RepositoryManager.getInstance().setCurrentRepository(repository);
         if (project.exists()) {
             try {
                 project.delete(monitor);
@@ -124,7 +124,7 @@ class BonitaProjectImplTest {
     }
 
     @Test
-    public void gitConnect() throws Exception {
+    void gitConnect() throws Exception {
         var op = project.newConnectProviderOperation();
 
         op.run(monitor);
@@ -142,7 +142,7 @@ class BonitaProjectImplTest {
     }
 
     @Test
-    public void createDefaultIgnoreFile() throws Exception {
+    void createDefaultIgnoreFile() throws Exception {
         var updatedMetadata = metadata;
         updatedMetadata.setVersion("2.0.0");
 
