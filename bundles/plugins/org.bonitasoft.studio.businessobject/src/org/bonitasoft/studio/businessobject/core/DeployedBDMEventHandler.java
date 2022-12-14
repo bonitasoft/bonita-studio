@@ -42,11 +42,11 @@ public class DeployedBDMEventHandler implements EventHandler {
             var addBDMClientDependencyOperation = new AddDependencyOperation(parametrized);
             try {
                 addBDMClientDependencyOperation.disableAnalyze().run(new NullProgressMonitor());
-                RepositoryManager.getInstance().getCurrentProject().ifPresent( p -> {
+                RepositoryManager.getInstance().getCurrentProject().ifPresent(p -> {
                     try {
                         p.getAppProject().build(IncrementalProjectBuilder.INCREMENTAL_BUILD, new NullProgressMonitor());
                     } catch (CoreException e) {
-                       BonitaStudioLog.error(e);
+                        BonitaStudioLog.error(e);
                     }
                 });
             } catch (CoreException e) {
@@ -58,12 +58,9 @@ public class DeployedBDMEventHandler implements EventHandler {
                 @Override
                 public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
                     // Update bdm model and dao list cache
-                    var currentRepository = RepositoryManager.getInstance().getCurrentRepository().orElse(null);
-                    if (currentRepository != null) {
-                        var businessObjectModelRepositoryStore = currentRepository
-                                .getRepositoryStore(BusinessObjectModelRepositoryStore.class);
-                        businessObjectModelRepositoryStore.allBusinessObjectDao(currentRepository.getJavaProject());
-                    }
+                    RepositoryManager.getInstance().getCurrentRepository()
+                            .map(r -> r.getRepositoryStore(BusinessObjectModelRepositoryStore.class))
+                            .ifPresent(BusinessObjectModelRepositoryStore::updateBusinessObjectDao);
                     return Status.OK_STATUS;
                 }
             }.schedule();

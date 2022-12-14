@@ -31,7 +31,6 @@ import org.bonitasoft.studio.businessobject.editor.model.BusinessObject;
 import org.bonitasoft.studio.businessobject.editor.model.BusinessObjectModel;
 import org.bonitasoft.studio.businessobject.i18n.Messages;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.ui.jface.BonitaStudioFontRegistry;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.ui.widget.TextAreaWidget;
@@ -44,6 +43,7 @@ import org.eclipse.core.databinding.observable.value.WritableValue;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.text.DocumentRewriteSession;
 import org.eclipse.jface.text.DocumentRewriteSessionType;
 import org.eclipse.swt.SWT;
@@ -52,8 +52,6 @@ import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.ToolItem;
@@ -64,6 +62,7 @@ import org.xml.sax.SAXException;
 
 public class BusinessDataModelFormPart extends AbstractFormPart {
 
+    private static final String TEXT_EDITOR_FONT = "org.eclipse.jdt.ui.editors.textfont";
     private DataBindingContext ctx = new DataBindingContext();
     private BusinessDataModelFormPage formPage;
     private BusinessObjectList businessObjectList;
@@ -132,39 +131,46 @@ public class BusinessDataModelFormPart extends AbstractFormPart {
                 .createIn(client);
 
         textAreaWidget.onClickButton(e -> {
-            copyToClipboard(modelDependencyGav, textAreaWidget);
+            copyToClipboard(modelDependencyGav, textAreaWidget, true);
         });
 
         var textControl = textAreaWidget.getTextControl();
         textControl.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_TEXT_DISABLED_BACKGROUND));
         textControl.getParent().setBackground(Display.getDefault().getSystemColor(SWT.COLOR_TEXT_DISABLED_BACKGROUND));
-        textControl.setFont(BonitaStudioFontRegistry.getMonospaceFont());
+        textControl.setFont(JFaceResources.getFontRegistry().get(TEXT_EDITOR_FONT));
         textControl.addFocusListener(new FocusAdapter() {
 
             @Override
             public void focusGained(FocusEvent e) {
-                textControl.getDisplay().timerExec(100, () -> textControl.selectAll());
-                copyToClipboard(modelDependencyGav, textAreaWidget);
+                textControl.getDisplay().timerExec(100, () -> {
+                    textControl.selectAll();
+                    copyToClipboard(modelDependencyGav, textAreaWidget, false);
+                });
             }
-            
+
         });
 
         section.setClient(client);
     }
 
-    private void copyToClipboard(String text, TextWidget textAreaWidget) {
+    private void copyToClipboard(String text, TextWidget textAreaWidget, boolean forceFeedback) {
         Clipboard clipboard = new Clipboard(Display.getDefault());
         TextTransfer textTransfer = TextTransfer.getInstance();
-        clipboard.setContents(new String[] { text }, new Transfer[] { textTransfer });
+        var content = clipboard.getContents(textTransfer);
+        if (!text.equals(content)) {
+            clipboard.setContents(new String[] { text }, new Transfer[] { textTransfer });
+        }
+        if (!text.equals(content) || forceFeedback) {
+            textAreaWidget.getButtonWithImage().ifPresent(showCopiedToClipboard());
+        }
         clipboard.dispose();
-        textAreaWidget.getButtonWithImage().ifPresent(showCopiedToClipboard());
     }
 
     private Consumer<? super ToolItem> showCopiedToClipboard() {
         return b -> Display.getDefault().asyncExec(() -> {
             var originalImage = b.getImage();
             b.setImage(Pics.getImage(PicsConstants.checkmark));
-            Display.getDefault().timerExec(4000, () -> {
+            Display.getDefault().timerExec(1500, () -> {
                 if (!b.isDisposed() && !originalImage.isDisposed()) {
                     b.setImage(originalImage);
                 }

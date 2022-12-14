@@ -54,11 +54,10 @@ public class DAOExpressionProvider implements IExpressionProvider {
     @Override
     public Set<Expression> getExpressions(final EObject context) {
         final Set<Expression> result = new HashSet<>();
-        final BusinessObjectModelRepositoryStore<BusinessObjectModelFileStore> boStore = repositoryAccessor
+        BusinessObjectModelRepositoryStore<BusinessObjectModelFileStore> boStore = repositoryAccessor
                 .getRepositoryStore(BusinessObjectModelRepositoryStore.class);
-        List<IType> allBusinessObjectDao = boStore.allBusinessObjectDao(repositoryAccessor.getCurrentRepository().map(IJavaContainer::getJavaProject).orElse(null));
-        for (final IType t : allBusinessObjectDao) {
-            result.add(createExpression(t));
+        for (final IType type : boStore.allBusinessObjectDao()) {
+            result.add(createExpression(type));
         }
         return result;
     }

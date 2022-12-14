@@ -32,19 +32,18 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.osgi.framework.Version;
 
 public class BdmModelArtifactMigrationStep implements MavenModelMigration, MigrationStep {
-    
+
     private boolean parametrizedGAV;
 
     /**
-     * 
-     * @param parametrizedGAV Whether the groupId and version of the BDM mode 
-     * artifacts should be parametrized in the model with ${project.groupId} 
-     * and ${project.version} or not.
+     * @param parametrizedGAV Whether the groupId and version of the BDM mode
+     *        artifacts should be parametrized in the model with ${project.groupId}
+     *        and ${project.version} or not.
      */
     public BdmModelArtifactMigrationStep(boolean parametrizedGAV) {
         this.parametrizedGAV = parametrizedGAV;
     }
-    
+
     public BdmModelArtifactMigrationStep() {
         this(false);
     }
@@ -52,38 +51,73 @@ public class BdmModelArtifactMigrationStep implements MavenModelMigration, Migra
     @Override
     public MigrationReport migrate(Model model, ProjectMetadata metadata) {
         MigrationReport report = new MigrationReport();
-        
-        // Remove old bdm artifacts from dependencies
-        var removed = false;
-        removed = removeDependency(model, matchingBdmClient(), report);
-        removed = removeDependency(model, matchingBdmDaoClient(), report) || removed;
 
-        if (removed) {
+        // Remove old bdm artifacts from dependencies
+        var bdmClientDependency = removeDependency(model, matchingBdmClient());
+        var bdmDaoDependency = removeDependency(model, matchingBdmDaoClient());
+        String reportMessage = null;
+        if (bdmClientDependency != null) {
             // Add new bdm model dependency
             var bdmModelDependency = bdmModelDependency(metadata);
-            model.getDependencies().add(bdmModelDependency);
-            report.added(String.format("`%s` dependency has been added.", new GAV(bdmModelDependency)));
+            model.getDependencies().add(bdmClientDependency.getPosition(), bdmModelDependency);
+            reportMessage = bdmDaoDependency != null
+                    ? String.format("`%s` and `%s` dependencies have been replaced with `%s`.",
+                            new GAV(bdmClientDependency.getDependency()),
+                            new GAV(bdmDaoDependency.getDependency()),
+                            new GAV(bdmModelDependency))
+                    : String.format("`%s` dependency has been replaced with `%s`.",
+                            new GAV(bdmClientDependency.getDependency()),
+                            new GAV(bdmModelDependency));
+
+        } else if (bdmDaoDependency != null) {
+            var bdmModelDependency = bdmModelDependency(metadata);
+            model.getDependencies().add(bdmDaoDependency.getPosition(), bdmModelDependency);
+            reportMessage = String.format("`%s` dependency has been replaced with `%s`.",
+                    new GAV(bdmDaoDependency.getDependency()),
+                    new GAV(bdmModelDependency));
+        }
+        if (bdmDaoDependency != null) {
+            reportMessage = addDaoImplNote(reportMessage);
+        }
+        if (reportMessage != null) {
+            report.updated(reportMessage);
         }
         return report;
     }
 
-    private boolean removeDependency(Model model, Predicate<Dependency> dependencyPredicate, MigrationReport report) {
+    private String addDaoImplNote(String reportMessage) {
+        return reportMessage + "  \n\n" +
+                "[NOTE]\n"
+                + "====\n"
+                + "If you were referencing `DAOImpl` directly in your code you may need to update the following usage:  \n"
+                + "[source,java]\n"
+                + "----\n"
+                + "// When a direct access to DAOImpl class is used\n"
+                + "BusinessObjectDAOImpl dao = new BusinessObjectDAOImpl(context.getApiSession())\n\n"
+                + "// Use the DAO interfaces and the DAO factory from the ApiClient instead\n"
+                + "BusinessObjectDAO dao = context.getApiClient().getDAO(BusinessObjectDAO.class)\n"
+                + "----\n"
+                + "====\n";
+    }
+
+    private RemovedDependency removeDependency(Model model, Predicate<Dependency> dependencyPredicate) {
         var dependency = model.getDependencies().stream()
                 .filter(dependencyPredicate)
                 .findFirst()
                 .orElse(null);
         if (dependency != null) {
+            var position = model.getDependencies().indexOf(dependency);
             var removed = model.getDependencies().remove(dependency);
             if (removed) {
-                report.removed(String.format("`%s` has been removed.",  new GAV(dependency)));
-                return true;
+                return RemovedDependency.create(dependency, position);
             }
         }
-        return false;
+        return null;
     }
 
     private Dependency bdmModelDependency(ProjectMetadata metadata) {
-        return newDependency(parametrizedGAV ? "${project.groupId}" : metadata.getGroupId(), String.format("%s-bdm-model", metadata.getProjectId()),
+        return newDependency(parametrizedGAV ? "${project.groupId}" : metadata.getGroupId(),
+                String.format("%s-bdm-model", metadata.getProjectId()),
                 parametrizedGAV ? "${project.version}" : metadata.getVersion(), Artifact.SCOPE_PROVIDED);
     }
 
@@ -108,8 +142,8 @@ public class BdmModelArtifactMigrationStep implements MavenModelMigration, Migra
 
     @Override
     public boolean appliesTo(Model model, ProjectMetadata metadata) {
-        return model.getDependencies().stream().anyMatch(matchingBdmClient())
-                || model.getDependencies().stream().anyMatch(matchingBdmDaoClient());
+        return model.getDependencies().stream()
+                .anyMatch(matchingBdmClient().or(matchingBdmDaoClient()));
     }
 
     @Override
@@ -129,5 +163,29 @@ public class BdmModelArtifactMigrationStep implements MavenModelMigration, Migra
     @Override
     public boolean appliesTo(String sourceVersion) {
         return Version.parseVersion(sourceVersion).compareTo(new Version("7.16.0")) < 0;
+    }
+
+    static class RemovedDependency {
+
+        private Dependency dependency;
+        private int position;
+
+        private RemovedDependency(Dependency dependency, int position) {
+            this.dependency = dependency;
+            this.position = position;
+        }
+
+        static RemovedDependency create(Dependency dependency, int position) {
+            return new RemovedDependency(dependency, position);
+        }
+
+        public Dependency getDependency() {
+            return dependency;
+        }
+
+        public int getPosition() {
+            return position;
+        }
+
     }
 }

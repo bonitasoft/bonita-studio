@@ -192,13 +192,17 @@ public class BusinessObjectModelFileStore extends AbstractBDMFileStore<BusinessO
         }
         super.doDelete();
         cachedBusinessObjectModel.clear();
+        clearBusinessObjectDaoCache();
        
         if (commandExecutor.canExecute(CLEAN_ACCESS_CONTROL_CMD, null)) {
             commandExecutor.executeCommand(CLEAN_ACCESS_CONTROL_CMD, null);
         }
         getRepositoryAccessor().getCurrentProject().ifPresent(p -> {
             try {
-                p.removeBdmProjects(new NullProgressMonitor());
+                p.getBdmModelProject().delete(true, true, new NullProgressMonitor());
+                p.getBdmDaoClientProject().delete(true, true, new NullProgressMonitor());
+                p.getBdmParentProject().delete(true, true, new NullProgressMonitor());
+                p.removeModule(BonitaProject.BDM_MODULE,new NullProgressMonitor());
             } catch (CoreException e) {
                 BonitaStudioLog.error(e);
             }
@@ -385,6 +389,10 @@ public class BusinessObjectModelFileStore extends AbstractBDMFileStore<BusinessO
                     e);
         }
         return ValidationStatus.info(Messages.businessDataModelDeployed);
+    }
+    
+    public void clearBusinessObjectDaoCache() {
+        daoTypes = null;
     }
 
     public List<IType> allBusinessObjectDao(final IJavaProject javaProject) {

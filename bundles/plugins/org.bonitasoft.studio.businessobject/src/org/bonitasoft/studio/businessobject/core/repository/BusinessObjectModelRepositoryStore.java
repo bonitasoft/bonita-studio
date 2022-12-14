@@ -104,7 +104,7 @@ public class BusinessObjectModelRepositoryStore<F extends AbstractBDMFileStore<?
     @Override
     public IFolder getResource() {
         var project = getBonitaProject();
-        if(project != null && project.exists()) {
+        if (project != null && project.exists()) {
             return project.getAppProject().getFolder(STORE_NAME);
         }
         return super.getResource();
@@ -132,16 +132,17 @@ public class BusinessObjectModelRepositoryStore<F extends AbstractBDMFileStore<?
     @Override
     protected FileStoreCollector fileStoreCollector() {
         return new FileStoreCollector(getResource(), getCompatibleExtensions().toArray(String[]::new)) {
+
             @Override
             public boolean visit(IResource resource) throws CoreException {
-               if(Objects.equals(resource.getName(), BusinessObjectModelFileStore.BOM_FILENAME)) {
-                   return super.visit(resource);
-               }
-               return resource.equals(getResource());
+                if (Objects.equals(resource.getName(), BusinessObjectModelFileStore.BOM_FILENAME)) {
+                    return super.visit(resource);
+                }
+                return resource.equals(getResource());
             }
         };
     }
-    
+
     public Optional<BusinessObjectModelFileStore> getChildByQualifiedName(final String qualifiedName) {
         final Optional<BusinessObjectModelFileStore> businessObjectFileStore = Optional
                 .ofNullable((BusinessObjectModelFileStore) getChild(BusinessObjectModelFileStore.BOM_FILENAME, true));
@@ -154,30 +155,30 @@ public class BusinessObjectModelRepositoryStore<F extends AbstractBDMFileStore<?
                 .ofNullable((BusinessObjectModelFileStore) getChild(BusinessObjectModelFileStore.BOM_FILENAME, true))
                 .map(fileStore -> fileStore.getBusinessObject(qualifiedName));
     }
-    
+
     @Override
     public AbstractBDMFileStore<?> importInputStream(String fileName, InputStream inputStream) {
-        if(!getResource().exists()|| !getResource().getFile("pom.xml").exists()) {
+        if (!getResource().exists() || !getResource().getFile("pom.xml").exists()) {
             try {
-               var bdmFolder = createBdmModule(getBonitaProject(), new NullProgressMonitor());
-               var bomFile = bdmFolder.getFile(BusinessObjectModelFileStore.BOM_FILENAME);
-               if(bomFile.exists()) {
-                   bomFile.delete(true, new NullProgressMonitor());
-               }
+                var bdmFolder = createBdmModule(getBonitaProject(), new NullProgressMonitor());
+                var bomFile = bdmFolder.getFile(BusinessObjectModelFileStore.BOM_FILENAME);
+                if (bomFile.exists()) {
+                    bomFile.delete(true, new NullProgressMonitor());
+                }
             } catch (CoreException e) {
                 BonitaStudioLog.error(e);
             }
         }
         return super.importInputStream(fileName, inputStream);
     }
-    
+
     @Override
     protected AbstractBDMFileStore<?> doImportArchiveData(ImportArchiveData importArchiveData, IProgressMonitor monitor)
             throws CoreException {
         if (!getResource().exists() || !getResource().getFile("pom.xml").exists()) {
             var bdmFolder = createBdmModule(getBonitaProject(), new NullProgressMonitor());
             var bomFile = bdmFolder.getFile(BusinessObjectModelFileStore.BOM_FILENAME);
-            if(bomFile.exists()) {
+            if (bomFile.exists()) {
                 bomFile.delete(true, new NullProgressMonitor());
             }
         }
@@ -207,8 +208,8 @@ public class BusinessObjectModelRepositoryStore<F extends AbstractBDMFileStore<?
         }
         return fileStore;
     }
-    
-    public IFolder createBdmModule(BonitaProject project, IProgressMonitor monitor) throws CoreException{
+
+    public IFolder createBdmModule(BonitaProject project, IProgressMonitor monitor) throws CoreException {
         var parentProject = project.getParentProject();
         var parentProjectPath = parentProject.getLocation().toFile().toPath();
         var plugin = new CreateBdmModulePlugin(parentProjectPath, project.getId());
@@ -224,7 +225,7 @@ public class BusinessObjectModelRepositoryStore<F extends AbstractBDMFileStore<?
         var bdmFolder = project.getParentProject().getFolder(STORE_NAME);
         var bdmLinkedFolder = project.getAppProject().getFolder(STORE_NAME);
         try {
-            if(!bdmFolder.exists()) {
+            if (!bdmFolder.exists()) {
                 bdmFolder.create(false, true, new NullProgressMonitor());
             }
             if (!bdmLinkedFolder.exists()) {
@@ -270,7 +271,7 @@ public class BusinessObjectModelRepositoryStore<F extends AbstractBDMFileStore<?
             throws CoreException, MigrationException {
         MigrationReport report = super.migrate(monitor);
         var project = getBonitaProject();
-        if(project != null) {
+        if (project != null) {
             createBdmFolderLinkInAppProject(project);
         }
         BusinessObjectModelFileStore fStore = (BusinessObjectModelFileStore) getChild(
@@ -319,13 +320,22 @@ public class BusinessObjectModelRepositoryStore<F extends AbstractBDMFileStore<?
         }.schedule();
     }
 
-    public List<IType> allBusinessObjectDao(final IJavaProject javaProject) {
-        BusinessObjectModelFileStore fSotre = (BusinessObjectModelFileStore) getChild(
+    public void updateBusinessObjectDao() {
+        var fStore = (BusinessObjectModelFileStore) getChild(
                 BusinessObjectModelFileStore.BOM_FILENAME, true);
-        if (fSotre == null || !fSotre.getResource().exists()) {
+        if (fStore != null && fStore.getResource().exists()) {
+            fStore.clearBusinessObjectDaoCache();
+            fStore.allBusinessObjectDao(getBonitaProject().getAdapter(IJavaProject.class));
+        }
+    }
+
+    public List<IType> allBusinessObjectDao() {
+        var fStore = (BusinessObjectModelFileStore) getChild(
+                BusinessObjectModelFileStore.BOM_FILENAME, true);
+        if (fStore == null || !fStore.getResource().exists()) {
             return Collections.emptyList();
         }
-        return fSotre.allBusinessObjectDao(javaProject);
+        return fStore.allBusinessObjectDao(getBonitaProject().getAdapter(IJavaProject.class));
     }
 
     @Override

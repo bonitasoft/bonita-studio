@@ -65,15 +65,6 @@ public class BonitaStudioFontRegistry {
         return getFont("bonita_active_font", 10, SWT.BOLD);
     }
 
-    public static Font getMonospaceFont() {
-        Font font = JFaceResources.getFontRegistry().get("monospace_font");
-        if (font == null || font.equals(JFaceResources.getFontRegistry().get(JFaceResources.DEFAULT_FONT))) {
-            font = new Font(Display.getDefault(), "Monospaced", 10, SWT.NONE);
-            JFaceResources.getFontRegistry().put("monospace_font", font.getFontData());
-        }
-        return font;
-    }
-
     /**
      * @param fontID
      * @param style

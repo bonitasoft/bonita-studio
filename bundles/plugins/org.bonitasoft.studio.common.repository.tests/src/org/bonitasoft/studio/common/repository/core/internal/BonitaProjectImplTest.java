@@ -19,6 +19,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.io.File;
 import java.nio.file.Files;
 
+import org.bonitasoft.studio.common.FileUtil;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.core.BonitaProject;
@@ -139,6 +140,8 @@ class BonitaProjectImplTest {
                 .execute(new NullProgressMonitor());
 
         assertThat(RepositoryProvider.getProvider(project.getParentProject(), GitProvider.ID)).isNull();
+        FileUtil.deleteDir(project.getGitDir().toPath());
+        assertThat(project.getGitDir()).doesNotExist();
     }
 
     @Test

@@ -28,7 +28,6 @@ public class RepositoryPreferenceInitializer extends AbstractPreferenceInitializ
     @Override
     public void initializeDefaultPreferences() {
         IPreferenceStore store = CommonRepositoryPlugin.getDefault().getPreferenceStore();
-        store.setDefault(BUILD_ENABLE, true);
         store.setDefault(DEFAULT_GROUPID, DEFAULT_GROUPID_VALUE);
 
         IPreferenceStore gitPreferenceStore = new ScopedPreferenceStore(InstanceScope.INSTANCE,

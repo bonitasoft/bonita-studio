@@ -76,12 +76,14 @@ public interface BonitaProject extends GitProject, IAdaptable {
 
     IScopeContext getScopeContext();
 
-    void removeBdmProjects(IProgressMonitor monitor) throws CoreException;
+    void removeModule(String module, IProgressMonitor monitor) throws CoreException;
 
     void refresh(IProgressMonitor monitor) throws CoreException;
     
     void refresh(boolean updateConfiguration, IProgressMonitor monitor) throws CoreException;
 
+    boolean exists();
+    
     static List<IProject> getRelatedProjects(String id) {
         var relatedProjects = new ArrayList<IProject>();
         var bdmParentProject = getBdmParentProject(id);
@@ -96,16 +98,16 @@ public interface BonitaProject extends GitProject, IAdaptable {
         if (bdmDaoClientProject.exists()) {
             relatedProjects.add(bdmDaoClientProject);
         }
-        var parentProject = getParentProject(id);
-        if (parentProject.exists()) {
-            relatedProjects.add(parentProject);
-        }
         var appProject = getAppProject(id);
         if (appProject.exists()) {
             relatedProjects.add(appProject);
         }
         relatedProjects.addAll(getRestApiExtensionProjects(id));
         relatedProjects.addAll(getThemesProjects(id));
+        var parentProject = getParentProject(id);
+        if (parentProject.exists()) {
+            relatedProjects.add(parentProject);
+        }
         return relatedProjects;
     }
 
@@ -163,7 +165,7 @@ public interface BonitaProject extends GitProject, IAdaptable {
         return ResourcesPlugin.getWorkspace().getRoot().getProject(name);
     }
 
-    boolean exists();
+
 
     static BonitaProject create(String projectId) {
         return new BonitaProjectImpl(projectId);
