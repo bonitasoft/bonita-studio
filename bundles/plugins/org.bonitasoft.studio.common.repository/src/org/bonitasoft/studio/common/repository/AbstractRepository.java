@@ -81,14 +81,9 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.e4.core.services.events.IEventBroker;
 import org.eclipse.emf.edapt.migration.MigrationException;
 import org.eclipse.jdt.core.IJavaProject;
-import org.eclipse.jdt.core.JavaCore;
-import org.eclipse.m2e.core.MavenPlugin;
-import org.eclipse.m2e.core.internal.project.ProjectConfigurationManager;
-import org.eclipse.m2e.core.project.MavenUpdateRequest;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -381,10 +376,7 @@ public abstract class AbstractRepository implements IRepository {
 
     @Override
     public IJavaProject getJavaProject() {
-        if (getProject() != null && getProject().isAccessible()) {
-            return JavaCore.create(project.getAppProject());
-        }
-        return null;
+        return project.getAdapter(IJavaProject.class);
     }
 
     @Override

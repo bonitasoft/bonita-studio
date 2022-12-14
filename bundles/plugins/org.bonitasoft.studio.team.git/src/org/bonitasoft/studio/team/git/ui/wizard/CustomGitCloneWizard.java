@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.Collections;
@@ -203,10 +204,11 @@ public class CustomGitCloneWizard extends GitCloneWizard {
         File workdir = null;
         try {
             var name = uri.getHumanishName();
-            var workdirPath = Files.createDirectory(Paths.get(System.getProperty("java.io.tmpdir")).resolve(name));
+            var workdirPath = Paths.get(System.getProperty("java.io.tmpdir")).resolve(name);
             if (Files.isDirectory(workdirPath)) {
                 FileUtil.deleteDir(workdirPath);
             }
+            Files.createDirectory(workdirPath);
             workdir = workdirPath.toFile();
         } catch (IOException e1) {
             BonitaStudioLog.error(e1);

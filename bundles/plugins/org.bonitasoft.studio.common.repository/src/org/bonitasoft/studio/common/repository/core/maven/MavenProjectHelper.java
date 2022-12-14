@@ -44,10 +44,8 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.e4.core.di.annotations.Creatable;
 import org.eclipse.m2e.core.MavenPlugin;
-import org.eclipse.m2e.core.internal.IMavenConstants;
-import org.eclipse.m2e.core.internal.project.ProjectConfigurationManager;
 import org.eclipse.m2e.core.project.IMavenProjectFacade;
-import org.eclipse.m2e.core.project.MavenUpdateRequest;
+import org.eclipse.m2e.core.ui.internal.UpdateMavenProjectJob;
 import org.jdom2.Document;
 import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
@@ -57,8 +55,10 @@ import org.jdom2.output.Format.TextMode;
 @Creatable
 public class MavenProjectHelper {
 
-    public Model getMavenModel(IProject project) throws CoreException {
-        var pomFile = project.getFile(IMavenConstants.POM_FILE_NAME);
+    public static final String POM_FILE_NAME = "pom.xml";
+
+    public static Model getMavenModel(IProject project) throws CoreException {
+        var pomFile = project.getFile(POM_FILE_NAME);
         if (!pomFile.exists()) {
             return null;
         }
@@ -68,7 +68,7 @@ public class MavenProjectHelper {
     public static Model readModel(File pomFile) throws CoreException {
         try (InputStream is = Files.newInputStream(pomFile.toPath())) {
             var maven = MavenPlugin.getMaven();
-            if(maven == null) {
+            if (maven == null) {
                 throw new CoreException(Status.error("IMaven singleton is null"));
             }
             return maven.readModel(is);
@@ -78,20 +78,20 @@ public class MavenProjectHelper {
         }
     }
 
-    public void saveModel(IProject project, Model model, boolean updateConfiguration, IProgressMonitor monitor)
+    @SuppressWarnings("restriction")
+    public static void saveModel(IProject project, Model model, boolean updateConfiguration, IProgressMonitor monitor)
             throws CoreException {
         saveModel(project, model, monitor);
-        ((ProjectConfigurationManager) MavenPlugin.getProjectConfigurationManager())
-                .updateProjectConfiguration(new MavenUpdateRequest(project, false, false), updateConfiguration, false,
-                        true, monitor);
+        new UpdateMavenProjectJob(new IProject[] { project }, false, false, updateConfiguration, false, true)
+                .run(monitor);
     }
 
-    public void saveModel(IProject project, Model model, IProgressMonitor monitor) throws CoreException {
-        var pomFile = project.getFile(IMavenConstants.POM_FILE_NAME);
+    public static void saveModel(IProject project, Model model, IProgressMonitor monitor) throws CoreException {
+        var pomFile = project.getFile(POM_FILE_NAME);
         saveModel(pomFile, model, monitor);
     }
 
-    public void saveModel(IFile pomFile, Model model, IProgressMonitor monitor) throws CoreException {
+    public static void saveModel(IFile pomFile, Model model, IProgressMonitor monitor) throws CoreException {
         saveModel(pomFile.getLocation().toFile().toPath(), model);
         pomFile.refreshLocal(IResource.DEPTH_ONE, monitor);
     }
@@ -136,9 +136,10 @@ public class MavenProjectHelper {
     }
 
     private static IMavenProjectFacade getMavenProjectFacade(IProject project) throws CoreException {
-        var facade =  MavenPlugin.getMavenProjectRegistry().getProject(project);
-        if(facade == null) {
-            facade = MavenPlugin.getMavenProjectRegistry().create(project.getFile(IMavenConstants.POM_FILE_NAME),true,  new NullProgressMonitor());
+        var facade = MavenPlugin.getMavenProjectRegistry().getProject(project);
+        if (facade == null) {
+            facade = MavenPlugin.getMavenProjectRegistry().create(project.getFile(POM_FILE_NAME), true,
+                    new NullProgressMonitor());
         }
         return facade;
     }
@@ -180,8 +181,7 @@ public class MavenProjectHelper {
                     mavenModelJDOMWriter.write(model,
                             pom);
                 } catch (IOException | JDOMException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
+                    throw new CoreException(Status.error("Failed to update pom.xml", e));
                 }
             }
         }

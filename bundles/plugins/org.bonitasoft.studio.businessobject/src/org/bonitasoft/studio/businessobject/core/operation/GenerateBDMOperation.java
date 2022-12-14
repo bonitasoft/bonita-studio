@@ -32,12 +32,16 @@ import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.core.maven.MavenProjectHelper;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IncrementalProjectBuilder;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.e4.core.services.events.IEventBroker;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.m2e.core.MavenPlugin;
@@ -80,14 +84,19 @@ public class GenerateBDMOperation implements IRunnableWithProgress {
             var data = new HashMap<String, Object>();
             data.put(BdmEvents.MODEL_PROPERTY, model);
             try {
-                data.put(BdmEvents.FILE_CONTENT_PROPERTY, Files.readString(fileStore.getResource().getLocation().toFile().toPath()));
+                data.put(BdmEvents.FILE_CONTENT_PROPERTY,
+                        Files.readString(fileStore.getResource().getLocation().toFile().toPath()));
             } catch (Exception e) {
                 throw new InvocationTargetException(e);
             }
             try {
-                project.getBdmModelProject()
-                        .build(IncrementalProjectBuilder.INCREMENTAL_BUILD, monitor);
-                var status = mavenInstall(project.getBdmModelProject(), monitor);
+                var bdmModelProject = project.getBdmModelProject();
+                waitForAutoBuildJob();
+                bdmModelProject
+                        .build(IncrementalProjectBuilder.INCREMENTAL_BUILD, new NullProgressMonitor());
+                waitForAutoBuildJob();
+                bdmModelProject.refreshLocal(IResource.DEPTH_INFINITE, new NullProgressMonitor());
+                var status = mavenInstall(bdmModelProject, new NullProgressMonitor());
                 if (!status.isOK()) {
                     throw new CoreException(status);
                 }
@@ -96,7 +105,15 @@ public class GenerateBDMOperation implements IRunnableWithProgress {
                 throw new InvocationTargetException(e);
             }
             eventBroker().send(BdmEvents.BDM_DEPLOYED_TOPIC, data);
-        } 
+        }
+    }
+
+    private void waitForAutoBuildJob() {
+        try {
+            Job.getJobManager().join(ResourcesPlugin.FAMILY_AUTO_BUILD, new NullProgressMonitor());
+        } catch (OperationCanceledException | InterruptedException e) {
+            BonitaStudioLog.error(e);
+        }
     }
 
     private IStatus mavenInstall(IProject bdmModelProject, IProgressMonitor monitor) throws CoreException {

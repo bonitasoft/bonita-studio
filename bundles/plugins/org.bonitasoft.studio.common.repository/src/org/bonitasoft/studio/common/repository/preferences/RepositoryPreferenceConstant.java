@@ -17,7 +17,6 @@ package org.bonitasoft.studio.common.repository.preferences;
 public interface RepositoryPreferenceConstant {
 
     public static final String CURRENT_REPOSITORY = "currentRepository";
-    public static final String BUILD_ENABLE = "buildEnable";
     public static final String DEFAULT_GROUPID = "defaultGroupId";
     public static final String DEFAULT_GROUPID_VALUE = "com.company";
 
