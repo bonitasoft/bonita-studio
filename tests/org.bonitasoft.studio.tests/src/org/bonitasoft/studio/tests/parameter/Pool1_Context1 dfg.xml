@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<parameter:ParameterContext xmlns:parameter="http://www.bonitasoft.org/ns/studio/parameter" name="Context1 dfg" description="">
+  <parameters name="tata" value="3" typeClassname="java.lang.String"/>
+  <parameters name="toto" value="titi" typeClassname="java.lang.String"/>
+  <parameters name="parameter1" value="dfgdfg" typeClassname="java.lang.String" description=""/>
+</parameter:ParameterContext>
