@@ -128,7 +128,9 @@ public class ProjectMetadata {
         if (projectFacade == null) {
             if (project.getLocation() != null) {
                 var pomFile = project.getLocation().toFile().toPath().resolve("pom.xml").toFile();
-                return read(pomFile);
+                if(pomFile.exists()) {
+                    return read(pomFile);
+                }
             }
             return defaultMetadata();
         }

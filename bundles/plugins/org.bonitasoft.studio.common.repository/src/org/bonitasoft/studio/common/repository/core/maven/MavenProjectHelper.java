@@ -96,7 +96,7 @@ public class MavenProjectHelper {
         pomFile.refreshLocal(IResource.DEPTH_ONE, monitor);
     }
 
-    public static void saveModel(Path pomFile, Model model) throws CoreException {
+    public static Model saveModel(Path pomFile, Model model) throws CoreException {
         try {
             if (Files.exists(pomFile)) {
                 update(pomFile.toFile(), model);
@@ -105,6 +105,7 @@ public class MavenProjectHelper {
                     MavenPlugin.getMaven().writeModel(model, os);
                 }
             }
+            return model;
         } catch (IOException e) {
             throw new CoreException(
                     new Status(IStatus.ERROR, MavenProjectHelper.class, "Failed to write maven model in pom.xml file.",

@@ -14,9 +14,13 @@
  */
 package org.bonitasoft.studio.common.repository.core.migration.step;
 
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Properties;
 
+import org.apache.maven.model.Dependency;
+import org.apache.maven.model.Model;
 import org.bonitasoft.studio.common.RedirectURLBuilder;
 import org.bonitasoft.studio.common.repository.core.CreateBonitaProjectOperation;
 import org.bonitasoft.studio.common.repository.core.MavenProjectModelBuilder;
@@ -26,6 +30,7 @@ import org.bonitasoft.studio.common.repository.core.migration.MigrationStep;
 import org.bonitasoft.studio.common.repository.core.migration.report.MigrationReport;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.Status;
 import org.osgi.framework.Version;
 
 public class CreatePomMigrationStep implements MigrationStep {
@@ -34,35 +39,55 @@ public class CreatePomMigrationStep implements MigrationStep {
     public MigrationReport run(Path project, IProgressMonitor monitor) throws CoreException {
         var pomFile = project.resolve(POM_FILE_NAME);
         var report = new MigrationReport();
+        ProjectMetadata metadata = null;
         if (Files.exists(pomFile)) {
-            var currentMetadata = ProjectMetadata.read(pomFile.toFile());
-            createDefaultPomFile(project, currentMetadata);
+            metadata = ProjectMetadata.read(pomFile.toFile());
             report.removed(
                     "Existing `pom.xml` has been backed up as `pom.xml.old`. Bonita projects are now Maven project and the `pom.xml` file is *reserved for internal use*.");
         } else {
-            var defaultMetadata = ProjectMetadata.defaultMetadata();
+            metadata = ProjectMetadata.defaultMetadata();
             var name = project.getFileName().toString();
-            defaultMetadata.setName(name);
-            defaultMetadata.setArtifactId(ProjectMetadata.toArtifactId(name));
-            createDefaultPomFile(project, defaultMetadata);
+            metadata.setName(name);
+            metadata.setArtifactId(ProjectMetadata.toArtifactId(name));
         }
+        var model = createDefaultPomFile(project, metadata);
         report.updated("Groovy version has been updated from `2.4.x` to `3.0.x`");
         report.updated(
                 "Only Java `11` version is now supported. This might impact your existing project if you were still using Java 8. Some dependencies in your project might be incompatible with the _Java Platform Module System_ introduced in Java 9.");
         report.added(String.format(
                 "Bonita projects are now Maven projects and rely on the https://maven.apache.org/guides/introduction/introduction-to-dependency-mechanism.html[Maven dependency mechanism] to manage their dependencies. Check the documentation for more information about %s[Project composition].",
                 RedirectURLBuilder.create("727")));
+        addBdmDependency(project, model);
         return report;
     }
-    
-    private static void createDefaultPomFile(Path project,
+
+    private void addBdmDependency(Path project, Model model) throws CoreException {
+        var artifactDescriptor = project.resolve("bdm").resolve(".artifact-descriptor.properties");
+        if (Files.exists(artifactDescriptor)) {
+            var p = new Properties();
+            try (var is = Files.newInputStream(artifactDescriptor)) {
+                p.load(is);
+            } catch (IOException e) {
+                throw new CoreException(Status.error("Failed to read .artifact-descriptor.properties", e));
+            }
+            var bdmDependency = new Dependency();
+            bdmDependency.setGroupId(p.getProperty("groupId"));
+            bdmDependency.setArtifactId("bdm-client");
+            bdmDependency.setVersion("1.0.0");
+            bdmDependency.setScope("provided");
+            model.getDependencies().add(bdmDependency);
+            MavenProjectHelper.saveModel(project.resolve(POM_FILE_NAME), model);
+        }
+    }
+
+    private static Model createDefaultPomFile(Path project,
             ProjectMetadata metadata) throws CoreException {
         var pomFile = project.resolve("pom.xml");
         if (Files.exists(pomFile)) {
             CreateBonitaProjectOperation.backupExistingPomFile(pomFile, metadata);
         }
         var builder = CreateBonitaProjectOperation.newProjectBuilder(metadata, new MavenProjectModelBuilder());
-        MavenProjectHelper.saveModel(project.resolve("pom.xml"), builder.toMavenModel());
+        return MavenProjectHelper.saveModel(project.resolve("pom.xml"), builder.toMavenModel());
     }
 
     @Override
