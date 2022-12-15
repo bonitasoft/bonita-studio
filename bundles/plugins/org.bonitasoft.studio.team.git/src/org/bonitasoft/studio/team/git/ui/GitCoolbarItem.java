@@ -14,17 +14,10 @@
  */
 package org.bonitasoft.studio.team.git.ui;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.bonitasoft.studio.common.repository.RepositoryManager;
-import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.extension.IBonitaContributionItem;
 import org.bonitasoft.studio.pics.Pics;
-import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.team.git.TeamGitPlugin;
 import org.bonitasoft.studio.team.git.i18n.Messages;
-import org.eclipse.core.commands.Command;
 import org.eclipse.jface.action.ContributionItem;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -47,10 +40,8 @@ public class GitCoolbarItem extends ContributionItem implements IBonitaContribut
         item.setToolTipText(Messages.gitButtonTooltip);
         if (iconSize < 0) {
             item.setImage(Pics.getImage("git_coolbar_big.png", TeamGitPlugin.getDefault()));
-           // item.setHotImage(Pics.getImage(PicsConstants.coolbar_run_hot_32));
         } else {
             item.setImage(Pics.getImage("git_coolbar_small.png", TeamGitPlugin.getDefault()));
-        //    item.setHotImage(Pics.getImage(PicsConstants.coolbar_run_hot_24));
         }
         item.addSelectionListener(new SelectionAdapter() {
 
@@ -63,20 +54,6 @@ public class GitCoolbarItem extends ContributionItem implements IBonitaContribut
                     menu.setLocation(pt.x, pt.y + rect.height);
                   
                     new MenuContributionItem().fill(menu, 0);
-//                    final DropdownSelectionListener listener = new DropdownSelectionListener(item);
-//                    final List<String> confName = new ArrayList<>();
-//
-//                    final EnvironmentRepositoryStore environmentStore = RepositoryManager.getInstance()
-//                            .getCurrentRepository()
-//                            .orElseThrow()item.setImage(Pics.getImage(PicsConstants.coolbar_run_24));
-//                            .getRepositoryStore(EnvironmentRepositoryStore.class);
-//                    for (final IRepositoryFileStore file : environmentStore.getChildren()) {
-//                        confName.add(file.getDisplayName());
-//                    }
-//                    for (final String c : confName) {
-//                        listener.add(c);
-//                    }
-//                    listener.widgetSelected(e);
                     menu.setVisible(true);
                 }
             }

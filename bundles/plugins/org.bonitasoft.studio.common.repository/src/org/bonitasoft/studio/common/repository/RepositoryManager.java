@@ -37,7 +37,6 @@ import org.bonitasoft.studio.common.repository.preferences.RepositoryPreferenceC
 import org.bonitasoft.studio.common.ui.PlatformUtil;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.Adapters;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -222,8 +221,9 @@ public class RepositoryManager {
         try {
             var metadata = ProjectMetadata.read(currentRepository.getProject(), monitor);
             monitor.setTaskName(Messages.creatingNewProject);
-            var project = Adapters.adapt(currentRepository.create(metadata, monitor), BonitaProject.class);
+            currentRepository.create(metadata, monitor);
             setCurrentRepository(currentRepository);
+            var project = BonitaProject.create(projectId);
             project.open(monitor);
         } catch (CoreException e) {
             BonitaStudioLog.error(e);
