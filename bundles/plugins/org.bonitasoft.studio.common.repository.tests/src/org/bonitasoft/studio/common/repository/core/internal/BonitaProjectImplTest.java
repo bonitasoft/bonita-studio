@@ -35,6 +35,7 @@ import org.eclipse.egit.core.op.DisconnectProviderOperation;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.team.core.RepositoryProvider;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 class BonitaProjectImplTest {
@@ -124,6 +125,7 @@ class BonitaProjectImplTest {
         assertThat(currentMetadata.getVersion()).isEqualTo("2.0.0");
     }
 
+    @Disabled("Issue on CI where .git folder cannot be deleted")
     @Test
     void gitConnect() throws Exception {
         var op = project.newConnectProviderOperation();
