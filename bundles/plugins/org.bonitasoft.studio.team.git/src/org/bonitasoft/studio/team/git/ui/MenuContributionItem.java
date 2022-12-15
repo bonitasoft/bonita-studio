@@ -107,7 +107,7 @@ public class MenuContributionItem extends ContributionItem {
                 () -> RepositoryManager.getInstance().getCurrentRepository()
                         .filter(repo -> repo.isShared(GitProvider.ID)).isPresent(),
                 TeamGitPlugin.getImage("icons/history.png"));
-        if(RepositoryManager.getInstance().getCurrentRepository()
+        if (RepositoryManager.getInstance().getCurrentRepository()
                 .filter(repo -> repo.isShared(GitProvider.ID)).isPresent()) {
             new MenuItem(menu, SWT.SEPARATOR);
         }
@@ -136,7 +136,7 @@ public class MenuContributionItem extends ContributionItem {
                 },
                 rebaseActionHandler::isEnabled,
                 UIIcons.getImage(pluginResources, UIIcons.REBASE));
-        if(rebaseActionHandler.isEnabled()) {
+        if (rebaseActionHandler.isEnabled()) {
             new MenuItem(menu, SWT.SEPARATOR);
         }
     }
@@ -171,8 +171,8 @@ public class MenuContributionItem extends ContributionItem {
                 },
                 mergeActionHandler::isEnabled,
                 UIIcons.getImage(pluginResources, UIIcons.MERGE));
-        
-        if(mergeActionHandler.isEnabled()) {
+
+        if (mergeActionHandler.isEnabled()) {
             new MenuItem(menu, SWT.SEPARATOR);
         }
     }
@@ -197,7 +197,7 @@ public class MenuContributionItem extends ContributionItem {
                 e -> pullAction.run(null),
                 pullAction::isEnabled,
                 UIIcons.getImage(pluginResources, UIIcons.PULL));
-        if(pullAction.isEnabled()) {
+        if (pullAction.isEnabled()) {
             new MenuItem(menu, SWT.SEPARATOR);
         }
     }
@@ -295,7 +295,7 @@ public class MenuContributionItem extends ContributionItem {
         ShareGitProject shareGitProject = new ShareGitProject();
         createMenu(menu,
                 Messages.shareWithGit,
-                e -> shareGitProject.execute(getProject().getAdapter(BonitaProject.class)),
+                e -> shareGitProject.execute(getBonitaProject()),
                 () -> shareGitProject.canExecute(getProject()),
                 Pics.getImage("git.png", TeamGitPlugin.getDefault()));
     }
@@ -384,7 +384,15 @@ public class MenuContributionItem extends ContributionItem {
     }
 
     private IProject getProject() {
-        return RepositoryManager.getInstance().getCurrentRepository().map(IRepository::getProject).orElse(null);
+        var bonitaProject = getBonitaProject();
+        if (bonitaProject != null) {
+            return bonitaProject.getAppProject();
+        }
+        return null;
+    }
+
+    private BonitaProject getBonitaProject() {
+        return RepositoryManager.getInstance().getCurrentProject().orElse(null);
     }
 
 }

@@ -180,7 +180,7 @@ public class ProjectMigrationListener implements IResourceChangeListener, IResou
             var report = op.getReport();
             var bonitaProject = op.getBonitaProject();
             var currentRepo = RepositoryManager.getInstance().switchToRepository(
-                    bonitaProject.getAppProject().getName(),
+                    bonitaProject.getId(),
                     new NullProgressMonitor());
             try {
                 currentRepo.migrate(report, SubMonitor.convert(monitor));

@@ -95,7 +95,7 @@ public class MultiModuleMigrationStep implements MigrationStep {
                 var plugin = new CreateBdmModulePlugin(project, rootModel.getArtifactId());
                 plugin.execute(new NullProgressMonitor());
                 Files.deleteIfExists(bdmFolder.resolve(".artifact-descriptor.properties"));
-                report.updated("The project's Business Data Model now live in its own maven module. While it does not impact the design usage, it can now be built and deployed independantly from a Studio.  " +
+                report.updated("The project's Business Data Model now live in its own maven module. While it does not impact the design usage, it can now be built and deployed independently from a Studio.  " +
                                "The BDM model dependency share the same `version` and `groupId` of the parent project. It is enforced by the format of the Bonita project and must not be changed.");
             }
         } catch (IOException e) {
