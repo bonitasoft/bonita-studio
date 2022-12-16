@@ -208,14 +208,6 @@ public class RepositoryManager {
         }
         currentRepository = getRepository(projectId);
         if (currentRepository == null) {
-            // Ensure Bonita artifacts are properly installed in user local repository before creating a project
-            try {
-                monitor.subTask("");
-                monitor.beginTask("Check local repository required artifacts...", IProgressMonitor.UNKNOWN);
-                new InstallBonitaMavenArtifactsOperation(MavenPlugin.getMaven().getLocalRepository()).execute(monitor);
-            } catch (CoreException e1) {
-                BonitaStudioLog.error(e1);
-            }
             currentRepository = newRepository(projectId);
         }
         try {
@@ -311,5 +303,18 @@ public class RepositoryManager {
         return getCurrentRepository()
                 .map(repo -> BonitaProject.create(repo.getProjectId()))
                 .filter(Objects::nonNull);
+    }
+
+    /**
+     * Ensure Bonita artifacts are properly installed in user local repository before creating a project
+     * 
+     * @param monitor
+     * @throws CoreException
+     */
+    public void installRequiredMavenDependencies(IProgressMonitor monitor) throws CoreException {
+        // Ensure Bonita artifacts are properly installed in user local repository before creating a project
+        monitor.subTask("");
+        monitor.beginTask("Check local repository required artifacts...", IProgressMonitor.UNKNOWN);
+        new InstallBonitaMavenArtifactsOperation(MavenPlugin.getMaven().getLocalRepository()).execute(monitor);
     }
 }

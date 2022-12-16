@@ -44,10 +44,6 @@ public class WorkspaceInitializationJob extends WorkspaceJob {
         this.repositoryAccessor = repositoryAccessor;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.core.resources.WorkspaceJob#runInWorkspace(org.eclipse.core.runtime.IProgressMonitor)
-     */
     @Override
     public IStatus runInWorkspace(final IProgressMonitor monitor) throws CoreException {
         BonitaStudioLog.info("Initializing workspace..", CommonRepositoryPlugin.PLUGIN_ID);

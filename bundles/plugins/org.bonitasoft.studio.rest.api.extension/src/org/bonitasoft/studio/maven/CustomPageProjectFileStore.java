@@ -46,6 +46,7 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -292,11 +293,16 @@ public abstract class CustomPageProjectFileStore<T extends CustomPageMavenProjec
         final ImportCustomPageProjectOperation importRestAPIExtensionProjectOperation = new ImportCustomPageProjectOperation(
                 this,
                 MavenPlugin.getProjectConfigurationManager(), projectImportConfiguration);
-        try {
-            ResourcesPlugin.getWorkspace().run(importRestAPIExtensionProjectOperation, new NullProgressMonitor());
-        } catch (CoreException e) {
-           throw new ImportProjectException("Failed to import project", e);
-        }
+        var job = new WorkspaceJob(String.format("Import %s project", project.getName())) {
+
+            @Override
+            public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
+                importRestAPIExtensionProjectOperation.run(monitor);
+                return importRestAPIExtensionProjectOperation.getStatus();
+            }
+        };
+        job.setRule(getResource().getWorkspace().getRoot());
+        job.schedule();
     }
 
     public void removeProject() {

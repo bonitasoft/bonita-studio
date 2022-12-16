@@ -492,13 +492,7 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
 
             @Override
             public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
-                // Ensure the local repository contains Bonita artifacts
-                try {
-                    new InstallBonitaMavenArtifactsOperation(MavenPlugin.getMaven().getLocalRepository())
-                            .execute(monitor);
-                } catch (CoreException e) {
-                    return e.getStatus();
-                }
+                RepositoryManager.getInstance().installRequiredMavenDependencies(monitor);
                 RepositoryManager.getInstance().getAccessor().start(monitor);
                 return Status.OK_STATUS;
             }
