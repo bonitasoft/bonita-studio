@@ -23,7 +23,6 @@ import javax.inject.Singleton;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.core.BonitaProject;
-import org.bonitasoft.studio.common.repository.core.maven.contribution.InstallBonitaMavenArtifactsOperation;
 import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
 import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
@@ -35,7 +34,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.e4.core.di.annotations.Creatable;
-import org.eclipse.m2e.core.MavenPlugin;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
@@ -114,13 +112,12 @@ public class RepositoryAccessor {
 
     public IRepository createNewRepository(ProjectMetadata metadata,
             IProgressMonitor monitor) {
-        // Ensure Bonita artifacts are properly installed in user local repository before creating a project
         try {
-            monitor.beginTask("Check local repository required artifacts...", IProgressMonitor.UNKNOWN);
-            new InstallBonitaMavenArtifactsOperation(MavenPlugin.getMaven().getLocalRepository()).execute(monitor);
-        } catch (CoreException e1) {
-            BonitaStudioLog.error(e1);
+            repositoryManagerInstance.installRequiredMavenDependencies(monitor);
+        } catch (CoreException e) {
+            BonitaStudioLog.error(e);
         }
+
         monitor.beginTask(Messages.creatingNewProject, IProgressMonitor.UNKNOWN);
         BonitaStudioLog.info(String.format("Creating new project %s...", metadata.getName()),
                 CommonRepositoryPlugin.PLUGIN_ID);

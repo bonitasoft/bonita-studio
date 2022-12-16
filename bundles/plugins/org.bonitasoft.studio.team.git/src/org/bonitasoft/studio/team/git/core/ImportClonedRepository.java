@@ -36,6 +36,9 @@ public class ImportClonedRepository implements PostCloneTask {
         var subMonitor = SubMonitor.convert(monitor)
                 .split(IProgressMonitor.UNKNOWN, SubMonitor.SUPPRESS_SUBTASK);
         subMonitor.beginTask(Messages.importingProject, IProgressMonitor.UNKNOWN);
+        
+        RepositoryManager.getInstance().installRequiredMavenDependencies(new NullProgressMonitor());
+        
         var projectRoot = repository.getDirectory().getParentFile();
         var clonedVersion = BonitaProjectMigrator
                 .readBonitaVersion(projectRoot.toPath().resolve(IProjectDescription.DESCRIPTION_FILE_NAME));

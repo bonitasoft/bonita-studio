@@ -30,6 +30,7 @@ import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
 
 import org.bonitasoft.studio.common.DateUtil;
@@ -72,7 +73,6 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IncrementalProjectBuilder;
-import org.eclipse.core.runtime.Adapters;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -123,6 +123,8 @@ public abstract class AbstractRepository implements IRepository {
 
     private static Object openCloseLock = new Object();
 
+    private ReentrantLock loadStoreLock = new ReentrantLock();
+
     private boolean enableOpenIntroListener = true;
 
     private ProjectDependenciesStore projectDependenciesStore;
@@ -142,7 +144,7 @@ public abstract class AbstractRepository implements IRepository {
         this.extensionContextInjectionFactory = extensionContextInjectionFactory;
         this.eventBroker = eventBroker;
     }
-    
+
     @Override
     public String getProjectId() {
         return project.getId();
@@ -161,15 +163,16 @@ public abstract class AbstractRepository implements IRepository {
                 BonitaStudioLog.debug(
                         "Project " + project.getId() + " created in " + DateUtil.getDisplayDuration(duration),
                         CommonRepositoryPlugin.PLUGIN_ID);
-            } 
+            }
         } catch (final Exception e) {
             BonitaStudioLog.error(e);
-        } 
+        }
         return this;
     }
 
     private Path reportPath() {
-        return project.getAppProject().getFile(MigrationReportWriter.DEFAULT_REPORT_FILE_NAME).getLocation().toFile().toPath();
+        return project.getAppProject().getFile(MigrationReportWriter.DEFAULT_REPORT_FILE_NAME).getLocation().toFile()
+                .toPath();
     }
 
     protected CreateBonitaProjectOperation newProjectWorkspaceOperation(ProjectMetadata metadata,
@@ -207,7 +210,7 @@ public abstract class AbstractRepository implements IRepository {
             } catch (final CoreException e) {
                 BonitaStudioLog.error(e);
             }
-            
+
             try {
                 project.refresh(new NullProgressMonitor());
             } catch (CoreException e) {
@@ -310,17 +313,24 @@ public abstract class AbstractRepository implements IRepository {
         return allEditorClosed.get();
     }
 
-    protected synchronized void initRepositoryStores(final IProgressMonitor monitor) {
-        isLoaded = false;
-        if (stores == null || stores.isEmpty()) {
-            createStores(monitor);
-            registerBonitaProjectListeners();
+    protected void initRepositoryStores(final IProgressMonitor monitor) {
+        loadStoreLock.lock();
+        try {
+            isLoaded = false;
+            if (stores == null || stores.isEmpty()) {
+                createStores(monitor);
+                registerBonitaProjectListeners();
+            }
+            isLoaded = true;
+        } finally {
+            loadStoreLock.unlock();
         }
-        isLoaded = true;
+
     }
 
     protected void registerBonitaProjectListeners() {
-        getAllStores().stream()
+        Objects.requireNonNull(stores);
+        asStoreList(stores).stream()
                 .filter(IBonitaProjectListener.class::isInstance)
                 .map(IBonitaProjectListener.class::cast)
                 .forEach(this::addProjectListener);
@@ -401,10 +411,12 @@ public abstract class AbstractRepository implements IRepository {
     }
 
     @Override
-    public synchronized List<IRepositoryStore<? extends IRepositoryFileStore>> getAllStores() {
-        if (stores == null) {
-            initRepositoryStores(NULL_PROGRESS_MONITOR);
-        }
+    public List<IRepositoryStore<? extends IRepositoryFileStore>> getAllStores() {
+        initRepositoryStores(NULL_PROGRESS_MONITOR);
+        return asStoreList(stores);
+    }
+
+    private List<IRepositoryStore<? extends IRepositoryFileStore>> asStoreList(SortedMap<Class<?>, IRepositoryStore<? extends IRepositoryFileStore>> stores) {
         return stores.values().stream()
                 .distinct()
                 .sorted(new RepositoryStoreComparator())
@@ -631,7 +643,8 @@ public abstract class AbstractRepository implements IRepository {
         if (!report.isEmpty()) {
             try {
                 reportWriter.write(report, reportPath());
-                project.getAppProject().getFile(MigrationReportWriter.DEFAULT_REPORT_FILE_NAME).refreshLocal(IResource.DEPTH_ONE,
+                project.getAppProject().getFile(MigrationReportWriter.DEFAULT_REPORT_FILE_NAME).refreshLocal(
+                        IResource.DEPTH_ONE,
                         new NullProgressMonitor());
             } catch (IOException e) {
                 throw new CoreException(new Status(IStatus.ERROR, AbstractRepository.class, e.getMessage(), e));
@@ -639,8 +652,7 @@ public abstract class AbstractRepository implements IRepository {
                 report = MigrationReport.emptyReport();
             }
         }
-        var bonitaProject = Adapters.adapt(this, BonitaProject.class);
-        bonitaProject.refresh(monitor);
+        project.refresh(monitor);
         build(monitor);
     }
 
@@ -717,7 +729,6 @@ public abstract class AbstractRepository implements IRepository {
 
     @Override
     public String getBonitaRuntimeVersion() {
-        var project = Adapters.adapt(this, BonitaProject.class);
         try {
             return project.getProjectMetadata(new NullProgressMonitor()).getBonitaRuntimeVersion();
         } catch (CoreException e) {
