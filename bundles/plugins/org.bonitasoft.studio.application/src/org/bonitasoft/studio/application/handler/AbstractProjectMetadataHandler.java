@@ -32,6 +32,7 @@ import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.core.maven.MavenProjectHelper;
 import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
+import org.bonitasoft.studio.common.repository.filestore.AbstractFileStore;
 import org.bonitasoft.studio.ui.dialog.ExceptionDialogHandler;
 import org.bonitasoft.studio.ui.wizard.WizardBuilder;
 import org.bonitasoft.studio.ui.wizard.WizardPageBuilder;
@@ -62,8 +63,12 @@ public abstract class AbstractProjectMetadataHandler {
 
         createWizard(repositoryAccessor, mavenProjectHelper, exceptionDialogHandler, metadata, pages)
                 .open(activeShell, getFinishLabel())
-                .ifPresent(s -> new CommandExecutor().executeCommand(
-                        "org.bonitasoft.studio.application.show.overview.command", Collections.emptyMap()));
+                .ifPresent(s -> {
+                    AbstractFileStore.refreshExplorerView();
+                    new CommandExecutor().executeCommand("org.bonitasoft.studio.application.show.overview.command",
+                            Collections.emptyMap());
+                });
+
     }
 
     protected WizardBuilder<IStatus> createWizard(RepositoryAccessor repositoryAccessor,

@@ -146,7 +146,6 @@ public class UpdateProjectMetadataOperation implements IWorkspaceRunnable {
         if (!Objects.equals(projectId, newProjectId)) {
             if (currentRepository().closeAllEditors(false)) {
                 renameProjects(projectId, newProjectId, monitor);
-                PlatformUtil.openIntroIfNoOtherEditorOpen();
             }
         } else {
             new UpdateMavenProjectJob(project.getRelatedProjects().toArray(IProject[]::new), false, false, false,
@@ -154,7 +153,6 @@ public class UpdateProjectMetadataOperation implements IWorkspaceRunnable {
                             .run(monitor);
         }
         updateRestApiExtension(oldMetadata, metadata, new NullProgressMonitor());
-
     }
 
     private void renameProjects(String oldProjectId, String newProjectId, IProgressMonitor monitor)

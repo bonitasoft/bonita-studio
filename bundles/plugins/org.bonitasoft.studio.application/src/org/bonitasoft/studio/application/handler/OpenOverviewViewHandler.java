@@ -35,22 +35,25 @@ public class OpenOverviewViewHandler {
                 .map(IWorkbench::getActiveWorkbenchWindow)
                 .map(IWorkbenchWindow::getActivePage)
                 .ifPresent(activePage -> {
-                    if(PlatformUI.getWorkbench().isClosing()
-                             || PlatformUI.getWorkbench().getDisplay() == null
-                             || PlatformUI.getWorkbench().getDisplay().isDisposed()) {
+                    if (PlatformUI.getWorkbench().isClosing()
+                            || PlatformUI.getWorkbench().getDisplay() == null
+                            || PlatformUI.getWorkbench().getDisplay().isDisposed()) {
                         return;
                     }
-                    try {
-                        activePage.openEditor(ProjectOverviewEditorInput.getInstance(), ProjectOverviewEditorPart.ID);
-                    } catch (PartInitException e) {
-                        BonitaStudioLog.error(e);
-                    }
+                    PlatformUI.getWorkbench().getDisplay().asyncExec(() -> {
+                        try {
+                            activePage.openEditor(ProjectOverviewEditorInput.getInstance(),
+                                    ProjectOverviewEditorPart.ID);
+                        } catch (PartInitException e) {
+                            BonitaStudioLog.error(e);
+                        }
+                    });
                 });
     }
 
     @CanExecute
     public boolean canExecute(RepositoryAccessor repositoryAccessor) {
-        return PlatformUI.isWorkbenchRunning() 
+        return PlatformUI.isWorkbenchRunning()
                 && PlatformUI.getWorkbench().getActiveWorkbenchWindow() != null
                 && repositoryAccessor.hasActiveRepository();
     }
