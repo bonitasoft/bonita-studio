@@ -26,6 +26,7 @@ import org.bonitasoft.studio.connector.model.definition.Output;
 import org.bonitasoft.studio.connector.model.i18n.Messages;
 import org.bonitasoft.studio.connectors.repository.ConnectorDefRepositoryStore;
 import org.bonitasoft.studio.swtbot.framework.SWTBotConnectorTestUtil;
+import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
@@ -36,6 +37,7 @@ import org.eclipse.swtbot.swt.finder.utils.SWTBotPreferences;
 import org.eclipse.swtbot.swt.finder.waits.Conditions;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTable;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -44,6 +46,9 @@ public class SWTBotConnectorDefinitionTest {
 
     private SWTGefBot bot = new SWTGefBot();
 
+    @Rule
+    public SWTGefBotRule rule = new SWTGefBotRule(bot);
+    
     @Test
     public void testCreate() throws Exception {
         final String id = "test";
@@ -97,20 +102,6 @@ public class SWTBotConnectorDefinitionTest {
         bot.textWithLabel(textLabelVersion).setText(version);
         bot.waitUntil(Conditions.widgetIsEnabled(bot.button(IDialogConstants.FINISH_LABEL)), 5000);
         bot.button(IDialogConstants.CANCEL_LABEL).click();
-    }
-
-    @Test
-    public void testSelectCategory() throws Exception {
-        final String id = "test2";
-        final String version = "1.0.0";
-        SWTBotConnectorTestUtil.activateConnectorDefinitionShell(bot);
-        SWTBotConnectorTestUtil.createConnectorDefinition(bot, id, version);
-        bot.treeWithLabel(Messages.categoryLabel).select(0);
-        bot.button(IDialogConstants.FINISH_LABEL).click();
-        ConnectorDefRepositoryStore store = (ConnectorDefRepositoryStore) RepositoryManager
-                .getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class);
-        ConnectorDefinition connectorDef = store.getDefinition(id, version);
-        assertEquals("category size should be equal to 1", 1, connectorDef.getCategory().size());
     }
 
     @Test

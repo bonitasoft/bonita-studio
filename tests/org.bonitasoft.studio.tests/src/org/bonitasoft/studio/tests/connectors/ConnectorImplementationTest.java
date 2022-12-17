@@ -34,10 +34,12 @@ import org.bonitasoft.studio.connector.model.implementation.ConnectorImplementat
 import org.bonitasoft.studio.connectors.repository.ConnectorDefRepositoryStore;
 import org.bonitasoft.studio.connectors.repository.ConnectorImplRepositoryStore;
 import org.bonitasoft.studio.swtbot.framework.SWTBotConnectorTestUtil;
+import org.bonitasoft.studio.swtbot.framework.rule.EditorMatcherExceptOverview;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.custom.StyleRange;
+import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotEditor;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.SWTBot;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
@@ -335,7 +337,7 @@ public class ConnectorImplementationTest implements SWTBotConstants {
         IRepositoryFileStore file = store.getChild(NamingUtils.toConnectorDefinitionFilename("testEdit", "1.0.0", true), true);
         assertNotNull(file);
         file.delete();
-        bot.closeAllEditors();
+        bot.editors(new EditorMatcherExceptOverview()).forEach(SWTBotEditor::close);
     }
 
     private void containsError(StyleRange[] styles) {

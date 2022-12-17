@@ -31,6 +31,7 @@ import org.bonitasoft.studio.swtbot.framework.SWTBotTestUtil;
 import org.bonitasoft.studio.swtbot.framework.application.BotApplicationWorkbenchWindow;
 import org.bonitasoft.studio.swtbot.framework.conditions.EditorOpenCondition;
 import org.bonitasoft.studio.swtbot.framework.projectExplorer.ProjectExplorerBot;
+import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
@@ -40,6 +41,7 @@ import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -47,6 +49,9 @@ import org.junit.runner.RunWith;
 public class ExtractAsSubprocessTest {
 
     private final SWTGefBot bot = new SWTGefBot();
+    
+    @Rule
+    public final SWTGefBotRule rule = new SWTGefBotRule(bot);
 
     public class OneMoreEditor extends DefaultCondition {
 
@@ -88,18 +93,7 @@ public class ExtractAsSubprocessTest {
     private final DiagramRepositoryStore store = RepositoryManager.getInstance()
             .getRepositoryStore(DiagramRepositoryStore.class);
 
-    @Before
-    public void setUp() throws Exception {
-        bot.closeAllEditors();
-    }
-
-    @After
-    public void tearDown() throws Exception {
-        bot.saveAllEditors();
-        bot.closeAllEditors();
-    }
-
-    @Test
+        @Test
     public void testExtractAsSubprocess() throws Exception {
         SWTBotTestUtil.createNewDiagram(bot);
         final SWTBotGefEditor editor1 = bot.gefEditor(bot.activeEditor().getTitle());
