@@ -59,15 +59,11 @@ class BonitaProjectImplTest {
         metadata.setUseSnapshotRepository(true);
         projectId = metadata.getArtifactId();
         project = BonitaProject.create(projectId);
+        if (project.exists()) {
+            project.delete(monitor);
+        }
         repository = RepositoryManager.getInstance().newRepository(projectId);
         RepositoryManager.getInstance().setCurrentRepository(repository);
-        if (project.exists()) {
-            try {
-                project.delete(monitor);
-            } catch (CoreException e) {
-                BonitaStudioLog.error(e);
-            }
-        }
         repository.create(metadata, monitor);
     }
 
@@ -155,7 +151,7 @@ class BonitaProjectImplTest {
                 e.printStackTrace();
             }
             return !project.getGitDir().exists();
-        } , 10000, 500);
+        }, 10000, 500);
     }
 
     @Test
@@ -176,7 +172,7 @@ class BonitaProjectImplTest {
                 .isEqualTo(Files.readString(
                         new File(GitProject.getParentGitIgnoreTemplate().getFile()).toPath()));
     }
-    
+
     private static void waitUntil(BooleanSupplier condition, int timeout, int interval)
             throws TimeoutException, InterruptedException {
         var countDownLatch = new CountDownLatch(1);
