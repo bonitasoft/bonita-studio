@@ -1,4 +1,4 @@
-package org.bonitasoft.studio.tests.util;
+package org.bonitasoft.studio.swtbot.framework.rule;
 
 import org.bonitasoft.studio.application.views.overview.ProjectOverviewEditorInput;
 import org.eclipse.swtbot.swt.finder.matchers.AbstractMatcher;

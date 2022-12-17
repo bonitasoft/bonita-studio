@@ -33,6 +33,7 @@ import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swtbot.eclipse.finder.SWTWorkbenchBot;
+import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotEditor;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.finders.UIThreadRunnable;
 import org.eclipse.swtbot.swt.finder.results.BoolResult;
@@ -82,7 +83,6 @@ public class SWTGefBotRule implements TestRule {
                 } finally {
                     afterStatement(description);
                 }
-
             }
 
             void captureScreenshot(Description description, Throwable t) {
@@ -168,7 +168,7 @@ public class SWTGefBotRule implements TestRule {
         }
         initPreferences();
         bot.saveAllEditors();
-        bot.closeAllEditors();
+        bot.editors(new EditorMatcherExceptOverview()).forEach(SWTBotEditor::close);
         bot.waitUntil(BonitaBPMConditions.noPopupActive(), 10000);
     }
 
@@ -189,7 +189,7 @@ public class SWTGefBotRule implements TestRule {
 
     protected void closeAllAndReturnToWelcomePage() {
         bot.saveAllEditors();
-        bot.closeAllEditors();
+        bot.editors(new EditorMatcherExceptOverview()).forEach(SWTBotEditor::close);
         FileActionDialog.setDisablePopup(false);
     }
 

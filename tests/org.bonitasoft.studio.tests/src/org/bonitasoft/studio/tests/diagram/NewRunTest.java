@@ -18,12 +18,13 @@ import org.bonitasoft.engine.api.ProcessManagementAPI;
 import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.swtbot.framework.SWTBotTestUtil;
+import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.SWTBot;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.waits.ICondition;
-import org.junit.After;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -31,6 +32,9 @@ import org.junit.runner.RunWith;
 public class NewRunTest {
 
     private final SWTGefBot bot = new SWTGefBot();
+    
+    @Rule
+    public final SWTGefBotRule rule = new SWTGefBotRule(bot);
 
     @Test
     public void testNewRun() throws Exception {
@@ -57,11 +61,6 @@ public class NewRunTest {
                 return "the new+run swtbot test should be started and ready";
             }
         }, 30000, 2000);
-    }
-
-    @After
-    public void closeEditors() {
-        bot.closeAllEditors();
     }
 
     private long getNBProcessDefinitions() throws Exception {

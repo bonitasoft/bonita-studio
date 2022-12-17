@@ -18,6 +18,7 @@ import static org.junit.Assert.assertTrue;
 
 import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.swtbot.framework.SWTBotTestUtil;
+import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.draw2d.geometry.Rectangle;
@@ -30,7 +31,7 @@ import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditor;
 import org.eclipse.swtbot.swt.finder.SWTBot;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.waits.ICondition;
-import org.junit.After;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -38,6 +39,9 @@ import org.junit.runner.RunWith;
 public class TestMoveBetweenLane {
 
     private SWTGefBot bot = new SWTGefBot();
+    
+    @Rule
+    public SWTGefBotRule rule = new SWTGefBotRule(bot);
 
     @Test
     public void testMoveElementsBetweenLanes() {
@@ -96,10 +100,6 @@ public class TestMoveBetweenLane {
         });
     }
 
-    @After
-    public void closeEditors() throws Exception {
-        bot.closeAllEditors();
-    }
 
     public SWTBotGefEditPart getPartRecursively(SWTBotGefEditPart from, String label) {
         for (SWTBotGefEditPart child : from.children()) {

@@ -42,6 +42,7 @@ import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.e4.ui.services.IServiceConstants;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.wizard.IWizardContainer;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
 public abstract class AbstractProjectMetadataHandler {
@@ -65,8 +66,10 @@ public abstract class AbstractProjectMetadataHandler {
                 .open(activeShell, getFinishLabel())
                 .ifPresent(s -> {
                     AbstractFileStore.refreshExplorerView();
-                    new CommandExecutor().executeCommand("org.bonitasoft.studio.application.show.overview.command",
-                            Collections.emptyMap());
+                    Display.getDefault()
+                            .asyncExec(() -> new CommandExecutor().executeCommand(
+                                    "org.bonitasoft.studio.application.show.overview.command",
+                                    Collections.emptyMap()));
                 });
 
     }
