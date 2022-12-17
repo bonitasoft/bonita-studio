@@ -17,7 +17,14 @@ package org.bonitasoft.studio.common.repository.core.internal;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.BooleanSupplier;
+import java.util.function.Supplier;
 
 import org.bonitasoft.studio.common.FileUtil;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
@@ -32,10 +39,10 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.egit.core.GitProvider;
 import org.eclipse.egit.core.op.DisconnectProviderOperation;
+import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.team.core.RepositoryProvider;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 class BonitaProjectImplTest {
@@ -125,7 +132,6 @@ class BonitaProjectImplTest {
         assertThat(currentMetadata.getVersion()).isEqualTo("2.0.0");
     }
 
-    @Disabled("Issue on CI where .git folder cannot be deleted")
     @Test
     void gitConnect() throws Exception {
         var op = project.newConnectProviderOperation();
@@ -142,8 +148,14 @@ class BonitaProjectImplTest {
                 .execute(new NullProgressMonitor());
 
         assertThat(RepositoryProvider.getProvider(project.getParentProject(), GitProvider.ID)).isNull();
-        FileUtil.deleteDir(project.getGitDir().toPath());
-        assertThat(project.getGitDir()).doesNotExist();
+        waitUntil(() -> {
+            try {
+                FileUtil.deleteDir(project.getGitDir().toPath());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return !project.getGitDir().exists();
+        } , 10000, 500);
     }
 
     @Test
@@ -153,16 +165,43 @@ class BonitaProjectImplTest {
 
         project.createDefaultIgnoreFile();
 
-        var gitignore = project.getAdapter(IProject.class).getFile(".gitignore");
+        var gitignore = project.getAppProject().getFile(Constants.GITIGNORE_FILENAME);
         assertThat(gitignore.exists()).isTrue();
         assertThat(Files.readString(gitignore.getLocation().toFile().toPath()))
                 .isEqualTo(Files.readString(new File(GitProject.getGitignoreTemplateFileURL().getFile()).toPath()));
 
-        var parentGitignore = project.getParentProject().getFile(".gitignore");
+        var parentGitignore = project.getParentProject().getFile(Constants.GITIGNORE_FILENAME);
         assertThat(parentGitignore.exists()).isTrue();
         assertThat(Files.readString(parentGitignore.getLocation().toFile().toPath()))
                 .isEqualTo(Files.readString(
                         new File(GitProject.getParentGitIgnoreTemplate().getFile()).toPath()));
+    }
+    
+    private static void waitUntil(BooleanSupplier condition, int timeout, int interval)
+            throws TimeoutException, InterruptedException {
+        var countDownLatch = new CountDownLatch(1);
+        var shouldExitThread = new AtomicBoolean();
+        shouldExitThread.set(false);
+        new Thread(() -> {
+            var result = false;
+            while (!result && !shouldExitThread.get()) {
+                result = condition.getAsBoolean();
+                try {
+                    Thread.sleep(interval);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+            if (result) {
+                countDownLatch.countDown();
+            }
+        }, "Wait condition thread").start();
+
+        if (!countDownLatch.await(timeout, TimeUnit.MILLISECONDS)) {
+            shouldExitThread.set(true);
+            throw new TimeoutException(String.format("Failed to evaluate condtion after %sms", timeout));
+        }
+
     }
 
 }
