@@ -17,6 +17,7 @@ package org.bonitasoft.studio.application.operation;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Model;
@@ -24,10 +25,9 @@ import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
-import org.bonitasoft.studio.common.repository.core.ProjectDependenciesStore;
+import org.bonitasoft.studio.common.repository.core.BonitaProject;
 import org.bonitasoft.studio.common.repository.core.maven.MavenProjectHelper;
 import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
-import org.bonitasoft.studio.common.repository.filestore.AbstractFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.preferences.RepositoryPreferenceConstant;
 import org.eclipse.core.resources.IProject;
@@ -69,21 +69,27 @@ public class SetProjectMetadataOperation implements IRunnableWithProgress {
     @Override
     public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
         monitor.beginTask(Messages.updatingProjectMetadata, IProgressMonitor.UNKNOWN);
-        // Wait for Project initialization job to avoid locking the workspace
-        Job.getJobManager()
-                .join(RepositoryManager.class, new NullProgressMonitor());
+        if (projectIdChanged()) {
+            // Wait for Project initialization job to avoid locking the workspace
+            Job.getJobManager()
+                    .join(RepositoryManager.class, new NullProgressMonitor());
+        }
         try {
             if (createNewProject) {
                 createNewProject(monitor);
             } else {
                 repositoryAccessor.getCurrentProject().orElseThrow().update(metadata, monitor);
-                AbstractFileStore.refreshExplorerView();
             }
             CommonRepositoryPlugin.getDefault().getPreferenceStore()
                     .setValue(RepositoryPreferenceConstant.DEFAULT_GROUPID, metadata.getGroupId());
         } catch (CoreException e) {
             status = e.getStatus();
         }
+    }
+
+    private boolean projectIdChanged() {
+        var projectId = repositoryAccessor.getCurrentProject().map(BonitaProject::getId).orElse(null);
+        return !Objects.equals(metadata.getArtifactId(), projectId);
     }
 
     private void createNewProject(IProgressMonitor monitor) throws CoreException {

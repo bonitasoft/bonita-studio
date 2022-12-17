@@ -16,6 +16,11 @@ package org.bonitasoft.studio.application.views.overview;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Objects;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
 
 import org.bonitasoft.studio.application.i18n.Messages;
@@ -142,11 +147,14 @@ public class ProjectOverviewEditorPart extends EditorPart implements EventHandle
 
     @Override
     public void createPartControl(Composite parent) {
+
         try {
             PlatformUI.getWorkbench().getProgressService().busyCursorWhile(monitor -> {
                 monitor.beginTask(Messages.loadingProjectOverview, IProgressMonitor.UNKNOWN);
-                while (repositoryAccessor.getCurrentRepository().isPresent() && repositoryAccessor.getCurrentRepository().filter(IRepository::isLoaded).isEmpty()) {
-                    Thread.sleep(20);
+                try {
+                    waitUntil(() -> isCurrentRepositoryLoaded(), 5000, 50);
+                } catch (TimeoutException e) {
+                    BonitaStudioLog.error(e);
                 }
             });
         } catch (InvocationTargetException | InterruptedException e) {
@@ -168,6 +176,38 @@ public class ProjectOverviewEditorPart extends EditorPart implements EventHandle
         createTitleAndToolbar(mainComposite);
 
         elementComposite = new ElementComposite(mainComposite);
+    }
+
+    private boolean isCurrentRepositoryLoaded() {
+        return repositoryAccessor.getCurrentRepository().isPresent()
+                && !repositoryAccessor.getCurrentRepository().filter(IRepository::isLoaded).isEmpty();
+    }
+
+    private static void waitUntil(BooleanSupplier condition, int timeout, int interval)
+            throws TimeoutException, InterruptedException {
+        var countDownLatch = new CountDownLatch(1);
+        var shouldExitThread = new AtomicBoolean();
+        shouldExitThread.set(false);
+        new Thread(() -> {
+            var result = false;
+            while (!result && !shouldExitThread.get()) {
+                result = condition.getAsBoolean();
+                try {
+                    Thread.sleep(interval);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+            if (result) {
+                countDownLatch.countDown();
+            }
+        }, "Wait condition thread").start();
+
+        if (!countDownLatch.await(timeout, TimeUnit.MILLISECONDS)) {
+            shouldExitThread.set(true);
+            throw new TimeoutException(String.format("Failed to evaluate condition after %sms", timeout));
+        }
+
     }
 
     private void toElementsView() {
@@ -343,14 +383,14 @@ public class ProjectOverviewEditorPart extends EditorPart implements EventHandle
         synchronized (lock) {
             repositoryAccessor.getCurrentProject().ifPresent(bonitaProject -> {
                 Display.getDefault().asyncExec(() -> {
-                    if(metadata == null) {
+                    if (metadata == null) {
                         try {
                             metadata = bonitaProject.getProjectMetadata(new NullProgressMonitor());
                         } catch (CoreException e) {
-                           BonitaStudioLog.error(e);
+                            BonitaStudioLog.error(e);
                         }
                     }
-                    if(metadata == null) {
+                    if (metadata == null) {
                         return;
                     }
                     String name = metadata.getName();
@@ -471,13 +511,14 @@ public class ProjectOverviewEditorPart extends EditorPart implements EventHandle
         try {
             event.getDelta().accept(delta -> {
                 IResource r = delta.getResource();
-                if(repositoryAccessor.getCurrentRepository()
-                        .filter(current -> Objects.equals(r , current.getProject()
-                        .getFile(IMavenConstants.POM_FILE_NAME))).isPresent()) {
+                if (repositoryAccessor.getCurrentRepository()
+                        .filter(current -> Objects.equals(r, current.getProject()
+                                .getFile(IMavenConstants.POM_FILE_NAME)))
+                        .isPresent()) {
                     metadata = null;
                     refreshContent();
                     return false;
-                };
+                } ;
                 return true;
             });
         } catch (CoreException e) {
