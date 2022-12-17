@@ -18,6 +18,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.maven.model.Model;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
@@ -100,16 +101,16 @@ public class BonitaProjectImpl implements BonitaProject {
         for (var project : getRelatedProjects()) {
             project.open(monitor);
         }
-        currentRepository().open(monitor);
+        currentRepository().orElseThrow().open(monitor);
     }
 
-    private IRepository currentRepository() {
-        return RepositoryManager.getInstance().getCurrentRepository().orElseThrow();
+    private Optional<IRepository> currentRepository() {
+        return RepositoryManager.getInstance().getCurrentRepository();
     }
 
     @Override
     public void close(IProgressMonitor monitor) throws CoreException {
-        currentRepository().close(monitor);
+        currentRepository().orElseThrow().close(monitor);
         for (var project : getRelatedProjects()) {
             project.close(monitor);
         }
@@ -172,7 +173,9 @@ public class BonitaProjectImpl implements BonitaProject {
                 } catch (OperationCanceledException | InterruptedException e) {
                     BonitaStudioLog.error(e);
                 }
-                currentRepository().getProjectDependenciesStore().analyze(new NullProgressMonitor());
+                currentRepository()
+                        .map(IRepository::getProjectDependenciesStore)
+                        .ifPresent(depStore -> depStore.analyze(new NullProgressMonitor()));
                 return Status.OK_STATUS;
             }
         }.schedule();
