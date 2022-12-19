@@ -177,6 +177,11 @@
             <artifactId>bonita-business-data-client-resources</artifactId>
             <version>${bonita.runtime.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.codspire.plugins</groupId>
+            <artifactId>artifact-lookup-maven-plugin</artifactId>
+            <version>0.6.0</version>
+        </dependency>
     </dependencies>
     <build>
         <pluginManagement>

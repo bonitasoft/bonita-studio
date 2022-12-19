@@ -50,8 +50,10 @@ import org.eclipse.m2e.core.embedder.IMavenExecutionContext;
 public class JarLookupOperation implements IRunnableWithProgress {
 
     private static final String LOOKUP_GOAL = "lookup";
-    private static final String BONITA_PROJECT_PLUGIN_ARTIFACT_ID = "bonita-project-maven-plugin";
-    private static final String BONITA_PROJECT_PLUGIN_GROUP_ID = "org.bonitasoft.maven";
+    
+    private static final String LOOKUP_PLUGIN_ARTIFACT_ID = "artifact-lookup-maven-plugin";
+    private static final String LOOKUP_PLUGIN_GROUP_ID = "com.codspire.plugins";
+    private static final String LOOKUP_PLUGIN_VERSION = "0.6.0";
     static final String MAVEN_CENTRAL_REPOSITORY_URL = "https://repo.maven.apache.org/maven2";
 
     private DependencyLookup result;
@@ -145,9 +147,10 @@ public class JarLookupOperation implements IRunnableWithProgress {
             throws CoreException {
         final IMavenExecutionContext context = maven().createExecutionContext();
         final MavenExecutionRequest request = context.getExecutionRequest();
-        request.setGoals(List.of(String.format("%s:%s:%s",
-                BONITA_PROJECT_PLUGIN_GROUP_ID,
-                BONITA_PROJECT_PLUGIN_ARTIFACT_ID,
+        request.setGoals(List.of(String.format("%s:%s:%s:%s",
+                LOOKUP_PLUGIN_GROUP_ID,
+                LOOKUP_PLUGIN_ARTIFACT_ID,
+                LOOKUP_PLUGIN_VERSION,
                 LOOKUP_GOAL)));
         Properties userProperties = new Properties();
         userProperties.setProperty("artifactLocation", filePath.toFile().getAbsolutePath());
