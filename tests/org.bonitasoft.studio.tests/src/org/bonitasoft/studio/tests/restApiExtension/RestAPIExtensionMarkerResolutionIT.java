@@ -14,7 +14,6 @@ import java.io.File;
 import java.util.Objects;
 import java.util.stream.Stream;
 
-import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
@@ -28,6 +27,7 @@ import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.ui.PlatformUI;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -62,7 +62,7 @@ public class RestAPIExtensionMarkerResolutionIT {
                 FileLocator.toFileURL(RestAPIExtensionMarkerResolutionIT.class.getResource("/RestAPIExtension.bos")).getFile());
         ImportBosArchiveOperation importBosArchiveOperation = new ImportBosArchiveOperation(repositoryAccessor);
         importBosArchiveOperation.setArchiveFile(bosArchiveFile.getAbsolutePath());
-        importBosArchiveOperation.run(AbstractRepository.NULL_PROGRESS_MONITOR);
+        PlatformUI.getWorkbench().getProgressService().run(true, false, importBosArchiveOperation);
         importBosArchiveOperation.openFilesToOpen();
 
         RestAPIExtensionRepositoryStore restAPIExtensionRepositoryStore = repositoryAccessor
