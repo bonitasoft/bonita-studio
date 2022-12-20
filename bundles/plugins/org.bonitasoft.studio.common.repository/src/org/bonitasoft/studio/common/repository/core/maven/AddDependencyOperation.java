@@ -29,17 +29,17 @@ public class AddDependencyOperation extends MavenModelOperation {
     public AddDependencyOperation(List<Dependency> dependenciesToAdd) {
         this.dependenciesToAdd = dependenciesToAdd;
     }
-    
+
     public AddDependencyOperation(Dependency dependencyToAdd) {
         this(List.of(dependencyToAdd));
     }
-    
+
     public AddDependencyOperation(String groupId,
             String artifactId,
             String version) {
         this(createDependency(groupId, artifactId, version, null));
     }
-    
+
     public AddDependencyOperation(String groupId,
             String artifactId,
             String version,
@@ -47,12 +47,11 @@ public class AddDependencyOperation extends MavenModelOperation {
         this(createDependency(groupId, artifactId, version, scope));
     }
 
-
     @Override
     public void run(IProgressMonitor monitor) throws CoreException {
         Model model = readModel(getCurrentProject());
 
-        dependenciesToAdd.stream().forEach( dep -> {
+        dependenciesToAdd.stream().forEach(dep -> {
             if (model.getDependencies()
                     .stream()
                     .noneMatch(existingDep -> new GAV(existingDep).equals(new GAV(dep)))) {
@@ -60,7 +59,7 @@ public class AddDependencyOperation extends MavenModelOperation {
                 modelUpdated = true;
             }
         });
-        
+
         saveModel(getCurrentProject(), model, monitor);
     }
 

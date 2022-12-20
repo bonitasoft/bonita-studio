@@ -56,7 +56,7 @@ public abstract class AbstractPerspectiveFactory implements IPerspectiveFactory,
     protected boolean isInsideprojectWithREStApiExtensionNature(final IEditorPart part) {
         final IEditorInput editorInput = part.getEditorInput();
         IFile file = editorInput.getAdapter(IFile.class);
-        if (file != null) {
+        if (file != null && file.getProject().isAccessible()) {
             try {
                 return file.getProject().hasNature(RestAPIExtensionNature.NATURE_ID)
                         || Objects.equals(file.getName(), CUSTOM_PERMISSIONS_MAPPING_FILE);

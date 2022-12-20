@@ -158,16 +158,7 @@ public class MavenProjectHelper {
             throw new FileNotFoundException(pom.getAbsolutePath());
         }
         var mavenModelJDOMWriter = new MavenJDOMWriter();
-        SAXBuilder builder = new SAXBuilder();
-        builder.setIgnoringBoundaryWhitespace(false);
-        builder.setIgnoringElementContentWhitespace(false);
-
-        Document doc = null;
-        try {
-            doc = builder.build(pom);
-        } catch (JDOMException e) {
-            BonitaStudioLog.error(e);
-        }
+        var doc = readDocument(pom);
         try (var outputStream = Files.newOutputStream(pom.toPath());
                 var writer = WriterFactory.newWriter(outputStream, StandardCharsets.UTF_8.name());) {
             if (doc != null) {
@@ -175,16 +166,26 @@ public class MavenProjectHelper {
                         doc,
                         writer,
                         Format.getRawFormat()
-                                .setEncoding("UTF-8")
                                 .setTextMode(TextMode.PRESERVE));
             } else {
                 try {
-                    mavenModelJDOMWriter.write(model,
-                            pom);
+                    mavenModelJDOMWriter.write(model, pom);
                 } catch (IOException | JDOMException e) {
                     throw new CoreException(Status.error("Failed to update pom.xml", e));
                 }
             }
+        }
+    }
+
+    public static Document readDocument(File pomFile) throws IOException {
+        SAXBuilder builder = new SAXBuilder();
+        builder.setIgnoringBoundaryWhitespace(false);
+        builder.setIgnoringElementContentWhitespace(false);
+        try {
+            return builder.build(pomFile);
+        } catch (JDOMException e) {
+            BonitaStudioLog.error(e);
+            return null;
         }
     }
 

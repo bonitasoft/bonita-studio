@@ -52,7 +52,7 @@ public class DeployBDMOperationIT {
 
     @Rule
     public InitialProjectRule projectRule = InitialProjectRule.INSTANCE;
-    
+
     private BusinessObjectModelRepositoryStore<BusinessObjectModelFileStore> bomRepositoryStore;
     private BusinessObjectModelFileStore businessObjectDefinitionFileStore;
     private APISession apiSession;
@@ -69,26 +69,25 @@ public class DeployBDMOperationIT {
         }
     }
 
-    
     @SuppressWarnings("unchecked")
     @Before
     public void setUp() throws Exception {
-        bomRepositoryStore = RepositoryManager.getInstance().getRepositoryStore(BusinessObjectModelRepositoryStore.class);
+        bomRepositoryStore = RepositoryManager.getInstance()
+                .getRepositoryStore(BusinessObjectModelRepositoryStore.class);
         final BusinessObjectModelFileStore fileStore = bomRepositoryStore.getChild("bdm.zip", true);
         if (fileStore != null) {
             fileStore.delete();
-        }
-        try (var is = DeployBDMOperationIT.class.getResourceAsStream("/bdm.zip")){
-            businessObjectDefinitionFileStore = (BusinessObjectModelFileStore) bomRepositoryStore.importInputStream("bdm.zip",
-                    is);
         }
         managerEx = BOSEngineManager.getInstance();
     }
 
     @Test
     public void should_generate_and_deploy_bdm() throws Exception {
-        new GenerateBDMOperation(businessObjectDefinitionFileStore).run(null);
-
+        try (var is = DeployBDMOperationIT.class.getResourceAsStream("/bdm.zip")) {
+            businessObjectDefinitionFileStore = (BusinessObjectModelFileStore) bomRepositoryStore.importInputStream(
+                    "bdm.zip",
+                    is);
+        }
         var currentRepository = RepositoryManager.getInstance().getCurrentRepository().orElseThrow();
         final IJavaProject javaProject = currentRepository.getJavaProject();
         final IType iType = javaProject.findType("org.bonita.CompanyUser");
@@ -99,24 +98,26 @@ public class DeployBDMOperationIT {
 
         apiSession = managerEx.loginDefaultTenant(null);
         final TenantAdministrationAPI tenantManagementAPI = managerEx.getTenantAdministrationAPI(apiSession);
-        assertThat(tenantManagementAPI.getBusinessDataModelResource().getState()).isEqualTo(TenantResourceState.INSTALLED);
+        assertThat(tenantManagementAPI.getBusinessDataModelResource().getState())
+                .isEqualTo(TenantResourceState.INSTALLED);
         assertThat(tenantManagementAPI.isPaused()).isFalse();
 
         var metadata = ProjectMetadata.defaultMetadata();
-        MavenExecutionResult executionResult = resolveMavenDependency(metadata.getGroupId(),metadata.getArtifactId() + "-bdm-model", metadata.getVersion());
+        MavenExecutionResult executionResult = resolveMavenDependency(metadata.getGroupId(),
+                metadata.getArtifactId() + "-bdm-model", metadata.getVersion());
         assertThat(executionResult.hasExceptions())
-            .overridingErrorMessage("BDM model maven dependency not installed in local repository:\n%s", getException(executionResult))
-            .isFalse();
+                .overridingErrorMessage("BDM model maven dependency not installed in local repository:\n%s",
+                        getException(executionResult))
+                .isFalse();
     }
-
 
     // Update assertj to use lazy message initialization and avoid this
     private Throwable getException(MavenExecutionResult executionResult) {
-        return  !executionResult.getExceptions().isEmpty() ? executionResult.getExceptions().get(0)  : null;
+        return !executionResult.getExceptions().isEmpty() ? executionResult.getExceptions().get(0) : null;
     }
 
-
-    private MavenExecutionResult resolveMavenDependency( String groupId, String artifactId, String version) throws CoreException {
+    private MavenExecutionResult resolveMavenDependency(String groupId, String artifactId, String version)
+            throws CoreException {
         IMaven maven = MavenPlugin.getMaven();
         final IMavenExecutionContext context = maven.createExecutionContext();
         final MavenExecutionRequest request = context.getExecutionRequest();

@@ -78,7 +78,9 @@ import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.e4.core.contexts.ContextInjectionFactory;
 import org.eclipse.e4.core.di.InjectionException;
 import org.eclipse.e4.ui.css.swt.theme.IThemeEngine;
+import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.ErrorDialog;
+import org.eclipse.jface.dialogs.IDialogBlockedHandler;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
@@ -104,6 +106,7 @@ import org.eclipse.ui.contexts.IContextService;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.internal.Workbench;
 import org.eclipse.ui.internal.browser.WebBrowserUtil;
+import org.eclipse.ui.internal.dialogs.WorkbenchDialogBlockedHandler;
 import org.eclipse.ui.internal.ide.IDEInternalPreferences;
 import org.eclipse.ui.internal.ide.IDEInternalWorkbenchImages;
 import org.eclipse.ui.internal.ide.IDEWorkbenchMessages;
@@ -478,6 +481,26 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
 
     @Override
     public void postStartup() {
+        // Use a dummy block handler to avoid blocked job dialog to open
+        Dialog.setBlockedHandler(new IDialogBlockedHandler() {
+
+            @Override
+            public void clearBlocked() {
+                // No default behavior
+            }
+
+            @Override
+            public void showBlocked(IProgressMonitor blocking,
+                    IStatus blockingStatus, String blockedName) {
+                // No default behavior
+            }
+
+            @Override
+            public void showBlocked(Shell parentShell, IProgressMonitor blocking,
+                    IStatus blockingStatus, String blockedName) {
+                // No default behavior
+            }
+        });
         try {
             HealthCheckServerManager.getInstance().start(PortSelector.findFreePort());
         } catch (IOException e) {

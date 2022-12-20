@@ -33,25 +33,24 @@ import org.eclipse.core.runtime.Status;
 
 public abstract class MavenModelOperation implements IWorkspaceRunnable {
 
-    protected MavenProjectHelper helper = new MavenProjectHelper();
-
     private boolean disableAnalyze;
 
     protected boolean modelUpdated = false;
     
     private IProject project;
     
-    public void setProject(IProject project) {
+    public MavenModelOperation setProject(IProject project) {
         this.project = project;
+        return this;
     }
 
     protected Model readModel(IProject project) throws CoreException {
-        return helper.getMavenModel(project);
+        return MavenProjectHelper.getMavenModel(project);
     }
 
     protected void saveModel(IProject project, Model model, IProgressMonitor monitor) throws CoreException {
         if (modelUpdated) {
-            helper.saveModel(project, model, false, monitor);
+            MavenProjectHelper.saveModel(project, model, false, monitor);
 
             if (!disableAnalyze && getRepositoryAccessor().hasActiveRepository()) {
                 var projectDependenciesStore = getRepositoryAccessor().getCurrentRepository()

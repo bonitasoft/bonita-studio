@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
 
 import org.apache.maven.artifact.DefaultArtifact;
@@ -73,6 +74,7 @@ public class MavenProjectDependenciesStore implements ProjectDependenciesStore {
             .setSerializationInclusion(Include.NON_NULL)
             .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     private IEventBroker eventBroker;
+    private static ReentrantLock lock = new ReentrantLock();
 
     public MavenProjectDependenciesStore(BonitaProject project, IEventBroker eventBroker) {
         this.project = project;
@@ -81,10 +83,12 @@ public class MavenProjectDependenciesStore implements ProjectDependenciesStore {
 
     @Override
     public Optional<DependencyReport> analyze(IProgressMonitor monitor) {
+        lock.lock();
         try {
-            var eclipseProject = project.getAdapter(IProject.class);
-            eclipseProject.deleteMarkers(ANALYZE_PLUGIN_MARKER_TYPE, true, IResource.DEPTH_INFINITE);
-            AnalyzeBonitaProjectDependenciesPlugin bonitaProjectPlugin = new AnalyzeBonitaProjectDependenciesPlugin(project.getAdapter(IProject.class));
+            var appProject = project.getAppProject();
+            appProject.deleteMarkers(ANALYZE_PLUGIN_MARKER_TYPE, true, IResource.DEPTH_INFINITE);
+            AnalyzeBonitaProjectDependenciesPlugin bonitaProjectPlugin = new AnalyzeBonitaProjectDependenciesPlugin(
+                    appProject);
             IStatus status = bonitaProjectPlugin.execute(monitor);
             if (!status.isOK()) {
                 throw new CoreException(status);
@@ -93,7 +97,7 @@ public class MavenProjectDependenciesStore implements ProjectDependenciesStore {
             String reportPath = bonitaProjectPlugin.getReportPath();
             var path = Paths.get(reportPath);
             File reportFile = Paths.get(reportPath).isAbsolute() ? path.toFile()
-                    : eclipseProject.getLocation().toFile().toPath().resolve(reportPath).toFile();
+                    : appProject.getLocation().toFile().toPath().resolve(reportPath).toFile();
             if (reportFile.isFile()) {
                 dependencyReport = mapper.readValue(reportFile, DependencyReport.class);
                 eventBroker.send(PROJECT_DEPENDENCIES_ANALYZED_TOPIC, Map.of());
@@ -114,25 +118,28 @@ public class MavenProjectDependenciesStore implements ProjectDependenciesStore {
             } else {
                 BonitaStudioLog.error(ce, CommonRepositoryPlugin.PLUGIN_ID);
             }
+        } finally {
+            lock.unlock();
         }
         return Optional.ofNullable(dependencyReport);
     }
-    
+
     private MultiStatus createMultiStatus(String artifactId, List<Issue> issues) {
-        if(artifactId != null) {
+        if (artifactId != null) {
             String artifact = artifactId.split(":")[1];
-            var status = new MultiStatus(getClass(), 0, String.format("%s: Open Overview > Extension for more details. ",artifact));
+            var status = new MultiStatus(getClass(), 0,
+                    String.format("%s: Open Overview > Extension for more details. ", artifact));
             issues.stream()
-                .filter(issue -> Objects.equals(artifactId, getArtifactId(issue)))
-                .map(MavenProjectDependenciesStore::toStatus)
-                .forEach(status::add);
+                    .filter(issue -> Objects.equals(artifactId, getArtifactId(issue)))
+                    .map(MavenProjectDependenciesStore::toStatus)
+                    .forEach(status::add);
             return status;
         }
         return new MultiStatus(MavenProjectDependenciesStore.class, 0, null);
     }
 
     private String getArtifactId(Issue issue) {
-        if(!issue.getContext().isEmpty()) {
+        if (!issue.getContext().isEmpty()) {
             return issue.getContext().get(0);
         }
         return null;
@@ -262,24 +269,24 @@ public class MavenProjectDependenciesStore implements ProjectDependenciesStore {
     @Override
     public List<Issue> findIssues(Dependency dependency) {
         String artifactId = toArtifactId(dependency);
-        if(artifactId != null) {
+        if (artifactId != null) {
             return getIssues().stream()
                     .filter(issue -> issue.getContext().stream().anyMatch(artifactId::equals))
                     .collect(Collectors.toList());
         }
         return Collections.emptyList();
     }
-    
+
     @Override
     public MultiStatus getStatus(Dependency dependency) {
-        if(dependencyReport == null) {
+        if (dependencyReport == null) {
             return new MultiStatus(getClass(), 0, "");
         }
         return createMultiStatus(toArtifactId(dependency), dependencyReport.getIssues());
     }
 
     private static String toArtifactId(Dependency dependency) {
-        if(dependency.getVersion() != null) {
+        if (dependency.getVersion() != null) {
             return new DefaultArtifact(dependency.getGroupId(), dependency.getArtifactId(), dependency.getVersion(),
                     "compile", dependency.getType(),
                     dependency.getClassifier(), new DefaultArtifactHandler()).getId();
