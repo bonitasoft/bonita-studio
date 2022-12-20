@@ -44,7 +44,7 @@ public class UpdateDependencyVersionOperation extends MavenModelOperation {
         Model model = readModel(getCurrentProject());
 
         dependenciesToUpdate.stream().forEach( dependency -> {
-            Dependency dependencyToUpdate = helper.findDependency(model, dependency.getGroupId(), dependency.getArtifactId()).orElse(null);
+            Dependency dependencyToUpdate = MavenProjectHelper.findDependency(model, dependency.getGroupId(), dependency.getArtifactId()).orElse(null);
             if (dependencyToUpdate != null) {
                 Dependency dependencyUpdated = new Dependency();
                 dependencyUpdated.setArtifactId(dependency.getArtifactId());
