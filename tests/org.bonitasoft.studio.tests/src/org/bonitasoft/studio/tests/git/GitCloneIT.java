@@ -17,17 +17,29 @@ package org.bonitasoft.studio.tests.git;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Paths;
 
 import org.bonitasoft.studio.common.FileUtil;
+import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.engine.EnginePlugin;
 import org.bonitasoft.studio.engine.preferences.EnginePreferenceConstants;
 import org.bonitasoft.studio.swtbot.framework.application.BotApplicationWorkbenchWindow;
+import org.bonitasoft.studio.swtbot.framework.conditions.AssertionCondition;
 import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.ListBranchCommand.ListMode;
+import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.errors.IncorrectObjectTypeException;
+import org.eclipse.jgit.errors.MissingObjectException;
+import org.eclipse.jgit.lib.Ref;
+import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.revwalk.RevCommit;
+import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.junit.After;
@@ -64,12 +76,40 @@ public class GitCloneIT {
     @Test
     public void should_clone_a_bonita_project_and_migrate_it() throws Exception {
         new BotApplicationWorkbenchWindow(bot).gitClone()
-            .setURI(repoRoot.toURI().toString())
-            .next()
-            .finishWithMigration();
-        
+                .setURI(repoRoot.toURI().toString())
+                .next()
+                .finishWithMigration();
+
         var project = RepositoryManager.getInstance().getCurrentProject().orElseThrow();
         assertThat(project.getId()).isEqualTo("procurement-example");
+        bot.waitUntil(new AssertionCondition() {
+
+            @Override
+            protected void makeAssert() throws Exception {
+                var gitRepo = project.getAdapter(Repository.class);
+                var lastCommit = getLastCommit(gitRepo);
+                assertThat(lastCommit.getFullMessage())
+                        .isEqualTo(String.format("Bonita '7.12.1' to '%s' automated migration",
+                                ProductVersion.CURRENT_VERSION));
+            }
+        });
+
+    }
+
+    private RevCommit getLastCommit(Repository repository)
+            throws GitAPIException, MissingObjectException, IncorrectObjectTypeException, IOException {
+        RevCommit youngestCommit = null;
+        try (var git = new Git(repository);
+                var walk = new RevWalk(git.getRepository());) {
+            var branches = git.branchList().setListMode(ListMode.ALL).call();
+            for (Ref branch : branches) {
+                RevCommit commit = walk.parseCommit(branch.getObjectId());
+                if (youngestCommit == null || commit.getAuthorIdent().getWhen().compareTo(
+                        youngestCommit.getAuthorIdent().getWhen()) > 0)
+                    youngestCommit = commit;
+            }
+            return youngestCommit;
+        }
     }
 
 }
