@@ -95,6 +95,7 @@ public class BusinessDataModelFormPart extends AbstractFormPart {
         section.setLayoutData(GridDataFactory.fillDefaults().create());
         section.setLayout(GridLayoutFactory.fillDefaults().create());
         section.setText(Messages.mavenArtifactProperties);
+        section.setToolTipText(Messages.mavenArtifactPropertiesHint);
 
         Composite client = formPage.getToolkit().createComposite(section);
         client.setLayoutData(GridDataFactory.fillDefaults().create());
@@ -120,7 +121,6 @@ public class BusinessDataModelFormPart extends AbstractFormPart {
         var textAreaWidget = new TextAreaWidget.Builder()
                 .labelAbove()
                 .fill()
-                .withTootltip(Messages.mavenArtifactPropertiesHint)
                 .grabHorizontalSpace()
                 .bindTo(new WritableValue<String>(modelDependencyGav,
                         String.class))
