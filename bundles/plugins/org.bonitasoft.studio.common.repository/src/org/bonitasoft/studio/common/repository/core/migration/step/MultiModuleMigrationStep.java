@@ -55,8 +55,9 @@ public class MultiModuleMigrationStep implements MigrationStep {
     @Override
     public MigrationReport run(Path project, IProgressMonitor monitor) throws CoreException {
         var report = MigrationReport.emptyReport();
-        report.updated("The project layout has been changed in favor of a multi modules maven project. It means that files location inside the project have changed.  " + 
-                       "It is an internal change and will not impact the design usage in the Studio. Added maven modules and their respective `pom.xml` files are *reserved for internal use*.");
+        report.updated("The project layout has been changed in favor of a multi modules maven project. It means that files location inside the project have changed.  " 
+                       + "It is a technical change and will not impact the design usage in Bonita Studio."
+                       + "New maven modules and their respective `pom.xml` files are *reserved for internal Studio use*.");
         var app = project.resolve(BonitaProject.APP_MODULE);
         try {
             if (Files.isDirectory(app)) {
@@ -95,8 +96,10 @@ public class MultiModuleMigrationStep implements MigrationStep {
                 var plugin = new CreateBdmModulePlugin(project, rootModel.getArtifactId());
                 plugin.execute(new NullProgressMonitor());
                 Files.deleteIfExists(bdmFolder.resolve(".artifact-descriptor.properties"));
-                report.updated("The project's Business Data Model now live in its own maven module. While it does not impact the design usage, it can now be built and deployed independently from a Studio.  " +
-                               "The BDM model dependency share the same `version` and `groupId` of the parent project. It is enforced by the format of the Bonita project and must not be changed.");
+                report.updated("Project's Business Data Model is now build in its own maven module. "
+                             + "While it does not impact the design usage, it can now be built and deployed independently from a Studio.  "
+                             + "The BDM model dependency share the same `version` and `groupId` of the parent project. "
+                             + "It is enforced by the format of the Bonita project and must not be changed.");
             }
         } catch (IOException e) {
             throw new CoreException(Status.error("Failed to update project layout to multi-module.", e));
