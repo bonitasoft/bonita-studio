@@ -24,7 +24,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.BooleanSupplier;
-import java.util.function.Supplier;
 
 import org.bonitasoft.studio.common.FileUtil;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
@@ -42,6 +41,7 @@ import org.eclipse.egit.core.op.DisconnectProviderOperation;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.team.core.RepositoryProvider;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -56,8 +56,8 @@ class BonitaProjectImplTest {
     @BeforeEach
     void setupDefaultProject() throws Exception {
         metadata = ProjectMetadata.defaultMetadata();
-        metadata.setUseSnapshotRepository(true);
-        projectId = metadata.getArtifactId();
+        projectId = "my-project-" + System.currentTimeMillis();
+        metadata.setArtifactId(projectId);
         project = BonitaProject.create(projectId);
         if (project.exists()) {
             project.delete(monitor);
@@ -65,6 +65,17 @@ class BonitaProjectImplTest {
         repository = RepositoryManager.getInstance().newRepository(projectId);
         RepositoryManager.getInstance().setCurrentRepository(repository);
         repository.create(metadata, monitor);
+    }
+
+    @AfterEach
+    void deleteProject() throws Exception {
+        if (project.exists()) {
+            try {
+                project.delete(monitor);
+            } catch (CoreException e) {
+                BonitaStudioLog.error(e);
+            }
+        }
     }
 
     @Test
