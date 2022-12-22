@@ -52,7 +52,7 @@ public abstract class AbstractMavenProjectUpdateOperation implements IWorkspaceR
     }
 
     protected void shareProject(final IProject project, final IProgressMonitor monitor) throws CoreException {
-        final IProject parentProject = getParentProject(project);
+       var parentProject = getParentProject(project);
        if (RepositoryProvider.getProvider(parentProject, "org.eclipse.egit.core.GitProvider") != null) {
             var connectProviderOperation = new ConnectProviderOperation(project,
                     new File(parentProject.getLocation().toFile(), ".git"));
@@ -61,7 +61,7 @@ public abstract class AbstractMavenProjectUpdateOperation implements IWorkspaceR
     }
 
     private IProject getParentProject(IProject project) {
-        File file = project.getLocation().toFile().getParentFile().getParentFile();
+        var file = project.getLocation().toFile().getParentFile().getParentFile().getParentFile();
         return ResourcesPlugin.getWorkspace().getRoot().getProject(file.getName());
     }
 
