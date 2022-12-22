@@ -37,6 +37,7 @@ import org.eclipse.m2e.core.internal.IMavenConstants;
 import org.eclipse.m2e.core.project.IProjectConfigurationManager;
 import org.eclipse.m2e.core.project.IProjectCreationListener;
 import org.eclipse.m2e.core.project.ProjectImportConfiguration;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.navigator.CommonViewer;
@@ -100,7 +101,8 @@ public class CreateCustomPageProjectOperation extends AbstractMavenProjectUpdate
     }
 
     protected void projectCreated(IProject project) throws CoreException {
-        PlatformUI.getWorkbench().getDisplay().asyncExec(() -> refreshProjectExplorerView());
+        var display = PlatformUI.getWorkbench().getDisplay();
+        display.asyncExec(() ->  display.timerExec(500, () -> refreshProjectExplorerView()));
     }
 
     private void refreshProjectExplorerView() {

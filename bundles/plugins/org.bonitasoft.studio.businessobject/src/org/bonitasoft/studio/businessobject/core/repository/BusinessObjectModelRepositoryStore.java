@@ -354,18 +354,10 @@ public class BusinessObjectModelRepositoryStore<F extends AbstractBDMFileStore<?
 
     @Override
     public void projectOpened(IRepository repository, IProgressMonitor monitor) {
-        var job = new Job(Messages.generatingJarFromBDMModel) {
-
-            @Override
-            protected IStatus run(IProgressMonitor monitor) {
-                F fStore = getChild(BusinessObjectModelFileStore.BOM_FILENAME, true);
-                if (fStore != null) {
-                    return installArtifact(fStore);
-                }
-                return Status.OK_STATUS;
-            }
-        };
-        job.schedule();
+        F fStore = getChild(BusinessObjectModelFileStore.BOM_FILENAME, true);
+        if (fStore != null) {
+            installArtifact(fStore);
+        }
     }
 
     @Override

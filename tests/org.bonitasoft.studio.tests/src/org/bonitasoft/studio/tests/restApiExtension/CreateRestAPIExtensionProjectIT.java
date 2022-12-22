@@ -78,7 +78,7 @@ public class CreateRestAPIExtensionProjectIT {
 
         assertThat(newProject.getName()).isEqualTo("resourceNameRestAPI");
         assertThat(newProject.getFile("pom.xml").exists()).isTrue();
-        final Model mavenModel = new MavenProjectHelper().getMavenModel(newProject);
+        final Model mavenModel =  MavenProjectHelper.getMavenModel(newProject);
         assertThat(mavenModel.getArtifactId()).isEqualTo("resourceNameRestAPI");
         assertThat(mavenModel.getGroupId()).isEqualTo("com.company.rest.api");
         assertThat(mavenModel.getVersion()).isEqualTo("1.0.0-SNAPSHOT");

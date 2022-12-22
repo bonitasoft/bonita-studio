@@ -51,7 +51,6 @@ import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.engine.BOSWebServerManager;
 import org.bonitasoft.studio.engine.EnginePlugin;
 import org.bonitasoft.studio.engine.preferences.EnginePreferenceConstants;
-import org.bonitasoft.studio.engine.server.StartEngineJob;
 import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditorPlugin;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
@@ -106,7 +105,6 @@ import org.eclipse.ui.contexts.IContextService;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.internal.Workbench;
 import org.eclipse.ui.internal.browser.WebBrowserUtil;
-import org.eclipse.ui.internal.dialogs.WorkbenchDialogBlockedHandler;
 import org.eclipse.ui.internal.ide.IDEInternalPreferences;
 import org.eclipse.ui.internal.ide.IDEInternalWorkbenchImages;
 import org.eclipse.ui.internal.ide.IDEWorkbenchMessages;
@@ -481,26 +479,6 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
 
     @Override
     public void postStartup() {
-        // Use a dummy block handler to avoid blocked job dialog to open
-        Dialog.setBlockedHandler(new IDialogBlockedHandler() {
-
-            @Override
-            public void clearBlocked() {
-                // No default behavior
-            }
-
-            @Override
-            public void showBlocked(IProgressMonitor blocking,
-                    IStatus blockingStatus, String blockedName) {
-                // No default behavior
-            }
-
-            @Override
-            public void showBlocked(Shell parentShell, IProgressMonitor blocking,
-                    IStatus blockingStatus, String blockedName) {
-                // No default behavior
-            }
-        });
         try {
             HealthCheckServerManager.getInstance().start(PortSelector.findFreePort());
         } catch (IOException e) {
@@ -806,6 +784,26 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
         }
 
         ApplicationPlugin.getDefault().getPreferenceStore().setValue(FIRST_STARTUP, false);
+        // Use a dummy block handler to avoid blocked job dialog to open
+        Dialog.setBlockedHandler(new IDialogBlockedHandler() {
+
+            @Override
+            public void clearBlocked() {
+                // No default behavior
+            }
+
+            @Override
+            public void showBlocked(IProgressMonitor blocking,
+                    IStatus blockingStatus, String blockedName) {
+                // No default behavior
+            }
+
+            @Override
+            public void showBlocked(Shell parentShell, IProgressMonitor blocking,
+                    IStatus blockingStatus, String blockedName) {
+                // No default behavior
+            }
+        });
     }
 
     private void executePostStartupContributions() {

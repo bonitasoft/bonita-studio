@@ -19,6 +19,7 @@ import java.util.zip.ZipFile;
 
 import org.bonitasoft.engine.page.Page;
 import org.bonitasoft.studio.assertions.StatusAssert;
+import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.engine.BOSEngineManager;
@@ -67,7 +68,7 @@ public class BuildAndDeployRestAPIExtensionIT {
         defaultArchetypeConfiguration.setPageName(artifactId);
         defaultArchetypeConfiguration.setPageDisplayName("My test Rest API");
         defaultArchetypeConfiguration.setPathTemplate(pathTemplate);
-        defaultArchetypeConfiguration.setBonitaVersion("7.11.2");
+        defaultArchetypeConfiguration.setBonitaVersion(ProductVersion.BONITA_RUNTIME_VERSION);
         final CreateRestAPIExtensionProjectOperation operation = new CreateRestAPIExtensionProjectOperation(
                 RepositoryManager.getInstance().getRepositoryStore(RestAPIExtensionRepositoryStore.class),
                 MavenPlugin.getProjectConfigurationManager(),
