@@ -23,22 +23,25 @@ import org.apache.maven.execution.BuildSuccess;
 import org.apache.maven.execution.MavenExecutionResult;
 import org.apache.maven.model.Plugin;
 import org.apache.maven.project.MavenProject;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.Messages;
 import org.bonitasoft.studio.common.repository.core.maven.model.DefaultPluginVersions;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.ISchedulingRule;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.m2e.core.MavenPlugin;
 import org.eclipse.m2e.core.embedder.ICallable;
 import org.eclipse.m2e.core.embedder.IMaven;
 import org.eclipse.m2e.core.embedder.IMavenExecutionContext;
-import org.eclipse.m2e.core.internal.project.ProjectConfigurationManager;
+import org.eclipse.m2e.core.internal.MavenPluginActivator;
 import org.eclipse.m2e.core.project.IMavenProjectFacade;
-import org.eclipse.m2e.core.project.MavenUpdateRequest;
 
 public class AnalyzeBonitaProjectDependenciesPlugin {
 
@@ -55,7 +58,7 @@ public class AnalyzeBonitaProjectDependenciesPlugin {
     public IStatus execute(IProgressMonitor monitor) throws CoreException {
         synchronized (lock) {
             monitor.beginTask(Messages.analyzeProjectDependencies, IProgressMonitor.UNKNOWN);
-
+            waitProjectManagerRefreshJob();
             IMaven maven = maven();
             var mavenProject = getMavenProject(project, monitor);
             if (mavenProject == null) {
@@ -66,26 +69,37 @@ public class AnalyzeBonitaProjectDependenciesPlugin {
             var request = ctx.getExecutionRequest();
             request.setGoals(List.of("bonita-project:install", "bonita-project:analyze"));
             request.setPom(mavenProject.getFile());
-            MavenExecutionResult executionResult = ctx.execute(mavenProject, new ICallable<MavenExecutionResult>() {
+            ISchedulingRule rule = ResourcesPlugin.getWorkspace().getRoot();
+            Job.getJobManager().beginRule(rule, monitor);
+            try {
+                MavenExecutionResult executionResult = ctx.execute(mavenProject, new ICallable<MavenExecutionResult>() {
 
-                @Override
-                public MavenExecutionResult call(IMavenExecutionContext context, IProgressMonitor monitor)
-                        throws CoreException {
-                    return maven.lookup(Maven.class).execute(request);
+                    @Override
+                    public MavenExecutionResult call(IMavenExecutionContext context, IProgressMonitor monitor)
+                            throws CoreException {
+                        return maven.lookup(Maven.class).execute(request);
+                    }
+
+                }, monitor);
+                if (executionResult.getBuildSummary(executionResult.getProject()) instanceof BuildSuccess) {
+                    return Status.OK_STATUS;
+                } else {
+                    throw new CoreException(
+                            new Status(IStatus.ERROR, getClass(), "Failed to execute bonita-project-maven-plugin",
+                                    executionResult.hasExceptions() ? executionResult.getExceptions().get(0) : null));
                 }
-
-            }, monitor);
-
-            if (executionResult.getBuildSummary(executionResult.getProject()) instanceof BuildSuccess) {
-                ((ProjectConfigurationManager) MavenPlugin.getProjectConfigurationManager())
-                        .updateProjectConfiguration(new MavenUpdateRequest(project, true, false), false, false,
-                                monitor);
-                return Status.OK_STATUS;
-            } else {
-                throw new CoreException(
-                        new Status(IStatus.ERROR, getClass(), "Failed to execute bonita-project-maven-plugin",
-                                executionResult.hasExceptions() ? executionResult.getExceptions().get(0) : null));
+            } finally {
+                Job.getJobManager().endRule(rule);
             }
+        }
+    }
+
+    private void waitProjectManagerRefreshJob() {
+        var managerJob = MavenPluginActivator.getDefault().getProjectManagerRefreshJob();
+        try {
+            managerJob.join(10000, new NullProgressMonitor());
+        } catch (InterruptedException e) {
+            BonitaStudioLog.error(e);
         }
     }
 

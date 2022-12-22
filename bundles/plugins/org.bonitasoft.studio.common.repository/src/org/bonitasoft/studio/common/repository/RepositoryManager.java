@@ -270,24 +270,24 @@ public class RepositoryManager {
         if (currentRepository.filter(repo -> Objects.equals(repo.getProjectId(), projectId)).isPresent()) {
             return currentRepository.get();
         }
+        monitor.beginTask(Messages.team_switchingProject,
+                IProgressMonitor.UNKNOWN);
         try {
             WorkspaceModifyOperation workspaceModifyOperation = new WorkspaceModifyOperation() {
 
                 @Override
                 protected void execute(final IProgressMonitor monitor)
                         throws CoreException, InvocationTargetException, InterruptedException {
-                    monitor.beginTask(Messages.team_switchingProject,
-                            IProgressMonitor.UNKNOWN);
                     BonitaStudioLog.info("Switching project to "
                             + projectId, CommonRepositoryPlugin.PLUGIN_ID);
-                    RepositoryManager.getInstance().setRepository(projectId, monitor);
+                    RepositoryManager.getInstance().setRepository(projectId, new NullProgressMonitor());
                     BonitaStudioLog.info(
                             "Project switched to " + projectId,
                             CommonRepositoryPlugin.PLUGIN_ID);
                 }
             };
             Job.getJobManager().join(RepositoryManager.class, new NullProgressMonitor());
-            workspaceModifyOperation.run(monitor);
+            workspaceModifyOperation.run(new NullProgressMonitor());
             Display.getDefault().asyncExec(
                     PlatformUtil::openDashboardIfNoOtherEditorOpen);
             Display.getDefault().asyncExec(

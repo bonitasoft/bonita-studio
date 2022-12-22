@@ -41,7 +41,9 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.core.runtime.preferences.IScopeContext;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
@@ -161,20 +163,29 @@ public class BonitaProjectImpl implements BonitaProject {
     @Override
     public void refresh(boolean updateConfiguration, IProgressMonitor monitor) throws CoreException {
         monitor.beginTask(Messages.refresh, IProgressMonitor.UNKNOWN);
-        new UpdateMavenProjectJob(getRelatedProjects().toArray(IProject[]::new), false, false, updateConfiguration,
-                true, true)
-                        .run(new NullProgressMonitor());
-        new Job("Analyze Bonita dependencies") {
-
+        var job = new UpdateMavenProjectJob(getRelatedProjects().toArray(IProject[]::new), false, false, updateConfiguration,
+                true, true);
+        job.addJobChangeListener(new JobChangeAdapter() {
             @Override
-            protected IStatus run(IProgressMonitor monitor) {
-                currentRepository()
-                        .map(IRepository::getProjectDependenciesStore)
-                        .ifPresent(depStore -> depStore.analyze(new NullProgressMonitor()));
-                return Status.OK_STATUS;
-            }
-        }.schedule();
+            public void done(IJobChangeEvent event) {
+//                try {
+//                    Job.getJobManager().join(ResourcesPlugin.FAMILY_AUTO_BUILD, monitor);
+//                } catch (OperationCanceledException | InterruptedException e) {
+//                    BonitaStudioLog.error(e);
+//                }
+                new Job("Analyze Bonita dependencies") {
 
+                    @Override
+                    protected IStatus run(IProgressMonitor monitor) {
+                        currentRepository()
+                                .map(IRepository::getProjectDependenciesStore)
+                                .ifPresent(depStore -> depStore.analyze(new NullProgressMonitor()));
+                        return Status.OK_STATUS;
+                    }
+                }.schedule();
+            }
+        });
+        job.schedule();
     }
 
     @Override
