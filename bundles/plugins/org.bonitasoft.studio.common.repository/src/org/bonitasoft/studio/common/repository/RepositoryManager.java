@@ -41,6 +41,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.m2e.core.MavenPlugin;
@@ -285,6 +286,7 @@ public class RepositoryManager {
                             CommonRepositoryPlugin.PLUGIN_ID);
                 }
             };
+            Job.getJobManager().join(RepositoryManager.class, new NullProgressMonitor());
             workspaceModifyOperation.run(monitor);
             Display.getDefault().asyncExec(
                     PlatformUtil::openDashboardIfNoOtherEditorOpen);

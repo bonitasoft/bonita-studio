@@ -164,9 +164,17 @@ public class BonitaProjectImpl implements BonitaProject {
         new UpdateMavenProjectJob(getRelatedProjects().toArray(IProject[]::new), false, false, updateConfiguration,
                 true, true)
                         .run(new NullProgressMonitor());
-        currentRepository()
-                .map(IRepository::getProjectDependenciesStore)
-                .ifPresent(depStore -> depStore.analyze(new NullProgressMonitor()));
+        new Job("Analyze Bonita dependencies") {
+
+            @Override
+            protected IStatus run(IProgressMonitor monitor) {
+                currentRepository()
+                        .map(IRepository::getProjectDependenciesStore)
+                        .ifPresent(depStore -> depStore.analyze(new NullProgressMonitor()));
+                return Status.OK_STATUS;
+            }
+        }.schedule();
+
     }
 
     @Override

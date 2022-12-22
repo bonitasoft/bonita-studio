@@ -61,6 +61,7 @@ import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.jobs.Job;
@@ -177,29 +178,20 @@ public class BOSWebServerManager implements IBonitaProjectListener {
         startStoplock.lock();
         try {
             if (!serverIsStarted()) {
-                BonitaHomeUtil.configureBonitaClient();
-                copyTomcatBundleInWorkspace(monitor);
                 monitor.subTask(Messages.startingWebServer);
                 if (BonitaStudioLog.isLoggable(IStatus.OK)) {
                     BonitaStudioLog.debug("Starting tomcat...",
                             EnginePlugin.PLUGIN_ID);
                 }
-                updateRuntimeLocationIfNeeded();
-                final IRuntimeType type = ServerCore.findRuntimeType(TOMCAT_RUNTIME_TYPE);
                 try {
-                    final IProject confProject = createServerConfigurationProject(
-                            AbstractRepository.NULL_PROGRESS_MONITOR);
-                    final IRuntime runtime = createServerRuntime(type, AbstractRepository.NULL_PROGRESS_MONITOR);
-                    tomcat = createServer(monitor, confProject, runtime);
+                    setupLaunchConfiguration(monitor);
                     UIDesignerServerManager uidManager = UIDesignerServerManager.getInstance();
                     if (uidManager.getPortalPort() != portConfigurator.getHttpPort()) {
                         uidManager.setPortalPort(portConfigurator.getHttpPort());
                         uidManager.stop();
                         uidManager.start(repository, monitor);
                     }
-                    createLaunchConfiguration(tomcat, AbstractRepository.NULL_PROGRESS_MONITOR);
-                    confProject.build(IncrementalProjectBuilder.INCREMENTAL_BUILD,
-                            AbstractRepository.NULL_PROGRESS_MONITOR);
+
                     startResult = null;
                     tomcat.start(ILaunchManager.RUN_MODE, result -> startResult = result);
                     waitServerRunning();
@@ -217,6 +209,21 @@ public class BOSWebServerManager implements IBonitaProjectListener {
             }
         } finally {
             startStoplock.unlock();
+        }
+    }
+
+    public void setupLaunchConfiguration(IProgressMonitor monitor) throws CoreException {
+        if (tomcat == null) {
+            BonitaHomeUtil.configureBonitaClient();
+            copyTomcatBundleInWorkspace(monitor);
+            updateRuntimeLocationIfNeeded();
+            var type = ServerCore.findRuntimeType(TOMCAT_RUNTIME_TYPE);
+            var runtime = createServerRuntime(type, new NullProgressMonitor());
+            var confProject = createServerConfigurationProject(new NullProgressMonitor());
+         
+            tomcat = createServer(monitor, confProject, runtime);
+            createLaunchConfiguration(tomcat, new NullProgressMonitor());
+            confProject.build(IncrementalProjectBuilder.INCREMENTAL_BUILD, new NullProgressMonitor());
         }
     }
 
@@ -501,7 +508,6 @@ public class BOSWebServerManager implements IBonitaProjectListener {
                 tomcat.stop(true);
                 try {
                     waitServerStopped(monitor);
-                    tomcat.delete();
                 } catch (final CoreException e) {
                     BonitaStudioLog.error(e, EnginePlugin.PLUGIN_ID);
                 }
@@ -551,6 +557,11 @@ public class BOSWebServerManager implements IBonitaProjectListener {
             return;
         }
         if (!isLazyModeEnabled()) {
+            try {
+                BOSWebServerManager.getInstance().setupLaunchConfiguration(monitor);
+            } catch (CoreException e) {
+                BonitaStudioLog.error(e);
+            }
             final StartEngineJob job = new StartEngineJob(Messages.startingEngineServer, repository);
             job.setPriority(Job.LONG);
             job.setUser(false);

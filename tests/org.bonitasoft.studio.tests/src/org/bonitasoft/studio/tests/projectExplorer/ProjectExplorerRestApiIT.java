@@ -11,6 +11,7 @@ package org.bonitasoft.studio.tests.projectExplorer;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import org.bonitasoft.studio.assertions.StatusAssert;
+import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
@@ -66,7 +67,7 @@ public class ProjectExplorerRestApiIT {
     private void createRestApi(String packageName, String name, String projectName, String pathTemplate) throws Exception {
         RestAPIExtensionArchetypeConfiguration defaultArchetypeConfiguration = RestAPIExtensionArchetypeConfiguration
                 .defaultArchetypeConfiguration();
-        defaultArchetypeConfiguration.setBonitaVersion("7.11.2");
+        defaultArchetypeConfiguration.setBonitaVersion(ProductVersion.BONITA_RUNTIME_VERSION);
         defaultArchetypeConfiguration.setGroupId(packageName);
         defaultArchetypeConfiguration.setPageName(projectName);
         defaultArchetypeConfiguration.setPageDisplayName(name);
