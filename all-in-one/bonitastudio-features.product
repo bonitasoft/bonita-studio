@@ -7,8 +7,6 @@
    </configIni>
 
    <launcherArgs>
-      <programArgsLin>-clean
-      </programArgsLin>
       <vmArgs>-Xmx1g -Xms512m  -Dosgi.requiredJavaVersion=11 -Dfile.encoding=UTF8 -Dworkspace.recovery.mode=false
       </vmArgs>
       <vmArgsMac>-XstartOnFirstThread
@@ -75,14 +73,14 @@ along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
       <plugin id="org.eclipse.equinox.common" autoStart="true" startLevel="2" />
       <plugin id="org.eclipse.equinox.event" autoStart="true" startLevel="2" />
       <plugin id="org.eclipse.equinox.simpleconfigurator" autoStart="true" startLevel="1" />
-      <property name="osgi.nls.warnings" value="ignore" />
-      <property name="eclipse.log.level" value="INFO" />
-      <property name="branding.version" value="${branding.version}" />
-      <property name="file.encoding" value="UTF-8" />
       <property name="eclipse.buildId" value="${unqualifiedVersion}.${buildQualifier}" />
       <property name="osgi.instance.area" value="@noDefault" />
       <property name="bonita-runtime.version" value="${bonita-runtime.version}" />
+      <property name="eclipse.log.level" value="INFO" />
+      <property name="branding.version" value="${branding.version}" />
       <property name="product.version" value="${project.version}" />
+      <property name="osgi.nls.warnings" value="ignore" />
+      <property name="file.encoding" value="UTF-8" />
    </configurations>
 
    <preferencesInfo>
