@@ -21,7 +21,6 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.Objects;
 import java.util.Properties;
 import java.util.stream.Stream;
 
@@ -36,7 +35,6 @@ import org.eclipse.core.commands.operations.OperationHistoryFactory;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.Job;
@@ -45,9 +43,6 @@ import org.eclipse.e4.core.contexts.ContextInjectionFactory;
 import org.eclipse.e4.core.contexts.EclipseContextFactory;
 import org.eclipse.equinox.app.IApplication;
 import org.eclipse.equinox.app.IApplicationContext;
-import org.eclipse.jdt.launching.IVMInstall;
-import org.eclipse.jdt.launching.IVMInstallType;
-import org.eclipse.jdt.launching.JavaRuntime;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.osgi.service.datalocation.Location;
@@ -62,7 +57,6 @@ import org.eclipse.ui.PlatformUI;
 public class BonitaStudioApplication extends JobChangeAdapter implements IApplication {
 
     private static final String REQUIRED_JAVA_VERSION = "11";
-    private static final String HOTSPOT_JDK_NAME = "OpenJDK Hotspot JDK " + REQUIRED_JAVA_VERSION;
 
     private Display display;
     public static final String PREFERENCES_FILE = ".wsPreferences";
@@ -232,29 +226,6 @@ public class BonitaStudioApplication extends JobChangeAdapter implements IApplic
                 try {
                     instanceLoc.set(new URL("file", null, path), true);
                 } catch (final Exception e) {
-                    BonitaStudioLog.error(e);
-                }
-            }
-        }
-        File installLocation = new File(Platform.getInstallLocation().getURL().getPath());
-        File jre11Location = new File(installLocation, "jre");
-        IVMInstall defaultVMInstall = JavaRuntime.getDefaultVMInstall();
-        if (!Objects.equals(Platform.getOS(), Platform.OS_MACOSX) && jre11Location.exists()) {
-            if (defaultVMInstall.getName() != null
-                    && !Objects.equals(defaultVMInstall.getName(), HOTSPOT_JDK_NAME)
-                    && Objects.equals(defaultVMInstall.getInstallLocation(), installLocation)) { //Remove invalid JRE 
-                defaultVMInstall.getVMInstallType().disposeVMInstall(defaultVMInstall.getId());
-            }
-            IVMInstallType type = JavaRuntime
-                    .getVMInstallType("org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType");
-            IVMInstall jre11Install = type.findVMInstall(HOTSPOT_JDK_NAME);
-            if (jre11Install == null) {
-                jre11Install = type.createVMInstall(HOTSPOT_JDK_NAME);
-                jre11Install.setName(HOTSPOT_JDK_NAME);
-                jre11Install.setInstallLocation(jre11Location);
-                try {
-                    JavaRuntime.setDefaultVMInstall(jre11Install, new NullProgressMonitor(), true);
-                } catch (CoreException e) {
                     BonitaStudioLog.error(e);
                 }
             }

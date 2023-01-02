@@ -62,7 +62,7 @@ class BonitaStudioApplicationTest {
     }
 
     @Test
-    void shoul_start_run_workbench_if_java_version_is_valid() throws Exception {
+    void should_start_run_workbench_if_java_version_is_valid() throws Exception {
         doReturn("11").when(application).getJavaVersion();
 
         final Object result = application.start(null);
@@ -72,7 +72,7 @@ class BonitaStudioApplicationTest {
     }
 
     @Test
-    void shoul_start_exit_if_java_version_is_not_valid() throws Exception {
+    void exit_if_java_version_is_not_valid() throws Exception {
         doReturn("1.8").when(application).getJavaVersion();
 
         application.start(null);
@@ -82,7 +82,7 @@ class BonitaStudioApplicationTest {
     }
 
     @Test
-    void should_start_add_auto_build_job_listener_that_cancel_autobuild_jobs_until_workbench_is_ready()
+    void add_auto_build_job_listener_that_cancel_autobuild_jobs_until_workbench_is_ready()
             throws Exception {
         doReturn("11").when(application).getJavaVersion();
 
