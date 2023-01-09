@@ -76,17 +76,26 @@ public class BonitaProjectBuilder extends IncrementalProjectBuilder {
     private void validateTargetRuntimeVersion(IProject project) throws CoreException {
         project.deleteMarkers(TARGET_RUNTIME_VERSION_MARKER_TYPE, true, IResource.DEPTH_ONE);
         var mavenProjectFacade = MavenPlugin.getMavenProjectRegistry().getProject(project);
-        if(mavenProjectFacade != null) {
+        if (mavenProjectFacade != null) {
             var mavenProject = mavenProjectFacade.getMavenProject();
-            if(mavenProject == null) {
-                mavenProject = mavenProjectFacade.getMavenProject(new NullProgressMonitor());
+            if (mavenProject == null) {
+                try {
+                    mavenProject = mavenProjectFacade.getMavenProject(new NullProgressMonitor());
+                } catch (CoreException e) {
+                    // The validation can be run on a project with unresolvable dependencies
+                    // This can happen if the validation is triggered on project in a old Bonita version
+                    // Just ignore this validation pass
+                    return;
+                }
             }
-            String runtimeVersion = mavenProject.getProperties().getProperty(ProjectDefaultConfiguration.BONITA_RUNTIME_VERSION);
+            String runtimeVersion = mavenProject.getProperties()
+                    .getProperty(ProjectDefaultConfiguration.BONITA_RUNTIME_VERSION);
             if (project.isAccessible() && !Objects.equals(runtimeVersion, ProductVersion.BONITA_RUNTIME_VERSION)) {
                 IStatus status = RUNTIME_VERSION_VALIDATOR.validate(runtimeVersion);
                 IMarker marker = project.createMarker(TARGET_RUNTIME_VERSION_MARKER_TYPE);
                 marker.setAttribute(IMarker.SEVERITY, new StatusToMarkerSeverity(status).toMarkerSeverity());
-                marker.setAttribute(IMarker.MESSAGE, status.getMessage() + Messages.editTargetRuntimeVersionFromProjectOverview);
+                marker.setAttribute(IMarker.MESSAGE,
+                        status.getMessage() + Messages.editTargetRuntimeVersionFromProjectOverview);
             }
         }
     }
