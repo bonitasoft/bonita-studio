@@ -14,11 +14,12 @@
  */
 package org.bonitasoft.studio.common.repository.core;
 
+import java.io.Closeable;
 import java.io.File;
 import java.io.InputStream;
 import java.util.function.Supplier;
 
-public interface InputStreamSupplier extends Supplier<InputStream>, AutoCloseable {
+public interface InputStreamSupplier extends Supplier<InputStream>, Closeable {
 
     String getName();
 

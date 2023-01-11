@@ -46,6 +46,7 @@ import org.bonitasoft.studio.common.repository.extension.update.DependencyUpdate
 import org.bonitasoft.studio.common.repository.store.LocalDependenciesStore;
 import org.bonitasoft.studio.ui.dialog.ExceptionDialogHandler;
 import org.bonitasoft.studio.ui.wizard.WizardBuilder;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -55,6 +56,7 @@ import org.eclipse.e4.ui.services.IServiceConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.m2e.core.repository.IRepository;
+import org.eclipse.m2e.core.ui.internal.UpdateMavenProjectJob;
 import org.eclipse.swt.widgets.Shell;
 
 public class ImportExtensionHandler {
@@ -78,14 +80,13 @@ public class ImportExtensionHandler {
         this.errorDialogHandler = errorDialogHandler;
         this.commandExecutor = commandExecutor;
     }
-    
+
     @CanExecute
     public boolean canExecute() {
-        return  repositoryAccessor.getCurrentRepository()
+        return repositoryAccessor.getCurrentRepository()
                 .filter(org.bonitasoft.studio.common.repository.model.IRepository::isLoaded)
                 .isPresent();
     }
-   
 
     @Execute
     public void execute(@Named(IServiceConstants.ACTIVE_SHELL) Shell activeShell,
@@ -146,7 +147,8 @@ public class ImportExtensionHandler {
         return Optional.of(dependency);
     }
 
-    protected Model loadMavenModel(MavenProjectHelper mavenProjectHelper, org.bonitasoft.studio.common.repository.model.IRepository currentRepository) {
+    protected Model loadMavenModel(MavenProjectHelper mavenProjectHelper,
+            org.bonitasoft.studio.common.repository.model.IRepository currentRepository) {
         try {
             return mavenProjectHelper.getMavenModel(currentRepository.getProject());
         } catch (CoreException e) {
@@ -204,6 +206,14 @@ public class ImportExtensionHandler {
                     extensionTypeHandler,
                     updateExtensionDecorator);
         }
+        try {
+            container.run(true, false,
+                    monitor -> new UpdateMavenProjectJob(new IProject[] { currentRepository.getProject() }, false, false,
+                            false, false, true)
+                            .run(monitor));
+        } catch (InvocationTargetException | InterruptedException e) {
+            BonitaStudioLog.error(e);
+        }
         return result;
     }
 
@@ -231,7 +241,7 @@ public class ImportExtensionHandler {
                     updateExtensionDecorator.preUpdate(monitor);
                     localDependenciesStore.install(dependencyLookup);
                     addDependency(mavenModel, dependency, monitor);
-                    if(updateExtensionDecorator.checkIssues(dependency, monitor)){
+                    if (updateExtensionDecorator.checkIssues(dependency, monitor)) {
                         updateExtensionDecorator.postUpdate(monitor);
                     }
                     monitor.done();
@@ -276,10 +286,11 @@ public class ImportExtensionHandler {
                     monitor.beginTask(Messages.installingExtensions, IProgressMonitor.UNKNOWN);
                     updateExtensionDecorator.preUpdate(monitor);
                     addDependency(mavenModel, dependency, monitor);
-                    if(updateExtensionDecorator.checkIssues(dependency, monitor)){
+                    if (updateExtensionDecorator.checkIssues(dependency, monitor)) {
                         updateExtensionDecorator.postUpdate(monitor);
                     }
                 });
+
                 if (updateExtensionDecorator.shouldValidateProject()) {
                     updateExtensionDecorator.validateDependenciesConstraints();
                 }
