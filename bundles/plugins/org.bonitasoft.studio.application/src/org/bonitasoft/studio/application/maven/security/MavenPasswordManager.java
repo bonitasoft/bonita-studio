@@ -12,7 +12,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.application.preference;
+package org.bonitasoft.studio.application.maven.security;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -44,7 +44,6 @@ public class MavenPasswordManager {
         if (securityFile == null) {
             securityFile = new File(SettingsXmlConfigurationProcessor.USER_MAVEN_CONFIGURATION_HOME,
                     "settings-security.xml");
-
             if (!securityFile.exists()) {
                 try {
                     securityFile.createNewFile();
@@ -65,7 +64,7 @@ public class MavenPasswordManager {
     public String encryptMasterPassword(String password) {
         try {
             if (password != null && !password.isEmpty()) {
-                return getEncrypter().encryptAndDecorate(password, DefaultSecDispatcher.SYSTEM_PROPERTY_SEC_LOCATION);
+                return getCypher().encryptAndDecorate(password, DefaultSecDispatcher.SYSTEM_PROPERTY_SEC_LOCATION);
             }
             return password;
         } catch (PlexusCipherException | CoreException e) {
@@ -82,20 +81,38 @@ public class MavenPasswordManager {
             if (password != null && !password.isEmpty()) {
                 Optional<String> currentMasterPassword = getCurrentMasterPassword();
                 if (currentMasterPassword.isPresent()) {
-                    PlexusCipher encrypter = getEncrypter();
-                    String masterPasswd = encrypter.decryptDecorated(currentMasterPassword.get(),
+                    var cypher = getCypher();
+                    String masterPasswd = cypher.decryptDecorated(currentMasterPassword.get(),
                             DefaultSecDispatcher.SYSTEM_PROPERTY_SEC_LOCATION);
-                    return encrypter.encryptAndDecorate(password, masterPasswd);
+                    return cypher.encryptAndDecorate(password, masterPasswd);
                 }
-                throw new IllegalStateException("A mester password is required to perform encryption.");
+                throw new IllegalStateException("A master password is required to perform encryption.");
             }
             return password;
         } catch (PlexusCipherException | CoreException e) {
             throw new RuntimeException(e);
         }
     }
+    
+    public String decryptPassword(String encryptedPassword) {
+        try {
+            var cypher = getCypher();
+            if (encryptedPassword != null && !encryptedPassword.isEmpty() && cypher.isEncryptedString(encryptedPassword)) {
+                Optional<String> currentMasterPassword = getCurrentMasterPassword();
+                if (currentMasterPassword.isPresent()) {
+                    String masterPasswd = cypher.decryptDecorated(currentMasterPassword.get(),
+                            DefaultSecDispatcher.SYSTEM_PROPERTY_SEC_LOCATION);
+                    return cypher.decrypt(encryptedPassword, masterPasswd);
+                }
+                throw new IllegalStateException("A master password is required to perform decryption.");
+            }
+            return encryptedPassword;
+        } catch (PlexusCipherException | CoreException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
-    protected PlexusCipher getEncrypter() throws CoreException {
+    protected PlexusCipher getCypher() throws CoreException {
         return MavenPlugin.getMaven().lookup(PlexusCipher.class);
     }
 

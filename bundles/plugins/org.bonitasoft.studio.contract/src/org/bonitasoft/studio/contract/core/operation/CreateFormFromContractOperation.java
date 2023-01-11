@@ -109,7 +109,7 @@ public class CreateFormFromContractOperation extends CreateUIDArtifactOperation 
                         Messages.createReadOnlWidgetsMessage,
                         Messages.createReadOnlWidgetsdetails,
                         new OpenSystemBrowserListener(FORM_GENERATION_DOCUMENTATION_LINK),
-                        SWT.NONE).getReturnCode();
+                        SWT.NONE);
                 buildReadOnlyAttributes = returnCode == 2;
             });
         }

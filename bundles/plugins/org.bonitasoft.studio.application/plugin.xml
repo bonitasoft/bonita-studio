@@ -229,6 +229,19 @@
                   visible="true">
             </separator>
             <command
+                  commandId="org.bonitasoft.studio.application.maven.testConnection.command"
+                  icon="icons/menuIcons/connectivity.png"
+                  style="push">
+               <parameter
+                     name="org.bonitasoft.studio.application.command.checkMavenConfiguration.showResult"
+                     value="true">
+               </parameter>
+            </command>
+            <separator
+                  name="org.bonitasoft.studio.application.help.separator5"
+                  visible="true">
+            </separator>
+            <command
                   commandId="org.bonitasoft.studio.application.openLog"
                   icon="icons/log.png"
                   label="%openLog_label"
@@ -1202,6 +1215,9 @@
       <startup
             class="org.bonitasoft.studio.application.BonitaStudioWorkbenchAdvisor">
       </startup>
+      <startup
+            class="org.bonitasoft.studio.application.maven.CheckMavenConfigurationStartup">
+      </startup>
    </extension>
    <extension
          point="org.eclipse.ui.contexts">
@@ -1605,7 +1621,7 @@
          point="org.eclipse.ui.preferencePages">
       <page
             category="org.bonitasoft.studio.preferences.pages.BPM"
-            class="org.bonitasoft.studio.application.preference.MavenPreferencePage"
+            class="org.bonitasoft.studio.application.maven.preference.MavenPreferencePage"
             id="org.bonitasoft.studio.preferences.maven"
             name="Maven">
          <keywordReference
@@ -1720,6 +1736,12 @@
                   pattern="Provided">
             </ignore>
          </extension>
+      </extension>
+      <extension
+            point="org.bonitasoft.studio.preferences.preferenceFieldEditorContribution">
+         <fieldEditor
+               class="org.bonitasoft.studio.application.maven.preference.TestMavenConnectionPreferenceContribution">
+         </fieldEditor>
       </extension>
 
 </plugin>

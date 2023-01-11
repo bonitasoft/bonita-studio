@@ -12,7 +12,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.application.preference;
+package org.bonitasoft.studio.application.maven.preference;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -26,6 +26,7 @@ import org.apache.maven.settings.Repository;
 import org.apache.maven.settings.RepositoryPolicy;
 import org.apache.maven.settings.Settings;
 import org.bonitasoft.studio.application.i18n.Messages;
+import org.bonitasoft.studio.application.maven.BonitaMavenConfigurationManager;
 import org.bonitasoft.studio.common.databinding.validator.EmptyInputValidator;
 import org.bonitasoft.studio.common.ui.jface.SWTBotConstants;
 import org.bonitasoft.studio.pics.Pics;
@@ -70,8 +71,6 @@ public class RepositoriesComposite extends Composite {
     public static final String REPOSITORIES_VIEWER_ID = "repositoriesViewer";
     public static final String ADD_REPOSITORY_BUTTON_ID = "addRepository";
     public static final String REMOVE_REPOSITORY_BUTTON_ID = "removeRepository";
-
-    public static final String BONITA_PROFILE_ID = "Bonita";
     public static final String DEFAULT_REPOSITORY_NAME = "myRepository";
 
     private TableViewer viewer;
@@ -154,14 +153,14 @@ public class RepositoriesComposite extends Composite {
 
     private Profile retrieveBonitaProfile() {
         return settingsObservable.getValue().getProfiles().stream()
-                .filter(profile -> Objects.equals(profile.getId(), BONITA_PROFILE_ID))
+                .filter(profile -> Objects.equals(profile.getId(), BonitaMavenConfigurationManager.BONITA_PROFILE_ID))
                 .findFirst()
                 .orElseGet(this::createBonitaProfile);
     }
 
     private Profile createBonitaProfile() {
         Profile profile = new Profile();
-        profile.setId(BONITA_PROFILE_ID);
+        profile.setId(BonitaMavenConfigurationManager.BONITA_PROFILE_ID);
         Activation activation = new Activation();
         activation.setActiveByDefault(true);
         profile.setActivation(activation);

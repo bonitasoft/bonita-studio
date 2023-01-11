@@ -33,6 +33,9 @@
     <elements xsi:type="commands:Command" xmi:id="_a7w1wOydEeybWZOTtQDoGQ" elementId="org.bonitasoft.studio.application.command.openExternalBrowser" commandName="">
       <parameters xmi:id="_eIa_AOydEeybWZOTtQDoGQ" elementId="org.bonitasoft.studio.application.command.openExternalBrowser.redirectId" name="Redirect URL ID" optional="false"/>
     </elements>
+    <elements xsi:type="commands:Command" xmi:id="_ygyu8IqhEe2DH_3IXShCMg" elementId="org.bonitasoft.studio.application.maven.testConnection.command" commandName="%testConnection">
+      <parameters xmi:id="_QpxwMIqsEe2DH_3IXShCMg" elementId="org.bonitasoft.studio.application.command.checkMavenConfiguration.showResult" name="Show result dialog"/>
+    </elements>
   </fragments>
   <fragments xsi:type="fragment:StringModelFragment" xmi:id="_NR20wKiaEemxstQeqTvXDA" featurename="handlers" parentElementId="org.eclipse.e4.legacy.ide.application">
     <elements xsi:type="commands:Handler" xmi:id="_6p_NQK0kEem8O8pWB8c8Fg" elementId="org.bonitasoft.studio.application.handler.deployArtifacts" contributionURI="bundleclass://org.bonitasoft.studio.application/org.bonitasoft.studio.application.handler.DeployArtifactsHandler" command="_yyuWEK0kEem8O8pWB8c8Fg"/>
@@ -47,6 +50,7 @@
     <elements xsi:type="commands:Handler" xmi:id="_t-zbEMhkEeu1UuXajEqDfg" elementId="org.bonitasoft.studio.application.update.gav.handler" contributionURI="bundleclass://org.bonitasoft.studio.application/org.bonitasoft.studio.application.handler.UpdateGavHandler" command="_oL198MhkEeu1UuXajEqDfg"/>
     <elements xsi:type="commands:Handler" xmi:id="_bI9ysOPdEeuJw-2qfH961g" elementId="org.bonitasoft.studio.application.show.extension.handler" contributionURI="bundleclass://org.bonitasoft.studio.application/org.bonitasoft.studio.application.handler.OpenExtensionViewHandler" command="_B-OBgOPdEeuJw-2qfH961g"/>
     <elements xsi:type="commands:Handler" xmi:id="_5C8EsOydEeybWZOTtQDoGQ" elementId="org.bonitasoft.studio.application.openExternalBrowser.handler" contributionURI="bundleclass://org.bonitasoft.studio.application/org.bonitasoft.studio.application.handler.OpenExternalBrowserHandler" command="_a7w1wOydEeybWZOTtQDoGQ"/>
+    <elements xsi:type="commands:Handler" xmi:id="_q6TCMIqiEe2DH_3IXShCMg" elementId="org.bonitasoft.studio.application.maven.testConnection.handler" contributionURI="bundleclass://org.bonitasoft.studio.application/org.bonitasoft.studio.application.maven.handler.TestMavenRepositoriesConnectionHandler" command="_ygyu8IqhEe2DH_3IXShCMg"/>
   </fragments>
   <fragments xsi:type="fragment:StringModelFragment" xmi:id="_7OSHQLFyEeuykI2WNDJFjw" featurename="addons" parentElementId="org.eclipse.e4.legacy.ide.application">
     <elements xsi:type="application:Addon" xmi:id="_Cpy2kLFzEeuykI2WNDJFjw" elementId="org.bonitasoft.studio.application.definition.participant.factory.addon" contributionURI="bundleclass://org.bonitasoft.studio.application/org.bonitasoft.studio.application.operation.extension.participant.definition.DefinitionUpdateParticipantFactory"/>

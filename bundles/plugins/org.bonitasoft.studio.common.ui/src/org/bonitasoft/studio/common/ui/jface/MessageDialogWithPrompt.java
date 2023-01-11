@@ -14,6 +14,7 @@
  */
 package org.bonitasoft.studio.common.ui.jface;
 
+import java.util.LinkedHashMap;
 import java.util.Optional;
 
 import org.bonitasoft.studio.common.Messages;
@@ -42,7 +43,7 @@ public class MessageDialogWithPrompt extends MessageDialogWithToggle {
 
     private String detailsMessage;
     private boolean withToggle = true;
-    private Optional<Listener> linkSelectionListener = Optional.empty();
+    protected Optional<Listener> linkSelectionListener = Optional.empty();
 
     public MessageDialogWithPrompt(Shell parentShell, String dialogTitle,
             Image image, String message, int dialogImageType,
@@ -63,6 +64,22 @@ public class MessageDialogWithPrompt extends MessageDialogWithToggle {
             boolean toggleState) {
         super(parentShell, dialogTitle, image, message, dialogImageType,
                 dialogButtonLabels, defaultIndex, toggleMessage, toggleState);
+        this.linkSelectionListener = Optional.ofNullable(linkSelectionListener);
+        this.withToggle = toggleMessage != null;
+    }
+    
+    protected MessageDialogWithPrompt(Shell parentShell,
+            String dialogTitle,
+            Image image, 
+            String message,
+            Listener linkSelectionListener,
+            int dialogImageType,
+            LinkedHashMap<String, Integer> buttonLabelToIdMap,
+            int defaultIndex,
+            String toggleMessage,
+            boolean toggleState) {
+        super(parentShell, dialogTitle, image, message, dialogImageType,
+                buttonLabelToIdMap, defaultIndex, toggleMessage, toggleState);
         this.linkSelectionListener = Optional.ofNullable(linkSelectionListener);
         this.withToggle = toggleMessage != null;
     }
@@ -169,7 +186,7 @@ public class MessageDialogWithPrompt extends MessageDialogWithToggle {
         return dialog;
     }
 
-    public static MessageDialogWithPrompt openWithDetails(int kind,
+    public static int openWithDetails(int kind,
             Shell parent,
             String title,
             String message,
@@ -188,11 +205,10 @@ public class MessageDialogWithPrompt extends MessageDialogWithToggle {
         dialog.setPrefStore(store);
         dialog.setPrefKey(key);
         dialog.setDetails(detailMessage);
-        dialog.open();
-        return dialog;
+        return dialog.open();
     }
 
-    public static MessageDialogWithPrompt openWithDetails(int kind,
+    public static int openWithDetails(int kind,
             Shell parent,
             String title,
             String message,
@@ -212,8 +228,7 @@ public class MessageDialogWithPrompt extends MessageDialogWithToggle {
         style &= SWT.SHEET;
         dialog.setShellStyle(dialog.getShellStyle() | style);
         dialog.setDetails(detailMessage);
-        dialog.open();
-        return dialog;
+        return dialog.open();
     }
 
     public void setDetails(String detailsMessage) {
@@ -265,6 +280,7 @@ public class MessageDialogWithPrompt extends MessageDialogWithToggle {
                 case IDialogConstants.YES_ID:
                 case IDialogConstants.YES_TO_ALL_ID:
                 case IDialogConstants.PROCEED_ID:
+                case IDialogConstants.IGNORE_ID:
                 case IDialogConstants.OK_ID:
                     prefStore.setValue(prefKey, toggleState);
                     break;
@@ -291,7 +307,7 @@ public class MessageDialogWithPrompt extends MessageDialogWithToggle {
 
             Section section = new Section(parent,
                     Section.TWISTIE | Section.NO_TITLE_FOCUS_BOX | Section.CLIENT_INDENT);
-            section.setText(Messages.moreDetails);
+            section.setText(getDetailsSectionTitle());
             section.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
             section.setBackground(parent.getBackground());
 
@@ -320,5 +336,9 @@ public class MessageDialogWithPrompt extends MessageDialogWithToggle {
             return section;
         }
         return super.createCustomArea(parent);
+    }
+
+    protected String getDetailsSectionTitle() {
+        return Messages.moreDetails;
     }
 }

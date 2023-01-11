@@ -408,7 +408,36 @@ public class Messages extends NLS {
     public static String switchRepositoryDialogTitle;
     public static String switchRepository;
     public static String loadingProjectOverview;
+    public static String mavenCentralConnection;
+    public static String bonitaArtifactRepositoryConnection;
+    public static String wizardConnectionMainTitle;
+    public static String wizardConnectionStartTitle;
+    public static String wizardConnectionStartDescription;
+    public static String wizardConnectionStartMainText;
+    public static String wizardConnectionStartNextText;
+    public static String wizardConnectionProxyTitle;
+    public static String wizardConnectionProxyDescription;
+    public static String wizardConnectionProxyOptional;
+    public static String wizardConnectionMirrorTitle;
+    public static String wizardConnectionMirrorDescription;
+    public static String wizardConnectionMirrorOptional;
+    public static String wizardConnectionBARTitle;
+    public static String wizardConnectionBARDescription;
+    public static String wizardConnectionBARMainText;
+    public static String wizardConnectionBARDocumentationLink;
+    public static String token;
+    public static String ignoreConnectionTestAtStartup;
+    public static String cannotReachBonitaArtifactRepositoryMessage;
+    public static String connectionFailedTitle;
+    public static String connectionFailedMessage;
+    public static String possibleReasons;
+    public static String testConnectionSuccessTitle;
+    public static String testConnectionSuccessMsg;
+    public static String testingConnection;
+    public static String noAuthenticationForBar;
+    public static String invalidBarCredentials;
 
+    
     static {
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);
     }

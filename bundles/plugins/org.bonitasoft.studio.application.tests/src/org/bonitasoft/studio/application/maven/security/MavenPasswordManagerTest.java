@@ -1,4 +1,4 @@
-package org.bonitasoft.studio.application.preference;
+package org.bonitasoft.studio.application.maven.security;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.doReturn;
@@ -26,7 +26,7 @@ public class MavenPasswordManagerTest {
 
         PlexusCipher encrypter = new DefaultPlexusCipher();
         doReturn(securityFile).when(pwdManager).getSecurityFile();
-        doReturn(encrypter).when(pwdManager).getEncrypter();
+        doReturn(encrypter).when(pwdManager).getCypher();
     }
 
     @AfterEach
@@ -43,16 +43,32 @@ public class MavenPasswordManagerTest {
         pwdManager.updateMasterPassword(encryptedMasterPassword);
 
         Optional<String> masterPwd = pwdManager.getCurrentMasterPassword();
-        assertThat(masterPwd).isPresent();
-        assertThat(masterPwd.get()).isEqualTo(encryptedMasterPassword);
+        assertThat(masterPwd)
+            .isPresent()
+            .hasValue(encryptedMasterPassword);
 
         String newEncryptedMasterPassword = pwdManager.encryptMasterPassword("adrien");
         assertThat(newEncryptedMasterPassword).isNotEqualTo(encryptedMasterPassword);
         pwdManager.updateMasterPassword(newEncryptedMasterPassword);
 
         Optional<String> newMasterPwd = pwdManager.getCurrentMasterPassword();
-        assertThat(newMasterPwd).isPresent();
-        assertThat(newMasterPwd.get()).isEqualTo(newEncryptedMasterPassword);
+        assertThat(newMasterPwd)
+            .isPresent()
+            .hasValue(newEncryptedMasterPassword);
+    }
+    
+    @Test
+    public void should_encrypt_and_decrypt_password() {
+        assertThat(securityFile).exists();
+        assertThat(pwdManager.getCurrentMasterPassword()).isEmpty();
+
+        String encryptedMasterPassword = pwdManager.encryptMasterPassword("Adrien");
+        pwdManager.updateMasterPassword(encryptedMasterPassword);
+
+        var encryptedPassowrd = pwdManager.encryptPassword("1Mi$$U");
+        assertThat(encryptedPassowrd).isNotEqualTo("1Mi$$U");
+        assertThat(pwdManager.decryptPassword(encryptedPassowrd))
+            .isEqualTo("1Mi$$U");
     }
 
 }

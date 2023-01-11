@@ -25,7 +25,6 @@ import org.apache.maven.settings.Repository;
 import org.apache.maven.settings.Server;
 import org.apache.maven.settings.Settings;
 import org.apache.maven.settings.io.DefaultSettingsReader;
-import org.bonitasoft.studio.application.preference.RepositoriesComposite;
 import org.bonitasoft.studio.swtbot.framework.application.BotApplicationWorkbenchWindow;
 import org.bonitasoft.studio.swtbot.framework.preferences.BotPreferencesDialog;
 import org.bonitasoft.studio.swtbot.framework.preferences.maven.BotMavenConfigurationPage;
@@ -181,7 +180,7 @@ public class MavenConfigurationIT {
         assertThat(settings.getProfiles()).hasSize(1);
 
         Profile bonitaProfile = settings.getProfiles().get(0);
-        assertThat(bonitaProfile.getId()).isEqualTo(RepositoriesComposite.BONITA_PROFILE_ID);
+        assertThat(bonitaProfile.getId()).isEqualTo("Bonita");
         assertThat(bonitaProfile.getRepositories()).hasSize(1);
 
         Repository repository = bonitaProfile.getRepositories().get(0);

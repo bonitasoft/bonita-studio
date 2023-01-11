@@ -67,6 +67,7 @@ public class ImportBonitaProjectOperation implements IWorkspaceRunnable {
             throw new CoreException(
                     Status.error(String.format("A project with id %s already exists in the workspace.", projectId)));
         }
+
         var projectInWs = ResourcesPlugin.getWorkspace().getRoot().getLocation().append(projectId).toFile();
         if (!Objects.equals(projectRoot.toPath(), projectInWs.toPath())) {
             try {
@@ -91,21 +92,20 @@ public class ImportBonitaProjectOperation implements IWorkspaceRunnable {
         var projectImportConfiguration = new BonitaProjectImportConfiguration(projectId);
         projectConfigurationManager.importProjects(
                 flatten(localProjectScanner.getProjects()).stream()
-                    .filter(bdmProjects()).collect(Collectors.toList()),
+                        .filter(bdmProjects()).collect(Collectors.toList()),
                 projectImportConfiguration, monitor);
-        
+
         projectConfigurationManager.importProjects(
                 flatten(localProjectScanner.getProjects()).stream()
-                    .filter(Predicate.not(bdmProjects())).collect(Collectors.toList()),
+                        .filter(Predicate.not(bdmProjects())).collect(Collectors.toList()),
                 projectImportConfiguration, monitor);
     }
-    
+
     private Predicate<? super MavenProjectInfo> bdmProjects() {
         return mpf -> mpf.getPomFile().toPath().toString().contains("/model/pom.xml")
                 || mpf.getPomFile().toPath().toString().contains("/dao-client/pom.xml")
                 || mpf.getPomFile().toPath().toString().contains("bdm/pom.xml");
     }
-    
 
     public BonitaProject getBonitaProject() {
         return BonitaProject.create(projectId);

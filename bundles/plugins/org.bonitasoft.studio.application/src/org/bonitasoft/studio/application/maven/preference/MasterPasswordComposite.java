@@ -12,12 +12,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.application.preference;
+package org.bonitasoft.studio.application.maven.preference;
 
 import static org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory.convertUpdateValueStrategy;
 import static org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory.updateValueStrategy;
 
 import org.bonitasoft.studio.application.i18n.Messages;
+import org.bonitasoft.studio.application.maven.security.MavenPasswordManager;
 import org.bonitasoft.studio.preferences.BonitaThemeConstants;
 import org.bonitasoft.studio.ui.browser.OpenSystemBrowserListener;
 import org.bonitasoft.studio.ui.widget.TextWidget;
