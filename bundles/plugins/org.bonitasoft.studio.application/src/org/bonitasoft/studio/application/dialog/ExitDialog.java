@@ -105,6 +105,7 @@ public class ExitDialog extends MessageDialogWithToggle {
         final Link messageLabel = new Link(composite, getMessageLabelStyle());
         messageLabel.setText(NLS.bind(Messages.exitWarningMessage,
                 new String[] { org.bonitasoft.studio.common.Messages.bonitaStudioModuleName,
+                        org.bonitasoft.studio.common.Messages.uiDesignerModuleName,
                         org.bonitasoft.studio.common.Messages.uiDesignerModuleName }));
         messageLabel.addSelectionListener(new SelectionAdapter() {
 

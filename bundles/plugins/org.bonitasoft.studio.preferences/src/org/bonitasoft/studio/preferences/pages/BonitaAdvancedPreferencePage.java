@@ -19,10 +19,7 @@ import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.bonitasoft.studio.preferences.i18n.Messages;
-import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.preference.BooleanFieldEditor;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Label;
 
 /**
  * @author Romain Bioteau
@@ -57,15 +54,6 @@ public class BonitaAdvancedPreferencePage extends AbstractBonitaPreferencePage {
         var notifyBdmDeploymentRequired = new BooleanFieldEditor(BonitaPreferenceConstants.NOTIFY_BDM_DEPLOYMENT_REQUIRED,
                 Messages.notifyBdmDeploymentRequiredMessage, getFieldEditorParent());
         addField(notifyBdmDeploymentRequired);
-
-        new Label(getFieldEditorParent(), SWT.NONE);
-        new Label(getFieldEditorParent(), SWT.NONE);
-
-        final Label separator = new Label(getFieldEditorParent(), SWT.SEPARATOR | SWT.HORIZONTAL);
-        separator.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).span(2, 1).create());
-
-        new Label(getFieldEditorParent(), SWT.NONE);
-        new Label(getFieldEditorParent(), SWT.NONE);
 
         createPreferenceEditorContributions(ADVANCED_CONTRIBUTOR_ID);
     }

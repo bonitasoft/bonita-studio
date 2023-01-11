@@ -21,6 +21,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven-resources-plugin.version>3.3.0</maven-resources-plugin.version>
         <maven-deploy-plugin.version>3.0.0</maven-deploy-plugin.version>
+        <maven-dependency-plugin.version>3.3.0</maven-dependency-plugin.version>
     </properties>
     
      <!-- 
@@ -215,6 +216,10 @@
               <version>${maven-deploy-plugin.version}</version>
             </plugin>
             <plugin>
+              <artifactId>maven-dependency-plugin</artifactId>
+              <version>${maven-dependency-plugin.version}</version>
+            </plugin>
+            <plugin>
               <artifactId>maven-shade-plugin</artifactId>
               <version>${maven-shade-plugin.version}</version>
             </plugin>
@@ -294,6 +299,9 @@
             </plugin>
             <plugin>
               <artifactId>maven-shade-plugin</artifactId>
+            </plugin>
+             <plugin>
+              <artifactId>maven-dependency-plugin</artifactId>
             </plugin>
             <plugin>
               <groupId>org.codehaus.mojo</groupId>

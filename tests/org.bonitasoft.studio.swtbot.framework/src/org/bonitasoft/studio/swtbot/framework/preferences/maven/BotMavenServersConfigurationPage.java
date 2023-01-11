@@ -16,7 +16,7 @@ package org.bonitasoft.studio.swtbot.framework.preferences.maven;
 
 import org.assertj.core.util.Strings;
 import org.bonitasoft.studio.application.i18n.Messages;
-import org.bonitasoft.studio.application.preference.ServersComposite;
+import org.bonitasoft.studio.application.maven.preference.ServersComposite;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTable;
 

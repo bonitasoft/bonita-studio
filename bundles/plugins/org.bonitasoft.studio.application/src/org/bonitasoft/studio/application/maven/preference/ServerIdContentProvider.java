@@ -12,7 +12,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.application.preference.provider;
+package org.bonitasoft.studio.application.maven.preference;
 
 import java.util.Collection;
 import java.util.stream.Stream;
@@ -30,7 +30,7 @@ public class ServerIdContentProvider {
     private IObservableList<Profile> profilesObservable;
     private IObservableList<Mirror> mirrorsObservable;
 
-    public ServerIdContentProvider(IObservableValue<Settings> settingsObservable) {
+    ServerIdContentProvider(IObservableValue<Settings> settingsObservable) {
         profilesObservable = PojoProperties.list(Settings.class, "profiles", Profile.class)
                 .observeDetail(settingsObservable);
         mirrorsObservable = PojoProperties.list(Settings.class, "mirrors", Mirror.class)
