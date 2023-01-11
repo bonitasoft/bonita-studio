@@ -281,7 +281,7 @@ public class ServerPreferencePage extends AbstractBonitaPreferencePage implement
 
                 @Override
                 protected IStatus run(IProgressMonitor monitor) {
-                    BOSWebServerManager.getInstance().resetServer(monitor);
+                    BOSWebServerManager.getInstance().resetServer(true, monitor);
                     return Status.OK_STATUS;
                 }
             }.schedule();

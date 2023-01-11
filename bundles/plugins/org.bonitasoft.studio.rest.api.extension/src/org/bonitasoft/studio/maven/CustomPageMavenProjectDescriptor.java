@@ -19,6 +19,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Properties;
 
@@ -120,15 +121,17 @@ public abstract class CustomPageMavenProjectDescriptor {
 
     public Optional<MavenProject> getMavenProject() {
         return Optional.ofNullable(project)
-                .flatMap(p -> Optional.ofNullable(MavenPlugin.getMavenProjectRegistry().getProject(p)))
-                .flatMap(facade -> {
+                .map(p -> MavenPlugin.getMavenProjectRegistry().getProject(p))
+                .filter(Objects::nonNull)
+                .map(facade -> {
                     try {
-                        return Optional.ofNullable(facade.getMavenProject(AbstractRepository.NULL_PROGRESS_MONITOR));
+                        return facade.getMavenProject(AbstractRepository.NULL_PROGRESS_MONITOR);
                     } catch (CoreException e) {
                         BonitaStudioLog.error(e);
                         return null;
                     }
-                });
+                })
+                .filter(Objects::nonNull);
     }
 
     public String getArtifactId() {
