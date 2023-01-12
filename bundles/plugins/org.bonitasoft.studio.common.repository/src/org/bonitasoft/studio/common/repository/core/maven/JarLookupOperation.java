@@ -25,6 +25,11 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Properties;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.stream.Collectors;
 
 import org.apache.maven.Maven;
@@ -33,13 +38,15 @@ import org.apache.maven.execution.BuildSummary;
 import org.apache.maven.execution.MavenExecutionRequest;
 import org.apache.maven.execution.MavenExecutionResult;
 import org.bonitasoft.studio.common.FileUtil;
-import org.bonitasoft.studio.common.repository.AbstractRepository;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.Messages;
 import org.bonitasoft.studio.common.repository.core.InputStreamSupplier;
 import org.bonitasoft.studio.common.repository.core.maven.migration.model.DependencyLookup;
+import org.bonitasoft.studio.common.repository.core.maven.repository.MavenRepositories;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.m2e.core.MavenPlugin;
@@ -98,37 +105,39 @@ public class JarLookupOperation implements IRunnableWithProgress {
         Path tmpLookupOutputFolder = null;
         try {
             tmpLookupOutputFolder = Files.createTempDirectory("depLookup");
-            MavenExecutionResult runLookupPlugin = runLookupPlugin(fileToLookup.toTempFile().toPath(),
-                    tmpLookupOutputFolder);
-            BuildSummary buildSummary = runLookupPlugin.getBuildSummary(runLookupPlugin.getProject());
-            if (buildSummary instanceof BuildSuccess) {
-                String line = "";
-                try (BufferedReader br = new BufferedReader(
-                        new FileReader(tmpLookupOutputFolder.resolve("dependency-status.csv").toFile()))) {
-                    line = br.readLine(); // Skip header line
-                    while ((line = br.readLine()) != null) {
-                        String[] csvData = line.split(",");
-                        var dl = DependencyLookup.fromCSV(csvData);
-                        var pomProperties = DependencyLookup.readPomProperties(fileToLookup.toTempFile());
-                        if (pomProperties.isPresent()) {
-                            return checkGAVConsistency(pomProperties.get(), dl);
+            try {
+                MavenExecutionResult result = runLookupPlugin(fileToLookup.toTempFile().toPath(),
+                        tmpLookupOutputFolder);
+                BuildSummary buildSummary = result.getBuildSummary(result.getProject());
+                if (buildSummary instanceof BuildSuccess) {
+                    String line = "";
+                    try (BufferedReader br = new BufferedReader(
+                            new FileReader(tmpLookupOutputFolder.resolve("dependency-status.csv").toFile()))) {
+                        line = br.readLine(); // Skip header line
+                        while ((line = br.readLine()) != null) {
+                            String[] csvData = line.split(",");
+                            var dl = DependencyLookup.fromCSV(csvData);
+                            var pomProperties = DependencyLookup.readPomProperties(fileToLookup.toTempFile());
+                            if (pomProperties.isPresent()) {
+                                return checkGAVConsistency(pomProperties.get(), dl);
+                            }
+                            return dl;
                         }
-                        return dl;
                     }
+                } else if (!result.getExceptions().isEmpty()) {
+                    Throwable throwable = result.getExceptions().get(0);
+                    throw new CoreException(Status.error( "Dependency lookup fails for " + fileToLookup.getName(), throwable));
                 }
-            } else if (!runLookupPlugin.getExceptions().isEmpty()) {
-                Throwable throwable = runLookupPlugin.getExceptions().get(0);
-                throw new CoreException(new org.eclipse.core.runtime.Status(IStatus.ERROR,
-                        getClass(),
-                        "Dependency lookup fails for " + fileToLookup.getName(),
-                        throwable));
+                throw new CoreException(Status.error( "Dependency lookup fails for " + fileToLookup.getName()));
+            } catch (InterruptedException | ExecutionException | TimeoutException e) {
+               BonitaStudioLog.error(e);
+               return DependencyLookup.fromCSV(new String[] { fileToLookup.toTempFile().getAbsolutePath(), null, DependencyLookup.Status.NOT_FOUND.name() } );
             }
         } finally {
             if (tmpLookupOutputFolder != null) {
                 FileUtil.deleteDir(tmpLookupOutputFolder.toFile());
             }
         }
-        return null;
     }
 
     private DependencyLookup checkGAVConsistency(Properties properties, DependencyLookup dl) {
@@ -144,7 +153,7 @@ public class JarLookupOperation implements IRunnableWithProgress {
     }
 
     private MavenExecutionResult runLookupPlugin(Path filePath, Path outputDir)
-            throws CoreException {
+            throws CoreException, InterruptedException, ExecutionException, TimeoutException {
         final IMavenExecutionContext context = maven().createExecutionContext();
         final MavenExecutionRequest request = context.getExecutionRequest();
         request.setGoals(List.of(String.format("%s:%s:%s:%s",
@@ -152,6 +161,7 @@ public class JarLookupOperation implements IRunnableWithProgress {
                 LOOKUP_PLUGIN_ARTIFACT_ID,
                 LOOKUP_PLUGIN_VERSION,
                 LOOKUP_GOAL)));
+        request.setLocalRepository(MavenRepositories.bundledRepository());
         Properties userProperties = new Properties();
         userProperties.setProperty("artifactLocation", filePath.toFile().getAbsolutePath());
         userProperties.setProperty("outputDir", outputDir.toFile().getAbsolutePath());
@@ -159,14 +169,20 @@ public class JarLookupOperation implements IRunnableWithProgress {
             userProperties.setProperty("repositoryUrl", repositories.stream().collect(Collectors.joining(",")));
         }
         request.setUserProperties(userProperties);
-        return context.execute(new ICallable<MavenExecutionResult>() {
+        var executor = Executors.newSingleThreadExecutor();
+        Callable<MavenExecutionResult> task = () -> context.execute(new ICallable<MavenExecutionResult>() {
 
             @Override
             public MavenExecutionResult call(final IMavenExecutionContext context, final IProgressMonitor innerMonitor)
                     throws CoreException {
                 return maven().lookup(Maven.class).execute(request);
             }
-        }, AbstractRepository.NULL_PROGRESS_MONITOR);
+        }, new NullProgressMonitor());
+        
+        // There is no timeout in in the above plugin implemented
+        // It can cause the Studio to stall if one of the repository is not responding
+        // Here we force a timeout on the lookup task to avoid this.
+        return executor.submit(task).get(10, TimeUnit.SECONDS);
     }
 
     public DependencyLookup getResult() {

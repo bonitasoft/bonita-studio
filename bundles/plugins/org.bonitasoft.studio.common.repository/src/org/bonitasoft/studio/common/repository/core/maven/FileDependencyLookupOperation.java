@@ -124,7 +124,7 @@ public class FileDependencyLookupOperation implements IRunnableWithProgress {
                     result.setVersion(gav.getVersion());
                     result.setClassifier(gav.getClassifier());
                 } else {
-                    var fileExtension = name.toLowerCase().endsWith(".jar") | name.toLowerCase().endsWith(".zip")
+                    var fileExtension = name.toLowerCase().endsWith(".jar") || name.toLowerCase().endsWith(".zip")
                             ? name.substring(name.length() - 3) : null;
                     if (fileExtension != null) {
                         Pattern pattern = Pattern.compile(String.format("^(.+?)-(\\d.*?)\\.%s$", fileExtension));

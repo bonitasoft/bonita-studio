@@ -262,6 +262,24 @@
                             <version>2.3.0</version>
                             <repositoryType>PLUGIN</repositoryType>
                         </DynamicDependency>
+                        <DynamicDependency>
+                            <groupId>org.apache.httpcomponents</groupId>
+                            <artifactId>httpclient</artifactId>
+                            <version>4.5.2</version>
+                            <repositoryType>PLUGIN</repositoryType>
+                        </DynamicDependency>
+                        <DynamicDependency>
+                            <groupId>commons-codec</groupId>
+                            <artifactId>commons-codec</artifactId>
+                            <version>1.10</version>
+                            <repositoryType>PLUGIN</repositoryType>
+                        </DynamicDependency>
+                        <DynamicDependency>
+                            <groupId>org.apache.commons</groupId>
+                            <artifactId>commons-lang3</artifactId>
+                            <version>3.4</version>
+                            <repositoryType>PLUGIN</repositoryType>
+                        </DynamicDependency>
                     </dynamicDependencies>
                 </configuration>
             </plugin>
