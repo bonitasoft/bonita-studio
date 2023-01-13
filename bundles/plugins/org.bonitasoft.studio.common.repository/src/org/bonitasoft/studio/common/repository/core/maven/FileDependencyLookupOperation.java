@@ -53,9 +53,7 @@ public class FileDependencyLookupOperation implements IRunnableWithProgress {
 
     @Override
     public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-        JarLookupOperation jarLookupOperation = new JarLookupOperation(fileToLookup);
-        repositories.stream()
-                .forEach(jarLookupOperation::addRemoteRespository);
+        var jarLookupOperation = new MavenCentralJarLookupOperation(fileToLookup);
         monitor.setTaskName(String.format(Messages.lookupDependencyFor, fileToLookup.getName()));
         jarLookupOperation.run(new NullProgressMonitor());
         var status = jarLookupOperation.getStatus();

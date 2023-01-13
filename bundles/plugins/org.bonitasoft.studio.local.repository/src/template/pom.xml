@@ -178,11 +178,6 @@
             <artifactId>bonita-business-data-client-resources</artifactId>
             <version>${bonita.runtime.version}</version>
         </dependency>
-        <dependency>
-            <groupId>com.codspire.plugins</groupId>
-            <artifactId>artifact-lookup-maven-plugin</artifactId>
-            <version>0.6.0</version>
-        </dependency>
     </dependencies>
     <build>
         <pluginManagement>
@@ -260,24 +255,6 @@
                             <groupId>org.sonatype.sisu.inject</groupId>
                             <artifactId>guice-plexus-shim</artifactId>
                             <version>2.3.0</version>
-                            <repositoryType>PLUGIN</repositoryType>
-                        </DynamicDependency>
-                        <DynamicDependency>
-                            <groupId>org.apache.httpcomponents</groupId>
-                            <artifactId>httpclient</artifactId>
-                            <version>4.5.2</version>
-                            <repositoryType>PLUGIN</repositoryType>
-                        </DynamicDependency>
-                        <DynamicDependency>
-                            <groupId>commons-codec</groupId>
-                            <artifactId>commons-codec</artifactId>
-                            <version>1.10</version>
-                            <repositoryType>PLUGIN</repositoryType>
-                        </DynamicDependency>
-                        <DynamicDependency>
-                            <groupId>org.apache.commons</groupId>
-                            <artifactId>commons-lang3</artifactId>
-                            <version>3.4</version>
                             <repositoryType>PLUGIN</repositoryType>
                         </DynamicDependency>
                     </dynamicDependencies>
