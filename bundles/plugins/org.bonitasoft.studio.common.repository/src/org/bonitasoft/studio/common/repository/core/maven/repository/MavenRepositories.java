@@ -14,15 +14,20 @@
  */
 package org.bonitasoft.studio.common.repository.core.maven.repository;
 
+import java.io.File;
+import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URL;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 
 import org.apache.maven.artifact.repository.ArtifactRepository;
+import org.apache.maven.artifact.repository.ArtifactRepositoryPolicy;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.m2e.core.MavenPlugin;
 import org.eclipse.m2e.core.embedder.IMaven;
@@ -30,6 +35,7 @@ import org.eclipse.m2e.core.embedder.IMaven;
 public class MavenRepositories {
 
     private static final String INTERNAL_REPOSITORY = "internal-repository";
+    private static final String LOCAL_REPOSITORY_ID = "local";
 
     /**
      * Located in the studio workspace metadata. Used internally to determine if a dependency is accessible or not.
@@ -44,9 +50,48 @@ public class MavenRepositories {
                         .findFirst()
                         .orElseThrow();
             }
+            var policy = new ArtifactRepositoryPolicy();
+            policy.setUpdatePolicy(ArtifactRepositoryPolicy.UPDATE_POLICY_NEVER);
+            internalRepository.setReleaseUpdatePolicy(policy);
+            internalRepository.setSnapshotUpdatePolicy(policy);
             return internalRepository;
         } catch (MalformedURLException | CoreException e) {
             BonitaStudioLog.error(e);
+        }
+        return null;
+    }
+
+    public static ArtifactRepository bundledRepository() {
+        try {
+            File rootFolder = getBundledRepositoryRootFolder();
+            if (rootFolder == null) {
+                BonitaStudioLog.warning("No local repository bundled with Studio binary",
+                        CommonRepositoryPlugin.PLUGIN_ID);
+                return null;
+            }
+            ArtifactRepository internalRepository = maven().createArtifactRepository(LOCAL_REPOSITORY_ID,
+                    URLDecoder.decode(rootFolder.toURI().toURL().toString(), StandardCharsets.UTF_8));
+            if (!LOCAL_REPOSITORY_ID.equals(internalRepository.getId())) { // Check if the repository is mirrored 
+                internalRepository = internalRepository.getMirroredRepositories().stream()
+                        .filter(repo -> LOCAL_REPOSITORY_ID.equals(repo.getId()))
+                        .findFirst()
+                        .orElseThrow();
+            }
+            var policy = new ArtifactRepositoryPolicy();
+            policy.setUpdatePolicy(ArtifactRepositoryPolicy.UPDATE_POLICY_NEVER);
+            internalRepository.setReleaseUpdatePolicy(policy);
+            internalRepository.setSnapshotUpdatePolicy(policy);
+            return internalRepository;
+        } catch (Exception e) {
+            BonitaStudioLog.error(e);
+            return null;
+        }
+    }
+
+    public static File getBundledRepositoryRootFolder() throws IOException {
+        URL repositoryURL = CommonRepositoryPlugin.getDefault().getBundle().getResource("/repository/");
+        if (repositoryURL != null) {
+            return new File(FileLocator.toFileURL(repositoryURL).getFile());
         }
         return null;
     }
@@ -58,6 +103,21 @@ public class MavenRepositories {
 
     static IMaven maven() {
         return MavenPlugin.getMaven();
+    }
+    
+    public static String[] listBonitaRuntimeBomVersions() throws IOException{
+        File rootFolder = MavenRepositories.getBundledRepositoryRootFolder();
+        if(rootFolder == null) {
+            return new String[0];
+        }
+        File bomArtifactFolder = rootFolder.toPath()
+            .resolve("org")
+            .resolve("bonitasoft")
+            .resolve("runtime")
+            .resolve("bonita-runtime-bom")
+            .toFile();
+        
+        return bomArtifactFolder.list();
     }
 
 }

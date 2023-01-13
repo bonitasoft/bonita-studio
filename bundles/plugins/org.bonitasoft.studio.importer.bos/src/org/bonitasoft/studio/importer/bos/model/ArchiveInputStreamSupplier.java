@@ -79,7 +79,7 @@ public class ArchiveInputStreamSupplier implements InputStreamSupplier {
     }
 
     @Override
-    public void close() throws Exception {
+    public void close() throws IOException {
         if(tempFile != null) {
             Files.deleteIfExists(tempFile);
         }
