@@ -25,6 +25,7 @@ import org.bonitasoft.studio.common.repository.core.InputStreamSupplier;
 import org.bonitasoft.studio.common.repository.core.maven.migration.model.DependencyLookup;
 import org.bonitasoft.studio.common.repository.core.maven.migration.model.DependencyLookup.Status;
 import org.bonitasoft.studio.common.repository.core.maven.migration.model.GAV;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
@@ -52,90 +53,89 @@ public class FileDependencyLookupOperation implements IRunnableWithProgress {
 
     @Override
     public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-        JarLookupOperation jarLookupOperation = new JarLookupOperation(fileToLookup);
-        repositories.stream()
-                .forEach(jarLookupOperation::addRemoteRespository);
+        var jarLookupOperation = new MavenCentralJarLookupOperation(fileToLookup);
         monitor.setTaskName(String.format(Messages.lookupDependencyFor, fileToLookup.getName()));
         jarLookupOperation.run(new NullProgressMonitor());
         var status = jarLookupOperation.getStatus();
-        if (status.isOK()) {
-            result = jarLookupOperation.getResult();
-            if (result.getStatus() == Status.FOUND
-                    && DependencyLookup.guessClassifier(fileToLookup.getName(), result.getGAV()) != null) {
-                GAV gavWithClassifier = result.getGAV();
-                gavWithClassifier
-                        .setClassifier(DependencyLookup.guessClassifier(fileToLookup.getName(), result.getGAV()));
-                var dependencyGetOperation = new DependencyGetOperation(gavWithClassifier);
+        if (!status.isOK()) {
+            throw new InvocationTargetException(new CoreException(status));
+        }
+        result = jarLookupOperation.getResult();
+        if (result.getStatus() == Status.FOUND
+                && DependencyLookup.guessClassifier(fileToLookup.getName(), result.getGAV()) != null) {
+            GAV gavWithClassifier = result.getGAV();
+            gavWithClassifier
+                    .setClassifier(DependencyLookup.guessClassifier(fileToLookup.getName(), result.getGAV()));
+            var dependencyGetOperation = new DependencyGetOperation(gavWithClassifier);
+            repositories.stream()
+                    .forEach(dependencyGetOperation::addRemoteRespository);
+            monitor.setTaskName(String.format(Messages.lookupDependencyFor, result.getGAV()));
+            dependencyGetOperation.run(new NullProgressMonitor());
+            status = dependencyGetOperation.getStatus();
+            if (status.isOK() && dependencyGetOperation.getResult() != null) {
+                result = dependencyGetOperation.getResult();
+            }
+        } else if (result.getStatus() == Status.NOT_FOUND) {
+            GAV gav = DependencyLookup.readPomProperties(fileToLookup.toTempFile())
+                    .map(properties -> new GAV(properties.getProperty("groupId"),
+                            properties.getProperty("artifactId"),
+                            properties.getProperty("version")))
+                    .orElse(null);
+            if (gav != null) {
+                var dependencyGetOperation = new DependencyGetOperation(gav);
                 repositories.stream()
                         .forEach(dependencyGetOperation::addRemoteRespository);
-                monitor.setTaskName(String.format(Messages.lookupDependencyFor, result.getGAV()));
+                monitor.setTaskName(String.format(Messages.lookupDependencyFor, gav));
                 dependencyGetOperation.run(new NullProgressMonitor());
                 status = dependencyGetOperation.getStatus();
-                if (status.isOK() && dependencyGetOperation.getResult() != null) {
-                    result = dependencyGetOperation.getResult();
-                }
-            } else if (result.getStatus() == Status.NOT_FOUND) {
-                GAV gav = DependencyLookup.readPomProperties(fileToLookup.toTempFile())
-                        .map(properties -> new GAV(properties.getProperty("groupId"),
-                                properties.getProperty("artifactId"),
-                                properties.getProperty("version")))
-                        .orElse(null);
-                if (gav != null) {
-                    var dependencyGetOperation = new DependencyGetOperation(gav);
-                    repositories.stream()
-                            .forEach(dependencyGetOperation::addRemoteRespository);
-                    monitor.setTaskName(String.format(Messages.lookupDependencyFor, gav));
-                    dependencyGetOperation.run(new NullProgressMonitor());
-                    status = dependencyGetOperation.getStatus();
-                    if (status.isOK()) {
-                        if (dependencyGetOperation.getResult() != null) {
+                if (status.isOK()) {
+                    if (dependencyGetOperation.getResult() != null) {
+                        var fileName = result.getFileName();
+                        result = dependencyGetOperation.getResult();
+                        if (result.getFileName() == null) {
+                            result.setFileName(fileName);
+                        }
+                    } else if (DependencyLookup.guessClassifier(fileToLookup.getName(), gav) != null) {
+                        gav.setClassifier(DependencyLookup.guessClassifier(fileToLookup.getName(), gav));
+                        dependencyGetOperation = new DependencyGetOperation(gav);
+                        repositories.stream()
+                                .forEach(dependencyGetOperation::addRemoteRespository);
+                        dependencyGetOperation.run(monitor);
+                        status = dependencyGetOperation.getStatus();
+                        if (status.isOK() && dependencyGetOperation.getResult() != null) {
                             var fileName = result.getFileName();
                             result = dependencyGetOperation.getResult();
-                            if(result.getFileName() == null) {
+                            if (result.getFileName() == null) {
                                 result.setFileName(fileName);
                             }
-                        } else if (DependencyLookup.guessClassifier(fileToLookup.getName(), gav) != null) {
-                            gav.setClassifier(DependencyLookup.guessClassifier(fileToLookup.getName(), gav));
-                            dependencyGetOperation = new DependencyGetOperation(gav);
-                            repositories.stream()
-                                    .forEach(dependencyGetOperation::addRemoteRespository);
-                            dependencyGetOperation.run(monitor);
-                            status = dependencyGetOperation.getStatus();
-                            if (status.isOK() && dependencyGetOperation.getResult() != null) {
-                                var fileName = result.getFileName();
-                                result = dependencyGetOperation.getResult();
-                                if(result.getFileName() == null) {
-                                    result.setFileName(fileName);
-                                }
-                            }
                         }
                     }
                 }
-                if (result.getStatus() == Status.NOT_FOUND
-                        && result.getFile() != null
-                        && result.getFile().exists()) {
-                    String name = result.getFile().getName();
-                    if (gav != null) {
-                        result.setGroupId(gav.getGroupId());
-                        result.setArtifactId(gav.getArtifactId());
-                        result.setVersion(gav.getVersion());
-                        result.setClassifier(gav.getClassifier());
-                    } else {
-                        var fileExtension = name.toLowerCase().endsWith(".jar") | name.toLowerCase().endsWith(".zip")
-                                ? name.substring(name.length() - 3) : null;
-                        if (fileExtension != null) {
-                            Pattern pattern = Pattern.compile(String.format("^(.+?)-(\\d.*?)\\.%s$", fileExtension));
-                            Matcher matcher = pattern.matcher(name);
-                            if (matcher.find()) {
-                                var artifactId = matcher.group(1);
-                                var version = matcher.group(2);
-                                result.setArtifactId(artifactId);
-                                result.setVersion(version);
-                            }
+            }
+            if (result.getStatus() == Status.NOT_FOUND
+                    && result.getFile() != null
+                    && result.getFile().exists()) {
+                String name = result.getFile().getName();
+                if (gav != null) {
+                    result.setGroupId(gav.getGroupId());
+                    result.setArtifactId(gav.getArtifactId());
+                    result.setVersion(gav.getVersion());
+                    result.setClassifier(gav.getClassifier());
+                } else {
+                    var fileExtension = name.toLowerCase().endsWith(".jar") || name.toLowerCase().endsWith(".zip")
+                            ? name.substring(name.length() - 3) : null;
+                    if (fileExtension != null) {
+                        Pattern pattern = Pattern.compile(String.format("^(.+?)-(\\d.*?)\\.%s$", fileExtension));
+                        Matcher matcher = pattern.matcher(name);
+                        if (matcher.find()) {
+                            var artifactId = matcher.group(1);
+                            var version = matcher.group(2);
+                            result.setArtifactId(artifactId);
+                            result.setVersion(version);
                         }
                     }
-                    result.setStatus(Status.LOCAL);
                 }
+                result.setStatus(Status.LOCAL);
             }
         }
     }

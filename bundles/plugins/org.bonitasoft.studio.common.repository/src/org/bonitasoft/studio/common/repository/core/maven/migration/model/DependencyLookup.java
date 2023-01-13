@@ -160,7 +160,7 @@ public class DependencyLookup {
                         ""));
     }
 
-    private static String defaultGroupId() {
+    public static String defaultGroupId() {
         return CommonRepositoryPlugin.getDefault().getPreferenceStore().getString(RepositoryPreferenceConstant.DEFAULT_GROUPID);
     }
 

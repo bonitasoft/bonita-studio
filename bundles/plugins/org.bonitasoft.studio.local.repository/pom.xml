@@ -15,13 +15,21 @@
 
     <properties>
         <repository.dir>${project.basedir}/repository</repository.dir>
+        <localRepository.compatibleVersions.skip>false</localRepository.compatibleVersions.skip>
+        <goOfflineCmdLine>
+            de.qaware.maven:go-offline-maven-plugin:resolve-dependencies
+            -Dlocal.remote.repo.url=file:///${settings.localRepository}
+            -Dmaven.repo.local=${repository.dir}
+            -Dbonita-project-maven-plugin.version=${bonita-project-report-model.version}
+            -Dbonita.runtime.version=${bonita-runtime.version}
+        </goOfflineCmdLine>
+        <mavenSettingsArg></mavenSettingsArg>
     </properties>
 
     <build>
         <plugins>
             <plugin>
                 <artifactId>maven-clean-plugin</artifactId>
-                <version>3.1.0</version>
                 <executions>
                     <execution>
                         <id>clean-local-repository</id>
@@ -30,6 +38,7 @@
                             <goal>clean</goal>
                         </goals>
                         <configuration>
+                            <skip>${localRepository.skip}</skip>
                             <filesets>
                                 <fileset>
                                     <directory>${repository.dir}</directory>
@@ -71,34 +80,8 @@
                             <workingDirectory>${project.basedir}/src/template</workingDirectory>
                             <executable>${mavenWrapper}</executable>
                             <useMavenLogger>true</useMavenLogger>
-                            <skip>${packageLocalRepository.skip}</skip>
-                            <arguments>
-                                <argument>org.apache.maven.plugins:maven-dependency-plugin:${maven-dependency-plugin.version}:resolve</argument>
-                                <argument>-Dlocal.remote.repo.url=file:///${settings.localRepository}</argument>
-                                <argument>-Dmaven.repo.local=${repository.dir}</argument>
-                                <argument>-Dbonita.runtime.version=${bonita-runtime.version}</argument>
-                                <argument>-Dbonita-project-maven-plugin.version=${bonita-project-report-model.version}</argument>
-                            </arguments>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>package-dependency-plugins</id>
-                        <goals>
-                            <goal>exec</goal>
-                        </goals>
-                        <phase>generate-resources</phase>
-                        <configuration>
-                            <workingDirectory>${project.basedir}/src/template</workingDirectory>
-                            <executable>${mavenWrapper}</executable>
-                            <useMavenLogger>true</useMavenLogger>
-                            <skip>${packageLocalRepository.skip}</skip>
-                            <arguments>
-                                <argument>org.apache.maven.plugins:maven-dependency-plugin:${maven-dependency-plugin.version}:resolve-plugins</argument>
-                                <argument>-Dlocal.remote.repo.url=file:///${settings.localRepository}</argument>
-                                <argument>-Dmaven.repo.local=${repository.dir}</argument>
-                                <argument>-Dbonita.runtime.version=${bonita-runtime.version}</argument>
-                                <argument>-Dbonita-project-maven-plugin.version=${bonita-project-report-model.version}</argument>
-                            </arguments>
+                            <skip>${localRepository.skip}</skip>
+                            <commandlineArgs>${mavenSettingsArg} -ntp ${goOfflineCmdLine}</commandlineArgs>
                         </configuration>
                     </execution>
                 </executions>
@@ -107,6 +90,54 @@
     </build>
 
     <profiles>
+        <profile>
+            <id>maven-settings-arg</id>
+            <activation>
+                <property>
+                    <name>mavenSettingsFile</name>
+                </property>
+            </activation>
+            <properties>
+                <mavenSettingsArg>-s ${mavenSettingsFile}</mavenSettingsArg>
+            </properties>
+        </profile>
+        <profile>
+            <id>offline-local-repository</id>
+            <properties>
+                <localRepository.compatibleVersions.skip>false</localRepository.compatibleVersions.skip>
+                <goOfflineCmdLine>
+                    de.qaware.maven:go-offline-maven-plugin:resolve-dependencies
+                    -Dmaven.repo.local=${settings.localRepository}
+                    -Dlocal.remote.repo.url=file:///${settings.localRepository}
+                    -Dbonita-project-maven-plugin.version=${bonita-project-report-model.version}
+                    -Dbonita.runtime.version=${bonita-runtime.version}
+                </goOfflineCmdLine>
+            </properties>
+            <build>
+                <plugins>
+                    <plugin>
+                     <groupId>org.codehaus.mojo</groupId>
+                     <artifactId>exec-maven-plugin</artifactId>
+                     <executions>
+                         <execution>
+                            <id>resolve-dependencies-locally</id>
+                            <goals>
+                                <goal>exec</goal>
+                            </goals>
+                            <phase>generate-resources</phase>
+                            <configuration>
+                                <workingDirectory>${project.basedir}/src/template</workingDirectory>
+                                <executable>${mavenWrapper}</executable>
+                                <useMavenLogger>true</useMavenLogger>
+                                <skip>${localRepository.skip}</skip>
+                                <commandlineArgs>${mavenSettingsArg} -ntp ${goOfflineCmdLine}</commandlineArgs>
+                            </configuration>
+                        </execution>
+                     </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile> 
         <profile>
             <id>windows-maven-wrapper</id>
             <activation>

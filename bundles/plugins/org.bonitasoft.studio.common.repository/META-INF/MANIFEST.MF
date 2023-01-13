@@ -80,6 +80,7 @@ Bundle-ClassPath: .,
  lib/bonita-project-report-model.jar
 Import-Package: javax.annotation;version="1.2.0",
  javax.inject;version="1.0.0",
+ javax.xml.bind.annotation.adapters;version="2.3.3",
  org.bonitasoft.engine.connector,
  org.bonitasoft.engine.filter,
  org.bonitasoft.engine.session,

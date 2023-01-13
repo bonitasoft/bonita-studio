@@ -23,8 +23,8 @@ import org.bonitasoft.studio.common.jface.databinding.validator.EmptyInputValida
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryNameValidator;
 import org.bonitasoft.studio.common.repository.core.maven.BonitaProjectBuilder.BonitaRuntimeVersionValidator;
-import org.bonitasoft.studio.common.repository.core.maven.contribution.InstallBonitaMavenArtifactsOperation;
 import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
+import org.bonitasoft.studio.common.repository.core.maven.repository.MavenRepositories;
 import org.bonitasoft.studio.common.repository.ui.validator.MavenIdValidator;
 import org.bonitasoft.studio.ui.converter.ConverterBuilder;
 import org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory;
@@ -186,7 +186,7 @@ public class ProjectMetadataPage implements ControlSupplier {
 
     private String[] availableCompatibleVersions() {
         try {
-            return InstallBonitaMavenArtifactsOperation.listBonitaRuntimeBomVersions();
+            return MavenRepositories.listBonitaRuntimeBomVersions();
         } catch (IOException e) {
             BonitaStudioLog.error(e);
             return new String[0];
