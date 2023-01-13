@@ -17,6 +17,7 @@ package org.bonitasoft.studio.swtbot.framework.diagram.importer;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.time.Duration;
 
 import org.bonitasoft.studio.importer.bos.i18n.Messages;
 import org.bonitasoft.studio.swtbot.framework.BotWizardDialog;
@@ -80,10 +81,14 @@ public class BotImportBOSDialog extends BotWizardDialog {
     }
 
     public void importArchive() {
+        importArchiveWithTimeout(Duration.ofMinutes(2));
+    }
+    
+    private void importArchiveWithTimeout(Duration timeout) {
         // Wait extension resolution
-        bot.waitUntil(Conditions.widgetIsEnabled(bot.button(Messages.importButtonLabel)), 120000);
+        bot.waitUntil(Conditions.widgetIsEnabled(bot.button(Messages.importButtonLabel)), timeout.toMillis());
         bot.button(Messages.importButtonLabel).click();
-        bot.waitUntil(Conditions.shellIsActive(org.bonitasoft.studio.importer.i18n.Messages.importResultTitle), 120000);
+        bot.waitUntil(Conditions.shellIsActive(org.bonitasoft.studio.importer.i18n.Messages.importResultTitle), timeout.toMillis());
         bot.shell(org.bonitasoft.studio.importer.i18n.Messages.importResultTitle).activate();
         final SWTBotShell activeShell = bot.activeShell();
         bot.waitUntil(Conditions.widgetIsEnabled(bot.button(IDialogConstants.OK_LABEL)));
@@ -121,6 +126,10 @@ public class BotImportBOSDialog extends BotWizardDialog {
     @Override
     public void finish() {
         importArchive();
+    }
+    
+    public void finishWithTimeout(Duration timeout) {
+        importArchiveWithTimeout(timeout);
     }
 
     public BotImportBOSDialog currentRepository() {
