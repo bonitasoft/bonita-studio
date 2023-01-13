@@ -13,6 +13,7 @@
         <build-helper-maven-plugin.version>3.2.0</build-helper-maven-plugin.version>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <maven.compiler.target>11</maven.compiler.target>
+        <maven-dependency-plugin.version>3.1.2</maven-dependency-plugin.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
     
@@ -20,11 +21,17 @@
         The local repo is set to ${repository.dir} by the maven exec plugin that calls this pom (see the root pom.xml of this Studio plugin).
         In order to be able to retrieve dependencies from the real local repo we declare it as a remote repo (required for offline build for ex).
     -->
-    <repositories>
+     <repositories>
         <repository>
             <id>local-remote-repo</id>
             <name>Default local repo as remote repo</name>
             <url>${local.remote.repo.url}</url>
+            <releases>
+                <checksumPolicy>ignore</checksumPolicy>
+             </releases>
+          <snapshots>
+            <checksumPolicy>ignore</checksumPolicy>
+          </snapshots>
         </repository>
     </repositories>
     <pluginRepositories>
@@ -32,6 +39,23 @@
             <id>local-remote-repo</id>
             <name>Default local repo as remote repo</name>
             <url>${local.remote.repo.url}</url>
+             <releases>
+                <checksumPolicy>ignore</checksumPolicy>
+             </releases>
+          <snapshots>
+            <checksumPolicy>ignore</checksumPolicy>
+          </snapshots>
+        </pluginRepository>
+        <pluginRepository>
+            <id>ossrh-snapshots-plugins</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+            <releases>
+                <enabled>false</enabled>
+                <checksumPolicy>ignore</checksumPolicy>
+            </releases>
         </pluginRepository>
         <pluginRepository>
             <id>ossrh-snapshots-plugins</id>
@@ -147,18 +171,6 @@
             <artifactId>groovy-servlet</artifactId>
             <scope>provided</scope>
         </dependency>
-
-        <!-- Workaround go-offline goal not retrieving all transitive deps -->
-        <dependency>
-            <groupId>org.sonatype.sisu.inject</groupId>
-            <artifactId>guice-bean-containers</artifactId>
-            <version>2.3.0</version>
-        </dependency>
-        <dependency>
-            <groupId>org.sonatype.sisu.inject</groupId>
-            <artifactId>guice-plexus-shim</artifactId>
-            <version>2.3.0</version>
-        </dependency>
     </dependencies>
     <build>
         <pluginManagement>
@@ -177,6 +189,37 @@
                     <artifactId>build-helper-maven-plugin</artifactId>
                     <version>${build-helper-maven-plugin.version}</version>
                 </plugin>
+                <plugin>
+                   <artifactId>maven-dependency-plugin</artifactId>
+                   <version>${maven-dependency-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>de.qaware.maven</groupId>
+                    <artifactId>go-offline-maven-plugin</artifactId>
+                    <version>1.2.8</version>
+                    <configuration>
+                        <dynamicDependencies>
+                            <DynamicDependency>
+                                <groupId>org.codehaus.plexus</groupId>
+                                <artifactId>plexus-utils</artifactId>
+                                <version>1.1</version>
+                                <repositoryType>PLUGIN</repositoryType>
+                            </DynamicDependency>
+                            <DynamicDependency>
+                                <groupId>org.sonatype.sisu.inject</groupId>
+                                <artifactId>guice-bean-containers</artifactId>
+                                <version>2.3.0</version>
+                                <repositoryType>PLUGIN</repositoryType>
+                            </DynamicDependency>
+                            <DynamicDependency>
+                                <groupId>org.sonatype.sisu.inject</groupId>
+                                <artifactId>guice-plexus-shim</artifactId>
+                                <version>2.3.0</version>
+                                <repositoryType>PLUGIN</repositoryType>
+                            </DynamicDependency>
+                        </dynamicDependencies>
+                    </configuration>
+                </plugin>
             </plugins>
         </pluginManagement>
         <plugins>
@@ -190,6 +233,9 @@
             </plugin>
             <plugin>
                 <artifactId>maven-install-plugin</artifactId>
+            </plugin>
+            <plugin>
+              <artifactId>maven-dependency-plugin</artifactId>
             </plugin>
         </plugins>
     </build>

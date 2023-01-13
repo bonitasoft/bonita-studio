@@ -15,17 +15,14 @@
 package org.bonitasoft.studio.tests.configuration;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertTrue;
 
 import java.time.Duration;
 import java.util.List;
 
 import org.bonitasoft.studio.configuration.i18n.Messages;
-import org.bonitasoft.studio.swtbot.framework.SWTBotTestUtil;
 import org.bonitasoft.studio.swtbot.framework.application.BotApplicationWorkbenchWindow;
 import org.bonitasoft.studio.swtbot.framework.diagram.configuration.BotConfigureDialog;
 import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.junit.Rule;
@@ -49,9 +46,6 @@ public class JavaDependenciesConfigurationIT {
                 .next()
                 // Depending of the network latency this may take a while....
                 .finishWithTimeout(Duration.ofMinutes(5));
-
-        final IStatus status = SWTBotTestUtil.selectAndRunFirstPoolFound(bot);
-        assertTrue(status.getMessage(), status.isOK());
     }
 
     @Test

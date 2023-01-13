@@ -47,6 +47,7 @@ import org.bonitasoft.studio.common.repository.extension.update.DependencyUpdate
 import org.bonitasoft.studio.common.repository.store.LocalDependenciesStore;
 import org.bonitasoft.studio.ui.dialog.ExceptionDialogHandler;
 import org.bonitasoft.studio.ui.wizard.WizardBuilder;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -56,6 +57,7 @@ import org.eclipse.e4.ui.services.IServiceConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.m2e.core.repository.IRepository;
+import org.eclipse.m2e.core.ui.internal.UpdateMavenProjectJob;
 import org.eclipse.swt.widgets.Shell;
 
 public class ImportExtensionHandler {
@@ -205,6 +207,14 @@ public class ImportExtensionHandler {
                     extensionTypeHandler,
                     updateExtensionDecorator);
         }
+        try {
+            container.run(true, false,
+                    monitor -> new UpdateMavenProjectJob(new IProject[] { currentRepository.getProject() }, false, false,
+                            false, false, true)
+                            .run(monitor));
+        } catch (InvocationTargetException | InterruptedException e) {
+            BonitaStudioLog.error(e);
+        }
         return result;
     }
 
@@ -281,6 +291,7 @@ public class ImportExtensionHandler {
                         updateExtensionDecorator.postUpdate(monitor);
                     }
                 });
+
                 if (updateExtensionDecorator.shouldValidateProject()) {
                     updateExtensionDecorator.validateDependenciesConstraints();
                 }
