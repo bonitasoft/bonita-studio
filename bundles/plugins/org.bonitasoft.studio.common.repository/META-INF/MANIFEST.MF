@@ -78,6 +78,7 @@ Require-Bundle: org.bonitasoft.studio.common,
  org.eclipse.e4.ui.model.workbench;bundle-version="2.2.100.v20220331-0744"
 Import-Package: javax.annotation;version="1.2.0",
  javax.inject;version="1.0.0",
+ javax.xml.bind.annotation.adapters;version="2.3.3",
  org.bonitasoft.engine.connector,
  org.bonitasoft.engine.filter,
  org.bonitasoft.engine.session,

@@ -14,12 +14,14 @@
  */
 package org.bonitasoft.studio.application.ui.control;
 
+import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Path;
 import java.util.Optional;
 import java.util.function.Supplier;
 
 import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Model;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.core.maven.MavenRepositoryRegistry;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.observable.value.ComputedValue;
@@ -37,6 +39,7 @@ import org.eclipse.swt.widgets.Display;
 public class UpdateGavPage extends ImportExtensionPage {
 
     private Path dependencyPath;
+    private DataBindingContext ctx;
 
     public UpdateGavPage(MavenRepositoryRegistry mavenRepositoryRegistry,
             Model mavenModel,
@@ -52,6 +55,7 @@ public class UpdateGavPage extends ImportExtensionPage {
     @Override
     public Control createControl(Composite parent, IWizardContainer wizardContainer, DataBindingContext ctx) {
         this.wizardContainer = wizardContainer;
+        this.ctx = ctx;
         mainComposite = new Composite(parent, SWT.NONE);
         mainComposite.setLayout(GridLayoutFactory.fillDefaults()
                 .margins(10, 10)
@@ -67,7 +71,13 @@ public class UpdateGavPage extends ImportExtensionPage {
     @Override
     public void pageChanged(PageChangedEvent event) {
         super.pageChanged(event);
-        Display.getDefault().asyncExec(() -> createDependencyLookup(dependencyPath.toFile()));
+        Display.getDefault().asyncExec(() -> {
+            try {
+                runDependencyLookup(dependencyPath.toFile());
+            } catch (InvocationTargetException | InterruptedException e) {
+                BonitaStudioLog.error(e);
+            }
+        });
     }
 
     @Override

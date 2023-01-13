@@ -70,11 +70,11 @@ public class FileInputStreamSupplier implements InputStreamSupplier {
     }
 
     @Override
-    public void close() throws Exception {
+    public void close() throws IOException {
         if(tempFile != null) {
             Files.deleteIfExists(tempFile);
         }
-        for(InputStream is : openedStreams) {
+        for(var is : openedStreams) {
             if(is != null) {
                 is.close();
             }

@@ -14,10 +14,13 @@
  */
 package org.bonitasoft.studio.application.ui.control;
 
+import static java.util.function.Predicate.not;
 import static org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory.neverUpdateValueStrategy;
 import static org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory.updateValueStrategy;
 
 import java.io.File;
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -29,7 +32,6 @@ import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.common.jface.databinding.validator.EmptyInputValidator;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.core.FileInputStreamSupplier;
-import org.bonitasoft.studio.common.repository.core.InputStreamSupplier;
 import org.bonitasoft.studio.common.repository.core.maven.FileDependencyLookupOperation;
 import org.bonitasoft.studio.common.repository.core.maven.MavenProjectHelper;
 import org.bonitasoft.studio.common.repository.core.maven.MavenRepositoryRegistry;
@@ -37,8 +39,6 @@ import org.bonitasoft.studio.common.repository.core.maven.migration.model.Depend
 import org.bonitasoft.studio.common.repository.core.maven.migration.model.DependencyLookup.Status;
 import org.bonitasoft.studio.common.repository.ui.validator.MavenIdValidator;
 import org.bonitasoft.studio.common.widgets.CustomStackLayout;
-import org.bonitasoft.studio.pics.Pics;
-import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.preferences.BonitaThemeConstants;
 import org.bonitasoft.studio.preferences.dialog.BonitaPreferenceDialog;
 import org.bonitasoft.studio.ui.databinding.ComputedValueBuilder;
@@ -56,7 +56,6 @@ import org.eclipse.core.databinding.observable.list.IObservableList;
 import org.eclipse.core.databinding.observable.value.ComputedValue;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.SelectObservableValue;
-import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
 import org.eclipse.core.databinding.observable.value.WritableValue;
 import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
@@ -139,7 +138,8 @@ public class ImportExtensionPage implements ControlSupplier {
         });
 
         this.dependencyObservable = PojoProperties.value("dependency", Dependency.class).observe(this);
-        this.dependencyLookupObservable = PojoProperties.value("dependencyLookup", DependencyLookup.class).observe(this);
+        this.dependencyLookupObservable = PojoProperties.value("dependencyLookup", DependencyLookup.class)
+                .observe(this);
     }
 
     @Override
@@ -167,7 +167,8 @@ public class ImportExtensionPage implements ControlSupplier {
         importModeObservable.addValueChangeListener(e -> {
             if (e.diff.getNewValue() == ImportMode.MANUAL) {
                 editableDependencyObservable.setValue(true);
-            } else if (isMavenDependency() || (dependencyLookup != null && dependencyLookup.getStatus() == Status.FOUND)) {
+            } else if (isMavenDependency()
+                    || (dependencyLookup != null && dependencyLookup.getStatus() == Status.FOUND)) {
                 editableDependencyObservable.setValue(false);
             }
             ctx.updateModels();
@@ -245,7 +246,7 @@ public class ImportExtensionPage implements ControlSupplier {
         filePathObserveValue = PojoProperties
                 .value("filePath", String.class)
                 .observe(this);
-        filePathObserveValue.addValueChangeListener(e -> analyzeFile(e, dbc));
+
         filePathText = new TextWidget.Builder()
                 .withLabel(String.format(Messages.file, extensionTypeHandler.getExtensionType()))
                 .grabHorizontalSpace()
@@ -254,7 +255,7 @@ public class ImportExtensionPage implements ControlSupplier {
                 .labelAbove()
                 .withTargetToModelStrategy(updateValueStrategy()
                         .withValidator(new MultiValidator.Builder()
-                                .havingValidators(filePathValidator(), fileContentValidator()))
+                                .havingValidators(filePathValidator(), fileContentValidator(dbc)))
                         .create())
                 .bindTo(filePathObserveValue)
                 .inContext(dbc)
@@ -276,10 +277,19 @@ public class ImportExtensionPage implements ControlSupplier {
         };
     }
 
-    private IValidator<String> fileContentValidator() {
+    private IValidator<String> fileContentValidator(DataBindingContext dbc) {
         return path -> {
             if (importModeObservable.getValue() == ImportMode.FILE && !(path == null || path.isBlank())) {
-                return extensionTypeHandler.getExtensionValidator().validate(new File(path));
+                var typeValidator = extensionTypeHandler.getExtensionValidator().validate(new File(path));
+                if (!typeValidator.isOK()) {
+                    return typeValidator;
+                }
+                try {
+                    return analyzeFile(path, dbc);
+                } catch (InvocationTargetException | InterruptedException err) {
+                    BonitaStudioLog.error(err);
+                    return org.eclipse.core.runtime.Status.error("Dependency lookup has failed.", err);
+                }
             }
             return ValidationStatus.ok();
         };
@@ -296,36 +306,36 @@ public class ImportExtensionPage implements ControlSupplier {
         return fd.open();
     }
 
-    private void analyzeFile(ValueChangeEvent<? extends String> event, DataBindingContext dbc) {
-        String path = event.diff.getNewValue();
+    private IStatus analyzeFile(String path, DataBindingContext dbc)
+            throws InvocationTargetException, InterruptedException {
         if (path != null) {
             File file = new File(path);
             if (file.exists()) {
-                createDependencyLookup(file);
+                var dependencyLookup = runDependencyLookup(file);
                 Dependency parsedDependency = dependencyLookup.toMavenDependency();
                 if (extensionToUpdate.isEmpty()) {
                     dependencyObservable.setValue(parsedDependency);
                 } else { // Update mode -> Only version can be updated 
                     versionObservable.setValue(parsedDependency.getVersion());
                 }
-                Image image = Pics.getImage(Pics
-                        .getImageDescriptor(
-                                dependencyLookup.getStatus() == Status.FOUND ? PicsConstants.checkmark
-                                        : PicsConstants.warning));
-                String message = dependencyLookup.getStatus() == Status.FOUND
-                        ? String.format(Messages.resolvedDependency, dependencyLookup.getRepository())
-                        : Messages.cannotResolveDependencyInstalledLocally;
-                filePathText.setMessage(message, image);
                 editableDependencyObservable
                         .setValue(!isMavenDependency() && (dependencyLookup.getStatus() != Status.FOUND));
-                dbc.getBindings().forEach(Binding::validateTargetToModel);
+                dbc.getBindings()
+                        .stream()
+                        .filter(not(filePathText.getValueBinding()::equals))
+                        .forEach(Binding::validateTargetToModel);
+                return dependencyLookup.getStatus() == Status.FOUND
+                        ? ValidationStatus
+                                .info(String.format(Messages.resolvedDependency, dependencyLookup.getRepository()))
+                        : ValidationStatus.warning(Messages.cannotResolveDependencyInstalledLocally);
 
             }
         }
+        return ValidationStatus.ok();
     }
 
-    protected void createDependencyLookup(File file) {
-        try (InputStreamSupplier iss = new FileInputStreamSupplier(file)) {
+    protected DependencyLookup runDependencyLookup(File file) throws InvocationTargetException, InterruptedException {
+        try (var iss = new FileInputStreamSupplier(file)) {
             FileDependencyLookupOperation operation = new FileDependencyLookupOperation(iss);
             wizardContainer.run(true, false, mavenRepositoryRegistry.updateRegistry());
             mavenRepositoryRegistry.getGlobalRepositories().stream()
@@ -340,8 +350,9 @@ public class ImportExtensionPage implements ControlSupplier {
                 dependencyLookup.setType("zip");
             }
             dependencyLookupObservable.setValue(dependencyLookup);
-        } catch (Exception e) {
-            BonitaStudioLog.error(e);
+            return dependencyLookup;
+        } catch (IOException e) {
+            throw new InvocationTargetException(e);
         }
     }
 
@@ -442,7 +453,8 @@ public class ImportExtensionPage implements ControlSupplier {
 
             @Override
             protected Boolean calculate() {
-                return importModeObservable.getValue() == ImportMode.MANUAL || dependencyLookupObservable.getValue() != null;
+                return importModeObservable.getValue() == ImportMode.MANUAL
+                        || dependencyLookupObservable.getValue() != null;
             }
 
         };
@@ -499,7 +511,8 @@ public class ImportExtensionPage implements ControlSupplier {
 
         ctx.bindValue(new ComputedValueBuilder<Boolean>()
                 .withSupplier(
-                        () -> sameExistingDependency.getValue() != null && sameExistingDependency.getValue().isPresent())
+                        () -> sameExistingDependency.getValue() != null
+                                && sameExistingDependency.getValue().isPresent())
                 .build(), WidgetProperties.visible().observe(composite),
                 updateValueStrategy().create(),
                 neverUpdateValueStrategy().create());
@@ -511,7 +524,8 @@ public class ImportExtensionPage implements ControlSupplier {
             if (Objects.equals(existingVersion, versionObservable.getValue())) {
                 updateDependencyAlreadyExistsLabel(
                         String.format(Messages.dependencyAlreadyExistsInSameVersion, existingVersion),
-                        BonitaThemeConstants.WARNING_TEXT_COLOR, JFaceResources.getImage(Dialog.DLG_IMG_MESSAGE_WARNING));
+                        BonitaThemeConstants.WARNING_TEXT_COLOR,
+                        JFaceResources.getImage(Dialog.DLG_IMG_MESSAGE_WARNING));
                 return ValidationStatus.warning(Messages.dependencyAlreadyExistsInSameVersion);
             }
             updateDependencyAlreadyExistsLabel(
