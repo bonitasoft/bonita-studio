@@ -76,7 +76,8 @@ Require-Bundle: org.bonitasoft.studio.diagram,
  org.bonitasoft.studio.dependencies,
  org.bonitasoft.studio.diagram.custom,
  org.objenesis;bundle-version="3.2.0";resolution:=optional,
- net.bytebuddy.byte-buddy;bundle-version="1.12.1";resolution:=optional
+ net.bytebuddy.byte-buddy;bundle-version="1.12.1";resolution:=optional,
+ org.eclipse.m2e.core.ui
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-ActivationPolicy: lazy
 Import-Package: javax.annotation;version="1.2.0",

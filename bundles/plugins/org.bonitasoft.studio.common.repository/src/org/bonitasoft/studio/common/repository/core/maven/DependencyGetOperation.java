@@ -27,7 +27,6 @@ import org.apache.maven.Maven;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.factory.DefaultArtifactFactory;
 import org.apache.maven.artifact.repository.ArtifactRepository;
-import org.apache.maven.artifact.repository.ArtifactRepositoryPolicy;
 import org.apache.maven.execution.BuildSuccess;
 import org.apache.maven.execution.MavenExecutionRequest;
 import org.apache.maven.execution.MavenExecutionResult;
@@ -104,6 +103,8 @@ public class DependencyGetOperation implements IRunnableWithProgress {
                             gav,
                             repository,
                             artifact);
+                }else if(!executionResult.getExceptions().isEmpty()) {
+                    BonitaStudioLog.error("Maven dependency remote resolution failed.", executionResult.getExceptions().get(0));
                 }
             }
         } catch (CoreException e) {
@@ -166,14 +167,8 @@ public class DependencyGetOperation implements IRunnableWithProgress {
         if (internalRepository != null) {
             request.setLocalRepository(internalRepository);
         }
-        request.setUpdateSnapshots(true);
         request.setGoals(List.of(String.format("org.apache.maven.plugins:maven-dependency-plugin:%s:get",
                 DefaultPluginVersions.MAVEN_DEPENDENCY_PLUGIN_VERSION)));
-        request.getRemoteRepositories().forEach(r -> {
-            // Force remote update
-            r.getReleases().setUpdatePolicy(ArtifactRepositoryPolicy.UPDATE_POLICY_ALWAYS);
-            r.getSnapshots().setUpdatePolicy(ArtifactRepositoryPolicy.UPDATE_POLICY_ALWAYS);
-        });
 
         Properties userProperties = new Properties();
         userProperties.setProperty("groupId", gav.getGroupId());

@@ -10,27 +10,22 @@ package org.bonitasoft.studio.common.repository.core.maven.contribution;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
-import java.net.URLDecoder;
-import java.nio.charset.StandardCharsets;
 
 import org.apache.maven.artifact.factory.DefaultArtifactFactory;
 import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.bonitasoft.studio.common.jface.BonitaErrorDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
-import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
 import org.bonitasoft.studio.common.repository.Messages;
 import org.bonitasoft.studio.common.repository.core.maven.MavenInstallFileOperation;
+import org.bonitasoft.studio.common.repository.core.maven.repository.MavenRepositories;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.m2e.core.MavenPlugin;
 import org.eclipse.m2e.core.embedder.IMaven;
 import org.eclipse.swt.widgets.Display;
 
 public class InstallBonitaMavenArtifactsOperation {
 
-    private static final String LOCAL_REPOSITORY_ID = "local";
     private ArtifactRepository targetRepository;
     
     
@@ -56,49 +51,20 @@ public class InstallBonitaMavenArtifactsOperation {
     
     protected MavenLocalRepositoryContributor newMavenLocalRepositoryContributor(ArtifactRepository targetRepository) throws IOException, CoreException {
         final IMaven maven = maven();
-        File rootFolder = getRootFolder();
-        if (rootFolder == null) {
-            BonitaStudioLog.warning("No local repository packaged with Studio binary", CommonRepositoryPlugin.PLUGIN_ID);
+        var bundledRepository = MavenRepositories.bundledRepository();
+        if (bundledRepository == null) {
             return null;
         }
-        ArtifactRepository internalRepository = maven.createArtifactRepository(LOCAL_REPOSITORY_ID,
-                URLDecoder.decode(rootFolder.toURI().toURL().toString(), StandardCharsets.UTF_8));
-        if(!LOCAL_REPOSITORY_ID.equals(internalRepository.getId())){ // Check if the repository is mirrored 
-            internalRepository = internalRepository.getMirroredRepositories().stream().filter(repo -> LOCAL_REPOSITORY_ID.equals(repo.getId()))
-                    .findFirst()
-                    .orElseThrow();
-        }
-        return new MavenLocalRepositoryContributor(rootFolder, targetRepository,
-                new DependencyCatalog(rootFolder,
+        File baseDir = new File(bundledRepository.getBasedir());
+        return new MavenLocalRepositoryContributor(baseDir, targetRepository,
+                new DependencyCatalog(baseDir,
                         new MavenArtifactParser((DefaultArtifactFactory) maven
                                 .lookup(org.apache.maven.artifact.factory.ArtifactFactory.class))),
-                new MavenInstallFileOperation(maven(), internalRepository, targetRepository));
+                new MavenInstallFileOperation(maven(), bundledRepository, targetRepository));
     }
 
     protected IMaven maven() {
         return MavenPlugin.getMaven();
     }
-
-    private static File getRootFolder() throws IOException {
-        URL repositoryURL = CommonRepositoryPlugin.getDefault().getBundle().getResource("/repository/");
-        if(repositoryURL != null) {
-            return new File(FileLocator.toFileURL(repositoryURL).getFile());
-        }
-        return null;
-    }
-
-    public static String[] listBonitaRuntimeBomVersions() throws IOException{
-        File rootFolder = getRootFolder();
-        if(rootFolder == null) {
-            return new String[0];
-        }
-        File bomArtifactFolder = rootFolder.toPath()
-            .resolve("org")
-            .resolve("bonitasoft")
-            .resolve("runtime")
-            .resolve("bonita-runtime-bom")
-            .toFile();
-        
-        return bomArtifactFolder.list();
-    }
+  
 }
