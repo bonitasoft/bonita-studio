@@ -32,6 +32,7 @@ import org.apache.maven.execution.MavenExecutionRequest;
 import org.apache.maven.execution.MavenExecutionResult;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
+import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
 import org.bonitasoft.studio.common.repository.Messages;
 import org.bonitasoft.studio.common.repository.core.maven.contribution.DependencyCatalog;
 import org.bonitasoft.studio.common.repository.core.maven.contribution.MavenArtifactParser;
@@ -104,7 +105,7 @@ public class DependencyGetOperation implements IRunnableWithProgress {
                             repository,
                             artifact);
                 }else if(!executionResult.getExceptions().isEmpty()) {
-                    BonitaStudioLog.error("Maven dependency remote resolution failed.", executionResult.getExceptions().get(0));
+                    BonitaStudioLog.warning(String.format("Maven dependency remote resolution failed: %s", executionResult.getExceptions().get(0).getLocalizedMessage()), CommonRepositoryPlugin.PLUGIN_ID);
                 }
             }
         } catch (CoreException e) {
@@ -167,6 +168,7 @@ public class DependencyGetOperation implements IRunnableWithProgress {
         if (internalRepository != null) {
             request.setLocalRepository(internalRepository);
         }
+        request.setInteractiveMode(false);
         request.setGoals(List.of(String.format("org.apache.maven.plugins:maven-dependency-plugin:%s:get",
                 DefaultPluginVersions.MAVEN_DEPENDENCY_PLUGIN_VERSION)));
 
