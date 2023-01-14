@@ -141,7 +141,13 @@ public class MavenCentralJarLookupOperation implements IRunnableWithProgress {
                         defaultGav,
                         "");
             } catch (IOException e) {
-                throw new CoreException(Status.error("Failed to parse response", e));
+                BonitaStudioLog.warning(
+                        String.format("Central search request failed for %s: %s", file.getName(), e.getClass()), CommonRepositoryPlugin.PLUGIN_ID);
+                return new DependencyLookup(file.getAbsolutePath(),
+                        sha1,
+                        DependencyLookup.Status.NOT_FOUND,
+                        defaultGav,
+                        "");
             } catch (InterruptedException e) {
                 throw new CoreException(Status.error("Failed to lookup dependency", e));
             }
