@@ -14,18 +14,18 @@
  */
 package org.bonitasoft.studio.tests.exporter.bpmn;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.MalformedURLException;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicReference;
 
 import org.bonitasoft.studio.assertions.StatusAssert;
 import org.bonitasoft.studio.common.ProductVersion;
+import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.model.IModelSearch;
 import org.bonitasoft.studio.common.model.ModelSearch;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
@@ -36,15 +36,15 @@ import org.bonitasoft.studio.exporter.bpmn.transfo.OSGIConnectorTransformationXS
 import org.bonitasoft.studio.exporter.extension.BonitaModelExporterImpl;
 import org.bonitasoft.studio.exporter.extension.IBonitaModelExporter;
 import org.bonitasoft.studio.model.process.AbstractProcess;
-import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.MainProcess;
-import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.SequenceFlow;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.MainProcessEditPart;
 import org.bonitasoft.studio.swtbot.framework.application.BotApplicationWorkbenchWindow;
+import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
+import org.bonitasoft.studio.tests.util.ProjectUtil;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.swt.widgets.Display;
@@ -53,7 +53,6 @@ import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditPart;
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditor;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.junit.After;
-import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -65,26 +64,20 @@ import org.omg.spec.bpmn.model.DocumentRoot;
 public class BPMNSequenceFlowDefaultFlowExportImportTest {
 
     private final SWTGefBot bot = new SWTGefBot();
-    private MainProcess mainProcessAfterReimport;
-    List<SequenceFlow> sequenceFlows = new ArrayList<>();
-    Resource resource;
 
     @Rule
     public TemporaryFolder tmpFolder = new TemporaryFolder();
 
-    @Test
-    public void testDefaultFlow() {
-        int numberOfDefaultFlow = 0;
-        for (final SequenceFlow sequenceFlow : sequenceFlows) {
-            if (sequenceFlow.isIsDefault()) {
-                numberOfDefaultFlow++;
-            }
-        }
-        assertEquals("Default has not been exported/imported succesfully in BPMN2", 2, numberOfDefaultFlow);
+    @Rule
+    public SWTGefBotRule swtGefBotRule = new SWTGefBotRule(bot);
+
+    @After
+    public void cleanup() throws CoreException {
+        ProjectUtil.cleanProject();
     }
 
-    @Before
-    public void prepareTest() throws IOException {
+    @Test
+    public void testDefaultFlow() throws Exception {
         new BotApplicationWorkbenchWindow(bot)
                 .importBOSArchive()
                 .setArchive(BPMNConnectorExportImportTest.class.getResource("MyDiagramToTestDefaultFlowInBPMN-1.0.bos"))
@@ -96,7 +89,8 @@ public class BPMNSequenceFlowDefaultFlowExportImportTest {
         final SWTBotGefEditor editor1 = bot.gefEditor(bot.activeEditor().getTitle());
         final SWTBotGefEditPart step1Part = editor1.getEditPart("Step1").parent();
         final MainProcessEditPart mped = (MainProcessEditPart) step1Part.part().getRoot().getChildren().get(0);
-        DiagramRepositoryStore dStore = RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
+        DiagramRepositoryStore dStore = RepositoryManager.getInstance()
+                .getRepositoryStore(DiagramRepositoryStore.class);
         ConnectorDefRepositoryStore connectorDefStore = RepositoryManager.getInstance()
                 .getRepositoryStore(ConnectorDefRepositoryStore.class);
         List<AbstractProcess> allProcesses = dStore.getAllProcesses();
@@ -105,7 +99,8 @@ public class BPMNSequenceFlowDefaultFlowExportImportTest {
                 modelSearch);
         final File bpmnFileExported = tmpFolder.newFile("PoolToTestDefaultFlowInBPMN.bpmn");
         BonitaToBPMNExporter bonitaToBPMNExporter = new BonitaToBPMNExporter();
-        bonitaToBPMNExporter.export(exporter, modelSearch, bpmnFileExported, new OSGIConnectorTransformationXSLProvider(), ProductVersion.CURRENT_VERSION);
+        bonitaToBPMNExporter.export(exporter, modelSearch, bpmnFileExported,
+                new OSGIConnectorTransformationXSLProvider(), ProductVersion.CURRENT_VERSION);
         StatusAssert.assertThat(bonitaToBPMNExporter.getStatus()).hasSeverity(IStatus.INFO);
 
         final ResourceSet resourceSet1 = new ResourceSetImpl();
@@ -113,31 +108,22 @@ public class BPMNSequenceFlowDefaultFlowExportImportTest {
                 .getExtensionToFactoryMap();
         final DiResourceFactoryImpl diResourceFactoryImpl = new DiResourceFactoryImpl();
         extensionToFactoryMap.put("bpmn", diResourceFactoryImpl);
-        resource = resourceSet1.createResource(URI.createFileURI(bpmnFileExported.getAbsolutePath()));
+        var resource = resourceSet1.createResource(URI.createFileURI(bpmnFileExported.getAbsolutePath()));
         resource.load(Collections.emptyMap());
 
-        final DocumentRoot model2 = (DocumentRoot) resource.getContents().get(0);
-
+        var bpmnModel = (DocumentRoot) resource.getContents().get(0);
+        var modelRef = new AtomicReference<MainProcess>();
         Display.getDefault().syncExec(() -> {
             try {
-                mainProcessAfterReimport = BPMNTestUtil.importBPMNFile(model2);
+                modelRef.set(BPMNTestUtil.importBPMNFile(bpmnModel));
             } catch (final MalformedURLException e) {
-                e.printStackTrace();
+               throw new RuntimeException(e);
             }
         });
 
-        for (final Element element : ((Pool) mainProcessAfterReimport.getElements().get(0)).getConnections()) {
-            if (element instanceof SequenceFlow) {
-                sequenceFlows.add((SequenceFlow) element);
-            }
-        }
-    }
-
-    @After
-    public void clean() {
-        if (resource != null) {
-            resource.unload();
-        }
+        assertThat(ModelHelper.getAllElementOfTypeIn(modelRef.get(), SequenceFlow.class))
+                    .filteredOn(SequenceFlow::isIsDefault)
+                    .hasSize(2);
     }
 
 }

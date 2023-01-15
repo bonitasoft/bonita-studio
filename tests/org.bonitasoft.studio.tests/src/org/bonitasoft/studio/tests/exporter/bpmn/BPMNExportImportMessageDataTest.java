@@ -49,6 +49,8 @@ import org.bonitasoft.studio.model.process.ThrowMessageEvent;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.MainProcessEditPart;
 import org.bonitasoft.studio.swtbot.framework.application.BotApplicationWorkbenchWindow;
 import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
+import org.bonitasoft.studio.tests.util.ProjectUtil;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
@@ -85,6 +87,12 @@ public class BPMNExportImportMessageDataTest {
 
     @Rule
     public final SWTGefBotRule rule = new SWTGefBotRule(bot);
+    
+    @After
+    public void cleanup() throws CoreException {
+        resource.unload();
+        ProjectUtil.cleanProject();
+    }
 
     @Test
     public void testDataDefined() {
@@ -178,9 +186,5 @@ public class BPMNExportImportMessageDataTest {
         }
     }
 
-    @After
-    public void clean() {
-        resource.unload();
-    }
 
 }

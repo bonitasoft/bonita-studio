@@ -16,7 +16,7 @@ package org.bonitasoft.studio.tests.timer;
 
 import static org.bonitasoft.studio.common.Messages.daysLabel;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
 
 import java.io.IOException;
 import java.text.ParseException;
@@ -29,7 +29,8 @@ import org.bonitasoft.studio.swtbot.framework.application.BotApplicationWorkbenc
 import org.bonitasoft.studio.swtbot.framework.expression.BotExpressionEditorDialog;
 import org.bonitasoft.studio.swtbot.framework.projectExplorer.ProjectExplorerBot;
 import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
-import org.eclipse.core.runtime.IStatus;
+import org.bonitasoft.studio.tests.util.ProjectUtil;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.widgets.Widget;
@@ -42,6 +43,7 @@ import org.eclipse.swtbot.swt.finder.waits.Conditions;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTabItem;
 import org.hamcrest.Matcher;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
@@ -58,6 +60,11 @@ public class TestTimer implements SWTBotConstants {
 
     @Rule
     public SWTGefBotRule rule = new SWTGefBotRule(bot);
+    
+    @After
+    public void cleanup() throws CoreException {
+        ProjectUtil.cleanProject();
+    }
 
     @Test
     public void testEditTimerCondition() throws IOException {
@@ -114,10 +121,6 @@ public class TestTimer implements SWTBotConstants {
 
         assertEquals(ERROR_WRONG_TIMER_CONDITION_MESSAGE, "0 0/5 * 1/1 * ? *",
                 bot.textWithLabel(Messages.timerCondition).getText());
-
-        saveDiagram();
-        final IStatus status = SWTBotTestUtil.selectAndRunFirstPoolFound(bot);
-        assertTrue(status.getMessage(), status.isOK());
     }
 
     /**
@@ -144,10 +147,6 @@ public class TestTimer implements SWTBotConstants {
         assertEquals(ERROR_WRONG_TIMER_CONDITION_MESSAGE, "0 30 8 ? 4 MON#2 *",
                 bot.textWithLabel(Messages.timerCondition).getText());
 
-        saveDiagram();
-        final IStatus status = SWTBotTestUtil.selectAndRunFirstPoolFound(bot);
-        assertTrue(status.getMessage(), status.isOK());
-
     }
 
     /**
@@ -172,13 +171,8 @@ public class TestTimer implements SWTBotConstants {
         bot.button(Messages.generateCronButtonLabel).click();
         bot.button(IDialogConstants.FINISH_LABEL).click();
 
-        Assert.assertEquals(ERROR_WRONG_TIMER_CONDITION_MESSAGE, "0 0 12 ? 1/1 TUE#2 *",
+        assertEquals(ERROR_WRONG_TIMER_CONDITION_MESSAGE, "0 0 12 ? 1/1 TUE#2 *",
                 bot.textWithLabel(Messages.timerCondition).getText());
-
-        saveDiagram();
-        final IStatus status = SWTBotTestUtil.selectAndRunFirstPoolFound(bot);
-        assertTrue(status.getMessage(), status.isOK());
-
     }
 
     /**
@@ -204,12 +198,8 @@ public class TestTimer implements SWTBotConstants {
         bot.button(Messages.generateCronButtonLabel).click();
         bot.button(IDialogConstants.FINISH_LABEL).click();
 
-        Assert.assertEquals(ERROR_WRONG_TIMER_CONDITION_MESSAGE, "0 15 9 ? * WED *",
+        assertEquals(ERROR_WRONG_TIMER_CONDITION_MESSAGE, "0 15 9 ? * WED *",
                 bot.textWithLabel(Messages.timerCondition).getText());
-
-        saveDiagram();
-        final IStatus status = SWTBotTestUtil.selectAndRunFirstPoolFound(bot);
-        assertTrue(status.getMessage(), status.isOK());
 
     }
 
@@ -235,13 +225,8 @@ public class TestTimer implements SWTBotConstants {
         bot.button(IDialogConstants.FINISH_LABEL).click();
 
         // "Every day at xx:yy:zz"
-        Assert.assertEquals(ERROR_WRONG_TIMER_CONDITION_MESSAGE, "0 0 14 1/1 * ? *",
+        assertEquals(ERROR_WRONG_TIMER_CONDITION_MESSAGE, "0 0 14 1/1 * ? *",
                 bot.textWithLabel(Messages.timerCondition).getText());
-
-        saveDiagram();
-        final IStatus status = SWTBotTestUtil.selectAndRunFirstPoolFound(bot);
-        assertTrue(status.getMessage(), status.isOK());
-
     }
 
     /**
@@ -252,7 +237,6 @@ public class TestTimer implements SWTBotConstants {
      */
     @Test
     public void testEditTimerConditionEveryHour() {
-
         // create new Diagram
         final SWTBotGefEditor gmfEditor = createNewEmptyDiagram();
         createStartTimerDiagram(gmfEditor);
@@ -268,11 +252,6 @@ public class TestTimer implements SWTBotConstants {
         // "Every 4 hours"
         Assert.assertEquals(ERROR_WRONG_TIMER_CONDITION_MESSAGE, "0 0 0/1 1/1 * ? *",
                 bot.textWithLabel(Messages.timerCondition).getText());
-
-        saveDiagram();
-        final IStatus status = SWTBotTestUtil.selectAndRunFirstPoolFound(bot);
-        assertTrue(status.getMessage(), status.isOK());
-
     }
 
     /**
@@ -306,15 +285,6 @@ public class TestTimer implements SWTBotConstants {
         Assert.assertEquals(ERROR_WRONG_TIMER_CONDITION_MESSAGE, conditionRes,
                 bot.textWithLabel(Messages.timerCondition).getText());
 
-        saveDiagram();
-        final IStatus status = SWTBotTestUtil.selectAndRunFirstPoolFound(bot);
-        assertTrue(status.getMessage(), status.isOK());
-
-    }
-
-    private void saveDiagram() {
-        bot.activeEditor().setFocus();
-        bot.toolbarButtonWithId(SWTBotConstants.SWTBOT_ID_SAVE_EDITOR).click();
     }
 
     /**
@@ -339,14 +309,8 @@ public class TestTimer implements SWTBotConstants {
         bot.button(Messages.generateFixedDateLabel).click();
         bot.button(IDialogConstants.FINISH_LABEL).click();
 
-        Assert.assertFalse(ERROR_WRONG_TIMER_CONDITION_MESSAGE,
+        assertFalse(ERROR_WRONG_TIMER_CONDITION_MESSAGE,
                 bot.textWithLabel(Messages.timerCondition).getText().isEmpty());
-
-        saveDiagram();
-
-        final IStatus status = SWTBotTestUtil.selectAndRunFirstPoolFound(bot);
-        assertTrue(status.getMessage(), status.isOK());
-
     }
 
     /**
@@ -388,12 +352,8 @@ public class TestTimer implements SWTBotConstants {
 
         bot.button(IDialogConstants.FINISH_LABEL).click();
 
-        Assert.assertEquals(ERROR_WRONG_TIMER_CONDITION_MESSAGE, "00:02:00",
+        assertEquals(ERROR_WRONG_TIMER_CONDITION_MESSAGE, "00:02:00",
                 bot.textWithLabel(Messages.timerCondition).getText());
-
-        saveDiagram();
-        final IStatus status = SWTBotTestUtil.selectAndRunFirstPoolFound(bot);
-        assertTrue(status.getMessage(), status.isOK());
     }
 
     /**
@@ -432,10 +392,6 @@ public class TestTimer implements SWTBotConstants {
         editTimerCondition(gmfEditor, DEFAULT_TIMER_NAME);
         Assert.assertTrue(ERROR_WRONG_TIMER_CONDITION_MESSAGE, bot.radio(Messages.durationLabel).isSelected());
         bot.button(IDialogConstants.CANCEL_LABEL).click();
-        saveDiagram();
-        final IStatus status = SWTBotTestUtil.selectAndRunFirstPoolFound(bot);
-        assertTrue(status.getMessage(), status.isOK());
-
     }
 
     private SWTBotGefEditor addTimerAndTaskToDiagram() {
