@@ -39,11 +39,15 @@ import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditor;
 import org.bonitasoft.studio.swtbot.framework.application.BotApplicationWorkbenchWindow;
 import org.bonitasoft.studio.swtbot.framework.projectExplorer.ProjectExplorerBot;
+import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
+import org.bonitasoft.studio.tests.util.ProjectUtil;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
@@ -64,6 +68,14 @@ public class BPMNExportTests {
 
     @Rule
     public TemporaryFolder tmpFolder = new TemporaryFolder();
+    
+    @Rule
+    public SWTGefBotRule swtGefBotRule = new SWTGefBotRule(bot);
+
+    @After
+    public void cleanup() throws CoreException {
+        ProjectUtil.cleanProject();
+    }
 
     @Test
     public void testExportToBPMN() throws Exception {

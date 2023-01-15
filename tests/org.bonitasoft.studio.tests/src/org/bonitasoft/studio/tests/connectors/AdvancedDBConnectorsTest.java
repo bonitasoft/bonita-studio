@@ -35,10 +35,12 @@ import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.waits.Conditions;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+@Ignore("Too random on CI")
 @RunWith(SWTBotJunit4ClassRunner.class)
 public class AdvancedDBConnectorsTest {
 

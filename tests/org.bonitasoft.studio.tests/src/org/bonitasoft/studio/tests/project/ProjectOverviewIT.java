@@ -18,7 +18,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
 
-import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.core.ActiveOrganizationProvider;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
@@ -33,6 +32,7 @@ import org.bonitasoft.studio.tests.util.ProjectUtil;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
+import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Rule;
@@ -40,19 +40,16 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(SWTBotJunit4ClassRunner.class)
-public class ProjectOverviewdIT {
+public class ProjectOverviewIT {
 
     private final SWTGefBot bot = new SWTGefBot();
 
     @Rule
     public SWTGefBotRule rule = new SWTGefBotRule(bot);
 
-    private static RepositoryAccessor repositoryAccessor;
 
     @BeforeClass
     public static void setUp() throws CoreException {
-        repositoryAccessor = RepositoryManager.getInstance().getAccessor();
-        ProjectUtil.cleanProject();
         LivingApplicationPlugin.getDefault().getPreferenceStore()
                 .setValue(NewApplicationHandler.DO_NOT_SHOW_HELP_MESSAGE_DIALOG, true);
     }
@@ -61,13 +58,19 @@ public class ProjectOverviewdIT {
     public static void cleanUp() throws CoreException {
         ProjectUtil.cleanProject();
     }
+    
+    @After
+    public void closeDashboard() throws Exception {
+        var worbenchBot = new BotApplicationWorkbenchWindow(bot);
+        worbenchBot.openProjectOverview().close();
+    }
 
     @Test
     public void should_manage_diagrams_from_dashboard() {
         var worbenchBot = new BotApplicationWorkbenchWindow(bot);
         var dashboardBot = worbenchBot.openProjectOverview().toDashboardView();
         dashboardBot.createDiagram().closeActiveDiagram();
-        List<DiagramFileStore> diagrams = repositoryAccessor.getRepositoryStore(DiagramRepositoryStore.class).getChildren();
+        List<DiagramFileStore> diagrams = RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class).getChildren();
         assertThat(diagrams).isNotEmpty();
         dashboardBot.openDiagram(diagrams.get(0).getName()).closeActiveDiagram();
     }
@@ -95,7 +98,7 @@ public class ProjectOverviewdIT {
         var worbenchBot = new BotApplicationWorkbenchWindow(bot);
         var dashboardBot = worbenchBot.openProjectOverview().toDashboardView();
         dashboardBot.createApplicationFile().close();
-        List<ApplicationFileStore> apps = repositoryAccessor
+        List<ApplicationFileStore> apps = RepositoryManager.getInstance()
                 .getRepositoryStore(ApplicationRepositoryStore.class).getChildren();
         assertThat(apps).isNotEmpty();
         dashboardBot.openApplicationFile(apps.get(0).getName()).close();

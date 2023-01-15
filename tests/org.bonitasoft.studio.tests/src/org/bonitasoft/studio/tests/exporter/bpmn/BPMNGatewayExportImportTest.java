@@ -45,6 +45,9 @@ import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.XORGateway;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.MainProcessEditPart;
 import org.bonitasoft.studio.swtbot.framework.application.BotApplicationWorkbenchWindow;
+import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
+import org.bonitasoft.studio.tests.util.ProjectUtil;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -79,6 +82,14 @@ public class BPMNGatewayExportImportTest {
     public TemporaryFolder tmpFolder = new TemporaryFolder();
 
     private Resource resource;
+    
+    @Rule
+    public SWTGefBotRule swtGefBotRule = new SWTGefBotRule(bot);
+
+    @After
+    public void cleanup() throws CoreException {
+        ProjectUtil.cleanProject();
+    }
 
     @Test
     public void shouldGatewaysHaveBeenExportedImported() {
@@ -153,8 +164,4 @@ public class BPMNGatewayExportImportTest {
         });
     }
 
-    @After
-    public void clean() {
-        resource.unload();
-    }
 }
