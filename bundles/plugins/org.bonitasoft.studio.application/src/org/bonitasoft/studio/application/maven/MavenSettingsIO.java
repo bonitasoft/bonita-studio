@@ -41,7 +41,8 @@ public class MavenSettingsIO {
 
     public static Settings read() {
         try {
-            return MavenPlugin.getMaven().getSettings();
+            var settings =  MavenPlugin.getMaven().getSettings();
+            return settings.clone();
         } catch (CoreException e) {
             BonitaStudioLog.error(e);
             return new Settings();
