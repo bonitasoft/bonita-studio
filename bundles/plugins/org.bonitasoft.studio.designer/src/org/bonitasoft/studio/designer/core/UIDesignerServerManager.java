@@ -32,6 +32,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -92,6 +93,7 @@ public class UIDesignerServerManager implements IBonitaProjectListener {
     private PageDesignerURLFactory pageDesignerURLBuilder;
     private boolean started = false;
     private UIDWorkspaceSynchronizer synchronizer;
+    private Process process;
 
     private UIDesignerServerManager() {
         addShutdownHook();
@@ -125,58 +127,100 @@ public class UIDesignerServerManager implements IBonitaProjectListener {
             monitor.beginTask(Messages.startingUIDesigner, IProgressMonitor.UNKNOWN);
             BonitaStudioLog.info(Messages.startingUIDesigner, UIDesignerPlugin.PLUGIN_ID);
             Instant start = Instant.now();
-            int healthCheckServerPort = BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore()
-                    .getInt(BonitaPreferenceConstants.HEALTHCHECK_SERVER_PORT);
-            DataRepositoryServerManager dataRepositoryServerManager = DataRepositoryServerManager.getInstance();
-            int dataRepositoryPort = dataRepositoryServerManager.selectPort(healthCheckServerPort);
-            if (!dataRepositoryServerManager.isStarted()) {
-                schedule(healthCheckServerPort, dataRepositoryPort,
-                        dataRepositoryServerManager);
-            }
-            this.runtimePort = BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore()
-                    .getInt(BonitaPreferenceConstants.CONSOLE_PORT);
-            final ILaunchManager manager = getLaunchManager();
-            final ILaunchConfigurationType ltype = manager
-                    .getLaunchConfigurationType(IExternalToolConstants.ID_PROGRAM_LAUNCH_CONFIGURATION_TYPE);
-            try {
-                final ILaunchConfigurationWorkingCopy workingCopy = ltype.newInstance(null, "Standalone UI Designer");
-                workingCopy.setAttribute(IExternalToolConstants.ATTR_LOCATION, javaBinaryLocation());
-                workingCopy.setAttribute(IExternalToolConstants.ATTR_TOOL_ARGUMENTS,
-                        buildCommand(repository, healthCheckServerPort, dataRepositoryPort).stream()
-                                .collect(Collectors.joining(" ")));
-                Map<String, String> env = new HashMap<>();
-                env.put("JAVA_TOOL_OPTIONS", "-Dfile.encoding=UTF-8");
-                workingCopy.setAttribute(ILaunchManager.ATTR_ENVIRONMENT_VARIABLES, env);
-                launch = workingCopy.launch(ILaunchManager.RUN_MODE, AbstractRepository.NULL_PROGRESS_MONITOR);
-                pageDesignerURLBuilder = new PageDesignerURLFactory(getPreferenceStore());
-                if (waitForUID(pageDesignerURLBuilder)) {
-                    schedule(healthCheckServerPort,
-                            dataRepositoryPort,
+            if (PlatformUI.isWorkbenchRunning()) {
+                int healthCheckServerPort = BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore()
+                        .getInt(BonitaPreferenceConstants.HEALTHCHECK_SERVER_PORT);
+                DataRepositoryServerManager dataRepositoryServerManager = DataRepositoryServerManager.getInstance();
+                int dataRepositoryPort = dataRepositoryServerManager.selectPort(healthCheckServerPort);
+                if (!DataRepositoryServerManager.isStarted()) {
+                    schedule(healthCheckServerPort, dataRepositoryPort,
                             dataRepositoryServerManager);
-                    started = true;
-                    BonitaStudioLog.info(
-                            String.format("UI Designer has been started on http://localhost:%s/bonita in %ss", port,
-                                    Duration.between(start, Instant.now()).getSeconds()),
-                            UIDesignerPlugin.PLUGIN_ID);
-                    synchronizer = new UIDWorkspaceSynchronizer(repository);
-                    synchronizer.connect();
-                } else {
-                    Display.getDefault().asyncExec(() -> {
-                        int res = MessageDialog.open(MessageDialog.ERROR,
-                                Display.getDefault().getActiveShell(),
-                                Messages.uidStartupFailedTitle,
-                                Messages.uidStartupFailedMsg,
-                                SWT.NONE,
-                                IDialogConstants.CLOSE_LABEL, Messages.openLogFile);
-                        if (res == 1) {
-                            new CommandExecutor().executeCommand("org.bonitasoft.studio.application.openUidLog",
-                                    Map.of());
-                        }
-                    });
                 }
-            } catch (final CoreException | IOException e) {
-                BonitaStudioLog.error("Failed to run ui designer war", e);
+                startUidWithLaunchManager(repository, start, healthCheckServerPort, dataRepositoryServerManager,
+                        dataRepositoryPort);
+            } else {
+                try {
+                    start(repository.getProject().getLocation().toFile().toPath());
+                } catch (IOException e) {
+                    BonitaStudioLog.error(e);
+                }
             }
+        }
+    }
+
+    private void startUidWithLaunchManager(IRepository repository, Instant start, int healthCheckServerPort,
+            DataRepositoryServerManager dataRepositoryServerManager, int dataRepositoryPort) {
+        this.runtimePort = BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore()
+                .getInt(BonitaPreferenceConstants.CONSOLE_PORT);
+        final ILaunchManager manager = getLaunchManager();
+        final ILaunchConfigurationType ltype = manager
+                .getLaunchConfigurationType(IExternalToolConstants.ID_PROGRAM_LAUNCH_CONFIGURATION_TYPE);
+        try {
+            final ILaunchConfigurationWorkingCopy workingCopy = ltype.newInstance(null, "Standalone UI Designer");
+            workingCopy.setAttribute(IExternalToolConstants.ATTR_LOCATION, javaBinaryLocation());
+            workingCopy.setAttribute(IExternalToolConstants.ATTR_TOOL_ARGUMENTS,
+                    buildCommand(repository.getProject().getLocation().toFile().toPath(), healthCheckServerPort,
+                            dataRepositoryPort, true).stream()
+                                    .collect(Collectors.joining(" ")));
+            Map<String, String> env = new HashMap<>();
+            env.put("JAVA_TOOL_OPTIONS", "-Dfile.encoding=UTF-8");
+            workingCopy.setAttribute(ILaunchManager.ATTR_ENVIRONMENT_VARIABLES, env);
+            launch = workingCopy.launch(ILaunchManager.RUN_MODE, AbstractRepository.NULL_PROGRESS_MONITOR);
+            pageDesignerURLBuilder = new PageDesignerURLFactory(getPreferenceStore());
+            if (waitForUID(pageDesignerURLBuilder)) {
+                schedule(healthCheckServerPort,
+                        dataRepositoryPort,
+                        dataRepositoryServerManager);
+                started = true;
+                BonitaStudioLog.info(
+                        String.format("UI Designer has been started on http://localhost:%s/bonita in %ss", port,
+                                Duration.between(start, Instant.now()).getSeconds()),
+                        UIDesignerPlugin.PLUGIN_ID);
+                synchronizer = new UIDWorkspaceSynchronizer(repository);
+                synchronizer.connect();
+            } else {
+                Display.getDefault().asyncExec(() -> {
+                    int res = MessageDialog.open(MessageDialog.ERROR,
+                            Display.getDefault().getActiveShell(),
+                            Messages.uidStartupFailedTitle,
+                            Messages.uidStartupFailedMsg,
+                            SWT.NONE,
+                            IDialogConstants.CLOSE_LABEL, Messages.openLogFile);
+                    if (res == 1) {
+                        new CommandExecutor().executeCommand("org.bonitasoft.studio.application.openUidLog",
+                                Map.of());
+                    }
+                });
+            }
+        } catch (final CoreException | IOException e) {
+            BonitaStudioLog.error("Failed to run ui designer war", e);
+        }
+    }
+
+    /**
+     * Start method that doesn't required the Workbench to be running.
+     * This is used when migrating a workspace
+     * 
+     * @param projectPath
+     * @throws IOException
+     */
+    private void start(Path projectPath) throws IOException {
+        var java = javaBinaryLocation();
+        var command = new ArrayList<String>();
+        command.add(java);
+        command.addAll(buildCommand(projectPath, -1, -1, false));
+        process = new ProcessBuilder()
+                .command(command)
+                .inheritIO()
+                .start();
+        pageDesignerURLBuilder = new PageDesignerURLFactory(getPreferenceStore());
+        if (waitForUID(pageDesignerURLBuilder)) {
+            started = true;
+        } else {
+            if (process != null) {
+                process.destroyForcibly();
+            }
+            throw new IOException("Failed to start UID.");
         }
     }
 
@@ -283,6 +327,10 @@ public class UIDesignerServerManager implements IBonitaProjectListener {
                 BonitaStudioLog.error(e);
             }
         }
+        if (process != null) {
+            process.destroyForcibly();
+            process = null;
+        }
     }
 
     protected String javaBinaryLocation() throws FileNotFoundException {
@@ -300,30 +348,39 @@ public class UIDesignerServerManager implements IBonitaProjectListener {
         return javaBinaryPath.getAbsolutePath();
     }
 
-    protected List<String> buildCommand(IRepository repository,
+    protected List<String> buildCommand(Path projectPath,
             int workspaceResourceServerPort,
-            int dataRepositoryPort) throws IOException {
-        final WorkspaceSystemProperties workspaceSystemProperties = new WorkspaceSystemProperties(repository);
+            int dataRepositoryPort, boolean quotePath) throws IOException {
+        final WorkspaceSystemProperties workspaceSystemProperties = new WorkspaceSystemProperties(projectPath);
         port = getPreferenceStore().getInt(BonitaPreferenceConstants.UID_PORT, UID_DEFAULT_PORT);
         if (isPortInUse(port)) {
             port = PortSelector.findFreePort();
             getPreferenceStore().putInt(BonitaPreferenceConstants.UID_PORT, port);
         }
-        return Arrays.asList(
-                getPreferenceStore().get(BonitaPreferenceConstants.UID_JVM_OPTS, "-Xmx256m"),
-                workspaceSystemProperties.getWorspacePathLocation(),
-                workspaceSystemProperties.getRestAPIURL(workspaceResourceServerPort),
-                workspaceSystemProperties.activateSpringProfile("studio"),
-                aSystemProperty(PORTAL_BASE_URL,
-                        String.format("http://%s:%s", InetAddress.getLoopbackAddress().getHostAddress(),
-                                runtimePort)),
-                aSystemProperty(BONITA_DATA_REPOSITORY_ORIGIN, String.format("http://%s:%s",
-                        InetAddress.getLoopbackAddress().getHostAddress(),
-                        dataRepositoryPort)),
-                aSystemProperty(UID_SERVER_PORT, String.valueOf(port)),
-                aSystemProperty(UID_LOGGING_FILE, String.format("\"%s\"", getLogFile().getAbsolutePath())),
-                "-jar",
-                "\"" + locateUIDjar() + "\"");
+        var commandList = new ArrayList<String>();
+        commandList.add(getPreferenceStore().get(BonitaPreferenceConstants.UID_JVM_OPTS, "-Xmx256m"));
+        commandList.add(workspaceSystemProperties.getWorspacePathLocation(quotePath));
+        commandList.add(workspaceSystemProperties.activateSpringProfile("studio"));
+        commandList.add(aSystemProperty(UID_SERVER_PORT, String.valueOf(port)));
+        commandList.add(aSystemProperty(UID_LOGGING_FILE,
+                quotePath ? String.format("\"%s\"", getLogFile().getAbsolutePath()) : getLogFile().getAbsolutePath()));
+        if (workspaceResourceServerPort > 0) {
+            commandList.add(workspaceSystemProperties.getRestAPIURL(workspaceResourceServerPort));
+        }
+        if (runtimePort > 0) {
+            commandList.add(aSystemProperty(PORTAL_BASE_URL,
+                    String.format("http://%s:%s", InetAddress.getLoopbackAddress().getHostAddress(),
+                            runtimePort)));
+        }
+        if (dataRepositoryPort > 0) {
+            commandList.add(aSystemProperty(BONITA_DATA_REPOSITORY_ORIGIN, String.format("http://%s:%s",
+                    InetAddress.getLoopbackAddress().getHostAddress(),
+                    dataRepositoryPort)));
+        }
+        commandList.add("-jar");
+        var uidJarLocation = locateUIDjar();
+        commandList.add(quotePath ? "\"" + uidJarLocation + "\"" : uidJarLocation);
+        return commandList;
     }
 
     private static boolean isPortInUse(int port) {
@@ -368,16 +425,12 @@ public class UIDesignerServerManager implements IBonitaProjectListener {
 
     @Override
     public void projectOpened(IRepository repository, IProgressMonitor monitor) {
-        if (PlatformUI.isWorkbenchRunning()) {
-            start(repository, monitor);
-        }
+        start(repository, monitor);
     }
 
     @Override
     public void projectClosed(IRepository repository, IProgressMonitor monitor) {
-        if (PlatformUI.isWorkbenchRunning()) {
-            stop();
-        }
+        stop();
     }
 
 }

@@ -14,9 +14,7 @@
  */
 package org.bonitasoft.studio.application;
 
-import java.io.File;
-
-import org.eclipse.core.runtime.Platform;
+import org.bonitasoft.studio.common.platform.tools.ClearPersistedStateIndication;
 import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.e4.ui.workbench.IWorkbench;
 import org.eclipse.e4.ui.workbench.lifecycle.PostContextCreate;
@@ -29,13 +27,7 @@ public class LifeCycleManager {
     }
 
     protected boolean shouldClearPersistedState() {
-        File installFolder = new File(Platform.getInstallLocation().getURL().getFile());
-        File clearStateFile = installFolder.toPath().resolve(".clearState").toFile();
-        if (clearStateFile.exists()) {
-            clearStateFile.delete();
-            return true;
-        }
-        return false;
+        return ClearPersistedStateIndication.hasIndication();
     }
 
 }

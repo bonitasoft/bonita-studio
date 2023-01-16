@@ -65,6 +65,7 @@ public class RepositoryManager {
     private IPreferenceStore preferenceStore;
     private IConfigurationElement repositoryImplementationElement;
     private RepositoryAccessor repositoryAccessor;
+    private boolean requiredDependenciesInstalled = false;
 
     private RepositoryManager() {
         final IConfigurationElement[] repositoryFactories = BonitaStudioExtensionRegistryManager.getInstance()
@@ -315,8 +316,11 @@ public class RepositoryManager {
      */
     public void installRequiredMavenDependencies(IProgressMonitor monitor) throws CoreException {
         // Ensure Bonita artifacts are properly installed in user local repository before creating a project
-        monitor.subTask("");
-        monitor.beginTask("Check local repository required artifacts...", IProgressMonitor.UNKNOWN);
-        new InstallBonitaMavenArtifactsOperation(MavenPlugin.getMaven().getLocalRepository()).execute(monitor);
+        if(!requiredDependenciesInstalled) {
+            monitor.subTask("");
+            monitor.beginTask("Install required artifacts in local repository...", IProgressMonitor.UNKNOWN);
+            new InstallBonitaMavenArtifactsOperation(MavenPlugin.getMaven().getLocalRepository()).execute(monitor);
+            requiredDependenciesInstalled = true;
+        }
     }
 }

@@ -79,7 +79,7 @@ public class RepositoryAccessor {
             if (!repository.exists()) {
                 repository.create(ProjectMetadata.defaultMetadata(), AbstractRepository.NULL_PROGRESS_MONITOR);
             }
-            var project = Adapters.adapt(repository, BonitaProject.class);
+            var project = BonitaProject.create(repository.getProjectId());
             project.open(new NullProgressMonitor());
             return repository;
         }

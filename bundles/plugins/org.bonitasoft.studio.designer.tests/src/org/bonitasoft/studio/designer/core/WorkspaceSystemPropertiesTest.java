@@ -15,24 +15,16 @@
 package org.bonitasoft.studio.designer.core;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.when;
 
-import java.io.File;
 import java.net.InetAddress;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
-import org.junit.runner.RunWith;
-import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
 
-@RunWith(MockitoJUnitRunner.class)
 public class WorkspaceSystemPropertiesTest {
 
     private WorkspaceSystemProperties workspaceSystemProperties;
@@ -41,17 +33,12 @@ public class WorkspaceSystemPropertiesTest {
     public TemporaryFolder tmpFolder = new TemporaryFolder();
 
 
-    private File projectFolder;
+    private Path projectPath;
 
-    /**
-     * @throws java.lang.Exception
-     */
     @Before
     public void setUp() throws Exception {
-        projectFolder = Paths.get("myProject").toFile();
-        AbstractRepository repository = mock(AbstractRepository.class,Mockito.RETURNS_DEEP_STUBS);
-        when(repository.getProject().getLocation().toFile()).thenReturn(projectFolder);
-        workspaceSystemProperties = spy(new WorkspaceSystemProperties(repository));
+        projectPath = Paths.get("myProject");
+        workspaceSystemProperties = new WorkspaceSystemProperties(projectPath);
     }
 
 
@@ -78,6 +65,7 @@ public class WorkspaceSystemPropertiesTest {
     
     @Test
     public void should_create_workspacePathLocation_uid_environment_property() throws Exception {
-        assertThat(workspaceSystemProperties.getWorspacePathLocation()).isEqualTo("-Ddesigner.workspace.path=\""+projectFolder.toURI()+"\"");
+        assertThat(workspaceSystemProperties.getWorspacePathLocation(true)).isEqualTo("-Ddesigner.workspace.path=\""+projectPath.toFile().toURI()+"\"");
+        assertThat(workspaceSystemProperties.getWorspacePathLocation(false)).isEqualTo("-Ddesigner.workspace.path="+projectPath.toFile().toURI());
     }
 }

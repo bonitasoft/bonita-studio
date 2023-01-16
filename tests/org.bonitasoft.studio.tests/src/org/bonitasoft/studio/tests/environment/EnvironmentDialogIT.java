@@ -1,5 +1,6 @@
 package org.bonitasoft.studio.tests.environment;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
@@ -19,6 +20,7 @@ import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.swtbot.framework.application.BotApplicationWorkbenchWindow;
 import org.bonitasoft.studio.swtbot.framework.projectExplorer.EnvironmentsProjectExplorerBot;
 import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
+import org.bonitasoft.studio.tests.util.ProjectUtil;
 
 @RunWith(SWTBotJunit4ClassRunner.class)
 public class EnvironmentDialogIT {
@@ -36,8 +38,9 @@ public class EnvironmentDialogIT {
     }
     
     @After
-    public void cleanup() {
+    public void cleanup() throws CoreException {
         envExplorerBot.setAsActiveEnvironment("Local");
+        ProjectUtil.cleanProject();
     }
 
     @Test
