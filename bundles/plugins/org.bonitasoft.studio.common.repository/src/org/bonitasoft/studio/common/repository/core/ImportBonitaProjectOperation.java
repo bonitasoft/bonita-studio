@@ -16,6 +16,8 @@ package org.bonitasoft.studio.common.repository.core;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.UncheckedIOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -68,12 +70,17 @@ public class ImportBonitaProjectOperation implements IWorkspaceRunnable {
                     Status.error(String.format("A project with id %s already exists in the workspace.", projectId)));
         }
 
+        removeUidProvidedWidgets();
         var projectInWs = ResourcesPlugin.getWorkspace().getRoot().getLocation().append(projectId).toFile();
         if (!Objects.equals(projectRoot.toPath(), projectInWs.toPath())) {
             try {
                 FileUtil.copyDirectory(projectRoot.toPath(), projectInWs.toPath());
             } catch (IOException e) {
                 throw new CoreException(Status.error("Failed to copy project in workspace.", e));
+            }
+            // Remove source project when present in workspace
+            if(Objects.equals(projectRoot.toPath().getParent(), projectInWs.toPath().getParent())){
+                FileUtil.deleteDir(projectRoot);
             }
         }
 
@@ -99,6 +106,28 @@ public class ImportBonitaProjectOperation implements IWorkspaceRunnable {
                 flatten(localProjectScanner.getProjects()).stream()
                         .filter(Predicate.not(bdmProjects())).collect(Collectors.toList()),
                 projectImportConfiguration, monitor);
+    }
+
+
+    protected void removeUidProvidedWidgets() throws CoreException {
+        var widgetsFolder = projectRoot.toPath().resolve("app").resolve("web_widgets");
+        if (Files.exists(widgetsFolder)) {
+            try {
+                Files.find(widgetsFolder,
+                        1,
+                        // Provided widget folder matcher
+                        (path, attr) -> path.getFileName().toString().startsWith("pb") && Files.isDirectory(path))
+                        .forEach(widget -> {
+                            try {
+                                FileUtil.deleteDir(widget);
+                            } catch (IOException e) {
+                                throw new UncheckedIOException(e);
+                            }
+                        });
+            } catch (IOException | UncheckedIOException e) {
+                throw new CoreException(Status.error("Failed to delete provided widgets.", e));
+            }
+        }
     }
 
     private Predicate<? super MavenProjectInfo> bdmProjects() {

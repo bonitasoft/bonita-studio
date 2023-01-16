@@ -27,6 +27,7 @@ import java.util.Locale;
 import java.util.Properties;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.platform.tools.ClearPersistedStateIndication;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
@@ -68,7 +69,8 @@ public class BonitaLanguagePreferencePage extends AbstractBonitaPreferencePage i
     @Override
     public void createFieldEditors() {
 
-        createTitleBar(Messages.BonitaPreferenceDialog_language, Pics.getImage(PicsConstants.preferenceLanguage), false);
+        createTitleBar(Messages.BonitaPreferenceDialog_language, Pics.getImage(PicsConstants.preferenceLanguage),
+                false);
 
         studioLocale = new ComboFieldEditor(BonitaPreferenceConstants.CURRENT_STUDIO_LOCALE,
                 Messages.bind(Messages.studioLocalLabel,
@@ -159,36 +161,21 @@ public class BonitaLanguagePreferencePage extends AbstractBonitaPreferencePage i
         if (configArea == null) {
             return;
         }
-        try {
-            File configIniFile = new File(
-                    new URL(configArea.getURL().toExternalForm() + File.separatorChar + "configuration" + File.separatorChar
-                            + "config.ini").getFile());
-            if (configIniFile.exists()) {
+        var configAreaFolder = new File(configArea.getURL().getFile());
+        File configIniFile = configAreaFolder.toPath().resolve("configuration").resolve("config.ini").toFile();
+        if (configIniFile.exists()) {
+            try (var inStream = new FileInputStream(configIniFile);
+                 var out = new FileOutputStream(configIniFile);) {
                 Properties configIniProperties = new Properties();
-                final FileInputStream inStream = new FileInputStream(configIniFile);
                 configIniProperties.load(inStream);
                 configIniProperties.setProperty("osgi.nl", locale);
-                final FileOutputStream out = new FileOutputStream(configIniFile);
                 configIniProperties.store(out, "");
-                inStream.close();
-                out.close();
-            }
-        } catch (MalformedURLException e1) {
-            BonitaStudioLog.error(e1);
-        } catch (FileNotFoundException e) {
-            BonitaStudioLog.error(e);
-        } catch (IOException e) {
-            BonitaStudioLog.error(e);
+            } catch (IOException e) {
+                BonitaStudioLog.error(e);
+            } 
         }
 
-        File installFolder = new File(configArea.getURL().getFile());
-        File clearStateFile = installFolder.toPath().resolve(".clearState").toFile();
-        try {
-            clearStateFile.delete();
-            clearStateFile.createNewFile();
-        } catch (IOException e) {
-            BonitaStudioLog.error(e);
-        }
+        ClearPersistedStateIndication.letIndication();
     }
 
 }

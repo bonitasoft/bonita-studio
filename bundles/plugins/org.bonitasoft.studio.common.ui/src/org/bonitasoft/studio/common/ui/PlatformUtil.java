@@ -131,23 +131,25 @@ public class PlatformUtil {
      * open the intro
      */
     public static void openIntroIfNoOtherEditorOpen() {
-        final IWorkbench workbench = PlatformUI.getWorkbench();
-        if (workbench != null) {
-            workbench.getDisplay().asyncExec(() -> Optional.ofNullable(PlatformUI.getWorkbench())
-                    .map(IWorkbench::getActiveWorkbenchWindow)
-                    .map(IWorkbenchWindow::getActivePage)
-                    .map(page -> page.getEditorReferences().length)
-                    .filter(nbEditors -> nbEditors == 0)
-                    .ifPresent(nbEditors -> {
-                        // and that we are in BOS or BOS-SP
-                        if (Platform.isRunning() && Platform.getProduct() != null) {
-                            if (isABonitaProduct(Platform.getProduct().getId())) {
-                                showIntroPart();
-                            } else {
-                                hideIntroPart();
+        if (PlatformUI.isWorkbenchRunning()) {
+            var workbench = PlatformUI.getWorkbench();
+            if (workbench != null) {
+                workbench.getDisplay().asyncExec(() -> Optional.ofNullable(PlatformUI.getWorkbench())
+                        .map(IWorkbench::getActiveWorkbenchWindow)
+                        .map(IWorkbenchWindow::getActivePage)
+                        .map(page -> page.getEditorReferences().length)
+                        .filter(nbEditors -> nbEditors == 0)
+                        .ifPresent(nbEditors -> {
+                            // and that we are in BOS or BOS-SP
+                            if (Platform.isRunning() && Platform.getProduct() != null) {
+                                if (isABonitaProduct(Platform.getProduct().getId())) {
+                                    showIntroPart();
+                                } else {
+                                    hideIntroPart();
+                                }
                             }
-                        }
-                    }));
+                        }));
+            }
         }
     }
 
@@ -156,9 +158,9 @@ public class PlatformUtil {
     }
 
     public static void openDashboardIfNoOtherEditorOpen(boolean synched) {
-        final IWorkbench workbench = PlatformUI.getWorkbench();
-        if (workbench != null) {
-            Runnable openDashboard = () -> Optional.ofNullable(PlatformUI.getWorkbench())
+        if (PlatformUI.isWorkbenchRunning()) {
+            var workbench = PlatformUI.getWorkbench();
+            Runnable openDashboard = () -> Optional.ofNullable(workbench)
                     .map(IWorkbench::getActiveWorkbenchWindow)
                     .map(IWorkbenchWindow::getActivePage)
                     .map(page -> page.getEditorReferences().length)
@@ -181,9 +183,11 @@ public class PlatformUtil {
     }
 
     public static void openIntro() {
-        final IWorkbench workbench = PlatformUI.getWorkbench();
-        if (workbench != null) {
-            workbench.getDisplay().asyncExec(PlatformUtil::showIntroPart);
+        if (PlatformUI.isWorkbenchRunning()) {
+            var workbench = PlatformUI.getWorkbench();
+            if (workbench != null) {
+                workbench.getDisplay().asyncExec(PlatformUtil::showIntroPart);
+            }
         }
     }
 

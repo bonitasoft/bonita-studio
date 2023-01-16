@@ -197,6 +197,10 @@ public class Messages extends NLS {
     public static String removeExtension;
     public static String updateExtensionConfirmationTitle;
     public static String updateExtensionConfirmation;
+    public static String backupWorkspaceBeforeUpdate;
+    public static String backupOngoing;
+    public static String backupFailedTitle;
+    public static String backupFailedMessage;
     public static String dependencyAlreadyExistsInSameVersion;
     public static String dependencyAlreadyExistsInDifferentVersion;
     public static String upgradeExtension;
@@ -283,6 +287,8 @@ public class Messages extends NLS {
     public static String definitionUpateMessage;
     public static String otherDependencyUpdateMessage;
     public static String updateActionsMessage;
+    public static String updateOlderWorkspaceMaintenanceMsg;
+    public static String updateOlderWorkspaceMsg;
     public static String abortingUpdate;
     public static String definitionUpdateWithBreakingChanges;
     public static String definitionRemovedDescription;
@@ -359,6 +365,8 @@ public class Messages extends NLS {
     public static String mavenConfigurationUpdated;
     public static String projectDoesntContainsElement;
     public static String newElementTitle;
+    public static String newerWorkspaceWithoutVersionMsg;
+    public static String newerWorkspaceWithVersionMsg;
     public static String noDescription;
     public static String diagramZoomHint;
     public static String cannotReachMavenCentralRepositoryTitle;
@@ -404,6 +412,11 @@ public class Messages extends NLS {
     public static String createNewLocalRepo;
     public static String confirmDeleteRepositoryTitle;
     public static String confirmDeleteRepository;
+    public static String couldNotParseVersion;
+    public static String couldNotReadVersion;
+    public static String couldNotWriteVersion;
+    public static String projectsMigration;
+    public static String migratingProject;
     public static String removeRepository;
     public static String switchRepositoryDialogTitle;
     public static String switchRepository;
@@ -436,8 +449,8 @@ public class Messages extends NLS {
     public static String testingConnection;
     public static String noAuthenticationForBar;
     public static String invalidBarCredentials;
+    public static String saveWorkspaceBackupArchive;
 
-    
     static {
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);
     }

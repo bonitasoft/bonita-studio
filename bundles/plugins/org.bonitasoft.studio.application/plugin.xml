@@ -802,9 +802,26 @@
             id="org.bonitasoft.studio.application.searchActivity"
             name="SearchActivity">
       </activity>
+      <activity
+            description="spiesActivity to remove from studio"
+            id="org.bonitasoft.studio.application.spiesActivity"
+            name="SpiesActivity">
+      </activity>
+      <activity
+            id="org.bonitasoft.studio.application.diagramActivity"
+            name="diagramRuntimeActivity to remove from studio">
+      </activity>
       <activityPatternBinding
             activityId="org.bonitasoft.studio.application.searchActivity"
-            pattern="org.eclipse.search.*">
+            pattern="org\.eclipse\.search\..*">
+      </activityPatternBinding>
+      <activityPatternBinding
+            activityId="org.bonitasoft.studio.application.spiesActivity"
+            pattern="org\.eclipse\.pde\.spy\..*">
+      </activityPatternBinding>
+      <activityPatternBinding
+            activityId="org.bonitasoft.studio.application.diagramActivity"
+            pattern="org\.eclipse\.gmf\.runtime\.diagram\.ui\..*">
       </activityPatternBinding>
    </extension>
    <extension
@@ -1533,6 +1550,9 @@
          </hiddenMenuItem>
          <hiddenMenuItem
                id="org.eclipse.search.menu">
+         </hiddenMenuItem>
+         <hiddenMenuItem
+               id="org.eclipse.pde.spy.core.menu.e4spies">
          </hiddenMenuItem>
          <hiddenMenuItem
                id="org.eclipse.jdt.ui/org.eclipse.jdt.ui.refactoring.menu">

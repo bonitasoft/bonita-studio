@@ -182,11 +182,7 @@ public class ProjectMigrationListener implements IResourceChangeListener, IResou
             var currentRepo = RepositoryManager.getInstance().switchToRepository(
                     bonitaProject.getId(),
                     new NullProgressMonitor());
-            try {
-                currentRepo.migrate(report, SubMonitor.convert(monitor));
-            } catch (CoreException | MigrationException e) {
-                new InvocationTargetException(e);
-            }
+            currentRepo.migrate(report, SubMonitor.convert(monitor));
         } else {
             var repository = RepositoryManager.getInstance().getCurrentRepository().orElse(null);
             var report = migrator.run(new NullProgressMonitor());

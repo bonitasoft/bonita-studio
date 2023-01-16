@@ -18,8 +18,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-
-import org.bonitasoft.studio.common.repository.model.IRepository;
+import java.nio.file.Path;
 
 import com.google.common.base.Joiner;
 
@@ -29,18 +28,18 @@ public class WorkspaceSystemProperties {
     private static final String WORKSPACE_API_REST_URL = "designer.workspace.apiUrl";
     private static final String SPRING_PROFILES_ACTIVE = "spring.profiles.active";
 
-    private IRepository repository;
+    private Path projectPath;
 
-    public WorkspaceSystemProperties(final IRepository repository) {
-        this.repository = repository;
+    public WorkspaceSystemProperties(Path projectPath) {
+        this.projectPath = projectPath;
     }
 
     public String getRestAPIURL(final int port) throws UnknownHostException {
         return aSystemProperty(WORKSPACE_API_REST_URL, String.format("http://%s:%s/api/workspace", InetAddress.getLoopbackAddress().getHostAddress(), port));
     }
     
-    public String getWorspacePathLocation() {
-        return aSystemProperty(UID_WORKSPACE_PATH_PROPERTIES, "\"" + repository.getProject().getLocation().toFile().toURI() + "\"");
+    public String getWorspacePathLocation(boolean quotePath) {
+        return aSystemProperty(UID_WORKSPACE_PATH_PROPERTIES, quotePath ?  "\"" + projectPath.toFile().toURI() + "\"" : projectPath.toFile().toURI());
     }
 
     public String activateSpringProfile(final String... profiles) {

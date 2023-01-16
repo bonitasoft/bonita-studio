@@ -22,6 +22,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.function.Predicate;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
@@ -32,6 +33,7 @@ public class ZipUtil extends SimpleFileVisitor<Path> implements java.lang.AutoCl
     private Path source;
     private FileOutputStream fos;
     private ZipOutputStream zos;
+    private Predicate<Path> targetFilter;
 
     public static void zip(Path source, Path target) throws IOException {
         try (ZipUtil zippingVisitor = new ZipUtil(source, target)) {
@@ -43,10 +45,15 @@ public class ZipUtil extends SimpleFileVisitor<Path> implements java.lang.AutoCl
         this.source = source;
         fos = new FileOutputStream(target.toFile());
         zos = new ZipOutputStream(fos);
+        targetFilter = target::equals;
     }
 
     @Override
     public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+        if (targetFilter.test(file)) {
+            // do not include the target in zip
+            return CONTINUE;
+        }
         if (!file.toFile().exists()) {
             throw new IOException("File " + file.toString() + " not found.");
         }
@@ -83,21 +90,27 @@ public class ZipUtil extends SimpleFileVisitor<Path> implements java.lang.AutoCl
                 ZipInputStream zis = new ZipInputStream(new BufferedInputStream(fis));) {
             ZipEntry entry;
             while ((entry = zis.getNextEntry()) != null) {
-                int count;
-                byte[] data = new byte[BUFFER_SIZE];
                 File target = targetDir.toFile().toPath().resolve(entry.getName()).toFile();
-                if (!target.exists()) {
-                    target.getParentFile().mkdirs();
-                    if (!target.createNewFile()) {
-                        throw new IOException("Failed to create file " + target.getAbsolutePath());
+                if (entry.isDirectory()) {
+                    if (!target.exists()) {
+                        target.mkdirs();
                     }
-                }
-                FileOutputStream fos = new FileOutputStream(target);
-                try (BufferedOutputStream dest = new BufferedOutputStream(fos, BUFFER_SIZE);) {
-                    while ((count = zis.read(data, 0, BUFFER_SIZE)) != -1) {
-                        dest.write(data, 0, count);
+                } else {
+                    if (!target.exists()) {
+                        target.getParentFile().mkdirs();
+                        if (!target.createNewFile()) {
+                            throw new IOException("Failed to create file " + target.getAbsolutePath());
+                        }
                     }
-                    dest.flush();
+                    FileOutputStream fos = new FileOutputStream(target);
+                    try (BufferedOutputStream dest = new BufferedOutputStream(fos, BUFFER_SIZE);) {
+                        byte[] data = new byte[BUFFER_SIZE];
+                        int count;
+                        while ((count = zis.read(data, 0, BUFFER_SIZE)) != -1) {
+                            dest.write(data, 0, count);
+                        }
+                        dest.flush();
+                    }
                 }
             }
         }
