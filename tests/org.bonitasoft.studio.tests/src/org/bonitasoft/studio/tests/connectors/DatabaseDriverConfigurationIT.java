@@ -38,6 +38,7 @@ import org.bonitasoft.studio.model.configuration.Configuration;
 import org.bonitasoft.studio.model.configuration.Fragment;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.tests.importer.bos.ImportBOSArchiveIT;
+import org.bonitasoft.studio.tests.util.Await;
 import org.bonitasoft.studio.tests.util.InitialProjectRule;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.ui.PlatformUI;
@@ -127,9 +128,12 @@ public class DatabaseDriverConfigurationIT {
                             .contains("hsqldb-2.5.1.jar");
         }
 
-        List<String> dependencies = depStore.getChildren().stream().map(DependencyFileStore::getName)
-                .collect(Collectors.toList());
-        assertThat(dependencies).contains("ojdbc11-21.1.0.0.jar", "postgresql-42.2.19.jar");
+        Await.waitUntil(() -> {
+            List<String> dependencies = depStore.getChildren().stream().map(DependencyFileStore::getName)
+                    .collect(Collectors.toList());
+           return dependencies.contains("ojdbc11-21.1.0.0.jar") 
+                   && dependencies.contains("postgresql-42.2.19.jar");
+        } , 10000, 100);
 
         DatabaseConnectorPropertiesFileStore oracle = dcpStore.getChild("database-oracle11g.properties", false);
         assertThat(oracle.getDefault()).isEqualTo("ojdbc11-21.1.0.0.jar");
