@@ -14,7 +14,9 @@
  */
 package org.bonitasoft.studio.validation.constraints;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
@@ -38,8 +40,9 @@ public class GroovyCompilationOnScriptExpressionConstraint extends AbstractLiveV
     private static final String CONSTRAINT_ID = "org.bonitasoft.studio.validation.constraint.groovyCompilationFailure";
     private static final String GROOVY_DEF_ID = "scripting-groovy";
     private static final Object SCRIPT_PARAMETER = "script";
-    private ProcessScriptsCompiler processScriptsCompilation = new ProcessScriptsCompiler();
-
+    private final ProcessScriptsCompiler scriptCompiler = new ProcessScriptsCompiler();
+    
+    
     @Override
     protected IStatus performBatchValidation(final IValidationContext context) {
         final EObject eObj = context.getTarget();
@@ -70,13 +73,15 @@ public class GroovyCompilationOnScriptExpressionConstraint extends AbstractLiveV
         if (scriptText == null || scriptText.isEmpty()) {
             return context.createSuccessStatus();
         }
-        var compilationResultCache = (ProcessScriptsCompilationResult) context.getCurrentConstraintData();
-        Pool process = ModelHelper.getParentPool(expression);
-        if (compilationResultCache == null || !processScriptsCompilation.contains(process)) {
-            compilationResultCache = processScriptsCompilation.compileForErrors(process);
+        var compilationResultCache = (Map<String,ProcessScriptsCompilationResult>) context.getCurrentConstraintData();
+        if(compilationResultCache == null) {
+            compilationResultCache = new HashMap<String, ProcessScriptsCompilationResult>();
             context.putCurrentConstraintData(compilationResultCache);
         }
-        List<String> errors = compilationResultCache.getResult(expression);
+        Pool process = ModelHelper.getParentPool(expression);
+        String processId = ModelHelper.getEObjectID(process);
+        var result = compilationResultCache.computeIfAbsent(processId, key -> scriptCompiler.compileForErrors(process));
+        List<String> errors = result.getResult(expression);
         if (errors != null && !errors.isEmpty()) {
             MultiStatus status = new MultiStatus(GroovyCompilationOnScriptExpressionConstraint.class, 0, null);
             errors.stream()
@@ -87,7 +92,7 @@ public class GroovyCompilationOnScriptExpressionConstraint extends AbstractLiveV
         }
         return context.createSuccessStatus();
     }
-
+    
     @Override
     protected String getConstraintId() {
         return CONSTRAINT_ID;
