@@ -48,23 +48,16 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 
 public class ProcessScriptsCompiler {
 
-    private Map<String, Object> processes = new HashMap<>();
-
     public ProcessScriptsCompilationResult compileForErrors(Pool process) {
         try (var source = GroovySourceWriter.write(process)) {
             source.build();
-            ProcessScriptsCompilationResult result = source.collectCompilationErrors();
-            processes.put(ModelHelper.getEObjectID(process), result);
-            return result;
+            return source.collectCompilationErrors();
         } catch (CoreException e) {
             BonitaStudioLog.error(e);
             return null;
         }
     }
 
-    public boolean contains(Pool process) {
-        return processes.containsKey(ModelHelper.getEObjectID(process));
-    }
 
     static class GroovySourceWriter implements Closeable {
 
