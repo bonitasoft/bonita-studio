@@ -56,9 +56,12 @@ public class BonitaLanguagePreferencePage extends AbstractBonitaPreferencePage i
 
     private ComboFieldEditor webLocale;
 
+    private ConfigurationUpdater configurationUpdater;
+
     public BonitaLanguagePreferencePage() {
         super(GRID);
         setPreferenceStore(BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore());
+        configurationUpdater = new ConfigurationUpdater();
     }
 
     /**
@@ -156,25 +159,8 @@ public class BonitaLanguagePreferencePage extends AbstractBonitaPreferencePage i
     public void init(IWorkbench workbench) {
     }
 
-    private static void changeLocale(String locale) {
-        Location configArea = Platform.getInstallLocation();
-        if (configArea == null) {
-            return;
-        }
-        var configAreaFolder = new File(configArea.getURL().getFile());
-        File configIniFile = configAreaFolder.toPath().resolve("configuration").resolve("config.ini").toFile();
-        if (configIniFile.exists()) {
-            try (var inStream = new FileInputStream(configIniFile);
-                 var out = new FileOutputStream(configIniFile);) {
-                Properties configIniProperties = new Properties();
-                configIniProperties.load(inStream);
-                configIniProperties.setProperty("osgi.nl", locale);
-                configIniProperties.store(out, "");
-            } catch (IOException e) {
-                BonitaStudioLog.error(e);
-            } 
-        }
-
+    private void changeLocale(String locale) {
+        configurationUpdater.updateLocale(locale);
         ClearPersistedStateIndication.letIndication();
     }
 
