@@ -1,0 +1,532 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.eclipse.datatools.modelbase.sql.query/src"
+    creationCommands="false" editDirectory="/org.eclipse.datatools.modelbase.sql.query.edit/src"
+    editorDirectory="/org.eclipse.datatools.modelbase.sql.query.editor/src" modelPluginID="org.eclipse.datatools.modelbase.sql.query"
+    runtimeJar="true" modelName="SQLQueryModel" editPluginClass="org.eclipse.datatools.modelbase.sql.query.provider.SQLQueryEditPlugin"
+    editorPluginClass="org.eclipse.datatools.modelbase.sql.query.presentation.SQLQueryEditorPlugin"
+    importerID="org.eclipse.emf.importer.rose" usedGenPackages="../../org.eclipse.datatools.modelbase.sql/model/sqlmodel.genmodel#//sqlmodel ../../org.eclipse.emf.ecore/model/Ecore.genmodel#//ecore">
+  <foreignModel>SQLQueryModel.mdl</foreignModel>
+  <foreignModel>ECORE_MODEL_PLUGIN_PATH</foreignModel>
+  <foreignModel>../..</foreignModel>
+  <foreignModel>CDM_EXTRACT_PATH</foreignModel>
+  <foreignModel>SQL_MODEL_PLUGIN_PATH</foreignModel>
+  <genPackages prefix="SQLQueryModel" basePackage="org.eclipse.datatools.modelbase.sql"
+      ecorePackage="SQLQueryModel.ecore#/">
+    <genEnums ecoreEnum="SQLQueryModel.ecore#//SuperGroupType">
+      <genEnumLiterals ecoreEnumLiteral="SQLQueryModel.ecore#//SuperGroupType/CUBE"/>
+      <genEnumLiterals ecoreEnumLiteral="SQLQueryModel.ecore#//SuperGroupType/GRANDTOTAL"/>
+      <genEnumLiterals ecoreEnumLiteral="SQLQueryModel.ecore#//SuperGroupType/ROLLUP"/>
+    </genEnums>
+    <genEnums ecoreEnum="SQLQueryModel.ecore#//PredicateQuantifiedType">
+      <genEnumLiterals ecoreEnumLiteral="SQLQueryModel.ecore#//PredicateQuantifiedType/SOME"/>
+      <genEnumLiterals ecoreEnumLiteral="SQLQueryModel.ecore#//PredicateQuantifiedType/ANY"/>
+      <genEnumLiterals ecoreEnumLiteral="SQLQueryModel.ecore#//PredicateQuantifiedType/ALL"/>
+    </genEnums>
+    <genEnums ecoreEnum="SQLQueryModel.ecore#//PredicateComparisonOperator">
+      <genEnumLiterals ecoreEnumLiteral="SQLQueryModel.ecore#//PredicateComparisonOperator/EQUAL"/>
+      <genEnumLiterals ecoreEnumLiteral="SQLQueryModel.ecore#//PredicateComparisonOperator/NOT_EQUAL"/>
+      <genEnumLiterals ecoreEnumLiteral="SQLQueryModel.ecore#//PredicateComparisonOperator/LESS_THAN"/>
+      <genEnumLiterals ecoreEnumLiteral="SQLQueryModel.ecore#//PredicateComparisonOperator/GREATER_THAN"/>
+      <genEnumLiterals ecoreEnumLiteral="SQLQueryModel.ecore#//PredicateComparisonOperator/LESS_THAN_OR_EQUAL"/>
+      <genEnumLiterals ecoreEnumLiteral="SQLQueryModel.ecore#//PredicateComparisonOperator/GREATER_THAN_OR_EQUAL"/>
+    </genEnums>
+    <genEnums ecoreEnum="SQLQueryModel.ecore#//SearchConditionCombinedOperator">
+      <genEnumLiterals ecoreEnumLiteral="SQLQueryModel.ecore#//SearchConditionCombinedOperator/AND"/>
+      <genEnumLiterals ecoreEnumLiteral="SQLQueryModel.ecore#//SearchConditionCombinedOperator/OR"/>
+    </genEnums>
+    <genEnums ecoreEnum="SQLQueryModel.ecore#//TableJoinedOperator">
+      <genEnumLiterals ecoreEnumLiteral="SQLQueryModel.ecore#//TableJoinedOperator/DEFAULT_INNER"/>
+      <genEnumLiterals ecoreEnumLiteral="SQLQueryModel.ecore#//TableJoinedOperator/EXPLICIT_INNER"/>
+      <genEnumLiterals ecoreEnumLiteral="SQLQueryModel.ecore#//TableJoinedOperator/LEFT_OUTER"/>
+      <genEnumLiterals ecoreEnumLiteral="SQLQueryModel.ecore#//TableJoinedOperator/RIGHT_OUTER"/>
+      <genEnumLiterals ecoreEnumLiteral="SQLQueryModel.ecore#//TableJoinedOperator/FULL_OUTER"/>
+    </genEnums>
+    <genEnums ecoreEnum="SQLQueryModel.ecore#//QueryCombinedOperator">
+      <genEnumLiterals ecoreEnumLiteral="SQLQueryModel.ecore#//QueryCombinedOperator/UNION"/>
+      <genEnumLiterals ecoreEnumLiteral="SQLQueryModel.ecore#//QueryCombinedOperator/UNION_ALL"/>
+      <genEnumLiterals ecoreEnumLiteral="SQLQueryModel.ecore#//QueryCombinedOperator/INTERSECT"/>
+      <genEnumLiterals ecoreEnumLiteral="SQLQueryModel.ecore#//QueryCombinedOperator/INTERSECT_ALL"/>
+      <genEnumLiterals ecoreEnumLiteral="SQLQueryModel.ecore#//QueryCombinedOperator/EXCEPT"/>
+      <genEnumLiterals ecoreEnumLiteral="SQLQueryModel.ecore#//QueryCombinedOperator/EXCEPT_ALL"/>
+    </genEnums>
+    <genEnums ecoreEnum="SQLQueryModel.ecore#//ValueExpressionUnaryOperator">
+      <genEnumLiterals ecoreEnumLiteral="SQLQueryModel.ecore#//ValueExpressionUnaryOperator/NONE"/>
+      <genEnumLiterals ecoreEnumLiteral="SQLQueryModel.ecore#//ValueExpressionUnaryOperator/PLUS"/>
+      <genEnumLiterals ecoreEnumLiteral="SQLQueryModel.ecore#//ValueExpressionUnaryOperator/MINUS"/>
+    </genEnums>
+    <genEnums ecoreEnum="SQLQueryModel.ecore#//ValueExpressionCombinedOperator">
+      <genEnumLiterals ecoreEnumLiteral="SQLQueryModel.ecore#//ValueExpressionCombinedOperator/ADD"/>
+      <genEnumLiterals ecoreEnumLiteral="SQLQueryModel.ecore#//ValueExpressionCombinedOperator/SUBTRACT"/>
+      <genEnumLiterals ecoreEnumLiteral="SQLQueryModel.ecore#//ValueExpressionCombinedOperator/MULTIPLY"/>
+      <genEnumLiterals ecoreEnumLiteral="SQLQueryModel.ecore#//ValueExpressionCombinedOperator/DIVIDE"/>
+      <genEnumLiterals ecoreEnumLiteral="SQLQueryModel.ecore#//ValueExpressionCombinedOperator/CONCATENATE"/>
+    </genEnums>
+    <genEnums ecoreEnum="SQLQueryModel.ecore#//ValueExpressionLabeledDurationType">
+      <genEnumLiterals ecoreEnumLiteral="SQLQueryModel.ecore#//ValueExpressionLabeledDurationType/YEARS"/>
+      <genEnumLiterals ecoreEnumLiteral="SQLQueryModel.ecore#//ValueExpressionLabeledDurationType/MONTHS"/>
+      <genEnumLiterals ecoreEnumLiteral="SQLQueryModel.ecore#//ValueExpressionLabeledDurationType/DAYS"/>
+      <genEnumLiterals ecoreEnumLiteral="SQLQueryModel.ecore#//ValueExpressionLabeledDurationType/HOURS"/>
+      <genEnumLiterals ecoreEnumLiteral="SQLQueryModel.ecore#//ValueExpressionLabeledDurationType/MINUTES"/>
+      <genEnumLiterals ecoreEnumLiteral="SQLQueryModel.ecore#//ValueExpressionLabeledDurationType/SECONDS"/>
+      <genEnumLiterals ecoreEnumLiteral="SQLQueryModel.ecore#//ValueExpressionLabeledDurationType/MICROSECONDS"/>
+    </genEnums>
+    <genEnums ecoreEnum="SQLQueryModel.ecore#//NullOrderingType">
+      <genEnumLiterals ecoreEnumLiteral="SQLQueryModel.ecore#//NullOrderingType/NONE"/>
+      <genEnumLiterals ecoreEnumLiteral="SQLQueryModel.ecore#//NullOrderingType/NULLS_FIRST"/>
+      <genEnumLiterals ecoreEnumLiteral="SQLQueryModel.ecore#//NullOrderingType/NULLS_LAST"/>
+    </genEnums>
+    <genEnums ecoreEnum="SQLQueryModel.ecore#//OrderingSpecType">
+      <genEnumLiterals ecoreEnumLiteral="SQLQueryModel.ecore#//OrderingSpecType/NONE"/>
+      <genEnumLiterals ecoreEnumLiteral="SQLQueryModel.ecore#//OrderingSpecType/ASC"/>
+      <genEnumLiterals ecoreEnumLiteral="SQLQueryModel.ecore#//OrderingSpecType/DESC"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="SQLQueryModel.ecore#//UpdatabilityType">
+      <genEnumLiterals ecoreEnumLiteral="SQLQueryModel.ecore#//UpdatabilityType/READ_ONLY"/>
+      <genEnumLiterals ecoreEnumLiteral="SQLQueryModel.ecore#//UpdatabilityType/UPDATE"/>
+    </genEnums>
+    <genClasses image="false" ecoreClass="SQLQueryModel.ecore#//QueryStatement"/>
+    <genClasses ecoreClass="SQLQueryModel.ecore#//QueryDeleteStatement">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//QueryDeleteStatement/whereCurrentOfClause"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//QueryDeleteStatement/whereClause"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//QueryDeleteStatement/targetTable"/>
+    </genClasses>
+    <genClasses ecoreClass="SQLQueryModel.ecore#//QueryInsertStatement">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//QueryInsertStatement/sourceQuery"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//QueryInsertStatement/sourceValuesRowList"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//QueryInsertStatement/targetTable"/>
+      <genFeatures notify="false" createChild="false" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//QueryInsertStatement/targetColumnList"/>
+    </genClasses>
+    <genClasses ecoreClass="SQLQueryModel.ecore#//QuerySelectStatement">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//QuerySelectStatement/queryExpr"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//QuerySelectStatement/orderByClause"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//QuerySelectStatement/updatabilityExpr"/>
+    </genClasses>
+    <genClasses ecoreClass="SQLQueryModel.ecore#//QueryUpdateStatement">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//QueryUpdateStatement/assignmentClause"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//QueryUpdateStatement/whereCurrentOfClause"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//QueryUpdateStatement/whereClause"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//QueryUpdateStatement/targetTable"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="SQLQueryModel.ecore#//UpdateAssignmentExpression">
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//UpdateAssignmentExpression/updateStatement"/>
+      <genFeatures notify="false" createChild="false" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//UpdateAssignmentExpression/targetColumnList"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//UpdateAssignmentExpression/updateSource"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//UpdateAssignmentExpression/mergeUpdateSpec"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="SQLQueryModel.ecore#//CursorReference">
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//CursorReference/updateStatement"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//CursorReference/deleteStatement"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="SQLQueryModel.ecore#//QuerySearchCondition">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute SQLQueryModel.ecore#//QuerySearchCondition/negatedCondition"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//QuerySearchCondition/updateStatement"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//QuerySearchCondition/deleteStatement"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//QuerySearchCondition/tableJoined"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//QuerySearchCondition/combinedLeft"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//QuerySearchCondition/combinedRight"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//QuerySearchCondition/querySelectHaving"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//QuerySearchCondition/querySelectWhere"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//QuerySearchCondition/valueExprCaseSearchContent"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//QuerySearchCondition/nest"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//QuerySearchCondition/mergeOnCondition"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="SQLQueryModel.ecore#//QueryExpressionBody">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute SQLQueryModel.ecore#//QueryExpressionBody/rowFetchLimit"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//QueryExpressionBody/queryExpression"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//QueryExpressionBody/combinedLeft"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//QueryExpressionBody/combinedRight"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//QueryExpressionBody/predicateExists"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//QueryExpressionBody/updateSourceQuery"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//QueryExpressionBody/withTableSpecification"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//QueryExpressionBody/queryNest"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//QueryExpressionBody/sortSpecList"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="SQLQueryModel.ecore#//QueryValueExpression">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute SQLQueryModel.ecore#//QueryValueExpression/unaryOperator"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//QueryValueExpression/dataType"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//QueryValueExpression/valuesRow"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//QueryValueExpression/orderByValueExpr"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//QueryValueExpression/resultColumn"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//QueryValueExpression/basicRight"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//QueryValueExpression/basicLeft"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//QueryValueExpression/likePattern"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//QueryValueExpression/likeMatching"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//QueryValueExpression/predicateNull"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//QueryValueExpression/inValueListRight"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//QueryValueExpression/inValueListLeft"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//QueryValueExpression/inValueRowSelectLeft"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//QueryValueExpression/inValueSelectLeft"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//QueryValueExpression/quantifiedRowSelectLeft"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//QueryValueExpression/quantifiedValueSelectLeft"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//QueryValueExpression/betweenLeft"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//QueryValueExpression/betweenRight1"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//QueryValueExpression/betweenRight2"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//QueryValueExpression/valueExprCast"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//QueryValueExpression/valueExprFunction"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//QueryValueExpression/valueExprCombinedLeft"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//QueryValueExpression/valueExprCombinedRight"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//QueryValueExpression/groupingExpr"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//QueryValueExpression/valueExprCaseElse"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//QueryValueExpression/valueExprCaseSimple"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//QueryValueExpression/valueExprCaseSimpleContentWhen"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//QueryValueExpression/valueExprCaseSimpleContentResult"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//QueryValueExpression/valueExprCaseSearchContent"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//QueryValueExpression/likeEscape"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//QueryValueExpression/valueExprLabeledDuration"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//QueryValueExpression/nest"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//QueryValueExpression/updateSourceExprList"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//QueryValueExpression/tableFunction"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//QueryValueExpression/valueExprRow"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//QueryValueExpression/callStatement"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="SQLQueryModel.ecore#//QueryExpressionRoot">
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//QueryExpressionRoot/insertStatement"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//QueryExpressionRoot/selectStatement"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//QueryExpressionRoot/withClause"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//QueryExpressionRoot/query"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//QueryExpressionRoot/inValueRowSelectRight"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//QueryExpressionRoot/inValueSelectRight"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//QueryExpressionRoot/quantifiedRowSelectRight"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//QueryExpressionRoot/quantifiedValueSelectRight"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//QueryExpressionRoot/valExprScalarSelect"/>
+    </genClasses>
+    <genClasses ecoreClass="SQLQueryModel.ecore#//ValuesRow">
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//ValuesRow/insertStatement"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//ValuesRow/exprList"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//ValuesRow/queryValues"/>
+    </genClasses>
+    <genClasses ecoreClass="SQLQueryModel.ecore#//QueryValues">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//QueryValues/valuesRowList"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="SQLQueryModel.ecore#//TableReference">
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//TableReference/tableJoinedRight"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//TableReference/tableJoinedLeft"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//TableReference/querySelect"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//TableReference/nest"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//TableReference/mergeSourceTable"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="SQLQueryModel.ecore#//TableExpression">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//TableExpression/columnList"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//TableExpression/tableCorrelation"/>
+      <genFeatures notify="false" createChild="false" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//TableExpression/resultTableAllColumns"/>
+      <genFeatures notify="false" createChild="false" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//TableExpression/valueExprColumns"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//TableExpression/mergeTargetTable"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="SQLQueryModel.ecore#//TableJoined">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute SQLQueryModel.ecore#//TableJoined/joinOperator"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//TableJoined/joinCondition"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//TableJoined/tableRefRight"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//TableJoined/tableRefLeft"/>
+    </genClasses>
+    <genClasses ecoreClass="SQLQueryModel.ecore#//WithTableSpecification">
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//WithTableSpecification/queryExpressionRoot"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//WithTableSpecification/withTableQueryExpr"/>
+      <genFeatures notify="false" createChild="false" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//WithTableSpecification/withTableReferences"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//WithTableSpecification/columnNameList"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="SQLQueryModel.ecore#//Predicate">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute SQLQueryModel.ecore#//Predicate/negatedPredicate"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute SQLQueryModel.ecore#//Predicate/hasSelectivity"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute SQLQueryModel.ecore#//Predicate/selectivityValue"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="SQLQueryModel.ecore#//SearchConditionCombined">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute SQLQueryModel.ecore#//SearchConditionCombined/combinedOperator"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//SearchConditionCombined/leftCondition"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//SearchConditionCombined/rightCondition"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="SQLQueryModel.ecore#//OrderByValueExpression">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//OrderByValueExpression/valueExpr"/>
+    </genClasses>
+    <genClasses ecoreClass="SQLQueryModel.ecore#//QueryCombined">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute SQLQueryModel.ecore#//QueryCombined/combinedOperator"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//QueryCombined/leftQuery"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//QueryCombined/rightQuery"/>
+    </genClasses>
+    <genClasses ecoreClass="SQLQueryModel.ecore#//QuerySelect">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute SQLQueryModel.ecore#//QuerySelect/distinct"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//QuerySelect/havingClause"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//QuerySelect/whereClause"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//QuerySelect/groupByClause"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//QuerySelect/selectClause"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//QuerySelect/fromClause"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//QuerySelect/intoClause"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="SQLQueryModel.ecore#//GroupingSpecification">
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//GroupingSpecification/querySelect"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="SQLQueryModel.ecore#//QueryResultSpecification">
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//QueryResultSpecification/querySelect"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="SQLQueryModel.ecore#//ResultTableAllColumns">
+      <genFeatures notify="false" createChild="false" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//ResultTableAllColumns/tableExpr"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="SQLQueryModel.ecore#//ResultColumn">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//ResultColumn/valueExpr"/>
+      <genFeatures notify="false" createChild="false" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//ResultColumn/orderByResultCol"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="SQLQueryModel.ecore#//PredicateBasic">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute SQLQueryModel.ecore#//PredicateBasic/comparisonOperator"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//PredicateBasic/rightValueExpr"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//PredicateBasic/leftValueExpr"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="SQLQueryModel.ecore#//PredicateQuantified"/>
+    <genClasses image="false" ecoreClass="SQLQueryModel.ecore#//PredicateBetween">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute SQLQueryModel.ecore#//PredicateBetween/notBetween"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//PredicateBetween/leftValueExpr"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//PredicateBetween/rightValueExpr1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//PredicateBetween/rightValueExpr2"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="SQLQueryModel.ecore#//PredicateExists">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//PredicateExists/queryExpr"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="SQLQueryModel.ecore#//PredicateIn">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute SQLQueryModel.ecore#//PredicateIn/notIn"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="SQLQueryModel.ecore#//PredicateLike">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute SQLQueryModel.ecore#//PredicateLike/notLike"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//PredicateLike/patternValueExpr"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//PredicateLike/matchingValueExpr"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//PredicateLike/escapeValueExpr"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="SQLQueryModel.ecore#//PredicateIsNull">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute SQLQueryModel.ecore#//PredicateIsNull/notNull"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//PredicateIsNull/valueExpr"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="SQLQueryModel.ecore#//PredicateQuantifiedValueSelect">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute SQLQueryModel.ecore#//PredicateQuantifiedValueSelect/quantifiedType"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute SQLQueryModel.ecore#//PredicateQuantifiedValueSelect/comparisonOperator"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//PredicateQuantifiedValueSelect/queryExpr"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//PredicateQuantifiedValueSelect/valueExpr"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="SQLQueryModel.ecore#//PredicateQuantifiedRowSelect">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute SQLQueryModel.ecore#//PredicateQuantifiedRowSelect/quantifiedType"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//PredicateQuantifiedRowSelect/queryExpr"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//PredicateQuantifiedRowSelect/valueExprList"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="SQLQueryModel.ecore#//PredicateInValueSelect">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//PredicateInValueSelect/queryExpr"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//PredicateInValueSelect/valueExpr"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="SQLQueryModel.ecore#//PredicateInValueList">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//PredicateInValueList/valueExprList"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//PredicateInValueList/valueExpr"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="SQLQueryModel.ecore#//PredicateInValueRowSelect">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//PredicateInValueRowSelect/valueExprList"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//PredicateInValueRowSelect/queryExpr"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="SQLQueryModel.ecore#//ValueExpressionSimple">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute SQLQueryModel.ecore#//ValueExpressionSimple/value"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="SQLQueryModel.ecore#//ValueExpressionColumn">
+      <genFeatures notify="false" createChild="false" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//ValueExpressionColumn/assignmentExprTarget"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//ValueExpressionColumn/parentTableExpr"/>
+      <genFeatures notify="false" createChild="false" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//ValueExpressionColumn/insertStatement"/>
+      <genFeatures notify="false" createChild="false" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//ValueExpressionColumn/tableExpr"/>
+      <genFeatures notify="false" createChild="false" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//ValueExpressionColumn/tableInDatabase"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//ValueExpressionColumn/mergeInsertSpec"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="SQLQueryModel.ecore#//ValueExpressionVariable">
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//ValueExpressionVariable/querySelect"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="SQLQueryModel.ecore#//ValueExpressionScalarSelect">
+      <genFeatures notify="false" createChild="false" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//ValueExpressionScalarSelect/queryExpr"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="SQLQueryModel.ecore#//ValueExpressionLabeledDuration">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute SQLQueryModel.ecore#//ValueExpressionLabeledDuration/labeledDurationType"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//ValueExpressionLabeledDuration/valueExpr"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="SQLQueryModel.ecore#//ValueExpressionCase">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//ValueExpressionCase/caseElse"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="SQLQueryModel.ecore#//ValueExpressionCast">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//ValueExpressionCast/valueExpr"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="SQLQueryModel.ecore#//ValueExpressionNullValue"/>
+    <genClasses image="false" ecoreClass="SQLQueryModel.ecore#//ValueExpressionDefaultValue"/>
+    <genClasses image="false" ecoreClass="SQLQueryModel.ecore#//ValueExpressionFunction">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute SQLQueryModel.ecore#//ValueExpressionFunction/specialRegister"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute SQLQueryModel.ecore#//ValueExpressionFunction/distinct"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute SQLQueryModel.ecore#//ValueExpressionFunction/columnFunction"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//ValueExpressionFunction/parameterList"/>
+      <genFeatures notify="false" createChild="false" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//ValueExpressionFunction/function"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="SQLQueryModel.ecore#//ValueExpressionCombined">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute SQLQueryModel.ecore#//ValueExpressionCombined/combinedOperator"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//ValueExpressionCombined/leftValueExpr"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//ValueExpressionCombined/rightValueExpr"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="SQLQueryModel.ecore#//GroupingSets">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//GroupingSets/groupingSetsElementList"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="SQLQueryModel.ecore#//Grouping">
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//Grouping/groupingSetsElementExpr"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="SQLQueryModel.ecore#//GroupingSetsElement">
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//GroupingSetsElement/groupingSets"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="SQLQueryModel.ecore#//GroupingSetsElementSublist">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//GroupingSetsElementSublist/groupingSetsElementExprList"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="SQLQueryModel.ecore#//GroupingSetsElementExpression">
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//GroupingSetsElementExpression/groupingSetsElementSublist"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//GroupingSetsElementExpression/grouping"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="SQLQueryModel.ecore#//SuperGroup">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute SQLQueryModel.ecore#//SuperGroup/superGroupType"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//SuperGroup/superGroupElementList"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="SQLQueryModel.ecore#//GroupingExpression">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//GroupingExpression/valueExpr"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//GroupingExpression/superGroupElementExpr"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="SQLQueryModel.ecore#//SuperGroupElement">
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//SuperGroupElement/superGroup"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="SQLQueryModel.ecore#//SuperGroupElementSublist">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//SuperGroupElementSublist/superGroupElementExprList"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="SQLQueryModel.ecore#//SuperGroupElementExpression">
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//SuperGroupElementExpression/superGroupElementSublist"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//SuperGroupElementExpression/groupingExpr"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="SQLQueryModel.ecore#//ValueExpressionCaseSearch">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//ValueExpressionCaseSearch/searchContentList"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="SQLQueryModel.ecore#//ValueExpressionCaseSimple">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//ValueExpressionCaseSimple/contentList"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//ValueExpressionCaseSimple/valueExpr"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="SQLQueryModel.ecore#//ValueExpressionCaseElse">
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//ValueExpressionCaseElse/valueExprCase"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//ValueExpressionCaseElse/valueExpr"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="SQLQueryModel.ecore#//ValueExpressionCaseSearchContent">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//ValueExpressionCaseSearchContent/valueExpr"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//ValueExpressionCaseSearchContent/searchCondition"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//ValueExpressionCaseSearchContent/valueExprCaseSearch"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="SQLQueryModel.ecore#//ValueExpressionCaseSimpleContent">
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//ValueExpressionCaseSimpleContent/valueExprCaseSimple"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//ValueExpressionCaseSimpleContent/whenValueExpr"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//ValueExpressionCaseSimpleContent/resultValueExpr"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="SQLQueryModel.ecore#//TableInDatabase">
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//TableInDatabase/updateStatement"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//TableInDatabase/deleteStatement"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//TableInDatabase/insertStatement"/>
+      <genFeatures notify="false" createChild="false" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//TableInDatabase/databaseTable"/>
+      <genFeatures notify="false" createChild="false" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//TableInDatabase/derivedColumnList"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="SQLQueryModel.ecore#//TableFunction">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//TableFunction/function"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//TableFunction/parameterList"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="SQLQueryModel.ecore#//SQLQueryObject">
+      <genOperations ecoreOperation="SQLQueryModel.ecore#//SQLQueryObject/getSQL"/>
+      <genOperations ecoreOperation="SQLQueryModel.ecore#//SQLQueryObject/setSQL">
+        <genParameters ecoreParameter="SQLQueryModel.ecore#//SQLQueryObject/setSQL/sqlText"/>
+      </genOperations>
+    </genClasses>
+    <genClasses image="false" ecoreClass="SQLQueryModel.ecore#//QueryChangeStatement"/>
+    <genClasses image="false" ecoreClass="SQLQueryModel.ecore#//ColumnName">
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//ColumnName/tableCorrelation"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//ColumnName/withTableSpecification"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="SQLQueryModel.ecore#//TableNested">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//TableNested/nestedTableRef"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="SQLQueryModel.ecore#//QueryMergeStatement">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//QueryMergeStatement/targetTable"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//QueryMergeStatement/sourceTable"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//QueryMergeStatement/onCondition"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//QueryMergeStatement/operationSpecList"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="SQLQueryModel.ecore#//SearchConditionNested">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//SearchConditionNested/nestedCondition"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="SQLQueryModel.ecore#//ValueExpressionNested">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//ValueExpressionNested/nestedValueExpr"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="SQLQueryModel.ecore#//ValueExpressionAtomic"/>
+    <genClasses image="false" ecoreClass="SQLQueryModel.ecore#//OrderBySpecification">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute SQLQueryModel.ecore#//OrderBySpecification/descending"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute SQLQueryModel.ecore#//OrderBySpecification/OrderingSpecOption"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute SQLQueryModel.ecore#//OrderBySpecification/NullOrderingOption"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//OrderBySpecification/selectStatement"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//OrderBySpecification/query"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="SQLQueryModel.ecore#//OrderByOrdinal">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute SQLQueryModel.ecore#//OrderByOrdinal/ordinalValue"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="SQLQueryModel.ecore#//TableCorrelation">
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//TableCorrelation/tableExpr"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//TableCorrelation/columnNameList"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="SQLQueryModel.ecore#//UpdateSource">
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//UpdateSource/updateAssignmentExpr"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="SQLQueryModel.ecore#//UpdateSourceExprList">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//UpdateSourceExprList/valueExprList"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="SQLQueryModel.ecore#//UpdateSourceQuery">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//UpdateSourceQuery/queryExpr"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="SQLQueryModel.ecore#//OrderByResultColumn">
+      <genFeatures notify="false" createChild="false" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//OrderByResultColumn/resultCol"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="SQLQueryModel.ecore#//WithTableReference">
+      <genFeatures notify="false" createChild="false" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//WithTableReference/withTableSpecification"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="SQLQueryModel.ecore#//QueryNested">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//QueryNested/nestedQuery"/>
+    </genClasses>
+    <genClasses ecoreClass="SQLQueryModel.ecore#//ValueExpressionRow">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//ValueExpressionRow/valueExprList"/>
+    </genClasses>
+    <genClasses ecoreClass="SQLQueryModel.ecore#//MergeTargetTable">
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//MergeTargetTable/mergeStatement"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//MergeTargetTable/tableExpr"/>
+    </genClasses>
+    <genClasses ecoreClass="SQLQueryModel.ecore#//MergeSourceTable">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//MergeSourceTable/QueryMergeStatement"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//MergeSourceTable/mergeStatement"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//MergeSourceTable/tableRef"/>
+    </genClasses>
+    <genClasses ecoreClass="SQLQueryModel.ecore#//MergeOnCondition">
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//MergeOnCondition/mergeStatement"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//MergeOnCondition/searchCondition"/>
+    </genClasses>
+    <genClasses ecoreClass="SQLQueryModel.ecore#//MergeUpdateSpecification">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//MergeUpdateSpecification/assignementExprList"/>
+    </genClasses>
+    <genClasses ecoreClass="SQLQueryModel.ecore#//MergeInsertSpecification">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//MergeInsertSpecification/targetColumnList"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//MergeInsertSpecification/sourceValuesRow"/>
+    </genClasses>
+    <genClasses ecoreClass="SQLQueryModel.ecore#//MergeOperationSpecification">
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//MergeOperationSpecification/mergeStatement"/>
+    </genClasses>
+    <genClasses ecoreClass="SQLQueryModel.ecore#//UpdateOfColumn">
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//UpdateOfColumn/updatabilityExpr"/>
+    </genClasses>
+    <genClasses ecoreClass="SQLQueryModel.ecore#//UpdatabilityExpression">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute SQLQueryModel.ecore#//UpdatabilityExpression/updatabilityType"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//UpdatabilityExpression/updateOfColumnList"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//UpdatabilityExpression/selectStatement"/>
+    </genClasses>
+    <genClasses ecoreClass="SQLQueryModel.ecore#//CallStatement">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//CallStatement/argumentList"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//CallStatement/procedureRef"/>
+    </genClasses>
+    <genClasses ecoreClass="SQLQueryModel.ecore#//ProcedureReference">
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//ProcedureReference/callStatement"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//ProcedureReference/procedure"/>
+    </genClasses>
+    <genClasses ecoreClass="SQLQueryModel.ecore#//TableQueryLateral">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference SQLQueryModel.ecore#//TableQueryLateral/query"/>
+    </genClasses>
+  </genPackages>
+</genmodel:GenModel>

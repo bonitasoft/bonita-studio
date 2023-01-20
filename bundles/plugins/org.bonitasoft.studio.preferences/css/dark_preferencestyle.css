@@ -1,0 +1,24 @@
+/* Global editors css */
+@import url("platform:/plugin/org.eclipse.ui.themes/css/dark/e4-dark_preferencestyle.css");
+@import url("platform:/plugin/org.eclipse.wst.sse.ui/css/dark/preferencestyle.css");
+
+/* Debug css */
+@import url("platform:/plugin/org.eclipse.debug.ui/css/e4-dark_debug_prefstyle.css");
+
+/* Java css */
+@import url("platform:/plugin/org.eclipse.jdt.ui/css/e4-dark_jdt_syntaxhighlighting.css");
+
+/* Groovy css */
+@import url("platform:/plugin/org.codehaus.groovy.eclipse.ui/e4_dark.css");
+
+/* XML css */
+@import url("platform:/plugin/org.eclipse.wst.xml.ui/css/dark/preferencestyle.css");
+
+/* CSS css */
+@import url("platform:/plugin/org.eclipse.wst.css.ui/css/dark/preferencestyle.css");
+
+/* Json css */
+@import url("platform:/plugin/org.eclipse.wst.json.ui/css/dark/preferencestyle.css");
+
+/* Git css */
+@import url("platform:/plugin/org.eclipse.egit.ui/css/e4-dark_egit_prefstyle.css");

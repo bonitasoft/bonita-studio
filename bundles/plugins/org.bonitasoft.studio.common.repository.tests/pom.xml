@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.bonitasoft.studio.bundles</groupId>
+		<artifactId>plugins</artifactId>
+		<version>7.16.0-SNAPSHOT</version>
+	</parent>
+	<groupId>org.bonitasoft.studio.bundles.plugins</groupId>
+	<artifactId>org.bonitasoft.studio.common.repository.tests</artifactId>
+	<packaging>eclipse-test-plugin</packaging>
+
+   <build>
+        <testResources>
+            <testResource>
+                <directory>resources</directory>
+            </testResource>
+        </testResources>
+        <plugins>
+             <plugin>
+                    <groupId>org.eclipse.tycho</groupId>
+                    <artifactId>tycho-surefire-plugin</artifactId>
+                    <configuration>
+                        <showEclipseLog>true</showEclipseLog>
+                        <useUIHarness>true</useUIHarness>
+                        <useUIThread>true</useUIThread>
+                    </configuration>
+                </plugin>
+        </plugins>
+    </build>
+
+</project>
