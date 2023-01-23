@@ -42,9 +42,9 @@
                             <outputImageFormat>png</outputImageFormat>
                             <xLocation>192</xLocation>
                             <yLocation>78</yLocation>
-                            <italic>true</italic>
+                            <italic>false</italic>
                             <fontSize>35</fontSize>
-                            <color>#0b4361</color>
+                            <color>#002395</color>
                             <bold>true</bold>
                             <versionLabel>${branding.version.short}</versionLabel>
                         </configuration>
@@ -60,9 +60,9 @@
                             <outputImageFormat>png</outputImageFormat>
                             <xLocation>192</xLocation>
                             <yLocation>78</yLocation>
-                            <italic>true</italic>
+                            <italic>false</italic>
                             <fontSize>35</fontSize>
-                            <color>#4a5568</color>
+                            <color>#526fcd</color>
                             <bold>true</bold>
                             <versionLabel>${branding.version.short}</versionLabel>
                         </configuration>

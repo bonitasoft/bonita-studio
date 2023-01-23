@@ -40,9 +40,9 @@
                     <outputImageFormat>bmp</outputImageFormat>
                     <xLocation>358</xLocation>
                     <yLocation>159</yLocation>
-                    <italic>true</italic>
+                    <italic>false</italic>
                     <fontSize>58</fontSize>
-                    <color>#0B4361</color>
+                    <color>#002395</color>
                     <versionLabel>${branding.version.short}</versionLabel>
                 </configuration>
                 <executions>
