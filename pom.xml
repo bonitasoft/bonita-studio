@@ -14,7 +14,7 @@
         <java.version>11</java.version>
         <os-jvm-flags></os-jvm-flags>
         <branding.version></branding.version>
-        <bonita-runtime.version>7.16-SNAPSHOT</bonita-runtime.version>
+        <bonita-runtime.version>8.0-SNAPSHOT</bonita-runtime.version>
         <ui.designer.version>1.16.3</ui.designer.version>
         <business.data.repository.version>${bonita-runtime.version}</business.data.repository.version>
         <platform.version>${project.parent.version}</platform.version>
