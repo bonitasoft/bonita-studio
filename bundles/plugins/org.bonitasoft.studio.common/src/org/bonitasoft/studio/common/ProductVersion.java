@@ -20,6 +20,7 @@ import java.io.UncheckedIOException;
 import java.util.Properties;
 
 import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
+import org.apache.maven.repository.internal.DefaultVersionRangeResolver;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.FrameworkUtil;
 import org.osgi.framework.Version;
@@ -170,5 +171,18 @@ public class ProductVersion {
 
     public static String mavenVersion() {
         return manifestVersion(false);
+    }
+    
+    
+    public static boolean isInRange(String semver) {
+        var minVersion = new DefaultArtifactVersion("7.12.0");
+        var maxVersion = new DefaultArtifactVersion("8.0.0");
+        var version = new DefaultArtifactVersion(semver);
+        if(version.compareTo(minVersion) < 0 ) {
+            return false;
+        }else if(version.compareTo(maxVersion) > 0 ) {
+            return false;
+        }
+        return true;
     }
 }
