@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension-point id="propertiesContribution" name="Section Contribution" schema="schema/propertiesContribution.exsd"/>
+	<extension-point id="poststartup" name="Actions to hook after studio started" schema="schema/poststartup.exsd"/>
+   <extension-point id="startupDialog" name="Actions to hook after studio started" schema="schema/startupDialog.exsd"/>
+   <extension-point id="coolbarContributionItem" name="Coolbar contribution item" schema="schema/coolbarContributionItem.exsd"/>
+  <extension-point id="dashboardContribution" name="Project dashboard contribution" schema="schema/dashboardContribution.exsd"/>
+	<extension
+	      point="org.eclipse.core.runtime.adapters">
+    <factory
+          adaptableType="org.bonitasoft.studio.common.core.IRunnableWithProgress"
+          class="org.bonitasoft.studio.common.ui.internal.IRunnableWithProgressAdapterFactory">
+       <adapter
+             type="org.eclipse.jface.operation.IRunnableWithProgress">
+       </adapter>
+    </factory>
+	</extension>
+</plugin>

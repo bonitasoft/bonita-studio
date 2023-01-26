@@ -1,0 +1,808 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="query"
+    nsURI="http:///org/eclipse/datatools/modelbase/sql/query/SQLQueryModel.ecore"
+    nsPrefix="org.eclipse.datatools.modelbase.sql.query">
+  <eClassifiers xsi:type="ecore:EClass" name="QueryStatement" abstract="true" eSuperTypes="#//SQLQueryObject ../../org.eclipse.datatools.modelbase.sql/model/sqlmodel.ecore#//statements/SQLDataStatement"/>
+  <eClassifiers xsi:type="ecore:EClass" name="QueryDeleteStatement" eSuperTypes="#//QueryChangeStatement">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="whereCurrentOfClause" eType="#//CursorReference"
+        containment="true" eOpposite="#//CursorReference/deleteStatement"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="whereClause" eType="#//QuerySearchCondition"
+        unsettable="true" containment="true" eOpposite="#//QuerySearchCondition/deleteStatement"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="targetTable" lowerBound="1"
+        eType="#//TableInDatabase" unsettable="true" containment="true" eOpposite="#//TableInDatabase/deleteStatement"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="QueryInsertStatement" eSuperTypes="#//QueryChangeStatement">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="sourceQuery" eType="#//QueryExpressionRoot"
+        containment="true" eOpposite="#//QueryExpressionRoot/insertStatement"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="sourceValuesRowList" upperBound="-1"
+        eType="#//ValuesRow" containment="true" eOpposite="#//ValuesRow/insertStatement"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="targetTable" lowerBound="1"
+        eType="#//TableInDatabase" unsettable="true" containment="true" eOpposite="#//TableInDatabase/insertStatement"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="targetColumnList" upperBound="-1"
+        eType="#//ValueExpressionColumn" eOpposite="#//ValueExpressionColumn/insertStatement"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="QuerySelectStatement" eSuperTypes="#//QueryStatement">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="queryExpr" lowerBound="1"
+        eType="#//QueryExpressionRoot" containment="true" eOpposite="#//QueryExpressionRoot/selectStatement"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="orderByClause" upperBound="-1"
+        eType="#//OrderBySpecification" containment="true" eOpposite="#//OrderBySpecification/selectStatement"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="updatabilityExpr" eType="#//UpdatabilityExpression"
+        containment="true" eOpposite="#//UpdatabilityExpression/selectStatement"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="QueryUpdateStatement" eSuperTypes="#//QueryChangeStatement">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="assignmentClause" lowerBound="1"
+        upperBound="-1" eType="#//UpdateAssignmentExpression" containment="true" eOpposite="#//UpdateAssignmentExpression/updateStatement"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="whereCurrentOfClause" eType="#//CursorReference"
+        containment="true" eOpposite="#//CursorReference/updateStatement"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="whereClause" eType="#//QuerySearchCondition"
+        unsettable="true" containment="true" eOpposite="#//QuerySearchCondition/updateStatement"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="targetTable" lowerBound="1"
+        eType="#//TableInDatabase" unsettable="true" containment="true" eOpposite="#//TableInDatabase/updateStatement"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="UpdateAssignmentExpression" eSuperTypes="#//SQLQueryObject">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="updateStatement" eType="#//QueryUpdateStatement"
+        transient="true" eOpposite="#//QueryUpdateStatement/assignmentClause"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="targetColumnList" lowerBound="1"
+        upperBound="-1" eType="#//ValueExpressionColumn" eOpposite="#//ValueExpressionColumn/assignmentExprTarget"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="updateSource" lowerBound="1"
+        eType="#//UpdateSource" containment="true" eOpposite="#//UpdateSource/updateAssignmentExpr"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="mergeUpdateSpec" eType="#//MergeUpdateSpecification"
+        transient="true" eOpposite="#//MergeUpdateSpecification/assignementExprList"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="CursorReference" eSuperTypes="#//SQLQueryObject">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="updateStatement" eType="#//QueryUpdateStatement"
+        transient="true" eOpposite="#//QueryUpdateStatement/whereCurrentOfClause"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="deleteStatement" eType="#//QueryDeleteStatement"
+        transient="true" eOpposite="#//QueryDeleteStatement/whereCurrentOfClause"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="QuerySearchCondition" abstract="true"
+      eSuperTypes="#//SQLQueryObject ../../org.eclipse.datatools.modelbase.sql/model/sqlmodel.ecore#//expressions/SearchCondition">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="negatedCondition" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="This represents NOT ( &lt;searchCondition> ).  This attribute and paren can not both be true at the same time."/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="updateStatement" eType="#//QueryUpdateStatement"
+        transient="true" eOpposite="#//QueryUpdateStatement/whereClause"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="deleteStatement" eType="#//QueryDeleteStatement"
+        transient="true" eOpposite="#//QueryDeleteStatement/whereClause"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="tableJoined" eType="#//TableJoined"
+        transient="true" eOpposite="#//TableJoined/joinCondition"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="combinedLeft" eType="#//SearchConditionCombined"
+        transient="true" eOpposite="#//SearchConditionCombined/leftCondition"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="combinedRight" eType="#//SearchConditionCombined"
+        transient="true" eOpposite="#//SearchConditionCombined/rightCondition"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="querySelectHaving" eType="#//QuerySelect"
+        transient="true" eOpposite="#//QuerySelect/havingClause"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="querySelectWhere" eType="#//QuerySelect"
+        transient="true" eOpposite="#//QuerySelect/whereClause"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="valueExprCaseSearchContent"
+        eType="#//ValueExpressionCaseSearchContent" transient="true" eOpposite="#//ValueExpressionCaseSearchContent/searchCondition"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="nest" eType="#//SearchConditionNested"
+        transient="true" eOpposite="#//SearchConditionNested/nestedCondition"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="mergeOnCondition" eType="#//MergeOnCondition"
+        transient="true" eOpposite="#//MergeOnCondition/searchCondition"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="QueryExpressionBody" abstract="true"
+      eSuperTypes="#//TableExpression">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="rowFetchLimit" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="queryExpression" eType="#//QueryExpressionRoot"
+        transient="true" eOpposite="#//QueryExpressionRoot/query"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="combinedLeft" eType="#//QueryCombined"
+        transient="true" eOpposite="#//QueryCombined/leftQuery"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="combinedRight" eType="#//QueryCombined"
+        transient="true" eOpposite="#//QueryCombined/rightQuery"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="predicateExists" eType="#//PredicateExists"
+        transient="true" eOpposite="#//PredicateExists/queryExpr"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="updateSourceQuery" lowerBound="1"
+        eType="#//UpdateSourceQuery" transient="true" eOpposite="#//UpdateSourceQuery/queryExpr"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="withTableSpecification"
+        lowerBound="1" eType="#//WithTableSpecification" transient="true" eOpposite="#//WithTableSpecification/withTableQueryExpr"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="queryNest" eType="#//QueryNested"
+        transient="true" eOpposite="#//QueryNested/nestedQuery"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="sortSpecList" upperBound="-1"
+        eType="#//OrderBySpecification" containment="true" eOpposite="#//OrderBySpecification/query"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="QueryValueExpression" abstract="true"
+      eSuperTypes="#//SQLQueryObject ../../org.eclipse.datatools.modelbase.sql/model/sqlmodel.ecore#//expressions/ValueExpression">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="unaryOperator" eType="#//ValueExpressionUnaryOperator"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="dataType" eType="ecore:EClass ../../org.eclipse.datatools.modelbase.sql/model/sqlmodel.ecore#//datatypes/DataType"
+        containment="true" resolveProxies="false"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="valuesRow" eType="#//ValuesRow"
+        transient="true" eOpposite="#//ValuesRow/exprList"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="orderByValueExpr" eType="#//OrderByValueExpression"
+        transient="true" eOpposite="#//OrderByValueExpression/valueExpr"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="resultColumn" eType="#//ResultColumn"
+        transient="true" eOpposite="#//ResultColumn/valueExpr"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="basicRight" eType="#//PredicateBasic"
+        transient="true" eOpposite="#//PredicateBasic/rightValueExpr"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="basicLeft" eType="#//PredicateBasic"
+        transient="true" eOpposite="#//PredicateBasic/leftValueExpr"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="likePattern" eType="#//PredicateLike"
+        transient="true" eOpposite="#//PredicateLike/patternValueExpr"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="likeMatching" eType="#//PredicateLike"
+        transient="true" eOpposite="#//PredicateLike/matchingValueExpr"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="predicateNull" eType="#//PredicateIsNull"
+        transient="true" eOpposite="#//PredicateIsNull/valueExpr"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="inValueListRight" eType="#//PredicateInValueList"
+        transient="true" eOpposite="#//PredicateInValueList/valueExprList"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="inValueListLeft" eType="#//PredicateInValueList"
+        transient="true" eOpposite="#//PredicateInValueList/valueExpr"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="inValueRowSelectLeft" eType="#//PredicateInValueRowSelect"
+        transient="true" eOpposite="#//PredicateInValueRowSelect/valueExprList"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="inValueSelectLeft" eType="#//PredicateInValueSelect"
+        transient="true" eOpposite="#//PredicateInValueSelect/valueExpr"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="quantifiedRowSelectLeft"
+        eType="#//PredicateQuantifiedRowSelect" transient="true" eOpposite="#//PredicateQuantifiedRowSelect/valueExprList"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="quantifiedValueSelectLeft"
+        eType="#//PredicateQuantifiedValueSelect" transient="true" eOpposite="#//PredicateQuantifiedValueSelect/valueExpr"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="betweenLeft" eType="#//PredicateBetween"
+        transient="true" eOpposite="#//PredicateBetween/leftValueExpr"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="betweenRight1" eType="#//PredicateBetween"
+        transient="true" eOpposite="#//PredicateBetween/rightValueExpr1"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="betweenRight2" eType="#//PredicateBetween"
+        transient="true" eOpposite="#//PredicateBetween/rightValueExpr2"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="valueExprCast" eType="#//ValueExpressionCast"
+        transient="true" eOpposite="#//ValueExpressionCast/valueExpr"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="valueExprFunction" eType="#//ValueExpressionFunction"
+        transient="true" eOpposite="#//ValueExpressionFunction/parameterList"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="valueExprCombinedLeft"
+        eType="#//ValueExpressionCombined" transient="true" eOpposite="#//ValueExpressionCombined/leftValueExpr"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="valueExprCombinedRight"
+        eType="#//ValueExpressionCombined" transient="true" eOpposite="#//ValueExpressionCombined/rightValueExpr"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="groupingExpr" eType="#//GroupingExpression"
+        transient="true" eOpposite="#//GroupingExpression/valueExpr"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="valueExprCaseElse" eType="#//ValueExpressionCaseElse"
+        transient="true" eOpposite="#//ValueExpressionCaseElse/valueExpr"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="valueExprCaseSimple" eType="#//ValueExpressionCaseSimple"
+        transient="true" eOpposite="#//ValueExpressionCaseSimple/valueExpr"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="valueExprCaseSimpleContentWhen"
+        eType="#//ValueExpressionCaseSimpleContent" transient="true" eOpposite="#//ValueExpressionCaseSimpleContent/whenValueExpr"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="valueExprCaseSimpleContentResult"
+        eType="#//ValueExpressionCaseSimpleContent" transient="true" eOpposite="#//ValueExpressionCaseSimpleContent/resultValueExpr"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="valueExprCaseSearchContent"
+        eType="#//ValueExpressionCaseSearchContent" transient="true" eOpposite="#//ValueExpressionCaseSearchContent/valueExpr"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="likeEscape" eType="#//PredicateLike"
+        transient="true" eOpposite="#//PredicateLike/escapeValueExpr"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="valueExprLabeledDuration"
+        eType="#//ValueExpressionLabeledDuration" transient="true" eOpposite="#//ValueExpressionLabeledDuration/valueExpr"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="nest" eType="#//ValueExpressionNested"
+        transient="true" eOpposite="#//ValueExpressionNested/nestedValueExpr"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="updateSourceExprList" eType="#//UpdateSourceExprList"
+        transient="true" eOpposite="#//UpdateSourceExprList/valueExprList"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="tableFunction" lowerBound="1"
+        eType="#//TableFunction" transient="true" eOpposite="#//TableFunction/parameterList"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="valueExprRow" lowerBound="1"
+        eType="#//ValueExpressionRow" transient="true" eOpposite="#//ValueExpressionRow/valueExprList"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="callStatement" lowerBound="1"
+        eType="#//CallStatement" transient="true" eOpposite="#//CallStatement/argumentList"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="QueryExpressionRoot" eSuperTypes="#//SQLQueryObject ../../org.eclipse.datatools.modelbase.sql/model/sqlmodel.ecore#//expressions/QueryExpression">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="insertStatement" eType="#//QueryInsertStatement"
+        transient="true" eOpposite="#//QueryInsertStatement/sourceQuery"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="selectStatement" eType="#//QuerySelectStatement"
+        transient="true" eOpposite="#//QuerySelectStatement/queryExpr"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="withClause" upperBound="-1"
+        eType="#//WithTableSpecification" containment="true" eOpposite="#//WithTableSpecification/queryExpressionRoot"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="query" lowerBound="1" eType="#//QueryExpressionBody"
+        containment="true" eOpposite="#//QueryExpressionBody/queryExpression"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="inValueRowSelectRight"
+        eType="#//PredicateInValueRowSelect" transient="true" eOpposite="#//PredicateInValueRowSelect/queryExpr"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="inValueSelectRight" eType="#//PredicateInValueSelect"
+        transient="true" eOpposite="#//PredicateInValueSelect/queryExpr"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="quantifiedRowSelectRight"
+        eType="#//PredicateQuantifiedRowSelect" transient="true" eOpposite="#//PredicateQuantifiedRowSelect/queryExpr"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="quantifiedValueSelectRight"
+        eType="#//PredicateQuantifiedValueSelect" transient="true" eOpposite="#//PredicateQuantifiedValueSelect/queryExpr"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="valExprScalarSelect" eType="#//ValueExpressionScalarSelect"
+        transient="true" eOpposite="#//ValueExpressionScalarSelect/queryExpr"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ValuesRow" eSuperTypes="#//SQLQueryObject">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="insertStatement" eType="#//QueryInsertStatement"
+        transient="true" eOpposite="#//QueryInsertStatement/sourceValuesRowList"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="exprList" lowerBound="1"
+        upperBound="-1" eType="#//QueryValueExpression" containment="true" eOpposite="#//QueryValueExpression/valuesRow"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="queryValues" lowerBound="1"
+        eType="#//QueryValues" transient="true" eOpposite="#//QueryValues/valuesRowList"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="QueryValues" eSuperTypes="#//QueryExpressionBody">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="valuesRowList" lowerBound="1"
+        upperBound="-1" eType="#//ValuesRow" containment="true" eOpposite="#//ValuesRow/queryValues"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="TableReference" abstract="true" eSuperTypes="#//SQLQueryObject">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="tableJoinedRight" lowerBound="1"
+        eType="#//TableJoined" transient="true" eOpposite="#//TableJoined/tableRefRight"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="tableJoinedLeft" lowerBound="1"
+        eType="#//TableJoined" transient="true" eOpposite="#//TableJoined/tableRefLeft"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="querySelect" eType="#//QuerySelect"
+        transient="true" eOpposite="#//QuerySelect/fromClause"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="nest" eType="#//TableNested"
+        transient="true" eOpposite="#//TableNested/nestedTableRef"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="mergeSourceTable" eType="#//MergeSourceTable"
+        transient="true" eOpposite="#//MergeSourceTable/tableRef"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="TableExpression" abstract="true" eSuperTypes="#//TableReference">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="columnList" upperBound="-1"
+        eType="#//ValueExpressionColumn" containment="true" eOpposite="#//ValueExpressionColumn/parentTableExpr"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="tableCorrelation" eType="#//TableCorrelation"
+        containment="true" eOpposite="#//TableCorrelation/tableExpr"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="resultTableAllColumns"
+        upperBound="-1" eType="#//ResultTableAllColumns" eOpposite="#//ResultTableAllColumns/tableExpr"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="valueExprColumns" upperBound="-1"
+        eType="#//ValueExpressionColumn" eOpposite="#//ValueExpressionColumn/tableExpr"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="mergeTargetTable" eType="#//MergeTargetTable"
+        transient="true" eOpposite="#//MergeTargetTable/tableExpr"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="TableJoined" eSuperTypes="#//TableReference">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="joinOperator" eType="#//TableJoinedOperator"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="joinCondition" eType="#//QuerySearchCondition"
+        containment="true" eOpposite="#//QuerySearchCondition/tableJoined"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="tableRefRight" lowerBound="1"
+        eType="#//TableReference" containment="true" eOpposite="#//TableReference/tableJoinedRight"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="tableRefLeft" lowerBound="1"
+        eType="#//TableReference" containment="true" eOpposite="#//TableReference/tableJoinedLeft"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="WithTableSpecification" eSuperTypes="#//SQLQueryObject">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="queryExpressionRoot" eType="#//QueryExpressionRoot"
+        transient="true" eOpposite="#//QueryExpressionRoot/withClause"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="withTableQueryExpr" lowerBound="1"
+        eType="#//QueryExpressionBody" containment="true" eOpposite="#//QueryExpressionBody/withTableSpecification"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="withTableReferences" upperBound="-1"
+        eType="#//WithTableReference" eOpposite="#//WithTableReference/withTableSpecification"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="columnNameList" upperBound="-1"
+        eType="#//ColumnName" containment="true" eOpposite="#//ColumnName/withTableSpecification"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Predicate" abstract="true" eSuperTypes="#//QuerySearchCondition">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="negatedPredicate" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="This attribute adds the NOT keyword in front of a predicate, so when true you have NOT &lt;predicate>.  If attribute &quot;paren&quot; in the superclass is also true, you get ( NOT &lt;predicate> ).  If attribute &quot;notParen&quot; in the superclass is true, you get NOT ( NOT &lt;predicate> )."/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="hasSelectivity" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="selectivityValue" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EIntegerObject"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="SearchConditionCombined" eSuperTypes="#//QuerySearchCondition">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="combinedOperator" eType="#//SearchConditionCombinedOperator"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="leftCondition" lowerBound="1"
+        eType="#//QuerySearchCondition" containment="true" eOpposite="#//QuerySearchCondition/combinedLeft"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="rightCondition" lowerBound="1"
+        eType="#//QuerySearchCondition" containment="true" eOpposite="#//QuerySearchCondition/combinedRight"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="OrderByValueExpression" eSuperTypes="#//OrderBySpecification">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="valueExpr" lowerBound="1"
+        eType="#//QueryValueExpression" containment="true" eOpposite="#//QueryValueExpression/orderByValueExpr"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="QueryCombined" eSuperTypes="#//QueryExpressionBody">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="combinedOperator" eType="#//QueryCombinedOperator"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="leftQuery" lowerBound="1"
+        eType="#//QueryExpressionBody" containment="true" eOpposite="#//QueryExpressionBody/combinedLeft"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="rightQuery" lowerBound="1"
+        eType="#//QueryExpressionBody" containment="true" eOpposite="#//QueryExpressionBody/combinedRight"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="QuerySelect" eSuperTypes="#//QueryExpressionBody">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="distinct" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="havingClause" eType="#//QuerySearchCondition"
+        unsettable="true" containment="true" eOpposite="#//QuerySearchCondition/querySelectHaving"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="whereClause" eType="#//QuerySearchCondition"
+        unsettable="true" containment="true" eOpposite="#//QuerySearchCondition/querySelectWhere"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="groupByClause" upperBound="-1"
+        eType="#//GroupingSpecification" containment="true" eOpposite="#//GroupingSpecification/querySelect"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="selectClause" upperBound="-1"
+        eType="#//QueryResultSpecification" containment="true" eOpposite="#//QueryResultSpecification/querySelect"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="fromClause" lowerBound="1"
+        upperBound="-1" eType="#//TableReference" containment="true" eOpposite="#//TableReference/querySelect"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="intoClause" upperBound="-1"
+        eType="#//ValueExpressionVariable" containment="true" eOpposite="#//ValueExpressionVariable/querySelect"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="GroupingSpecification" abstract="true"
+      eSuperTypes="#//SQLQueryObject">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="querySelect" eType="#//QuerySelect"
+        transient="true" eOpposite="#//QuerySelect/groupByClause"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="QueryResultSpecification" abstract="true"
+      eSuperTypes="#//SQLQueryObject">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="querySelect" eType="#//QuerySelect"
+        transient="true" eOpposite="#//QuerySelect/selectClause"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ResultTableAllColumns" eSuperTypes="#//QueryResultSpecification">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="tableExpr" lowerBound="1"
+        eType="#//TableExpression" eOpposite="#//TableExpression/resultTableAllColumns"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ResultColumn" eSuperTypes="#//QueryResultSpecification">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="valueExpr" lowerBound="1"
+        eType="#//QueryValueExpression" containment="true" eOpposite="#//QueryValueExpression/resultColumn"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="orderByResultCol" upperBound="-1"
+        eType="#//OrderByResultColumn" eOpposite="#//OrderByResultColumn/resultCol"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="PredicateBasic" eSuperTypes="#//Predicate">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="comparisonOperator" eType="#//PredicateComparisonOperator"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="rightValueExpr" lowerBound="1"
+        eType="#//QueryValueExpression" containment="true" eOpposite="#//QueryValueExpression/basicRight"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="leftValueExpr" lowerBound="1"
+        eType="#//QueryValueExpression" containment="true" eOpposite="#//QueryValueExpression/basicLeft"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="PredicateQuantified" abstract="true"
+      eSuperTypes="#//Predicate"/>
+  <eClassifiers xsi:type="ecore:EClass" name="PredicateBetween" eSuperTypes="#//Predicate">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="notBetween" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="leftValueExpr" lowerBound="1"
+        eType="#//QueryValueExpression" containment="true" eOpposite="#//QueryValueExpression/betweenLeft"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="rightValueExpr1" lowerBound="1"
+        eType="#//QueryValueExpression" containment="true" eOpposite="#//QueryValueExpression/betweenRight1"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="rightValueExpr2" lowerBound="1"
+        eType="#//QueryValueExpression" containment="true" eOpposite="#//QueryValueExpression/betweenRight2"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="PredicateExists" eSuperTypes="#//Predicate">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="queryExpr" lowerBound="1"
+        eType="#//QueryExpressionBody" containment="true" eOpposite="#//QueryExpressionBody/predicateExists"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="PredicateIn" abstract="true" eSuperTypes="#//Predicate">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="notIn" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="PredicateLike" eSuperTypes="#//Predicate">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="notLike" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="patternValueExpr" lowerBound="1"
+        eType="#//QueryValueExpression" containment="true" eOpposite="#//QueryValueExpression/likePattern"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="matchingValueExpr" lowerBound="1"
+        eType="#//QueryValueExpression" containment="true" eOpposite="#//QueryValueExpression/likeMatching"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="escapeValueExpr" eType="#//QueryValueExpression"
+        containment="true" eOpposite="#//QueryValueExpression/likeEscape"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="PredicateIsNull" eSuperTypes="#//Predicate">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="notNull" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="valueExpr" lowerBound="1"
+        eType="#//QueryValueExpression" containment="true" eOpposite="#//QueryValueExpression/predicateNull"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="PredicateQuantifiedValueSelect" eSuperTypes="#//PredicateQuantified">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="quantifiedType" eType="#//PredicateQuantifiedType"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="comparisonOperator" eType="#//PredicateComparisonOperator"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="queryExpr" lowerBound="1"
+        eType="#//QueryExpressionRoot" containment="true" eOpposite="#//QueryExpressionRoot/quantifiedValueSelectRight"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="valueExpr" lowerBound="1"
+        eType="#//QueryValueExpression" containment="true" eOpposite="#//QueryValueExpression/quantifiedValueSelectLeft"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="PredicateQuantifiedRowSelect" eSuperTypes="#//PredicateQuantified">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="quantifiedType" eType="#//PredicateQuantifiedType"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="queryExpr" lowerBound="1"
+        eType="#//QueryExpressionRoot" containment="true" eOpposite="#//QueryExpressionRoot/quantifiedRowSelectRight"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="valueExprList" lowerBound="1"
+        upperBound="-1" eType="#//QueryValueExpression" containment="true" eOpposite="#//QueryValueExpression/quantifiedRowSelectLeft"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="PredicateInValueSelect" eSuperTypes="#//PredicateIn">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="queryExpr" lowerBound="1"
+        eType="#//QueryExpressionRoot" containment="true" eOpposite="#//QueryExpressionRoot/inValueSelectRight"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="valueExpr" lowerBound="1"
+        eType="#//QueryValueExpression" containment="true" eOpposite="#//QueryValueExpression/inValueSelectLeft"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="PredicateInValueList" eSuperTypes="#//PredicateIn">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="valueExprList" lowerBound="1"
+        upperBound="-1" eType="#//QueryValueExpression" containment="true" eOpposite="#//QueryValueExpression/inValueListRight"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="valueExpr" lowerBound="1"
+        eType="#//QueryValueExpression" containment="true" eOpposite="#//QueryValueExpression/inValueListLeft"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="PredicateInValueRowSelect" eSuperTypes="#//PredicateIn">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="valueExprList" lowerBound="1"
+        upperBound="-1" eType="#//QueryValueExpression" containment="true" eOpposite="#//QueryValueExpression/inValueRowSelectLeft"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="queryExpr" lowerBound="1"
+        eType="#//QueryExpressionRoot" containment="true" eOpposite="#//QueryExpressionRoot/inValueRowSelectRight"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ValueExpressionSimple" eSuperTypes="#//ValueExpressionAtomic">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ValueExpressionColumn" eSuperTypes="#//ValueExpressionAtomic">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="This is a VEC"/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="assignmentExprTarget" upperBound="-1"
+        eType="#//UpdateAssignmentExpression" eOpposite="#//UpdateAssignmentExpression/targetColumnList"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="parentTableExpr" lowerBound="1"
+        eType="#//TableExpression" transient="true" unsettable="true" eOpposite="#//TableExpression/columnList"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="insertStatement" upperBound="-1"
+        eType="#//QueryInsertStatement" eOpposite="#//QueryInsertStatement/targetColumnList"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="tableExpr" lowerBound="1"
+        eType="#//TableExpression" eOpposite="#//TableExpression/valueExprColumns"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="tableInDatabase" eType="#//TableInDatabase"
+        eOpposite="#//TableInDatabase/derivedColumnList">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="Gets the &lt;code>TableInDatabase&lt;/code> from which this column is ulitimately derived, if any."/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="mergeInsertSpec" upperBound="-1"
+        eType="#//MergeInsertSpecification" eOpposite="#//MergeInsertSpecification/targetColumnList"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ValueExpressionVariable" eSuperTypes="#//ValueExpressionAtomic">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="querySelect" eType="#//QuerySelect"
+        transient="true" eOpposite="#//QuerySelect/intoClause"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ValueExpressionScalarSelect" eSuperTypes="#//ValueExpressionAtomic">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="queryExpr" lowerBound="1"
+        eType="#//QueryExpressionRoot" containment="true" eOpposite="#//QueryExpressionRoot/valExprScalarSelect"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ValueExpressionLabeledDuration" eSuperTypes="#//ValueExpressionAtomic">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="labeledDurationType" eType="#//ValueExpressionLabeledDurationType"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="valueExpr" lowerBound="1"
+        eType="#//QueryValueExpression" containment="true" eOpposite="#//QueryValueExpression/valueExprLabeledDuration"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ValueExpressionCase" abstract="true"
+      eSuperTypes="#//ValueExpressionAtomic">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="caseElse" eType="#//ValueExpressionCaseElse"
+        containment="true" eOpposite="#//ValueExpressionCaseElse/valueExprCase"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ValueExpressionCast" eSuperTypes="#//ValueExpressionAtomic">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="valueExpr" lowerBound="1"
+        eType="#//QueryValueExpression" containment="true" eOpposite="#//QueryValueExpression/valueExprCast"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ValueExpressionNullValue" eSuperTypes="#//ValueExpressionAtomic"/>
+  <eClassifiers xsi:type="ecore:EClass" name="ValueExpressionDefaultValue" eSuperTypes="#//ValueExpressionAtomic"/>
+  <eClassifiers xsi:type="ecore:EClass" name="ValueExpressionFunction" eSuperTypes="#//ValueExpressionAtomic">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="specialRegister" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="distinct" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="columnFunction" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="parameterList" upperBound="-1"
+        eType="#//QueryValueExpression" containment="true" eOpposite="#//QueryValueExpression/valueExprFunction"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="function" lowerBound="1"
+        eType="ecore:EClass ../../org.eclipse.datatools.modelbase.sql/model/sqlmodel.ecore#//routines/Function"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ValueExpressionCombined" eSuperTypes="#//QueryValueExpression">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="combinedOperator" eType="#//ValueExpressionCombinedOperator"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="leftValueExpr" lowerBound="1"
+        eType="#//QueryValueExpression" containment="true" eOpposite="#//QueryValueExpression/valueExprCombinedLeft"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="rightValueExpr" lowerBound="1"
+        eType="#//QueryValueExpression" containment="true" eOpposite="#//QueryValueExpression/valueExprCombinedRight"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="GroupingSets" eSuperTypes="#//GroupingSpecification">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="groupingSetsElementList"
+        lowerBound="1" upperBound="-1" eType="#//GroupingSetsElement" containment="true"
+        eOpposite="#//GroupingSetsElement/groupingSets"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Grouping" abstract="true" eSuperTypes="#//GroupingSpecification">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="groupingSetsElementExpr"
+        eType="#//GroupingSetsElementExpression" transient="true" eOpposite="#//GroupingSetsElementExpression/grouping"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="GroupingSetsElement" abstract="true"
+      eSuperTypes="#//SQLQueryObject">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="groupingSets" eType="#//GroupingSets"
+        transient="true" eOpposite="#//GroupingSets/groupingSetsElementList"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="GroupingSetsElementSublist" eSuperTypes="#//GroupingSetsElement">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="groupingSetsElementExprList"
+        lowerBound="1" upperBound="-1" eType="#//GroupingSetsElementExpression" containment="true"
+        eOpposite="#//GroupingSetsElementExpression/groupingSetsElementSublist"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="GroupingSetsElementExpression" eSuperTypes="#//GroupingSetsElement">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="groupingSetsElementSublist"
+        eType="#//GroupingSetsElementSublist" transient="true" eOpposite="#//GroupingSetsElementSublist/groupingSetsElementExprList"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="grouping" lowerBound="1"
+        eType="#//Grouping" containment="true" eOpposite="#//Grouping/groupingSetsElementExpr"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="SuperGroup" eSuperTypes="#//Grouping">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="superGroupType" eType="#//SuperGroupType"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="superGroupElementList"
+        upperBound="-1" eType="#//SuperGroupElement" containment="true" eOpposite="#//SuperGroupElement/superGroup"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="GroupingExpression" eSuperTypes="#//Grouping">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="valueExpr" lowerBound="1"
+        eType="#//QueryValueExpression" containment="true" eOpposite="#//QueryValueExpression/groupingExpr"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="superGroupElementExpr"
+        eType="#//SuperGroupElementExpression" transient="true" eOpposite="#//SuperGroupElementExpression/groupingExpr"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="SuperGroupElement" abstract="true" eSuperTypes="#//SQLQueryObject">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="superGroup" eType="#//SuperGroup"
+        transient="true" eOpposite="#//SuperGroup/superGroupElementList"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="SuperGroupElementSublist" eSuperTypes="#//SuperGroupElement">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="superGroupElementExprList"
+        lowerBound="1" upperBound="-1" eType="#//SuperGroupElementExpression" containment="true"
+        eOpposite="#//SuperGroupElementExpression/superGroupElementSublist"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="SuperGroupElementExpression" eSuperTypes="#//SuperGroupElement">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="superGroupElementSublist"
+        eType="#//SuperGroupElementSublist" transient="true" eOpposite="#//SuperGroupElementSublist/superGroupElementExprList"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="groupingExpr" lowerBound="1"
+        eType="#//GroupingExpression" containment="true" eOpposite="#//GroupingExpression/superGroupElementExpr"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ValueExpressionCaseSearch" eSuperTypes="#//ValueExpressionCase">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="searchContentList" lowerBound="1"
+        upperBound="-1" eType="#//ValueExpressionCaseSearchContent" containment="true"
+        eOpposite="#//ValueExpressionCaseSearchContent/valueExprCaseSearch"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ValueExpressionCaseSimple" eSuperTypes="#//ValueExpressionCase">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="contentList" lowerBound="1"
+        upperBound="-1" eType="#//ValueExpressionCaseSimpleContent" containment="true"
+        eOpposite="#//ValueExpressionCaseSimpleContent/valueExprCaseSimple"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="valueExpr" lowerBound="1"
+        eType="#//QueryValueExpression" containment="true" eOpposite="#//QueryValueExpression/valueExprCaseSimple"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ValueExpressionCaseElse" eSuperTypes="#//SQLQueryObject">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="valueExprCase" eType="#//ValueExpressionCase"
+        transient="true" eOpposite="#//ValueExpressionCase/caseElse"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="valueExpr" eType="#//QueryValueExpression"
+        containment="true" eOpposite="#//QueryValueExpression/valueExprCaseElse"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ValueExpressionCaseSearchContent" eSuperTypes="#//SQLQueryObject">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="valueExpr" lowerBound="1"
+        eType="#//QueryValueExpression" containment="true" eOpposite="#//QueryValueExpression/valueExprCaseSearchContent"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="searchCondition" lowerBound="1"
+        eType="#//QuerySearchCondition" containment="true" eOpposite="#//QuerySearchCondition/valueExprCaseSearchContent"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="valueExprCaseSearch" eType="#//ValueExpressionCaseSearch"
+        transient="true" eOpposite="#//ValueExpressionCaseSearch/searchContentList"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ValueExpressionCaseSimpleContent" eSuperTypes="#//SQLQueryObject">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="valueExprCaseSimple" eType="#//ValueExpressionCaseSimple"
+        transient="true" eOpposite="#//ValueExpressionCaseSimple/contentList"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="whenValueExpr" lowerBound="1"
+        eType="#//QueryValueExpression" containment="true" eOpposite="#//QueryValueExpression/valueExprCaseSimpleContentWhen"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="resultValueExpr" lowerBound="1"
+        eType="#//QueryValueExpression" containment="true" eOpposite="#//QueryValueExpression/valueExprCaseSimpleContentResult"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="SuperGroupType">
+    <eLiterals name="CUBE"/>
+    <eLiterals name="GRANDTOTAL" value="1"/>
+    <eLiterals name="ROLLUP" value="2"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="PredicateQuantifiedType">
+    <eLiterals name="SOME"/>
+    <eLiterals name="ANY" value="1"/>
+    <eLiterals name="ALL" value="2"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="PredicateComparisonOperator">
+    <eLiterals name="EQUAL"/>
+    <eLiterals name="NOT_EQUAL" value="1"/>
+    <eLiterals name="LESS_THAN" value="2"/>
+    <eLiterals name="GREATER_THAN" value="3"/>
+    <eLiterals name="LESS_THAN_OR_EQUAL" value="4"/>
+    <eLiterals name="GREATER_THAN_OR_EQUAL" value="5"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="SearchConditionCombinedOperator">
+    <eLiterals name="AND"/>
+    <eLiterals name="OR" value="1"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="TableJoinedOperator">
+    <eLiterals name="DEFAULT_INNER"/>
+    <eLiterals name="EXPLICIT_INNER" value="1"/>
+    <eLiterals name="LEFT_OUTER" value="2"/>
+    <eLiterals name="RIGHT_OUTER" value="3"/>
+    <eLiterals name="FULL_OUTER" value="4"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="QueryCombinedOperator">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="UNION=1&#xD;&#xA;UNION_ALL=2&#xD;&#xA;INTERSECT=3&#xD;&#xA;INTERSECT_ALL=4&#xD;&#xA;EXCEPT=5&#xD;&#xA;EXCEPT_ALL=6"/>
+    </eAnnotations>
+    <eLiterals name="UNION"/>
+    <eLiterals name="UNION_ALL" value="1"/>
+    <eLiterals name="INTERSECT" value="2"/>
+    <eLiterals name="INTERSECT_ALL" value="3"/>
+    <eLiterals name="EXCEPT" value="4"/>
+    <eLiterals name="EXCEPT_ALL" value="5"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="ValueExpressionUnaryOperator">
+    <eLiterals name="NONE"/>
+    <eLiterals name="PLUS" value="1"/>
+    <eLiterals name="MINUS" value="2"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="ValueExpressionCombinedOperator">
+    <eLiterals name="ADD"/>
+    <eLiterals name="SUBTRACT" value="1"/>
+    <eLiterals name="MULTIPLY" value="2"/>
+    <eLiterals name="DIVIDE" value="3"/>
+    <eLiterals name="CONCATENATE" value="4"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="ValueExpressionLabeledDurationType">
+    <eLiterals name="YEARS"/>
+    <eLiterals name="MONTHS" value="1"/>
+    <eLiterals name="DAYS" value="2"/>
+    <eLiterals name="HOURS" value="3"/>
+    <eLiterals name="MINUTES" value="4"/>
+    <eLiterals name="SECONDS" value="5"/>
+    <eLiterals name="MICROSECONDS" value="6"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="TableInDatabase" eSuperTypes="#//TableExpression">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="updateStatement" eType="#//QueryUpdateStatement"
+        transient="true" eOpposite="#//QueryUpdateStatement/targetTable"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="deleteStatement" eType="#//QueryDeleteStatement"
+        transient="true" eOpposite="#//QueryDeleteStatement/targetTable"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="insertStatement" eType="#//QueryInsertStatement"
+        transient="true" eOpposite="#//QueryInsertStatement/targetTable"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="databaseTable" lowerBound="1"
+        eType="ecore:EClass ../../org.eclipse.datatools.modelbase.sql/model/sqlmodel.ecore#//tables/Table"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="derivedColumnList" upperBound="-1"
+        eType="#//ValueExpressionColumn" eOpposite="#//ValueExpressionColumn/tableInDatabase">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="Gets the list of columns used anywhere in the statement that are derived from this table."/>
+      </eAnnotations>
+    </eStructuralFeatures>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="TableFunction" eSuperTypes="#//TableExpression">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="function" lowerBound="1"
+        eType="ecore:EClass ../../org.eclipse.datatools.modelbase.sql/model/sqlmodel.ecore#//routines/Function"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="parameterList" upperBound="-1"
+        eType="#//QueryValueExpression" containment="true" eOpposite="#//QueryValueExpression/tableFunction"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="SQLQueryObject" abstract="true" eSuperTypes="../../org.eclipse.datatools.modelbase.sql/model/sqlmodel.ecore#//schema/SQLObject">
+    <eOperations name="getSQL" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eOperations name="setSQL">
+      <eParameters name="sqlText" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    </eOperations>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="QueryChangeStatement" abstract="true"
+      eSuperTypes="#//QueryStatement ../../org.eclipse.datatools.modelbase.sql/model/sqlmodel.ecore#//statements/SQLDataChangeStatement"/>
+  <eClassifiers xsi:type="ecore:EClass" name="ColumnName" eSuperTypes="#//SQLQueryObject">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="tableCorrelation" eType="#//TableCorrelation"
+        transient="true" eOpposite="#//TableCorrelation/columnNameList"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="withTableSpecification"
+        lowerBound="1" eType="#//WithTableSpecification" transient="true" eOpposite="#//WithTableSpecification/columnNameList"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="TableNested" eSuperTypes="#//TableReference">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="nestedTableRef" lowerBound="1"
+        eType="#//TableReference" containment="true" eOpposite="#//TableReference/nest"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="QueryMergeStatement" eSuperTypes="#//QueryChangeStatement">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="SQL syntax:&#xD;&#xA;MERGE INTO &lt;target table> [ [ AS] &lt;merge correlation name> ]&#xD;&#xA;USING &lt;table reference>&#xD;&#xA;ON &lt;search condition> &#xD;&#xA;&lt;merge operation specificaion list>&#xD;&#xA;&#xD;&#xA;where:&#xD;&#xA;&lt;merge operation specification list> ::=&#xD;&#xA;    &lt;merge operation specification> [&lt;merge operation specification ...]&#xD;&#xA;&lt;merge operation specification> ::=&#xD;&#xA;    &lt;merge update specification>  |  &lt;merge insert specification>&#xD;&#xA;&#xD;&#xA;Note: a non-syntactic rule is that the operation specification list can contain at most one update specification and one insert specification.&#xD;&#xA;&#xD;&#xA;Example:&#xD;&#xA;MERGE INTO inventory AS in&#xD;&#xA;USING &#xD;&#xA;  (SELECT partno, description, count &#xD;&#xA;   FROM shipment&#xD;&#xA;   WHERE shipment.partno IS NOT NULL) AS sh&#xD;&#xA;ON (in.partno = sh.partno)&#xD;&#xA;WHEN MATCHED THEN&#xD;&#xA;   UPDATE SET&#xD;&#xA;        description = sh.description,&#xD;&#xA;        quantity = in.quantity + sh.count&#xD;&#xA;WHEN NOT MATCHED THEN&#xD;&#xA;    INSERT (partno, description, quantity)&#xD;&#xA;    VALUES (sh.partno, sh.description, sh.count) "/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="targetTable" lowerBound="1"
+        eType="#//MergeTargetTable" containment="true" eOpposite="#//MergeTargetTable/mergeStatement"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="sourceTable" lowerBound="1"
+        eType="#//MergeSourceTable" containment="true" eOpposite="#//MergeSourceTable/mergeStatement"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="onCondition" lowerBound="1"
+        eType="#//MergeOnCondition" containment="true" eOpposite="#//MergeOnCondition/mergeStatement"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="operationSpecList" lowerBound="1"
+        upperBound="-1" eType="#//MergeOperationSpecification" containment="true"
+        eOpposite="#//MergeOperationSpecification/mergeStatement"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="SearchConditionNested" eSuperTypes="#//QuerySearchCondition">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="nestedCondition" lowerBound="1"
+        eType="#//QuerySearchCondition" containment="true" eOpposite="#//QuerySearchCondition/nest"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ValueExpressionNested" eSuperTypes="#//QueryValueExpression">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="nestedValueExpr" lowerBound="1"
+        eType="#//QueryValueExpression" containment="true" eOpposite="#//QueryValueExpression/nest"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ValueExpressionAtomic" abstract="true"
+      eSuperTypes="#//QueryValueExpression"/>
+  <eClassifiers xsi:type="ecore:EClass" name="OrderBySpecification" abstract="true"
+      eSuperTypes="#//SQLQueryObject">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="descending" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="OrderingSpecOption" eType="#//OrderingSpecType"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="NullOrderingOption" eType="#//NullOrderingType"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="selectStatement" eType="#//QuerySelectStatement"
+        transient="true" eOpposite="#//QuerySelectStatement/orderByClause"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="query" eType="#//QueryExpressionBody"
+        transient="true" eOpposite="#//QueryExpressionBody/sortSpecList"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="OrderByOrdinal" eSuperTypes="#//OrderBySpecification">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="ordinalValue" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="TableCorrelation" eSuperTypes="#//SQLQueryObject">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="tableExpr" eType="#//TableExpression"
+        transient="true" eOpposite="#//TableExpression/tableCorrelation"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="columnNameList" upperBound="-1"
+        eType="#//ColumnName" containment="true" eOpposite="#//ColumnName/tableCorrelation"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="UpdateSource" eSuperTypes="#//SQLQueryObject">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="updateAssignmentExpr" eType="#//UpdateAssignmentExpression"
+        transient="true" eOpposite="#//UpdateAssignmentExpression/updateSource"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="UpdateSourceExprList" eSuperTypes="#//UpdateSource">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="valueExprList" lowerBound="1"
+        upperBound="-1" eType="#//QueryValueExpression" containment="true" eOpposite="#//QueryValueExpression/updateSourceExprList"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="UpdateSourceQuery" eSuperTypes="#//UpdateSource">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="queryExpr" lowerBound="1"
+        eType="#//QueryExpressionBody" containment="true" eOpposite="#//QueryExpressionBody/updateSourceQuery"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="OrderByResultColumn" eSuperTypes="#//OrderBySpecification">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="resultCol" lowerBound="1"
+        eType="#//ResultColumn" eOpposite="#//ResultColumn/orderByResultCol"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="WithTableReference" eSuperTypes="#//TableExpression">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="withTableSpecification"
+        lowerBound="1" eType="#//WithTableSpecification" eOpposite="#//WithTableSpecification/withTableReferences"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="NullOrderingType">
+    <eLiterals name="NONE"/>
+    <eLiterals name="NULLS_FIRST" value="1"/>
+    <eLiterals name="NULLS_LAST" value="2"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="OrderingSpecType">
+    <eLiterals name="NONE"/>
+    <eLiterals name="ASC" value="1"/>
+    <eLiterals name="DESC" value="2"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="QueryNested" eSuperTypes="#//QueryExpressionBody">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="nestedQuery" lowerBound="1"
+        eType="#//QueryExpressionBody" containment="true" eOpposite="#//QueryExpressionBody/queryNest"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ValueExpressionRow" eSuperTypes="#//QueryValueExpression">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="valueExprList" upperBound="-1"
+        eType="#//QueryValueExpression" containment="true" eOpposite="#//QueryValueExpression/valueExprRow"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="MergeTargetTable" eSuperTypes="#//SQLQueryObject">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="SQL syntax:&#xD;&#xA;&lt;target table> [[AS] &lt;merge correlation name>]&#xD;&#xA;&#xD;&#xA;where:&#xD;&#xA;&lt;target table> is a simple or qualified table name.&#xD;&#xA;&lt;merge correlation name> is a simple identifier"/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="mergeStatement" eType="#//QueryMergeStatement"
+        transient="true" eOpposite="#//QueryMergeStatement/targetTable"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="tableExpr" lowerBound="1"
+        eType="#//TableExpression" containment="true" eOpposite="#//TableExpression/mergeTargetTable"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="MergeSourceTable" eSuperTypes="#//SQLQueryObject">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="SQL syntax:&#xD;&#xA;&lt;table reference>&#xD;&#xA;&#xD;&#xA;The source table reference can be a table name, a query (SELECT expression), a joined table, a table function..."/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="QueryMergeStatement" upperBound="-1"
+        eType="#//QueryMergeStatement"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="mergeStatement" eType="#//QueryMergeStatement"
+        transient="true" eOpposite="#//QueryMergeStatement/sourceTable"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="tableRef" lowerBound="1"
+        eType="#//TableReference" containment="true" eOpposite="#//TableReference/mergeSourceTable"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="MergeOnCondition" eSuperTypes="#//SQLQueryObject">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="SQL syntax:&#xD;&#xA;&lt;search condition>&#xD;&#xA;"/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="mergeStatement" eType="#//QueryMergeStatement"
+        transient="true" eOpposite="#//QueryMergeStatement/onCondition"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="searchCondition" lowerBound="1"
+        eType="#//QuerySearchCondition" containment="true" eOpposite="#//QuerySearchCondition/mergeOnCondition"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="MergeUpdateSpecification" eSuperTypes="#//MergeOperationSpecification">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="SQL syntax:&#xD;&#xA;WHEN MATCHED THEN UPDATE SET &lt;set clause list>&#xD;&#xA;&#xD;&#xA;where&#xD;&#xA;&lt;set clause list> is a list of assignement expressions, such as &#xD;&#xA;  description = sh.description&#xD;&#xA;&#xD;&#xA;The assignment expression list is modelled as a list of UpdateAssignementExpression objects, which in the general case can have a query exrpession as the assignement source, but for Merge only simple assignment list is allowed."/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="assignementExprList" lowerBound="1"
+        upperBound="-1" eType="#//UpdateAssignmentExpression" containment="true" eOpposite="#//UpdateAssignmentExpression/mergeUpdateSpec"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="MergeInsertSpecification" eSuperTypes="#//MergeOperationSpecification">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="SQL syntax:&#xD;&#xA;WHEN NOT MATCHED THEN &#xD;&#xA;INSERT &lt;target column list> &#xD;&#xA;VALUES &lt;insert value list>&#xD;&#xA;&#xD;&#xA;where&#xD;&#xA;&lt;target column list> is a simple list of column names&#xD;&#xA;&lt;insert value list> is a list of value expressions&#xD;&#xA;&#xD;&#xA;Note that the MergeInsertSpecification object does not &quot;own&quot; the column objects in the target column list.  They are &quot;owned&quot; by the table object in the MergeTargetTable"/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="targetColumnList" upperBound="-1"
+        eType="#//ValueExpressionColumn" eOpposite="#//ValueExpressionColumn/mergeInsertSpec"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="sourceValuesRow" lowerBound="1"
+        eType="#//ValuesRow" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="MergeOperationSpecification" eSuperTypes="#//SQLQueryObject">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="SQL syntax:&#xD;&#xA;&lt;merge update specification>  |  &lt;merge insert specification>&#xD;&#xA;"/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="mergeStatement" eType="#//QueryMergeStatement"
+        transient="true" eOpposite="#//QueryMergeStatement/operationSpecList"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="UpdateOfColumn" eSuperTypes="#//SQLQueryObject">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="updatabilityExpr" eType="#//UpdatabilityExpression"
+        transient="true" eOpposite="#//UpdatabilityExpression/updateOfColumnList"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="UpdatabilityType">
+    <eLiterals name="READ_ONLY"/>
+    <eLiterals name="UPDATE" value="1"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="UpdatabilityExpression" eSuperTypes="#//SQLQueryObject">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="updatabilityType" eType="#//UpdatabilityType"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="updateOfColumnList" upperBound="-1"
+        eType="#//UpdateOfColumn" containment="true" eOpposite="#//UpdateOfColumn/updatabilityExpr"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="selectStatement" eType="#//QuerySelectStatement"
+        transient="true" eOpposite="#//QuerySelectStatement/updatabilityExpr"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="CallStatement" eSuperTypes="#//SQLQueryObject ../../org.eclipse.datatools.modelbase.sql/model/sqlmodel.ecore#//statements/SQLControlStatement">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="argumentList" upperBound="-1"
+        eType="#//QueryValueExpression" containment="true" eOpposite="#//QueryValueExpression/callStatement"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="procedureRef" lowerBound="1"
+        eType="#//ProcedureReference" containment="true" eOpposite="#//ProcedureReference/callStatement"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ProcedureReference" eSuperTypes="#//SQLQueryObject">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="callStatement" lowerBound="1"
+        eType="#//CallStatement" transient="true" eOpposite="#//CallStatement/procedureRef"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="procedure" lowerBound="1"
+        eType="ecore:EClass ../../org.eclipse.datatools.modelbase.sql/model/sqlmodel.ecore#//routines/Procedure"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="TableQueryLateral" eSuperTypes="#//TableExpression">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="A &quot;lateral&quot; table query is a query that appears in the FROM clause.  However it is semantically different from a regular FROM clause query in that the lateral table query can itself contain references to other tables defined before (that is, to the left of it) in the same FROM clause.  Regular FROM clause queries can only refer to tables defined at a higher level in the statement.  In ISO SQL a lateral table query expression is prefixed by the keyword LATERAL.  (The DB2 SQL dialects prefix the lateral query table with the keyword TABLE.)&#xD;&#xA;&#xD;&#xA;For example, here is a statement containing a lateral table query expression:&#xD;&#xA;&#xD;&#xA;SELECT d.dept_name, e.emp_name&#xD;&#xA;  FROM dept d, LATERAL( &#xD;&#xA;    SELECT emp_id, emp_name&#xD;&#xA;    FROM emp&#xD;&#xA;    WHERE emp_dept = d.dept_id ) as e&#xD;&#xA;&#xD;&#xA;The reference to d.dept_id is legal in a lateral table query, but would not be legal in a regular table query expression."/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="query" lowerBound="1" eType="#//QueryExpressionBody"
+        containment="true"/>
+  </eClassifiers>
+</ecore:EPackage>
