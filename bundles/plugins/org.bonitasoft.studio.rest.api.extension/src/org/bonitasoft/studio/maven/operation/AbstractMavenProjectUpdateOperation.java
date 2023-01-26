@@ -29,7 +29,7 @@ public abstract class AbstractMavenProjectUpdateOperation implements IWorkspaceR
     protected IStatus status = Status.OK_STATUS;
     private boolean updateAfter;
 
-    public AbstractMavenProjectUpdateOperation(boolean updateAfter) {
+    protected AbstractMavenProjectUpdateOperation(boolean updateAfter) {
         this.updateAfter = updateAfter;
     }
    

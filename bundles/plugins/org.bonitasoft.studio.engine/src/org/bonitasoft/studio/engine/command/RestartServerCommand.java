@@ -87,10 +87,7 @@ public class RestartServerCommand extends AbstractHandler {
 
     @Override
     public boolean isEnabled() {
-        if (RepositoryManager.getInstance().hasActiveRepository()) {
-            return true;
-        }
-        return false;
+        return RepositoryManager.getInstance().hasActiveRepository();
     }
 
 }
