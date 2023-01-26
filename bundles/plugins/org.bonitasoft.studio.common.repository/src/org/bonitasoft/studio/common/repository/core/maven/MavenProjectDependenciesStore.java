@@ -49,11 +49,15 @@ import org.bonitasoft.studio.common.ui.jface.databinding.StatusToMarkerSeverity;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
+import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.ISchedulingRule;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.e4.core.services.events.IEventBroker;
 
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -74,7 +78,7 @@ public class MavenProjectDependenciesStore implements ProjectDependenciesStore {
             .setSerializationInclusion(Include.NON_NULL)
             .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     private IEventBroker eventBroker;
-    private static ReentrantLock lock = new ReentrantLock();
+    private static final ReentrantLock LOCK = new ReentrantLock();
 
     public MavenProjectDependenciesStore(BonitaProject project, IEventBroker eventBroker) {
         this.project = project;
@@ -83,31 +87,38 @@ public class MavenProjectDependenciesStore implements ProjectDependenciesStore {
 
     @Override
     public Optional<DependencyReport> analyze(IProgressMonitor monitor) {
-        lock.lock();
+        try {
+            Job.getJobManager().join(ResourcesPlugin.FAMILY_AUTO_BUILD, monitor);
+        } catch (OperationCanceledException | InterruptedException e) {
+           BonitaStudioLog.error(e);
+        }
+        ISchedulingRule rule = ResourcesPlugin.getWorkspace().getRoot();
+        Job.getJobManager().beginRule(rule, monitor);
+        LOCK.lock();
         try {
             var appProject = project.getAppProject();
             appProject.deleteMarkers(ANALYZE_PLUGIN_MARKER_TYPE, true, IResource.DEPTH_INFINITE);
-            AnalyzeBonitaProjectDependenciesPlugin bonitaProjectPlugin = new AnalyzeBonitaProjectDependenciesPlugin(
+            var bonitaProjectPlugin = new AnalyzeBonitaProjectDependenciesPlugin(
                     appProject);
-            IStatus status = bonitaProjectPlugin.execute(monitor);
-            if (!status.isOK()) {
-                throw new CoreException(status);
-            }
-
-            String reportPath = bonitaProjectPlugin.getReportPath();
-            var path = Paths.get(reportPath);
-            File reportFile = Paths.get(reportPath).isAbsolute() ? path.toFile()
-                    : appProject.getLocation().toFile().toPath().resolve(reportPath).toFile();
-            if (reportFile.isFile()) {
-                dependencyReport = mapper.readValue(reportFile, DependencyReport.class);
-                eventBroker.send(PROJECT_DEPENDENCIES_ANALYZED_TOPIC, Map.of());
-                dependencyReport.getIssues().stream()
-                        .map(this::getArtifactId)
-                        .filter(Objects::nonNull)
-                        .distinct()
-                        .map(artifactId -> createMultiStatus(artifactId, dependencyReport.getIssues()))
-                        .filter(Objects::nonNull)
-                        .forEach(this::addMarker);
+            var result = bonitaProjectPlugin.execute(monitor);
+            if (result.isOK()) {
+                String reportPath = bonitaProjectPlugin.getReportPath();
+                var path = Paths.get(reportPath);
+                File reportFile = Paths.get(reportPath).isAbsolute() ? path.toFile()
+                        : appProject.getLocation().toFile().toPath().resolve(reportPath).toFile();
+                if (reportFile.isFile()) {
+                    dependencyReport = mapper.readValue(reportFile, DependencyReport.class);
+                    eventBroker.send(PROJECT_DEPENDENCIES_ANALYZED_TOPIC, Map.of());
+                    dependencyReport.getIssues().stream()
+                            .map(this::getArtifactId)
+                            .filter(Objects::nonNull)
+                            .distinct()
+                            .map(artifactId -> createMultiStatus(artifactId, dependencyReport.getIssues()))
+                            .filter(Objects::nonNull)
+                            .forEach(this::addMarker);
+                }
+            } else {
+                throw new CoreException(result);
             }
         } catch (IOException e) {
             BonitaStudioLog.error(e);
@@ -119,7 +130,8 @@ public class MavenProjectDependenciesStore implements ProjectDependenciesStore {
                 BonitaStudioLog.error(ce, CommonRepositoryPlugin.PLUGIN_ID);
             }
         } finally {
-            lock.unlock();
+            Job.getJobManager().endRule(rule);
+            LOCK.unlock();
         }
         return Optional.ofNullable(dependencyReport);
     }

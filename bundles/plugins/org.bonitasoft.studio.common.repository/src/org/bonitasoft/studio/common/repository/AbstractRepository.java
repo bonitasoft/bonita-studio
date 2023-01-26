@@ -623,6 +623,10 @@ public abstract class AbstractRepository implements IRepository {
     @Override
     public void migrate(MigrationReport report, IProgressMonitor monitor) throws CoreException, MigrationException {
         Assert.isNotNull(project);
+        
+        // Force deps analysis before migration
+        getProjectDependenciesStore().analyze(new NullProgressMonitor());
+        
         var orderedStores = getAllStores().stream()
                 .sorted(Comparator.comparingInt(IRepositoryStore::getImportOrder))
                 .collect(Collectors.toList());

@@ -39,7 +39,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.Job;
@@ -168,12 +167,7 @@ public class BonitaProjectImpl implements BonitaProject {
         job.addJobChangeListener(new JobChangeAdapter() {
             @Override
             public void done(IJobChangeEvent event) {
-//                try {
-//                    Job.getJobManager().join(ResourcesPlugin.FAMILY_AUTO_BUILD, monitor);
-//                } catch (OperationCanceledException | InterruptedException e) {
-//                    BonitaStudioLog.error(e);
-//                }
-                new Job("Analyze Bonita dependencies") {
+                new Job("Analyze project dependencies") {
 
                     @Override
                     protected IStatus run(IProgressMonitor monitor) {

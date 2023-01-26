@@ -193,17 +193,11 @@ public class BOSWebServerManager implements IBonitaProjectListener {
                     }
 
                     startResult = null;
+                  
                     tomcat.start(ILaunchManager.RUN_MODE, result -> startResult = result);
                     waitServerRunning();
                 } catch (final CoreException e) {
-                    if (tomcat != null) {
-                        try {
-                            tomcat.delete();
-                            tomcat = null;
-                        } catch (CoreException e1) {
-                            BonitaStudioLog.error(e1);
-                        }
-                    }
+                    clearConfiguration();
                     handleCoreExceptionWhileStartingTomcat(e);
                 }
             }
@@ -212,8 +206,22 @@ public class BOSWebServerManager implements IBonitaProjectListener {
         }
     }
 
+    public void clearConfiguration() {
+        if (tomcat != null) {
+            try {
+                tomcat.delete();
+                tomcat = null;
+            } catch (CoreException e1) {
+                BonitaStudioLog.error(e1);
+            }
+        }
+    }
+
     public void setupLaunchConfiguration(IProgressMonitor monitor) throws CoreException {
         if (tomcat == null) {
+            var rule = ResourcesPlugin.getWorkspace().getRoot();
+            // Avoid workspace deadlock
+            Job.getJobManager().beginRule(rule, monitor);
             BonitaHomeUtil.configureBonitaClient();
             copyTomcatBundleInWorkspace(monitor);
             updateRuntimeLocationIfNeeded();
@@ -224,6 +232,7 @@ public class BOSWebServerManager implements IBonitaProjectListener {
             tomcat = createServer(monitor, confProject, runtime);
             createLaunchConfiguration(tomcat, new NullProgressMonitor());
             confProject.build(IncrementalProjectBuilder.INCREMENTAL_BUILD, new NullProgressMonitor());
+            Job.getJobManager().endRule(rule);
         }
     }
 
@@ -471,10 +480,6 @@ public class BOSWebServerManager implements IBonitaProjectListener {
         return tomcat != null
                 && (tomcat.getServerState() == IServer.STATE_STARTED);
     }
-
-    public void resetServer(IProgressMonitor monitor) {
-        resetServer(false, monitor);
-    }
     
     public void resetServer(boolean cleanConfiguration, IProgressMonitor monitor) {
         boolean notifying = notifyRestartServer();
@@ -569,7 +574,8 @@ public class BOSWebServerManager implements IBonitaProjectListener {
         }
         if (!isLazyModeEnabled()) {
             try {
-                BOSWebServerManager.getInstance().setupLaunchConfiguration(monitor);
+                clearConfiguration();
+                setupLaunchConfiguration(monitor);
             } catch (CoreException e) {
                 BonitaStudioLog.error(e);
             }
