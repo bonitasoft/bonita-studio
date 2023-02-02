@@ -96,7 +96,7 @@ public class BOSWebServerManager implements IBonitaProjectListener {
     private static final String BONITA_TOMCAT_SERVER_ID = "bonita-tomcat-server-id";
     private static final String BONITA_TOMCAT_RUNTIME_ID = "bonita-tomcat-runtime-id";
     public static final String SERVER_CONFIGURATION_PROJECT = "server_configuration";
-    private static final String LOGINSERVICE_PATH = "/bonita/loginservice?";
+    private static final String LOGINSERVICE_PATH = "/bonita/loginservice";
     protected static final String WEBSERVERMANAGER_EXTENSION_ID = "org.bonitasoft.studio.engine.bonitaWebServerManager";
     protected static final String TOMCAT_SERVER_TYPE = "org.eclipse.jst.server.tomcat.90";
     protected static final String TOMCAT_RUNTIME_TYPE = "org.eclipse.jst.server.tomcat.runtime.90";
@@ -543,7 +543,11 @@ public class BOSWebServerManager implements IBonitaProjectListener {
     }
 
     public String generateLoginURL(final String username, final String password) {
-        return generateUrlBase() + LOGINSERVICE_PATH + "username=" + username + "&password=" + password;
+        return generateUrlBase() + LOGINSERVICE_PATH + "?username=" + username + "&password=" + password;
+    }
+    
+    public String generateLoginURL() {
+        return generateUrlBase() + LOGINSERVICE_PATH;
     }
 
     public File getBonitaLogFile() {
