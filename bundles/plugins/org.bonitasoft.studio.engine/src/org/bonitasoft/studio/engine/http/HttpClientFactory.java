@@ -49,7 +49,7 @@ public class HttpClientFactory {
                 .setDefaultCookieStore(context.getCookieStore()).build();
     }
 
-    public HttpRequest<String> newLoginRequest() {
+    public HttpRequest<Void> newLoginRequest() {
         return new LoginRequest(this);
     }
 
