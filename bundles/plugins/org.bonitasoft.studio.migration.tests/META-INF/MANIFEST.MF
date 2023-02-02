@@ -1,0 +1,15 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Migration Tests Fragment
+Bundle-SymbolicName: org.bonitasoft.studio.migration.tests
+Bundle-Version: 8.0.0.qualifier
+Bundle-Vendor: Bonitasoft S.A.
+Fragment-Host: org.bonitasoft.studio.migration;bundle-version="7.16.0"
+Automatic-Module-Name: org.bonitasoft.studio.migration.tests
+Bundle-RequiredExecutionEnvironment: JavaSE-11
+Require-Bundle: org.junit,
+ assertj-core,
+ org.mockito.mockito-core,
+ org.bonitasoft.studio.tests-utils,
+ net.bytebuddy.byte-buddy,
+ org.objenesis
