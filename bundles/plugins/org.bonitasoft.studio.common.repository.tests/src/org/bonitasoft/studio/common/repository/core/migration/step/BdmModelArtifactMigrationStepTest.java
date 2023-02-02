@@ -81,9 +81,13 @@ class BdmModelArtifactMigrationStepTest {
     
     private static Stream<Arguments> provideModelAndReportMessage() throws IOException, CoreException {
         var model = load("/pom.xml.test");
+        var modelVersionProperty = load("/pom.xml.version.property.test");
         return Stream.of(
                 Arguments.of(model.clone(), withDaoHint(String.format(
                         "`com.company.example.model:bdm-client:jar:1.0.0` and `com.company.example.model:bdm-dao:jar:1.0.0` dependencies have been replaced with `com.company:%s-bdm-model:jar:0.0.1`.",
+                        metadata.getProjectId()))),
+                Arguments.of(modelVersionProperty.clone(), withDaoHint(String.format(
+                        "`com.company.example.model:bdm-client:jar:${my.bdm.version}` and `com.company.example.model:bdm-dao:jar:${my.bdm.version}` dependencies have been replaced with `com.company:%s-bdm-model:jar:0.0.1`.",
                         metadata.getProjectId()))),
                 Arguments.of(remove(model.clone(), "bdm-dao"), String.format(
                         "`com.company.example.model:bdm-client:jar:1.0.0` dependency has been replaced with `com.company:%s-bdm-model:jar:0.0.1`.",
