@@ -53,8 +53,9 @@ public class BdmModelArtifactMigrationStep implements MavenModelMigration, Migra
         MigrationReport report = new MigrationReport();
 
         // Remove old bdm artifacts from dependencies
-        var bdmClientDependency = removeDependency(model, matchingBdmClient());
-        var bdmDaoDependency = removeDependency(model, matchingBdmDaoClient());
+        var versionResolver = versionResolver(model);
+        var bdmClientDependency = removeDependency(model, matchingBdmClient(versionResolver));
+        var bdmDaoDependency = removeDependency(model, matchingBdmDaoClient(versionResolver));
         String reportMessage = null;
         if (bdmClientDependency != null) {
             // Add new bdm model dependency
@@ -83,6 +84,22 @@ public class BdmModelArtifactMigrationStep implements MavenModelMigration, Migra
             report.updated(reportMessage);
         }
         return report;
+    }
+
+    private VersionResolver versionResolver(Model model) {
+        return dependency -> {
+            String versionValue = dependency.getVersion();
+            if(versionValue != null 
+                    && versionValue.startsWith("${")
+                    && versionValue.endsWith("}")){
+                var property = versionValue.substring(2, versionValue.length()-1);
+                var versionFromProperty = model.getProperties().getProperty(property);
+                if( versionFromProperty != null ) {
+                    return versionFromProperty;
+                }
+            }
+            return versionValue;
+        };
     }
 
     private String addDaoImplNote(String reportMessage) {
@@ -121,14 +138,14 @@ public class BdmModelArtifactMigrationStep implements MavenModelMigration, Migra
                 parametrizedGAV ? "${project.version}" : metadata.getVersion(), Artifact.SCOPE_PROVIDED);
     }
 
-    private Predicate<Dependency> matchingBdmClient() {
+    private Predicate<Dependency> matchingBdmClient(VersionResolver versionResolver) {
         return dep -> Objects.equals(dep.getArtifactId(), "bdm-client")
-                && Objects.equals(dep.getVersion(), "1.0.0");
+                && Objects.equals(versionResolver.resolve(dep), "1.0.0");
     }
 
-    private Predicate<Dependency> matchingBdmDaoClient() {
+    private Predicate<Dependency> matchingBdmDaoClient(VersionResolver versionResolver) {
         return dep -> Objects.equals(dep.getArtifactId(), "bdm-dao")
-                && Objects.equals(dep.getVersion(), "1.0.0");
+                && Objects.equals(versionResolver.resolve(dep), "1.0.0");
     }
 
     private Dependency newDependency(String groupId, String artifactId, String version, String scope) {
@@ -142,8 +159,9 @@ public class BdmModelArtifactMigrationStep implements MavenModelMigration, Migra
 
     @Override
     public boolean appliesTo(Model model, ProjectMetadata metadata) {
+        var versionResolver = versionResolver(model);
         return model.getDependencies().stream()
-                .anyMatch(matchingBdmClient().or(matchingBdmDaoClient()));
+                .anyMatch(matchingBdmClient(versionResolver).or(matchingBdmDaoClient(versionResolver)));
     }
 
     @Override
@@ -187,5 +205,12 @@ public class BdmModelArtifactMigrationStep implements MavenModelMigration, Migra
             return position;
         }
 
+    }
+    
+    @FunctionalInterface
+    static interface VersionResolver {
+        
+        String resolve(Dependency dependency);
+        
     }
 }
