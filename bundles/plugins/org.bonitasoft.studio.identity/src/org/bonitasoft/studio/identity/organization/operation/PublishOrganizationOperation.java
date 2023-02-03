@@ -27,6 +27,7 @@ import org.bonitasoft.engine.api.ProfileAPI;
 import org.bonitasoft.engine.bpm.process.ProcessDeploymentInfo;
 import org.bonitasoft.engine.exception.CreationException;
 import org.bonitasoft.engine.exception.DeletionException;
+import org.bonitasoft.engine.exception.ProcessInstanceHierarchicalDeletionException;
 import org.bonitasoft.engine.exception.SearchException;
 import org.bonitasoft.engine.identity.OrganizationImportException;
 import org.bonitasoft.engine.identity.User;
@@ -62,10 +63,9 @@ public abstract class PublishOrganizationOperation implements IRunnableWithProgr
 
     protected final Organization organization;
     private APISession session;
-    private boolean flushSession;
     private boolean shouldApplyAllProfileToUser = true;
 
-    public PublishOrganizationOperation(final Organization organization) {
+    PublishOrganizationOperation(final Organization organization) {
         this.organization = organization;
     }
 
@@ -84,7 +84,7 @@ public abstract class PublishOrganizationOperation implements IRunnableWithProgr
 
         monitor.beginTask(String.format(Messages.deployingOrganization, organization.getName()), IProgressMonitor.UNKNOWN);
 
-        flushSession = false;
+        var flushSession = false;
         BonitaStudioLog.info("Loading organization " + organization.getName() + " in portal...", IdentityPlugin.PLUGIN_ID);
         try {
             if (session == null) {
@@ -96,7 +96,7 @@ public abstract class PublishOrganizationOperation implements IRunnableWithProgr
             final SearchResult<ProcessDeploymentInfo> result = processApi
                     .searchProcessDeploymentInfos(new SearchOptionsBuilder(0, Integer.MAX_VALUE).done());
             for (final ProcessDeploymentInfo info : result.getResult()) {
-                processApi.deleteProcessInstances(info.getProcessId(), 0, Integer.MAX_VALUE);
+                deleteProcessInstances(processApi, info);
                 processApi.deleteArchivedProcessInstances(info.getProcessId(), 0, Integer.MAX_VALUE);
             }
             importOrganization(identityAPI);
@@ -111,6 +111,16 @@ public abstract class PublishOrganizationOperation implements IRunnableWithProgr
                 BOSEngineManager.getInstance().logoutDefaultTenant(session);
                 session = null;
             }
+        }
+    }
+
+    private void deleteProcessInstances(final ProcessAPI processApi, final ProcessDeploymentInfo info)
+            throws DeletionException {
+        try {
+            processApi.deleteProcessInstances(info.getProcessId(), 0, Integer.MAX_VALUE);
+        }catch (ProcessInstanceHierarchicalDeletionException e) {
+            processApi.deleteProcessInstance(e.getProcessInstanceId());
+            deleteProcessInstances(processApi, info);
         }
     }
 
