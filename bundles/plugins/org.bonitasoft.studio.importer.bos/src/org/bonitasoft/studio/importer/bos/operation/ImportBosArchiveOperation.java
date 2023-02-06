@@ -211,7 +211,7 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
                     .filter(dl -> dl.getConflictVersion() == null
                             || dl.getConflictVersion().getStatus() == ConflictVersion.Status.KEEP_OURS)
                     .collect(Collectors.toList());
-            var dependenciesUpdateOperation = dependenciesUpdateOperationFactory.create();
+            var dependenciesUpdateOperation = dependenciesUpdateOperationFactory.createDependencyUpdateOperation();
             for (var dl : dependenciesLookupToInstall) {
                 installLocalDependency(dl, localDependencyStore);
                 dependencies.add(dl.toMavenDependency());
@@ -226,7 +226,7 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
             if (!dependencies.isEmpty()) {
                 doUpdateProjectDependencies(monitor, statusBuilder);
             }
-
+            
             doImport(importArchiveModel, statusBuilder, monitor);
 
             monitor.subTask("");
@@ -238,6 +238,10 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
 
             repositoryStore.computeProcesses(monitor);
             dependenciesUpdateOperation.run(monitor);
+            if(importedMavenModel == null) { // Imported from -7.13, trigger configuration synch
+                var synchOp = dependenciesUpdateOperationFactory.createConfigurationSynchronizationOperation();
+                synchOp.run(monitor);
+            }
         } finally {
             FileActionDialog.setDisablePopup(disablePopup);
         }

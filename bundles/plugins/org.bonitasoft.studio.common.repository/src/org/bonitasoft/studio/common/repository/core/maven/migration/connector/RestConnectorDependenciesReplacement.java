@@ -28,7 +28,7 @@ public class RestConnectorDependenciesReplacement extends BonitaJarDependencyRep
             "rest-delete");
     
     public RestConnectorDependenciesReplacement() {
-        super(dependency(CONNECTOR_GROUP_ID, "bonita-connector-rest", "1.0.10"), 
+        super(dependency(CONNECTOR_GROUP_ID, "bonita-connector-rest", "1.0.11"), 
                 "bonita-connector-rest-1.0.*.jar");
     }
     
