@@ -27,7 +27,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InOrder;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -72,10 +71,6 @@ public class ImportBosArchiveOperationTest {
         doReturn(null).when(operationUnserTest).existingMavenModel(any());
         doReturn(mock(DependenciesUpdateOperation.class)).when(dependenciesUpdateOperationFactory).createDependencyUpdateOperation();
         doReturn(mock(ConfigurationSynchronizationOperation.class)).when(dependenciesUpdateOperationFactory).createConfigurationSynchronizationOperation();
-   
-        when(parseOpeation.getImportArchiveModel()).thenReturn(mock(ImportArchiveModel.class));
-        doReturn(parseOpeation).when(operationUnserTest).newParseBosOperation(Mockito.any(),
-                Mockito.any());
         doReturn(Collections.emptyList()).when(operationUnserTest).getValidators();
         when(repositoryAccessor.getRepositoryStore(DiagramRepositoryStore.class)).thenReturn(diagramStore);
     }
