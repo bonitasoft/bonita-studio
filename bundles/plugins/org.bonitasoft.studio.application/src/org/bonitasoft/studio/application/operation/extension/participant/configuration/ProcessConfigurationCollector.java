@@ -17,7 +17,9 @@ package org.bonitasoft.studio.application.operation.extension.participant.config
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
@@ -28,6 +30,7 @@ import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.common.repository.core.migration.dependencies.ConfigurationCollector;
 import org.bonitasoft.studio.common.repository.core.migration.dependencies.DependentArtifactCollector;
 import org.bonitasoft.studio.common.repository.core.migration.dependencies.DependentArtifactCollectorRegistry;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
@@ -36,10 +39,12 @@ import org.bonitasoft.studio.diagram.custom.repository.ProcessConfigurationFileS
 import org.bonitasoft.studio.diagram.custom.repository.ProcessConfigurationRepositoryStore;
 import org.bonitasoft.studio.model.configuration.Configuration;
 import org.bonitasoft.studio.model.process.AbstractProcess;
+import org.bonitasoft.studio.model.process.Pool;
+import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.e4.core.di.annotations.Creatable;
 
 @Creatable
-public class ProcessConfigurationCollector implements DependentArtifactCollector<Configuration> {
+public class ProcessConfigurationCollector implements DependentArtifactCollector<Configuration>, ConfigurationCollector {
 
     private RepositoryAccessor repositoryAccessor;
 
@@ -49,7 +54,7 @@ public class ProcessConfigurationCollector implements DependentArtifactCollector
     }
     
     @PostConstruct
-    void init(DependentArtifactCollectorRegistry registry) {
+    void init(DependentArtifactCollectorRegistry registry, IEclipseContext ctx) {
         registry.register(Configuration.class, this);
     }
 
@@ -57,17 +62,31 @@ public class ProcessConfigurationCollector implements DependentArtifactCollector
     public Collection<Configuration> findArtifactDependingOn(String jarName) {
         ProcessConfigurationRepositoryStore processConfigurationRepositoryStore = repositoryAccessor
                 .getRepositoryStore(ProcessConfigurationRepositoryStore.class);
-        DiagramRepositoryStore diagramRepositoryStore = repositoryAccessor
-                .getRepositoryStore(DiagramRepositoryStore.class);
-        if (!diagramRepositoryStore.hasComputedProcesses()) {
-            diagramRepositoryStore.computeProcesses(AbstractRepository.NULL_PROGRESS_MONITOR);
-        }
-        return diagramRepositoryStore.getComputedProcesses()
+        return getProcesses()
                 .stream()
                 .flatMap(process -> getProcessConfigurations(process, processConfigurationRepositoryStore).stream())
                 .filter(c -> containsJar(c, jarName))
                 .collect(Collectors.toList());
 
+    }
+    
+    @Override
+    public void forEach(BiConsumer<Pool, Collection<Configuration>> action) {
+        ProcessConfigurationRepositoryStore processConfigurationRepositoryStore = repositoryAccessor
+                .getRepositoryStore(ProcessConfigurationRepositoryStore.class);
+        getProcesses()
+                .stream()
+                .map(process -> Map.entry((Pool) process, getProcessConfigurations(process, processConfigurationRepositoryStore)))
+                .forEach(e -> action.accept(e.getKey(), e.getValue()));
+    }
+    
+    private Collection<AbstractProcess> getProcesses(){
+        DiagramRepositoryStore diagramRepositoryStore = repositoryAccessor
+                .getRepositoryStore(DiagramRepositoryStore.class);
+        if (!diagramRepositoryStore.hasComputedProcesses()) {
+            diagramRepositoryStore.computeProcesses(AbstractRepository.NULL_PROGRESS_MONITOR);
+        }
+        return diagramRepositoryStore.getComputedProcesses();
     }
 
     private boolean containsJar(Configuration configuration, String jarName) {
@@ -77,7 +96,7 @@ public class ProcessConfigurationCollector implements DependentArtifactCollector
                 .anyMatch(f -> Objects.equals(jarName, f.getValue()));
     }
 
-    private List<Configuration> getProcessConfigurations(AbstractProcess process,
+    private Collection<Configuration> getProcessConfigurations(AbstractProcess process,
             ProcessConfigurationRepositoryStore processConfigurationRepositoryStore) {
         List<Configuration> result = new ArrayList<>();
         ProcessConfigurationFileStore fileStore = processConfigurationRepositoryStore
