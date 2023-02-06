@@ -52,12 +52,6 @@
       </menuContribution>
    </extension>
    <extension
-         point="org.bonitasoft.studio.diagram.custom.configurationSynchronizer">
-      <synchronizer
-            class="org.bonitasoft.studio.configuration.ConfigurationSynchronizer">
-      </synchronizer>
-   </extension>
-   <extension
          point="org.eclipse.emf.ecore.generated_package">
       <package
             genModel="model/environment.genmodel"

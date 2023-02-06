@@ -22,7 +22,6 @@ import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -34,22 +33,16 @@ import java.util.stream.Collectors;
 import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.editingdomain.BonitaEditingDomainUtil;
 import org.bonitasoft.studio.common.emf.tools.EMFResourceUtil;
-import org.bonitasoft.studio.common.emf.tools.ModelHelper;
-import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.gmf.tools.RemoveDanglingReferences;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.platform.tools.CopyInputStream;
 import org.bonitasoft.studio.common.repository.ImportArchiveData;
-import org.bonitasoft.studio.common.repository.RepositoryManager;
-import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.common.repository.store.AbstractEMFRepositoryStore;
 import org.bonitasoft.studio.diagram.custom.Activator;
 import org.bonitasoft.studio.diagram.custom.i18n.Messages;
-import org.bonitasoft.studio.model.configuration.Configuration;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.MainProcess;
-import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditorUtil;
 import org.bonitasoft.studio.model.process.provider.ProcessItemProviderAdapterFactory;
@@ -57,7 +50,6 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.common.util.URI;
@@ -89,26 +81,7 @@ public class DiagramRepositoryStore extends AbstractEMFRepositoryStore<DiagramFi
     private AdapterFactoryLabelProvider labelProvider;
 
     private final Map<String, String> eObjectIdToLabel = new HashMap<>();
-    private Synchronizer synchronizer;
     private List<AbstractProcess> computedProcessesList;
-
-    @Override
-    public void createRepositoryStore(IRepository repository) {
-        super.createRepositoryStore(repository);
-        synchronizer = loadSynchronizer();
-    }
-
-    private Synchronizer loadSynchronizer() {
-        for (IConfigurationElement elem : BonitaStudioExtensionRegistryManager.getInstance()
-                .getConfigurationElements("org.bonitasoft.studio.diagram.custom.configurationSynchronizer")) {
-            try {
-                return (Synchronizer) elem.createExecutableExtension("class");
-            } catch (CoreException e) {
-                BonitaStudioLog.error(e);
-            }
-        }
-        return null;
-    }
 
     @Override
     public String getName() {
@@ -191,19 +164,7 @@ public class DiagramRepositoryStore extends AbstractEMFRepositoryStore<DiagramFi
             BonitaStudioLog.error(e);
         }
 
-        Collections.sort(resources, new Comparator<>() {
-
-            @Override
-            public int compare(final IResource arg0, final IResource arg1) {
-                final long lastModifiedArg1 = arg1.getLocation().toFile()
-                        .lastModified();
-                final long lastModifiedArg0 = arg0.getLocation().toFile()
-                        .lastModified();
-                return Long.valueOf(lastModifiedArg1).compareTo(
-                        Long.valueOf(lastModifiedArg0));
-            }
-        });
-
+        Collections.sort(resources, (r1, r2) -> Long.compare(r2.getModificationStamp(), r1.getModificationStamp()));
         for (int i = 0; i < nbResult; i++) {
             if (resources.size() > i) {
                 result.add(createRepositoryFileStore(resources.get(i).getName()));
@@ -367,23 +328,7 @@ public class DiagramRepositoryStore extends AbstractEMFRepositoryStore<DiagramFi
             diagram.eResource().getContents().removeIf(this::isFormDiagram);
 
             applyTransformations(diagram);
-
-            ProcessConfigurationRepositoryStore confStore = RepositoryManager.getInstance()
-                    .getRepositoryStore(ProcessConfigurationRepositoryStore.class);
-            for (Pool process : ModelHelper.getAllElementOfTypeIn(diagram, Pool.class)) {
-                ProcessConfigurationFileStore file = confStore.getChild(ModelHelper.getEObjectID(process) + ".conf",
-                        true);
-                if (file != null) {
-                    try {
-                        Configuration configuration = file.getContent();
-                        synchronizer.synchronize(process, configuration);
-                        file.save(configuration);
-                    } catch (ReadFileStoreException e) {
-                        BonitaStudioLog.warning(file.getName() + ": " + e.getMessage(), Activator.PLUGIN_ID);
-                    }
-                }
-                process.getConfigurations().stream().forEach(conf -> synchronizer.synchronize(process, conf));
-            }
+            
             try {
                 diagramResource.save(ProcessDiagramEditorUtil.getSaveOptions());
             } catch (final IOException e) {
@@ -494,7 +439,7 @@ public class DiagramRepositoryStore extends AbstractEMFRepositoryStore<DiagramFi
         }
         return computedProcessesList;
     }
-
+    
     @Override
     public int getImportOrder() {
         return 999;

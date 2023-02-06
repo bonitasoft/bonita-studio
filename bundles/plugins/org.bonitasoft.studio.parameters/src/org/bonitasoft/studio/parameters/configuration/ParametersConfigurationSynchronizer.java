@@ -14,7 +14,7 @@
  */
 package org.bonitasoft.studio.parameters.configuration;
 
-import org.bonitasoft.studio.configuration.extension.IConfigurationSynchronizer;
+import org.bonitasoft.studio.common.repository.extension.IConfigurationSynchronizer;
 import org.bonitasoft.studio.model.configuration.Configuration;
 import org.bonitasoft.studio.model.configuration.ConfigurationPackage;
 import org.bonitasoft.studio.model.parameter.Parameter;
