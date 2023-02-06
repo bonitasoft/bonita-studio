@@ -62,24 +62,23 @@ class UpdateProjectDescriptionMigrationStepTest {
 
         assertThrows(CoreException.class, () -> step.run(tmpDir, new NullProgressMonitor()));
     }
-    
+
     @Test
     void stepDoesNotApplyToCurrentVersion() throws Exception {
         var step = new UpdateProjectDescriptionMigrationStep();
 
         assertThat(step.appliesTo(ProductVersion.CURRENT_VERSION)).isFalse();
     }
-    
-    
+
     @Test
     void stepDoesNotApplyToNewerVersion() throws Exception {
         var step = new UpdateProjectDescriptionMigrationStep();
         var current = new Version(ProductVersion.CURRENT_VERSION);
-        var nextVersion =  new Version(current.getMajor(), current.getMinor(), current.getMinor()+1);
-        
+        var nextVersion = new Version(current.getMajor(), current.getMinor(), current.getMinor() + 1);
+
         assertThat(step.appliesTo(nextVersion.toString())).isFalse();
     }
-    
+
     @Test
     void stepAppliesToOtherVersion() throws Exception {
         var step = new UpdateProjectDescriptionMigrationStep();
@@ -92,10 +91,12 @@ class UpdateProjectDescriptionMigrationStepTest {
         var step = new UpdateProjectDescriptionMigrationStep();
         var descriptor = tmpDir.resolve(IProjectDescription.DESCRIPTION_FILE_NAME);
         var appDescriptor = tmpDir.resolve("app").resolve(IProjectDescription.DESCRIPTION_FILE_NAME);
-        var testDescriptor = new File(FileLocator.toFileURL(UpdateProjectDescriptionMigrationStepTest.class.getResource("/testProjectDescriptor")).getFile()).toPath();
+        var testDescriptor = new File(FileLocator
+                .toFileURL(UpdateProjectDescriptionMigrationStepTest.class.getResource("/testProjectDescriptor"))
+                .getFile()).toPath();
         try (var is = Files.newInputStream(testDescriptor)) {
             Files.copy(is, descriptor);
-        } 
+        }
         try (var is = Files.newInputStream(testDescriptor)) {
             Files.copy(is, appDescriptor);
         }
@@ -109,18 +110,20 @@ class UpdateProjectDescriptionMigrationStepTest {
         assertThat(desc.getName()).isEqualTo(defaultMetadata.getArtifactId());
         assertThat(desc.getComment()).isEqualTo(ProductVersion.CURRENT_VERSION);
         assertThat(desc.getNatureIds()).containsExactly(IMavenConstants.NATURE_ID);
-        assertThat(desc.getBuildSpec()).extracting(ICommand::getBuilderName).containsExactly(IMavenConstants.BUILDER_ID);
-        
+        assertThat(desc.getBuildSpec()).extracting(ICommand::getBuilderName)
+                .containsExactly(IMavenConstants.BUILDER_ID);
+
         var appDesc = readDescriptor(appDescriptor);
-        assertThat(appDesc.getName()).isEqualTo(defaultMetadata.getArtifactId()+"-app");
+        assertThat(appDesc.getName()).isEqualTo(defaultMetadata.getArtifactId() + "-app");
         assertThat(appDesc.getComment()).isNullOrEmpty();
         assertThat(appDesc.getNatureIds()).containsExactlyInAnyOrderElementsOf(BonitaProject.NATRUES);
-        assertThat(appDesc.getBuildSpec()).extracting(ICommand::getBuilderName).containsExactlyInAnyOrderElementsOf(BonitaProject.BUILDERS);
+        assertThat(appDesc.getBuildSpec()).extracting(ICommand::getBuilderName)
+                .containsExactlyInAnyOrderElementsOf(BonitaProject.BUILDERS);
     }
 
     private static IProjectDescription readDescriptor(Path descriptor) throws IOException, CoreException {
         try (var is = Files.newInputStream(descriptor)) {
-           return ResourcesPlugin.getWorkspace().loadProjectDescription(is);
+            return ResourcesPlugin.getWorkspace().loadProjectDescription(is);
         }
     }
 

@@ -30,7 +30,8 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.e4.core.di.annotations,
  org.eclipse.e4.ui.services,
  org.eclipse.core.expressions,
- org.bonitasoft.studio.common.ui
+ org.bonitasoft.studio.common.ui,
+ org.eclipse.e4.core.di
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-ActivationPolicy: lazy
 Export-Package: org.bonitasoft.studio.configuration,
@@ -42,5 +43,6 @@ Export-Package: org.bonitasoft.studio.configuration,
  org.bonitasoft.studio.configuration.preferences,
  org.bonitasoft.studio.configuration.repository,
  org.bonitasoft.studio.configuration.ui.handler
-Import-Package: javax.inject;version="1.0.0",
+Import-Package: javax.annotation;version="1.3.5",
+ javax.inject;version="1.0.0",
  org.bonitasoft.engine.form
