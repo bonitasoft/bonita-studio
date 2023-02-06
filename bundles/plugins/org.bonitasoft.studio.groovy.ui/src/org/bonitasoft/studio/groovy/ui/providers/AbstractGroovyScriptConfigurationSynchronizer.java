@@ -22,7 +22,7 @@ import org.bonitasoft.studio.common.FragmentTypes;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
-import org.bonitasoft.studio.configuration.extension.IConfigurationSynchronizer;
+import org.bonitasoft.studio.common.repository.extension.IConfigurationSynchronizer;
 import org.bonitasoft.studio.groovy.repository.GroovyRepositoryStore;
 import org.bonitasoft.studio.model.configuration.Configuration;
 import org.bonitasoft.studio.model.configuration.ConfigurationFactory;
