@@ -15,6 +15,9 @@ import java.util.Optional;
 
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.common.repository.core.migration.dependencies.operation.ConfigurationSynchronizationOperation;
+import org.bonitasoft.studio.common.repository.core.migration.dependencies.operation.DependenciesUpdateOperation;
+import org.bonitasoft.studio.common.repository.core.migration.dependencies.operation.DependenciesUpdateOperationFactory;
 import org.bonitasoft.studio.designer.core.repository.WebPageRepositoryStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.importer.bos.model.ImportArchiveModel;
@@ -51,11 +54,19 @@ public class ImportBosArchiveOperationTest {
 
     @Mock
     private DiagramRepositoryStore diagramStore;
+    
+    @Mock
+    private DependenciesUpdateOperationFactory dependenciesUpdateOperationFactory;
 
     @Before
     public void setUp() throws Exception {
         when(repositoryAccessor.getCurrentRepository()).thenReturn(Optional.of(repostiory));
-        operationUnserTest = spy(new ImportBosArchiveOperation(repositoryAccessor));
+        operationUnserTest = spy(new ImportBosArchiveOperation(archiveFile,
+                null,
+                mock(ImportArchiveModel.class),
+               true,
+               repositoryAccessor,
+               dependenciesUpdateOperationFactory));
         doNothing().when(operationUnserTest).migrateUID(any());
         doReturn(Collections.emptySet()).when(operationUnserTest).doMigrateToMavenDependencies(any(ImportArchiveModel.class), any(IProgressMonitor.class));
         doReturn(null).when(operationUnserTest).existingMavenModel(any());
@@ -63,6 +74,8 @@ public class ImportBosArchiveOperationTest {
         when(parseOpeation.getImportArchiveModel()).thenReturn(mock(ImportArchiveModel.class));
         doReturn(parseOpeation).when(operationUnserTest).newParseBosOperation(Mockito.any(),
                 Mockito.any());
+        doReturn(mock(DependenciesUpdateOperation.class)).when(dependenciesUpdateOperationFactory).createDependencyUpdateOperation();
+        doReturn(mock(ConfigurationSynchronizationOperation.class)).when(dependenciesUpdateOperationFactory).createConfigurationSynchronizationOperation();
         doReturn(Collections.emptyList()).when(operationUnserTest).getValidators();
         when(repositoryAccessor.getRepositoryStore(DiagramRepositoryStore.class)).thenReturn(diagramStore);
     }

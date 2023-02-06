@@ -17,7 +17,7 @@ package org.bonitasoft.studio.document.configuration;
 import java.util.Objects;
 
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
-import org.bonitasoft.studio.configuration.extension.IConfigurationSynchronizer;
+import org.bonitasoft.studio.common.repository.extension.IConfigurationSynchronizer;
 import org.bonitasoft.studio.model.configuration.Configuration;
 import org.bonitasoft.studio.model.configuration.ConfigurationFactory;
 import org.bonitasoft.studio.model.configuration.ConfigurationPackage;

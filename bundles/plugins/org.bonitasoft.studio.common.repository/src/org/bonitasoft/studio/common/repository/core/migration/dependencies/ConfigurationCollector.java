@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2019 BonitaSoft S.A.
+ * Copyright (C) 2023 BonitaSoft S.A.
  * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,13 +14,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.diagram.custom.repository;
+package org.bonitasoft.studio.common.repository.core.migration.dependencies;
+
+import java.util.Collection;
+import java.util.function.BiConsumer;
 
 import org.bonitasoft.studio.model.configuration.Configuration;
 import org.bonitasoft.studio.model.process.Pool;
 
-public interface Synchronizer {
-
-    void synchronize(Pool process, Configuration configuration) ;
+public interface ConfigurationCollector {
+    
+    void forEach(BiConsumer<Pool, Collection<Configuration>> action);
     
 }
+

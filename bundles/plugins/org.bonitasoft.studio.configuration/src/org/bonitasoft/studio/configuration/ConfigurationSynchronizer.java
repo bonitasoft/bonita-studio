@@ -24,12 +24,12 @@ import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManag
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.core.ActiveOrganizationProvider;
-import org.bonitasoft.studio.configuration.extension.IConfigurationSynchronizer;
+import org.bonitasoft.studio.common.repository.core.migration.dependencies.Synchronizer;
+import org.bonitasoft.studio.common.repository.extension.IConfigurationSynchronizer;
 import org.bonitasoft.studio.configuration.extension.IProcessConfigurationWizardPage;
 import org.bonitasoft.studio.configuration.i18n.Messages;
 import org.bonitasoft.studio.configuration.preferences.ConfigurationPreferenceConstants;
 import org.bonitasoft.studio.configuration.ui.wizard.page.JavaDependenciesConfigurationWizardPage;
-import org.bonitasoft.studio.diagram.custom.repository.Synchronizer;
 import org.bonitasoft.studio.model.configuration.Configuration;
 import org.bonitasoft.studio.model.configuration.ConfigurationFactory;
 import org.bonitasoft.studio.model.configuration.ConfigurationPackage;
@@ -43,6 +43,7 @@ import org.bonitasoft.studio.model.process.util.ProcessAdapterFactory;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.e4.core.di.annotations.Creatable;
 import org.eclipse.emf.common.command.BasicCommandStack;
 import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -54,9 +55,7 @@ import org.eclipse.emf.edit.provider.ReflectiveItemProviderAdapterFactory;
 import org.eclipse.emf.edit.provider.resource.ResourceItemProviderAdapterFactory;
 import org.eclipse.emf.transaction.util.TransactionUtil;
 
-/**
- * @author Romain Bioteau
- */
+@Creatable
 public class ConfigurationSynchronizer implements Synchronizer {
 
     private AbstractProcess process;
@@ -83,7 +82,7 @@ public class ConfigurationSynchronizer implements Synchronizer {
         initializaSynchronizers();
         initializaWizardPages();
     }
-
+    
     static void initializaSynchronizers() {
         if (synchronizers == null) {
             synchronizers = new ArrayList<>();
@@ -209,8 +208,6 @@ public class ConfigurationSynchronizer implements Synchronizer {
                 synchronizeFragmentContainer(dependencyKind, containerId, cc);
             }
         }
-        synchronizeFragmentContainer(ConfigurationPackage.Literals.CONFIGURATION__APPLICATION_DEPENDENCIES,
-                FragmentTypes.OTHER, cc);
         synchronizeFragmentContainer(ConfigurationPackage.Literals.CONFIGURATION__PROCESS_DEPENDENCIES,
                 FragmentTypes.OTHER, cc);
     }

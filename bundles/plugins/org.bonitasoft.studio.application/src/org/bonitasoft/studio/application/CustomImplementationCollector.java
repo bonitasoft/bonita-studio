@@ -55,10 +55,15 @@ public class CustomImplementationCollector implements DependentArtifactCollector
 
     @Override
     public Collection<ConnectorImplementation> findArtifactDependingOn(String jarName) {
+        return stream()
+                .filter(withJarDependency(jarName))
+                .collect(Collectors.toSet());
+    }
+    
+    private Stream<ConnectorImplementation> stream(){
         var connectorImplRepositoryStore = repositoryAccessor.getRepositoryStore(ConnectorImplRepositoryStore.class);
         var actorFilterImplRepositoryStore = repositoryAccessor
                 .getRepositoryStore(ActorFilterImplRepositoryStore.class);
-
         return Stream.concat(connectorImplRepositoryStore.getChildren().stream()
                 .filter(not(DependencyConnectorImplFileStore.class::isInstance)),
                 actorFilterImplRepositoryStore.getChildren().stream()
@@ -70,9 +75,7 @@ public class CustomImplementationCollector implements DependentArtifactCollector
                        return null;
                     }
                 })
-                .filter(Objects::nonNull)
-                .filter(withJarDependency(jarName))
-                .collect(Collectors.toSet());
+                .filter(Objects::nonNull);
     }
 
     private Predicate<ConnectorImplementation> withJarDependency(String jarName) {
@@ -81,4 +84,7 @@ public class CustomImplementationCollector implements DependentArtifactCollector
                 .stream()
                 .anyMatch(deps -> deps.contains(jarName));
     }
+
+
+  
 }
