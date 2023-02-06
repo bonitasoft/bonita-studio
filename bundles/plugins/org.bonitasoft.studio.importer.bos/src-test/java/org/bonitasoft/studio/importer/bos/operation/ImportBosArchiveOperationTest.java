@@ -66,7 +66,6 @@ public class ImportBosArchiveOperationTest {
                 repositoryAccessor,
                 dependenciesUpdateOperationFactory));
         doNothing().when(operationUnserTest).migrateUID(any(IProgressMonitor.class));
-        doNothing().when(operationUnserTest).doUpdateProjectDependencies(any(IProgressMonitor.class), any(ImportBosArchiveStatusBuilder.class));
         doReturn(Collections.emptySet()).when(operationUnserTest).doMigrateToMavenDependencies(any(ImportArchiveModel.class), any(IProgressMonitor.class));
         doReturn(null).when(operationUnserTest).existingMavenModel(any());
         doReturn(mock(DependenciesUpdateOperation.class)).when(dependenciesUpdateOperationFactory).createDependencyUpdateOperation();
