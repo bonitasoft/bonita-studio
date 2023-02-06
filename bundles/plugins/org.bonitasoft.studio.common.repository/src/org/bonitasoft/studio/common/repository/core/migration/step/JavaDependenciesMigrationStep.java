@@ -55,31 +55,7 @@ public class JavaDependenciesMigrationStep implements MigrationStep {
             StringBuilder dependenciesUpdatesReport = new StringBuilder(
                     "Upgrade of java archives files into Maven dependencies:\n");
             dependencyLookups.stream()
-                    .forEach(dl -> {
-                        String fileName = dl.getFileName();
-                        if (!dl.isUsed()) {
-                            dependenciesUpdatesReport.append(String.format(
-                                    "** `%s` file has been removed from the project as it was not used in any process configuration or implementation.\n",
-                                    fileName));
-                        } else {
-                            if (fileName != null) {
-                                if (dl.getStatus() == Status.FOUND) {
-                                    dependenciesUpdatesReport.append(String.format(
-                                            "** `%s` file has been replaced by a remote Maven dependency with the following coordinates: `%s`\n",
-                                            fileName, dl.getGAV()));
-                                } else if (dl.getStatus() == Status.LOCAL) {
-                                    dependenciesUpdatesReport.append(String.format(
-                                            "`%s` file has been replaced by a local Maven dependency with the following coordinates: `%s`\n",
-                                            fileName, dl.getGAV()));
-                                }
-                            } else {
-                                dependenciesUpdatesReport.append(String.format(
-                                        "** `%s` remote Maven dependency has been added to the project.\n",
-                                        dl.getGAV()));
-                            }
-                        }
-                        dl.setSelected(dl.isUsed());
-                    });
+                    .forEach(dl -> selectDependencyLookup(dependenciesUpdatesReport, dl));
             if (!dependencyLookups.isEmpty()) {
                 report.updated(dependenciesUpdatesReport.toString());
             }
@@ -89,7 +65,7 @@ public class JavaDependenciesMigrationStep implements MigrationStep {
                     .filter(DependencyLookup::isSelected)
                     .collect(Collectors.toSet());
 
-            var processConfigurationUpdateOperation = dependenciesUpdateOperationFactory.create();
+            var processConfigurationUpdateOperation = dependenciesUpdateOperationFactory.createDependencyUpdateOperation();
             for (var dl : dependenciesToInstall) {
                 try {
                     localDependencyStore.install(dl);
@@ -121,6 +97,7 @@ public class JavaDependenciesMigrationStep implements MigrationStep {
                     .forEach(processConfigurationUpdateOperation::addJarRemovedChange);
 
             report.addPostMigrationOperation(processConfigurationUpdateOperation);
+            report.addPostMigrationOperation(dependenciesUpdateOperationFactory.createConfigurationSynchronizationOperation());
 
             var libFolder = project.resolve("lib");
             if (Files.exists(libFolder)) {
@@ -136,6 +113,32 @@ public class JavaDependenciesMigrationStep implements MigrationStep {
             throw new CoreException(org.eclipse.core.runtime.Status.error("Failed to delete lib folder", e));
         }
         return report;
+    }
+
+    private void selectDependencyLookup(StringBuilder dependenciesUpdatesReport, DependencyLookup dl) {
+        String fileName = dl.getFileName();
+        if (!dl.isUsed()) {
+            dependenciesUpdatesReport.append(String.format(
+                    "** `%s` file has been removed from the project as it was not used in any process configuration or implementation.%n",
+                    fileName));
+        } else {
+            if (fileName != null) {
+                if (dl.getStatus() == Status.FOUND) {
+                    dependenciesUpdatesReport.append(String.format(
+                            "** `%s` file has been replaced by a remote Maven dependency with the following coordinates: `%s`%n",
+                            fileName, dl.getGAV()));
+                } else if (dl.getStatus() == Status.LOCAL) {
+                    dependenciesUpdatesReport.append(String.format(
+                            "`%s` file has been replaced by a local Maven dependency with the following coordinates: `%s`%n",
+                            fileName, dl.getGAV()));
+                }
+            } else {
+                dependenciesUpdatesReport.append(String.format(
+                        "** `%s` remote Maven dependency has been added to the project.%n",
+                        dl.getGAV()));
+            }
+        }
+        dl.setSelected(dl.isUsed());
     }
 
     protected Set<DependencyLookup> doMigrateToMavenDependencies(Path project, IProgressMonitor monitor)
