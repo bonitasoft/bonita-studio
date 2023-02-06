@@ -28,7 +28,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InOrder;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -61,6 +60,7 @@ public class ImportBosArchiveOperationTest {
     @Before
     public void setUp() throws Exception {
         when(repositoryAccessor.getCurrentRepository()).thenReturn(Optional.of(repostiory));
+        archiveFile = new File(ImportBosArchiveOperationTest.class.getResource("/customer_support_2.0.bos").getFile());
         operationUnserTest = spy(new ImportBosArchiveOperation(archiveFile,
                 null,
                 mock(ImportArchiveModel.class),
@@ -70,10 +70,6 @@ public class ImportBosArchiveOperationTest {
         doNothing().when(operationUnserTest).migrateUID(any());
         doReturn(Collections.emptySet()).when(operationUnserTest).doMigrateToMavenDependencies(any(ImportArchiveModel.class), any(IProgressMonitor.class));
         doReturn(null).when(operationUnserTest).existingMavenModel(any());
-        archiveFile = new File(ImportBosArchiveOperationTest.class.getResource("/customer_support_2.0.bos").getFile());
-        when(parseOpeation.getImportArchiveModel()).thenReturn(mock(ImportArchiveModel.class));
-        doReturn(parseOpeation).when(operationUnserTest).newParseBosOperation(Mockito.any(),
-                Mockito.any());
         doReturn(mock(DependenciesUpdateOperation.class)).when(dependenciesUpdateOperationFactory).createDependencyUpdateOperation();
         doReturn(mock(ConfigurationSynchronizationOperation.class)).when(dependenciesUpdateOperationFactory).createConfigurationSynchronizationOperation();
         doReturn(Collections.emptyList()).when(operationUnserTest).getValidators();
