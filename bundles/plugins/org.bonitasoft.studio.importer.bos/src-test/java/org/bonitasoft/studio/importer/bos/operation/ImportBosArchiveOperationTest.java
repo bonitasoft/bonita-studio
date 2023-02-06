@@ -14,6 +14,9 @@ import java.util.Collections;
 
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.common.repository.core.migration.dependencies.operation.ConfigurationSynchronizationOperation;
+import org.bonitasoft.studio.common.repository.core.migration.dependencies.operation.DependenciesUpdateOperation;
+import org.bonitasoft.studio.common.repository.core.migration.dependencies.operation.DependenciesUpdateOperationFactory;
 import org.bonitasoft.studio.designer.core.repository.WebPageRepositoryStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.importer.bos.model.ImportArchiveModel;
@@ -44,6 +47,9 @@ public class ImportBosArchiveOperationTest {
 
     @Mock
     private RepositoryAccessor repositoryAccessor;
+    
+    @Mock
+    private DependenciesUpdateOperationFactory dependenciesUpdateOperationFactory;
 
     @Mock
     private WebPageRepositoryStore webPageRepositoryStore;
@@ -53,11 +59,20 @@ public class ImportBosArchiveOperationTest {
 
     @Before
     public void setUp() throws Exception {
-        operationUnserTest = spy(new ImportBosArchiveOperation(repositoryAccessor));
-        doNothing().when(operationUnserTest).migrateUID(any());
+        archiveFile = new File(ImportBosArchiveOperationTest.class.getResource("/customer_support_2.0.bos").getFile());
+        operationUnserTest = spy(new ImportBosArchiveOperation(archiveFile,
+                 null,
+                 mock(ImportArchiveModel.class),
+                true,
+                repositoryAccessor,
+                dependenciesUpdateOperationFactory));
+        doNothing().when(operationUnserTest).migrateUID(any(IProgressMonitor.class));
+        doNothing().when(operationUnserTest).doUpdateProjectDependencies(any(IProgressMonitor.class), any(ImportBosArchiveStatusBuilder.class));
         doReturn(Collections.emptySet()).when(operationUnserTest).doMigrateToMavenDependencies(any(ImportArchiveModel.class), any(IProgressMonitor.class));
         doReturn(null).when(operationUnserTest).existingMavenModel(any());
-        archiveFile = new File(ImportBosArchiveOperationTest.class.getResource("/customer_support_2.0.bos").getFile());
+        doReturn(mock(DependenciesUpdateOperation.class)).when(dependenciesUpdateOperationFactory).createDependencyUpdateOperation();
+        doReturn(mock(ConfigurationSynchronizationOperation.class)).when(dependenciesUpdateOperationFactory).createConfigurationSynchronizationOperation();
+   
         when(parseOpeation.getImportArchiveModel()).thenReturn(mock(ImportArchiveModel.class));
         doReturn(parseOpeation).when(operationUnserTest).newParseBosOperation(Mockito.any(),
                 Mockito.any());

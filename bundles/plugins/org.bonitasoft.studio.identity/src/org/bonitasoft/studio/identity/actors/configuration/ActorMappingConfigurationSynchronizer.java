@@ -16,7 +16,7 @@
  */
 package org.bonitasoft.studio.identity.actors.configuration;
 
-import org.bonitasoft.studio.configuration.extension.IConfigurationSynchronizer;
+import org.bonitasoft.studio.common.repository.extension.IConfigurationSynchronizer;
 import org.bonitasoft.studio.model.actormapping.ActorMapping;
 import org.bonitasoft.studio.model.actormapping.ActorMappingFactory;
 import org.bonitasoft.studio.model.actormapping.ActorMappingPackage;
