@@ -15,15 +15,9 @@
 package org.bonitasoft.studio.common.repository.core.migration;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
-
-import javax.xml.XMLConstants;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 
 import org.bonitasoft.studio.common.Strings;
 import org.bonitasoft.studio.common.repository.core.migration.report.MigrationReport;
@@ -44,9 +38,6 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Status;
-import org.w3c.dom.Document;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
 
 public class BonitaProjectMigrator {
 
@@ -113,19 +104,6 @@ public class BonitaProjectMigrator {
             return ResourcesPlugin.getWorkspace().loadProjectDescription(is);
         } catch (IOException e) {
             throw new CoreException(Status.error("Failed to read project descriptor.", e));
-        }
-    }
-
-    private static Document asXMLDocument(InputStream source) {
-        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
-        factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
-        factory.setNamespaceAware(true);
-        try {
-            DocumentBuilder builder = factory.newDocumentBuilder();
-            return builder.parse(new InputSource(source));
-        } catch (SAXException | IOException | ParserConfigurationException e) {
-            return null;
         }
     }
 

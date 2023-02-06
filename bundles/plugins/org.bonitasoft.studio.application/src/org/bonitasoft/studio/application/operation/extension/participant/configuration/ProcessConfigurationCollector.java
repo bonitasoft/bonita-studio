@@ -41,6 +41,7 @@ import org.bonitasoft.studio.model.configuration.Configuration;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.Pool;
 import org.eclipse.e4.core.contexts.IEclipseContext;
+import org.eclipse.e4.core.di.InjectorFactory;
 import org.eclipse.e4.core.di.annotations.Creatable;
 
 @Creatable
@@ -56,6 +57,8 @@ public class ProcessConfigurationCollector implements DependentArtifactCollector
     @PostConstruct
     void init(DependentArtifactCollectorRegistry registry, IEclipseContext ctx) {
         registry.register(Configuration.class, this);
+        InjectorFactory.getDefault()
+            .addBinding(ConfigurationCollector.class).implementedBy(ProcessConfigurationCollector.class);
     }
 
     @Override

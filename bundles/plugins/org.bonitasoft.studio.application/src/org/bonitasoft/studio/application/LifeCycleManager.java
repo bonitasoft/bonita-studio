@@ -14,13 +14,8 @@
  */
 package org.bonitasoft.studio.application;
 
-import org.bonitasoft.studio.application.operation.extension.participant.configuration.ProcessConfigurationCollector;
 import org.bonitasoft.studio.common.platform.tools.ClearPersistedStateIndication;
-import org.bonitasoft.studio.common.repository.core.migration.dependencies.ConfigurationCollector;
-import org.bonitasoft.studio.common.repository.core.migration.dependencies.Synchronizer;
-import org.bonitasoft.studio.configuration.ConfigurationSynchronizer;
 import org.eclipse.e4.core.contexts.IEclipseContext;
-import org.eclipse.e4.core.di.InjectorFactory;
 import org.eclipse.e4.ui.workbench.IWorkbench;
 import org.eclipse.e4.ui.workbench.lifecycle.PostContextCreate;
 
@@ -29,11 +24,6 @@ public class LifeCycleManager {
     @PostContextCreate
     public void postContextCreate(IEclipseContext context) {
         System.setProperty(IWorkbench.CLEAR_PERSISTED_STATE, String.valueOf(shouldClearPersistedState()));
-    
-        InjectorFactory.getDefault()
-            .addBinding(Synchronizer.class).implementedBy(ConfigurationSynchronizer.class);
-        InjectorFactory.getDefault()
-            .addBinding(ConfigurationCollector.class).implementedBy(ProcessConfigurationCollector.class);
     }
 
     protected boolean shouldClearPersistedState() {

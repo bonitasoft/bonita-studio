@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ASCII"?>
-<fragment:ModelFragments xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:commands="http://www.eclipse.org/ui/2010/UIModel/application/commands" xmlns:fragment="http://www.eclipse.org/ui/2010/UIModel/fragment" xmi:id="_MyNFIPiiEeifHZ93CINx-w">
+<fragment:ModelFragments xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:application="http://www.eclipse.org/ui/2010/UIModel/application" xmlns:commands="http://www.eclipse.org/ui/2010/UIModel/application/commands" xmlns:fragment="http://www.eclipse.org/ui/2010/UIModel/fragment" xmi:id="_MyNFIPiiEeifHZ93CINx-w">
   <fragments xsi:type="fragment:StringModelFragment" xmi:id="_ROfDMPiiEeifHZ93CINx-w" featurename="commands" parentElementId="org.eclipse.e4.legacy.ide.application">
     <elements xsi:type="commands:Command" xmi:id="_WRzzIPiiEeifHZ93CINx-w" elementId="org.bonitasoft.studio.configuration.command.setActive" commandName="%setActive"/>
     <elements xsi:type="commands:Command" xmi:id="_WbcVsPICEeyXrej9FyQnew" elementId="org.bonitasoft.studio.configuration.environment.create.command" commandName="%newEnvironmentLabel"/>
@@ -7,5 +7,8 @@
   <fragments xsi:type="fragment:StringModelFragment" xmi:id="_UoY-QPiiEeifHZ93CINx-w" featurename="handlers" parentElementId="org.eclipse.e4.legacy.ide.application">
     <elements xsi:type="commands:Handler" xmi:id="_kTb60PiiEeifHZ93CINx-w" elementId="org.bonitasoft.studio.configuration.handler.setActive" contributionURI="bundleclass://org.bonitasoft.studio.configuration/org.bonitasoft.studio.configuration.ui.handler.SetSelectionAsDefaultConfigurationHandler" command="_WRzzIPiiEeifHZ93CINx-w"/>
     <elements xsi:type="commands:Handler" xmi:id="_h14jQPIDEeyXrej9FyQnew" elementId="org.bonitasoft.studio.configuration.environment.create.handler" contributionURI="bundleclass://org.bonitasoft.studio.configuration/org.bonitasoft.studio.configuration.ui.handler.CreateEnvironmentHandler" command="_WbcVsPICEeyXrej9FyQnew"/>
+  </fragments>
+  <fragments xsi:type="fragment:StringModelFragment" xmi:id="_YCGbAKZrEe2SUpZwL76oWQ" featurename="addons" parentElementId="org.eclipse.e4.legacy.ide.application">
+    <elements xsi:type="application:Addon" xmi:id="_do2oIKZrEe2SUpZwL76oWQ" elementId="org.bonitasoft.studio.configuration.addon" contributionURI="bundleclass://org.bonitasoft.studio.configuration/org.bonitasoft.studio.configuration.InjectionConfiguration"/>
   </fragments>
 </fragment:ModelFragments>
