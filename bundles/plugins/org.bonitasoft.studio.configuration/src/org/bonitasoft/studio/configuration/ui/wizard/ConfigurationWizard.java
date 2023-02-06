@@ -47,6 +47,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.IProgressService;
 
@@ -64,7 +65,7 @@ public class ConfigurationWizard extends Wizard {
     private Configuration configurationWorkingCopy;
     private String configurationName;
     private final ProcessConfigurationRepositoryStore processConfStore;
-    private EMFModelUpdater<Configuration> emfModelUpdater = new EMFModelUpdater();
+    private EMFModelUpdater<Configuration> emfModelUpdater = new EMFModelUpdater<>();
 
     public ConfigurationWizard() {
         super();
@@ -87,7 +88,7 @@ public class ConfigurationWizard extends Wizard {
         this.configurationName = configurationName;
         setProcess(selectedProcess);
         final String processName = selectedProcess.getName() + " (" + selectedProcess.getVersion() + ")";
-        setWindowTitle(Messages.bind(Messages.configurationTitle, configurationName, processName));
+        setWindowTitle(NLS.bind(Messages.configurationTitle, configurationName, processName));
     }
 
     @Override

@@ -42,4 +42,5 @@ Export-Package: org.bonitasoft.studio.configuration,
  org.bonitasoft.studio.configuration.preferences,
  org.bonitasoft.studio.configuration.repository,
  org.bonitasoft.studio.configuration.ui.handler
-Import-Package: org.bonitasoft.engine.form
+Import-Package: javax.inject;version="1.0.0",
+ org.bonitasoft.engine.form

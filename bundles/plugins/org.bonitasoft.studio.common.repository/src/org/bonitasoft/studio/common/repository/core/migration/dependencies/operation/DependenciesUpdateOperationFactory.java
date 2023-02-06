@@ -17,7 +17,9 @@ package org.bonitasoft.studio.common.repository.core.migration.dependencies.oper
 import javax.inject.Inject;
 
 import org.bonitasoft.studio.common.repository.core.maven.ProjectDependenciesResolver;
+import org.bonitasoft.studio.common.repository.core.migration.dependencies.ConfigurationCollector;
 import org.bonitasoft.studio.common.repository.core.migration.dependencies.DependentArtifactCollectorRegistry;
+import org.bonitasoft.studio.common.repository.core.migration.dependencies.Synchronizer;
 import org.bonitasoft.studio.common.repository.core.migration.dependencies.configuration.ProcessConfigurationUpdater;
 import org.bonitasoft.studio.common.repository.core.migration.dependencies.connector.ConnectorImplementationUpdater;
 import org.eclipse.e4.core.di.annotations.Creatable;
@@ -29,23 +31,33 @@ public class DependenciesUpdateOperationFactory {
     private ProcessConfigurationUpdater processConfigurationUpdater;
     private ConnectorImplementationUpdater connectorImplementationUpdater;
     private ProjectDependenciesResolver dependencyResolver;
+    private Synchronizer configurationSynchronizer;
+    private ConfigurationCollector configurationCollector;
 
     @Inject
     public DependenciesUpdateOperationFactory(DependentArtifactCollectorRegistry dependentArtifactCollectorRegistry,
             ProcessConfigurationUpdater processConfigurationUpdater,
             ConnectorImplementationUpdater connectorImplementationUpdater,
-            ProjectDependenciesResolver dependencyResolver) {
+            ProjectDependenciesResolver dependencyResolver,
+            Synchronizer configurationSynchronizer,
+            ConfigurationCollector configurationCollector) {
         this.dependentArtifactCollectorRegistry = dependentArtifactCollectorRegistry;
         this.processConfigurationUpdater = processConfigurationUpdater;
         this.connectorImplementationUpdater = connectorImplementationUpdater;
         this.dependencyResolver = dependencyResolver;
+        this.configurationSynchronizer = configurationSynchronizer;
+        this.configurationCollector = configurationCollector;
     }
 
-    public DependenciesUpdateOperation create() {
+    public DependenciesUpdateOperation createDependencyUpdateOperation() {
         return new DependenciesUpdateOperation(dependentArtifactCollectorRegistry,
                 processConfigurationUpdater,
                 connectorImplementationUpdater,
                 dependencyResolver);
     }
 
+    public ConfigurationSynchronizationOperation createConfigurationSynchronizationOperation() {
+        return new ConfigurationSynchronizationOperation(configurationCollector, configurationSynchronizer);
+    }
+    
 }
