@@ -599,7 +599,10 @@ public class GroovyScriptExpressionEditor extends SelectionAwareExpressionEditor
         if (content == null) {
             content = "";
         }
-        sourceViewer.getTextWidget().setText(content);
+        
+        if (sourceViewer.getTextWidget().getText().isEmpty()) {
+            sourceViewer.getTextWidget().setText(content);
+        }
         sourceViewer.getDocument().addDocumentListener(new IDocumentListener() {
 
             @Override
