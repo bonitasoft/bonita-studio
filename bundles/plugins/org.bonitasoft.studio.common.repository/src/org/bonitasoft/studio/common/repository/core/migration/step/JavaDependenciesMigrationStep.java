@@ -32,8 +32,6 @@ import org.bonitasoft.studio.common.repository.store.LocalDependenciesStore;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.e4.core.contexts.ContextInjectionFactory;
-import org.eclipse.e4.core.contexts.EclipseContextFactory;
 import org.osgi.framework.Version;
 
 public class JavaDependenciesMigrationStep implements MigrationStep {
@@ -41,10 +39,8 @@ public class JavaDependenciesMigrationStep implements MigrationStep {
     private MavenRepositoryRegistry mavenRepositoryRegistry = new MavenRepositoryRegistry();
     private DependenciesUpdateOperationFactory dependenciesUpdateOperationFactory;
 
-    public JavaDependenciesMigrationStep() {
-        var eclipseContext = EclipseContextFactory.create();
-        this.dependenciesUpdateOperationFactory = ContextInjectionFactory
-                .make(DependenciesUpdateOperationFactory.class, eclipseContext);
+    public JavaDependenciesMigrationStep(DependenciesUpdateOperationFactory dependenciesUpdateOperationFactory) {
+        this.dependenciesUpdateOperationFactory = dependenciesUpdateOperationFactory;
     }
 
     @Override

@@ -14,6 +14,4 @@ Require-Bundle: assertj-core,
  org.objenesis,
  org.junit.jupiter.api,
  org.mockito.junit-jupiter,
- org.junit.jupiter.params,
- org.bonitasoft.studio.configuration,
- org.bonitasoft.studio.application
+ org.junit.jupiter.params

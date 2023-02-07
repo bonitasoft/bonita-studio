@@ -20,6 +20,7 @@ import java.nio.file.Path;
 import java.util.List;
 
 import org.bonitasoft.studio.common.Strings;
+import org.bonitasoft.studio.common.repository.core.migration.dependencies.operation.DependenciesUpdateOperationFactory;
 import org.bonitasoft.studio.common.repository.core.migration.report.MigrationReport;
 import org.bonitasoft.studio.common.repository.core.migration.step.BdmModelArtifactMigrationStep;
 import org.bonitasoft.studio.common.repository.core.migration.step.CreatePomMigrationStep;
@@ -47,7 +48,7 @@ public class BonitaProjectMigrator {
             new UpdateBonitaRuntimeVersionInPomStep(),
             new UpdateBonitaProjectMavenPluginVersionInPomStep(),
             new SplitGroovyAllIntoModulesStep(),
-            new JavaDependenciesMigrationStep(),
+            new JavaDependenciesMigrationStep(DependenciesUpdateOperationFactory.get()),
             new BdmModelArtifactMigrationStep(true),
             new MultiModuleMigrationStep(),
             new GitIgnoreMigrationStep(),

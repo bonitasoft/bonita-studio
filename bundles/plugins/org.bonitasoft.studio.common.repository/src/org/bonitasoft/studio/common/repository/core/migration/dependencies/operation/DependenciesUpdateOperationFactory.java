@@ -16,12 +16,16 @@ package org.bonitasoft.studio.common.repository.core.migration.dependencies.oper
 
 import javax.inject.Inject;
 
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.core.maven.ProjectDependenciesResolver;
 import org.bonitasoft.studio.common.repository.core.migration.dependencies.ConfigurationCollector;
 import org.bonitasoft.studio.common.repository.core.migration.dependencies.DependentArtifactCollectorRegistry;
 import org.bonitasoft.studio.common.repository.core.migration.dependencies.Synchronizer;
 import org.bonitasoft.studio.common.repository.core.migration.dependencies.configuration.ProcessConfigurationUpdater;
 import org.bonitasoft.studio.common.repository.core.migration.dependencies.connector.ConnectorImplementationUpdater;
+import org.eclipse.e4.core.contexts.ContextInjectionFactory;
+import org.eclipse.e4.core.contexts.EclipseContextFactory;
+import org.eclipse.e4.core.di.InjectionException;
 import org.eclipse.e4.core.di.annotations.Creatable;
 
 @Creatable
@@ -59,5 +63,16 @@ public class DependenciesUpdateOperationFactory {
     public ConfigurationSynchronizationOperation createConfigurationSynchronizationOperation() {
         return new ConfigurationSynchronizationOperation(configurationCollector, configurationSynchronizer);
     }
-    
+
+    public static DependenciesUpdateOperationFactory get() {
+        var eclipseContext = EclipseContextFactory.create();
+        try {
+            return ContextInjectionFactory
+                    .make(DependenciesUpdateOperationFactory.class, eclipseContext);
+        } catch (InjectionException e) {
+            // Unit test workaround
+            return new DependenciesUpdateOperationFactory(null, null, null, null, null, null);
+        }
+    }
+
 }
