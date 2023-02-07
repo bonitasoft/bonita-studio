@@ -48,7 +48,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-public class AbstractRepositoryTest {
+class AbstractRepositoryTest {
 
     @Mock
     private IWorkspace workspace;
@@ -70,7 +70,7 @@ public class AbstractRepositoryTest {
     private IEventBroker eventBroker;
 
     @Test
-    public void should_not_refresh_project_when_deleting_a_closed_repository() throws Exception {
+    void should_not_refresh_project_when_deleting_a_closed_repository() throws Exception {
         final AbstractRepository repository = newRepository();
 
         repository.delete(monitor);
@@ -79,7 +79,7 @@ public class AbstractRepositoryTest {
     }
 
     @Test
-    public void should_refresh_project_when_deleting_an_open_repository() throws Exception {
+    void should_refresh_project_when_deleting_an_open_repository() throws Exception {
         final AbstractRepository repository = newRepository();
         doReturn(true).when(project).isOpen();
 
@@ -89,7 +89,7 @@ public class AbstractRepositoryTest {
     }
 
     @Test
-    public void should_return_the_correct_file_store_when_two_resources_have_the_same_name() throws Exception {
+    void should_return_the_correct_file_store_when_two_resources_have_the_same_name() throws Exception {
         IResource resource1 = mock(IResource.class);
         IResource resource2 = mock(IResource.class);
         when(resource1.getName()).thenReturn("name.xml");
