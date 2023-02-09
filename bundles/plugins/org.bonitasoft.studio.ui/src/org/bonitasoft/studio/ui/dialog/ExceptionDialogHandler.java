@@ -39,48 +39,52 @@ public class ExceptionDialogHandler {
     private static final ILog LOG = Platform.getLog(Platform.getBundle(PLUGIN_ID));
 
     public void openErrorDialog(Shell shell, String errorMessage, Throwable t) {
-        if(t instanceof CoreException) {
+        if (t instanceof CoreException) {
             openErrorDialog(shell, (CoreException) t);
-        }else {
+        } else {
             var status = createErrorStatus(t);
             LOG.log(status);
             var dialog = new InternalErrorDialog(shell,
                     Messages.errorTitle,
-                    null, 
+                    null,
                     errorMessage,
-                    status.getException(), 
-                    MessageDialog.ERROR, 
-                    new String[] {IDialogConstants.OK_LABEL, IDialogConstants.SHOW_DETAILS_LABEL}, 
+                    status.getException(),
+                    MessageDialog.ERROR,
+                    new String[] { IDialogConstants.OK_LABEL, IDialogConstants.SHOW_DETAILS_LABEL },
                     0);
             dialog.setDetailButton(1);
             dialog.open();
         }
-      
+
     }
 
     private IStatus createErrorStatus(Throwable t) {
-        Throwable exception = t instanceof InvocationTargetException 
+        Throwable exception = t instanceof InvocationTargetException
                 && ((InvocationTargetException) t).getTargetException() != null
-                ? ((InvocationTargetException) t).getTargetException() : t;
+                        ? ((InvocationTargetException) t).getTargetException() : t;
         return Status.error(exception.getMessage(), exception);
     }
 
     public void openErrorDialog(Shell shell, CoreException e) {
         IStatus status = e.getStatus();
-        if(status == null) {
+        if (status == null) {
             status = createErrorStatus(e);
         }
         LOG.log(status);
-        var dialog = new InternalErrorDialog(shell,
-                Messages.errorTitle,
-                null, 
-                status.getMessage(), 
-                status.getException(), 
-                MessageDialog.ERROR, 
-                new String[] {IDialogConstants.OK_LABEL, IDialogConstants.SHOW_DETAILS_LABEL}, 
-                0);
-        dialog.setDetailButton(1);
-        dialog.open();
+        if (status.getException() != null) {
+            var dialog = new InternalErrorDialog(shell,
+                    Messages.errorTitle,
+                    null,
+                    status.getMessage(),
+                    status.getException(),
+                    MessageDialog.ERROR,
+                    new String[] { IDialogConstants.OK_LABEL, IDialogConstants.SHOW_DETAILS_LABEL },
+                    0);
+            dialog.setDetailButton(1);
+            dialog.open();
+        } else {
+            MessageDialog.openError(shell, Messages.errorTitle, status.getMessage());
+        }
     }
 
 }
