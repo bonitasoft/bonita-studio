@@ -35,7 +35,6 @@ import org.bonitasoft.engine.bdm.model.BusinessObjectModel;
 import org.bonitasoft.studio.businessobject.BusinessObjectPlugin;
 import org.bonitasoft.studio.businessobject.core.operation.DeployBDMOperation;
 import org.bonitasoft.studio.businessobject.core.operation.GenerateBDMOperation;
-import org.bonitasoft.studio.businessobject.i18n.Messages;
 import org.bonitasoft.studio.common.ModelVersion;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.model.validator.ModelNamespaceValidator;
@@ -54,6 +53,7 @@ import org.bonitasoft.studio.common.repository.store.FileStoreCollector;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IncrementalProjectBuilder;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Adapters;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -232,6 +232,8 @@ public class BusinessObjectModelRepositoryStore<F extends AbstractBDMFileStore<?
                 bdmLinkedFolder.createLink(Path.fromOSString("PARENT-1-PROJECT_LOC/" + STORE_NAME),
                         IResource.REPLACE | IResource.ALLOW_MISSING_LOCAL,
                         new NullProgressMonitor());
+                // Persist workspace state
+                ResourcesPlugin.getWorkspace().save(false, new NullProgressMonitor());
             }
         } catch (CoreException e) {
             BonitaStudioLog.error(e);

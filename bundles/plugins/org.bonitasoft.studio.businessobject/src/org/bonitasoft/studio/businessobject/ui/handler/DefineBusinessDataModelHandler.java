@@ -58,7 +58,9 @@ public class DefineBusinessDataModelHandler {
                         new CoreException(Status.error("Failed to create the BDM.")));
             }
         }
-        bdmFileStore.open();
+        if(bdmFileStore != null) {
+            bdmFileStore.open();
+        }
     }
 
     private void createBdmFileStore(RepositoryAccessor repositoryAccessor,
@@ -68,6 +70,10 @@ public class DefineBusinessDataModelHandler {
         var project = repositoryAccessor.getCurrentProject().orElseThrow();
         if (project != null && !project.getBdmParentProject().exists()) {
             bdmStore.createBdmModule(project, monitor);
+        }
+        // Folder link is broken, recreate it.
+        if(project != null && project.getBdmParentProject().exists() && !bdmStore.getResource().exists()) {
+            bdmStore.createBdmFolderLinkInAppProject(project);
         }
     }
 
