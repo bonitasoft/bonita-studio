@@ -1,0 +1,34 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Refactoring lugin
+Bundle-SymbolicName: org.bonitasoft.studio.refactoring
+Bundle-Version: 8.0.0.qualifier
+Bundle-Activator: org.bonitasoft.studio.refactoring.RefactoringPlugin
+Bundle-Vendor: BonitaSoft S.A.
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.eclipse.emf.common,
+ org.eclipse.emf.edit,
+ org.bonitasoft.studio.model,
+ org.bonitasoft.studio.common,
+ org.eclipse.jdt.core,
+ org.eclipse.jdt.groovy.core,
+ org.codehaus.groovy.eclipse.codeassist,
+ org.eclipse.compare,
+ org.eclipse.emf.edit.ui,
+ org.codehaus.groovy,
+ org.bonitasoft.studio.common.repository,
+ org.bonitasoft.studio.groovy,
+ org.codehaus.groovy.eclipse.refactoring,
+ org.eclipse.text,
+ org.eclipse.emf.transaction,
+ org.eclipse.emf.workspace,
+ org.eclipse.emf.databinding.edit,
+ org.bonitasoft.studio.model.edit.custom,
+ org.bonitasoft.studio.model.edit,
+ org.bonitasoft.studio.common.ui
+Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-ActivationPolicy: lazy
+Export-Package: org.bonitasoft.studio.refactoring.core,
+ org.bonitasoft.studio.refactoring.core.emf,
+ org.bonitasoft.studio.refactoring.core.script

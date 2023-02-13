@@ -1,0 +1,18 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Core for Decision Table Support
+Bundle-SymbolicName: org.bonitasoft.studio.decision.table
+Bundle-Version: 8.0.0.qualifier
+Bundle-Vendor: BonitaSoft S.A.
+Bundle-RequiredExecutionEnvironment: JavaSE-11
+Require-Bundle: org.bonitasoft.studio.model,
+ org.bonitasoft.studio.expression.editor,
+ org.bonitasoft.studio.common,
+ org.eclipse.core.runtime,
+ org.eclipse.ui;bundle-version="3.106.0",
+ org.bonitasoft.studio.pics,
+ org.bonitasoft.studio.preferences,
+ org.bonitasoft.studio.common.ui
+Export-Package: org.bonitasoft.studio.decision.i18n,
+ org.bonitasoft.studio.decision.ui,
+ org.bonitasoft.studio.decision.ui.condition
