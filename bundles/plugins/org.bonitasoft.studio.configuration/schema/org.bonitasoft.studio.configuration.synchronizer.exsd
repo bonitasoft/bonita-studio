@@ -55,7 +55,7 @@
                   
                </documentation>
                <appinfo>
-                  <meta.attribute kind="java" basedOn=":org.bonitasoft.studio.configuration.extension.IConfigurationSynchronizer"/>
+                  <meta.attribute kind="java" basedOn=":org.bonitasoft.studio.common.repository.extension.IConfigurationSynchronizer"/>
                </appinfo>
             </annotation>
          </attribute>
