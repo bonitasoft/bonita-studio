@@ -104,7 +104,7 @@
         <profile>
             <id>offline-local-repository</id>
             <properties>
-                <localRepository.compatibleVersions.skip>false</localRepository.compatibleVersions.skip>
+                <localRepository.compatibleVersions.skip>true</localRepository.compatibleVersions.skip>
                 <goOfflineCmdLine>
                     de.qaware.maven:go-offline-maven-plugin:resolve-dependencies
                     -Dmaven.repo.local=${settings.localRepository}
@@ -113,30 +113,6 @@
                     -Dbonita.runtime.version=${bonita-runtime.version}
                 </goOfflineCmdLine>
             </properties>
-            <build>
-                <plugins>
-                    <plugin>
-                     <groupId>org.codehaus.mojo</groupId>
-                     <artifactId>exec-maven-plugin</artifactId>
-                     <executions>
-                         <execution>
-                            <id>resolve-dependencies-locally</id>
-                            <goals>
-                                <goal>exec</goal>
-                            </goals>
-                            <phase>generate-resources</phase>
-                            <configuration>
-                                <workingDirectory>${project.basedir}/src/template</workingDirectory>
-                                <executable>${mavenWrapper}</executable>
-                                <useMavenLogger>true</useMavenLogger>
-                                <skip>${localRepository.skip}</skip>
-                                <commandlineArgs>${mavenSettingsArg} -ntp ${goOfflineCmdLine}</commandlineArgs>
-                            </configuration>
-                        </execution>
-                     </executions>
-                    </plugin>
-                </plugins>
-            </build>
         </profile> 
         <profile>
             <id>windows-maven-wrapper</id>
