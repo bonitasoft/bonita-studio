@@ -1,0 +1,36 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Migration Plugin
+Bundle-SymbolicName: org.bonitasoft.studio.migration;singleton:=true
+Bundle-Version: 8.0.0.qualifier
+Bundle-Activator: org.bonitasoft.studio.migration.MigrationPlugin
+Bundle-Vendor: BonitaSoft S.A.
+Bundle-Localization: plugin
+Require-Bundle: org.eclipse.core.runtime,
+ org.bonitasoft.studio.model,
+ org.bonitasoft.studio.common,
+ org.eclipse.ui,
+ org.eclipse.emf.edapt.history,
+ org.eclipse.emf.edapt.migration,
+ org.eclipse.emf.transaction,
+ org.eclipse.gmf.runtime.emf.core,
+ org.eclipse.gmf.runtime.diagram.ui,
+ org.eclipse.ui.ide,
+ org.bonitasoft.studio.pics,
+ org.eclipse.jdt.ui,
+ org.eclipse.ui.navigator,
+ org.eclipse.gmf.runtime.diagram.ui.properties,
+ org.bonitasoft.studio.connectors.model,
+ org.junit;bundle-version="4.11.0";resolution:=optional,
+ org.mockito.mockito-core;resolution:=optional,
+ org.bonitasoft.studio.tests-utils;resolution:=optional,
+ assertj-core;resolution:=optional,
+ com.google.guava,
+ net.bytebuddy.byte-buddy;resolution:=optional
+Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-ActivationPolicy: lazy
+Export-Package: org.bonitasoft.studio.migration,
+ org.bonitasoft.studio.migration.i18n;x-friends:="org.bonitasoft.studio.migration.tests",
+ org.bonitasoft.studio.migration.utils
+Bundle-ClassPath: .
+Import-Package: org.bonitasoft.engine.operation
