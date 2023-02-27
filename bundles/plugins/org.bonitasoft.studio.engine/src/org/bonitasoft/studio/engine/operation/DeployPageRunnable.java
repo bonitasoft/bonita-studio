@@ -18,8 +18,12 @@ import static java.util.Objects.requireNonNull;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 
+import org.apache.http.HttpException;
 import org.bonitasoft.engine.api.PageAPI;
+import org.bonitasoft.engine.page.Page;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.designer.core.bar.FormBuilder;
 import org.bonitasoft.studio.designer.core.exception.PageIncompatibleException;
 import org.bonitasoft.studio.designer.core.repository.WebPageFileStore;
@@ -27,12 +31,11 @@ import org.bonitasoft.studio.engine.http.HttpClientFactory;
 import org.bonitasoft.studio.engine.i18n.Messages;
 import org.eclipse.core.runtime.IProgressMonitor;
 
-import com.google.common.io.Files;
-
 public class DeployPageRunnable extends DeployCustomPageOperation {
 
     private final WebPageFileStore pageFileStore;
     private final FormBuilder formBuilder;
+    private File tmpFile;
 
     public DeployPageRunnable(PageAPI pageApi,
             HttpClientFactory httpClientFactory,
@@ -45,10 +48,9 @@ public class DeployPageRunnable extends DeployCustomPageOperation {
 
     @Override
     protected File getArchiveFile(IProgressMonitor monitor) {
-        File tmpFile = null;
         try {
             tmpFile = File.createTempFile(getCustomPageId(), ".zip");
-            Files.write(formBuilder.export(pageFileStore.getId()), tmpFile);
+            Files.write(tmpFile.toPath(), formBuilder.export(pageFileStore.getId()));
             return tmpFile;
         } catch (PageIncompatibleException | IOException e) {
             if (tmpFile != null) {
@@ -82,6 +84,21 @@ public class DeployPageRunnable extends DeployCustomPageOperation {
     @Override
     protected String getCustomPageType() {
         return pageFileStore.getType();
+    }
+
+    @Override
+    public Page deploy(IProgressMonitor monitor) throws IOException, HttpException {
+        try {
+            return super.deploy(monitor);
+        } finally {
+            try {
+                if (tmpFile != null) {
+                    Files.delete(tmpFile.toPath());
+                }
+            } catch (IOException e) {
+                BonitaStudioLog.error(e);
+            }
+        }
     }
 
 }
