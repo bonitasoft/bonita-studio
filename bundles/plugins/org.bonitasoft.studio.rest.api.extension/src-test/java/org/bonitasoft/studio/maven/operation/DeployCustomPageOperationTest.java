@@ -13,7 +13,6 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.notNull;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.io.File;
@@ -22,15 +21,13 @@ import org.bonitasoft.engine.api.PageAPI;
 import org.bonitasoft.engine.page.Page;
 import org.bonitasoft.engine.page.PageNotFoundException;
 import org.bonitasoft.engine.session.APISession;
-import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.engine.http.AddCustomPageRequest;
 import org.bonitasoft.studio.engine.http.HttpClientFactory;
 import org.bonitasoft.studio.engine.http.LoginRequest;
 import org.bonitasoft.studio.engine.http.UpdateCustomPageRequest;
 import org.bonitasoft.studio.engine.http.UploadCustomPageRequest;
-import org.bonitasoft.studio.maven.operation.DeployCustomPageOperation;
 import org.bonitasoft.studio.rest.api.extension.core.repository.RestAPIExtensionFileStore;
-import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -43,8 +40,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 @RunWith(MockitoJUnitRunner.class)
 public class DeployCustomPageOperationTest {
 
-    @Mock
-    private BOSEngineManager engineManager;
     @Mock
     private PageAPI pageAPI;
     @Mock
@@ -66,7 +61,6 @@ public class DeployCustomPageOperationTest {
 
     @Before
     public void setUp() throws Exception {
-        when(engineManager.loginDefaultTenant(any(IProgressMonitor.class))).thenReturn(apiSession);
         when(httpClientFactory.newAddCustomPageRequest(notNull(String.class))).thenReturn(addCustomPageRequest);
         when(httpClientFactory.newLoginRequest()).thenReturn(loginRequest);
         when(httpClientFactory.newUploadCustomPageRequest(any(File.class))).thenReturn(uploadCustomPageRequest);
@@ -74,28 +68,26 @@ public class DeployCustomPageOperationTest {
         when(httpClientFactory.newUpdateCustomPageRequest(notNull(String.class), notNull(Page.class)))
                 .thenReturn(updateCustomPageRequest);
         when(fileStore.getPageId()).thenReturn("newPageId");
+        when(fileStore.getContentType()).thenReturn("apiExtension");
         when(fileStore.getArchiveFile()).thenReturn(tmpFolder.newFile());
     }
 
     @Test
     public void should_find_existing_custom_page() throws Exception {
-        final DeployCustomPageOperation operation = new DeployCustomPageOperation(engineManager,
+        var operation = new DeployCustomPageProjectOperation(pageAPI,
                 httpClientFactory, fileStore);
         final Page existingPage = mock(Page.class);
         when(pageAPI.getPageByName("anExistingPage")).thenReturn(existingPage);
-        when(engineManager.getPageAPI(any(APISession.class))).thenReturn(pageAPI);
         final Page page = operation.findCustomPage("anExistingPage");
 
         assertThat(page).isEqualTo(existingPage);
-        verify(engineManager).logoutDefaultTenant(apiSession);
     }
 
     @Test
     public void should_not_find_new_custom_page() throws Exception {
-        final DeployCustomPageOperation operation = new DeployCustomPageOperation(engineManager,
+        var operation = new DeployCustomPageProjectOperation(pageAPI,
                 httpClientFactory, fileStore);
         when(pageAPI.getPageByName("newPage")).thenThrow(PageNotFoundException.class);
-        when(engineManager.getPageAPI(any(APISession.class))).thenReturn(pageAPI);
         final Page page = operation.findCustomPage("newPage");
 
         assertThat(page).isNull();
@@ -103,11 +95,10 @@ public class DeployCustomPageOperationTest {
 
     @Test
     public void should_add_a_new_custom_page() throws Exception {
-        final DeployCustomPageOperation operation = new DeployCustomPageOperation(engineManager,
+        var operation = new DeployCustomPageProjectOperation(pageAPI,
                 httpClientFactory, fileStore);
-        when(engineManager.getPageAPI(any(APISession.class))).thenReturn(pageAPI);
 
-        operation.deploy();
+        operation.deploy(new NullProgressMonitor());
 
         final InOrder order = inOrder(loginRequest, uploadCustomPageRequest, addCustomPageRequest);
         order.verify(loginRequest).execute();
@@ -118,18 +109,19 @@ public class DeployCustomPageOperationTest {
     @Test
     public void should_update_an_existing_custom_page() throws Exception {
         final Page existingPage = mock(Page.class);
+        when(existingPage.getContentType()).thenReturn("apiExtension");
         when(pageAPI.getPageByName("anExistingPage")).thenReturn(existingPage);
-        when(engineManager.getPageAPI(any(APISession.class))).thenReturn(pageAPI);
         when(fileStore.getPageId()).thenReturn("anExistingPage");
-        final DeployCustomPageOperation operation = new DeployCustomPageOperation(engineManager,
+        var operation = new DeployCustomPageProjectOperation(pageAPI,
                 httpClientFactory, fileStore);
 
-        operation.deploy();
+        operation.deploy(new NullProgressMonitor());
 
         final InOrder order = inOrder(loginRequest, uploadCustomPageRequest, updateCustomPageRequest);
         order.verify(loginRequest).execute();
         order.verify(uploadCustomPageRequest).execute();
         order.verify(updateCustomPageRequest).execute();
     }
+    
 
 }

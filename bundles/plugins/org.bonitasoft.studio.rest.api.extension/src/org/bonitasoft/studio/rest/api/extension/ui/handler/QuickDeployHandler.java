@@ -14,6 +14,9 @@ import java.nio.file.Paths;
 
 import javax.inject.Named;
 
+import org.bonitasoft.engine.exception.BonitaHomeNotSetException;
+import org.bonitasoft.engine.exception.ServerAPIException;
+import org.bonitasoft.engine.exception.UnknownAPITypeException;
 import org.bonitasoft.studio.common.jface.BonitaErrorDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
@@ -24,10 +27,11 @@ import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.engine.http.HttpClientFactory;
+import org.bonitasoft.studio.engine.operation.GetApiSessionOperation;
 import org.bonitasoft.studio.maven.CustomPageProjectFileStore;
 import org.bonitasoft.studio.maven.i18n.Messages;
 import org.bonitasoft.studio.maven.operation.BuildCustomPageOperation;
-import org.bonitasoft.studio.maven.operation.DeployCustomPageOperation;
+import org.bonitasoft.studio.maven.operation.DeployCustomPageProjectOperation;
 import org.bonitasoft.studio.rest.api.extension.RestAPIExtensionActivator;
 import org.bonitasoft.studio.rest.api.extension.ui.view.MavenConsoleView;
 import org.eclipse.core.databinding.validation.ValidationStatus;
@@ -64,6 +68,7 @@ public class QuickDeployHandler {
         if (showInUI) {
             showConsoleView();
         }
+        var apiSessionOperation = new GetApiSessionOperation();
         try {
             CustomPageProjectFileStore customPageFilseStore = null;
             if (projectPath != null) {
@@ -81,14 +86,16 @@ public class QuickDeployHandler {
             }
 
             if (customPageFilseStore != null) {
-                if(!customPageFilseStore.isReadOnly()) {
+                if (!customPageFilseStore.isReadOnly()) {
                     IStatus buildStatus = build(customPageFilseStore);
                     if (!buildStatus.isOK()) {
-                        return ValidationStatus.error(String.format(Messages.buildHasFailed, customPageFilseStore.getDisplayName()));
+                        return ValidationStatus
+                                .error(String.format(Messages.buildHasFailed, customPageFilseStore.getDisplayName()));
                     }
                 }
-                final DeployCustomPageOperation deployRestAPIExtensionOperation = new DeployCustomPageOperation(
-                        BOSEngineManager.getInstance(),
+                var session = apiSessionOperation.execute();
+                var deployRestAPIExtensionOperation = new DeployCustomPageProjectOperation(
+                        BOSEngineManager.getInstance().getPageAPI(session),
                         httpClientFactory,
                         customPageFilseStore);
                 if (showInUI) {
@@ -105,9 +112,12 @@ public class QuickDeployHandler {
                     return deployRestAPIExtensionOperation.getStatus();
                 }
             }
-        } catch (InvocationTargetException | InterruptedException e) {
+        } catch (InvocationTargetException | InterruptedException | BonitaHomeNotSetException | ServerAPIException
+                | UnknownAPITypeException e) {
             BonitaStudioLog.error(e);
             return new Status(IStatus.ERROR, RestAPIExtensionActivator.PLUGIN_ID, e.getMessage(), e);
+        } finally {
+            apiSessionOperation.logout();
         }
         return ValidationStatus.ok();
     }
@@ -115,10 +125,10 @@ public class QuickDeployHandler {
     protected IStatus build(CustomPageProjectFileStore selectedRestApiExtension) {
         try {
             final BuildCustomPageOperation operation = selectedRestApiExtension.newBuildOperation();
-            if(showInUI) {
+            if (showInUI) {
                 ModalContext.run(operation.asWorkspaceModifyOperation(), true, AbstractRepository.NULL_PROGRESS_MONITOR,
                         Display.getDefault());
-            }else {
+            } else {
                 operation.run(AbstractRepository.NULL_PROGRESS_MONITOR);
             }
             return operation.getStatus();
