@@ -44,7 +44,7 @@ public class ProcessValidationOperation extends WorkspaceModifyOperation {
         if(process.eResource() == null) {
             BonitaStudioLog.warning(String.format("Process %s (%s) resource is not loaded and can't be validated.",
                     process.getName(),
-                    process.getVersion()));
+                    process.getVersion()), ValidationCommonPlugin.PLUGIN_ID);
             return this;
         }
         listOfProcessesToValidate.add(process);
