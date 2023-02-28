@@ -18,14 +18,17 @@ import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 
+import org.bonitasoft.engine.exception.BonitaHomeNotSetException;
+import org.bonitasoft.engine.exception.ServerAPIException;
+import org.bonitasoft.engine.exception.UnknownAPITypeException;
 import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.plugin.analyze.report.model.RestAPIExtension;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.engine.http.HttpClientFactory;
+import org.bonitasoft.studio.engine.operation.GetApiSessionOperation;
 import org.bonitasoft.studio.maven.ImportProjectException;
-import org.bonitasoft.studio.maven.operation.DeployCustomPageOperation;
-import org.bonitasoft.studio.theme.DependencyThemeFileStore;
+import org.bonitasoft.studio.maven.operation.DeployCustomPageProjectOperation;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -72,23 +75,24 @@ public class DependencyRestAPIExtensionFileStore extends RestAPIExtensionFileSto
 
     @Override
     public IStatus deploy(APISession session, Map<String, Object> options, IProgressMonitor monitor) {
-        final DeployCustomPageOperation deployOperation = new DeployCustomPageOperation(
-                BOSEngineManager.getInstance(),
-                new HttpClientFactory(),
-                this);
+        GetApiSessionOperation apiSessionOperation = new GetApiSessionOperation();
         try {
+            APISession apiSession = apiSessionOperation.execute();
+            BOSEngineManager bosEngineManager = BOSEngineManager.getInstance();
+            var deployOperation = new DeployCustomPageProjectOperation(
+                    bosEngineManager.getPageAPI(apiSession),
+                    new HttpClientFactory(),
+                    this);
             deployOperation.run(monitor);
-        } catch (InvocationTargetException | InterruptedException e) {
-            return new Status(IStatus.ERROR, DependencyThemeFileStore.class, "Failed to deployed rest api extension",
-                    e);
+            return deployOperation.getStatus();
+        } catch (InvocationTargetException | InterruptedException | BonitaHomeNotSetException | ServerAPIException
+                | UnknownAPITypeException e) {
+            return Status.error("Failed to deployed rest api extension", e);
+        } finally {
+            apiSessionOperation.logout();
         }
-        return deployOperation.getStatus();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.repository.model.IRepositoryFileStore#getAdapter(java.lang.Class)
-     */
     @Override
     public <X> X getAdapter(Class<X> adapter) {
         if (adapter.isAssignableFrom(RestAPIExtension.class)) {

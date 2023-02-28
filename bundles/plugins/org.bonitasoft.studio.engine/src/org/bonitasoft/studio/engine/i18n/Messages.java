@@ -197,6 +197,7 @@ public class Messages extends NLS {
     public static String processDeployedButNoUserAppFound;
     public static String runButtonTooltip;
     public static String userAppToken;
+    public static String invalidPageContentType;
 
     static {
         NLS.initializeMessages("messages", Messages.class); //$NON-NLS-1$
