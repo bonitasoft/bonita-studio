@@ -10,16 +10,21 @@ package org.bonitasoft.studio.maven.ui.wizard;
 
 import java.lang.reflect.InvocationTargetException;
 
+import org.bonitasoft.engine.exception.BonitaHomeNotSetException;
+import org.bonitasoft.engine.exception.ServerAPIException;
+import org.bonitasoft.engine.exception.UnknownAPITypeException;
+import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.studio.common.jface.BonitaErrorDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.engine.http.HttpClientFactory;
+import org.bonitasoft.studio.engine.operation.GetApiSessionOperation;
 import org.bonitasoft.studio.maven.CustomPageProjectFileStore;
 import org.bonitasoft.studio.maven.CustomPageProjectRepositoryStore;
 import org.bonitasoft.studio.maven.i18n.Messages;
 import org.bonitasoft.studio.maven.operation.BuildCustomPageOperation;
-import org.bonitasoft.studio.maven.operation.DeployCustomPageOperation;
+import org.bonitasoft.studio.maven.operation.DeployCustomPageProjectOperation;
 import org.bonitasoft.studio.maven.ui.WidgetFactory;
 import org.bonitasoft.studio.maven.ui.handler.CustomPageProjectSelectionProvider;
 import org.bonitasoft.studio.pics.Pics;
@@ -40,7 +45,8 @@ public abstract class DeployCustomPageWizard extends Wizard {
     private final BOSEngineManager engineManager;
     private HttpClientFactory httpClientFactory;
 
-    public DeployCustomPageWizard(final CustomPageProjectRepositoryStore<? extends CustomPageProjectFileStore> repositoryStore,
+    public DeployCustomPageWizard(
+            final CustomPageProjectRepositoryStore<? extends CustomPageProjectFileStore> repositoryStore,
             final BOSEngineManager engineManager,
             final WidgetFactory widgetFactory,
             final HttpClientFactory httpClientFactory,
@@ -49,7 +55,8 @@ public abstract class DeployCustomPageWizard extends Wizard {
         this.engineManager = engineManager;
         this.httpClientFactory = httpClientFactory;
         this.widgetFactory = widgetFactory;
-        fileStoreObservable = new WritableValue<CustomPageProjectFileStore>(selectionProvider.getSelection(), RestAPIExtensionFileStore.class);
+        fileStoreObservable = new WritableValue<CustomPageProjectFileStore>(selectionProvider.getSelection(),
+                RestAPIExtensionFileStore.class);
         setDefaultPageImageDescriptor(Pics.getWizban());
         setNeedsProgressMonitor(true);
         setWindowTitle(Messages.deployWizardTitle);
@@ -57,41 +64,48 @@ public abstract class DeployCustomPageWizard extends Wizard {
 
     @Override
     public void addPages() {
-        final SelectCustomPageProjectPage selectionPage = new SelectCustomPageProjectPage(repositoryStore, widgetFactory,
+        final SelectCustomPageProjectPage selectionPage = new SelectCustomPageProjectPage(repositoryStore,
+                widgetFactory,
                 fileStoreObservable);
         selectionPage.setTitle(getSelectionPageTitle());
         selectionPage.setDescription(getSelectionPageDeployDescription());
         addPage(selectionPage);
     }
-    
+
     protected abstract String getSelectionPageDeployDescription();
 
     protected abstract String getSelectionPageTitle();
-   
+
     @Override
     public boolean performFinish() {
         final CustomPageProjectFileStore fileStore = fileStoreObservable.getValue();
-        if(!fileStore.isReadOnly()) {
+        if (!fileStore.isReadOnly()) {
             return build(fileStore) && deploy(fileStore);
         }
         return deploy(fileStore);
     }
 
     protected boolean deploy(final CustomPageProjectFileStore fileStore) {
-        final DeployCustomPageOperation operation = new DeployCustomPageOperation(engineManager,
-                httpClientFactory,
-                fileStore);
+        GetApiSessionOperation apiSessionOperation = new GetApiSessionOperation();
         try {
+            APISession apiSession = apiSessionOperation.execute();
+            BOSEngineManager bosEngineManager = BOSEngineManager.getInstance();
+            var operation = new DeployCustomPageProjectOperation(bosEngineManager.getPageAPI(apiSession),
+                    httpClientFactory,
+                    fileStore);
             getContainer().run(true, false, operation);
             final IStatus status = operation.getStatus();
             if (!status.isOK()) {
                 return showDeployErrorDialog(status);
             }
-        } catch (InvocationTargetException | InterruptedException e) {
+        } catch (InvocationTargetException | InterruptedException | BonitaHomeNotSetException | ServerAPIException
+                | UnknownAPITypeException e) {
             new BonitaErrorDialog(getShell(), Messages.errorTitle,
                     NLS.bind(Messages.deployFailedMessage, fileStore.getDisplayName()), e).open();
             BonitaStudioLog.error(e);
             return false;
+        } finally {
+            apiSessionOperation.logout();
         }
         return openDeploySuccessDialog(fileStore.getDisplayName());
     }

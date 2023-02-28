@@ -59,11 +59,7 @@ public class DeployThemeOperation extends DeployCustomPageOperation {
 
     @Override
     protected String getCustomPageLabel() {
-        try {
-            return themeFileStore.getContent().getDisplayName();
-        } catch (ReadFileStoreException e) {
-            return themeFileStore.getDisplayName();
-        }
+        return themeFileStore.getDisplayName();
     }
 
     @Override
@@ -73,7 +69,7 @@ public class DeployThemeOperation extends DeployCustomPageOperation {
 
     @Override
     protected String getCustomPageType() {
-        return "theme";
+        return themeFileStore.getContentType();
     }
 
 }
