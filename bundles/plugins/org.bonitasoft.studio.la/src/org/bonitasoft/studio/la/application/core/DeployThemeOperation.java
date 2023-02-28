@@ -74,7 +74,7 @@ public class DeployThemeOperation extends DeployCustomPageOperation {
 
     @Override
     protected String getCustomPageType() {
-        return "theme";
+        return themeFileStore.getContentType();
     }
 
 }

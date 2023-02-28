@@ -100,6 +100,15 @@ public abstract class CustomPageProjectFileStore<T extends CustomPageMavenProjec
             return null;
         }
     }
+    
+    public String getContentType() {
+        try {
+            final CustomPageMavenProjectDescriptor content = getContent();
+            return content.getContentType();
+        } catch (final ReadFileStoreException e) {
+            return null;
+        }
+    }
 
     public boolean canBeImported() {
         return getResource().getFile("pom.xml").exists();

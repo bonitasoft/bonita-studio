@@ -42,9 +42,10 @@ public class ProcessValidationOperation extends WorkspaceModifyOperation {
 
     public ProcessValidationOperation addProcess(final AbstractProcess process) {
         if(process.eResource() == null) {
-            throw new IllegalArgumentException(String.format("Process %s (%s) is not in an EMF Resource",
+            BonitaStudioLog.warning(String.format("Process %s (%s) resource is not loaded and can't be validated.",
                     process.getName(),
-                    process.getVersion()));
+                    process.getVersion()), ValidationCommonPlugin.PLUGIN_ID);
+            return this;
         }
         listOfProcessesToValidate.add(process);
         return this;

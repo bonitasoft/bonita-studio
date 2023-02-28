@@ -40,11 +40,11 @@ public abstract class CustomPageMavenProjectDescriptor {
     protected IProject project;
     private static final String PAGE_PROPERTIES_PATH = "src/main/resources/page.properties";
 
-    public CustomPageMavenProjectDescriptor() {
+    protected CustomPageMavenProjectDescriptor() {
 
     }
 
-    public CustomPageMavenProjectDescriptor(final IProject project) {
+    protected CustomPageMavenProjectDescriptor(final IProject project) {
         this.project = project;
     }
 
@@ -153,6 +153,10 @@ public abstract class CustomPageMavenProjectDescriptor {
         return staticProperty(PagePropertyConstants.DISPLAY_NAME)
                 .orElse(getMavenProject().map(MavenProject::getName).orElse(null));
     }
+    
+    public String getContentType() {
+        return staticProperty(PagePropertyConstants.CONTENT_TYPE).orElse(null);
+    }
 
     public String getCustomPageName() {
         return staticProperty(PagePropertyConstants.NAME).orElse("custompage_" + getArtifactId());
@@ -161,5 +165,7 @@ public abstract class CustomPageMavenProjectDescriptor {
     private Optional<String> staticProperty(String property) {
         return ExtensionPagePropertiesReader.getProperty(getPageProperties(), property);
     }
+
+    
 
 }

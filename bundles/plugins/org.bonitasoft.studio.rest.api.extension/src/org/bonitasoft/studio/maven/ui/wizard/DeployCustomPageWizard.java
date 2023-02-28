@@ -10,17 +10,21 @@ package org.bonitasoft.studio.maven.ui.wizard;
 
 import java.lang.reflect.InvocationTargetException;
 
+import org.bonitasoft.engine.exception.BonitaHomeNotSetException;
+import org.bonitasoft.engine.exception.ServerAPIException;
+import org.bonitasoft.engine.exception.UnknownAPITypeException;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.common.ui.IDisplayable;
 import org.bonitasoft.studio.common.ui.jface.BonitaErrorDialog;
 import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.engine.http.HttpClientFactory;
+import org.bonitasoft.studio.engine.operation.GetApiSessionOperation;
 import org.bonitasoft.studio.maven.CustomPageProjectFileStore;
 import org.bonitasoft.studio.maven.CustomPageProjectRepositoryStore;
 import org.bonitasoft.studio.maven.i18n.Messages;
 import org.bonitasoft.studio.maven.operation.BuildCustomPageOperation;
-import org.bonitasoft.studio.maven.operation.DeployCustomPageOperation;
+import org.bonitasoft.studio.maven.operation.DeployCustomPageProjectOperation;
 import org.bonitasoft.studio.maven.ui.WidgetFactory;
 import org.bonitasoft.studio.maven.ui.handler.CustomPageProjectSelectionProvider;
 import org.bonitasoft.studio.pics.Pics;
@@ -82,21 +86,27 @@ public abstract class DeployCustomPageWizard extends Wizard {
     }
 
     protected boolean deploy(final CustomPageProjectFileStore fileStore) {
-        final DeployCustomPageOperation operation = new DeployCustomPageOperation(engineManager,
-                httpClientFactory,
-                fileStore);
+        GetApiSessionOperation apiSessionOperation = new GetApiSessionOperation();
         String displayName = IDisplayable.toDisplayName(fileStore).orElse("");
         try {
-            getContainer().run(true, false, operation);
+            var apiSession = apiSessionOperation.execute();
+            BOSEngineManager bosEngineManager = BOSEngineManager.getInstance();
+            var operation = new DeployCustomPageProjectOperation(bosEngineManager.getPageAPI(apiSession),
+                    httpClientFactory,
+                    fileStore);
+            getContainer().run(true, false, operation::run);
             final IStatus status = operation.getStatus();
             if (!status.isOK()) {
                 return showDeployErrorDialog(status);
             }
-        } catch (InvocationTargetException | InterruptedException e) {
+        } catch (InvocationTargetException | InterruptedException | BonitaHomeNotSetException | ServerAPIException
+                | UnknownAPITypeException e) {
             new BonitaErrorDialog(getShell(), Messages.errorTitle,
                     NLS.bind(Messages.deployFailedMessage, displayName), e).open();
             BonitaStudioLog.error(e);
             return false;
+        } finally {
+            apiSessionOperation.logout();
         }
         return openDeploySuccessDialog(displayName);
     }
