@@ -20,6 +20,7 @@ import java.util.zip.ZipFile;
 
 import org.bonitasoft.engine.page.Page;
 import org.bonitasoft.studio.assertions.StatusAssert;
+import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.engine.BOSEngineManager;
