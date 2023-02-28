@@ -189,13 +189,9 @@ public class BonitaStudioApplication extends IDEApplication implements IApplicat
      * @param display display to dispose (non-null)
      */
     protected void disposeDisplay(Display display) {
-        display.syncExec(new Runnable() {
-
-            @Override
-            public void run() {
-                if (!display.isDisposed()) {
-                    display.dispose();
-                }
+        display.asyncExec(() -> {
+            if (display != null && !display.isDisposed()) {
+                display.dispose();
             }
         });
     }
