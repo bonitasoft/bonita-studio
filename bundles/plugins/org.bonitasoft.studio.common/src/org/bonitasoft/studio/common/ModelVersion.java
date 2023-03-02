@@ -28,7 +28,7 @@ public class ModelVersion {
     public static final String CURRENT_CONNECTOR_IMPLEMENTATION_NAMESPACE = "http://www.bonitasoft.org/ns/connector/implementation/6.0";
 
     //Profile model
-    public static final String CURRENT_PROFILE_NAMESPACE = "http://www.bonitasoft.org/ns/profile/6.1";
+    public static final String CURRENT_PROFILE_NAMESPACE = "http://documentation.bonitasoft.com/profile-xml-schema/1.0";
 
     // BDM  & Access control
     public static final String CURRENT_BDM_NAMESPACE = "http://documentation.bonitasoft.com/bdm-xml-schema/1.0";

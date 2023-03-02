@@ -20,7 +20,6 @@ import static org.bonitasoft.studio.ui.util.StatusCollectors.toMultiStatus;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
@@ -103,7 +102,6 @@ public class DeployApplicationDescriptorOperation implements IRunnableWithProgre
     }
 
     protected List<IRunnableWithStatus> findDependencies(ApplicationNodeContainer applicationNodeContainer) {
-        List<String> profilesPages = getProfilePages();
         Stream.Builder<IRunnableWithStatus> deployables = Stream.builder();
         if (pageDependencyResolver != null) {
             Stream.Builder<String> builder = Stream.builder();
@@ -121,8 +119,7 @@ public class DeployApplicationDescriptorOperation implements IRunnableWithProgre
                     .stream()
                     .map(ApplicationNode::getLayout)
                     .forEach(builder::add);
-            pageDependencyResolver.prepareDeployOperation(builder.build()
-                    .filter(customPage -> !profilesPages.contains(customPage)))
+            pageDependencyResolver.prepareDeployOperation(builder.build())
                     .forEach(deployables::add);
         }
         if (themeDependencyResolver != null) {
@@ -133,10 +130,6 @@ public class DeployApplicationDescriptorOperation implements IRunnableWithProgre
                     .forEach(deployables::add);
         }
         return deployables.build().collect(Collectors.toList());
-    }
-
-    protected List<String> getProfilePages() {
-        return Collections.emptyList();
     }
 
     protected void deployApplications(IProgressMonitor monitor) {
