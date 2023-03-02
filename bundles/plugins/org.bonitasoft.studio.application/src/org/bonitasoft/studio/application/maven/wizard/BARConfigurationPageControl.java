@@ -42,6 +42,7 @@ import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.core.databinding.observable.value.ComputedValue;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.WritableValue;
+import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.jface.dialogs.InputDialog;
@@ -73,9 +74,11 @@ public class BARConfigurationPageControl implements ControlSupplier {
     private IObservableValue<String> masterPwdObservable = new WritableValue<>();
     private TextWidget passwordField;
     private ToolItem encryptPwdItem;
+    private IObservableValue<Boolean> enableMirrorObservable;
 
-    BARConfigurationPageControl(Server barServer) {
+    BARConfigurationPageControl(Server barServer, IObservableValue<Boolean> enableMirrorObservable) {
         this.barServer = barServer;
+        this.enableMirrorObservable = enableMirrorObservable;
     }
 
     @Override
@@ -98,7 +101,8 @@ public class BARConfigurationPageControl implements ControlSupplier {
                 .fill()
                 .grabHorizontalSpace()
                 .bindTo(PojoProperties.value("username").observe(barServer))
-                .withValidator(new EmptyInputValidator(Messages.username))
+                .withValidator(value -> enableMirrorObservable.getValue() ? ValidationStatus.ok()
+                        :  new EmptyInputValidator(Messages.username).validate((String) value))
                 .inContext(ctx)
                 .useNativeRender()
                 .createIn(parent);
@@ -107,7 +111,8 @@ public class BARConfigurationPageControl implements ControlSupplier {
         hiddenEchoChar = passwordField.getTextControl().getEchoChar();
         createPasswordEncryptButton();
         createInformationComposite(parent);
-
+        
+        enableMirrorObservable.addValueChangeListener(e -> ctx.updateTargets());
     }
 
     private void createInformationComposite(Composite container) {
@@ -144,7 +149,8 @@ public class BARConfigurationPageControl implements ControlSupplier {
                 .fill()
                 .grabHorizontalSpace()
                 .bindTo(PojoProperties.value("password").observe(barServer))
-                .withValidator(new EmptyInputValidator(Messages.token))
+                .withValidator(value -> enableMirrorObservable.getValue() ? ValidationStatus.ok()
+                        :  new EmptyInputValidator(Messages.token).validate((String) value))
                 .inContext(ctx)
                 .useNativeRender()
                 .createIn(parent);

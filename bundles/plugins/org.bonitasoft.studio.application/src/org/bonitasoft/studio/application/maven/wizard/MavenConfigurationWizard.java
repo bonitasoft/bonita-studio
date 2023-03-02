@@ -16,7 +16,9 @@ package org.bonitasoft.studio.application.maven.wizard;
 
 import java.util.Objects;
 
+import org.apache.maven.settings.Profile;
 import org.apache.maven.settings.Proxy;
+import org.apache.maven.settings.Repository;
 import org.apache.maven.settings.Settings;
 import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.application.maven.BonitaMavenConfigurationManager;
@@ -27,6 +29,7 @@ import org.bonitasoft.studio.common.ui.PlatformUtil;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.ui.dialog.MultiStatusDialog;
 import org.bonitasoft.studio.ui.wizard.WizardPageBuilder;
+import org.eclipse.core.databinding.beans.typed.PojoProperties;
 import org.eclipse.core.internal.net.ProxyData;
 import org.eclipse.core.internal.net.ProxyManager;
 import org.eclipse.core.net.proxy.IProxyData;
@@ -51,6 +54,7 @@ public class MavenConfigurationWizard extends Wizard {
     
     @Override
     public void addPages() {
+        var enableMirrorObservable = PojoProperties.value("enableMirror", Boolean.class).observe(mavenConfiguration);
         addPage(WizardPageBuilder.newPage()
                 .withTitle(Messages.wizardConnectionStartTitle)
                 .withDescription(Messages.wizardConnectionStartDescription)
@@ -64,13 +68,13 @@ public class MavenConfigurationWizard extends Wizard {
         addPage(WizardPageBuilder.newPage()
                 .withTitle(Messages.wizardConnectionMirrorTitle)
                 .withDescription(Messages.wizardConnectionMirrorDescription)
-                .withControl(new MirrorConfigurationPageControl(mavenConfiguration))
+                .withControl(new MirrorConfigurationPageControl(mavenConfiguration.getMirror(), enableMirrorObservable))
                 .asPage());
         if (mavenConfiguration.getBarServer() != null) {
             addPage(WizardPageBuilder.newPage()
                     .withTitle(Messages.wizardConnectionBARTitle)
                     .withDescription(Messages.wizardConnectionBARDescription)
-                    .withControl(new BARConfigurationPageControl(mavenConfiguration.getBarServer()))
+                    .withControl(new BARConfigurationPageControl(mavenConfiguration.getBarServer(), enableMirrorObservable))
                     .asPage());
         }
     }
@@ -87,10 +91,32 @@ public class MavenConfigurationWizard extends Wizard {
         if (mavenConfiguration.isEnableMirror()) {
             userSettings.addMirror(mavenConfiguration.getMirror());
         }
-        if (mavenConfiguration.getBarServer() != null) {
+        if (mavenConfiguration.getBarServer() != null 
+                && Strings.hasText(mavenConfiguration.getBarServer().getUsername())
+                && Strings.hasText(mavenConfiguration.getBarServer().getPassword())) {
             userSettings.getServers()
                     .removeIf(s -> Objects.equals(BonitaMavenConfigurationManager.MAVEN_ID_BAR_SERVER, s.getId()));
             userSettings.addServer(mavenConfiguration.getBarServer());
+            var profile = userSettings.getProfiles().stream()
+                    .filter(p -> p.getId().equals(BonitaMavenConfigurationManager.BONITA_PROFILE_ID))
+                    .findAny()
+                    .orElseGet(() -> {
+                        var newProfile = new Profile();
+                        newProfile.setId(BonitaMavenConfigurationManager.BONITA_PROFILE_ID);
+                        userSettings.addProfile(newProfile);
+                        return newProfile;
+                    });
+
+            var bar = MavenConfiguration.createBonitaArtifactRepository();
+            if (profile.getRepositories().stream().map(Repository::getId)
+                    .noneMatch(BonitaMavenConfigurationManager.MAVEN_ID_BAR_SERVER::equals)) {
+                profile.addRepository(bar);
+            }
+            if (profile.getPluginRepositories().stream().map(Repository::getId)
+                    .noneMatch(BonitaMavenConfigurationManager.MAVEN_ID_BAR_SERVER::equals)) {
+                profile.addPluginRepository(bar);
+            }
+            
             // Add Bonita profile to active profiles if not
             if (userSettings.getActiveProfiles().stream()
                     .noneMatch(BonitaMavenConfigurationManager.BONITA_PROFILE_ID::equals)) {
