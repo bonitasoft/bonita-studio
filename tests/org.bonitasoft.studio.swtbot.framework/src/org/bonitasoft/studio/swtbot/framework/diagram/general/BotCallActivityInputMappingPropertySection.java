@@ -48,11 +48,11 @@ public class BotCallActivityInputMappingPropertySection extends BotBase {
         if (assignationType != null) {
             final SWTBotCombo assignationTypeCombo = bot
                     .comboBoxWithId(SWTBotConstants.SWTBOT_ID_CALLACTIVITY_MAPPING_INPUT_ASSIGNATIONTYPE, index);
-            switch (assignationType) {
-                case CONTRACT_INPUT:
+            switch (assignationType.getValue()) {
+                case InputMappingAssignationType.CONTRACT_INPUT_VALUE:
                     assignationTypeCombo.setSelection(Messages.assignToContractInput);
                     break;
-                case DATA:
+                case InputMappingAssignationType.DATA_VALUE:
                     assignationTypeCombo.setSelection(Messages.assignToData);
                     break;
                 default:

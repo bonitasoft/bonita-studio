@@ -51,7 +51,7 @@ public abstract class AbstractImportPage implements ControlSupplier {
     protected String filePath;
     protected IObservableValue<String> filePathObservable;
 
-    public AbstractImportPage(RepositoryAccessor repositoryAccessor) {
+    protected AbstractImportPage(RepositoryAccessor repositoryAccessor) {
         this.repositoryAccessor = repositoryAccessor;
         filePathObservable = PojoProperties.<AbstractImportPage, String> value("filePath").observe(this);
     }
