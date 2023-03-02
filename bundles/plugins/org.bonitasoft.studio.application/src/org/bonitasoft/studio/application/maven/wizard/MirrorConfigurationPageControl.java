@@ -42,12 +42,11 @@ public class MirrorConfigurationPageControl implements ControlSupplier {
 
     private DataBindingContext ctx;
     private Mirror mirrorConfiguration;
-    private MavenConfiguration mavenConfiguration;
     private IObservableValue<Boolean> enableMirrorObservable;
 
-    MirrorConfigurationPageControl(MavenConfiguration mavenConfiguration) {
-        this.mavenConfiguration = mavenConfiguration;
-        this.mirrorConfiguration = mavenConfiguration.getMirror();
+    MirrorConfigurationPageControl(Mirror mirrorConfiguration, IObservableValue<Boolean> enableMirrorObservable) {
+        this.enableMirrorObservable = enableMirrorObservable;
+        this.mirrorConfiguration = mirrorConfiguration;
     }
 
     @Override
@@ -67,9 +66,7 @@ public class MirrorConfigurationPageControl implements ControlSupplier {
         createMirrorDetails(configurationContainer);
 
         ctx.bindValue(WidgetProperties.visible().observe(configurationContainer), enableMirrorObservable);
-        enableMirrorObservable.addValueChangeListener(e -> {
-            ctx.updateTargets();
-        });
+        enableMirrorObservable.addValueChangeListener(e -> ctx.updateTargets());
         return container;
     }
 
@@ -92,7 +89,7 @@ public class MirrorConfigurationPageControl implements ControlSupplier {
         optionalObserbable.addOption(Boolean.TRUE, WidgetProperties.buttonSelection().observe(yesButton));
         optionalObserbable.addOption(Boolean.FALSE, WidgetProperties.buttonSelection().observe(noButton));
 
-        enableMirrorObservable = PojoProperties.value("enableMirror", Boolean.class).observe(mavenConfiguration);
+       
         ctx.bindValue(optionalObserbable, enableMirrorObservable);
     }
 

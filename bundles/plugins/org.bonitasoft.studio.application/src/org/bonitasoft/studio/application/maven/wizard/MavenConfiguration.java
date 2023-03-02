@@ -92,40 +92,27 @@ public class MavenConfiguration {
         var activeProxy = settings.getActiveProxy();
         if (activeProxy != null) {
             mavenConfiguration.setProxy(activeProxy);
+            mavenConfiguration.setEnableProxy(true);
+        }
+        var mirrors = settings.getMirrors();
+        if (!mirrors.isEmpty()) {
+            Mirror mirror = mirrors.get(0);
+            mavenConfiguration.setMirror(mirror);
+            mavenConfiguration.setEnableMirror(true);
         }
         if (addBar) {
             var barServer = Optional.ofNullable(settings.getServer(BonitaMavenConfigurationManager.MAVEN_ID_BAR_SERVER))
-                        .orElseGet(() -> {
-                            var server = new Server();
-                            server.setId(BonitaMavenConfigurationManager.MAVEN_ID_BAR_SERVER);
-                            return server;
-                        });
-                mavenConfiguration.setBarServer(barServer);
-            var profile = settings.getProfiles().stream()
-                .filter(p -> p.getId().equals(BonitaMavenConfigurationManager.BONITA_PROFILE_ID))
-                .findAny()
-                .orElseGet(() -> {
-                    var newProfile = new Profile();
-                    newProfile.setId(BonitaMavenConfigurationManager.BONITA_PROFILE_ID);
-                    settings.addProfile(newProfile);
-                    return newProfile;
-                });
-
-        
-            var bar = createBonitaArtifactRepository();
-            if (profile.getRepositories().stream().map(Repository::getId)
-                    .noneMatch(BonitaMavenConfigurationManager.MAVEN_ID_BAR_SERVER::equals)) {
-                profile.addRepository(bar);
-            }
-            if (profile.getPluginRepositories().stream().map(Repository::getId)
-                    .noneMatch(BonitaMavenConfigurationManager.MAVEN_ID_BAR_SERVER::equals)) {
-                profile.addPluginRepository(bar);
-            }
+                    .orElseGet(() -> {
+                        var server = new Server();
+                        server.setId(BonitaMavenConfigurationManager.MAVEN_ID_BAR_SERVER);
+                        return server;
+                    });
+            mavenConfiguration.setBarServer(barServer);
         }
         return mavenConfiguration;
     }
 
-    private static Repository createBonitaArtifactRepository() {
+    public static Repository createBonitaArtifactRepository() {
         var rep = new Repository();
         rep.setId(BonitaMavenConfigurationManager.MAVEN_ID_BAR_SERVER);
         rep.setName(BonitaMavenConfigurationManager.MAVEN_BAR_REPO_NAME);
