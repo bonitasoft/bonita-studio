@@ -16,7 +16,6 @@ package org.bonitasoft.studio.engine.command;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.List;
 
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
@@ -27,25 +26,17 @@ import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.jface.wizard.WizardDialog;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 
-/**
- * @author Romain Bioteau
- */
 public class ExportAsBarFileHandler extends AbstractHandler {
 
-    /**
-     * @return a List<File> of the all the created bar or proc
-     * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
-     */
     @Override
     public Object execute(final ExecutionEvent event) throws ExecutionException {
         if (PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().saveAllEditors(true)) {
-            DiagramRepositoryStore diagramRepositoryStore = RepositoryManager.getInstance()
+            var diagramRepositoryStore = RepositoryManager.getInstance()
                     .getRepositoryStore(DiagramRepositoryStore.class);
-            List<MainProcess> allDiagrams = new ArrayList<>();
             try {
+                var allDiagrams = new ArrayList<MainProcess>();
                 PlatformUI.getWorkbench().getProgressService().run(true, false, monitor -> {
                     diagramRepositoryStore.computeProcesses(monitor).stream()
                             .map(ModelHelper::getMainProcess)
@@ -53,23 +44,20 @@ public class ExportAsBarFileHandler extends AbstractHandler {
                             .forEach(allDiagrams::add);
                     monitor.done();
                 });
+                new WizardDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+                        new ExportBarWizard(allDiagrams)).open();
             } catch (InvocationTargetException | InterruptedException e) {
                 throw new ExecutionException("Failed to retrieved all diagrams", e);
+            } finally {
+                diagramRepositoryStore.resetComputedProcesses();
             }
-            ExportBarWizard exportWizard = new ExportBarWizard(allDiagrams);
-            WizardDialog dialog = new WizardDialog(Display.getDefault().getActiveShell(), exportWizard);
-            dialog.open();
-            diagramRepositoryStore.resetComputedProcesses();
         }
         return null;
     }
 
     @Override
     public boolean isEnabled() {
-        if (RepositoryManager.getInstance().hasActiveRepository()) {
-            return true;
-        }
-        return false;
+        return RepositoryManager.getInstance().hasActiveRepository();
     }
 
 }

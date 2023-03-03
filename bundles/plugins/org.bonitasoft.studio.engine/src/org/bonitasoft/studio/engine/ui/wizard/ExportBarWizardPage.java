@@ -22,6 +22,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.bonitasoft.studio.common.databinding.validator.EmptyInputValidator;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
@@ -40,9 +42,7 @@ import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.validation.common.operation.ProcessValidationOperation;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
-import org.eclipse.core.databinding.beans.PojoObservables;
-import org.eclipse.core.databinding.beans.PojoProperties;
-import org.eclipse.core.databinding.observable.set.IObservableSet;
+import org.eclipse.core.databinding.beans.typed.PojoProperties;
 import org.eclipse.core.databinding.validation.MultiValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -51,8 +51,8 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
-import org.eclipse.jface.databinding.swt.SWTObservables;
-import org.eclipse.jface.databinding.viewers.ViewersObservables;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
+import org.eclipse.jface.databinding.viewers.typed.ViewerProperties;
 import org.eclipse.jface.databinding.wizard.WizardPageSupport;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -70,8 +70,6 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Button;
@@ -117,7 +115,7 @@ public class ExportBarWizardPage extends WizardPage implements ICheckStateListen
         final String confId = ConfigurationPlugin.getDefault().getPreferenceStore()
                 .getString(ConfigurationPreferenceConstants.DEFAULT_CONFIGURATION);
         setConfigurationId(confId);
-        
+
     }
 
     /*
@@ -147,21 +145,34 @@ public class ExportBarWizardPage extends WizardPage implements ICheckStateListen
 
     protected void createProcessViewer(final Composite mainComposite) {
         final Label processLabel = new Label(mainComposite, SWT.WRAP);
-        processLabel.setText(Messages.selectProcessToExport);
+        processLabel.setText(Messages.selectProcessesToExport);
 
-        final Text serachBox = new Text(mainComposite, SWT.BORDER | SWT.SEARCH | SWT.ICON_CANCEL | SWT.ICON_SEARCH);
-        serachBox.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
-        serachBox.setMessage(Messages.searchProcess);
+
+        var buttonsComposite = new Composite(mainComposite, SWT.NONE);
+        buttonsComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+        buttonsComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(3).create());
+
+        var selectAllButton = new Button(buttonsComposite, SWT.PUSH);
+        selectAllButton.setText(Messages.selectAll);
+        selectAllButton.setLayoutData(GridDataFactory.swtDefaults().create());
+
+        var clearSelectedButton = new Button(buttonsComposite, SWT.PUSH);
+        clearSelectedButton.setText(Messages.clearSelected);
+        clearSelectedButton.setLayoutData(GridDataFactory.swtDefaults().create());
+        
+        final Text searchBox = new Text(buttonsComposite, SWT.BORDER | SWT.SEARCH | SWT.ICON_CANCEL | SWT.ICON_SEARCH);
+        searchBox.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+        searchBox.setMessage(Messages.searchProcess);
 
         viewer = new CheckboxTreeViewer(mainComposite, SWT.BORDER | SWT.FULL_SELECTION);
-        viewer.getTree().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+        viewer.getTree().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(650, 300).create());
         viewer.addCheckStateListener(this);
         viewer.setCheckStateProvider(this);
         viewer.addFilter(new ViewerFilter() {
 
             @Override
             public boolean select(final Viewer viewer, final Object parentElement, final Object element) {
-                final String searchQuery = serachBox.getText();
+                final String searchQuery = searchBox.getText();
                 if (searchQuery != null && !searchQuery.isEmpty()) {
                     return queryElementAndChildren(searchQuery, element);
                 }
@@ -183,11 +194,35 @@ public class ExportBarWizardPage extends WizardPage implements ICheckStateListen
             }
 
         });
-        viewer.setContentProvider(new AbstractProcessContentProvider(allDiagrams));
+        var provider = new AbstractProcessContentProvider(allDiagrams);
+        viewer.setContentProvider(provider);
         viewer.setInput(new Object());
 
-        final IObservableSet checkedElementsObservable = ViewersObservables.observeCheckedElements(viewer,
-                AbstractProcess.class);
+        var checkedElementsObservable = ViewerProperties.checkedElements(AbstractProcess.class)
+                .observe((Viewer) viewer);
+
+        selectAllButton.addSelectionListener(new SelectionAdapter() {
+
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                allDiagrams.stream().forEach(mainDiagram -> {
+                    checkedElementsObservable.add(mainDiagram);
+                    checkedElementsObservable.addAll(Stream.of(provider.getChildren(mainDiagram))
+                            .map(AbstractProcess.class::cast).collect(Collectors.toSet()));
+
+                });
+            }
+
+        });
+        clearSelectedButton.addSelectionListener(new SelectionAdapter() {
+
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                checkedElementsObservable.clear();
+            }
+
+        });
+
         final MultiValidator notEmptyValidator = new MultiValidator() {
 
             @Override
@@ -205,14 +240,8 @@ public class ExportBarWizardPage extends WizardPage implements ICheckStateListen
 
         dbc.addValidationStatusProvider(notEmptyValidator);
         dbc.bindSet(notEmptyValidator.observeValidatedSet(checkedElementsObservable),
-                PojoObservables.observeSet(this, "selectedProcess"));
-        serachBox.addModifyListener(new ModifyListener() {
-
-            @Override
-            public void modifyText(final ModifyEvent e) {
-                viewer.refresh();
-            }
-        });
+                org.eclipse.core.databinding.beans.typed.PojoProperties.set("selectedProcess").observe(this));
+        searchBox.addModifyListener(e -> viewer.refresh());
     }
 
     protected boolean queryElementAndChildren(final String searchQuery, final Object element) {
@@ -220,13 +249,7 @@ public class ExportBarWizardPage extends WizardPage implements ICheckStateListen
         final String processVersion = ((AbstractProcess) element).getVersion();
         if (processName != null && processName.toLowerCase().contains(searchQuery.toLowerCase())
                 || processVersion != null && processVersion.toLowerCase().contains(searchQuery.toLowerCase())) {
-            Display.getDefault().asyncExec(new Runnable() {
-
-                @Override
-                public void run() {
-                    viewer.expandAll();
-                }
-            });
+            Display.getDefault().asyncExec(() -> viewer.expandAll());
             return true;
         }
         final ITreeContentProvider contentProvider = (ITreeContentProvider) viewer.getContentProvider();
@@ -262,8 +285,8 @@ public class ExportBarWizardPage extends WizardPage implements ICheckStateListen
         configurationCombo.setInput(new Object());
         configurationCombo.getCombo().setEnabled(true);
 
-        dbc.bindValue(ViewersObservables.observeSingleSelection(configurationCombo),
-                PojoProperties.value(ExportBarWizardPage.class, "configurationId").observe(this));
+        dbc.bindValue(ViewerProperties.singleSelection().observe(configurationCombo),
+                org.eclipse.core.databinding.beans.typed.PojoProperties.value(ExportBarWizardPage.class, "configurationId").observe(this));
 
         if (barWithoutConfigIsSupported()) {
             configButton.addSelectionListener(new SelectionAdapter() {
@@ -302,8 +325,8 @@ public class ExportBarWizardPage extends WizardPage implements ICheckStateListen
         restoreWidgetValues();
         final UpdateValueStrategy pathStrategy = new UpdateValueStrategy();
         pathStrategy.setBeforeSetValidator(new EmptyInputValidator(Messages.destinationPath));
-        dbc.bindValue(SWTObservables.observeText(destinationCombo),
-                PojoProperties.value(ExportBarWizardPage.class, "detinationPath").observe(this),
+        dbc.bindValue(WidgetProperties.text().observe(destinationCombo),
+                PojoProperties.value(ExportBarWizardPage.class, "detinationPath", String.class).observe(this),
                 pathStrategy, null);
 
         // destination browse button
@@ -456,8 +479,6 @@ public class ExportBarWizardPage extends WizardPage implements ICheckStateListen
         });
         return operation.getStatus();
     }
-
- 
 
     /**
      *
