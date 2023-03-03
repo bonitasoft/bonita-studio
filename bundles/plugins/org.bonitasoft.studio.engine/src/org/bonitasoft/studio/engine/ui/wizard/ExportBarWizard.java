@@ -62,10 +62,6 @@ public class ExportBarWizard extends Wizard {
         addPage(page);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.jface.wizard.Wizard#performFinish()
-     */
     @Override
     public boolean performFinish() {
         try {
@@ -94,11 +90,9 @@ public class ExportBarWizard extends Wizard {
                         Messages.exportSuccessMsg);
             }
             return !statusContainsError(status);
-        } catch (InvocationTargetException e) {
+        } catch (InvocationTargetException | InterruptedException e) {
             BonitaStudioLog.error(e);
-        } catch (InterruptedException e) {
-            BonitaStudioLog.error(e);
-        }
+        } 
         return false;
     }
 

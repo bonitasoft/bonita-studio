@@ -35,11 +35,11 @@ import org.bonitasoft.studio.swtbot.framework.draw.BotGefProcessDiagramEditor;
 import org.bonitasoft.studio.swtbot.framework.projectExplorer.ProjectExplorerBot;
 import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
 import org.eclipse.jface.dialogs.IDialogConstants;
-import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotEditor;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditor;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
+import org.eclipse.swtbot.swt.finder.waits.Conditions;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTree;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
@@ -50,7 +50,7 @@ import org.junit.runner.RunWith;
 @RunWith(SWTBotJunit4ClassRunner.class)
 public class BarExporterTest {
 
-    final public static String EditorTitleRegex = "(.*)\\s\\((.*)\\)";
+    private static final String EditorTitleRegex = "(.*)\\s\\((.*)\\)";
 
     private final SWTGefBot bot = new SWTGefBot();
 
@@ -98,7 +98,7 @@ public class BarExporterTest {
         bot.waitUntil(Conditions.shellIsActive(Messages.buildTitle));
 
         // select and check created Diagram in the Tree
-        final SWTBotTree tree = bot.treeWithLabel("Select processes to export");
+        final SWTBotTree tree = bot.treeWithLabel(Messages.selectProcessesToExport);
         final SWTBotTreeItem diagramTreeItem = tree.getTreeItem(editorTitle);
 
         // check the diagram to export

@@ -61,7 +61,7 @@ public class Messages extends NLS {
 
     public static String enablingProcess;
 
-    public static String selectProcessToExport;
+    public static String selectProcessesToExport;
 
     public static String buildTitle;
 
@@ -198,6 +198,8 @@ public class Messages extends NLS {
     public static String runButtonTooltip;
     public static String userAppToken;
     public static String invalidPageContentType;
+    public static String selectAll;
+    public static String clearSelected;
 
     static {
         NLS.initializeMessages("messages", Messages.class); //$NON-NLS-1$
