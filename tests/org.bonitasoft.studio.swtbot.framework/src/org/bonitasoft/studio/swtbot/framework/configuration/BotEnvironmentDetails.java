@@ -41,19 +41,19 @@ public class BotEnvironmentDetails extends BotDialog {
     }
     
     public String getName() {
-        return bot.textWithLabel(Messages.name).getText();
+        return bot.textWithId(SWTBOT_ID_ENV_NAME).getText();
     }
     
     public String getDescription() {
-        return bot.textWithLabel(Messages.descripiton).getText();
+        return bot.textWithId(SWTBOT_ID_ENV_DESC).getText();
     }
 
     public void setName(String name) {
-        bot.textWithLabel(Messages.name).setText(name);
+        bot.textWithId(SWTBOT_ID_ENV_NAME).setText(name);
     }
 
     public void setDescription(String description) {
-        bot.textWithLabel(Messages.descripiton).setText(description);
+        bot.textWithId(SWTBOT_ID_ENV_DESC).setText(description);
     }
     
 
