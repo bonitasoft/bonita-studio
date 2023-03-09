@@ -119,6 +119,8 @@ public class EnvironmentDialogIT {
         new BotApplicationWorkbenchWindow(bot).createNewDiagram();
         new BotApplicationWorkbenchWindow(bot).createNewDiagram();
 
+        bot.sleep(500);
+        
         var newEnv = "Production";
         var modEnv = "MOD_TEST";
         var modDesc = "Testing description";
@@ -130,8 +132,8 @@ public class EnvironmentDialogIT {
 
         assertEnvExist(modEnv);
         envDialog = envExplorerBot.open(modEnv);
-        assertEquals(envDialog.getName(), modEnv);
-        assertEquals(envDialog.getDescription(), modDesc);
+        assertEquals(modEnv, envDialog.getName());
+        assertEquals(modDesc, envDialog.getDescription());
         envDialog.close();
     }
 
