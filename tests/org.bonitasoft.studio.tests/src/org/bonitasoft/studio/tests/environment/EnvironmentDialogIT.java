@@ -118,8 +118,6 @@ public class EnvironmentDialogIT {
     public void should_modify_details_new_environment_selected_with_multiples_diagrams() {
         new BotApplicationWorkbenchWindow(bot).createNewDiagram();
         new BotApplicationWorkbenchWindow(bot).createNewDiagram();
-
-        bot.sleep(500);
         
         var newEnv = "Production";
         var modEnv = "MOD_TEST";

@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.bonitasoft.studio.common.databinding.validator.FileNameValidator;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.ui.IDisplayable;
+import org.bonitasoft.studio.common.ui.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.ui.jface.databinding.DialogSupport;
 import org.bonitasoft.studio.configuration.environment.Environment;
 import org.bonitasoft.studio.configuration.i18n.Messages;
@@ -81,6 +82,7 @@ public class DetailsEnvironmentDialog extends Dialog {
         dbc.addValidationStatusProvider(changeValidationStatusProvider);
 
         var nameWidget = new TextWidget.Builder()
+                .withId(SWTBotConstants.SWTBOT_ID_ENV_NAME)
                 .labelAbove()
                 .withLabel(Messages.name)
                 .widthHint(500)
@@ -104,6 +106,7 @@ public class DetailsEnvironmentDialog extends Dialog {
                 .createIn(composite);
 
         var descriptionWidget = new TextAreaWidget.Builder()
+                .withId(SWTBotConstants.SWTBOT_ID_ENV_DESC)
                 .labelAbove()
                 .useNativeRender()
                 .withLabel(Messages.descripiton)
