@@ -1,0 +1,34 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Datatools plugin
+Bundle-SymbolicName: org.bonitasoft.studio.datatools
+Bundle-Version: 9.0.0.qualifier
+Bundle-Activator: org.bonitasoft.studio.datatools.DatatoolsPlugin
+Bundle-Vendor: BonitaSoft S.A.
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.eclipse.datatools.connectivity,
+ org.eclipse.datatools.connectivity.db.generic,
+ org.eclipse.datatools.connectivity.oda,
+ org.bonitasoft.studio.common,
+ org.bonitasoft.studio.dependencies,
+ org.bonitasoft.studio.common.repository,
+ org.eclipse.core.resources,
+ org.bonitasoft.studio.connectors.model.edit,
+ org.eclipse.core.databinding,
+ org.eclipse.core.databinding.beans,
+ org.eclipse.core.databinding.observable,
+ org.eclipse.core.databinding.property,
+ org.eclipse.emf.databinding,
+ org.eclipse.emf.databinding.edit,
+ org.eclipse.jface.databinding,
+ org.bonitasoft.studio.expression.editor,
+ org.eclipse.datatools.connectivity.ui,
+ org.bonitasoft.studio.connectors,
+ org.junit;resolution:=optional,
+ assertj-core;resolution:=optional
+Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-ActivationPolicy: lazy
+Export-Package: org.bonitasoft.studio.datatools,
+ org.bonitasoft.studio.datatools.i18n;x-friends:="org.bonitasoft.studio.tests.ex,org.bonitasoft.studio.swtbot.framework.ex",
+ org.bonitasoft.studio.datatools.ui
