@@ -1,6 +1,5 @@
 package org.bonitasoft.studio.configuration;
 
-import org.bonitasoft.studio.configuration.preferences.ConfigurationPreferenceConstants;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
@@ -28,7 +27,6 @@ public class ConfigurationPlugin extends AbstractUIPlugin {
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		plugin = this;
-		ConfigurationPlugin.getDefault().getPreferenceStore().setDefault(ConfigurationPreferenceConstants.DEFAULT_CONFIGURATION, ConfigurationPreferenceConstants.LOCAL_CONFIGURAITON);
 	}
 
 	/*
