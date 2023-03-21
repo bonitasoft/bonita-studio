@@ -23,6 +23,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.apache.maven.artifact.Artifact;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.core.maven.ProjectDependenciesResolver;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
@@ -34,17 +35,33 @@ public class MavenDependencyFileStore extends DependencyFileStore {
 
     private Artifact artifact;
     private ProjectDependenciesResolver projectDependenciesResolver;
+    private File file;
 
     public MavenDependencyFileStore(Artifact artifact, final DependencyRepositoryStore parentStore) {
-        super(artifact.getFile().getName(), parentStore);
+        super(resolveFile(artifact).getName(), parentStore);
         this.artifact = artifact;
         this.projectDependenciesResolver = new ProjectDependenciesResolver(getRepositoryAccessor());
+    }
+
+    private static File resolveFile(Artifact artifact) {
+        File file = artifact.getFile();
+        // Artifact is a project imported in the workspace
+        if (file.isDirectory()) {
+            try {
+                // Resolve artifact from the localRepository
+                var localRepository = org.eclipse.m2e.core.MavenPlugin.getMaven().getLocalRepository();
+                return localRepository.find(artifact).getFile();
+            } catch (CoreException e) {
+                BonitaStudioLog.error(e);
+            }
+        }
+        return file;
     }
 
     @Override
     protected InputStream doGetContent() throws ReadFileStoreException {
         try {
-            return new FileInputStream(artifact.getFile());
+            return new FileInputStream(getFile());
         } catch (FileNotFoundException e) {
             throw new ReadFileStoreException("Failed to read file.", e);
         }
@@ -83,22 +100,26 @@ public class MavenDependencyFileStore extends DependencyFileStore {
     public IFile getResource() {
         return null;
     }
-    
+
     @Override
     public File getFile() {
-        return artifact.getFile();
+        if (file == null) {
+            file = resolveFile(artifact);
+        }
+        return file;
+        
     }
-    
+
     @Override
     public List<File> getTransitiveDependencies() {
         try {
             return projectDependenciesResolver
-                .getTransitiveDependencies(artifact, AbstractRepository.NULL_PROGRESS_MONITOR)
-                .stream()
-                .map(Artifact::getFile)
-                .filter(Objects::nonNull)
-                .filter(File::exists)
-                .collect(Collectors.toList());
+                    .getTransitiveDependencies(artifact, AbstractRepository.NULL_PROGRESS_MONITOR)
+                    .stream()
+                    .map(Artifact::getFile)
+                    .filter(Objects::nonNull)
+                    .filter(File::exists)
+                    .collect(Collectors.toList());
         } catch (CoreException e) {
             return super.getTransitiveDependencies();
         }
