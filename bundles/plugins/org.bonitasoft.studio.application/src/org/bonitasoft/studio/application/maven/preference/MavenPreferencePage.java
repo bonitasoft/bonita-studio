@@ -15,8 +15,10 @@
 package org.bonitasoft.studio.application.maven.preference;
 
 import java.io.EOFException;
+import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Objects;
 
 import org.apache.maven.settings.Settings;
 import org.apache.maven.settings.io.DefaultSettingsReader;
@@ -42,6 +44,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
+import org.eclipse.ui.PlatformUI;
 
 public class MavenPreferencePage extends PreferencePage implements
         IWorkbenchPreferencePage {
@@ -57,8 +60,11 @@ public class MavenPreferencePage extends PreferencePage implements
 
     private IObservableValue<String> masterPwdObservable = new WritableValue<>();
 
+    private File userSettingsFile;
+
     @Override
     public void init(IWorkbench workbench) {
+        userSettingsFile = MavenSettingsIO.getUserSettingsFile(); 
         settingsObservable.setValue(MavenSettingsIO.read());
     }
 
@@ -69,7 +75,7 @@ public class MavenPreferencePage extends PreferencePage implements
         mainComposite.setLayout(GridLayoutFactory.fillDefaults().create());
 
         NativeTabFolderWidget tabFolder = new NativeTabFolderWidget.Builder().createIn(mainComposite);
-        tabFolder.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+        tabFolder.setLayoutData(GridDataFactory.fillDefaults().hint(500, 450).grab(true, true).create());
 
         createRepositoriesTabItem(tabFolder);
         createServersTabItem(tabFolder);
@@ -116,10 +122,15 @@ public class MavenPreferencePage extends PreferencePage implements
 
     @Override
     public boolean performOk() {
+        var currentSettingsFile = MavenSettingsIO.getUserSettingsFile();
+        if(!Objects.equals(userSettingsFile, currentSettingsFile)) {
+            // Eclipse preference dialog
+            return true;
+        }
         MultiStatus status = MavenSettingsIO.validate(settingsObservable.getValue());
-        var userSettingsFile = MavenSettingsIO.getUserSettingsFile();
+        var shellProvider = PlatformUI.getWorkbench().getModalDialogShellProvider();
         if (!status.isOK()) {
-            new MultiStatusDialog(getShell(), Messages.invalidMavenConfigurationTitle,
+            new MultiStatusDialog(shellProvider.getShell(), Messages.invalidMavenConfigurationTitle,
                     String.format(Messages.invalidMavenConfiguration, userSettingsFile.getPath()),
                     new String[] { IDialogConstants.OK_LABEL }, status).open();
             return false;
@@ -127,11 +138,11 @@ public class MavenPreferencePage extends PreferencePage implements
         try {
             MavenSettingsIO.writePreservingFormat(settingsObservable.getValue());
         } catch (CoreException e) {
-            MessageDialog.openError(getShell(), Messages.error, e.getMessage());
+            MessageDialog.openError(shellProvider.getShell(), Messages.error, e.getMessage());
             BonitaStudioLog.error(e);
             return false;
         }
-        MessageDialog.openInformation(getShell(), Messages.mavenConfigurationUpdatedTitle,
+        MessageDialog.openInformation(shellProvider.getShell(), Messages.mavenConfigurationUpdatedTitle,
                 String.format(Messages.mavenConfigurationUpdated, userSettingsFile.getPath()));
         return true;
     }
@@ -140,7 +151,6 @@ public class MavenPreferencePage extends PreferencePage implements
     protected void performDefaults() {
         if (MessageDialog.openConfirm(getShell(), Messages.restoreDefaultConfirmationTitle,
                 Messages.restoreDefaultConfirmation)) {
-            var userSettingsFile = MavenSettingsIO.getUserSettingsFile();
             try {
                 settingsObservable.setValue(defaultSettingsReader.read(userSettingsFile, null));
             } catch (EOFException | SettingsParseException e) {
