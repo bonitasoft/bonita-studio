@@ -38,19 +38,30 @@ public class BonitaScriptGroovyCompilationUnit extends GroovyCompilationUnit {
         ModuleNodeInfo moduleInfo = super.getModuleInfo(force);
         if (context != null) {
             ClassNode scriptClassDummy = moduleInfo.module.getScriptClassDummy();
-            context.values().forEach(var -> {
-                if (scriptClassDummy.getField(var.getName()) == null) {
-                    String typeName = var.getType();
-                    ClassNode resolvedType = resolvedTypes.computeIfAbsent(typeName,
-                            t -> moduleInfo.resolver.resolve(t));
-                    scriptClassDummy.addField(var.getName(),
-                            FieldNode.ACC_PUBLIC | FieldNode.ACC_FINAL,
-                            resolvedType,
-                            null);
-                }
-            });
+            context.values().forEach(var -> addVariableField(moduleInfo, scriptClassDummy, var));
         }
         return moduleInfo;
+    }
+
+    /**
+     * Update the script class dummy, adding a new field corresponding to the script variable.
+     * 
+     * @param moduleInfo the module information
+     * @param scriptClassDummy the script class dummy to update
+     * @param var the script variable
+     */
+    private void addVariableField(ModuleNodeInfo moduleInfo, ClassNode scriptClassDummy, ScriptVariable var) {
+        synchronized (scriptClassDummy) {
+            if (scriptClassDummy.getField(var.getName()) == null) {
+                String typeName = var.getType();
+                ClassNode resolvedType = resolvedTypes.computeIfAbsent(typeName,
+                        t -> moduleInfo.resolver.resolve(t));
+                scriptClassDummy.addField(var.getName(),
+                        FieldNode.ACC_PUBLIC | FieldNode.ACC_FINAL,
+                        resolvedType,
+                        null);
+            }
+        }
     }
 
     public void setContext(Map<String, ScriptVariable> context) {
