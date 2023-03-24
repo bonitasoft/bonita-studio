@@ -96,6 +96,7 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.osgi.service.datalocation.Location;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Device;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Shell;
@@ -189,6 +190,10 @@ public class BonitaStudioApplication extends IDEApplication implements IApplicat
      * @param display display to dispose (non-null)
      */
     protected void disposeDisplay(Display display) {
+        if(Objects.equals(Platform.getOS(), Platform.OS_MACOSX)){
+            // Avoid exception due to device already disposed...
+            return;
+        }
         display.syncExec(() -> {
             if (display != null && !display.isDisposed()) {
                 display.dispose();
@@ -234,7 +239,7 @@ public class BonitaStudioApplication extends IDEApplication implements IApplicat
             return IApplication.EXIT_RESTART;
         }
         return IApplication.EXIT_OK;
-        // display disposed by start methd
+        // display disposed by start method
     }
 
     protected BonitaStudioWorkbenchAdvisor createWorkbenchAdvisor() {
