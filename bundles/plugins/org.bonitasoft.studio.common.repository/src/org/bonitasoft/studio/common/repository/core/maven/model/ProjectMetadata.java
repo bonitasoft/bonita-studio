@@ -139,7 +139,7 @@ public class ProjectMetadata {
         if (mavenProject == null) {
             return read(projectPom);
         }
-        return read(projectPom);
+        return read(mavenProject);
     }
 
     public static ProjectMetadata read(MavenProject mavenProject) {
