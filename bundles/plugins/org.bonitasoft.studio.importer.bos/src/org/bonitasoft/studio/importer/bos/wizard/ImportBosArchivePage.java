@@ -606,6 +606,9 @@ public class ImportBosArchivePage implements ControlSupplier, Supplier<ImportArc
 
     public void setArchiveModel(ImportArchiveModel archiveModel) {
         this.archiveModel = archiveModel;
+        if(filePath != null) {
+            parsedModels.put(filePath, archiveModel);
+        }
     }
 
     public String getFilePath() {
