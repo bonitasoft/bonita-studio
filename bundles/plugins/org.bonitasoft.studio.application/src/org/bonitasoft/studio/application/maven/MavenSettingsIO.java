@@ -52,6 +52,10 @@ public class MavenSettingsIO {
 
     public static void write(Settings settings) throws CoreException {
         var userSettingsFile = getUserSettingsFile();
+        var parentFile = userSettingsFile.getParentFile();
+        if(!parentFile.exists()) {
+            parentFile.mkdirs();
+        }
         try (var os = Files.newOutputStream(userSettingsFile.toPath())) {
             MavenPlugin.getMaven().writeSettings(settings, os);
         } catch (IOException e) {
@@ -64,6 +68,10 @@ public class MavenSettingsIO {
 
     public static void writePreservingFormat(Settings settings) throws CoreException {
         var userSettingsFile = getUserSettingsFile();
+        var parentFile = userSettingsFile.getParentFile();
+        if(!parentFile.exists()) {
+            parentFile.mkdirs();
+        }
         try {
             SAXBuilder builder = new SAXBuilder();
             builder.setIgnoringBoundaryWhitespace(false);
