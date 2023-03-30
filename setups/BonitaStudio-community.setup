@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<setup:Project
+    xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:git="http://www.eclipse.org/oomph/setup/git/1.0"
+    xmlns:pde="http://www.eclipse.org/oomph/setup/pde/1.0"
+    xmlns:predicates="http://www.eclipse.org/oomph/predicates/1.0"
+    xmlns:projects="http://www.eclipse.org/oomph/setup/projects/1.0"
+    xmlns:setup="http://www.eclipse.org/oomph/setup/1.0"
+    xmlns:setup.targlets="http://www.eclipse.org/oomph/setup/targlets/1.0"
+    xmlns:setup.workingsets="http://www.eclipse.org/oomph/setup/workingsets/1.0"
+    xsi:schemaLocation="http://www.eclipse.org/oomph/setup/git/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/Git.ecore http://www.eclipse.org/oomph/setup/pde/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/PDE.ecore http://www.eclipse.org/oomph/predicates/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/Predicates.ecore http://www.eclipse.org/oomph/setup/projects/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/Projects.ecore http://www.eclipse.org/oomph/setup/targlets/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/SetupTarglets.ecore http://www.eclipse.org/oomph/setup/workingsets/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/SetupWorkingSets.ecore"
+    name="bonita-studio-community"
+    label="BonitaStudio Community">
+  <setupTask
+      xsi:type="setup:CompoundTask"
+      href="BonitaStudio-common.setup#BonitaStudio-common"/>
+  <setupTask
+      xsi:type="setup:VariableTask"
+      name="email"
+      defaultValue="${firstname|lower}.${lastname|lower}@gmail.com"
+      label="Email"/>
+  <setupTask
+      xsi:type="setup:VariableTask"
+      id="licenseDisclaimer"
+      name="licenseDisclaimer"
+      storageURI="scope://Workspace"
+      label="License disclaimer to use">
+    <choice
+        value=" * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble&#xD;&#xA; * This program is free software: you can redistribute it and/or modify&#xD;&#xA; * it under the terms of the GNU General Public License as published by&#xD;&#xA; * the Free Software Foundation, either version 2.0 of the License, or&#xD;&#xA; * (at your option) any later version.&#xD;&#xA; * This program is distributed in the hope that it will be useful,&#xD;&#xA; * but WITHOUT ANY WARRANTY; without even the implied warranty of&#xD;&#xA; * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the&#xD;&#xA; * GNU General Public License for more details.&#xD;&#xA; * You should have received a copy of the GNU General Public License&#xD;&#xA; * along with this program. If not, see &amp;lt;http://www.gnu.org/licenses/&amp;gt;."
+        label="Community License"/>
+  </setupTask>
+  <setupTask
+      xsi:type="setup:VariableTask"
+      id="mavenSettingsStudio"
+      type="FILE"
+      name="mavenSettingsStudio"
+      defaultValue="${user.home/.m2/settings.xml}"
+      label="Maven settings.xml file (manually configured)">
+    <description>The settings.xml file, usually located in maven .m2 folder, which will be used to build Studio</description>
+  </setupTask>
+  <setupTask
+      xsi:type="git:GitCloneTask"
+      id="git.clone.bonita-studio"
+      remoteURI="bonitasoft/bonita-studio">
+    <annotation
+        source="http://www.eclipse.org/oomph/setup/InducedChoices">
+      <detail
+          key="inherit">
+        <value>github.remoteURIs</value>
+      </detail>
+      <detail
+          key="label">
+        <value>${scope.project.label} Github repository</value>
+      </detail>
+      <detail
+          key="target">
+        <value>remoteURI</value>
+      </detail>
+    </annotation>
+    <description>${scope.project.label}</description>
+  </setupTask>
+  <setupTask
+      xsi:type="projects:ProjectsImportTask"
+      force="true">
+    <sourceLocator
+        rootFolder="${git.clone.bonita-studio.location}"
+        locateNestedProjects="true"/>
+  </setupTask>
+  <setupTask
+      xsi:type="setup.workingsets:WorkingSetTask"
+      predecessor="//@setupTasks.5">
+    <workingSet
+        name="community-patched-plugin">
+      <predicate
+          xsi:type="predicates:LocationPredicate"
+          pattern="\Q${git.clone.bonita-studio.location|path}\E/patched-plugins/.*"/>
+    </workingSet>
+    <workingSet
+        name="community-feature">
+      <predicate
+          xsi:type="predicates:LocationPredicate"
+          pattern="\Q${git.clone.bonita-studio.location|path}\E/bundles/features/.*"/>
+    </workingSet>
+    <workingSet
+        name="community-plugin">
+      <predicate
+          xsi:type="predicates:LocationPredicate"
+          pattern="\Q${git.clone.bonita-studio.location|path}\E/bundles/plugins/.*"/>
+    </workingSet>
+    <workingSet
+        name="tests-dependencies">
+      <predicate
+          xsi:type="predicates:LocationPredicate"
+          pattern="\Q${git.clone.bonita-studio.location|path}\E/tests-dependencies/.*"/>
+    </workingSet>
+    <workingSet
+        name="community-test">
+      <predicate
+          xsi:type="predicates:LocationPredicate"
+          pattern="\Q${git.clone.bonita-studio.location|path}\E/tests/.*"/>
+    </workingSet>
+    <workingSet
+        name="helper">
+      <predicate
+          xsi:type="predicates:LocationPredicate"
+          pattern="\Q${git.clone.bonita-studio.location|path}\E"/>
+    </workingSet>
+    <description>The dynamic working sets for ${scope.project.label}</description>
+  </setupTask>
+  <setupTask
+      xsi:type="pde:TargetPlatformTask"
+      name="${workspace.location|uri}/platform/platform.target"/>
+  <setupTask
+      xsi:type="setup:CompoundTask"
+      name="User Preferences">
+    <setupTask
+        xsi:type="setup:CompoundTask"
+        name="org.eclipse.m2e.core">
+      <setupTask
+          xsi:type="setup:PreferenceTask"
+          key="/instance/org.eclipse.m2e.core/eclipse.m2.globalSettingsFile"
+          value="${mavenSettingsStudio|uri}"/>
+    </setupTask>
+  </setupTask>
+  <stream name="dev"
+      label="Dev">
+    <setupTask
+        xsi:type="setup:EclipseIniTask"
+        option="-Doomph.redirection.bonita-studio-sp"
+        value="=https://raw.githubusercontent.com/bonitasoft/bonita-studio/dev/setups/->${git.clone.bonita-studio.location|uri}/setups/"
+        vm="true">
+      <description>
+        Set an Oomph redirection system property to redirect the logical location of this setup to its physical location in the Git clone.
+        Before enabling this task, replace '...' with the repository path of this setup's containing project.
+      </description>
+    </setupTask>
+    <setupTask
+        xsi:type="setup:VariableTask"
+        name="eclipse.target.platform"
+        defaultValue="2022-06"
+        storageURI="scope://Workspace"/>
+    <setupTask
+        xsi:type="setup.targlets:TargletTask"
+        disabled="true">
+      <targlet
+          name="${scope.project.label}VersionedDep_${scope.project.stream.name}">
+        <requirement
+            name="org.eclipse.gmf.feature.group"/>
+        <requirement
+            name="org.eclipse.gmf.tooling.runtime"/>
+        <requirement
+            name="org.eclipse.m2e.logback.feature.feature.group"/>
+        <requirement
+            name="de.jcup.asciidoctoreditor.feature.group"
+            versionRange="2.5.1"/>
+        <requirement
+            name="de.jcup.yamleditor.feature.group"
+            versionRange="1.9.0"/>
+        <requirement
+            name="net.sourceforge.plantuml.feature.feature.group"
+            versionRange="1.1.26"/>
+      </targlet>
+    </setupTask>
+  </stream>
+  <stream name="master"
+      label="Master">
+    <setupTask
+        xsi:type="setup:EclipseIniTask"
+        option="-Doomph.redirection.bonita-studio-sp"
+        value="=https://raw.githubusercontent.com/bonitasoft/bonita-studio/dev/setups/->${git.clone.bonita-studio.location|uri}/setups/"
+        vm="true">
+      <description>
+        Set an Oomph redirection system property to redirect the logical location of this setup to its physical location in the Git clone.
+        Before enabling this task, replace '...' with the repository path of this setup's containing project.
+      </description>
+    </setupTask>
+    <setupTask
+        xsi:type="setup:VariableTask"
+        name="eclipse.target.platform"
+        defaultValue="2021-12"
+        storageURI="scope://Workspace"/>
+    <setupTask
+        xsi:type="setup.targlets:TargletTask"
+        disabled="true">
+      <targlet
+          name="${scope.project.label}VersionedDep_${scope.project.stream.name}">
+        <requirement
+            name="org.eclipse.gmf.sdk.feature.group"/>
+        <requirement
+            name="de.jcup.asciidoctoreditor.feature.group"
+            versionRange="2.2.0"/>
+        <requirement
+            name="de.jcup.yamleditor.feature.group"
+            versionRange="1.7.0"/>
+        <requirement
+            name="org.eclipse.team.svn.feature.group"/>
+        <requirement
+            name="org.eclipse.team.svn.m2e.feature.group"/>
+        <requirement
+            name="org.eclipse.team.svn.nl1.feature.group"/>
+        <requirement
+            name="org.eclipse.team.svn.revision.graph.feature.group"/>
+        <requirement
+            name="org.eclipse.team.svn.source.feature.group"/>
+        <requirement
+            name="org.polarion.eclipse.team.svn.connector.feature.group"/>
+        <requirement
+            name="org.polarion.eclipse.team.svn.connector.javahl18.feature.group"/>
+        <requirement
+            name="org.polarion.eclipse.team.svn.connector.svnkit18.feature.group"/>
+        <requirement
+            name="net.sourceforge.plantuml.feature.feature.group"
+            versionRange="1.1.24"/>
+      </targlet>
+      <targlet
+          name="Bonitasoft Mirror">
+        <repositoryList
+            name="4.16">
+          <repository
+              url="https://update-site.bonitasoft.com/p2/4.16"/>
+        </repositoryList>
+      </targlet>
+    </setupTask>
+  </stream>
+  <logicalProjectContainer
+      xsi:type="setup:ProjectCatalog"
+      href="index:/org.eclipse.setup#//@projectCatalogs[name='com.github']"/>
+  <description>
+    Bonita Studio - Development environment.
+    Ready for Eclipse IDE for RCP and RAP Developers - 2022-06.
+  </description>
+</setup:Project>
