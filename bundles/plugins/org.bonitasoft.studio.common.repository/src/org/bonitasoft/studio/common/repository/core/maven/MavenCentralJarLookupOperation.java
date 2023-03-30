@@ -21,6 +21,7 @@ import java.io.UncheckedIOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse.BodyHandlers;
@@ -30,6 +31,7 @@ import java.security.NoSuchAlgorithmException;
 import java.time.Duration;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.concurrent.Executors;
 
@@ -109,8 +111,32 @@ public class MavenCentralJarLookupOperation implements IRunnableWithProgress {
                     var status = searchResponse.getResponse().getNumFound() > 0 ? DependencyLookup.Status.FOUND
                             : DependencyLookup.Status.NOT_FOUND;
                     if (status == DependencyLookup.Status.FOUND) {
-                        var doc = searchResponse.getResponse().getDocs().get(0);
-                        var gav = new GAV(doc.getG(), doc.getA(), doc.getV(), null, doc.getP(), Artifact.SCOPE_COMPILE);
+                        var fileName = file.getName();
+                        var document = searchResponse.getResponse().getDocs().get(0);
+                        var gav = new GAV(document.getG(), document.getA(), document.getV(), null, document.getP(), Artifact.SCOPE_COMPILE);
+                        for(var doc : searchResponse.getResponse().getDocs()) {
+                            String classifier = findMatchingClassifier(fileName, doc);
+                            if(classifier != null) {
+                                gav = new GAV(doc.getG(), doc.getA(), doc.getV(), classifier, doc.getP(), Artifact.SCOPE_COMPILE);
+                            }
+                            // Handle relocated artifacts
+                            try(var is = new URL(String.format("https://search.maven.org/remotecontent?filepath=%s/%s/%s/%s-%s.pom", doc.getG().replace(".", "/"), 
+                                    doc.getA(),
+                                    doc.getV(),
+                                    doc.getA(),
+                                    doc.getV())).openStream()){
+                                var model = MavenPlugin.getMaven().readModel(is);
+                                if(model.getDistributionManagement() != null && model.getDistributionManagement().getRelocation() != null) {
+                                    var relocation = model.getDistributionManagement().getRelocation();
+                                    gav = new GAV(Optional.ofNullable(relocation.getGroupId()).orElse(doc.getG()), 
+                                            Optional.ofNullable(relocation.getArtifactId()).orElse(doc.getA()), 
+                                            Optional.ofNullable(relocation.getVersion()).orElse(doc.getV()), 
+                                            classifier, 
+                                            document.getP(),
+                                            Artifact.SCOPE_COMPILE);
+                                }
+                            }
+                        }
                         var dl = new DependencyLookup(file.getAbsolutePath(),
                                 sha1,
                                 status,
@@ -154,6 +180,15 @@ public class MavenCentralJarLookupOperation implements IRunnableWithProgress {
         } catch (NoSuchAlgorithmException e) {
             throw new CoreException(Status.error(String.format("Failed to compute SHA-1 for %s", file.getName()), e));
         }
+    }
+
+    private String findMatchingClassifier(String fileName, Document doc) {
+        for(var ec : doc.getEc()) {
+            if(!ec.equals(".jar") && fileName.endsWith(ec)) {
+                return ec.substring(1,ec.length()-4);
+            }
+        }
+        return null;
     }
 
     private DependencyLookup checkGAVConsistency(Properties properties, DependencyLookup dl) {
