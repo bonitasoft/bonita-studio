@@ -40,10 +40,10 @@
                             <baseImgPath>${basedir}/content/images/Logo-Welcome-Community-Without-Version.png</baseImgPath>
                             <outputImagePath>${basedir}/content/images/logo-community.png</outputImagePath>
                             <outputImageFormat>png</outputImageFormat>
-                            <xLocation>192</xLocation>
-                            <yLocation>78</yLocation>
+                            <xLocation>198</xLocation>
+                            <yLocation>77</yLocation>
                             <italic>false</italic>
-                            <fontSize>35</fontSize>
+                            <fontSize>38</fontSize>
                             <color>#002395</color>
                             <bold>true</bold>
                             <versionLabel>${branding.version.short}</versionLabel>
@@ -58,10 +58,10 @@
                             <baseImgPath>${basedir}/content/images/Logo-Welcome-Community-Dark-Without-Version.png</baseImgPath>
                             <outputImagePath>${basedir}/content/images/logo-community-dark.png</outputImagePath>
                             <outputImageFormat>png</outputImageFormat>
-                            <xLocation>192</xLocation>
-                            <yLocation>78</yLocation>
+                            <xLocation>198</xLocation>
+                            <yLocation>77</yLocation>
                             <italic>false</italic>
-                            <fontSize>35</fontSize>
+                            <fontSize>38</fontSize>
                             <color>#526fcd</color>
                             <bold>true</bold>
                             <versionLabel>${branding.version.short}</versionLabel>
