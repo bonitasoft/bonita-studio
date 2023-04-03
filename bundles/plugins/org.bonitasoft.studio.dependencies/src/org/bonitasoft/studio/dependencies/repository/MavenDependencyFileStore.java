@@ -23,7 +23,6 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.apache.maven.artifact.Artifact;
-import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.core.maven.ProjectDependenciesResolver;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
@@ -38,25 +37,11 @@ public class MavenDependencyFileStore extends DependencyFileStore {
     private File file;
 
     public MavenDependencyFileStore(Artifact artifact, final DependencyRepositoryStore parentStore) {
-        super(resolveFile(artifact).getName(), parentStore);
+        super(ProjectDependenciesResolver.resolveFile(artifact).getName(), parentStore);
         this.artifact = artifact;
         this.projectDependenciesResolver = new ProjectDependenciesResolver(getRepositoryAccessor());
     }
 
-    private static File resolveFile(Artifact artifact) {
-        File file = artifact.getFile();
-        // Artifact is a project imported in the workspace
-        if (file.isDirectory()) {
-            try {
-                // Resolve artifact from the localRepository
-                var localRepository = org.eclipse.m2e.core.MavenPlugin.getMaven().getLocalRepository();
-                return localRepository.find(artifact).getFile();
-            } catch (CoreException e) {
-                BonitaStudioLog.error(e);
-            }
-        }
-        return file;
-    }
 
     @Override
     protected InputStream doGetContent() throws ReadFileStoreException {
@@ -104,7 +89,7 @@ public class MavenDependencyFileStore extends DependencyFileStore {
     @Override
     public File getFile() {
         if (file == null) {
-            file = resolveFile(artifact);
+            file = ProjectDependenciesResolver.resolveFile(artifact);
         }
         return file;
         
