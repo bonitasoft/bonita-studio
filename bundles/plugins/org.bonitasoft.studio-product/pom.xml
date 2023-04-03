@@ -38,8 +38,8 @@
                     <baseImgPath>${basedir}/splash_without_version.bmp</baseImgPath>
                     <outputImagePath>${basedir}/splash.bmp</outputImagePath>
                     <outputImageFormat>bmp</outputImageFormat>
-                    <xLocation>358</xLocation>
-                    <yLocation>159</yLocation>
+                    <xLocation>364</xLocation>
+                    <yLocation>160</yLocation>
                     <italic>false</italic>
                     <fontSize>58</fontSize>
                     <color>#002395</color>
