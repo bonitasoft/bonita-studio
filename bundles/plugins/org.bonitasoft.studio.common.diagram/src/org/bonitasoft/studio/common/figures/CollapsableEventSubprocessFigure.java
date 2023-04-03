@@ -33,8 +33,10 @@ public class CollapsableEventSubprocessFigure extends RoundedRectangle {
     @Override
     protected void outlineShape(Graphics graphics) {
         graphics.setAdvanced(true);
-        this.setLineAttributes(new LineAttributes(2, SWT.CAP_FLAT, SWT.JOIN_ROUND));
-        setLineStyle(SWT.LINE_DOT);
+        graphics.pushState();
+        graphics.setLineAttributes(new LineAttributes(2, SWT.CAP_FLAT, SWT.JOIN_ROUND));
+        graphics.setLineStyle(SWT.LINE_DOT);
+        graphics.popState();
         super.outlineShape(graphics);
     }
 
