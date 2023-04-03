@@ -14,6 +14,7 @@
  */
 package org.bonitasoft.studio.common.repository.core.maven;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -26,6 +27,7 @@ import javax.inject.Inject;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.model.Dependency;
 import org.apache.maven.project.MavenProject;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.eclipse.aether.graph.DependencyNode;
@@ -86,8 +88,8 @@ public class ProjectDependenciesResolver {
         }
         return mavenProject.getArtifacts().stream()
                 .filter(artifact -> Artifact.SCOPE_COMPILE.equals(artifact.getScope()) || Artifact.SCOPE_RUNTIME.equals(artifact.getScope()))
-                .filter(artifact -> artifact.getFile() != null && artifact.getFile().exists())
-                .filter(artifact -> Objects.equals(fileName, artifact.getFile().getName()))
+                .filter(artifact ->  resolveFile(artifact) != null &&  resolveFile(artifact).exists())
+                .filter(artifact -> Objects.equals(fileName, resolveFile(artifact).getName()))
                 .findFirst();
     }
 
@@ -112,6 +114,21 @@ public class ProjectDependenciesResolver {
                 .stream()
                 .forEach(n -> n.accept(collector));
         return collector.getResult();
+    }
+    
+    public static File resolveFile(Artifact artifact) {
+        File file = artifact.getFile();
+        // Artifact is a project imported in the workspace
+        if (file.isDirectory()) {
+            try {
+                // Resolve artifact from the localRepository
+                var localRepository = org.eclipse.m2e.core.MavenPlugin.getMaven().getLocalRepository();
+                return localRepository.find(artifact).getFile();
+            } catch (CoreException e) {
+                BonitaStudioLog.error(e);
+            }
+        }
+        return file;
     }
 
     private MavenProject getMavenProject(IProject project, IProgressMonitor monitor) throws CoreException {
