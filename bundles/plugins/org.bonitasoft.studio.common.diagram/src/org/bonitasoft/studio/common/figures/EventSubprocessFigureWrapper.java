@@ -34,26 +34,14 @@ public class EventSubprocessFigureWrapper extends CollapsableEventSubprocessFigu
 
 
 	public EventSubprocessFigureWrapper() {
-
 		GridLayout layoutThis = new GridLayout();
 		layoutThis.numColumns = 1;
 		layoutThis.makeColumnsEqualWidth = true;
 		layoutThis.marginWidth = 2;
 		layoutThis.marginHeight = 10;
 		this.setLayoutManager(layoutThis);
-
-		this.setLineCap(SWT.CAP_ROUND);
-
-		this.setLineWidth(2);
-
-		this.setLineStyle(SWT.LINE_DOT);
-
-		this.setLineDash(new float[] { 1.0f, 5.0f });
-
 		this.setAntialias(SWT.ON);
-
 		this.setCornerDimensions(new Dimension(15, 15));
-
 		this.setPreferredSize(new Dimension(100,50));
 		this.setMinimumSize(new Dimension(100,50));
 		createContents();
