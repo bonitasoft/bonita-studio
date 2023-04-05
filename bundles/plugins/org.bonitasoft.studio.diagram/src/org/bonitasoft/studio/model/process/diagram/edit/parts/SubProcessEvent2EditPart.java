@@ -318,10 +318,6 @@ public class SubProcessEvent2EditPart extends ShapeNodeEditPart {
 
 			this.setPreferredSize(new Dimension(getMapMode().DPtoLP(150), getMapMode().DPtoLP(70)));
 			this.setMinimumSize(new Dimension(getMapMode().DPtoLP(100), getMapMode().DPtoLP(50)));
-			this.setLineCap(SWT.CAP_ROUND);
-			this.setLineWidth(2);
-			this.setLineStyle(SWT.LINE_DOT);
-			this.setLineDash(new float[] { 1.0f, 5.0f });
 			this.setAntialias(SWT.ON);
 			this.setCornerDimensions(new Dimension(15, 15));
 			createContents();
