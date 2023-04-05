@@ -1,0 +1,15 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Validation Tests Fragment
+Bundle-SymbolicName: org.bonitasoft.studio.validation.tests
+Bundle-Version: 9.0.0.qualifier
+Bundle-Vendor: Bonitasoft S.A.
+Fragment-Host: org.bonitasoft.studio.validation;bundle-version="7.16.0"
+Automatic-Module-Name: org.bonitasoft.studio.validation.tests
+Bundle-RequiredExecutionEnvironment: JavaSE-11
+Require-Bundle: org.junit,
+ assertj-core,
+ org.mockito.mockito-core,
+ org.bonitasoft.studio.tests-utils,
+ net.bytebuddy.byte-buddy,
+ org.objenesis

@@ -1,0 +1,99 @@
+﻿/*
+ * Copyright (c) 2006, 2009 Borland Software Corporation
+ * 
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Anna Karjakina (Borland) - initial API and implementation
+ */
+
+«IMPORT 'http://www.eclipse.org/gmf/2009/GenModel'»
+
+«EXTENSION xpt::ExternalizerUtils»
+
+«DEFINE Access FOR gmfgen::GenEditorGenerator-»
+«EXPAND xpt::Common::copyright-»
+package «getExternalizerPackageName(self)»;
+
+«EXPAND xpt::Common::generatedClassComment»
+public class «getExternalizerClassName()» extends org.eclipse.osgi.util.NLS {
+
+	«EXPAND xpt::Common::generatedMemberComment»
+	static {
+		org.eclipse.osgi.util.NLS.initializeMessages("«getExternalizerClassName().toLower()»", «getExternalizerClassName()».class); «EXPAND xpt::Common::nonNLS»
+	}
+
+	«EXPAND xpt::Common::generatedMemberComment»
+	private «getExternalizerClassName()»() {
+	}
+
+	«EXPAND Fields»
+
+}
+«ENDDEFINE»
+
+«DEFINE Fields FOR gmfgen::GenEditorGenerator»
+	«EXPAND impl::actions::CreateShortcutAction::i18nAccessors FOR diagram-»
+	«EXPAND xpt::editor::CreationWizard::i18nAccessors FOR diagram-»
+	«EXPAND xpt::editor::CreationWizardPage::i18nAccessors FOR diagram-»
+    «EXPAND xpt::editor::DiagramEditorUtil::i18nAccessors FOR diagram-»
+	«EXPAND xpt::editor::DocumentProvider::i18nAccessors FOR diagram-»
+	«EXPAND xpt::editor::InitDiagramFileAction::i18nAccessors FOR diagram-»
+	«EXPAND xpt::editor::NewDiagramFileWizard::i18nAccessors FOR diagram-»
+	«EXPAND xpt::editor::Editor::i18nAccessors FOR editor-»
+	«EXPAND xpt::editor::ElementChooser::i18nAccessors FOR diagram-»
+	«EXPAND xpt::editor::ShortcutCreationWizard::i18nAccessors FOR diagram-»
+	«EXPAND xpt::editor::ModelElementSelectionPage::i18nAccessors FOR diagram-»
+	«EXPAND xpt::editor::ValidateAction::i18nAccessors FOR diagram-»
+	«EXPAND xpt::editor::palette::PaletteFactory::i18nAccessors FOR diagram.palette-»
+	«EXPAND xpt::application::ActionBarAdvisor::i18nAccessors FOR application-»
+    «EXPAND xpt::application::WorkbenchWindowAdvisor::i18nAccessors FOR application-»
+    «EXPAND xpt::application::WizardNewFileCreationPage::i18nAccessors FOR application-»
+    «EXPAND impl::diagram::editparts::CompartmentEditPart::i18nAccessors FOR diagram-»
+    «EXPAND xpt::diagram::editpolicies::OpenDiagram::i18nAccessors FOR diagram-»
+    «EXPAND xpt::navigator::NavigatorContentProvider::i18nAccessors FOR navigator-»
+    «EXPAND xpt::navigator::NavigatorActionProvider::i18nAccessors FOR navigator-»
+	«EXPAND parsers::PredefinedParser::i18nAccessors FOR labelParsers-»
+	«EXPAND xpt::providers::ModelingAssistantProvider::i18nAccessors FOR diagram-»
+«ENDDEFINE»
+
+«DEFINE Values FOR gmfgen::GenEditorGenerator»
+# TODO: manually put keys and values
+«EXPAND impl::actions::CreateShortcutAction::i18nValues FOR diagram-»
+«EXPAND xpt::editor::CreationWizard::i18nValues FOR diagram-»
+«EXPAND xpt::editor::CreationWizardPage::i18nValues FOR diagram-»
+«EXPAND xpt::editor::DiagramEditorUtil::i18nValues FOR diagram-»
+«EXPAND xpt::editor::DocumentProvider::i18nValues FOR diagram-»
+«EXPAND xpt::editor::InitDiagramFileAction::i18nValues FOR diagram-»
+«EXPAND xpt::editor::NewDiagramFileWizard::i18nValues FOR diagram-»
+«EXPAND xpt::editor::Editor::i18nValues FOR editor-»
+«EXPAND xpt::editor::ElementChooser::i18nValues FOR diagram-»
+«EXPAND xpt::editor::ShortcutCreationWizard::i18nValues FOR diagram-»
+«EXPAND xpt::editor::ModelElementSelectionPage::i18nValues FOR diagram-»
+«EXPAND xpt::editor::ValidateAction::i18nValues FOR diagram-»
+«EXPAND xpt::editor::palette::PaletteFactory::i18nValues FOR diagram.palette-»
+«EXPAND xpt::application::ActionBarAdvisor::i18nValues FOR application-»
+«EXPAND xpt::application::WorkbenchWindowAdvisor::i18nValues FOR application-»
+«EXPAND xpt::application::WizardNewFileCreationPage::i18nValues FOR application-»
+«EXPAND impl::diagram::editparts::CompartmentEditPart::i18nValues FOR diagram-»
+«EXPAND xpt::diagram::editpolicies::OpenDiagram::i18nValues FOR diagram-»
+«EXPAND xpt::navigator::NavigatorContentProvider::i18nValues FOR navigator-»
+«EXPAND xpt::navigator::NavigatorActionProvider::i18nValues FOR navigator-»
+«EXPAND parsers::PredefinedParser::i18nValues FOR labelParsers-»
+«EXPAND xpt::providers::ModelingAssistantProvider::i18nValues FOR diagram-»
+«ENDDEFINE»
+
+«DEFINE accessorField(key : String) FOR OclAny»
+	«EXPAND xpt::Common::generatedMemberComment»
+    public static String «escapeIllegalKeySymbols(key)»;
+«ENDDEFINE»
+
+«DEFINE messageEntry(key : String, message : String) FOR OclAny-»
+«escapeIllegalKeySymbols(key)»=«escapeIllegalMessageSymbols(message)»
+«ENDDEFINE»
+
+«DEFINE accessorCall(key : String) FOR gmfgen::GenEditorGenerator-»
+«getExternalizerPackageName(self)».«getExternalizerClassName()».«escapeIllegalKeySymbols(key)»«ENDDEFINE»
