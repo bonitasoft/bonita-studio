@@ -19,11 +19,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import org.apache.maven.model.Dependency;
 import org.junit.jupiter.api.Test;
 
-public class GAVTest {
-    
+class GAVTest {
     
     @Test
-    public void newGavFromDependency() throws Exception {
+    void newGavFromDependency() throws Exception {
         var gav = new GAV(aDependency("g", "a", "1", null, null, null));
         
         assertThat(gav.getGroupId()).isEqualTo("g");
@@ -35,7 +34,7 @@ public class GAVTest {
     }
     
     @Test
-    public void isSameGavIgnoreVersion() throws Exception {
+    void isSameGavIgnoreVersion() throws Exception {
         var gav = new GAV(aDependency("g", "a", "1", null, null, null));
         var gav1 = new GAV(aDependency("g", "a", "2", null, null, null));
         
@@ -43,7 +42,7 @@ public class GAVTest {
     }
     
     @Test
-    public void isEqualGavDoesNotIgnoreVersion() throws Exception {
+    void isEqualGavDoesNotIgnoreVersion() throws Exception {
         var gav = new GAV(aDependency("g", "a", "1", null, null, null));
         var gav1 = new GAV(aDependency("g", "a", "2", null, null, null));
         
@@ -51,7 +50,7 @@ public class GAVTest {
     }
     
     @Test
-    public void isEqualGavWithDefaultType() throws Exception {
+    void isEqualGavWithDefaultType() throws Exception {
         var gav = new GAV(aDependency("g", "a", "1", null, "jar", null));
         var gav1 = new GAV(aDependency("g", "a", "1", null, null, null));
         
@@ -59,11 +58,20 @@ public class GAVTest {
     }
     
     @Test
-    public void isEqualGavWithDefaultScope() throws Exception {
+    void isEqualGavWithDefaultScope() throws Exception {
         var gav = new GAV(aDependency("g", "a", "1", null, null, "compile"));
         var gav1 = new GAV(aDependency("g", "a", "1", null, null, null));
         
         assertThat(gav.equals(gav1)).isTrue();
+    }
+    
+    @Test
+    void toLocalRepositoryPath() throws Exception {
+        var gav = new GAV(aDependency("com.company.group", "my-artifact", "1.3.7", null, null, "compile"));
+        var gavWithClassifier = new GAV(aDependency("com.company.group", "my-artifact", "1.3.7", "archived", "zip", "compile"));
+        
+        assertThat(gav.toLocalRepositoryPath()).isEqualTo("com/company/group/my-artifact/1.3.7/my-artifact-1.3.7.jar");
+        assertThat(gavWithClassifier.toLocalRepositoryPath()).isEqualTo("com/company/group/my-artifact/1.3.7/my-artifact-1.3.7-archived.zip");
     }
 
     

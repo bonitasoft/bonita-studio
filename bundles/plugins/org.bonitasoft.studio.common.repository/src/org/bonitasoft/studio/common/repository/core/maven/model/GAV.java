@@ -17,6 +17,10 @@ package org.bonitasoft.studio.common.repository.core.maven.model;
 import java.util.Objects;
 
 import org.apache.maven.artifact.Artifact;
+import org.apache.maven.artifact.DefaultArtifact;
+import org.apache.maven.artifact.handler.DefaultArtifactHandler;
+import org.apache.maven.artifact.repository.layout.ArtifactRepositoryLayout;
+import org.apache.maven.artifact.repository.layout.DefaultRepositoryLayout;
 import org.apache.maven.model.Dependency;
 import org.bonitasoft.studio.common.Strings;
 
@@ -29,6 +33,7 @@ public class GAV {
     private String classifier;
     private String scope;
     private String type = JAR_TYPE;
+    private ArtifactRepositoryLayout repositoryLayout = new DefaultRepositoryLayout();
 
     public GAV(String groupId, String artifactId, String version) {
         this(groupId, artifactId, version, null, JAR_TYPE, null);
@@ -43,7 +48,7 @@ public class GAV {
         this.artifactId = artifactId;
         this.version = version;
         this.classifier = classifier;
-        this.type = type == null ? JAR_TYPE : type ;
+        this.type = type == null ? JAR_TYPE : type;
         this.scope = scope == null ? Artifact.SCOPE_COMPILE : scope;
     }
 
@@ -61,7 +66,7 @@ public class GAV {
      */
     @Override
     public String toString() {
-        var label = String.format("%s:%s:%s", groupId, artifactId,type);
+        var label = String.format("%s:%s:%s", groupId, artifactId, type);
         if (classifier != null && !classifier.isEmpty()) {
             label = label + ":" + classifier;
         }
@@ -108,17 +113,17 @@ public class GAV {
     public String getType() {
         return type;
     }
-    
+
     public void setScope(String scope) {
         this.scope = scope;
     }
-    
+
     public String getScope() {
         return scope;
     }
-    
+
     public boolean isSameAs(GAV gav) {
-        if(gav == null) {
+        if (gav == null) {
             return false;
         }
         return Objects.equals(gav.getArtifactId(), getArtifactId())
@@ -128,8 +133,6 @@ public class GAV {
                 && Objects.equals(gav.getType(), getType());
     }
 
-    
-    
     @Override
     public int hashCode() {
         return Objects.hash(artifactId, classifier, groupId, scope, type, version);
@@ -149,7 +152,13 @@ public class GAV {
                 && Objects.equals(type, other.type) && Objects.equals(version, other.version);
     }
 
-    
-    
+    public String toLocalRepositoryPath() {
+        return repositoryLayout.pathOf(toArtifact());
+    }
+
+    private Artifact toArtifact() {
+        return new DefaultArtifact(groupId, artifactId, version, scope, type, classifier,
+                new DefaultArtifactHandler(type));
+    }
 
 }
