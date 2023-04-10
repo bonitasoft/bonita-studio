@@ -17,9 +17,9 @@
 package org.bonitasoft.studio.importer.bos.operation;
 
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.util.Optional;
 
-import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.core.InputStreamSupplier;
 import org.bonitasoft.studio.common.repository.core.LocalDependencyInputStreamSupplier;
 import org.bonitasoft.studio.common.repository.core.maven.model.GAV;
@@ -38,14 +38,14 @@ public class ArchiveLocalDependencyInputStreamSupplier implements LocalDependenc
     @Override
     public Optional<InputStreamSupplier> find(GAV gav) {
         try {
+            var localStoreDepPattern = localDependencyFilePattern(gav);
             return bosArchive.getZipFile()
                     .stream()
-                    .filter(entry -> entry.getName().matches(localDependencyFilePattern(gav)))
+                    .filter(entry -> entry.getName().matches(localStoreDepPattern))
                     .findFirst()
                     .map(entry -> new ArchiveInputStreamSupplier(bosArchive.getArchiveFile(), entry));
         } catch (IOException e) {
-            BonitaStudioLog.error(e);
-            return null;
+            throw new UncheckedIOException(e);
         }
     }
 
