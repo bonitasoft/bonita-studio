@@ -19,12 +19,12 @@ import org.bonitasoft.studio.ui.notification.BonitaNotificator.NOTIFICATION_LEVE
 import org.bonitasoft.studio.ui.notification.job.CloseJob;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.jface.notifications.internal.AnimationUtil;
+import org.eclipse.jface.notifications.internal.AnimationUtil.FadeJob;
+import org.eclipse.jface.notifications.internal.AnimationUtil.IFadeListener;
+import org.eclipse.jface.notifications.internal.CommonImages;
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.window.Window;
-import org.eclipse.mylyn.commons.ui.CommonImages;
-import org.eclipse.mylyn.commons.ui.compatibility.CommonFonts;
-import org.eclipse.mylyn.internal.commons.ui.AnimationUtil;
-import org.eclipse.mylyn.internal.commons.ui.AnimationUtil.FadeJob;
-import org.eclipse.mylyn.internal.commons.ui.AnimationUtil.IFadeListener;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
@@ -43,6 +43,14 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 
+/**
+ * This is a notification popup.
+ * Quite similar to org.eclipse.jface.notifications.NotificationPopup, except:
+ * <ul><li>it is displayed on same screen</li>
+ * <li>the background color changes</li>
+ * <li>it does not stack but displays vertically</li>
+ * <li>height adapts to big text</li></ul>
+ */
 public class BonitaNotificationPopup extends Window {
 
     private static final int MAX_WIDTH = 400;
@@ -73,6 +81,8 @@ public class BonitaNotificationPopup extends Window {
         this.level = level;
         this.selectionListener = selectionListener;
         this.closeJob = new CloseJob(this);
+        // do not display this job in UI
+        this.closeJob.setSystem(true);
     }
 
     private void createTitleArea(Composite parent) {
@@ -90,7 +100,7 @@ public class BonitaNotificationPopup extends Window {
         titleLabel.setLayoutData(
                 GridDataFactory.fillDefaults().grab(true, true).span(1, 2).align(SWT.FILL, SWT.CENTER).create());
         titleLabel.setText(title);
-        titleLabel.setFont(CommonFonts.BOLD);
+        titleLabel.setFont(JFaceResources.getFontRegistry().getBold(JFaceResources.DEFAULT_FONT));
         titleLabel.addListener(SWT.MouseUp, this::bringStudioToFront);
 
         Label closeButton = new Label(composite, SWT.NONE);
@@ -150,9 +160,10 @@ public class BonitaNotificationPopup extends Window {
     @Override
     protected void initializeBounds() {
         Rectangle clArea = getClientArea();
-        Point initialSize = getShell().computeSize(SWT.DEFAULT, SWT.DEFAULT);
-        int height = Math.max(initialSize.y, MIN_HEIGHT);
-        int width = Math.min(initialSize.x, MAX_WIDTH);
+        // we must compute height with max width as hint, so that the content/text is considered wrapped
+        int height = Math.max(getShell().computeSize(MAX_WIDTH, SWT.DEFAULT).y, MIN_HEIGHT);
+        // width, on the other hand, is computed with default sizes to be able to shrink smaller
+        int width = Math.min(getShell().computeSize(SWT.DEFAULT, SWT.DEFAULT).x, MAX_WIDTH);
 
         Point size = new Point(width, height);
         getShell().setLocation(clArea.width + clArea.x - size.x - PADDING_EDGE, getInitialY(clArea, height) - size.y
@@ -244,7 +255,8 @@ public class BonitaNotificationPopup extends Window {
         Composite mainComposite = new Composite(parent, SWT.NONE);
         mainComposite.setLayout(GridLayoutFactory.fillDefaults().margins(5, 5).create());
         mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-        mainComposite.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, BonitaThemeConstants.NOTIFICATION_COMPOSITE);
+        mainComposite.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME,
+                BonitaThemeConstants.NOTIFICATION_COMPOSITE);
 
         Composite titleComposite = new Composite(mainComposite, SWT.NONE);
         titleComposite.setLayout(GridLayoutFactory.fillDefaults().create());
