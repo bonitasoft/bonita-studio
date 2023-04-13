@@ -49,7 +49,6 @@
             <unit id="org.eclipse.equinox.p2.sdk.feature.group" version="3.11.1400.v20211104-1616"/>
             <unit id="org.eclipse.sdk.feature.group" version="4.22.0.v20211124-1800"/>
   			<unit id="org.eclipse.emf.edapt.runtime.feature.feature.group" version="1.4.1.202002140949"/>
-  			<unit id="org.eclipse.mylyn.commons.ui" version="3.25.2.v20200813-0821"/>
   			<unit id="org.eclipse.wst.jsdt.feature.feature.group" version="2.3.600.v202108041610"/>
   			<unit id="org.eclipse.wst.json_ui.feature.feature.group" version="1.1.10.v202103121626"/>
 	  		<unit id="com.sun.jna.platform" version="5.8.0.v20210406-1004"/>
