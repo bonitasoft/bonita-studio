@@ -16,19 +16,11 @@ import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.preferences.BonitaThemeConstants;
 import org.bonitasoft.studio.ui.notification.BonitaNotificator.NOTIFICATION_LEVEL;
-import org.bonitasoft.studio.ui.notification.job.CloseJob;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
-import org.eclipse.jface.notifications.internal.AnimationUtil;
-import org.eclipse.jface.notifications.internal.AnimationUtil.FadeJob;
-import org.eclipse.jface.notifications.internal.AnimationUtil.IFadeListener;
-import org.eclipse.jface.notifications.internal.CommonImages;
-import org.eclipse.jface.resource.JFaceResources;
-import org.eclipse.jface.window.Window;
+import org.eclipse.jface.notifications.AbstractNotificationPopup;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.MouseAdapter;
-import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.events.MouseTrackAdapter;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
@@ -36,29 +28,24 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.PlatformUI;
 
 /**
  * This is a notification popup.
  * Quite similar to org.eclipse.jface.notifications.NotificationPopup, except:
  * <ul><li>it is displayed on same screen</li>
- * <li>the background color changes</li>
+ * <li>a few cosmetic changes (color / cursor / layout)</li>
  * <li>it does not stack but displays vertically</li>
- * <li>height adapts to big text</li></ul>
+ * <li>height adapts to big text width-wrapping</li></ul>
  */
-public class BonitaNotificationPopup extends Window {
+public class BonitaNotificationPopup extends AbstractNotificationPopup {
 
     private static final int MAX_WIDTH = 400;
     private static final int MIN_HEIGHT = 120;
     private static final int PADDING_EDGE = 10;
-
-    private static final long DEFAULT_DELAY_CLOSE = 8 * 1000;
-    private long delayClose = DEFAULT_DELAY_CLOSE;
 
     private static List<Shell> existingNotifications = new ArrayList<>();
 
@@ -66,70 +53,31 @@ public class BonitaNotificationPopup extends Window {
     private String content;
     private NOTIFICATION_LEVEL level;
     private Optional<Listener> selectionListener;
-    private boolean fadingEnabled;
-    private FadeJob fadeJob;
-    private Display display;
-    private CloseJob closeJob;
 
     public BonitaNotificationPopup(Display display, String title, String content, NOTIFICATION_LEVEL level,
             Optional<Listener> selectionListener) {
-        super(new Shell(display));
-        setShellStyle(SWT.NO_TRIM | SWT.ON_TOP | SWT.NO_FOCUS | SWT.TOOL);
-        this.display = display;
+        super(display, SWT.NO_TRIM | SWT.ON_TOP | SWT.NO_FOCUS | SWT.TOOL);
         this.title = title;
         this.content = content;
         this.level = level;
         this.selectionListener = selectionListener;
-        this.closeJob = new CloseJob(this);
-        // do not display this job in UI
-        this.closeJob.setSystem(true);
     }
 
-    private void createTitleArea(Composite parent) {
-        Composite composite = new Composite(parent, SWT.NONE);
-        composite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-        composite.setLayout(GridLayoutFactory.fillDefaults().numColumns(3).create());
-        composite.addListener(SWT.MouseUp, this::bringStudioToFront);
-
-        Label iconLabel = new Label(composite, SWT.NONE);
-        iconLabel.setLayoutData(GridDataFactory.fillDefaults().span(1, 2).create());
-        iconLabel.setImage(getIcon());
-        iconLabel.addListener(SWT.MouseUp, this::bringStudioToFront);
-
-        Label titleLabel = new Label(composite, SWT.NONE);
-        titleLabel.setLayoutData(
-                GridDataFactory.fillDefaults().grab(true, true).span(1, 2).align(SWT.FILL, SWT.CENTER).create());
-        titleLabel.setText(title);
-        titleLabel.setFont(JFaceResources.getFontRegistry().getBold(JFaceResources.DEFAULT_FONT));
-        titleLabel.addListener(SWT.MouseUp, this::bringStudioToFront);
-
-        Label closeButton = new Label(composite, SWT.NONE);
-        closeButton.setLayoutData(GridDataFactory.fillDefaults().grab(false, true).create());
-        closeButton.setImage(CommonImages.getImage(CommonImages.NOTIFICATION_CLOSE));
-        closeButton.addMouseTrackListener(new MouseTrackAdapter() {
-
-            @Override
-            public void mouseEnter(MouseEvent e) {
-                closeButton.setImage(CommonImages.getImage(CommonImages.NOTIFICATION_CLOSE_HOVER));
-            }
-
-            @Override
-            public void mouseExit(MouseEvent e) {
-                closeButton.setImage(CommonImages.getImage(CommonImages.NOTIFICATION_CLOSE));
-            }
-        });
-        closeButton.addMouseListener(new MouseAdapter() {
-
-            @Override
-            public void mouseUp(MouseEvent e) {
-                close();
-                setReturnCode(CANCEL);
-            }
-
-        });
+    /*
+     * (non-Javadoc)
+     * @see org.eclipse.jface.notifications.AbstractNotificationPopup#getTitleForeground()
+     */
+    @Override
+    protected Color getTitleForeground() {
+        return null;
     }
 
-    private Image getIcon() {
+    /*
+     * (non-Javadoc)
+     * @see org.eclipse.jface.notifications.AbstractNotificationPopup#getPopupShellImage(int)
+     */
+    @Override
+    protected Image getPopupShellImage(int maximumHeight) {
         switch (level) {
             case ERROR:
                 return Pics.getImage(PicsConstants.notificationError);
@@ -140,16 +88,19 @@ public class BonitaNotificationPopup extends Window {
         }
     }
 
-    private void createContentArea(Composite parent) {
+    /*
+     * (non-Javadoc)
+     * @see org.eclipse.jface.notifications.AbstractNotificationPopup#createContentArea(org.eclipse.swt.widgets.Composite)
+     */
+    @Override
+    protected void createContentArea(org.eclipse.swt.widgets.Composite parent) {
         Composite composite = new Composite(parent, SWT.NONE);
         composite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         composite.setLayout(GridLayoutFactory.fillDefaults().create());
-        composite.addListener(SWT.MouseUp, this::bringStudioToFront);
 
         Link link = new Link(composite, SWT.WRAP);
         link.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         link.setText(content);
-        link.addListener(SWT.MouseUp, this::bringStudioToFront);
         selectionListener.ifPresent(listener -> link.addListener(SWT.Selection, listener));
     }
 
@@ -193,34 +144,14 @@ public class BonitaNotificationPopup extends Window {
                 : Display.getDefault().getClientArea();
     }
 
+    /*
+     * (non-Javadoc)
+     * @see org.eclipse.jface.window.Window#constrainShellSize()
+     */
     @Override
-    public int open() {
-        if (getShell() == null || getShell().isDisposed()) {
-            create();
-        }
-
-        constrainShellSize();
+    protected void constrainShellSize() {
+        super.constrainShellSize();
         getShell().setLocation(fixupDisplayBounds(getShell().getSize(), getShell().getLocation()));
-
-        if (isFadingEnabled()) {
-            getShell().setAlpha(0);
-        }
-        getShell().setVisible(true);
-        AnimationUtil.fadeIn(getShell(), new IFadeListener() {
-
-            @Override
-            public void faded(Shell shell, int alpha) {
-                if (shell.isDisposed()) {
-                    return;
-                }
-
-                if (alpha == 255) {
-                    closeJob.scheduleAutoClose();
-                }
-            }
-        });
-
-        return Window.OK;
     }
 
     private Point fixupDisplayBounds(Point tipSize, Point location) {
@@ -258,8 +189,8 @@ public class BonitaNotificationPopup extends Window {
         mainComposite.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME,
                 BonitaThemeConstants.NOTIFICATION_COMPOSITE);
 
-        Composite titleComposite = new Composite(mainComposite, SWT.NONE);
-        titleComposite.setLayout(GridLayoutFactory.fillDefaults().create());
+        Composite titleComposite = new Composite(mainComposite, SWT.NO_FOCUS);
+        titleComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(4).create());
         titleComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         createTitleArea(titleComposite);
 
@@ -270,6 +201,7 @@ public class BonitaNotificationPopup extends Window {
         contentComposite.setLayout(GridLayoutFactory.fillDefaults().create());
         contentComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         createContentArea(contentComposite);
+        addWindowActivationHelper(contentComposite);
 
         return mainComposite;
     }
@@ -282,67 +214,18 @@ public class BonitaNotificationPopup extends Window {
 
     public void closeFade() {
         existingNotifications.remove(getShell());
-        if (fadeJob != null) {
-            fadeJob.cancelAndWait(false);
-        }
-        fadeJob = AnimationUtil.fadeOut(getShell(), new IFadeListener() {
-
-            @Override
-            public void faded(Shell shell, int alpha) {
-                if (!shell.isDisposed()) {
-                    if (alpha == 0) {
-                        shell.close();
-                    } else if (isMouseOver(shell)) {
-                        if (fadeJob != null) {
-                            fadeJob.cancelAndWait(false);
-                        }
-                        fadeJob = AnimationUtil.fastFadeIn(shell, new IFadeListener() {
-
-                            @Override
-                            public void faded(Shell shell, int alpha) {
-                                if (shell.isDisposed()) {
-                                    return;
-                                }
-
-                                if (alpha == 255) {
-                                    closeJob.scheduleAutoClose();
-                                }
-                            }
-                        });
-                    }
-                }
-            }
-        });
+        super.closeFade();
     }
 
-    public boolean isMouseOver(Shell shell) {
-        if (display.isDisposed()) {
-            return false;
-        }
-        return shell.getBounds().contains(display.getCursorLocation());
+    /*
+     * (non-Javadoc)
+     * @see org.eclipse.jface.notifications.AbstractNotificationPopup#addWindowActivationHelper(org.eclipse.swt.widgets.Control)
+     */
+    @Override
+    protected void addWindowActivationHelper(Control control) {
+        // reset cursor in case it was modified (for title)
+        control.setCursor(getShell().getDisplay().getSystemCursor(SWT.DEFAULT));
+        super.addWindowActivationHelper(control);
     }
 
-    public boolean isFadingEnabled() {
-        return fadingEnabled;
-    }
-
-    public void setFadingEnabled(boolean fadingEnabled) {
-        this.fadingEnabled = fadingEnabled;
-    }
-
-    public long getDelayClose() {
-        return delayClose;
-    }
-
-    public void setDelayClose(long delayClose) {
-        this.delayClose = delayClose;
-    }
-
-    public Display getDisplay() {
-        return display;
-    }
-
-    private void bringStudioToFront(Event e) {
-        PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell().forceActive();
-    }
 }
