@@ -69,7 +69,6 @@
       <unit id="org.codehaus.groovy.compilerless.feature.feature.group" version="0.0.0"/>
       <unit id="org.codehaus.groovy.m2eclipse.feature.feature.group" version="0.0.0"/>
       <unit id="org.codehaus.groovy30.feature.feature.group" version="0.0.0"/>
-      <unit id="org.eclipse.mylyn.commons.ui" version="3.25.2.v20200813-0821"/>
     </location>
     <location missingManifest="generate" includeDependencyScopes="compile,runtime,system" includeSource="true" includeDependencyDepth="infinite" type="Maven">
       <dependencies>
