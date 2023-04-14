@@ -56,7 +56,6 @@ Require-Bundle: org.bonitasoft.studio.model,
  org.eclipse.e4.ui.model.workbench,
  org.eclipse.e4.ui.services,
  org.eclipse.e4.core.commands,
- org.eclipse.mylyn.commons.ui,
  org.eclipse.wst.server.core,
  org.eclipse.ui.ide,
  org.eclipse.core.filesystem
