@@ -415,9 +415,9 @@
     <repository
         url="https://projectlombok.org/p2"/>
     <repository
-        url="https://dist.springsource.org/release/GRECLIPSE/e4.24"/>
+        url="https://groovy.jfrog.io/artifactory/plugins-release/e4.24"/>
     <repository
-        url="https://dist.springsource.org/snapshot/GRECLIPSE/e4.25">
+        url="https://groovy.jfrog.io/artifactory/plugins-snapshot/e4.25">
       <annotation
           source="comment">
         <detail
