@@ -1,0 +1,134 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- Schema file written by PDE -->
+<schema targetNamespace="org.bonitasoft.studio.common.repository" xmlns="http://www.w3.org/2001/XMLSchema">
+<annotation>
+      <appinfo>
+         <meta.schema plugin="org.bonitasoft.studio.common.repository" id="initializer" name="initializer"/>
+      </appinfo>
+      <documentation>
+         This extension point allows you to plug classes that are executed when creating a connector.
+      </documentation>
+   </annotation>
+
+   <element name="extension">
+      <annotation>
+         <appinfo>
+            <meta.element />
+         </appinfo>
+      </annotation>
+      <complexType>
+         <sequence>
+            <element ref="initializer" minOccurs="1" maxOccurs="unbounded"/>
+         </sequence>
+         <attribute name="point" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="id" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="name" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+               <appinfo>
+                  <meta.attribute translatable="true"/>
+               </appinfo>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="initializer">
+      <complexType>
+         <attribute name="repositoryId" use="required">
+            <annotation>
+               <documentation>
+                  Id of the repository on with to run the initializer
+               </documentation>
+            </annotation>
+            <simpleType>
+               <restriction base="string">
+                  <enumeration value="BonitaExamplesRepository">
+                  </enumeration>
+                  <enumeration value="ProvidedJars">
+                  </enumeration>
+                  <enumeration value="BonitaGroovyScriptRepository">
+                  </enumeration>
+                  <enumeration value="ProvidedWebTemplatesRepository">
+                  </enumeration>
+                  <enumeration value="XSDRepository">
+                  </enumeration>
+                  <enumeration value="DeploymentConfigurationRepository">
+                  </enumeration>
+                  <enumeration value="BonitaComplexTypesRepository">
+                  </enumeration>
+                  <enumeration value="ProfileRepository">
+                  </enumeration>
+                  <enumeration value="LookNFeelRepository">
+                  </enumeration>
+                  <enumeration value="OrganizationRepository">
+                  </enumeration>
+               </restriction>
+            </simpleType>
+         </attribute>
+         <attribute name="initializerClass" type="string">
+            <annotation>
+               <documentation>
+                  Class to of the initializer
+implements org.bonitasoft.studio.repository.RepositoryInitializationContributor
+               </documentation>
+               <appinfo>
+                  <meta.attribute kind="java" basedOn=":org.bonitasoft.studio.repository.RepositoryInitializationContributor"/>
+               </appinfo>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <annotation>
+      <appinfo>
+         <meta.section type="since"/>
+      </appinfo>
+      <documentation>
+         [Enter the first release in which this extension point appears.]
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appinfo>
+         <meta.section type="examples"/>
+      </appinfo>
+      <documentation>
+         [Enter extension point usage example here.]
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appinfo>
+         <meta.section type="apiinfo"/>
+      </appinfo>
+      <documentation>
+         [Enter API information here.]
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appinfo>
+         <meta.section type="implementation"/>
+      </appinfo>
+      <documentation>
+         [Enter information about supplied implementation of this extension point.]
+      </documentation>
+   </annotation>
+
+
+</schema>

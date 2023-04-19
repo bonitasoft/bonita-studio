@@ -1,0 +1,1224 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<!--
+Copyright (C) 2009 BonitaSoft S.A.
+BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 2.0 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<plugin>
+
+   <extension point="org.eclipse.team.core.fileTypes" id="repo-ftype">
+      <?gmfgen generated="true"?>
+      <fileTypes type="text" extension="proc"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.extension_parser" id="resource-factory">
+      <?gmfgen generated="true"?>
+      <parser
+         type="proc"
+         class="org.eclipse.gmf.runtime.emf.core.resources.GMFResourceFactory">
+      </parser>
+   </extension>
+   
+   <extension point="org.eclipse.ui.contexts" id="ui-context">
+      <?gmfgen generated="true"?>
+      <context
+         description="%context.description"
+         id="org.bonitasoft.studio.model.process.diagram.ui.diagramContext"
+         name="%context.name"
+         parentId="org.eclipse.gmf.runtime.diagram.ui.diagramContext">
+      </context>
+   </extension>
+
+   <extension point="org.eclipse.ui.newWizards" id="creation-wizard">
+      <?gmfgen generated="true"?>
+  	  <wizard
+  	     name="%newWizardName"
+  	     icon="icons/obj16/ProcessDiagramFile.gif"
+  	     category="org.eclipse.ui.Examples"
+  	     class="org.bonitasoft.studio.model.process.diagram.part.ProcessCreationWizard"
+  	     id="org.bonitasoft.studio.model.process.diagram.part.ProcessCreationWizardID">
+  	  	 <description>%newWizardDesc</description>  
+      </wizard>
+   </extension>
+
+   <extension point="org.eclipse.ui.popupMenus" id="init-diagram-action">
+      <?gmfgen generated="true"?>
+      <objectContribution
+            id="org.bonitasoft.studio.diagram.InitDiagram"
+            nameFilter="*.proc"
+            objectClass="org.eclipse.core.resources.IFile">
+         <action
+               label="%initDiagramActionLabel"
+               class="org.bonitasoft.studio.model.process.diagram.part.ProcessInitDiagramFileAction"
+               menubarPath="additions"
+               enablesFor="1"
+               id="org.bonitasoft.studio.diagram.InitDiagramAction">
+         </action>
+      </objectContribution>
+   </extension>
+	
+   <extension point="org.eclipse.gmf.runtime.common.ui.services.action.globalActionHandlerProviders" id="global-actions">
+      <?gmfgen generated="true"?>
+      <GlobalActionHandlerProvider
+         class="org.eclipse.gmf.runtime.diagram.ui.providers.DiagramGlobalActionHandlerProvider"
+         id="ProcessPresentation">
+         <Priority name="Lowest"/>
+         <ViewId id="org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditorID">
+            <ElementType class="org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart">
+               <GlobalActionId actionId="delete"/>
+            </ElementType>
+            <ElementType class="org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart">
+               <GlobalActionId actionId="save"/>
+            </ElementType>
+         </ViewId>
+      </GlobalActionHandlerProvider>
+      <GlobalActionHandlerProvider
+         class="org.eclipse.gmf.runtime.diagram.ui.providers.ide.providers.DiagramIDEGlobalActionHandlerProvider"
+         id="ProcessPresentationIDE">
+         <Priority name="Lowest"/>
+         <ViewId id="org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditorID">
+            <ElementType class="org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart">
+               <GlobalActionId actionId="bookmark"/>
+            </ElementType>
+         </ViewId>
+      </GlobalActionHandlerProvider>
+
+   </extension>
+
+
+   <extension point="org.eclipse.gmf.runtime.common.ui.services.markerNavigationProviders" id="markers-navigation">
+      <?gmfgen generated="true"?>
+      <MarkerNavigationProvider class="org.bonitasoft.studio.model.process.diagram.providers.ProcessMarkerNavigationProvider">
+         <MarkerType name="org.bonitasoft.studio.diagram.diagnostic"/>
+         <Priority name="Lowest"/>
+      </MarkerNavigationProvider>
+   </extension>
+
+   <extension id="diagnostic" name="Bonita process editor problems" point="org.eclipse.core.resources.markers">
+      <?gmfgen generated="true"?>
+      <super type="org.eclipse.core.resources.problemmarker"/>
+      <super type="org.eclipse.gmf.runtime.common.ui.services.marker"/>
+      <persistent value="true"/>
+   </extension>   
+
+   <extension id="validationDecoratorProvider" name="ValidationDecorations" point="org.eclipse.gmf.runtime.diagram.ui.decoratorProviders">
+      <?gmfgen generated="true"?>
+      <decoratorProvider class="org.bonitasoft.studio.model.process.diagram.providers.ProcessValidationDecoratorProvider">
+         <Priority name="Medium"/>
+         <object class="org.eclipse.gmf.runtime.diagram.ui.editparts.IPrimaryEditPart(org.eclipse.gmf.runtime.diagram.ui)" id="PRIMARY_VIEW"/>
+         <context decoratorTargets="PRIMARY_VIEW"/>
+      </decoratorProvider>
+   </extension>
+
+   <extension point="org.eclipse.core.runtime.preferences" id="prefs">
+      <?gmfgen generated="true"?>
+      <initializer class="org.bonitasoft.studio.model.process.diagram.preferences.DiagramPreferenceInitializer"/>
+   </extension>
+
+
+
+
+
+   <extension point="org.eclipse.gmf.runtime.diagram.core.viewProviders" id="view-provider">
+      <?gmfgen generated="true"?>
+      <viewProvider class="org.bonitasoft.studio.model.process.diagram.providers.ProcessViewProvider">
+         <Priority name="Lowest"/>
+         <context viewClass="org.eclipse.gmf.runtime.notation.Diagram" semanticHints="Process"/>
+         <context viewClass="org.eclipse.gmf.runtime.notation.Node" semanticHints="2009,2002,2003,2004,2036,2031,2025,2026,2027,2028,2008,2030,2006,2007,2010,2011,2013,2014,2015,2017,2016,2018,2019,2020,2021,2022,2023,2024,2029,2033,2035,3029,3035,3064,3043,3052,3030,3036,3065,3044,3053,3009,3003,3063,3005,3026,3031,3025,3027,3032,3028,3033,3008,3006,3034,3013,3012,3011,3014,3015,3016,3017,3023,3022,3021,3020,3050,3062,3060,3024,3051,3007,3002,3058,3018,3019"/>
+         <context viewClass="org.eclipse.gmf.runtime.notation.Edge" semanticHints="4001,4002,4003"/>
+      </viewProvider>
+   </extension>
+
+   <extension point="org.eclipse.gmf.runtime.diagram.ui.editpartProviders" id="ep-provider">
+      <?gmfgen generated="true"?>
+      <editpartProvider class="org.bonitasoft.studio.model.process.diagram.providers.ProcessEditPartProvider">
+         <Priority name="Lowest"/>
+         <object class="org.eclipse.gmf.runtime.notation.Diagram" id="generated-diagram">
+            <method name="getType()" value="Process"/>
+         </object>
+         <object class="org.eclipse.gmf.runtime.notation.Node" id="generated-nodes">
+            <method name="getType()" value="2009,2002,2003,2004,2036,2031,2025,2026,2027,2028,2008,2030,2006,2007,2010,2011,2013,2014,2015,2017,2016,2018,2019,2020,2021,2022,2023,2024,2029,2033,2035,3029,3035,3064,3043,3052,3030,3036,3065,3044,3053,3009,3003,3063,3005,3026,3031,3025,3027,3032,3028,3033,3008,3006,3034,3013,3012,3011,3014,3015,3016,3017,3023,3022,3021,3020,3050,3062,3060,3024,3051,3007,3002,3058,3018,3019"/>
+         </object>
+         <object class="org.eclipse.gmf.runtime.notation.Edge" id="generated-links">
+            <method name="getType()" value="4001,4002,4003"/>
+         </object>
+         <object class="org.eclipse.gmf.runtime.notation.Node" id="generated-labels">
+            <method name="getType()" value="5019,5021,5022,5001,5092,5081,5013,5014,5015,5016,5023,5074,5003,5008,5039,5040,5041,5042,5009,5043,5044,5045,5046,5047,5048,5049,5050,5051,5087,5091,5053,5054,5094,5055,5076,5056,5057,5095,5058,5077,5020,5025,5093,5005,5012,5059,5011,5017,5062,5018,5065,5026,5006,5068,5027,5029,5028,5030,5010,5031,5032,5038,5037,5036,5035,5052,5090,5086,5075,5007,5024,5083,5033,5034"/>
+         </object>
+         <object class="org.eclipse.gmf.runtime.notation.Node" id="generated-compartments">
+            <method name="getType()" value="7005,7001,7002,7006"/>
+         </object>
+         <context views="generated-diagram,generated-nodes,generated-links,generated-labels,generated-compartments"/>
+      </editpartProvider>
+   </extension>
+
+   <extension point="org.eclipse.gmf.runtime.emf.ui.modelingAssistantProviders" id="modelassist-provider">
+      <?gmfgen generated="true"?>
+      <modelingAssistantProvider class="org.bonitasoft.studio.model.process.diagram.providers.ProcessModelingAssistantProvider">
+         <Priority name="Lowest"/>
+         <object class="org.bonitasoft.studio.model.process.diagram.edit.parts.MainProcessEditPart" id="MainProcess_1000"/>
+         <object class="org.bonitasoft.studio.model.process.diagram.edit.parts.ANDGatewayEditPart" id="ANDGateway_2009"/>
+         <object class="org.bonitasoft.studio.model.process.diagram.edit.parts.StartEventEditPart" id="StartEvent_2002"/>
+         <object class="org.bonitasoft.studio.model.process.diagram.edit.parts.EndEventEditPart" id="EndEvent_2003"/>
+         <object class="org.bonitasoft.studio.model.process.diagram.edit.parts.TaskEditPart" id="Task_2004"/>
+         <object class="org.bonitasoft.studio.model.process.diagram.edit.parts.CallActivityEditPart" id="CallActivity_2036"/>
+         <object class="org.bonitasoft.studio.model.process.diagram.edit.parts.SubProcessEventEditPart" id="SubProcessEvent_2031"/>
+         <object class="org.bonitasoft.studio.model.process.diagram.edit.parts.ReceiveTaskEditPart" id="ReceiveTask_2025"/>
+         <object class="org.bonitasoft.studio.model.process.diagram.edit.parts.SendTaskEditPart" id="SendTask_2026"/>
+         <object class="org.bonitasoft.studio.model.process.diagram.edit.parts.ServiceTaskEditPart" id="ServiceTask_2027"/>
+         <object class="org.bonitasoft.studio.model.process.diagram.edit.parts.ScriptTaskEditPart" id="ScriptTask_2028"/>
+         <object class="org.bonitasoft.studio.model.process.diagram.edit.parts.XORGatewayEditPart" id="XORGateway_2008"/>
+         <object class="org.bonitasoft.studio.model.process.diagram.edit.parts.InclusiveGatewayEditPart" id="InclusiveGateway_2030"/>
+         <object class="org.bonitasoft.studio.model.process.diagram.edit.parts.ActivityEditPart" id="Activity_2006"/>
+         <object class="org.bonitasoft.studio.model.process.diagram.edit.parts.PoolEditPart" id="Pool_2007"/>
+         <object class="org.bonitasoft.studio.model.process.diagram.edit.parts.StartMessageEventEditPart" id="StartMessageEvent_2010"/>
+         <object class="org.bonitasoft.studio.model.process.diagram.edit.parts.EndMessageEventEditPart" id="EndMessageEvent_2011"/>
+         <object class="org.bonitasoft.studio.model.process.diagram.edit.parts.IntermediateCatchMessageEventEditPart" id="IntermediateCatchMessageEvent_2013"/>
+         <object class="org.bonitasoft.studio.model.process.diagram.edit.parts.IntermediateThrowMessageEventEditPart" id="IntermediateThrowMessageEvent_2014"/>
+         <object class="org.bonitasoft.studio.model.process.diagram.edit.parts.TextAnnotationEditPart" id="TextAnnotation_2015"/>
+         <object class="org.bonitasoft.studio.model.process.diagram.edit.parts.IntermediateCatchTimerEventEditPart" id="IntermediateCatchTimerEvent_2017"/>
+         <object class="org.bonitasoft.studio.model.process.diagram.edit.parts.StartTimerEventEditPart" id="StartTimerEvent_2016"/>
+         <object class="org.bonitasoft.studio.model.process.diagram.edit.parts.CatchLinkEventEditPart" id="CatchLinkEvent_2018"/>
+         <object class="org.bonitasoft.studio.model.process.diagram.edit.parts.ThrowLinkEventEditPart" id="ThrowLinkEvent_2019"/>
+         <object class="org.bonitasoft.studio.model.process.diagram.edit.parts.IntermediateThrowSignalEventEditPart" id="IntermediateThrowSignalEvent_2020"/>
+         <object class="org.bonitasoft.studio.model.process.diagram.edit.parts.IntermediateCatchSignalEventEditPart" id="IntermediateCatchSignalEvent_2021"/>
+         <object class="org.bonitasoft.studio.model.process.diagram.edit.parts.StartSignalEventEditPart" id="StartSignalEvent_2022"/>
+         <object class="org.bonitasoft.studio.model.process.diagram.edit.parts.EndSignalEventEditPart" id="EndSignalEvent_2023"/>
+         <object class="org.bonitasoft.studio.model.process.diagram.edit.parts.EventEditPart" id="Event_2024"/>
+         <object class="org.bonitasoft.studio.model.process.diagram.edit.parts.EndErrorEventEditPart" id="EndErrorEvent_2029"/>
+         <object class="org.bonitasoft.studio.model.process.diagram.edit.parts.StartErrorEventEditPart" id="StartErrorEvent_2033"/>
+         <object class="org.bonitasoft.studio.model.process.diagram.edit.parts.EndTerminatedEventEditPart" id="EndTerminatedEvent_2035"/>
+         <context elements="MainProcess_1000,ANDGateway_2009,StartEvent_2002,EndEvent_2003,Task_2004,CallActivity_2036,SubProcessEvent_2031,ReceiveTask_2025,SendTask_2026,ServiceTask_2027,ScriptTask_2028,XORGateway_2008,InclusiveGateway_2030,Activity_2006,Pool_2007,StartMessageEvent_2010,EndMessageEvent_2011,IntermediateCatchMessageEvent_2013,IntermediateThrowMessageEvent_2014,TextAnnotation_2015,IntermediateCatchTimerEvent_2017,StartTimerEvent_2016,CatchLinkEvent_2018,ThrowLinkEvent_2019,IntermediateThrowSignalEvent_2020,IntermediateCatchSignalEvent_2021,StartSignalEvent_2022,EndSignalEvent_2023,Event_2024,EndErrorEvent_2029,StartErrorEvent_2033,EndTerminatedEvent_2035"/>
+      </modelingAssistantProvider>
+   </extension>
+
+   <extension point="org.eclipse.gmf.runtime.common.ui.services.iconProviders" id="icon-provider">
+      <?gmfgen generated="true"?>
+      <IconProvider class="org.bonitasoft.studio.model.process.diagram.providers.ProcessIconProvider">
+         <Priority name="Low"/>
+      </IconProvider>
+   </extension>
+
+   <extension point="org.eclipse.gmf.runtime.common.ui.services.parserProviders" id="parser-provider">
+      <?gmfgen generated="true"?>
+      <ParserProvider class="org.bonitasoft.studio.model.process.diagram.providers.ProcessParserProvider">
+         <Priority name="Lowest"/>
+      </ParserProvider>
+   </extension>
+
+   <extension point="org.eclipse.gmf.runtime.emf.type.core.elementTypes" id="element-types">
+      <?gmfgen generated="true"?>
+      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+         <metamodelType
+               id="org.bonitasoft.studio.diagram.MainProcess_1000"
+               name="%metatype.name.MainProcess_1000"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType"
+               eclass="MainProcess"
+               edithelper="org.bonitasoft.studio.model.process.diagram.edit.helpers.MainProcessEditHelper">
+            <param name="semanticHint" value="1000"/>
+         </metamodelType>
+      </metamodel>
+      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+         <metamodelType
+               id="org.bonitasoft.studio.diagram.ANDGateway_2009"
+               name="%metatype.name.ANDGateway_2009"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType"
+               eclass="ANDGateway"
+               edithelper="org.bonitasoft.studio.model.process.diagram.edit.helpers.ANDGatewayEditHelper">
+            <param name="semanticHint" value="2009"/>
+         </metamodelType>
+      </metamodel>
+      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+         <metamodelType
+               id="org.bonitasoft.studio.diagram.StartEvent_2002"
+               name="%metatype.name.StartEvent_2002"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType"
+               eclass="StartEvent"
+               edithelper="org.bonitasoft.studio.model.process.diagram.edit.helpers.StartEventEditHelper">
+            <param name="semanticHint" value="2002"/>
+         </metamodelType>
+      </metamodel>
+      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+         <metamodelType
+               id="org.bonitasoft.studio.diagram.EndEvent_2003"
+               name="%metatype.name.EndEvent_2003"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType"
+               eclass="EndEvent"
+               edithelper="org.bonitasoft.studio.model.process.diagram.edit.helpers.EndEventEditHelper">
+            <param name="semanticHint" value="2003"/>
+         </metamodelType>
+      </metamodel>
+      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+         <metamodelType
+               id="org.bonitasoft.studio.diagram.Task_2004"
+               name="%metatype.name.Task_2004"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType"
+               eclass="Task"
+               edithelper="org.bonitasoft.studio.model.process.diagram.edit.helpers.TaskEditHelper">
+            <param name="semanticHint" value="2004"/>
+         </metamodelType>
+      </metamodel>
+      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+         <metamodelType
+               id="org.bonitasoft.studio.diagram.CallActivity_2036"
+               name="%metatype.name.CallActivity_2036"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType"
+               eclass="CallActivity"
+               edithelper="org.bonitasoft.studio.model.process.diagram.edit.helpers.CallActivityEditHelper">
+            <param name="semanticHint" value="2036"/>
+         </metamodelType>
+      </metamodel>
+      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+         <metamodelType
+               id="org.bonitasoft.studio.diagram.SubProcessEvent_2031"
+               name="%metatype.name.SubProcessEvent_2031"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType"
+               eclass="SubProcessEvent"
+               edithelper="org.bonitasoft.studio.model.process.diagram.edit.helpers.SubProcessEventEditHelper">
+            <param name="semanticHint" value="2031"/>
+         </metamodelType>
+      </metamodel>
+      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+         <specializationType
+               id="org.bonitasoft.studio.diagram.ReceiveTask_2025"
+               name="%metatype.name.ReceiveTask_2025"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType">
+            <specializes id="org.bonitasoft.studio.diagram.ReceiveTask_3026"/>
+            <param name="semanticHint" value="2025"/>
+         </specializationType>
+      </metamodel>
+      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+         <specializationType
+               id="org.bonitasoft.studio.diagram.SendTask_2026"
+               name="%metatype.name.SendTask_2026"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType">
+            <specializes id="org.bonitasoft.studio.diagram.SendTask_3025"/>
+            <param name="semanticHint" value="2026"/>
+         </specializationType>
+      </metamodel>
+      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+         <specializationType
+               id="org.bonitasoft.studio.diagram.ServiceTask_2027"
+               name="%metatype.name.ServiceTask_2027"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType">
+            <specializes id="org.bonitasoft.studio.diagram.ServiceTask_3027"/>
+            <param name="semanticHint" value="2027"/>
+         </specializationType>
+      </metamodel>
+      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+         <specializationType
+               id="org.bonitasoft.studio.diagram.ScriptTask_2028"
+               name="%metatype.name.ScriptTask_2028"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType">
+            <specializes id="org.bonitasoft.studio.diagram.ScriptTask_3028"/>
+            <param name="semanticHint" value="2028"/>
+         </specializationType>
+      </metamodel>
+      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+         <specializationType
+               id="org.bonitasoft.studio.diagram.XORGateway_2008"
+               name="%metatype.name.XORGateway_2008"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType">
+            <specializes id="org.bonitasoft.studio.diagram.XORGateway_3008"/>
+            <param name="semanticHint" value="2008"/>
+         </specializationType>
+      </metamodel>
+      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+         <specializationType
+               id="org.bonitasoft.studio.diagram.InclusiveGateway_2030"
+               name="%metatype.name.InclusiveGateway_2030"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType">
+            <specializes id="org.bonitasoft.studio.diagram.InclusiveGateway_3051"/>
+            <param name="semanticHint" value="2030"/>
+         </specializationType>
+      </metamodel>
+      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+         <specializationType
+               id="org.bonitasoft.studio.diagram.Activity_2006"
+               name="%metatype.name.Activity_2006"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType">
+            <specializes id="org.bonitasoft.studio.diagram.Activity_3006"/>
+            <param name="semanticHint" value="2006"/>
+         </specializationType>
+      </metamodel>
+      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+         <metamodelType
+               id="org.bonitasoft.studio.diagram.Pool_2007"
+               name="%metatype.name.Pool_2007"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType"
+               eclass="Pool"
+               edithelper="org.bonitasoft.studio.model.process.diagram.edit.helpers.PoolEditHelper">
+            <param name="semanticHint" value="2007"/>
+         </metamodelType>
+      </metamodel>
+      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+         <specializationType
+               id="org.bonitasoft.studio.diagram.StartMessageEvent_2010"
+               name="%metatype.name.StartMessageEvent_2010"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType">
+            <specializes id="org.bonitasoft.studio.diagram.StartMessageEvent_3012"/>
+            <param name="semanticHint" value="2010"/>
+         </specializationType>
+      </metamodel>
+      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+         <specializationType
+               id="org.bonitasoft.studio.diagram.EndMessageEvent_2011"
+               name="%metatype.name.EndMessageEvent_2011"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType">
+            <specializes id="org.bonitasoft.studio.diagram.EndMessageEvent_3011"/>
+            <param name="semanticHint" value="2011"/>
+         </specializationType>
+      </metamodel>
+      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+         <specializationType
+               id="org.bonitasoft.studio.diagram.IntermediateCatchMessageEvent_2013"
+               name="%metatype.name.IntermediateCatchMessageEvent_2013"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType">
+            <specializes id="org.bonitasoft.studio.diagram.IntermediateCatchMessageEvent_3013"/>
+            <param name="semanticHint" value="2013"/>
+         </specializationType>
+      </metamodel>
+      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+         <specializationType
+               id="org.bonitasoft.studio.diagram.IntermediateThrowMessageEvent_2014"
+               name="%metatype.name.IntermediateThrowMessageEvent_2014"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType">
+            <specializes id="org.bonitasoft.studio.diagram.IntermediateThrowMessageEvent_3014"/>
+            <param name="semanticHint" value="2014"/>
+         </specializationType>
+      </metamodel>
+      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+         <specializationType
+               id="org.bonitasoft.studio.diagram.TextAnnotation_2015"
+               name="%metatype.name.TextAnnotation_2015"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType">
+            <specializes id="org.bonitasoft.studio.diagram.TextAnnotation_3015"/>
+            <param name="semanticHint" value="2015"/>
+         </specializationType>
+      </metamodel>
+      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+         <specializationType
+               id="org.bonitasoft.studio.diagram.IntermediateCatchTimerEvent_2017"
+               name="%metatype.name.IntermediateCatchTimerEvent_2017"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType">
+            <specializes id="org.bonitasoft.studio.diagram.IntermediateCatchTimerEvent_3017"/>
+            <param name="semanticHint" value="2017"/>
+         </specializationType>
+      </metamodel>
+      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+         <specializationType
+               id="org.bonitasoft.studio.diagram.StartTimerEvent_2016"
+               name="%metatype.name.StartTimerEvent_2016"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType">
+            <specializes id="org.bonitasoft.studio.diagram.StartTimerEvent_3016"/>
+            <param name="semanticHint" value="2016"/>
+         </specializationType>
+      </metamodel>
+      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+         <specializationType
+               id="org.bonitasoft.studio.diagram.CatchLinkEvent_2018"
+               name="%metatype.name.CatchLinkEvent_2018"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType">
+            <specializes id="org.bonitasoft.studio.diagram.CatchLinkEvent_3019"/>
+            <param name="semanticHint" value="2018"/>
+         </specializationType>
+      </metamodel>
+      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+         <specializationType
+               id="org.bonitasoft.studio.diagram.ThrowLinkEvent_2019"
+               name="%metatype.name.ThrowLinkEvent_2019"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType">
+            <specializes id="org.bonitasoft.studio.diagram.ThrowLinkEvent_3018"/>
+            <param name="semanticHint" value="2019"/>
+         </specializationType>
+      </metamodel>
+      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+         <specializationType
+               id="org.bonitasoft.studio.diagram.IntermediateThrowSignalEvent_2020"
+               name="%metatype.name.IntermediateThrowSignalEvent_2020"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType">
+            <specializes id="org.bonitasoft.studio.diagram.IntermediateThrowSignalEvent_3022"/>
+            <param name="semanticHint" value="2020"/>
+         </specializationType>
+      </metamodel>
+      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+         <specializationType
+               id="org.bonitasoft.studio.diagram.IntermediateCatchSignalEvent_2021"
+               name="%metatype.name.IntermediateCatchSignalEvent_2021"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType">
+            <specializes id="org.bonitasoft.studio.diagram.IntermediateCatchSignalEvent_3021"/>
+            <param name="semanticHint" value="2021"/>
+         </specializationType>
+      </metamodel>
+      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+         <specializationType
+               id="org.bonitasoft.studio.diagram.StartSignalEvent_2022"
+               name="%metatype.name.StartSignalEvent_2022"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType">
+            <specializes id="org.bonitasoft.studio.diagram.StartSignalEvent_3023"/>
+            <param name="semanticHint" value="2022"/>
+         </specializationType>
+      </metamodel>
+      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+         <specializationType
+               id="org.bonitasoft.studio.diagram.EndSignalEvent_2023"
+               name="%metatype.name.EndSignalEvent_2023"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType">
+            <specializes id="org.bonitasoft.studio.diagram.EndSignalEvent_3020"/>
+            <param name="semanticHint" value="2023"/>
+         </specializationType>
+      </metamodel>
+      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+         <specializationType
+               id="org.bonitasoft.studio.diagram.Event_2024"
+               name="%metatype.name.Event_2024"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType">
+            <specializes id="org.bonitasoft.studio.diagram.Event_3024"/>
+            <param name="semanticHint" value="2024"/>
+         </specializationType>
+      </metamodel>
+      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+         <specializationType
+               id="org.bonitasoft.studio.diagram.EndErrorEvent_2029"
+               name="%metatype.name.EndErrorEvent_2029"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType">
+            <specializes id="org.bonitasoft.studio.diagram.EndErrorEvent_3050"/>
+            <param name="semanticHint" value="2029"/>
+         </specializationType>
+      </metamodel>
+      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+         <specializationType
+               id="org.bonitasoft.studio.diagram.StartErrorEvent_2033"
+               name="%metatype.name.StartErrorEvent_2033"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType">
+            <specializes id="org.bonitasoft.studio.diagram.StartErrorEvent_3060"/>
+            <param name="semanticHint" value="2033"/>
+         </specializationType>
+      </metamodel>
+      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+         <specializationType
+               id="org.bonitasoft.studio.diagram.EndTerminatedEvent_2035"
+               name="%metatype.name.EndTerminatedEvent_2035"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType">
+            <specializes id="org.bonitasoft.studio.diagram.EndTerminatedEvent_3062"/>
+            <param name="semanticHint" value="2035"/>
+         </specializationType>
+      </metamodel>
+      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+         <metamodelType
+               id="org.bonitasoft.studio.diagram.IntermediateErrorCatchEvent_3029"
+               name="%metatype.name.IntermediateErrorCatchEvent_3029"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType"
+               eclass="IntermediateErrorCatchEvent"
+               edithelper="org.bonitasoft.studio.model.process.diagram.edit.helpers.IntermediateErrorCatchEventEditHelper">
+            <param name="semanticHint" value="3029"/>
+         </metamodelType>
+      </metamodel>
+      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+         <metamodelType
+               id="org.bonitasoft.studio.diagram.BoundaryMessageEvent_3035"
+               name="%metatype.name.BoundaryMessageEvent_3035"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType"
+               eclass="BoundaryMessageEvent"
+               edithelper="org.bonitasoft.studio.model.process.diagram.edit.helpers.BoundaryMessageEventEditHelper">
+            <param name="semanticHint" value="3035"/>
+         </metamodelType>
+      </metamodel>
+      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+         <metamodelType
+               id="org.bonitasoft.studio.diagram.NonInterruptingBoundaryTimerEvent_3064"
+               name="%metatype.name.NonInterruptingBoundaryTimerEvent_3064"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType"
+               eclass="NonInterruptingBoundaryTimerEvent"
+               edithelper="org.bonitasoft.studio.model.process.diagram.edit.helpers.NonInterruptingBoundaryTimerEventEditHelper">
+            <param name="semanticHint" value="3064"/>
+         </metamodelType>
+      </metamodel>
+      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+         <metamodelType
+               id="org.bonitasoft.studio.diagram.BoundaryTimerEvent_3043"
+               name="%metatype.name.BoundaryTimerEvent_3043"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType"
+               eclass="BoundaryTimerEvent"
+               edithelper="org.bonitasoft.studio.model.process.diagram.edit.helpers.BoundaryTimerEventEditHelper">
+            <param name="semanticHint" value="3043"/>
+         </metamodelType>
+      </metamodel>
+      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+         <metamodelType
+               id="org.bonitasoft.studio.diagram.BoundarySignalEvent_3052"
+               name="%metatype.name.BoundarySignalEvent_3052"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType"
+               eclass="BoundarySignalEvent"
+               edithelper="org.bonitasoft.studio.model.process.diagram.edit.helpers.BoundarySignalEventEditHelper">
+            <param name="semanticHint" value="3052"/>
+         </metamodelType>
+      </metamodel>
+      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+         <specializationType
+               id="org.bonitasoft.studio.diagram.IntermediateErrorCatchEvent_3030"
+               name="%metatype.name.IntermediateErrorCatchEvent_3030"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType">
+            <specializes id="org.bonitasoft.studio.diagram.IntermediateErrorCatchEvent_3029"/>
+            <param name="semanticHint" value="3030"/>
+         </specializationType>
+      </metamodel>
+      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+         <specializationType
+               id="org.bonitasoft.studio.diagram.BoundaryMessageEvent_3036"
+               name="%metatype.name.BoundaryMessageEvent_3036"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType">
+            <specializes id="org.bonitasoft.studio.diagram.BoundaryMessageEvent_3035"/>
+            <param name="semanticHint" value="3036"/>
+         </specializationType>
+      </metamodel>
+      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+         <specializationType
+               id="org.bonitasoft.studio.diagram.NonInterruptingBoundaryTimerEvent_3065"
+               name="%metatype.name.NonInterruptingBoundaryTimerEvent_3065"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType">
+            <specializes id="org.bonitasoft.studio.diagram.NonInterruptingBoundaryTimerEvent_3064"/>
+            <param name="semanticHint" value="3065"/>
+         </specializationType>
+      </metamodel>
+      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+         <specializationType
+               id="org.bonitasoft.studio.diagram.BoundaryTimerEvent_3044"
+               name="%metatype.name.BoundaryTimerEvent_3044"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType">
+            <specializes id="org.bonitasoft.studio.diagram.BoundaryTimerEvent_3043"/>
+            <param name="semanticHint" value="3044"/>
+         </specializationType>
+      </metamodel>
+      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+         <specializationType
+               id="org.bonitasoft.studio.diagram.BoundarySignalEvent_3053"
+               name="%metatype.name.BoundarySignalEvent_3053"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType">
+            <specializes id="org.bonitasoft.studio.diagram.BoundarySignalEvent_3052"/>
+            <param name="semanticHint" value="3053"/>
+         </specializationType>
+      </metamodel>
+      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+         <specializationType
+               id="org.bonitasoft.studio.diagram.ANDGateway_3009"
+               name="%metatype.name.ANDGateway_3009"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType">
+            <specializes id="org.bonitasoft.studio.diagram.ANDGateway_2009"/>
+            <param name="semanticHint" value="3009"/>
+         </specializationType>
+      </metamodel>
+      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+         <specializationType
+               id="org.bonitasoft.studio.diagram.EndEvent_3003"
+               name="%metatype.name.EndEvent_3003"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType">
+            <specializes id="org.bonitasoft.studio.diagram.EndEvent_2003"/>
+            <param name="semanticHint" value="3003"/>
+         </specializationType>
+      </metamodel>
+      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+         <specializationType
+               id="org.bonitasoft.studio.diagram.CallActivity_3063"
+               name="%metatype.name.CallActivity_3063"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType">
+            <specializes id="org.bonitasoft.studio.diagram.CallActivity_2036"/>
+            <param name="semanticHint" value="3063"/>
+         </specializationType>
+      </metamodel>
+      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+         <specializationType
+               id="org.bonitasoft.studio.diagram.Task_3005"
+               name="%metatype.name.Task_3005"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType">
+            <specializes id="org.bonitasoft.studio.diagram.Task_2004"/>
+            <param name="semanticHint" value="3005"/>
+         </specializationType>
+      </metamodel>
+      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+         <metamodelType
+               id="org.bonitasoft.studio.diagram.ReceiveTask_3026"
+               name="%metatype.name.ReceiveTask_3026"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType"
+               eclass="ReceiveTask"
+               edithelper="org.bonitasoft.studio.model.process.diagram.edit.helpers.ReceiveTaskEditHelper">
+            <param name="semanticHint" value="3026"/>
+         </metamodelType>
+      </metamodel>
+      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+         <specializationType
+               id="org.bonitasoft.studio.diagram.IntermediateErrorCatchEvent_3031"
+               name="%metatype.name.IntermediateErrorCatchEvent_3031"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType">
+            <specializes id="org.bonitasoft.studio.diagram.IntermediateErrorCatchEvent_3029"/>
+            <param name="semanticHint" value="3031"/>
+         </specializationType>
+      </metamodel>
+      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+         <metamodelType
+               id="org.bonitasoft.studio.diagram.SendTask_3025"
+               name="%metatype.name.SendTask_3025"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType"
+               eclass="SendTask"
+               edithelper="org.bonitasoft.studio.model.process.diagram.edit.helpers.SendTaskEditHelper">
+            <param name="semanticHint" value="3025"/>
+         </metamodelType>
+      </metamodel>
+      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+         <metamodelType
+               id="org.bonitasoft.studio.diagram.ServiceTask_3027"
+               name="%metatype.name.ServiceTask_3027"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType"
+               eclass="ServiceTask"
+               edithelper="org.bonitasoft.studio.model.process.diagram.edit.helpers.ServiceTaskEditHelper">
+            <param name="semanticHint" value="3027"/>
+         </metamodelType>
+      </metamodel>
+      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+         <specializationType
+               id="org.bonitasoft.studio.diagram.IntermediateErrorCatchEvent_3032"
+               name="%metatype.name.IntermediateErrorCatchEvent_3032"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType">
+            <specializes id="org.bonitasoft.studio.diagram.IntermediateErrorCatchEvent_3029"/>
+            <param name="semanticHint" value="3032"/>
+         </specializationType>
+      </metamodel>
+      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+         <metamodelType
+               id="org.bonitasoft.studio.diagram.ScriptTask_3028"
+               name="%metatype.name.ScriptTask_3028"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType"
+               eclass="ScriptTask"
+               edithelper="org.bonitasoft.studio.model.process.diagram.edit.helpers.ScriptTaskEditHelper">
+            <param name="semanticHint" value="3028"/>
+         </metamodelType>
+      </metamodel>
+      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+         <specializationType
+               id="org.bonitasoft.studio.diagram.IntermediateErrorCatchEvent_3033"
+               name="%metatype.name.IntermediateErrorCatchEvent_3033"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType">
+            <specializes id="org.bonitasoft.studio.diagram.IntermediateErrorCatchEvent_3029"/>
+            <param name="semanticHint" value="3033"/>
+         </specializationType>
+      </metamodel>
+      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+         <metamodelType
+               id="org.bonitasoft.studio.diagram.XORGateway_3008"
+               name="%metatype.name.XORGateway_3008"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType"
+               eclass="XORGateway"
+               edithelper="org.bonitasoft.studio.model.process.diagram.edit.helpers.XORGatewayEditHelper">
+            <param name="semanticHint" value="3008"/>
+         </metamodelType>
+      </metamodel>
+      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+         <metamodelType
+               id="org.bonitasoft.studio.diagram.Activity_3006"
+               name="%metatype.name.Activity_3006"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType"
+               eclass="Activity"
+               edithelper="org.bonitasoft.studio.model.process.diagram.edit.helpers.ActivityEditHelper">
+            <param name="semanticHint" value="3006"/>
+         </metamodelType>
+      </metamodel>
+      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+         <specializationType
+               id="org.bonitasoft.studio.diagram.IntermediateErrorCatchEvent_3034"
+               name="%metatype.name.IntermediateErrorCatchEvent_3034"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType">
+            <specializes id="org.bonitasoft.studio.diagram.IntermediateErrorCatchEvent_3029"/>
+            <param name="semanticHint" value="3034"/>
+         </specializationType>
+      </metamodel>
+      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+         <metamodelType
+               id="org.bonitasoft.studio.diagram.IntermediateCatchMessageEvent_3013"
+               name="%metatype.name.IntermediateCatchMessageEvent_3013"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType"
+               eclass="IntermediateCatchMessageEvent"
+               edithelper="org.bonitasoft.studio.model.process.diagram.edit.helpers.IntermediateCatchMessageEventEditHelper">
+            <param name="semanticHint" value="3013"/>
+         </metamodelType>
+      </metamodel>
+      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+         <metamodelType
+               id="org.bonitasoft.studio.diagram.StartMessageEvent_3012"
+               name="%metatype.name.StartMessageEvent_3012"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType"
+               eclass="StartMessageEvent"
+               edithelper="org.bonitasoft.studio.model.process.diagram.edit.helpers.StartMessageEventEditHelper">
+            <param name="semanticHint" value="3012"/>
+         </metamodelType>
+      </metamodel>
+      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+         <metamodelType
+               id="org.bonitasoft.studio.diagram.EndMessageEvent_3011"
+               name="%metatype.name.EndMessageEvent_3011"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType"
+               eclass="EndMessageEvent"
+               edithelper="org.bonitasoft.studio.model.process.diagram.edit.helpers.EndMessageEventEditHelper">
+            <param name="semanticHint" value="3011"/>
+         </metamodelType>
+      </metamodel>
+      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+         <metamodelType
+               id="org.bonitasoft.studio.diagram.IntermediateThrowMessageEvent_3014"
+               name="%metatype.name.IntermediateThrowMessageEvent_3014"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType"
+               eclass="IntermediateThrowMessageEvent"
+               edithelper="org.bonitasoft.studio.model.process.diagram.edit.helpers.IntermediateThrowMessageEventEditHelper">
+            <param name="semanticHint" value="3014"/>
+         </metamodelType>
+      </metamodel>
+      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+         <metamodelType
+               id="org.bonitasoft.studio.diagram.TextAnnotation_3015"
+               name="%metatype.name.TextAnnotation_3015"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType"
+               eclass="TextAnnotation"
+               edithelper="org.bonitasoft.studio.model.process.diagram.edit.helpers.TextAnnotationEditHelper">
+            <param name="semanticHint" value="3015"/>
+         </metamodelType>
+      </metamodel>
+      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+         <metamodelType
+               id="org.bonitasoft.studio.diagram.StartTimerEvent_3016"
+               name="%metatype.name.StartTimerEvent_3016"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType"
+               eclass="StartTimerEvent"
+               edithelper="org.bonitasoft.studio.model.process.diagram.edit.helpers.StartTimerEventEditHelper">
+            <param name="semanticHint" value="3016"/>
+         </metamodelType>
+      </metamodel>
+      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+         <metamodelType
+               id="org.bonitasoft.studio.diagram.IntermediateCatchTimerEvent_3017"
+               name="%metatype.name.IntermediateCatchTimerEvent_3017"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType"
+               eclass="IntermediateCatchTimerEvent"
+               edithelper="org.bonitasoft.studio.model.process.diagram.edit.helpers.IntermediateCatchTimerEventEditHelper">
+            <param name="semanticHint" value="3017"/>
+         </metamodelType>
+      </metamodel>
+      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+         <metamodelType
+               id="org.bonitasoft.studio.diagram.StartSignalEvent_3023"
+               name="%metatype.name.StartSignalEvent_3023"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType"
+               eclass="StartSignalEvent"
+               edithelper="org.bonitasoft.studio.model.process.diagram.edit.helpers.StartSignalEventEditHelper">
+            <param name="semanticHint" value="3023"/>
+         </metamodelType>
+      </metamodel>
+      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+         <metamodelType
+               id="org.bonitasoft.studio.diagram.IntermediateThrowSignalEvent_3022"
+               name="%metatype.name.IntermediateThrowSignalEvent_3022"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType"
+               eclass="IntermediateThrowSignalEvent"
+               edithelper="org.bonitasoft.studio.model.process.diagram.edit.helpers.IntermediateThrowSignalEventEditHelper">
+            <param name="semanticHint" value="3022"/>
+         </metamodelType>
+      </metamodel>
+      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+         <metamodelType
+               id="org.bonitasoft.studio.diagram.IntermediateCatchSignalEvent_3021"
+               name="%metatype.name.IntermediateCatchSignalEvent_3021"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType"
+               eclass="IntermediateCatchSignalEvent"
+               edithelper="org.bonitasoft.studio.model.process.diagram.edit.helpers.IntermediateCatchSignalEventEditHelper">
+            <param name="semanticHint" value="3021"/>
+         </metamodelType>
+      </metamodel>
+      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+         <metamodelType
+               id="org.bonitasoft.studio.diagram.EndSignalEvent_3020"
+               name="%metatype.name.EndSignalEvent_3020"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType"
+               eclass="EndSignalEvent"
+               edithelper="org.bonitasoft.studio.model.process.diagram.edit.helpers.EndSignalEventEditHelper">
+            <param name="semanticHint" value="3020"/>
+         </metamodelType>
+      </metamodel>
+      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+         <metamodelType
+               id="org.bonitasoft.studio.diagram.EndErrorEvent_3050"
+               name="%metatype.name.EndErrorEvent_3050"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType"
+               eclass="EndErrorEvent"
+               edithelper="org.bonitasoft.studio.model.process.diagram.edit.helpers.EndErrorEventEditHelper">
+            <param name="semanticHint" value="3050"/>
+         </metamodelType>
+      </metamodel>
+      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+         <metamodelType
+               id="org.bonitasoft.studio.diagram.EndTerminatedEvent_3062"
+               name="%metatype.name.EndTerminatedEvent_3062"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType"
+               eclass="EndTerminatedEvent"
+               edithelper="org.bonitasoft.studio.model.process.diagram.edit.helpers.EndTerminatedEventEditHelper">
+            <param name="semanticHint" value="3062"/>
+         </metamodelType>
+      </metamodel>
+      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+         <metamodelType
+               id="org.bonitasoft.studio.diagram.StartErrorEvent_3060"
+               name="%metatype.name.StartErrorEvent_3060"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType"
+               eclass="StartErrorEvent"
+               edithelper="org.bonitasoft.studio.model.process.diagram.edit.helpers.StartErrorEventEditHelper">
+            <param name="semanticHint" value="3060"/>
+         </metamodelType>
+      </metamodel>
+      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+         <metamodelType
+               id="org.bonitasoft.studio.diagram.Event_3024"
+               name="%metatype.name.Event_3024"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType"
+               eclass="Event"
+               edithelper="org.bonitasoft.studio.model.process.diagram.edit.helpers.EventEditHelper">
+            <param name="semanticHint" value="3024"/>
+         </metamodelType>
+      </metamodel>
+      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+         <metamodelType
+               id="org.bonitasoft.studio.diagram.InclusiveGateway_3051"
+               name="%metatype.name.InclusiveGateway_3051"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType"
+               eclass="InclusiveGateway"
+               edithelper="org.bonitasoft.studio.model.process.diagram.edit.helpers.InclusiveGatewayEditHelper">
+            <param name="semanticHint" value="3051"/>
+         </metamodelType>
+      </metamodel>
+      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+         <metamodelType
+               id="org.bonitasoft.studio.diagram.Lane_3007"
+               name="%metatype.name.Lane_3007"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType"
+               eclass="Lane"
+               edithelper="org.bonitasoft.studio.model.process.diagram.edit.helpers.LaneEditHelper">
+            <param name="semanticHint" value="3007"/>
+         </metamodelType>
+      </metamodel>
+      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+         <specializationType
+               id="org.bonitasoft.studio.diagram.StartEvent_3002"
+               name="%metatype.name.StartEvent_3002"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType">
+            <specializes id="org.bonitasoft.studio.diagram.StartEvent_2002"/>
+            <param name="semanticHint" value="3002"/>
+         </specializationType>
+      </metamodel>
+      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+         <specializationType
+               id="org.bonitasoft.studio.diagram.SubProcessEvent_3058"
+               name="%metatype.name.SubProcessEvent_3058"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType">
+            <specializes id="org.bonitasoft.studio.diagram.SubProcessEvent_2031"/>
+            <param name="semanticHint" value="3058"/>
+         </specializationType>
+      </metamodel>
+      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+         <metamodelType
+               id="org.bonitasoft.studio.diagram.ThrowLinkEvent_3018"
+               name="%metatype.name.ThrowLinkEvent_3018"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType"
+               eclass="ThrowLinkEvent"
+               edithelper="org.bonitasoft.studio.model.process.diagram.edit.helpers.ThrowLinkEventEditHelper">
+            <param name="semanticHint" value="3018"/>
+         </metamodelType>
+      </metamodel>
+      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+         <metamodelType
+               id="org.bonitasoft.studio.diagram.CatchLinkEvent_3019"
+               name="%metatype.name.CatchLinkEvent_3019"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType"
+               eclass="CatchLinkEvent"
+               edithelper="org.bonitasoft.studio.model.process.diagram.edit.helpers.CatchLinkEventEditHelper">
+            <param name="semanticHint" value="3019"/>
+         </metamodelType>
+      </metamodel>
+      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+         <metamodelType
+               id="org.bonitasoft.studio.diagram.SequenceFlow_4001"
+               name="%metatype.name.SequenceFlow_4001"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType"
+               eclass="SequenceFlow"
+               edithelper="org.bonitasoft.studio.model.process.diagram.edit.helpers.SequenceFlowEditHelper">
+            <param name="semanticHint" value="4001"/>
+         </metamodelType>
+      </metamodel>
+      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+         <metamodelType
+               id="org.bonitasoft.studio.diagram.MessageFlow_4002"
+               name="%metatype.name.MessageFlow_4002"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType"
+               eclass="MessageFlow"
+               edithelper="org.bonitasoft.studio.model.process.diagram.edit.helpers.MessageFlowEditHelper">
+            <param name="semanticHint" value="4002"/>
+         </metamodelType>
+      </metamodel>
+      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+         <metamodelType
+               id="org.bonitasoft.studio.diagram.TextAnnotationAttachment_4003"
+               name="%metatype.name.TextAnnotationAttachment_4003"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType"
+               eclass="TextAnnotationAttachment"
+               edithelper="org.bonitasoft.studio.model.process.diagram.edit.helpers.TextAnnotationAttachmentEditHelper">
+            <param name="semanticHint" value="4003"/>
+         </metamodelType>
+      </metamodel>
+   </extension>
+
+   <extension point="org.eclipse.gmf.runtime.emf.type.core.elementTypeBindings" id="element-types-bindings">
+      <?gmfgen generated="true"?>
+      <clientContext id="SharedClientContext">
+         <enablement>
+            <test
+               property="org.eclipse.gmf.runtime.emf.core.editingDomain"
+               value="org.bonitasoft.studio.diagram.EditingDomain"/>
+         </enablement>
+      </clientContext> 
+      <binding context="SharedClientContext">
+         <elementType ref="org.bonitasoft.studio.diagram.MainProcess_1000"/>
+         <elementType ref="org.bonitasoft.studio.diagram.ANDGateway_2009"/>
+         <elementType ref="org.bonitasoft.studio.diagram.StartEvent_2002"/>
+         <elementType ref="org.bonitasoft.studio.diagram.EndEvent_2003"/>
+         <elementType ref="org.bonitasoft.studio.diagram.Task_2004"/>
+         <elementType ref="org.bonitasoft.studio.diagram.CallActivity_2036"/>
+         <elementType ref="org.bonitasoft.studio.diagram.SubProcessEvent_2031"/>
+         <elementType ref="org.bonitasoft.studio.diagram.ReceiveTask_2025"/>
+         <elementType ref="org.bonitasoft.studio.diagram.SendTask_2026"/>
+         <elementType ref="org.bonitasoft.studio.diagram.ServiceTask_2027"/>
+         <elementType ref="org.bonitasoft.studio.diagram.ScriptTask_2028"/>
+         <elementType ref="org.bonitasoft.studio.diagram.XORGateway_2008"/>
+         <elementType ref="org.bonitasoft.studio.diagram.InclusiveGateway_2030"/>
+         <elementType ref="org.bonitasoft.studio.diagram.Activity_2006"/>
+         <elementType ref="org.bonitasoft.studio.diagram.Pool_2007"/>
+         <elementType ref="org.bonitasoft.studio.diagram.StartMessageEvent_2010"/>
+         <elementType ref="org.bonitasoft.studio.diagram.EndMessageEvent_2011"/>
+         <elementType ref="org.bonitasoft.studio.diagram.IntermediateCatchMessageEvent_2013"/>
+         <elementType ref="org.bonitasoft.studio.diagram.IntermediateThrowMessageEvent_2014"/>
+         <elementType ref="org.bonitasoft.studio.diagram.TextAnnotation_2015"/>
+         <elementType ref="org.bonitasoft.studio.diagram.IntermediateCatchTimerEvent_2017"/>
+         <elementType ref="org.bonitasoft.studio.diagram.StartTimerEvent_2016"/>
+         <elementType ref="org.bonitasoft.studio.diagram.CatchLinkEvent_2018"/>
+         <elementType ref="org.bonitasoft.studio.diagram.ThrowLinkEvent_2019"/>
+         <elementType ref="org.bonitasoft.studio.diagram.IntermediateThrowSignalEvent_2020"/>
+         <elementType ref="org.bonitasoft.studio.diagram.IntermediateCatchSignalEvent_2021"/>
+         <elementType ref="org.bonitasoft.studio.diagram.StartSignalEvent_2022"/>
+         <elementType ref="org.bonitasoft.studio.diagram.EndSignalEvent_2023"/>
+         <elementType ref="org.bonitasoft.studio.diagram.Event_2024"/>
+         <elementType ref="org.bonitasoft.studio.diagram.EndErrorEvent_2029"/>
+         <elementType ref="org.bonitasoft.studio.diagram.StartErrorEvent_2033"/>
+         <elementType ref="org.bonitasoft.studio.diagram.EndTerminatedEvent_2035"/>
+         <elementType ref="org.bonitasoft.studio.diagram.IntermediateErrorCatchEvent_3029"/>
+         <elementType ref="org.bonitasoft.studio.diagram.BoundaryMessageEvent_3035"/>
+         <elementType ref="org.bonitasoft.studio.diagram.NonInterruptingBoundaryTimerEvent_3064"/>
+         <elementType ref="org.bonitasoft.studio.diagram.BoundaryTimerEvent_3043"/>
+         <elementType ref="org.bonitasoft.studio.diagram.BoundarySignalEvent_3052"/>
+         <elementType ref="org.bonitasoft.studio.diagram.IntermediateErrorCatchEvent_3030"/>
+         <elementType ref="org.bonitasoft.studio.diagram.BoundaryMessageEvent_3036"/>
+         <elementType ref="org.bonitasoft.studio.diagram.NonInterruptingBoundaryTimerEvent_3065"/>
+         <elementType ref="org.bonitasoft.studio.diagram.BoundaryTimerEvent_3044"/>
+         <elementType ref="org.bonitasoft.studio.diagram.BoundarySignalEvent_3053"/>
+         <elementType ref="org.bonitasoft.studio.diagram.ANDGateway_3009"/>
+         <elementType ref="org.bonitasoft.studio.diagram.EndEvent_3003"/>
+         <elementType ref="org.bonitasoft.studio.diagram.CallActivity_3063"/>
+         <elementType ref="org.bonitasoft.studio.diagram.Task_3005"/>
+         <elementType ref="org.bonitasoft.studio.diagram.ReceiveTask_3026"/>
+         <elementType ref="org.bonitasoft.studio.diagram.IntermediateErrorCatchEvent_3031"/>
+         <elementType ref="org.bonitasoft.studio.diagram.SendTask_3025"/>
+         <elementType ref="org.bonitasoft.studio.diagram.ServiceTask_3027"/>
+         <elementType ref="org.bonitasoft.studio.diagram.IntermediateErrorCatchEvent_3032"/>
+         <elementType ref="org.bonitasoft.studio.diagram.ScriptTask_3028"/>
+         <elementType ref="org.bonitasoft.studio.diagram.IntermediateErrorCatchEvent_3033"/>
+         <elementType ref="org.bonitasoft.studio.diagram.XORGateway_3008"/>
+         <elementType ref="org.bonitasoft.studio.diagram.Activity_3006"/>
+         <elementType ref="org.bonitasoft.studio.diagram.IntermediateErrorCatchEvent_3034"/>
+         <elementType ref="org.bonitasoft.studio.diagram.IntermediateCatchMessageEvent_3013"/>
+         <elementType ref="org.bonitasoft.studio.diagram.StartMessageEvent_3012"/>
+         <elementType ref="org.bonitasoft.studio.diagram.EndMessageEvent_3011"/>
+         <elementType ref="org.bonitasoft.studio.diagram.IntermediateThrowMessageEvent_3014"/>
+         <elementType ref="org.bonitasoft.studio.diagram.TextAnnotation_3015"/>
+         <elementType ref="org.bonitasoft.studio.diagram.StartTimerEvent_3016"/>
+         <elementType ref="org.bonitasoft.studio.diagram.IntermediateCatchTimerEvent_3017"/>
+         <elementType ref="org.bonitasoft.studio.diagram.StartSignalEvent_3023"/>
+         <elementType ref="org.bonitasoft.studio.diagram.IntermediateThrowSignalEvent_3022"/>
+         <elementType ref="org.bonitasoft.studio.diagram.IntermediateCatchSignalEvent_3021"/>
+         <elementType ref="org.bonitasoft.studio.diagram.EndSignalEvent_3020"/>
+         <elementType ref="org.bonitasoft.studio.diagram.EndErrorEvent_3050"/>
+         <elementType ref="org.bonitasoft.studio.diagram.EndTerminatedEvent_3062"/>
+         <elementType ref="org.bonitasoft.studio.diagram.StartErrorEvent_3060"/>
+         <elementType ref="org.bonitasoft.studio.diagram.Event_3024"/>
+         <elementType ref="org.bonitasoft.studio.diagram.InclusiveGateway_3051"/>
+         <elementType ref="org.bonitasoft.studio.diagram.Lane_3007"/>
+         <elementType ref="org.bonitasoft.studio.diagram.StartEvent_3002"/>
+         <elementType ref="org.bonitasoft.studio.diagram.SubProcessEvent_3058"/>
+         <elementType ref="org.bonitasoft.studio.diagram.ThrowLinkEvent_3018"/>
+         <elementType ref="org.bonitasoft.studio.diagram.CatchLinkEvent_3019"/>
+         <elementType ref="org.bonitasoft.studio.diagram.SequenceFlow_4001"/>
+         <elementType ref="org.bonitasoft.studio.diagram.MessageFlow_4002"/>
+         <elementType ref="org.bonitasoft.studio.diagram.TextAnnotationAttachment_4003"/>
+         <advice ref="org.eclipse.gmf.runtime.diagram.core.advice.notationDepdendents"/>
+      </binding>
+   </extension>
+	   <extension point="org.eclipse.core.expressions.propertyTesters" id="navigator-proptest.isURIEditorInput">
+      <?gmfgen generated="true"?>
+       <propertyTester
+           id="org.bonitasoft.studio.diagram.URIEditorInputPropertyTester"
+           type="org.eclipse.emf.common.ui.URIEditorInput"
+           namespace="org.bonitasoft.studio.diagram"
+           properties="isURIEditorInput"
+           class="org.bonitasoft.studio.model.process.diagram.part.ProcessUriEditorInputTester">
+       </propertyTester>
+   </extension>
+
+	   <extension point="org.eclipse.ui.navigator.viewer" id="navigator-viewbinding">
+      <?gmfgen generated="true"?>
+      <viewerContentBinding viewerId="org.eclipse.ui.navigator.ProjectExplorer">
+         <includes>
+            <contentExtension pattern="org.bonitasoft.studio.diagram.resourceContent"/>
+            <contentExtension pattern="org.bonitasoft.studio.diagram.navigatorLinkHelper"/>
+         </includes>
+      </viewerContentBinding>
+      <viewerActionBinding viewerId="org.eclipse.ui.navigator.ProjectExplorer">
+         <includes>
+            <actionExtension pattern="org.bonitasoft.studio.diagram.navigatorActionProvider"/>
+         </includes>
+      </viewerActionBinding>
+   </extension>
+
+   <extension point="org.eclipse.ui.navigator.navigatorContent" id="navigator-content">
+      <?gmfgen generated="true"?>
+      <navigatorContent
+            id="org.bonitasoft.studio.diagram.resourceContent" 
+            name="%navigatorContentName" 
+            priority="normal" 
+            contentProvider="org.bonitasoft.studio.model.process.diagram.navigator.ProcessNavigatorContentProvider" 
+            labelProvider="org.bonitasoft.studio.model.process.diagram.navigator.ProcessNavigatorLabelProvider"
+            icon="icons/obj16/ProcessDiagramFile.gif"
+            activeByDefault="true">
+         <triggerPoints>
+            <or>
+	           <and>
+    	          <instanceof value="org.eclipse.core.resources.IFile"/>
+        	      <test property="org.eclipse.core.resources.extension" value="proc"/>
+               </and>
+               <instanceof value="org.bonitasoft.studio.model.process.diagram.navigator.ProcessAbstractNavigatorItem"/>
+            </or>
+         </triggerPoints>
+         <possibleChildren>
+            <or>
+         	   <instanceof value="org.bonitasoft.studio.model.process.diagram.navigator.ProcessAbstractNavigatorItem"/>
+            </or>
+         </possibleChildren>
+         <commonSorter 
+               id="org.bonitasoft.studio.diagram.navigatorSorter" 
+               class="org.bonitasoft.studio.model.process.diagram.navigator.ProcessNavigatorSorter">
+            <parentExpression>
+               <or>
+	              <and>
+    	             <instanceof value="org.eclipse.core.resources.IFile"/>
+        	         <test property="org.eclipse.core.resources.extension" value="proc"/>
+                  </and>
+                  <instanceof value="org.bonitasoft.studio.model.process.diagram.navigator.ProcessAbstractNavigatorItem"/>
+               </or>
+            </parentExpression>
+         </commonSorter>
+      </navigatorContent>
+      <actionProvider
+            id="org.bonitasoft.studio.diagram.navigatorActionProvider"
+            class="org.bonitasoft.studio.model.process.diagram.navigator.ProcessNavigatorActionProvider">
+         <enablement>
+            <or>
+               <instanceof value="org.bonitasoft.studio.model.process.diagram.navigator.ProcessAbstractNavigatorItem"/>
+            </or>
+         </enablement>
+      </actionProvider>
+   </extension>
+   
+	   <extension point="org.eclipse.ui.navigator.linkHelper" id="navigator-linkhelper">
+      <?gmfgen generated="true"?>
+      <linkHelper
+            id="org.bonitasoft.studio.diagram.navigatorLinkHelper"
+            class="org.bonitasoft.studio.model.process.diagram.navigator.ProcessNavigatorLinkHelper">
+         <editorInputEnablement>
+            <and>
+               <instanceof value="org.eclipse.emf.common.ui.URIEditorInput"/>
+               <test property="org.bonitasoft.studio.diagram.isURIEditorInput"/>
+            </and>
+         </editorInputEnablement>
+         <selectionEnablement>
+            <instanceof value="org.bonitasoft.studio.model.process.diagram.navigator.ProcessAbstractNavigatorItem"/>
+         </selectionEnablement>
+      </linkHelper>
+   </extension>
+   <extension point="org.eclipse.ui.commands" id="update-cmd">
+      <?gmfgen generated="true"?>
+      <command
+         categoryId="org.eclipse.ui.category.edit"
+         defaultHandler="org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramUpdateCommand"
+         description="%update.diagram.description"
+         id="org.bonitasoft.studio.model.process.diagram.updateDiagram"
+         name="%update.diagram.name"/>
+   </extension>
+   
+   <extension point="org.eclipse.ui.bindings" id="update-cmd-binding">
+      <?gmfgen generated="true"?>
+      <key 
+         commandId="org.bonitasoft.studio.model.process.diagram.updateDiagram"
+         contextId="org.bonitasoft.studio.model.process.diagram.ui.diagramContext"
+         schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+         sequence="F5"/>
+   </extension>
+
+   <extension point="org.eclipse.ui.menus" id="context-menus">
+      <?gmfgen generated="true"?>
+      <!-- menuContribution locationURI="menu:org.eclipse.ui.main.menu?after=">
+      </menuContribution>
+      <menuContribution locationURI="toolbar:org.eclipse.ui.main.toolbar?after=">
+      </menuContribution -->
+      <menuContribution locationURI="popup:org.eclipse.gmf.runtime.diagram.ui.DiagramEditorContextMenu">
+         <command commandId="org.bonitasoft.studio.diagram.LoadResourceAction">
+            <visibleWhen>
+               <and>
+                  <with variable="activePartId"><equals value="org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditorID"/></with>
+                  <with variable="selection"><iterate ifEmpty="false"> 
+                     <instanceof value="org.bonitasoft.studio.model.process.diagram.edit.parts.MainProcessEditPart"/>
+                  </iterate></with>
+               </and>
+            </visibleWhen>
+         </command>
+      </menuContribution>
+   </extension>
+
+   <extension point="org.eclipse.ui.commands" id="menu-commands">
+      <?gmfgen generated="true"?>
+      <category id="org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditorID" name="%cmdcategory.name" description="%cmdcategory.desc"/>
+      <command id="org.bonitasoft.studio.diagram.LoadResourceAction"
+         name="Load Resource"
+         categoryId="org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditorID"
+         defaultHandler="org.bonitasoft.studio.model.process.diagram.part.LoadResourceAction"/>
+   </extension>
+
+   <extension point="org.eclipse.ui.handlers" id="menu-handlers">
+      <?gmfgen generated="true"?>
+   </extension>
+
+   <!-- optionally, specify keybindings -->
+</plugin>
