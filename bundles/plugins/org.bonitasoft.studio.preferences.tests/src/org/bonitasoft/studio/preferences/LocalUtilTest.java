@@ -26,7 +26,7 @@ public class LocalUtilTest {
     public void testReplacePartNotI18nRelatedForDefaultLanguage() {
         final String[] poFiles = new String[] { "portal-js.po", "portal-js-sp.po", "mobile.po", "mobile-sp.po", "portal.po", "portal-sp.po" };
         for (final String poFile : poFiles) {
-            Assertions.assertThat(LocaleUtil.replacePartNotI18nRelated(poFile)).isEqualTo("");
+            Assertions.assertThat(LocaleUtil.replacePartNotI18nRelated(poFile)).isEmpty();
         }
     }
 

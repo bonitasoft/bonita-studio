@@ -69,7 +69,7 @@ public class LocaleUtil {
         return locales.toArray(new Locale[locales.size()]);
     }
 
-    private static String replacePartNotI18nRelated(final String poFile) {
+    static String replacePartNotI18nRelated(final String poFile) {
         return poFile
                 .replace("mobile_", "")
                 .replace("mobile-sp_", "")
