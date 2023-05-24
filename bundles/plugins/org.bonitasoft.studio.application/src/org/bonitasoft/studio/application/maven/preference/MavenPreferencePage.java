@@ -75,7 +75,7 @@ public class MavenPreferencePage extends PreferencePage implements
         mainComposite.setLayout(GridLayoutFactory.fillDefaults().create());
 
         NativeTabFolderWidget tabFolder = new NativeTabFolderWidget.Builder().createIn(mainComposite);
-        tabFolder.setLayoutData(GridDataFactory.fillDefaults().hint(500, 450).grab(true, true).create());
+        tabFolder.setLayoutData(GridDataFactory.fillDefaults().hint(500, 510).grab(true, true).create());
 
         createRepositoriesTabItem(tabFolder);
         createServersTabItem(tabFolder);
