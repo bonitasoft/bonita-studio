@@ -15,13 +15,14 @@
 package org.bonitasoft.studio.preferences;
 
 import java.io.File;
-import java.io.FilenameFilter;
 import java.net.URL;
 import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.Locale;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 import org.eclipse.core.resources.ResourcesPlugin;
 
@@ -32,56 +33,43 @@ public class LocaleUtil {
 
     public static Locale DEFAULT_LOCALE = Locale.ENGLISH;
 
-    private static Comparator<Locale> localeComparator = new Comparator<Locale>() {
-
-        @Override
-        public int compare(final Locale paramT1, final Locale paramT2) {
-            return paramT1.getLanguage().compareTo(paramT2.getLanguage());
-        }
-
-    };
-
-    public static File getPortalI18NFolder() {
+    private static File getPortalI18NFolder() {
         return new File(ResourcesPlugin.getWorkspace().getRoot().getLocation().toFile(), "tomcat"
                 + File.separator + "server"
-                + File.separator + "webapps"
-                + File.separator + "bonita"
-                + File.separator + "WEB-INF"
-                + File.separator + "classes"
                 + File.separator + "i18n");
     }
 
     public static Locale[] getProtalLocales() {
         final File portalI18NFolder = getPortalI18NFolder();
-        final String[] poFiles = portalI18NFolder.list(new FilenameFilter() {
-
-            @Override
-            public boolean accept(final File parent, final String filename) {
-                return filename.endsWith(".po") && filename.contains("portal");
-            }
-        });
-        final Set<Locale> locales = new TreeSet<>(localeComparator);
+        final Set<Locale> locales = new TreeSet<>(Comparator.comparing(Locale::getLanguage));
         locales.add(Locale.ENGLISH);
-        if (poFiles != null) {
-            for (String poFile : poFiles) {
-                poFile = replacePartNotI18nRelated(poFile);
-                if (!poFile.isEmpty()) {
-                    String country = null;
-                    String language = null;
-                    if (poFile.contains("_")) {
-                        language = poFile.split("_")[0];
-                        country = poFile.split("_")[1];
-                    } else {
-                        language = poFile;
-                    }
-                    locales.add(country == null ? new Locale(language) : new Locale(language, country));
-                }
-            }
+        locales.add(Locale.FRENCH);
+        locales.add(new Locale("es"));
+        locales.add(Locale.JAPANESE);
+        locales.add(new Locale("pt", "BR"));
+        if (portalI18NFolder.exists()) {
+            Stream.of(portalI18NFolder.listFiles())
+                    .map(File::getName)
+                    .filter(file -> file.endsWith(".po") && file.contains("portal"))
+                    .map(LocaleUtil::replacePartNotI18nRelated)
+                    .filter(Predicate.not(String::isEmpty))
+                    .map(poFile -> {
+                        String country = null;
+                        String language = null;
+                        if (poFile.contains("_")) {
+                            language = poFile.split("_")[0];
+                            country = poFile.split("_")[1];
+                        } else {
+                            language = poFile;
+                        }
+                        return country == null ? new Locale(language) : new Locale(language, country);
+                    })
+                    .forEach(locales::add);
         }
         return locales.toArray(new Locale[locales.size()]);
     }
 
-    protected static String replacePartNotI18nRelated(final String poFile) {
+    static String replacePartNotI18nRelated(final String poFile) {
         return poFile
                 .replace("mobile_", "")
                 .replace("mobile-sp_", "")
@@ -99,8 +87,9 @@ public class LocaleUtil {
     }
 
     public static Locale[] getStudioLocales() {
-        final Enumeration<URL> findEntries = BonitaStudioPreferencesPlugin.getDefault().getBundle().findEntries("/", "message*_*.properties", false);
-        final Set<Locale> locales = new TreeSet<>(localeComparator);
+        final Enumeration<URL> findEntries = BonitaStudioPreferencesPlugin.getDefault().getBundle().findEntries("/",
+                "message*_*.properties", false);
+        final Set<Locale> locales = new TreeSet<>(Comparator.comparing(Locale::getLanguage));
         locales.add(Locale.ENGLISH);
         if (findEntries != null) {
             while (findEntries.hasMoreElements()) {
