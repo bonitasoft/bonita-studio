@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Repository Common Plugin
 Bundle-SymbolicName: org.bonitasoft.studio.common.repository;singleton:=true
-Bundle-Version: 7.15.3.qualifier
+Bundle-Version: 7.15.4.qualifier
 Bundle-ClassPath: .,
  lib/bonita-project-report-model.jar
 Bundle-Activator: org.bonitasoft.studio.common.repository.CommonRepositoryPlugin
