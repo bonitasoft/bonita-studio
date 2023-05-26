@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Cusomt Model Tests Fragment
 Bundle-SymbolicName: org.bonitasoft.studio.model.edit.custom.tests
-Bundle-Version: 9.0.0.qualifier
+Bundle-Version: 9.0.0.W21
 Bundle-Vendor: Bonitasoft S.A.
 Fragment-Host: org.bonitasoft.studio.model.edit.custom;bundle-version="7.16.0"
 Automatic-Module-Name: org.bonitasoft.studio.model.edit.custom.tests
