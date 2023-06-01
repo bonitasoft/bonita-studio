@@ -70,6 +70,14 @@ public class MavenPlugin {
     public String getVersion() {
         return version;
     }
+    
+    public String getGroupId() {
+        return groupId;
+    }
+    
+    public String getArtifactId() {
+        return artifactId;
+    }
 
     public String getVersionPropertyVariable() {
         return String.format("${%s.version}", artifactId);

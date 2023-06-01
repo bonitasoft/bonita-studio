@@ -30,8 +30,8 @@ import org.bonitasoft.studio.common.repository.core.migration.step.JavaDependenc
 import org.bonitasoft.studio.common.repository.core.migration.step.MultiModuleMigrationStep;
 import org.bonitasoft.studio.common.repository.core.migration.step.RemoveLegacyFolderStep;
 import org.bonitasoft.studio.common.repository.core.migration.step.SplitGroovyAllIntoModulesStep;
-import org.bonitasoft.studio.common.repository.core.migration.step.UpdateBonitaProjectMavenPluginVersionInPomStep;
 import org.bonitasoft.studio.common.repository.core.migration.step.UpdateBonitaRuntimeVersionInPomStep;
+import org.bonitasoft.studio.common.repository.core.migration.step.UpdateMavenPluginVersionInPomStep;
 import org.bonitasoft.studio.common.repository.core.migration.step.UpdateProjectDescriptionMigrationStep;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
@@ -46,14 +46,14 @@ public class BonitaProjectMigrator {
             new CreatePomMigrationStep(),
             new RemoveLegacyFolderStep(),
             new UpdateBonitaRuntimeVersionInPomStep(),
-            new UpdateBonitaProjectMavenPluginVersionInPomStep(),
             new SplitGroovyAllIntoModulesStep(),
             new JavaDependenciesMigrationStep(DependenciesUpdateOperationFactory.get()),
             new BdmModelArtifactMigrationStep(true),
             new MultiModuleMigrationStep(),
             new GitIgnoreMigrationStep(),
             new DeleteProjectSettingsMigrationStep(),
-            new UpdateProjectDescriptionMigrationStep());
+            new UpdateProjectDescriptionMigrationStep(),
+            new UpdateMavenPluginVersionInPomStep());
 
     private Path project;
 
