@@ -72,6 +72,7 @@ public interface DefaultPluginVersions {
     static final String BUILD_HELPER_MAVEN_PLUGIN = "build-helper-maven-plugin";
     static final String BUILD_HELPER_MAVEN_PLUGIN_VERSION = "3.4.0";
     
+    static final String MAVEN_DEPENDENCY_PLUGIN = "maven-dependency-plugin";
     static final String MAVEN_DEPENDENCY_PLUGIN_VERSION = "3.6.0";
     
     static final String RUNTIME_BOM_GROUP_ID = "org.bonitasoft.runtime";

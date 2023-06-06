@@ -61,6 +61,7 @@ public class ProjectDefaultConfiguration implements DefaultPluginVersions {
         addPlugin(new MavenPlugin(APACHE_MAVEN_PLUGIN_GROUP_ID, MAVEN_ASSEMBLY_PLUGIN, MAVEN_ASSEMBLY_PLUGIN_VERSION));
         addPlugin(new MavenPlugin(APACHE_MAVEN_PLUGIN_GROUP_ID, MAVEN_SUREFIRE_PLUGIN, MAVEN_SUREFIRE_PLUGIN_VERSION));
         addPlugin(new MavenPlugin(APACHE_MAVEN_PLUGIN_GROUP_ID, MAVEN_FAILSAFE_PLUGIN, MAVEN_FAILSAFE_PLUGIN_VERSION));
+        addPlugin(new MavenPlugin(APACHE_MAVEN_PLUGIN_GROUP_ID, MAVEN_DEPENDENCY_PLUGIN, MAVEN_DEPENDENCY_PLUGIN_VERSION));
         var jarPlugin = new MavenPlugin(APACHE_MAVEN_PLUGIN_GROUP_ID, MAVEN_JAR_PLUGIN, MAVEN_JAR_PLUGIN_VERSION);
         jarPlugin.setConfiguration(jarPluginConfiguration());
         addPlugin(jarPlugin);
