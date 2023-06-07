@@ -10,14 +10,22 @@ package org.bonitasoft.studio.rest.api.extension.core.maven;
 
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
+import java.util.HashMap;
 import java.util.Set;
+import java.util.jar.JarFile;
 
+import org.apache.maven.archetype.catalog.Archetype;
+import org.apache.maven.artifact.Artifact;
+import org.apache.maven.artifact.DefaultArtifact;
+import org.apache.maven.artifact.handler.DefaultArtifactHandler;
 import org.apache.maven.model.Dependency;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelFileStore;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
-import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.core.maven.ProjectDependenciesResolver;
 import org.bonitasoft.studio.maven.CustomPageProjectRepositoryStore;
+import org.bonitasoft.studio.maven.model.RestAPIExtensionArchetype;
 import org.bonitasoft.studio.maven.model.RestAPIExtensionArchetypeConfiguration;
 import org.bonitasoft.studio.maven.operation.CreateCustomPageProjectOperation;
 import org.bonitasoft.studio.rest.api.extension.core.builder.RestAPIBuilder;
@@ -25,13 +33,14 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.m2e.core.MavenPlugin;
 import org.eclipse.m2e.core.project.IProjectConfigurationManager;
 import org.eclipse.m2e.core.project.ProjectImportConfiguration;
+
+import groovy.lang.Binding;
+import groovy.lang.GroovyShell;
 
 public class CreateRestAPIExtensionProjectOperation extends CreateCustomPageProjectOperation {
 
@@ -45,17 +54,21 @@ public class CreateRestAPIExtensionProjectOperation extends CreateCustomPageProj
     @Override
     protected void projectCreated(IProject project) throws CoreException {
         //archetype-post-generate.groovy doesn't work with m2e maven-archetype embedded version...
-        //so we need to clean irrelevant generated files here
+        // TODO fix me after updating m2e to 2.x+
         RestAPIExtensionArchetypeConfiguration archetypeConfiguration = (RestAPIExtensionArchetypeConfiguration) getArchetypeConfiguration();
-        if (RestAPIExtensionArchetypeConfiguration.JAVA_LANGUAGE.equals(archetypeConfiguration.getLanguage())) {
-            cleanKotlinResources(AbstractRepository.NULL_PROGRESS_MONITOR, project);
-            cleanGroovyResources(AbstractRepository.NULL_PROGRESS_MONITOR, project);
-        } else if (RestAPIExtensionArchetypeConfiguration.GROOVY_LANGUAGE
-                .equals(archetypeConfiguration.getLanguage())) {
-            cleanKotlinResources(AbstractRepository.NULL_PROGRESS_MONITOR, project);
-            cleanJavaResources(AbstractRepository.NULL_PROGRESS_MONITOR, project);
-            project.getFile("groovy-pom.xml").move(Path.fromOSString("pom.xml"), true,
-                    AbstractRepository.NULL_PROGRESS_MONITOR);
+        var archetypeJarFile = ProjectDependenciesResolver.resolveFile(toArtifact(RestAPIExtensionArchetype.INSTANCE));
+        if (archetypeJarFile.exists()) {
+            try (var jar = new JarFile(archetypeJarFile)) {
+                var scriptEntry = jar.getEntry("META-INF/archetype-post-generate.groovy");
+                if (scriptEntry != null) {
+                    var groovyShell = newGroovyShell(archetypeConfiguration);
+                    var scriptFile = Files.createTempFile("archetype-post-generate", ".groovy");
+                    Files.copy(jar.getInputStream(scriptEntry), scriptFile, StandardCopyOption.REPLACE_EXISTING);
+                    groovyShell.evaluate(scriptFile.toFile());
+                }
+            } catch (IOException e) {
+                throw new CoreException(Status.error("Failed to execute archetype-post-generate.groovy", e));
+            }
         }
         if (archetypeConfiguration.isEnableBDMDependencies()) {
             var bdmStore = RepositoryManager.getInstance().getAccessor()
@@ -75,6 +88,23 @@ public class CreateRestAPIExtensionProjectOperation extends CreateCustomPageProj
             MavenPlugin.getProjectConfigurationManager().updateProjectConfiguration(project, new NullProgressMonitor());
         }
         super.projectCreated(project);
+    }
+
+    private GroovyShell newGroovyShell(RestAPIExtensionArchetypeConfiguration archetypeConfiguration) {
+        var variables = new HashMap<String, Object>();
+        var request = new HashMap<String, Object>();
+        var location = repositoryStore.getResource().getLocation();
+        request.put("properties", archetypeConfiguration.toProperties());
+        request.put("outputDirectory", location.toFile().getAbsolutePath());
+        request.put("artifactId", archetypeConfiguration.getPageName());
+        variables.put("request", request);
+        var binding = new Binding(variables);
+        return new GroovyShell(binding);
+    }
+
+    private Artifact toArtifact(Archetype instance) {
+        return new DefaultArtifact(instance.getGroupId(), instance.getArtifactId(), instance.getVersion(), null, "jar",
+                null, new DefaultArtifactHandler("jar"));
     }
 
     /* Dirty string replacement to control the location of the dependency in the dependency list */
@@ -97,24 +127,6 @@ public class CreateRestAPIExtensionProjectOperation extends CreateCustomPageProj
                                 + "            <scope>provided</scope>%n"
                                 + "        </dependency>%n",
                         bdmModelDep.getGroupId(), bdmModelDep.getArtifactId(), bdmModelDep.getVersion()));
-    }
-
-    private void cleanJavaResources(IProgressMonitor monitor, IProject project) throws CoreException {
-        project.getFile("pom.xml").delete(true, monitor);
-        project.getFolder("src/main/java").delete(true, monitor);
-        project.getFolder("src/test/java").delete(true, monitor);
-    }
-
-    private void cleanGroovyResources(IProgressMonitor monitor, IProject project) throws CoreException {
-        project.getFile("groovy-pom.xml").delete(true, monitor);
-        project.getFolder("src/main/groovy").delete(true, monitor);
-        project.getFolder("src/test/groovy").delete(true, monitor);
-    }
-
-    private void cleanKotlinResources(IProgressMonitor monitor, IProject project) throws CoreException {
-        project.getFile("kotlin-pom.xml").delete(true, monitor);
-        project.getFolder("src/main/kotlin").delete(true, monitor);
-        project.getFolder("src/test/kotlin").delete(true, monitor);
     }
 
     @Override

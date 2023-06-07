@@ -119,7 +119,7 @@ public class ProjectDependenciesResolver {
     public static File resolveFile(Artifact artifact) {
         File file = artifact.getFile();
         // Artifact is a project imported in the workspace
-        if (file.isDirectory()) {
+        if (file == null || file.isDirectory() || !file.exists()) {
             try {
                 // Resolve artifact from the localRepository
                 var localRepository = org.eclipse.m2e.core.MavenPlugin.getMaven().getLocalRepository();
