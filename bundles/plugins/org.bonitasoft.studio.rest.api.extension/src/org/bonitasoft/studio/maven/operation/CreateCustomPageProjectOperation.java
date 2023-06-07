@@ -50,7 +50,7 @@ public class CreateCustomPageProjectOperation extends AbstractMavenProjectUpdate
     private List<IProject> projects;
     private final IProjectConfigurationManager projectConfigurationManager;
     private final CustomPageArchetypeConfiguration archetypeConfiguration;
-    private final CustomPageProjectRepositoryStore<?> repositoryStore;
+    protected final CustomPageProjectRepositoryStore<?> repositoryStore;
     private final ProjectImportConfiguration projectImportConfiguration;
 
     public CreateCustomPageProjectOperation(
