@@ -40,12 +40,12 @@ import org.bonitasoft.studio.designer.core.repository.WebPageFileStore;
 import org.bonitasoft.studio.designer.core.repository.WebPageRepositoryStore;
 import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.engine.operation.BusinessArchiveValidatorProvider;
+import org.bonitasoft.studio.maven.ExtensionRepositoryStore;
 import org.bonitasoft.studio.maven.i18n.Messages;
 import org.bonitasoft.studio.rest.api.extension.RestAPIExtensionActivator;
 import org.bonitasoft.studio.rest.api.extension.core.repository.PathTemplate;
 import org.bonitasoft.studio.rest.api.extension.core.repository.RestAPIExtensionDescriptor;
 import org.bonitasoft.studio.rest.api.extension.core.repository.RestAPIExtensionFileStore;
-import org.bonitasoft.studio.rest.api.extension.core.repository.RestAPIExtensionRepositoryStore;
 import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
@@ -110,8 +110,8 @@ public class FormsCustomPermissionsValidator implements IValidator<BusinessArchi
         return RepositoryManager.getInstance().getRepositoryStore(WebPageRepositoryStore.class);
     }
 
-    protected RestAPIExtensionRepositoryStore getRestAPIExtensionRepositoryStore() {
-        return RepositoryManager.getInstance().getRepositoryStore(RestAPIExtensionRepositoryStore.class);
+    protected ExtensionRepositoryStore getRestAPIExtensionRepositoryStore() {
+        return RepositoryManager.getInstance().getRepositoryStore(ExtensionRepositoryStore.class);
     }
 
     @Override

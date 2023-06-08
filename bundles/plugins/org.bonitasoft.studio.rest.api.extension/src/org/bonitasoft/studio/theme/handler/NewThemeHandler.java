@@ -12,17 +12,20 @@ import javax.inject.Named;
 
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
 import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.ui.jface.CustomWizardDialog;
+import org.bonitasoft.studio.maven.ExtensionRepositoryStore;
 import org.bonitasoft.studio.maven.MavenProjectConfiguration;
 import org.bonitasoft.studio.maven.i18n.Messages;
 import org.bonitasoft.studio.maven.ui.WidgetFactory;
-import org.bonitasoft.studio.theme.ThemeRepositoryStore;
 import org.bonitasoft.studio.theme.wizard.NewThemeWizard;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IWorkspace;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.e4.core.di.annotations.CanExecute;
 import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.e4.ui.services.IServiceConstants;
@@ -41,11 +44,17 @@ public class NewThemeHandler extends AbstractHandler {
             WidgetFactory widgetFactory,
             IWorkspace workspace)
             throws ExecutionException {
-        final NewThemeWizard wizard = newWizard(repositoryAccessor, widgetFactory, workspace);
-        final int open = newWizardDialog(wizard, Messages.create).open();
-        if (open == IDialogConstants.OK_ID) {
-            wizard.getNewFileStore().open();
+        try {
+            var projectMetadata = repositoryAccessor.getCurrentProject().orElseThrow().getProjectMetadata(new NullProgressMonitor());
+            final NewThemeWizard wizard = newWizard(repositoryAccessor, projectMetadata, widgetFactory, workspace);
+            final int open = newWizardDialog(wizard, Messages.create).open();
+            if (open == IDialogConstants.OK_ID) {
+                wizard.getNewFileStore().open();
+            }
+        } catch (CoreException e) {
+            throw new ExecutionException("Failed to create Theme Extension", e);
         }
+     
     }
 
     @CanExecute
@@ -53,8 +62,8 @@ public class NewThemeHandler extends AbstractHandler {
         return repositoryAccessor.getCurrentRepository().filter(IRepository::isLoaded).isPresent();
     }
 
-    protected NewThemeWizard newWizard(RepositoryAccessor repositoryAccessor, WidgetFactory widgetFactory, IWorkspace workspace) {
-        return new NewThemeWizard(repositoryAccessor.getRepositoryStore(ThemeRepositoryStore.class),
+    protected NewThemeWizard newWizard(RepositoryAccessor repositoryAccessor, ProjectMetadata projectMetadata, WidgetFactory widgetFactory, IWorkspace workspace) {
+        return new NewThemeWizard(projectMetadata, repositoryAccessor.getRepositoryStore(ExtensionRepositoryStore.class),
                 MavenPlugin.getProjectConfigurationManager(), new MavenProjectConfiguration(), workspace, widgetFactory);
     }
 

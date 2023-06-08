@@ -9,12 +9,13 @@
 package org.bonitasoft.studio.rest.api.extension.core.repository;
 
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
-import org.bonitasoft.studio.maven.CustomPageProjectFileStore;
+import org.bonitasoft.studio.maven.ExtensionProjectFileStore;
+import org.bonitasoft.studio.maven.ExtensionRepositoryStore;
 import org.eclipse.core.resources.IProject;
 
-public class RestAPIExtensionFileStore extends CustomPageProjectFileStore<RestAPIExtensionDescriptor> {
+public class RestAPIExtensionFileStore extends ExtensionProjectFileStore<RestAPIExtensionDescriptor> {
 
-    public RestAPIExtensionFileStore(final String restApiName, final RestAPIExtensionRepositoryStore parentStore) {
+    public RestAPIExtensionFileStore(final String restApiName, final ExtensionRepositoryStore parentStore) {
         super(restApiName, parentStore);
     }
 

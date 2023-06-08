@@ -18,8 +18,10 @@ package org.bonitasoft.studio.theme;
 
 import java.util.Set;
 
-import org.bonitasoft.studio.maven.CustomPageProjectRepositoryStore;
+import org.apache.maven.archetype.catalog.Archetype;
+import org.bonitasoft.studio.maven.ExtensionRepositoryStore;
 import org.bonitasoft.studio.maven.model.CustomPageArchetypeConfiguration;
+import org.bonitasoft.studio.maven.model.ThemeArchetype;
 import org.bonitasoft.studio.maven.operation.CreateCustomPageProjectOperation;
 import org.bonitasoft.studio.theme.builder.ThemeProjectBuilder;
 import org.eclipse.core.resources.IProjectDescription;
@@ -29,7 +31,7 @@ import org.eclipse.m2e.core.project.ProjectImportConfiguration;
 
 public class CreateThemeProjectOperation extends CreateCustomPageProjectOperation {
 
-    public CreateThemeProjectOperation(CustomPageProjectRepositoryStore<?> repositoryStore,
+    public CreateThemeProjectOperation(ExtensionRepositoryStore repositoryStore,
             IProjectConfigurationManager projectConfigurationManager,
             ProjectImportConfiguration projectImportConfiguration,
             CustomPageArchetypeConfiguration archetypeConfiguration) {
@@ -46,6 +48,11 @@ public class CreateThemeProjectOperation extends CreateCustomPageProjectOperatio
          Set<String> projectBuilders = super.projectBuilders(description);
          projectBuilders.add(ThemeProjectBuilder.BUILDER_ID);
          return projectBuilders;
+    }
+
+    @Override
+    protected Archetype getArchetype() {
+        return ThemeArchetype.INSTANCE;
     }
 
 }

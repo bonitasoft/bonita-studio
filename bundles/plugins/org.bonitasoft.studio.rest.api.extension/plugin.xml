@@ -3,10 +3,7 @@
    <extension
          point="org.bonitasoft.studio.repositoryStore">
       <repositoryStore
-            class="org.bonitasoft.studio.rest.api.extension.core.repository.RestAPIExtensionRepositoryStore">
-      </repositoryStore>
-      <repositoryStore
-            class="org.bonitasoft.studio.theme.ThemeRepositoryStore">
+            class="org.bonitasoft.studio.maven.ExtensionRepositoryStore">
       </repositoryStore>
    </extension>
    <extension
@@ -189,7 +186,7 @@
                allPopups="false"
                locationURI="popup:org.bonitasoft.studio.application.project.explorer?after=group.build">
             <command
-                  commandId="org.bonitasoft.studio.rest.api.extension.quickBuildCommand"
+                  commandId="org.bonitasoft.studio.maven.extension.quickBuildCommand"
                   style="push">
                   <visibleWhen
                   checkEnabled="false">
@@ -200,14 +197,9 @@
 	                           value="1">
 	                     </count>
 	                     <iterate>
-                         <or>
-                            <test
-                                  property="org.bonitasoft.studio.rest.api.extension.propertyTester.isRestApiElement">
-                            </test>
-                            <test
-                                  property="org.bonitasoft.studio.rest.api.extension.propertyTester.isThemeElement">
-                            </test>
-                         </or>
+                         <test
+                               property="org.bonitasoft.studio.rest.api.extension.propertyTester.isCustomPageElement">
+                         </test>
                          </iterate>
 	                  </and>
 	               </with>
@@ -282,7 +274,7 @@
                allPopups="false"
                locationURI="popup:org.bonitasoft.studio.application.project.explorer?after=group.export">
             <command
-                  commandId="org.bonitasoft.studio.rest.api.extension.buildCommand"
+                  commandId="org.bonitasoft.studio.maven.extension.buildCommand"
                   style="push">
                <visibleWhen
                      checkEnabled="false">
@@ -294,27 +286,7 @@
                         </count>
                         <iterate>
                            <test
-                                 property="org.bonitasoft.studio.rest.api.extension.propertyTester.isRestApiElement">
-                           </test>
-                        </iterate>
-                     </and>
-                  </with>
-               </visibleWhen>
-            </command>
-            <command
-                  commandId="org.bonitasoft.studio.theme.buildCommand"
-                  style="push">
-               <visibleWhen
-                     checkEnabled="false">
-                  <with
-                        variable="activeMenuSelection">
-                     <and>
-                        <count
-                              value="1">
-                        </count>
-                        <iterate>
-                           <test
-                                 property="org.bonitasoft.studio.rest.api.extension.propertyTester.isThemeElement">
+                                 property="org.bonitasoft.studio.rest.api.extension.propertyTester.isCustomPageElement">
                            </test>
                         </iterate>
                      </and>
@@ -343,7 +315,7 @@
                class="org.bonitasoft.studio.maven.ProjectElementPropertyTester"
                id="org.bonitasoft.studio.rest.api.extension.propertyTester"
                namespace="org.bonitasoft.studio.rest.api.extension.propertyTester"
-               properties="isRestApiElement,isRestApiFolder,isRestApiProject,isNonProjectRestApiFolder,isThemeElement,isThemeFolder"
+               properties="isRestApiElement,isRestApiFolder,isRestApiProject,isNonProjectRestApiFolder,isThemeElement,isThemeFolder,isCustomPageElement"
                type="org.eclipse.core.runtime.IAdaptable">
          </propertyTester>
       </extension>
@@ -443,21 +415,14 @@
    <extension
          point="org.eclipse.core.runtime.adapters">
      <factory
-           adaptableType="org.bonitasoft.studio.maven.CustomPageProjectFileStore"
+           adaptableType="org.bonitasoft.studio.maven.ExtensionProjectFileStore"
            class="org.bonitasoft.studio.maven.ui.internal.DisplayableAdapterFactory">
         <adapter
               type="org.bonitasoft.studio.common.ui.IDisplayable">
         </adapter>
      </factory>
      <factory
-           adaptableType="org.bonitasoft.studio.rest.api.extension.core.repository.RestAPIExtensionRepositoryStore"
-           class="org.bonitasoft.studio.maven.ui.internal.DisplayableAdapterFactory">
-        <adapter
-              type="org.bonitasoft.studio.common.ui.IDisplayable">
-        </adapter>
-     </factory>
-     <factory
-           adaptableType="org.bonitasoft.studio.theme.ThemeRepositoryStore"
+           adaptableType="org.bonitasoft.studio.maven.ExtensionRepositoryStore"
            class="org.bonitasoft.studio.maven.ui.internal.DisplayableAdapterFactory">
         <adapter
               type="org.bonitasoft.studio.common.ui.IDisplayable">

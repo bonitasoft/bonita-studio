@@ -25,6 +25,7 @@ import org.bonitasoft.studio.common.repository.core.migration.report.MigrationRe
 import org.bonitasoft.studio.common.repository.core.migration.step.BdmModelArtifactMigrationStep;
 import org.bonitasoft.studio.common.repository.core.migration.step.CreatePomMigrationStep;
 import org.bonitasoft.studio.common.repository.core.migration.step.DeleteProjectSettingsMigrationStep;
+import org.bonitasoft.studio.common.repository.core.migration.step.ExtensionsModuleMigrationStep;
 import org.bonitasoft.studio.common.repository.core.migration.step.GitIgnoreMigrationStep;
 import org.bonitasoft.studio.common.repository.core.migration.step.JavaDependenciesMigrationStep;
 import org.bonitasoft.studio.common.repository.core.migration.step.MultiModuleMigrationStep;
@@ -53,7 +54,8 @@ public class BonitaProjectMigrator {
             new GitIgnoreMigrationStep(),
             new DeleteProjectSettingsMigrationStep(),
             new UpdateProjectDescriptionMigrationStep(),
-            new UpdateMavenPluginVersionInPomStep());
+            new UpdateMavenPluginVersionInPomStep(),
+            new ExtensionsModuleMigrationStep());
 
     private Path project;
 

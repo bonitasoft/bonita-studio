@@ -15,7 +15,7 @@ import java.util.List;
 import org.apache.maven.project.MavenProject;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
-import org.bonitasoft.studio.rest.api.extension.core.repository.RestAPIExtensionRepositoryStore;
+import org.bonitasoft.studio.maven.ExtensionProjectFileStore;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IMarker;
@@ -139,7 +139,7 @@ public class PomFileValidator extends AbstractCustomPageValidator {
 
     @Override
     protected IFolder getParentFolder() {
-        return RepositoryManager.getInstance().getRepositoryStore(RestAPIExtensionRepositoryStore.class).getResource();
+        return RepositoryManager.getInstance().getRepositoryStore(ExtensionProjectFileStore.class).getResource();
     }
 
 }

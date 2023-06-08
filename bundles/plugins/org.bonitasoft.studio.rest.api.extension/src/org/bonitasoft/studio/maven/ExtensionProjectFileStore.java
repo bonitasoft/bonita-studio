@@ -23,16 +23,26 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
+import java.util.Properties;
 
 import org.apache.maven.project.MavenProject;
 import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.studio.application.views.BonitaProjectExplorer;
+import org.bonitasoft.studio.common.extension.properties.ExtensionPagePropertiesReader;
+import org.bonitasoft.studio.common.extension.properties.PagePropertyConstants;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
+import org.bonitasoft.studio.common.repository.core.maven.MavenProjectHelper;
+import org.bonitasoft.studio.common.repository.core.maven.model.GAV;
 import org.bonitasoft.studio.common.repository.filestore.AbstractFileStore;
 import org.bonitasoft.studio.common.repository.model.IBuildable;
 import org.bonitasoft.studio.common.repository.model.IDeployable;
+import org.bonitasoft.studio.common.repository.model.IRenamable;
+import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
+import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
+import org.bonitasoft.studio.common.repository.ui.validator.MavenIdValidator;
 import org.bonitasoft.studio.common.ui.PlatformUtil;
 import org.bonitasoft.studio.common.ui.jface.FileActionDialog;
 import org.bonitasoft.studio.common.ui.perspectives.BonitaPerspectivesUtils;
@@ -40,6 +50,8 @@ import org.bonitasoft.studio.maven.operation.BuildCustomPageOperation;
 import org.bonitasoft.studio.maven.operation.ImportCustomPageProjectOperation;
 import org.bonitasoft.studio.rest.api.extension.RestAPIExtensionActivator;
 import org.bonitasoft.studio.rest.api.extension.ui.perspective.RestAPIExtensionPerspectiveFactory;
+import org.bonitasoft.studio.ui.i18n.Messages;
+import org.bonitasoft.studio.ui.validator.InputValidatorWrapper;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -52,10 +64,15 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.IJobChangeEvent;
+import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.debug.core.DebugPlugin;
+import org.eclipse.jface.dialogs.InputDialog;
+import org.eclipse.jface.window.Window;
 import org.eclipse.m2e.core.MavenPlugin;
 import org.eclipse.m2e.core.project.MavenProjectInfo;
 import org.eclipse.m2e.core.project.ProjectImportConfiguration;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
@@ -65,13 +82,13 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.internal.wizards.datatransfer.ArchiveFileExportOperation;
 
-public abstract class CustomPageProjectFileStore<T extends CustomPageMavenProjectDescriptor>
-        extends AbstractFileStore<T> implements IDeployable, IBuildable {
+public class ExtensionProjectFileStore<T extends ExtensionProjectDescriptor>
+        extends AbstractFileStore<T> implements IDeployable, IBuildable, IRenamable {
 
-    public static final String QUICK_DEPLOY_COMMAND = "org.bonitasoft.studio.rest.api.extension.quickDeployCommand";
+    public static final String QUICK_DEPLOY_COMMAND = "org.bonitasoft.studio.maven.extension.quickDeployCommand";
 
-    public CustomPageProjectFileStore(String fileName, CustomPageProjectRepositoryStore parentStore) {
-        super(fileName, parentStore);
+    public ExtensionProjectFileStore(String fileName, ExtensionRepositoryStore parentStore) {
+        super(fileName, (IRepositoryStore<? extends IRepositoryFileStore<T>>) parentStore);
     }
 
     @Override
@@ -85,7 +102,7 @@ public abstract class CustomPageProjectFileStore<T extends CustomPageMavenProjec
 
     public String getPageDisplayName() {
         try {
-            final CustomPageMavenProjectDescriptor content = getContent();
+            final ExtensionProjectDescriptor content = getContent();
             return content.getDisplayName();
         } catch (final ReadFileStoreException e) {
             return null;
@@ -94,20 +111,29 @@ public abstract class CustomPageProjectFileStore<T extends CustomPageMavenProjec
 
     public String getDescription() {
         try {
-            final CustomPageMavenProjectDescriptor content = getContent();
+            final ExtensionProjectDescriptor content = getContent();
             return content.getDescription();
         } catch (final ReadFileStoreException e) {
             return null;
         }
     }
-    
+
     public String getContentType() {
-        try {
-            final CustomPageMavenProjectDescriptor content = getContent();
-            return content.getContentType();
-        } catch (final ReadFileStoreException e) {
-            return null;
+        var descriptor = getResource().getFile("src/main/resources/page.properties");
+        if (!descriptor.exists()) {
+            descriptor = getResource().getFile("page.properties");
         }
+        if (descriptor.exists()) {
+            try (var is = descriptor.getContents()) {
+                var properties = new Properties();
+                properties.load(is);
+                return ExtensionPagePropertiesReader.getProperty(properties, PagePropertyConstants.CONTENT_TYPE)
+                        .orElse(null);
+            } catch (IOException | CoreException e1) {
+                return null;
+            }
+        }
+        return null;
     }
 
     public boolean canBeImported() {
@@ -128,7 +154,7 @@ public abstract class CustomPageProjectFileStore<T extends CustomPageMavenProjec
     protected IWorkbenchPart doOpen() {
         final IWorkbenchPage page = getActivePage();
         try {
-            final CustomPageMavenProjectDescriptor raed = getContent();
+            final ExtensionProjectDescriptor raed = getContent();
             AbstractFileStore.refreshExplorerView();
             return openEditors(page, raed);
         } catch (final PartInitException | ReadFileStoreException e) {
@@ -138,7 +164,7 @@ public abstract class CustomPageProjectFileStore<T extends CustomPageMavenProjec
         return null;
     }
 
-    protected IWorkbenchPart openEditors(final IWorkbenchPage page, final CustomPageMavenProjectDescriptor descriptor)
+    protected IWorkbenchPart openEditors(final IWorkbenchPage page, final ExtensionProjectDescriptor descriptor)
             throws PartInitException {
         BonitaProjectExplorer explorerView = (BonitaProjectExplorer) getActivePage().findView(BonitaProjectExplorer.ID);
         if (explorerView != null) {
@@ -189,7 +215,7 @@ public abstract class CustomPageProjectFileStore<T extends CustomPageMavenProjec
                 }
             }
             try {
-                final CustomPageMavenProjectDescriptor raed = getContent();
+                final ExtensionProjectDescriptor raed = getContent();
                 final List<IResource> resourcesToInclude = findResourcesToExport(raed);
                 final ArchiveFileExportOperation op = new ArchiveFileExportOperation(raed.getProject(),
                         resourcesToInclude,
@@ -205,7 +231,7 @@ public abstract class CustomPageProjectFileStore<T extends CustomPageMavenProjec
                         getName()));
     }
 
-    protected List<IResource> findResourcesToExport(final CustomPageMavenProjectDescriptor raed) {
+    protected List<IResource> findResourcesToExport(final ExtensionProjectDescriptor raed) {
         final List<IResource> resourcesToInclude = new ArrayList<>();
         try {
             final IResource[] members = raed.getProject().members();
@@ -239,10 +265,19 @@ public abstract class CustomPageProjectFileStore<T extends CustomPageMavenProjec
                         activePage.closeEditor(ref.getEditor(false), false);
                     }
                 }
-                IProgressMonitor monitor = AbstractRepository.NULL_PROGRESS_MONITOR;
+
+                IProgressMonitor monitor = new NullProgressMonitor();
+                getRepositoryAccessor().getCurrentProject().ifPresent(p -> {
+                    try {
+                        p.removeModule(p.getExtensionsParentProject(), project.getName(), monitor);
+                    } catch (CoreException e) {
+                        BonitaStudioLog.error(e);
+                    }
+                });
+
                 project.close(monitor);
                 project.delete(true, true, monitor);
-                ((CustomPageProjectRepositoryStore<?>) getParentStore()).refreshMarkers();
+
             }
         } catch (CoreException | ReadFileStoreException e) {
             super.doDelete();
@@ -297,7 +332,7 @@ public abstract class CustomPageProjectFileStore<T extends CustomPageMavenProjec
             throw new ImportProjectException(String.format("Project %s already exists", project.getName()));
         }
         final ProjectImportConfiguration projectImportConfiguration = new ProjectImportConfiguration();
-        projectImportConfiguration.setProjectNameTemplate(project.getName());
+        projectImportConfiguration.setProjectNameTemplate("[artifactId]");
         final ImportCustomPageProjectOperation importRestAPIExtensionProjectOperation = new ImportCustomPageProjectOperation(
                 this,
                 MavenPlugin.getProjectConfigurationManager(), projectImportConfiguration);
@@ -311,6 +346,23 @@ public abstract class CustomPageProjectFileStore<T extends CustomPageMavenProjec
         };
         job.setRule(getResource().getWorkspace().getRoot());
         job.schedule();
+        job.addJobChangeListener(new JobChangeAdapter() {
+
+            @Override
+            public void done(IJobChangeEvent event) {
+                new WorkspaceJob(String.format("Add %s module to extensions", project.getName())) {
+
+                    @Override
+                    public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
+                        var bonitaProject = getRepositoryAccessor().getCurrentProject().orElseThrow();
+                        var extensionsParentProject = bonitaProject.getExtensionsParentProject();
+                        bonitaProject.addModule(extensionsParentProject, ExtensionProjectFileStore.this.getName(),
+                                new NullProgressMonitor());
+                        return Status.OK_STATUS;
+                    }
+                }.schedule();
+            }
+        });
     }
 
     public void removeProject() {
@@ -319,7 +371,6 @@ public abstract class CustomPageProjectFileStore<T extends CustomPageMavenProjec
             if (project.exists()) {
                 //Only delete project, not content
                 project.delete(false, true, AbstractRepository.NULL_PROGRESS_MONITOR);
-                ((CustomPageProjectRepositoryStore<?>) getParentStore()).refreshMarkers();
             }
         } catch (final CoreException e) {
             BonitaStudioLog.error(e);
@@ -380,6 +431,68 @@ public abstract class CustomPageProjectFileStore<T extends CustomPageMavenProjec
         return Status.OK_STATUS;
     }
 
-    protected abstract String getBuildFolder();
+    protected String getBuildFolder() {
+        return getParentStore().getName();
+    }
+
+    @Override
+    protected T doGetContent() throws ReadFileStoreException {
+        final IProject project = getProject();
+        if (!project.exists()) {
+            throw new ReadFileStoreException(String.format("Project with name %s does not exist", project.getName()));
+        }
+        return (T) new ExtensionProjectDescriptor(project);
+    }
+
+    public GAV getGAV() {
+        try {
+            ExtensionProjectDescriptor descriptor = getContent();
+            return new GAV(descriptor.getGroupId(), descriptor.getArtifactId(), descriptor.getVersion(),
+                    descriptor.getClassifier(), "zip", null);
+        } catch (ReadFileStoreException e) {
+            BonitaStudioLog.error(e);
+            return null;
+        }
+    }
+
+    @Override
+    public void rename(String newName) {
+        IProject project = getProject();
+        var projectLocation = project.getLocation();
+        var pomFile = project.getFile("pom.xml");
+        if (pomFile.exists()) {
+            try (var is = pomFile.getContents()) {
+                var model = MavenPlugin.getMaven().readModel(is);
+                model.setArtifactId(newName);
+                MavenProjectHelper.saveModel(pomFile.getLocation().toFile().toPath(), model);
+            } catch (IOException | CoreException e) {
+                BonitaStudioLog.error(e);
+            }
+        }
+        try {
+            File projectFolder = projectLocation.toFile();
+            projectFolder.renameTo(projectFolder.getParentFile().toPath().resolve(newName).toFile());
+            project.delete(false, false, new NullProgressMonitor());
+            var bonitaProject = getRepositoryAccessor().getCurrentProject().orElseThrow();
+            bonitaProject.removeModule(bonitaProject.getExtensionsParentProject(), project.getName(), new NullProgressMonitor());
+            setName(newName);
+            importProject();
+        } catch (CoreException | ImportProjectException e) {
+            BonitaStudioLog.error(e);
+        }
+    }
+
+    @Override
+    public Optional<String> retrieveNewName() {
+        var validator = new MavenIdValidator("Artifact ID", true);
+        var bonitaProject = getRepositoryAccessor().getCurrentProject().orElseThrow();
+        bonitaProject.getRelatedProjects().stream().map(IProject::getName).forEach(validator::addReservedId);
+        InputDialog dialog = new InputDialog(Display.getDefault().getActiveShell(), Messages.rename,
+                "Artifact ID", getName(), new InputValidatorWrapper(validator));
+        if (dialog.open() == Window.OK) {
+            return Optional.of(dialog.getValue());
+        }
+        return Optional.empty();
+    }
 
 }

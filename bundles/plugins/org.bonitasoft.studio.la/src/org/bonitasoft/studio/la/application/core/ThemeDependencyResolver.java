@@ -23,15 +23,15 @@ import org.bonitasoft.studio.common.core.IRunnableWithStatus;
 import org.bonitasoft.studio.engine.http.HttpClientFactory;
 import org.bonitasoft.studio.la.application.ui.editor.customPage.CustomPageProvider;
 import org.bonitasoft.studio.la.i18n.Messages;
+import org.bonitasoft.studio.maven.ExtensionRepositoryStore;
 import org.bonitasoft.studio.theme.ThemeFileStore;
-import org.bonitasoft.studio.theme.ThemeRepositoryStore;
 
 public class ThemeDependencyResolver {
 
-    private final ThemeRepositoryStore store;
+    private final ExtensionRepositoryStore store;
     private final PageAPI pageApi;
 
-    public ThemeDependencyResolver(ThemeRepositoryStore store,
+    public ThemeDependencyResolver(ExtensionRepositoryStore store,
             PageAPI pageApi) {
         this.store = store;
         this.pageApi = pageApi;
@@ -45,7 +45,7 @@ public class ThemeDependencyResolver {
     }
 
     private IRunnableWithStatus newDeployPageOperation(String pageId) {
-        final Optional<ThemeFileStore> fStore = store.findByCustomPageId(pageId);
+        final Optional<ThemeFileStore> fStore = store.findTheme(pageId);
         if (fStore.isPresent()) {
             return new DeployThemeOperation(pageApi,
                     new HttpClientFactory(),

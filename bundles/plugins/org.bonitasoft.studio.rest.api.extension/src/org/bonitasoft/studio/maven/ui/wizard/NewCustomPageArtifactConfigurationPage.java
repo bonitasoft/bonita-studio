@@ -8,14 +8,12 @@
  *******************************************************************************/
 package org.bonitasoft.studio.maven.ui.wizard;
 
-import static org.bonitasoft.studio.common.databinding.validator.ValidatorFactory.mandatoryValidator;
 import static org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory.updateValueStrategy;
 
 import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.apache.maven.model.Model;
-import org.bonitasoft.studio.businessobject.ui.wizard.validator.GroupIdValidator;
 import org.bonitasoft.studio.common.databinding.validator.EmptyInputValidator;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.ui.jface.SWTBotConstants;
@@ -33,6 +31,8 @@ import org.eclipse.core.databinding.observable.value.SelectObservableValue;
 import org.eclipse.core.databinding.validation.MultiValidator;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.jdt.core.JavaConventions;
+import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.jface.databinding.wizard.WizardPageSupport;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -100,9 +100,9 @@ public class NewCustomPageArtifactConfigurationPage extends WizardPage {
         mavenGroup.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(10, 10).create());
         mavenGroup.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 
-        final IObservableValue groupIdObservable = createGroupIdControl(mavenGroup, context);
-        final IObservableValue apiNameObservable = createArtifactIdControl(mavenGroup, context);
-        final IObservableValue vesionObservable = createVersionControl(mavenGroup, context);
+     
+        var apiNameObservable = createArtifactIdControl(mavenGroup, context);
+        createPackageControl(mavenGroup, context);
         
         if(configuration instanceof RestAPIExtensionArchetypeConfiguration) {
             createLanguageControl(mavenGroup, context);
@@ -114,8 +114,8 @@ public class NewCustomPageArtifactConfigurationPage extends WizardPage {
             protected IStatus validate() {
                 final Model model = new Model();
                 model.setArtifactId((String) apiNameObservable.getValue());
-                model.setGroupId((String) groupIdObservable.getValue());
-                model.setVersion((String) vesionObservable.getValue());
+                model.setGroupId(configuration.getGroupId());
+                model.setVersion(configuration.getVersion());
                 return projectConfiguration.validateProjectName(model);
             }
 
@@ -162,16 +162,7 @@ public class NewCustomPageArtifactConfigurationPage extends WizardPage {
                 null);
     }
 
-    protected IObservableValue createVersionControl(final Composite mainComposite, final DataBindingContext context) {
-        widgetFactory.newLabel(mainComposite, Messages.version);
-        final Text versionText = widgetFactory.newText(mainComposite);
-        final IObservableValue vesionObservable = PojoProperties.value("version").observe(configuration);
-        context.bindValue(WidgetProperties.text(SWT.Modify).observe(versionText),
-                vesionObservable,
-                updateValueStrategy().withValidator(mandatoryValidator(Messages.version)).create(),
-                null);
-        return vesionObservable;
-    }
+  
 
     protected IObservableValue createArtifactIdControl(final Composite mainComposite,
             final DataBindingContext context) {
@@ -189,19 +180,18 @@ public class NewCustomPageArtifactConfigurationPage extends WizardPage {
         return apiNameObservable;
     }
 
-    protected IObservableValue createGroupIdControl(final Composite mainComposite, final DataBindingContext context) {
-        widgetFactory.newLabel(mainComposite, Messages.groupId);
+    protected IObservableValue createPackageControl(final Composite mainComposite, final DataBindingContext context) {
+        widgetFactory.newLabel(mainComposite, Messages.packageLabel);
         final Text groupIdText = widgetFactory.newText(mainComposite);
         groupIdText.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY,
-                "org.bonitasoft.studio.rest.api.extension.ui.wizard.groupIdText");
-        widgetFactory.createHintDecorator(groupIdText, SWT.LEFT, Messages.groupIdHint);
+                "org.bonitasoft.studio.rest.api.extension.ui.wizard.packageText");
 
-        final IObservableValue groupIdObservable = PojoProperties.value("groupId").observe(configuration);
+        final IObservableValue packageObservable = PojoProperties.value("javaPackage").observe(configuration);
         context.bindValue(WidgetProperties.text(SWT.Modify).observe(groupIdText),
-                groupIdObservable,
-                updateValueStrategy().withValidator(new GroupIdValidator(workspace)).create(),
+                packageObservable,
+                updateValueStrategy().withValidator(p -> JavaConventions.validatePackageName((String) p, JavaCore.VERSION_11, JavaCore.VERSION_11)).create(),
                 null);
-        return groupIdObservable;
+        return packageObservable;
     }
     
     private void createLanguageControl(Composite mainComposite, DataBindingContext context) {

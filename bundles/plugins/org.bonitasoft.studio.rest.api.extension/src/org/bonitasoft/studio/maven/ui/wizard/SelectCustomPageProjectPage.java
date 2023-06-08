@@ -14,8 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bonitasoft.studio.common.databinding.validator.TypedValidator;
-import org.bonitasoft.studio.maven.CustomPageProjectFileStore;
-import org.bonitasoft.studio.maven.CustomPageProjectRepositoryStore;
+import org.bonitasoft.studio.maven.ExtensionProjectFileStore;
+import org.bonitasoft.studio.maven.ExtensionRepositoryStore;
 import org.bonitasoft.studio.maven.i18n.Messages;
 import org.bonitasoft.studio.maven.ui.WidgetFactory;
 import org.bonitasoft.studio.rest.api.extension.ui.wizard.RestAPIExtensionLabelProvider;
@@ -42,14 +42,14 @@ import org.eclipse.swt.widgets.Composite;
 public class SelectCustomPageProjectPage extends WizardPage {
 
     private static final int TABLE_WIDTH_HINT = 600;
-    private final CustomPageProjectRepositoryStore<? extends CustomPageProjectFileStore> repositoryStore;
+    private final ExtensionRepositoryStore repositoryStore;
     protected final WidgetFactory widgetFactory;
     private final IObservableValue fileStoreObservable;
     private DataBindingContext context;
     private TableViewer viewer;
     private List<ViewerFilter> filters = new ArrayList<>();
 
-    public SelectCustomPageProjectPage(final CustomPageProjectRepositoryStore<? extends CustomPageProjectFileStore> repositoryStore,
+    public SelectCustomPageProjectPage(final ExtensionRepositoryStore repositoryStore,
             final WidgetFactory widgetFactory,
             final IObservableValue fileStoreObservable) {
         super(SelectCustomPageProjectPage.class.getName());
@@ -107,10 +107,10 @@ public class SelectCustomPageProjectPage extends WizardPage {
     }
 
     private IValidator selectionValidator() {
-        return new TypedValidator<CustomPageProjectFileStore, IStatus>() {
+        return new TypedValidator<ExtensionProjectFileStore, IStatus>() {
 
             @Override
-            protected IStatus doValidate(final CustomPageProjectFileStore value) {
+            protected IStatus doValidate(final ExtensionProjectFileStore value) {
                 return value == null ? ValidationStatus.error(Messages.emptySelectionErrorMessage) : ValidationStatus.ok();
             }
 

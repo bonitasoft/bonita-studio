@@ -36,7 +36,7 @@ import org.eclipse.swt.widgets.Control;
 
 public class RestApiExtensionCard extends ExtensionCard implements Zoomable {
 
-    public static final String DEPLOY_COMMAND = "org.bonitasoft.studio.rest.api.extension.deploy.from.dependency.command";
+    public static final String DEPLOY_COMMAND = "org.bonitasoft.studio.maven.extension.deploy.from.dependency.command";
 
     private ZoomListener zoomListener;
     private CommandExecutor commandExecutor;

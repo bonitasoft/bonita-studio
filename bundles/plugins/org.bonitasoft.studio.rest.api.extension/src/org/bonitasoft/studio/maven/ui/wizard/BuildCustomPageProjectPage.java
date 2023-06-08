@@ -13,8 +13,8 @@ import static org.bonitasoft.studio.common.databinding.validator.ValidatorFactor
 import java.io.File;
 
 import org.bonitasoft.studio.common.databinding.validator.TypedValidator;
-import org.bonitasoft.studio.maven.CustomPageProjectFileStore;
-import org.bonitasoft.studio.maven.CustomPageProjectRepositoryStore;
+import org.bonitasoft.studio.maven.ExtensionProjectFileStore;
+import org.bonitasoft.studio.maven.ExtensionRepositoryStore;
 import org.bonitasoft.studio.maven.i18n.Messages;
 import org.bonitasoft.studio.maven.ui.WidgetFactory;
 import org.bonitasoft.studio.rest.api.extension.ui.wizard.RestAPIExtensionLabelProvider;
@@ -53,16 +53,16 @@ public class BuildCustomPageProjectPage extends WizardPage {
 
     private static final int TABLE_WIDTH_HINT = 700;
 
-    private CustomPageProjectRepositoryStore<? extends CustomPageProjectFileStore> repositoryStore;
+    private ExtensionRepositoryStore repositoryStore;
     private DataBindingContext context;
     private IObservableValue<String> locationObservable;
-    private IObservableSet<CustomPageProjectFileStore> selectedFileStores;
+    private IObservableSet<ExtensionProjectFileStore> selectedFileStores;
 
     protected WidgetFactory widgetFactory;
 
-    public BuildCustomPageProjectPage(CustomPageProjectRepositoryStore<? extends CustomPageProjectFileStore> repositoryStore,
+    public BuildCustomPageProjectPage(ExtensionRepositoryStore repositoryStore,
             WidgetFactory widgetFactory, IObservableValue<String> locationObservable,
-            IObservableSet<CustomPageProjectFileStore> selectedFileStores) {
+            IObservableSet<ExtensionProjectFileStore> selectedFileStores) {
         super(BuildCustomPageProjectPage.class.getName());
         this.repositoryStore = repositoryStore;
         this.widgetFactory = widgetFactory;
@@ -97,12 +97,12 @@ public class BuildCustomPageProjectPage extends WizardPage {
             
             @Override
             public boolean select(Viewer viewer, Object parentElement, Object element) {
-                return element instanceof CustomPageProjectFileStore && !((CustomPageProjectFileStore)element).isReadOnly();
+                return element instanceof ExtensionProjectFileStore && !((ExtensionProjectFileStore)element).isReadOnly();
             }
         });
         viewer.setInput(repositoryStore.getChildren());
         ctx.bindSet(selectedFileStores,
-                ViewerProperties.checkedElements(CustomPageProjectFileStore.class).observe((ICheckable) viewer));
+                ViewerProperties.checkedElements(ExtensionProjectFileStore.class).observe((ICheckable) viewer));
         ctx.addValidationStatusProvider(new MultiValidator() {
 
             @Override
@@ -173,15 +173,15 @@ public class BuildCustomPageProjectPage extends WizardPage {
         }
     }
 
-    public IObservableSet<CustomPageProjectFileStore> observeSelectedFileStore() {
+    public IObservableSet<ExtensionProjectFileStore> observeSelectedFileStore() {
         return selectedFileStores;
     }
 
     private IValidator selectionValidator() {
-        return new TypedValidator<CustomPageProjectFileStore, IStatus>() {
+        return new TypedValidator<ExtensionProjectFileStore, IStatus>() {
 
             @Override
-            protected IStatus doValidate(final CustomPageProjectFileStore value) {
+            protected IStatus doValidate(final ExtensionProjectFileStore value) {
                 return value == null ? ValidationStatus.error(Messages.emptySelectionErrorMessage) : ValidationStatus.ok();
             }
 

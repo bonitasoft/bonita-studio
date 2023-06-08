@@ -37,10 +37,14 @@ import org.bonitasoft.studio.rest.api.extension.core.repository.RestAPIExtension
 import org.eclipse.aether.artifact.Artifact;
 import org.eclipse.aether.graph.Dependency;
 import org.eclipse.core.databinding.validation.ValidationStatus;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.m2e.core.MavenPlugin;
 import org.eclipse.m2e.core.embedder.ICallable;
 import org.eclipse.m2e.core.embedder.IMaven;
@@ -146,6 +150,11 @@ public class RestAPIExtensionPomValidator {
     }
 
     protected MavenExecutionResult build(RestAPIExtensionFileStore restApiFileStore) throws CoreException {
+        try {
+            Job.getJobManager().join(ResourcesPlugin.FAMILY_AUTO_BUILD, new NullProgressMonitor());
+        } catch (OperationCanceledException | InterruptedException e) {
+            BonitaStudioLog.error(e);
+        }
         IMaven maven = MavenPlugin.getMaven();
         MavenProjectInfo info = restApiFileStore.getMavenProjectInfo();
         var projectFacade = MavenPlugin.getMavenProjectRegistry().getProject(restApiFileStore.getProject());
@@ -162,7 +171,7 @@ public class RestAPIExtensionPomValidator {
                 newProjectBuildingRequest.setProcessPlugins(true);
                 return maven.readMavenProject(info.getPomFile(), newProjectBuildingRequest);
             }
-        }, AbstractRepository.NULL_PROGRESS_MONITOR);
+        }, new NullProgressMonitor());
     }
 
     private boolean isBonitaWebExtensionsDependency(Dependency dependency) {

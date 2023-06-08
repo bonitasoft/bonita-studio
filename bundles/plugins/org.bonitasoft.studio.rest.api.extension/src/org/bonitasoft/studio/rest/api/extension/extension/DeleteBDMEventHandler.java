@@ -21,7 +21,7 @@ import org.bonitasoft.studio.common.event.BdmEvents;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.core.maven.RemoveDependencyOperation;
-import org.bonitasoft.studio.rest.api.extension.core.repository.RestAPIExtensionRepositoryStore;
+import org.bonitasoft.studio.maven.ExtensionRepositoryStore;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.e4.core.services.events.IEventBroker;
@@ -42,7 +42,7 @@ public class DeleteBDMEventHandler implements EventHandler {
     public void handleEvent(final Event event) {
         var dependency = event.getProperty(BdmEvents.DEPENDENCY_PROPERTY);
         if (dependency instanceof Dependency) {
-            for (var fStore : accessor.getRepositoryStore(RestAPIExtensionRepositoryStore.class).getChildren()) {
+            for (var fStore : accessor.getRepositoryStore(ExtensionRepositoryStore.class).getChildren()) {
                 var op = new RemoveDependencyOperation((Dependency) dependency);
                 op.setProject(fStore.getProject());
                 try {

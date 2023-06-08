@@ -23,10 +23,10 @@ import org.bonitasoft.studio.designer.core.repository.WebPageRepositoryStore;
 import org.bonitasoft.studio.la.application.ui.editor.customPage.CustomPageProvider;
 import org.bonitasoft.studio.la.application.ui.editor.listener.AddApplicationDescriptorListener;
 import org.bonitasoft.studio.la.i18n.Messages;
+import org.bonitasoft.studio.maven.ExtensionRepositoryStore;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.preferences.BonitaThemeConstants;
-import org.bonitasoft.studio.theme.ThemeRepositoryStore;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -53,7 +53,7 @@ public class ApplicationFormPart extends AbstractFormPart {
         RepositoryAccessor repositoryAccessor = formPage.getRepositoryAccessor();
         this.customPageProvider = new CustomPageProvider(
                 repositoryAccessor.getRepositoryStore(WebPageRepositoryStore.class),
-                repositoryAccessor.getRepositoryStore(ThemeRepositoryStore.class));
+                repositoryAccessor.getRepositoryStore(ExtensionRepositoryStore.class));
         customPageProvider.init();
         toolkit = formPage.getToolkit();
         if (workingCopy.getApplications().isEmpty()) {

@@ -202,7 +202,7 @@ public class BusinessObjectModelFileStore extends AbstractBDMFileStore<BusinessO
                 p.getBdmModelProject().delete(true, true, new NullProgressMonitor());
                 p.getBdmDaoClientProject().delete(true, true, new NullProgressMonitor());
                 p.getBdmParentProject().delete(true, true, new NullProgressMonitor());
-                p.removeModule(BonitaProject.BDM_MODULE,new NullProgressMonitor());
+                p.removeModule(p.getParentProject(), BonitaProject.BDM_MODULE, new NullProgressMonitor());
             } catch (CoreException e) {
                 BonitaStudioLog.error(e);
             }

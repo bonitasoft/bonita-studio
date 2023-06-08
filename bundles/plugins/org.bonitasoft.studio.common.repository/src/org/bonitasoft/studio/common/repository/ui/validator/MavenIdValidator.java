@@ -14,6 +14,9 @@
  */
 package org.bonitasoft.studio.common.repository.ui.validator;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.bonitasoft.studio.common.Strings;
 import org.bonitasoft.studio.common.databinding.validator.EmptyInputValidator;
 import org.bonitasoft.studio.common.databinding.validator.RegExpValidator;
@@ -27,9 +30,14 @@ public class MavenIdValidator implements IValidator<String> {
     private IValidator<String> emptyFieldValidator;
     private boolean mandatory;
     private RegExpValidator regExpValidator;
+    private Set<String> reserved = new HashSet<>();
 
     public MavenIdValidator(String fieldName) {
         this(fieldName, true);
+    }
+    
+    public void addReservedId(String id) {
+        reserved.add(id.toLowerCase());
     }
 
     public MavenIdValidator(String fieldName, boolean mandatory) {
@@ -43,6 +51,9 @@ public class MavenIdValidator implements IValidator<String> {
         if (mandatory) {
             var status = emptyFieldValidator.validate(value);
             if (status.isOK()) {
+                if(reserved.contains(value.toLowerCase())) {
+                    return ValidationStatus.error(Messages.reservedId);
+                }
                 return regExpValidator.validate(value);
             }
         } else if (Strings.isNullOrEmpty(value)) {

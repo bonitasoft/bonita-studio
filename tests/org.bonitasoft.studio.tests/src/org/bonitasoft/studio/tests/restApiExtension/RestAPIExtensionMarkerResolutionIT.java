@@ -18,9 +18,8 @@ import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.importer.bos.operation.ImportBosArchiveOperation;
+import org.bonitasoft.studio.maven.ExtensionRepositoryStore;
 import org.bonitasoft.studio.maven.i18n.Messages;
-import org.bonitasoft.studio.rest.api.extension.core.repository.RestAPIExtensionFileStore;
-import org.bonitasoft.studio.rest.api.extension.core.repository.RestAPIExtensionRepositoryStore;
 import org.bonitasoft.studio.rest.api.extension.core.validation.RestAPIDependencyVersionToUpdateFinder;
 import org.bonitasoft.studio.tests.util.InitialProjectRule;
 import org.eclipse.core.resources.IMarker;
@@ -52,7 +51,7 @@ public class RestAPIExtensionMarkerResolutionIT {
     }
 
     private void cleanRestApiRepositoryStore() {
-        repositoryAccessor.getRepositoryStore(RestAPIExtensionRepositoryStore.class).getChildren()
+        repositoryAccessor.getRepositoryStore(ExtensionRepositoryStore.class).getChildren()
                 .forEach(IRepositoryFileStore::delete);
     }
 
@@ -65,11 +64,11 @@ public class RestAPIExtensionMarkerResolutionIT {
         PlatformUI.getWorkbench().getProgressService().run(true, false, importBosArchiveOperation);
         importBosArchiveOperation.openFilesToOpen();
 
-        RestAPIExtensionRepositoryStore restAPIExtensionRepositoryStore = repositoryAccessor
-                .getRepositoryStore(RestAPIExtensionRepositoryStore.class);
+        var restAPIExtensionRepositoryStore = repositoryAccessor
+                .getRepositoryStore(ExtensionRepositoryStore.class);
         assertThat(restAPIExtensionRepositoryStore.getChildren()).hasSize(1);
 
-        RestAPIExtensionFileStore restAPIExtensionFileStore = restAPIExtensionRepositoryStore.getChildren().get(0);
+        var restAPIExtensionFileStore = restAPIExtensionRepositoryStore.getChildren().get(0);
 
         checkProjectMarkers(restAPIExtensionFileStore.getProject());
     }

@@ -44,6 +44,10 @@ public class MultiModuleBosArchiveEntryHandler extends DefaultBosArchiveEntryHan
                 segments.get(0).equals("bdm")) {
             return 1;
         }
+        if(!segments.isEmpty() && 
+                segments.get(0).equals("extensions")) {
+            return 1;
+        }
         return super.getStoreDepth(segments);
     }
     

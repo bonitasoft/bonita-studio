@@ -31,7 +31,6 @@ import java.util.Properties;
 
 import org.bonitasoft.studio.rest.api.extension.core.repository.RestAPIExtensionDescriptor;
 import org.bonitasoft.studio.rest.api.extension.core.repository.RestAPIExtensionFileStore;
-import org.bonitasoft.studio.rest.api.extension.core.repository.RestAPIExtensionRepositoryStore;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -59,7 +58,7 @@ public class CustomPageProjectFileStoreTest {
 
     @Test
     public void should_open_Index_groovy_file() throws Exception {
-        final RestAPIExtensionRepositoryStore parentStore = mock(RestAPIExtensionRepositoryStore.class, Mockito.RETURNS_DEEP_STUBS);
+        var parentStore = mock(ExtensionRepositoryStore.class, Mockito.RETURNS_DEEP_STUBS);
         final IProject restApiProject = mock(IProject.class);
         when(restApiProject.getName()).thenReturn("my-rest-api");
         final IFile indexGroovy = mock(IFile.class);
@@ -75,7 +74,7 @@ public class CustomPageProjectFileStoreTest {
         pageProperties.put("myApi.classFileName", "Index.groovy");
         doReturn(pageProperties).when(descriptor).getPageProperties();
         doReturn(descriptor).when(fileStore).getContent();
-        doReturn(null).when(fileStore).openEditors(any(IWorkbenchPage.class), any(CustomPageMavenProjectDescriptor.class));
+        doReturn(null).when(fileStore).openEditors(any(IWorkbenchPage.class), any(ExtensionProjectDescriptor.class));
         final IWorkbenchPage page = mock(IWorkbenchPage.class);
         doReturn(page).when(fileStore).getActivePage();
 
@@ -90,7 +89,7 @@ public class CustomPageProjectFileStoreTest {
 
     @Test
     public void should_return_null_if_open_throw_a_PartInitException() throws Exception {
-        final RestAPIExtensionRepositoryStore parentStore = mock(RestAPIExtensionRepositoryStore.class, Mockito.RETURNS_DEEP_STUBS);
+        var parentStore = mock(ExtensionRepositoryStore.class, Mockito.RETURNS_DEEP_STUBS);
 
         final RestAPIExtensionFileStore fileStore = spy(new RestAPIExtensionFileStore("my-rest-api", parentStore));
         final IWorkbenchPage page = mock(IWorkbenchPage.class);
@@ -103,7 +102,7 @@ public class CustomPageProjectFileStoreTest {
 
     @Test
     public void shouldFilterResourcesToExport() throws Exception {
-        final RestAPIExtensionRepositoryStore parentStore = mock(RestAPIExtensionRepositoryStore.class, Mockito.RETURNS_DEEP_STUBS);
+        var parentStore = mock(ExtensionRepositoryStore.class, Mockito.RETURNS_DEEP_STUBS);
         final IProject restApiProject = mock(IProject.class);
         doReturn(restApiProject).when(raed).getProject();
         final List<IResource> members = new ArrayList<IResource>();

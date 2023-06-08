@@ -22,7 +22,7 @@ public class DependencyRestAPIExtensionDescriptor extends RestAPIExtensionDescri
     private RestAPIExtension extension;
 
     public DependencyRestAPIExtensionDescriptor(RestAPIExtension extension) {
-        super();
+        super(null);
         this.extension = extension;
     }
 
@@ -35,6 +35,26 @@ public class DependencyRestAPIExtensionDescriptor extends RestAPIExtensionDescri
             new ExceptionDialogHandler().openErrorDialog(Display.getDefault().getActiveShell(), e.getMessage(), e);
             return new Properties();
         }
+    }
+    
+    @Override
+    public String getGroupId() {
+        return extension.getArtifact().getGroupId();
+    }
+    
+    @Override
+    public String getArtifactId() {
+        return extension.getArtifact().getArtifactId();
+    }
+    
+    @Override
+    public String getVersion() {
+        return extension.getArtifact().getVersion();
+    }
+    
+    @Override
+    public String getClassifier() {
+        return extension.getArtifact().getClassifier();
     }
 
 }

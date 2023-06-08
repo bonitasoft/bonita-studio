@@ -11,14 +11,12 @@ package org.bonitasoft.studio.rest.api.extension.ui.handler;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.engine.http.HttpClientFactory;
-import org.bonitasoft.studio.maven.CustomPageProjectFileStore;
-import org.bonitasoft.studio.maven.CustomPageProjectRepositoryStore;
+import org.bonitasoft.studio.maven.ExtensionRepositoryStore;
 import org.bonitasoft.studio.maven.i18n.Messages;
 import org.bonitasoft.studio.maven.ui.WidgetFactory;
 import org.bonitasoft.studio.maven.ui.handler.CustomPageProjectSelectionProvider;
 import org.bonitasoft.studio.maven.ui.handler.OpenWizardDialogAbstractHandler;
 import org.bonitasoft.studio.maven.ui.wizard.DeployCustomPageWizard;
-import org.bonitasoft.studio.rest.api.extension.core.repository.RestAPIExtensionRepositoryStore;
 import org.eclipse.jface.wizard.IWizard;
 
 public class DeployRestAPIExtensionHandler extends OpenWizardDialogAbstractHandler {
@@ -36,15 +34,15 @@ public class DeployRestAPIExtensionHandler extends OpenWizardDialogAbstractHandl
     }
 
     @Override
-    protected CustomPageProjectRepositoryStore<? extends CustomPageProjectFileStore> getStore(
+    protected ExtensionRepositoryStore getStore(
             RepositoryAccessor repositoryAccessor) {
-        return repositoryAccessor.getRepositoryStore(RestAPIExtensionRepositoryStore.class);
+        return repositoryAccessor.getRepositoryStore(ExtensionRepositoryStore.class);
     }
     
     private class DeployRestAPIWizard extends DeployCustomPageWizard {
 
         public DeployRestAPIWizard(
-                CustomPageProjectRepositoryStore<? extends CustomPageProjectFileStore> repositoryStore,
+                ExtensionRepositoryStore repositoryStore,
                 BOSEngineManager engineManager, WidgetFactory widgetFactory, HttpClientFactory httpClientFactory,
                 CustomPageProjectSelectionProvider selectionProvider) {
             super(repositoryStore, engineManager, widgetFactory, httpClientFactory, selectionProvider);

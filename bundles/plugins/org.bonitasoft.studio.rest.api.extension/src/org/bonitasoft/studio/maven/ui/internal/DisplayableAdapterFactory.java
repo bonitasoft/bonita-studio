@@ -20,16 +20,15 @@ import java.util.function.Supplier;
 import org.bonitasoft.plugin.analyze.report.model.CustomPage;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.common.ui.IDisplayable;
-import org.bonitasoft.studio.maven.CustomPageMavenProjectDescriptor;
-import org.bonitasoft.studio.maven.CustomPageProjectFileStore;
+import org.bonitasoft.studio.maven.ExtensionProjectDescriptor;
+import org.bonitasoft.studio.maven.ExtensionProjectFileStore;
+import org.bonitasoft.studio.maven.ExtensionRepositoryStore;
 import org.bonitasoft.studio.maven.i18n.Messages;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.rest.api.extension.RestAPIExtensionActivator;
 import org.bonitasoft.studio.rest.api.extension.core.repository.DependencyRestAPIExtensionFileStore;
-import org.bonitasoft.studio.rest.api.extension.core.repository.RestAPIExtensionRepositoryStore;
 import org.bonitasoft.studio.theme.DependencyThemeFileStore;
-import org.bonitasoft.studio.theme.ThemeRepositoryStore;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IAdapterFactory;
 import org.eclipse.jdt.internal.ui.viewsupport.JavaUILabelProvider;
@@ -37,7 +36,7 @@ import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.swt.graphics.Image;
 
 /**
- * Adapts {@link CustomPageProjectFileStore}, {@link RestAPIExtensionRepositoryStore} or {@link ThemeRepositoryStore} to {@link IDisplayable}
+ * Adapts {@link ExtensionProjectFileStore}, {@link RestAPIExtensionRepositoryStore} or {@link ThemeRepositoryStore} to {@link IDisplayable}
  * 
  * @author Vincent Hemery
  */
@@ -46,8 +45,8 @@ public class DisplayableAdapterFactory implements IAdapterFactory {
     @Override
     public <T> T getAdapter(Object adaptableObject, Class<T> adapterType) {
         if (adapterType.isAssignableFrom(IDisplayable.class)) {
-            if (adaptableObject instanceof CustomPageProjectFileStore) {
-                CustomPageProjectFileStore store = (CustomPageProjectFileStore) adaptableObject;
+            if (adaptableObject instanceof ExtensionProjectFileStore) {
+                ExtensionProjectFileStore store = (ExtensionProjectFileStore) adaptableObject;
                 IDisplayable display = new IDisplayable() {
 
                     private JavaUILabelProvider javaUILabelProvider;
@@ -69,9 +68,9 @@ public class DisplayableAdapterFactory implements IAdapterFactory {
                             return store.getName();
                         };
                         try {
-                            final CustomPageMavenProjectDescriptor content = store.getContent();
+                            final ExtensionProjectDescriptor content = store.getContent();
                             return Optional.ofNullable(content)
-                                    .map(c -> String.format("%s (%s)", c.getArtifactId(), c.getVersion()))
+                                    .map(ExtensionProjectDescriptor::getDisplayName)
                                     .orElseGet(getFromName);
                         } catch (final ReadFileStoreException e) {
                             return getFromName.get();
@@ -102,39 +101,29 @@ public class DisplayableAdapterFactory implements IAdapterFactory {
                     @Override
                     public StyledString getStyledString() {
                         StyledString styledString = new StyledString(store.getName());
+                        var type = store.getContentType() ;
                         if ((store.getProject() == null || !store.getProject().exists()) && store.canBeImported()) {
                             styledString.append("  ");
                             styledString.append(Messages.rightClickToConvert, StyledString.DECORATIONS_STYLER);
+                        }else if(type != null) {
+                            styledString.append("  ");
+                            styledString.append(type.equals(ExtensionRepositoryStore.API_EXTENSION_CONTENT_TYPE) ? "REST API EXTENSION" : type.toUpperCase(), StyledString.QUALIFIER_STYLER);
                         }
                         return styledString;
                     }
                 };
                 return (T) display;
-            } else if (adaptableObject instanceof RestAPIExtensionRepositoryStore) {
+            } else if (adaptableObject instanceof ExtensionRepositoryStore) {
                 IDisplayable display = new IDisplayable() {
 
                     @Override
                     public String getDisplayName() {
-                        return Messages.restApiExtensionRepositoryName;
+                        return Messages.extensionRepositoryName;
                     }
 
                     @Override
                     public Image getIcon() {
-                        return Pics.getImage(PicsConstants.restApi);
-                    }
-                };
-                return (T) display;
-            } else if (adaptableObject instanceof ThemeRepositoryStore) {
-                IDisplayable display = new IDisplayable() {
-
-                    @Override
-                    public String getDisplayName() {
-                        return Messages.themesRepositoryName;
-                    }
-
-                    @Override
-                    public Image getIcon() {
-                        return Pics.getImage("theme.png", RestAPIExtensionActivator.getDefault());
+                        return Pics.getImage(PicsConstants.extensions);
                     }
                 };
                 return (T) display;

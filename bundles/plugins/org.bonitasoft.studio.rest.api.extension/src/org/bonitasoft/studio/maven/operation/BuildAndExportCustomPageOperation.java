@@ -26,7 +26,7 @@ import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.common.ui.IDisplayable;
 import org.bonitasoft.studio.common.ui.jface.BonitaErrorDialog;
 import org.bonitasoft.studio.common.ui.jface.FileActionDialog;
-import org.bonitasoft.studio.maven.CustomPageProjectFileStore;
+import org.bonitasoft.studio.maven.ExtensionProjectFileStore;
 import org.bonitasoft.studio.maven.i18n.Messages;
 import org.bonitasoft.studio.rest.api.extension.RestAPIExtensionActivator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
@@ -39,11 +39,11 @@ public class BuildAndExportCustomPageOperation {
 
     private MultiStatus status;
 
-    public void run(Collection<CustomPageProjectFileStore> customPageFileStores, String targetDir,
+    public void run(Collection<ExtensionProjectFileStore> customPageFileStores, String targetDir,
             IRunnableContext runnableContext) {
         try {
             status = new MultiStatus(RestAPIExtensionActivator.PLUGIN_ID, 0, "", null);
-            for (CustomPageProjectFileStore fileStore : customPageFileStores) {
+            for (ExtensionProjectFileStore fileStore : customPageFileStores) {
                 buildCustomPage(fileStore, targetDir, runnableContext);
             }
         } catch (CoreException | ReadFileStoreException | InvocationTargetException | InterruptedException
@@ -53,7 +53,7 @@ public class BuildAndExportCustomPageOperation {
         }
     }
 
-    private void buildCustomPage(CustomPageProjectFileStore fileStore, String targetDir,
+    private void buildCustomPage(ExtensionProjectFileStore fileStore, String targetDir,
             IRunnableContext runnableContext)
             throws ReadFileStoreException, CoreException, InvocationTargetException, InterruptedException, IOException {
         BuildCustomPageOperation operation = fileStore.newBuildOperation();

@@ -10,8 +10,8 @@ package org.bonitasoft.studio.maven.ui.wizard;
 
 import java.util.Arrays;
 
-import org.bonitasoft.studio.maven.CustomPageProjectFileStore;
-import org.bonitasoft.studio.maven.CustomPageProjectRepositoryStore;
+import org.bonitasoft.studio.maven.ExtensionProjectFileStore;
+import org.bonitasoft.studio.maven.ExtensionRepositoryStore;
 import org.bonitasoft.studio.maven.i18n.Messages;
 import org.bonitasoft.studio.maven.operation.BuildAndExportCustomPageOperation;
 import org.bonitasoft.studio.maven.ui.WidgetFactory;
@@ -27,22 +27,22 @@ import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.wizard.Wizard;
 
-public abstract class BuildCustomPageWizard extends Wizard {
+public class BuildCustomPageWizard extends Wizard {
 
     private static final String LAST_TARGET_LOCATION_SETTING = "LAST_TARGET_LOCATION_SETTING";
-    private final CustomPageProjectRepositoryStore<? extends CustomPageProjectFileStore> repositoryStore;
+    private final ExtensionRepositoryStore repositoryStore;
     private final WidgetFactory widgetFactory;
-    private final IObservableSet<CustomPageProjectFileStore> selectedFileStoreObservable;
+    private final IObservableSet<ExtensionProjectFileStore> selectedFileStoreObservable;
     private final IObservableValue<String> locationObservable;
     private final DialogSettingsHelper dialogSettingsHelper;
 
-    public BuildCustomPageWizard(CustomPageProjectRepositoryStore<? extends CustomPageProjectFileStore> repositoryStore,
+    public BuildCustomPageWizard(ExtensionRepositoryStore repositoryStore,
             WidgetFactory widgetFactory,
             CustomPageProjectSelectionProvider selectionProvider) {
         this.repositoryStore = repositoryStore;
         this.widgetFactory = widgetFactory;
         selectedFileStoreObservable = new WritableSet<>(Arrays.asList(selectionProvider.getSelection()),
-                CustomPageProjectFileStore.class);
+                ExtensionProjectFileStore.class);
         locationObservable = new WritableValue<>();
         dialogSettingsHelper = new DialogSettingsHelper(BuildCustomPageWizard.class.getName());
         setDefaultPageImageDescriptor(Pics.getWizban());
@@ -56,14 +56,11 @@ public abstract class BuildCustomPageWizard extends Wizard {
                 .setValue(dialogSettingsHelper.get(LAST_TARGET_LOCATION_SETTING, System.getProperty("user.home")));
         final BuildCustomPageProjectPage selectionPage = new BuildCustomPageProjectPage(repositoryStore, widgetFactory,
                 locationObservable, selectedFileStoreObservable);
-        selectionPage.setTitle(getSelectionPageTitle());
-        selectionPage.setDescription(getSelectionPageDescription());
+        selectionPage.setTitle(Messages.selectExtensionTitle);
+        selectionPage.setDescription(Messages.selectExtensionDescription);
         addPage(selectionPage);
     }
 
-    protected abstract String getSelectionPageDescription();
-
-    protected abstract String getSelectionPageTitle();
 
     @Override
     public boolean performFinish() {

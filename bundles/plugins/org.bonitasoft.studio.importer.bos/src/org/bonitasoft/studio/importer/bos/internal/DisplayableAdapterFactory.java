@@ -24,8 +24,12 @@ import org.bonitasoft.studio.importer.bos.model.ImportFileModel;
 import org.bonitasoft.studio.importer.bos.model.ImportFolderFileStoreModel;
 import org.bonitasoft.studio.importer.bos.model.ImportFolderModel;
 import org.bonitasoft.studio.importer.bos.model.ImportStoreModel;
+import org.bonitasoft.studio.importer.bos.model.LegacyRestAPIExtensionsImportStoreModel;
 import org.bonitasoft.studio.importer.bos.model.LegacyStoreModel;
+import org.bonitasoft.studio.importer.bos.model.LegacyThemesImportStoreModel;
 import org.bonitasoft.studio.importer.bos.model.RootFileModel;
+import org.bonitasoft.studio.pics.Pics;
+import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.core.runtime.IAdapterFactory;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.resource.JFaceResources;
@@ -78,6 +82,10 @@ public class DisplayableAdapterFactory implements IAdapterFactory {
             }
         } else if (importModel instanceof ImportFolderModel) {
             return PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJ_FOLDER);
+        }else if(importModel instanceof LegacyThemesImportStoreModel) {
+            return Pics.getImage(PicsConstants.themeDefaultIcon);
+        }else if(importModel instanceof LegacyRestAPIExtensionsImportStoreModel) {
+            return Pics.getImage(PicsConstants.restApi);
         } else if (importModel instanceof ImportFolderFileStoreModel) {
             Optional<IRepositoryStore> store = Optional.ofNullable(importModel.getAdapter(IRepositoryStore.class));
             Optional<IDisplayable> display = store.flatMap(IDisplayable::adapt);

@@ -6,24 +6,22 @@
  * Bonitasoft, 32 rue Gustave Eiffel – 38000 Grenoble
  * or Bonitasoft US, 51 Federal Street, Suite 305, San Francisco, CA 94107
  *******************************************************************************/
-package org.bonitasoft.studio.rest.api.extension.ui.handler;
+package org.bonitasoft.studio.maven.ui.handler;
 
 import java.lang.reflect.InvocationTargetException;
 
 import javax.inject.Named;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.filestore.FileStoreFinder;
-import org.bonitasoft.studio.common.repository.model.IDeployable;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
-import org.bonitasoft.studio.maven.CustomPageProjectFileStore;
+import org.bonitasoft.studio.maven.ExtensionProjectFileStore;
+import org.bonitasoft.studio.maven.ExtensionRepositoryStore;
 import org.bonitasoft.studio.maven.operation.BuildCustomPageOperation;
 import org.bonitasoft.studio.rest.api.extension.RestAPIExtensionActivator;
-import org.bonitasoft.studio.rest.api.extension.core.repository.RestAPIExtensionRepositoryStore;
 import org.bonitasoft.studio.rest.api.extension.ui.view.MavenConsoleView;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IncrementalProjectBuilder;
@@ -49,23 +47,23 @@ public class QuickBuildHandler {
     public void execute(RepositoryAccessor repositoryAccessor,
             @Named(IServiceConstants.ACTIVE_SELECTION) @Optional ISelection selection) {
         showConsoleView();
-        final CustomPageProjectFileStore selectedRestApiExtension = getMavenProjectFileStore(selection,
+        final ExtensionProjectFileStore selectedExtension = getMavenProjectFileStore(selection,
                 repositoryAccessor);
-        if (selectedRestApiExtension != null) {
-            build(selectedRestApiExtension);
+        if (selectedExtension != null) {
+            build(selectedExtension);
         }
     }
 
-    protected IStatus build(CustomPageProjectFileStore selectedRestApiExtension) {
+    protected IStatus build(ExtensionProjectFileStore selectedExtension) {
         try {
             ModalContext.run(monitor -> {
                 try {
-                    selectedRestApiExtension.getProject().build(IncrementalProjectBuilder.INCREMENTAL_BUILD, monitor);
+                    selectedExtension.getProject().build(IncrementalProjectBuilder.INCREMENTAL_BUILD, monitor);
                 } catch (CoreException e) {
                   throw new InvocationTargetException(e);
                 }
             }, false, new NullProgressMonitor(), Display.getDefault());
-            final BuildCustomPageOperation operation = selectedRestApiExtension.newBuildOperation();
+            final BuildCustomPageOperation operation = selectedExtension.newBuildOperation();
             operation.setGoals("clean install");
             ModalContext.run(operation.asWorkspaceModifyOperation(), true, new NullProgressMonitor(),
                     Display.getDefault());
@@ -84,7 +82,7 @@ public class QuickBuildHandler {
         }
     }
 
-    private CustomPageProjectFileStore getMavenProjectFileStore(final ISelection selection,
+    private ExtensionProjectFileStore getMavenProjectFileStore(final ISelection selection,
             RepositoryAccessor repositoryAccessor) {
         if (selection instanceof IStructuredSelection) {
             final Object firstSelectedElement = ((IStructuredSelection) selection).getFirstElement();
@@ -93,16 +91,16 @@ public class QuickBuildHandler {
                         .findFileStore(((IAdaptable) firstSelectedElement).getAdapter(IResource.class).getProject(),
                                 repositoryAccessor.getCurrentRepository().orElseThrow())
                         .orElse(null);
-                if (fStore instanceof CustomPageProjectFileStore) {
-                    return (CustomPageProjectFileStore) fStore;
+                if (fStore instanceof ExtensionProjectFileStore) {
+                    return (ExtensionProjectFileStore) fStore;
                 }
             }
         }
         return null;
     }
 
-    protected RestAPIExtensionRepositoryStore getRestAPIExtensionRepositoryStore() {
-        return RepositoryManager.getInstance().getRepositoryStore(RestAPIExtensionRepositoryStore.class);
+    protected ExtensionRepositoryStore getRestAPIExtensionRepositoryStore() {
+        return RepositoryManager.getInstance().getRepositoryStore(ExtensionRepositoryStore.class);
     }
 
     @CanExecute

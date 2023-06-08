@@ -32,6 +32,8 @@ public abstract class CustomPageArchetypeConfiguration {
     
     private String version;
     
+    private String javaPackage;
+    
     public String getPageDescription() {
         return pageDescription;
     }
@@ -83,4 +85,13 @@ public abstract class CustomPageArchetypeConfiguration {
     public abstract Properties toProperties();
     
     public abstract String getArtifactLabel() ;
+
+    public String getJavaPackage() {
+        return javaPackage;
+    }
+
+    public void setJavaPackage(String javaPackage) {
+        this.javaPackage = javaPackage;
+    }
+
 }

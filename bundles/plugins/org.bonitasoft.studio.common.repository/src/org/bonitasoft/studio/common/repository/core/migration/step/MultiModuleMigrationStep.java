@@ -161,6 +161,6 @@ public class MultiModuleMigrationStep implements MigrationStep {
 
     @Override
     public boolean appliesTo(String sourceVersion) {
-        return Version.parseVersion(sourceVersion).compareTo(new Version("7.16.0")) < 0;
+        return Version.parseVersion(sourceVersion).compareTo(new Version("8.0.0")) < 0;
     }
 }

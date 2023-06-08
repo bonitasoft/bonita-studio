@@ -11,8 +11,10 @@ package org.bonitasoft.studio.maven.operation;
 import java.util.Collections;
 import java.util.List;
 
+import org.apache.maven.model.Dependency;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.maven.CustomPageProjectFileStore;
+import org.bonitasoft.studio.common.repository.core.maven.AddDependencyOperation;
+import org.bonitasoft.studio.maven.ExtensionProjectFileStore;
 import org.bonitasoft.studio.maven.builder.validator.PomFileValidator;
 import org.bonitasoft.studio.maven.i18n.Messages;
 import org.bonitasoft.studio.rest.api.extension.RestAPIExtensionActivator;
@@ -33,11 +35,11 @@ import org.eclipse.osgi.util.NLS;
 public class ImportCustomPageProjectOperation extends AbstractMavenProjectUpdateOperation {
 
     private final IProjectConfigurationManager projectConfigurationManager;
-    private final CustomPageProjectFileStore fileStore;
+    private final ExtensionProjectFileStore fileStore;
     private final ProjectImportConfiguration projectImportConfiguration;
 
     public ImportCustomPageProjectOperation(
-            final CustomPageProjectFileStore fileStore,
+            final ExtensionProjectFileStore fileStore,
             final IProjectConfigurationManager projectConfigurationManager,
             final ProjectImportConfiguration projectImportConfiguration) {
         super(false);

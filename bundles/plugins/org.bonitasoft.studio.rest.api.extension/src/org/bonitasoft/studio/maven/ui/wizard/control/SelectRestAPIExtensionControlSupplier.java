@@ -10,10 +10,10 @@ package org.bonitasoft.studio.maven.ui.wizard.control;
 
 import static org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory.updateValueStrategy;
 
+import org.bonitasoft.studio.maven.ExtensionRepositoryStore;
 import org.bonitasoft.studio.maven.i18n.Messages;
 import org.bonitasoft.studio.maven.ui.WidgetFactory;
 import org.bonitasoft.studio.rest.api.extension.core.repository.DependencyRestAPIExtensionFileStore;
-import org.bonitasoft.studio.rest.api.extension.core.repository.RestAPIExtensionRepositoryStore;
 import org.bonitasoft.studio.rest.api.extension.ui.wizard.RestAPIExtensionLabelProvider;
 import org.bonitasoft.studio.ui.wizard.ControlSupplier;
 import org.bonitasoft.studio.ui.wizard.listener.WizardDoubleClickListener;
@@ -36,11 +36,11 @@ import org.eclipse.swt.widgets.Control;
 public class SelectRestAPIExtensionControlSupplier implements ControlSupplier {
 
     private static final int TABLE_WIDTH_HINT = 600;
-    private final RestAPIExtensionRepositoryStore repositoryStore;
+    private final ExtensionRepositoryStore repositoryStore;
     protected final WidgetFactory widgetFactory;
     private final IObservableValue fileStoreObservable;
 
-    public SelectRestAPIExtensionControlSupplier(final RestAPIExtensionRepositoryStore repositoryStore,
+    public SelectRestAPIExtensionControlSupplier(ExtensionRepositoryStore repositoryStore,
             final WidgetFactory widgetFactory,
             final IObservableValue fileStoreObservable) {
         this.repositoryStore = repositoryStore;

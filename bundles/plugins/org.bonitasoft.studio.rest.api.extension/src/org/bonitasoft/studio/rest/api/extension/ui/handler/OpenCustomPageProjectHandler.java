@@ -15,12 +15,12 @@ import java.util.Optional;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.engine.http.HttpClientFactory;
+import org.bonitasoft.studio.maven.ExtensionRepositoryStore;
 import org.bonitasoft.studio.maven.i18n.Messages;
 import org.bonitasoft.studio.maven.ui.WidgetFactory;
 import org.bonitasoft.studio.maven.ui.handler.CustomPageProjectSelectionProvider;
 import org.bonitasoft.studio.maven.ui.wizard.control.SelectRestAPIExtensionControlSupplier;
 import org.bonitasoft.studio.rest.api.extension.core.repository.RestAPIExtensionFileStore;
-import org.bonitasoft.studio.rest.api.extension.core.repository.RestAPIExtensionRepositoryStore;
 import org.bonitasoft.studio.ui.wizard.WizardBuilder;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.databinding.observable.value.WritableValue;
@@ -45,21 +45,19 @@ public class OpenCustomPageProjectHandler {
                         .withTitle(Messages.selectRestAPIExtensionToOpenTitle)
                         .withDescription(Messages.selectRestAPIExtensionToOpenDescription)
                         .withControl(new SelectRestAPIExtensionControlSupplier(
-                                repositoryAccessor.getRepositoryStore(RestAPIExtensionRepositoryStore.class),
+                                repositoryAccessor.getRepositoryStore(ExtensionRepositoryStore.class),
                                 widgetFactory,
                                 fileStoreObservable)))
                 .onFinish(wizardContainer -> Optional.ofNullable((RestAPIExtensionFileStore) fileStoreObservable.getValue()))
                 .open(shell, IDialogConstants.OPEN_LABEL);
 
-        fileStore.ifPresent(file -> {
-            file.open();
-        });
+        fileStore.ifPresent(RestAPIExtensionFileStore::open);
     }
 
     @CanExecute
     public boolean canExecute(final RepositoryAccessor repositoryAccessor) {
         return repositoryAccessor.getCurrentRepository().filter(IRepository::isLoaded).isPresent()
-                && !repositoryAccessor.getRepositoryStore(RestAPIExtensionRepositoryStore.class).getChildren().isEmpty();
+                && !repositoryAccessor.getRepositoryStore(ExtensionRepositoryStore.class).getChildren().isEmpty();
     }
 
 }

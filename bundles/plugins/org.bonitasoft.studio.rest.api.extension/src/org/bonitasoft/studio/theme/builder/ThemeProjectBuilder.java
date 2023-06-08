@@ -12,11 +12,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.maven.ExtensionRepositoryStore;
 import org.bonitasoft.studio.maven.builder.CustomPageProjectBuilder;
 import org.bonitasoft.studio.maven.builder.validator.AbstractCustomPageValidator;
 import org.bonitasoft.studio.maven.builder.validator.PagePropertyFileValidator;
 import org.bonitasoft.studio.maven.builder.validator.PomFileValidator;
-import org.bonitasoft.studio.theme.ThemeRepositoryStore;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IProgressMonitor;
 
@@ -32,7 +32,7 @@ public class ThemeProjectBuilder extends CustomPageProjectBuilder {
     
     protected PagePropertyFileValidator createPagePropertyFileValidator(IProject project) {
         return new ThemePagePropertyFileValidator(project,
-                RepositoryManager.getInstance().getRepositoryStore(ThemeRepositoryStore.class).getResource());
+                RepositoryManager.getInstance().getRepositoryStore(ExtensionRepositoryStore.class).getResource());
     }
 
 }

@@ -17,7 +17,7 @@ package org.bonitasoft.studio.la.application.ui.editor.customPage;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.designer.core.repository.WebPageRepositoryStore;
 import org.bonitasoft.studio.la.application.ui.provider.ProfileProposalProvider;
-import org.bonitasoft.studio.theme.ThemeRepositoryStore;
+import org.bonitasoft.studio.maven.ExtensionRepositoryStore;
 
 public class ApplicationEditorProviders {
 
@@ -28,7 +28,7 @@ public class ApplicationEditorProviders {
 
     public ApplicationEditorProviders(RepositoryAccessor repositoryAccessor) {
         this.customPageProvider = new CustomPageProvider(repositoryAccessor.getRepositoryStore(WebPageRepositoryStore.class),
-                repositoryAccessor.getRepositoryStore(ThemeRepositoryStore.class));
+                repositoryAccessor.getRepositoryStore(ExtensionRepositoryStore.class));
         this.layoutProposalProvider = new LayoutProposalProvider(customPageProvider, true);
         this.themeProposalProvider = new ThemeProposalProvider(customPageProvider, true);
         this.profileProposalProvider = createProfileProposalProvider(repositoryAccessor);

@@ -13,7 +13,7 @@ import java.util.List;
 
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.common.ui.IDisplayable;
-import org.bonitasoft.studio.maven.CustomPageProjectFileStore;
+import org.bonitasoft.studio.maven.ExtensionProjectFileStore;
 import org.bonitasoft.studio.rest.api.extension.core.repository.PathTemplate;
 import org.bonitasoft.studio.rest.api.extension.core.repository.RestAPIExtensionFileStore;
 import org.eclipse.jface.viewers.ILabelProvider;
@@ -31,8 +31,8 @@ public class RestAPIExtensionLabelProvider extends StyledCellLabelProvider imple
 
     @Override
     public void update(final ViewerCell cell) {
-        if (cell.getElement() instanceof CustomPageProjectFileStore) {
-            final CustomPageProjectFileStore fileStore = (CustomPageProjectFileStore) cell.getElement();
+        if (cell.getElement() instanceof ExtensionProjectFileStore) {
+            final ExtensionProjectFileStore fileStore = (ExtensionProjectFileStore) cell.getElement();
             final StyledString styledString = new StyledString();
             styledString.append(IDisplayable.toDisplayName(fileStore).orElse(""));
             if (cell.getElement() instanceof RestAPIExtensionFileStore) {

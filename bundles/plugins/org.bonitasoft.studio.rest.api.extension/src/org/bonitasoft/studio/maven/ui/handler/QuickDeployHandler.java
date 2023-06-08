@@ -6,7 +6,7 @@
  * Bonitasoft, 32 rue Gustave Eiffel – 38000 Grenoble
  * or Bonitasoft US, 51 Federal Street, Suite 305, San Francisco, CA 94107
  *******************************************************************************/
-package org.bonitasoft.studio.rest.api.extension.ui.handler;
+package org.bonitasoft.studio.maven.ui.handler;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -29,7 +29,8 @@ import org.bonitasoft.studio.common.ui.jface.BonitaErrorDialog;
 import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.engine.http.HttpClientFactory;
 import org.bonitasoft.studio.engine.operation.GetApiSessionOperation;
-import org.bonitasoft.studio.maven.CustomPageProjectFileStore;
+import org.bonitasoft.studio.maven.ExtensionProjectFileStore;
+import org.bonitasoft.studio.maven.ExtensionRepositoryStore;
 import org.bonitasoft.studio.maven.i18n.Messages;
 import org.bonitasoft.studio.maven.operation.BuildCustomPageOperation;
 import org.bonitasoft.studio.maven.operation.DeployCustomPageProjectOperation;
@@ -71,17 +72,15 @@ public class QuickDeployHandler {
         }
         var apiSessionOperation = new GetApiSessionOperation();
         try {
-            CustomPageProjectFileStore customPageFilseStore = null;
+            ExtensionProjectFileStore customPageFilseStore = null;
             if (projectPath != null) {
-                try {
-                    IRepositoryFileStore fStore = repositoryAccessor.getCurrentRepository()
-                            .orElseThrow()
-                            .asRepositoryFileStore(Paths.get(projectPath), false);
-                    if (fStore instanceof CustomPageProjectFileStore) {
-                        customPageFilseStore = (CustomPageProjectFileStore) fStore;
-                    }
-                } catch (IOException | CoreException e) {
-                    BonitaStudioLog.error(e);
+                IRepositoryFileStore fStore = repositoryAccessor.getCurrentRepository()
+                        .orElseThrow()
+                        .getRepositoryStore(ExtensionRepositoryStore.class)
+                        .getChild(projectPath.substring(projectPath.lastIndexOf("/")+1,projectPath.length()), false);
+
+                if (fStore instanceof ExtensionProjectFileStore) {
+                    customPageFilseStore = (ExtensionProjectFileStore) fStore;
                 }
             } else {
                 customPageFilseStore = getMavenProjectFileStore(selection, repositoryAccessor);
@@ -102,7 +101,8 @@ public class QuickDeployHandler {
                         httpClientFactory,
                         customPageFilseStore);
                 if (showInUI) {
-                    new ProgressMonitorDialog(Display.getDefault().getActiveShell()).run(true, false, deployRestAPIExtensionOperation::run);
+                    new ProgressMonitorDialog(Display.getDefault().getActiveShell()).run(true, false,
+                            deployRestAPIExtensionOperation::run);
                     final IStatus status = deployRestAPIExtensionOperation.getStatus();
                     if (status.isOK()) {
                         openDeploySuccessDialog(displayName);
@@ -124,7 +124,7 @@ public class QuickDeployHandler {
         return ValidationStatus.ok();
     }
 
-    protected IStatus build(CustomPageProjectFileStore selectedRestApiExtension) {
+    protected IStatus build(ExtensionProjectFileStore selectedRestApiExtension) {
         try {
             final BuildCustomPageOperation operation = selectedRestApiExtension.newBuildOperation();
             if (showInUI) {
@@ -164,7 +164,7 @@ public class QuickDeployHandler {
                 IStatus.ERROR).open();
     }
 
-    private CustomPageProjectFileStore getMavenProjectFileStore(final ISelection selection,
+    private ExtensionProjectFileStore getMavenProjectFileStore(final ISelection selection,
             RepositoryAccessor repositoryAccessor) {
         if (selection instanceof IStructuredSelection) {
             final Object firstSelectedElement = ((IStructuredSelection) selection).getFirstElement();
@@ -174,8 +174,8 @@ public class QuickDeployHandler {
                                 ((IAdaptable) firstSelectedElement).getAdapter(IResource.class).getProject(),
                                 repositoryAccessor.getCurrentRepository().orElseThrow())
                         .orElse(null);
-                if (deployable instanceof CustomPageProjectFileStore) {
-                    return (CustomPageProjectFileStore) deployable;
+                if (deployable instanceof ExtensionProjectFileStore) {
+                    return (ExtensionProjectFileStore) deployable;
                 }
             }
         }

@@ -30,12 +30,12 @@ import org.eclipse.m2e.core.project.IProjectConfigurationManager;
 import org.eclipse.m2e.core.project.MavenProjectInfo;
 import org.eclipse.m2e.core.project.ProjectImportConfiguration;
 
-public class ImportBdmModuleOperation implements IWorkspaceRunnable {
+public class ImportMavenModuleOperation implements IWorkspaceRunnable {
 
     private File projectRoot;
     private IProjectConfigurationManager projectConfigurationManager;
 
-    public ImportBdmModuleOperation(File projectRoot) {
+    public ImportMavenModuleOperation(File projectRoot) {
         this.projectRoot = projectRoot;
         this.projectConfigurationManager = MavenPlugin.getProjectConfigurationManager();
     }

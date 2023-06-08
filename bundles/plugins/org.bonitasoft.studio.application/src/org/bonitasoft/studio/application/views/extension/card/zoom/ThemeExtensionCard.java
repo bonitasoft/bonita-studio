@@ -33,7 +33,7 @@ import org.eclipse.swt.widgets.Composite;
 
 public class ThemeExtensionCard extends ExtensionCard {
 
-    public static final String DEPLOY_COMMAND = "org.bonitasoft.studio.theme.deploy.from.dependency.command";
+    public static final String DEPLOY_COMMAND = "org.bonitasoft.studio.maven.extension.deploy.from.dependency.command";
 
     private CommandExecutor commandExecutor;
 

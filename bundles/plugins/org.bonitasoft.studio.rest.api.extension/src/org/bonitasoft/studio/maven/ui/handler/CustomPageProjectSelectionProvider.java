@@ -15,7 +15,7 @@ import org.bonitasoft.studio.common.RestAPIExtensionNature;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
-import org.bonitasoft.studio.maven.CustomPageProjectFileStore;
+import org.bonitasoft.studio.maven.ExtensionProjectFileStore;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.e4.core.di.annotations.Creatable;
@@ -36,7 +36,7 @@ public class CustomPageProjectSelectionProvider {
         this.repositoryAccessor = repositoryAccessor;
     }
 
-    public CustomPageProjectFileStore getSelection() {
+    public ExtensionProjectFileStore getSelection() {
         final IEditorPart activeEditor = activePage.getActiveEditor();
         if (activeEditor != null) {
             final IEditorInput editorInput = activeEditor.getEditorInput();
@@ -46,7 +46,7 @@ public class CustomPageProjectSelectionProvider {
                     IRepositoryFileStore fileStore = repositoryAccessor.getCurrentRepository()
                             .orElseThrow()
                             .getFileStore(file.getProject());
-                    return (CustomPageProjectFileStore) fileStore;
+                    return (ExtensionProjectFileStore) fileStore;
                     //return repositoryAccessor.getRepositoryStore(RestAPIExtensionRepositoryStore.class).getChild(file.getProject().getName());
                 }
             } catch (final CoreException e) {

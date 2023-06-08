@@ -155,6 +155,16 @@ public class BonitaProjectImpl implements BonitaProject {
     }
 
     @Override
+    public IProject getExtensionsParentProject() {
+        return BonitaProject.getExtensionsParentProject(getId());
+    }
+
+    @Override
+    public List<IProject> getExtensionsProjects() {
+        return BonitaProject.getExtensionsProjects(getId());
+    }
+
+    @Override
     public void refresh(IProgressMonitor monitor) throws CoreException {
         refresh(false, monitor);
     }
@@ -162,9 +172,11 @@ public class BonitaProjectImpl implements BonitaProject {
     @Override
     public void refresh(boolean updateConfiguration, IProgressMonitor monitor) throws CoreException {
         monitor.beginTask(Messages.refresh, IProgressMonitor.UNKNOWN);
-        var job = new UpdateMavenProjectJob(getRelatedProjects().toArray(IProject[]::new), false, false, updateConfiguration,
+        var job = new UpdateMavenProjectJob(getRelatedProjects().toArray(IProject[]::new), false, false,
+                updateConfiguration,
                 true, true);
         job.addJobChangeListener(new JobChangeAdapter() {
+
             @Override
             public void done(IJobChangeEvent event) {
                 new Job("Analyze project dependencies") {
@@ -242,10 +254,18 @@ public class BonitaProjectImpl implements BonitaProject {
         }
         gitProject.commitAll(commitMessage, monitor);
     }
+    
+    @Override
+    public void addModule(IProject parentProject, String module, IProgressMonitor monitor) throws CoreException {
+        var parentModel = MavenProjectHelper.getMavenModel(parentProject);
+        if(parentModel != null && parentModel.getModules().stream().noneMatch(module::equals)) {
+            parentModel.getModules().add(module);
+            MavenProjectHelper.saveModel(parentProject, parentModel, new NullProgressMonitor());
+        }
+    }
 
     @Override
-    public void removeModule(String module, IProgressMonitor monitor) throws CoreException {
-        var parentProject = getParentProject();
+    public void removeModule(IProject parentProject, String module, IProgressMonitor monitor) throws CoreException {
         var parentModel = MavenProjectHelper.getMavenModel(parentProject);
         parentModel.getModules().removeIf(module::equals);
         MavenProjectHelper.saveModel(parentProject, parentModel, new NullProgressMonitor());
@@ -254,7 +274,7 @@ public class BonitaProjectImpl implements BonitaProject {
             moduleFolder.delete(true, new NullProgressMonitor());
         }
     }
-
+    
     @Override
     public IScopeContext getScopeContext() {
         return new ProjectScope(getAppProject());
@@ -283,4 +303,5 @@ public class BonitaProjectImpl implements BonitaProject {
         }
         return null;
     }
+
 }

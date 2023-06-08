@@ -13,15 +13,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Properties;
 
+import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
 import org.bonitasoft.studio.maven.i18n.Messages;
-import org.bonitasoft.studio.maven.model.RestAPIExtensionArchetypeConfiguration;
 import org.junit.Test;
 
 public class RestAPIExtensionArchetypeConfigurationTest {
 
     @Test
     public void should_create_a_valid_default_configuration_for_rest_api_extension_archetype() throws Exception {
-        final RestAPIExtensionArchetypeConfiguration configuration = RestAPIExtensionArchetypeConfiguration.defaultArchetypeConfiguration();
+        final RestAPIExtensionArchetypeConfiguration configuration = RestAPIExtensionArchetypeConfiguration.defaultArchetypeConfiguration(ProjectMetadata.defaultMetadata());
 
         assertThat(configuration.getPageName()).isEqualTo("resourceNameRestAPI");
         assertThat(configuration.getPageDisplayName()).isEqualTo(Messages.defaultAPIDisplayName);
@@ -36,7 +36,7 @@ public class RestAPIExtensionArchetypeConfigurationTest {
 
     @Test
     public void should_transform_configuration_of_rest_api_extension_archetype_as_properties() throws Exception {
-        final RestAPIExtensionArchetypeConfiguration configuration = RestAPIExtensionArchetypeConfiguration.defaultArchetypeConfiguration();
+        final RestAPIExtensionArchetypeConfiguration configuration = RestAPIExtensionArchetypeConfiguration.defaultArchetypeConfiguration(ProjectMetadata.defaultMetadata());
 
         final Properties properties = configuration.toProperties();
 
@@ -53,7 +53,7 @@ public class RestAPIExtensionArchetypeConfigurationTest {
 
     @Test
     public void should_transform_permissions_to_comma_separated_list() throws Exception {
-        final RestAPIExtensionArchetypeConfiguration configuration = RestAPIExtensionArchetypeConfiguration.defaultArchetypeConfiguration();
+        final RestAPIExtensionArchetypeConfiguration configuration = RestAPIExtensionArchetypeConfiguration.defaultArchetypeConfiguration(ProjectMetadata.defaultMetadata());
 
         configuration.getPermissions().add("newPermission");
         final Properties properties = configuration.toProperties();
@@ -63,7 +63,7 @@ public class RestAPIExtensionArchetypeConfigurationTest {
 
     @Test
     public void should_transform_url_parameters_to_comma_separated_list() throws Exception {
-        final RestAPIExtensionArchetypeConfiguration configuration = RestAPIExtensionArchetypeConfiguration.defaultArchetypeConfiguration();
+        final RestAPIExtensionArchetypeConfiguration configuration = RestAPIExtensionArchetypeConfiguration.defaultArchetypeConfiguration(ProjectMetadata.defaultMetadata());
 
         configuration.getUrlParameters().addAll(newArrayList("userId", "startDate"));
         final Properties properties = configuration.toProperties();
@@ -73,7 +73,7 @@ public class RestAPIExtensionArchetypeConfigurationTest {
 
     @Test
     public void should_enable_bdmDependencies_properties() throws Exception {
-        final RestAPIExtensionArchetypeConfiguration configuration = RestAPIExtensionArchetypeConfiguration.defaultArchetypeConfiguration(true);
+        final RestAPIExtensionArchetypeConfiguration configuration = RestAPIExtensionArchetypeConfiguration.defaultArchetypeConfiguration(ProjectMetadata.defaultMetadata(), true);
 
         assertThat(configuration.isEnableBDMDependencies()).isTrue();
     }

@@ -15,6 +15,7 @@
 package org.bonitasoft.studio.application.views.filters;
 
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.core.BonitaProject;
 import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.eclipse.jface.viewers.Viewer;
 
@@ -30,8 +31,12 @@ public class HideFolderWhenProjectIsShownAsNested
             if (project != null && project.exists()) {
                 var appProject = project.getAppProject();
                 if (appProject.exists()) {
-                    var bdmFolder = appProject.getFolder("bdm");
+                    var bdmFolder = appProject.getFolder(BonitaProject.BDM_MODULE);
                     if (bdmFolder.exists() && element.equals(bdmFolder)) {
+                        return true;
+                    }
+                    var extensionsFolder = appProject.getFolder(BonitaProject.EXTENSIONS_MODULE);
+                    if (extensionsFolder.exists() && element.equals(extensionsFolder)) {
                         return true;
                     }
                     // Hide generated submodules in Project explorer

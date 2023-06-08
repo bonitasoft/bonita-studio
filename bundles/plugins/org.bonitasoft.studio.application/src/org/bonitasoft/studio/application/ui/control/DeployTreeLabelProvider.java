@@ -36,11 +36,6 @@ public class DeployTreeLabelProvider extends StyledCellLabelProvider implements 
     }
 
     @Override
-    public String getToolTipText(Object element) {
-        return super.getToolTipText(element);
-    }
-
-    @Override
     public Image getImage(Object element) {
         if (element instanceof IDisplayable) {
             return ((IDisplayable) element).getIcon();
