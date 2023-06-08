@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<!-- Generator: Adobe Illustrator 13.0.2, SVG Export Plug-In . SVG Version: 6.00 Build 14948)  -->
+<svg xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" version="1.1" id="Calque_1" x="0px" y="0px" width="32.366px" height="32.366px" viewBox="0 0 32.366 32.366" enable-background="new 0 0 32.366 32.366" xml:space="preserve" inkscape:version="0.47 r22583" sodipodi:docname="IntermediateCatchErrorEvent.svgz"><metadata id="metadata255"><rdf:RDF><cc:Work rdf:about=""><dc:format>image/svg+xml</dc:format><dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/></cc:Work></rdf:RDF></metadata><defs id="defs253"><inkscape:perspective sodipodi:type="inkscape:persp3d" inkscape:vp_x="0 : 16.183001 : 1" inkscape:vp_y="0 : 1000 : 0" inkscape:vp_z="32.366001 : 16.183001 : 1" inkscape:persp3d-origin="16.183001 : 10.788667 : 1" id="perspective257"/></defs><sodipodi:namedview pagecolor="#ffffff" bordercolor="#666666" borderopacity="1" objecttolerance="10" gridtolerance="10" guidetolerance="10" inkscape:pageopacity="0" inkscape:pageshadow="2" inkscape:window-width="640" inkscape:window-height="480" id="namedview251" showgrid="false" inkscape:zoom="7.291602" inkscape:cx="16.183001" inkscape:cy="16.183001" inkscape:current-layer="Calque_1"/>
+
+<g id="g236" style="fill:#ffffff;fill-opacity:1">
+	<linearGradient id="SVGID_1_" gradientUnits="userSpaceOnUse" x1="25.438" y1="25.9849" x2="6.6934" y2="6.1323">
+		<stop offset="0" style="stop-color:#B8B9DA" id="stop239"/>
+		<stop offset="1" style="stop-color:#FBFBEE" id="stop241"/>
+	</linearGradient>
+	<circle fill="url(#SVGID_1_)" stroke="#2C6DA3" stroke-width="1.7" cx="16.183" cy="16.183" r="15.333" id="circle243" style="fill:#ffffff;fill-opacity:1"/>
+</g>
+<circle fill="none" stroke="#2C6DA3" stroke-width="1.7" cx="16.183" cy="16.183" r="12.5" id="circle245"/>
+<g id="g247">
+	<path fill="#2C6DA3" d="M11.972,6.971l7.855,12.75l5.247-7.683l-5.196,13.355l-7.228-11.938l-5.358,8.631L11.972,6.971    M12.276,9.371l-1.725,5.572l1.25-2.014l0.86-1.386l0.845,1.395l6.176,10.202l1.296-3.33l-0.324,0.476l-0.869,1.271l-0.809-1.312   L12.276,9.371L12.276,9.371z" id="path249"/>
+</g>
+</svg>

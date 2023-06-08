@@ -1,0 +1,9 @@
+bin
+.classpath
+.settings
+target/
+.flattened-pom.xml
+dependency-reduced-pom.xml
+pom.xml.versionsBackup
+node/
+node_modules/
