@@ -10,19 +10,18 @@ package org.bonitasoft.studio.maven.model;
 
 import java.util.Properties;
 
-import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
-import org.bonitasoft.studio.common.repository.preferences.RepositoryPreferenceConstant;
+import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
 import org.bonitasoft.studio.maven.i18n.Messages;
 
 public class ThemeArchetypeConfiguration extends CustomPageArchetypeConfiguration {
 
-    public static ThemeArchetypeConfiguration defaultArchetypeConfiguration() {
+    public static ThemeArchetypeConfiguration defaultArchetypeConfiguration(ProjectMetadata projectMetadata) {
         final ThemeArchetypeConfiguration configuration = new ThemeArchetypeConfiguration();
         configuration.setPageName("myCustomTheme");
         configuration.setPageDisplayName(Messages.defaultThemeDisplayName);
         configuration.setPageDescription(Messages.defaultThemeDescription);
-        configuration.setGroupId(defaultGroupId() + ".theme");
-        configuration.setVersion("1.0.0-SNAPSHOT");
+        configuration.setGroupId(projectMetadata.getGroupId());
+        configuration.setVersion(projectMetadata.getVersion());
         return configuration;
     }
 
@@ -41,9 +40,4 @@ public class ThemeArchetypeConfiguration extends CustomPageArchetypeConfiguratio
         return Messages.themesRepositoryName;
     }
     
-    private static String defaultGroupId() {
-        return CommonRepositoryPlugin.getDefault().getPreferenceStore()
-                .getString(RepositoryPreferenceConstant.DEFAULT_GROUPID);
-    }
-
 }

@@ -81,8 +81,10 @@ public abstract class AbstractRepositoryStore<T extends IRepositoryFileStore<?>>
         REPO_STORE_ORDER.put("web_page", 12);
         REPO_STORE_ORDER.put("web_widgets", 13);
         REPO_STORE_ORDER.put("web_fragments", 14);
-        REPO_STORE_ORDER.put("themes", 15);
+        REPO_STORE_ORDER.put("extensions", 15);
+        // Keep legacy stor names for old bos import
         REPO_STORE_ORDER.put("restAPIExtensions", 16);
+        REPO_STORE_ORDER.put("themes", 17);
         REPO_STORE_ORDER.put("connectors-def", 17);
         REPO_STORE_ORDER.put("connectors-impl", 18);
         REPO_STORE_ORDER.put("connectors-conf", 19);
@@ -413,7 +415,7 @@ public abstract class AbstractRepositoryStore<T extends IRepositoryFileStore<?>>
     }
     
     protected FileStoreCollector fileStoreCollector() {
-        return new FileStoreCollector(folder,
+        return new FileStoreCollector(getResource(),
                 toArray(getCompatibleExtensions(), String.class));
     }
 
@@ -427,7 +429,7 @@ public abstract class AbstractRepositoryStore<T extends IRepositoryFileStore<?>>
         //NOTHING TO UPDATE
     }
 
-    protected IRepository getRepository() {
+    public IRepository getRepository() {
         return repository;
     }
 }

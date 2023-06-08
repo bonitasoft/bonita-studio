@@ -60,7 +60,7 @@ public class ImportConflictsChecker {
 
     private void compareStore(AbstractFolderModel importedStore, BosArchive bosArchive) {
         repository.getAllStores().stream()
-                .filter(aStoreInCurrentRepo -> Objects.equals(aStoreInCurrentRepo.getName(), importedStore.getFolderName()))
+                .filter(aStoreInCurrentRepo -> Objects.equals(aStoreInCurrentRepo.getName(), importedStore.getFolderName()) || ("extensions".equals(aStoreInCurrentRepo.getName()) && isLegacyApiOrThemeStore(importedStore.getFolderName())))
                 .findFirst()
                 .ifPresent(storeInCurrentRepo -> {
                     if (Objects.equals(storeInCurrentRepo.getName(),
@@ -86,6 +86,10 @@ public class ImportConflictsChecker {
             compareFolders(bosArchive, files, importedStore.getFolders());
             compareFiles(bosArchive, files, importedStore.getFiles());
         }
+    }
+
+    private boolean isLegacyApiOrThemeStore(String folderName) {
+        return "themes".equals(folderName) || "restAPIExtensions".equals(folderName);
     }
 
     // We can't use checksum to compare .properties file because there is always a comment with the creation date at the top of the .properties file -> always conflicting. 

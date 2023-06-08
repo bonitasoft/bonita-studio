@@ -13,11 +13,12 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import org.bonitasoft.studio.assertions.StatusAssert;
+import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
+import org.bonitasoft.studio.maven.ExtensionRepositoryStore;
 import org.bonitasoft.studio.maven.i18n.Messages;
 import org.bonitasoft.studio.maven.model.RestAPIExtensionArchetypeConfiguration;
 import org.bonitasoft.studio.maven.ui.WidgetFactory;
 import org.bonitasoft.studio.rest.api.extension.core.RestAPIAddressResolver;
-import org.bonitasoft.studio.rest.api.extension.core.repository.RestAPIExtensionRepositoryStore;
 import org.bonitasoft.studio.swt.WidgetFinder;
 import org.bonitasoft.studio.swt.rules.RealmWithDisplay;
 import org.eclipse.core.databinding.observable.list.IObservableList;
@@ -43,14 +44,16 @@ public class NewRestAPIProjectAdvancedConfigurationPageTest {
     private final WidgetFinder widgetFinder = new WidgetFinder();
 
     @Mock
-    private RestAPIExtensionRepositoryStore repositoryStore;
+    private ExtensionRepositoryStore repositoryStore;
 
     @Mock
     private RestAPIAddressResolver addressResolver;
+    
+    private ProjectMetadata metadata = ProjectMetadata.defaultMetadata();
 
     @Test
     public void should_bind_pathTemplate_control_with_configuration() throws Exception {
-        final RestAPIExtensionArchetypeConfiguration configuration = RestAPIExtensionArchetypeConfiguration.defaultArchetypeConfiguration();
+        final RestAPIExtensionArchetypeConfiguration configuration = RestAPIExtensionArchetypeConfiguration.defaultArchetypeConfiguration(metadata);
 
         final NewRestAPIProjectAdvancedConfigurationPage page = new NewRestAPIProjectAdvancedConfigurationPage(new WidgetFactory(), configuration,
                 repositoryStore, addressResolver);
@@ -68,7 +71,7 @@ public class NewRestAPIProjectAdvancedConfigurationPageTest {
 
     @Test
     public void should_not_accept_empty_permission_list() throws Exception {
-        final RestAPIExtensionArchetypeConfiguration configuration = RestAPIExtensionArchetypeConfiguration.defaultArchetypeConfiguration();
+        final RestAPIExtensionArchetypeConfiguration configuration = RestAPIExtensionArchetypeConfiguration.defaultArchetypeConfiguration(metadata);
 
         final NewRestAPIProjectAdvancedConfigurationPage page = new NewRestAPIProjectAdvancedConfigurationPage(new WidgetFactory(), configuration,
                 repositoryStore, addressResolver);
@@ -83,7 +86,7 @@ public class NewRestAPIProjectAdvancedConfigurationPageTest {
     
     @Test
     public void should_disable_add_bdm_checkbox_if_no_bdmPackage_in_configuration() throws Exception {
-        final RestAPIExtensionArchetypeConfiguration configuration = RestAPIExtensionArchetypeConfiguration.defaultArchetypeConfiguration();
+        final RestAPIExtensionArchetypeConfiguration configuration = RestAPIExtensionArchetypeConfiguration.defaultArchetypeConfiguration(metadata);
 
         final NewRestAPIProjectAdvancedConfigurationPage page = new NewRestAPIProjectAdvancedConfigurationPage(new WidgetFactory(), configuration,
                 repositoryStore, addressResolver);
@@ -99,7 +102,7 @@ public class NewRestAPIProjectAdvancedConfigurationPageTest {
 
     @Test
     public void should_select_add_bdm_checkbox_if_bdmPackage_in_configuration_exists() throws Exception {
-        final RestAPIExtensionArchetypeConfiguration configuration = RestAPIExtensionArchetypeConfiguration.defaultArchetypeConfiguration(true);
+        final RestAPIExtensionArchetypeConfiguration configuration = RestAPIExtensionArchetypeConfiguration.defaultArchetypeConfiguration(metadata, true);
 
         final NewRestAPIProjectAdvancedConfigurationPage page = new NewRestAPIProjectAdvancedConfigurationPage(new WidgetFactory(), configuration,
                 repositoryStore, addressResolver);

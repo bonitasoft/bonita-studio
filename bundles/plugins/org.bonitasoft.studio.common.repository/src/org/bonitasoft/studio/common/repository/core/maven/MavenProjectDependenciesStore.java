@@ -305,5 +305,5 @@ public class MavenProjectDependenciesStore implements ProjectDependenciesStore {
         }
         return null;
     }
-
+    
 }

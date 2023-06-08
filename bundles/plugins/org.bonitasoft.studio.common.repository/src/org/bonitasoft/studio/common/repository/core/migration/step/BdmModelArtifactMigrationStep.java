@@ -180,7 +180,7 @@ public class BdmModelArtifactMigrationStep implements MavenModelMigration, Migra
 
     @Override
     public boolean appliesTo(String sourceVersion) {
-        return Version.parseVersion(sourceVersion).compareTo(new Version("7.16.0")) < 0;
+        return Version.parseVersion(sourceVersion).compareTo(new Version("8.0.0")) < 0;
     }
 
     static class RemovedDependency {

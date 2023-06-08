@@ -42,5 +42,25 @@ public class DependencyThemeExtensionDescriptor extends ThemeExtensionDescriptor
             return new Properties();
         }
     }
+    
+    @Override
+    public String getGroupId() {
+        return theme.getArtifact().getGroupId();
+    }
+    
+    @Override
+    public String getArtifactId() {
+        return theme.getArtifact().getArtifactId();
+    }
+    
+    @Override
+    public String getVersion() {
+        return theme.getArtifact().getVersion();
+    }
+    
+    @Override
+    public String getClassifier() {
+        return theme.getArtifact().getClassifier();
+    }
 
 }

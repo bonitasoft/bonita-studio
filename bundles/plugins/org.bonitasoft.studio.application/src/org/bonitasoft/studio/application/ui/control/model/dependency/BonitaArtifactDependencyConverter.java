@@ -170,7 +170,9 @@ public class BonitaArtifactDependencyConverter {
                 : bonitaArtifact.getName();
         bonitaDep.setName(name);
         bonitaDep.setDescription(bonitaArtifact.getDescription());
-        if (Paths.get(file).toFile().exists()) {
+        bonitaDep.setArtifactId(bonitaArtifact.getArtifact().getArtifactId());
+        bonitaDep.setGroupId(bonitaArtifact.getArtifact().getGroupId());
+        if (file != null && Paths.get(file).toFile().exists()) {
             setDepInfoFromMavenMetaInf(dep, bonitaDep, file);
         }
 

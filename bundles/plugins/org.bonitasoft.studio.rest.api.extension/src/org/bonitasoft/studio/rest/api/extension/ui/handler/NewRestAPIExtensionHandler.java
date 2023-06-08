@@ -14,21 +14,22 @@ import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelF
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
-import org.bonitasoft.studio.common.repository.filestore.AbstractFileStore;
+import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
 import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.ui.jface.CustomWizardDialog;
+import org.bonitasoft.studio.maven.ExtensionRepositoryStore;
 import org.bonitasoft.studio.maven.MavenProjectConfiguration;
 import org.bonitasoft.studio.maven.i18n.Messages;
 import org.bonitasoft.studio.maven.ui.WidgetFactory;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.bonitasoft.studio.rest.api.extension.core.RestAPIAddressResolver;
-import org.bonitasoft.studio.rest.api.extension.core.repository.RestAPIExtensionRepositoryStore;
 import org.bonitasoft.studio.rest.api.extension.ui.wizard.NewRestAPIExtensionWizard;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.e4.core.di.annotations.CanExecute;
 import org.eclipse.e4.core.di.annotations.Execute;
@@ -46,11 +47,10 @@ public class NewRestAPIExtensionHandler extends AbstractHandler {
             RepositoryAccessor repositoryAccessor,
             WidgetFactory widgetFactory,
             IWorkspace workspace,
-            RestAPIAddressResolver addressResolver)
-            throws ExecutionException {
-        NewRestAPIExtensionWizard wizard;
+            RestAPIAddressResolver addressResolver) throws ExecutionException {
         try {
-            wizard = newWizard(repositoryAccessor, widgetFactory, workspace, addressResolver);
+            var projectMetadata = repositoryAccessor.getCurrentProject().orElseThrow().getProjectMetadata(new NullProgressMonitor());
+            var wizard = newWizard(repositoryAccessor, projectMetadata, widgetFactory, workspace, addressResolver);
             final int open = newWizardDialog(wizard, Messages.create).open();
             if (open == IDialogConstants.OK_ID) {
                 wizard.getNewFileStore().open();
@@ -65,10 +65,10 @@ public class NewRestAPIExtensionHandler extends AbstractHandler {
         return repositoryAccessor.getCurrentRepository().filter(IRepository::isLoaded).isPresent();
     }
 
-    protected NewRestAPIExtensionWizard newWizard(RepositoryAccessor repositoryAccessor, WidgetFactory widgetFactory,
+    protected NewRestAPIExtensionWizard newWizard(RepositoryAccessor repositoryAccessor, ProjectMetadata projectMetadata, WidgetFactory widgetFactory,
             IWorkspace workspace, RestAPIAddressResolver addressReolver) throws CoreException {
-        return new NewRestAPIExtensionWizard(
-                repositoryAccessor.getRepositoryStore(RestAPIExtensionRepositoryStore.class),
+        return new NewRestAPIExtensionWizard(projectMetadata,
+                repositoryAccessor.getRepositoryStore(ExtensionRepositoryStore.class),
                 MavenPlugin.getProjectConfigurationManager(), new MavenProjectConfiguration(), workspace, widgetFactory,
                 bdmExists(repositoryAccessor), addressReolver);
     }

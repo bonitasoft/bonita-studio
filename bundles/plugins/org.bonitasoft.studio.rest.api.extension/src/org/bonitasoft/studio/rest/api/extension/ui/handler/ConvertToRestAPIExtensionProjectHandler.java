@@ -20,7 +20,7 @@ import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.filestore.FileStoreFinder;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.ui.jface.BonitaErrorDialog;
-import org.bonitasoft.studio.maven.CustomPageProjectFileStore;
+import org.bonitasoft.studio.maven.ExtensionProjectFileStore;
 import org.bonitasoft.studio.maven.ImportProjectException;
 import org.bonitasoft.studio.maven.i18n.Messages;
 import org.eclipse.core.commands.AbstractHandler;
@@ -37,7 +37,7 @@ public class ConvertToRestAPIExtensionProjectHandler extends AbstractHandler {
 
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
-        CustomPageProjectFileStore fStore = getSelectedCustomPageProjectFileStore();
+        ExtensionProjectFileStore fStore = getSelectedCustomPageProjectFileStore();
         if (fStore != null) {
             try {
                 fStore.importProject();
@@ -57,7 +57,7 @@ public class ConvertToRestAPIExtensionProjectHandler extends AbstractHandler {
         return false;
     }
 
-    private CustomPageProjectFileStore getSelectedCustomPageProjectFileStore() {
+    private ExtensionProjectFileStore getSelectedCustomPageProjectFileStore() {
         Optional<IStructuredSelection> currentStructuredSelection = selectionFinder.getCurrentStructuredSelection();
         if (currentStructuredSelection.isPresent()) {
             IStructuredSelection selection = currentStructuredSelection.get();
@@ -67,9 +67,9 @@ public class ConvertToRestAPIExtensionProjectHandler extends AbstractHandler {
                     IResource resource =  ((IAdaptable) selectedObject).getAdapter(IResource.class);
                     Optional<? extends IRepositoryFileStore> fStore = selectionFinder.findFileStore(resource,
                             RepositoryManager.getInstance().getCurrentRepository().orElseThrow());
-                    return fStore.filter(CustomPageProjectFileStore.class::isInstance)
-                            .map(CustomPageProjectFileStore.class::cast)
-                            .filter(CustomPageProjectFileStore::canBeImported)
+                    return fStore.filter(ExtensionProjectFileStore.class::isInstance)
+                            .map(ExtensionProjectFileStore.class::cast)
+                            .filter(ExtensionProjectFileStore::canBeImported)
                             .orElse(null);
                 }
             }

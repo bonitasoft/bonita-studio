@@ -13,14 +13,14 @@ public abstract class AbstractFileModel extends AbstractImportModel {
     private final String fileName;
     private boolean toOpen;
 
-    public AbstractFileModel(String filePath, AbstractFolderModel parent) {
+    protected AbstractFileModel(String filePath, AbstractFolderModel parent) {
         super(filePath, parent);
         requireNonNull(parent);
         final String[] segments = filePath.split("/");
         this.fileName = segments[segments.length - 1];
     }
 
-    public AbstractFileModel(String filePath, AbstractFolderModel parent, ConflictStatus status) {
+    protected AbstractFileModel(String filePath, AbstractFolderModel parent, ConflictStatus status) {
         this(filePath, parent);
         this.status = status;
     }

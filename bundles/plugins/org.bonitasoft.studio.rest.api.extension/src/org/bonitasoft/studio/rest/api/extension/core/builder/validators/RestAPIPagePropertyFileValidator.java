@@ -14,10 +14,10 @@ import java.util.Collections;
 import java.util.Properties;
 
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.maven.ExtensionRepositoryStore;
 import org.bonitasoft.studio.maven.builder.validator.PagePropertyFileValidator;
 import org.bonitasoft.studio.maven.i18n.Messages;
 import org.bonitasoft.studio.rest.api.extension.RestAPIExtensionActivator;
-import org.bonitasoft.studio.rest.api.extension.core.repository.RestAPIExtensionRepositoryStore;
 import org.bonitasoft.studio.rest.api.extension.core.validation.RestAPIPagePropertiesValidator;
 import org.bonitasoft.studio.rest.api.extension.core.validation.UniquePathTemplateValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
@@ -49,7 +49,7 @@ public class RestAPIPagePropertyFileValidator extends PagePropertyFileValidator 
         Properties properties = new Properties();
         try (InputStream is = pagePropertyFile.getContents()) {
             properties.load(is);
-            RestAPIExtensionRepositoryStore repositoryStore = restAPIExtensionRepositoryStore();
+            ExtensionRepositoryStore repositoryStore = extensionRepositoryStore();
             RestAPIPagePropertiesValidator pagePropertiesValidator = new RestAPIPagePropertiesValidator(repositoryStore,
                     new UniquePathTemplateValidator(repositoryStore));
             refreshMarkers(pagePropertyFile, pagePropertiesValidator.validate(pagePropertyFile),
@@ -59,15 +59,15 @@ public class RestAPIPagePropertyFileValidator extends PagePropertyFileValidator 
         }
     }
 
-    private RestAPIExtensionRepositoryStore restAPIExtensionRepositoryStore() {
+    private ExtensionRepositoryStore extensionRepositoryStore() {
         return RepositoryManager.getInstance().getCurrentRepository()
                 .orElseThrow()
-                .getRepositoryStore(RestAPIExtensionRepositoryStore.class);
+                .getRepositoryStore(ExtensionRepositoryStore.class);
     }
 
     @Override
     protected IFolder getParentFolder() {
-        return restAPIExtensionRepositoryStore().getResource();
+        return extensionRepositoryStore().getResource();
     }
 
 }

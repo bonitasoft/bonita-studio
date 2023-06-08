@@ -12,9 +12,9 @@ import static com.google.common.collect.Lists.newArrayList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.doReturn;
 
+import org.bonitasoft.studio.maven.ExtensionRepositoryStore;
 import org.bonitasoft.studio.maven.i18n.Messages;
 import org.bonitasoft.studio.maven.ui.WidgetFactory;
-import org.bonitasoft.studio.rest.api.extension.core.repository.RestAPIExtensionRepositoryStore;
 import org.bonitasoft.studio.swt.WidgetFinder;
 import org.bonitasoft.studio.swt.rules.RealmWithDisplay;
 import org.eclipse.core.databinding.observable.set.WritableSet;
@@ -36,7 +36,7 @@ public class BuildCustomPageProjectPageTest {
     private final WidgetFinder widgetFinder = new WidgetFinder();
 
     @Mock
-    private RestAPIExtensionRepositoryStore repositoryStore;
+    private ExtensionRepositoryStore repositoryStore;
 
     @Test
     public void should_bind_target_location_to_observable() throws Exception {

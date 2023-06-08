@@ -16,13 +16,14 @@ package org.bonitasoft.studio.application.ui.control.model.dependency;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import org.apache.maven.model.Dependency;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.swt.graphics.Image;
 
-public class BonitaArtifactDependency implements Comparable {
+public class BonitaArtifactDependency implements Comparable<BonitaArtifactDependency> {
 
     private String name;
     private String description;
@@ -33,16 +34,13 @@ public class BonitaArtifactDependency implements Comparable {
     private String groupId;
     private String artifactId;
     private String scope;
-    private List<BonitaArtifactDependencyVersion> versions = new ArrayList();
+    private List<BonitaArtifactDependencyVersion> versions = new ArrayList<>();
     private Image iconImage;
     private boolean localDependency;
 
     private boolean fromMarketplace = true;
     private String scmUrl;
     private MultiStatus status = new MultiStatus(getClass(), 0, "");
-
-    public BonitaArtifactDependency() {
-    }
 
     public String getName() {
         return name;
@@ -170,7 +168,6 @@ public class BonitaArtifactDependency implements Comparable {
         dependency.setGroupId(getGroupId());
         dependency.setArtifactId(getArtifactId());
         dependency.setVersion(getBestVersion());
-        String scope = getScope();
         if (scope != null) {
             dependency.setScope(scope);
         }
@@ -182,20 +179,6 @@ public class BonitaArtifactDependency implements Comparable {
                 .map(BonitaArtifactDependencyVersion::getVersion)
                 .orElseThrow(() -> new IllegalArgumentException(
                         String.format("No compatible version found for %s:%s", getGroupId(), getArtifactId())));
-    }
-
-    @Override
-    public int compareTo(Object o) {
-        if (o instanceof BonitaArtifactDependency) {
-            BonitaArtifactDependency otherDep = (BonitaArtifactDependency) o;
-            int priorityComparaison = getArtifactType().getPriority()
-                    - otherDep.getArtifactType().getPriority();
-            if (priorityComparaison != 0) {
-                return priorityComparaison;
-            }
-            return getName().compareTo(otherDep.getName());
-        }
-        return 0;
     }
 
     public void setSCMUrl(String scmUrl) {
@@ -212,6 +195,45 @@ public class BonitaArtifactDependency implements Comparable {
     
     public void setStatus(MultiStatus status) {
         this.status = status;
+    }
+    
+    @Override
+    public int hashCode() {
+        return Objects.hash(artifactId, artifactType, bonitaMinVersion, description, fromMarketplace, groupId, icon,
+                iconImage, localDependency, name, scmUrl, scope, status, type, versions);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        BonitaArtifactDependency other = (BonitaArtifactDependency) obj;
+        return Objects.equals(artifactId, other.artifactId) && artifactType == other.artifactType
+                && Objects.equals(bonitaMinVersion, other.bonitaMinVersion)
+                && Objects.equals(description, other.description) && fromMarketplace == other.fromMarketplace
+                && Objects.equals(groupId, other.groupId) && Objects.equals(icon, other.icon)
+                && Objects.equals(iconImage, other.iconImage) && localDependency == other.localDependency
+                && Objects.equals(name, other.name) && Objects.equals(scmUrl, other.scmUrl)
+                && Objects.equals(scope, other.scope) && Objects.equals(status, other.status)
+                && Objects.equals(type, other.type) && Objects.equals(versions, other.versions);
+    }
+
+    @Override
+    public int compareTo(BonitaArtifactDependency o) {
+        if (o instanceof BonitaArtifactDependency) {
+            BonitaArtifactDependency otherDep = o;
+            int priorityComparaison = getArtifactType().getPriority()
+                    - otherDep.getArtifactType().getPriority();
+            if (priorityComparaison != 0) {
+                return priorityComparaison;
+            }
+            return getName().compareTo(otherDep.getName());
+        }
+        return 0;
     }
 
 }

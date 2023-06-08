@@ -24,7 +24,7 @@ import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelF
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.core.maven.ProjectDependenciesResolver;
-import org.bonitasoft.studio.maven.CustomPageProjectRepositoryStore;
+import org.bonitasoft.studio.maven.ExtensionRepositoryStore;
 import org.bonitasoft.studio.maven.model.RestAPIExtensionArchetype;
 import org.bonitasoft.studio.maven.model.RestAPIExtensionArchetypeConfiguration;
 import org.bonitasoft.studio.maven.operation.CreateCustomPageProjectOperation;
@@ -44,7 +44,7 @@ import groovy.lang.GroovyShell;
 
 public class CreateRestAPIExtensionProjectOperation extends CreateCustomPageProjectOperation {
 
-    public CreateRestAPIExtensionProjectOperation(CustomPageProjectRepositoryStore<?> repositoryStore,
+    public CreateRestAPIExtensionProjectOperation(ExtensionRepositoryStore repositoryStore,
             IProjectConfigurationManager projectConfigurationManager,
             ProjectImportConfiguration projectImportConfiguration,
             RestAPIExtensionArchetypeConfiguration archetypeConfiguration) {
@@ -99,7 +99,7 @@ public class CreateRestAPIExtensionProjectOperation extends CreateCustomPageProj
         request.put("artifactId", archetypeConfiguration.getPageName());
         variables.put("request", request);
         var binding = new Binding(variables);
-        return new GroovyShell(binding);
+        return new GroovyShell(CreateCustomPageProjectOperation.class.getClassLoader(), binding);
     }
 
     private Artifact toArtifact(Archetype instance) {
@@ -121,12 +121,11 @@ public class CreateRestAPIExtensionProjectOperation extends CreateCustomPageProj
                                 + "        </dependency>%n%n"
                                 + "        <!-- BDM model dependency -->%n"
                                 + "        <dependency>%n"
-                                + "            <groupId>%s</groupId>%n"
+                                + "            <groupId>${project.groupId}</groupId>%n"
                                 + "            <artifactId>%s</artifactId>%n"
-                                + "            <version>%s</version>%n"
+                                + "            <version>${project.version}</version>%n"
                                 + "            <scope>provided</scope>%n"
-                                + "        </dependency>%n",
-                        bdmModelDep.getGroupId(), bdmModelDep.getArtifactId(), bdmModelDep.getVersion()));
+                                + "        </dependency>%n",bdmModelDep.getArtifactId()));
     }
 
     @Override
@@ -134,6 +133,11 @@ public class CreateRestAPIExtensionProjectOperation extends CreateCustomPageProj
         Set<String> projectBuilders = super.projectBuilders(description);
         projectBuilders.add(RestAPIBuilder.BUILDER_ID);
         return projectBuilders;
+    }
+
+    @Override
+    protected Archetype getArchetype() {
+        return RestAPIExtensionArchetype.INSTANCE;
     }
 
 }

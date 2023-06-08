@@ -20,7 +20,7 @@ import java.util.stream.Stream;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.extension.properties.PagePropertyConstants;
-import org.bonitasoft.studio.maven.CustomPageMavenProjectDescriptor;
+import org.bonitasoft.studio.maven.ExtensionProjectDescriptor;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IPath;
@@ -32,14 +32,10 @@ import org.eclipse.jdt.core.JavaModelException;
 
 import com.google.common.base.Strings;
 
-public class RestAPIExtensionDescriptor extends CustomPageMavenProjectDescriptor {
+public class RestAPIExtensionDescriptor extends ExtensionProjectDescriptor {
 
     protected static final String SRC_PROJECT_PATH = "src/main/groovy/";
 
-    public RestAPIExtensionDescriptor() {
-        
-    }
-    
     public RestAPIExtensionDescriptor(final IProject project) {
         super(project);
     }

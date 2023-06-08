@@ -12,7 +12,9 @@ import java.lang.reflect.InvocationTargetException;
 
 import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
 import org.bonitasoft.studio.common.ui.jface.BonitaErrorDialog;
+import org.bonitasoft.studio.maven.ExtensionRepositoryStore;
 import org.bonitasoft.studio.maven.MavenProjectConfiguration;
 import org.bonitasoft.studio.maven.i18n.Messages;
 import org.bonitasoft.studio.maven.model.RestAPIExtensionArchetypeConfiguration;
@@ -23,7 +25,6 @@ import org.bonitasoft.studio.rest.api.extension.RestAPIExtensionActivator;
 import org.bonitasoft.studio.rest.api.extension.core.RestAPIAddressResolver;
 import org.bonitasoft.studio.rest.api.extension.core.maven.CreateRestAPIExtensionProjectOperation;
 import org.bonitasoft.studio.rest.api.extension.core.repository.RestAPIExtensionFileStore;
-import org.bonitasoft.studio.rest.api.extension.core.repository.RestAPIExtensionRepositoryStore;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.wizard.Wizard;
@@ -32,7 +33,7 @@ import org.eclipse.m2e.core.project.IProjectConfigurationManager;
 public class NewRestAPIExtensionWizard extends Wizard {
 
     private static final String REST_API_EXT_DOC_URL = "http://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=690&bos_redirect_product=bos&bos_redirect_major_version=%s&bos_redirect_minor_version=";
-    private final RestAPIExtensionRepositoryStore repositoryStore;
+    private final ExtensionRepositoryStore repositoryStore;
     private final RestAPIExtensionArchetypeConfiguration configuration;
     private final IProjectConfigurationManager projectConfigurationManager;
     private final WidgetFactory widgetFactory;
@@ -40,7 +41,8 @@ public class NewRestAPIExtensionWizard extends Wizard {
     private final IWorkspace workspace;
     private final RestAPIAddressResolver addressReolver;
 
-    public NewRestAPIExtensionWizard(RestAPIExtensionRepositoryStore repositoryStore,
+    public NewRestAPIExtensionWizard(ProjectMetadata projectMetadata,
+            ExtensionRepositoryStore repositoryStore,
             IProjectConfigurationManager projectConfigurationManager,
             MavenProjectConfiguration projectConfiguration,
             IWorkspace workspace,
@@ -48,7 +50,8 @@ public class NewRestAPIExtensionWizard extends Wizard {
             boolean addBdmDependency,
             RestAPIAddressResolver addressReolver) {
         this.repositoryStore = repositoryStore;
-        this.configuration = RestAPIExtensionArchetypeConfiguration.defaultArchetypeConfiguration(addBdmDependency);
+        this.configuration = RestAPIExtensionArchetypeConfiguration.defaultArchetypeConfiguration(projectMetadata,
+                addBdmDependency);
         this.configuration.setBonitaVersion(repositoryStore.getRepository().getBonitaRuntimeVersion());
         this.projectConfigurationManager = projectConfigurationManager;
         this.widgetFactory = widgetFactory;
@@ -60,10 +63,6 @@ public class NewRestAPIExtensionWizard extends Wizard {
         setWindowTitle(Messages.newRestApiExtensionTitle);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.jface.wizard.Wizard#addPages()
-     */
     @Override
     public void addPages() {
         final NewCustomPageArtifactConfigurationPage configurationPage = new NewCustomPageArtifactConfigurationPage(
@@ -73,7 +72,7 @@ public class NewRestAPIExtensionWizard extends Wizard {
                 workspace);
         configurationPage.setTitle(Messages.artifactConfigurationPageTitle);
         configurationPage.setDescription(Messages.artifactConfigurationPageDescription);
-        configurationPage.setHelpLinkURL(String.format(REST_API_EXT_DOC_URL,ProductVersion.minorVersion()));
+        configurationPage.setHelpLinkURL(String.format(REST_API_EXT_DOC_URL, ProductVersion.minorVersion()));
         addPage(configurationPage);
 
         final NewRestAPIProjectAdvancedConfigurationPage advancedConfigurationPage = new NewRestAPIProjectAdvancedConfigurationPage(
@@ -83,33 +82,31 @@ public class NewRestAPIExtensionWizard extends Wizard {
         advancedConfigurationPage.setDescription(Messages.advancedConfigurationPageDescription);
         addPage(advancedConfigurationPage);
 
-        final NewRestAPIProjectURLParametersPage urlParametersPage = new NewRestAPIProjectURLParametersPage(widgetFactory,
+        final NewRestAPIProjectURLParametersPage urlParametersPage = new NewRestAPIProjectURLParametersPage(
+                widgetFactory,
                 configuration);
         urlParametersPage.setTitle(Messages.urlParametersPageTile);
         urlParametersPage.setDescription(Messages.urlParametersPageDescription);
         addPage(urlParametersPage);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.jface.wizard.Wizard#performFinish()
-     */
     @Override
     public boolean performFinish() {
-        final CreateRestAPIExtensionProjectOperation operation = new CreateRestAPIExtensionProjectOperation(repositoryStore,
+        final CreateRestAPIExtensionProjectOperation operation = new CreateRestAPIExtensionProjectOperation(
+                repositoryStore,
                 projectConfigurationManager,
                 projectConfiguration.toImportConfiguration(),
                 configuration);
         try {
             getContainer().run(true, true, operation.asWorkspaceModifyOperation());
-            return handleRestult(operation.getStatus());
+            return handleResult(operation.getStatus());
         } catch (InvocationTargetException | InterruptedException e) {
             showErrorDialog(e);
             return false;
         }
     }
 
-    private boolean handleRestult(IStatus status) {
+    private boolean handleResult(IStatus status) {
         if (!status.isOK()) {
             showErrorDialog(status.getException());
             return false;
@@ -124,7 +121,7 @@ public class NewRestAPIExtensionWizard extends Wizard {
     }
 
     public RestAPIExtensionFileStore getNewFileStore() {
-        return repositoryStore.getChild(configuration.getPageName(), true);
+        return (RestAPIExtensionFileStore) repositoryStore.getChild(configuration.getPageName(), true);
     }
 
 }

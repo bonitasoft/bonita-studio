@@ -10,13 +10,18 @@ package org.bonitasoft.studio.rest.api.extension.ui.handler;
 
 import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.notNull;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.Optional;
+
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.common.repository.core.BonitaProject;
+import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
 import org.bonitasoft.studio.maven.i18n.Messages;
 import org.bonitasoft.studio.maven.ui.WidgetFactory;
 import org.bonitasoft.studio.rest.api.extension.core.RestAPIAddressResolver;
@@ -37,7 +42,11 @@ public class NewRestAPIExtensionHandlerTest {
         final NewRestAPIExtensionWizard wizard = mock(NewRestAPIExtensionWizard.class);
         final WidgetFactory widgetFactory = mock(WidgetFactory.class);
         final IWorkspace workspace = mock(IWorkspace.class);
-        doReturn(wizard).when(handler).newWizard(eq(repositoryAccessor), eq(widgetFactory), eq(workspace),
+        var metadata = ProjectMetadata.defaultMetadata();
+        var project = mock(BonitaProject.class);
+        when(project.getProjectMetadata(any())).thenReturn(metadata);
+        when(repositoryAccessor.getCurrentProject()).thenReturn(Optional.of(project));
+        doReturn(wizard).when(handler).newWizard(eq(repositoryAccessor),eq(metadata), eq(widgetFactory), eq(workspace),
                 notNull());
         final RestAPIExtensionFileStore fileStore = mock(RestAPIExtensionFileStore.class);
         when(wizard.getNewFileStore()).thenReturn(fileStore);

@@ -29,11 +29,11 @@ import java.util.Properties;
 
 import org.assertj.core.data.MapEntry;
 import org.bonitasoft.studio.assertions.StatusAssert;
+import org.bonitasoft.studio.maven.ExtensionRepositoryStore;
 import org.bonitasoft.studio.maven.builder.validator.Location;
 import org.bonitasoft.studio.maven.builder.validator.LocationResolver;
 import org.bonitasoft.studio.maven.builder.validator.StatusWithLocation;
 import org.bonitasoft.studio.rest.api.extension.core.repository.RestAPIExtensionFileStore;
-import org.bonitasoft.studio.rest.api.extension.core.repository.RestAPIExtensionRepositoryStore;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -52,7 +52,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 public class RestAPIPagePropertiesValidatorTest {
 
     @Mock
-    private RestAPIExtensionRepositoryStore repositoryStore;
+    private ExtensionRepositoryStore repositoryStore;
     @Mock
     private IFile pagePropertyFile;
     @Mock

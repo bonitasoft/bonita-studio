@@ -16,44 +16,44 @@ import org.eclipse.swtbot.swt.finder.waits.Conditions;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
 
-public class RestApiProjectExplorerBot extends ProjectExplorerBot {
+public class ExtensionProjectExplorerBot extends ProjectExplorerBot {
 
-    public RestApiProjectExplorerBot(SWTGefBot bot) {
+    public ExtensionProjectExplorerBot(SWTGefBot bot) {
         super(bot);
     }
 
-    public void buildRestApi(String restApi) {
-        clickOnContextualMenu(getRestApiTreeItem(restApi), "Build");
+    public void buildExtension(String name) {
+        clickOnContextualMenu(getExtensionProjectTreeItem(name), "Build");
     }
 
-    public void runRestApiTests(String restApi) {
-        clickOnContextualMenu(getRestApiTreeItem(restApi), "Run JUnit Test");
+    public void runTests(String name) {
+        clickOnContextualMenu(getExtensionProjectTreeItem(name), "Run JUnit Test");
         bot.waitUntil(BonitaBPMConditions.noPopupActive(), 200000);
     }
 
-    public void deployRestAPi(String restApi) {
-        clickOnContextualMenu(getRestApiTreeItem(restApi), "Deploy");
+    public void deployExtension(String name) {
+        clickOnContextualMenu(getExtensionProjectTreeItem(name), "Deploy");
         bot.waitUntil(Conditions.shellIsActive(Messages.deploySuccessTitle), 200000);
         SWTBotShell activeShell = bot.activeShell();
         bot.button(IDialogConstants.OK_LABEL).click();
         bot.waitUntil(Conditions.shellCloses(activeShell));
     }
 
-    public void deleteRestApi(String restApi) {
-        clickOnContextualMenu(getRestApiTreeItem(restApi), "Delete");
+    public void deleteExtension(String name) {
+        clickOnContextualMenu(getExtensionProjectTreeItem(name), "Delete");
     }
 
-    public void openRestApiPomFile(String restApi) {
-        SWTBotTreeItem pomTreeItem = getTreeItem(getRestApiTreeItem(restApi), "pom.xml");
+    public void openExtensionPomFile(String name) {
+        SWTBotTreeItem pomTreeItem = getTreeItem(getExtensionProjectTreeItem(name), "pom.xml");
         clickOnContextualMenu(pomTreeItem, "Open");
     }
 
-    public SWTBotTreeItem getRestApiFolderTreeItem() {
-        return getTreeItem(getProjectTreeItem(), "REST API extensions");
+    public SWTBotTreeItem getExtensionsFolderTreeItem() {
+        return getTreeItem(getProjectTreeItem(), "Extensions");
     }
 
-    public SWTBotTreeItem getRestApiTreeItem(String restApi) {
-        return getTreeItem(getRestApiFolderTreeItem(), restApi);
+    public SWTBotTreeItem getExtensionProjectTreeItem(String restApi) {
+        return getTreeItem(getExtensionsFolderTreeItem(), restApi);
     }
 
 }

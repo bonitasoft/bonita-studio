@@ -156,4 +156,8 @@ public class Messages extends NLS {
     public static String newRestAPiExtMenuLabel;
     public static String buildMenuLabel;
     public static String editPermissionsMenuLabel;
+    public static String extensionRepositoryName;
+    public static String selectExtensionDescription;
+    public static String selectExtensionTitle;
+    public static String packageLabel;
 }

@@ -18,7 +18,7 @@ import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.common.ui.IDisplayable;
 import org.bonitasoft.studio.engine.http.HttpClientFactory;
 import org.bonitasoft.studio.engine.operation.DeployCustomPageOperation;
-import org.bonitasoft.studio.maven.CustomPageProjectFileStore;
+import org.bonitasoft.studio.maven.ExtensionProjectFileStore;
 import org.bonitasoft.studio.maven.i18n.Messages;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -26,11 +26,11 @@ import org.eclipse.osgi.util.NLS;
 
 public class DeployCustomPageProjectOperation extends DeployCustomPageOperation {
 
-    private final CustomPageProjectFileStore fileStore;
+    private final ExtensionProjectFileStore fileStore;
     private Page deployedPage;
 
     public DeployCustomPageProjectOperation(PageAPI pageApi, HttpClientFactory httpClientFactory,
-            CustomPageProjectFileStore fileStore) {
+            ExtensionProjectFileStore fileStore) {
         super(pageApi, httpClientFactory);
         this.fileStore = fileStore;
     }

@@ -24,7 +24,7 @@ import java.util.stream.Stream;
 
 import org.apache.maven.project.MavenProject;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
-import org.bonitasoft.studio.maven.CustomPageMavenProjectDescriptor;
+import org.bonitasoft.studio.maven.ExtensionProjectDescriptor;
 import org.bonitasoft.studio.maven.i18n.Messages;
 import org.bonitasoft.studio.rest.api.extension.RestAPIExtensionActivator;
 import org.eclipse.core.resources.IProject;
@@ -59,17 +59,17 @@ public class BuildCustomPageOperation implements IWorkspaceRunnable {
 
     private final ILaunchManager launchManager;
     private IStatus status = Status.OK_STATUS;
-    private final CustomPageMavenProjectDescriptor fileStoreDescriptor;
+    private final ExtensionProjectDescriptor fileStoreDescriptor;
     private String mavenGoals;
     private boolean logToSysout = false;
     private final Set<String> activatedProfiles = new HashSet<>();
 
-    public BuildCustomPageOperation(final CustomPageMavenProjectDescriptor fileStoreDescriptor,
+    public BuildCustomPageOperation(final ExtensionProjectDescriptor fileStoreDescriptor,
             final ILaunchManager launchManager) {
         this(fileStoreDescriptor, launchManager, "clean verify");
     }
 
-    public BuildCustomPageOperation(final CustomPageMavenProjectDescriptor fileStoreDescriptor,
+    public BuildCustomPageOperation(final ExtensionProjectDescriptor fileStoreDescriptor,
             final ILaunchManager launchManager, final String mavenGoals) {
         this.fileStoreDescriptor = fileStoreDescriptor;
         this.launchManager = launchManager;

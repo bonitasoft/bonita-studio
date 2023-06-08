@@ -21,7 +21,7 @@ import org.bonitasoft.studio.common.ui.IDisplayable;
 import org.bonitasoft.studio.designer.core.repository.WebPageFileStore;
 import org.bonitasoft.studio.designer.core.repository.WebPageRepositoryStore;
 import org.bonitasoft.studio.la.application.core.BonitaPagesRegistry;
-import org.bonitasoft.studio.theme.ThemeRepositoryStore;
+import org.bonitasoft.studio.maven.ExtensionRepositoryStore;
 import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceChangeEvent;
@@ -38,12 +38,12 @@ public class CustomPageProvider implements IResourceChangeListener {
             "Bonita theme", null);
 
     private final WebPageRepositoryStore webPageStore;
-    private ThemeRepositoryStore themeStore;
+    private ExtensionRepositoryStore themeStore;
     private List<CustomPageDescriptor> pages;
     private List<CustomPageDescriptor> layouts;
     private List<CustomPageDescriptor> themes;
 
-    public CustomPageProvider(WebPageRepositoryStore store, ThemeRepositoryStore themeStore) {
+    public CustomPageProvider(WebPageRepositoryStore store, ExtensionRepositoryStore themeStore) {
         this.webPageStore = store;
         this.themeStore = themeStore;
     }
@@ -143,7 +143,7 @@ public class CustomPageProvider implements IResourceChangeListener {
         return themes;
     }
 
-    public ThemeRepositoryStore getThemeStore() {
+    public ExtensionRepositoryStore getThemeStore() {
         return themeStore;
     }
 

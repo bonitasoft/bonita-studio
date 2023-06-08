@@ -77,8 +77,18 @@ public class DefaultBosArchiveEntryHandler implements BosArchiveEntryHandler {
     private boolean selectSegment(IRepository repository, String segment) {
         return isRepositoryStoreParent(repository, segment)
                 || isLegacyFormRepo(segment)
+                || isLegacyRestAPIRepo(segment)
+                || isLegacyThemeRepo(segment)
                 || isReadme(segment)
                 || isSrc(segment);
+    }
+
+    private boolean isLegacyThemeRepo(String segment) {
+        return "themes".equals(segment);
+    }
+
+    private boolean isLegacyRestAPIRepo(String segment) {
+        return "restAPIExtensions".equals(segment);
     }
 
     private boolean isSrc(String segment) {
@@ -101,11 +111,22 @@ public class DefaultBosArchiveEntryHandler implements BosArchiveEntryHandler {
             IRepository repository, Set<String> resourcesToOpen) {
         int storeDepth = getStoreDepth(segments);
         final List<String> parentSegments = segments.subList(0, storeDepth);
-        Optional<IRepositoryStore<? extends IRepositoryFileStore>> repositoryStoreByName = repository
-                .getRepositoryStoreByName(segment);
+        Optional<IRepositoryStore<? extends IRepositoryFileStore>> repositoryStoreByName;
+        if(isLegacyThemeRepo(segment) || isLegacyRestAPIRepo(segment)) {
+            repositoryStoreByName = repository.getRepositoryStoreByName("extensions");
+        }else {
+            repositoryStoreByName = repository.getRepositoryStoreByName(segment);
+        }
         if (repositoryStoreByName.isPresent()) {
-            final ImportStoreModel store = new ImportStoreModel(toEntryPath(parentSegments),
+            var store = new ImportStoreModel(toEntryPath(parentSegments),
                     (IRepositoryStore<IRepositoryFileStore>) repositoryStoreByName.get());
+            if(isLegacyThemeRepo(segment)) {
+                store = new LegacyThemesImportStoreModel(toEntryPath(parentSegments), (IRepositoryStore<IRepositoryFileStore>) repositoryStoreByName.get());
+            }
+            if(isLegacyRestAPIRepo(segment)) {
+                store = new LegacyRestAPIExtensionsImportStoreModel(toEntryPath(parentSegments), (IRepositoryStore<IRepositoryFileStore>) repositoryStoreByName.get());
+            }
+           
 
             parseFolder(archiveModel.addStore(store), segments.subList(storeDepth, segments.size()), parentSegments,
                     resourcesToOpen,

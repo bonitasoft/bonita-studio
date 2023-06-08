@@ -17,17 +17,17 @@ package org.bonitasoft.studio.maven;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Properties;
 
 import org.apache.maven.project.MavenProject;
-import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.extension.properties.ExtensionPagePropertiesReader;
 import org.bonitasoft.studio.common.extension.properties.PagePropertyConstants;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -35,16 +35,21 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.m2e.core.MavenPlugin;
 import org.eclipse.m2e.core.project.IMavenProjectRegistry;
 
-public abstract class CustomPageMavenProjectDescriptor {
+public class ExtensionProjectDescriptor {
 
     protected IProject project;
-    private static final String PAGE_PROPERTIES_PATH = "src/main/resources/page.properties";
+    private String pagePropertiesPath = "src/main/resources/page.properties";
 
-    protected CustomPageMavenProjectDescriptor() {
-
+    public ExtensionProjectDescriptor(String pagePropertiesPath) {
+        this.pagePropertiesPath = pagePropertiesPath;
     }
 
-    protected CustomPageMavenProjectDescriptor(final IProject project) {
+    public ExtensionProjectDescriptor(final IProject project, String pagePropertiesPath) {
+        this(project);
+        this.pagePropertiesPath = pagePropertiesPath;
+    }
+
+    public ExtensionProjectDescriptor(final IProject project) {
         this.project = project;
     }
 
@@ -53,7 +58,7 @@ public abstract class CustomPageMavenProjectDescriptor {
     }
 
     protected String getPagePropertyPath() {
-        return PAGE_PROPERTIES_PATH;
+        return pagePropertiesPath;
     }
 
     public IProject getProject() {
@@ -67,24 +72,14 @@ public abstract class CustomPageMavenProjectDescriptor {
     public Properties getPageProperties() {
         final Properties properties = new Properties();
         if (project != null) {
-            InputStream contents = null;
-            try {
-                final IFile propertyFile = getPropertyFile();
-                if (!propertyFile.exists()) {
-                    return properties;
-                }
-                contents = propertyFile.getContents();
-                properties.load(contents);
+            var propertyFile =  getPropertyFile();
+            if (!propertyFile.exists()) {
+                return properties;
+            }
+            try (var is = getPropertyFile().getContents()) {
+                properties.load(is);
             } catch (IOException | CoreException e) {
                 BonitaStudioLog.error(e);
-            } finally {
-                if (contents != null) {
-                    try {
-                        contents.close();
-                    } catch (final IOException e) {
-                        BonitaStudioLog.error(e);
-                    }
-                }
             }
         }
         return properties;
@@ -142,7 +137,9 @@ public abstract class CustomPageMavenProjectDescriptor {
         return getMavenProject().map(MavenProject::getVersion).orElse(null);
     }
 
-    public abstract List<IFile> getFilesToOpen();
+    public List<IFile> getFilesToOpen() {
+        return Collections.emptyList();
+    }
 
     public String getDescription() {
         return staticProperty(PagePropertyConstants.DESCRIPTION)
@@ -153,7 +150,7 @@ public abstract class CustomPageMavenProjectDescriptor {
         return staticProperty(PagePropertyConstants.DISPLAY_NAME)
                 .orElse(getMavenProject().map(MavenProject::getName).orElse(null));
     }
-    
+
     public String getContentType() {
         return staticProperty(PagePropertyConstants.CONTENT_TYPE).orElse(null);
     }
@@ -166,6 +163,12 @@ public abstract class CustomPageMavenProjectDescriptor {
         return ExtensionPagePropertiesReader.getProperty(getPageProperties(), property);
     }
 
-    
+    public String getGroupId() {
+        return getMavenProject().map(MavenProject::getGroupId).orElse(null);
+    }
+
+    public String getClassifier() {
+        return null;
+    }
 
 }

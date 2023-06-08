@@ -105,16 +105,14 @@ public class DeployArtifactsHandler {
     private static final List<String> REPO_STORE_DEPLOY_ORDER = new ArrayList<>();
     private DirtyEditorChecker dirtyEditorChecker;
     private RepositoryAccessor repositoryAccessor;
-    private IProgressService progressService;
 
     static {
         REPO_STORE_DEPLOY_ORDER.add("organizations");
         REPO_STORE_DEPLOY_ORDER.add("profiles");
         REPO_STORE_DEPLOY_ORDER.add("bdm");
         REPO_STORE_DEPLOY_ORDER.add("diagrams");
-        REPO_STORE_DEPLOY_ORDER.add("restAPIExtensions");
+        REPO_STORE_DEPLOY_ORDER.add("extensions");
         REPO_STORE_DEPLOY_ORDER.add("web_page");
-        REPO_STORE_DEPLOY_ORDER.add("themes");
         REPO_STORE_DEPLOY_ORDER.add("applications");
     }
     

@@ -40,19 +40,8 @@ public class BonitaVersionMigrationStep implements MavenModelMigration {
 
     private void updateProperty(String property, MigrationReport report, Properties properties) {
         if (properties.containsKey(property)) {
-            var existingVersion = properties.getProperty(property);
             String currentBonitaRuntimeVersion = ProductVersion.BONITA_RUNTIME_VERSION;
             properties.setProperty(property, currentBonitaRuntimeVersion);
-            if (existingVersion != null) {
-                report.updated(String.format("`%s` property has been updated from `%s` to `%s`.",
-                        property,
-                        existingVersion,
-                        currentBonitaRuntimeVersion));
-            } else {
-                report.added(String.format("`%s` property has been added with value `%s`.",
-                        property,
-                        currentBonitaRuntimeVersion));
-            }
         }
     }
 

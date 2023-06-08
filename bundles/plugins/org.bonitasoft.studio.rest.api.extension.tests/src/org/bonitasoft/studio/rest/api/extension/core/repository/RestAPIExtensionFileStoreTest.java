@@ -13,6 +13,7 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
+import org.bonitasoft.studio.maven.ExtensionRepositoryStore;
 import org.eclipse.core.resources.IProject;
 import org.junit.Rule;
 import org.junit.Test;
@@ -29,7 +30,7 @@ public class RestAPIExtensionFileStoreTest {
 
     @Test
     public void should_throw_a_ReadFileStoreException_when_reding_content_and_project_does_not_exists() throws Exception {
-        final RestAPIExtensionRepositoryStore parentStore = mock(RestAPIExtensionRepositoryStore.class, Mockito.RETURNS_DEEP_STUBS);
+        var parentStore = mock(ExtensionRepositoryStore.class, Mockito.RETURNS_DEEP_STUBS);
         final IProject restApiProject = mock(IProject.class);
         when(restApiProject.exists()).thenReturn(false);
         when(parentStore.getResource().getWorkspace().getRoot().getProject("my-rest-api")).thenReturn(restApiProject);

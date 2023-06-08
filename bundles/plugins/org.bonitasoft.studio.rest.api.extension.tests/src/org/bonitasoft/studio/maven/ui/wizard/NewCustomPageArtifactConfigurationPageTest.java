@@ -13,6 +13,7 @@ import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
+import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
 import org.bonitasoft.studio.maven.MavenProjectConfiguration;
 import org.bonitasoft.studio.maven.i18n.Messages;
 import org.bonitasoft.studio.maven.model.RestAPIExtensionArchetypeConfiguration;
@@ -47,9 +48,9 @@ public class NewCustomPageArtifactConfigurationPageTest {
     }
 
     @Test
-    public void should_bind_groupId_control_with_configuration() throws Exception {
+    public void should_bind_package_control_with_configuration() throws Exception {
         final RestAPIExtensionArchetypeConfiguration configuration = RestAPIExtensionArchetypeConfiguration
-                .defaultArchetypeConfiguration();
+                .defaultArchetypeConfiguration(ProjectMetadata.defaultMetadata());
 
         final NewCustomPageArtifactConfigurationPage page = new NewCustomPageArtifactConfigurationPage(
                 new WidgetFactory(), configuration,
@@ -58,15 +59,15 @@ public class NewCustomPageArtifactConfigurationPageTest {
 
         page.createControl(displayRule.createComposite());
 
-        final Text groupIdText = widgetFinder.<Text> withLabel(displayRule.getShell(), Messages.groupId);
-        assertThat(groupIdText).isNotNull();
-        assertThat(groupIdText.getText()).isEqualTo(configuration.getGroupId());
+        final Text packageText = widgetFinder.<Text> withLabel(displayRule.getShell(), Messages.packageLabel);
+        assertThat(packageText).isNotNull();
+        assertThat(packageText.getText()).isEqualTo(configuration.getJavaPackage());
     }
 
     @Test
     public void should_bind_artifactId_control_with_configuration() throws Exception {
         final RestAPIExtensionArchetypeConfiguration configuration = RestAPIExtensionArchetypeConfiguration
-                .defaultArchetypeConfiguration();
+                .defaultArchetypeConfiguration(ProjectMetadata.defaultMetadata());
 
         final NewCustomPageArtifactConfigurationPage page = new NewCustomPageArtifactConfigurationPage(
                 new WidgetFactory(), configuration,
@@ -83,28 +84,9 @@ public class NewCustomPageArtifactConfigurationPageTest {
     }
 
     @Test
-    public void should_bind_version_control_with_configuration() throws Exception {
-        final RestAPIExtensionArchetypeConfiguration configuration = RestAPIExtensionArchetypeConfiguration
-                .defaultArchetypeConfiguration();
-
-        final NewCustomPageArtifactConfigurationPage page = new NewCustomPageArtifactConfigurationPage(
-                new WidgetFactory(), configuration,
-                projectImportConfiguration, workspace);
-        page.setWizard(displayRule.wizardWithContainer());
-
-        page.createControl(displayRule.createComposite());
-
-        final Text versionText = widgetFinder.<Text> withLabel(displayRule.getShell(), Messages.version);
-        assertThat(versionText).isNotNull();
-        assertThat(versionText.getText()).isEqualTo(configuration.getVersion());
-        versionText.setText("0.0.1");
-        assertThat(configuration.getVersion()).isEqualTo("0.0.1");
-    }
-
-    @Test
     public void should_bind_name_control_with_configuration() throws Exception {
         final RestAPIExtensionArchetypeConfiguration configuration = RestAPIExtensionArchetypeConfiguration
-                .defaultArchetypeConfiguration();
+                .defaultArchetypeConfiguration(ProjectMetadata.defaultMetadata());
 
         final NewCustomPageArtifactConfigurationPage page = new NewCustomPageArtifactConfigurationPage(
                 new WidgetFactory(), configuration,
@@ -123,7 +105,7 @@ public class NewCustomPageArtifactConfigurationPageTest {
     @Test
     public void should_bind_description_control_with_configuration() throws Exception {
         final RestAPIExtensionArchetypeConfiguration configuration = RestAPIExtensionArchetypeConfiguration
-                .defaultArchetypeConfiguration();
+                .defaultArchetypeConfiguration(ProjectMetadata.defaultMetadata());
 
         final NewCustomPageArtifactConfigurationPage page = new NewCustomPageArtifactConfigurationPage(
                 new WidgetFactory(), configuration,

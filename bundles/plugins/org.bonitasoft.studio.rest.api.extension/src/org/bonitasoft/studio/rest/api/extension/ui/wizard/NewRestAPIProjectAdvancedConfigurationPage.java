@@ -17,6 +17,7 @@ import java.util.Set;
 
 import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.ui.jface.SWTBotConstants;
+import org.bonitasoft.studio.maven.ExtensionRepositoryStore;
 import org.bonitasoft.studio.maven.i18n.Messages;
 import org.bonitasoft.studio.maven.model.RestAPIExtensionArchetypeConfiguration;
 import org.bonitasoft.studio.maven.ui.WidgetFactory;
@@ -25,7 +26,6 @@ import org.bonitasoft.studio.maven.ui.wizard.validator.AllJavaIdentifierValidato
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.rest.api.extension.core.RestAPIAddressResolver;
-import org.bonitasoft.studio.rest.api.extension.core.repository.RestAPIExtensionRepositoryStore;
 import org.bonitasoft.studio.rest.api.extension.core.validation.UniquePathTemplateValidator;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.beans.typed.PojoProperties;
@@ -59,12 +59,12 @@ public class NewRestAPIProjectAdvancedConfigurationPage extends WizardPage {
     private static final int WIDTH_HINT = 400;
     private final RestAPIExtensionArchetypeConfiguration configuration;
     private final WidgetFactory widgetFactory;
-    private final RestAPIExtensionRepositoryStore repositoryStore;
+    private final ExtensionRepositoryStore repositoryStore;
     private final RestAPIAddressResolver restAPIAddressResolver;
 
     public NewRestAPIProjectAdvancedConfigurationPage(final WidgetFactory widgetFactory,
             final RestAPIExtensionArchetypeConfiguration configuration,
-            final RestAPIExtensionRepositoryStore repositoryStore,
+            final ExtensionRepositoryStore repositoryStore,
             RestAPIAddressResolver restAPIAddressResolver) {
         super(NewRestAPIProjectAdvancedConfigurationPage.class.getName());
         this.configuration = configuration;

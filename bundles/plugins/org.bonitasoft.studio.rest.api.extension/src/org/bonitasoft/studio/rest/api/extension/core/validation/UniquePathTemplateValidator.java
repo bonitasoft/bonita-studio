@@ -16,11 +16,11 @@ import java.util.Set;
 
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.common.ui.IDisplayable;
+import org.bonitasoft.studio.maven.ExtensionRepositoryStore;
 import org.bonitasoft.studio.maven.i18n.Messages;
 import org.bonitasoft.studio.rest.api.extension.RestAPIExtensionActivator;
 import org.bonitasoft.studio.rest.api.extension.core.repository.PathTemplate;
 import org.bonitasoft.studio.rest.api.extension.core.repository.RestAPIExtensionFileStore;
-import org.bonitasoft.studio.rest.api.extension.core.repository.RestAPIExtensionRepositoryStore;
 import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
@@ -29,9 +29,9 @@ import org.eclipse.osgi.util.NLS;
 
 public class UniquePathTemplateValidator implements IValidator {
 
-    private final RestAPIExtensionRepositoryStore repositoryStore;
+    private final ExtensionRepositoryStore repositoryStore;
 
-    public UniquePathTemplateValidator(final RestAPIExtensionRepositoryStore repositoryStore) {
+    public UniquePathTemplateValidator(final ExtensionRepositoryStore repositoryStore) {
         this.repositoryStore = repositoryStore;
     }
 
@@ -56,7 +56,8 @@ public class UniquePathTemplateValidator implements IValidator {
 
     protected IStatus doValidatePathTemplate(final String pathTemplate) {
         final StringBuilder sb = new StringBuilder("[");
-        for (final RestAPIExtensionFileStore fileStore : repositoryStore.getChildren()) {
+        repositoryStore.getChildren(RestAPIExtensionFileStore.class);
+        for (final RestAPIExtensionFileStore fileStore : repositoryStore.getChildren(RestAPIExtensionFileStore.class)) {
             if (pathTemplates(fileStore).contains(new PathTemplate(pathTemplate, "GET"))) {
                 sb.append(IDisplayable.toDisplayName(fileStore).orElse(""));
                 sb.append(",");
@@ -84,7 +85,7 @@ public class UniquePathTemplateValidator implements IValidator {
         }
         for (final PathTemplate t : templates) {
             final StringBuilder sb = new StringBuilder("[");
-            for (final RestAPIExtensionFileStore f : repositoryStore.getChildren()) {
+            for (final RestAPIExtensionFileStore f : repositoryStore.getChildren(RestAPIExtensionFileStore.class)) {
                 if (!Objects.equals(fileStore.getName(), f.getName())) {
                     if (pathTemplates(f).contains(t)) {
                         sb.append(IDisplayable.toDisplayName(f).orElse(""));

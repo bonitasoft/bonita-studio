@@ -20,14 +20,15 @@ import java.util.Set;
 import java.util.stream.Stream;
 
 import org.bonitasoft.studio.common.databinding.validator.TypedValidator;
-import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.extension.properties.PagePropertyConstants;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.maven.ExtensionRepositoryStore;
 import org.bonitasoft.studio.maven.builder.validator.Location;
 import org.bonitasoft.studio.maven.builder.validator.LocationResolver;
 import org.bonitasoft.studio.maven.builder.validator.StatusWithLocation;
 import org.bonitasoft.studio.maven.i18n.Messages;
 import org.bonitasoft.studio.rest.api.extension.RestAPIExtensionActivator;
-import org.bonitasoft.studio.rest.api.extension.core.repository.RestAPIExtensionRepositoryStore;
+import org.bonitasoft.studio.rest.api.extension.core.repository.RestAPIExtensionFileStore;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -82,10 +83,10 @@ public class RestAPIPagePropertiesValidator extends TypedValidator<IFile, MultiS
         HTTP_METHODS.add(HTTPMethod.TRACE.name());
     }
 
-    private final RestAPIExtensionRepositoryStore repositoryStore;
+    private final ExtensionRepositoryStore repositoryStore;
     private final UniquePathTemplateValidator uniquePathTemplateValidator;
 
-    public RestAPIPagePropertiesValidator(final RestAPIExtensionRepositoryStore repositoryStore,
+    public RestAPIPagePropertiesValidator(final ExtensionRepositoryStore repositoryStore,
             final UniquePathTemplateValidator uniquePathTemplateValidator) {
         this.repositoryStore = repositoryStore;
         this.uniquePathTemplateValidator = uniquePathTemplateValidator;
@@ -123,15 +124,18 @@ public class RestAPIPagePropertiesValidator extends TypedValidator<IFile, MultiS
     protected IStatus validatePathTemplateUnicity(final IProject project, final LocationResolver locationResolver)
             throws BadLocationException {
         final MultiStatus result = new MultiStatus(RestAPIExtensionActivator.PLUGIN_ID, IStatus.OK, "", null);
-        final MultiStatus status = uniquePathTemplateValidator
-                .doValidatePathTemplate(repositoryStore.getChild(project.getName(), true));
-        if (!status.isOK()) {
-            for (final IStatus s : status.getChildren()) {
-                if (s instanceof PathTemplateErrorStatus) {
-                    for (final Location location : locationResolver
-                            .findLocationsMatching("." + PATH_TEMAPLTE + "[\\s]*=[\\s]*"
-                                    + ((PathTemplateErrorStatus) s).getPathTemplate().getPath() + "(?!.)", true)) {
-                        result.add(new StatusWithLocation(s.getMessage(), location));
+        var fileStore = repositoryStore.getChild(project.getName(), true);
+        if (fileStore instanceof RestAPIExtensionFileStore) {
+            final MultiStatus status = uniquePathTemplateValidator
+                    .doValidatePathTemplate((RestAPIExtensionFileStore) fileStore);
+            if (!status.isOK()) {
+                for (final IStatus s : status.getChildren()) {
+                    if (s instanceof PathTemplateErrorStatus) {
+                        for (final Location location : locationResolver
+                                .findLocationsMatching("." + PATH_TEMAPLTE + "[\\s]*=[\\s]*"
+                                        + ((PathTemplateErrorStatus) s).getPathTemplate().getPath() + "(?!.)", true)) {
+                            result.add(new StatusWithLocation(s.getMessage(), location));
+                        }
                     }
                 }
             }
@@ -160,7 +164,8 @@ public class RestAPIPagePropertiesValidator extends TypedValidator<IFile, MultiS
         final MultiStatus status = new MultiStatus(RestAPIExtensionActivator.PLUGIN_ID, IStatus.OK, "", null);
         for (final String key : keySet) {
             IStatus propertyStatus = validateProperty(pageProperties, prefix, key, project, locationResolver);
-            if(Stream.of(status.getChildren()).map(IStatus::getMessage).noneMatch(propertyStatus.getMessage()::equals)){
+            if (Stream.of(status.getChildren()).map(IStatus::getMessage)
+                    .noneMatch(propertyStatus.getMessage()::equals)) {
                 status.add(propertyStatus);
             }
         }
@@ -176,14 +181,17 @@ public class RestAPIPagePropertiesValidator extends TypedValidator<IFile, MultiS
             final LocationResolver locationResolver) {
         final String key = propertyKey(prefix, keyId);
         if (!pageProperties.containsKey(key)) {
-            if(propertyKey(prefix,CLASS_FILENAME).equals(key) && pageProperties.containsKey(propertyKey(prefix,CLASS_NAME))) {
+            if (propertyKey(prefix, CLASS_FILENAME).equals(key)
+                    && pageProperties.containsKey(propertyKey(prefix, CLASS_NAME))) {
                 return ValidationStatus.ok();
             }
-            if(propertyKey(prefix,CLASS_NAME).equals(key) && pageProperties.containsKey(propertyKey(prefix,CLASS_FILENAME))) {
+            if (propertyKey(prefix, CLASS_NAME).equals(key)
+                    && pageProperties.containsKey(propertyKey(prefix, CLASS_FILENAME))) {
                 return ValidationStatus.ok();
             }
-            if(CLASS_FILENAME.equals(keyId)) {
-                return new StatusWithLocation(NLS.bind(Messages.pagePropertyKeyMissing, propertyKey(prefix,CLASS_NAME)));
+            if (CLASS_FILENAME.equals(keyId)) {
+                return new StatusWithLocation(
+                        NLS.bind(Messages.pagePropertyKeyMissing, propertyKey(prefix, CLASS_NAME)));
             }
             return new StatusWithLocation(NLS.bind(Messages.pagePropertyKeyMissing, key));
         } else if (Strings.isNullOrEmpty(pageProperties.getProperty(key))) {

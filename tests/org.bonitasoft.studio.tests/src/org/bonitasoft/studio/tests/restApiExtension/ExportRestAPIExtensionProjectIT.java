@@ -20,12 +20,14 @@ import org.bonitasoft.studio.assertions.StatusAssert;
 import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
-import org.bonitasoft.studio.maven.CustomPageProjectFileStore;
+import org.bonitasoft.studio.maven.ExtensionProjectFileStore;
+import org.bonitasoft.studio.maven.ExtensionRepositoryStore;
 import org.bonitasoft.studio.maven.model.RestAPIExtensionArchetypeConfiguration;
 import org.bonitasoft.studio.maven.operation.BuildAndExportCustomPageOperation;
 import org.bonitasoft.studio.rest.api.extension.core.maven.CreateRestAPIExtensionProjectOperation;
-import org.bonitasoft.studio.rest.api.extension.core.repository.RestAPIExtensionRepositoryStore;
 import org.bonitasoft.studio.tests.util.InitialProjectRule;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.m2e.core.MavenPlugin;
 import org.eclipse.m2e.core.project.ProjectImportConfiguration;
@@ -42,26 +44,25 @@ public class ExportRestAPIExtensionProjectIT {
     private static final String pageName2 = "my-rest-api-test-export2";
     
     @Rule
-    public InitialProjectRule projectRule = InitialProjectRule.INSTANCE;
-    
-    @Rule
     public TemporaryFolder tmp = new TemporaryFolder();
 
     @BeforeClass
     public static void setup() throws Exception {
+        InitialProjectRule.ensureDefaultProjectExists();
         createApi(pageName);
         createApi(pageName2);
     }
 
-    private static void createApi(String pageName) throws InterruptedException, InvocationTargetException {
+    private static void createApi(String pageName) throws InterruptedException, InvocationTargetException, CoreException {
+        var metadata = RepositoryManager.getInstance().getCurrentProject().orElseThrow().getProjectMetadata(new NullProgressMonitor());
         final RestAPIExtensionArchetypeConfiguration configuration = RestAPIExtensionArchetypeConfiguration
-                .defaultArchetypeConfiguration();
-        configuration.setGroupId("org.bonitasoft.test");
+                .defaultArchetypeConfiguration(metadata);
+        configuration.setJavaPackage("org.bonitasoft.test");
         configuration.setBonitaVersion(ProductVersion.BONITA_RUNTIME_VERSION);
         configuration.setLanguage(RestAPIExtensionArchetypeConfiguration.GROOVY_LANGUAGE);
         configuration.setPageName(pageName);
         final CreateRestAPIExtensionProjectOperation operation = new CreateRestAPIExtensionProjectOperation(
-                RepositoryManager.getInstance().getRepositoryStore(RestAPIExtensionRepositoryStore.class),
+                RepositoryManager.getInstance().getRepositoryStore(ExtensionRepositoryStore.class),
                 MavenPlugin.getProjectConfigurationManager(),
                 new ProjectImportConfiguration(),
                 configuration);
@@ -73,8 +74,8 @@ public class ExportRestAPIExtensionProjectIT {
 
     @Test
     public void testExport() throws Exception {
-        final RestAPIExtensionRepositoryStore store = RepositoryManager.getInstance()
-                .getRepositoryStore(RestAPIExtensionRepositoryStore.class);
+        var store = RepositoryManager.getInstance()
+                .getRepositoryStore(ExtensionRepositoryStore.class);
         final String targetAbsoluteFilePath = tmp.newFolder().getAbsolutePath();
 
         store.getChild(pageName, true).export(targetAbsoluteFilePath);
@@ -93,9 +94,9 @@ public class ExportRestAPIExtensionProjectIT {
 
     @Test
     public void buildAndExportMultipleRestApi() throws Exception {
-        List<CustomPageProjectFileStore> apiToExport = RepositoryManager.getInstance()
-                .getRepositoryStore(RestAPIExtensionRepositoryStore.class).getChildren().stream()
-                .map(CustomPageProjectFileStore.class::cast).collect(Collectors.toList());
+        List<ExtensionProjectFileStore> apiToExport = RepositoryManager.getInstance()
+                .getRepositoryStore(ExtensionRepositoryStore.class).getChildren().stream()
+                .map(ExtensionProjectFileStore.class::cast).collect(Collectors.toList());
         String targetDir = tmp.newFolder().getAbsolutePath();
 
         BuildAndExportCustomPageOperation operation = new BuildAndExportCustomPageOperation();
@@ -103,8 +104,8 @@ public class ExportRestAPIExtensionProjectIT {
         operation.run(apiToExport, targetDir, progressService);
 
         StatusAssert.assertThat(operation.getStatus()).isOK();
-        assertThat(new File(targetDir + File.separator + pageName + "-1.0.0-SNAPSHOT.zip")).exists();
-        assertThat(new File(targetDir + File.separator + pageName2 + "-1.0.0-SNAPSHOT.zip")).exists();
+        assertThat(new File(targetDir + File.separator + pageName + "-0.0.1.zip")).exists();
+        assertThat(new File(targetDir + File.separator + pageName2 + "-0.0.1.zip")).exists();
     }
 
 }

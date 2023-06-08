@@ -10,8 +10,8 @@ package org.bonitasoft.studio.maven.ui.wizard;
 
 import org.bonitasoft.studio.common.ui.IDisplayable;
 import org.bonitasoft.studio.common.ui.jface.FileActionDialog;
-import org.bonitasoft.studio.maven.CustomPageProjectFileStore;
-import org.bonitasoft.studio.maven.CustomPageProjectRepositoryStore;
+import org.bonitasoft.studio.maven.ExtensionProjectFileStore;
+import org.bonitasoft.studio.maven.ExtensionRepositoryStore;
 import org.bonitasoft.studio.maven.i18n.Messages;
 import org.bonitasoft.studio.maven.ui.WidgetFactory;
 import org.bonitasoft.studio.maven.ui.handler.CustomPageProjectSelectionProvider;
@@ -24,18 +24,18 @@ import org.eclipse.jface.wizard.Wizard;
 
 public abstract class DeleteCustomPageProjectWizard extends Wizard {
 
-    private final IObservableValue<CustomPageProjectFileStore> fileStoreObservable;
-    private final CustomPageProjectRepositoryStore<? extends CustomPageProjectFileStore> repositoryStore;
+    private final IObservableValue<ExtensionProjectFileStore> fileStoreObservable;
+    private final ExtensionRepositoryStore repositoryStore;
     private final WidgetFactory widgetFactory;
 
     public DeleteCustomPageProjectWizard(
-            final CustomPageProjectRepositoryStore<? extends CustomPageProjectFileStore> repositoryStore,
+            final ExtensionRepositoryStore repositoryStore,
             final WidgetFactory widgetFactory,
             final CustomPageProjectSelectionProvider selectionProvider) {
         this.repositoryStore = repositoryStore;
         this.widgetFactory = widgetFactory;
-        fileStoreObservable = new WritableValue<CustomPageProjectFileStore>(selectionProvider.getSelection(),
-                CustomPageProjectFileStore.class);
+        fileStoreObservable = new WritableValue<ExtensionProjectFileStore>(selectionProvider.getSelection(),
+                ExtensionProjectFileStore.class);
         setDefaultPageImageDescriptor(Pics.getWizban());
         setWindowTitle(Messages.delete);
     }
@@ -49,8 +49,8 @@ public abstract class DeleteCustomPageProjectWizard extends Wizard {
 
             @Override
             public boolean select(Viewer viewer, Object parentElement, Object element) {
-                return element instanceof CustomPageProjectFileStore
-                        && !((CustomPageProjectFileStore) element).isReadOnly();
+                return element instanceof ExtensionProjectFileStore
+                        && !((ExtensionProjectFileStore) element).isReadOnly();
             }
         });
         selectionPage.setTitle(getSelectionPageTitle());
@@ -64,7 +64,7 @@ public abstract class DeleteCustomPageProjectWizard extends Wizard {
 
     @Override
     public boolean performFinish() {
-        final CustomPageProjectFileStore fileStore = fileStoreObservable.getValue();
+        final ExtensionProjectFileStore fileStore = fileStoreObservable.getValue();
         if (FileActionDialog.confirmDeletionQuestion(IDisplayable.toDisplayName(fileStore).orElse(""))) {
             fileStore.delete();
             return true;

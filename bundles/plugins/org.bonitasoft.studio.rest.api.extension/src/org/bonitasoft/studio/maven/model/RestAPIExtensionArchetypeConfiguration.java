@@ -13,8 +13,7 @@ import java.util.List;
 import java.util.Properties;
 
 import org.bonitasoft.studio.common.ProductVersion;
-import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
-import org.bonitasoft.studio.common.repository.preferences.RepositoryPreferenceConstant;
+import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
 import org.bonitasoft.studio.maven.i18n.Messages;
 
 import com.google.common.base.Joiner;
@@ -42,15 +41,16 @@ public class RestAPIExtensionArchetypeConfiguration extends CustomPageArchetypeC
 
     private String bdmVersion;
 
-    public static RestAPIExtensionArchetypeConfiguration defaultArchetypeConfiguration(boolean addBdmDependency) {
+    public static RestAPIExtensionArchetypeConfiguration defaultArchetypeConfiguration(ProjectMetadata projectMetadata, boolean addBdmDependency) {
         final RestAPIExtensionArchetypeConfiguration configuration = new RestAPIExtensionArchetypeConfiguration();
+        configuration.setJavaPackage(projectMetadata.getGroupId()+".rest.api");
         configuration.setBonitaVersion(ProductVersion.BONITA_RUNTIME_VERSION);
         configuration.setPageName("resourceNameRestAPI");
         configuration.setPathTemplate("resourceName");
         configuration.setPageDisplayName(Messages.defaultAPIDisplayName);
         configuration.setPageDescription(Messages.defaultAPIDisplayDescription);
-        configuration.setGroupId(defaultGroupId() + ".rest.api");
-        configuration.setVersion("1.0.0-SNAPSHOT");
+        configuration.setGroupId(projectMetadata.getGroupId());
+        configuration.setVersion(projectMetadata.getVersion());
         configuration.setLanguage(GROOVY_LANGUAGE);
         configuration.setHttpVerb("GET");
         configuration.getPermissions().add("myPermission");
@@ -62,16 +62,8 @@ public class RestAPIExtensionArchetypeConfiguration extends CustomPageArchetypeC
         return configuration;
     }
 
-    private static String defaultGroupId() {
-        if(CommonRepositoryPlugin.getDefault() == null) {
-            return RepositoryPreferenceConstant.DEFAULT_GROUPID_VALUE;
-        }
-        return CommonRepositoryPlugin.getDefault().getPreferenceStore()
-                .getString(RepositoryPreferenceConstant.DEFAULT_GROUPID);
-    }
-
-    public static RestAPIExtensionArchetypeConfiguration defaultArchetypeConfiguration() {
-        return defaultArchetypeConfiguration(false);
+    public static RestAPIExtensionArchetypeConfiguration defaultArchetypeConfiguration(ProjectMetadata projectMetadata) {
+        return defaultArchetypeConfiguration(projectMetadata, false);
     }
 
     public void setBonitaVersion(final String bonitaVersion) {

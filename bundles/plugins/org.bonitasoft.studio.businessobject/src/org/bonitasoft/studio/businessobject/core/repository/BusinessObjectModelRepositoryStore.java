@@ -44,7 +44,7 @@ import org.bonitasoft.studio.common.repository.IBonitaProjectListener;
 import org.bonitasoft.studio.common.repository.ImportArchiveData;
 import org.bonitasoft.studio.common.repository.core.BonitaProject;
 import org.bonitasoft.studio.common.repository.core.maven.plugin.CreateBdmModulePlugin;
-import org.bonitasoft.studio.common.repository.core.maven.plugin.ImportBdmModuleOperation;
+import org.bonitasoft.studio.common.repository.core.maven.plugin.ImportMavenModuleOperation;
 import org.bonitasoft.studio.common.repository.core.migration.report.MigrationReport;
 import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
@@ -214,7 +214,7 @@ public class BusinessObjectModelRepositoryStore<F extends AbstractBDMFileStore<?
         var parentProjectPath = parentProject.getLocation().toFile().toPath();
         var plugin = new CreateBdmModulePlugin(parentProjectPath, project.getId());
         plugin.execute(new NullProgressMonitor());
-        var importBdmModules = new ImportBdmModuleOperation(parentProjectPath.resolve(STORE_NAME).toFile());
+        var importBdmModules = new ImportMavenModuleOperation(parentProjectPath.resolve(STORE_NAME).toFile());
         importBdmModules.run(monitor);
         project.getBdmParentProject().refreshLocal(IResource.DEPTH_INFINITE, monitor);
         project.getBdmModelProject().build(IncrementalProjectBuilder.INCREMENTAL_BUILD, monitor);

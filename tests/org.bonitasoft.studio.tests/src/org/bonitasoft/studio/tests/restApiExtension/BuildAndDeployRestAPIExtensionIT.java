@@ -26,15 +26,14 @@ import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.engine.http.HttpClientFactory;
 import org.bonitasoft.studio.engine.operation.GetApiSessionOperation;
+import org.bonitasoft.studio.maven.ExtensionRepositoryStore;
 import org.bonitasoft.studio.maven.model.RestAPIExtensionArchetypeConfiguration;
 import org.bonitasoft.studio.maven.operation.BuildCustomPageOperation;
 import org.bonitasoft.studio.maven.operation.DeployCustomPageProjectOperation;
 import org.bonitasoft.studio.rest.api.extension.core.maven.CreateRestAPIExtensionProjectOperation;
-import org.bonitasoft.studio.rest.api.extension.core.repository.RestAPIExtensionDescriptor;
-import org.bonitasoft.studio.rest.api.extension.core.repository.RestAPIExtensionFileStore;
-import org.bonitasoft.studio.rest.api.extension.core.repository.RestAPIExtensionRepositoryStore;
 import org.bonitasoft.studio.tests.util.InitialProjectRule;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.m2e.core.MavenPlugin;
@@ -56,8 +55,8 @@ public class BuildAndDeployRestAPIExtensionIT {
 
     @Before
     public void setUp() throws Exception {
-        final RestAPIExtensionRepositoryStore store = RepositoryManager.getInstance()
-                .getRepositoryStore(RestAPIExtensionRepositoryStore.class);
+        final ExtensionRepositoryStore store = RepositoryManager.getInstance()
+                .getRepositoryStore(ExtensionRepositoryStore.class);
         if (store.getChild(ARTIFACT_ID, true) == null) {
             newRestAPIExtensionProject(ARTIFACT_ID, ARTIFACT_ID);
         }
@@ -65,14 +64,15 @@ public class BuildAndDeployRestAPIExtensionIT {
 
     private void newRestAPIExtensionProject(final String artifactId, final String pathTemplate)
             throws CoreException, OperationCanceledException, InterruptedException, InvocationTargetException {
+        var metadata = RepositoryManager.getInstance().getCurrentProject().orElseThrow().getProjectMetadata(new NullProgressMonitor());
         final RestAPIExtensionArchetypeConfiguration defaultArchetypeConfiguration = RestAPIExtensionArchetypeConfiguration
-                .defaultArchetypeConfiguration();
+                .defaultArchetypeConfiguration(metadata);
         defaultArchetypeConfiguration.setPageName(artifactId);
         defaultArchetypeConfiguration.setPageDisplayName("My test Rest API");
         defaultArchetypeConfiguration.setPathTemplate(pathTemplate);
         defaultArchetypeConfiguration.setBonitaVersion(ProductVersion.BONITA_RUNTIME_VERSION);
         final CreateRestAPIExtensionProjectOperation operation = new CreateRestAPIExtensionProjectOperation(
-                RepositoryManager.getInstance().getRepositoryStore(RestAPIExtensionRepositoryStore.class),
+                RepositoryManager.getInstance().getRepositoryStore(ExtensionRepositoryStore.class),
                 MavenPlugin.getProjectConfigurationManager(),
                 new ProjectImportConfiguration(),
                 defaultArchetypeConfiguration);
@@ -87,8 +87,8 @@ public class BuildAndDeployRestAPIExtensionIT {
 
     @Test
     public void should_build_rest_api_extension_archive_in_target_folder() throws Exception {
-        final RestAPIExtensionRepositoryStore store = RepositoryManager.getInstance()
-                .getRepositoryStore(RestAPIExtensionRepositoryStore.class);
+        var store = RepositoryManager.getInstance()
+                .getRepositoryStore(ExtensionRepositoryStore.class);
         final String targetAbsoluteFilePath = tmp.newFolder().getAbsolutePath();
         final File exportedFile = new File(targetAbsoluteFilePath + File.separator + ARTIFACT_ID + ".zip");
 
@@ -101,7 +101,7 @@ public class BuildAndDeployRestAPIExtensionIT {
 
         assertThat(exportedFile).exists();
         try (final ZipFile zipFile = new ZipFile(exportedFile);) {
-            assertThat(zipFile.getEntry("lib/myRestApiTestExportRuntime-1.0.0-SNAPSHOT.jar")).isNotNull();
+            assertThat(zipFile.getEntry("lib/myRestApiTestExportRuntime-0.0.1.jar")).isNotNull();
             assertThat(zipFile.getEntry("configuration.properties")).isNotNull();
             assertThat(zipFile.getEntry("page.properties")).isNotNull();
         }
@@ -109,10 +109,10 @@ public class BuildAndDeployRestAPIExtensionIT {
 
     @Test
     public void should_deploy_rest_api_extension_in_portal() throws Exception {
-        final RestAPIExtensionRepositoryStore store = RepositoryManager.getInstance()
-                .getRepositoryStore(RestAPIExtensionRepositoryStore.class);
+        var store = RepositoryManager.getInstance()
+                .getRepositoryStore(ExtensionRepositoryStore.class);
 
-        final RestAPIExtensionFileStore fileStore = store.getChild(ARTIFACT_ID, true);
+       var fileStore = store.getChild(ARTIFACT_ID, true);
         BuildCustomPageOperation operation = store.getChild(ARTIFACT_ID, true).newBuildOperation();
         PlatformUI.getWorkbench().getProgressService().run(true, false, operation.asWorkspaceModifyOperation());
 
@@ -130,7 +130,7 @@ public class BuildAndDeployRestAPIExtensionIT {
             sessionOperation.logout();
         }
 
-        final RestAPIExtensionDescriptor content = fileStore.getContent();
+        var content = fileStore.getContent();
         final Properties pageProperties = content.getPageProperties();
         pageProperties.setProperty("displayName", "My updated test Rest API");
         content.savePageProperties(pageProperties);
@@ -157,10 +157,10 @@ public class BuildAndDeployRestAPIExtensionIT {
     @Test
     public void should_fail_when_deploying_a_rest_api_extension_with_the_same_pathTemplate_as_an_existing_one()
             throws Exception {
-        final RestAPIExtensionRepositoryStore store = RepositoryManager.getInstance()
-                .getRepositoryStore(RestAPIExtensionRepositoryStore.class);
+        var store = RepositoryManager.getInstance()
+                .getRepositoryStore(ExtensionRepositoryStore.class);
 
-        RestAPIExtensionFileStore fileStore = store.getChild(ARTIFACT_ID, true);
+        var fileStore = store.getChild(ARTIFACT_ID, true);
         BuildCustomPageOperation operation = store.getChild(ARTIFACT_ID, true).newBuildOperation();
         PlatformUI.getWorkbench().getProgressService().run(true, false, operation.asWorkspaceModifyOperation());
 

@@ -27,6 +27,7 @@ import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.engine.http.HttpClientFactory;
 import org.bonitasoft.studio.engine.operation.GetApiSessionOperation;
+import org.bonitasoft.studio.maven.ExtensionRepositoryStore;
 import org.bonitasoft.studio.maven.ImportProjectException;
 import org.bonitasoft.studio.maven.operation.DeployCustomPageProjectOperation;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -38,7 +39,7 @@ public class DependencyRestAPIExtensionFileStore extends RestAPIExtensionFileSto
     private RestAPIExtension extension;
 
     public DependencyRestAPIExtensionFileStore(RestAPIExtension extension,
-            RestAPIExtensionRepositoryStore parentStore) {
+            ExtensionRepositoryStore parentStore) {
         super(new File(extension.getArtifact().getFile()).getName(), parentStore);
         this.extension = extension;
     }
@@ -63,6 +64,11 @@ public class DependencyRestAPIExtensionFileStore extends RestAPIExtensionFileSto
         return getArchiveFile().getName();
     }
 
+    @Override
+    public String getContentType() {
+        return ExtensionRepositoryStore.API_EXTENSION_CONTENT_TYPE;
+    }
+    
     @Override
     public boolean isReadOnly() {
         return true;

@@ -2,12 +2,14 @@ package org.bonitasoft.studio.importer.bos.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
 import java.util.stream.Stream;
 import java.util.zip.ZipFile;
 
 import org.bonitasoft.studio.common.model.ImportAction;
 import org.bonitasoft.studio.common.repository.ImportArchiveData;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
+import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 
@@ -54,6 +56,21 @@ public class ImportFolderFileStoreModel extends AbstractFolderModel implements I
     @Override
     public Stream<ImportableUnit> importableUnits() {
         return Stream.empty();
+    }
+
+    @Override
+    public <T> T getAdapter(Class<T> adapter) {
+        if (adapter.isAssignableFrom(IRepositoryStore.class)) {
+            if (getParent().isPresent()) {
+                var folderModel = getParent().get();
+                if (folderModel instanceof LegacyRestAPIExtensionsImportStoreModel
+                        || folderModel instanceof LegacyThemesImportStoreModel) {
+                    return null;
+                }
+            }
+            return (T) getParentRepositoryStore().orElse(null);
+        }
+        return super.getAdapter(adapter);
     }
 
 }

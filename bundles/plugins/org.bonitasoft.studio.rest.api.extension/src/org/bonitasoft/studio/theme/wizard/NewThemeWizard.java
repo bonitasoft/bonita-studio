@@ -20,7 +20,9 @@ import java.lang.reflect.InvocationTargetException;
 
 import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
 import org.bonitasoft.studio.common.ui.jface.BonitaErrorDialog;
+import org.bonitasoft.studio.maven.ExtensionRepositoryStore;
 import org.bonitasoft.studio.maven.MavenProjectConfiguration;
 import org.bonitasoft.studio.maven.i18n.Messages;
 import org.bonitasoft.studio.maven.model.ThemeArchetypeConfiguration;
@@ -30,7 +32,6 @@ import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.rest.api.extension.RestAPIExtensionActivator;
 import org.bonitasoft.studio.theme.CreateThemeProjectOperation;
 import org.bonitasoft.studio.theme.ThemeFileStore;
-import org.bonitasoft.studio.theme.ThemeRepositoryStore;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.wizard.Wizard;
@@ -39,20 +40,21 @@ import org.eclipse.m2e.core.project.IProjectConfigurationManager;
 public class NewThemeWizard extends Wizard {
     
     private static final String THEME_DOC_URL = "http://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=689&bos_redirect_product=bos&bos_redirect_major_version=%s&bos_redirect_minor_version=";
-    private final ThemeRepositoryStore repositoryStore;
+    private final ExtensionRepositoryStore repositoryStore;
     private final ThemeArchetypeConfiguration configuration;
     private final IProjectConfigurationManager projectConfigurationManager;
     private final WidgetFactory widgetFactory;
     private final MavenProjectConfiguration projectConfiguration;
     private final IWorkspace workspace;
 
-    public NewThemeWizard(ThemeRepositoryStore repositoryStore,
+    public NewThemeWizard(ProjectMetadata projectMetadata,
+            ExtensionRepositoryStore repositoryStore,
             IProjectConfigurationManager projectConfigurationManager,
             MavenProjectConfiguration projectConfiguration,
             IWorkspace workspace,
             WidgetFactory widgetFactory) {
         this.repositoryStore = repositoryStore;
-        this.configuration = ThemeArchetypeConfiguration.defaultArchetypeConfiguration();
+        this.configuration = ThemeArchetypeConfiguration.defaultArchetypeConfiguration(projectMetadata);
         this.projectConfigurationManager = projectConfigurationManager;
         this.widgetFactory = widgetFactory;
         this.projectConfiguration = projectConfiguration;
@@ -105,6 +107,6 @@ public class NewThemeWizard extends Wizard {
     }
 
     public ThemeFileStore getNewFileStore() {
-        return repositoryStore.getChild(configuration.getPageName(), true);
+        return (ThemeFileStore) repositoryStore.getChild(configuration.getPageName(), true);
     }
 }

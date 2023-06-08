@@ -18,26 +18,22 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.bonitasoft.studio.maven.CustomPageMavenProjectDescriptor;
+import org.bonitasoft.studio.maven.ExtensionProjectDescriptor;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.Path;
 
-public class ThemeExtensionDescriptor extends CustomPageMavenProjectDescriptor {
+public class ThemeExtensionDescriptor extends ExtensionProjectDescriptor {
 
     private static final String MAIN_SCSS_PATH = "src/scss/main.scss";
     private static final String BONITA_VARIABLES_SCSS_PATH = "src/scss/_bonita_variables.scss";
 
     public ThemeExtensionDescriptor() {
+        super("page.properties");
     }
     
     public ThemeExtensionDescriptor(IProject project) {
-        super(project);
-    }
-
-    @Override
-    protected String getPagePropertyPath() {
-        return "page.properties";
+        super(project, "page.properties");
     }
 
     @Override

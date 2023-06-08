@@ -10,14 +10,12 @@ package org.bonitasoft.studio.theme.handler;
 
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.engine.http.HttpClientFactory;
-import org.bonitasoft.studio.maven.CustomPageProjectFileStore;
-import org.bonitasoft.studio.maven.CustomPageProjectRepositoryStore;
+import org.bonitasoft.studio.maven.ExtensionRepositoryStore;
 import org.bonitasoft.studio.maven.i18n.Messages;
 import org.bonitasoft.studio.maven.ui.WidgetFactory;
 import org.bonitasoft.studio.maven.ui.handler.CustomPageProjectSelectionProvider;
 import org.bonitasoft.studio.maven.ui.handler.OpenWizardDialogAbstractHandler;
 import org.bonitasoft.studio.maven.ui.wizard.DeleteCustomPageProjectWizard;
-import org.bonitasoft.studio.theme.ThemeRepositoryStore;
 import org.eclipse.jface.wizard.IWizard;
 
 public class DeleteThemeHandler extends OpenWizardDialogAbstractHandler {
@@ -36,15 +34,15 @@ public class DeleteThemeHandler extends OpenWizardDialogAbstractHandler {
     }
 
     @Override
-    protected CustomPageProjectRepositoryStore<? extends CustomPageProjectFileStore> getStore(
+    protected ExtensionRepositoryStore getStore(
             RepositoryAccessor repositoryAccessor) {
-        return repositoryAccessor.getRepositoryStore(ThemeRepositoryStore.class);
+        return repositoryAccessor.getRepositoryStore(ExtensionRepositoryStore.class);
     }
     
     private class DeleteThemeWizard extends DeleteCustomPageProjectWizard {
 
         public DeleteThemeWizard(
-                CustomPageProjectRepositoryStore<? extends CustomPageProjectFileStore> repositoryStore,
+                ExtensionRepositoryStore repositoryStore,
                 WidgetFactory widgetFactory, CustomPageProjectSelectionProvider selectionProvider) {
             super(repositoryStore, widgetFactory, selectionProvider);
         }
