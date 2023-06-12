@@ -24,8 +24,8 @@
         <maven-dependency-plugin.version>3.6.0</maven-dependency-plugin.version>
         <maven-assembly-plugin.version>3.6.0</maven-assembly-plugin.version>
         <maven-javadoc-plugin.version>3.5.0</maven-javadoc-plugin.version>
-        <maven-surefire-plugin.version>3.1.0</maven-surefire-plugin.version>
-        <maven-failsafe-plugin.version>3.5.0</maven-failsafe-plugin.version>
+        <maven-surefire-plugin.version>3.1.2</maven-surefire-plugin.version>
+        <maven-failsafe-plugin.version>3.1.2</maven-failsafe-plugin.version>
     </properties>
     
      <!-- 
@@ -209,6 +209,15 @@
             <plugin>
               <artifactId>maven-resources-plugin</artifactId>
               <version>${maven-resources-plugin.version}</version>
+            </plugin>
+             <plugin>
+              <artifactId>maven-javadoc-plugin</artifactId>
+            </plugin>
+            <plugin>
+              <artifactId>maven-surefire-plugin</artifactId>
+            </plugin>
+             <plugin>
+              <artifactId>maven-failsafe-plugin</artifactId>
             </plugin>
             <plugin>
               <artifactId>maven-deploy-plugin</artifactId>
