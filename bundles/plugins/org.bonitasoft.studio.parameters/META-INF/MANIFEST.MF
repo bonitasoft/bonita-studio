@@ -1,0 +1,35 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Localization: plugin
+Bundle-Name: Parameters Plugin
+Bundle-SymbolicName: org.bonitasoft.studio.parameters;singleton:=true
+Bundle-Version: 9.0.0.qualifier
+Bundle-Activator: org.bonitasoft.studio.parameters.ParameterPlugin
+Bundle-Vendor: BonitaSoft S.A.
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.bonitasoft.studio.model,
+ org.bonitasoft.studio.expression.editor,
+ org.eclipse.gmf.runtime.diagram.ui.properties,
+ org.bonitasoft.studio.pics,
+ org.bonitasoft.studio.common,
+ org.eclipse.core.databinding,
+ org.eclipse.emf.databinding,
+ org.eclipse.emf.databinding.edit,
+ org.eclipse.jface.databinding,
+ org.bonitasoft.studio.configuration,
+ org.bonitasoft.studio.common.repository,
+ org.bonitasoft.studio.diagram,
+ org.eclipse.jdt.core,
+ org.eclipse.core.databinding.property,
+ org.eclipse.jface,
+ org.bonitasoft.studio.diagram.custom,
+ org.bonitasoft.studio.groovy.ui,
+ org.bonitasoft.studio.refactoring,
+ org.eclipse.jdt.groovy.core,
+ org.bonitasoft.studio.ui,
+ org.bonitasoft.studio.preferences
+Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-ActivationPolicy: lazy
+Export-Package: org.bonitasoft.studio.parameters.action,org.bonitasoft
+ .studio.parameters.i18n,org.bonitasoft.studio.parameters.wizard.page

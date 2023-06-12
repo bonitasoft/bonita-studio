@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<!-- Generator: Adobe Illustrator 13.0.2, SVG Export Plug-In . SVG Version: 6.00 Build 14948)  -->
+<svg xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" version="1.1" id="Calque_1" x="0px" y="0px" width="140.159px" height="34.871px" viewBox="0 0 140.159 34.871" enable-background="new 0 0 140.159 34.871" xml:space="preserve" sodipodi:version="0.32" inkscape:version="0.46" sodipodi:docname="checkbox-group.svgz" inkscape:output_extension="org.inkscape.output.svgz.inkscape"><metadata id="metadata273"><rdf:RDF><cc:Work rdf:about=""><dc:format>image/svg+xml</dc:format><dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/></cc:Work></rdf:RDF></metadata><defs id="defs271"><inkscape:perspective sodipodi:type="inkscape:persp3d" inkscape:vp_x="0 : 17.435499 : 1" inkscape:vp_y="0 : 1000 : 0" inkscape:vp_z="140.159 : 17.435499 : 1" inkscape:persp3d-origin="70.079498 : 11.623666 : 1" id="perspective275"/></defs><sodipodi:namedview inkscape:window-height="480" inkscape:window-width="640" inkscape:pageshadow="2" inkscape:pageopacity="0.0" guidetolerance="10.0" gridtolerance="10.0" objecttolerance="10.0" borderopacity="1.0" bordercolor="#666666" pagecolor="#ffffff" id="base" showgrid="false" inkscape:zoom="3.8955758" inkscape:cx="69.228551" inkscape:cy="17.435499" inkscape:current-layer="Calque_1"/>
+
+<g id="g236">
+	<linearGradient id="SVGID_1_" gradientUnits="userSpaceOnUse" x1="7.4976" y1="24.7061" x2="7.4976" y2="-12.5111">
+		<stop offset="0" style="stop-color:#FFFFFF" id="stop239"/>
+		<stop offset="1" style="stop-color:#B4B2B4" id="stop241"/>
+	</linearGradient>
+	<polygon fill="url(#SVGID_1_)" points="14.496,14.495 0.499,14.495 0.499,0.499 14.496,0.499 14.496,14.495  " id="polygon243"/>
+	<g id="g245">
+		<path fill="#87919B" d="M14.995,0v14.995H0V0H14.995 M13.995,1H1v12.995h12.995V1L13.995,1z" id="path247"/>
+	</g>
+</g>
+<path fill="#646D76" d="M6.229,8.602L3.873,5.872c0,0-0.29,0.875-0.75,1.688c0,0,1.73,1.292,3.125,3.25c0,0,2.293-3,5.625-6.125  c0,0-0.728-0.625-1.385-1.531C10.488,3.153,8.062,6.685,6.229,8.602z" id="path249"/>
+<g id="g251">
+	<linearGradient id="SVGID_2_" gradientUnits="userSpaceOnUse" x1="7.4976" y1="44.5791" x2="7.4976" y2="7.3697">
+		<stop offset="0" style="stop-color:#FFFFFF" id="stop254"/>
+		<stop offset="1" style="stop-color:#B4B2B4" id="stop256"/>
+	</linearGradient>
+	<polygon fill="url(#SVGID_2_)" points="14.496,34.371 0.5,34.371 0.5,20.378 14.496,20.378 14.496,34.371  " id="polygon258"/>
+	<g id="g260">
+		<path fill="#87919B" d="M14.995,19.876v14.995H0V19.876H14.995 M13.995,20.876H1v12.995h12.995V20.876L13.995,20.876z" id="path262"/>
+	</g>
+</g>
+<path fill="#646D76" d="M6.228,28.478l-2.355-2.729c0,0-0.29,0.875-0.75,1.688c0,0,1.73,1.292,3.125,3.25c0,0,2.293-3,5.625-6.125  c0,0-0.728-0.625-1.385-1.531C10.487,23.029,8.061,26.561,6.228,28.478z" id="path264"/>
+<rect x="22" y="7.5609999" width="95.000008" height="1" id="rect266" style="fill:#646d76"/>
+<rect x="22" y="27.206999" width="95.000008" height="1" id="rect268" style="fill:#646d76"/>
+</svg>

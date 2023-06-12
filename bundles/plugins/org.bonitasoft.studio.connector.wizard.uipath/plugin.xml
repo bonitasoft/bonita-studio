@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.bonitasoft.studio.connectors.connectorWizard">
+      <connectorWizard
+            DefinitionId="uipath-add-queueItem"
+            priority="1"
+            useDefaultGeneratedPages="false"
+            useDefaultOutputPage="true">
+         <configurationPage
+               page="org.bonitasoft.studio.connector.wizard.uipath.page.UiPathAuthenticationWizardPage">
+         </configurationPage>
+         <configurationPage
+               page="org.bonitasoft.studio.connector.model.definition.wizard.GeneratedConnectorWizardPage">
+         </configurationPage>
+         <configurationPage
+               page="org.bonitasoft.studio.connector.model.definition.wizard.GeneratedConnectorWizardPage">
+         </configurationPage>
+      </connectorWizard>
+      <connectorWizard
+            DefinitionId="uipath-getjob"
+            priority="1"
+            useDefaultGeneratedPages="false"
+            useDefaultOutputPage="true">
+         <configurationPage
+               page="org.bonitasoft.studio.connector.wizard.uipath.page.UiPathAuthenticationWizardPage">
+         </configurationPage>
+         <configurationPage
+               page="org.bonitasoft.studio.connector.model.definition.wizard.GeneratedConnectorWizardPage">
+         </configurationPage>
+      </connectorWizard>
+      <connectorWizard
+            DefinitionId="uipath-startjob"
+            priority="1"
+            useDefaultGeneratedPages="false"
+            useDefaultOutputPage="true">
+         <configurationPage
+               page="org.bonitasoft.studio.connector.wizard.uipath.page.UiPathAuthenticationWizardPage">
+         </configurationPage>
+         <configurationPage
+               page="org.bonitasoft.studio.connector.wizard.uipath.page.UIPathStartJobConfigurationPage">
+         </configurationPage>
+         <configurationPage
+               page="org.bonitasoft.studio.connector.model.definition.wizard.GeneratedConnectorWizardPage">
+         </configurationPage>
+      </connectorWizard>
+   </extension>
+
+</plugin>
