@@ -37,10 +37,10 @@ public interface DefaultPluginVersions {
     static final String MAVEN_ASSEMBLY_PLUGIN_VERSION = "3.6.0";
     
     static final String MAVEN_SUREFIRE_PLUGIN = "maven-surefire-plugin";
-    static final String MAVEN_SUREFIRE_PLUGIN_VERSION = "3.1.0";
+    static final String MAVEN_SUREFIRE_PLUGIN_VERSION = "3.1.2";
     
     static final String MAVEN_FAILSAFE_PLUGIN = "maven-failsafe-plugin";
-    static final String MAVEN_FAILSAFE_PLUGIN_VERSION = "3.1.0";
+    static final String MAVEN_FAILSAFE_PLUGIN_VERSION = "3.1.2";
     
     static final String MAVEN_SHADE_PLUGIN = "maven-shade-plugin";
     static final String MAVEN_SHADE_PLUGIN_VERSION = "3.4.1";
