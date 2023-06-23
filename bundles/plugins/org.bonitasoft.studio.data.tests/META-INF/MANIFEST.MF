@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Data Tests Fragment
 Bundle-SymbolicName: org.bonitasoft.studio.data.tests
-Bundle-Version: 9.0.0.qualifier
+Bundle-Version: 9.0.0.W25
 Bundle-Vendor: Bonitasoft S.A.
 Fragment-Host: org.bonitasoft.studio.data;bundle-version="7.16.0"
 Automatic-Module-Name: org.bonitasoft.studio.data.tests
