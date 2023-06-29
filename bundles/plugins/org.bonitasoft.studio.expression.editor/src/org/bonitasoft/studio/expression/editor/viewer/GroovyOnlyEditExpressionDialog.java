@@ -35,7 +35,8 @@ public class GroovyOnlyEditExpressionDialog extends EditExpressionDialog {
             final EditingDomain domain, final ViewerFilter[] viewerTypeFilters,
             final ExpressionViewer expressionViewer,
             ExpressionNameResolver expressionNameResolver) {
-        super(parentShell, isPassword, inputExpression, context, domain, viewerTypeFilters, expressionViewer, expressionNameResolver);
+        super(parentShell, isPassword, inputExpression, context, domain, viewerTypeFilters, expressionViewer,
+                expressionNameResolver);
         this.inputExpression.setType(ExpressionConstants.SCRIPT_TYPE);
     }
 
@@ -49,8 +50,7 @@ public class GroovyOnlyEditExpressionDialog extends EditExpressionDialog {
     }
 
     @Override
-    public void create() {
-        super.create();
+    protected void shellActivated() {
         showContent(null, ExpressionConstants.SCRIPT_TYPE);
         getShell().layout(true, true);
     }

@@ -19,7 +19,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
@@ -44,8 +43,8 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.emf.edit.domain.EditingDomain;
+import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.dialogs.TrayDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.Viewer;
@@ -61,7 +60,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.Workbench;
 
-public class EditExpressionDialog extends TrayDialog {
+public class EditExpressionDialog extends Dialog {
 
     private static final String EXPRESSION_TYPE_KEY = "expression.type";
     private static final int HEIGHT = 700;
@@ -82,6 +81,7 @@ public class EditExpressionDialog extends TrayDialog {
     private Map<String, Expression> lastExpressionByType = new HashMap<>();
     private IExpressionEditor currentExpressionEditor;
     private NativeTabFolderWidget tabFolder;
+    private String defaultExpressionType;
 
     protected EditExpressionDialog(final Shell parentShell,
             final boolean isPassword,
@@ -101,7 +101,7 @@ public class EditExpressionDialog extends TrayDialog {
         expressionUpdater = new EMFModelUpdater<Expression>().from(this.inputExpression);
         boolean shouldClearName = shouldClearName();
         this.inputExpression = ExpressionEditionAdapter.adapt(expressionUpdater.getWorkingCopy());
-        if(shouldClearName) {
+        if (shouldClearName) {
             this.inputExpression.setName(null);
         }
         this.inputExpression.setName(expressionNameResolver.getName(this.inputExpression));
@@ -148,6 +148,28 @@ public class EditExpressionDialog extends TrayDialog {
     protected void configureShell(final Shell newShell) {
         super.configureShell(newShell);
         newShell.setText(Messages.editExpression);
+
+        /*
+         * Delay tab selection to ensure the shell is active before attaching the eclipse context for the groovy script editor
+         */
+        newShell.addListener(SWT.Show, e ->  EditExpressionDialog.this.shellActivated());
+    }
+    
+    protected void shellActivated() {
+        if (tabFolder != null 
+                && tabFolder.getTabFolder() != null 
+                && !tabFolder.getTabFolder().isDisposed()) {
+            tabFolder.getItems().stream()
+                    .filter(item -> !item.getItem().isDisposed() && defaultExpressionType.equals(item.getItem().getData(EXPRESSION_TYPE_KEY)))
+                    .findFirst()
+                    .ifPresent(item -> {
+                        if(!item.getItem().isDisposed()) {
+                            showContent(item, defaultExpressionType);
+                            updateOKButton();
+                            tabFolder.setSelection(item);
+                        }
+                    });
+        }
     }
 
     @Override
@@ -186,13 +208,13 @@ public class EditExpressionDialog extends TrayDialog {
         });
         createContentComposite(tabFolder.getTabFolder());
         ExpressionTypeContentProvider expressionTypeContentProvider = new ExpressionTypeContentProvider();
+        defaultExpressionType = defaultExpressionType();
         Stream.of(expressionTypeContentProvider.getElements(expressionViewer.getInput()))
                 .filter(provider -> Stream.of(viewerTypeFilters).allMatch(f -> f.select(null, null, provider)))
                 .filter(provider -> filterEditor().select(null, null, provider))
                 .map(IExpressionProvider.class::cast)
                 .sorted((e1, e2) -> e1.getTypeLabel().compareTo(e2.getTypeLabel()))
-                .map(provider -> createTabItem(tabFolder, provider, inputExpression))
-                .collect(Collectors.toList());
+                .forEach(provider -> createTabItem(tabFolder, provider, inputExpression));
         return tabFolder.getTabFolder();
     }
 
@@ -215,17 +237,14 @@ public class EditExpressionDialog extends TrayDialog {
         return expressionType;
     }
 
-    private NativeTabItemWidget createTabItem(NativeTabFolderWidget folder, IExpressionProvider provider, Expression input) {
+    private NativeTabItemWidget createTabItem(NativeTabFolderWidget folder, IExpressionProvider provider,
+            Expression input) {
         NativeTabItemWidget nativeItem = new NativeTabItemWidget.Builder().withText(provider.getTypeLabel())
                 .createIn(folder);
         nativeItem.getItem().setData(EXPRESSION_TYPE_KEY, provider.getExpressionType());
 
         IExpressionEditor expressionEditor = provider.getExpressionEditor(input, context);
         nativeItem.getItem().setData("editor", expressionEditor);
-        String defaultExpressionType = defaultExpressionType();
-        if (defaultExpressionType.equals(provider.getExpressionType())) {
-            folder.setSelection(nativeItem);
-        }
         return nativeItem;
     }
 
@@ -302,7 +321,11 @@ public class EditExpressionDialog extends TrayDialog {
             });
             if (item != null) {
                 item.setControl(contentComposite);
-                contentComposite.getDisplay().asyncExec(() -> contentComposite.layout(true, true) );
+                contentComposite.getDisplay().asyncExec(() -> {
+                    if(!contentComposite.isDisposed()) {
+                        contentComposite.layout(true, true);
+                    }
+                });
             }
             DialogSupport.create(this, dataBindingContext);
         }
@@ -344,14 +367,14 @@ public class EditExpressionDialog extends TrayDialog {
         }
         return false;
     }
-    
+
     private boolean hasExpressionChanged() {
         return expressionUpdater.hasChanged();
     }
 
     @Override
     protected void cancelPressed() {
-        if(canHandleShellCloseEvent()) {
+        if (canHandleShellCloseEvent()) {
             super.cancelPressed();
         }
     }
