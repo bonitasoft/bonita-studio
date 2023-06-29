@@ -4,6 +4,9 @@
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry exported="true" kind="lib" path="lib/bonita-client.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/bonita-common.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/bonita-form-mapping-model.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/bonita-process-definition-model.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/bonita-business-archive.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/commons-lang3.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

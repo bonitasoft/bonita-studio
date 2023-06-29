@@ -6,8 +6,9 @@ Bundle-ClassPath: .,lib/bonita-client.jar,lib/httpclient.jar,lib/httpcor
  ax.activation-api.jar,lib/jaxb-runtime.jar,lib/txw2.jar,lib/istack-comm
  ons-runtime.jar,lib/stax-ex.jar,lib/FastInfoset.jar,lib/bonita-common.j
  ar,lib/commons-io.jar,lib/jackson-databind.jar,lib/jackson-core.jar,lib
- /slf4j-api.jar,lib/commons-lang3.jar,lib/jackson-annotations.jar,lib/ja
- karta.activation.jar
+ /slf4j-api.jar,lib/commons-lang3.jar,lib/jackson-annotations.jar,lib/bo
+ nita-business-archive.jar,lib/bonita-process-definition-model.jar,lib/b
+ onita-form-mapping-model.jar,lib/jakarta.activation.jar
 Bundle-ManifestVersion: 2
 Bundle-Name: Bonita Community Tomcat Bundle
 Bundle-RequiredExecutionEnvironment: JavaSE-11
