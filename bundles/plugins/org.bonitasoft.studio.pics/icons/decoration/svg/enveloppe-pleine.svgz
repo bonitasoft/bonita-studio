@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<!-- Generator: Adobe Illustrator 14.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 43363)  -->
+<svg xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" version="1.1" id="Calque_1" x="0px" y="0px" width="20.569" height="13.631" viewBox="0 0 20.568999 13.630999" enable-background="new 0 0 595.28 841.89" xml:space="preserve" inkscape:version="0.48.0 r9654" sodipodi:docname="enveloppe-pleine.svgz"><metadata id="metadata16"><rdf:RDF><cc:Work rdf:about=""><dc:format>image/svg+xml</dc:format><dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/></cc:Work></rdf:RDF></metadata><defs id="defs14"/><sodipodi:namedview pagecolor="#ffffff" bordercolor="#666666" borderopacity="1" objecttolerance="10" gridtolerance="10" guidetolerance="10" inkscape:pageopacity="0" inkscape:pageshadow="2" inkscape:window-width="640" inkscape:window-height="480" id="namedview12" showgrid="false" fit-margin-top="0" fit-margin-left="0" fit-margin-right="0" fit-margin-bottom="0" inkscape:zoom="0.28032165" inkscape:cx="10.41" inkscape:cy="6.5329909" inkscape:current-layer="Calque_1"/>
+<linearGradient id="SVGID_1_" gradientUnits="userSpaceOnUse" x1="286.8154" y1="415.16699" x2="332.5654" y2="438.66699" gradientTransform="translate(-287.23001,-413.84699)">
+	<stop offset="0" style="stop-color:#5F8CC4" id="stop4"/>
+	<stop offset="1" style="stop-color:#FBFBEE" id="stop6"/>
+</linearGradient>
+<rect x="0.91098171" y="0.85000002" width="18.747" height="11.931" id="BORDER" stroke="#2c6da3" style="fill:url(#SVGID_1_);stroke-width:1.70000005"/>
+<polyline points="306.799,415.271 297.514,422.652 288.23,415.271 " id="BORDER2" stroke="#2c6da3" style="fill:none;stroke-width:2" transform="translate(-287.23001,-413.84699)"/>
+</svg>
