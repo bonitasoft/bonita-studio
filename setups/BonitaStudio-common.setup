@@ -412,6 +412,8 @@
         name="org.eclipse.emf.edapt.recorder.feature.feature.group"/>
     <requirement
         name="org.eclipse.emf.edapt.runtime.feature.feature.group"/>
+    <requirement
+        name="org.sonarlint.eclipse.feature.feature.group"/>
     <repository
         url="https://projectlombok.org/p2"/>
     <repository
@@ -430,6 +432,8 @@
         url="https://de-jcup.github.io/update-site-eclipse-asciidoctor-editor/update-site"/>
     <repository
         url="https://download.eclipse.org/edapt/releases/15x/"/>
+    <repository
+        url="https://eclipse-uc.sonarlint.org"/>
     <description>Install the tools needed in the IDE to work with the source code for ${scope.project.label}</description>
   </setupTask>
   <setupTask
