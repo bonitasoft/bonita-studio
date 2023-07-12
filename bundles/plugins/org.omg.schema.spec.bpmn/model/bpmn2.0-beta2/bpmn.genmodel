@@ -1,0 +1,952 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.bonitasoft.studio.importer/src"
+    modelPluginID="org.bonitasoft.studio.importer" modelName="Bpmn" importerID="org.eclipse.emf.importer.ecore"
+    complianceLevel="5.0" copyrightFields="false">
+  <foreignModel>bpmn.ecore</foreignModel>
+  <foreignModel>bpmndi.ecore</foreignModel>
+  <genPackages prefix="BPMN" basePackage="org.omg.schema.spec.bpmn" resource="XML"
+      disposableProviderFactory="true" loadInitialization="true" literalsInterface="false"
+      ecorePackage="bpmn.ecore#/">
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="bpmn.ecore#//TAdHocOrdering">
+      <genEnumLiterals ecoreEnumLiteral="bpmn.ecore#//TAdHocOrdering/parallel"/>
+      <genEnumLiterals ecoreEnumLiteral="bpmn.ecore#//TAdHocOrdering/sequential"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="bpmn.ecore#//TAssociationDirection">
+      <genEnumLiterals ecoreEnumLiteral="bpmn.ecore#//TAssociationDirection/none"/>
+      <genEnumLiterals ecoreEnumLiteral="bpmn.ecore#//TAssociationDirection/one"/>
+      <genEnumLiterals ecoreEnumLiteral="bpmn.ecore#//TAssociationDirection/both"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="bpmn.ecore#//TEventBasedGatewayType">
+      <genEnumLiterals ecoreEnumLiteral="bpmn.ecore#//TEventBasedGatewayType/Exclusive"/>
+      <genEnumLiterals ecoreEnumLiteral="bpmn.ecore#//TEventBasedGatewayType/Parallel"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="bpmn.ecore#//TGatewayDirection">
+      <genEnumLiterals ecoreEnumLiteral="bpmn.ecore#//TGatewayDirection/unspecified"/>
+      <genEnumLiterals ecoreEnumLiteral="bpmn.ecore#//TGatewayDirection/converging"/>
+      <genEnumLiterals ecoreEnumLiteral="bpmn.ecore#//TGatewayDirection/diverging"/>
+      <genEnumLiterals ecoreEnumLiteral="bpmn.ecore#//TGatewayDirection/mixed"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="bpmn.ecore#//TItemKind">
+      <genEnumLiterals ecoreEnumLiteral="bpmn.ecore#//TItemKind/Information"/>
+      <genEnumLiterals ecoreEnumLiteral="bpmn.ecore#//TItemKind/Physical"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="bpmn.ecore#//TMultiInstanceFlowCondition">
+      <genEnumLiterals ecoreEnumLiteral="bpmn.ecore#//TMultiInstanceFlowCondition/none"/>
+      <genEnumLiterals ecoreEnumLiteral="bpmn.ecore#//TMultiInstanceFlowCondition/one"/>
+      <genEnumLiterals ecoreEnumLiteral="bpmn.ecore#//TMultiInstanceFlowCondition/all"/>
+      <genEnumLiterals ecoreEnumLiteral="bpmn.ecore#//TMultiInstanceFlowCondition/complex"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="bpmn.ecore#//TProcessType">
+      <genEnumLiterals ecoreEnumLiteral="bpmn.ecore#//TProcessType/none"/>
+      <genEnumLiterals ecoreEnumLiteral="bpmn.ecore#//TProcessType/executable"/>
+      <genEnumLiterals ecoreEnumLiteral="bpmn.ecore#//TProcessType/nonExecutable"/>
+      <genEnumLiterals ecoreEnumLiteral="bpmn.ecore#//TProcessType/public"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="bpmn.ecore#//TRelationshipDirection">
+      <genEnumLiterals ecoreEnumLiteral="bpmn.ecore#//TRelationshipDirection/none"/>
+      <genEnumLiterals ecoreEnumLiteral="bpmn.ecore#//TRelationshipDirection/forward"/>
+      <genEnumLiterals ecoreEnumLiteral="bpmn.ecore#//TRelationshipDirection/backward"/>
+      <genEnumLiterals ecoreEnumLiteral="bpmn.ecore#//TRelationshipDirection/both"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="bpmn.ecore#//TServiceImplementation">
+      <genEnumLiterals ecoreEnumLiteral="bpmn.ecore#//TServiceImplementation/WebService"/>
+      <genEnumLiterals ecoreEnumLiteral="bpmn.ecore#//TServiceImplementation/Other"/>
+      <genEnumLiterals ecoreEnumLiteral="bpmn.ecore#//TServiceImplementation/Unspecified"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="bpmn.ecore#//TTransactionMethod">
+      <genEnumLiterals ecoreEnumLiteral="bpmn.ecore#//TTransactionMethod/compensate"/>
+      <genEnumLiterals ecoreEnumLiteral="bpmn.ecore#//TTransactionMethod/image"/>
+      <genEnumLiterals ecoreEnumLiteral="bpmn.ecore#//TTransactionMethod/store"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="bpmn.ecore#//TUserTaskImplementation">
+      <genEnumLiterals ecoreEnumLiteral="bpmn.ecore#//TUserTaskImplementation/unspecified"/>
+      <genEnumLiterals ecoreEnumLiteral="bpmn.ecore#//TUserTaskImplementation/other"/>
+      <genEnumLiterals ecoreEnumLiteral="bpmn.ecore#//TUserTaskImplementation/webService"/>
+      <genEnumLiterals ecoreEnumLiteral="bpmn.ecore#//TUserTaskImplementation/humanTaskWebService"/>
+    </genEnums>
+    <genDataTypes ecoreDataType="bpmn.ecore#//TAdHocOrderingObject"/>
+    <genDataTypes ecoreDataType="bpmn.ecore#//TAssociationDirectionObject"/>
+    <genDataTypes ecoreDataType="bpmn.ecore#//TEventBasedGatewayTypeObject"/>
+    <genDataTypes ecoreDataType="bpmn.ecore#//TGatewayDirectionObject"/>
+    <genDataTypes ecoreDataType="bpmn.ecore#//TItemKindObject"/>
+    <genDataTypes ecoreDataType="bpmn.ecore#//TMultiInstanceFlowConditionObject"/>
+    <genDataTypes ecoreDataType="bpmn.ecore#//TProcessTypeObject"/>
+    <genDataTypes ecoreDataType="bpmn.ecore#//TRelationshipDirectionObject"/>
+    <genDataTypes ecoreDataType="bpmn.ecore#//TServiceImplementationObject"/>
+    <genDataTypes ecoreDataType="bpmn.ecore#//TTransactionMethodObject"/>
+    <genDataTypes ecoreDataType="bpmn.ecore#//TUserTaskImplementationObject"/>
+    <genClasses ecoreClass="bpmn.ecore#//DocumentRoot">
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//DocumentRoot/mixed"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference bpmn.ecore#//DocumentRoot/xMLNSPrefixMap"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference bpmn.ecore#//DocumentRoot/xSISchemaLocation"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//DocumentRoot/activity"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//DocumentRoot/activityResource"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//DocumentRoot/adHocSubProcess"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//DocumentRoot/flowElement"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//DocumentRoot/artifact"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//DocumentRoot/assignment"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//DocumentRoot/association"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//DocumentRoot/auditing"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//DocumentRoot/baseElement"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//DocumentRoot/baseElementWithMixedContent"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//DocumentRoot/boundaryEvent"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//DocumentRoot/businessRuleTask"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//DocumentRoot/callableElement"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//DocumentRoot/callActivity"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//DocumentRoot/callChoreographyActivity"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//DocumentRoot/callConversation"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//DocumentRoot/conversationNode"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//DocumentRoot/cancelEventDefinition"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//DocumentRoot/eventDefinition"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//DocumentRoot/rootElement"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//DocumentRoot/catchEvent"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//DocumentRoot/category"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//DocumentRoot/categoryValue"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//DocumentRoot/choreography"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//DocumentRoot/choreographyActivity"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//DocumentRoot/choreographySubProcess"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//DocumentRoot/choreographyTask"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//DocumentRoot/collaboration"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//DocumentRoot/communication"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//DocumentRoot/compensateEventDefinition"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//DocumentRoot/complexBehaviorDefinition"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//DocumentRoot/complexGateway"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//DocumentRoot/conditionalEventDefinition"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//DocumentRoot/conversation"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//DocumentRoot/conversationAssociation"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//DocumentRoot/correlationKey"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//DocumentRoot/correlationProperty"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//DocumentRoot/correlationPropertyBinding"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//DocumentRoot/correlationPropertyRetrievalExpression"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//DocumentRoot/correlationSubscription"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//DocumentRoot/dataAssociation"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//DocumentRoot/dataInput"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//DocumentRoot/dataInputAssociation"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//DocumentRoot/dataObject"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//DocumentRoot/dataOutput"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//DocumentRoot/dataOutputAssociation"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//DocumentRoot/dataState"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//DocumentRoot/dataStore"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//DocumentRoot/dataStoreReference"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//DocumentRoot/definitions"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//DocumentRoot/documentation"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//DocumentRoot/endEvent"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//DocumentRoot/endPoint"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//DocumentRoot/error"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//DocumentRoot/errorEventDefinition"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//DocumentRoot/escalation"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//DocumentRoot/escalationEventDefinition"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//DocumentRoot/event"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//DocumentRoot/eventBasedGateway"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//DocumentRoot/exclusiveGateway"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//DocumentRoot/expression"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//DocumentRoot/extension"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//DocumentRoot/flowNode"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//DocumentRoot/formalExpression"/>
+      <genFeatures property="None" children="true" createChild="false" ecoreFeature="ecore:EReference bpmn.ecore#//DocumentRoot/gateway"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//DocumentRoot/globalBusinessRuleTask"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//DocumentRoot/globalChoreographyTask"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//DocumentRoot/globalCommunication"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//DocumentRoot/globalManualTask"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//DocumentRoot/globalScriptTask"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//DocumentRoot/globalTask"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//DocumentRoot/globalUserTask"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//DocumentRoot/group"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//DocumentRoot/humanPerformer"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//DocumentRoot/performer"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//DocumentRoot/implicitThrowEvent"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//DocumentRoot/import"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//DocumentRoot/inclusiveGateway"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//DocumentRoot/inputSet"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//DocumentRoot/interface"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//DocumentRoot/intermediateCatchEvent"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//DocumentRoot/intermediateThrowEvent"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//DocumentRoot/ioBinding"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//DocumentRoot/ioSpecification"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//DocumentRoot/itemDefinition"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//DocumentRoot/lane"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//DocumentRoot/laneSet"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//DocumentRoot/linkEventDefinition"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//DocumentRoot/loopCharacteristics"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//DocumentRoot/manualTask"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//DocumentRoot/message"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//DocumentRoot/messageEventDefinition"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//DocumentRoot/messageFlow"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//DocumentRoot/messageFlowAssociation"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//DocumentRoot/monitoring"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//DocumentRoot/multiInstanceLoopCharacteristics"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//DocumentRoot/operation"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//DocumentRoot/outputSet"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//DocumentRoot/parallelGateway"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//DocumentRoot/participant"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//DocumentRoot/participantAssociation"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//DocumentRoot/participantMultiplicity"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//DocumentRoot/partnerEntity"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//DocumentRoot/partnerRole"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//DocumentRoot/potentialOwner"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//DocumentRoot/process"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//DocumentRoot/property"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//DocumentRoot/receiveTask"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//DocumentRoot/relationship"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//DocumentRoot/rendering"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//DocumentRoot/resource"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//DocumentRoot/resourceAssignmentExpression"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//DocumentRoot/resourceParameter"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//DocumentRoot/resourceParameterBinding"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//DocumentRoot/script"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//DocumentRoot/scriptTask"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//DocumentRoot/sendTask"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//DocumentRoot/sequenceFlow"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//DocumentRoot/serviceTask"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//DocumentRoot/signal"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//DocumentRoot/signalEventDefinition"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//DocumentRoot/standardLoopCharacteristics"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//DocumentRoot/startEvent"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//DocumentRoot/subConversation"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//DocumentRoot/subProcess"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//DocumentRoot/task"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//DocumentRoot/terminateEventDefinition"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//DocumentRoot/text"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//DocumentRoot/textAnnotation"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//DocumentRoot/throwEvent"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//DocumentRoot/timerEventDefinition"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//DocumentRoot/transaction"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//DocumentRoot/userTask"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="bpmn.ecore#//TActivity">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//TActivity/ioSpecification"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//TActivity/property"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//TActivity/dataInputAssociation"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//TActivity/dataOutputAssociation"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute bpmn.ecore#//TActivity/activityResourceGroup"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference bpmn.ecore#//TActivity/activityResource"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute bpmn.ecore#//TActivity/loopCharacteristicsGroup"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference bpmn.ecore#//TActivity/loopCharacteristics"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TActivity/completionQuantity"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TActivity/default"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TActivity/isForCompensation"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TActivity/startQuantity"/>
+    </genClasses>
+    <genClasses ecoreClass="bpmn.ecore#//TActivityResource">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//TActivityResource/resourceAssignmentExpression"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//TActivityResource/resourceParameterBinding"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TActivityResource/resourceRef"/>
+    </genClasses>
+    <genClasses ecoreClass="bpmn.ecore#//TAdHocSubProcess">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//TAdHocSubProcess/completionCondition"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TAdHocSubProcess/cancelRemainingInstances"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TAdHocSubProcess/ordering"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="bpmn.ecore#//TArtifact"/>
+    <genClasses ecoreClass="bpmn.ecore#//TAssignment">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//TAssignment/from"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//TAssignment/to"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TAssignment/language"/>
+    </genClasses>
+    <genClasses ecoreClass="bpmn.ecore#//TAssociation">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TAssociation/associationDirection"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TAssociation/sourceRef"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TAssociation/targetRef"/>
+    </genClasses>
+    <genClasses ecoreClass="bpmn.ecore#//TAuditing"/>
+    <genClasses image="false" ecoreClass="bpmn.ecore#//TBaseElement">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//TBaseElement/documentation"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute bpmn.ecore#//TBaseElement/any"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TBaseElement/id"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute bpmn.ecore#//TBaseElement/anyAttribute"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="bpmn.ecore#//TBaseElementWithMixedContent">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute bpmn.ecore#//TBaseElementWithMixedContent/mixed"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference bpmn.ecore#//TBaseElementWithMixedContent/documentation"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference bpmn.ecore#//TBaseElementWithMixedContent/category"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TBaseElementWithMixedContent/any"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TBaseElementWithMixedContent/id"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute bpmn.ecore#//TBaseElementWithMixedContent/anyAttribute"/>
+    </genClasses>
+    <genClasses ecoreClass="bpmn.ecore#//TBoundaryEvent">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TBoundaryEvent/attachedToRef"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TBoundaryEvent/cancelActivity"/>
+    </genClasses>
+    <genClasses ecoreClass="bpmn.ecore#//TBusinessRuleTask"/>
+    <genClasses ecoreClass="bpmn.ecore#//TCallableElement">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TCallableElement/supportedInterfaceRef"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//TCallableElement/ioSpecification"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//TCallableElement/ioBinding"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TCallableElement/name"/>
+    </genClasses>
+    <genClasses ecoreClass="bpmn.ecore#//TCallActivity">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TCallActivity/calledElement"/>
+    </genClasses>
+    <genClasses ecoreClass="bpmn.ecore#//TCallChoreographyActivity">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//TCallChoreographyActivity/participantAssociation"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TCallChoreographyActivity/calledElement"/>
+    </genClasses>
+    <genClasses ecoreClass="bpmn.ecore#//TCallConversation">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//TCallConversation/participantAssociation"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TCallConversation/calledElementRef"/>
+    </genClasses>
+    <genClasses ecoreClass="bpmn.ecore#//TCancelEventDefinition"/>
+    <genClasses image="false" ecoreClass="bpmn.ecore#//TCatchEvent">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//TCatchEvent/dataOutput"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//TCatchEvent/dataOutputAssociation"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//TCatchEvent/outputSet"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute bpmn.ecore#//TCatchEvent/eventDefinitionGroup"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference bpmn.ecore#//TCatchEvent/eventDefinition"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TCatchEvent/eventDefinitionRef"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TCatchEvent/parallelMultiple"/>
+    </genClasses>
+    <genClasses ecoreClass="bpmn.ecore#//TCategory">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//TCategory/categoryValue"/>
+    </genClasses>
+    <genClasses ecoreClass="bpmn.ecore#//TCategoryValue">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TCategoryValue/value"/>
+    </genClasses>
+    <genClasses ecoreClass="bpmn.ecore#//TChoreography">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute bpmn.ecore#//TChoreography/flowElementGroup"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference bpmn.ecore#//TChoreography/flowElement"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute bpmn.ecore#//TChoreography/artifactGroup"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference bpmn.ecore#//TChoreography/artifact"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//TChoreography/messageFlow"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//TChoreography/participant"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//TChoreography/conversation"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//TChoreography/conversationAssociation"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//TChoreography/messageFlowAssociation"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//TChoreography/participantAssociation"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TChoreography/isClosed"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="bpmn.ecore#//TChoreographyActivity">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TChoreographyActivity/participantRef"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TChoreographyActivity/initiatingParticipantRef"/>
+    </genClasses>
+    <genClasses ecoreClass="bpmn.ecore#//TChoreographySubProcess">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute bpmn.ecore#//TChoreographySubProcess/flowElementGroup"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference bpmn.ecore#//TChoreographySubProcess/flowElement"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute bpmn.ecore#//TChoreographySubProcess/artifactGroup"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference bpmn.ecore#//TChoreographySubProcess/artifact"/>
+    </genClasses>
+    <genClasses ecoreClass="bpmn.ecore#//TChoreographyTask">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TChoreographyTask/messageFlowRef"/>
+    </genClasses>
+    <genClasses ecoreClass="bpmn.ecore#//TCollaboration">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//TCollaboration/participant"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//TCollaboration/messageFlow"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute bpmn.ecore#//TCollaboration/artifactGroup"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference bpmn.ecore#//TCollaboration/artifact"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//TCollaboration/conversation"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//TCollaboration/conversationAssociation"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//TCollaboration/participantAssociation"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//TCollaboration/messageFlowAssociation"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TCollaboration/choreographyRef"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TCollaboration/isClosed"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TCollaboration/name"/>
+    </genClasses>
+    <genClasses ecoreClass="bpmn.ecore#//TCommunication">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TCommunication/messageFlowRef"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TCommunication/correlationKeyRef"/>
+    </genClasses>
+    <genClasses ecoreClass="bpmn.ecore#//TCompensateEventDefinition">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TCompensateEventDefinition/activityRef"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TCompensateEventDefinition/waitForCompletion"/>
+    </genClasses>
+    <genClasses ecoreClass="bpmn.ecore#//TComplexBehaviorDefinition">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//TComplexBehaviorDefinition/condition"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//TComplexBehaviorDefinition/event"/>
+    </genClasses>
+    <genClasses ecoreClass="bpmn.ecore#//TComplexGateway">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//TComplexGateway/activationCondition"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TComplexGateway/default"/>
+    </genClasses>
+    <genClasses ecoreClass="bpmn.ecore#//TConditionalEventDefinition">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//TConditionalEventDefinition/condition"/>
+    </genClasses>
+    <genClasses ecoreClass="bpmn.ecore#//TConversation">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute bpmn.ecore#//TConversation/conversationNodeGroup"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference bpmn.ecore#//TConversation/conversationNode"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//TConversation/participant"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute bpmn.ecore#//TConversation/artifactGroup"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference bpmn.ecore#//TConversation/artifact"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//TConversation/messageFlow"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TConversation/messageFlowRef"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//TConversation/correlationKey"/>
+    </genClasses>
+    <genClasses ecoreClass="bpmn.ecore#//TConversationAssociation">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TConversationAssociation/messageFlowRef"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TConversationAssociation/conversationRef"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TConversationAssociation/correlationKeyRef"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="bpmn.ecore#//TConversationNode">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TConversationNode/participantRef"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TConversationNode/name"/>
+    </genClasses>
+    <genClasses ecoreClass="bpmn.ecore#//TCorrelationKey">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TCorrelationKey/correlationPropertyRef"/>
+    </genClasses>
+    <genClasses ecoreClass="bpmn.ecore#//TCorrelationProperty">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//TCorrelationProperty/correlationPropertyRetrievalExpression"/>
+    </genClasses>
+    <genClasses ecoreClass="bpmn.ecore#//TCorrelationPropertyBinding">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//TCorrelationPropertyBinding/dataPath"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TCorrelationPropertyBinding/correlationPropertyRef"/>
+    </genClasses>
+    <genClasses ecoreClass="bpmn.ecore#//TCorrelationPropertyRetrievalExpression">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//TCorrelationPropertyRetrievalExpression/messagePath"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TCorrelationPropertyRetrievalExpression/messageRef"/>
+    </genClasses>
+    <genClasses ecoreClass="bpmn.ecore#//TCorrelationSubscription">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//TCorrelationSubscription/correlationPropertyBinding"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TCorrelationSubscription/correlationKeyRef"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TCorrelationSubscription/process"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="bpmn.ecore#//TDataAssociation">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//TDataAssociation/transformation"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//TDataAssociation/assignment"/>
+    </genClasses>
+    <genClasses ecoreClass="bpmn.ecore#//TDataInput">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//TDataInput/dataState"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TDataInput/isCollection"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TDataInput/itemSubjectRef"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TDataInput/name"/>
+    </genClasses>
+    <genClasses ecoreClass="bpmn.ecore#//TDataInputAssociation">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TDataInputAssociation/sourceRef"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TDataInputAssociation/targetRef"/>
+    </genClasses>
+    <genClasses ecoreClass="bpmn.ecore#//TDataObject">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//TDataObject/dataState"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TDataObject/isCollection"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TDataObject/itemSubjectRef"/>
+    </genClasses>
+    <genClasses ecoreClass="bpmn.ecore#//TDataOutput">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//TDataOutput/dataState"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TDataOutput/isCollection"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TDataOutput/itemSubjectRef"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TDataOutput/name"/>
+    </genClasses>
+    <genClasses ecoreClass="bpmn.ecore#//TDataOutputAssociation">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TDataOutputAssociation/sourceRef"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TDataOutputAssociation/targetRef"/>
+    </genClasses>
+    <genClasses ecoreClass="bpmn.ecore#//TDataState">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TDataState/name"/>
+    </genClasses>
+    <genClasses ecoreClass="bpmn.ecore#//TDataStore">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//TDataStore/dataState"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TDataStore/capacity"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TDataStore/isUnlimited"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TDataStore/itemSubjectRef"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TDataStore/name"/>
+    </genClasses>
+    <genClasses ecoreClass="bpmn.ecore#//TDataStoreReference">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//TDataStoreReference/dataState"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TDataStoreReference/dataStoreRef"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TDataStoreReference/itemSubjectRef"/>
+    </genClasses>
+    <genClasses ecoreClass="bpmn.ecore#//TDefinitions">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//TDefinitions/import"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//TDefinitions/extension"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute bpmn.ecore#//TDefinitions/rootElementGroup"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference bpmn.ecore#//TDefinitions/rootElement"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute bpmn.ecore#//TDefinitions/diagramGroup"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference bpmn.ecore#//TDefinitions/diagram"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//TDefinitions/relationship"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TDefinitions/expressionLanguage"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TDefinitions/id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TDefinitions/targetNamespace"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TDefinitions/typeLanguage"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute bpmn.ecore#//TDefinitions/anyAttribute"/>
+    </genClasses>
+    <genClasses ecoreClass="bpmn.ecore#//TDocumentation">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute bpmn.ecore#//TDocumentation/mixed"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TDocumentation/any"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TDocumentation/id"/>
+    </genClasses>
+    <genClasses ecoreClass="bpmn.ecore#//TEndEvent"/>
+    <genClasses ecoreClass="bpmn.ecore#//TEndPoint"/>
+    <genClasses ecoreClass="bpmn.ecore#//TError">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TError/structureRef"/>
+    </genClasses>
+    <genClasses ecoreClass="bpmn.ecore#//TErrorEventDefinition">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TErrorEventDefinition/errorCode"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TErrorEventDefinition/errorRef"/>
+    </genClasses>
+    <genClasses ecoreClass="bpmn.ecore#//TEscalation">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TEscalation/structureRef"/>
+    </genClasses>
+    <genClasses ecoreClass="bpmn.ecore#//TEscalationEventDefinition">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TEscalationEventDefinition/escalationCode"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TEscalationEventDefinition/escalationRef"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="bpmn.ecore#//TEvent"/>
+    <genClasses ecoreClass="bpmn.ecore#//TEventBasedGateway">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TEventBasedGateway/eventGatewayType"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TEventBasedGateway/instantiate"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="bpmn.ecore#//TEventDefinition"/>
+    <genClasses ecoreClass="bpmn.ecore#//TExclusiveGateway">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TExclusiveGateway/default"/>
+    </genClasses>
+    <genClasses ecoreClass="bpmn.ecore#//TExpression"/>
+    <genClasses ecoreClass="bpmn.ecore#//TExtension">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//TExtension/documentation"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TExtension/definition"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TExtension/mustUnderstand"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="bpmn.ecore#//TFlowElement">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//TFlowElement/auditing"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//TFlowElement/monitoring"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TFlowElement/categoryValueRef"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TFlowElement/name"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="bpmn.ecore#//TFlowNode">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TFlowNode/incoming"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TFlowNode/outgoing"/>
+    </genClasses>
+    <genClasses ecoreClass="bpmn.ecore#//TFormalExpression">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TFormalExpression/evaluatesToTypeRef"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TFormalExpression/language"/>
+    </genClasses>
+    <genClasses ecoreClass="bpmn.ecore#//TGateway">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TGateway/gatewayDirection"/>
+    </genClasses>
+    <genClasses ecoreClass="bpmn.ecore#//TGlobalBusinessRuleTask"/>
+    <genClasses ecoreClass="bpmn.ecore#//TGlobalChoreographyTask">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//TGlobalChoreographyTask/participant"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//TGlobalChoreographyTask/messageFlow"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TGlobalChoreographyTask/initiatingParticipantRef"/>
+    </genClasses>
+    <genClasses ecoreClass="bpmn.ecore#//TGlobalCommunication">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//TGlobalCommunication/participant"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//TGlobalCommunication/messageFlow"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//TGlobalCommunication/correlationKey"/>
+    </genClasses>
+    <genClasses ecoreClass="bpmn.ecore#//TGlobalManualTask"/>
+    <genClasses ecoreClass="bpmn.ecore#//TGlobalScriptTask">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//TGlobalScriptTask/script"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TGlobalScriptTask/scriptLanguage"/>
+    </genClasses>
+    <genClasses ecoreClass="bpmn.ecore#//TGlobalTask">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute bpmn.ecore#//TGlobalTask/performerGroup"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference bpmn.ecore#//TGlobalTask/performer"/>
+    </genClasses>
+    <genClasses ecoreClass="bpmn.ecore#//TGlobalUserTask">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//TGlobalUserTask/rendering"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TGlobalUserTask/implementation"/>
+    </genClasses>
+    <genClasses ecoreClass="bpmn.ecore#//TGroup">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TGroup/categoryRef"/>
+    </genClasses>
+    <genClasses ecoreClass="bpmn.ecore#//THumanPerformer"/>
+    <genClasses ecoreClass="bpmn.ecore#//TImplicitThrowEvent"/>
+    <genClasses ecoreClass="bpmn.ecore#//TImport">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TImport/importType"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TImport/location"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TImport/namespace"/>
+    </genClasses>
+    <genClasses ecoreClass="bpmn.ecore#//TInclusiveGateway">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TInclusiveGateway/default"/>
+    </genClasses>
+    <genClasses ecoreClass="bpmn.ecore#//TInputOutputBinding">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TInputOutputBinding/inputDataRef"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TInputOutputBinding/operationRef"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TInputOutputBinding/outputDataRef"/>
+    </genClasses>
+    <genClasses ecoreClass="bpmn.ecore#//TInputOutputSpecification">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//TInputOutputSpecification/dataInput"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//TInputOutputSpecification/dataOutput"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//TInputOutputSpecification/inputSet"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//TInputOutputSpecification/outputSet"/>
+    </genClasses>
+    <genClasses ecoreClass="bpmn.ecore#//TInputSet">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TInputSet/dataInputRefs"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TInputSet/optionalInputRefs"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TInputSet/whileExecutingInputRefs"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TInputSet/outputSetRefs"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TInputSet/name"/>
+    </genClasses>
+    <genClasses ecoreClass="bpmn.ecore#//TInterface">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//TInterface/operation"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TInterface/name"/>
+    </genClasses>
+    <genClasses ecoreClass="bpmn.ecore#//TIntermediateCatchEvent"/>
+    <genClasses ecoreClass="bpmn.ecore#//TIntermediateThrowEvent"/>
+    <genClasses ecoreClass="bpmn.ecore#//TItemDefinition">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TItemDefinition/isCollection"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TItemDefinition/itemKind"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TItemDefinition/structureRef"/>
+    </genClasses>
+    <genClasses ecoreClass="bpmn.ecore#//TLane">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//TLane/partitionElement"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TLane/flowElementRef"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//TLane/childLaneSet"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TLane/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TLane/partitionElementRef"/>
+    </genClasses>
+    <genClasses ecoreClass="bpmn.ecore#//TLaneSet">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//TLaneSet/lane"/>
+    </genClasses>
+    <genClasses ecoreClass="bpmn.ecore#//TLinkEventDefinition">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TLinkEventDefinition/name"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="bpmn.ecore#//TLoopCharacteristics"/>
+    <genClasses ecoreClass="bpmn.ecore#//TManualTask"/>
+    <genClasses ecoreClass="bpmn.ecore#//TMessage">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TMessage/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TMessage/structureRef"/>
+    </genClasses>
+    <genClasses ecoreClass="bpmn.ecore#//TMessageEventDefinition">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TMessageEventDefinition/operationRef"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TMessageEventDefinition/messageRef"/>
+    </genClasses>
+    <genClasses ecoreClass="bpmn.ecore#//TMessageFlow">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TMessageFlow/messageRef"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TMessageFlow/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TMessageFlow/sourceRef"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TMessageFlow/targetRef"/>
+    </genClasses>
+    <genClasses ecoreClass="bpmn.ecore#//TMessageFlowAssociation">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TMessageFlowAssociation/innerMessageFlowRef"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TMessageFlowAssociation/outerMessageFlowRef"/>
+    </genClasses>
+    <genClasses ecoreClass="bpmn.ecore#//TMonitoring"/>
+    <genClasses ecoreClass="bpmn.ecore#//TMultiInstanceLoopCharacteristics">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//TMultiInstanceLoopCharacteristics/loopCardinality"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//TMultiInstanceLoopCharacteristics/loopDataInput"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//TMultiInstanceLoopCharacteristics/loopDataOutput"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//TMultiInstanceLoopCharacteristics/inputDataItem"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//TMultiInstanceLoopCharacteristics/outputDataItem"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//TMultiInstanceLoopCharacteristics/complexBehaviorDefinition"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//TMultiInstanceLoopCharacteristics/completionCondition"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TMultiInstanceLoopCharacteristics/behavior"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TMultiInstanceLoopCharacteristics/isSequential"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TMultiInstanceLoopCharacteristics/noneBehaviorEventRef"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TMultiInstanceLoopCharacteristics/oneBehaviorEventRef"/>
+    </genClasses>
+    <genClasses ecoreClass="bpmn.ecore#//TOperation">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TOperation/inMessageRef"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TOperation/outMessageRef"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TOperation/errorRef"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TOperation/name"/>
+    </genClasses>
+    <genClasses ecoreClass="bpmn.ecore#//TOutputSet">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TOutputSet/dataOutputRefs"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TOutputSet/optionalOutputRefs"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TOutputSet/whileExecutingOutputRefs"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TOutputSet/inputSetRefs"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TOutputSet/name"/>
+    </genClasses>
+    <genClasses ecoreClass="bpmn.ecore#//TParallelGateway"/>
+    <genClasses ecoreClass="bpmn.ecore#//TParticipant">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TParticipant/interfaceRef"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TParticipant/endPointRef"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//TParticipant/participantMultiplicity"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TParticipant/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TParticipant/partnerEntityRef"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TParticipant/partnerRoleRef"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TParticipant/processRef"/>
+    </genClasses>
+    <genClasses ecoreClass="bpmn.ecore#//TParticipantAssociation">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TParticipantAssociation/innerParticipantRef"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TParticipantAssociation/outerParticipantRef"/>
+    </genClasses>
+    <genClasses ecoreClass="bpmn.ecore#//TParticipantMultiplicity">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TParticipantMultiplicity/maximum"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TParticipantMultiplicity/minimum"/>
+    </genClasses>
+    <genClasses ecoreClass="bpmn.ecore#//TPartnerEntity">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TPartnerEntity/name"/>
+    </genClasses>
+    <genClasses ecoreClass="bpmn.ecore#//TPartnerRole">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TPartnerRole/name"/>
+    </genClasses>
+    <genClasses ecoreClass="bpmn.ecore#//TPerformer"/>
+    <genClasses ecoreClass="bpmn.ecore#//TPotentialOwner"/>
+    <genClasses ecoreClass="bpmn.ecore#//TProcess">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//TProcess/auditing"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//TProcess/monitoring"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//TProcess/property"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//TProcess/laneSet"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute bpmn.ecore#//TProcess/flowElementGroup"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference bpmn.ecore#//TProcess/flowElement"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute bpmn.ecore#//TProcess/artifactGroup"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference bpmn.ecore#//TProcess/artifact"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TProcess/supports"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TProcess/definitionalCollaborationRef"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TProcess/isClosed"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TProcess/processType"/>
+    </genClasses>
+    <genClasses ecoreClass="bpmn.ecore#//TProperty">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//TProperty/dataState"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TProperty/itemSubjectRef"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TProperty/name"/>
+    </genClasses>
+    <genClasses ecoreClass="bpmn.ecore#//TReceiveTask">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TReceiveTask/implementation"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TReceiveTask/instantiate"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TReceiveTask/messageRef"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TReceiveTask/operationRef"/>
+    </genClasses>
+    <genClasses ecoreClass="bpmn.ecore#//TRelationship">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TRelationship/source"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TRelationship/target"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TRelationship/direction"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TRelationship/type"/>
+    </genClasses>
+    <genClasses ecoreClass="bpmn.ecore#//TRendering"/>
+    <genClasses ecoreClass="bpmn.ecore#//TResource">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//TResource/resourceParameter"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TResource/name"/>
+    </genClasses>
+    <genClasses ecoreClass="bpmn.ecore#//TResourceAssignmentExpression">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute bpmn.ecore#//TResourceAssignmentExpression/expressionGroup"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference bpmn.ecore#//TResourceAssignmentExpression/expression"/>
+    </genClasses>
+    <genClasses ecoreClass="bpmn.ecore#//TResourceParameter">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TResourceParameter/isRequired"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TResourceParameter/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TResourceParameter/type"/>
+    </genClasses>
+    <genClasses ecoreClass="bpmn.ecore#//TResourceParameterBinding">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute bpmn.ecore#//TResourceParameterBinding/expressionGroup"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference bpmn.ecore#//TResourceParameterBinding/expression"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TResourceParameterBinding/parameterRef"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="bpmn.ecore#//TRootElement"/>
+    <genClasses ecoreClass="bpmn.ecore#//TScript">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute bpmn.ecore#//TScript/mixed"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TScript/any"/>
+    </genClasses>
+    <genClasses ecoreClass="bpmn.ecore#//TScriptTask">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//TScriptTask/script"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TScriptTask/scriptLanguage"/>
+    </genClasses>
+    <genClasses ecoreClass="bpmn.ecore#//TSendTask">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TSendTask/implementation"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TSendTask/messageRef"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TSendTask/operationRef"/>
+    </genClasses>
+    <genClasses ecoreClass="bpmn.ecore#//TSequenceFlow">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//TSequenceFlow/conditionExpression"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TSequenceFlow/isImmediate"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TSequenceFlow/sourceRef"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TSequenceFlow/targetRef"/>
+    </genClasses>
+    <genClasses ecoreClass="bpmn.ecore#//TServiceTask">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TServiceTask/implementation"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TServiceTask/operationRef"/>
+    </genClasses>
+    <genClasses ecoreClass="bpmn.ecore#//TSignal">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TSignal/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TSignal/structureRef"/>
+    </genClasses>
+    <genClasses ecoreClass="bpmn.ecore#//TSignalEventDefinition">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TSignalEventDefinition/signalRef"/>
+    </genClasses>
+    <genClasses ecoreClass="bpmn.ecore#//TStandardLoopCharacteristics">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//TStandardLoopCharacteristics/loopCondition"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TStandardLoopCharacteristics/loopMaximum"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TStandardLoopCharacteristics/testBefore"/>
+    </genClasses>
+    <genClasses ecoreClass="bpmn.ecore#//TStartEvent">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TStartEvent/isInterrupting"/>
+    </genClasses>
+    <genClasses ecoreClass="bpmn.ecore#//TSubConversation">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute bpmn.ecore#//TSubConversation/conversationNodeGroup"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference bpmn.ecore#//TSubConversation/conversationNode"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute bpmn.ecore#//TSubConversation/artifactGroup"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference bpmn.ecore#//TSubConversation/artifact"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TSubConversation/correlationKeyRef"/>
+    </genClasses>
+    <genClasses ecoreClass="bpmn.ecore#//TSubProcess">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute bpmn.ecore#//TSubProcess/flowElementGroup"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference bpmn.ecore#//TSubProcess/flowElement"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute bpmn.ecore#//TSubProcess/artifactGroup"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference bpmn.ecore#//TSubProcess/artifact"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TSubProcess/triggeredByEvent"/>
+    </genClasses>
+    <genClasses ecoreClass="bpmn.ecore#//TTask"/>
+    <genClasses ecoreClass="bpmn.ecore#//TTerminateEventDefinition"/>
+    <genClasses ecoreClass="bpmn.ecore#//TText">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute bpmn.ecore#//TText/mixed"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TText/any"/>
+    </genClasses>
+    <genClasses ecoreClass="bpmn.ecore#//TTextAnnotation">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//TTextAnnotation/text"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="bpmn.ecore#//TThrowEvent">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//TThrowEvent/dataInput"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//TThrowEvent/dataInputAssociation"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//TThrowEvent/inputSet"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute bpmn.ecore#//TThrowEvent/eventDefinitionGroup"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference bpmn.ecore#//TThrowEvent/eventDefinition"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TThrowEvent/eventDefinitionRef"/>
+    </genClasses>
+    <genClasses ecoreClass="bpmn.ecore#//TTimerEventDefinition">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//TTimerEventDefinition/timeDate"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//TTimerEventDefinition/timeCycle"/>
+    </genClasses>
+    <genClasses ecoreClass="bpmn.ecore#//TTransaction">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TTransaction/method"/>
+    </genClasses>
+    <genClasses ecoreClass="bpmn.ecore#//TUserTask">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//TUserTask/rendering"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//TUserTask/implementation"/>
+    </genClasses>
+  </genPackages>
+  <genPackages prefix="BPMNDiagram" basePackage="org.omg.schema.spec.bpmn" resource="XML"
+      disposableProviderFactory="true" ecorePackage="bpmndi.ecore#/">
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="bpmndi.ecore#//OrientationType">
+      <genEnumLiterals ecoreEnumLiteral="bpmndi.ecore#//OrientationType/horizontal"/>
+      <genEnumLiterals ecoreEnumLiteral="bpmndi.ecore#//OrientationType/vertical"/>
+    </genEnums>
+    <genDataTypes ecoreDataType="bpmndi.ecore#//OrientationTypeObject"/>
+    <genClasses ecoreClass="bpmndi.ecore#//ActivityShapeType">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmndi.ecore#//ActivityShapeType/activityRef"/>
+    </genClasses>
+    <genClasses ecoreClass="bpmndi.ecore#//ActivityShapeType1">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmndi.ecore#//ActivityShapeType1/activityRef"/>
+    </genClasses>
+    <genClasses ecoreClass="bpmndi.ecore#//AssociationConnectorType">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmndi.ecore#//AssociationConnectorType/isDirectional"/>
+    </genClasses>
+    <genClasses ecoreClass="bpmndi.ecore#//AssociationConnectorType1">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmndi.ecore#//AssociationConnectorType1/associationRef"/>
+    </genClasses>
+    <genClasses ecoreClass="bpmndi.ecore#//BendpointType">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmndi.ecore#//BendpointType/x"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmndi.ecore#//BendpointType/y"/>
+    </genClasses>
+    <genClasses ecoreClass="bpmndi.ecore#//BpmnCompartmentType">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmndi.ecore#//BpmnCompartmentType/isVisible"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmndi.ecore#//BpmnCompartmentType/orientation"/>
+    </genClasses>
+    <genClasses ecoreClass="bpmndi.ecore#//BpmnConnectorType">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmndi.ecore#//BpmnConnectorType/bendpoint"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmndi.ecore#//BpmnConnectorType/id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmndi.ecore#//BpmnConnectorType/label"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmndi.ecore#//BpmnConnectorType/sourceRef"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmndi.ecore#//BpmnConnectorType/targetRef"/>
+    </genClasses>
+    <genClasses ecoreClass="bpmndi.ecore#//BpmndiType">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute bpmndi.ecore#//BpmndiType/diagramGroup"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference bpmndi.ecore#//BpmndiType/diagram"/>
+    </genClasses>
+    <genClasses ecoreClass="bpmndi.ecore#//BpmnNodeType">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmndi.ecore#//BpmnNodeType/height"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmndi.ecore#//BpmnNodeType/id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmndi.ecore#//BpmnNodeType/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmndi.ecore#//BpmnNodeType/width"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmndi.ecore#//BpmnNodeType/x"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmndi.ecore#//BpmnNodeType/y"/>
+    </genClasses>
+    <genClasses ecoreClass="bpmndi.ecore#//CalledSubprocessShapeType">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmndi.ecore#//CalledSubprocessShapeType/diagramLink"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmndi.ecore#//CalledSubprocessShapeType/isExpanded"/>
+    </genClasses>
+    <genClasses ecoreClass="bpmndi.ecore#//CollaborationDiagramType">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmndi.ecore#//CollaborationDiagramType/pool"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmndi.ecore#//CollaborationDiagramType/messageFlowConnector"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmndi.ecore#//CollaborationDiagramType/collaborationRef"/>
+    </genClasses>
+    <genClasses ecoreClass="bpmndi.ecore#//DataAssociationConnectorType">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmndi.ecore#//DataAssociationConnectorType/dataAssociationRef"/>
+    </genClasses>
+    <genClasses ecoreClass="bpmndi.ecore#//DataInputShapeType">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmndi.ecore#//DataInputShapeType/dataInputRef"/>
+    </genClasses>
+    <genClasses ecoreClass="bpmndi.ecore#//DataObjectShapeType">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmndi.ecore#//DataObjectShapeType/dataObjectRef"/>
+    </genClasses>
+    <genClasses ecoreClass="bpmndi.ecore#//DataOutputShapeType">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmndi.ecore#//DataOutputShapeType/dataOutputRef"/>
+    </genClasses>
+    <genClasses ecoreClass="bpmndi.ecore#//DataStoreShapeType">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmndi.ecore#//DataStoreShapeType/dataStoreRef"/>
+    </genClasses>
+    <genClasses ecoreClass="bpmndi.ecore#//DiagramType">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmndi.ecore#//DiagramType/id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmndi.ecore#//DiagramType/name"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute bpmndi.ecore#//DiagramType/anyAttribute"/>
+    </genClasses>
+    <genClasses ecoreClass="bpmndi.ecore#//DocumentRoot">
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EAttribute bpmndi.ecore#//DocumentRoot/mixed"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference bpmndi.ecore#//DocumentRoot/xMLNSPrefixMap"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference bpmndi.ecore#//DocumentRoot/xSISchemaLocation"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmndi.ecore#//DocumentRoot/activityShape"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmndi.ecore#//DocumentRoot/bpmnShape"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmndi.ecore#//DocumentRoot/bpmnNode"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmndi.ecore#//DocumentRoot/associationConnector"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmndi.ecore#//DocumentRoot/bpmnConnector"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmndi.ecore#//DocumentRoot/bpmnCompartment"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmndi.ecore#//DocumentRoot/bpmndi"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmndi.ecore#//DocumentRoot/bpmnLabel"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmndi.ecore#//DocumentRoot/calledSubprocessShape"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmndi.ecore#//DocumentRoot/collaborationDiagram"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmndi.ecore#//DocumentRoot/diagram"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmndi.ecore#//DocumentRoot/compensationFlowConnector"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmndi.ecore#//DocumentRoot/dataAssociationConnector"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmndi.ecore#//DocumentRoot/dataInputShape"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmndi.ecore#//DocumentRoot/dataObjectShape"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmndi.ecore#//DocumentRoot/dataOutputShape"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmndi.ecore#//DocumentRoot/dataStoreShape"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmndi.ecore#//DocumentRoot/eventShape"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmndi.ecore#//DocumentRoot/gatewayShape"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmndi.ecore#//DocumentRoot/groupShape"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmndi.ecore#//DocumentRoot/lane"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmndi.ecore#//DocumentRoot/laneCompartment"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmndi.ecore#//DocumentRoot/messageFlowConnector"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmndi.ecore#//DocumentRoot/messageShape"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmndi.ecore#//DocumentRoot/poolCompartment"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmndi.ecore#//DocumentRoot/processDiagram"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmndi.ecore#//DocumentRoot/sequenceFlowConnector"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmndi.ecore#//DocumentRoot/subprocessShape"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmndi.ecore#//DocumentRoot/taskShape"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmndi.ecore#//DocumentRoot/textAnnotationShape"/>
+    </genClasses>
+    <genClasses ecoreClass="bpmndi.ecore#//EventShapeType">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmndi.ecore#//EventShapeType/eventRef"/>
+    </genClasses>
+    <genClasses ecoreClass="bpmndi.ecore#//GatewayShapeType">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmndi.ecore#//GatewayShapeType/gatewayRef"/>
+    </genClasses>
+    <genClasses ecoreClass="bpmndi.ecore#//GroupShapeType">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmndi.ecore#//GroupShapeType/categoryRef"/>
+    </genClasses>
+    <genClasses ecoreClass="bpmndi.ecore#//LaneCompartmentType">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute bpmndi.ecore#//LaneCompartmentType/bpmnShapeGroup"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference bpmndi.ecore#//LaneCompartmentType/bpmnShape"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmndi.ecore#//LaneCompartmentType/subLane"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmndi.ecore#//LaneCompartmentType/laneRef"/>
+    </genClasses>
+    <genClasses ecoreClass="bpmndi.ecore#//LaneCompartmentType1"/>
+    <genClasses ecoreClass="bpmndi.ecore#//MessageFlowConnectorType">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmndi.ecore#//MessageFlowConnectorType/messageFlowRef"/>
+    </genClasses>
+    <genClasses ecoreClass="bpmndi.ecore#//MessageShapeType">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmndi.ecore#//MessageShapeType/messageRef"/>
+    </genClasses>
+    <genClasses ecoreClass="bpmndi.ecore#//PoolCompartmentType">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmndi.ecore#//PoolCompartmentType/laneCompRef"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmndi.ecore#//PoolCompartmentType/participantRef"/>
+    </genClasses>
+    <genClasses ecoreClass="bpmndi.ecore#//ProcessDiagramType">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmndi.ecore#//ProcessDiagramType/laneCompartment"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmndi.ecore#//ProcessDiagramType/sequenceFlowConnector"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute bpmndi.ecore#//ProcessDiagramType/associationConnectorGroup"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference bpmndi.ecore#//ProcessDiagramType/associationConnector"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmndi.ecore#//ProcessDiagramType/dataAssociationConnector"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmndi.ecore#//ProcessDiagramType/processRef"/>
+    </genClasses>
+    <genClasses ecoreClass="bpmndi.ecore#//SequenceFlowConnectorType">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmndi.ecore#//SequenceFlowConnectorType/sequenceFlowRef"/>
+    </genClasses>
+    <genClasses ecoreClass="bpmndi.ecore#//SubprocessShapeType">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmndi.ecore#//SubprocessShapeType/laneCompRef"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmndi.ecore#//SubprocessShapeType/isExpanded"/>
+    </genClasses>
+    <genClasses ecoreClass="bpmndi.ecore#//TextAnnotationShapeType">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmndi.ecore#//TextAnnotationShapeType/annotationRef"/>
+    </genClasses>
+  </genPackages>
+</genmodel:GenModel>
