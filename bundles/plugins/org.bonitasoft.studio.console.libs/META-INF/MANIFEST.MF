@@ -20,6 +20,7 @@ Bundle-ClassPath:
  lib/stax-ex.jar,
  lib/FastInfoset.jar,
  lib/bonita-common.jar,
+ lib/bonita-business-object-model.jar,
  lib/commons-io.jar,
  lib/jackson-databind.jar,
  lib/jackson-core.jar,
