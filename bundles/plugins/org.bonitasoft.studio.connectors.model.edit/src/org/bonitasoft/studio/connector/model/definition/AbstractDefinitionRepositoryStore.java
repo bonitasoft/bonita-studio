@@ -14,14 +14,7 @@
  */
 package org.bonitasoft.studio.connector.model.definition;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.net.URL;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -29,33 +22,24 @@ import java.util.stream.Collectors;
 import org.bonitasoft.bpm.connector.model.definition.Category;
 import org.bonitasoft.bpm.connector.model.definition.ConnectorDefinition;
 import org.bonitasoft.bpm.connector.model.definition.ConnectorDefinitionFactory;
-import org.bonitasoft.bpm.connector.model.definition.DocumentRoot;
 import org.bonitasoft.bpm.connector.model.definition.util.ConnectorDefinitionAdapterFactory;
-import org.bonitasoft.bpm.connector.model.definition.util.ConnectorDefinitionResourceImpl;
-import org.bonitasoft.bpm.connector.model.definition.util.ConnectorDefinitionXMLProcessor;
-import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.filestore.EMFFileStore;
 import org.bonitasoft.studio.common.repository.model.IDefinitionRepositoryStore;
+import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.common.repository.store.AbstractEMFRepositoryStore;
-import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.emf.ecore.xmi.XMLResource;
-import org.eclipse.emf.ecore.xmi.impl.XMLResourceImpl;
-import org.eclipse.emf.edapt.internal.migration.execution.ValidationLevel;
-import org.eclipse.emf.edapt.migration.MigrationException;
-import org.eclipse.emf.edapt.migration.execution.Migrator;
-import org.eclipse.emf.edapt.spi.history.Release;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.osgi.framework.Bundle;
 
 public abstract class AbstractDefinitionRepositoryStore<T extends EMFFileStore> extends AbstractEMFRepositoryStore<T>
         implements IDefinitionRepositoryStore<T> {
 
+	@Override
+	public void createRepositoryStore(IRepository repository) {
+		this.repository = repository;
+	}
+	
     @Override
     public List<ConnectorDefinition> getDefinitions() {
         return getChildren().stream()
@@ -124,45 +108,6 @@ public abstract class AbstractDefinitionRepositoryStore<T extends EMFFileStore> 
         adapterFactory.addAdapterFactory(new ConnectorDefinitionAdapterFactory());
     }
 
-    protected abstract T getDefFileStore(URL url);
-
     protected abstract Bundle getBundle();
-
-    @Override
-    protected void performMigration(final Migrator migrator, final URI resourceURI, final Release release)
-            throws MigrationException {
-        migrator.setLevel(ValidationLevel.NONE);
-        final ResourceSet rSet = migrator.migrateAndLoad(
-                Collections.singletonList(resourceURI), release,
-                null, AbstractRepository.NULL_PROGRESS_MONITOR);
-        if (!rSet.getResources().isEmpty()) {
-            FileOutputStream fos = null;
-            try {
-                final ConnectorDefinitionResourceImpl r = (ConnectorDefinitionResourceImpl) rSet.getResources().get(0);
-                final Resource resource = new XMLResourceImpl(resourceURI);
-                final DocumentRoot root = ConnectorDefinitionFactory.eINSTANCE.createDocumentRoot();
-                final ConnectorDefinition definition = EcoreUtil
-                        .copy(((DocumentRoot) r.getContents().get(0)).getConnectorDefinition());
-                root.setConnectorDefinition(definition);
-                resource.getContents().add(root);
-                final Map<String, String> options = new HashMap<>();
-                options.put(XMLResource.OPTION_ENCODING, "UTF-8");
-                options.put(XMLResource.OPTION_XML_VERSION, "1.0");
-                final File target = new File(resourceURI.toFileString());
-                fos = new FileOutputStream(target);
-                new ConnectorDefinitionXMLProcessor().save(fos, resource, options);
-            } catch (final Exception e) {
-                BonitaStudioLog.error(e, "org.bonitasoft.studio.connectors.model.edit");
-            } finally {
-                if (fos != null) {
-                    try {
-                        fos.close();
-                    } catch (final IOException e) {
-                        BonitaStudioLog.error(e, "org.bonitasoft.studio.connectors.model.edit");
-                    }
-                }
-            }
-        }
-    }
 
 }

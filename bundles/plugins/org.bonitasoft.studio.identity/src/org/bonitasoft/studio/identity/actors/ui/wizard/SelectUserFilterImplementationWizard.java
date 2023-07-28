@@ -15,18 +15,15 @@
 package org.bonitasoft.studio.identity.actors.ui.wizard;
 
 import org.bonitasoft.studio.common.repository.RepositoryManager;
-import org.bonitasoft.studio.common.repository.filestore.AbstractFileStore;
 import org.bonitasoft.studio.common.repository.model.IDefinitionRepositoryStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
-import org.bonitasoft.studio.common.repository.store.SourceRepositoryStore;
 import org.bonitasoft.studio.connector.model.implementation.provider.ConnectorImplementationContentProvider;
 import org.bonitasoft.studio.connector.model.implementation.provider.ConnectorImplementationLabelProvider;
 import org.bonitasoft.studio.connector.model.implementation.wizard.AbstractSelectImplementationWizard;
 import org.bonitasoft.studio.identity.IdentityPlugin;
 import org.bonitasoft.studio.identity.actors.repository.ActorFilterDefRepositoryStore;
 import org.bonitasoft.studio.identity.actors.repository.ActorFilterImplRepositoryStore;
-import org.bonitasoft.studio.identity.actors.repository.ActorFilterSourceRepositoryStore;
 import org.bonitasoft.studio.identity.i18n.Messages;
 import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.jface.viewers.LabelProvider;
@@ -39,11 +36,6 @@ public class SelectUserFilterImplementationWizard extends AbstractSelectImplemen
     public SelectUserFilterImplementationWizard() {
         super();
         setWindowTitle(Messages.selectActorFitleImplementation);
-    }
-
-    @Override
-    protected SourceRepositoryStore<AbstractFileStore> getSourceStore() {
-        return RepositoryManager.getInstance().getRepositoryStore(ActorFilterSourceRepositoryStore.class);
     }
 
     @Override

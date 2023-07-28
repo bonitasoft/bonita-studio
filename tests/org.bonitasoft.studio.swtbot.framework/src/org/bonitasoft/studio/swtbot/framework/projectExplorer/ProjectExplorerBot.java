@@ -22,12 +22,9 @@ import java.util.Objects;
 import java.util.Optional;
 
 import org.bonitasoft.studio.common.repository.RepositoryManager;
-import org.bonitasoft.studio.identity.i18n.Messages;
 import org.bonitasoft.studio.swtbot.framework.BotBase;
 import org.bonitasoft.studio.swtbot.framework.ConditionBuilder;
 import org.bonitasoft.studio.swtbot.framework.bdm.BotBdmEditor;
-import org.bonitasoft.studio.swtbot.framework.connector.ConnectorDefinitionWizardBot;
-import org.bonitasoft.studio.swtbot.framework.connector.ConnectorImplementationWizardBot;
 import org.bonitasoft.studio.swtbot.framework.diagram.BotProcessDiagramPerspective;
 import org.bonitasoft.studio.swtbot.framework.diagram.importer.BotImportOtherDialog;
 import org.eclipse.swt.widgets.Tree;
@@ -41,11 +38,6 @@ import org.eclipse.swtbot.swt.finder.widgets.SWTBotTree;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
 
 public class ProjectExplorerBot extends BotBase {
-
-    private static final String NEW_CONNECTOR_DEF_COMMAND = "org.bonitasoft.studio.connectors.newDefinition";
-    private static final String NEW_CONNECTOR_IMPL_COMMAND = "org.bonitasoft.studio.connectors.newImplementation";
-    private static final String NEW_FILTER_DEF_COMMAND = "org.bonitasoft.studio.actors.newFilterDef";
-    private static final String NEW_FILTER_IMPL_COMMAND = "org.bonitasoft.studio.actors.newFilterImpl";
 
     protected String projectName;
 
@@ -99,32 +91,6 @@ public class ProjectExplorerBot extends BotBase {
         return new BotImportOtherDialog(bot);
     }
 
-    public ConnectorDefinitionWizardBot newConnectorDefinition() {
-        bot.getDisplay().asyncExec(() -> commandExecutor.executeCommand(NEW_CONNECTOR_DEF_COMMAND, null));
-        bot.waitUntil(Conditions.shellIsActive("New connector definition"), 10000);
-        return new ConnectorDefinitionWizardBot(bot,
-                org.bonitasoft.studio.connectors.i18n.Messages.newConnectorDefinition);
-    }
-
-    public ConnectorImplementationWizardBot newConnectorImplementation() {
-        bot.getDisplay().asyncExec(() -> commandExecutor.executeCommand(NEW_CONNECTOR_IMPL_COMMAND, null));
-        bot.waitUntil(Conditions.shellIsActive("New connector implementation"), 10000);
-        return new ConnectorImplementationWizardBot(bot,
-                org.bonitasoft.studio.connectors.i18n.Messages.newConnectorImplementation);
-    }
-
-    public ConnectorDefinitionWizardBot newActorFilterDefinition() {
-        bot.getDisplay().asyncExec(() -> commandExecutor.executeCommand(NEW_FILTER_DEF_COMMAND, null));
-        return new ConnectorDefinitionWizardBot(bot, org.bonitasoft.studio.identity.i18n.Messages.newFilterDefinition);
-    }
-
-    public ConnectorImplementationWizardBot newActorFilterImplementation() {
-        bot.getDisplay().asyncExec(() -> commandExecutor.executeCommand(NEW_FILTER_IMPL_COMMAND, null));
-        bot.waitUntil(Conditions.shellIsActive(Messages.newFilterImplementation), 10000);
-        return new ConnectorImplementationWizardBot(bot,
-                org.bonitasoft.studio.identity.i18n.Messages.newFilterImplementation);
-    }
-
     public OrganizationProjectExplorerBot organization() {
         return new OrganizationProjectExplorerBot(bot);
     }
@@ -139,22 +105,6 @@ public class ProjectExplorerBot extends BotBase {
 
     public DiagramProjectExplorerBot diagram() {
         return new DiagramProjectExplorerBot(bot);
-    }
-
-    public ConnectorDefinitionProjectExplorerBot connectorDefinition() {
-        return new ConnectorDefinitionProjectExplorerBot(bot);
-    }
-
-    public ConnectorImplementationProjectExplorerBot connectorImplementation() {
-        return new ConnectorImplementationProjectExplorerBot(bot);
-    }
-
-    public ActorFilterDefinitionProjectExplorerBot actorFilterDefinition() {
-        return new ActorFilterDefinitionProjectExplorerBot(bot);
-    }
-
-    public ActorFilterImplementationProjectExplorerBot actorFilterImplementation() {
-        return new ActorFilterImplementationProjectExplorerBot(bot);
     }
     
     public EnvironmentsProjectExplorerBot environments() {

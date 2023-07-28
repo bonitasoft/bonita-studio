@@ -86,7 +86,6 @@ Export-Package: org.bonitasoft.studio.identity;uses:="org.osgi.framework,org.ecl
    org.eclipse.emf.edit.provider,
    org.eclipse.emf.ecore.resource,
    org.eclipse.emf.edapt.migration.execution",
- org.bonitasoft.studio.identity.actors.ui.handler,
  org.bonitasoft.studio.identity.actors.ui.wizard.page,
  org.bonitasoft.studio.identity.i18n,
  org.bonitasoft.studio.identity.organization.editor.control.group,

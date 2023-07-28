@@ -15,10 +15,11 @@
 package org.bonitasoft.studio.connectors.repository;
 
 import java.io.InputStream;
-import java.net.URL;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.bonitasoft.studio.common.ModelVersion;
 import org.bonitasoft.studio.common.model.validator.ModelNamespaceValidator;
@@ -35,11 +36,6 @@ import org.eclipse.emf.edapt.migration.MigrationException;
 import org.eclipse.ui.PlatformUI;
 import org.osgi.framework.Bundle;
 
-/**
- * @author Romain Bioteau
- * @author Baptiste Mesta
- *         This extends SourceRepositoryStore in order to find message resources
- */
 public class ConnectorDefRepositoryStore extends AbstractDefinitionRepositoryStore<ConnectorDefFileStore> {
 
     public static final String STORE_NAME = "connectors-def";
@@ -61,16 +57,14 @@ public class ConnectorDefRepositoryStore extends AbstractDefinitionRepositorySto
 
     @Override
     public List<ConnectorDefFileStore> getChildren() {
-        List<ConnectorDefFileStore> defFileStores = super.getChildren();
-
         var projectDependenciesStore = getRepository().getProjectDependenciesStore();
         if (projectDependenciesStore != null) {
-            projectDependenciesStore.getConnectorDefinitions().stream()
+           return projectDependenciesStore.getConnectorDefinitions().stream()
                     .map(def -> new DependencyConnectorDefFileStore(def, this))
-                    .forEach(defFileStores::add);
+                    .collect(Collectors.toList());
         }
 
-        return defFileStores;
+        return Collections.emptyList();
     }
 
     @Override
@@ -105,15 +99,6 @@ public class ConnectorDefRepositoryStore extends AbstractDefinitionRepositorySto
         return extensions;
     }
 
-    @Override
-    protected ConnectorDefFileStore getDefFileStore(final URL url) {
-        for (final String compatibleExtension : getCompatibleExtensions()) {
-            if (url.getFile().endsWith(compatibleExtension)) {
-                return new URLConnectorDefFileStore(url, this);
-            }
-        }
-        return null;
-    }
 
     @Override
     protected Bundle getBundle() {

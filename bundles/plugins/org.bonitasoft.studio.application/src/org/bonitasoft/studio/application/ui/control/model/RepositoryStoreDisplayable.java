@@ -22,7 +22,6 @@ import org.bonitasoft.studio.connectors.ConnectorPlugin;
 import org.bonitasoft.studio.connectors.repository.ConnectorConfRepositoryStore;
 import org.bonitasoft.studio.connectors.repository.ConnectorDefRepositoryStore;
 import org.bonitasoft.studio.connectors.repository.ConnectorImplRepositoryStore;
-import org.bonitasoft.studio.connectors.repository.ConnectorSourceRepositoryStore;
 import org.bonitasoft.studio.connectors.repository.DatabaseConnectorPropertiesRepositoryStore;
 import org.bonitasoft.studio.dependencies.repository.DependencyRepositoryStore;
 import org.bonitasoft.studio.designer.core.repository.WebFragmentRepositoryStore;
@@ -31,7 +30,6 @@ import org.bonitasoft.studio.designer.core.repository.WebWidgetRepositoryStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.diagram.custom.repository.ProcessConfigurationRepositoryStore;
 import org.bonitasoft.studio.groovy.repository.GroovyRepositoryStore;
-import org.bonitasoft.studio.groovy.repository.ProvidedGroovyRepositoryStore;
 import org.bonitasoft.studio.identity.IdentityPlugin;
 import org.bonitasoft.studio.identity.actors.repository.ActorFilterConfRepositoryStore;
 import org.bonitasoft.studio.identity.actors.repository.ActorFilterDefRepositoryStore;
@@ -89,14 +87,8 @@ public class RepositoryStoreDisplayable implements IDisplayable {
             return DependencyRepositoryStore.STORE_NAME;
         } else if (repositoryStore instanceof ActorFilterSourceRepositoryStore) {
             return org.bonitasoft.studio.identity.i18n.Messages.filtersSourceRepositoryName;
-        } else if (repositoryStore instanceof ConnectorSourceRepositoryStore) {
-            return org.bonitasoft.studio.connectors.i18n.Messages.connectorSourceRepositoryName;
         } else if (repositoryStore instanceof GroovyRepositoryStore) {
-            if (repositoryStore instanceof ProvidedGroovyRepositoryStore) {
-                return org.bonitasoft.studio.groovy.Messages.groovyProvidedScriptRepository;
-            } else {
-                return org.bonitasoft.studio.groovy.Messages.groovyScriptRepository;
-            }
+            return org.bonitasoft.studio.groovy.Messages.groovyScriptRepository;
         }
 
         // by default, just use the name
@@ -139,9 +131,7 @@ public class RepositoryStoreDisplayable implements IDisplayable {
             return null;
         } else if (repositoryStore instanceof ActorFilterSourceRepositoryStore) {
             return Pics.getImage("java.gif", IdentityPlugin.getDefault());
-        } else if (repositoryStore instanceof ConnectorSourceRepositoryStore) {
-            return Pics.getImage("java.gif", ConnectorPlugin.getDefault());
-        } else if (repositoryStore instanceof GroovyRepositoryStore) {
+        }else if (repositoryStore instanceof GroovyRepositoryStore) {
             return Pics.getImage(PicsConstants.groovyScript);
         }
 

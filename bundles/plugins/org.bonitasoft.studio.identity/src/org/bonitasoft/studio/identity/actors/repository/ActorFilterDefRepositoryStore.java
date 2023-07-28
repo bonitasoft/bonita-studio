@@ -15,10 +15,10 @@
 package org.bonitasoft.studio.identity.actors.repository;
 
 import java.io.InputStream;
-import java.net.URL;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.bonitasoft.studio.common.ModelVersion;
 import org.bonitasoft.studio.common.model.validator.ModelNamespaceValidator;
@@ -67,16 +67,14 @@ public class ActorFilterDefRepositoryStore extends AbstractDefinitionRepositoryS
 
     @Override
     public List<ActorFilterDefFileStore> getChildren() {
-        List<ActorFilterDefFileStore> defFileStores = super.getChildren();
-
         var projectDependenciesStore = getRepository().getProjectDependenciesStore();
         if (projectDependenciesStore != null) {
-            projectDependenciesStore.getActorFilterDefinitions().stream()
+           return projectDependenciesStore.getActorFilterDefinitions().stream()
                     .map(t -> new DependencyActorFilterDefFileStore(t, this))
-                    .forEach(defFileStores::add);
+                    .collect(Collectors.toList());
         }
 
-        return defFileStores;
+        return List.of();
     }
 
     @Override
@@ -94,13 +92,6 @@ public class ActorFilterDefRepositoryStore extends AbstractDefinitionRepositoryS
         return extensions;
     }
 
-    @Override
-    protected ActorFilterDefFileStore getDefFileStore(final URL url) {
-        if (url.toString().endsWith(DEF_EXT)) {
-            return new URLActorFilterDefFileStore(url, this);
-        }
-        return null;
-    }
 
     @Override
     protected Bundle getBundle() {

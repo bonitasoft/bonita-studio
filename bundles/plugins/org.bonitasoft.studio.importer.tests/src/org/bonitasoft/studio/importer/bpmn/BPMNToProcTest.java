@@ -67,7 +67,7 @@ public class BPMNToProcTest {
 
     @Before
     public void setup() throws Exception {
-        bpmnToProc = spy(new BPMNToProc("myProc"));
+        bpmnToProc = spy(new BPMNToProc());
     }
 
     @Test

@@ -732,7 +732,7 @@
                   lang="java"
                   mode="Batch"
                   name="Deprecated provided Groovy script usage"
-                  severity="WARNING"
+                  severity="ERROR"
                   statusCode="1">
                <message>
                   {0}

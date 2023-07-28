@@ -16,17 +16,10 @@ package org.bonitasoft.studio.identity.actors.repository;
 
 import java.util.Optional;
 
-import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRenamable;
-import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
-import org.bonitasoft.studio.common.repository.provider.DefinitionResourceProvider;
 import org.bonitasoft.studio.common.repository.store.AbstractEMFRepositoryStore;
 import org.bonitasoft.studio.connector.model.definition.AbstractDefFileStore;
-import org.bonitasoft.studio.connector.model.definition.dialog.ConnectorDefinitionWizardDialog;
 import org.bonitasoft.studio.identity.IdentityPlugin;
-import org.bonitasoft.studio.identity.actors.ui.wizard.FilterDefinitionWizard;
-import org.eclipse.jface.wizard.WizardDialog;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbenchPart;
 import org.osgi.framework.Bundle;
 
@@ -47,19 +40,6 @@ public class ActorFilterDefFileStore extends AbstractDefFileStore implements IRe
 
     @Override
     protected IWorkbenchPart doOpen() {
-        final ActorFilterDefRepositoryStore defStore = RepositoryManager.getInstance()
-                .getRepositoryStore(ActorFilterDefRepositoryStore.class);
-        final DefinitionResourceProvider messageProvider = DefinitionResourceProvider.getInstance(defStore,
-                IdentityPlugin.getDefault().getBundle());
-        FilterDefinitionWizard wizard;
-        try {
-            wizard = new FilterDefinitionWizard(getContent(), messageProvider);
-        } catch (ReadFileStoreException e) {
-            return null;
-        }
-        WizardDialog wd = new ConnectorDefinitionWizardDialog(Display.getCurrent().getActiveShell(), wizard,
-                messageProvider);
-        wd.open();
         return null;
     }
 

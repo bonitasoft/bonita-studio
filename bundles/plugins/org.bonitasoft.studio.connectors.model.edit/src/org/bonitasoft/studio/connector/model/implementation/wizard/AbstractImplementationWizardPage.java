@@ -93,9 +93,9 @@ public abstract class AbstractImplementationWizardPage extends NewTypeWizardPage
 
     private ISWTObservableValue observePackageText;
 
-    public AbstractImplementationWizardPage(final ConnectorImplementation implementation,
+    protected AbstractImplementationWizardPage(final ConnectorImplementation implementation,
             final List<ConnectorImplementation> existingImpl, final List<ConnectorDefinition> definitions,
-            final SourceRepositoryStore<AbstractFileStore> sourceStore, final String pageTitle,
+             final String pageTitle,
             final String pageDescription,
             final DefinitionResourceProvider messageProvider) {
         super(true, AbstractImplementationWizardPage.class.getName());
@@ -105,14 +105,6 @@ public abstract class AbstractImplementationWizardPage extends NewTypeWizardPage
         this.existingImpl = existingImpl;
         this.messageProvider = messageProvider;
         this.definitions = definitions;
-        try {
-            final IPackageFragmentRoot root = RepositoryManager.getInstance().getCurrentRepository().orElseThrow()
-                    .getJavaProject()
-                    .findPackageFragmentRoot(sourceStore.getResource().getFullPath());
-            setPackageFragmentRoot(root, false);
-        } catch (final JavaModelException e) {
-            BonitaStudioLog.error(e);
-        }
     }
 
     /*

@@ -143,7 +143,11 @@ public abstract class AbstractFileStore<T>
 
     @Override
     public IResource getResource() {
-        return getParentStore().getResource().getFile(getName());
+    	if(getParentStore().getResource() != null) {
+    		 return getParentStore().getResource().getFile(getName());
+    	}
+    	return null;
+       
     }
 
     @Override

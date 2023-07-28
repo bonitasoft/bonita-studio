@@ -17,11 +17,11 @@ package org.bonitasoft.studio.connectors.repository;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.bonitasoft.studio.common.ModelVersion;
 import org.bonitasoft.studio.common.model.validator.ModelNamespaceValidator;
 import org.bonitasoft.studio.common.model.validator.XMLModelCompatibilityValidator;
-import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.connector.model.implementation.AbstractConnectorImplRepositoryStore;
@@ -51,21 +51,15 @@ public class ConnectorImplRepositoryStore extends AbstractConnectorImplRepositor
 
     @Override
     public List<ConnectorImplFileStore> getChildren() {
-        List<ConnectorImplFileStore> result = super.getChildren();
         var projectDependenciesStore = getRepository().getProjectDependenciesStore();
         if (projectDependenciesStore != null) {
-            projectDependenciesStore.getConnectorImplementations().stream()
+           return projectDependenciesStore.getConnectorImplementations().stream()
                     .map(impl -> new DependencyConnectorImplFileStore(impl, this))
-                    .forEach(result::add);
+                    .collect(Collectors.toList());
         }
-        return result;
+        return List.of();
     }
 
-    @Override
-    protected IRepositoryStore<? extends IRepositoryFileStore> getSourceRepositoryStore() {
-        return RepositoryManager.getInstance()
-                .getRepositoryStore(ConnectorSourceRepositoryStore.class);
-    }
 
     @Override
     public IStatus validate(String filename, InputStream inputStream) {
@@ -84,4 +78,5 @@ public class ConnectorImplRepositoryStore extends AbstractConnectorImplRepositor
     public int getImportOrder() {
         return 5;
     }
+
 }

@@ -143,7 +143,7 @@ public abstract class EMFFileStore<T extends EObject> extends AbstractFileStore<
 
     @Override
     public IFile getResource() {
-        return getParentStore().getResource().getFile(getName());
+    	return (IFile) super.getResource();
     }
 
 }

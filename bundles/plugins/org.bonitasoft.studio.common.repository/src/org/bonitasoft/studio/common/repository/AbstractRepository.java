@@ -26,6 +26,7 @@ import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -48,6 +49,7 @@ import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
 import org.bonitasoft.studio.common.repository.core.migration.report.AsciidocMigrationReportWriter;
 import org.bonitasoft.studio.common.repository.core.migration.report.MigrationReport;
 import org.bonitasoft.studio.common.repository.core.migration.report.MigrationReportWriter;
+import org.bonitasoft.studio.common.repository.core.migration.step.RemoveLegacyFolderStep;
 import org.bonitasoft.studio.common.repository.filestore.AbstractFileStore;
 import org.bonitasoft.studio.common.repository.filestore.FileStoreChangeEvent;
 import org.bonitasoft.studio.common.repository.jdt.JDTTypeHierarchyManager;
@@ -593,6 +595,9 @@ public abstract class AbstractRepository implements IRepository {
     @Override
     public java.util.Optional<IRepositoryStore<? extends IRepositoryFileStore>> getRepositoryStoreByName(
             final String storeName) {
+    	if(RemoveLegacyFolderStep.legacyRepositories().contains(storeName)) {
+    		return Optional.empty();
+    	}
         return getAllStores().stream().filter(store -> Objects.equals(store.getName(), storeName)).findFirst();
     }
 

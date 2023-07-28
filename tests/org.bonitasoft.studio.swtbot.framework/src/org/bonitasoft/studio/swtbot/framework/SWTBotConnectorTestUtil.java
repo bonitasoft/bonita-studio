@@ -20,11 +20,9 @@ import java.util.List;
 import org.bonitasoft.studio.common.CommandExecutor;
 import org.bonitasoft.studio.common.ui.jface.SWTBotConstants;
 import org.eclipse.jface.dialogs.IDialogConstants;
-import org.eclipse.swtbot.eclipse.finder.SWTWorkbenchBot;
 import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
 import org.eclipse.swtbot.swt.finder.SWTBot;
 import org.eclipse.swtbot.swt.finder.waits.ICondition;
-import org.eclipse.swtbot.swt.finder.widgets.SWTBotCombo;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
 import org.junit.Assert;
@@ -34,49 +32,12 @@ import org.junit.Assert;
  */
 public class SWTBotConnectorTestUtil {
 
-    private static final String NEW_DEF_COMMAND = "org.bonitasoft.studio.connectors.newDefinition";
-    private static final String EDIT_DEF_COMMAND = "org.bonitasoft.studio.connectors.editDefinition";
-    private static final String NEW_IMPL_COMMAND = "org.bonitasoft.studio.connectors.newImplementation";
-    private static final String IMPORT_COMMAND = "org.bonitasoft.studio.connectors.importConnector";
     private static final String TEST_COMMAND = "org.bonitasoft.studio.connectors.testConnector";
-    private static final String EXPORT_COMMAND = "org.bonitasoft.studio.connectors.exportConnector";
 
     private static SWTBotTreeItem categoryItem;
     private static List<String> nodes;
     private static CommandExecutor commandExecutor = new CommandExecutor();
 
-    /**
-     * use it to access to the wizard "New definition..." (menu
-     * DEvelopement>Connectors>New definition...)
-     * 
-     * @param bot
-     */
-    public static void activateConnectorDefinitionShell(SWTBot bot) {
-        bot.getDisplay().asyncExec(() -> commandExecutor.executeCommand(NEW_DEF_COMMAND, null));
-        bot.waitUntil(Conditions.shellIsActive("New connector definition"), 10000);
-    }
-
-    /**
-     * use it to access to the wizard "New implementation..." (menu
-     * DEvelopement>Connectors>Edit definition)
-     * 
-     * @param bot
-     */
-    public static void activateConnectorImplementationShell(SWTBot bot) {
-        bot.getDisplay().asyncExec(() -> commandExecutor.executeCommand(NEW_IMPL_COMMAND, null));
-        bot.waitUntil(Conditions.shellIsActive("New connector implementation"), 10000);
-    }
-
-    /**
-     * use it to access to the wizard "Edit definition" (menu
-     * DEvelopement>Connectors>Edit definition)
-     * 
-     * @param bot
-     */
-    public static void activateConnectorDefEditionShell(SWTBot bot) {
-        bot.getDisplay().asyncExec(() -> commandExecutor.executeCommand(EDIT_DEF_COMMAND, null));
-        bot.waitUntil(Conditions.shellIsActive("Select a connector definition"), 10000);
-    }
 
     /**
      * use it to access to the wizard "Test connector" (menu
@@ -158,68 +119,6 @@ public class SWTBotConnectorTestUtil {
         activeShell.setFocus();
     }
 
-    /**
-     * use it to access to the wizard "Import connector" (menu
-     * Developement>Connectors>Import)
-     * 
-     * @param bot
-     */
-    public static void activateConnectorImportShell(SWTBot bot) {
-        bot.getDisplay().asyncExec(() -> commandExecutor.executeCommand(IMPORT_COMMAND, null));
-        bot.waitUntil(Conditions.shellIsActive("Import connector archive"), 10000);
-    }
-
-    /**
-     * use it to access to the wizard "Export connector" (menu Development<Connector>Export)
-     */
-    public static void activateExportConnectorShell(SWTBot bot) {
-        bot.getDisplay().asyncExec(() -> commandExecutor.executeCommand(EXPORT_COMMAND, null));
-        bot.waitUntil(Conditions.shellIsActive("Export connector"), 10000);
-        bot.activeShell().setFocus();
-    }
-
-    /**
-     * use it to create a connector def and impl (no window should be opened)
-     * 
-     * @param bot
-     * @param id
-     * @param version
-     * @param className
-     * @param packageName
-     */
-    public static void createConnectorDefAndImpl(final SWTWorkbenchBot bot, String id, String version, String className,
-            String packageName) {
-        final int nbEditorsBefore = bot.editors().size();
-        activateConnectorDefinitionShell(bot);
-        createConnectorDefinition(bot, id, version);
-        bot.button(IDialogConstants.FINISH_LABEL).click();
-        activateConnectorImplementationShell(bot);
-        bot.table().select(id);
-        final SWTBotCombo comboBoxToSelectVersion = bot.comboBoxWithLabel("Definition version");
-        if (comboBoxToSelectVersion.isEnabled()) {
-            comboBoxToSelectVersion.setSelection(version);
-        }
-        bot.button(IDialogConstants.NEXT_LABEL).click();
-        bot.textWithLabel("Class name *").setText(className);
-        bot.textWithLabel("Package *").setText(packageName);
-        bot.button(IDialogConstants.FINISH_LABEL).click();
-        bot.waitUntil(new ICondition() {
-
-            @Override
-            public boolean test() throws Exception {
-                return nbEditorsBefore + 1 == bot.editors().size();
-            }
-
-            @Override
-            public void init(SWTBot bot) {
-            }
-
-            @Override
-            public String getFailureMessage() {
-                return "Editor for implementation has not been opened.";
-            }
-        }, 30000);
-    }
 
     /**
      * connector configuration input widget should be a text field or a text area

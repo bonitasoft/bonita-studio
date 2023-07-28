@@ -174,9 +174,9 @@ public class ImportBOSArchiveIT {
         }
         assertThat(mavenProjectHelper.findDependency(model, "org.codehaus.groovy", "groovy")).isPresent();
         assertThat(mavenProjectHelper.findDependency(model, "org.codehaus.groovy", "groovy-dateutil")).isPresent();
-        // Dependencies migrated from existing jars in lib folder
+        // Dependencies migrated from custom impl should not be added.
         assertThat(mavenProjectHelper.findDependency(model, dependency("org.apache.commons", "commons-exec", "1.1")))
-                .isPresent();
+                .isEmpty();
     }
 
     private Dependency dependency(String groupId, String artifactId, String version) {
@@ -224,7 +224,7 @@ public class ImportBOSArchiveIT {
                 .getFolder("src-connectors").getFolder("org").getFolder("bonitasoft").getFolder("connector")
                 .getFolder("demo").getFile("FillDBImpl.java")
                 .exists();
-        assertThat(javaFileExists).isTrue();
+        assertThat(javaFileExists).isFalse();
     }
 
     private File loadArchiveFile(String filePath) throws IOException {

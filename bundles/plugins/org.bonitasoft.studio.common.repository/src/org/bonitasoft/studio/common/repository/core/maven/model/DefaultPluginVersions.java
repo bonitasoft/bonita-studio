@@ -43,7 +43,7 @@ public interface DefaultPluginVersions {
     static final String MAVEN_FAILSAFE_PLUGIN_VERSION = "3.1.2";
     
     static final String MAVEN_SHADE_PLUGIN = "maven-shade-plugin";
-    static final String MAVEN_SHADE_PLUGIN_VERSION = "3.4.1";
+    static final String MAVEN_SHADE_PLUGIN_VERSION = "3.5.0";
     
     static final String MAVEN_SOURCE_PLUGIN = "maven-source-plugin";
     static final String MAVEN_SOURCE_PLUGIN_VERSION = "3.3.0";

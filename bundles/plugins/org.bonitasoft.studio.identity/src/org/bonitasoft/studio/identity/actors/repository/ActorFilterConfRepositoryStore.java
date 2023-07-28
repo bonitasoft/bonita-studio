@@ -24,13 +24,13 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 
 import org.bonitasoft.bpm.model.connectorconfiguration.ConnectorConfiguration;
 import org.bonitasoft.bpm.model.connectorconfiguration.util.ConnectorConfigurationAdapterFactory;
 import org.bonitasoft.bpm.model.process.util.migration.MigrationHelper;
 import org.bonitasoft.bpm.model.process.util.migration.MigrationPolicy;
+import org.bonitasoft.studio.common.ModelVersion;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.platform.tools.CopyInputStream;
 import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
@@ -151,13 +151,21 @@ public class ActorFilterConfRepositoryStore extends AbstractEMFRepositoryStore<D
                     MigrationPolicy.ALWAYS_MIGRATE_POLICY);
             confResource.load(migrateOptions);
             if (!confResource.getContents().isEmpty()) {
-                final Optional<ConnectorConfiguration> configuration = confResource.getContents().stream()
+                final ConnectorConfiguration configuration = confResource.getContents().stream()
                         .filter(ConnectorConfiguration.class::isInstance)
                         .map(ConnectorConfiguration.class::cast)
-                        .findFirst();
-                if (!configuration.isPresent()) {
-                    throw new IOException(
-                            "Resource content is invalid. There should be one ConnectorConfiguration per .connectorconfig file.");
+                        .findFirst()
+                        .orElseThrow(() -> new IOException(
+                                "Resource content is invalid. There should be only one ConnectorConfiguration per .connectorconfig file."));
+
+                final String mVersion = configuration.getVersion();
+                if (!ModelVersion.CURRENT_DIAGRAM_VERSION.equals(mVersion)) {
+                    configuration.setModelVersion(ModelVersion.CURRENT_DIAGRAM_VERSION);
+                }
+                try {
+                    confResource.save(Collections.EMPTY_MAP);
+                } catch (final IOException e) {
+                    BonitaStudioLog.error(e);
                 }
                 return new FileInputStream(new File(confResource.getURI()
                         .toFileString()));

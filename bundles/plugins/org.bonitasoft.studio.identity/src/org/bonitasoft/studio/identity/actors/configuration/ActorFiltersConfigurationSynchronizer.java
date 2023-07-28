@@ -65,11 +65,6 @@ public class ActorFiltersConfigurationSynchronizer extends AbstractConnectorConf
         return DefinitionResourceProvider.getInstance(defStore, IdentityPlugin.getDefault().getBundle());
     }
 
-    @Override
-    protected SourceRepositoryStore getSourcerepositoryStore() {
-        return RepositoryManager.getInstance().getRepositoryStore(ActorFilterSourceRepositoryStore.class);
-    }
-
     /*
      * (non-Javadoc)
      * @see org.bonitasoft.studio.configuration.AbstractConnectorConfigurationSynchronizer#getImplementationStore()

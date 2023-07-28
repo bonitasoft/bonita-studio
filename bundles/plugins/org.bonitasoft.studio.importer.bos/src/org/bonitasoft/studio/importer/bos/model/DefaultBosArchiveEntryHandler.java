@@ -104,7 +104,7 @@ public class DefaultBosArchiveEntryHandler implements BosArchiveEntryHandler {
     }
 
     private boolean isLegacyFormRepo(String segment) {
-        return RemoveLegacyFolderStep.LEGACY_REPOSITORIES.contains(segment);
+        return RemoveLegacyFolderStep.legacyRepositories().contains(segment);
     }
 
     private void handleSegment(ImportArchiveModel archiveModel, String segment, final List<String> segments,
@@ -142,7 +142,7 @@ public class DefaultBosArchiveEntryHandler implements BosArchiveEntryHandler {
                     true,
                     archiveModel,
                     repository);
-        } else if (RemoveLegacyFolderStep.LEGACY_REPOSITORIES.contains(segment)) {
+        } else if (RemoveLegacyFolderStep.legacyRepositories().contains(segment)) {
             archiveModel.addStore(new LegacyStoreModel(toEntryPath(parentSegments)));
         } else if (segments.size() == storeDepth) { // Only root files should be added as RootFileModel
             archiveModel.addStore(new RootFileModel(segment, toEntryPath(parentSegments)));

@@ -25,6 +25,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.bonitasoft.bpm.model.configuration.Configuration;
+import org.bonitasoft.bpm.model.expression.Expression;
+import org.bonitasoft.bpm.model.parameter.Parameter;
+import org.bonitasoft.bpm.model.process.AbstractProcess;
 import org.bonitasoft.bpm.model.util.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
@@ -44,18 +48,13 @@ import org.bonitasoft.studio.groovy.BonitaScriptGroovyCompilationUnit;
 import org.bonitasoft.studio.groovy.GroovyUtil;
 import org.bonitasoft.studio.groovy.ScriptVariable;
 import org.bonitasoft.studio.groovy.repository.GroovyFileStore;
-import org.bonitasoft.studio.groovy.repository.ProvidedGroovyRepositoryStore;
+import org.bonitasoft.studio.groovy.repository.GroovyRepositoryStore;
 import org.bonitasoft.studio.groovy.ui.Activator;
 import org.bonitasoft.studio.groovy.ui.Messages;
 import org.bonitasoft.studio.groovy.ui.job.UnknownElementsIndexer;
-import org.bonitasoft.bpm.model.configuration.Configuration;
-import org.bonitasoft.bpm.model.expression.Expression;
-import org.bonitasoft.bpm.model.parameter.Parameter;
-import org.bonitasoft.bpm.model.process.AbstractProcess;
 import org.codehaus.groovy.eclipse.editor.GroovyEditor;
 import org.codehaus.groovy.eclipse.preferences.PreferenceConstants;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jdt.internal.ui.JavaPlugin;
@@ -66,7 +65,6 @@ import org.eclipse.jface.text.DocumentEvent;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IDocumentListener;
 import org.eclipse.jface.text.source.CompositeRuler;
-import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.IVerticalRulerInfo;
 import org.eclipse.jface.text.source.SourceViewer;
 import org.eclipse.jface.viewers.ViewerFilter;
@@ -137,8 +135,8 @@ public class GroovyViewer implements IDocumentListener {
         this.restrictScriptSize = restrictScriptSize;
         enbaleSyntaxHighligthing();
         if (input == null) {
-            final ProvidedGroovyRepositoryStore store = RepositoryManager.getInstance()
-                    .getRepositoryStore(ProvidedGroovyRepositoryStore.class);
+        	var store = RepositoryManager.getInstance()
+                    .getRepositoryStore(GroovyRepositoryStore.class);
             GroovyFileStore tmpGroovyFileStore = store.getChild(GroovyFileStore.EXPRESSION_SCRIPT_NAME, true);
             if (tmpGroovyFileStore != null) {
                 tmpGroovyFileStore.delete();
@@ -322,9 +320,8 @@ public class GroovyViewer implements IDocumentListener {
             // Stops reconciler thread before deleting groovy file
             viewer.unconfigure();
         }
-       
-        final ProvidedGroovyRepositoryStore store = RepositoryManager.getInstance()
-                .getRepositoryStore(ProvidedGroovyRepositoryStore.class);
+        var store = RepositoryManager.getInstance()
+                .getRepositoryStore(GroovyRepositoryStore.class);
         GroovyFileStore fStore = store.getChild(GroovyFileStore.EXPRESSION_SCRIPT_NAME, true);
         if (fStore != null) {
             fStore.delete();

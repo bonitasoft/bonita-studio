@@ -22,6 +22,7 @@ import java.util.Map;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
+import org.bonitasoft.bpm.connector.model.definition.util.ConnectorDefinitionXMLProcessor;
 import org.bonitasoft.plugin.analyze.report.model.Definition;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.provider.BundleResourceLoader;
@@ -29,7 +30,6 @@ import org.bonitasoft.studio.common.repository.provider.DefinitionImageResourceL
 import org.bonitasoft.studio.common.repository.provider.JarBundleResourceLoader;
 import org.bonitasoft.studio.common.repository.provider.JarDefinitionResourceLoader;
 import org.bonitasoft.studio.common.repository.store.AbstractEMFRepositoryStore;
-import org.bonitasoft.bpm.connector.model.definition.util.ConnectorDefinitionXMLProcessor;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.xmi.XMLResource;
 
@@ -76,11 +76,6 @@ public class DependencyConnectorDefFileStore extends ConnectorDefFileStore {
 
     @Override
     public boolean canBeExported() {
-        return false;
-    }
-
-    @Override
-    public boolean canBeRenamed() {
         return false;
     }
 

@@ -4,17 +4,8 @@
    <extension
          point="org.bonitasoft.studio.repositoryStore">
       <repositoryStore
-            class="org.bonitasoft.studio.groovy.repository.ProvidedGroovyRepositoryStore">
-      </repositoryStore>
-      <repositoryStore
             class="org.bonitasoft.studio.groovy.repository.GroovyRepositoryStore">
       </repositoryStore>
-   </extension>
-   <extension
-         point="org.bonitasoft.studio.repository.fileContribution">
-      <fileContribution
-            class="org.bonitasoft.studio.groovy.repository.DefaultScriptsContribution">
-      </fileContribution>
    </extension>
    <extension
          point="org.bonitasoft.studio.common.barResourcesProvider">

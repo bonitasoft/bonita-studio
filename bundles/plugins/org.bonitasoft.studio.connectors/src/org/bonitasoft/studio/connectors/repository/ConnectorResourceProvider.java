@@ -33,6 +33,7 @@ import org.bonitasoft.bpm.model.configuration.DefinitionMapping;
 import org.bonitasoft.bpm.model.process.AbstractProcess;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Display;
 
 /**
@@ -54,8 +55,6 @@ public class ConnectorResourceProvider implements IBOSArchiveFileStoreProvider {
                 ConnectorDefRepositoryStore.class);
         final ConnectorImplRepositoryStore connectorImplStore = RepositoryManager.getInstance().getRepositoryStore(
                 ConnectorImplRepositoryStore.class);
-        final ConnectorSourceRepositoryStore connectorSourceStore = RepositoryManager.getInstance().getRepositoryStore(
-                ConnectorSourceRepositoryStore.class);
         final DependencyRepositoryStore depStore = RepositoryManager.getInstance().getRepositoryStore(
                 DependencyRepositoryStore.class);
         for (final DefinitionMapping mapping : configuration.getDefinitionMappings()) {
@@ -88,7 +87,7 @@ public class ConnectorResourceProvider implements IBOSArchiveFileStoreProvider {
                     if (implId == null) {
                         MessageDialog.openError(Display.getDefault().getActiveShell(),
                                 Messages.noImplementationFoundErrorTitle,
-                                Messages.bind(Messages.noImplementationFoundErrorMessage, def.getId()));
+                                NLS.bind(Messages.noImplementationFoundErrorMessage, def.getId()));
                         return null;
                     }
                     final IRepositoryFileStore implementation = connectorImplStore.getImplementationFileStore(implId,
@@ -97,14 +96,6 @@ public class ConnectorResourceProvider implements IBOSArchiveFileStoreProvider {
                         files.add(implementation);
                         try {
                             final ConnectorImplementation impl = (ConnectorImplementation) implementation.getContent();
-                            final String className = impl.getImplementationClassname();
-                            final String packageName = className.substring(0, className.lastIndexOf("."));
-                            final IRepositoryFileStore packageFileStore = connectorSourceStore.getChild(packageName,
-                                    true);
-                            if (packageFileStore != null) {
-                                files.add(packageFileStore);
-                            }
-
                             for (final String jarName : impl.getJarDependencies().getJarDependency()) {
                                 final IRepositoryFileStore jarFile = depStore.getChild(jarName, true);
                                 if (jarFile != null) {

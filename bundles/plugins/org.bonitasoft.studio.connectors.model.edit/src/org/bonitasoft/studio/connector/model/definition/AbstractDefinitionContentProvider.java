@@ -20,14 +20,11 @@ import java.util.List;
 import org.bonitasoft.bpm.connector.model.definition.Category;
 import org.bonitasoft.bpm.connector.model.definition.ConnectorDefinition;
 import org.bonitasoft.bpm.connector.model.definition.UnloadableConnectorDefinition;
-import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.provider.DefinitionResourceProvider;
 import org.bonitasoft.studio.common.repository.provider.ExtendedCategory;
 import org.bonitasoft.studio.common.repository.provider.ExtendedConnectorDefinition;
 import org.bonitasoft.studio.connector.model.definition.dialog.DefinitionCategoryContentProvider;
-import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.osgi.framework.Bundle;
@@ -43,36 +40,15 @@ public abstract class AbstractDefinitionContentProvider implements ITreeContentP
     protected DefinitionCategoryContentProvider definitionCategoryContentProvider;
     private final Category unCategorizedCategory;
 
-    public AbstractDefinitionContentProvider() {
+    protected AbstractDefinitionContentProvider() {
         this(false);
     }
 
-    public AbstractDefinitionContentProvider(final boolean userDefinitionOnly) {
+    protected AbstractDefinitionContentProvider(final boolean userDefinitionOnly) {
         final AbstractDefinitionRepositoryStore<?> connectorDefStore = (AbstractDefinitionRepositoryStore<?>) RepositoryManager
                 .getInstance().getRepositoryStore(
                         getDefStoreClass());
         connectorDefList = connectorDefStore.getResourceProvider().getConnectorDefinitionRegistry().getDefinitions();
-        if (userDefinitionOnly) {
-            final List<ConnectorDefinition> toRemove = new ArrayList<>();
-            final String absolutePathOfConnectorDefStoreResource = connectorDefStore.getResource().getLocation()
-                    .toFile().getAbsolutePath();
-            for (final ConnectorDefinition definition : connectorDefList) {
-                final Resource eResource = definition.eResource();
-                if (eResource != null) {
-                    final URI uri = eResource.getURI();
-                    if (uri != null) {
-                        final String path = uri.toFileString();
-                        if (!path.contains(absolutePathOfConnectorDefStoreResource)) {
-                            toRemove.add(definition);
-                        }
-                    }
-                } else {
-                    BonitaStudioLog.debug("A connectorDefinition is outside of a Resource: " + definition.getId(),
-                            "org.bonitasoft.studio.connectors.model.edit");
-                }
-            }
-            connectorDefList.removeAll(toRemove);
-        }
         final Bundle bundle = getBundle();
         messageProvider = DefinitionResourceProvider.getInstance(
                 connectorDefStore, bundle);

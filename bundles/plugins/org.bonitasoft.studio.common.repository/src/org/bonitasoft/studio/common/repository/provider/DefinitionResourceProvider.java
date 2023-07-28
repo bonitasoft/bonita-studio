@@ -86,7 +86,6 @@ public class DefinitionResourceProvider implements EventHandler {
     public static final String connectorDefinitionDescription = "connectorDefinitionDescription";
     public static final String fieldDescription = "description";
     public static final String fieldExample = "example";
-    private static final String CLASSPATH_DIR = "dependencies";
     public static final String OUTPUTS_DESC = "outputsDescription";
     public static final String OUTPUT_DESC = "output.description";
 

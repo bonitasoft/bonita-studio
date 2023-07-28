@@ -106,7 +106,7 @@ public class SelectConnectorConfigurationWizardPage extends WizardPage {
         configurationViewers
                 .setContentProvider(new ConfigurationsContentProvider(configuration.getDefinitionId(), configuration.getVersion(), configurationStore));
         configurationViewers.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-        configurationViewers.setLabelProvider(new ConnectorConfiguraitonLabelProvider(defStore));
+        configurationViewers.setLabelProvider(new ConnectorConfigurationLabelProvider(defStore));
         configurationViewers.addDoubleClickListener(new IDoubleClickListener() {
 
             @Override

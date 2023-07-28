@@ -93,12 +93,12 @@ class UpdateMavenPluginVersionInPomStepTest {
     }
     
     @Test
-    void shouldAppliesTo80AndAbove() throws Exception {
+    void shouldAppliesTo713AndAbove() throws Exception {
         var step = new UpdateMavenPluginVersionInPomStep();
         
         assertThat(step.appliesTo("8.0.0")).isTrue();
         assertThat(step.appliesTo("9.0.0")).isTrue();
-        assertThat(step.appliesTo("7.15.0")).isFalse();
+        assertThat(step.appliesTo("7.12.0")).isFalse();
     }
     
     private static Model load(String resourcePath) throws IOException, CoreException {

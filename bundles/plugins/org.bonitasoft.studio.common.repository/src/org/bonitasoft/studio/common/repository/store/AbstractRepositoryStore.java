@@ -408,7 +408,7 @@ public abstract class AbstractRepositoryStore<T extends IRepositoryFileStore<?>>
         refresh();
         final IFolder folder = getResource();
         final FileStoreCollector collector = fileStoreCollector();
-        if (folder.exists()) {
+        if (folder != null && folder.exists()) {
             folder.accept(collector);
         }
         return collector.toList();

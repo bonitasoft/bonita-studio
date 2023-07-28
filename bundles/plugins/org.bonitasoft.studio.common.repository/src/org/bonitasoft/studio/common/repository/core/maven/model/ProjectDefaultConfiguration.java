@@ -162,18 +162,9 @@ public class ProjectDefaultConfiguration implements DefaultPluginVersions {
     private Xpp3Dom createBuilderHelperMavenPluginConfiguration() {
         Xpp3Dom pluginConfiguration = new Xpp3Dom("configuration");
         Xpp3Dom sources = new Xpp3Dom("sources");
-        Xpp3Dom srcConnectors = new Xpp3Dom("source");
-        srcConnectors.setValue("src-connectors");
-        Xpp3Dom srcFilters = new Xpp3Dom("source");
-        srcFilters.setValue("src-filters");
         Xpp3Dom srcGroovy = new Xpp3Dom("source");
         srcGroovy.setValue("src-groovy");
-        Xpp3Dom providedGroovySrc = new Xpp3Dom("source");
-        providedGroovySrc.setValue("src-providedGroovy");
-        sources.addChild(srcConnectors);
-        sources.addChild(srcFilters);
         sources.addChild(srcGroovy);
-        sources.addChild(providedGroovySrc);
         pluginConfiguration.addChild(sources);
         return pluginConfiguration;
     }

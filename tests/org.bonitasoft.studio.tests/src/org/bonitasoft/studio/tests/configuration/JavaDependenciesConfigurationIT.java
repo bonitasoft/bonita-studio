@@ -14,14 +14,9 @@
  */
 package org.bonitasoft.studio.tests.configuration;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import java.time.Duration;
-import java.util.List;
 
-import org.bonitasoft.studio.configuration.i18n.Messages;
 import org.bonitasoft.studio.swtbot.framework.application.BotApplicationWorkbenchWindow;
-import org.bonitasoft.studio.swtbot.framework.diagram.configuration.BotConfigureDialog;
 import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
@@ -46,22 +41,6 @@ public class JavaDependenciesConfigurationIT {
                 .next()
                 // Depending of the network latency this may take a while....
                 .finishWithTimeout(Duration.ofMinutes(5));
-    }
-
-    @Test
-    public void should_have_connector_dependencies() throws Exception {
-        new BotApplicationWorkbenchWindow(bot).importBOSArchive()
-                .setArchive(
-                        JavaDependenciesConfigurationIT.class.getResource("CustomConnectorWithSources-1.0.bos"))
-                .currentRepository()
-                .next()
-                .next()
-                .finish();
-
-        final BotConfigureDialog configureBot = new BotApplicationWorkbenchWindow(bot).configure();
-        final List<String> items = configureBot.selectJavaDependencies().selectTreeView().items();
-        assertThat(items).contains(Messages.connector, Messages.others);
-        configureBot.cancel();
     }
 
 }
