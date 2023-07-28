@@ -19,11 +19,11 @@ package org.bonitasoft.studio.expression.editor.constant;
 import java.util.Collections;
 import java.util.Set;
 
-import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.bpm.model.util.ExpressionConstants;
 import org.bonitasoft.studio.expression.editor.i18n.Messages;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionEditor;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionProvider;
-import org.bonitasoft.studio.model.expression.Expression;
+import org.bonitasoft.bpm.model.expression.Expression;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.emf.ecore.EObject;
@@ -54,7 +54,7 @@ public class ConstantExpressionProvider implements IExpressionProvider {
     }
 
     /* (non-Javadoc)
-     * @see org.bonitasoft.studio.expression.editor.provider.IExpressionProvider#getIcon(org.bonitasoft.studio.model.expression.Expression)
+     * @see org.bonitasoft.studio.expression.editor.provider.IExpressionProvider#getIcon(org.bonitasoft.bpm.model.expression.Expression)
      */
     @Override
     public Image getIcon(Expression expression) {
@@ -70,7 +70,7 @@ public class ConstantExpressionProvider implements IExpressionProvider {
     }
 
     /* (non-Javadoc)
-     * @see org.bonitasoft.studio.expression.editor.provider.IExpressionProvider#getProposalLabel(org.bonitasoft.studio.model.expression.Expression)
+     * @see org.bonitasoft.studio.expression.editor.provider.IExpressionProvider#getProposalLabel(org.bonitasoft.bpm.model.expression.Expression)
      */
     @Override
     public String getProposalLabel(Expression expression) {

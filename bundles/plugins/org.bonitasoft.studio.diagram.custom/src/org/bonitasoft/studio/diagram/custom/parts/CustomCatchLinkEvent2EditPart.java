@@ -21,9 +21,9 @@ package org.bonitasoft.studio.diagram.custom.parts;
 import java.util.List;
 
 import org.bonitasoft.studio.common.diagram.tools.FiguresHelper;
-import org.bonitasoft.studio.model.process.CatchLinkEvent;
-import org.bonitasoft.studio.model.process.ProcessPackage;
-import org.bonitasoft.studio.model.process.ThrowLinkEvent;
+import org.bonitasoft.bpm.model.process.CatchLinkEvent;
+import org.bonitasoft.bpm.model.process.ProcessPackage;
+import org.bonitasoft.bpm.model.process.ThrowLinkEvent;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.CatchLinkEvent2EditPart;
 import org.eclipse.draw2d.geometry.PointList;
 import org.eclipse.draw2d.geometry.Rectangle;

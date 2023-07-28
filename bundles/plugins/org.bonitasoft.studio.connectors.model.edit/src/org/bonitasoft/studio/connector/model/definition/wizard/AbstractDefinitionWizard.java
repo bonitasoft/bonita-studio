@@ -26,6 +26,13 @@ import java.util.Set;
 
 import javax.imageio.ImageIO;
 
+import org.bonitasoft.bpm.connector.model.definition.Component;
+import org.bonitasoft.bpm.connector.model.definition.ConnectorDefinition;
+import org.bonitasoft.bpm.connector.model.definition.ConnectorDefinitionFactory;
+import org.bonitasoft.bpm.connector.model.definition.Group;
+import org.bonitasoft.bpm.connector.model.definition.Input;
+import org.bonitasoft.bpm.connector.model.definition.Page;
+import org.bonitasoft.bpm.connector.model.definition.WidgetComponent;
 import org.bonitasoft.studio.common.FileUtil;
 import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
@@ -36,13 +43,6 @@ import org.bonitasoft.studio.common.repository.provider.DefinitionResourceProvid
 import org.bonitasoft.studio.common.ui.jface.ExtensibleWizard;
 import org.bonitasoft.studio.common.ui.jface.MessageDialogWithPrompt;
 import org.bonitasoft.studio.connector.model.definition.AbstractDefinitionRepositoryStore;
-import org.bonitasoft.studio.connector.model.definition.Component;
-import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
-import org.bonitasoft.studio.connector.model.definition.ConnectorDefinitionFactory;
-import org.bonitasoft.studio.connector.model.definition.Group;
-import org.bonitasoft.studio.connector.model.definition.Input;
-import org.bonitasoft.studio.connector.model.definition.Page;
-import org.bonitasoft.studio.connector.model.definition.WidgetComponent;
 import org.bonitasoft.studio.connector.model.i18n.Messages;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
@@ -207,7 +207,8 @@ public abstract class AbstractDefinitionWizard extends ExtensibleWizard {
                 public void run() {
                     for (final IFile toOpen : filesToOpen) {
                         try {
-                            IDE.openEditor(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage(), toOpen);
+                            IDE.openEditor(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage(),
+                                    toOpen);
                         } catch (final PartInitException e) {
                             BonitaStudioLog.error(e);
                         }
@@ -294,7 +295,7 @@ public abstract class AbstractDefinitionWizard extends ExtensibleWizard {
     }
 
     private void reloadCategories() {
-       messageProvider.loadDefinitionsCategories(null);
+        messageProvider.loadDefinitionsCategories(null);
     }
 
     protected List<IFile> openPropertiesEditor(final Set<Locale> selectedLocales) {

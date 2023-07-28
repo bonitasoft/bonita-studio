@@ -15,11 +15,25 @@
 package org.bonitasoft.studio.common.model;
 
 import java.util.List;
+import java.util.function.Supplier;
 
-import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
+import org.bonitasoft.engine.bpm.connector.ConnectorDefinition;
 
-public interface IConnectorDefContextProvider {
+/**
+ * @deprecated just use {@link Supplier} instead
+ */
+@FunctionalInterface
+public interface IConnectorDefContextProvider extends Supplier<List<ConnectorDefinition>> {
 
     List<ConnectorDefinition> getConnectorDefinitions();
+
+    /*
+     * (non-Javadoc)
+     * @see java.util.function.Supplier#get()
+     */
+    @Override
+    default List<ConnectorDefinition> get() {
+        return getConnectorDefinitions();
+    }
 
 }

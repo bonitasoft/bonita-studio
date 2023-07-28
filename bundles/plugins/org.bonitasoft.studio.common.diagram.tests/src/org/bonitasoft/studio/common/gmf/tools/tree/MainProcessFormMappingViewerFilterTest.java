@@ -15,13 +15,13 @@
 package org.bonitasoft.studio.common.gmf.tools.tree;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.bonitasoft.studio.model.expression.builders.ExpressionBuilder.anExpression;
-import static org.bonitasoft.studio.model.process.builders.FormMappingBuilder.aFormMapping;
-import static org.bonitasoft.studio.model.process.builders.MainProcessBuilder.aMainProcess;
-import static org.bonitasoft.studio.model.process.builders.PoolBuilder.aPool;
+import static org.bonitasoft.bpm.model.expression.builders.ExpressionBuilder.anExpression;
+import static org.bonitasoft.bpm.model.process.builders.FormMappingBuilder.aFormMapping;
+import static org.bonitasoft.bpm.model.process.builders.MainProcessBuilder.aMainProcess;
+import static org.bonitasoft.bpm.model.process.builders.PoolBuilder.aPool;
 
-import org.bonitasoft.studio.model.process.FormMapping;
-import org.bonitasoft.studio.model.process.MainProcess;
+import org.bonitasoft.bpm.model.process.FormMapping;
+import org.bonitasoft.bpm.model.process.MainProcess;
 import org.junit.Before;
 import org.junit.Test;
 

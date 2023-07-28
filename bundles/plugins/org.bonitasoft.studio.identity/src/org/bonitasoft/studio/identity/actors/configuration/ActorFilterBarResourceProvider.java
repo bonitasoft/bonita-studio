@@ -18,6 +18,7 @@ import java.io.IOException;
 
 import javax.inject.Inject;
 
+import org.bonitasoft.bpm.model.configuration.Configuration;
 import org.bonitasoft.engine.bpm.bar.BusinessArchiveBuilder;
 import org.bonitasoft.studio.common.FragmentTypes;
 import org.bonitasoft.studio.common.extension.BARResourcesProvider;
@@ -29,7 +30,6 @@ import org.bonitasoft.studio.connector.model.implementation.IImplementationRepos
 import org.bonitasoft.studio.connectors.configuration.ConnectorBarResourceProvider;
 import org.bonitasoft.studio.identity.actors.repository.ActorFilterImplRepositoryStore;
 import org.bonitasoft.studio.identity.actors.repository.ActorFilterSourceRepositoryStore;
-import org.bonitasoft.studio.model.configuration.Configuration;
 
 /**
  * @author Romain Bioteau
@@ -71,10 +71,11 @@ public class ActorFilterBarResourceProvider extends ConnectorBarResourceProvider
     /*
      * (non-Javadoc)
      * @see org.bonitasoft.studio.connectors.configuration.ConnectorBarResourceProvider#addImplementation(org.bonitasoft.engine.bpm.bar.BusinessArchiveBuilder,
-     * java.lang.String, org.bonitasoft.studio.common.repository.filestore.EMFFileStore, org.bonitasoft.studio.model.configuration.Configuration)
+     * java.lang.String, org.bonitasoft.studio.common.repository.filestore.EMFFileStore, org.bonitasoft.bpm.model.configuration.Configuration)
      */
     @Override
-    protected void addImplementation(BusinessArchiveBuilder builder, String connectorImplementationFilename, EMFFileStore implementationFileStore,
+    protected void addImplementation(BusinessArchiveBuilder builder, String connectorImplementationFilename,
+            EMFFileStore implementationFileStore,
             Configuration configuration) throws IOException, ReadFileStoreException {
         builder.addUserFilters(newBarResource(connectorImplementationFilename, implementationFileStore, configuration));
     }

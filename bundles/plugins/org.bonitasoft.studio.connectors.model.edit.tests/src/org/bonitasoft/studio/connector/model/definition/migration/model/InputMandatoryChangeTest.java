@@ -15,11 +15,11 @@
 package org.bonitasoft.studio.connector.model.definition.migration.model;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.bonitasoft.studio.model.connectorconfiguration.builders.ConnectorConfigurationBuilder.aConnectorConfiguration;
-import static org.bonitasoft.studio.model.connectorconfiguration.builders.ConnectorParameterBuilder.aConnectorParameter;
-import static org.bonitasoft.studio.model.expression.builders.ExpressionBuilder.aConstantExpression;
+import static org.bonitasoft.bpm.model.connectorconfiguration.builders.ConnectorConfigurationBuilder.aConnectorConfiguration;
+import static org.bonitasoft.bpm.model.connectorconfiguration.builders.ConnectorParameterBuilder.aConnectorParameter;
+import static org.bonitasoft.bpm.model.expression.builders.ExpressionBuilder.aConstantExpression;
 
-import org.bonitasoft.studio.model.expression.ExpressionFactory;
+import org.bonitasoft.bpm.model.expression.ExpressionFactory;
 import org.junit.Test;
 
 public class InputMandatoryChangeTest {

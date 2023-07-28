@@ -14,9 +14,9 @@
  */
 package org.bonitasoft.studio.validation.constraints.process;
 
-import org.bonitasoft.studio.model.process.Activity;
-import org.bonitasoft.studio.model.process.MultiInstanceType;
-import org.bonitasoft.studio.model.process.MultiInstantiable;
+import org.bonitasoft.bpm.model.process.Activity;
+import org.bonitasoft.bpm.model.process.MultiInstanceType;
+import org.bonitasoft.bpm.model.process.MultiInstantiable;
 import org.bonitasoft.studio.validation.constraints.AbstractLiveValidationMarkerConstraint;
 import org.bonitasoft.studio.validation.i18n.Messages;
 import org.eclipse.core.runtime.IStatus;

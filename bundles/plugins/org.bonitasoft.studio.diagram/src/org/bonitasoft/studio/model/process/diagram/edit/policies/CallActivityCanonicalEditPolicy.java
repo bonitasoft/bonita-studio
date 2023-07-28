@@ -23,7 +23,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.bonitasoft.studio.model.process.ProcessPackage;
+import org.bonitasoft.bpm.model.process.ProcessPackage;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.BoundaryMessageEvent2EditPart;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.BoundarySignalEvent2EditPart;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.BoundaryTimerEvent2EditPart;

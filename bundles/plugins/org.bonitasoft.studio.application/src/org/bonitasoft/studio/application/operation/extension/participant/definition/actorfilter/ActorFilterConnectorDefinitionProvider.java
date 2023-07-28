@@ -18,7 +18,7 @@ import java.util.Optional;
 
 import org.bonitasoft.studio.application.operation.extension.participant.definition.ConnectorDefinitionProvider;
 import org.bonitasoft.studio.common.repository.provider.ExtendedConnectorDefinition;
-import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
+import org.bonitasoft.bpm.connector.model.definition.ConnectorDefinition;
 import org.bonitasoft.studio.identity.actors.repository.ActorFilterDefRepositoryStore;
 
 

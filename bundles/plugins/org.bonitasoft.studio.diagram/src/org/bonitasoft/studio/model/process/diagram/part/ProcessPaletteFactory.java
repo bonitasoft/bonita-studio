@@ -609,7 +609,7 @@ public class ProcessPaletteFactory {
 				types);
 		entry.setId("createEvent9CreationTool"); //$NON-NLS-1$
 		entry.setSmallIcon(ProcessDiagramEditorPlugin
-				.findImageDescriptor("/org.bonitasoft.studio.model.edit/icons/full/obj16/Event.gif")); //$NON-NLS-1$
+				.findImageDescriptor("/org.bonitasoft.bpm.model.edit/icons/full/obj16/Event.gif")); //$NON-NLS-1$
 		entry.setLargeIcon(entry.getSmallIcon());
 		return entry;
 	}

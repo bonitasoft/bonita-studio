@@ -24,25 +24,25 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import org.bonitasoft.bonita2bpmn.extension.BonitaModelExporterImpl;
+import org.bonitasoft.bonita2bpmn.extension.IBonitaModelExporter;
+import org.bonitasoft.bonita2bpmn.transfo.BonitaToBPMNExporter;
+import org.bonitasoft.bonita2bpmn.transfo.ConnectorTransformationXSLProvider;
+import org.bonitasoft.bpm.model.process.ANDGateway;
+import org.bonitasoft.bpm.model.process.AbstractProcess;
+import org.bonitasoft.bpm.model.process.Element;
+import org.bonitasoft.bpm.model.process.InclusiveGateway;
+import org.bonitasoft.bpm.model.process.Lane;
+import org.bonitasoft.bpm.model.process.MainProcess;
+import org.bonitasoft.bpm.model.process.Pool;
+import org.bonitasoft.bpm.model.process.XORGateway;
+import org.bonitasoft.bpm.model.util.IModelSearch;
+import org.bonitasoft.bpm.model.util.ModelSearch;
 import org.bonitasoft.studio.assertions.StatusAssert;
 import org.bonitasoft.studio.common.ProductVersion;
-import org.bonitasoft.studio.common.model.IModelSearch;
-import org.bonitasoft.studio.common.model.ModelSearch;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.connectors.repository.ConnectorDefRepositoryStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
-import org.bonitasoft.studio.exporter.bpmn.transfo.BonitaToBPMNExporter;
-import org.bonitasoft.studio.exporter.bpmn.transfo.OSGIConnectorTransformationXSLProvider;
-import org.bonitasoft.studio.exporter.extension.BonitaModelExporterImpl;
-import org.bonitasoft.studio.exporter.extension.IBonitaModelExporter;
-import org.bonitasoft.studio.model.process.ANDGateway;
-import org.bonitasoft.studio.model.process.AbstractProcess;
-import org.bonitasoft.studio.model.process.Element;
-import org.bonitasoft.studio.model.process.InclusiveGateway;
-import org.bonitasoft.studio.model.process.Lane;
-import org.bonitasoft.studio.model.process.MainProcess;
-import org.bonitasoft.studio.model.process.Pool;
-import org.bonitasoft.studio.model.process.XORGateway;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.MainProcessEditPart;
 import org.bonitasoft.studio.swtbot.framework.application.BotApplicationWorkbenchWindow;
 import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
@@ -82,7 +82,7 @@ public class BPMNGatewayExportImportTest {
     public TemporaryFolder tmpFolder = new TemporaryFolder();
 
     private Resource resource;
-    
+
     @Rule
     public SWTGefBotRule swtGefBotRule = new SWTGefBotRule(bot);
 
@@ -102,17 +102,17 @@ public class BPMNGatewayExportImportTest {
                 andGatewayAfterReimport = (ANDGateway) element;
             }
             if (element instanceof InclusiveGateway) {
-               incGatewayAfterReimport = (InclusiveGateway) element;
+                incGatewayAfterReimport = (InclusiveGateway) element;
             }
             if (element instanceof XORGateway) {
-               xorGatewayAfterReimport = (XORGateway) element;
+                xorGatewayAfterReimport = (XORGateway) element;
             }
         }
-        
+
         assertThat(xorGatewayAfterReimport).isNotNull();
         assertThat(incGatewayAfterReimport).isNotNull();
         assertThat(andGatewayAfterReimport).isNotNull();
-        
+
         assertEquals("XOR (Exclusive) Gateway name not correct", XOR_GATEWAY_NAME, xorGatewayAfterReimport.getName());
         assertEquals("OR (Inclusive) Gateway name not correct", INC_GATEWAY_NAME, incGatewayAfterReimport.getName());
         assertEquals("AND (Parallel) Gateway name not correct", AND_GATEWAY_NAME, andGatewayAfterReimport.getName());
@@ -132,17 +132,19 @@ public class BPMNGatewayExportImportTest {
         final SWTBotGefEditPart step1Part = editor1.getEditPart(AND_GATEWAY_NAME).parent();
         final MainProcessEditPart mped = (MainProcessEditPart) step1Part.part().getRoot().getChildren().get(0);
 
-        DiagramRepositoryStore dStore = RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
+        DiagramRepositoryStore dStore = RepositoryManager.getInstance()
+                .getRepositoryStore(DiagramRepositoryStore.class);
         ConnectorDefRepositoryStore connectorDefStore = RepositoryManager.getInstance()
                 .getRepositoryStore(ConnectorDefRepositoryStore.class);
         List<AbstractProcess> allProcesses = dStore.getAllProcesses();
-        IModelSearch modelSearch = new ModelSearch(() -> allProcesses, connectorDefStore::getDefinitions);
+        IModelSearch modelSearch = new ModelSearch(() -> allProcesses);
 
         final IBonitaModelExporter exporter = new BonitaModelExporterImpl(mped.resolveSemanticElement().eResource(),
                 modelSearch);
         final File bpmnFileExported = tmpFolder.newFile("testGateway.bpmn");
         BonitaToBPMNExporter bonitaToBPMNExporter = new BonitaToBPMNExporter();
-        bonitaToBPMNExporter.export(exporter, modelSearch, bpmnFileExported, new OSGIConnectorTransformationXSLProvider(), ProductVersion.CURRENT_VERSION);
+        bonitaToBPMNExporter.export(exporter, modelSearch, connectorDefStore::getDefinitions, bpmnFileExported,
+                ConnectorTransformationXSLProvider.DEFAULT, ProductVersion.CURRENT_VERSION);
         StatusAssert.assertThat(bonitaToBPMNExporter.getStatus()).hasSeverity(IStatus.INFO);
 
         final ResourceSet resourceSet1 = new ResourceSetImpl();

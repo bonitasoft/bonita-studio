@@ -15,18 +15,18 @@
 package org.bonitasoft.studio.validation.constraints.process;
 
 import static org.bonitasoft.studio.assertions.StatusAssert.assertThat;
-import static org.bonitasoft.studio.model.expression.builders.ExpressionBuilder.anExpression;
-import static org.bonitasoft.studio.model.process.builders.FormMappingBuilder.aFormMapping;
-import static org.bonitasoft.studio.model.process.builders.PoolBuilder.aPool;
-import static org.bonitasoft.studio.model.process.builders.TaskBuilder.aTask;
+import static org.bonitasoft.bpm.model.expression.builders.ExpressionBuilder.anExpression;
+import static org.bonitasoft.bpm.model.process.builders.FormMappingBuilder.aFormMapping;
+import static org.bonitasoft.bpm.model.process.builders.PoolBuilder.aPool;
+import static org.bonitasoft.bpm.model.process.builders.TaskBuilder.aTask;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.designer.core.repository.WebPageFileStore;
 import org.bonitasoft.studio.designer.core.repository.WebPageRepositoryStore;
-import org.bonitasoft.studio.model.process.FormMappingType;
-import org.bonitasoft.studio.model.process.Pool;
+import org.bonitasoft.bpm.model.process.FormMappingType;
+import org.bonitasoft.bpm.model.process.Pool;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.validation.IValidationContext;

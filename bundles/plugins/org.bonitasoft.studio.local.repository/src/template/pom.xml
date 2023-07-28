@@ -210,15 +210,6 @@
               <artifactId>maven-resources-plugin</artifactId>
               <version>${maven-resources-plugin.version}</version>
             </plugin>
-             <plugin>
-              <artifactId>maven-javadoc-plugin</artifactId>
-            </plugin>
-            <plugin>
-              <artifactId>maven-surefire-plugin</artifactId>
-            </plugin>
-             <plugin>
-              <artifactId>maven-failsafe-plugin</artifactId>
-            </plugin>
             <plugin>
               <artifactId>maven-deploy-plugin</artifactId>
               <version>${maven-deploy-plugin.version}</version>

@@ -24,7 +24,7 @@ import org.bonitasoft.studio.identity.organization.model.organization.CustomUser
 import org.bonitasoft.studio.identity.organization.model.organization.Organization;
 import org.bonitasoft.studio.identity.organization.repository.OrganizationFileStore;
 import org.bonitasoft.studio.identity.organization.repository.OrganizationRepositoryStore;
-import org.bonitasoft.studio.model.expression.Expression;
+import org.bonitasoft.bpm.model.expression.Expression;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 

@@ -16,20 +16,20 @@ package org.bonitasoft.studio.connector.wizard.uipath.page;
 
 import java.util.Objects;
 
-import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.bpm.model.util.ExpressionConstants;
 import org.bonitasoft.studio.common.databinding.validator.EmptyInputValidator;
 import org.bonitasoft.studio.common.ui.widgets.CustomStackLayout;
-import org.bonitasoft.studio.connector.model.definition.Checkbox;
-import org.bonitasoft.studio.connector.model.definition.ConnectorDefinitionFactory;
-import org.bonitasoft.studio.connector.model.definition.Input;
-import org.bonitasoft.studio.connector.model.definition.Text;
+import org.bonitasoft.bpm.connector.model.definition.Checkbox;
+import org.bonitasoft.bpm.connector.model.definition.ConnectorDefinitionFactory;
+import org.bonitasoft.bpm.connector.model.definition.Input;
+import org.bonitasoft.bpm.connector.model.definition.Text;
 import org.bonitasoft.studio.connector.model.definition.wizard.ConnectorConfigurationSupport;
 import org.bonitasoft.studio.connector.model.definition.wizard.GeneratedConnectorWizardPage;
 import org.bonitasoft.studio.connector.model.definition.wizard.PageComponentSwitchBuilder;
 import org.bonitasoft.studio.connector.wizard.uipath.i18n.Messages;
 import org.bonitasoft.studio.connector.wizard.uipath.switchBuilder.UIPathPageComponentSwitchBuilder;
-import org.bonitasoft.studio.model.connectorconfiguration.ConnectorParameter;
-import org.bonitasoft.studio.model.expression.Expression;
+import org.bonitasoft.bpm.model.connectorconfiguration.ConnectorParameter;
+import org.bonitasoft.bpm.model.expression.Expression;
 import org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory;
 import org.eclipse.core.databinding.beans.PojoProperties;
 import org.eclipse.core.databinding.conversion.IConverter;

@@ -14,8 +14,8 @@
  */
 package org.bonitasoft.studio.common.gmf.tools.tree.selection.provider;
 
-import org.bonitasoft.studio.model.process.Lane;
-import org.bonitasoft.studio.model.process.Pool;
+import org.bonitasoft.bpm.model.process.Lane;
+import org.bonitasoft.bpm.model.process.Pool;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.ui.IEditorReference;
 

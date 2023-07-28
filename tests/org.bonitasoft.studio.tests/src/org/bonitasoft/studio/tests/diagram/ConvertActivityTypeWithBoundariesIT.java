@@ -17,10 +17,10 @@ package org.bonitasoft.studio.tests.diagram;
 import java.io.IOException;
 
 import org.assertj.core.api.Assertions;
-import org.bonitasoft.studio.model.process.MainProcess;
-import org.bonitasoft.studio.model.process.Pool;
-import org.bonitasoft.studio.model.process.SendTask;
-import org.bonitasoft.studio.model.process.ServiceTask;
+import org.bonitasoft.bpm.model.process.MainProcess;
+import org.bonitasoft.bpm.model.process.Pool;
+import org.bonitasoft.bpm.model.process.SendTask;
+import org.bonitasoft.bpm.model.process.ServiceTask;
 import org.bonitasoft.studio.properties.i18n.Messages;
 import org.bonitasoft.studio.swtbot.framework.application.BotApplicationWorkbenchWindow;
 import org.bonitasoft.studio.swtbot.framework.diagram.BotProcessDiagramPerspective;

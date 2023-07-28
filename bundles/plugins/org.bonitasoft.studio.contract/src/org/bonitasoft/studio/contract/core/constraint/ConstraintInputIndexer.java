@@ -20,8 +20,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import org.bonitasoft.studio.model.process.ContractConstraint;
-import org.bonitasoft.studio.model.process.ContractInput;
+import org.bonitasoft.bpm.model.process.ContractConstraint;
+import org.bonitasoft.bpm.model.process.ContractInput;
 import org.codehaus.groovy.ast.Variable;
 import org.codehaus.groovy.ast.stmt.BlockStatement;
 import org.codehaus.jdt.groovy.model.GroovyCompilationUnit;

@@ -15,13 +15,13 @@
 package org.bonitasoft.studio.designer.ui.property.section;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.bonitasoft.studio.model.process.builders.ActivityBuilder.anActivity;
-import static org.bonitasoft.studio.model.process.builders.LaneBuilder.aLane;
-import static org.bonitasoft.studio.model.process.builders.PoolBuilder.aPool;
+import static org.bonitasoft.bpm.model.process.builders.ActivityBuilder.anActivity;
+import static org.bonitasoft.bpm.model.process.builders.LaneBuilder.aLane;
+import static org.bonitasoft.bpm.model.process.builders.PoolBuilder.aPool;
 import static org.mockito.Mockito.mock;
 
-import org.bonitasoft.studio.model.process.PageFlow;
-import org.bonitasoft.studio.model.process.ProcessFactory;
+import org.bonitasoft.bpm.model.process.PageFlow;
+import org.bonitasoft.bpm.model.process.ProcessFactory;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;

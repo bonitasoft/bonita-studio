@@ -16,8 +16,8 @@ import org.bonitasoft.engine.bdm.model.field.Field;
 import org.bonitasoft.engine.bdm.model.field.RelationField;
 import org.bonitasoft.engine.bdm.model.field.SimpleField;
 import org.bonitasoft.studio.contract.core.mapping.SimpleFieldToContractInputMapping;
-import org.bonitasoft.studio.model.process.ContractInput;
-import org.bonitasoft.studio.model.process.ContractInputType;
+import org.bonitasoft.bpm.model.process.ContractInput;
+import org.bonitasoft.bpm.model.process.ContractInputType;
 
 public class ContractInputToFieldMatcher {
 

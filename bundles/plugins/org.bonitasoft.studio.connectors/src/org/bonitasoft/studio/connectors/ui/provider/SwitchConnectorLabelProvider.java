@@ -19,8 +19,8 @@
 //package org.bonitasoft.studio.connectors.ui.provider;
 //
 //import org.bonitasoft.studio.connectors.i18n.Messages;
-//import org.bonitasoft.studio.model.process.Connector;
-//import org.bonitasoft.studio.model.process.Element;
+//import org.bonitasoft.bpm.model.process.Connector;
+//import org.bonitasoft.bpm.model.process.Element;
 //import org.eclipse.jface.viewers.IBaseLabelProvider;
 //import org.eclipse.osgi.util.NLS;
 ///**

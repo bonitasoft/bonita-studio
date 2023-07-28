@@ -17,8 +17,8 @@
 package org.bonitasoft.studio.configuration.ui.wizard.page;
 
 import org.bonitasoft.studio.configuration.ConfigurationPlugin;
-import org.bonitasoft.studio.model.configuration.Fragment;
-import org.bonitasoft.studio.model.configuration.FragmentContainer;
+import org.bonitasoft.bpm.model.configuration.Fragment;
+import org.bonitasoft.bpm.model.configuration.FragmentContainer;
 import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;

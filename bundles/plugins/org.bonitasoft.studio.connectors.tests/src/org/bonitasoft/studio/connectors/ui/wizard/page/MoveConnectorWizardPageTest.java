@@ -14,16 +14,16 @@
  */
 package org.bonitasoft.studio.connectors.ui.wizard.page;
 
-import static org.bonitasoft.studio.model.process.builders.LaneBuilder.aLane;
-import static org.bonitasoft.studio.model.process.builders.PoolBuilder.aPool;
-import static org.bonitasoft.studio.model.process.builders.TaskBuilder.aTask;
+import static org.bonitasoft.bpm.model.process.builders.LaneBuilder.aLane;
+import static org.bonitasoft.bpm.model.process.builders.PoolBuilder.aPool;
+import static org.bonitasoft.bpm.model.process.builders.TaskBuilder.aTask;
 
 import org.bonitasoft.engine.bpm.connector.ConnectorEvent;
 import org.bonitasoft.studio.assertions.StatusAssert;
 import org.bonitasoft.studio.common.databinding.validator.MultiValidator;
-import org.bonitasoft.studio.model.process.Connector;
-import org.bonitasoft.studio.model.process.Pool;
-import org.bonitasoft.studio.model.process.Task;
+import org.bonitasoft.bpm.model.process.Connector;
+import org.bonitasoft.bpm.model.process.Pool;
+import org.bonitasoft.bpm.model.process.Task;
 import org.bonitasoft.studio.swt.rules.RealmWithDisplay;
 import org.eclipse.core.databinding.observable.value.WritableValue;
 import org.eclipse.core.runtime.IStatus;

@@ -17,7 +17,7 @@ package org.bonitasoft.studio.contract.core.mapping.treeMaching;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.bonitasoft.studio.model.process.ContractInput;
+import org.bonitasoft.bpm.model.process.ContractInput;
 import org.bonitasoft.web.designer.model.contract.DataReference;
 
 public class TreeNode {

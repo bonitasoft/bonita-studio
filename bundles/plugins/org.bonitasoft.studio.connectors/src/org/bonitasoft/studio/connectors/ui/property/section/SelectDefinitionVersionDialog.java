@@ -17,7 +17,7 @@ package org.bonitasoft.studio.connectors.ui.property.section;
 import java.util.Collection;
 import java.util.List;
 
-import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
+import org.bonitasoft.bpm.connector.model.definition.ConnectorDefinition;
 import org.bonitasoft.studio.connectors.i18n.Messages;
 import org.bonitasoft.studio.ui.widget.ComboWidget;
 import org.eclipse.core.databinding.DataBindingContext;

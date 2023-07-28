@@ -16,15 +16,15 @@ package org.bonitasoft.studio.connector.model.definition.migration;
 
 import java.util.List;
 
-import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
-import org.bonitasoft.studio.connector.model.definition.ConnectorDefinitionFactory;
-import org.bonitasoft.studio.connector.model.definition.Input;
-import org.bonitasoft.studio.connector.model.definition.Output;
-import org.bonitasoft.studio.model.connectorconfiguration.ConnectorParameter;
-import org.bonitasoft.studio.model.expression.Expression;
-import org.bonitasoft.studio.model.expression.ListExpression;
-import org.bonitasoft.studio.model.expression.TableExpression;
-import org.bonitasoft.studio.model.process.Connector;
+import org.bonitasoft.bpm.connector.model.definition.ConnectorDefinition;
+import org.bonitasoft.bpm.connector.model.definition.ConnectorDefinitionFactory;
+import org.bonitasoft.bpm.connector.model.definition.Input;
+import org.bonitasoft.bpm.connector.model.definition.Output;
+import org.bonitasoft.bpm.model.connectorconfiguration.ConnectorParameter;
+import org.bonitasoft.bpm.model.expression.Expression;
+import org.bonitasoft.bpm.model.expression.ListExpression;
+import org.bonitasoft.bpm.model.expression.TableExpression;
+import org.bonitasoft.bpm.model.process.Connector;
 import org.eclipse.e4.core.di.annotations.Creatable;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 

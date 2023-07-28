@@ -27,8 +27,8 @@ import java.util.stream.Collectors;
 
 import org.bonitasoft.studio.common.repository.model.IDefinitionRepositoryStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
-import org.bonitasoft.studio.connector.model.definition.Category;
-import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
+import org.bonitasoft.bpm.connector.model.definition.Category;
+import org.bonitasoft.bpm.connector.model.definition.ConnectorDefinition;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.resource.ImageDescriptor;
 

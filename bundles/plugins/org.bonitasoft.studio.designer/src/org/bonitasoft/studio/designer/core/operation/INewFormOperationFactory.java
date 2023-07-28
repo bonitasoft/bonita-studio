@@ -19,7 +19,7 @@ package org.bonitasoft.studio.designer.core.operation;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.designer.core.FormScope;
 import org.bonitasoft.studio.designer.core.PageDesignerURLFactory;
-import org.bonitasoft.studio.model.process.Contract;
+import org.bonitasoft.bpm.model.process.Contract;
 
 public interface INewFormOperationFactory {
 

@@ -20,7 +20,7 @@ import org.bonitasoft.studio.contract.core.mapping.FieldToContractInputMapping;
 import org.bonitasoft.studio.contract.core.mapping.RelationFieldToContractInputMapping;
 import org.bonitasoft.studio.contract.core.mapping.operation.VariableNameResolver;
 import org.bonitasoft.studio.contract.core.mapping.operation.initializer.InitializerContext;
-import org.bonitasoft.studio.model.process.Data;
+import org.bonitasoft.bpm.model.process.Data;
 
 public abstract class AbsractInitializerFactory implements InitializerFactory {
 

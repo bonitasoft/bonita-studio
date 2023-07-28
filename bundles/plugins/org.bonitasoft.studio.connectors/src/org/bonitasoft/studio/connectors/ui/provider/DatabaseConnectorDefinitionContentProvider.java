@@ -17,7 +17,7 @@
 
 package org.bonitasoft.studio.connectors.ui.provider;
 
-import org.bonitasoft.studio.connector.model.definition.Category;
+import org.bonitasoft.bpm.connector.model.definition.Category;
 import org.bonitasoft.studio.connectors.repository.ConnectorDefRepositoryStore;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.Viewer;

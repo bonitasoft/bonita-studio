@@ -18,8 +18,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import org.bonitasoft.engine.bdm.model.field.RelationField;
 import org.bonitasoft.studio.contract.core.mapping.FieldToContractInputMapping;
-import org.bonitasoft.studio.model.process.ContractInput;
-import org.bonitasoft.studio.model.process.Data;
+import org.bonitasoft.bpm.model.process.ContractInput;
+import org.bonitasoft.bpm.model.process.Data;
 
 public class InitializerContext {
 

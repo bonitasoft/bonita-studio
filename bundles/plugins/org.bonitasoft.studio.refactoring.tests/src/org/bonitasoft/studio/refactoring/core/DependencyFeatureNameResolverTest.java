@@ -15,15 +15,15 @@
 package org.bonitasoft.studio.refactoring.core;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.bonitasoft.studio.model.parameter.builders.ParameterBuilder.aParameter;
-import static org.bonitasoft.studio.model.process.builders.ContractInputBuilder.aContractInput;
-import static org.bonitasoft.studio.model.process.builders.DataBuilder.aData;
-import static org.bonitasoft.studio.model.process.builders.SearchIndexBuilder.aSearchIndex;
+import static org.bonitasoft.bpm.model.parameter.builders.ParameterBuilder.aParameter;
+import static org.bonitasoft.bpm.model.process.builders.ContractInputBuilder.aContractInput;
+import static org.bonitasoft.bpm.model.process.builders.DataBuilder.aData;
+import static org.bonitasoft.bpm.model.process.builders.SearchIndexBuilder.aSearchIndex;
 import static org.junit.Assert.assertThrows;
 
-import org.bonitasoft.studio.model.parameter.ParameterFactory;
-import org.bonitasoft.studio.model.parameter.ParameterPackage;
-import org.bonitasoft.studio.model.process.ProcessPackage;
+import org.bonitasoft.bpm.model.parameter.ParameterFactory;
+import org.bonitasoft.bpm.model.parameter.ParameterPackage;
+import org.bonitasoft.bpm.model.process.ProcessPackage;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.junit.Test;
 

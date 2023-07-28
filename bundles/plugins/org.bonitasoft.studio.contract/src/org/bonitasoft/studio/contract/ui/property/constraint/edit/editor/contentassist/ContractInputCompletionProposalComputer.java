@@ -20,7 +20,7 @@ import java.util.List;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.contract.ContractPlugin;
-import org.bonitasoft.studio.model.process.ContractInput;
+import org.bonitasoft.bpm.model.process.ContractInput;
 import org.codehaus.groovy.ast.ASTNode;
 import org.codehaus.groovy.ast.ModuleNode;
 import org.codehaus.groovy.eclipse.codeassist.creators.MethodProposalCreator;

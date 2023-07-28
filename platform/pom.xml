@@ -101,11 +101,7 @@
                   <layout>p2</layout>
                 </repository>
                 <repository>
-                  <url>https://dist.springsource.org/release/GRECLIPSE/e4.24</url>
-                  <layout>p2</layout>
-                </repository>
-                <repository>
-                  <url>https://download.eclipse.org/mylyn/releases/latest/</url>
+                  <url>https://groovy.jfrog.io/artifactory/plugins-release/e4.24</url>
                   <layout>p2</layout>
                 </repository>
               </source>
@@ -374,31 +370,27 @@
                   <id>org.codehaus.groovy30.feature.feature.group</id>
                   <version>0.0.0</version>
                 </iu>
-                <iu>
-                  <id>org.eclipse.mylyn.commons.ui</id>
-                  <version>3.25.2.v20200813-0821</version>
-                </iu>
               </ius>
             </configuration>
           </plugin>
           <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-assembly-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>archive-mirror</id>
-                        <phase>package</phase>
-                        <configuration>
-                            <descriptorSourceDirectory>${basedir}/src/assembly</descriptorSourceDirectory>
-                            <appendAssemblyId>false</appendAssemblyId>
-                            <finalName>studio-target-platform-${target.platform.version}</finalName>
-                        </configuration>
-                        <goals>
-                            <goal>single</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-assembly-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>archive-mirror</id>
+                <phase>package</phase>
+                <configuration>
+                  <descriptorSourceDirectory>${basedir}/src/assembly</descriptorSourceDirectory>
+                  <appendAssemblyId>false</appendAssemblyId>
+                  <finalName>studio-target-platform-${target.platform.version}</finalName>
+                </configuration>
+                <goals>
+                  <goal>single</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
         </plugins>
       </build>
     </profile>
@@ -406,23 +398,23 @@
       <id>validate</id>
       <build>
         <plugins>
-         <plugin>
-          <groupId>org.eclipse.tycho.extras</groupId>
-          <artifactId>target-platform-validation-plugin</artifactId>
-          <version>${tychoVersion}</version>
-          <executions>
-            <execution>
-              <id>validate-target-platform</id>
-              <goals>
-                <goal>validate-target-platform</goal>
-              </goals>
-              <configuration>
-                <checkDependencies>true</checkDependencies>
-                <checkProvisioning>true</checkProvisioning>
-              </configuration>
-            </execution>
-          </executions>
-         </plugin>
+          <plugin>
+            <groupId>org.eclipse.tycho.extras</groupId>
+            <artifactId>target-platform-validation-plugin</artifactId>
+            <version>${tychoVersion}</version>
+            <executions>
+              <execution>
+                <id>validate-target-platform</id>
+                <goals>
+                  <goal>validate-target-platform</goal>
+                </goals>
+                <configuration>
+                  <checkDependencies>true</checkDependencies>
+                  <checkProvisioning>true</checkProvisioning>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
         </plugins>
       </build>
     </profile>

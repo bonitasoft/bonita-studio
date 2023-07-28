@@ -15,8 +15,8 @@
 package org.bonitasoft.studio.contract.ui.property.input.labelProvider;
 
 import org.bonitasoft.studio.businessobject.ui.DateTypeLabels;
-import org.bonitasoft.studio.model.process.ContractInput;
-import org.bonitasoft.studio.model.process.ContractInputType;
+import org.bonitasoft.bpm.model.process.ContractInput;
+import org.bonitasoft.bpm.model.process.ContractInputType;
 import org.bonitasoft.studio.preferences.PreferenceUtil;
 import org.bonitasoft.studio.ui.ColorConstants;
 import org.eclipse.jface.viewers.ColumnViewer;

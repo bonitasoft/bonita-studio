@@ -2,8 +2,8 @@ package org.bonitasoft.studio.diagram.custom.decorator;
 
 import org.bonitasoft.studio.common.diagram.tools.FiguresHelper;
 import org.bonitasoft.studio.common.figures.DecoratorSVGFigure;
-import org.bonitasoft.studio.model.process.Activity;
-import org.bonitasoft.studio.model.process.MultiInstanceType;
+import org.bonitasoft.bpm.model.process.Activity;
+import org.bonitasoft.bpm.model.process.MultiInstanceType;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gmf.runtime.diagram.ui.services.decorator.IDecoratorTarget;
 

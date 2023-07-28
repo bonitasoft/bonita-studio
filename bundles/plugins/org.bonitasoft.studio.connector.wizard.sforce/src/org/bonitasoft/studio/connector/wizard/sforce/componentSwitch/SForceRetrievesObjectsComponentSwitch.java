@@ -17,13 +17,13 @@
 package org.bonitasoft.studio.connector.wizard.sforce.componentSwitch;
 
 import org.bonitasoft.studio.common.repository.provider.ExtendedConnectorDefinition;
-import org.bonitasoft.studio.connector.model.definition.List;
+import org.bonitasoft.bpm.connector.model.definition.List;
 import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFilter;
 import org.bonitasoft.studio.expression.editor.provider.ExpressionLabelProvider;
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionCollectionViewer;
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
-import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration;
-import org.bonitasoft.studio.model.expression.Expression;
+import org.bonitasoft.bpm.model.connectorconfiguration.ConnectorConfiguration;
+import org.bonitasoft.bpm.model.expression.Expression;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -58,7 +58,7 @@ public class SForceRetrievesObjectsComponentSwitch extends
 
 	@Override
 	protected ExpressionViewer createTextControl(Composite composite,
-			org.bonitasoft.studio.connector.model.definition.Text object) {
+			org.bonitasoft.bpm.connector.model.definition.Text object) {
 		if (S_OBJECT_TYPE.equals(object.getInputName())
 				&& allSforceObject != null) {
 			nameExpViewer = super.createTextControl(composite, object);

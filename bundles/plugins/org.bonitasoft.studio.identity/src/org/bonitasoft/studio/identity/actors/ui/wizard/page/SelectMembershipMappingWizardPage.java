@@ -25,9 +25,9 @@ import org.bonitasoft.studio.identity.organization.model.organization.Organizati
 import org.bonitasoft.studio.identity.organization.model.organization.OrganizationFactory;
 import org.bonitasoft.studio.identity.organization.model.organization.Role;
 import org.bonitasoft.studio.identity.organization.ui.provider.content.GroupContentProvider;
-import org.bonitasoft.studio.model.actormapping.ActorMapping;
-import org.bonitasoft.studio.model.actormapping.ActorMappingFactory;
-import org.bonitasoft.studio.model.actormapping.MembershipType;
+import org.bonitasoft.bpm.model.actormapping.ActorMapping;
+import org.bonitasoft.bpm.model.actormapping.ActorMappingFactory;
+import org.bonitasoft.bpm.model.actormapping.MembershipType;
 import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -78,7 +78,7 @@ public class SelectMembershipMappingWizardPage extends SelectOrganizationWizardP
     }
 
     private void createMembershipComposite(final Composite viewersComposite) {
-        final org.bonitasoft.studio.model.actormapping.Membership membership = mapping.getMemberships();
+        final org.bonitasoft.bpm.model.actormapping.Membership membership = mapping.getMemberships();
         if (membership != null) {
             for (final MembershipType mType : membership.getMembership()) {
                 final Label groupName = new Label(viewersComposite, SWT.NONE);

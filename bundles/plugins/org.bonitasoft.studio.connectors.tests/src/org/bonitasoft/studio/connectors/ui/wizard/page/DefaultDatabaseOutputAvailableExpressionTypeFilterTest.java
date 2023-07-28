@@ -18,9 +18,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import org.bonitasoft.studio.common.ExpressionConstants;
-import org.bonitasoft.studio.connector.model.definition.Output;
-import org.bonitasoft.studio.model.expression.Expression;
+import org.bonitasoft.bpm.model.util.ExpressionConstants;
+import org.bonitasoft.bpm.connector.model.definition.Output;
+import org.bonitasoft.bpm.model.expression.Expression;
 import org.junit.Test;
 
 public class DefaultDatabaseOutputAvailableExpressionTypeFilterTest {

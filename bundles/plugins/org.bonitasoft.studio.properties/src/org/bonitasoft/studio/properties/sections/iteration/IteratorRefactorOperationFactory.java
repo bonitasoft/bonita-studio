@@ -16,11 +16,11 @@ package org.bonitasoft.studio.properties.sections.iteration;
 
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
-import org.bonitasoft.studio.model.expression.Expression;
-import org.bonitasoft.studio.model.process.Data;
-import org.bonitasoft.studio.model.process.DataAware;
-import org.bonitasoft.studio.model.process.MainProcess;
-import org.bonitasoft.studio.model.process.MultiInstantiable;
+import org.bonitasoft.bpm.model.expression.Expression;
+import org.bonitasoft.bpm.model.process.Data;
+import org.bonitasoft.bpm.model.process.DataAware;
+import org.bonitasoft.bpm.model.process.MainProcess;
+import org.bonitasoft.bpm.model.process.MultiInstantiable;
 import org.bonitasoft.studio.refactoring.core.RefactorDataOperation;
 import org.bonitasoft.studio.refactoring.core.RefactoringOperationType;
 import org.eclipse.emf.ecore.EObject;

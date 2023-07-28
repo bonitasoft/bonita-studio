@@ -17,9 +17,9 @@ package org.bonitasoft.studio.contract.core.refactoring;
 import static com.google.common.base.Preconditions.checkArgument;
 
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
-import org.bonitasoft.studio.model.process.ContractContainer;
-import org.bonitasoft.studio.model.process.ContractInput;
-import org.bonitasoft.studio.model.process.ContractInputType;
+import org.bonitasoft.bpm.model.process.ContractContainer;
+import org.bonitasoft.bpm.model.process.ContractInput;
+import org.bonitasoft.bpm.model.process.ContractInputType;
 import org.bonitasoft.studio.refactoring.core.RefactoringOperationType;
 import org.bonitasoft.studio.refactoring.core.emf.IRefactorOperationFactory;
 import org.bonitasoft.studio.refactoring.core.script.GroovyScriptRefactoringOperationFactory;

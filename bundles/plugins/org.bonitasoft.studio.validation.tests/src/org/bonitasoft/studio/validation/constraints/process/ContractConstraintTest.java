@@ -14,10 +14,10 @@
  */
 package org.bonitasoft.studio.validation.constraints.process;
 
-import static org.bonitasoft.studio.model.process.builders.ContractBuilder.aContract;
-import static org.bonitasoft.studio.model.process.builders.ContractConstraintBuilder.aContractConstraint;
-import static org.bonitasoft.studio.model.process.builders.ContractInputBuilder.aContractInput;
-import static org.bonitasoft.studio.model.process.builders.TaskBuilder.aTask;
+import static org.bonitasoft.bpm.model.process.builders.ContractBuilder.aContract;
+import static org.bonitasoft.bpm.model.process.builders.ContractConstraintBuilder.aContractConstraint;
+import static org.bonitasoft.bpm.model.process.builders.ContractInputBuilder.aContractInput;
+import static org.bonitasoft.bpm.model.process.builders.TaskBuilder.aTask;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;

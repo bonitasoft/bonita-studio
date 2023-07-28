@@ -16,11 +16,11 @@ package org.bonitasoft.studio.common.gmf.tools.convert;
 
 import java.util.Optional;
 
-import org.bonitasoft.studio.model.process.Activity;
-import org.bonitasoft.studio.model.process.BoundaryEvent;
-import org.bonitasoft.studio.model.process.BoundaryMessageEvent;
-import org.bonitasoft.studio.model.process.Connection;
-import org.bonitasoft.studio.model.process.TargetElement;
+import org.bonitasoft.bpm.model.process.Activity;
+import org.bonitasoft.bpm.model.process.BoundaryEvent;
+import org.bonitasoft.bpm.model.process.BoundaryMessageEvent;
+import org.bonitasoft.bpm.model.process.Connection;
+import org.bonitasoft.bpm.model.process.TargetElement;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;

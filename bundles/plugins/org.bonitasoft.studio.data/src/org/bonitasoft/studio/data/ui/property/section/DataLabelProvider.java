@@ -17,8 +17,8 @@
 package org.bonitasoft.studio.data.ui.property.section;
 
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
-import org.bonitasoft.studio.model.process.Data;
-import org.bonitasoft.studio.model.process.JavaObjectData;
+import org.bonitasoft.bpm.model.process.Data;
+import org.bonitasoft.bpm.model.process.JavaObjectData;
 import org.eclipse.core.databinding.observable.map.IObservableMap;
 import org.eclipse.jface.databinding.viewers.ObservableMapLabelProvider;
 import org.eclipse.swt.graphics.Image;

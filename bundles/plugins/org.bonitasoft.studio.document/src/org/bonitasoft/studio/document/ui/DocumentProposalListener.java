@@ -17,7 +17,7 @@ package org.bonitasoft.studio.document.ui;
 import org.bonitasoft.studio.document.ui.dialog.DocumentWizardDialog;
 import org.bonitasoft.studio.document.ui.wizard.DocumentWizard;
 import org.bonitasoft.studio.expression.editor.provider.IProposalListener;
-import org.bonitasoft.studio.model.process.Document;
+import org.bonitasoft.bpm.model.process.Document;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;

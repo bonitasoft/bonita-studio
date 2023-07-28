@@ -14,7 +14,7 @@
  */
 package org.bonitasoft.studio.parameters.wizard.page;
 
-import org.bonitasoft.studio.model.parameter.Parameter;
+import org.bonitasoft.bpm.model.parameter.Parameter;
 import org.bonitasoft.studio.parameters.i18n.Messages;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColumnViewer;

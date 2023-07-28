@@ -20,8 +20,8 @@ import java.util.List;
 import java.util.Set;
 
 import org.bonitasoft.studio.data.i18n.Messages;
-import org.bonitasoft.studio.model.process.DataType;
-import org.bonitasoft.studio.model.process.EnumType;
+import org.bonitasoft.bpm.model.process.DataType;
+import org.bonitasoft.bpm.model.process.EnumType;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.EditingSupport;

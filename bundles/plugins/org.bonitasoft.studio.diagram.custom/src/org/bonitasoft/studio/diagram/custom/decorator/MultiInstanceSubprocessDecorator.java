@@ -18,8 +18,8 @@
 package org.bonitasoft.studio.diagram.custom.decorator;
 
 import org.bonitasoft.studio.common.figures.DecoratorSVGFigure;
-import org.bonitasoft.studio.model.process.CallActivity;
-import org.bonitasoft.studio.model.process.ProcessPackage;
+import org.bonitasoft.bpm.model.process.CallActivity;
+import org.bonitasoft.bpm.model.process.ProcessPackage;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gmf.runtime.diagram.core.listener.DiagramEventBroker;

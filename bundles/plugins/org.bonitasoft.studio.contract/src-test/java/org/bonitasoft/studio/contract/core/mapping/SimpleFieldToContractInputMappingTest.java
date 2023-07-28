@@ -20,9 +20,9 @@ import java.util.List;
 
 import org.bonitasoft.engine.bdm.model.field.FieldType;
 import org.bonitasoft.engine.bdm.model.field.SimpleField;
-import org.bonitasoft.studio.model.process.ContractInput;
-import org.bonitasoft.studio.model.process.ContractInputType;
-import org.bonitasoft.studio.model.process.assertions.ContractInputAssert;
+import org.bonitasoft.bpm.model.process.ContractInput;
+import org.bonitasoft.bpm.model.process.ContractInputType;
+import org.bonitasoft.bpm.model.process.assertions.ContractInputAssert;
 import org.junit.Test;
 
 /**

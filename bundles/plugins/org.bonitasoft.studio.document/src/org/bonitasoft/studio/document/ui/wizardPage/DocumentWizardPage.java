@@ -18,7 +18,7 @@ import static org.bonitasoft.studio.common.ui.jface.databinding.UpdateStrategyFa
 
 import java.util.Iterator;
 
-import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.bpm.model.util.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.ui.IDisplayable;
 import org.bonitasoft.studio.document.i18n.Messages;
@@ -33,10 +33,10 @@ import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFil
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
 import org.bonitasoft.studio.expression.editor.viewer.GroovyOnlyExpressionViewer;
 import org.bonitasoft.studio.expression.editor.viewer.ObservableExpressionContentProvider;
-import org.bonitasoft.studio.model.process.Document;
-import org.bonitasoft.studio.model.process.DocumentType;
-import org.bonitasoft.studio.model.process.Pool;
-import org.bonitasoft.studio.model.process.ProcessPackage;
+import org.bonitasoft.bpm.model.process.Document;
+import org.bonitasoft.bpm.model.process.DocumentType;
+import org.bonitasoft.bpm.model.process.Pool;
+import org.bonitasoft.bpm.model.process.ProcessPackage;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.core.databinding.Binding;

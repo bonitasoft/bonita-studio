@@ -21,7 +21,7 @@ import java.util.stream.Stream;
 
 import org.bonitasoft.studio.expression.editor.pattern.IDocumentViewer;
 import org.bonitasoft.studio.expression.editor.pattern.ITextControl;
-import org.bonitasoft.studio.model.expression.Expression;
+import org.bonitasoft.bpm.model.expression.Expression;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.observable.value.IObservableValue;

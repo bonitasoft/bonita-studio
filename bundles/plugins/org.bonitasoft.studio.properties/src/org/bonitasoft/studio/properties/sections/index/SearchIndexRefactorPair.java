@@ -1,6 +1,6 @@
 package org.bonitasoft.studio.properties.sections.index;
 
-import org.bonitasoft.studio.model.process.SearchIndex;
+import org.bonitasoft.bpm.model.process.SearchIndex;
 import org.bonitasoft.studio.refactoring.core.RefactorPair;
 
 public class SearchIndexRefactorPair extends RefactorPair<SearchIndex, SearchIndex> {

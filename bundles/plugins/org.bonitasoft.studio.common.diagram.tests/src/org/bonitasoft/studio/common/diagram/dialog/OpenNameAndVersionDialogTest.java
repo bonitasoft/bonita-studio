@@ -15,8 +15,8 @@
 package org.bonitasoft.studio.common.diagram.dialog;
 
 import static org.bonitasoft.studio.assertions.StatusAssert.assertThat;
-import static org.bonitasoft.studio.model.process.builders.MainProcessBuilder.aMainProcess;
-import static org.bonitasoft.studio.model.process.builders.PoolBuilder.aPool;
+import static org.bonitasoft.bpm.model.process.builders.MainProcessBuilder.aMainProcess;
+import static org.bonitasoft.bpm.model.process.builders.PoolBuilder.aPool;
 
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.swt.rules.RealmWithDisplay;

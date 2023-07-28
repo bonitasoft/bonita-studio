@@ -25,7 +25,7 @@ import org.bonitasoft.studio.common.gmf.tools.GMFTools;
 import org.bonitasoft.studio.diagram.custom.commands.UpdatePoolSizeCommand;
 import org.bonitasoft.studio.diagram.custom.parts.CustomLaneEditPart;
 import org.bonitasoft.studio.diagram.custom.parts.CustomMainProcessEditPart;
-import org.bonitasoft.studio.model.process.Lane;
+import org.bonitasoft.bpm.model.process.Lane;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.PoolEditPart;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;

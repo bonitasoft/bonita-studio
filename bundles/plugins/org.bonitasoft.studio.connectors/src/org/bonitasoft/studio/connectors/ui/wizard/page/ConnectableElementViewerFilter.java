@@ -16,10 +16,10 @@
 package org.bonitasoft.studio.connectors.ui.wizard.page;
 
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
-import org.bonitasoft.studio.model.process.AbstractProcess;
-import org.bonitasoft.studio.model.process.ConnectableElement;
-import org.bonitasoft.studio.model.process.Container;
-import org.bonitasoft.studio.model.process.MessageEvent;
+import org.bonitasoft.bpm.model.process.AbstractProcess;
+import org.bonitasoft.bpm.model.process.ConnectableElement;
+import org.bonitasoft.bpm.model.process.Container;
+import org.bonitasoft.bpm.model.process.MessageEvent;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;

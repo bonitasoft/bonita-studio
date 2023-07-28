@@ -16,7 +16,7 @@ package org.bonitasoft.studio.designer.ui.property.section;
 
 import org.bonitasoft.studio.expression.editor.autocompletion.IExpressionProposalLabelProvider;
 import org.bonitasoft.studio.expression.editor.provider.ExpressionLabelProvider;
-import org.bonitasoft.studio.model.expression.Expression;
+import org.bonitasoft.bpm.model.expression.Expression;
 
 /**
  * @author Romain Bioteau

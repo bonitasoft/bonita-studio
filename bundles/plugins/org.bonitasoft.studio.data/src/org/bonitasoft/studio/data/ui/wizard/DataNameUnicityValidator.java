@@ -6,7 +6,7 @@ import static org.eclipse.core.databinding.validation.ValidationStatus.error;
 import static org.eclipse.core.databinding.validation.ValidationStatus.ok;
 
 import org.bonitasoft.studio.data.i18n.Messages;
-import org.bonitasoft.studio.model.process.Data;
+import org.bonitasoft.bpm.model.process.Data;
 import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.runtime.IStatus;
 

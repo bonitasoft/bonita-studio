@@ -6,12 +6,12 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-import org.bonitasoft.studio.model.configuration.Configuration;
-import org.bonitasoft.studio.model.configuration.ConfigurationFactory;
-import org.bonitasoft.studio.model.configuration.Resource;
-import org.bonitasoft.studio.model.process.AdditionalResource;
-import org.bonitasoft.studio.model.process.Pool;
-import org.bonitasoft.studio.model.process.ProcessFactory;
+import org.bonitasoft.bpm.model.configuration.Configuration;
+import org.bonitasoft.bpm.model.configuration.ConfigurationFactory;
+import org.bonitasoft.bpm.model.configuration.Resource;
+import org.bonitasoft.bpm.model.process.AdditionalResource;
+import org.bonitasoft.bpm.model.process.Pool;
+import org.bonitasoft.bpm.model.process.ProcessFactory;
 import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.junit.Before;

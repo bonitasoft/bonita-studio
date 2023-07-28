@@ -17,9 +17,9 @@ package org.bonitasoft.studio.contract.ui.property.input.labelProvider;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import org.bonitasoft.studio.businessobject.ui.DateTypeLabels;
-import org.bonitasoft.studio.model.process.ContractInputType;
-import org.bonitasoft.studio.model.process.ProcessFactory;
-import org.bonitasoft.studio.model.process.builders.ContractInputBuilder;
+import org.bonitasoft.bpm.model.process.ContractInputType;
+import org.bonitasoft.bpm.model.process.ProcessFactory;
+import org.bonitasoft.bpm.model.process.builders.ContractInputBuilder;
 import org.junit.Before;
 import org.junit.Test;
 

@@ -14,6 +14,30 @@
  */
 package org.bonitasoft.studio.engine.export.builder;
 
+import org.bonitasoft.bpm.model.connectorconfiguration.ConnectorConfiguration;
+import org.bonitasoft.bpm.model.connectorconfiguration.ConnectorParameter;
+import org.bonitasoft.bpm.model.expression.Operation;
+import org.bonitasoft.bpm.model.kpi.AbstractKPIBinding;
+import org.bonitasoft.bpm.model.kpi.DatabaseKPIBinding;
+import org.bonitasoft.bpm.model.parameter.Parameter;
+import org.bonitasoft.bpm.model.process.AbstractProcess;
+import org.bonitasoft.bpm.model.process.Actor;
+import org.bonitasoft.bpm.model.process.BusinessObjectData;
+import org.bonitasoft.bpm.model.process.ConnectableElement;
+import org.bonitasoft.bpm.model.process.Connector;
+import org.bonitasoft.bpm.model.process.Contract;
+import org.bonitasoft.bpm.model.process.ContractContainer;
+import org.bonitasoft.bpm.model.process.Data;
+import org.bonitasoft.bpm.model.process.DataAware;
+import org.bonitasoft.bpm.model.process.Document;
+import org.bonitasoft.bpm.model.process.Element;
+import org.bonitasoft.bpm.model.process.MainProcess;
+import org.bonitasoft.bpm.model.process.Pool;
+import org.bonitasoft.bpm.model.process.SearchIndex;
+import org.bonitasoft.bpm.model.process.Task;
+import org.bonitasoft.bpm.model.process.util.ProcessSwitch;
+import org.bonitasoft.bpm.model.util.ExpressionConstants;
+import org.bonitasoft.bpm.model.util.IModelSearch;
 import org.bonitasoft.engine.bpm.connector.ConnectorEvent;
 import org.bonitasoft.engine.bpm.process.impl.ActorDefinitionBuilder;
 import org.bonitasoft.engine.bpm.process.impl.ConnectorDefinitionBuilder;
@@ -23,34 +47,10 @@ import org.bonitasoft.engine.bpm.process.impl.FlowElementBuilder;
 import org.bonitasoft.engine.bpm.process.impl.ProcessDefinitionBuilder;
 import org.bonitasoft.engine.bpm.process.impl.UserTaskDefinitionBuilder;
 import org.bonitasoft.engine.expression.Expression;
-import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
-import org.bonitasoft.studio.common.model.IModelSearch;
 import org.bonitasoft.studio.engine.contribution.BuildProcessDefinitionException;
 import org.bonitasoft.studio.engine.contribution.IEngineDefinitionBuilder;
 import org.bonitasoft.studio.engine.export.EngineExpressionUtil;
-import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration;
-import org.bonitasoft.studio.model.connectorconfiguration.ConnectorParameter;
-import org.bonitasoft.studio.model.expression.Operation;
-import org.bonitasoft.studio.model.kpi.AbstractKPIBinding;
-import org.bonitasoft.studio.model.kpi.DatabaseKPIBinding;
-import org.bonitasoft.studio.model.parameter.Parameter;
-import org.bonitasoft.studio.model.process.AbstractProcess;
-import org.bonitasoft.studio.model.process.Actor;
-import org.bonitasoft.studio.model.process.BusinessObjectData;
-import org.bonitasoft.studio.model.process.ConnectableElement;
-import org.bonitasoft.studio.model.process.Connector;
-import org.bonitasoft.studio.model.process.Contract;
-import org.bonitasoft.studio.model.process.ContractContainer;
-import org.bonitasoft.studio.model.process.Data;
-import org.bonitasoft.studio.model.process.DataAware;
-import org.bonitasoft.studio.model.process.Document;
-import org.bonitasoft.studio.model.process.Element;
-import org.bonitasoft.studio.model.process.MainProcess;
-import org.bonitasoft.studio.model.process.Pool;
-import org.bonitasoft.studio.model.process.SearchIndex;
-import org.bonitasoft.studio.model.process.Task;
-import org.bonitasoft.studio.model.process.util.ProcessSwitch;
 
 /**
  * @author Romain Bioteau
@@ -89,10 +89,11 @@ public abstract class AbstractProcessBuilder extends ProcessSwitch<Element> {
     protected void addParameters(final ProcessDefinitionBuilder builder, final AbstractProcess process) {
         for (final Parameter p : process.getParameters()) {
             final String description = p.getDescription();
-            builder.addParameter(p.getName(), p.getTypeClassname()).addDescription(description == null ? "" : description);
+            builder.addParameter(p.getName(), p.getTypeClassname())
+                    .addDescription(description == null ? "" : description);
         }
     }
-    
+
     protected void addSearchIndex(final ProcessDefinitionBuilder builder, final AbstractProcess process) {
         if (process instanceof Pool) {
             final Pool pool = (Pool) process;
@@ -231,7 +232,8 @@ public abstract class AbstractProcessBuilder extends ProcessSwitch<Element> {
                     documentBuilder.setEngineBuilder(builder);
                     documentBuilder.build(document);
                 } catch (final BuildProcessDefinitionException | EngineDefinitionBuilderNotFoundException e) {
-                    throw new RuntimeException("Failed to export document definition for " + ((Element) pool).getName(), e);
+                    throw new RuntimeException("Failed to export document definition for " + ((Element) pool).getName(),
+                            e);
                 }
             }
         }
@@ -248,7 +250,7 @@ public abstract class AbstractProcessBuilder extends ProcessSwitch<Element> {
      * @param task
      */
     protected void addIteratorToContext(final Object contextBuilder, final Task task) {
-        final org.bonitasoft.studio.model.expression.Expression iteratorExpression = task.getIteratorExpression();
+        final org.bonitasoft.bpm.model.expression.Expression iteratorExpression = task.getIteratorExpression();
         if (iteratorExpression != null &&
                 ExpressionConstants.MULTIINSTANCE_ITERATOR_TYPE.equals(iteratorExpression.getType())
                 && iteratorExpression.getName() != null

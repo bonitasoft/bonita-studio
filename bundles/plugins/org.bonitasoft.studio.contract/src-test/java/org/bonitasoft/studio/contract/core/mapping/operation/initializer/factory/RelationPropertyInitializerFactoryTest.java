@@ -21,8 +21,8 @@ import static org.bonitasoft.studio.model.businessObject.BusinessObjectBuilder.a
 import static org.bonitasoft.studio.model.businessObject.FieldBuilder.aCompositionField;
 import static org.bonitasoft.studio.model.businessObject.FieldBuilder.aStringField;
 import static org.bonitasoft.studio.model.businessObject.FieldBuilder.anAggregationField;
-import static org.bonitasoft.studio.model.process.builders.BusinessObjectDataBuilder.aBusinessData;
-import static org.bonitasoft.studio.model.process.builders.PoolBuilder.aPool;
+import static org.bonitasoft.bpm.model.process.builders.BusinessObjectDataBuilder.aBusinessData;
+import static org.bonitasoft.bpm.model.process.builders.PoolBuilder.aPool;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -41,8 +41,8 @@ import org.bonitasoft.studio.contract.core.mapping.operation.initializer.Composi
 import org.bonitasoft.studio.contract.core.mapping.operation.initializer.IPropertyInitializer;
 import org.bonitasoft.studio.contract.core.mapping.operation.initializer.MultipleAggregationReferencePropertyInitializer;
 import org.bonitasoft.studio.contract.core.mapping.operation.initializer.MultipleCompositionReferencePropertyInitializer;
-import org.bonitasoft.studio.model.process.BusinessObjectData;
-import org.bonitasoft.studio.model.process.builders.BusinessObjectDataBuilder;
+import org.bonitasoft.bpm.model.process.BusinessObjectData;
+import org.bonitasoft.bpm.model.process.builders.BusinessObjectDataBuilder;
 import org.junit.Test;
 
 public class RelationPropertyInitializerFactoryTest {

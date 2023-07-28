@@ -19,7 +19,7 @@ package org.bonitasoft.studio.sqlbuilder.ex.builder.viewer;
 
 import java.util.List;
 
-import org.bonitasoft.studio.model.expression.Expression;
+import org.bonitasoft.bpm.model.expression.Expression;
 import org.eclipse.datatools.sqltools.sqlbuilder.model.SQLDomainModel;
 import org.eclipse.datatools.sqltools.sqlbuilder.util.ViewUtility;
 import org.eclipse.jface.viewers.ContentViewer;

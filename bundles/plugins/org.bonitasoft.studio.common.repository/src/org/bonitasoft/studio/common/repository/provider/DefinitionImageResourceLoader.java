@@ -14,8 +14,8 @@
  */
 package org.bonitasoft.studio.common.repository.provider;
 
-import org.bonitasoft.studio.connector.model.definition.Category;
-import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
+import org.bonitasoft.bpm.connector.model.definition.Category;
+import org.bonitasoft.bpm.connector.model.definition.ConnectorDefinition;
 import org.eclipse.jface.resource.ImageDescriptor;
 
 public interface DefinitionImageResourceLoader {

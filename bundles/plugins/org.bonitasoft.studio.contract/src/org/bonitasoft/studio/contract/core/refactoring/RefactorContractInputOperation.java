@@ -24,16 +24,16 @@ import static org.bonitasoft.studio.common.predicate.ExpressionPredicates.withEx
 import java.util.Collection;
 import java.util.Set;
 
-import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.bpm.model.util.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.EMFModelUpdater;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
-import org.bonitasoft.studio.model.expression.Expression;
-import org.bonitasoft.studio.model.expression.ExpressionPackage;
-import org.bonitasoft.studio.model.process.Contract;
-import org.bonitasoft.studio.model.process.ContractConstraint;
-import org.bonitasoft.studio.model.process.ContractContainer;
-import org.bonitasoft.studio.model.process.ContractInput;
+import org.bonitasoft.bpm.model.expression.Expression;
+import org.bonitasoft.bpm.model.expression.ExpressionPackage;
+import org.bonitasoft.bpm.model.process.Contract;
+import org.bonitasoft.bpm.model.process.ContractConstraint;
+import org.bonitasoft.bpm.model.process.ContractContainer;
+import org.bonitasoft.bpm.model.process.ContractInput;
 import org.bonitasoft.studio.refactoring.core.AbstractRefactorOperation;
 import org.bonitasoft.studio.refactoring.core.RefactorPair;
 import org.bonitasoft.studio.refactoring.core.RefactoringOperationType;

@@ -19,7 +19,6 @@ import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
 import org.bonitasoft.studio.common.repository.core.migration.report.MigrationReport;
 import org.bonitasoft.studio.common.repository.filestore.FileStoreChangeEvent;
 import org.bonitasoft.studio.common.repository.jdt.JDTTypeHierarchyManager;
-import org.bonitasoft.studio.common.repository.migration.ProcessModelTransformation;
 import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
@@ -199,11 +198,6 @@ public class FakeRepository implements IRepository {
     @Override
     public void addProjectListener(IBonitaProjectListener listener) {
 
-    }
-
-    @Override
-    public List<ProcessModelTransformation> getProcessModelTransformations() {
-        return null;
     }
 
     @Override

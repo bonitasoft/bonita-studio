@@ -20,10 +20,10 @@ import java.util.Set;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
-import org.bonitasoft.studio.model.parameter.Parameter;
-import org.bonitasoft.studio.model.parameter.ParameterFactory;
-import org.bonitasoft.studio.model.process.AbstractProcess;
-import org.bonitasoft.studio.model.process.ProcessPackage;
+import org.bonitasoft.bpm.model.parameter.Parameter;
+import org.bonitasoft.bpm.model.parameter.ParameterFactory;
+import org.bonitasoft.bpm.model.process.AbstractProcess;
+import org.bonitasoft.bpm.model.process.ProcessPackage;
 import org.bonitasoft.studio.parameters.ParameterPlugin;
 import org.bonitasoft.studio.parameters.i18n.Messages;
 import org.bonitasoft.studio.pics.Pics;

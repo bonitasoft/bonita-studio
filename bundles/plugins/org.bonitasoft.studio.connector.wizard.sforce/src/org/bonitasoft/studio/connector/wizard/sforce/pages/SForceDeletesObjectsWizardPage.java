@@ -17,9 +17,9 @@
 package org.bonitasoft.studio.connector.wizard.sforce.pages;
 
 import org.bonitasoft.studio.common.repository.provider.ExtendedConnectorDefinition;
-import org.bonitasoft.studio.connector.model.definition.Component;
-import org.bonitasoft.studio.connector.model.definition.List;
-import org.bonitasoft.studio.connector.model.definition.Page;
+import org.bonitasoft.bpm.connector.model.definition.Component;
+import org.bonitasoft.bpm.connector.model.definition.List;
+import org.bonitasoft.bpm.connector.model.definition.Page;
 import org.bonitasoft.studio.connector.model.definition.wizard.PageComponentSwitch;
 import org.bonitasoft.studio.connector.wizard.sforce.componentSwitch.AbstractSforceComponentSwitch;
 import org.bonitasoft.studio.connector.wizard.sforce.componentSwitch.ExpressionNameNatureProvider;
@@ -27,8 +27,8 @@ import org.bonitasoft.studio.connector.wizard.sforce.i18n.Messages;
 import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFilter;
 import org.bonitasoft.studio.expression.editor.provider.ExpressionLabelProvider;
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionCollectionViewer;
-import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration;
-import org.bonitasoft.studio.model.expression.Expression;
+import org.bonitasoft.bpm.model.connectorconfiguration.ConnectorConfiguration;
+import org.bonitasoft.bpm.model.expression.Expression;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.fieldassist.AutoCompleteField;

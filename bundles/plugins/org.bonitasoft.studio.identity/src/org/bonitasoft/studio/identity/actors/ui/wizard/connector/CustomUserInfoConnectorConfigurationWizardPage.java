@@ -15,9 +15,9 @@ package org.bonitasoft.studio.identity.actors.ui.wizard.connector;
 
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.core.ActiveOrganizationProvider;
-import org.bonitasoft.studio.connector.model.definition.Checkbox;
-import org.bonitasoft.studio.connector.model.definition.Page;
-import org.bonitasoft.studio.connector.model.definition.Text;
+import org.bonitasoft.bpm.connector.model.definition.Checkbox;
+import org.bonitasoft.bpm.connector.model.definition.Page;
+import org.bonitasoft.bpm.connector.model.definition.Text;
 import org.bonitasoft.studio.connector.model.definition.wizard.AbstractConnectorConfigurationWizardPage;
 import org.bonitasoft.studio.connector.model.definition.wizard.PageComponentSwitchBuilder;
 import org.bonitasoft.studio.expression.editor.viewer.CheckBoxExpressionViewer;

@@ -16,8 +16,8 @@ package org.bonitasoft.studio.contract.ui.property;
 
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.ui.jface.selection.EObjectAdaptableSelectionProvider;
-import org.bonitasoft.studio.model.process.ContractContainer;
-import org.bonitasoft.studio.model.process.Lane;
+import org.bonitasoft.bpm.model.process.ContractContainer;
+import org.bonitasoft.bpm.model.process.Lane;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.e4.core.di.annotations.Creatable;
 import org.eclipse.emf.ecore.EObject;

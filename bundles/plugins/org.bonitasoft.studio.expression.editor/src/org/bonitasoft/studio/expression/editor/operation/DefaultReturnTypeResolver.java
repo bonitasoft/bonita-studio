@@ -15,8 +15,8 @@
 package org.bonitasoft.studio.expression.editor.operation;
 
 import org.bonitasoft.engine.bpm.document.DocumentValue;
-import org.bonitasoft.studio.common.ExpressionConstants;
-import org.bonitasoft.studio.model.expression.Operation;
+import org.bonitasoft.bpm.model.util.ExpressionConstants;
+import org.bonitasoft.bpm.model.expression.Operation;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 
 public class DefaultReturnTypeResolver {

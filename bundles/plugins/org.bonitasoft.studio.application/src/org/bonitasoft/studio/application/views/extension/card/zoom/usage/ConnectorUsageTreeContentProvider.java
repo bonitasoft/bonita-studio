@@ -18,8 +18,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.bonitasoft.studio.model.process.AbstractProcess;
-import org.bonitasoft.studio.model.process.Element;
+import org.bonitasoft.bpm.model.process.AbstractProcess;
+import org.bonitasoft.bpm.model.process.Element;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 
 public class ConnectorUsageTreeContentProvider implements ITreeContentProvider {

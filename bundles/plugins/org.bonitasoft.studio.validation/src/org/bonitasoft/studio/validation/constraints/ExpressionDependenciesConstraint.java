@@ -17,10 +17,10 @@ package org.bonitasoft.studio.validation.constraints;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.bpm.model.util.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.expression.editor.provider.ExpressionTypeLabelProvider;
-import org.bonitasoft.studio.model.expression.Expression;
+import org.bonitasoft.bpm.model.expression.Expression;
 import org.bonitasoft.studio.validation.i18n.Messages;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;

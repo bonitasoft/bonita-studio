@@ -120,3 +120,4 @@ Export-Package: org.bonitasoft.studio.application,
  org.bonitasoft.studio.application.views.process,
  org.bonitasoft.studio.application.views.provider
 Bundle-ClassPath: .
+Automatic-Module-Name: org.bonitasoft.studio.application

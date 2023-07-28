@@ -16,13 +16,13 @@ package org.bonitasoft.studio.engine.export;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.entry;
-import static org.bonitasoft.studio.model.configuration.builders.ActorMappingBuilder.anActorMapping;
-import static org.bonitasoft.studio.model.configuration.builders.ActorMappingsTypeBuilder.anActorMappingsType;
-import static org.bonitasoft.studio.model.configuration.builders.ConfigurationBuilder.aConfiguration;
-import static org.bonitasoft.studio.model.configuration.builders.MembershipBuilder.aMembership;
-import static org.bonitasoft.studio.model.parameter.builders.ParameterBuilder.aBooleanParameter;
-import static org.bonitasoft.studio.model.parameter.builders.ParameterBuilder.aStringParameter;
-import static org.bonitasoft.studio.model.parameter.builders.ParameterBuilder.anIntegerParameter;
+import static org.bonitasoft.bpm.model.configuration.builders.ActorMappingBuilder.anActorMapping;
+import static org.bonitasoft.bpm.model.configuration.builders.ActorMappingsTypeBuilder.anActorMappingsType;
+import static org.bonitasoft.bpm.model.configuration.builders.ConfigurationBuilder.aConfiguration;
+import static org.bonitasoft.bpm.model.configuration.builders.MembershipBuilder.aMembership;
+import static org.bonitasoft.bpm.model.parameter.builders.ParameterBuilder.aBooleanParameter;
+import static org.bonitasoft.bpm.model.parameter.builders.ParameterBuilder.aStringParameter;
+import static org.bonitasoft.bpm.model.parameter.builders.ParameterBuilder.anIntegerParameter;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
@@ -36,7 +36,7 @@ import java.util.Map;
 import org.bonitasoft.engine.bpm.bar.actorMapping.Actor;
 import org.bonitasoft.engine.bpm.bar.actorMapping.ActorMapping;
 import org.bonitasoft.studio.configuration.preferences.ConfigurationPreferenceConstants;
-import org.bonitasoft.studio.model.process.AbstractProcess;
+import org.bonitasoft.bpm.model.process.AbstractProcess;
 import org.junit.Test;
 
 public class BarExporterTest {

@@ -16,7 +16,7 @@
  */
 package org.bonitasoft.studio.designer.core.operation;
 
-import org.bonitasoft.studio.model.process.ContractInput;
+import org.bonitasoft.bpm.model.process.ContractInput;
 
 public interface IContractReferenceResolver {
 

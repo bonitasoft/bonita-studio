@@ -14,7 +14,7 @@
  */
 package org.bonitasoft.studio.common.gmf.tools.tree;
 
-import org.bonitasoft.studio.model.process.decision.DecisionTable;
+import org.bonitasoft.bpm.model.process.decision.DecisionTable;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 

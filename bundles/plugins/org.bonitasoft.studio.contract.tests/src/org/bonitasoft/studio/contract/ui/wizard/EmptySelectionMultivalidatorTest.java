@@ -15,8 +15,8 @@
 package org.bonitasoft.studio.contract.ui.wizard;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.bonitasoft.studio.model.process.builders.BusinessObjectDataBuilder.aBusinessData;
-import static org.bonitasoft.studio.model.process.builders.PoolBuilder.aPool;
+import static org.bonitasoft.bpm.model.process.builders.BusinessObjectDataBuilder.aBusinessData;
+import static org.bonitasoft.bpm.model.process.builders.PoolBuilder.aPool;
 import static org.mockito.Mockito.mock;
 
 import java.util.ArrayList;
@@ -27,7 +27,7 @@ import org.bonitasoft.studio.contract.core.mapping.FieldToContractInputMapping;
 import org.bonitasoft.studio.contract.core.mapping.RelationFieldToContractInputMapping;
 import org.bonitasoft.studio.contract.core.mapping.SimpleFieldToContractInputMapping;
 import org.bonitasoft.studio.contract.ui.wizard.GenerationOptions.EditMode;
-import org.bonitasoft.studio.model.process.BusinessObjectData;
+import org.bonitasoft.bpm.model.process.BusinessObjectData;
 import org.bonitasoft.studio.swt.rules.RealmWithDisplay;
 import org.eclipse.core.databinding.observable.set.IObservableSet;
 import org.eclipse.core.databinding.observable.set.WritableSet;

@@ -19,8 +19,8 @@
 //package org.bonitasoft.studio.connectors.extension;
 //
 //import org.bonitasoft.studio.connectors.ui.wizard.DefaultSetConnectorFieldsWizard;
-//import org.bonitasoft.studio.model.process.Connector;
-//import org.bonitasoft.studio.model.process.Element;
+//import org.bonitasoft.bpm.model.process.Connector;
+//import org.bonitasoft.bpm.model.process.Element;
 //import org.eclipse.jface.wizard.IWizardPage;
 //
 ///**

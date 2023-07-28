@@ -16,7 +16,7 @@
  */
 package org.bonitasoft.studio.properties.sections.iteration;
 
-import org.bonitasoft.studio.model.process.Data;
+import org.bonitasoft.bpm.model.process.Data;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
 

@@ -11,8 +11,8 @@
  */
 package org.bonitasoft.studio.properties.sections.index;
 
-import org.bonitasoft.studio.model.process.Lane;
-import org.bonitasoft.studio.model.process.Pool;
+import org.bonitasoft.bpm.model.process.Lane;
+import org.bonitasoft.bpm.model.process.Pool;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.jface.viewers.IFilter;
 

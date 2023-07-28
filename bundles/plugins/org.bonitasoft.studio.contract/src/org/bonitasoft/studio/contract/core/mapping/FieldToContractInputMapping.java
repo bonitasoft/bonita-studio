@@ -20,10 +20,10 @@ import java.util.List;
 import org.bonitasoft.engine.bdm.model.field.Field;
 import org.bonitasoft.studio.contract.core.mapping.operation.MappingOperationScriptBuilder;
 import org.bonitasoft.studio.contract.core.mapping.operation.PropertySetter;
-import org.bonitasoft.studio.model.process.BusinessObjectData;
-import org.bonitasoft.studio.model.process.ContractInput;
-import org.bonitasoft.studio.model.process.ContractInputType;
-import org.bonitasoft.studio.model.process.ProcessFactory;
+import org.bonitasoft.bpm.model.process.BusinessObjectData;
+import org.bonitasoft.bpm.model.process.ContractInput;
+import org.bonitasoft.bpm.model.process.ContractInputType;
+import org.bonitasoft.bpm.model.process.ProcessFactory;
 
 public abstract class FieldToContractInputMapping {
 

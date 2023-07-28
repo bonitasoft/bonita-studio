@@ -15,9 +15,9 @@
 package org.bonitasoft.studio.document.ui.validator;
 
 import org.bonitasoft.studio.document.i18n.Messages;
-import org.bonitasoft.studio.model.process.Document;
-import org.bonitasoft.studio.model.process.DocumentType;
-import org.bonitasoft.studio.model.process.ProcessPackage;
+import org.bonitasoft.bpm.model.process.Document;
+import org.bonitasoft.bpm.model.process.DocumentType;
+import org.bonitasoft.bpm.model.process.ProcessPackage;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.validation.MultiValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;

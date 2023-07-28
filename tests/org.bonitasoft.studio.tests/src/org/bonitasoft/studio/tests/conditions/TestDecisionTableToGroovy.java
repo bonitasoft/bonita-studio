@@ -16,15 +16,15 @@ package org.bonitasoft.studio.tests.conditions;
 
 import static org.junit.Assert.assertTrue;
 
-import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.bpm.model.util.ExpressionConstants;
 import org.bonitasoft.studio.engine.export.DecisionTableUtil;
-import org.bonitasoft.studio.model.expression.Expression;
-import org.bonitasoft.studio.model.expression.ExpressionFactory;
-import org.bonitasoft.studio.model.process.decision.DecisionFactory;
-import org.bonitasoft.studio.model.process.decision.DecisionTable;
-import org.bonitasoft.studio.model.process.decision.DecisionTableLine;
-import org.bonitasoft.studio.model.process.decision.transitions.TakeTransitionAction;
-import org.bonitasoft.studio.model.process.decision.transitions.TransitionsFactory;
+import org.bonitasoft.bpm.model.expression.Expression;
+import org.bonitasoft.bpm.model.expression.ExpressionFactory;
+import org.bonitasoft.bpm.model.process.decision.DecisionFactory;
+import org.bonitasoft.bpm.model.process.decision.DecisionTable;
+import org.bonitasoft.bpm.model.process.decision.DecisionTableLine;
+import org.bonitasoft.bpm.model.process.decision.transitions.TakeTransitionAction;
+import org.bonitasoft.bpm.model.process.decision.transitions.TransitionsFactory;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.junit.Test;
 

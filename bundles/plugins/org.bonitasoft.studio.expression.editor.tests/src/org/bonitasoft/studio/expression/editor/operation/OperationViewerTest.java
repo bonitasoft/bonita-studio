@@ -15,13 +15,13 @@
 package org.bonitasoft.studio.expression.editor.operation;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.bonitasoft.studio.model.expression.builders.OperationBuilder.anOperation;
-import static org.bonitasoft.studio.model.expression.builders.OperatorBuilder.anOperator;
+import static org.bonitasoft.bpm.model.expression.builders.OperationBuilder.anOperation;
+import static org.bonitasoft.bpm.model.expression.builders.OperatorBuilder.anOperator;
 
-import org.bonitasoft.studio.common.ExpressionConstants;
-import org.bonitasoft.studio.model.expression.Operation;
-import org.bonitasoft.studio.model.expression.Operator;
-import org.bonitasoft.studio.model.expression.assertions.OperatorAssert;
+import org.bonitasoft.bpm.model.util.ExpressionConstants;
+import org.bonitasoft.bpm.model.expression.Operation;
+import org.bonitasoft.bpm.model.expression.Operator;
+import org.bonitasoft.bpm.model.expression.assertions.OperatorAssert;
 import org.bonitasoft.studio.swt.rules.RealmWithDisplay;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
 import org.junit.Rule;

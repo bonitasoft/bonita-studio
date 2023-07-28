@@ -21,8 +21,8 @@ package org.bonitasoft.studio.data.commands;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.bonitasoft.studio.model.process.Data;
-import org.bonitasoft.studio.model.process.DataAware;
+import org.bonitasoft.bpm.model.process.Data;
+import org.bonitasoft.bpm.model.process.DataAware;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;

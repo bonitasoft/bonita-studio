@@ -20,7 +20,7 @@ import org.bonitasoft.engine.bdm.model.field.SimpleField;
 import org.bonitasoft.studio.contract.core.mapping.FieldToContractInputMapping;
 import org.bonitasoft.studio.contract.core.mapping.operation.initializer.IPropertyInitializer;
 import org.bonitasoft.studio.contract.core.mapping.operation.initializer.SimpleFieldPropertyInitializer;
-import org.bonitasoft.studio.model.process.BusinessObjectData;
+import org.bonitasoft.bpm.model.process.BusinessObjectData;
 
 public class PropertyInitializerFactory extends AbsractInitializerFactory {
 

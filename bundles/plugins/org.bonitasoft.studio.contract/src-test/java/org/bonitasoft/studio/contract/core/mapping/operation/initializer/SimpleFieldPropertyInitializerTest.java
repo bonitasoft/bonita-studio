@@ -16,11 +16,11 @@ package org.bonitasoft.studio.contract.core.mapping.operation.initializer;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.bonitasoft.studio.model.businessObject.FieldBuilder.aSimpleField;
-import static org.bonitasoft.studio.model.process.builders.ContractInputBuilder.aContractInput;
+import static org.bonitasoft.bpm.model.process.builders.ContractInputBuilder.aContractInput;
 
 import org.bonitasoft.engine.bdm.model.field.FieldType;
 import org.bonitasoft.engine.bdm.model.field.SimpleField;
-import org.bonitasoft.studio.model.process.ContractInputType;
+import org.bonitasoft.bpm.model.process.ContractInputType;
 import org.junit.Test;
 
 public class SimpleFieldPropertyInitializerTest {

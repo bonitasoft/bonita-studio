@@ -18,23 +18,23 @@ import java.io.File;
 import java.nio.file.Files;
 import java.util.List;
 
+import org.bonitasoft.bonita2bpmn.extension.BonitaModelExporterImpl;
+import org.bonitasoft.bonita2bpmn.transfo.BonitaToBPMNExporter;
+import org.bonitasoft.bonita2bpmn.transfo.ConnectorTransformationXSLProvider;
+import org.bonitasoft.bpm.connector.model.definition.ConnectorDefinition;
+import org.bonitasoft.bpm.model.configuration.Configuration;
+import org.bonitasoft.bpm.model.process.AbstractProcess;
+import org.bonitasoft.bpm.model.util.IModelSearch;
+import org.bonitasoft.bpm.model.util.ModelSearch;
 import org.bonitasoft.engine.bpm.bar.BarResource;
 import org.bonitasoft.engine.bpm.bar.BusinessArchiveBuilder;
 import org.bonitasoft.studio.common.ProductVersion;
-import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.model.IModelSearch;
-import org.bonitasoft.studio.common.model.ModelSearch;
-import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.extension.BARResourcesProvider;
-import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.connectors.repository.ConnectorDefRepositoryStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.exporter.Activator;
-import org.bonitasoft.studio.exporter.bpmn.transfo.BonitaToBPMNExporter;
-import org.bonitasoft.studio.exporter.bpmn.transfo.OSGIConnectorTransformationXSLProvider;
-import org.bonitasoft.studio.exporter.extension.BonitaModelExporterImpl;
-import org.bonitasoft.studio.model.configuration.Configuration;
-import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -53,13 +53,14 @@ public class BPMNBarResourceProvider implements BARResourcesProvider {
                         .getRepositoryStore(DiagramRepositoryStore.class);
                 ConnectorDefRepositoryStore connectorDefRepoStore = RepositoryManager.getInstance()
                         .getRepositoryStore(ConnectorDefRepositoryStore.class);
-                List<AbstractProcess> allProcesses = diagramRepoStore.hasComputedProcesses() ? diagramRepoStore.getComputedProcesses() : diagramRepoStore.getAllProcesses();
+                List<AbstractProcess> allProcesses = diagramRepoStore.hasComputedProcesses()
+                        ? diagramRepoStore.getComputedProcesses() : diagramRepoStore.getAllProcesses();
                 List<ConnectorDefinition> definitions = connectorDefRepoStore.getDefinitions();
                 IModelSearch modelSearch = new ModelSearch(
-                        () -> allProcesses,
-                        () -> definitions);
+                        () -> allProcesses);
                 new BonitaToBPMNExporter().export(new BonitaModelExporterImpl(eResource, modelSearch), modelSearch,
-                        destFile, new OSGIConnectorTransformationXSLProvider(), ProductVersion.CURRENT_VERSION);
+                        () -> definitions,
+                        destFile, ConnectorTransformationXSLProvider.DEFAULT, ProductVersion.CURRENT_VERSION);
                 builder.addExternalResource(new BarResource("process.bpmn", Files.readAllBytes(destFile.toPath())));
             } else {
                 BonitaStudioLog.warning(

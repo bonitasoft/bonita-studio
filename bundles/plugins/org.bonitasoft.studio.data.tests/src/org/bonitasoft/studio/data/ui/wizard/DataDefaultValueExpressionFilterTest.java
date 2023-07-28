@@ -15,12 +15,12 @@
 package org.bonitasoft.studio.data.ui.wizard;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.bonitasoft.studio.model.process.builders.PoolBuilder.aPool;
-import static org.bonitasoft.studio.model.process.builders.TaskBuilder.aTask;
+import static org.bonitasoft.bpm.model.process.builders.PoolBuilder.aPool;
+import static org.bonitasoft.bpm.model.process.builders.TaskBuilder.aTask;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 
-import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.bpm.model.util.ExpressionConstants;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionProvider;
 import org.junit.Test;
 import org.junit.runner.RunWith;

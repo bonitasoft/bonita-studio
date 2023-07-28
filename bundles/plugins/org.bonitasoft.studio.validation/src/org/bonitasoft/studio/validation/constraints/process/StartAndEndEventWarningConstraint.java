@@ -14,19 +14,19 @@
  */
 package org.bonitasoft.studio.validation.constraints.process;
 
-import org.bonitasoft.studio.model.process.Element;
-import org.bonitasoft.studio.model.process.EndErrorEvent;
-import org.bonitasoft.studio.model.process.EndEvent;
-import org.bonitasoft.studio.model.process.EndMessageEvent;
-import org.bonitasoft.studio.model.process.EndSignalEvent;
-import org.bonitasoft.studio.model.process.EndTerminatedEvent;
-import org.bonitasoft.studio.model.process.Lane;
-import org.bonitasoft.studio.model.process.Pool;
-import org.bonitasoft.studio.model.process.StartErrorEvent;
-import org.bonitasoft.studio.model.process.StartEvent;
-import org.bonitasoft.studio.model.process.StartMessageEvent;
-import org.bonitasoft.studio.model.process.StartSignalEvent;
-import org.bonitasoft.studio.model.process.StartTimerEvent;
+import org.bonitasoft.bpm.model.process.Element;
+import org.bonitasoft.bpm.model.process.EndErrorEvent;
+import org.bonitasoft.bpm.model.process.EndEvent;
+import org.bonitasoft.bpm.model.process.EndMessageEvent;
+import org.bonitasoft.bpm.model.process.EndSignalEvent;
+import org.bonitasoft.bpm.model.process.EndTerminatedEvent;
+import org.bonitasoft.bpm.model.process.Lane;
+import org.bonitasoft.bpm.model.process.Pool;
+import org.bonitasoft.bpm.model.process.StartErrorEvent;
+import org.bonitasoft.bpm.model.process.StartEvent;
+import org.bonitasoft.bpm.model.process.StartMessageEvent;
+import org.bonitasoft.bpm.model.process.StartSignalEvent;
+import org.bonitasoft.bpm.model.process.StartTimerEvent;
 import org.bonitasoft.studio.validation.constraints.AbstractLiveValidationMarkerConstraint;
 import org.bonitasoft.studio.validation.i18n.Messages;
 import org.eclipse.core.runtime.IStatus;

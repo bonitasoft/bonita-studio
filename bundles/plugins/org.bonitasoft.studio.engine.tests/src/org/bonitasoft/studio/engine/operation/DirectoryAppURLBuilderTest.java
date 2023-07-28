@@ -23,8 +23,8 @@ import java.net.URL;
 import java.net.URLEncoder;
 
 import org.bonitasoft.studio.common.repository.AbstractRepository;
-import org.bonitasoft.studio.model.process.AbstractProcess;
-import org.bonitasoft.studio.model.process.ProcessFactory;
+import org.bonitasoft.bpm.model.process.AbstractProcess;
+import org.bonitasoft.bpm.model.process.ProcessFactory;
 import org.junit.Before;
 import org.junit.Test;
 

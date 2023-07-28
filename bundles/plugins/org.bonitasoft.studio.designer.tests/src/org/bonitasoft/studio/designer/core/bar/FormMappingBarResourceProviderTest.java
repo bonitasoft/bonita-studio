@@ -16,11 +16,11 @@ package org.bonitasoft.studio.designer.core.bar;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
-import static org.bonitasoft.studio.model.configuration.builders.ConfigurationBuilder.aConfiguration;
-import static org.bonitasoft.studio.model.expression.builders.ExpressionBuilder.anExpression;
-import static org.bonitasoft.studio.model.process.builders.FormMappingBuilder.aFormMapping;
-import static org.bonitasoft.studio.model.process.builders.PoolBuilder.aPool;
-import static org.bonitasoft.studio.model.process.builders.TaskBuilder.aTask;
+import static org.bonitasoft.bpm.model.configuration.builders.ConfigurationBuilder.aConfiguration;
+import static org.bonitasoft.bpm.model.expression.builders.ExpressionBuilder.anExpression;
+import static org.bonitasoft.bpm.model.process.builders.FormMappingBuilder.aFormMapping;
+import static org.bonitasoft.bpm.model.process.builders.PoolBuilder.aPool;
+import static org.bonitasoft.bpm.model.process.builders.TaskBuilder.aTask;
 import static org.junit.Assert.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
@@ -34,7 +34,7 @@ import org.bonitasoft.engine.bpm.bar.form.model.FormMappingDefinition;
 import org.bonitasoft.engine.bpm.bar.form.model.FormMappingModel;
 import org.bonitasoft.engine.form.FormMappingTarget;
 import org.bonitasoft.engine.form.FormMappingType;
-import org.bonitasoft.studio.model.process.Pool;
+import org.bonitasoft.bpm.model.process.Pool;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -190,14 +190,14 @@ public class FormMappingBarResourceProviderTest {
                 .withName("Pool1")
                 .withVersion("1.0")
                 .havingOverviewFormMapping(
-                        aFormMapping().withType(org.bonitasoft.studio.model.process.FormMappingType.URL)
+                        aFormMapping().withType(org.bonitasoft.bpm.model.process.FormMappingType.URL)
                                 .withURL("http://www.bonitasoft.com"))
                 .havingElements(
                         aTask().withName("Step1").havingFormMapping(
                                 aFormMapping().havingTargetForm(
                                         anExpression().withName("StepForm").withContent("step-form-id"))),
                         aTask().withName("Step2").havingFormMapping(
-                                aFormMapping().withType(org.bonitasoft.studio.model.process.FormMappingType.NONE)))
+                                aFormMapping().withType(org.bonitasoft.bpm.model.process.FormMappingType.NONE)))
                 .build();
     }
 
@@ -206,7 +206,7 @@ public class FormMappingBarResourceProviderTest {
                 .withName("Pool1")
                 .withVersion("1.0")
                 .havingFormMapping(
-                        aFormMapping().withType(org.bonitasoft.studio.model.process.FormMappingType.INTERNAL)
+                        aFormMapping().withType(org.bonitasoft.bpm.model.process.FormMappingType.INTERNAL)
                                 .havingTargetForm(anExpression().withContent("")))
                 .build();
     }
@@ -216,7 +216,7 @@ public class FormMappingBarResourceProviderTest {
                 .withName("Pool1")
                 .withVersion("1.0")
                 .havingOverviewFormMapping(
-                        aFormMapping().withType(org.bonitasoft.studio.model.process.FormMappingType.INTERNAL)
+                        aFormMapping().withType(org.bonitasoft.bpm.model.process.FormMappingType.INTERNAL)
                                 .havingTargetForm(anExpression().withContent("")))
                 .build();
     }
@@ -224,7 +224,7 @@ public class FormMappingBarResourceProviderTest {
     private Pool aPoolWithInvalidFormMapping() {
         return aPool().withName("Pool2").withVersion("2.0")
                 .havingOverviewFormMapping(
-                        aFormMapping().withType(org.bonitasoft.studio.model.process.FormMappingType.URL).withURL(""))
+                        aFormMapping().withType(org.bonitasoft.bpm.model.process.FormMappingType.URL).withURL(""))
                 .havingFormMapping(aFormMapping().havingTargetForm(anExpression().withContent(null)))
                 .havingElements(
                         aTask().withName("Step1").havingFormMapping(

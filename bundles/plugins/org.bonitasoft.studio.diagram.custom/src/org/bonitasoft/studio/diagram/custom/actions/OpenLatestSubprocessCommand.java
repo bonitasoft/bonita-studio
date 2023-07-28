@@ -17,7 +17,7 @@
  */
 package org.bonitasoft.studio.diagram.custom.actions;
 
-import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.bpm.model.util.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.gmf.tools.GMFTools;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
@@ -25,9 +25,9 @@ import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.diagram.custom.i18n.Messages;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
-import org.bonitasoft.studio.model.expression.Expression;
-import org.bonitasoft.studio.model.process.AbstractProcess;
-import org.bonitasoft.studio.model.process.CallActivity;
+import org.bonitasoft.bpm.model.expression.Expression;
+import org.bonitasoft.bpm.model.process.AbstractProcess;
+import org.bonitasoft.bpm.model.process.CallActivity;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;

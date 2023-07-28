@@ -14,8 +14,8 @@
  */
 package org.bonitasoft.studio.connector.model.definition.wizard;
 
-import org.bonitasoft.studio.connector.model.definition.Component;
-import org.bonitasoft.studio.connector.model.definition.Page;
+import org.bonitasoft.bpm.connector.model.definition.Component;
+import org.bonitasoft.bpm.connector.model.definition.Page;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;

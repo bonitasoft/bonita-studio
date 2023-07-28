@@ -15,12 +15,12 @@
 package org.bonitasoft.studio.validation.constraints.process;
 
 import static org.bonitasoft.studio.assertions.StatusAssert.assertThat;
-import static org.bonitasoft.studio.model.expression.builders.ExpressionBuilder.anExpression;
-import static org.bonitasoft.studio.model.process.builders.TaskBuilder.aTask;
+import static org.bonitasoft.bpm.model.expression.builders.ExpressionBuilder.anExpression;
+import static org.bonitasoft.bpm.model.process.builders.TaskBuilder.aTask;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-import org.bonitasoft.studio.model.process.MultiInstanceType;
+import org.bonitasoft.bpm.model.process.MultiInstanceType;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.validation.IValidationContext;

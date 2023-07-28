@@ -18,7 +18,7 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 import org.bonitasoft.studio.expression.editor.ExpressionProviderService;
-import org.bonitasoft.studio.model.expression.Expression;
+import org.bonitasoft.bpm.model.expression.Expression;
 import org.eclipse.emf.ecore.EObject;
 
 /**

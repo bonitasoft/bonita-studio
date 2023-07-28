@@ -19,13 +19,13 @@ import java.util.List;
 import java.util.Objects;
 
 import org.bonitasoft.studio.common.repository.provider.ExtendedConnectorDefinition;
-import org.bonitasoft.studio.connector.model.definition.Text;
+import org.bonitasoft.bpm.connector.model.definition.Text;
 import org.bonitasoft.studio.connector.model.definition.wizard.GeneratedConnectorWizardPage;
 import org.bonitasoft.studio.connector.model.definition.wizard.PageComponentSwitch;
 import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFilter;
 import org.bonitasoft.studio.expression.editor.provider.ExpressionNatureProvider;
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
-import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration;
+import org.bonitasoft.bpm.model.connectorconfiguration.ConnectorConfiguration;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.wizard.IWizardContainer;

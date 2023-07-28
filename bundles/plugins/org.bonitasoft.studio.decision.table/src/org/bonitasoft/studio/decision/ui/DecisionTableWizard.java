@@ -19,10 +19,10 @@ package org.bonitasoft.studio.decision.ui;
 
 import org.bonitasoft.studio.decision.i18n.Messages;
 import org.bonitasoft.studio.decision.ui.condition.TakeTransitionLabelProvider;
-import org.bonitasoft.studio.model.process.Element;
-import org.bonitasoft.studio.model.process.decision.DecisionFactory;
-import org.bonitasoft.studio.model.process.decision.DecisionTable;
-import org.bonitasoft.studio.model.process.decision.DecisionTableAction;
+import org.bonitasoft.bpm.model.process.Element;
+import org.bonitasoft.bpm.model.process.decision.DecisionFactory;
+import org.bonitasoft.bpm.model.process.decision.DecisionTable;
+import org.bonitasoft.bpm.model.process.decision.DecisionTableAction;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jface.viewers.IBaseLabelProvider;
 import org.eclipse.jface.viewers.IElementComparer;

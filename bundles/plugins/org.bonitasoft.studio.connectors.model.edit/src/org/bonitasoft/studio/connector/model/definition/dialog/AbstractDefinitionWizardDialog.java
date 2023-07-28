@@ -14,6 +14,8 @@
  */
 package org.bonitasoft.studio.connector.model.definition.dialog;
 
+import org.bonitasoft.bpm.model.connectorconfiguration.ConnectorConfiguration;
+import org.bonitasoft.bpm.model.process.Connector;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.model.IDefinitionRepositoryStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
@@ -26,8 +28,6 @@ import org.bonitasoft.studio.connector.model.definition.wizard.SelectConnectorCo
 import org.bonitasoft.studio.connector.model.definition.wizard.SelectNameAndDescWizardPage;
 import org.bonitasoft.studio.connector.model.i18n.Messages;
 import org.bonitasoft.studio.connector.model.implementation.IImplementationRepositoryStore;
-import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration;
-import org.bonitasoft.studio.model.process.Connector;
 import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -64,7 +64,8 @@ public abstract class AbstractDefinitionWizardDialog extends WizardDialog {
     private final IDefinitionRepositoryStore definitionRepositoryStore;
 
     public AbstractDefinitionWizardDialog(final Shell parentShell, final IWizard newWizard,
-            final IRepositoryStore<? extends IRepositoryFileStore> configurationStore, final IRepositoryStore<?> definitionRepositoryStore,
+            final IRepositoryStore<? extends IRepositoryFileStore> configurationStore,
+            final IRepositoryStore<?> definitionRepositoryStore,
             final IImplementationRepositoryStore implStore) {
         super(parentShell, newWizard);
         this.configurationStore = configurationStore;
@@ -94,7 +95,8 @@ public abstract class AbstractDefinitionWizardDialog extends WizardDialog {
 
     protected void createToolbar(final Composite parent) {
         toolbar = new ToolBar(parent, SWT.FLAT);
-        toolbar.setLayoutData(GridDataFactory.fillDefaults().align(SWT.BEGINNING, SWT.CENTER).grab(true, false).create());
+        toolbar.setLayoutData(
+                GridDataFactory.fillDefaults().align(SWT.BEGINNING, SWT.CENTER).grab(true, false).create());
 
         loadItem = new ToolItem(toolbar, SWT.NO_FOCUS | SWT.FLAT);
         loadItem.setImage(Pics.getImage("load_conf.png"));
@@ -107,7 +109,8 @@ public abstract class AbstractDefinitionWizardDialog extends WizardDialog {
                 if (page instanceof AbstractConnectorConfigurationWizardPage) {
                     final AbstractConnectorConfigurationWizardPage connectorConfPage = (AbstractConnectorConfigurationWizardPage) page;
                     final ConnectorConfiguration connectorConfigurationToLoad = connectorConfPage.getConfiguration();
-                    final SelectConnectorConfigurationWizard wizard = new SelectConnectorConfigurationWizard(connectorConfigurationToLoad, configurationStore,
+                    final SelectConnectorConfigurationWizard wizard = new SelectConnectorConfigurationWizard(
+                            connectorConfigurationToLoad, configurationStore,
                             definitionRepositoryStore);
                     final WizardDialog dialog = new WizardDialog(Display.getDefault().getActiveShell(), wizard);
                     if (dialog.open() == Dialog.OK) {
@@ -155,7 +158,8 @@ public abstract class AbstractDefinitionWizardDialog extends WizardDialog {
             if (saveConfigurationListener != null) {
                 saveItem.removeListener(SWT.Selection, saveConfigurationListener);
             }
-            saveConfigurationListener = new SaveConfigurationListener(this, connectorConfPage.getConfiguration(), configurationStore,
+            saveConfigurationListener = new SaveConfigurationListener(this, connectorConfPage.getConfiguration(),
+                    configurationStore,
                     definitionRepositoryStore);
             saveItem.addListener(SWT.Selection, saveConfigurationListener);
 
@@ -209,7 +213,8 @@ public abstract class AbstractDefinitionWizardDialog extends WizardDialog {
         }
     }
 
-    protected abstract ITestConfigurationListener getTestListener(ConnectorConfiguration configuration, Connector connector);
+    protected abstract ITestConfigurationListener getTestListener(ConnectorConfiguration configuration,
+            Connector connector);
 
     protected abstract ITestConfigurationListener getTestListener(ConnectorConfiguration configuration, IWizard wizard);
 
@@ -225,7 +230,5 @@ public abstract class AbstractDefinitionWizardDialog extends WizardDialog {
         // show the next page
         showPage(page);
     }
-
-
 
 }

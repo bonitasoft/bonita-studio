@@ -22,7 +22,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
-import org.bonitasoft.studio.model.expression.Expression;
+import org.bonitasoft.bpm.model.expression.Expression;
 import org.bonitasoft.studio.sqlbuilder.ex.builder.viewer.element.BonitaUpdateTreeElement;
 import org.eclipse.datatools.modelbase.sql.query.QueryUpdateStatement;
 import org.eclipse.datatools.modelbase.sql.query.SQLQueryModelFactory;

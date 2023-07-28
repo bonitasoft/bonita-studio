@@ -16,11 +16,11 @@ package org.bonitasoft.studio.properties.sections.callActivity;
 
 import javax.inject.Inject;
 
-import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.bpm.model.util.ExpressionConstants;
 import org.bonitasoft.studio.common.ui.properties.AbstractBonitaDescriptionSection;
 import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFilter;
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
-import org.bonitasoft.studio.model.process.CallActivity;
+import org.bonitasoft.bpm.model.process.CallActivity;
 import org.bonitasoft.studio.properties.i18n.Messages;
 import org.bonitasoft.studio.properties.sections.general.ProcessNamesExpressionNatureProvider;
 import org.bonitasoft.studio.properties.sections.general.ProcessVersionsExpressionNatureProvider;

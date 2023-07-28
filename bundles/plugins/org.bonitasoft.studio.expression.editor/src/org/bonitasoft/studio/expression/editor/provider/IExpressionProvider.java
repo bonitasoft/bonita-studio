@@ -18,7 +18,7 @@ package org.bonitasoft.studio.expression.editor.provider;
 
 import java.util.Set;
 
-import org.bonitasoft.studio.model.expression.Expression;
+import org.bonitasoft.bpm.model.expression.Expression;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.swt.graphics.Image;
 

@@ -17,7 +17,7 @@
 package org.bonitasoft.studio.connector.model.definition.wizard;
 
 import org.bonitasoft.studio.common.repository.provider.ExtendedConnectorDefinition;
-import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
+import org.bonitasoft.bpm.connector.model.definition.ConnectorDefinition;
 
 /**
  * @author Romain Bioteau

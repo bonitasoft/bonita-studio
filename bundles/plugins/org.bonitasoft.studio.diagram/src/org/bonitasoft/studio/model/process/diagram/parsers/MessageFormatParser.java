@@ -23,8 +23,8 @@ import java.text.MessageFormat;
 import java.text.ParsePosition;
 
 import org.bonitasoft.studio.common.TimerEventLabelProvider;
-import org.bonitasoft.studio.model.process.AbstractTimerEvent;
-import org.bonitasoft.studio.model.process.StartTimerEvent;
+import org.bonitasoft.bpm.model.process.AbstractTimerEvent;
+import org.bonitasoft.bpm.model.process.StartTimerEvent;
 import org.bonitasoft.studio.model.process.diagram.part.Messages;
 import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditorPlugin;
 import org.eclipse.core.runtime.IAdaptable;

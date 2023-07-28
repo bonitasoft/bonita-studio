@@ -16,6 +16,12 @@ package org.bonitasoft.studio.identity.actors.configuration;
 
 import java.util.HashMap;
 
+import org.bonitasoft.bpm.connector.model.implementation.ConnectorImplementation;
+import org.bonitasoft.bpm.model.configuration.Configuration;
+import org.bonitasoft.bpm.model.configuration.DefinitionMapping;
+import org.bonitasoft.bpm.model.configuration.util.ConfigurationAdapterFactory;
+import org.bonitasoft.bpm.model.configuration.util.ConfigurationResourceFactoryImpl;
+import org.bonitasoft.bpm.model.process.util.ProcessAdapterFactory;
 import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IDefinitionRepositoryStore;
@@ -23,18 +29,12 @@ import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.common.repository.provider.DefinitionResourceProvider;
 import org.bonitasoft.studio.configuration.extension.IProcessConfigurationWizardPage;
-import org.bonitasoft.studio.connector.model.implementation.ConnectorImplementation;
 import org.bonitasoft.studio.connector.model.implementation.IImplementationRepositoryStore;
 import org.bonitasoft.studio.connectors.configuration.ConnectorConfigurationWizardPage;
 import org.bonitasoft.studio.identity.IdentityPlugin;
 import org.bonitasoft.studio.identity.actors.repository.ActorFilterDefRepositoryStore;
 import org.bonitasoft.studio.identity.actors.repository.ActorFilterImplRepositoryStore;
 import org.bonitasoft.studio.identity.i18n.Messages;
-import org.bonitasoft.studio.model.configuration.Configuration;
-import org.bonitasoft.studio.model.configuration.DefinitionMapping;
-import org.bonitasoft.studio.model.configuration.util.ConfigurationAdapterFactory;
-import org.bonitasoft.studio.model.configuration.util.ConfigurationResourceFactoryImpl;
-import org.bonitasoft.studio.model.process.util.ProcessAdapterFactory;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.emf.common.command.BasicCommandStack;
@@ -190,7 +190,8 @@ public class ActorFilterConfigurationWizardPage extends ConnectorConfigurationWi
                 if (implementationId == null || implementationVersion == null) {
                     return Messages.bind(Messages.invalidImplementationFor, association.getDefinitionId());
                 }
-                ConnectorImplementation impl = getImplStore().getImplementation(implementationId, implementationVersion);
+                ConnectorImplementation impl = getImplStore().getImplementation(implementationId,
+                        implementationVersion);
                 if (impl == null) {
                     return Messages.bind(Messages.implementationNotFound,
                             implementationId + " (" + implementationVersion + ")");

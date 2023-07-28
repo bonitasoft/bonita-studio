@@ -44,7 +44,7 @@ import org.bonitasoft.studio.common.repository.extension.update.preview.PreviewM
 import org.bonitasoft.studio.common.repository.extension.update.preview.PreviewResult;
 import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.connectors.repository.DatabaseConnectorPropertiesRepositoryStore;
-import org.bonitasoft.studio.model.configuration.Configuration;
+import org.bonitasoft.bpm.model.configuration.Configuration;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;

@@ -26,7 +26,7 @@ import org.bonitasoft.studio.contract.core.mapping.operation.initializer.factory
 import org.bonitasoft.studio.contract.core.mapping.operation.initializer.factory.InitializerFactory;
 import org.bonitasoft.studio.contract.core.mapping.operation.initializer.factory.PropertyInitializerFactory;
 import org.bonitasoft.studio.contract.core.mapping.operation.initializer.factory.RelationPropertyInitializerFactory;
-import org.bonitasoft.studio.model.process.BusinessObjectData;
+import org.bonitasoft.bpm.model.process.BusinessObjectData;
 import org.codehaus.groovy.eclipse.refactoring.formatter.DefaultGroovyFormatter;
 import org.codehaus.groovy.eclipse.refactoring.formatter.IFormatterPreferences;
 import org.eclipse.jface.text.BadLocationException;

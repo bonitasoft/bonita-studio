@@ -14,10 +14,10 @@
  */
 package org.bonitasoft.studio.document.core.export;
 
-import static org.bonitasoft.studio.model.expression.builders.ExpressionBuilder.aGroovyScriptExpression;
-import static org.bonitasoft.studio.model.expression.builders.ExpressionBuilder.anExpression;
-import static org.bonitasoft.studio.model.process.builders.ContractInputBuilder.aContractInput;
-import static org.bonitasoft.studio.model.process.builders.DocumentBuilder.aDocument;
+import static org.bonitasoft.bpm.model.expression.builders.ExpressionBuilder.aGroovyScriptExpression;
+import static org.bonitasoft.bpm.model.expression.builders.ExpressionBuilder.anExpression;
+import static org.bonitasoft.bpm.model.process.builders.ContractInputBuilder.aContractInput;
+import static org.bonitasoft.bpm.model.process.builders.DocumentBuilder.aDocument;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.notNull;
@@ -28,12 +28,12 @@ import static org.mockito.Mockito.when;
 import org.bonitasoft.engine.bpm.process.impl.DocumentListDefinitionBuilder;
 import org.bonitasoft.engine.bpm.process.impl.ProcessDefinitionBuilder;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
-import org.bonitasoft.studio.model.expression.Expression;
-import org.bonitasoft.studio.model.process.ContractInput;
-import org.bonitasoft.studio.model.process.Document;
-import org.bonitasoft.studio.model.process.DocumentType;
-import org.bonitasoft.studio.model.process.Pool;
-import org.bonitasoft.studio.model.process.ProcessFactory;
+import org.bonitasoft.bpm.model.expression.Expression;
+import org.bonitasoft.bpm.model.process.ContractInput;
+import org.bonitasoft.bpm.model.process.Document;
+import org.bonitasoft.bpm.model.process.DocumentType;
+import org.bonitasoft.bpm.model.process.Pool;
+import org.bonitasoft.bpm.model.process.ProcessFactory;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;

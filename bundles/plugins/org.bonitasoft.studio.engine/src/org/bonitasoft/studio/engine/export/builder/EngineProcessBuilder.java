@@ -14,10 +14,10 @@
  */
 package org.bonitasoft.studio.engine.export.builder;
 
+import org.bonitasoft.bpm.model.process.Element;
+import org.bonitasoft.bpm.model.process.Pool;
+import org.bonitasoft.bpm.model.util.IModelSearch;
 import org.bonitasoft.engine.bpm.process.impl.ProcessDefinitionBuilder;
-import org.bonitasoft.studio.common.model.IModelSearch;
-import org.bonitasoft.studio.model.process.Element;
-import org.bonitasoft.studio.model.process.Pool;
 
 /**
  * @author Romain Bioteau

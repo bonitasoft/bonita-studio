@@ -4,18 +4,18 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.bonitasoft.bpm.connector.model.definition.ConnectorDefinition;
+import org.bonitasoft.bpm.connector.model.definition.Input;
+import org.bonitasoft.bpm.model.connectorconfiguration.ConnectorConfiguration;
+import org.bonitasoft.bpm.model.connectorconfiguration.ConnectorParameter;
+import org.bonitasoft.bpm.model.process.ActorFilter;
+import org.bonitasoft.bpm.model.process.Connector;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.connector.model.definition.AbstractDefFileStore;
 import org.bonitasoft.studio.connector.model.definition.AbstractDefinitionRepositoryStore;
-import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
-import org.bonitasoft.studio.connector.model.definition.Input;
 import org.bonitasoft.studio.connectors.configuration.CustomConnectorDefinitionInput;
 import org.bonitasoft.studio.connectors.repository.ConnectorDefRepositoryStore;
 import org.bonitasoft.studio.identity.actors.repository.ActorFilterDefRepositoryStore;
-import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration;
-import org.bonitasoft.studio.model.connectorconfiguration.ConnectorParameter;
-import org.bonitasoft.studio.model.process.ActorFilter;
-import org.bonitasoft.studio.model.process.Connector;
 import org.bonitasoft.studio.validation.constraints.AbstractLiveValidationMarkerConstraint;
 import org.bonitasoft.studio.validation.i18n.Messages;
 import org.eclipse.core.runtime.IStatus;
@@ -87,7 +87,8 @@ public class ConnectorDefinitionAndConfigurationInputConsistencyConstraint
 
     protected IStatus checkInputConsistency(ConnectorConfiguration configuration, ConnectorDefinition def,
             IValidationContext context) {
-        Set<String> customInputs = CustomConnectorDefinitionInput.CUSTOM_DEFINITION_INPUT.getOrDefault(def.getId(), Set.of());
+        Set<String> customInputs = CustomConnectorDefinitionInput.CUSTOM_DEFINITION_INPUT.getOrDefault(def.getId(),
+                Set.of());
         List<Input> inputs = def.getInput();
         Set<String> inputNames = new HashSet<>();
         for (Input in : inputs) {

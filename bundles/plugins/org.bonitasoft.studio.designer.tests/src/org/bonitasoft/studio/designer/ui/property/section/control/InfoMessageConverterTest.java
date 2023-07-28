@@ -15,14 +15,14 @@
 package org.bonitasoft.studio.designer.ui.property.section.control;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.bonitasoft.studio.model.process.builders.FormMappingBuilder.aFormMapping;
-import static org.bonitasoft.studio.model.process.builders.PoolBuilder.aPool;
-import static org.bonitasoft.studio.model.process.builders.TaskBuilder.aTask;
+import static org.bonitasoft.bpm.model.process.builders.FormMappingBuilder.aFormMapping;
+import static org.bonitasoft.bpm.model.process.builders.PoolBuilder.aPool;
+import static org.bonitasoft.bpm.model.process.builders.TaskBuilder.aTask;
 
 import org.bonitasoft.studio.designer.i18n.Messages;
-import org.bonitasoft.studio.model.process.FormMappingType;
-import org.bonitasoft.studio.model.process.Pool;
-import org.bonitasoft.studio.model.process.Task;
+import org.bonitasoft.bpm.model.process.FormMappingType;
+import org.bonitasoft.bpm.model.process.Pool;
+import org.bonitasoft.bpm.model.process.Task;
 import org.eclipse.core.databinding.conversion.IConverter;
 import org.junit.Test;
 

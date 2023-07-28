@@ -17,9 +17,9 @@ package org.bonitasoft.studio.designer.ui.property.section.control;
 import static org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory.updateValueStrategy;
 
 import org.bonitasoft.studio.common.ui.properties.Well;
-import org.bonitasoft.studio.model.process.FormMapping;
-import org.bonitasoft.studio.model.process.FormMappingType;
-import org.bonitasoft.studio.model.process.Task;
+import org.bonitasoft.bpm.model.process.FormMapping;
+import org.bonitasoft.bpm.model.process.FormMappingType;
+import org.bonitasoft.bpm.model.process.Task;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.conversion.IConverter;

@@ -14,7 +14,7 @@
  */
 package org.bonitasoft.studio.common.ui.jface.databinding.converter;
 
-import org.bonitasoft.studio.model.process.Element;
+import org.bonitasoft.bpm.model.process.Element;
 import org.eclipse.core.databinding.conversion.Converter;
 
 public class ElementToStringConverter extends Converter {

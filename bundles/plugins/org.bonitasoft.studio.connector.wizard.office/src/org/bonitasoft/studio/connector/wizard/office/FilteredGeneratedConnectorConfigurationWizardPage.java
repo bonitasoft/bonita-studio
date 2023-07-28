@@ -19,7 +19,7 @@ package org.bonitasoft.studio.connector.wizard.office;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.bonitasoft.studio.connector.model.definition.Component;
+import org.bonitasoft.bpm.connector.model.definition.Component;
 import org.bonitasoft.studio.connector.model.definition.wizard.GeneratedConnectorWizardPage;
 import org.bonitasoft.studio.connector.model.definition.wizard.PageComponentSwitch;
 import org.bonitasoft.studio.connector.model.definition.wizard.PageComponentSwitchBuilder;

@@ -14,12 +14,12 @@
  */
 package org.bonitasoft.studio.validation.constraints.process;
 
-import org.bonitasoft.studio.model.process.Assignable;
-import org.bonitasoft.studio.model.process.Element;
-import org.bonitasoft.studio.model.process.Lane;
-import org.bonitasoft.studio.model.process.ProcessPackage;
-import org.bonitasoft.studio.model.process.SubProcessEvent;
-import org.bonitasoft.studio.model.process.Task;
+import org.bonitasoft.bpm.model.process.Assignable;
+import org.bonitasoft.bpm.model.process.Element;
+import org.bonitasoft.bpm.model.process.Lane;
+import org.bonitasoft.bpm.model.process.ProcessPackage;
+import org.bonitasoft.bpm.model.process.SubProcessEvent;
+import org.bonitasoft.bpm.model.process.Task;
 import org.bonitasoft.studio.model.process.diagram.providers.ProcessMarkerNavigationProvider;
 import org.bonitasoft.studio.validation.constraints.AbstractLiveValidationMarkerConstraint;
 import org.eclipse.core.runtime.IStatus;

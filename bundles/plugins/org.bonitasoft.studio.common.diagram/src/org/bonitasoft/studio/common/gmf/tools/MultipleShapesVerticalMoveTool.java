@@ -30,9 +30,9 @@ import java.util.Collections;
 import java.util.List;
 
 import org.bonitasoft.studio.common.diagram.tools.FiguresHelper;
-import org.bonitasoft.studio.model.process.Container;
-import org.bonitasoft.studio.model.process.FlowElement;
-import org.bonitasoft.studio.model.process.SubProcessEvent;
+import org.bonitasoft.bpm.model.process.Container;
+import org.bonitasoft.bpm.model.process.FlowElement;
+import org.bonitasoft.bpm.model.process.SubProcessEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;

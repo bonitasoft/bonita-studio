@@ -17,13 +17,13 @@ package org.bonitasoft.studio.connectors.ui.wizard.custom.webservice;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.bonitasoft.studio.common.ExpressionConstants;
-import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
+import org.bonitasoft.bpm.model.util.ExpressionConstants;
+import org.bonitasoft.bpm.connector.model.definition.ConnectorDefinition;
 import org.bonitasoft.studio.connectors.extension.ICanBeUsedProvider;
-import org.bonitasoft.studio.model.connectorconfiguration.ConnectorParameter;
-import org.bonitasoft.studio.model.expression.AbstractExpression;
-import org.bonitasoft.studio.model.expression.Expression;
-import org.bonitasoft.studio.model.process.Connector;
+import org.bonitasoft.bpm.model.connectorconfiguration.ConnectorParameter;
+import org.bonitasoft.bpm.model.expression.AbstractExpression;
+import org.bonitasoft.bpm.model.expression.Expression;
+import org.bonitasoft.bpm.model.process.Connector;
 import org.eclipse.emf.common.util.EList;
 
 /*******************************************************************************

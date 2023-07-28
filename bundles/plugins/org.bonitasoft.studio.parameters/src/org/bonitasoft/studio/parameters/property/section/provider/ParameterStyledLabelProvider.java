@@ -16,7 +16,7 @@
  */
 package org.bonitasoft.studio.parameters.property.section.provider;
 
-import org.bonitasoft.studio.model.parameter.Parameter;
+import org.bonitasoft.bpm.model.parameter.Parameter;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.jface.viewers.ILabelProvider;

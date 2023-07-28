@@ -35,7 +35,7 @@ import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelF
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
 import org.bonitasoft.studio.businessobject.i18n.Messages;
 import org.bonitasoft.studio.businessobject.ui.expression.QueryExpressionEditor;
-import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.bpm.model.util.ExpressionConstants;
 import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
@@ -43,9 +43,9 @@ import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionEditor;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionProvider;
-import org.bonitasoft.studio.model.expression.Expression;
-import org.bonitasoft.studio.model.expression.ExpressionFactory;
-import org.bonitasoft.studio.model.process.BusinessObjectData;
+import org.bonitasoft.bpm.model.expression.Expression;
+import org.bonitasoft.bpm.model.expression.ExpressionFactory;
+import org.bonitasoft.bpm.model.process.BusinessObjectData;
 import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.swt.graphics.Image;
@@ -167,7 +167,7 @@ public class QueryExpressionProvider implements IExpressionProvider {
     /*
      * (non-Javadoc)
      * @see
-     * org.bonitasoft.studio.expression.editor.provider.IExpressionProvider#getIcon(org.bonitasoft.studio.model.expression.
+     * org.bonitasoft.studio.expression.editor.provider.IExpressionProvider#getIcon(org.bonitasoft.bpm.model.expression.
      * Expression)
      */
     @Override
@@ -187,7 +187,7 @@ public class QueryExpressionProvider implements IExpressionProvider {
     /*
      * (non-Javadoc)
      * @see
-     * org.bonitasoft.studio.expression.editor.provider.IExpressionProvider#getProposalLabel(org.bonitasoft.studio.model.
+     * org.bonitasoft.studio.expression.editor.provider.IExpressionProvider#getProposalLabel(org.bonitasoft.bpm.model.
      * expression.Expression)
      */
     @Override
@@ -217,7 +217,7 @@ public class QueryExpressionProvider implements IExpressionProvider {
     /*
      * (non-Javadoc)
      * @see
-     * org.bonitasoft.studio.expression.editor.provider.IExpressionProvider#getExpressionEditor(org.bonitasoft.studio.model.
+     * org.bonitasoft.studio.expression.editor.provider.IExpressionProvider#getExpressionEditor(org.bonitasoft.bpm.model.
      * expression.Expression,
      * org.eclipse.emf.ecore.EObject)
      */

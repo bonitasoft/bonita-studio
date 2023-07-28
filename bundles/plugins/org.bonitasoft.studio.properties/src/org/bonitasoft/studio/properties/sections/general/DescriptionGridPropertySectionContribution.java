@@ -19,8 +19,8 @@ package org.bonitasoft.studio.properties.sections.general;
 
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.ui.properties.DescriptionPropertySectionContribution;
-import org.bonitasoft.studio.model.process.Element;
-import org.bonitasoft.studio.model.process.Lane;
+import org.bonitasoft.bpm.model.process.Element;
+import org.bonitasoft.bpm.model.process.Lane;
 import org.eclipse.emf.ecore.EObject;
 
 public class DescriptionGridPropertySectionContribution extends DescriptionPropertySectionContribution {

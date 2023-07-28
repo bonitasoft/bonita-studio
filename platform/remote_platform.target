@@ -91,12 +91,20 @@
             <repository location="https://download.eclipse.org/technology/babel/update-site/R0.19.2/2021-12/"/>
         </location>
         <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-            <repository location="https://dist.springsource.org/release/GRECLIPSE/e4.24"/>
+            <repository location="https://groovy.jfrog.io/artifactory/plugins-release/e4.24"/>
             <unit id="org.codehaus.groovy.compilerless.feature.feature.group" version="0.0.0"/>
             <unit id="org.codehaus.groovy.m2eclipse.feature.feature.group" version="0.0.0"/>
             <unit id="org.codehaus.groovy30.feature.feature.group" version="0.0.0"/>
         </location>
-        <location includeDependencyDepth="infinite" includeDependencyScopes="compile,runtime,system" includeSource="true" missingManifest="generate" type="Maven">
+        <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+            <repository location="mvn:org.bonitasoft.bpm:org.bonitasoft.bpm.eclipse-repository:8.0.0-SNAPSHOT:zip"/>
+            <unit id="org.bonitasoft.bonita2bpmn.feature.feature.group" version="0.0.0"/>
+            <unit id="org.bonitasoft.bpm.connector.feature.feature.group" version="0.0.0"/>
+            <unit id="org.bonitasoft.bpm.definitions.feature.feature.group" version="0.0.0"/>
+            <unit id="org.bonitasoft.bpm.model.feature.feature.group" version="0.0.0"/>
+            <unit id="org.bonitasoft.bpm.tests.feature.feature.group" version="0.0.0"/>
+        </location>
+            <location includeDependencyDepth="infinite" includeDependencyScopes="compile,runtime,system" includeSource="true" missingManifest="generate" type="Maven">
                 <dependencies>
                     <dependency>
                         <groupId>com.fasterxml.jackson.core</groupId>
@@ -123,15 +131,16 @@
                         <type>jar</type>
                     </dependency>
                     <dependency>
+                        <groupId>com.sun.activation</groupId>
+                        <artifactId>jakarta.activation</artifactId>
+                        <version>2.0.1</version>
+                        <type>jar</type>
+                    </dependency>
+                    <dependency>
                         <groupId>jakarta.xml.bind</groupId>
                         <artifactId>jakarta.xml.bind-api</artifactId>
                         <version>2.3.3</version>
                         <type>jar</type>
-                    </dependency>
-                    <dependency>
-                      <groupId>com.sun.activation</groupId>
-                      <artifactId>jakarta.activation</artifactId>
-                      <version>2.0.1</version>
                     </dependency>
                     <dependency>
                         <groupId>jakarta.xml.soap</groupId>
@@ -140,15 +149,15 @@
                         <type>jar</type>
                     </dependency>
                     <dependency>
-                        <groupId>org.jdom</groupId>
-                        <artifactId>jdom2</artifactId>
-                        <version>2.0.6.1</version>
-                        <type>jar</type>
-                    </dependency>
-                    <dependency>
                         <groupId>org.assertj</groupId>
                         <artifactId>assertj-core</artifactId>
                         <version>3.23.1</version>
+                        <type>jar</type>
+                    </dependency>
+                    <dependency>
+                        <groupId>org.jdom</groupId>
+                        <artifactId>jdom2</artifactId>
+                        <version>2.0.6.1</version>
                         <type>jar</type>
                     </dependency>
                     <dependency>

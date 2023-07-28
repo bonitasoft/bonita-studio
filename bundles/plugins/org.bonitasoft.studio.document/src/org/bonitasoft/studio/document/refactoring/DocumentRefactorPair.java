@@ -14,7 +14,7 @@
  */
 package org.bonitasoft.studio.document.refactoring;
 
-import org.bonitasoft.studio.model.process.Document;
+import org.bonitasoft.bpm.model.process.Document;
 import org.bonitasoft.studio.refactoring.core.RefactorPair;
 
 public class DocumentRefactorPair extends RefactorPair<Document, Document> {

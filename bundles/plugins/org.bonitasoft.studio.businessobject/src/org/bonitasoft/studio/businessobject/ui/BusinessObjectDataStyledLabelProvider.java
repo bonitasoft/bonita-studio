@@ -17,7 +17,7 @@ package org.bonitasoft.studio.businessobject.ui;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
 import org.bonitasoft.studio.businessobject.i18n.Messages;
 import org.bonitasoft.studio.common.ui.jface.DataStyledTreeLabelProvider;
-import org.bonitasoft.studio.model.process.BusinessObjectData;
+import org.bonitasoft.bpm.model.process.BusinessObjectData;
 import org.eclipse.core.databinding.observable.map.IObservableMap;
 import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.jface.viewers.ViewerCell;

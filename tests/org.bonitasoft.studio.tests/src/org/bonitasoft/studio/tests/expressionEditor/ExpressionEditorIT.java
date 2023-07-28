@@ -15,21 +15,21 @@
 package org.bonitasoft.studio.tests.expressionEditor;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.bonitasoft.studio.model.expression.assertions.ExpressionAssert.assertThat;
+import static org.bonitasoft.bpm.model.expression.assertions.ExpressionAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
-import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.bpm.model.util.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.ui.jface.SWTBotConstants;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
-import org.bonitasoft.studio.model.process.Data;
-import org.bonitasoft.studio.model.process.Pool;
+import org.bonitasoft.bpm.model.process.Data;
+import org.bonitasoft.bpm.model.process.Pool;
 import org.bonitasoft.studio.swtbot.framework.SWTBotConnectorTestUtil;
 import org.bonitasoft.studio.swtbot.framework.application.BotApplicationWorkbenchWindow;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.data.AbstractBotDataWizardPage;

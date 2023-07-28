@@ -19,10 +19,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-import org.bonitasoft.studio.connector.model.definition.ConnectorDefinitionPackage;
-import org.bonitasoft.studio.connector.model.definition.Input;
-import org.bonitasoft.studio.connector.model.definition.Output;
-import org.bonitasoft.studio.connector.model.definition.WidgetComponent;
+import org.bonitasoft.bpm.connector.model.definition.ConnectorDefinitionPackage;
+import org.bonitasoft.bpm.connector.model.definition.Input;
+import org.bonitasoft.bpm.connector.model.definition.Output;
+import org.bonitasoft.bpm.connector.model.definition.WidgetComponent;
 import org.bonitasoft.studio.connector.model.definition.migration.model.DefinitionInputChange;
 import org.bonitasoft.studio.connector.model.definition.migration.model.DefinitionOutputChange;
 import org.bonitasoft.studio.connector.model.definition.migration.model.InputMandatoryChange;
@@ -33,8 +33,8 @@ import org.bonitasoft.studio.connector.model.definition.migration.model.NewOutpu
 import org.bonitasoft.studio.connector.model.definition.migration.model.OutputTypeChange;
 import org.bonitasoft.studio.connector.model.definition.migration.model.RemovedInputChange;
 import org.bonitasoft.studio.connector.model.definition.migration.model.RemovedOutputChange;
-import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration;
-import org.bonitasoft.studio.model.process.Connector;
+import org.bonitasoft.bpm.model.connectorconfiguration.ConnectorConfiguration;
+import org.bonitasoft.bpm.model.process.Connector;
 import org.eclipse.emf.compare.AttributeChange;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;

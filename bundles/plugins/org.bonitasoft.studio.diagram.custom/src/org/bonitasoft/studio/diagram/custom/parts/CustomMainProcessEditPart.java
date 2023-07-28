@@ -24,7 +24,7 @@ import org.bonitasoft.studio.diagram.custom.editPolicies.CompartmentEditPolicy;
 import org.bonitasoft.studio.diagram.custom.editPolicies.CustomMainProcessItemSemanticEditPolicy;
 import org.bonitasoft.studio.diagram.custom.editPolicies.CustomSnapFeedbackPolicy;
 import org.bonitasoft.studio.diagram.custom.layout.CustomGravityConstrainedFlowLayout;
-import org.bonitasoft.studio.model.process.ProcessPackage;
+import org.bonitasoft.bpm.model.process.ProcessPackage;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.MainProcessEditPart;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.MarginBorder;

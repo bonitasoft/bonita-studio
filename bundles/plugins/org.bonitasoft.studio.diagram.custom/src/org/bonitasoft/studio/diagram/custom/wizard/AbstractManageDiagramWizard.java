@@ -28,7 +28,7 @@ import org.bonitasoft.studio.diagram.custom.i18n.Messages;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.diagram.custom.repository.ProcessConfigurationRepositoryStore;
-import org.bonitasoft.studio.model.process.AbstractProcess;
+import org.bonitasoft.bpm.model.process.AbstractProcess;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ContentViewer;
 import org.eclipse.jface.wizard.IWizard;

@@ -20,7 +20,7 @@ import org.bonitasoft.studio.identity.organization.model.organization.Group;
 import org.bonitasoft.studio.identity.organization.model.organization.Organization;
 import org.bonitasoft.studio.identity.organization.model.organization.Role;
 import org.bonitasoft.studio.identity.organization.model.organization.User;
-import org.bonitasoft.studio.model.actormapping.MembershipType;
+import org.bonitasoft.bpm.model.actormapping.MembershipType;
 import org.bonitasoft.studio.ui.ColorConstants;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.jface.viewers.ColumnLabelProvider;

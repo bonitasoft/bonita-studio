@@ -18,12 +18,12 @@ package org.bonitasoft.studio.diagram.custom.clipboard;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
-import org.bonitasoft.studio.model.process.Actor;
-import org.bonitasoft.studio.model.process.Lane;
-import org.bonitasoft.studio.model.process.MainProcess;
-import org.bonitasoft.studio.model.process.Pool;
-import org.bonitasoft.studio.model.process.ProcessFactory;
-import org.bonitasoft.studio.model.process.Task;
+import org.bonitasoft.bpm.model.process.Actor;
+import org.bonitasoft.bpm.model.process.Lane;
+import org.bonitasoft.bpm.model.process.MainProcess;
+import org.bonitasoft.bpm.model.process.Pool;
+import org.bonitasoft.bpm.model.process.ProcessFactory;
+import org.bonitasoft.bpm.model.process.Task;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.junit.After;

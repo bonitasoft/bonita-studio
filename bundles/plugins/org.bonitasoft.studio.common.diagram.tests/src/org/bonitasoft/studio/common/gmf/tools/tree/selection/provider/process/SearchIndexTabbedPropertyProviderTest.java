@@ -16,7 +16,7 @@ package org.bonitasoft.studio.common.gmf.tools.tree.selection.provider.process;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.bonitasoft.studio.model.process.ProcessFactory;
+import org.bonitasoft.bpm.model.process.ProcessFactory;
 import org.junit.Test;
 
 public class SearchIndexTabbedPropertyProviderTest {

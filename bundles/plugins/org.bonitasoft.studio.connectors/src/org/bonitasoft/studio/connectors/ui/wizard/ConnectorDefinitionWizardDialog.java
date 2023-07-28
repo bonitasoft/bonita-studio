@@ -14,6 +14,8 @@
  */
 package org.bonitasoft.studio.connectors.ui.wizard;
 
+import org.bonitasoft.bpm.model.connectorconfiguration.ConnectorConfiguration;
+import org.bonitasoft.bpm.model.process.Connector;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.connector.model.definition.dialog.AbstractDefinitionWizardDialog;
 import org.bonitasoft.studio.connector.model.definition.dialog.ITestConfigurationListener;
@@ -21,8 +23,6 @@ import org.bonitasoft.studio.connectors.repository.ConnectorConfRepositoryStore;
 import org.bonitasoft.studio.connectors.repository.ConnectorDefRepositoryStore;
 import org.bonitasoft.studio.connectors.repository.ConnectorImplRepositoryStore;
 import org.bonitasoft.studio.connectors.ui.TestConfigurationListener;
-import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration;
-import org.bonitasoft.studio.model.process.Connector;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.swt.widgets.Shell;
 
@@ -38,7 +38,7 @@ public class ConnectorDefinitionWizardDialog extends AbstractDefinitionWizardDia
 
     /*
      * (non-Javadoc)
-     * @see org.bonitasoft.studio.connector.model.definition.dialog.AbstractDefinitionWizardDialog#getTestListener()
+     * @see org.bonitasoft.bpm.connector.model.definition.dialog.AbstractDefinitionWizardDialog#getTestListener()
      */
     @Override
     protected ITestConfigurationListener getTestListener(final ConnectorConfiguration configuration, final Connector connector) {
@@ -47,7 +47,7 @@ public class ConnectorDefinitionWizardDialog extends AbstractDefinitionWizardDia
 
     /*
      * (non-Javadoc)
-     * @see org.bonitasoft.studio.connector.model.definition.dialog.AbstractDefinitionWizardDialog#getTestListener()
+     * @see org.bonitasoft.bpm.connector.model.definition.dialog.AbstractDefinitionWizardDialog#getTestListener()
      */
     @Override
     protected ITestConfigurationListener getTestListener(final ConnectorConfiguration configuration, final IWizard wizard) {

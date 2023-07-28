@@ -16,7 +16,7 @@
  */
 package org.bonitasoft.studio.connector.model.definition.dialog.suport;
 
-import org.bonitasoft.studio.connector.model.definition.RadioGroup;
+import org.bonitasoft.bpm.connector.model.definition.RadioGroup;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.EditingSupport;

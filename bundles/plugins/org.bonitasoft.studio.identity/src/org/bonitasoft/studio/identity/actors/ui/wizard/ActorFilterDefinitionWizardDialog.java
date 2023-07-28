@@ -16,13 +16,13 @@
  */
 package org.bonitasoft.studio.identity.actors.ui.wizard;
 
+import org.bonitasoft.bpm.model.connectorconfiguration.ConnectorConfiguration;
+import org.bonitasoft.bpm.model.process.Connector;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.connector.model.definition.dialog.AbstractDefinitionWizardDialog;
 import org.bonitasoft.studio.connector.model.definition.dialog.ITestConfigurationListener;
 import org.bonitasoft.studio.identity.actors.repository.ActorFilterConfRepositoryStore;
 import org.bonitasoft.studio.identity.actors.repository.ActorFilterDefRepositoryStore;
-import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration;
-import org.bonitasoft.studio.model.process.Connector;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.swt.widgets.Shell;
 

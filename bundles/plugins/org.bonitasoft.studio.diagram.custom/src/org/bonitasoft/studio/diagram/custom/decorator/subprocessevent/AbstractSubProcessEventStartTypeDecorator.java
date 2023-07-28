@@ -18,8 +18,8 @@
 package org.bonitasoft.studio.diagram.custom.decorator.subprocessevent;
 
 import org.bonitasoft.studio.diagram.custom.decorator.AbstractBonitaDecorator;
-import org.bonitasoft.studio.model.process.ProcessPackage;
-import org.bonitasoft.studio.model.process.SubProcessEvent;
+import org.bonitasoft.bpm.model.process.ProcessPackage;
+import org.bonitasoft.bpm.model.process.SubProcessEvent;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.SubProcessEvent2EditPart;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;

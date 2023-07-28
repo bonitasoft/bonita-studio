@@ -19,7 +19,7 @@ package org.bonitasoft.studio.expression.editor.autocompletion;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.bonitasoft.studio.model.expression.Expression;
+import org.bonitasoft.bpm.model.expression.Expression;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.fieldassist.IContentProposal;
 import org.eclipse.jface.fieldassist.IContentProposalProvider;

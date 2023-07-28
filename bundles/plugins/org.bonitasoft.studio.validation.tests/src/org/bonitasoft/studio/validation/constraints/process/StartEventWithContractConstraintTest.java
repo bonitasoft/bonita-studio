@@ -14,19 +14,19 @@
  */
 package org.bonitasoft.studio.validation.constraints.process;
 
-import static org.bonitasoft.studio.model.process.builders.ContractBuilder.aContract;
-import static org.bonitasoft.studio.model.process.builders.ContractInputBuilder.aContractInput;
-import static org.bonitasoft.studio.model.process.builders.PoolBuilder.aPool;
-import static org.bonitasoft.studio.model.process.builders.StartEventBuilder.aStartEvent;
-import static org.bonitasoft.studio.model.process.builders.StartMessageEventBuilder.aStartMessageEvent;
-import static org.bonitasoft.studio.model.process.builders.StartSignalEventBuilder.aStartSignalEvent;
-import static org.bonitasoft.studio.model.process.builders.StartTimerEventBuilder.aStartTimerEvent;
-import static org.bonitasoft.studio.model.process.builders.SubProcessEventBuilder.aSubProcessEvent;
+import static org.bonitasoft.bpm.model.process.builders.ContractBuilder.aContract;
+import static org.bonitasoft.bpm.model.process.builders.ContractInputBuilder.aContractInput;
+import static org.bonitasoft.bpm.model.process.builders.PoolBuilder.aPool;
+import static org.bonitasoft.bpm.model.process.builders.StartEventBuilder.aStartEvent;
+import static org.bonitasoft.bpm.model.process.builders.StartMessageEventBuilder.aStartMessageEvent;
+import static org.bonitasoft.bpm.model.process.builders.StartSignalEventBuilder.aStartSignalEvent;
+import static org.bonitasoft.bpm.model.process.builders.StartTimerEventBuilder.aStartTimerEvent;
+import static org.bonitasoft.bpm.model.process.builders.SubProcessEventBuilder.aSubProcessEvent;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import org.bonitasoft.studio.model.process.StartMessageEvent;
+import org.bonitasoft.bpm.model.process.StartMessageEvent;
 import org.bonitasoft.studio.validation.i18n.Messages;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.validation.IValidationContext;

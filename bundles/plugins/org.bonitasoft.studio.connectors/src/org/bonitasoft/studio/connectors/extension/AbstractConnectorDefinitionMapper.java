@@ -19,15 +19,15 @@ package org.bonitasoft.studio.connectors.extension;
 import java.util.Collections;
 import java.util.Map;
 
-import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.bpm.model.util.ExpressionConstants;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
-import org.bonitasoft.studio.connector.model.definition.Component;
-import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
-import org.bonitasoft.studio.connector.model.definition.Input;
-import org.bonitasoft.studio.connector.model.definition.Output;
-import org.bonitasoft.studio.connector.model.definition.Page;
-import org.bonitasoft.studio.connector.model.definition.TextArea;
-import org.bonitasoft.studio.connector.model.definition.WidgetComponent;
+import org.bonitasoft.bpm.connector.model.definition.Component;
+import org.bonitasoft.bpm.connector.model.definition.ConnectorDefinition;
+import org.bonitasoft.bpm.connector.model.definition.Input;
+import org.bonitasoft.bpm.connector.model.definition.Output;
+import org.bonitasoft.bpm.connector.model.definition.Page;
+import org.bonitasoft.bpm.connector.model.definition.TextArea;
+import org.bonitasoft.bpm.connector.model.definition.WidgetComponent;
 import org.bonitasoft.studio.connectors.repository.ConnectorDefRepositoryStore;
 
 /**

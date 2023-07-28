@@ -17,7 +17,7 @@
 
 package org.bonitasoft.studio.common.gmf.tools.tree;
 
-import org.bonitasoft.studio.model.process.ContractInputMapping;
+import org.bonitasoft.bpm.model.process.ContractInputMapping;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 

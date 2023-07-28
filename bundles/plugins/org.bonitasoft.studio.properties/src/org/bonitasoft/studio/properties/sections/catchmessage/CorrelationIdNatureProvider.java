@@ -19,13 +19,13 @@ package org.bonitasoft.studio.properties.sections.catchmessage;
 
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionNatureProvider;
-import org.bonitasoft.studio.model.expression.Expression;
-import org.bonitasoft.studio.model.expression.ListExpression;
-import org.bonitasoft.studio.model.expression.TableExpression;
-import org.bonitasoft.studio.model.process.AbstractCatchMessageEvent;
-import org.bonitasoft.studio.model.process.Element;
-import org.bonitasoft.studio.model.process.Message;
-import org.bonitasoft.studio.model.process.MessageFlow;
+import org.bonitasoft.bpm.model.expression.Expression;
+import org.bonitasoft.bpm.model.expression.ListExpression;
+import org.bonitasoft.bpm.model.expression.TableExpression;
+import org.bonitasoft.bpm.model.process.AbstractCatchMessageEvent;
+import org.bonitasoft.bpm.model.process.Element;
+import org.bonitasoft.bpm.model.process.Message;
+import org.bonitasoft.bpm.model.process.MessageFlow;
 import org.eclipse.emf.ecore.EObject;
 
 /**

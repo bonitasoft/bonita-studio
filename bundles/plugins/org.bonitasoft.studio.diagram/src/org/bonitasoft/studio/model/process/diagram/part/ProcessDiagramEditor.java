@@ -29,7 +29,7 @@ import org.bonitasoft.studio.common.gmf.tools.PaletteToolTransferDropTargetListe
 import org.bonitasoft.studio.common.gmf.tools.tree.BonitaTreeViewer;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.preferences.CommonDiagramPreferencesConstants;
-import org.bonitasoft.studio.model.process.MainProcess;
+import org.bonitasoft.bpm.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.diagram.navigator.ProcessNavigatorItem;
 import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.ExecutionEvent;

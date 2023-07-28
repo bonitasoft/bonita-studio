@@ -15,7 +15,7 @@
 package org.bonitasoft.studio.properties.sections.general;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.bonitasoft.studio.model.process.builders.TaskBuilder.aTask;
+import static org.bonitasoft.bpm.model.process.builders.TaskBuilder.aTask;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -23,7 +23,7 @@ import static org.mockito.Mockito.when;
 import java.util.Arrays;
 
 import org.bonitasoft.studio.common.ui.properties.ExtensibleGridPropertySection;
-import org.bonitasoft.studio.model.process.Task;
+import org.bonitasoft.bpm.model.process.Task;
 import org.bonitasoft.studio.swt.rules.RealmWithDisplay;
 import org.eclipse.core.databinding.observable.value.WritableValue;
 import org.eclipse.core.databinding.validation.MultiValidator;

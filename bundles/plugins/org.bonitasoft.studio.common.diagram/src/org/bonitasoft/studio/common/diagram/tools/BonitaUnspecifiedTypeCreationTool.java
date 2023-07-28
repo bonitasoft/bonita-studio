@@ -20,8 +20,8 @@ import java.util.List;
 import java.util.Map.Entry;
 
 import org.bonitasoft.studio.common.gmf.command.InsertElementOnSequenceFlowCommand;
-import org.bonitasoft.studio.model.process.Lane;
-import org.bonitasoft.studio.model.process.ProcessPackage;
+import org.bonitasoft.bpm.model.process.Lane;
+import org.bonitasoft.bpm.model.process.ProcessPackage;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.draw2d.geometry.Dimension;

@@ -19,8 +19,8 @@ import static org.mockito.Mockito.doCallRealMethod;
 
 import org.bonitasoft.studio.businessobject.ui.wizard.AddBusinessObjectDataWizard;
 import org.bonitasoft.studio.businessobject.ui.wizard.EditBusinessObjectDataWizard;
-import org.bonitasoft.studio.model.process.ProcessFactory;
-import org.bonitasoft.studio.model.process.ProcessPackage;
+import org.bonitasoft.bpm.model.process.ProcessFactory;
+import org.bonitasoft.bpm.model.process.ProcessPackage;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.junit.Test;

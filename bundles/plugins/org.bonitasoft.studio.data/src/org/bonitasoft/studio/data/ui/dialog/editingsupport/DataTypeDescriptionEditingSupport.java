@@ -16,7 +16,7 @@
  */
 package org.bonitasoft.studio.data.ui.dialog.editingsupport;
 
-import org.bonitasoft.studio.model.process.DataType;
+import org.bonitasoft.bpm.model.process.DataType;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.EditingSupport;

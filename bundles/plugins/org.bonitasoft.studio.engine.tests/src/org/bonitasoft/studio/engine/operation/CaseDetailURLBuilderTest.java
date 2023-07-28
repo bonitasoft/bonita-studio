@@ -27,10 +27,10 @@ import java.net.URLEncoder;
 
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.configuration.preferences.ConfigurationPreferenceConstants;
-import org.bonitasoft.studio.model.configuration.Configuration;
-import org.bonitasoft.studio.model.configuration.ConfigurationFactory;
-import org.bonitasoft.studio.model.process.AbstractProcess;
-import org.bonitasoft.studio.model.process.ProcessFactory;
+import org.bonitasoft.bpm.model.configuration.Configuration;
+import org.bonitasoft.bpm.model.configuration.ConfigurationFactory;
+import org.bonitasoft.bpm.model.process.AbstractProcess;
+import org.bonitasoft.bpm.model.process.ProcessFactory;
 import org.junit.Before;
 import org.junit.Test;
 

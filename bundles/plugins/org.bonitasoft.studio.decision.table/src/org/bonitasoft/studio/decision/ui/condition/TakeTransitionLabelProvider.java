@@ -18,7 +18,7 @@
 package org.bonitasoft.studio.decision.ui.condition;
 
 import org.bonitasoft.studio.decision.i18n.Messages;
-import org.bonitasoft.studio.model.process.decision.transitions.TakeTransitionAction;
+import org.bonitasoft.bpm.model.process.decision.transitions.TakeTransitionAction;
 import org.eclipse.jface.viewers.IBaseLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 

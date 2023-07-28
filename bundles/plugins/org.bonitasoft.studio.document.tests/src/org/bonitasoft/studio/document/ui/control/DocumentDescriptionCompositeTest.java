@@ -15,9 +15,9 @@
 package org.bonitasoft.studio.document.ui.control;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.bonitasoft.studio.model.process.builders.DocumentBuilder.aDocument;
+import static org.bonitasoft.bpm.model.process.builders.DocumentBuilder.aDocument;
 
-import org.bonitasoft.studio.model.process.Document;
+import org.bonitasoft.bpm.model.process.Document;
 import org.bonitasoft.studio.swt.rules.RealmWithDisplay;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.junit.Rule;

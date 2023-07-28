@@ -14,9 +14,9 @@
  */
 package org.bonitasoft.studio.expression.editor.operation;
 
-import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.bpm.model.util.ExpressionConstants;
 import org.bonitasoft.studio.expression.editor.i18n.Messages;
-import org.bonitasoft.studio.model.expression.Operator;
+import org.bonitasoft.bpm.model.expression.Operator;
 import org.eclipse.jface.viewers.LabelProvider;
 
 /**

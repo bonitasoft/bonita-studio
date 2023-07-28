@@ -51,11 +51,11 @@ import org.bonitasoft.studio.designer.core.repository.WebPageFileStore;
 import org.bonitasoft.studio.designer.core.repository.WebPageRepositoryStore;
 import org.bonitasoft.studio.designer.core.repository.WebWidgetFileStore;
 import org.bonitasoft.studio.designer.core.repository.WebWidgetRepositoryStore;
-import org.bonitasoft.studio.model.configuration.Configuration;
-import org.bonitasoft.studio.model.process.AbstractProcess;
-import org.bonitasoft.studio.model.process.FormMapping;
-import org.bonitasoft.studio.model.process.FormMappingType;
-import org.bonitasoft.studio.model.process.ProcessPackage;
+import org.bonitasoft.bpm.model.configuration.Configuration;
+import org.bonitasoft.bpm.model.process.AbstractProcess;
+import org.bonitasoft.bpm.model.process.FormMapping;
+import org.bonitasoft.bpm.model.process.FormMappingType;
+import org.bonitasoft.bpm.model.process.ProcessPackage;
 import org.eclipse.e4.core.di.annotations.Creatable;
 
 import com.google.common.base.Function;

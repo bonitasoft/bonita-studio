@@ -19,12 +19,12 @@ import static org.mockito.Mockito.doReturn;
 
 import java.nio.charset.Charset;
 
-import org.bonitasoft.studio.model.actormapping.ActorMapping;
-import org.bonitasoft.studio.model.actormapping.ActorMappingFactory;
-import org.bonitasoft.studio.model.actormapping.ActorMappingsType;
-import org.bonitasoft.studio.model.actormapping.Users;
-import org.bonitasoft.studio.model.configuration.Configuration;
-import org.bonitasoft.studio.model.configuration.ConfigurationFactory;
+import org.bonitasoft.bpm.model.actormapping.ActorMapping;
+import org.bonitasoft.bpm.model.actormapping.ActorMappingFactory;
+import org.bonitasoft.bpm.model.actormapping.ActorMappingsType;
+import org.bonitasoft.bpm.model.actormapping.Users;
+import org.bonitasoft.bpm.model.configuration.Configuration;
+import org.bonitasoft.bpm.model.configuration.ConfigurationFactory;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;

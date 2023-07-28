@@ -11,7 +11,7 @@ package org.bonitasoft.studio.document.ui.validator;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.document.i18n.Messages;
-import org.bonitasoft.studio.model.configuration.Resource;
+import org.bonitasoft.bpm.model.configuration.Resource;
 import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;

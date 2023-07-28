@@ -15,7 +15,7 @@
 package org.bonitasoft.studio.properties.sections.callActivity;
 
 import org.bonitasoft.studio.common.ui.jface.selection.EObjectAdaptableSelectionProvider;
-import org.bonitasoft.studio.model.process.CallActivity;
+import org.bonitasoft.bpm.model.process.CallActivity;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.e4.core.di.annotations.Creatable;
 import org.eclipse.emf.ecore.EObject;

@@ -15,17 +15,17 @@
 package org.bonitasoft.studio.validation.constraints.connector;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.bonitasoft.studio.model.process.builders.ConnectorBuilder.aConnector;
+import static org.bonitasoft.bpm.model.process.builders.ConnectorBuilder.aConnector;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
-import org.bonitasoft.studio.model.connectorconfiguration.builders.ConnectorConfigurationBuilder;
-import org.bonitasoft.studio.model.connectorconfiguration.builders.ConnectorParameterBuilder;
-import org.bonitasoft.studio.model.expression.builders.ExpressionBuilder;
-import org.bonitasoft.studio.model.process.Connector;
+import org.bonitasoft.bpm.model.connectorconfiguration.builders.ConnectorConfigurationBuilder;
+import org.bonitasoft.bpm.model.connectorconfiguration.builders.ConnectorParameterBuilder;
+import org.bonitasoft.bpm.model.expression.builders.ExpressionBuilder;
+import org.bonitasoft.bpm.model.process.Connector;
 import org.eclipse.emf.validation.IValidationContext;
 import org.junit.After;
 import org.junit.Before;

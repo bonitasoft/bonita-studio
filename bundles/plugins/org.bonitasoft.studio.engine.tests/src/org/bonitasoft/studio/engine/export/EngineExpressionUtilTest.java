@@ -15,10 +15,10 @@
 package org.bonitasoft.studio.engine.export;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.bonitasoft.studio.model.expression.builders.ExpressionBuilder.aVariableExpression;
-import static org.bonitasoft.studio.model.expression.builders.ExpressionBuilder.anExpression;
-import static org.bonitasoft.studio.model.expression.builders.OperationBuilder.anOperation;
-import static org.bonitasoft.studio.model.expression.builders.OperatorBuilder.anAssignmentOperator;
+import static org.bonitasoft.bpm.model.expression.builders.ExpressionBuilder.aVariableExpression;
+import static org.bonitasoft.bpm.model.expression.builders.ExpressionBuilder.anExpression;
+import static org.bonitasoft.bpm.model.expression.builders.OperationBuilder.anOperation;
+import static org.bonitasoft.bpm.model.expression.builders.OperatorBuilder.anAssignmentOperator;
 
 import java.util.Arrays;
 import java.util.List;
@@ -26,18 +26,18 @@ import java.util.List;
 import org.bonitasoft.engine.expression.ExpressionType;
 import org.bonitasoft.studio.assertions.EngineExpressionAssert;
 import org.bonitasoft.studio.common.DatasourceConstants;
-import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.bpm.model.util.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
-import org.bonitasoft.studio.model.expression.Expression;
-import org.bonitasoft.studio.model.expression.ExpressionFactory;
-import org.bonitasoft.studio.model.expression.Operation;
-import org.bonitasoft.studio.model.expression.Operator;
-import org.bonitasoft.studio.model.process.BusinessObjectData;
-import org.bonitasoft.studio.model.process.Data;
-import org.bonitasoft.studio.model.process.Document;
-import org.bonitasoft.studio.model.process.ProcessFactory;
-import org.bonitasoft.studio.model.process.builders.BusinessObjectDataBuilder;
-import org.bonitasoft.studio.model.process.builders.DocumentBuilder;
+import org.bonitasoft.bpm.model.expression.Expression;
+import org.bonitasoft.bpm.model.expression.ExpressionFactory;
+import org.bonitasoft.bpm.model.expression.Operation;
+import org.bonitasoft.bpm.model.expression.Operator;
+import org.bonitasoft.bpm.model.process.BusinessObjectData;
+import org.bonitasoft.bpm.model.process.Data;
+import org.bonitasoft.bpm.model.process.Document;
+import org.bonitasoft.bpm.model.process.ProcessFactory;
+import org.bonitasoft.bpm.model.process.builders.BusinessObjectDataBuilder;
+import org.bonitasoft.bpm.model.process.builders.DocumentBuilder;
 import org.eclipse.emf.ecore.EObject;
 import org.junit.Test;
 
@@ -300,7 +300,7 @@ public class EngineExpressionUtilTest {
         businessObjectData.setName("leaveRequest");
         businessObjectData.setClassName("org.bonita.business.LeaveRequest");
         final Operation operation = ExpressionFactory.eINSTANCE.createOperation();
-        final org.bonitasoft.studio.model.expression.Expression businessDataExpression = ExpressionFactory.eINSTANCE
+        final org.bonitasoft.bpm.model.expression.Expression businessDataExpression = ExpressionFactory.eINSTANCE
                 .createExpression();
         businessDataExpression.setContent("businessDataExpression");
         businessDataExpression.getReferencedElements().add(businessObjectData);
@@ -317,7 +317,7 @@ public class EngineExpressionUtilTest {
         final Document document = ProcessFactory.eINSTANCE.createDocument();
         document.setName("docName");
         final Operation operation = ExpressionFactory.eINSTANCE.createOperation();
-        final org.bonitasoft.studio.model.expression.Expression documentExpression = ExpressionFactory.eINSTANCE
+        final org.bonitasoft.bpm.model.expression.Expression documentExpression = ExpressionFactory.eINSTANCE
                 .createExpression();
         documentExpression.setContent("docName");
         documentExpression.getReferencedElements().add(document);
@@ -335,7 +335,7 @@ public class EngineExpressionUtilTest {
         document.setName("docName");
         document.setMultiple(true);
         final Operation operation = ExpressionFactory.eINSTANCE.createOperation();
-        final org.bonitasoft.studio.model.expression.Expression documentExpression = ExpressionFactory.eINSTANCE
+        final org.bonitasoft.bpm.model.expression.Expression documentExpression = ExpressionFactory.eINSTANCE
                 .createExpression();
         documentExpression.setContent("docName");
         documentExpression.getReferencedElements().add(document);
@@ -353,7 +353,7 @@ public class EngineExpressionUtilTest {
         document.setName("docName");
         document.setMultiple(true);
         final Operation operation = ExpressionFactory.eINSTANCE.createOperation();
-        final org.bonitasoft.studio.model.expression.Expression documentExpression = ExpressionFactory.eINSTANCE
+        final org.bonitasoft.bpm.model.expression.Expression documentExpression = ExpressionFactory.eINSTANCE
                 .createExpression();
         documentExpression.setContent("docName");
         documentExpression.setType(ExpressionConstants.DOCUMENT_TYPE);
@@ -371,7 +371,7 @@ public class EngineExpressionUtilTest {
         final Document document = ProcessFactory.eINSTANCE.createDocument();
         document.setName("docName");
         final Operation operation = ExpressionFactory.eINSTANCE.createOperation();
-        final org.bonitasoft.studio.model.expression.Expression documentExpression = ExpressionFactory.eINSTANCE
+        final org.bonitasoft.bpm.model.expression.Expression documentExpression = ExpressionFactory.eINSTANCE
                 .createExpression();
         documentExpression.setContent("docName");
         documentExpression.setType(ExpressionConstants.DOCUMENT_TYPE);

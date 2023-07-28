@@ -14,8 +14,8 @@
  */
 package org.bonitasoft.studio.parameters.property.section.editingsupport;
 
-import org.bonitasoft.studio.model.parameter.Parameter;
-import org.bonitasoft.studio.model.parameter.ParameterPackage;
+import org.bonitasoft.bpm.model.parameter.Parameter;
+import org.bonitasoft.bpm.model.parameter.ParameterPackage;
 import org.bonitasoft.studio.parameters.property.section.provider.ParameterTypeLabelProvider;
 import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.edit.command.SetCommand;

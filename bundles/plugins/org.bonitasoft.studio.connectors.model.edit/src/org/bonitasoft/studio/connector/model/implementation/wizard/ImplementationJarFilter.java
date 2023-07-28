@@ -17,7 +17,7 @@
 package org.bonitasoft.studio.connector.model.implementation.wizard;
 
 import org.bonitasoft.studio.common.NamingUtils;
-import org.bonitasoft.studio.connector.model.implementation.ConnectorImplementation;
+import org.bonitasoft.bpm.connector.model.implementation.ConnectorImplementation;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 

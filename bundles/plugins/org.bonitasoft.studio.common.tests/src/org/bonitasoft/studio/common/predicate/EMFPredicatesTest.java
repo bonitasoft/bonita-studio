@@ -16,9 +16,9 @@ package org.bonitasoft.studio.common.predicate;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.bonitasoft.studio.common.predicate.EMFPredicates.featureNotNull;
-import static org.bonitasoft.studio.model.process.builders.PoolBuilder.aPool;
+import static org.bonitasoft.bpm.model.process.builders.PoolBuilder.aPool;
 
-import org.bonitasoft.studio.model.process.ProcessPackage;
+import org.bonitasoft.bpm.model.process.ProcessPackage;
 import org.junit.Test;
 
 public class EMFPredicatesTest {

@@ -12,8 +12,14 @@ assert pomFile.exists() : "$pomFile not found"
 assert targetFile.exists() : "$targetFile not found"
 
 def targetPlatform = new XmlSlurper(false,false).parseText(targetFile.text)
-def locations = targetPlatform.locations.location.repository.@location
-def units = targetPlatform.locations.location.unit
+def locations = targetPlatform.locations.location.repository.findAll {
+    // exclude maven based repo
+    !it.@location.toString().startsWith("mvn:")
+}.@location
+def units = targetPlatform.locations.location.findAll {
+    // exclude maven based repo
+    !it.repository.@location.toString().startsWith("mvn:")
+}.unit
 
 
 def projectModel = new XmlSlurper(false,false).parseText(pomFile.text)

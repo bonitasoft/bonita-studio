@@ -14,9 +14,9 @@
  */
 package org.bonitasoft.studio.common.repository.extension;
 
-import org.bonitasoft.studio.model.configuration.Configuration;
-import org.bonitasoft.studio.model.configuration.ConfigurationPackage;
-import org.bonitasoft.studio.model.process.AbstractProcess;
+import org.bonitasoft.bpm.model.configuration.Configuration;
+import org.bonitasoft.bpm.model.configuration.ConfigurationPackage;
+import org.bonitasoft.bpm.model.process.AbstractProcess;
 import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.edit.domain.EditingDomain;

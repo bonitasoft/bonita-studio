@@ -22,7 +22,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.bpm.model.util.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
@@ -36,9 +36,9 @@ import org.bonitasoft.studio.groovy.BonitaScriptGroovyCompilationUnit;
 import org.bonitasoft.studio.groovy.GroovyCompilationUnitFactory;
 import org.bonitasoft.studio.groovy.ScriptVariable;
 import org.bonitasoft.studio.groovy.ui.job.ComputeScriptDependenciesJob;
-import org.bonitasoft.studio.model.expression.Expression;
-import org.bonitasoft.studio.model.process.BusinessObjectData;
-import org.bonitasoft.studio.model.process.ContractInput;
+import org.bonitasoft.bpm.model.expression.Expression;
+import org.bonitasoft.bpm.model.process.BusinessObjectData;
+import org.bonitasoft.bpm.model.process.ContractInput;
 import org.eclipse.e4.core.di.annotations.Creatable;
 import org.eclipse.jdt.core.JavaModelException;
 

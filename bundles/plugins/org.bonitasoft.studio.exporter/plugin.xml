@@ -15,7 +15,7 @@
             menuIcon="icons/bpmn.png"
             priority="0"
             menuLabel="BPMN 2.0"
-            class="org.bonitasoft.studio.exporter.bpmn.transfo.BonitaToBPMN">
+            class="org.bonitasoft.bonita2bpmn.transfo.BonitaToBPMN">
       </exporterFactory>
    </extension>
    <extension

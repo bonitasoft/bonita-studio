@@ -14,7 +14,7 @@
  */
 package org.bonitasoft.studio.expression.editor.viewer;
 
-import org.bonitasoft.studio.model.expression.Expression;
+import org.bonitasoft.bpm.model.expression.Expression;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.emf.common.command.AbstractCommand;
 import org.eclipse.emf.common.command.CompoundCommand;

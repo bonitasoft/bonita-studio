@@ -16,7 +16,7 @@
  */
 package org.bonitasoft.studio.contract.ui.expression;
 
-import org.bonitasoft.studio.model.process.ContractInput;
+import org.bonitasoft.bpm.model.process.ContractInput;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.jface.viewers.ILabelProvider;

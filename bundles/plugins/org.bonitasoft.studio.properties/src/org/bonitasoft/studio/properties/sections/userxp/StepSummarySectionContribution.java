@@ -17,16 +17,16 @@
  */
 package org.bonitasoft.studio.properties.sections.userxp;
 
-import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.bpm.model.util.ExpressionConstants;
 import org.bonitasoft.studio.common.ui.properties.AbstractPropertySectionContribution;
 import org.bonitasoft.studio.common.ui.properties.ExtensibleGridPropertySection;
 import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFilter;
 import org.bonitasoft.studio.expression.editor.viewer.DefaultExpressionNameResolver;
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
-import org.bonitasoft.studio.model.expression.Expression;
-import org.bonitasoft.studio.model.expression.ExpressionFactory;
-import org.bonitasoft.studio.model.process.FlowElement;
-import org.bonitasoft.studio.model.process.ProcessPackage;
+import org.bonitasoft.bpm.model.expression.Expression;
+import org.bonitasoft.bpm.model.expression.ExpressionFactory;
+import org.bonitasoft.bpm.model.process.FlowElement;
+import org.bonitasoft.bpm.model.process.ProcessPackage;
 import org.bonitasoft.studio.properties.i18n.Messages;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.edit.EMFEditProperties;

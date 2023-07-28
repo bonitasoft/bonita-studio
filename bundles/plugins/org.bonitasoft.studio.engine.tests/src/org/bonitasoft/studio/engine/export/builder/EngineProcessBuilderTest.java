@@ -15,14 +15,13 @@
 package org.bonitasoft.studio.engine.export.builder;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.bonitasoft.studio.model.parameter.builders.ParameterBuilder.aParameter;
-import static org.bonitasoft.studio.model.process.builders.ActorBuilder.anActor;
-import static org.bonitasoft.studio.model.process.builders.ContractBuilder.aContract;
-import static org.bonitasoft.studio.model.process.builders.DocumentBuilder.aDocument;
-import static org.bonitasoft.studio.model.process.builders.PoolBuilder.aPool;
+import static org.bonitasoft.bpm.model.parameter.builders.ParameterBuilder.aParameter;
+import static org.bonitasoft.bpm.model.process.builders.ActorBuilder.anActor;
+import static org.bonitasoft.bpm.model.process.builders.ContractBuilder.aContract;
+import static org.bonitasoft.bpm.model.process.builders.DocumentBuilder.aDocument;
+import static org.bonitasoft.bpm.model.process.builders.PoolBuilder.aPool;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyBoolean;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
@@ -31,6 +30,12 @@ import static org.mockito.Mockito.verify;
 
 import java.util.Collections;
 
+import org.bonitasoft.bpm.model.process.Contract;
+import org.bonitasoft.bpm.model.process.Document;
+import org.bonitasoft.bpm.model.process.Pool;
+import org.bonitasoft.bpm.model.process.builders.BusinessObjectDataBuilder;
+import org.bonitasoft.bpm.model.process.builders.PoolBuilder;
+import org.bonitasoft.bpm.model.util.ModelSearch;
 import org.bonitasoft.engine.bpm.process.impl.ActorDefinitionBuilder;
 import org.bonitasoft.engine.bpm.process.impl.BusinessDataDefinitionBuilder;
 import org.bonitasoft.engine.bpm.process.impl.FlowElementBuilder;
@@ -38,13 +43,7 @@ import org.bonitasoft.engine.bpm.process.impl.ParameterDefinitionBuilder;
 import org.bonitasoft.engine.bpm.process.impl.ProcessDefinitionBuilder;
 import org.bonitasoft.engine.expression.Expression;
 import org.bonitasoft.engine.expression.ExpressionType;
-import org.bonitasoft.studio.common.model.ModelSearch;
 import org.bonitasoft.studio.engine.contribution.IEngineDefinitionBuilder;
-import org.bonitasoft.studio.model.process.Contract;
-import org.bonitasoft.studio.model.process.Document;
-import org.bonitasoft.studio.model.process.Pool;
-import org.bonitasoft.studio.model.process.builders.BusinessObjectDataBuilder;
-import org.bonitasoft.studio.model.process.builders.PoolBuilder;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -63,13 +62,12 @@ public class EngineProcessBuilderTest {
     @Mock
     private IEngineDefinitionBuilderProvider builderProvider;
 
-
     @Before
     public void setup() {
         engineProcessBuilder = spy(
                 new EngineProcessBuilder(processDefBuilder, builderProvider, new ModelSearch(Collections::emptyList)));
         doReturn(bDataBuilder).when(processDefBuilder).addBusinessData(any(), any(), any());
-        
+
     }
 
     @Test
@@ -82,7 +80,8 @@ public class EngineProcessBuilderTest {
         final ArgumentCaptor<Expression> argument = ArgumentCaptor.forClass(Expression.class);
         verify(processDefBuilder).addContextEntry(eq("myBData_ref"), argument.capture());
         assertThat(argument.getValue().getName()).isEqualTo("myBData");
-        assertThat(argument.getValue().getExpressionType()).isEqualTo(ExpressionType.TYPE_BUSINESS_DATA_REFERENCE.name());
+        assertThat(argument.getValue().getExpressionType())
+                .isEqualTo(ExpressionType.TYPE_BUSINESS_DATA_REFERENCE.name());
     }
 
     @Test
@@ -131,7 +130,8 @@ public class EngineProcessBuilderTest {
         final ArgumentCaptor<Expression> argument = ArgumentCaptor.forClass(Expression.class);
         verify(processDefBuilder).addContextEntry(eq("myBData_ref"), argument.capture());
         assertThat(argument.getValue().getName()).isEqualTo("myBData");
-        assertThat(argument.getValue().getExpressionType()).isEqualTo(ExpressionType.TYPE_BUSINESS_DATA_REFERENCE.name());
+        assertThat(argument.getValue().getExpressionType())
+                .isEqualTo(ExpressionType.TYPE_BUSINESS_DATA_REFERENCE.name());
 
         final ArgumentCaptor<Expression> argumentDoc = ArgumentCaptor.forClass(Expression.class);
         verify(processDefBuilder).addContextEntry(eq("myDoc_ref"), argumentDoc.capture());

@@ -17,10 +17,10 @@ package org.bonitasoft.studio.scripting.provider;
 import java.util.Collections;
 import java.util.Set;
 
-import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.bpm.model.util.ExpressionConstants;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionEditor;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionProvider;
-import org.bonitasoft.studio.model.expression.Expression;
+import org.bonitasoft.bpm.model.expression.Expression;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.scripting.extensions.IScriptLanguageProvider;
@@ -54,7 +54,7 @@ public class ScriptExpressionProvider implements IExpressionProvider {
 
     /*
      * (non-Javadoc)
-     * @see org.bonitasoft.studio.expression.editor.provider.IExpressionProvider#getIcon(org.bonitasoft.studio.model.expression.Expression)
+     * @see org.bonitasoft.studio.expression.editor.provider.IExpressionProvider#getIcon(org.bonitasoft.bpm.model.expression.Expression)
      */
     @Override
     public Image getIcon(final Expression expression) {
@@ -78,7 +78,7 @@ public class ScriptExpressionProvider implements IExpressionProvider {
 
     /*
      * (non-Javadoc)
-     * @see org.bonitasoft.studio.expression.editor.provider.IExpressionProvider#getProposalLabel(org.bonitasoft.studio.model.expression.Expression)
+     * @see org.bonitasoft.studio.expression.editor.provider.IExpressionProvider#getProposalLabel(org.bonitasoft.bpm.model.expression.Expression)
      */
     @Override
     public String getProposalLabel(final Expression expression) {

@@ -43,7 +43,7 @@ import org.bonitasoft.engine.exception.DeletionException;
 import org.bonitasoft.engine.expression.Expression;
 import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.engine.session.InvalidSessionException;
-import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.bpm.model.util.ExpressionConstants;
 import org.bonitasoft.studio.common.FragmentTypes;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
@@ -51,7 +51,7 @@ import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.configuration.ConfigurationSynchronizer;
-import org.bonitasoft.studio.connector.model.implementation.ConnectorImplementation;
+import org.bonitasoft.bpm.connector.model.implementation.ConnectorImplementation;
 import org.bonitasoft.studio.connectors.ConnectorPlugin;
 import org.bonitasoft.studio.connectors.configuration.ConnectorsConfigurationSynchronizer;
 import org.bonitasoft.studio.connectors.i18n.Messages;
@@ -63,30 +63,30 @@ import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.engine.export.BarExporter;
 import org.bonitasoft.studio.engine.export.EngineExpressionUtil;
 import org.bonitasoft.studio.engine.export.builder.GroovyConnectorConfigurationConverter;
-import org.bonitasoft.studio.model.configuration.Configuration;
-import org.bonitasoft.studio.model.configuration.ConfigurationFactory;
-import org.bonitasoft.studio.model.configuration.ConfigurationPackage;
-import org.bonitasoft.studio.model.configuration.DefinitionMapping;
-import org.bonitasoft.studio.model.configuration.Fragment;
-import org.bonitasoft.studio.model.configuration.FragmentContainer;
-import org.bonitasoft.studio.model.configuration.util.ConfigurationAdapterFactory;
-import org.bonitasoft.studio.model.configuration.util.ConfigurationResourceFactoryImpl;
-import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration;
-import org.bonitasoft.studio.model.connectorconfiguration.ConnectorParameter;
-import org.bonitasoft.studio.model.expression.AbstractExpression;
-import org.bonitasoft.studio.model.expression.ExpressionFactory;
-import org.bonitasoft.studio.model.expression.ExpressionPackage;
-import org.bonitasoft.studio.model.expression.Operation;
-import org.bonitasoft.studio.model.expression.Operator;
-import org.bonitasoft.studio.model.parameter.Parameter;
-import org.bonitasoft.studio.model.process.AbstractProcess;
-import org.bonitasoft.studio.model.process.Connector;
-import org.bonitasoft.studio.model.process.Data;
-import org.bonitasoft.studio.model.process.Document;
-import org.bonitasoft.studio.model.process.JavaObjectData;
-import org.bonitasoft.studio.model.process.JavaType;
-import org.bonitasoft.studio.model.process.ProcessFactory;
-import org.bonitasoft.studio.model.process.util.ProcessAdapterFactory;
+import org.bonitasoft.bpm.model.configuration.Configuration;
+import org.bonitasoft.bpm.model.configuration.ConfigurationFactory;
+import org.bonitasoft.bpm.model.configuration.ConfigurationPackage;
+import org.bonitasoft.bpm.model.configuration.DefinitionMapping;
+import org.bonitasoft.bpm.model.configuration.Fragment;
+import org.bonitasoft.bpm.model.configuration.FragmentContainer;
+import org.bonitasoft.bpm.model.configuration.util.ConfigurationAdapterFactory;
+import org.bonitasoft.bpm.model.configuration.util.ConfigurationResourceFactoryImpl;
+import org.bonitasoft.bpm.model.connectorconfiguration.ConnectorConfiguration;
+import org.bonitasoft.bpm.model.connectorconfiguration.ConnectorParameter;
+import org.bonitasoft.bpm.model.expression.AbstractExpression;
+import org.bonitasoft.bpm.model.expression.ExpressionFactory;
+import org.bonitasoft.bpm.model.expression.ExpressionPackage;
+import org.bonitasoft.bpm.model.expression.Operation;
+import org.bonitasoft.bpm.model.expression.Operator;
+import org.bonitasoft.bpm.model.parameter.Parameter;
+import org.bonitasoft.bpm.model.process.AbstractProcess;
+import org.bonitasoft.bpm.model.process.Connector;
+import org.bonitasoft.bpm.model.process.Data;
+import org.bonitasoft.bpm.model.process.Document;
+import org.bonitasoft.bpm.model.process.JavaObjectData;
+import org.bonitasoft.bpm.model.process.JavaType;
+import org.bonitasoft.bpm.model.process.ProcessFactory;
+import org.bonitasoft.bpm.model.process.util.ProcessAdapterFactory;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -119,7 +119,7 @@ public class TestConnectorOperation implements IRunnableWithProgress {
     private static final ConnectorsConfigurationSynchronizer CONNECTORS_CONFIGURATION_SYNCHRONIZER = new ConnectorsConfigurationSynchronizer();
     private Set<DependencyFileStore> additionalJars = new HashSet<>();
     private final List<org.bonitasoft.engine.operation.Operation> outputOperations = new ArrayList<org.bonitasoft.engine.operation.Operation>();
-    private final Map<String, org.bonitasoft.studio.model.expression.Expression> invalidExpressionForTest = new HashMap<String, org.bonitasoft.studio.model.expression.Expression>();
+    private final Map<String, org.bonitasoft.bpm.model.expression.Expression> invalidExpressionForTest = new HashMap<String, org.bonitasoft.bpm.model.expression.Expression>();
     private IStatus status;
 
     /*
@@ -135,7 +135,7 @@ public class TestConnectorOperation implements IRunnableWithProgress {
 
         if (!invalidExpressionForTest.isEmpty()) {
             final StringBuilder sb = new StringBuilder(Messages.unsuportedExpressionTypeForTesting);
-            for (final Entry<String, org.bonitasoft.studio.model.expression.Expression> e : invalidExpressionForTest
+            for (final Entry<String, org.bonitasoft.bpm.model.expression.Expression> e : invalidExpressionForTest
                     .entrySet()) {
                 sb.append("\n");
                 if (ExpressionConstants.PATTERN_TYPE.equals(e.getValue().getType())
@@ -405,10 +405,10 @@ public class TestConnectorOperation implements IRunnableWithProgress {
     }
 
     protected void detectInvalidExpressions(final ConnectorParameter parameter) {
-        final List<org.bonitasoft.studio.model.expression.Expression> expressions = ModelHelper.getAllItemsOfType(
+        final List<org.bonitasoft.bpm.model.expression.Expression> expressions = ModelHelper.getAllItemsOfType(
                 parameter,
                 ExpressionPackage.Literals.EXPRESSION);
-        for (final org.bonitasoft.studio.model.expression.Expression e : expressions) {
+        for (final org.bonitasoft.bpm.model.expression.Expression e : expressions) {
             if (ExpressionConstants.VARIABLE_TYPE.equals(e.getType())) {
                 invalidExpressionForTest.put(parameter.getKey(), e);
             } else if (ExpressionConstants.PARAMETER_TYPE.equals(e.getType())) {

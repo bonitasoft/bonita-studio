@@ -17,7 +17,7 @@ package org.bonitasoft.studio.swtbot.framework.composite;
 import java.util.Arrays;
 import java.util.List;
 
-import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.bpm.model.util.ExpressionConstants;
 import org.bonitasoft.studio.expression.editor.i18n.Messages;
 import org.bonitasoft.studio.swtbot.framework.BotDialog;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;

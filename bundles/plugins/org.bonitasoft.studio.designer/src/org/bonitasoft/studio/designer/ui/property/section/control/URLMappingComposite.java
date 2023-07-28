@@ -16,8 +16,8 @@ package org.bonitasoft.studio.designer.ui.property.section.control;
 
 import org.bonitasoft.studio.common.ui.jface.databinding.CustomEMFEditObservables;
 import org.bonitasoft.studio.designer.i18n.Messages;
-import org.bonitasoft.studio.model.process.FormMappingType;
-import org.bonitasoft.studio.model.process.ProcessPackage;
+import org.bonitasoft.bpm.model.process.FormMappingType;
+import org.bonitasoft.bpm.model.process.ProcessPackage;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;

@@ -16,7 +16,7 @@
  */
 package org.bonitasoft.studio.groovy.ui.providers;
 
-import org.bonitasoft.studio.model.configuration.Fragment;
+import org.bonitasoft.bpm.model.configuration.Fragment;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.jface.viewers.LabelProvider;

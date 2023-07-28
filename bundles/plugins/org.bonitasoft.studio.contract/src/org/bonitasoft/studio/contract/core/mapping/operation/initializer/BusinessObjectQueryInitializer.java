@@ -25,7 +25,7 @@ import org.bonitasoft.engine.bdm.model.field.FieldType;
 import org.bonitasoft.engine.bdm.model.field.SimpleField;
 import org.bonitasoft.studio.contract.core.mapping.FieldToContractInputMappingFactory;
 import org.bonitasoft.studio.contract.core.mapping.operation.BusinessObjectInstantiationException;
-import org.bonitasoft.studio.model.process.ContractInput;
+import org.bonitasoft.bpm.model.process.ContractInput;
 
 
 public class BusinessObjectQueryInitializer extends AbstractBusinessObjectInitializer implements IPropertyInitializer {

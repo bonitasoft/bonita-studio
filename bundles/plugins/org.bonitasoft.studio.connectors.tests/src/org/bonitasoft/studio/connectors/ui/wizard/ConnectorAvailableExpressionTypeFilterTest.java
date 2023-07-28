@@ -15,23 +15,23 @@
 package org.bonitasoft.studio.connectors.ui.wizard;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.bonitasoft.studio.model.parameter.builders.ParameterBuilder.aParameter;
-import static org.bonitasoft.studio.model.process.builders.DataBuilder.aData;
+import static org.bonitasoft.bpm.model.parameter.builders.ParameterBuilder.aParameter;
+import static org.bonitasoft.bpm.model.process.builders.DataBuilder.aData;
 import static org.mockito.Mockito.when;
 
 import org.bonitasoft.engine.bpm.connector.ConnectorEvent;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
-import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration;
-import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfigurationFactory;
-import org.bonitasoft.studio.model.parameter.Parameter;
-import org.bonitasoft.studio.model.parameter.ParameterFactory;
-import org.bonitasoft.studio.model.process.Activity;
-import org.bonitasoft.studio.model.process.Connector;
-import org.bonitasoft.studio.model.process.ContractInput;
-import org.bonitasoft.studio.model.process.ContractInputType;
-import org.bonitasoft.studio.model.process.Data;
-import org.bonitasoft.studio.model.process.ProcessFactory;
+import org.bonitasoft.bpm.model.connectorconfiguration.ConnectorConfiguration;
+import org.bonitasoft.bpm.model.connectorconfiguration.ConnectorConfigurationFactory;
+import org.bonitasoft.bpm.model.parameter.Parameter;
+import org.bonitasoft.bpm.model.parameter.ParameterFactory;
+import org.bonitasoft.bpm.model.process.Activity;
+import org.bonitasoft.bpm.model.process.Connector;
+import org.bonitasoft.bpm.model.process.ContractInput;
+import org.bonitasoft.bpm.model.process.ContractInputType;
+import org.bonitasoft.bpm.model.process.Data;
+import org.bonitasoft.bpm.model.process.ProcessFactory;
 import org.eclipse.jface.viewers.Viewer;
 import org.junit.Before;
 import org.junit.Test;

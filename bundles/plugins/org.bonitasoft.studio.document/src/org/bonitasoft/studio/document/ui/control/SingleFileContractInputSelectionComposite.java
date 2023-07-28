@@ -15,7 +15,7 @@
 package org.bonitasoft.studio.document.ui.control;
 
 import org.bonitasoft.studio.document.ui.validator.SingleContractInputValidator;
-import org.bonitasoft.studio.model.process.Document;
+import org.bonitasoft.bpm.model.process.Document;
 import org.eclipse.core.databinding.ValidationStatusProvider;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.swt.widgets.Composite;
@@ -29,7 +29,7 @@ public class SingleFileContractInputSelectionComposite extends FileContractInput
     /*
      * (non-Javadoc)
      * @see
-     * org.bonitasoft.studio.document.ui.control.FileContractInputSelectionComposite#createContractInputParameter(org.bonitasoft.studio.model.process.Document,
+     * org.bonitasoft.studio.document.ui.control.FileContractInputSelectionComposite#createContractInputParameter(org.bonitasoft.bpm.model.process.Document,
      * org.eclipse.core.databinding.observable.value.IObservableValue, org.eclipse.jface.databinding.viewers.IViewerObservableValue)
      */
     @Override

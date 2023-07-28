@@ -14,10 +14,10 @@
  */
 package org.bonitasoft.studio.designer.core.command;
 
-import org.bonitasoft.studio.model.expression.Expression;
-import org.bonitasoft.studio.model.process.FormMapping;
-import org.bonitasoft.studio.model.process.FormMappingType;
-import org.bonitasoft.studio.model.process.ProcessPackage;
+import org.bonitasoft.bpm.model.expression.Expression;
+import org.bonitasoft.bpm.model.process.FormMapping;
+import org.bonitasoft.bpm.model.process.FormMappingType;
+import org.bonitasoft.bpm.model.process.ProcessPackage;
 import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.emf.edit.domain.EditingDomain;

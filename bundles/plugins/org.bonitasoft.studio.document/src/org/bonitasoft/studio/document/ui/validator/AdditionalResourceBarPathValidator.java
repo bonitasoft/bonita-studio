@@ -17,8 +17,8 @@ package org.bonitasoft.studio.document.ui.validator;
 import java.util.Objects;
 
 import org.bonitasoft.studio.document.i18n.Messages;
-import org.bonitasoft.studio.model.process.AdditionalResource;
-import org.bonitasoft.studio.model.process.Pool;
+import org.bonitasoft.bpm.model.process.AdditionalResource;
+import org.bonitasoft.bpm.model.process.Pool;
 import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;

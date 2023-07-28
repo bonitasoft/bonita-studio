@@ -20,8 +20,8 @@ package org.bonitasoft.studio.diagram.custom.editPolicies;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.bonitasoft.studio.model.process.Activity;
-import org.bonitasoft.studio.model.process.SubProcessEvent;
+import org.bonitasoft.bpm.model.process.Activity;
+import org.bonitasoft.bpm.model.process.SubProcessEvent;
 import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.Cursors;

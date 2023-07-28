@@ -19,19 +19,19 @@ package org.bonitasoft.studio.properties.sections.callActivity;
 import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Sets.newHashSet;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.bonitasoft.studio.model.expression.builders.ExpressionBuilder.anExpression;
-import static org.bonitasoft.studio.model.process.builders.DataBuilder.aData;
+import static org.bonitasoft.bpm.model.expression.builders.ExpressionBuilder.anExpression;
+import static org.bonitasoft.bpm.model.process.builders.DataBuilder.aData;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.Set;
 
-import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.bpm.model.util.ExpressionConstants;
 import org.bonitasoft.studio.data.provider.DataExpressionProvider;
-import org.bonitasoft.studio.model.expression.Expression;
-import org.bonitasoft.studio.model.process.Data;
-import org.bonitasoft.studio.model.process.builders.CallActivityBuilder;
+import org.bonitasoft.bpm.model.expression.Expression;
+import org.bonitasoft.bpm.model.process.Data;
+import org.bonitasoft.bpm.model.process.builders.CallActivityBuilder;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.emf.ecore.EObject;
 import org.junit.After;

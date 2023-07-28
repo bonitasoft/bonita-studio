@@ -14,7 +14,7 @@
  */
 package org.bonitasoft.studio.common.gmf.tools.tree.selection.provider.process;
 
-import org.bonitasoft.studio.model.parameter.Parameter;
+import org.bonitasoft.bpm.model.parameter.Parameter;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.ui.IEditorReference;
 

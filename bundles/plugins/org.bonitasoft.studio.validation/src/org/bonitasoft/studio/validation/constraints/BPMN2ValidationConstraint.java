@@ -14,10 +14,10 @@
  */
 package org.bonitasoft.studio.validation.constraints;
 
-import org.bonitasoft.studio.model.process.ConnectableElement;
-import org.bonitasoft.studio.model.process.Pool;
-import org.bonitasoft.studio.model.process.ScriptTask;
-import org.bonitasoft.studio.model.process.ServiceTask;
+import org.bonitasoft.bpm.model.process.ConnectableElement;
+import org.bonitasoft.bpm.model.process.Pool;
+import org.bonitasoft.bpm.model.process.ScriptTask;
+import org.bonitasoft.bpm.model.process.ServiceTask;
 import org.bonitasoft.studio.validation.i18n.Messages;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;

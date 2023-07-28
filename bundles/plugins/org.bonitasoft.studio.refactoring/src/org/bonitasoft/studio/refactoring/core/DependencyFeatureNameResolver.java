@@ -16,8 +16,8 @@ package org.bonitasoft.studio.refactoring.core;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
-import org.bonitasoft.studio.model.parameter.ParameterPackage;
-import org.bonitasoft.studio.model.process.ProcessPackage;
+import org.bonitasoft.bpm.model.parameter.ParameterPackage;
+import org.bonitasoft.bpm.model.process.ProcessPackage;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;

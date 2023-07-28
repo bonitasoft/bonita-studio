@@ -9,7 +9,7 @@
 package org.bonitasoft.studio.connector.wizard.sapjco3.pages;
 
 import org.bonitasoft.studio.connector.model.definition.wizard.PageComponentSwitch;
-import org.bonitasoft.studio.model.expression.Expression;
+import org.bonitasoft.bpm.model.expression.Expression;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.swt.widgets.Composite;

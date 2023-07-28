@@ -19,7 +19,7 @@ package org.bonitasoft.studio.diagram.custom.repository;
 import java.util.Collection;
 import java.util.Collections;
 
-import org.bonitasoft.studio.model.process.MainProcess;
+import org.bonitasoft.bpm.model.process.MainProcess;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;

@@ -14,9 +14,9 @@
  */
 package org.bonitasoft.studio.validation.constraints.process;
 
-import org.bonitasoft.studio.model.process.ANDGateway;
-import org.bonitasoft.studio.model.process.Connection;
-import org.bonitasoft.studio.model.process.SequenceFlow;
+import org.bonitasoft.bpm.model.process.ANDGateway;
+import org.bonitasoft.bpm.model.process.Connection;
+import org.bonitasoft.bpm.model.process.SequenceFlow;
 import org.bonitasoft.studio.validation.constraints.AbstractLiveValidationMarkerConstraint;
 import org.bonitasoft.studio.validation.i18n.Messages;
 import org.eclipse.core.runtime.IStatus;

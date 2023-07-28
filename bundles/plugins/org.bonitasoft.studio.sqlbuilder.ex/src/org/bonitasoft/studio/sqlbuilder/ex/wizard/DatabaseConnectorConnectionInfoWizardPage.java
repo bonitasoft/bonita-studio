@@ -17,7 +17,7 @@
  */
 package org.bonitasoft.studio.sqlbuilder.ex.wizard;
 
-import org.bonitasoft.studio.connector.model.definition.Page;
+import org.bonitasoft.bpm.connector.model.definition.Page;
 import org.bonitasoft.studio.connector.model.definition.wizard.GeneratedConnectorWizardPage;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.jface.wizard.IWizardPage;

@@ -16,10 +16,12 @@ package org.bonitasoft.studio.connectors.ui.wizard;
 
 import java.util.List;
 
+import org.bonitasoft.bpm.connector.model.definition.ConnectorDefinition;
+import org.bonitasoft.bpm.connector.model.implementation.ConnectorImplementation;
+import org.bonitasoft.bpm.model.connectorconfiguration.ConnectorConfiguration;
+import org.bonitasoft.bpm.model.process.Connector;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.provider.ExtendedConnectorDefinition;
-import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
-import org.bonitasoft.studio.connector.model.implementation.ConnectorImplementation;
 import org.bonitasoft.studio.connector.model.implementation.IImplementationRepositoryStore;
 import org.bonitasoft.studio.connectors.configuration.SelectConnectorImplementationWizard;
 import org.bonitasoft.studio.connectors.i18n.Messages;
@@ -28,8 +30,6 @@ import org.bonitasoft.studio.connectors.repository.ConnectorImplRepositoryStore;
 import org.bonitasoft.studio.connectors.ui.wizard.page.AbstractConnectorOutputWizardPage;
 import org.bonitasoft.studio.connectors.ui.wizard.page.TestConnectorOutputWizardPage;
 import org.bonitasoft.studio.connectors.ui.wizard.page.TestDatabaseConnectorOutputWizardPage;
-import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration;
-import org.bonitasoft.studio.model.process.Connector;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.wizard.IWizardPage;
@@ -94,7 +94,8 @@ public class TestConnectorWizard extends ConnectorWizard {
         final ConnectorConfiguration configuration = connectorWorkingCopy.getConfiguration();
         final String defId = connectorWorkingCopy.getDefinitionId();
         final String defVersion = connectorWorkingCopy.getDefinitionVersion();
-        return TestConnectorUtil.testConnectorWithConfiguration(configuration, defId, defVersion, connectorWorkingCopy, getShell(), getContainer());
+        return TestConnectorUtil.testConnectorWithConfiguration(configuration, defId, defVersion, connectorWorkingCopy,
+                getShell(), getContainer());
     }
 
     protected ConnectorImplementation openImplementationSelection(final String defId, final String defVersion) {
@@ -117,7 +118,8 @@ public class TestConnectorWizard extends ConnectorWizard {
 
     @Override
     public ExtendedConnectorDefinition getDefinition() {
-        final ConnectorDefRepositoryStore defStore = RepositoryManager.getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class);
+        final ConnectorDefRepositoryStore defStore = RepositoryManager.getInstance()
+                .getRepositoryStore(ConnectorDefRepositoryStore.class);
         if (connectorWorkingCopy.getDefinitionId() != null && !connectorWorkingCopy.getDefinitionId().isEmpty()) {
             return defStore.getResourceProvider()
                     .getConnectorDefinitionRegistry()

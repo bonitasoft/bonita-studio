@@ -22,10 +22,10 @@ import java.util.Set;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.provider.IBOSArchiveFileStoreProvider;
-import org.bonitasoft.studio.model.configuration.Configuration;
-import org.bonitasoft.studio.model.process.AbstractProcess;
-import org.bonitasoft.studio.model.process.Document;
-import org.bonitasoft.studio.model.process.Pool;
+import org.bonitasoft.bpm.model.configuration.Configuration;
+import org.bonitasoft.bpm.model.process.AbstractProcess;
+import org.bonitasoft.bpm.model.process.Document;
+import org.bonitasoft.bpm.model.process.Pool;
 
 
 /**
@@ -35,7 +35,7 @@ import org.bonitasoft.studio.model.process.Pool;
 public class DocumentFilseStoreProvider implements IBOSArchiveFileStoreProvider {
 
     /* (non-Javadoc)
-     * @see org.bonitasoft.studio.common.repository.provider.IBOSArchiveFileStoreProvider#getFileStoreForConfiguration(org.bonitasoft.studio.model.process.AbstractProcess, org.bonitasoft.studio.model.configuration.Configuration)
+     * @see org.bonitasoft.studio.common.repository.provider.IBOSArchiveFileStoreProvider#getFileStoreForConfiguration(org.bonitasoft.bpm.model.process.AbstractProcess, org.bonitasoft.bpm.model.configuration.Configuration)
      */
     @Override
     public Set<IRepositoryFileStore<?>> getFileStoreForConfiguration(final AbstractProcess process, final Configuration configuration) {
@@ -43,7 +43,7 @@ public class DocumentFilseStoreProvider implements IBOSArchiveFileStoreProvider 
         final DocumentRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(DocumentRepositoryStore.class);
         if(process instanceof Pool){
             for(final Document doc :  ((Pool) process).getDocuments()){
-                if (doc.getDocumentType().equals(org.bonitasoft.studio.model.process.DocumentType.INTERNAL) && doc.getDefaultValueIdOfDocumentStore() != null
+                if (doc.getDocumentType().equals(org.bonitasoft.bpm.model.process.DocumentType.INTERNAL) && doc.getDefaultValueIdOfDocumentStore() != null
                         && !doc.getDefaultValueIdOfDocumentStore().isEmpty()) {
                     final DocumentFileStore fileStore = store.getChild(doc.getDefaultValueIdOfDocumentStore(), true);
                     if(fileStore != null){

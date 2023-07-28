@@ -20,7 +20,7 @@ package org.bonitasoft.studio.diagram.custom.editPolicies;
 
 import java.util.List;
 
-import org.bonitasoft.studio.model.process.Pool;
+import org.bonitasoft.bpm.model.process.Pool;
 import org.eclipse.gef.DragTracker;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;

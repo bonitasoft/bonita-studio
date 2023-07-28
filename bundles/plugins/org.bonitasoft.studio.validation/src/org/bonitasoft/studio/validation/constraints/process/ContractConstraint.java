@@ -18,8 +18,8 @@ import static com.google.common.base.Preconditions.checkArgument;
 
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.contract.core.validation.ContractConstraintInputValidator;
-import org.bonitasoft.studio.model.process.ContractContainer;
-import org.bonitasoft.studio.model.process.Element;
+import org.bonitasoft.bpm.model.process.ContractContainer;
+import org.bonitasoft.bpm.model.process.Element;
 import org.bonitasoft.studio.validation.constraints.AbstractLiveValidationMarkerConstraint;
 import org.bonitasoft.studio.validation.i18n.Messages;
 import org.eclipse.core.runtime.IStatus;
@@ -40,7 +40,7 @@ public class ContractConstraint extends AbstractLiveValidationMarkerConstraint {
     @Override
     protected IStatus performBatchValidation(final IValidationContext ctx) {
         final EObject eObj = ctx.getTarget();
-        checkArgument(eObj instanceof org.bonitasoft.studio.model.process.ContractConstraint);
+        checkArgument(eObj instanceof org.bonitasoft.bpm.model.process.ContractConstraint);
         final IStatus status = validator.validate(eObj);
         if (!status.isOK()) {
             return ctx.createFailureStatus(Messages.bind(Messages.invalidContractConstraintDefinition, contractContainer(eObj).getName(),

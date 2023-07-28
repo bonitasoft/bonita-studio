@@ -15,7 +15,7 @@
 package org.bonitasoft.studio.designer.ui.property.section;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.bonitasoft.studio.model.expression.builders.ExpressionBuilder.anExpression;
+import static org.bonitasoft.bpm.model.expression.builders.ExpressionBuilder.anExpression;
 
 import org.junit.Before;
 import org.junit.Test;

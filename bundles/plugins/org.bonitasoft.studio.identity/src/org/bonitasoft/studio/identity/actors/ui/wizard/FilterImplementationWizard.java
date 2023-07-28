@@ -18,13 +18,13 @@ package org.bonitasoft.studio.identity.actors.ui.wizard;
 
 import java.util.List;
 
+import org.bonitasoft.bpm.connector.model.implementation.ConnectorImplementation;
+import org.bonitasoft.bpm.connector.model.implementation.ConnectorImplementationPackage;
 import org.bonitasoft.engine.filter.AbstractUserFilter;
 import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IDefinitionRepositoryStore;
 import org.bonitasoft.studio.common.repository.provider.DefinitionResourceProvider;
-import org.bonitasoft.studio.connector.model.implementation.ConnectorImplementation;
-import org.bonitasoft.studio.connector.model.implementation.ConnectorImplementationPackage;
 import org.bonitasoft.studio.connector.model.implementation.wizard.AbstractDefinitionSelectionImpementationWizardPage;
 import org.bonitasoft.studio.connector.model.implementation.wizard.AbstractImplementationWizardPage;
 import org.bonitasoft.studio.connectors.ui.wizard.ConnectorImplementationWizard;

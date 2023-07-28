@@ -19,15 +19,15 @@ import static com.google.common.base.Preconditions.checkArgument;
 
 import java.util.Collection;
 
+import org.bonitasoft.bpm.model.process.AbstractProcess;
+import org.bonitasoft.bpm.model.process.ConnectableElement;
+import org.bonitasoft.bpm.model.process.Connector;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.ui.jface.BonitaErrorDialog;
 import org.bonitasoft.studio.connectors.i18n.Messages;
 import org.bonitasoft.studio.connectors.ui.wizard.command.ChangeConnectorContainerCommand;
 import org.bonitasoft.studio.connectors.ui.wizard.page.MoveConnectorWizardPage;
-import org.bonitasoft.studio.model.process.AbstractProcess;
-import org.bonitasoft.studio.model.process.ConnectableElement;
-import org.bonitasoft.studio.model.process.Connector;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.operations.IOperationHistory;
 import org.eclipse.core.databinding.observable.value.WritableValue;

@@ -16,8 +16,8 @@ package org.bonitasoft.studio.connectors.ui.wizard;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.bonitasoft.studio.model.process.builders.ConnectorBuilder.aConnector;
-import static org.bonitasoft.studio.model.process.builders.PoolBuilder.aPool;
+import static org.bonitasoft.bpm.model.process.builders.ConnectorBuilder.aConnector;
+import static org.bonitasoft.bpm.model.process.builders.PoolBuilder.aPool;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.notNull;
 import static org.mockito.Mockito.mock;

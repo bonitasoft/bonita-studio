@@ -16,13 +16,13 @@ package org.bonitasoft.studio.groovy;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
-import static org.bonitasoft.studio.model.expression.builders.OperationBuilder.anOperation;
-import static org.bonitasoft.studio.model.process.builders.TaskBuilder.aTask;
+import static org.bonitasoft.bpm.model.expression.builders.OperationBuilder.anOperation;
+import static org.bonitasoft.bpm.model.process.builders.TaskBuilder.aTask;
 
 import java.util.List;
 
 import org.bonitasoft.engine.expression.ExpressionConstants;
-import org.bonitasoft.studio.model.process.MultiInstanceType;
+import org.bonitasoft.bpm.model.process.MultiInstanceType;
 import org.junit.Test;
 
 public class GroovyUtilTest {

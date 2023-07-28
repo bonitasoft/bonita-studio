@@ -17,9 +17,9 @@ package org.bonitasoft.studio.connector.model.implementation.provider;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bonitasoft.bpm.connector.model.implementation.ConnectorImplementation;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
-import org.bonitasoft.studio.connector.model.implementation.ConnectorImplementation;
 import org.bonitasoft.studio.connector.model.implementation.IImplementationRepositoryStore;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.viewers.IStructuredContentProvider;

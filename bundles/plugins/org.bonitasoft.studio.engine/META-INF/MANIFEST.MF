@@ -20,7 +20,7 @@ Export-Package: org.bonitasoft.studio.engine,
  org.bonitasoft.studio.engine.ui.contributionItem,
  org.bonitasoft.studio.engine.ui.dialog,
  org.bonitasoft.studio.engine.ui.wizard
-Require-Bundle: org.bonitasoft.studio.model,
+Require-Bundle: org.bonitasoft.bpm.model,
  org.bonitasoft.studio.preferences,
  org.bonitasoft.studio.common,
  org.bonitasoft.studio.common.repository,

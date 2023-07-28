@@ -16,17 +16,17 @@ package org.bonitasoft.studio.configuration;
 
 import java.util.Collections;
 
-import org.bonitasoft.studio.common.model.ModelSearch;
+import org.bonitasoft.bpm.model.configuration.Configuration;
+import org.bonitasoft.bpm.model.parameter.Parameter;
+import org.bonitasoft.bpm.model.process.AbstractProcess;
+import org.bonitasoft.bpm.model.process.Element;
+import org.bonitasoft.bpm.model.process.FormMapping;
+import org.bonitasoft.bpm.model.process.FormMappingType;
+import org.bonitasoft.bpm.model.process.Pool;
+import org.bonitasoft.bpm.model.process.ProcessPackage;
+import org.bonitasoft.bpm.model.process.Task;
+import org.bonitasoft.bpm.model.util.ModelSearch;
 import org.bonitasoft.studio.configuration.i18n.Messages;
-import org.bonitasoft.studio.model.configuration.Configuration;
-import org.bonitasoft.studio.model.parameter.Parameter;
-import org.bonitasoft.studio.model.process.AbstractProcess;
-import org.bonitasoft.studio.model.process.Element;
-import org.bonitasoft.studio.model.process.FormMapping;
-import org.bonitasoft.studio.model.process.FormMappingType;
-import org.bonitasoft.studio.model.process.Pool;
-import org.bonitasoft.studio.model.process.ProcessPackage;
-import org.bonitasoft.studio.model.process.Task;
 import org.bonitasoft.studio.ui.util.StatusCollectors;
 import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
@@ -58,21 +58,22 @@ public class ConfigurationValidator implements IValidator<Configuration> {
                         mapping) != org.bonitasoft.engine.form.FormMappingType.PROCESS_OVERVIEW)
                 .filter(this::emptyInternalMapping)
                 .map(mapping -> ValidationStatus.error(statusMessage(
-                        String.format(Messages.missingInternalFormMapping, 
-                                containerName(mapping), 
-                                containerType(mapping))
-                        ,true)))
+                        String.format(Messages.missingInternalFormMapping,
+                                containerName(mapping),
+                                containerType(mapping)),
+                        true)))
                 .collect(StatusCollectors.toMultiStatus());
     }
 
     private String containerName(FormMapping formMapping) {
         return ((Element) formMapping.eContainer()).getName();
     }
-    
+
     private String formType(FormMapping formMapping) {
-        return ProcessPackage.Literals.PAGE_FLOW__FORM_MAPPING.equals(formMapping.eContainingFeature()) ? "instantiation form" : "overview form" ;
+        return ProcessPackage.Literals.PAGE_FLOW__FORM_MAPPING.equals(formMapping.eContainingFeature())
+                ? "instantiation form" : "overview form";
     }
-    
+
     private String containerType(FormMapping formMapping) {
         return formMapping.eContainer() instanceof Task ? "task" : formType(formMapping);
     }
@@ -84,11 +85,12 @@ public class ConfigurationValidator implements IValidator<Configuration> {
     }
 
     private org.bonitasoft.engine.form.FormMappingType mappingScope(final FormMapping formMapping) {
-        return formMapping.eContainer() instanceof Pool ? org.bonitasoft.engine.form.FormMappingType.PROCESS_START :  org.bonitasoft.engine.form.FormMappingType.TASK;
+        return formMapping.eContainer() instanceof Pool ? org.bonitasoft.engine.form.FormMappingType.PROCESS_START
+                : org.bonitasoft.engine.form.FormMappingType.TASK;
     }
 
     private boolean emptyInternalMapping(FormMapping mapping) {
-        return mapping.getType() == FormMappingType.INTERNAL 
+        return mapping.getType() == FormMappingType.INTERNAL
                 && (mapping.getTargetForm() == null || !mapping.getTargetForm().hasContent());
     }
 

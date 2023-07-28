@@ -8,8 +8,8 @@ import java.util.stream.Collectors;
 import org.bonitasoft.engine.bdm.model.BusinessObject;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
-import org.bonitasoft.studio.model.process.BusinessObjectData;
-import org.bonitasoft.studio.model.process.Pool;
+import org.bonitasoft.bpm.model.process.BusinessObjectData;
+import org.bonitasoft.bpm.model.process.Pool;
 
 public class BusinessDataStore {
 

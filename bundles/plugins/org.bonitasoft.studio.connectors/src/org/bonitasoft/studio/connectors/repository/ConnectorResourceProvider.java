@@ -24,13 +24,13 @@ import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.common.repository.provider.IBOSArchiveFileStoreProvider;
-import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
-import org.bonitasoft.studio.connector.model.implementation.ConnectorImplementation;
+import org.bonitasoft.bpm.connector.model.definition.ConnectorDefinition;
+import org.bonitasoft.bpm.connector.model.implementation.ConnectorImplementation;
 import org.bonitasoft.studio.connectors.i18n.Messages;
 import org.bonitasoft.studio.dependencies.repository.DependencyRepositoryStore;
-import org.bonitasoft.studio.model.configuration.Configuration;
-import org.bonitasoft.studio.model.configuration.DefinitionMapping;
-import org.bonitasoft.studio.model.process.AbstractProcess;
+import org.bonitasoft.bpm.model.configuration.Configuration;
+import org.bonitasoft.bpm.model.configuration.DefinitionMapping;
+import org.bonitasoft.bpm.model.process.AbstractProcess;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
@@ -42,8 +42,8 @@ public class ConnectorResourceProvider implements IBOSArchiveFileStoreProvider {
 
     /*
      * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.repository.provider.IBOSArchiveFileStoreProvider#getFileStoreForConfiguration(org.bonitasoft.studio.model.process.
-     * AbstractProcess, org.bonitasoft.studio.model.configuration.Configuration)
+     * @see org.bonitasoft.studio.common.repository.provider.IBOSArchiveFileStoreProvider#getFileStoreForConfiguration(org.bonitasoft.bpm.model.process.
+     * AbstractProcess, org.bonitasoft.bpm.model.configuration.Configuration)
      */
     @Override
     public Set<IRepositoryFileStore<?>> getFileStoreForConfiguration(final AbstractProcess process,

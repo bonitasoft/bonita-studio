@@ -16,18 +16,18 @@ package org.bonitasoft.studio.engine.export.builder;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.bonitasoft.studio.common.predicate.ConnectorParameterPredicates.withInputName;
-import static org.bonitasoft.studio.model.connectorconfiguration.builders.ConnectorConfigurationBuilder.aConnectorConfiguration;
-import static org.bonitasoft.studio.model.connectorconfiguration.builders.ConnectorParameterBuilder.aConnectorParameter;
-import static org.bonitasoft.studio.model.expression.builders.ExpressionBuilder.aConstantExpression;
-import static org.bonitasoft.studio.model.expression.builders.ExpressionBuilder.aGroovyScriptExpression;
-import static org.bonitasoft.studio.model.process.builders.DataBuilder.aData;
-import static org.bonitasoft.studio.model.process.builders.StringDataTypeBuilder.aStringDataType;
+import static org.bonitasoft.bpm.model.connectorconfiguration.builders.ConnectorConfigurationBuilder.aConnectorConfiguration;
+import static org.bonitasoft.bpm.model.connectorconfiguration.builders.ConnectorParameterBuilder.aConnectorParameter;
+import static org.bonitasoft.bpm.model.expression.builders.ExpressionBuilder.aConstantExpression;
+import static org.bonitasoft.bpm.model.expression.builders.ExpressionBuilder.aGroovyScriptExpression;
+import static org.bonitasoft.bpm.model.process.builders.DataBuilder.aData;
+import static org.bonitasoft.bpm.model.process.builders.StringDataTypeBuilder.aStringDataType;
 
-import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration;
-import org.bonitasoft.studio.model.expression.AbstractExpression;
-import org.bonitasoft.studio.model.expression.Expression;
-import org.bonitasoft.studio.model.expression.TableExpression;
-import org.bonitasoft.studio.model.expression.assertions.ExpressionAssert;
+import org.bonitasoft.bpm.model.connectorconfiguration.ConnectorConfiguration;
+import org.bonitasoft.bpm.model.expression.AbstractExpression;
+import org.bonitasoft.bpm.model.expression.Expression;
+import org.bonitasoft.bpm.model.expression.TableExpression;
+import org.bonitasoft.bpm.model.expression.assertions.ExpressionAssert;
 import org.junit.Test;
 
 public class GroovyConnectorConfigurationConverterTest {

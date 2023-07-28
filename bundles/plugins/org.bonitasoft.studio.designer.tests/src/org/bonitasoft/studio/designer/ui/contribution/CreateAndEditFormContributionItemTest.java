@@ -15,11 +15,11 @@
 package org.bonitasoft.studio.designer.ui.contribution;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.bonitasoft.studio.model.expression.builders.ExpressionBuilder.anExpression;
-import static org.bonitasoft.studio.model.process.builders.ContractBuilder.aContract;
-import static org.bonitasoft.studio.model.process.builders.ContractInputBuilder.aContractInput;
-import static org.bonitasoft.studio.model.process.builders.FormMappingBuilder.aFormMapping;
-import static org.bonitasoft.studio.model.process.builders.TaskBuilder.aTask;
+import static org.bonitasoft.bpm.model.expression.builders.ExpressionBuilder.anExpression;
+import static org.bonitasoft.bpm.model.process.builders.ContractBuilder.aContract;
+import static org.bonitasoft.bpm.model.process.builders.ContractInputBuilder.aContractInput;
+import static org.bonitasoft.bpm.model.process.builders.FormMappingBuilder.aFormMapping;
+import static org.bonitasoft.bpm.model.process.builders.TaskBuilder.aTask;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.verify;
 
@@ -28,9 +28,9 @@ import org.bonitasoft.studio.designer.core.expression.CreateNewFormProposalListe
 import org.bonitasoft.studio.designer.core.repository.WebPageFileStore;
 import org.bonitasoft.studio.designer.core.repository.WebPageRepositoryStore;
 import org.bonitasoft.studio.designer.i18n.Messages;
-import org.bonitasoft.studio.model.process.FormMappingType;
-import org.bonitasoft.studio.model.process.PageFlow;
-import org.bonitasoft.studio.model.process.provider.ProcessItemProviderAdapterFactory;
+import org.bonitasoft.bpm.model.process.FormMappingType;
+import org.bonitasoft.bpm.model.process.PageFlow;
+import org.bonitasoft.bpm.model.process.provider.ProcessItemProviderAdapterFactory;
 import org.bonitasoft.studio.swt.rules.RealmWithDisplay;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.transaction.impl.TransactionalEditingDomainImpl;

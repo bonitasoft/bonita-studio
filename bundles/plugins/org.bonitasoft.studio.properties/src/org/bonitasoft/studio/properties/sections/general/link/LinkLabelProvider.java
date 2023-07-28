@@ -18,7 +18,7 @@
  
 package org.bonitasoft.studio.properties.sections.general.link;
 
-import org.bonitasoft.studio.model.process.LinkEvent;
+import org.bonitasoft.bpm.model.process.LinkEvent;
 import org.eclipse.jface.viewers.LabelProvider;
 
 /**

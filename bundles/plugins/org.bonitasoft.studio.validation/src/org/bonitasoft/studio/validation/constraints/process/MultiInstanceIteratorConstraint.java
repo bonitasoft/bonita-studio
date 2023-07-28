@@ -17,8 +17,8 @@ package org.bonitasoft.studio.validation.constraints.process;
 import static com.google.common.base.Preconditions.checkArgument;
 import static org.bonitasoft.studio.common.databinding.validator.ValidatorFactory.groovyReferenceValidator;
 
-import org.bonitasoft.studio.model.process.MultiInstanceType;
-import org.bonitasoft.studio.model.process.MultiInstantiable;
+import org.bonitasoft.bpm.model.process.MultiInstanceType;
+import org.bonitasoft.bpm.model.process.MultiInstantiable;
 import org.bonitasoft.studio.validation.constraints.AbstractLiveValidationMarkerConstraint;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;

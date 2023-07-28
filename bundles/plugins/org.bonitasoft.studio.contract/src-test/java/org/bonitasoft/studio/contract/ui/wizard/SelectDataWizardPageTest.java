@@ -15,9 +15,9 @@
 package org.bonitasoft.studio.contract.ui.wizard;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.bonitasoft.studio.model.process.builders.BusinessObjectDataBuilder.aBusinessData;
-import static org.bonitasoft.studio.model.process.builders.ContractBuilder.aContract;
-import static org.bonitasoft.studio.model.process.builders.PoolBuilder.aPool;
+import static org.bonitasoft.bpm.model.process.builders.BusinessObjectDataBuilder.aBusinessData;
+import static org.bonitasoft.bpm.model.process.builders.ContractBuilder.aContract;
+import static org.bonitasoft.bpm.model.process.builders.PoolBuilder.aPool;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -25,13 +25,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
-import org.bonitasoft.studio.model.process.BusinessObjectData;
-import org.bonitasoft.studio.model.process.Contract;
-import org.bonitasoft.studio.model.process.Data;
-import org.bonitasoft.studio.model.process.Document;
-import org.bonitasoft.studio.model.process.DocumentType;
-import org.bonitasoft.studio.model.process.Pool;
-import org.bonitasoft.studio.model.process.ProcessFactory;
+import org.bonitasoft.bpm.model.process.BusinessObjectData;
+import org.bonitasoft.bpm.model.process.Contract;
+import org.bonitasoft.bpm.model.process.Data;
+import org.bonitasoft.bpm.model.process.Document;
+import org.bonitasoft.bpm.model.process.DocumentType;
+import org.bonitasoft.bpm.model.process.Pool;
+import org.bonitasoft.bpm.model.process.ProcessFactory;
 import org.bonitasoft.studio.swt.WidgetFinder;
 import org.bonitasoft.studio.swt.rules.RealmWithDisplay;
 import org.eclipse.core.databinding.observable.value.WritableValue;

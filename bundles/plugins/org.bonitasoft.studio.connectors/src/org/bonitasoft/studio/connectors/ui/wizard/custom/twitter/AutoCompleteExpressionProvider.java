@@ -18,7 +18,7 @@ import java.util.List;
 
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionNatureProvider;
-import org.bonitasoft.studio.model.expression.Expression;
+import org.bonitasoft.bpm.model.expression.Expression;
 import org.eclipse.emf.ecore.EObject;
 
 public class AutoCompleteExpressionProvider implements

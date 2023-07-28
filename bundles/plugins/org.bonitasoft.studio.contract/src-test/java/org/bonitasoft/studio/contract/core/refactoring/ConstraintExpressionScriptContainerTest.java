@@ -16,8 +16,8 @@ package org.bonitasoft.studio.contract.core.refactoring;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.bonitasoft.studio.model.process.builders.ContractConstraintBuilder.aContractConstraint;
-import static org.bonitasoft.studio.model.process.builders.ContractInputBuilder.aContractInput;
+import static org.bonitasoft.bpm.model.process.builders.ContractConstraintBuilder.aContractConstraint;
+import static org.bonitasoft.bpm.model.process.builders.ContractInputBuilder.aContractInput;
 import static org.mockito.Mockito.anyList;
 import static org.mockito.Mockito.anyString;
 import static org.mockito.Mockito.verify;
@@ -25,8 +25,8 @@ import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 
-import org.bonitasoft.studio.model.process.ContractConstraint;
-import org.bonitasoft.studio.model.process.provider.ProcessItemProviderAdapterFactory;
+import org.bonitasoft.bpm.model.process.ContractConstraint;
+import org.bonitasoft.bpm.model.process.provider.ProcessItemProviderAdapterFactory;
 import org.bonitasoft.studio.refactoring.core.script.IScriptRefactoringOperation;
 import org.bonitasoft.studio.refactoring.core.script.IScriptRefactoringOperationFactory;
 import org.bonitasoft.studio.refactoring.core.script.ReferenceDiff;

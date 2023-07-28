@@ -29,8 +29,8 @@ import org.bonitasoft.studio.common.repository.core.maven.ProjectDependenciesRes
 import org.bonitasoft.studio.common.repository.core.migration.dependencies.DependentArtifactCollectorRegistry;
 import org.bonitasoft.studio.common.repository.core.migration.dependencies.configuration.ProcessConfigurationUpdater;
 import org.bonitasoft.studio.common.repository.core.migration.dependencies.connector.ConnectorImplementationUpdater;
-import org.bonitasoft.studio.connector.model.implementation.ConnectorImplementation;
-import org.bonitasoft.studio.model.configuration.Configuration;
+import org.bonitasoft.bpm.connector.model.implementation.ConnectorImplementation;
+import org.bonitasoft.bpm.model.configuration.Configuration;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;

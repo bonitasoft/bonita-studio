@@ -14,18 +14,18 @@
  */
 package org.bonitasoft.studio.document.core.export;
 
-import static org.bonitasoft.studio.model.process.builders.ContractInputBuilder.aContractInput;
+import static org.bonitasoft.bpm.model.process.builders.ContractInputBuilder.aContractInput;
 
 import java.util.List;
 
 import org.bonitasoft.engine.bpm.contract.FileInputValue;
 import org.bonitasoft.engine.expression.ExpressionType;
-import org.bonitasoft.studio.model.expression.Expression;
-import org.bonitasoft.studio.model.expression.assertions.ExpressionAssert;
-import org.bonitasoft.studio.model.process.ContractInput;
-import org.bonitasoft.studio.model.process.ContractInputType;
-import org.bonitasoft.studio.model.process.assertions.ContractInputAssert;
-import org.bonitasoft.studio.model.process.builders.ContractInputBuilder;
+import org.bonitasoft.bpm.model.expression.Expression;
+import org.bonitasoft.bpm.model.expression.assertions.ExpressionAssert;
+import org.bonitasoft.bpm.model.process.ContractInput;
+import org.bonitasoft.bpm.model.process.ContractInputType;
+import org.bonitasoft.bpm.model.process.assertions.ContractInputAssert;
+import org.bonitasoft.bpm.model.process.builders.ContractInputBuilder;
 import org.junit.Test;
 
 public class DocumentGroovyScriptExpressionFactoryTest {

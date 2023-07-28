@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<connectorconfiguration:ConnectorConfiguration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:connectorconfiguration="http://wwww.bonitasoft.org/model/connector/configuration" xmlns:expression="http://www.bonitasoft.org/ns/studio/expression" definitionId="email" version="1.0.0" name="email-1.0.0" modelVersion="7.6.0-002">
+<connectorconfiguration:ConnectorConfiguration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:connectorconfiguration="http://wwww.bonitasoft.org/model/connector/configuration" xmlns:expression="http://www.bonitasoft.org/ns/bpm/expression" definitionId="email" version="1.0.0" name="email-1.0.0" modelVersion="8">
   <parameters key="smtpHost">
     <expression xsi:type="expression:Expression" name="smtp.gmail.com" content="smtp.gmail.com" returnTypeFixed="true"/>
   </parameters>

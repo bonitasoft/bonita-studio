@@ -19,9 +19,9 @@
 package org.bonitasoft.studio.engine.contribution;
 
 import org.bonitasoft.studio.engine.export.BonitaExportException;
-import org.bonitasoft.studio.model.kpi.AbstractKPIDefinition;
-import org.bonitasoft.studio.model.kpi.KPIField;
-import org.bonitasoft.studio.model.kpi.KPIParameterMapping;
+import org.bonitasoft.bpm.model.kpi.AbstractKPIDefinition;
+import org.bonitasoft.bpm.model.kpi.KPIField;
+import org.bonitasoft.bpm.model.kpi.KPIParameterMapping;
 
 /**
  * @author Romain Bioteau

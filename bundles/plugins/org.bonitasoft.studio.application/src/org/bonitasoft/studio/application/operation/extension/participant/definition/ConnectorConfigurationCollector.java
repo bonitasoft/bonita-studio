@@ -16,7 +16,7 @@ package org.bonitasoft.studio.application.operation.extension.participant.defini
 
 import java.util.Collection;
 
-import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration;
+import org.bonitasoft.bpm.model.connectorconfiguration.ConnectorConfiguration;
 
 public interface ConnectorConfigurationCollector {
 

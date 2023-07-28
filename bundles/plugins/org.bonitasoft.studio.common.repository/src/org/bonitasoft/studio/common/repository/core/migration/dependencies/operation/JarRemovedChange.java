@@ -21,8 +21,8 @@ import java.util.Objects;
 
 import org.bonitasoft.studio.common.repository.core.migration.dependencies.configuration.ProcessConfigurationChange;
 import org.bonitasoft.studio.common.repository.core.migration.dependencies.connector.ConnectorImplementationChange;
-import org.bonitasoft.studio.connector.model.implementation.ConnectorImplementation;
-import org.bonitasoft.studio.model.configuration.Configuration;
+import org.bonitasoft.bpm.connector.model.implementation.ConnectorImplementation;
+import org.bonitasoft.bpm.model.configuration.Configuration;
 
 public class JarRemovedChange implements ProcessConfigurationChange, ConnectorImplementationChange {
 

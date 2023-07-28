@@ -17,11 +17,11 @@ package org.bonitasoft.studio.connector.model.definition.migration.model;
 import java.util.Objects;
 import java.util.Optional;
 
-import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
-import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration;
-import org.bonitasoft.studio.model.connectorconfiguration.ConnectorParameter;
-import org.bonitasoft.studio.model.expression.AbstractExpression;
-import org.bonitasoft.studio.model.expression.Expression;
+import org.bonitasoft.bpm.connector.model.definition.ConnectorDefinition;
+import org.bonitasoft.bpm.model.connectorconfiguration.ConnectorConfiguration;
+import org.bonitasoft.bpm.model.connectorconfiguration.ConnectorParameter;
+import org.bonitasoft.bpm.model.expression.AbstractExpression;
+import org.bonitasoft.bpm.model.expression.Expression;
 
 public interface DefinitionInputChange {
 

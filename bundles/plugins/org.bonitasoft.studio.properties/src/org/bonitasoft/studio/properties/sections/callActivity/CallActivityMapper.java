@@ -17,7 +17,7 @@ package org.bonitasoft.studio.properties.sections.callActivity;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.bonitasoft.studio.model.process.Data;
+import org.bonitasoft.bpm.model.process.Data;
 
 
 public class CallActivityMapper {

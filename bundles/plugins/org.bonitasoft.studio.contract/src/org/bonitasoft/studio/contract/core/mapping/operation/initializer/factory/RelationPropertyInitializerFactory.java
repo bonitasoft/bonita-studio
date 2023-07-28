@@ -23,7 +23,7 @@ import org.bonitasoft.studio.contract.core.mapping.operation.initializer.IProper
 import org.bonitasoft.studio.contract.core.mapping.operation.initializer.InitializerContext;
 import org.bonitasoft.studio.contract.core.mapping.operation.initializer.MultipleAggregationReferencePropertyInitializer;
 import org.bonitasoft.studio.contract.core.mapping.operation.initializer.MultipleCompositionReferencePropertyInitializer;
-import org.bonitasoft.studio.model.process.BusinessObjectData;
+import org.bonitasoft.bpm.model.process.BusinessObjectData;
 
 public class RelationPropertyInitializerFactory extends AbsractInitializerFactory {
 

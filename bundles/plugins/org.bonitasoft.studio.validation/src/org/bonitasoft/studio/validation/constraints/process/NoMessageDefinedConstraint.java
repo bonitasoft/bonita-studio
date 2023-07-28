@@ -14,9 +14,9 @@
  */
 package org.bonitasoft.studio.validation.constraints.process;
 
-import org.bonitasoft.studio.model.process.Element;
-import org.bonitasoft.studio.model.process.ProcessPackage;
-import org.bonitasoft.studio.model.process.ThrowMessageEvent;
+import org.bonitasoft.bpm.model.process.Element;
+import org.bonitasoft.bpm.model.process.ProcessPackage;
+import org.bonitasoft.bpm.model.process.ThrowMessageEvent;
 import org.bonitasoft.studio.validation.constraints.AbstractLiveValidationMarkerConstraint;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;

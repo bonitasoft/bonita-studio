@@ -22,8 +22,8 @@ import java.util.List;
 
 import org.bonitasoft.studio.common.handlers.DefaultPasteHandler;
 import org.bonitasoft.studio.diagram.custom.clipboard.Clipboard;
-import org.bonitasoft.studio.model.process.AbstractProcess;
-import org.bonitasoft.studio.model.process.Lane;
+import org.bonitasoft.bpm.model.process.AbstractProcess;
+import org.bonitasoft.bpm.model.process.Lane;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.gef.EditPart;

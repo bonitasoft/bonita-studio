@@ -19,15 +19,15 @@ package org.bonitasoft.studio.properties.sections.catchmessage;
 
 import java.util.List;
 
-import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.bpm.model.util.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionValidator;
-import org.bonitasoft.studio.model.expression.Expression;
-import org.bonitasoft.studio.model.expression.ListExpression;
-import org.bonitasoft.studio.model.expression.TableExpression;
-import org.bonitasoft.studio.model.process.AbstractCatchMessageEvent;
-import org.bonitasoft.studio.model.process.Message;
-import org.bonitasoft.studio.model.process.MessageFlow;
+import org.bonitasoft.bpm.model.expression.Expression;
+import org.bonitasoft.bpm.model.expression.ListExpression;
+import org.bonitasoft.bpm.model.expression.TableExpression;
+import org.bonitasoft.bpm.model.process.AbstractCatchMessageEvent;
+import org.bonitasoft.bpm.model.process.Message;
+import org.bonitasoft.bpm.model.process.MessageFlow;
 import org.bonitasoft.studio.properties.i18n.Messages;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
@@ -57,7 +57,7 @@ public class MessageContentExpressionValidator implements IExpressionValidator {
                     throwMessageContent = message.getMessageContent();
                     boolean isExisting =false;
                     for (final ListExpression row : throwMessageContent.getExpressions()) {
-                        final List<org.bonitasoft.studio.model.expression.Expression> col =  row.getExpressions() ;
+                        final List<org.bonitasoft.bpm.model.expression.Expression> col =  row.getExpressions() ;
                         if (col.size()==2){
                             if (expr.equals(col.get(0).getName())){
                                 isExisting =true;

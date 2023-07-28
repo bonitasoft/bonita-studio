@@ -16,10 +16,10 @@ package org.bonitasoft.studio.properties.sections.iteration;
 
 import static com.google.common.collect.Iterables.tryFind;
 
-import org.bonitasoft.studio.common.ExpressionConstants;
-import org.bonitasoft.studio.model.expression.Expression;
-import org.bonitasoft.studio.model.process.Activity;
-import org.bonitasoft.studio.model.process.Data;
+import org.bonitasoft.bpm.model.util.ExpressionConstants;
+import org.bonitasoft.bpm.model.expression.Expression;
+import org.bonitasoft.bpm.model.process.Activity;
+import org.bonitasoft.bpm.model.process.Data;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 

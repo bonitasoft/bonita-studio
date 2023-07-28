@@ -22,7 +22,7 @@ import org.bonitasoft.engine.bdm.BDMSimpleNameProvider;
 import org.bonitasoft.engine.bdm.model.BusinessObject;
 import org.bonitasoft.studio.contract.core.mapping.FieldToContractInputMappingFactory;
 import org.bonitasoft.studio.contract.core.mapping.operation.BusinessObjectInstantiationException;
-import org.bonitasoft.studio.model.process.ContractInput;
+import org.bonitasoft.bpm.model.process.ContractInput;
 
 import com.google.common.base.Joiner;
 

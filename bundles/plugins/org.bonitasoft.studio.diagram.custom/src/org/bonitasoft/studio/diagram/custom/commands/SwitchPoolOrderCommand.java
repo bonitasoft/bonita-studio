@@ -24,7 +24,7 @@ import org.bonitasoft.studio.diagram.custom.editPolicies.SwitchPoolSelectionEdit
 import org.bonitasoft.studio.diagram.custom.parts.CustomLaneEditPart;
 import org.bonitasoft.studio.diagram.custom.parts.CustomMainProcessEditPart;
 import org.bonitasoft.studio.diagram.custom.parts.CustomPoolCompartmentEditPart;
-import org.bonitasoft.studio.model.process.ProcessPackage;
+import org.bonitasoft.bpm.model.process.ProcessPackage;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;

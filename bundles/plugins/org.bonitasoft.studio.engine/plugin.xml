@@ -30,7 +30,7 @@
       </command>
        <commandParameterType
              id="org.bonitasoft.studio.commandParameterType.abstractProcess"
-             type="org.bonitasoft.studio.model.process.AbstractProcess">
+             type="org.bonitasoft.bpm.model.process.AbstractProcess">
        </commandParameterType>
   </extension>
   <extension

@@ -14,7 +14,7 @@
  */
 package org.bonitasoft.studio.common.diagram.dialog;
 
-import org.bonitasoft.studio.model.process.AbstractProcess;
+import org.bonitasoft.bpm.model.process.AbstractProcess;
 
 public class ProcessesNameVersion {
 

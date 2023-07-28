@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.bonitasoft.studio.common.repository.extension.update.preview.ChangePreview;
-import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
+import org.bonitasoft.bpm.connector.model.definition.ConnectorDefinition;
 import org.bonitasoft.studio.connector.model.definition.migration.ConnectorConfigurationMigrator;
 import org.bonitasoft.studio.connector.model.definition.migration.DefinitionChangesVisitor;
 import org.bonitasoft.studio.connector.model.i18n.Messages;

@@ -19,8 +19,8 @@ package org.bonitasoft.studio.common.repository.core.migration.dependencies.conf
 import java.util.Collection;
 
 import org.bonitasoft.studio.common.FragmentTypes;
-import org.bonitasoft.studio.model.configuration.Configuration;
-import org.bonitasoft.studio.model.configuration.FragmentContainer;
+import org.bonitasoft.bpm.model.configuration.Configuration;
+import org.bonitasoft.bpm.model.configuration.FragmentContainer;
 
 public interface ProcessConfigurationChange {
     

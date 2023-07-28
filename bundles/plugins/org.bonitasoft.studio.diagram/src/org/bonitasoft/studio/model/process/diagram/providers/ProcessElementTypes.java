@@ -22,7 +22,7 @@ import java.util.IdentityHashMap;
 import java.util.Map;
 import java.util.Set;
 
-import org.bonitasoft.studio.model.process.ProcessPackage;
+import org.bonitasoft.bpm.model.process.ProcessPackage;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.ANDGateway2EditPart;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.ANDGatewayEditPart;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.Activity2EditPart;

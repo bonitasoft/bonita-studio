@@ -20,7 +20,7 @@ package org.bonitasoft.studio.sqlbuilder.ex.builder.viewer;
 import org.bonitasoft.studio.expression.editor.pattern.FakeEditorPart;
 import org.bonitasoft.studio.expression.editor.pattern.TextViewerDocumentViewerDelegate;
 import org.bonitasoft.studio.expression.editor.pattern.contentAssist.PatternExpressionCompletionProcessor;
-import org.bonitasoft.studio.model.expression.Expression;
+import org.bonitasoft.bpm.model.expression.Expression;
 import org.bonitasoft.studio.sqlbuilder.ex.builder.BonitaSQLCompletionProcessor;
 import org.eclipse.datatools.sqltools.sqlbuilder.views.source.IDBContext;
 import org.eclipse.datatools.sqltools.sqlbuilder.views.source.SQLCompletionProcessor;

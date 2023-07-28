@@ -5,14 +5,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.identity.actors.ui.wizard;
 
@@ -33,16 +31,13 @@ import org.bonitasoft.studio.identity.i18n.Messages;
 import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 
-
 /**
  * @author Romain Bioteau
- *
  */
 public class SelectUserFilterImplementationWizard extends AbstractSelectImplementationWizard {
 
-
-    public SelectUserFilterImplementationWizard(){
-        super() ;
+    public SelectUserFilterImplementationWizard() {
+        super();
         setWindowTitle(Messages.selectActorFitleImplementation);
     }
 
@@ -53,18 +48,22 @@ public class SelectUserFilterImplementationWizard extends AbstractSelectImplemen
 
     @Override
     protected IRepositoryStore<? extends IRepositoryFileStore> getImplementationStore() {
-        return  RepositoryManager.getInstance().getRepositoryStore(ActorFilterImplRepositoryStore.class);
+        return RepositoryManager.getInstance().getRepositoryStore(ActorFilterImplRepositoryStore.class);
     }
 
     @Override
     protected LabelProvider getLabelProvider() {
-        return new ConnectorImplementationLabelProvider((IDefinitionRepositoryStore)RepositoryManager.getInstance().getRepositoryStore(ActorFilterDefRepositoryStore.class), IdentityPlugin.getDefault().getBundle());
+        return new ConnectorImplementationLabelProvider(
+                (IDefinitionRepositoryStore) RepositoryManager.getInstance()
+                        .getRepositoryStore(ActorFilterDefRepositoryStore.class),
+                IdentityPlugin.getDefault().getBundle());
     }
 
     @SuppressWarnings("unchecked")
-	@Override
+    @Override
     protected IContentProvider getContentProvider() {
-        return new ConnectorImplementationContentProvider((IRepositoryStore<IRepositoryFileStore>) getImplementationStore(), true);
+        return new ConnectorImplementationContentProvider(
+                (IRepositoryStore<IRepositoryFileStore>) getImplementationStore(), true);
     }
 
     @Override
@@ -76,8 +75,5 @@ public class SelectUserFilterImplementationWizard extends AbstractSelectImplemen
     protected String getPageTitle() {
         return Messages.selectFilterImplementationTitle;
     }
-
-
-
 
 }

@@ -16,7 +16,7 @@
  */
 package org.bonitasoft.studio.properties.filters;
 
-import org.bonitasoft.studio.model.process.Activity;
+import org.bonitasoft.bpm.model.process.Activity;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.jface.viewers.IFilter;
 

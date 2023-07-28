@@ -19,10 +19,10 @@ package org.bonitasoft.studio.connector.model.definition.wizard;
 import java.util.Properties;
 
 import org.bonitasoft.studio.common.repository.provider.DefinitionResourceProvider;
-import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
-import org.bonitasoft.studio.connector.model.definition.ConnectorDefinitionFactory;
-import org.bonitasoft.studio.connector.model.definition.ConnectorDefinitionPackage;
-import org.bonitasoft.studio.connector.model.definition.Page;
+import org.bonitasoft.bpm.connector.model.definition.ConnectorDefinition;
+import org.bonitasoft.bpm.connector.model.definition.ConnectorDefinitionFactory;
+import org.bonitasoft.bpm.connector.model.definition.ConnectorDefinitionPackage;
+import org.bonitasoft.bpm.connector.model.definition.Page;
 import org.bonitasoft.studio.connector.model.i18n.Messages;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.EMFObservables;

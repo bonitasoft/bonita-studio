@@ -257,6 +257,11 @@ along with this program. If not, see &lt;http://www.gnu.org/licenses/&gt;.
          id="org.eclipse.platform"
          version="0.0.0"/>
 
+   <requires>
+      <import feature="org.bonitasoft.bpm.definitions.feature" version="8.0.0.qualifier"/>
+      <import feature="org.bonitasoft.bonita2bpmn.feature" version="8.0.0.qualifier"/>
+   </requires>
+
    <plugin
          id="org.bonitasoft.studio"
          download-size="0"
@@ -280,13 +285,6 @@ along with this program. If not, see &lt;http://www.gnu.org/licenses/&gt;.
 
    <plugin
          id="org.bonitasoft.studio.diagram.custom"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.bonitasoft.studio.model.edit"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -349,13 +347,6 @@ along with this program. If not, see &lt;http://www.gnu.org/licenses/&gt;.
          unpack="false"/>
 
    <plugin
-         id="org.bonitasoft.studio.model"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.bonitasoft.studio.properties"
          download-size="0"
          install-size="0"
@@ -391,13 +382,6 @@ along with this program. If not, see &lt;http://www.gnu.org/licenses/&gt;.
          unpack="false"/>
 
    <plugin
-         id="org.omg.schema.spec.bpmn"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.bonitasoft.studio.common.repository"
          download-size="0"
          install-size="0"
@@ -413,13 +397,6 @@ along with this program. If not, see &lt;http://www.gnu.org/licenses/&gt;.
 
    <plugin
          id="org.bonitasoft.studio.groovy.ui"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.bonitasoft.studio.model.edit.custom"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -461,13 +438,6 @@ along with this program. If not, see &lt;http://www.gnu.org/licenses/&gt;.
          unpack="false"/>
 
    <plugin
-         id="org.bonitasoft.studio.connectors.model"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.bonitasoft.studio.connectors"
          download-size="0"
          install-size="0"
@@ -490,13 +460,6 @@ along with this program. If not, see &lt;http://www.gnu.org/licenses/&gt;.
 
    <plugin
          id="org.bonitasoft.studio-models"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.bonitasoft.studio.migration"
          download-size="0"
          install-size="0"
          version="0.0.0"

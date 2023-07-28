@@ -16,9 +16,9 @@ package org.bonitasoft.studio.contract.ui.property.constraint.edit;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.bonitasoft.studio.assertions.StatusAssert.assertThat;
-import static org.bonitasoft.studio.model.process.builders.ContractBuilder.aContract;
-import static org.bonitasoft.studio.model.process.builders.ContractConstraintBuilder.aContractConstraint;
-import static org.bonitasoft.studio.model.process.builders.ContractInputBuilder.aContractInput;
+import static org.bonitasoft.bpm.model.process.builders.ContractBuilder.aContract;
+import static org.bonitasoft.bpm.model.process.builders.ContractConstraintBuilder.aContractConstraint;
+import static org.bonitasoft.bpm.model.process.builders.ContractInputBuilder.aContractInput;
 
 import org.bonitasoft.studio.swt.rules.RealmWithDisplay;
 import org.eclipse.core.databinding.UpdateValueStrategy;

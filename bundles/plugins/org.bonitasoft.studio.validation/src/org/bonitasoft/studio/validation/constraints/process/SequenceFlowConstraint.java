@@ -14,9 +14,9 @@
  */
 package org.bonitasoft.studio.validation.constraints.process;
 
-import org.bonitasoft.studio.model.expression.Expression;
-import org.bonitasoft.studio.model.process.SequenceFlow;
-import org.bonitasoft.studio.model.process.SequenceFlowConditionType;
+import org.bonitasoft.bpm.model.expression.Expression;
+import org.bonitasoft.bpm.model.process.SequenceFlow;
+import org.bonitasoft.bpm.model.process.SequenceFlowConditionType;
 import org.bonitasoft.studio.validation.constraints.AbstractLiveValidationMarkerConstraint;
 import org.bonitasoft.studio.validation.i18n.Messages;
 import org.eclipse.core.runtime.IStatus;

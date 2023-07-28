@@ -20,22 +20,23 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
+import org.bonitasoft.bpm.connector.model.definition.ConnectorDefinition;
+import org.bonitasoft.bpm.connector.model.definition.ConnectorDefinitionFactory;
+import org.bonitasoft.bpm.connector.model.definition.DocumentRoot;
+import org.bonitasoft.bpm.connector.model.definition.Output;
+import org.bonitasoft.bpm.connector.model.definition.util.ConnectorDefinitionXMLProcessor;
+import org.bonitasoft.bpm.model.connectorconfiguration.ConnectorConfiguration;
+import org.bonitasoft.bpm.model.connectorconfiguration.ConnectorConfigurationFactory;
+import org.bonitasoft.bpm.model.connectorconfiguration.util.ConnectorConfigurationXMLProcessor;
+import org.bonitasoft.bpm.model.expression.Expression;
+import org.bonitasoft.bpm.model.expression.ExpressionFactory;
+import org.bonitasoft.bpm.model.expression.Operation;
+import org.bonitasoft.bpm.model.expression.assertions.ExpressionAssert;
+import org.bonitasoft.bpm.model.process.Connector;
+import org.bonitasoft.bpm.model.process.ProcessFactory;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
-import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
-import org.bonitasoft.studio.connector.model.definition.ConnectorDefinitionFactory;
-import org.bonitasoft.studio.connector.model.definition.DocumentRoot;
-import org.bonitasoft.studio.connector.model.definition.Output;
-import org.bonitasoft.studio.connector.model.definition.util.ConnectorDefinitionXMLProcessor;
-import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration;
-import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfigurationFactory;
-import org.bonitasoft.studio.model.connectorconfiguration.util.ConnectorConfigurationXMLProcessor;
-import org.bonitasoft.studio.model.expression.Expression;
-import org.bonitasoft.studio.model.expression.ExpressionFactory;
-import org.bonitasoft.studio.model.expression.Operation;
-import org.bonitasoft.studio.model.expression.assertions.ExpressionAssert;
-import org.bonitasoft.studio.model.process.Connector;
-import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.junit.Before;
@@ -49,7 +50,8 @@ public class ConnectorConfigurationMigratorTest {
 
     @Before
     public void createFactory() throws Exception {
-        migratorFactory = new ConnectorConfigurationMigratorFactory(new ConnectorDefinitionComparator(new DefaultValueExpressionFactory()));
+        migratorFactory = new ConnectorConfigurationMigratorFactory(
+                new ConnectorDefinitionComparator(new DefaultValueExpressionFactory()));
     }
 
     @Test
@@ -195,7 +197,7 @@ public class ConnectorConfigurationMigratorTest {
         assertThat(((Output) reference).getType())
                 .isEqualTo(Integer.class.getName());
     }
-    
+
     @Test
     public void should_update_connector_output_operations_when_output_removed() throws Exception {
         // Given
@@ -238,17 +240,24 @@ public class ConnectorConfigurationMigratorTest {
     }
 
     private ConnectorConfiguration loadConfiguration(String resourcePath) throws IOException {
-        try (InputStream is = ConnectorConfigurationMigratorTest.class.getResourceAsStream(resourcePath)) {
+        try (InputStream is = loadResource(resourcePath)) {
             Resource emfResource = configXmlProcessor.load(is, Collections.emptyMap());
             return (ConnectorConfiguration) emfResource.getContents().get(0);
         }
     }
 
     private ConnectorDefinition loadDefinition(String resourcePath) throws IOException {
-        try (InputStream is = ConnectorConfigurationMigratorTest.class.getResourceAsStream(resourcePath)) {
+        try (InputStream is = loadResource(resourcePath)) {
             Resource emfResource = defXmlProcessor.load(is, Collections.emptyMap());
             return ((DocumentRoot) emfResource.getContents().get(0)).getConnectorDefinition();
         }
+    }
+
+    private InputStream loadResource(String resourcePath) {
+        return Optional.ofNullable(ConnectorConfigurationMigratorTest.class.getResourceAsStream(resourcePath))
+                .orElseGet(() ->
+                // located in /resources, not found because prefix is missing on windows
+                ConnectorConfigurationMigratorTest.class.getResourceAsStream("/resources" + resourcePath));
     }
 
 }

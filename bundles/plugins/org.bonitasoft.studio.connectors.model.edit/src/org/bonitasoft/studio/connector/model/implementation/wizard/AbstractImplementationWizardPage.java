@@ -27,10 +27,10 @@ import org.bonitasoft.studio.common.repository.filestore.AbstractFileStore;
 import org.bonitasoft.studio.common.repository.provider.DefinitionResourceProvider;
 import org.bonitasoft.studio.common.repository.store.SourceRepositoryStore;
 import org.bonitasoft.studio.common.ui.jface.SWTBotConstants;
-import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
+import org.bonitasoft.bpm.connector.model.definition.ConnectorDefinition;
 import org.bonitasoft.studio.connector.model.i18n.Messages;
-import org.bonitasoft.studio.connector.model.implementation.ConnectorImplementation;
-import org.bonitasoft.studio.connector.model.implementation.ConnectorImplementationPackage;
+import org.bonitasoft.bpm.connector.model.implementation.ConnectorImplementation;
+import org.bonitasoft.bpm.connector.model.implementation.ConnectorImplementationPackage;
 import org.bonitasoft.studio.dependencies.repository.DependencyFileStore;
 import org.bonitasoft.studio.dependencies.ui.dialog.SelectJarsDialog;
 import org.bonitasoft.studio.pics.Pics;
@@ -141,7 +141,7 @@ public abstract class AbstractImplementationWizardPage extends NewTypeWizardPage
         final Text idText = new Text(idComposite, SWT.BORDER);
         idText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         idText.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY,
-                "org.bonitasoft.studio.connector.model.implementation.wizard.idText");
+                "org.bonitasoft.bpm.connector.model.implementation.wizard.idText");
 
         final UpdateValueStrategy idStrategy = new UpdateValueStrategy();
         idStrategy.setAfterGetValidator(new EmptyInputValidator(Messages.implementationId));
@@ -160,7 +160,7 @@ public abstract class AbstractImplementationWizardPage extends NewTypeWizardPage
         final Text versionText = new Text(idComposite, SWT.BORDER);
         versionText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         versionText.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY,
-                "org.bonitasoft.studio.connector.model.implementation.wizard.versionText");
+                "org.bonitasoft.bpm.connector.model.implementation.wizard.versionText");
 
         final UpdateValueStrategy versionStrategy = new UpdateValueStrategy();
         versionStrategy.setAfterGetValidator(new EmptyInputValidator(Messages.versionLabel));
@@ -308,7 +308,7 @@ public abstract class AbstractImplementationWizardPage extends NewTypeWizardPage
         final Text classNameText = new Text(mainComposite, SWT.BORDER);
         classNameText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).span(2, 1).create());
         classNameText.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY,
-                "org.bonitasoft.studio.connector.model.implementation.wizard.classNameText");
+                "org.bonitasoft.bpm.connector.model.implementation.wizard.classNameText");
 
         final Label packageLabel = new Label(mainComposite, SWT.NONE);
         packageLabel.setText(Messages.packageName + " *");

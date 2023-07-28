@@ -19,7 +19,7 @@ package org.bonitasoft.studio.sqlbuilder.ex.builder;
 
 import java.util.List;
 
-import org.bonitasoft.studio.model.expression.Expression;
+import org.bonitasoft.bpm.model.expression.Expression;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.datatools.sqltools.sqlbuilder.views.source.IDBContext;
 import org.eclipse.datatools.sqltools.sqlbuilder.views.source.SQLCompletionEngine;

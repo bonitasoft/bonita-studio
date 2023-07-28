@@ -18,17 +18,17 @@ import java.util.Date;
 
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.data.i18n.Messages;
-import org.bonitasoft.studio.model.process.AbstractProcess;
-import org.bonitasoft.studio.model.process.BooleanType;
-import org.bonitasoft.studio.model.process.DataType;
-import org.bonitasoft.studio.model.process.DateType;
-import org.bonitasoft.studio.model.process.DoubleType;
-import org.bonitasoft.studio.model.process.EnumType;
-import org.bonitasoft.studio.model.process.FloatType;
-import org.bonitasoft.studio.model.process.IntegerType;
-import org.bonitasoft.studio.model.process.LongType;
-import org.bonitasoft.studio.model.process.StringType;
-import org.bonitasoft.studio.model.process.XMLType;
+import org.bonitasoft.bpm.model.process.AbstractProcess;
+import org.bonitasoft.bpm.model.process.BooleanType;
+import org.bonitasoft.bpm.model.process.DataType;
+import org.bonitasoft.bpm.model.process.DateType;
+import org.bonitasoft.bpm.model.process.DoubleType;
+import org.bonitasoft.bpm.model.process.EnumType;
+import org.bonitasoft.bpm.model.process.FloatType;
+import org.bonitasoft.bpm.model.process.IntegerType;
+import org.bonitasoft.bpm.model.process.LongType;
+import org.bonitasoft.bpm.model.process.StringType;
+import org.bonitasoft.bpm.model.process.XMLType;
 
 /**
  * @author Romain Bioteau

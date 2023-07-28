@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.model.process.AbstractProcess;
+import org.bonitasoft.bpm.model.process.AbstractProcess;
 import org.bonitasoft.studio.ui.util.ProcessValidationStatus;
 import org.bonitasoft.studio.validation.common.ValidationCommonPlugin;
 import org.bonitasoft.studio.validation.common.i18n.Messages;

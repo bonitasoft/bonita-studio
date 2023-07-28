@@ -22,7 +22,7 @@ import java.util.List;
 import org.bonitasoft.studio.expression.editor.pattern.FakeEditorPart;
 import org.bonitasoft.studio.expression.editor.pattern.PatternExpressionViewer;
 import org.bonitasoft.studio.expression.editor.pattern.contentAssist.PatternExpressionCompletionProcessor;
-import org.bonitasoft.studio.model.expression.Expression;
+import org.bonitasoft.bpm.model.expression.Expression;
 import org.bonitasoft.studio.sqlbuilder.ex.Messages;
 import org.bonitasoft.studio.sqlbuilder.ex.action.BonitaAddTableAction;
 import org.bonitasoft.studio.sqlbuilder.ex.builder.viewer.BonitaDesignViewer;

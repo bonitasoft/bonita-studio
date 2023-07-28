@@ -29,10 +29,10 @@ import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.configuration.extension.IConfigurationExportAction;
 import org.bonitasoft.studio.groovy.repository.GroovyFileStore;
 import org.bonitasoft.studio.groovy.repository.GroovyRepositoryStore;
-import org.bonitasoft.studio.model.configuration.Configuration;
-import org.bonitasoft.studio.model.configuration.Fragment;
-import org.bonitasoft.studio.model.configuration.FragmentContainer;
-import org.bonitasoft.studio.model.process.AbstractProcess;
+import org.bonitasoft.bpm.model.configuration.Configuration;
+import org.bonitasoft.bpm.model.configuration.Fragment;
+import org.bonitasoft.bpm.model.configuration.FragmentContainer;
+import org.bonitasoft.bpm.model.process.AbstractProcess;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.action.Action;
 

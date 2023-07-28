@@ -28,8 +28,8 @@ import java.util.Objects;
 
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.document.i18n.Messages;
-import org.bonitasoft.studio.model.process.Document;
-import org.bonitasoft.studio.model.process.ProcessPackage;
+import org.bonitasoft.bpm.model.process.Document;
+import org.bonitasoft.bpm.model.process.ProcessPackage;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.emf.ecore.EObject;

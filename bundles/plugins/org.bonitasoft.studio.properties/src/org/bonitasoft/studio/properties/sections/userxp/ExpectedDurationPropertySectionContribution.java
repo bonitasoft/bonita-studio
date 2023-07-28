@@ -20,17 +20,17 @@ package org.bonitasoft.studio.properties.sections.userxp;
 
 import javax.inject.Inject;
 
-import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.bpm.model.util.ExpressionConstants;
 import org.bonitasoft.studio.common.ui.jface.databinding.CustomEMFEditObservables;
 import org.bonitasoft.studio.common.ui.properties.ExtensibleGridPropertySection;
 import org.bonitasoft.studio.common.ui.properties.IExtensibleGridPropertySectionContribution;
 import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFilter;
 import org.bonitasoft.studio.expression.editor.viewer.DefaultExpressionNameResolver;
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
-import org.bonitasoft.studio.model.process.ProcessPackage;
-import org.bonitasoft.studio.model.process.ReceiveTask;
-import org.bonitasoft.studio.model.process.SendTask;
-import org.bonitasoft.studio.model.process.Task;
+import org.bonitasoft.bpm.model.process.ProcessPackage;
+import org.bonitasoft.bpm.model.process.ReceiveTask;
+import org.bonitasoft.bpm.model.process.SendTask;
+import org.bonitasoft.bpm.model.process.Task;
 import org.bonitasoft.studio.properties.i18n.Messages;
 import org.eclipse.core.databinding.observable.Realm;
 import org.eclipse.emf.databinding.EMFDataBindingContext;

@@ -15,10 +15,10 @@
 package org.bonitasoft.studio.document.ui;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.bonitasoft.studio.model.process.builders.ContractBuilder.aContract;
-import static org.bonitasoft.studio.model.process.builders.ContractInputBuilder.aContractInput;
+import static org.bonitasoft.bpm.model.process.builders.ContractBuilder.aContract;
+import static org.bonitasoft.bpm.model.process.builders.ContractInputBuilder.aContractInput;
 
-import org.bonitasoft.studio.model.process.Contract;
+import org.bonitasoft.bpm.model.process.Contract;
 import org.junit.Test;
 
 public class ContractInputLabelProviderTest {

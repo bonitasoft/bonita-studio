@@ -17,11 +17,11 @@
  */
 package org.bonitasoft.studio.properties.filters;
 
-import org.bonitasoft.studio.model.process.BoundaryEvent;
-import org.bonitasoft.studio.model.process.Event;
-import org.bonitasoft.studio.model.process.Gateway;
-import org.bonitasoft.studio.model.process.MainProcess;
-import org.bonitasoft.studio.model.process.SequenceFlow;
+import org.bonitasoft.bpm.model.process.BoundaryEvent;
+import org.bonitasoft.bpm.model.process.Event;
+import org.bonitasoft.bpm.model.process.Gateway;
+import org.bonitasoft.bpm.model.process.MainProcess;
+import org.bonitasoft.bpm.model.process.SequenceFlow;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.jface.viewers.IFilter;
 

@@ -36,8 +36,8 @@ import org.bonitasoft.studio.common.repository.model.ITenantResource;
 import org.bonitasoft.studio.designer.core.repository.WebPageFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.identity.organization.repository.OrganizationFileStore;
-import org.bonitasoft.studio.model.process.AbstractProcess;
-import org.bonitasoft.studio.model.process.Pool;
+import org.bonitasoft.bpm.model.process.AbstractProcess;
+import org.bonitasoft.bpm.model.process.Pool;
 import org.eclipse.core.runtime.IStatus;
 
 public class RepositoryModelBuilder {

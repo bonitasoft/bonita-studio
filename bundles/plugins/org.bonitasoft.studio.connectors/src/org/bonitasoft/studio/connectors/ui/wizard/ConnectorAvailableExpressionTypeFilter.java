@@ -16,14 +16,14 @@ package org.bonitasoft.studio.connectors.ui.wizard;
 
 import java.util.Set;
 
+import org.bonitasoft.bpm.model.expression.Expression;
+import org.bonitasoft.bpm.model.process.Activity;
+import org.bonitasoft.bpm.model.process.Connector;
+import org.bonitasoft.bpm.model.process.Pool;
+import org.bonitasoft.bpm.model.util.ExpressionConstants;
 import org.bonitasoft.engine.bpm.connector.ConnectorEvent;
-import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFilter;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionProvider;
-import org.bonitasoft.studio.model.expression.Expression;
-import org.bonitasoft.studio.model.process.Activity;
-import org.bonitasoft.studio.model.process.Connector;
-import org.bonitasoft.studio.model.process.Pool;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.viewers.Viewer;
 

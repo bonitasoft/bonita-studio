@@ -5,6 +5,8 @@ import java.util.function.Supplier;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.bonitasoft.bpm.connector.model.definition.ConnectorDefinition;
+import org.bonitasoft.bpm.model.edit.ProcessEditPlugin;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelFileStore;
 import org.bonitasoft.studio.businessobject.i18n.Messages;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
@@ -23,7 +25,6 @@ import org.bonitasoft.studio.configuration.repository.EnvironmentFileStore;
 import org.bonitasoft.studio.configuration.repository.LocalEnvironmentFileStore;
 import org.bonitasoft.studio.connector.model.definition.AbstractDefFileStore;
 import org.bonitasoft.studio.connector.model.definition.AbstractDefinitionRepositoryStore;
-import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
 import org.bonitasoft.studio.connectors.ConnectorPlugin;
 import org.bonitasoft.studio.connectors.repository.DatabaseConnectorPropertiesFileStore;
 import org.bonitasoft.studio.dependencies.DependenciesPlugin;
@@ -153,14 +154,17 @@ public class RepositoryFileStoreDisplayable implements IDisplayable {
                 return Pics.getImage("conf.png", CommonRepositoryPlugin.getDefault());
             } else if (store instanceof EnvironmentFileStore) {
                 return Pics.getImage(PicsConstants.environment);
+            }else if (store instanceof DiagramFileStore) {
+            	return Pics.getImage("full/obj16/MainProcess.gif", ProcessEditPlugin.getPlugin());
             } else if (store instanceof OrganizationFileStore) {
                 // rely on default behavior
-            } else
-                try {
-                    return ((EMFFileStore) store).getLabelProvider().getImage(store.getContent());
-                } catch (ReadFileStoreException e) {
-                    return null;
-                }
+            } else {
+	            try {
+	                return ((EMFFileStore) store).getLabelProvider().getImage(store.getContent());
+	            } catch (ReadFileStoreException e) {
+	                return null;
+	            }
+            }
         } else if (store instanceof BusinessObjectModelFileStore) {
             return Pics.getImage(PicsConstants.bdm);
         } else if (store instanceof MavenDependencyFileStore) {

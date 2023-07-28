@@ -3,17 +3,17 @@ package org.bonitasoft.studio.validation.constraints.connector;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.bonitasoft.bpm.connector.model.definition.ConnectorDefinition;
+import org.bonitasoft.bpm.connector.model.definition.Output;
+import org.bonitasoft.bpm.model.connectorconfiguration.ConnectorConfiguration;
+import org.bonitasoft.bpm.model.expression.Expression;
+import org.bonitasoft.bpm.model.expression.Operation;
+import org.bonitasoft.bpm.model.process.ActorFilter;
+import org.bonitasoft.bpm.model.process.Connector;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.connector.model.definition.AbstractDefinitionRepositoryStore;
-import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
-import org.bonitasoft.studio.connector.model.definition.Output;
 import org.bonitasoft.studio.connectors.repository.ConnectorDefRepositoryStore;
 import org.bonitasoft.studio.identity.actors.repository.ActorFilterDefRepositoryStore;
-import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration;
-import org.bonitasoft.studio.model.expression.Expression;
-import org.bonitasoft.studio.model.expression.Operation;
-import org.bonitasoft.studio.model.process.ActorFilter;
-import org.bonitasoft.studio.model.process.Connector;
 import org.bonitasoft.studio.validation.constraints.AbstractLiveValidationMarkerConstraint;
 import org.bonitasoft.studio.validation.i18n.Messages;
 import org.eclipse.core.runtime.IStatus;
@@ -21,7 +21,8 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.validation.IValidationContext;
 
-public class ConnectorDefinitionAndConfigurationOutputConsistencyConstraint extends AbstractLiveValidationMarkerConstraint {
+public class ConnectorDefinitionAndConfigurationOutputConsistencyConstraint
+        extends AbstractLiveValidationMarkerConstraint {
 
     public static final String ID = "org.bonitasoft.studio.validation.constraints.connectorDefAndConfigOutputConsistency";
 

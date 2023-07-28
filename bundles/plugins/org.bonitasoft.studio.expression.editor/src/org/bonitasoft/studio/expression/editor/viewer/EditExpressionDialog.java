@@ -21,7 +21,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Stream;
 
-import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.bpm.model.util.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.EMFModelUpdater;
 import org.bonitasoft.studio.common.ui.jface.FileActionDialog;
 import org.bonitasoft.studio.common.ui.jface.databinding.DialogSupport;
@@ -31,9 +31,9 @@ import org.bonitasoft.studio.expression.editor.provider.ExpressionEditionAdapter
 import org.bonitasoft.studio.expression.editor.provider.ExpressionTypeContentProvider;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionEditor;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionProvider;
-import org.bonitasoft.studio.model.expression.Expression;
-import org.bonitasoft.studio.model.expression.ExpressionFactory;
-import org.bonitasoft.studio.model.expression.ExpressionPackage;
+import org.bonitasoft.bpm.model.expression.Expression;
+import org.bonitasoft.bpm.model.expression.ExpressionFactory;
+import org.bonitasoft.bpm.model.expression.ExpressionPackage;
 import org.bonitasoft.studio.ui.widget.NativeTabFolderWidget;
 import org.bonitasoft.studio.ui.widget.NativeTabItemWidget;
 import org.eclipse.core.runtime.Assert;

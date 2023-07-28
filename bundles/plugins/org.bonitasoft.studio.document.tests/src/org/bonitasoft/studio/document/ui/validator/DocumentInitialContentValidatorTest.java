@@ -14,16 +14,16 @@
  */
 package org.bonitasoft.studio.document.ui.validator;
 
-import static org.bonitasoft.studio.model.expression.builders.ExpressionBuilder.aGroovyScriptExpression;
-import static org.bonitasoft.studio.model.expression.builders.ExpressionBuilder.anExpression;
-import static org.bonitasoft.studio.model.process.builders.DocumentBuilder.aDocument;
+import static org.bonitasoft.bpm.model.expression.builders.ExpressionBuilder.aGroovyScriptExpression;
+import static org.bonitasoft.bpm.model.expression.builders.ExpressionBuilder.anExpression;
+import static org.bonitasoft.bpm.model.process.builders.DocumentBuilder.aDocument;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
-import org.bonitasoft.studio.model.process.Document;
-import org.bonitasoft.studio.model.process.DocumentType;
+import org.bonitasoft.bpm.model.process.Document;
+import org.bonitasoft.bpm.model.process.DocumentType;
 import org.eclipse.core.runtime.IStatus;
 import org.junit.Test;
 

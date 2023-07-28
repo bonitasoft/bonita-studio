@@ -22,10 +22,10 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import org.bonitasoft.studio.contract.i18n.Messages;
-import org.bonitasoft.studio.model.process.Contract;
-import org.bonitasoft.studio.model.process.ContractConstraint;
-import org.bonitasoft.studio.model.process.ProcessFactory;
-import org.bonitasoft.studio.model.process.ProcessPackage;
+import org.bonitasoft.bpm.model.process.Contract;
+import org.bonitasoft.bpm.model.process.ContractConstraint;
+import org.bonitasoft.bpm.model.process.ProcessFactory;
+import org.bonitasoft.bpm.model.process.ProcessPackage;
 import org.bonitasoft.studio.swt.rules.RealmWithDisplay;
 import org.eclipse.ui.views.properties.IPropertySource;
 import org.eclipse.ui.views.properties.IPropertySourceProvider;

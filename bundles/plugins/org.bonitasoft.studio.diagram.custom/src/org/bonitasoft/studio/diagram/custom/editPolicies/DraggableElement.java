@@ -17,7 +17,7 @@
  */
 package org.bonitasoft.studio.diagram.custom.editPolicies;
 
-import org.bonitasoft.studio.model.process.ProcessFactory;
+import org.bonitasoft.bpm.model.process.ProcessFactory;
 import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.ImageFigure;

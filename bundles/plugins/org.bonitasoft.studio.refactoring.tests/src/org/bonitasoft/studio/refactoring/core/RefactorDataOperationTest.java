@@ -16,19 +16,19 @@ package org.bonitasoft.studio.refactoring.core;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.bpm.model.edit.process.CustomProcessItemProviderAdapterFactory;
+import org.bonitasoft.bpm.model.expression.Expression;
+import org.bonitasoft.bpm.model.expression.ExpressionFactory;
+import org.bonitasoft.bpm.model.expression.Operation;
+import org.bonitasoft.bpm.model.expression.assertions.ExpressionAssert;
+import org.bonitasoft.bpm.model.process.AbstractProcess;
+import org.bonitasoft.bpm.model.process.BooleanType;
+import org.bonitasoft.bpm.model.process.Data;
+import org.bonitasoft.bpm.model.process.ProcessFactory;
+import org.bonitasoft.bpm.model.process.ProcessPackage;
+import org.bonitasoft.bpm.model.process.Task;
+import org.bonitasoft.bpm.model.util.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
-import org.bonitasoft.studio.model.edit.custom.process.CustomProcessItemProviderAdapterFactory;
-import org.bonitasoft.studio.model.expression.Expression;
-import org.bonitasoft.studio.model.expression.ExpressionFactory;
-import org.bonitasoft.studio.model.expression.Operation;
-import org.bonitasoft.studio.model.expression.assertions.ExpressionAssert;
-import org.bonitasoft.studio.model.process.AbstractProcess;
-import org.bonitasoft.studio.model.process.BooleanType;
-import org.bonitasoft.studio.model.process.Data;
-import org.bonitasoft.studio.model.process.ProcessFactory;
-import org.bonitasoft.studio.model.process.ProcessPackage;
-import org.bonitasoft.studio.model.process.Task;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
@@ -56,7 +56,8 @@ public class RefactorDataOperationTest {
      */
     @Before
     public void setUp() throws Exception {
-        domain = new TransactionalEditingDomainImpl(new CustomProcessItemProviderAdapterFactory(), new TransactionalCommandStackImpl());
+        domain = new TransactionalEditingDomainImpl(new CustomProcessItemProviderAdapterFactory(),
+                new TransactionalCommandStackImpl());
         parentProcess = ProcessFactory.eINSTANCE.createPool();
         myData = ProcessFactory.eINSTANCE.createData();
         myData.setName("myData");

@@ -18,7 +18,7 @@ import java.util.Optional;
 
 import org.bonitasoft.studio.identity.i18n.Messages;
 import org.bonitasoft.studio.identity.organization.model.organization.Organization;
-import org.bonitasoft.studio.model.actormapping.ActorMapping;
+import org.bonitasoft.bpm.model.actormapping.ActorMapping;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.jface.viewers.StyledCellLabelProvider;

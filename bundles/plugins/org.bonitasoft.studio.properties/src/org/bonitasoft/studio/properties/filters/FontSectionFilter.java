@@ -17,14 +17,14 @@
  */
 package org.bonitasoft.studio.properties.filters;
 
-import org.bonitasoft.studio.model.process.Activity;
-import org.bonitasoft.studio.model.process.BoundaryEvent;
-import org.bonitasoft.studio.model.process.Connection;
-import org.bonitasoft.studio.model.process.Event;
-import org.bonitasoft.studio.model.process.Gateway;
-import org.bonitasoft.studio.model.process.Lane;
-import org.bonitasoft.studio.model.process.MessageFlow;
-import org.bonitasoft.studio.model.process.Pool;
+import org.bonitasoft.bpm.model.process.Activity;
+import org.bonitasoft.bpm.model.process.BoundaryEvent;
+import org.bonitasoft.bpm.model.process.Connection;
+import org.bonitasoft.bpm.model.process.Event;
+import org.bonitasoft.bpm.model.process.Gateway;
+import org.bonitasoft.bpm.model.process.Lane;
+import org.bonitasoft.bpm.model.process.MessageFlow;
+import org.bonitasoft.bpm.model.process.Pool;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.jface.viewers.IFilter;
 

@@ -14,14 +14,14 @@
  */
 package org.bonitasoft.studio.designer.ui.property.section.control;
 
-import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.bpm.model.util.ExpressionConstants;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.ui.jface.databinding.CustomEMFEditObservables;
 import org.bonitasoft.studio.designer.core.repository.WebPageRepositoryStore;
 import org.bonitasoft.studio.designer.i18n.Messages;
 import org.bonitasoft.studio.designer.ui.property.section.FormReferenceProposalLabelProvider;
 import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFilter;
-import org.bonitasoft.studio.model.process.ProcessPackage;
+import org.bonitasoft.bpm.model.process.ProcessPackage;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
@@ -91,7 +91,7 @@ public class InternalMappingComposite extends Composite implements BonitaPrefere
 
     protected void doBindInfo(final DataBindingContext context, final IObservableValue formMappingObservable) {
         final UpdateValueStrategy infoStrategy = new UpdateValueStrategy();
-        infoStrategy.setConverter(new InfoMessageConverter(org.bonitasoft.studio.model.process.FormMappingType.INTERNAL));
+        infoStrategy.setConverter(new InfoMessageConverter(org.bonitasoft.bpm.model.process.FormMappingType.INTERNAL));
         context.bindValue(WidgetProperties.text().observe(info), formMappingObservable, null, infoStrategy);
     }
 

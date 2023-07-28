@@ -14,11 +14,11 @@
  */
 package org.bonitasoft.studio.properties.filters;
 
-import org.bonitasoft.studio.model.process.BoundaryEvent;
-import org.bonitasoft.studio.model.process.Connection;
-import org.bonitasoft.studio.model.process.FlowElement;
-import org.bonitasoft.studio.model.process.MainProcess;
-import org.bonitasoft.studio.model.process.TextAnnotation;
+import org.bonitasoft.bpm.model.process.BoundaryEvent;
+import org.bonitasoft.bpm.model.process.Connection;
+import org.bonitasoft.bpm.model.process.FlowElement;
+import org.bonitasoft.bpm.model.process.MainProcess;
+import org.bonitasoft.bpm.model.process.TextAnnotation;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.jface.viewers.IFilter;
 

@@ -14,14 +14,14 @@
  */
 package org.bonitasoft.studio.validation.constraints.process;
 
-import static org.bonitasoft.studio.model.process.builders.PoolBuilder.aPool;
-import static org.bonitasoft.studio.model.process.builders.SequenceFlowBuilder.aSequenceFlow;
-import static org.bonitasoft.studio.model.process.builders.TaskBuilder.aTask;
+import static org.bonitasoft.bpm.model.process.builders.PoolBuilder.aPool;
+import static org.bonitasoft.bpm.model.process.builders.SequenceFlowBuilder.aSequenceFlow;
+import static org.bonitasoft.bpm.model.process.builders.TaskBuilder.aTask;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
-import org.bonitasoft.studio.model.process.Pool;
+import org.bonitasoft.bpm.model.process.Pool;
 import org.bonitasoft.studio.validation.i18n.Messages;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.validation.IValidationContext;

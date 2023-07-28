@@ -16,12 +16,12 @@
  */
 package org.bonitasoft.studio.contract.core.operation;
 
+import org.bonitasoft.bpm.model.process.Contract;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.designer.core.FormScope;
 import org.bonitasoft.studio.designer.core.PageDesignerURLFactory;
 import org.bonitasoft.studio.designer.core.operation.CreateUIDArtifactOperation;
 import org.bonitasoft.studio.designer.core.operation.INewFormOperationFactory;
-import org.bonitasoft.studio.model.process.Contract;
 
 
 public class NewFormFromContractOperationFactory implements INewFormOperationFactory {

@@ -23,7 +23,7 @@ public class Strings {
 
     private static final Pattern NONLATIN = Pattern.compile("[^\\w-]");
     private static final Pattern WHITESPACE = Pattern.compile("[\\s]");
-    private static final Pattern EDGESDHASHES = Pattern.compile("(^-|-$)");
+    private static final Pattern EDGESDHASHES = Pattern.compile("(^-)|(-$)");
 
     public static boolean isNullOrEmpty(String string) {
         return string == null || string.isEmpty();

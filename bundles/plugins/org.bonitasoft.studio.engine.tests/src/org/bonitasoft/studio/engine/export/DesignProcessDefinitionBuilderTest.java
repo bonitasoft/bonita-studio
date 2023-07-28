@@ -14,7 +14,7 @@
  */
 package org.bonitasoft.studio.engine.export;
 
-import static org.bonitasoft.studio.model.process.builders.PoolBuilder.aPool;
+import static org.bonitasoft.bpm.model.process.builders.PoolBuilder.aPool;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.spy;
@@ -22,11 +22,11 @@ import static org.mockito.Mockito.verify;
 
 import java.util.Collections;
 
+import org.bonitasoft.bpm.model.process.Pool;
+import org.bonitasoft.bpm.model.util.ModelSearch;
 import org.bonitasoft.engine.bpm.process.impl.ProcessDefinitionBuilder;
-import org.bonitasoft.studio.common.model.ModelSearch;
 import org.bonitasoft.studio.engine.export.builder.EngineProcessBuilder;
 import org.bonitasoft.studio.engine.export.builder.IEngineDefinitionBuilderProvider;
-import org.bonitasoft.studio.model.process.Pool;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -41,13 +41,12 @@ public class DesignProcessDefinitionBuilderTest {
     @Mock
     private IEngineDefinitionBuilderProvider builderProvider;
 
-
-
     @Test
     public void should_export_pool_element_using_EngineProcessBuilder() throws Exception {
         final DesignProcessDefinitionBuilder definitionBuilder = spy(
                 new DesignProcessDefinitionBuilder(builderProvider, new ModelSearch(Collections::emptyList)));
-        doReturn(engineProcessBuilder).when(definitionBuilder).newEngineProcessBuilder(any(ProcessDefinitionBuilder.class));
+        doReturn(engineProcessBuilder).when(definitionBuilder)
+                .newEngineProcessBuilder(any(ProcessDefinitionBuilder.class));
 
         final Pool pool = aPool().withName("myProcess").withVersion("1.0").build();
         definitionBuilder.createDefinition(pool);

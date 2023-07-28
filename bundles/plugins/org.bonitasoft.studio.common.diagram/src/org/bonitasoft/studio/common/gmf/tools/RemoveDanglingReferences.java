@@ -22,8 +22,8 @@ import java.util.Map;
 
 import org.bonitasoft.studio.common.Activator;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.model.process.Connection;
-import org.bonitasoft.studio.model.process.MessageFlow;
+import org.bonitasoft.bpm.model.process.Connection;
+import org.bonitasoft.bpm.model.process.MessageFlow;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;

@@ -21,7 +21,7 @@ package org.bonitasoft.studio.diagram.custom.editPolicies;
 
 import org.bonitasoft.studio.diagram.custom.commands.CompartmentRepositionEObjectCommand;
 import org.bonitasoft.studio.diagram.custom.parts.CustomPoolEditPart;
-import org.bonitasoft.studio.model.process.Pool;
+import org.bonitasoft.bpm.model.process.Pool;
 import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Rectangle;

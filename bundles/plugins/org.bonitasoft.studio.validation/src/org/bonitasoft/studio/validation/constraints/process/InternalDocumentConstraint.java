@@ -16,9 +16,9 @@ package org.bonitasoft.studio.validation.constraints.process;
 
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.document.core.repository.DocumentRepositoryStore;
-import org.bonitasoft.studio.model.process.Document;
-import org.bonitasoft.studio.model.process.DocumentType;
-import org.bonitasoft.studio.model.process.Pool;
+import org.bonitasoft.bpm.model.process.Document;
+import org.bonitasoft.bpm.model.process.DocumentType;
+import org.bonitasoft.bpm.model.process.Pool;
 import org.bonitasoft.studio.validation.constraints.AbstractLiveValidationMarkerConstraint;
 import org.bonitasoft.studio.validation.i18n.Messages;
 import org.eclipse.core.runtime.IStatus;
@@ -44,7 +44,7 @@ public class InternalDocumentConstraint extends AbstractLiveValidationMarkerCons
             final Pool pool = (Pool) eObj;
             for (final Document document : pool.getDocuments()) {
                 final DocumentType documentType = document.getDocumentType();
-                if (documentType.equals(org.bonitasoft.studio.model.process.DocumentType.INTERNAL)) {
+                if (documentType.equals(org.bonitasoft.bpm.model.process.DocumentType.INTERNAL)) {
                     final String id = document.getDefaultValueIdOfDocumentStore();
                     if (id != null && !id.isEmpty()) {
                         if (store.getChild(id, true) == null) {

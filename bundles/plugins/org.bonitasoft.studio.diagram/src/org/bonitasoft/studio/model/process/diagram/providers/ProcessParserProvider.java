@@ -17,7 +17,7 @@
  */
 package org.bonitasoft.studio.model.process.diagram.providers;
 
-import org.bonitasoft.studio.model.process.ProcessPackage;
+import org.bonitasoft.bpm.model.process.ProcessPackage;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.ANDGatewayLabel2EditPart;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.ANDGatewayLabelEditPart;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.ActivityName2EditPart;

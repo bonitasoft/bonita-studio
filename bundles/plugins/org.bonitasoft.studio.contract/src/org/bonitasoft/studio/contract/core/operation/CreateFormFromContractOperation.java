@@ -26,10 +26,14 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.bonitasoft.bpm.model.process.BusinessObjectData;
+import org.bonitasoft.bpm.model.process.Contract;
+import org.bonitasoft.bpm.model.process.ContractInput;
+import org.bonitasoft.bpm.model.process.Pool;
+import org.bonitasoft.bpm.model.util.ModelSearch;
 import org.bonitasoft.engine.bdm.model.BusinessObject;
 import org.bonitasoft.engine.bdm.model.field.RelationField;
 import org.bonitasoft.studio.common.ProductVersion;
-import org.bonitasoft.studio.common.model.ModelSearch;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.ui.jface.MessageDialogWithPrompt;
 import org.bonitasoft.studio.contract.core.mapping.treeMaching.BusinessDataStore;
@@ -41,10 +45,6 @@ import org.bonitasoft.studio.designer.core.PageDesignerURLFactory;
 import org.bonitasoft.studio.designer.core.operation.CreateUIDArtifactOperation;
 import org.bonitasoft.studio.designer.core.repository.WebPageFileStore;
 import org.bonitasoft.studio.designer.core.repository.WebPageRepositoryStore;
-import org.bonitasoft.studio.model.process.BusinessObjectData;
-import org.bonitasoft.studio.model.process.Contract;
-import org.bonitasoft.studio.model.process.ContractInput;
-import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.ui.browser.OpenSystemBrowserListener;
 import org.bonitasoft.studio.ui.util.StringIncrementer;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -58,8 +58,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 public class CreateFormFromContractOperation extends CreateUIDArtifactOperation {
 
     private static final String FORM_GENERATION_DOCUMENTATION_LINK = String.format(
-                    "https://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=685&bos_redirect_product=bos&bos_redirect_major_version=%s&bos_redirect_minor_version=0",
-                    ProductVersion.minorVersion());
+            "https://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=685&bos_redirect_product=bos&bos_redirect_major_version=%s&bos_redirect_minor_version=0",
+            ProductVersion.minorVersion());
 
     private Contract contract;
     private FormScope formScope;
@@ -88,16 +88,17 @@ public class CreateFormFromContractOperation extends CreateUIDArtifactOperation 
             throw new InvocationTargetException(e, "Failed to create new form url.");
         }
     }
-    
+
     @Override
     protected String getTaskName() {
         return Messages.creatingNewForm;
     }
 
-    Map<String, Object> toWebContract(ContractToBusinessDataResolver contractToBusinessDataResolver, Contract tmpContract) throws JsonProcessingException {
+    Map<String, Object> toWebContract(ContractToBusinessDataResolver contractToBusinessDataResolver,
+            Contract tmpContract) throws JsonProcessingException {
         TreeResult treeResult = contractToBusinessDataResolver.resolve(tmpContract, buildReadOnlyAttributes);
         var webContract = new ToWebContract(treeResult).apply(tmpContract);
-        return objectMapper.readValue( objectMapper.writeValueAsString(webContract), Map.class);
+        return objectMapper.readValue(objectMapper.writeValueAsString(webContract), Map.class);
     }
 
     private void openReadOnlyAttributeDialog(Contract contract, BusinessDataStore businessDataStore) {
@@ -134,7 +135,8 @@ public class CreateFormFromContractOperation extends CreateUIDArtifactOperation 
 
     private boolean hasFieldMissingInContractInput(BusinessObject businessObject, ContractInput contractInput) {
         return businessObject.getFields().stream().anyMatch(aField -> {
-            Optional<ContractInput> matchingInput = findMatchingContractInputForField(aField, contractInput.getInputs());
+            Optional<ContractInput> matchingInput = findMatchingContractInputForField(aField,
+                    contractInput.getInputs());
             if (matchingInput.isPresent()) {
                 if (aField instanceof RelationField) {
                     return hasFieldMissingInContractInput(((RelationField) aField).getReference(), matchingInput.get());

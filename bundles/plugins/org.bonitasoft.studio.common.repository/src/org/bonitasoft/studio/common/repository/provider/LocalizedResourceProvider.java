@@ -19,7 +19,7 @@ import java.util.ResourceBundle;
 
 import org.bonitasoft.studio.common.repository.model.IDefinitionRepositoryStore;
 import org.bonitasoft.studio.common.repository.model.ILocalizedResourceProvider;
-import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
+import org.bonitasoft.bpm.connector.model.definition.ConnectorDefinition;
 
 public class LocalizedResourceProvider implements ILocalizedResourceProvider {
 

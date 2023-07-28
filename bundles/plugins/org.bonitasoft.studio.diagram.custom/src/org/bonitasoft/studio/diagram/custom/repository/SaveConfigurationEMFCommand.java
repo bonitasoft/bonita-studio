@@ -18,7 +18,7 @@ package org.bonitasoft.studio.diagram.custom.repository;
 
 import java.util.Collection;
 
-import org.bonitasoft.studio.model.configuration.Configuration;
+import org.bonitasoft.bpm.model.configuration.Configuration;
 import org.eclipse.emf.common.command.Command;
 
 /**

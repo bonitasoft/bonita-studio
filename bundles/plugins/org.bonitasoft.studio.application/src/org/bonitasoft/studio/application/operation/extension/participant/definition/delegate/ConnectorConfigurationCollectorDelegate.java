@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.bonitasoft.studio.application.operation.extension.participant.definition.ConnectorConfigurationCollector;
-import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration;
+import org.bonitasoft.bpm.model.connectorconfiguration.ConnectorConfiguration;
 
 public class ConnectorConfigurationCollectorDelegate implements ConnectorConfigurationCollector {
 

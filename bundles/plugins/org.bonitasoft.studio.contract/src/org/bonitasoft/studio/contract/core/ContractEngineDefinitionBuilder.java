@@ -21,10 +21,10 @@ import org.bonitasoft.engine.bpm.process.impl.ContractDefinitionBuilder;
 import org.bonitasoft.engine.bpm.process.impl.InputContainerDefinitionBuilder;
 import org.bonitasoft.studio.engine.contribution.BuildProcessDefinitionException;
 import org.bonitasoft.studio.engine.contribution.IEngineDefinitionBuilder;
-import org.bonitasoft.studio.model.process.Contract;
-import org.bonitasoft.studio.model.process.ContractConstraint;
-import org.bonitasoft.studio.model.process.ContractInput;
-import org.bonitasoft.studio.model.process.ContractInputType;
+import org.bonitasoft.bpm.model.process.Contract;
+import org.bonitasoft.bpm.model.process.ContractConstraint;
+import org.bonitasoft.bpm.model.process.ContractInput;
+import org.bonitasoft.bpm.model.process.ContractInputType;
 import org.eclipse.emf.ecore.EObject;
 
 /**

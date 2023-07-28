@@ -17,7 +17,7 @@ package org.bonitasoft.studio.diagram.custom.parts;
 import org.bonitasoft.studio.diagram.custom.editPolicies.CustomDragDropEditPolicy;
 import org.bonitasoft.studio.diagram.custom.figures.VerticalLabel;
 import org.bonitasoft.studio.diagram.custom.providers.DiagramColorProvider;
-import org.bonitasoft.studio.model.process.Element;
+import org.bonitasoft.bpm.model.process.Element;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.PoolEditPart;
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.GridData;

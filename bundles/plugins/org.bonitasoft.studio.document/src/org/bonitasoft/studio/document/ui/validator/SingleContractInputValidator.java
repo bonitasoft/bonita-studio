@@ -14,7 +14,7 @@
  */
 package org.bonitasoft.studio.document.ui.validator;
 
-import org.bonitasoft.studio.model.process.Document;
+import org.bonitasoft.bpm.model.process.Document;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 
 public class SingleContractInputValidator extends ContractInputValidator {

@@ -25,7 +25,7 @@ import org.bonitasoft.studio.common.diagram.tools.FiguresHelper;
 import org.bonitasoft.studio.common.gmf.tools.GMFTools;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.diagram.custom.tools.ToolAndToolEntry;
-import org.bonitasoft.studio.model.process.BoundaryEvent;
+import org.bonitasoft.bpm.model.process.BoundaryEvent;
 import org.eclipse.draw2d.Button;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.geometry.Rectangle;

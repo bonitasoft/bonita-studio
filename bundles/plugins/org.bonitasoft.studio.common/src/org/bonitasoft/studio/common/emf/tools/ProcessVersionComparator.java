@@ -17,7 +17,7 @@ package org.bonitasoft.studio.common.emf.tools;
 import java.util.Comparator;
 
 import org.apache.maven.artifact.versioning.ComparableVersion;
-import org.bonitasoft.studio.model.process.AbstractProcess;
+import org.bonitasoft.bpm.model.process.AbstractProcess;
 
 public class ProcessVersionComparator implements Comparator<AbstractProcess> {
 

@@ -31,7 +31,7 @@ import org.bonitasoft.studio.identity.organization.model.organization.Group;
 import org.bonitasoft.studio.identity.organization.model.organization.Organization;
 import org.bonitasoft.studio.identity.organization.model.organization.OrganizationFactory;
 import org.bonitasoft.studio.identity.organization.ui.provider.content.GroupContentProvider;
-import org.bonitasoft.studio.model.actormapping.ActorMapping;
+import org.bonitasoft.bpm.model.actormapping.ActorMapping;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.beans.PojoObservables;
 import org.eclipse.core.databinding.observable.set.IObservableSet;

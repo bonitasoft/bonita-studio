@@ -18,8 +18,8 @@ import java.util.List;
 import java.util.Optional;
 
 import org.bonitasoft.studio.common.repository.provider.DefinitionResourceProvider;
-import org.bonitasoft.studio.connector.model.definition.Category;
-import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
+import org.bonitasoft.bpm.connector.model.definition.Category;
+import org.bonitasoft.bpm.connector.model.definition.ConnectorDefinition;
 
 public interface IDefinitionRepositoryStore<T extends IRepositoryFileStore<?>> {
 

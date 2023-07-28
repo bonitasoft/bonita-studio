@@ -69,14 +69,16 @@ public class SmartImportBDMOperationTest {
     @Test
     public void should_merge_conflicting_models_according_to_user_choices() throws Exception {
         BusinessObjectModel existingBdm = new BusinessObjectModel();
-        BusinessObject existingBo1 = BusinessObjectBuilder.aBO(String.format("%s.%s", IMPORTED_PACKAGE_1, IMPORTED_BO_1))
+        BusinessObject existingBo1 = BusinessObjectBuilder
+                .aBO(String.format("%s.%s", IMPORTED_PACKAGE_1, IMPORTED_BO_1))
                 .withField(SimpleFieldBuilder.aStringField("existingField1").build())
                 .build();
         BusinessObject existingBo4 = BusinessObjectBuilder
                 .aBO(String.format("%s.%s", IMPORTED_PACKAGE_1, "NewBusinessObject"))
                 .withField(SimpleFieldBuilder.aStringField("field").build())
                 .build();
-        BusinessObject existingBo2 = BusinessObjectBuilder.aBO(String.format("%s.%s", IMPORTED_PACKAGE_2, IMPORTED_BO_2))
+        BusinessObject existingBo2 = BusinessObjectBuilder
+                .aBO(String.format("%s.%s", IMPORTED_PACKAGE_2, IMPORTED_BO_2))
                 .withField(SimpleFieldBuilder.aStringField("existingField2").build())
                 .build();
         BusinessObject existingBo3 = BusinessObjectBuilder

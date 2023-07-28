@@ -16,8 +16,8 @@ package org.bonitasoft.studio.refactoring.core.script;
 
 import java.util.List;
 
-import org.bonitasoft.studio.common.ExpressionConstants;
-import org.bonitasoft.studio.model.expression.Expression;
+import org.bonitasoft.bpm.model.util.ExpressionConstants;
+import org.bonitasoft.bpm.model.expression.Expression;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.jface.text.BadLocationException;

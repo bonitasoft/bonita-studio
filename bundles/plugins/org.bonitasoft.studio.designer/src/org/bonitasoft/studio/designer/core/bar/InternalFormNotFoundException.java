@@ -14,7 +14,7 @@
  */
 package org.bonitasoft.studio.designer.core.bar;
 
-import org.bonitasoft.studio.model.process.FormMapping;
+import org.bonitasoft.bpm.model.process.FormMapping;
 
 public class InternalFormNotFoundException extends FormMappingException {
 

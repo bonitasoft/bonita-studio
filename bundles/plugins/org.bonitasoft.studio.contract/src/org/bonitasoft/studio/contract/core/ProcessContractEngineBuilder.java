@@ -14,9 +14,9 @@
  */
 package org.bonitasoft.studio.contract.core;
 
+import org.bonitasoft.bpm.model.process.Pool;
 import org.bonitasoft.engine.bpm.process.impl.ContractDefinitionBuilder;
 import org.bonitasoft.engine.bpm.process.impl.ProcessDefinitionBuilder;
-import org.bonitasoft.studio.model.process.Pool;
 import org.eclipse.emf.ecore.EObject;
 
 public class ProcessContractEngineBuilder extends ContractEngineDefinitionBuilder<ProcessDefinitionBuilder> {

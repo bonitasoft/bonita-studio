@@ -14,7 +14,7 @@
  */
 package org.bonitasoft.studio.designer.ui.property.filter;
 
-import org.bonitasoft.studio.model.process.Task;
+import org.bonitasoft.bpm.model.process.Task;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.viewers.IFilter;

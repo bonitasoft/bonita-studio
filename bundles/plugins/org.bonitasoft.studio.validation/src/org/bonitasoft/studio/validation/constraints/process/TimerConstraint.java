@@ -16,11 +16,11 @@ package org.bonitasoft.studio.validation.constraints.process;
 
 import java.util.Date;
 
-import org.bonitasoft.studio.model.expression.Expression;
-import org.bonitasoft.studio.model.process.AbstractTimerEvent;
-import org.bonitasoft.studio.model.process.ProcessPackage;
-import org.bonitasoft.studio.model.process.StartTimerEvent;
-import org.bonitasoft.studio.model.process.StartTimerScriptType;
+import org.bonitasoft.bpm.model.expression.Expression;
+import org.bonitasoft.bpm.model.process.AbstractTimerEvent;
+import org.bonitasoft.bpm.model.process.ProcessPackage;
+import org.bonitasoft.bpm.model.process.StartTimerEvent;
+import org.bonitasoft.bpm.model.process.StartTimerScriptType;
 import org.bonitasoft.studio.validation.constraints.AbstractLiveValidationMarkerConstraint;
 import org.bonitasoft.studio.validation.i18n.Messages;
 import org.eclipse.core.runtime.IStatus;

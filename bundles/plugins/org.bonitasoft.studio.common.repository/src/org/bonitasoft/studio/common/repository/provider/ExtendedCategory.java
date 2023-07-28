@@ -16,7 +16,7 @@ package org.bonitasoft.studio.common.repository.provider;
 
 import java.lang.reflect.InvocationTargetException;
 
-import org.bonitasoft.studio.connector.model.definition.Category;
+import org.bonitasoft.bpm.connector.model.definition.Category;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.util.EList;

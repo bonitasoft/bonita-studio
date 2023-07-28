@@ -16,10 +16,10 @@ package org.bonitasoft.studio.connector.model.definition.migration.model;
 
 import java.util.Objects;
 
-import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.bpm.model.util.ExpressionConstants;
 import org.bonitasoft.studio.connector.model.i18n.Messages;
-import org.bonitasoft.studio.model.expression.Operation;
-import org.bonitasoft.studio.model.process.Connector;
+import org.bonitasoft.bpm.model.expression.Operation;
+import org.bonitasoft.bpm.model.process.Connector;
 
 public class OutputTypeChange implements DefinitionOutputChange {
 

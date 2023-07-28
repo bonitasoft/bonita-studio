@@ -21,6 +21,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Properties;
 
+import org.bonitasoft.bpm.connector.model.definition.Category;
+import org.bonitasoft.bpm.connector.model.definition.ConnectorDefinition;
+import org.bonitasoft.bpm.connector.model.definition.ConnectorDefinitionPackage;
 import org.bonitasoft.studio.common.FileUtil;
 import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.databinding.validator.EmptyInputValidator;
@@ -30,9 +33,6 @@ import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.provider.DefinitionResourceProvider;
 import org.bonitasoft.studio.common.repository.provider.ExtendedCategory;
 import org.bonitasoft.studio.common.ui.jface.SWTBotConstants;
-import org.bonitasoft.studio.connector.model.definition.Category;
-import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
-import org.bonitasoft.studio.connector.model.definition.ConnectorDefinitionPackage;
 import org.bonitasoft.studio.connector.model.definition.dialog.DefinitionCategoryContentProvider;
 import org.bonitasoft.studio.connector.model.definition.dialog.NewCategoryDialog;
 import org.bonitasoft.studio.connector.model.i18n.Messages;
@@ -102,7 +102,8 @@ public class DefinitionInformationWizardPage extends WizardPage implements ISele
     //private Button removeCategoryButton;
 
     public DefinitionInformationWizardPage(ConnectorDefinition definition, Properties messages,
-            List<ConnectorDefinition> existingDefinitions, Image defaultImage, DefinitionResourceProvider messageProvider) {
+            List<ConnectorDefinition> existingDefinitions, Image defaultImage,
+            DefinitionResourceProvider messageProvider) {
         super(DefinitionInformationWizardPage.class.getName());
         setTitle(Messages.definitionTitle);
         setDescription(Messages.definitionDescription);
@@ -198,7 +199,8 @@ public class DefinitionInformationWizardPage extends WizardPage implements ISele
                 EMFObservables.observeValue(definition, ConnectorDefinitionPackage.Literals.CONNECTOR_DEFINITION__ID),
                 idStrategy, null);
         context.bindValue(definitionValidator.observeValidatedValue(observableVersionText),
-                EMFObservables.observeValue(definition, ConnectorDefinitionPackage.Literals.CONNECTOR_DEFINITION__VERSION),
+                EMFObservables.observeValue(definition,
+                        ConnectorDefinitionPackage.Literals.CONNECTOR_DEFINITION__VERSION),
                 versionStrategy, null);
 
         final Label displayNameLabel = new Label(mainComposite, SWT.NONE);
@@ -219,7 +221,8 @@ public class DefinitionInformationWizardPage extends WizardPage implements ISele
 
         final Text descriptionText = new Text(mainComposite, SWT.BORDER | SWT.MULTI | SWT.WRAP);
         descriptionText
-                .setLayoutData(GridDataFactory.fillDefaults().grab(true, false).hint(SWT.DEFAULT, 60).span(2, 1).create());
+                .setLayoutData(
+                        GridDataFactory.fillDefaults().grab(true, false).hint(SWT.DEFAULT, 60).span(2, 1).create());
         UpdateValueStrategy descStrategy = new UpdateValueStrategy();
         descStrategy.setBeforeSetValidator(new InputLengthValidator(Messages.description, 255));
         context.bindValue(SWTObservables.observeText(descriptionText, SWT.Modify),
@@ -302,7 +305,8 @@ public class DefinitionInformationWizardPage extends WizardPage implements ISele
 
             @Override
             public boolean select(Viewer viewer, Object parentElement, Object element) {
-                return element instanceof Category && !org.bonitasoft.studio.common.repository.Messages.uncategorized.equals(((Category) element).getId());
+                return element instanceof Category && !org.bonitasoft.studio.common.repository.Messages.uncategorized
+                        .equals(((Category) element).getId());
             }
         });
         categoryViewer.setContentProvider(new DefinitionCategoryContentProvider());
@@ -325,7 +329,8 @@ public class DefinitionInformationWizardPage extends WizardPage implements ISele
         }
         categoryViewer.addSelectionChangedListener(event -> {
             if (!((IStructuredSelection) event.getSelection()).isEmpty()) {
-                ExtendedCategory selection = (ExtendedCategory) ((IStructuredSelection) event.getSelection()).getFirstElement();
+                ExtendedCategory selection = (ExtendedCategory) ((IStructuredSelection) event.getSelection())
+                        .getFirstElement();
                 definition.getCategory().clear();
                 definition.getCategory().add(EcoreUtil.copy(selection.getCategory()));
                 List<Category> categories = (List<Category>) categoryViewer.getInput();
@@ -364,7 +369,7 @@ public class DefinitionInformationWizardPage extends WizardPage implements ISele
                         newIcon = messageProvider.createIconDescritpor(imageFile, newCategory.getIcon());
                     }
                     input = (List<Category>) categoryViewer.getInput();
-                    
+
                     input.add(new ExtendedCategory(newCategory, newIcon, displayName));
                     categoryViewer.setInput(input);
                 }
@@ -383,7 +388,8 @@ public class DefinitionInformationWizardPage extends WizardPage implements ISele
         return null;
     }
 
-    protected void getParentCategories(List<Category> parentCategories, List<Category> allCategories, Category selection) {
+    protected void getParentCategories(List<Category> parentCategories, List<Category> allCategories,
+            Category selection) {
         for (Category c : allCategories) {
             if (selection.getParentCategoryId() != null && selection.getParentCategoryId().equals(c.getId())) {
                 parentCategories.add(EcoreUtil.copy(c));
@@ -437,7 +443,8 @@ public class DefinitionInformationWizardPage extends WizardPage implements ISele
         });
 
         removeJarButton = new Button(buttonComposite, SWT.FLAT);
-        removeJarButton.setLayoutData(GridDataFactory.fillDefaults().hint(DEFAULT_BUTTON_WIDTH_HINT, SWT.DEFAULT).create());
+        removeJarButton
+                .setLayoutData(GridDataFactory.fillDefaults().hint(DEFAULT_BUTTON_WIDTH_HINT, SWT.DEFAULT).create());
         removeJarButton.setText(Messages.remove);
         removeJarButton.addSelectionListener(new SelectionAdapter() {
 

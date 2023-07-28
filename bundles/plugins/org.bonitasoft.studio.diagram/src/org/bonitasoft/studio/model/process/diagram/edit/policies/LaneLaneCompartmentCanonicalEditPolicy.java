@@ -23,7 +23,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.bonitasoft.studio.model.process.ProcessPackage;
+import org.bonitasoft.bpm.model.process.ProcessPackage;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.ANDGateway2EditPart;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.Activity2EditPart;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.CallActivity2EditPart;

@@ -14,11 +14,11 @@
  */
 package org.bonitasoft.studio.expression.editor.provider;
 
-import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.bpm.model.util.ExpressionConstants;
 import org.bonitasoft.studio.expression.editor.ExpressionProviderService;
 import org.bonitasoft.studio.expression.editor.autocompletion.ExpressionProposal;
 import org.bonitasoft.studio.expression.editor.autocompletion.IExpressionProposalLabelProvider;
-import org.bonitasoft.studio.model.expression.Expression;
+import org.bonitasoft.bpm.model.expression.Expression;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.jface.viewers.LabelProvider;
@@ -94,7 +94,7 @@ public class ExpressionLabelProvider extends LabelProvider implements IExpressio
         return expression.getContent();
     }
 
-    public StyledString getStyledString(org.bonitasoft.studio.model.expression.Expression expression) {
+    public StyledString getStyledString(org.bonitasoft.bpm.model.expression.Expression expression) {
         final StyledString styledString = new StyledString(expression.getName());
         styledString.append(" -- ");
         styledString.append(new StyledString(expression.getReturnType(), StyledString.DECORATIONS_STYLER));

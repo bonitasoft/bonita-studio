@@ -17,10 +17,10 @@
  */
 package org.bonitasoft.studio.model.process.diagram.edit.commands;
 
-import org.bonitasoft.studio.model.process.AbstractCatchMessageEvent;
-import org.bonitasoft.studio.model.process.MainProcess;
-import org.bonitasoft.studio.model.process.MessageFlow;
-import org.bonitasoft.studio.model.process.ThrowMessageEvent;
+import org.bonitasoft.bpm.model.process.AbstractCatchMessageEvent;
+import org.bonitasoft.bpm.model.process.MainProcess;
+import org.bonitasoft.bpm.model.process.MessageFlow;
+import org.bonitasoft.bpm.model.process.ThrowMessageEvent;
 import org.bonitasoft.studio.model.process.diagram.edit.policies.ProcessBaseItemSemanticEditPolicy;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.IAdaptable;

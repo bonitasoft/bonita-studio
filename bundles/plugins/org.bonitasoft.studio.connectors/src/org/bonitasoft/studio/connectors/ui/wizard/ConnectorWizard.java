@@ -24,8 +24,26 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
+import org.bonitasoft.bpm.connector.model.definition.Category;
+import org.bonitasoft.bpm.connector.model.definition.ConnectorDefinition;
+import org.bonitasoft.bpm.connector.model.definition.Input;
+import org.bonitasoft.bpm.connector.model.definition.Output;
+import org.bonitasoft.bpm.connector.model.definition.Page;
+import org.bonitasoft.bpm.connector.model.implementation.ConnectorImplementation;
+import org.bonitasoft.bpm.model.connectorconfiguration.ConnectorConfiguration;
+import org.bonitasoft.bpm.model.connectorconfiguration.ConnectorConfigurationFactory;
+import org.bonitasoft.bpm.model.connectorconfiguration.ConnectorParameter;
+import org.bonitasoft.bpm.model.expression.AbstractExpression;
+import org.bonitasoft.bpm.model.expression.Expression;
+import org.bonitasoft.bpm.model.expression.ListExpression;
+import org.bonitasoft.bpm.model.expression.Operation;
+import org.bonitasoft.bpm.model.expression.TableExpression;
+import org.bonitasoft.bpm.model.process.AbstractProcess;
+import org.bonitasoft.bpm.model.process.Connector;
+import org.bonitasoft.bpm.model.process.Element;
+import org.bonitasoft.bpm.model.process.ProcessFactory;
+import org.bonitasoft.bpm.model.util.ExpressionConstants;
 import org.bonitasoft.engine.bpm.connector.ConnectorEvent;
-import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.IBonitaVariableContext;
 import org.bonitasoft.studio.common.ModelVersion;
 import org.bonitasoft.studio.common.emf.tools.EMFModelUpdater;
@@ -43,18 +61,12 @@ import org.bonitasoft.studio.common.repository.provider.ExtendedConnectorDefinit
 import org.bonitasoft.studio.common.ui.jface.ExtensibleWizard;
 import org.bonitasoft.studio.connector.model.definition.AbstractDefFileStore;
 import org.bonitasoft.studio.connector.model.definition.AbstractDefinitionRepositoryStore;
-import org.bonitasoft.studio.connector.model.definition.Category;
-import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
 import org.bonitasoft.studio.connector.model.definition.IConnectorDefinitionContainer;
-import org.bonitasoft.studio.connector.model.definition.Input;
-import org.bonitasoft.studio.connector.model.definition.Output;
-import org.bonitasoft.studio.connector.model.definition.Page;
 import org.bonitasoft.studio.connector.model.definition.migration.ConnectorConfigurationMigrator;
 import org.bonitasoft.studio.connector.model.definition.migration.DefaultValueExpressionFactory;
 import org.bonitasoft.studio.connector.model.definition.wizard.AbstractConnectorConfigurationWizardPage;
 import org.bonitasoft.studio.connector.model.definition.wizard.GeneratedConnectorWizardPage;
 import org.bonitasoft.studio.connector.model.definition.wizard.SelectNameAndDescWizardPage;
-import org.bonitasoft.studio.connector.model.implementation.ConnectorImplementation;
 import org.bonitasoft.studio.connector.model.implementation.wizard.AbstractDefinitionSelectionImpementationWizardPage;
 import org.bonitasoft.studio.connectors.ConnectorPlugin;
 import org.bonitasoft.studio.connectors.configuration.CustomConnectorDefinitionInput;
@@ -71,18 +83,6 @@ import org.bonitasoft.studio.connectors.ui.wizard.page.SelectDatabaseOutputTypeW
 import org.bonitasoft.studio.connectors.ui.wizard.page.SelectEventConnectorNameAndDescWizardPage;
 import org.bonitasoft.studio.dependencies.repository.DependencyRepositoryStore;
 import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFilter;
-import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration;
-import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfigurationFactory;
-import org.bonitasoft.studio.model.connectorconfiguration.ConnectorParameter;
-import org.bonitasoft.studio.model.expression.AbstractExpression;
-import org.bonitasoft.studio.model.expression.Expression;
-import org.bonitasoft.studio.model.expression.ListExpression;
-import org.bonitasoft.studio.model.expression.Operation;
-import org.bonitasoft.studio.model.expression.TableExpression;
-import org.bonitasoft.studio.model.process.AbstractProcess;
-import org.bonitasoft.studio.model.process.Connector;
-import org.bonitasoft.studio.model.process.Element;
-import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
@@ -312,7 +312,8 @@ public class ConnectorWizard extends ExtensibleWizard implements
                 .getConfiguration();
         boolean changed = false;
         if (configuration != null) {
-            Set<String> customInputs = CustomConnectorDefinitionInput.CUSTOM_DEFINITION_INPUT.getOrDefault(definition.getId(), Set.of());
+            Set<String> customInputs = CustomConnectorDefinitionInput.CUSTOM_DEFINITION_INPUT
+                    .getOrDefault(definition.getId(), Set.of());
             final EList<Input> inputs = definition.getInput();
             final Set<String> inputNames = new HashSet<>();
             for (final Input in : inputs) {

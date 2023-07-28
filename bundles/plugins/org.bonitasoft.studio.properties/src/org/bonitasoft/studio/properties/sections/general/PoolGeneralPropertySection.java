@@ -28,8 +28,8 @@ import org.bonitasoft.studio.common.ui.jface.databinding.CustomEMFEditObservable
 import org.bonitasoft.studio.common.ui.properties.AbstractBonitaDescriptionSection;
 import org.bonitasoft.studio.data.ui.property.section.PoolAdaptableSelectionProvider;
 import org.bonitasoft.studio.diagram.custom.refactoring.ProcessNamingTools;
-import org.bonitasoft.studio.model.process.Pool;
-import org.bonitasoft.studio.model.process.ProcessPackage;
+import org.bonitasoft.bpm.model.process.Pool;
+import org.bonitasoft.bpm.model.process.ProcessPackage;
 import org.bonitasoft.studio.properties.i18n.Messages;
 import org.bonitasoft.studio.ui.dialog.ExceptionDialogHandler;
 import org.bonitasoft.studio.ui.validator.LengthValidator;

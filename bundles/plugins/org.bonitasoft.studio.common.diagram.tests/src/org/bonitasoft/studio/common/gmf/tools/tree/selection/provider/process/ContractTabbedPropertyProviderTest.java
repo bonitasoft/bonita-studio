@@ -15,8 +15,8 @@
 package org.bonitasoft.studio.common.gmf.tools.tree.selection.provider.process;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.bonitasoft.studio.model.process.builders.ContractBuilder.aContract;
-import static org.bonitasoft.studio.model.process.builders.ContractInputBuilder.aContractInput;
+import static org.bonitasoft.bpm.model.process.builders.ContractBuilder.aContract;
+import static org.bonitasoft.bpm.model.process.builders.ContractInputBuilder.aContractInput;
 
 import org.junit.Test;
 

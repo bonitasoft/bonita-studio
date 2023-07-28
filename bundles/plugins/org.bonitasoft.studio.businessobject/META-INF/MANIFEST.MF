@@ -34,7 +34,7 @@ Export-Package: org.bonitasoft.studio.businessobject,
  org.bonitasoft.studio.businessobject.ui.handler,
  org.bonitasoft.studio.businessobject.ui.wizard,
  org.bonitasoft.studio.businessobject.ui.wizard.validator
-Require-Bundle: org.bonitasoft.studio.model,
+Require-Bundle: org.bonitasoft.bpm.model,
  org.bonitasoft.studio.common,
  org.bonitasoft.studio.pics,
  org.eclipse.ui.ide,

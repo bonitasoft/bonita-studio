@@ -16,7 +16,7 @@ package org.bonitasoft.studio.designer.ui.property.section;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.bonitasoft.studio.model.process.ProcessPackage;
+import org.bonitasoft.bpm.model.process.ProcessPackage;
 import org.junit.Before;
 import org.junit.Test;
 

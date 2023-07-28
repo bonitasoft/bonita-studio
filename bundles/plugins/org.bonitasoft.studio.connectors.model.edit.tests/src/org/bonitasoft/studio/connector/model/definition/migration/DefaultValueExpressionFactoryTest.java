@@ -14,22 +14,22 @@
  */
 package org.bonitasoft.studio.connector.model.definition.migration;
 
-import static org.bonitasoft.studio.model.expression.assertions.ExpressionAssert.assertThat;
+import static org.bonitasoft.bpm.model.expression.assertions.ExpressionAssert.assertThat;
 
 import java.util.List;
 import java.util.Map;
 
 import org.assertj.core.api.Assertions;
-import org.bonitasoft.studio.common.ExpressionConstants;
-import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
-import org.bonitasoft.studio.connector.model.definition.ConnectorDefinitionFactory;
-import org.bonitasoft.studio.connector.model.definition.Input;
-import org.bonitasoft.studio.connector.model.definition.Page;
-import org.bonitasoft.studio.connector.model.definition.WidgetComponent;
-import org.bonitasoft.studio.model.expression.AbstractExpression;
-import org.bonitasoft.studio.model.expression.Expression;
-import org.bonitasoft.studio.model.expression.ListExpression;
-import org.bonitasoft.studio.model.expression.TableExpression;
+import org.bonitasoft.bpm.model.util.ExpressionConstants;
+import org.bonitasoft.bpm.connector.model.definition.ConnectorDefinition;
+import org.bonitasoft.bpm.connector.model.definition.ConnectorDefinitionFactory;
+import org.bonitasoft.bpm.connector.model.definition.Input;
+import org.bonitasoft.bpm.connector.model.definition.Page;
+import org.bonitasoft.bpm.connector.model.definition.WidgetComponent;
+import org.bonitasoft.bpm.model.expression.AbstractExpression;
+import org.bonitasoft.bpm.model.expression.Expression;
+import org.bonitasoft.bpm.model.expression.ListExpression;
+import org.bonitasoft.bpm.model.expression.TableExpression;
 import org.junit.Before;
 import org.junit.Test;
 

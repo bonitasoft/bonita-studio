@@ -18,8 +18,8 @@ import java.util.Collections;
 import java.util.Set;
 
 import org.bonitasoft.studio.data.ui.wizard.DataWizard;
-import org.bonitasoft.studio.model.process.Data;
-import org.bonitasoft.studio.model.process.DataAware;
+import org.bonitasoft.bpm.model.process.Data;
+import org.bonitasoft.bpm.model.process.DataAware;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 

@@ -17,9 +17,9 @@ package org.bonitasoft.studio.validation.constraints.process;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.bonitasoft.studio.model.process.Connection;
-import org.bonitasoft.studio.model.process.SequenceFlow;
-import org.bonitasoft.studio.model.process.SourceElement;
+import org.bonitasoft.bpm.model.process.Connection;
+import org.bonitasoft.bpm.model.process.SequenceFlow;
+import org.bonitasoft.bpm.model.process.SourceElement;
 import org.bonitasoft.studio.validation.constraints.AbstractLiveValidationMarkerConstraint;
 import org.bonitasoft.studio.validation.i18n.Messages;
 import org.eclipse.core.runtime.IStatus;

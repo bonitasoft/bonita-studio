@@ -21,8 +21,8 @@ import java.util.Collection;
 import java.util.List;
 
 import org.bonitasoft.studio.common.Messages;
-import org.bonitasoft.studio.model.connectorconfiguration.ConnectorParameter;
-import org.bonitasoft.studio.model.process.Pool;
+import org.bonitasoft.bpm.model.connectorconfiguration.ConnectorParameter;
+import org.bonitasoft.bpm.model.process.Pool;
 import org.bonitasoft.studio.refactoring.core.RefactoringOperationType;
 import org.bonitasoft.studio.refactoring.core.script.ScriptContainer;
 import org.eclipse.compare.CompareConfiguration;

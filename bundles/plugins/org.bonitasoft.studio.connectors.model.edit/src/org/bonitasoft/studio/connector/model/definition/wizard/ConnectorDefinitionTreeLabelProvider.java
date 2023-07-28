@@ -14,10 +14,10 @@
  */
 package org.bonitasoft.studio.connector.model.definition.wizard;
 
+import org.bonitasoft.bpm.connector.model.definition.UnloadableConnectorDefinition;
 import org.bonitasoft.studio.common.repository.provider.ExtendedCategory;
 import org.bonitasoft.studio.common.repository.provider.ExtendedConnectorDefinition;
 import org.bonitasoft.studio.connector.model.definition.AbstractUniqueDefinitionContentProvider;
-import org.bonitasoft.studio.connector.model.definition.UnloadableConnectorDefinition;
 import org.bonitasoft.studio.connector.model.i18n.Messages;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
@@ -47,13 +47,13 @@ public class ConnectorDefinitionTreeLabelProvider extends LabelProvider {
     }
 
     protected String getLabelFor(Object element) {
-        if(!(element instanceof ExtendedConnectorDefinition)){
+        if (!(element instanceof ExtendedConnectorDefinition)) {
             return null;
         }
         ExtendedConnectorDefinition def = (ExtendedConnectorDefinition) element;
         String desc = def.getConnectorDefinitionDescription();
         String connectorDefinitionLabel = def.getConnectorDefinitionLabel();
-        if(connectorDefinitionLabel==null){
+        if (connectorDefinitionLabel == null) {
             connectorDefinitionLabel = def.getId();
         }
         String text = connectorDefinitionLabel
@@ -71,7 +71,7 @@ public class ConnectorDefinitionTreeLabelProvider extends LabelProvider {
         } else if (element instanceof ExtendedConnectorDefinition) {
             return ((ExtendedConnectorDefinition) element).getImage();
         } else if (element instanceof ExtendedCategory) {
-            return ((ExtendedCategory)element).getImage();
+            return ((ExtendedCategory) element).getImage();
         }
         return super.getImage(element);
     }

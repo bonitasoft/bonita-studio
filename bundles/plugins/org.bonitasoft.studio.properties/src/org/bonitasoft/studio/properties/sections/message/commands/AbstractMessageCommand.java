@@ -18,10 +18,10 @@ import java.util.Objects;
 import java.util.Optional;
 
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
-import org.bonitasoft.studio.model.process.AbstractCatchMessageEvent;
-import org.bonitasoft.studio.model.process.AbstractProcess;
-import org.bonitasoft.studio.model.process.Message;
-import org.bonitasoft.studio.model.process.ThrowMessageEvent;
+import org.bonitasoft.bpm.model.process.AbstractCatchMessageEvent;
+import org.bonitasoft.bpm.model.process.AbstractProcess;
+import org.bonitasoft.bpm.model.process.Message;
+import org.bonitasoft.bpm.model.process.ThrowMessageEvent;
 import org.bonitasoft.studio.properties.sections.message.MessageFlowFactory;
 import org.eclipse.emf.transaction.RecordingCommand;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;

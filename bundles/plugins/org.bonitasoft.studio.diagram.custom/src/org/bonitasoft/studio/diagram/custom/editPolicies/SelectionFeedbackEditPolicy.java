@@ -20,7 +20,7 @@ import java.util.Map;
 
 import org.bonitasoft.studio.common.diagram.tools.FiguresHelper;
 import org.bonitasoft.studio.common.figures.CustomSVGFigure;
-import org.bonitasoft.studio.model.process.BoundaryEvent;
+import org.bonitasoft.bpm.model.process.BoundaryEvent;
 import org.eclipse.draw2d.FigureListener;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.IFigure;

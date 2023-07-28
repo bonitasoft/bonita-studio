@@ -15,9 +15,9 @@
 package org.bonitasoft.studio.designer.ui.property.section;
 
 import org.bonitasoft.studio.common.ui.jface.selection.EObjectAdaptableSelectionProvider;
-import org.bonitasoft.studio.model.process.Lane;
-import org.bonitasoft.studio.model.process.MainProcess;
-import org.bonitasoft.studio.model.process.PageFlow;
+import org.bonitasoft.bpm.model.process.Lane;
+import org.bonitasoft.bpm.model.process.MainProcess;
+import org.bonitasoft.bpm.model.process.PageFlow;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.e4.core.di.annotations.Creatable;
 import org.eclipse.emf.ecore.EObject;

@@ -25,10 +25,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
    </extension>
 
    <extension point="org.eclipse.emf.ecore.extension_parser" id="resource-factory">
-      <?gmfgen generated="true"?>
+      <?gmfgen generated="false"?>
+      <!-- Use the factory declared by org.bonitasoft.bpm.model, as content handler is lower priority than XMI -->
       <parser
          type="proc"
-         class="org.eclipse.gmf.runtime.emf.core.resources.GMFResourceFactory">
+         class="org.bonitasoft.bpm.model.process.util.ProcessResourceFactoryImpl">
       </parser>
    </extension>
    
@@ -221,7 +222,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
    <extension point="org.eclipse.gmf.runtime.emf.type.core.elementTypes" id="element-types">
       <?gmfgen generated="true"?>
-      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+      <metamodel nsURI="http://www.bonitasoft.org/ns/bpm/process">
          <metamodelType
                id="org.bonitasoft.studio.diagram.MainProcess_1000"
                name="%metatype.name.MainProcess_1000"
@@ -231,7 +232,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <param name="semanticHint" value="1000"/>
          </metamodelType>
       </metamodel>
-      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+      <metamodel nsURI="http://www.bonitasoft.org/ns/bpm/process">
          <metamodelType
                id="org.bonitasoft.studio.diagram.ANDGateway_2009"
                name="%metatype.name.ANDGateway_2009"
@@ -241,7 +242,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <param name="semanticHint" value="2009"/>
          </metamodelType>
       </metamodel>
-      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+      <metamodel nsURI="http://www.bonitasoft.org/ns/bpm/process">
          <metamodelType
                id="org.bonitasoft.studio.diagram.StartEvent_2002"
                name="%metatype.name.StartEvent_2002"
@@ -251,7 +252,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <param name="semanticHint" value="2002"/>
          </metamodelType>
       </metamodel>
-      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+      <metamodel nsURI="http://www.bonitasoft.org/ns/bpm/process">
          <metamodelType
                id="org.bonitasoft.studio.diagram.EndEvent_2003"
                name="%metatype.name.EndEvent_2003"
@@ -261,7 +262,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <param name="semanticHint" value="2003"/>
          </metamodelType>
       </metamodel>
-      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+      <metamodel nsURI="http://www.bonitasoft.org/ns/bpm/process">
          <metamodelType
                id="org.bonitasoft.studio.diagram.Task_2004"
                name="%metatype.name.Task_2004"
@@ -271,7 +272,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <param name="semanticHint" value="2004"/>
          </metamodelType>
       </metamodel>
-      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+      <metamodel nsURI="http://www.bonitasoft.org/ns/bpm/process">
          <metamodelType
                id="org.bonitasoft.studio.diagram.CallActivity_2036"
                name="%metatype.name.CallActivity_2036"
@@ -281,7 +282,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <param name="semanticHint" value="2036"/>
          </metamodelType>
       </metamodel>
-      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+      <metamodel nsURI="http://www.bonitasoft.org/ns/bpm/process">
          <metamodelType
                id="org.bonitasoft.studio.diagram.SubProcessEvent_2031"
                name="%metatype.name.SubProcessEvent_2031"
@@ -291,7 +292,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <param name="semanticHint" value="2031"/>
          </metamodelType>
       </metamodel>
-      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+      <metamodel nsURI="http://www.bonitasoft.org/ns/bpm/process">
          <specializationType
                id="org.bonitasoft.studio.diagram.ReceiveTask_2025"
                name="%metatype.name.ReceiveTask_2025"
@@ -300,7 +301,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <param name="semanticHint" value="2025"/>
          </specializationType>
       </metamodel>
-      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+      <metamodel nsURI="http://www.bonitasoft.org/ns/bpm/process">
          <specializationType
                id="org.bonitasoft.studio.diagram.SendTask_2026"
                name="%metatype.name.SendTask_2026"
@@ -309,7 +310,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <param name="semanticHint" value="2026"/>
          </specializationType>
       </metamodel>
-      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+      <metamodel nsURI="http://www.bonitasoft.org/ns/bpm/process">
          <specializationType
                id="org.bonitasoft.studio.diagram.ServiceTask_2027"
                name="%metatype.name.ServiceTask_2027"
@@ -318,7 +319,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <param name="semanticHint" value="2027"/>
          </specializationType>
       </metamodel>
-      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+      <metamodel nsURI="http://www.bonitasoft.org/ns/bpm/process">
          <specializationType
                id="org.bonitasoft.studio.diagram.ScriptTask_2028"
                name="%metatype.name.ScriptTask_2028"
@@ -327,7 +328,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <param name="semanticHint" value="2028"/>
          </specializationType>
       </metamodel>
-      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+      <metamodel nsURI="http://www.bonitasoft.org/ns/bpm/process">
          <specializationType
                id="org.bonitasoft.studio.diagram.XORGateway_2008"
                name="%metatype.name.XORGateway_2008"
@@ -336,7 +337,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <param name="semanticHint" value="2008"/>
          </specializationType>
       </metamodel>
-      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+      <metamodel nsURI="http://www.bonitasoft.org/ns/bpm/process">
          <specializationType
                id="org.bonitasoft.studio.diagram.InclusiveGateway_2030"
                name="%metatype.name.InclusiveGateway_2030"
@@ -345,7 +346,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <param name="semanticHint" value="2030"/>
          </specializationType>
       </metamodel>
-      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+      <metamodel nsURI="http://www.bonitasoft.org/ns/bpm/process">
          <specializationType
                id="org.bonitasoft.studio.diagram.Activity_2006"
                name="%metatype.name.Activity_2006"
@@ -354,7 +355,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <param name="semanticHint" value="2006"/>
          </specializationType>
       </metamodel>
-      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+      <metamodel nsURI="http://www.bonitasoft.org/ns/bpm/process">
          <metamodelType
                id="org.bonitasoft.studio.diagram.Pool_2007"
                name="%metatype.name.Pool_2007"
@@ -364,7 +365,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <param name="semanticHint" value="2007"/>
          </metamodelType>
       </metamodel>
-      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+      <metamodel nsURI="http://www.bonitasoft.org/ns/bpm/process">
          <specializationType
                id="org.bonitasoft.studio.diagram.StartMessageEvent_2010"
                name="%metatype.name.StartMessageEvent_2010"
@@ -373,7 +374,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <param name="semanticHint" value="2010"/>
          </specializationType>
       </metamodel>
-      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+      <metamodel nsURI="http://www.bonitasoft.org/ns/bpm/process">
          <specializationType
                id="org.bonitasoft.studio.diagram.EndMessageEvent_2011"
                name="%metatype.name.EndMessageEvent_2011"
@@ -382,7 +383,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <param name="semanticHint" value="2011"/>
          </specializationType>
       </metamodel>
-      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+      <metamodel nsURI="http://www.bonitasoft.org/ns/bpm/process">
          <specializationType
                id="org.bonitasoft.studio.diagram.IntermediateCatchMessageEvent_2013"
                name="%metatype.name.IntermediateCatchMessageEvent_2013"
@@ -391,7 +392,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <param name="semanticHint" value="2013"/>
          </specializationType>
       </metamodel>
-      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+      <metamodel nsURI="http://www.bonitasoft.org/ns/bpm/process">
          <specializationType
                id="org.bonitasoft.studio.diagram.IntermediateThrowMessageEvent_2014"
                name="%metatype.name.IntermediateThrowMessageEvent_2014"
@@ -400,7 +401,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <param name="semanticHint" value="2014"/>
          </specializationType>
       </metamodel>
-      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+      <metamodel nsURI="http://www.bonitasoft.org/ns/bpm/process">
          <specializationType
                id="org.bonitasoft.studio.diagram.TextAnnotation_2015"
                name="%metatype.name.TextAnnotation_2015"
@@ -409,7 +410,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <param name="semanticHint" value="2015"/>
          </specializationType>
       </metamodel>
-      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+      <metamodel nsURI="http://www.bonitasoft.org/ns/bpm/process">
          <specializationType
                id="org.bonitasoft.studio.diagram.IntermediateCatchTimerEvent_2017"
                name="%metatype.name.IntermediateCatchTimerEvent_2017"
@@ -418,7 +419,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <param name="semanticHint" value="2017"/>
          </specializationType>
       </metamodel>
-      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+      <metamodel nsURI="http://www.bonitasoft.org/ns/bpm/process">
          <specializationType
                id="org.bonitasoft.studio.diagram.StartTimerEvent_2016"
                name="%metatype.name.StartTimerEvent_2016"
@@ -427,7 +428,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <param name="semanticHint" value="2016"/>
          </specializationType>
       </metamodel>
-      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+      <metamodel nsURI="http://www.bonitasoft.org/ns/bpm/process">
          <specializationType
                id="org.bonitasoft.studio.diagram.CatchLinkEvent_2018"
                name="%metatype.name.CatchLinkEvent_2018"
@@ -436,7 +437,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <param name="semanticHint" value="2018"/>
          </specializationType>
       </metamodel>
-      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+      <metamodel nsURI="http://www.bonitasoft.org/ns/bpm/process">
          <specializationType
                id="org.bonitasoft.studio.diagram.ThrowLinkEvent_2019"
                name="%metatype.name.ThrowLinkEvent_2019"
@@ -445,7 +446,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <param name="semanticHint" value="2019"/>
          </specializationType>
       </metamodel>
-      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+      <metamodel nsURI="http://www.bonitasoft.org/ns/bpm/process">
          <specializationType
                id="org.bonitasoft.studio.diagram.IntermediateThrowSignalEvent_2020"
                name="%metatype.name.IntermediateThrowSignalEvent_2020"
@@ -454,7 +455,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <param name="semanticHint" value="2020"/>
          </specializationType>
       </metamodel>
-      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+      <metamodel nsURI="http://www.bonitasoft.org/ns/bpm/process">
          <specializationType
                id="org.bonitasoft.studio.diagram.IntermediateCatchSignalEvent_2021"
                name="%metatype.name.IntermediateCatchSignalEvent_2021"
@@ -463,7 +464,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <param name="semanticHint" value="2021"/>
          </specializationType>
       </metamodel>
-      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+      <metamodel nsURI="http://www.bonitasoft.org/ns/bpm/process">
          <specializationType
                id="org.bonitasoft.studio.diagram.StartSignalEvent_2022"
                name="%metatype.name.StartSignalEvent_2022"
@@ -472,7 +473,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <param name="semanticHint" value="2022"/>
          </specializationType>
       </metamodel>
-      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+      <metamodel nsURI="http://www.bonitasoft.org/ns/bpm/process">
          <specializationType
                id="org.bonitasoft.studio.diagram.EndSignalEvent_2023"
                name="%metatype.name.EndSignalEvent_2023"
@@ -481,7 +482,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <param name="semanticHint" value="2023"/>
          </specializationType>
       </metamodel>
-      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+      <metamodel nsURI="http://www.bonitasoft.org/ns/bpm/process">
          <specializationType
                id="org.bonitasoft.studio.diagram.Event_2024"
                name="%metatype.name.Event_2024"
@@ -490,7 +491,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <param name="semanticHint" value="2024"/>
          </specializationType>
       </metamodel>
-      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+      <metamodel nsURI="http://www.bonitasoft.org/ns/bpm/process">
          <specializationType
                id="org.bonitasoft.studio.diagram.EndErrorEvent_2029"
                name="%metatype.name.EndErrorEvent_2029"
@@ -499,7 +500,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <param name="semanticHint" value="2029"/>
          </specializationType>
       </metamodel>
-      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+      <metamodel nsURI="http://www.bonitasoft.org/ns/bpm/process">
          <specializationType
                id="org.bonitasoft.studio.diagram.StartErrorEvent_2033"
                name="%metatype.name.StartErrorEvent_2033"
@@ -508,7 +509,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <param name="semanticHint" value="2033"/>
          </specializationType>
       </metamodel>
-      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+      <metamodel nsURI="http://www.bonitasoft.org/ns/bpm/process">
          <specializationType
                id="org.bonitasoft.studio.diagram.EndTerminatedEvent_2035"
                name="%metatype.name.EndTerminatedEvent_2035"
@@ -517,7 +518,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <param name="semanticHint" value="2035"/>
          </specializationType>
       </metamodel>
-      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+      <metamodel nsURI="http://www.bonitasoft.org/ns/bpm/process">
          <metamodelType
                id="org.bonitasoft.studio.diagram.IntermediateErrorCatchEvent_3029"
                name="%metatype.name.IntermediateErrorCatchEvent_3029"
@@ -527,7 +528,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <param name="semanticHint" value="3029"/>
          </metamodelType>
       </metamodel>
-      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+      <metamodel nsURI="http://www.bonitasoft.org/ns/bpm/process">
          <metamodelType
                id="org.bonitasoft.studio.diagram.BoundaryMessageEvent_3035"
                name="%metatype.name.BoundaryMessageEvent_3035"
@@ -537,7 +538,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <param name="semanticHint" value="3035"/>
          </metamodelType>
       </metamodel>
-      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+      <metamodel nsURI="http://www.bonitasoft.org/ns/bpm/process">
          <metamodelType
                id="org.bonitasoft.studio.diagram.NonInterruptingBoundaryTimerEvent_3064"
                name="%metatype.name.NonInterruptingBoundaryTimerEvent_3064"
@@ -547,7 +548,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <param name="semanticHint" value="3064"/>
          </metamodelType>
       </metamodel>
-      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+      <metamodel nsURI="http://www.bonitasoft.org/ns/bpm/process">
          <metamodelType
                id="org.bonitasoft.studio.diagram.BoundaryTimerEvent_3043"
                name="%metatype.name.BoundaryTimerEvent_3043"
@@ -557,7 +558,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <param name="semanticHint" value="3043"/>
          </metamodelType>
       </metamodel>
-      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+      <metamodel nsURI="http://www.bonitasoft.org/ns/bpm/process">
          <metamodelType
                id="org.bonitasoft.studio.diagram.BoundarySignalEvent_3052"
                name="%metatype.name.BoundarySignalEvent_3052"
@@ -567,7 +568,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <param name="semanticHint" value="3052"/>
          </metamodelType>
       </metamodel>
-      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+      <metamodel nsURI="http://www.bonitasoft.org/ns/bpm/process">
          <specializationType
                id="org.bonitasoft.studio.diagram.IntermediateErrorCatchEvent_3030"
                name="%metatype.name.IntermediateErrorCatchEvent_3030"
@@ -576,7 +577,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <param name="semanticHint" value="3030"/>
          </specializationType>
       </metamodel>
-      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+      <metamodel nsURI="http://www.bonitasoft.org/ns/bpm/process">
          <specializationType
                id="org.bonitasoft.studio.diagram.BoundaryMessageEvent_3036"
                name="%metatype.name.BoundaryMessageEvent_3036"
@@ -585,7 +586,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <param name="semanticHint" value="3036"/>
          </specializationType>
       </metamodel>
-      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+      <metamodel nsURI="http://www.bonitasoft.org/ns/bpm/process">
          <specializationType
                id="org.bonitasoft.studio.diagram.NonInterruptingBoundaryTimerEvent_3065"
                name="%metatype.name.NonInterruptingBoundaryTimerEvent_3065"
@@ -594,7 +595,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <param name="semanticHint" value="3065"/>
          </specializationType>
       </metamodel>
-      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+      <metamodel nsURI="http://www.bonitasoft.org/ns/bpm/process">
          <specializationType
                id="org.bonitasoft.studio.diagram.BoundaryTimerEvent_3044"
                name="%metatype.name.BoundaryTimerEvent_3044"
@@ -603,7 +604,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <param name="semanticHint" value="3044"/>
          </specializationType>
       </metamodel>
-      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+      <metamodel nsURI="http://www.bonitasoft.org/ns/bpm/process">
          <specializationType
                id="org.bonitasoft.studio.diagram.BoundarySignalEvent_3053"
                name="%metatype.name.BoundarySignalEvent_3053"
@@ -612,7 +613,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <param name="semanticHint" value="3053"/>
          </specializationType>
       </metamodel>
-      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+      <metamodel nsURI="http://www.bonitasoft.org/ns/bpm/process">
          <specializationType
                id="org.bonitasoft.studio.diagram.ANDGateway_3009"
                name="%metatype.name.ANDGateway_3009"
@@ -621,7 +622,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <param name="semanticHint" value="3009"/>
          </specializationType>
       </metamodel>
-      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+      <metamodel nsURI="http://www.bonitasoft.org/ns/bpm/process">
          <specializationType
                id="org.bonitasoft.studio.diagram.EndEvent_3003"
                name="%metatype.name.EndEvent_3003"
@@ -630,7 +631,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <param name="semanticHint" value="3003"/>
          </specializationType>
       </metamodel>
-      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+      <metamodel nsURI="http://www.bonitasoft.org/ns/bpm/process">
          <specializationType
                id="org.bonitasoft.studio.diagram.CallActivity_3063"
                name="%metatype.name.CallActivity_3063"
@@ -639,7 +640,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <param name="semanticHint" value="3063"/>
          </specializationType>
       </metamodel>
-      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+      <metamodel nsURI="http://www.bonitasoft.org/ns/bpm/process">
          <specializationType
                id="org.bonitasoft.studio.diagram.Task_3005"
                name="%metatype.name.Task_3005"
@@ -648,7 +649,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <param name="semanticHint" value="3005"/>
          </specializationType>
       </metamodel>
-      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+      <metamodel nsURI="http://www.bonitasoft.org/ns/bpm/process">
          <metamodelType
                id="org.bonitasoft.studio.diagram.ReceiveTask_3026"
                name="%metatype.name.ReceiveTask_3026"
@@ -658,7 +659,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <param name="semanticHint" value="3026"/>
          </metamodelType>
       </metamodel>
-      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+      <metamodel nsURI="http://www.bonitasoft.org/ns/bpm/process">
          <specializationType
                id="org.bonitasoft.studio.diagram.IntermediateErrorCatchEvent_3031"
                name="%metatype.name.IntermediateErrorCatchEvent_3031"
@@ -667,7 +668,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <param name="semanticHint" value="3031"/>
          </specializationType>
       </metamodel>
-      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+      <metamodel nsURI="http://www.bonitasoft.org/ns/bpm/process">
          <metamodelType
                id="org.bonitasoft.studio.diagram.SendTask_3025"
                name="%metatype.name.SendTask_3025"
@@ -677,7 +678,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <param name="semanticHint" value="3025"/>
          </metamodelType>
       </metamodel>
-      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+      <metamodel nsURI="http://www.bonitasoft.org/ns/bpm/process">
          <metamodelType
                id="org.bonitasoft.studio.diagram.ServiceTask_3027"
                name="%metatype.name.ServiceTask_3027"
@@ -687,7 +688,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <param name="semanticHint" value="3027"/>
          </metamodelType>
       </metamodel>
-      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+      <metamodel nsURI="http://www.bonitasoft.org/ns/bpm/process">
          <specializationType
                id="org.bonitasoft.studio.diagram.IntermediateErrorCatchEvent_3032"
                name="%metatype.name.IntermediateErrorCatchEvent_3032"
@@ -696,7 +697,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <param name="semanticHint" value="3032"/>
          </specializationType>
       </metamodel>
-      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+      <metamodel nsURI="http://www.bonitasoft.org/ns/bpm/process">
          <metamodelType
                id="org.bonitasoft.studio.diagram.ScriptTask_3028"
                name="%metatype.name.ScriptTask_3028"
@@ -706,7 +707,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <param name="semanticHint" value="3028"/>
          </metamodelType>
       </metamodel>
-      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+      <metamodel nsURI="http://www.bonitasoft.org/ns/bpm/process">
          <specializationType
                id="org.bonitasoft.studio.diagram.IntermediateErrorCatchEvent_3033"
                name="%metatype.name.IntermediateErrorCatchEvent_3033"
@@ -715,7 +716,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <param name="semanticHint" value="3033"/>
          </specializationType>
       </metamodel>
-      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+      <metamodel nsURI="http://www.bonitasoft.org/ns/bpm/process">
          <metamodelType
                id="org.bonitasoft.studio.diagram.XORGateway_3008"
                name="%metatype.name.XORGateway_3008"
@@ -725,7 +726,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <param name="semanticHint" value="3008"/>
          </metamodelType>
       </metamodel>
-      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+      <metamodel nsURI="http://www.bonitasoft.org/ns/bpm/process">
          <metamodelType
                id="org.bonitasoft.studio.diagram.Activity_3006"
                name="%metatype.name.Activity_3006"
@@ -735,7 +736,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <param name="semanticHint" value="3006"/>
          </metamodelType>
       </metamodel>
-      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+      <metamodel nsURI="http://www.bonitasoft.org/ns/bpm/process">
          <specializationType
                id="org.bonitasoft.studio.diagram.IntermediateErrorCatchEvent_3034"
                name="%metatype.name.IntermediateErrorCatchEvent_3034"
@@ -744,7 +745,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <param name="semanticHint" value="3034"/>
          </specializationType>
       </metamodel>
-      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+      <metamodel nsURI="http://www.bonitasoft.org/ns/bpm/process">
          <metamodelType
                id="org.bonitasoft.studio.diagram.IntermediateCatchMessageEvent_3013"
                name="%metatype.name.IntermediateCatchMessageEvent_3013"
@@ -754,7 +755,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <param name="semanticHint" value="3013"/>
          </metamodelType>
       </metamodel>
-      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+      <metamodel nsURI="http://www.bonitasoft.org/ns/bpm/process">
          <metamodelType
                id="org.bonitasoft.studio.diagram.StartMessageEvent_3012"
                name="%metatype.name.StartMessageEvent_3012"
@@ -764,7 +765,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <param name="semanticHint" value="3012"/>
          </metamodelType>
       </metamodel>
-      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+      <metamodel nsURI="http://www.bonitasoft.org/ns/bpm/process">
          <metamodelType
                id="org.bonitasoft.studio.diagram.EndMessageEvent_3011"
                name="%metatype.name.EndMessageEvent_3011"
@@ -774,7 +775,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <param name="semanticHint" value="3011"/>
          </metamodelType>
       </metamodel>
-      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+      <metamodel nsURI="http://www.bonitasoft.org/ns/bpm/process">
          <metamodelType
                id="org.bonitasoft.studio.diagram.IntermediateThrowMessageEvent_3014"
                name="%metatype.name.IntermediateThrowMessageEvent_3014"
@@ -784,7 +785,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <param name="semanticHint" value="3014"/>
          </metamodelType>
       </metamodel>
-      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+      <metamodel nsURI="http://www.bonitasoft.org/ns/bpm/process">
          <metamodelType
                id="org.bonitasoft.studio.diagram.TextAnnotation_3015"
                name="%metatype.name.TextAnnotation_3015"
@@ -794,7 +795,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <param name="semanticHint" value="3015"/>
          </metamodelType>
       </metamodel>
-      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+      <metamodel nsURI="http://www.bonitasoft.org/ns/bpm/process">
          <metamodelType
                id="org.bonitasoft.studio.diagram.StartTimerEvent_3016"
                name="%metatype.name.StartTimerEvent_3016"
@@ -804,7 +805,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <param name="semanticHint" value="3016"/>
          </metamodelType>
       </metamodel>
-      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+      <metamodel nsURI="http://www.bonitasoft.org/ns/bpm/process">
          <metamodelType
                id="org.bonitasoft.studio.diagram.IntermediateCatchTimerEvent_3017"
                name="%metatype.name.IntermediateCatchTimerEvent_3017"
@@ -814,7 +815,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <param name="semanticHint" value="3017"/>
          </metamodelType>
       </metamodel>
-      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+      <metamodel nsURI="http://www.bonitasoft.org/ns/bpm/process">
          <metamodelType
                id="org.bonitasoft.studio.diagram.StartSignalEvent_3023"
                name="%metatype.name.StartSignalEvent_3023"
@@ -824,7 +825,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <param name="semanticHint" value="3023"/>
          </metamodelType>
       </metamodel>
-      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+      <metamodel nsURI="http://www.bonitasoft.org/ns/bpm/process">
          <metamodelType
                id="org.bonitasoft.studio.diagram.IntermediateThrowSignalEvent_3022"
                name="%metatype.name.IntermediateThrowSignalEvent_3022"
@@ -834,7 +835,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <param name="semanticHint" value="3022"/>
          </metamodelType>
       </metamodel>
-      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+      <metamodel nsURI="http://www.bonitasoft.org/ns/bpm/process">
          <metamodelType
                id="org.bonitasoft.studio.diagram.IntermediateCatchSignalEvent_3021"
                name="%metatype.name.IntermediateCatchSignalEvent_3021"
@@ -844,7 +845,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <param name="semanticHint" value="3021"/>
          </metamodelType>
       </metamodel>
-      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+      <metamodel nsURI="http://www.bonitasoft.org/ns/bpm/process">
          <metamodelType
                id="org.bonitasoft.studio.diagram.EndSignalEvent_3020"
                name="%metatype.name.EndSignalEvent_3020"
@@ -854,7 +855,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <param name="semanticHint" value="3020"/>
          </metamodelType>
       </metamodel>
-      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+      <metamodel nsURI="http://www.bonitasoft.org/ns/bpm/process">
          <metamodelType
                id="org.bonitasoft.studio.diagram.EndErrorEvent_3050"
                name="%metatype.name.EndErrorEvent_3050"
@@ -864,7 +865,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <param name="semanticHint" value="3050"/>
          </metamodelType>
       </metamodel>
-      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+      <metamodel nsURI="http://www.bonitasoft.org/ns/bpm/process">
          <metamodelType
                id="org.bonitasoft.studio.diagram.EndTerminatedEvent_3062"
                name="%metatype.name.EndTerminatedEvent_3062"
@@ -874,7 +875,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <param name="semanticHint" value="3062"/>
          </metamodelType>
       </metamodel>
-      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+      <metamodel nsURI="http://www.bonitasoft.org/ns/bpm/process">
          <metamodelType
                id="org.bonitasoft.studio.diagram.StartErrorEvent_3060"
                name="%metatype.name.StartErrorEvent_3060"
@@ -884,7 +885,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <param name="semanticHint" value="3060"/>
          </metamodelType>
       </metamodel>
-      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+      <metamodel nsURI="http://www.bonitasoft.org/ns/bpm/process">
          <metamodelType
                id="org.bonitasoft.studio.diagram.Event_3024"
                name="%metatype.name.Event_3024"
@@ -894,7 +895,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <param name="semanticHint" value="3024"/>
          </metamodelType>
       </metamodel>
-      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+      <metamodel nsURI="http://www.bonitasoft.org/ns/bpm/process">
          <metamodelType
                id="org.bonitasoft.studio.diagram.InclusiveGateway_3051"
                name="%metatype.name.InclusiveGateway_3051"
@@ -904,7 +905,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <param name="semanticHint" value="3051"/>
          </metamodelType>
       </metamodel>
-      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+      <metamodel nsURI="http://www.bonitasoft.org/ns/bpm/process">
          <metamodelType
                id="org.bonitasoft.studio.diagram.Lane_3007"
                name="%metatype.name.Lane_3007"
@@ -914,7 +915,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <param name="semanticHint" value="3007"/>
          </metamodelType>
       </metamodel>
-      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+      <metamodel nsURI="http://www.bonitasoft.org/ns/bpm/process">
          <specializationType
                id="org.bonitasoft.studio.diagram.StartEvent_3002"
                name="%metatype.name.StartEvent_3002"
@@ -923,7 +924,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <param name="semanticHint" value="3002"/>
          </specializationType>
       </metamodel>
-      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+      <metamodel nsURI="http://www.bonitasoft.org/ns/bpm/process">
          <specializationType
                id="org.bonitasoft.studio.diagram.SubProcessEvent_3058"
                name="%metatype.name.SubProcessEvent_3058"
@@ -932,7 +933,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <param name="semanticHint" value="3058"/>
          </specializationType>
       </metamodel>
-      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+      <metamodel nsURI="http://www.bonitasoft.org/ns/bpm/process">
          <metamodelType
                id="org.bonitasoft.studio.diagram.ThrowLinkEvent_3018"
                name="%metatype.name.ThrowLinkEvent_3018"
@@ -942,7 +943,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <param name="semanticHint" value="3018"/>
          </metamodelType>
       </metamodel>
-      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+      <metamodel nsURI="http://www.bonitasoft.org/ns/bpm/process">
          <metamodelType
                id="org.bonitasoft.studio.diagram.CatchLinkEvent_3019"
                name="%metatype.name.CatchLinkEvent_3019"
@@ -952,7 +953,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <param name="semanticHint" value="3019"/>
          </metamodelType>
       </metamodel>
-      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+      <metamodel nsURI="http://www.bonitasoft.org/ns/bpm/process">
          <metamodelType
                id="org.bonitasoft.studio.diagram.SequenceFlow_4001"
                name="%metatype.name.SequenceFlow_4001"
@@ -962,7 +963,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <param name="semanticHint" value="4001"/>
          </metamodelType>
       </metamodel>
-      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+      <metamodel nsURI="http://www.bonitasoft.org/ns/bpm/process">
          <metamodelType
                id="org.bonitasoft.studio.diagram.MessageFlow_4002"
                name="%metatype.name.MessageFlow_4002"
@@ -972,7 +973,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <param name="semanticHint" value="4002"/>
          </metamodelType>
       </metamodel>
-      <metamodel nsURI="http://www.bonitasoft.org/ns/studio/process">
+      <metamodel nsURI="http://www.bonitasoft.org/ns/bpm/process">
          <metamodelType
                id="org.bonitasoft.studio.diagram.TextAnnotationAttachment_4003"
                name="%metatype.name.TextAnnotationAttachment_4003"

@@ -18,7 +18,7 @@
  
 package org.bonitasoft.studio.common;
 
-import org.bonitasoft.studio.model.process.AbstractTimerEvent;
+import org.bonitasoft.bpm.model.process.AbstractTimerEvent;
 
 /**
  * @author Romain Bioteau

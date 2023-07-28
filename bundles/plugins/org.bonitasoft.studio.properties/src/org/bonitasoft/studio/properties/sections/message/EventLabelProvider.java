@@ -18,7 +18,7 @@
  
 package org.bonitasoft.studio.properties.sections.message;
 
-import org.bonitasoft.studio.model.process.Message;
+import org.bonitasoft.bpm.model.process.Message;
 import org.eclipse.jface.viewers.LabelProvider;
 
 /**

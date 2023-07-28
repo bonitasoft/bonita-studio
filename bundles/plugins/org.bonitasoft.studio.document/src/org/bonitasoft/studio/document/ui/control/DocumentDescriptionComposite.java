@@ -17,8 +17,8 @@ package org.bonitasoft.studio.document.ui.control;
 import static com.google.common.base.Preconditions.checkArgument;
 
 import org.bonitasoft.studio.document.i18n.Messages;
-import org.bonitasoft.studio.model.process.Document;
-import org.bonitasoft.studio.model.process.ProcessPackage;
+import org.bonitasoft.bpm.model.process.Document;
+import org.bonitasoft.bpm.model.process.ProcessPackage;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.jface.databinding.swt.SWTObservables;

@@ -22,12 +22,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
-import org.bonitasoft.studio.model.process.AbstractProcess;
-import org.bonitasoft.studio.model.process.ConnectableElement;
-import org.bonitasoft.studio.model.process.Container;
-import org.bonitasoft.studio.model.process.Data;
-import org.bonitasoft.studio.model.process.DataType;
-import org.bonitasoft.studio.model.process.Element;
+import org.bonitasoft.bpm.model.process.AbstractProcess;
+import org.bonitasoft.bpm.model.process.ConnectableElement;
+import org.bonitasoft.bpm.model.process.Container;
+import org.bonitasoft.bpm.model.process.Data;
+import org.bonitasoft.bpm.model.process.DataType;
+import org.bonitasoft.bpm.model.process.Element;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;

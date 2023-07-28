@@ -16,14 +16,14 @@ package org.bonitasoft.studio.designer.core.command;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
-import static org.bonitasoft.studio.model.expression.builders.ExpressionBuilder.anExpression;
-import static org.bonitasoft.studio.model.process.builders.FormMappingBuilder.aFormMapping;
+import static org.bonitasoft.bpm.model.expression.builders.ExpressionBuilder.anExpression;
+import static org.bonitasoft.bpm.model.process.builders.FormMappingBuilder.aFormMapping;
 
-import org.bonitasoft.studio.model.expression.Expression;
-import org.bonitasoft.studio.model.process.FormMapping;
-import org.bonitasoft.studio.model.process.FormMappingType;
-import org.bonitasoft.studio.model.process.ProcessPackage;
-import org.bonitasoft.studio.model.process.provider.ProcessItemProviderAdapterFactory;
+import org.bonitasoft.bpm.model.expression.Expression;
+import org.bonitasoft.bpm.model.process.FormMapping;
+import org.bonitasoft.bpm.model.process.FormMappingType;
+import org.bonitasoft.bpm.model.process.ProcessPackage;
+import org.bonitasoft.bpm.model.process.provider.ProcessItemProviderAdapterFactory;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.transaction.impl.TransactionalCommandStackImpl;
 import org.eclipse.emf.transaction.impl.TransactionalEditingDomainImpl;

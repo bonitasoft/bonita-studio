@@ -19,7 +19,7 @@ package org.bonitasoft.studio.sqlbuilder.ex.builder.viewer;
 
 import java.util.List;
 
-import org.bonitasoft.studio.model.expression.Expression;
+import org.bonitasoft.bpm.model.expression.Expression;
 import org.bonitasoft.studio.sqlbuilder.ex.builder.viewer.element.BonitaInsertTableElement;
 import org.bonitasoft.studio.sqlbuilder.ex.builder.viewer.provider.BonitaInsertGridContentProvider;
 import org.eclipse.datatools.modelbase.sql.datatypes.CharacterStringDataType;

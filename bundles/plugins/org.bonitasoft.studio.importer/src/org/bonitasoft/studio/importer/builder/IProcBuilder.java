@@ -18,7 +18,7 @@ import java.io.File;
 import java.util.Set;
 
 import org.bonitasoft.engine.bpm.connector.ConnectorEvent;
-import org.bonitasoft.studio.model.expression.Expression;
+import org.bonitasoft.bpm.model.expression.Expression;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.PointList;

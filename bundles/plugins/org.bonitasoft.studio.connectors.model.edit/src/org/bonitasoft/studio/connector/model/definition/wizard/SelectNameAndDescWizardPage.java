@@ -23,8 +23,8 @@ import java.util.Set;
 
 import org.bonitasoft.studio.common.databinding.validator.InputLengthValidator;
 import org.bonitasoft.studio.connector.model.i18n.Messages;
-import org.bonitasoft.studio.model.process.Connector;
-import org.bonitasoft.studio.model.process.ProcessPackage;
+import org.bonitasoft.bpm.model.process.Connector;
+import org.bonitasoft.bpm.model.process.ProcessPackage;
 import org.bonitasoft.studio.ui.widget.TextAreaWidget;
 import org.bonitasoft.studio.ui.widget.TextWidget;
 import org.bonitasoft.studio.ui.widget.TextWidget.Builder;

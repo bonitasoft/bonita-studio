@@ -5,12 +5,10 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -20,14 +18,13 @@ import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.bonitasoft.bpm.model.process.ProcessPackage;
 import org.bonitasoft.studio.common.Messages;
-import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.emf.ecore.EClass;
 
 /**
  * @author Romain Bioteau
- *
  */
 public class ProcessPaletteLabelProvider {
 
@@ -130,8 +127,10 @@ public class ProcessPaletteLabelProvider {
         classifierIDToTitle.put(ProcessPackage.INTERMEDIATE_ERROR_CATCH_EVENT, Messages.CatchError_title);
         classifierIDToDescription.put(ProcessPackage.INTERMEDIATE_ERROR_CATCH_EVENT, Messages.CatchError_desc);
 
-        classifierIDToTitle.put(ProcessPackage.NON_INTERRUPTING_BOUNDARY_TIMER_EVENT, Messages.nonInterruptingTimerEvent_title);
-        classifierIDToDescription.put(ProcessPackage.NON_INTERRUPTING_BOUNDARY_TIMER_EVENT, Messages.nonInterruptingTimerEvent_desc);
+        classifierIDToTitle.put(ProcessPackage.NON_INTERRUPTING_BOUNDARY_TIMER_EVENT,
+                Messages.nonInterruptingTimerEvent_title);
+        classifierIDToDescription.put(ProcessPackage.NON_INTERRUPTING_BOUNDARY_TIMER_EVENT,
+                Messages.nonInterruptingTimerEvent_desc);
 
         classifierIDToTitle.put(ProcessPackage.EVENT, Messages.Event_title);
         classifierIDToDescription.put(ProcessPackage.EVENT, Messages.Event_desc);
@@ -171,10 +170,9 @@ public class ProcessPaletteLabelProvider {
 
     protected int getEClassifierId(final EClass eClass) {
         Assert.isLegal(eClass != null);
-        Assert.isLegal(ProcessPackage.eINSTANCE.equals(eClass.getEPackage()), MessageFormat.format("EClass {0} is not supported.", eClass.getName()));
+        Assert.isLegal(ProcessPackage.eINSTANCE.equals(eClass.getEPackage()),
+                MessageFormat.format("EClass {0} is not supported.", eClass.getName()));
         return eClass.getClassifierID();
     }
-
-
 
 }

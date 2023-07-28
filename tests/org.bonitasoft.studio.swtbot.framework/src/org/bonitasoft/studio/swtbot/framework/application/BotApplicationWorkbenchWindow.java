@@ -19,7 +19,7 @@ import org.bonitasoft.studio.application.views.overview.ProjectOverviewEditorPar
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.ui.jface.SWTBotConstants;
 import org.bonitasoft.studio.la.i18n.Messages;
-import org.bonitasoft.studio.model.process.Pool;
+import org.bonitasoft.bpm.model.process.Pool;
 import org.bonitasoft.studio.swtbot.framework.application.editor.BotProjectOverviewEditor;
 import org.bonitasoft.studio.swtbot.framework.application.menu.AbstractBotMenu;
 import org.bonitasoft.studio.swtbot.framework.bdm.BotBdmEditor;

@@ -17,7 +17,7 @@
  */
 package org.bonitasoft.studio.sqlbuilder.ex.wizard;
 
-import org.bonitasoft.studio.connector.model.definition.Page;
+import org.bonitasoft.bpm.connector.model.definition.Page;
 import org.bonitasoft.studio.connector.model.definition.wizard.GeneratedConnectorWizardPage;
 import org.bonitasoft.studio.connectors.ui.wizard.page.AbstractConnectorOutputWizardPage;
 import org.bonitasoft.studio.connectors.ui.wizard.page.SelectDatabaseOutputTypeWizardPage;

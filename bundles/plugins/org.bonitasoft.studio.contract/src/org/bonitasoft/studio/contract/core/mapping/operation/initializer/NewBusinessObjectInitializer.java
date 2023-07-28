@@ -26,7 +26,7 @@ import org.bonitasoft.engine.bdm.model.field.RelationField;
 import org.bonitasoft.studio.common.functions.ContractInputFunctions;
 import org.bonitasoft.studio.contract.core.mapping.FieldToContractInputMapping;
 import org.bonitasoft.studio.contract.core.mapping.operation.BusinessObjectInstantiationException;
-import org.bonitasoft.studio.model.process.ContractInput;
+import org.bonitasoft.bpm.model.process.ContractInput;
 import org.eclipse.emf.ecore.EObject;
 
 public class NewBusinessObjectInitializer extends AbstractBusinessObjectInitializer {

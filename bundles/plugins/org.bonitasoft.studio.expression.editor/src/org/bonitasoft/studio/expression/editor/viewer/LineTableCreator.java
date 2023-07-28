@@ -17,9 +17,9 @@
  */
 package org.bonitasoft.studio.expression.editor.viewer;
 
-import org.bonitasoft.studio.model.expression.Expression;
-import org.bonitasoft.studio.model.expression.ExpressionFactory;
-import org.bonitasoft.studio.model.expression.ListExpression;
+import org.bonitasoft.bpm.model.expression.Expression;
+import org.bonitasoft.bpm.model.expression.ExpressionFactory;
+import org.bonitasoft.bpm.model.expression.ListExpression;
 import org.eclipse.emf.common.util.EList;
 
 /**

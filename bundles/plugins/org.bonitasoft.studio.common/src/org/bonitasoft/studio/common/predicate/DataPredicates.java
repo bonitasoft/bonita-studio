@@ -16,7 +16,7 @@ package org.bonitasoft.studio.common.predicate;
 
 import java.util.Objects;
 
-import org.bonitasoft.studio.model.process.Data;
+import org.bonitasoft.bpm.model.process.Data;
 
 import com.google.common.base.Predicate;
 

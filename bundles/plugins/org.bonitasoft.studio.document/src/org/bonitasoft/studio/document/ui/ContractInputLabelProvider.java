@@ -17,7 +17,7 @@ package org.bonitasoft.studio.document.ui;
 import static com.google.common.base.Preconditions.checkArgument;
 import static org.bonitasoft.studio.common.functions.ContractInputFunctions.toAncestorNameList;
 
-import org.bonitasoft.studio.model.process.ContractInput;
+import org.bonitasoft.bpm.model.process.ContractInput;
 import org.eclipse.jface.viewers.LabelProvider;
 
 import com.google.common.base.Joiner;

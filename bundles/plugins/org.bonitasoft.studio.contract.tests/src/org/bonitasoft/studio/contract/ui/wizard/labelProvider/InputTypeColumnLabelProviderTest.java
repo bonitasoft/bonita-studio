@@ -15,8 +15,8 @@
 package org.bonitasoft.studio.contract.ui.wizard.labelProvider;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.bonitasoft.studio.model.process.builders.ContractBuilder.aContract;
-import static org.bonitasoft.studio.model.process.builders.PoolBuilder.aPool;
+import static org.bonitasoft.bpm.model.process.builders.ContractBuilder.aContract;
+import static org.bonitasoft.bpm.model.process.builders.PoolBuilder.aPool;
 
 import org.bonitasoft.studio.businessobject.ui.DateTypeLabels;
 import org.bonitasoft.studio.contract.core.mapping.RelationFieldToContractInputMapping;
@@ -24,7 +24,7 @@ import org.bonitasoft.studio.contract.core.mapping.SimpleFieldToContractInputMap
 import org.bonitasoft.studio.model.businessObject.BusinessObjectBuilder;
 import org.bonitasoft.studio.model.businessObject.FieldBuilder.RelationFieldBuilder;
 import org.bonitasoft.studio.model.businessObject.FieldBuilder.SimpleFieldBuilder;
-import org.bonitasoft.studio.model.process.ContractInputType;
+import org.bonitasoft.bpm.model.process.ContractInputType;
 import org.junit.Test;
 
 public class InputTypeColumnLabelProviderTest {

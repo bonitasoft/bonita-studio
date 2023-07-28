@@ -16,7 +16,7 @@
  */
 package org.bonitasoft.studio.expression.editor.autocompletion;
 
-import org.bonitasoft.studio.model.expression.Expression;
+import org.bonitasoft.bpm.model.expression.Expression;
 import org.eclipse.jface.viewers.ILabelProvider;
 
 /**

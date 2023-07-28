@@ -21,7 +21,7 @@ package org.bonitasoft.studio.diagram.custom.clipboard;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.bonitasoft.studio.model.process.Container;
+import org.bonitasoft.bpm.model.process.Container;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gmf.runtime.common.ui.action.global.GlobalActionId;
 import org.eclipse.gmf.runtime.common.ui.services.action.global.IGlobalActionContext;

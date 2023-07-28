@@ -18,19 +18,18 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.bpm.model.expression.Expression;
+import org.bonitasoft.bpm.model.expression.ExpressionPackage;
+import org.bonitasoft.bpm.model.process.ContractInput;
+import org.bonitasoft.bpm.model.process.Document;
+import org.bonitasoft.bpm.model.process.Pool;
+import org.bonitasoft.bpm.model.process.ProcessPackage;
+import org.bonitasoft.bpm.model.util.ExpressionConstants;
+import org.bonitasoft.bpm.model.util.ModelSearch;
 import org.bonitasoft.studio.common.emf.tools.EMFModelUpdater;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
-import org.bonitasoft.studio.common.model.ModelSearch;
-import org.bonitasoft.studio.model.expression.Expression;
-import org.bonitasoft.studio.model.expression.ExpressionPackage;
-import org.bonitasoft.studio.model.process.ContractInput;
-import org.bonitasoft.studio.model.process.Document;
-import org.bonitasoft.studio.model.process.Pool;
-import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.refactoring.core.AbstractRefactorOperation;
-import org.bonitasoft.studio.refactoring.core.DataRefactorPair;
 import org.bonitasoft.studio.refactoring.core.RefactoringOperationType;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.command.CompoundCommand;
@@ -46,7 +45,8 @@ public class RefactorDocumentOperation extends AbstractRefactorOperation<Documen
     }
 
     @Override
-    protected CompoundCommand doBuildCompoundCommand(final CompoundCommand compoundCommand, final IProgressMonitor monitor) {
+    protected CompoundCommand doBuildCompoundCommand(final CompoundCommand compoundCommand,
+            final IProgressMonitor monitor) {
         final CompoundCommand deleteCommands = new CompoundCommand(
                 "Compound commands containing all delete operations to do at last step");
         for (final DocumentRefactorPair pairToRefactor : pairsToRefactor) {
@@ -86,7 +86,8 @@ public class RefactorDocumentOperation extends AbstractRefactorOperation<Documen
             final DocumentRefactorPair pairToRefactor) {
         final Document newValue = pairToRefactor.getNewValue();
         if (newValue != null) {
-            final List<Expression> expressions = ModelHelper.getAllItemsOfType(getContainer(pairToRefactor.getOldValue()),
+            final List<Expression> expressions = ModelHelper.getAllItemsOfType(
+                    getContainer(pairToRefactor.getOldValue()),
                     ExpressionPackage.Literals.EXPRESSION);
             for (final Expression exp : expressions) {
                 updateDocumentInExpression(compoundCommand, pairToRefactor, newValue, exp);
@@ -168,7 +169,8 @@ public class RefactorDocumentOperation extends AbstractRefactorOperation<Documen
         cc.append(SetCommand.create(getEditingDomain(), exp, ExpressionPackage.Literals.EXPRESSION__TYPE,
                 ExpressionConstants.CONSTANT_TYPE));
         // update referenced document
-        cc.append(RemoveCommand.create(getEditingDomain(), exp, ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS,
+        cc.append(RemoveCommand.create(getEditingDomain(), exp,
+                ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS,
                 exp.getReferencedElements()));
     }
 
@@ -187,9 +189,9 @@ public class RefactorDocumentOperation extends AbstractRefactorOperation<Documen
     protected Pool getContainer(final Document oldValue) {
         return (Pool) ModelHelper.getParentProcess(oldValue);
     }
-    
+
     private void updateContractInputDataReference(final CompoundCommand cc,
-            final DocumentRefactorPair pairToRefactor,String newName) {
+            final DocumentRefactorPair pairToRefactor, String newName) {
         ModelSearch modelSearch = new ModelSearch(Collections::emptyList);
         modelSearch.getAllItemsOfType(getContainer(pairToRefactor.getOldValue()), ContractInput.class).stream()
                 .filter(input -> Objects.equals(pairToRefactor.getOldValue().getName(),

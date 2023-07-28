@@ -16,7 +16,7 @@
  */
 package org.bonitasoft.studio.connectors.ui.wizard.page;
 
-import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.bpm.model.util.ExpressionConstants;
 import org.bonitasoft.studio.connectors.ui.wizard.ConnectorAvailableExpressionTypeFilter;
 
 

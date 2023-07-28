@@ -16,9 +16,9 @@ package org.bonitasoft.studio.document.ui.wizardPage;
 
 import org.bonitasoft.studio.document.i18n.Messages;
 import org.bonitasoft.studio.document.ui.validator.AdditionalResourceBarPathValidator;
-import org.bonitasoft.studio.model.process.AdditionalResource;
-import org.bonitasoft.studio.model.process.Pool;
-import org.bonitasoft.studio.model.process.ProcessPackage;
+import org.bonitasoft.bpm.model.process.AdditionalResource;
+import org.bonitasoft.bpm.model.process.Pool;
+import org.bonitasoft.bpm.model.process.ProcessPackage;
 import org.bonitasoft.studio.ui.widget.TextAreaWidget;
 import org.bonitasoft.studio.ui.widget.TextWidget;
 import org.eclipse.emf.databinding.EMFDataBindingContext;

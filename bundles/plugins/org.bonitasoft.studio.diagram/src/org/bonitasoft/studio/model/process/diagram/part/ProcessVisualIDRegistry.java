@@ -17,8 +17,8 @@
 */
 package org.bonitasoft.studio.model.process.diagram.part;
 
-import org.bonitasoft.studio.model.process.MainProcess;
-import org.bonitasoft.studio.model.process.ProcessPackage;
+import org.bonitasoft.bpm.model.process.MainProcess;
+import org.bonitasoft.bpm.model.process.ProcessPackage;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.*;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.ecore.EAnnotation;

@@ -23,10 +23,10 @@ import static org.mockito.Mockito.when;
 
 import java.util.Collections;
 
-import org.bonitasoft.studio.model.process.Data;
-import org.bonitasoft.studio.model.process.ProcessFactory;
-import org.bonitasoft.studio.model.process.ProcessPackage;
-import org.bonitasoft.studio.model.process.util.ProcessAdapterFactory;
+import org.bonitasoft.bpm.model.process.Data;
+import org.bonitasoft.bpm.model.process.ProcessFactory;
+import org.bonitasoft.bpm.model.process.ProcessPackage;
+import org.bonitasoft.bpm.model.process.util.ProcessAdapterFactory;
 import org.bonitasoft.studio.refactoring.core.RefactorDataOperation;
 import org.bonitasoft.studio.swt.rules.RealmWithDisplay;
 import org.eclipse.emf.ecore.EStructuralFeature;

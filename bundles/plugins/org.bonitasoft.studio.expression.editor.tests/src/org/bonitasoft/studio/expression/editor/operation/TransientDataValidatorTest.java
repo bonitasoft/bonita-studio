@@ -18,10 +18,10 @@ package org.bonitasoft.studio.expression.editor.operation;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.bonitasoft.studio.model.expression.Expression;
-import org.bonitasoft.studio.model.expression.ExpressionFactory;
-import org.bonitasoft.studio.model.process.Data;
-import org.bonitasoft.studio.model.process.ProcessFactory;
+import org.bonitasoft.bpm.model.expression.Expression;
+import org.bonitasoft.bpm.model.expression.ExpressionFactory;
+import org.bonitasoft.bpm.model.process.Data;
+import org.bonitasoft.bpm.model.process.ProcessFactory;
 import org.eclipse.core.runtime.IStatus;
 import org.junit.After;
 import org.junit.Before;

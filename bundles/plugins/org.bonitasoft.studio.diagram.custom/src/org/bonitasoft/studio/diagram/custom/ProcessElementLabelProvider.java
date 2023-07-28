@@ -18,8 +18,8 @@ package org.bonitasoft.studio.diagram.custom;
  */
 
 
-import org.bonitasoft.studio.model.process.Element;
-import org.bonitasoft.studio.model.process.TextAnnotation;
+import org.bonitasoft.bpm.model.process.Element;
+import org.bonitasoft.bpm.model.process.TextAnnotation;
 import org.bonitasoft.studio.model.process.diagram.part.ProcessVisualIDRegistry;
 import org.bonitasoft.studio.model.process.diagram.providers.ProcessElementTypes;
 import org.eclipse.core.runtime.IAdaptable;

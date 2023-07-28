@@ -15,7 +15,7 @@
 package org.bonitasoft.studio.contract.core.refactoring;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.bonitasoft.studio.model.process.builders.ContractInputBuilder.aContractInput;
+import static org.bonitasoft.bpm.model.process.builders.ContractInputBuilder.aContractInput;
 
 import org.bonitasoft.studio.refactoring.core.RefactorPair;
 import org.junit.Test;

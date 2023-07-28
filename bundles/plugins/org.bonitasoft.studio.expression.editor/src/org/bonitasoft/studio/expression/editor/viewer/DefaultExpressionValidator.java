@@ -17,7 +17,7 @@
 package org.bonitasoft.studio.expression.editor.viewer;
 
 import org.bonitasoft.studio.expression.editor.provider.IExpressionValidator;
-import org.bonitasoft.studio.model.expression.Expression;
+import org.bonitasoft.bpm.model.expression.Expression;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.domain.EditingDomain;
 
@@ -29,7 +29,7 @@ import org.eclipse.emf.edit.domain.EditingDomain;
 public abstract class DefaultExpressionValidator implements IExpressionValidator {
 
     /* (non-Javadoc)
-     * @see org.bonitasoft.studio.expression.editor.provider.IExpressionValidator#setInputExpression(org.bonitasoft.studio.model.expression.Expression)
+     * @see org.bonitasoft.studio.expression.editor.provider.IExpressionValidator#setInputExpression(org.bonitasoft.bpm.model.expression.Expression)
      */
     @Override
     public void setInputExpression(final Expression inputExpression) {

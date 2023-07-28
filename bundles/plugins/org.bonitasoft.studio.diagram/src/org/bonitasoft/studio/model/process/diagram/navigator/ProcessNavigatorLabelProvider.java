@@ -17,8 +17,8 @@
 */
 package org.bonitasoft.studio.model.process.diagram.navigator;
 
-import org.bonitasoft.studio.model.process.Event;
-import org.bonitasoft.studio.model.process.MainProcess;
+import org.bonitasoft.bpm.model.process.Event;
+import org.bonitasoft.bpm.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.*;
 import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditorPlugin;
 import org.bonitasoft.studio.model.process.diagram.part.ProcessVisualIDRegistry;
@@ -94,251 +94,251 @@ public class ProcessNavigatorLabelProvider extends LabelProvider
 	public Image getImage(View view) {
 		switch (ProcessVisualIDRegistry.getVisualID(view)) {
 		case MainProcessEditPart.VISUAL_ID:
-			return getImage("Navigator?Diagram?http://www.bonitasoft.org/ns/studio/process?MainProcess", //$NON-NLS-1$
+			return getImage("Navigator?Diagram?http://www.bonitasoft.org/ns/bpm/process?MainProcess", //$NON-NLS-1$
 					ProcessElementTypes.MainProcess_1000);
 		case StartEventEditPart.VISUAL_ID:
-			return getImage("Navigator?TopLevelNode?http://www.bonitasoft.org/ns/studio/process?StartEvent", //$NON-NLS-1$
+			return getImage("Navigator?TopLevelNode?http://www.bonitasoft.org/ns/bpm/process?StartEvent", //$NON-NLS-1$
 					ProcessElementTypes.StartEvent_2002);
 		case EndEventEditPart.VISUAL_ID:
-			return getImage("Navigator?TopLevelNode?http://www.bonitasoft.org/ns/studio/process?EndEvent", //$NON-NLS-1$
+			return getImage("Navigator?TopLevelNode?http://www.bonitasoft.org/ns/bpm/process?EndEvent", //$NON-NLS-1$
 					ProcessElementTypes.EndEvent_2003);
 		case TaskEditPart.VISUAL_ID:
-			return getImage("Navigator?TopLevelNode?http://www.bonitasoft.org/ns/studio/process?Task", //$NON-NLS-1$
+			return getImage("Navigator?TopLevelNode?http://www.bonitasoft.org/ns/bpm/process?Task", //$NON-NLS-1$
 					ProcessElementTypes.Task_2004);
 		case ActivityEditPart.VISUAL_ID:
-			return getImage("Navigator?TopLevelNode?http://www.bonitasoft.org/ns/studio/process?Activity", //$NON-NLS-1$
+			return getImage("Navigator?TopLevelNode?http://www.bonitasoft.org/ns/bpm/process?Activity", //$NON-NLS-1$
 					ProcessElementTypes.Activity_2006);
 		case PoolEditPart.VISUAL_ID:
-			return getImage("Navigator?TopLevelNode?http://www.bonitasoft.org/ns/studio/process?Pool", //$NON-NLS-1$
+			return getImage("Navigator?TopLevelNode?http://www.bonitasoft.org/ns/bpm/process?Pool", //$NON-NLS-1$
 					ProcessElementTypes.Pool_2007);
 		case XORGatewayEditPart.VISUAL_ID:
-			return getImage("Navigator?TopLevelNode?http://www.bonitasoft.org/ns/studio/process?XORGateway", //$NON-NLS-1$
+			return getImage("Navigator?TopLevelNode?http://www.bonitasoft.org/ns/bpm/process?XORGateway", //$NON-NLS-1$
 					ProcessElementTypes.XORGateway_2008);
 		case ANDGatewayEditPart.VISUAL_ID:
-			return getImage("Navigator?TopLevelNode?http://www.bonitasoft.org/ns/studio/process?ANDGateway", //$NON-NLS-1$
+			return getImage("Navigator?TopLevelNode?http://www.bonitasoft.org/ns/bpm/process?ANDGateway", //$NON-NLS-1$
 					ProcessElementTypes.ANDGateway_2009);
 		case StartMessageEventEditPart.VISUAL_ID:
-			return getImage("Navigator?TopLevelNode?http://www.bonitasoft.org/ns/studio/process?StartMessageEvent", //$NON-NLS-1$
+			return getImage("Navigator?TopLevelNode?http://www.bonitasoft.org/ns/bpm/process?StartMessageEvent", //$NON-NLS-1$
 					ProcessElementTypes.StartMessageEvent_2010);
 		case EndMessageEventEditPart.VISUAL_ID:
-			return getImage("Navigator?TopLevelNode?http://www.bonitasoft.org/ns/studio/process?EndMessageEvent", //$NON-NLS-1$
+			return getImage("Navigator?TopLevelNode?http://www.bonitasoft.org/ns/bpm/process?EndMessageEvent", //$NON-NLS-1$
 					ProcessElementTypes.EndMessageEvent_2011);
 		case IntermediateCatchMessageEventEditPart.VISUAL_ID:
 			return getImage(
-					"Navigator?TopLevelNode?http://www.bonitasoft.org/ns/studio/process?IntermediateCatchMessageEvent", //$NON-NLS-1$
+					"Navigator?TopLevelNode?http://www.bonitasoft.org/ns/bpm/process?IntermediateCatchMessageEvent", //$NON-NLS-1$
 					ProcessElementTypes.IntermediateCatchMessageEvent_2013);
 		case IntermediateThrowMessageEventEditPart.VISUAL_ID:
 			return getImage(
-					"Navigator?TopLevelNode?http://www.bonitasoft.org/ns/studio/process?IntermediateThrowMessageEvent", //$NON-NLS-1$
+					"Navigator?TopLevelNode?http://www.bonitasoft.org/ns/bpm/process?IntermediateThrowMessageEvent", //$NON-NLS-1$
 					ProcessElementTypes.IntermediateThrowMessageEvent_2014);
 		case TextAnnotationEditPart.VISUAL_ID:
-			return getImage("Navigator?TopLevelNode?http://www.bonitasoft.org/ns/studio/process?TextAnnotation", //$NON-NLS-1$
+			return getImage("Navigator?TopLevelNode?http://www.bonitasoft.org/ns/bpm/process?TextAnnotation", //$NON-NLS-1$
 					ProcessElementTypes.TextAnnotation_2015);
 		case StartTimerEventEditPart.VISUAL_ID:
-			return getImage("Navigator?TopLevelNode?http://www.bonitasoft.org/ns/studio/process?StartTimerEvent", //$NON-NLS-1$
+			return getImage("Navigator?TopLevelNode?http://www.bonitasoft.org/ns/bpm/process?StartTimerEvent", //$NON-NLS-1$
 					ProcessElementTypes.StartTimerEvent_2016);
 		case IntermediateCatchTimerEventEditPart.VISUAL_ID:
 			return getImage(
-					"Navigator?TopLevelNode?http://www.bonitasoft.org/ns/studio/process?IntermediateCatchTimerEvent", //$NON-NLS-1$
+					"Navigator?TopLevelNode?http://www.bonitasoft.org/ns/bpm/process?IntermediateCatchTimerEvent", //$NON-NLS-1$
 					ProcessElementTypes.IntermediateCatchTimerEvent_2017);
 		case CatchLinkEventEditPart.VISUAL_ID:
-			return getImage("Navigator?TopLevelNode?http://www.bonitasoft.org/ns/studio/process?CatchLinkEvent", //$NON-NLS-1$
+			return getImage("Navigator?TopLevelNode?http://www.bonitasoft.org/ns/bpm/process?CatchLinkEvent", //$NON-NLS-1$
 					ProcessElementTypes.CatchLinkEvent_2018);
 		case ThrowLinkEventEditPart.VISUAL_ID:
-			return getImage("Navigator?TopLevelNode?http://www.bonitasoft.org/ns/studio/process?ThrowLinkEvent", //$NON-NLS-1$
+			return getImage("Navigator?TopLevelNode?http://www.bonitasoft.org/ns/bpm/process?ThrowLinkEvent", //$NON-NLS-1$
 					ProcessElementTypes.ThrowLinkEvent_2019);
 		case IntermediateThrowSignalEventEditPart.VISUAL_ID:
 			return getImage(
-					"Navigator?TopLevelNode?http://www.bonitasoft.org/ns/studio/process?IntermediateThrowSignalEvent", //$NON-NLS-1$
+					"Navigator?TopLevelNode?http://www.bonitasoft.org/ns/bpm/process?IntermediateThrowSignalEvent", //$NON-NLS-1$
 					ProcessElementTypes.IntermediateThrowSignalEvent_2020);
 		case IntermediateCatchSignalEventEditPart.VISUAL_ID:
 			return getImage(
-					"Navigator?TopLevelNode?http://www.bonitasoft.org/ns/studio/process?IntermediateCatchSignalEvent", //$NON-NLS-1$
+					"Navigator?TopLevelNode?http://www.bonitasoft.org/ns/bpm/process?IntermediateCatchSignalEvent", //$NON-NLS-1$
 					ProcessElementTypes.IntermediateCatchSignalEvent_2021);
 		case StartSignalEventEditPart.VISUAL_ID:
-			return getImage("Navigator?TopLevelNode?http://www.bonitasoft.org/ns/studio/process?StartSignalEvent", //$NON-NLS-1$
+			return getImage("Navigator?TopLevelNode?http://www.bonitasoft.org/ns/bpm/process?StartSignalEvent", //$NON-NLS-1$
 					ProcessElementTypes.StartSignalEvent_2022);
 		case EndSignalEventEditPart.VISUAL_ID:
-			return getImage("Navigator?TopLevelNode?http://www.bonitasoft.org/ns/studio/process?EndSignalEvent", //$NON-NLS-1$
+			return getImage("Navigator?TopLevelNode?http://www.bonitasoft.org/ns/bpm/process?EndSignalEvent", //$NON-NLS-1$
 					ProcessElementTypes.EndSignalEvent_2023);
 		case EventEditPart.VISUAL_ID:
-			return getImage("Navigator?TopLevelNode?http://www.bonitasoft.org/ns/studio/process?Event", //$NON-NLS-1$
+			return getImage("Navigator?TopLevelNode?http://www.bonitasoft.org/ns/bpm/process?Event", //$NON-NLS-1$
 					ProcessElementTypes.Event_2024);
 		case ReceiveTaskEditPart.VISUAL_ID:
-			return getImage("Navigator?TopLevelNode?http://www.bonitasoft.org/ns/studio/process?ReceiveTask", //$NON-NLS-1$
+			return getImage("Navigator?TopLevelNode?http://www.bonitasoft.org/ns/bpm/process?ReceiveTask", //$NON-NLS-1$
 					ProcessElementTypes.ReceiveTask_2025);
 		case SendTaskEditPart.VISUAL_ID:
-			return getImage("Navigator?TopLevelNode?http://www.bonitasoft.org/ns/studio/process?SendTask", //$NON-NLS-1$
+			return getImage("Navigator?TopLevelNode?http://www.bonitasoft.org/ns/bpm/process?SendTask", //$NON-NLS-1$
 					ProcessElementTypes.SendTask_2026);
 		case ServiceTaskEditPart.VISUAL_ID:
-			return getImage("Navigator?TopLevelNode?http://www.bonitasoft.org/ns/studio/process?ServiceTask", //$NON-NLS-1$
+			return getImage("Navigator?TopLevelNode?http://www.bonitasoft.org/ns/bpm/process?ServiceTask", //$NON-NLS-1$
 					ProcessElementTypes.ServiceTask_2027);
 		case ScriptTaskEditPart.VISUAL_ID:
-			return getImage("Navigator?TopLevelNode?http://www.bonitasoft.org/ns/studio/process?ScriptTask", //$NON-NLS-1$
+			return getImage("Navigator?TopLevelNode?http://www.bonitasoft.org/ns/bpm/process?ScriptTask", //$NON-NLS-1$
 					ProcessElementTypes.ScriptTask_2028);
 		case EndErrorEventEditPart.VISUAL_ID:
-			return getImage("Navigator?TopLevelNode?http://www.bonitasoft.org/ns/studio/process?EndErrorEvent", //$NON-NLS-1$
+			return getImage("Navigator?TopLevelNode?http://www.bonitasoft.org/ns/bpm/process?EndErrorEvent", //$NON-NLS-1$
 					ProcessElementTypes.EndErrorEvent_2029);
 		case InclusiveGatewayEditPart.VISUAL_ID:
-			return getImage("Navigator?TopLevelNode?http://www.bonitasoft.org/ns/studio/process?InclusiveGateway", //$NON-NLS-1$
+			return getImage("Navigator?TopLevelNode?http://www.bonitasoft.org/ns/bpm/process?InclusiveGateway", //$NON-NLS-1$
 					ProcessElementTypes.InclusiveGateway_2030);
 		case SubProcessEventEditPart.VISUAL_ID:
-			return getImage("Navigator?TopLevelNode?http://www.bonitasoft.org/ns/studio/process?SubProcessEvent", //$NON-NLS-1$
+			return getImage("Navigator?TopLevelNode?http://www.bonitasoft.org/ns/bpm/process?SubProcessEvent", //$NON-NLS-1$
 					ProcessElementTypes.SubProcessEvent_2031);
 		case StartErrorEventEditPart.VISUAL_ID:
-			return getImage("Navigator?TopLevelNode?http://www.bonitasoft.org/ns/studio/process?StartErrorEvent", //$NON-NLS-1$
+			return getImage("Navigator?TopLevelNode?http://www.bonitasoft.org/ns/bpm/process?StartErrorEvent", //$NON-NLS-1$
 					ProcessElementTypes.StartErrorEvent_2033);
 		case EndTerminatedEventEditPart.VISUAL_ID:
-			return getImage("Navigator?TopLevelNode?http://www.bonitasoft.org/ns/studio/process?EndTerminatedEvent", //$NON-NLS-1$
+			return getImage("Navigator?TopLevelNode?http://www.bonitasoft.org/ns/bpm/process?EndTerminatedEvent", //$NON-NLS-1$
 					ProcessElementTypes.EndTerminatedEvent_2035);
 		case CallActivityEditPart.VISUAL_ID:
-			return getImage("Navigator?TopLevelNode?http://www.bonitasoft.org/ns/studio/process?CallActivity", //$NON-NLS-1$
+			return getImage("Navigator?TopLevelNode?http://www.bonitasoft.org/ns/bpm/process?CallActivity", //$NON-NLS-1$
 					ProcessElementTypes.CallActivity_2036);
 		case StartEvent2EditPart.VISUAL_ID:
-			return getImage("Navigator?Node?http://www.bonitasoft.org/ns/studio/process?StartEvent", //$NON-NLS-1$
+			return getImage("Navigator?Node?http://www.bonitasoft.org/ns/bpm/process?StartEvent", //$NON-NLS-1$
 					ProcessElementTypes.StartEvent_3002);
 		case EndEvent2EditPart.VISUAL_ID:
-			return getImage("Navigator?Node?http://www.bonitasoft.org/ns/studio/process?EndEvent", //$NON-NLS-1$
+			return getImage("Navigator?Node?http://www.bonitasoft.org/ns/bpm/process?EndEvent", //$NON-NLS-1$
 					ProcessElementTypes.EndEvent_3003);
 		case Task2EditPart.VISUAL_ID:
-			return getImage("Navigator?Node?http://www.bonitasoft.org/ns/studio/process?Task", //$NON-NLS-1$
+			return getImage("Navigator?Node?http://www.bonitasoft.org/ns/bpm/process?Task", //$NON-NLS-1$
 					ProcessElementTypes.Task_3005);
 		case Activity2EditPart.VISUAL_ID:
-			return getImage("Navigator?Node?http://www.bonitasoft.org/ns/studio/process?Activity", //$NON-NLS-1$
+			return getImage("Navigator?Node?http://www.bonitasoft.org/ns/bpm/process?Activity", //$NON-NLS-1$
 					ProcessElementTypes.Activity_3006);
 		case LaneEditPart.VISUAL_ID:
-			return getImage("Navigator?Node?http://www.bonitasoft.org/ns/studio/process?Lane", //$NON-NLS-1$
+			return getImage("Navigator?Node?http://www.bonitasoft.org/ns/bpm/process?Lane", //$NON-NLS-1$
 					ProcessElementTypes.Lane_3007);
 		case XORGateway2EditPart.VISUAL_ID:
-			return getImage("Navigator?Node?http://www.bonitasoft.org/ns/studio/process?XORGateway", //$NON-NLS-1$
+			return getImage("Navigator?Node?http://www.bonitasoft.org/ns/bpm/process?XORGateway", //$NON-NLS-1$
 					ProcessElementTypes.XORGateway_3008);
 		case ANDGateway2EditPart.VISUAL_ID:
-			return getImage("Navigator?Node?http://www.bonitasoft.org/ns/studio/process?ANDGateway", //$NON-NLS-1$
+			return getImage("Navigator?Node?http://www.bonitasoft.org/ns/bpm/process?ANDGateway", //$NON-NLS-1$
 					ProcessElementTypes.ANDGateway_3009);
 		case EndMessageEvent2EditPart.VISUAL_ID:
-			return getImage("Navigator?Node?http://www.bonitasoft.org/ns/studio/process?EndMessageEvent", //$NON-NLS-1$
+			return getImage("Navigator?Node?http://www.bonitasoft.org/ns/bpm/process?EndMessageEvent", //$NON-NLS-1$
 					ProcessElementTypes.EndMessageEvent_3011);
 		case StartMessageEvent2EditPart.VISUAL_ID:
-			return getImage("Navigator?Node?http://www.bonitasoft.org/ns/studio/process?StartMessageEvent", //$NON-NLS-1$
+			return getImage("Navigator?Node?http://www.bonitasoft.org/ns/bpm/process?StartMessageEvent", //$NON-NLS-1$
 					ProcessElementTypes.StartMessageEvent_3012);
 		case IntermediateCatchMessageEvent2EditPart.VISUAL_ID:
-			return getImage("Navigator?Node?http://www.bonitasoft.org/ns/studio/process?IntermediateCatchMessageEvent", //$NON-NLS-1$
+			return getImage("Navigator?Node?http://www.bonitasoft.org/ns/bpm/process?IntermediateCatchMessageEvent", //$NON-NLS-1$
 					ProcessElementTypes.IntermediateCatchMessageEvent_3013);
 		case IntermediateThrowMessageEvent2EditPart.VISUAL_ID:
-			return getImage("Navigator?Node?http://www.bonitasoft.org/ns/studio/process?IntermediateThrowMessageEvent", //$NON-NLS-1$
+			return getImage("Navigator?Node?http://www.bonitasoft.org/ns/bpm/process?IntermediateThrowMessageEvent", //$NON-NLS-1$
 					ProcessElementTypes.IntermediateThrowMessageEvent_3014);
 		case TextAnnotation2EditPart.VISUAL_ID:
-			return getImage("Navigator?Node?http://www.bonitasoft.org/ns/studio/process?TextAnnotation", //$NON-NLS-1$
+			return getImage("Navigator?Node?http://www.bonitasoft.org/ns/bpm/process?TextAnnotation", //$NON-NLS-1$
 					ProcessElementTypes.TextAnnotation_3015);
 		case StartTimerEvent2EditPart.VISUAL_ID:
-			return getImage("Navigator?Node?http://www.bonitasoft.org/ns/studio/process?StartTimerEvent", //$NON-NLS-1$
+			return getImage("Navigator?Node?http://www.bonitasoft.org/ns/bpm/process?StartTimerEvent", //$NON-NLS-1$
 					ProcessElementTypes.StartTimerEvent_3016);
 		case IntermediateCatchTimerEvent2EditPart.VISUAL_ID:
-			return getImage("Navigator?Node?http://www.bonitasoft.org/ns/studio/process?IntermediateCatchTimerEvent", //$NON-NLS-1$
+			return getImage("Navigator?Node?http://www.bonitasoft.org/ns/bpm/process?IntermediateCatchTimerEvent", //$NON-NLS-1$
 					ProcessElementTypes.IntermediateCatchTimerEvent_3017);
 		case ThrowLinkEvent2EditPart.VISUAL_ID:
-			return getImage("Navigator?Node?http://www.bonitasoft.org/ns/studio/process?ThrowLinkEvent", //$NON-NLS-1$
+			return getImage("Navigator?Node?http://www.bonitasoft.org/ns/bpm/process?ThrowLinkEvent", //$NON-NLS-1$
 					ProcessElementTypes.ThrowLinkEvent_3018);
 		case CatchLinkEvent2EditPart.VISUAL_ID:
-			return getImage("Navigator?Node?http://www.bonitasoft.org/ns/studio/process?CatchLinkEvent", //$NON-NLS-1$
+			return getImage("Navigator?Node?http://www.bonitasoft.org/ns/bpm/process?CatchLinkEvent", //$NON-NLS-1$
 					ProcessElementTypes.CatchLinkEvent_3019);
 		case EndSignalEvent2EditPart.VISUAL_ID:
-			return getImage("Navigator?Node?http://www.bonitasoft.org/ns/studio/process?EndSignalEvent", //$NON-NLS-1$
+			return getImage("Navigator?Node?http://www.bonitasoft.org/ns/bpm/process?EndSignalEvent", //$NON-NLS-1$
 					ProcessElementTypes.EndSignalEvent_3020);
 		case IntermediateCatchSignalEvent2EditPart.VISUAL_ID:
-			return getImage("Navigator?Node?http://www.bonitasoft.org/ns/studio/process?IntermediateCatchSignalEvent", //$NON-NLS-1$
+			return getImage("Navigator?Node?http://www.bonitasoft.org/ns/bpm/process?IntermediateCatchSignalEvent", //$NON-NLS-1$
 					ProcessElementTypes.IntermediateCatchSignalEvent_3021);
 		case IntermediateThrowSignalEvent2EditPart.VISUAL_ID:
-			return getImage("Navigator?Node?http://www.bonitasoft.org/ns/studio/process?IntermediateThrowSignalEvent", //$NON-NLS-1$
+			return getImage("Navigator?Node?http://www.bonitasoft.org/ns/bpm/process?IntermediateThrowSignalEvent", //$NON-NLS-1$
 					ProcessElementTypes.IntermediateThrowSignalEvent_3022);
 		case StartSignalEvent2EditPart.VISUAL_ID:
-			return getImage("Navigator?Node?http://www.bonitasoft.org/ns/studio/process?StartSignalEvent", //$NON-NLS-1$
+			return getImage("Navigator?Node?http://www.bonitasoft.org/ns/bpm/process?StartSignalEvent", //$NON-NLS-1$
 					ProcessElementTypes.StartSignalEvent_3023);
 		case Event2EditPart.VISUAL_ID:
-			return getImage("Navigator?Node?http://www.bonitasoft.org/ns/studio/process?Event", //$NON-NLS-1$
+			return getImage("Navigator?Node?http://www.bonitasoft.org/ns/bpm/process?Event", //$NON-NLS-1$
 					ProcessElementTypes.Event_3024);
 		case SendTask2EditPart.VISUAL_ID:
-			return getImage("Navigator?Node?http://www.bonitasoft.org/ns/studio/process?SendTask", //$NON-NLS-1$
+			return getImage("Navigator?Node?http://www.bonitasoft.org/ns/bpm/process?SendTask", //$NON-NLS-1$
 					ProcessElementTypes.SendTask_3025);
 		case ReceiveTask2EditPart.VISUAL_ID:
-			return getImage("Navigator?Node?http://www.bonitasoft.org/ns/studio/process?ReceiveTask", //$NON-NLS-1$
+			return getImage("Navigator?Node?http://www.bonitasoft.org/ns/bpm/process?ReceiveTask", //$NON-NLS-1$
 					ProcessElementTypes.ReceiveTask_3026);
 		case ServiceTask2EditPart.VISUAL_ID:
-			return getImage("Navigator?Node?http://www.bonitasoft.org/ns/studio/process?ServiceTask", //$NON-NLS-1$
+			return getImage("Navigator?Node?http://www.bonitasoft.org/ns/bpm/process?ServiceTask", //$NON-NLS-1$
 					ProcessElementTypes.ServiceTask_3027);
 		case ScriptTask2EditPart.VISUAL_ID:
-			return getImage("Navigator?Node?http://www.bonitasoft.org/ns/studio/process?ScriptTask", //$NON-NLS-1$
+			return getImage("Navigator?Node?http://www.bonitasoft.org/ns/bpm/process?ScriptTask", //$NON-NLS-1$
 					ProcessElementTypes.ScriptTask_3028);
 		case IntermediateErrorCatchEvent2EditPart.VISUAL_ID:
-			return getImage("Navigator?Node?http://www.bonitasoft.org/ns/studio/process?IntermediateErrorCatchEvent", //$NON-NLS-1$
+			return getImage("Navigator?Node?http://www.bonitasoft.org/ns/bpm/process?IntermediateErrorCatchEvent", //$NON-NLS-1$
 					ProcessElementTypes.IntermediateErrorCatchEvent_3029);
 		case IntermediateErrorCatchEventEditPart.VISUAL_ID:
-			return getImage("Navigator?Node?http://www.bonitasoft.org/ns/studio/process?IntermediateErrorCatchEvent", //$NON-NLS-1$
+			return getImage("Navigator?Node?http://www.bonitasoft.org/ns/bpm/process?IntermediateErrorCatchEvent", //$NON-NLS-1$
 					ProcessElementTypes.IntermediateErrorCatchEvent_3030);
 		case IntermediateErrorCatchEvent3EditPart.VISUAL_ID:
-			return getImage("Navigator?Node?http://www.bonitasoft.org/ns/studio/process?IntermediateErrorCatchEvent", //$NON-NLS-1$
+			return getImage("Navigator?Node?http://www.bonitasoft.org/ns/bpm/process?IntermediateErrorCatchEvent", //$NON-NLS-1$
 					ProcessElementTypes.IntermediateErrorCatchEvent_3031);
 		case IntermediateErrorCatchEvent4EditPart.VISUAL_ID:
-			return getImage("Navigator?Node?http://www.bonitasoft.org/ns/studio/process?IntermediateErrorCatchEvent", //$NON-NLS-1$
+			return getImage("Navigator?Node?http://www.bonitasoft.org/ns/bpm/process?IntermediateErrorCatchEvent", //$NON-NLS-1$
 					ProcessElementTypes.IntermediateErrorCatchEvent_3032);
 		case IntermediateErrorCatchEvent5EditPart.VISUAL_ID:
-			return getImage("Navigator?Node?http://www.bonitasoft.org/ns/studio/process?IntermediateErrorCatchEvent", //$NON-NLS-1$
+			return getImage("Navigator?Node?http://www.bonitasoft.org/ns/bpm/process?IntermediateErrorCatchEvent", //$NON-NLS-1$
 					ProcessElementTypes.IntermediateErrorCatchEvent_3033);
 		case IntermediateErrorCatchEvent6EditPart.VISUAL_ID:
-			return getImage("Navigator?Node?http://www.bonitasoft.org/ns/studio/process?IntermediateErrorCatchEvent", //$NON-NLS-1$
+			return getImage("Navigator?Node?http://www.bonitasoft.org/ns/bpm/process?IntermediateErrorCatchEvent", //$NON-NLS-1$
 					ProcessElementTypes.IntermediateErrorCatchEvent_3034);
 		case BoundaryMessageEventEditPart.VISUAL_ID:
-			return getImage("Navigator?Node?http://www.bonitasoft.org/ns/studio/process?BoundaryMessageEvent", //$NON-NLS-1$
+			return getImage("Navigator?Node?http://www.bonitasoft.org/ns/bpm/process?BoundaryMessageEvent", //$NON-NLS-1$
 					ProcessElementTypes.BoundaryMessageEvent_3035);
 		case BoundaryMessageEvent2EditPart.VISUAL_ID:
-			return getImage("Navigator?Node?http://www.bonitasoft.org/ns/studio/process?BoundaryMessageEvent", //$NON-NLS-1$
+			return getImage("Navigator?Node?http://www.bonitasoft.org/ns/bpm/process?BoundaryMessageEvent", //$NON-NLS-1$
 					ProcessElementTypes.BoundaryMessageEvent_3036);
 		case BoundaryTimerEventEditPart.VISUAL_ID:
-			return getImage("Navigator?Node?http://www.bonitasoft.org/ns/studio/process?BoundaryTimerEvent", //$NON-NLS-1$
+			return getImage("Navigator?Node?http://www.bonitasoft.org/ns/bpm/process?BoundaryTimerEvent", //$NON-NLS-1$
 					ProcessElementTypes.BoundaryTimerEvent_3043);
 		case BoundaryTimerEvent2EditPart.VISUAL_ID:
-			return getImage("Navigator?Node?http://www.bonitasoft.org/ns/studio/process?BoundaryTimerEvent", //$NON-NLS-1$
+			return getImage("Navigator?Node?http://www.bonitasoft.org/ns/bpm/process?BoundaryTimerEvent", //$NON-NLS-1$
 					ProcessElementTypes.BoundaryTimerEvent_3044);
 		case EndErrorEvent2EditPart.VISUAL_ID:
-			return getImage("Navigator?Node?http://www.bonitasoft.org/ns/studio/process?EndErrorEvent", //$NON-NLS-1$
+			return getImage("Navigator?Node?http://www.bonitasoft.org/ns/bpm/process?EndErrorEvent", //$NON-NLS-1$
 					ProcessElementTypes.EndErrorEvent_3050);
 		case InclusiveGateway2EditPart.VISUAL_ID:
-			return getImage("Navigator?Node?http://www.bonitasoft.org/ns/studio/process?InclusiveGateway", //$NON-NLS-1$
+			return getImage("Navigator?Node?http://www.bonitasoft.org/ns/bpm/process?InclusiveGateway", //$NON-NLS-1$
 					ProcessElementTypes.InclusiveGateway_3051);
 		case BoundarySignalEventEditPart.VISUAL_ID:
-			return getImage("Navigator?Node?http://www.bonitasoft.org/ns/studio/process?BoundarySignalEvent", //$NON-NLS-1$
+			return getImage("Navigator?Node?http://www.bonitasoft.org/ns/bpm/process?BoundarySignalEvent", //$NON-NLS-1$
 					ProcessElementTypes.BoundarySignalEvent_3052);
 		case BoundarySignalEvent2EditPart.VISUAL_ID:
-			return getImage("Navigator?Node?http://www.bonitasoft.org/ns/studio/process?BoundarySignalEvent", //$NON-NLS-1$
+			return getImage("Navigator?Node?http://www.bonitasoft.org/ns/bpm/process?BoundarySignalEvent", //$NON-NLS-1$
 					ProcessElementTypes.BoundarySignalEvent_3053);
 		case SubProcessEvent2EditPart.VISUAL_ID:
-			return getImage("Navigator?Node?http://www.bonitasoft.org/ns/studio/process?SubProcessEvent", //$NON-NLS-1$
+			return getImage("Navigator?Node?http://www.bonitasoft.org/ns/bpm/process?SubProcessEvent", //$NON-NLS-1$
 					ProcessElementTypes.SubProcessEvent_3058);
 		case StartErrorEvent2EditPart.VISUAL_ID:
-			return getImage("Navigator?Node?http://www.bonitasoft.org/ns/studio/process?StartErrorEvent", //$NON-NLS-1$
+			return getImage("Navigator?Node?http://www.bonitasoft.org/ns/bpm/process?StartErrorEvent", //$NON-NLS-1$
 					ProcessElementTypes.StartErrorEvent_3060);
 		case EndTerminatedEvent2EditPart.VISUAL_ID:
-			return getImage("Navigator?Node?http://www.bonitasoft.org/ns/studio/process?EndTerminatedEvent", //$NON-NLS-1$
+			return getImage("Navigator?Node?http://www.bonitasoft.org/ns/bpm/process?EndTerminatedEvent", //$NON-NLS-1$
 					ProcessElementTypes.EndTerminatedEvent_3062);
 		case CallActivity2EditPart.VISUAL_ID:
-			return getImage("Navigator?Node?http://www.bonitasoft.org/ns/studio/process?CallActivity", //$NON-NLS-1$
+			return getImage("Navigator?Node?http://www.bonitasoft.org/ns/bpm/process?CallActivity", //$NON-NLS-1$
 					ProcessElementTypes.CallActivity_3063);
 		case NonInterruptingBoundaryTimerEventEditPart.VISUAL_ID:
 			return getImage(
-					"Navigator?Node?http://www.bonitasoft.org/ns/studio/process?NonInterruptingBoundaryTimerEvent", //$NON-NLS-1$
+					"Navigator?Node?http://www.bonitasoft.org/ns/bpm/process?NonInterruptingBoundaryTimerEvent", //$NON-NLS-1$
 					ProcessElementTypes.NonInterruptingBoundaryTimerEvent_3064);
 		case NonInterruptingBoundaryTimerEvent2EditPart.VISUAL_ID:
 			return getImage(
-					"Navigator?Node?http://www.bonitasoft.org/ns/studio/process?NonInterruptingBoundaryTimerEvent", //$NON-NLS-1$
+					"Navigator?Node?http://www.bonitasoft.org/ns/bpm/process?NonInterruptingBoundaryTimerEvent", //$NON-NLS-1$
 					ProcessElementTypes.NonInterruptingBoundaryTimerEvent_3065);
 		case SequenceFlowEditPart.VISUAL_ID:
-			return getImage("Navigator?Link?http://www.bonitasoft.org/ns/studio/process?SequenceFlow", //$NON-NLS-1$
+			return getImage("Navigator?Link?http://www.bonitasoft.org/ns/bpm/process?SequenceFlow", //$NON-NLS-1$
 					ProcessElementTypes.SequenceFlow_4001);
 		case MessageFlowEditPart.VISUAL_ID:
-			return getImage("Navigator?Link?http://www.bonitasoft.org/ns/studio/process?MessageFlow", //$NON-NLS-1$
+			return getImage("Navigator?Link?http://www.bonitasoft.org/ns/bpm/process?MessageFlow", //$NON-NLS-1$
 					ProcessElementTypes.MessageFlow_4002);
 		case TextAnnotationAttachmentEditPart.VISUAL_ID:
-			return getImage("Navigator?Link?http://www.bonitasoft.org/ns/studio/process?TextAnnotationAttachment", //$NON-NLS-1$
+			return getImage("Navigator?Link?http://www.bonitasoft.org/ns/bpm/process?TextAnnotationAttachment", //$NON-NLS-1$
 					ProcessElementTypes.TextAnnotationAttachment_4003);
 		}
 		return getImage("Navigator?UnknownElement", null); //$NON-NLS-1$

@@ -20,9 +20,9 @@ package org.bonitasoft.studio.properties.sections.message.commands;
 
 import java.util.List;
 
-import org.bonitasoft.studio.model.process.Message;
-import org.bonitasoft.studio.model.process.MessageFlow;
-import org.bonitasoft.studio.model.process.ThrowMessageEvent;
+import org.bonitasoft.bpm.model.process.Message;
+import org.bonitasoft.bpm.model.process.MessageFlow;
+import org.bonitasoft.bpm.model.process.ThrowMessageEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;

@@ -28,7 +28,7 @@ import org.bonitasoft.studio.diagram.custom.editPolicies.CustomSnapFeedbackPolic
 import org.bonitasoft.studio.diagram.custom.editPolicies.CustomSubProcessResizableCompartmentEditPolicy;
 import org.bonitasoft.studio.diagram.custom.figures.CustomSubprocessShapeCompartmentFigure;
 import org.bonitasoft.studio.diagram.custom.providers.DiagramColorProvider;
-import org.bonitasoft.studio.model.process.Container;
+import org.bonitasoft.bpm.model.process.Container;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.SubProcessEventSubProcessCompartment2EditPart;
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.GridData;

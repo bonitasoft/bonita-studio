@@ -5,7 +5,7 @@ Bundle-SymbolicName: org.bonitasoft.studio.decision.table
 Bundle-Version: 9.0.0.qualifier
 Bundle-Vendor: BonitaSoft S.A.
 Bundle-RequiredExecutionEnvironment: JavaSE-11
-Require-Bundle: org.bonitasoft.studio.model,
+Require-Bundle: org.bonitasoft.bpm.model,
  org.bonitasoft.studio.expression.editor,
  org.bonitasoft.studio.common,
  org.eclipse.core.runtime,

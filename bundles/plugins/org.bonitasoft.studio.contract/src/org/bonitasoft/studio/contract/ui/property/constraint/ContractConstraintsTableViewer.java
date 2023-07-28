@@ -23,8 +23,8 @@ import org.bonitasoft.studio.contract.ui.property.constraint.edit.ConstraintExpr
 import org.bonitasoft.studio.contract.ui.property.constraint.edit.ConstraintNameObservableEditingSupport;
 import org.bonitasoft.studio.contract.ui.property.constraint.edit.DescriptionObservableEditingSupport;
 import org.bonitasoft.studio.contract.ui.property.constraint.edit.ErrorMessageObservableEditingSupport;
-import org.bonitasoft.studio.model.process.ContractConstraint;
-import org.bonitasoft.studio.model.process.provider.ProcessItemProviderAdapterFactory;
+import org.bonitasoft.bpm.model.process.ContractConstraint;
+import org.bonitasoft.bpm.model.process.provider.ProcessItemProviderAdapterFactory;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.ui.viewer.LabelProviderBuilder;
 import org.eclipse.emf.databinding.EMFDataBindingContext;

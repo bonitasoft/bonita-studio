@@ -20,8 +20,8 @@ package org.bonitasoft.studio.model.process.diagram.edit.policies;
 import java.util.Iterator;
 
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
-import org.bonitasoft.studio.model.process.MessageFlow;
-import org.bonitasoft.studio.model.process.Pool;
+import org.bonitasoft.bpm.model.process.MessageFlow;
+import org.bonitasoft.bpm.model.process.Pool;
 import org.bonitasoft.studio.model.process.diagram.edit.commands.IntermediateErrorCatchEvent6CreateCommand;
 import org.bonitasoft.studio.model.process.diagram.edit.commands.SequenceFlowCreateCommand;
 import org.bonitasoft.studio.model.process.diagram.edit.commands.SequenceFlowReorientCommand;

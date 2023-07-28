@@ -22,12 +22,12 @@ import java.util.Set;
 
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.model.expression.ExpressionPackage;
-import org.bonitasoft.studio.model.process.BoundaryEvent;
-import org.bonitasoft.studio.model.process.Connection;
-import org.bonitasoft.studio.model.process.Container;
-import org.bonitasoft.studio.model.process.FlowElement;
-import org.bonitasoft.studio.model.process.MainProcess;
+import org.bonitasoft.bpm.model.expression.ExpressionPackage;
+import org.bonitasoft.bpm.model.process.BoundaryEvent;
+import org.bonitasoft.bpm.model.process.Connection;
+import org.bonitasoft.bpm.model.process.Container;
+import org.bonitasoft.bpm.model.process.FlowElement;
+import org.bonitasoft.bpm.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditor;
 import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditorPlugin;
 import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditorUtil;

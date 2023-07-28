@@ -23,7 +23,7 @@ import java.util.Objects;
 
 import javax.inject.Inject;
 
-import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.bpm.model.util.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
@@ -34,13 +34,13 @@ import org.bonitasoft.studio.common.ui.properties.AbstractBonitaDescriptionSecti
 import org.bonitasoft.studio.common.ui.widgets.MagicComposite;
 import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFilter;
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
-import org.bonitasoft.studio.model.process.CallActivity;
-import org.bonitasoft.studio.model.process.ContractInput;
-import org.bonitasoft.studio.model.process.Data;
-import org.bonitasoft.studio.model.process.InputMapping;
-import org.bonitasoft.studio.model.process.InputMappingAssignationType;
-import org.bonitasoft.studio.model.process.ProcessFactory;
-import org.bonitasoft.studio.model.process.ProcessPackage;
+import org.bonitasoft.bpm.model.process.CallActivity;
+import org.bonitasoft.bpm.model.process.ContractInput;
+import org.bonitasoft.bpm.model.process.Data;
+import org.bonitasoft.bpm.model.process.InputMapping;
+import org.bonitasoft.bpm.model.process.InputMappingAssignationType;
+import org.bonitasoft.bpm.model.process.ProcessFactory;
+import org.bonitasoft.bpm.model.process.ProcessPackage;
 import org.bonitasoft.studio.properties.i18n.Messages;
 import org.eclipse.core.databinding.conversion.Converter;
 import org.eclipse.core.databinding.conversion.IConverter;

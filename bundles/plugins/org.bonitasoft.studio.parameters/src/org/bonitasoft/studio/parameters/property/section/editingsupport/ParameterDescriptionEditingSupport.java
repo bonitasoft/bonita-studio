@@ -14,9 +14,9 @@
  */
 package org.bonitasoft.studio.parameters.property.section.editingsupport;
 
-import org.bonitasoft.studio.model.parameter.Parameter;
-import org.bonitasoft.studio.model.parameter.ParameterPackage;
-import org.bonitasoft.studio.model.process.AbstractProcess;
+import org.bonitasoft.bpm.model.parameter.Parameter;
+import org.bonitasoft.bpm.model.parameter.ParameterPackage;
+import org.bonitasoft.bpm.model.process.AbstractProcess;
 import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.command.SetCommand;

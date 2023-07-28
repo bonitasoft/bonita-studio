@@ -8,21 +8,21 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import org.bonitasoft.bonita2bpmn.extension.BonitaModelExporterImpl;
+import org.bonitasoft.bonita2bpmn.extension.IBonitaModelExporter;
+import org.bonitasoft.bonita2bpmn.transfo.BonitaToBPMNExporter;
+import org.bonitasoft.bonita2bpmn.transfo.ConnectorTransformationXSLProvider;
+import org.bonitasoft.bpm.model.process.AbstractProcess;
+import org.bonitasoft.bpm.model.process.MainProcess;
+import org.bonitasoft.bpm.model.util.IModelSearch;
+import org.bonitasoft.bpm.model.util.ModelSearch;
 import org.bonitasoft.studio.assertions.StatusAssert;
 import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.editingdomain.CustomDiagramEditingDomainFactory;
-import org.bonitasoft.studio.common.model.IModelSearch;
-import org.bonitasoft.studio.common.model.ModelSearch;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.connectors.repository.ConnectorDefRepositoryStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
-import org.bonitasoft.studio.exporter.bpmn.transfo.BonitaToBPMNExporter;
-import org.bonitasoft.studio.exporter.bpmn.transfo.OSGIConnectorTransformationXSLProvider;
-import org.bonitasoft.studio.exporter.extension.BonitaModelExporterImpl;
-import org.bonitasoft.studio.exporter.extension.IBonitaModelExporter;
 import org.bonitasoft.studio.importer.bpmn.BPMNToProc;
-import org.bonitasoft.studio.model.process.AbstractProcess;
-import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.MainProcessEditPart;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IStatus;
@@ -87,16 +87,18 @@ public class BPMNTestUtil {
     }
 
     public static DocumentRoot exportToBpmn(final Resource resource) throws IOException {
-        DiagramRepositoryStore dStore = RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
+        DiagramRepositoryStore dStore = RepositoryManager.getInstance()
+                .getRepositoryStore(DiagramRepositoryStore.class);
         ConnectorDefRepositoryStore connectorDefStore = RepositoryManager.getInstance()
                 .getRepositoryStore(ConnectorDefRepositoryStore.class);
         List<AbstractProcess> allProcesses = dStore.getAllProcesses();
-        IModelSearch modelSearch = new ModelSearch(() -> allProcesses, () -> connectorDefStore.getDefinitions());
+        IModelSearch modelSearch = new ModelSearch(() -> allProcesses);
         final IBonitaModelExporter exporter = new BonitaModelExporterImpl(resource, modelSearch);
         final File bpmnFileExported = File.createTempFile("testBpmnExport", ".bpmn");
         bpmnFileExported.deleteOnExit();
         BonitaToBPMNExporter bonitaToBPMNExporter = new BonitaToBPMNExporter();
-        bonitaToBPMNExporter.export(exporter, modelSearch, bpmnFileExported, new OSGIConnectorTransformationXSLProvider(), ProductVersion.CURRENT_VERSION);
+        bonitaToBPMNExporter.export(exporter, modelSearch, connectorDefStore::getDefinitions, bpmnFileExported,
+                ConnectorTransformationXSLProvider.DEFAULT, ProductVersion.CURRENT_VERSION);
         StatusAssert.assertThat(bonitaToBPMNExporter.getStatus()).hasSeverity(IStatus.INFO);
 
         final ResourceSet resourceSet1 = new ResourceSetImpl();

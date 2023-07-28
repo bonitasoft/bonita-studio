@@ -15,9 +15,9 @@
 package org.bonitasoft.studio.properties.sections;
 
 import org.assertj.core.api.Assertions;
-import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.bpm.model.util.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
-import org.bonitasoft.studio.model.expression.Expression;
+import org.bonitasoft.bpm.model.expression.Expression;
 import org.bonitasoft.studio.properties.sections.userxp.ExpressionLengthValidator;
 import org.junit.Test;
 

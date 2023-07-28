@@ -21,8 +21,8 @@ import java.util.Collections;
 import java.util.List;
 
 import org.bonitasoft.studio.common.gmf.CustomEventLabelEditPart;
-import org.bonitasoft.studio.model.process.ProcessPackage;
-import org.bonitasoft.studio.model.process.ThrowLinkEvent;
+import org.bonitasoft.bpm.model.process.ProcessPackage;
+import org.bonitasoft.bpm.model.process.ThrowLinkEvent;
 import org.bonitasoft.studio.model.process.diagram.edit.policies.ProcessTextSelectionEditPolicy;
 import org.bonitasoft.studio.model.process.diagram.part.ProcessVisualIDRegistry;
 import org.bonitasoft.studio.model.process.diagram.providers.ProcessElementTypes;

@@ -20,14 +20,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.bonitasoft.bpm.connector.model.definition.Category;
+import org.bonitasoft.bpm.connector.model.definition.ConnectorDefinition;
+import org.bonitasoft.bpm.connector.model.implementation.ConnectorImplementation;
 import org.bonitasoft.studio.common.repository.provider.ExtendedConnectorDefinition;
 import org.bonitasoft.studio.common.ui.jface.TreeExplorer;
 import org.bonitasoft.studio.connector.model.definition.AbstractUniqueDefinitionContentProvider;
-import org.bonitasoft.studio.connector.model.definition.Category;
-import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
 import org.bonitasoft.studio.connector.model.definition.wizard.ConnectorDefinitionExplorerLabelProvider;
 import org.bonitasoft.studio.connector.model.i18n.Messages;
-import org.bonitasoft.studio.connector.model.implementation.ConnectorImplementation;
 import org.bonitasoft.studio.connector.model.implementation.filter.CustomConnectorViewerFilter;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.conversion.Converter;
@@ -81,7 +81,7 @@ public abstract class AbstractDefinitionSelectionImpementationWizardPage extends
     private CLabel cloudValidationLabel;
 
     public AbstractDefinitionSelectionImpementationWizardPage(final ConnectorImplementation implementation,
-            final List<ConnectorImplementation> existingImpl, 
+            final List<ConnectorImplementation> existingImpl,
             final List<ExtendedConnectorDefinition> definitions,
             final String pageTitle,
             final String pageDescription) {
@@ -94,8 +94,8 @@ public abstract class AbstractDefinitionSelectionImpementationWizardPage extends
     }
 
     public AbstractDefinitionSelectionImpementationWizardPage(final List<ConnectorImplementation> existingImpl,
-            final List<ExtendedConnectorDefinition> definitions, 
-            final String pageTitle, 
+            final List<ExtendedConnectorDefinition> definitions,
+            final String pageTitle,
             final String pageDescription) {
         super(true, AbstractDefinitionSelectionImpementationWizardPage.class.getName());
         setTitle(pageTitle);
@@ -128,13 +128,14 @@ public abstract class AbstractDefinitionSelectionImpementationWizardPage extends
         descriptionGroup.setText(Messages.description);
         descriptionGroup.setLayout(GridLayoutFactory.fillDefaults().margins(10, 10).create());
         descriptionGroup
-                .setLayoutData(GridDataFactory.fillDefaults().grab(true, false).hint(SWT.DEFAULT, 70).span(2, 1).create());
+                .setLayoutData(
+                        GridDataFactory.fillDefaults().grab(true, false).hint(SWT.DEFAULT, 70).span(2, 1).create());
 
         final Label descriptionLabel = new Label(descriptionGroup, SWT.WRAP);
         descriptionLabel.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 
         createCloudValidationComposite(mainComposite);
-        
+
         explorer.getRightTableViewer().addSelectionChangedListener(new ISelectionChangedListener() {
 
             @Override
@@ -204,7 +205,8 @@ public abstract class AbstractDefinitionSelectionImpementationWizardPage extends
 
             @Override
             public void selectionChanged(final SelectionChangedEvent event) {
-                final Object sel = ((IStructuredSelection) explorer.getRightTableViewer().getSelection()).getFirstElement();
+                final Object sel = ((IStructuredSelection) explorer.getRightTableViewer().getSelection())
+                        .getFirstElement();
                 if (sel instanceof ConnectorDefinition) {
                     final String defId = ((ConnectorDefinition) sel).getId();
                     final String version = (String) ((IStructuredSelection) event.getSelection()).getFirstElement();
@@ -276,7 +278,8 @@ public abstract class AbstractDefinitionSelectionImpementationWizardPage extends
 
     protected TreeExplorer createTreeExplorer(final Composite mainComposite) {
         final TreeExplorer explorer = new TreeExplorer(mainComposite, SWT.NONE);
-        explorer.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).span(2, 1).hint(SWT.DEFAULT, 290).create());
+        explorer.setLayoutData(
+                GridDataFactory.fillDefaults().grab(true, true).span(2, 1).hint(SWT.DEFAULT, 290).create());
 
         final Composite additionalComposite = explorer.getAdditionalComposite();
         additionalComposite.setLayoutData(GridDataFactory.fillDefaults().grab(false, false).create());

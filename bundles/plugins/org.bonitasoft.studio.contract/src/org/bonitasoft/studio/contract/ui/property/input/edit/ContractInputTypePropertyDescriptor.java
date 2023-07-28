@@ -17,7 +17,7 @@ package org.bonitasoft.studio.contract.ui.property.input.edit;
 import java.util.ArrayList;
 
 import org.bonitasoft.studio.contract.ui.property.input.CustomAdapterFactoryContentProvider;
-import org.bonitasoft.studio.model.process.ProcessPackage;
+import org.bonitasoft.bpm.model.process.ProcessPackage;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.ui.celleditor.ExtendedComboBoxCellEditor;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;

@@ -26,7 +26,7 @@ import org.bonitasoft.studio.identity.i18n.Messages;
 import org.bonitasoft.studio.identity.organization.model.organization.Organization;
 import org.bonitasoft.studio.identity.organization.model.organization.OrganizationFactory;
 import org.bonitasoft.studio.identity.organization.model.organization.Role;
-import org.bonitasoft.studio.model.actormapping.ActorMapping;
+import org.bonitasoft.bpm.model.actormapping.ActorMapping;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ArrayContentProvider;

@@ -23,11 +23,11 @@ package org.bonitasoft.studio.contract.ui.property.input.edit;
 // import static org.mockito.Mockito.verify;
 // import static org.mockito.Mockito.when;
 //
-// import org.bonitasoft.studio.model.process.Contract;
-// import org.bonitasoft.studio.model.process.ContractInput;
-// import org.bonitasoft.studio.model.process.ContractInputMapping;
-// import org.bonitasoft.studio.model.process.Data;
-// import org.bonitasoft.studio.model.process.ProcessFactory;
+// import org.bonitasoft.bpm.model.process.Contract;
+// import org.bonitasoft.bpm.model.process.ContractInput;
+// import org.bonitasoft.bpm.model.process.ContractInputMapping;
+// import org.bonitasoft.bpm.model.process.Data;
+// import org.bonitasoft.bpm.model.process.ProcessFactory;
 // import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
 // import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 // import org.eclipse.jface.viewers.TableViewer;

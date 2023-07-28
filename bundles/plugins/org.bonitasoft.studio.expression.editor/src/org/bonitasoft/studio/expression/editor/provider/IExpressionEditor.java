@@ -20,7 +20,7 @@ import java.util.List;
 
 import org.bonitasoft.studio.common.IBonitaVariableContext;
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
-import org.bonitasoft.studio.model.expression.Expression;
+import org.bonitasoft.bpm.model.expression.Expression;
 import org.eclipse.core.databinding.observable.IObservable;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.ecore.EObject;

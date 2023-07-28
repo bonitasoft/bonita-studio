@@ -17,7 +17,7 @@
 package org.bonitasoft.studio.identity.actors.ui.wizard.page;
 
 import org.bonitasoft.studio.identity.i18n.Messages;
-import org.bonitasoft.studio.model.process.Actor;
+import org.bonitasoft.bpm.model.process.Actor;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;

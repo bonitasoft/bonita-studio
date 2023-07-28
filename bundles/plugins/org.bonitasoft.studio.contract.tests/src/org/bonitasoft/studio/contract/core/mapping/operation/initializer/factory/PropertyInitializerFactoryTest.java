@@ -20,7 +20,7 @@ import static org.bonitasoft.studio.contract.core.mapping.operation.FieldToContr
 import static org.bonitasoft.studio.model.businessObject.BusinessObjectBuilder.aBO;
 import static org.bonitasoft.studio.model.businessObject.FieldBuilder.aCompositionField;
 import static org.bonitasoft.studio.model.businessObject.FieldBuilder.aStringField;
-import static org.bonitasoft.studio.model.process.builders.BusinessObjectDataBuilder.aBusinessData;
+import static org.bonitasoft.bpm.model.process.builders.BusinessObjectDataBuilder.aBusinessData;
 import static org.mockito.Mockito.verify;
 
 import org.bonitasoft.engine.bdm.model.field.Field;
@@ -29,8 +29,8 @@ import org.bonitasoft.studio.contract.core.mapping.FieldToContractInputMapping;
 import org.bonitasoft.studio.contract.core.mapping.operation.FieldToContractInputMappingBuilder;
 import org.bonitasoft.studio.contract.core.mapping.operation.initializer.IPropertyInitializer;
 import org.bonitasoft.studio.contract.core.mapping.operation.initializer.SimpleFieldPropertyInitializer;
-import org.bonitasoft.studio.model.process.BusinessObjectData;
-import org.bonitasoft.studio.model.process.ContractInputType;
+import org.bonitasoft.bpm.model.process.BusinessObjectData;
+import org.bonitasoft.bpm.model.process.ContractInputType;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
