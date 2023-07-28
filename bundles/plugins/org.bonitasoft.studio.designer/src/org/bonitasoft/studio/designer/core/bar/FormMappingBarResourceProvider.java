@@ -20,25 +20,25 @@ import java.util.Objects;
 
 import javax.inject.Inject;
 
+import org.bonitasoft.bpm.model.configuration.Configuration;
+import org.bonitasoft.bpm.model.process.AbstractProcess;
+import org.bonitasoft.bpm.model.process.Element;
+import org.bonitasoft.bpm.model.process.FormMapping;
+import org.bonitasoft.bpm.model.process.Pool;
+import org.bonitasoft.bpm.model.process.ProcessPackage;
+import org.bonitasoft.bpm.model.process.Task;
+import org.bonitasoft.bpm.model.util.ModelSearch;
 import org.bonitasoft.engine.bpm.bar.BusinessArchiveBuilder;
 import org.bonitasoft.engine.bpm.bar.form.model.FormMappingDefinition;
 import org.bonitasoft.engine.bpm.bar.form.model.FormMappingModel;
 import org.bonitasoft.engine.form.FormMappingTarget;
 import org.bonitasoft.engine.form.FormMappingType;
 import org.bonitasoft.studio.common.Strings;
-import org.bonitasoft.studio.common.model.ModelSearch;
-import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.extension.BARResourcesProvider;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.designer.core.preference.DesignerPreferenceConstants;
 import org.bonitasoft.studio.designer.core.repository.PageUUIDResolver;
 import org.bonitasoft.studio.designer.core.repository.WebPageRepositoryStore;
-import org.bonitasoft.studio.model.configuration.Configuration;
-import org.bonitasoft.studio.model.process.AbstractProcess;
-import org.bonitasoft.studio.model.process.Element;
-import org.bonitasoft.studio.model.process.FormMapping;
-import org.bonitasoft.studio.model.process.Pool;
-import org.bonitasoft.studio.model.process.ProcessPackage;
-import org.bonitasoft.studio.model.process.Task;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.preferences.InstanceScope;
@@ -143,7 +143,7 @@ public class FormMappingBarResourceProvider implements BARResourcesProvider {
     }
 
     private String formId(final FormMapping formMapping) {
-        if(formMapping.getType() != org.bonitasoft.studio.model.process.FormMappingType.INTERNAL) {
+        if(formMapping.getType() != org.bonitasoft.bpm.model.process.FormMappingType.INTERNAL) {
             throw new IllegalArgumentException("Only internal mapping has a form uuid");
         }
         return resolveUUID(formMapping.getTargetForm().getContent());

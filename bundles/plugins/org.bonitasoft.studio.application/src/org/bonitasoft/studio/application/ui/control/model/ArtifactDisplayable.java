@@ -1,7 +1,7 @@
 package org.bonitasoft.studio.application.ui.control.model;
 
 import org.bonitasoft.studio.common.ui.IDisplayable;
-import org.bonitasoft.studio.model.edit.ProcessEditPlugin;
+import org.bonitasoft.bpm.model.edit.ProcessEditPlugin;
 import org.eclipse.core.runtime.Adapters;
 import org.eclipse.emf.edit.ui.provider.ExtendedImageRegistry;
 import org.eclipse.jface.viewers.StyledString;

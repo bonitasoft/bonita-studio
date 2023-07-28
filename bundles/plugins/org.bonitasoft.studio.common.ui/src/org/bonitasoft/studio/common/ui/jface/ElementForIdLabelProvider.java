@@ -17,7 +17,7 @@
  */
 package org.bonitasoft.studio.common.ui.jface;
 
-import org.bonitasoft.studio.model.process.Element;
+import org.bonitasoft.bpm.model.process.Element;
 import org.eclipse.jface.viewers.LabelProvider;
 
 /**

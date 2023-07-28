@@ -16,6 +16,8 @@
  */
 package org.bonitasoft.studio.connectors.ui.wizard;
 
+import org.bonitasoft.bpm.model.connectorconfiguration.ConnectorConfiguration;
+import org.bonitasoft.bpm.model.process.Connector;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.connector.model.definition.dialog.AbstractDefinitionWizardDialog;
 import org.bonitasoft.studio.connector.model.definition.dialog.ITestConfigurationListener;
@@ -24,8 +26,6 @@ import org.bonitasoft.studio.connector.model.implementation.IImplementationRepos
 import org.bonitasoft.studio.connectors.repository.ConnectorConfRepositoryStore;
 import org.bonitasoft.studio.connectors.repository.ConnectorDefRepositoryStore;
 import org.bonitasoft.studio.connectors.repository.ConnectorImplRepositoryStore;
-import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration;
-import org.bonitasoft.studio.model.process.Connector;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.swt.widgets.Composite;

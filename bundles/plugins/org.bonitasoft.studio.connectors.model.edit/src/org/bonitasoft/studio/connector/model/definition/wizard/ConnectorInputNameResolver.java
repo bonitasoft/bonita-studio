@@ -14,9 +14,9 @@
  */
 package org.bonitasoft.studio.connector.model.definition.wizard;
 
-import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.bpm.model.util.ExpressionConstants;
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionNameResolver;
-import org.bonitasoft.studio.model.expression.Expression;
+import org.bonitasoft.bpm.model.expression.Expression;
 
 import com.google.common.base.Strings;
 
@@ -30,7 +30,7 @@ public class ConnectorInputNameResolver implements ExpressionNameResolver {
     }
 
     /* (non-Javadoc)
-     * @see org.bonitasoft.studio.expression.editor.viewer.ExpressionNameResolver#getName(org.bonitasoft.studio.model.expression.Expression)
+     * @see org.bonitasoft.studio.expression.editor.viewer.ExpressionNameResolver#getName(org.bonitasoft.bpm.model.expression.Expression)
      */
     @Override
     public String getName(Expression expression) {

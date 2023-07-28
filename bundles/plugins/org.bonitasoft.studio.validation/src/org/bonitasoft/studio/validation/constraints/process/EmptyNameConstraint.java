@@ -25,8 +25,8 @@ import static org.bonitasoft.studio.common.databinding.validator.ValidatorFactor
 
 import org.bonitasoft.studio.common.databinding.validator.MultiValidatorFactory;
 import org.bonitasoft.studio.common.databinding.validator.ValidatorFactory;
-import org.bonitasoft.studio.model.process.Element;
-import org.bonitasoft.studio.model.process.ProcessPackage;
+import org.bonitasoft.bpm.model.process.Element;
+import org.bonitasoft.bpm.model.process.ProcessPackage;
 import org.bonitasoft.studio.validation.constraints.AbstractLiveValidationMarkerConstraint;
 import org.bonitasoft.studio.validation.i18n.Messages;
 import org.eclipse.core.databinding.validation.IValidator;

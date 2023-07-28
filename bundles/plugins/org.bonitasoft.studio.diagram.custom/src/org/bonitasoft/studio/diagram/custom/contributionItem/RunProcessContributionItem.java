@@ -17,7 +17,7 @@ package org.bonitasoft.studio.diagram.custom.contributionItem;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.bonitasoft.studio.model.process.AbstractProcess;
+import org.bonitasoft.bpm.model.process.AbstractProcess;
 import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;

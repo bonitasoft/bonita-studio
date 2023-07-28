@@ -27,7 +27,7 @@ import java.util.Set;
 import org.bonitasoft.engine.bpm.connector.ConnectorEvent;
 import org.bonitasoft.studio.common.DataTypeLabels;
 import org.bonitasoft.studio.common.DataUtil;
-import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.bpm.model.util.ExpressionConstants;
 import org.bonitasoft.studio.common.ModelVersion;
 import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.Pair;
@@ -37,56 +37,56 @@ import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.gmf.tools.GMFTools;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration;
-import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfigurationFactory;
-import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfigurationPackage;
-import org.bonitasoft.studio.model.connectorconfiguration.ConnectorParameter;
-import org.bonitasoft.studio.model.expression.Expression;
-import org.bonitasoft.studio.model.expression.ExpressionFactory;
-import org.bonitasoft.studio.model.expression.Operation;
-import org.bonitasoft.studio.model.expression.Operator;
-import org.bonitasoft.studio.model.process.AbstractProcess;
-import org.bonitasoft.studio.model.process.AbstractTimerEvent;
-import org.bonitasoft.studio.model.process.Activity;
-import org.bonitasoft.studio.model.process.Actor;
-import org.bonitasoft.studio.model.process.Assignable;
-import org.bonitasoft.studio.model.process.CallActivity;
-import org.bonitasoft.studio.model.process.CatchLinkEvent;
-import org.bonitasoft.studio.model.process.ConnectableElement;
-import org.bonitasoft.studio.model.process.Connection;
-import org.bonitasoft.studio.model.process.Container;
-import org.bonitasoft.studio.model.process.Data;
-import org.bonitasoft.studio.model.process.DataAware;
-import org.bonitasoft.studio.model.process.Element;
-import org.bonitasoft.studio.model.process.EnumType;
-import org.bonitasoft.studio.model.process.ErrorEvent;
-import org.bonitasoft.studio.model.process.InputMapping;
-import org.bonitasoft.studio.model.process.JavaObjectData;
-import org.bonitasoft.studio.model.process.Lane;
-import org.bonitasoft.studio.model.process.MainProcess;
-import org.bonitasoft.studio.model.process.Message;
-import org.bonitasoft.studio.model.process.MessageFlow;
-import org.bonitasoft.studio.model.process.MultiInstanceType;
-import org.bonitasoft.studio.model.process.MultiInstantiable;
-import org.bonitasoft.studio.model.process.OutputMapping;
-import org.bonitasoft.studio.model.process.Pool;
-import org.bonitasoft.studio.model.process.ProcessFactory;
-import org.bonitasoft.studio.model.process.ProcessPackage;
-import org.bonitasoft.studio.model.process.ReceiveTask;
-import org.bonitasoft.studio.model.process.ScriptTask;
-import org.bonitasoft.studio.model.process.SendTask;
-import org.bonitasoft.studio.model.process.SequenceFlow;
-import org.bonitasoft.studio.model.process.SequenceFlowConditionType;
-import org.bonitasoft.studio.model.process.ServiceTask;
-import org.bonitasoft.studio.model.process.SignalEvent;
-import org.bonitasoft.studio.model.process.SubProcessEvent;
-import org.bonitasoft.studio.model.process.Task;
-import org.bonitasoft.studio.model.process.TextAnnotation;
-import org.bonitasoft.studio.model.process.ThrowLinkEvent;
-import org.bonitasoft.studio.model.process.ThrowMessageEvent;
-import org.bonitasoft.studio.model.process.XMLData;
-import org.bonitasoft.studio.model.process.decision.DecisionFactory;
-import org.bonitasoft.studio.model.process.decision.DecisionTable;
+import org.bonitasoft.bpm.model.connectorconfiguration.ConnectorConfiguration;
+import org.bonitasoft.bpm.model.connectorconfiguration.ConnectorConfigurationFactory;
+import org.bonitasoft.bpm.model.connectorconfiguration.ConnectorConfigurationPackage;
+import org.bonitasoft.bpm.model.connectorconfiguration.ConnectorParameter;
+import org.bonitasoft.bpm.model.expression.Expression;
+import org.bonitasoft.bpm.model.expression.ExpressionFactory;
+import org.bonitasoft.bpm.model.expression.Operation;
+import org.bonitasoft.bpm.model.expression.Operator;
+import org.bonitasoft.bpm.model.process.AbstractProcess;
+import org.bonitasoft.bpm.model.process.AbstractTimerEvent;
+import org.bonitasoft.bpm.model.process.Activity;
+import org.bonitasoft.bpm.model.process.Actor;
+import org.bonitasoft.bpm.model.process.Assignable;
+import org.bonitasoft.bpm.model.process.CallActivity;
+import org.bonitasoft.bpm.model.process.CatchLinkEvent;
+import org.bonitasoft.bpm.model.process.ConnectableElement;
+import org.bonitasoft.bpm.model.process.Connection;
+import org.bonitasoft.bpm.model.process.Container;
+import org.bonitasoft.bpm.model.process.Data;
+import org.bonitasoft.bpm.model.process.DataAware;
+import org.bonitasoft.bpm.model.process.Element;
+import org.bonitasoft.bpm.model.process.EnumType;
+import org.bonitasoft.bpm.model.process.ErrorEvent;
+import org.bonitasoft.bpm.model.process.InputMapping;
+import org.bonitasoft.bpm.model.process.JavaObjectData;
+import org.bonitasoft.bpm.model.process.Lane;
+import org.bonitasoft.bpm.model.process.MainProcess;
+import org.bonitasoft.bpm.model.process.Message;
+import org.bonitasoft.bpm.model.process.MessageFlow;
+import org.bonitasoft.bpm.model.process.MultiInstanceType;
+import org.bonitasoft.bpm.model.process.MultiInstantiable;
+import org.bonitasoft.bpm.model.process.OutputMapping;
+import org.bonitasoft.bpm.model.process.Pool;
+import org.bonitasoft.bpm.model.process.ProcessFactory;
+import org.bonitasoft.bpm.model.process.ProcessPackage;
+import org.bonitasoft.bpm.model.process.ReceiveTask;
+import org.bonitasoft.bpm.model.process.ScriptTask;
+import org.bonitasoft.bpm.model.process.SendTask;
+import org.bonitasoft.bpm.model.process.SequenceFlow;
+import org.bonitasoft.bpm.model.process.SequenceFlowConditionType;
+import org.bonitasoft.bpm.model.process.ServiceTask;
+import org.bonitasoft.bpm.model.process.SignalEvent;
+import org.bonitasoft.bpm.model.process.SubProcessEvent;
+import org.bonitasoft.bpm.model.process.Task;
+import org.bonitasoft.bpm.model.process.TextAnnotation;
+import org.bonitasoft.bpm.model.process.ThrowLinkEvent;
+import org.bonitasoft.bpm.model.process.ThrowMessageEvent;
+import org.bonitasoft.bpm.model.process.XMLData;
+import org.bonitasoft.bpm.model.process.decision.DecisionFactory;
+import org.bonitasoft.bpm.model.process.decision.DecisionTable;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.MainProcessEditPart;
 import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditorPlugin;
 import org.bonitasoft.studio.model.process.diagram.providers.ProcessElementTypes;
@@ -170,7 +170,7 @@ public class ProcBuilder implements IProcBuilder {
     private final Map<String, Data> dataByName;
     private final Map<String, ShapeNodeEditPart> editParts;
     private final Map<String, Actor> participants;
-    private org.bonitasoft.studio.model.process.Connector currentConnector;
+    private org.bonitasoft.bpm.model.process.Connector currentConnector;
     private EObject currentElement;
     private final Map<String, EnumType> datatypes;
     private final Map<ThrowLinkEvent, String> throwLinkEvents;
@@ -984,7 +984,7 @@ public class ProcBuilder implements IProcBuilder {
                     : "null");
         }
 
-        final org.bonitasoft.studio.model.process.Connector connector = ProcessFactory.eINSTANCE.createConnector();
+        final org.bonitasoft.bpm.model.process.Connector connector = ProcessFactory.eINSTANCE.createConnector();
         connector.setName(NamingUtils.convertToId(id));
         connector.setDefinitionId(connectorId);
         connector.setDefinitionVersion(version);
@@ -1016,7 +1016,7 @@ public class ProcBuilder implements IProcBuilder {
                     ? ((Element) currentAssignable).getName() : "null");
         }
 
-        final org.bonitasoft.studio.model.process.Connector filter = ProcessFactory.eINSTANCE.createConnector();
+        final org.bonitasoft.bpm.model.process.Connector filter = ProcessFactory.eINSTANCE.createConnector();
         filter.setName(NamingUtils.convertToId(id));
         filter.setDefinitionId(connectorId);
         filter.setIgnoreErrors(ignoreError);
@@ -1049,7 +1049,7 @@ public class ProcBuilder implements IProcBuilder {
 
     /*
      * (non-Javadoc)
-     * @see org.bonitasoft.studio.importer.builder.IProcBuilder#addCompletionConditionExpression(org.bonitasoft.studio.model.expression.Expression)
+     * @see org.bonitasoft.studio.importer.builder.IProcBuilder#addCompletionConditionExpression(org.bonitasoft.bpm.model.expression.Expression)
      */
     @Override
     public void addCompletionConditionExpression(final Expression completionCondition) throws ProcBuilderException {
@@ -1067,7 +1067,7 @@ public class ProcBuilder implements IProcBuilder {
 
     /*
      * (non-Javadoc)
-     * @see org.bonitasoft.studio.importer.builder.IProcBuilder#addCardinalityExpression(org.bonitasoft.studio.model.expression.Expression)
+     * @see org.bonitasoft.studio.importer.builder.IProcBuilder#addCardinalityExpression(org.bonitasoft.bpm.model.expression.Expression)
      */
     @Override
     public void addCardinalityExpression(final Expression cardinalityExpression) throws ProcBuilderException {
@@ -1087,7 +1087,7 @@ public class ProcBuilder implements IProcBuilder {
     @Deprecated
     public void addConnectorParameter(final String parameterKey, final String valueContent) throws ProcBuilderException {
 
-        if (!(currentConnector instanceof org.bonitasoft.studio.model.process.Connector)) {
+        if (!(currentConnector instanceof org.bonitasoft.bpm.model.process.Connector)) {
             String name = "null";
             if (currentConnector != null) {
                 name = ((Element) currentConnector).getName();
@@ -1108,7 +1108,7 @@ public class ProcBuilder implements IProcBuilder {
     public void addConnectorParameter(final String parameterKey, final String valueContent, final String valueReturnType, final String valueInterpreter,
             final String expressionType) throws ProcBuilderException {
 
-        if (!(currentConnector instanceof org.bonitasoft.studio.model.process.Connector)) {
+        if (!(currentConnector instanceof org.bonitasoft.bpm.model.process.Connector)) {
             throw new ProcBuilderException("Impossible to add a connector parameter on Current connector :" + currentConnector != null
                     ? ((Element) currentConnector).getName() : "null");
         }
@@ -1126,7 +1126,7 @@ public class ProcBuilder implements IProcBuilder {
     public void addConnectorOutput(final String targetDataId, final String valueContent, final String valueReturnType, final String valueInterpreter,
             final String expressionType) throws ProcBuilderException {
 
-        if (!(currentConnector instanceof org.bonitasoft.studio.model.process.Connector)) {
+        if (!(currentConnector instanceof org.bonitasoft.bpm.model.process.Connector)) {
             throw new ProcBuilderException("Impossible to add a connector output on Current connector :" + currentConnector != null
                     ? ((Element) currentConnector).getName() : "null");
         }
@@ -1273,7 +1273,7 @@ public class ProcBuilder implements IProcBuilder {
         }
     }
 
-    private org.bonitasoft.studio.model.process.DataType toProcDataType(final EObject container, final DataType dataType) throws ProcBuilderException {
+    private org.bonitasoft.bpm.model.process.DataType toProcDataType(final EObject container, final DataType dataType) throws ProcBuilderException {
 
         final MainProcess mainProc = ModelHelper.getMainProcess(container);
         if (mainProc == null || mainProc.getDatatypes().isEmpty()) {

@@ -163,7 +163,7 @@
         <smallIcon
             xsi:type="gmftool:BundleImage"
             path="icons/full/obj16/Event.gif"
-            bundle="org.bonitasoft.studio.model.edit"/>
+            bundle="org.bonitasoft.bpm.model.edit"/>
       </tools>
       <tools
           xsi:type="gmftool:CreationTool"

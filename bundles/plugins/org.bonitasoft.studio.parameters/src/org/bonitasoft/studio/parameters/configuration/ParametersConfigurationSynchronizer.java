@@ -15,12 +15,12 @@
 package org.bonitasoft.studio.parameters.configuration;
 
 import org.bonitasoft.studio.common.repository.extension.IConfigurationSynchronizer;
-import org.bonitasoft.studio.model.configuration.Configuration;
-import org.bonitasoft.studio.model.configuration.ConfigurationPackage;
-import org.bonitasoft.studio.model.parameter.Parameter;
-import org.bonitasoft.studio.model.parameter.ParameterFactory;
-import org.bonitasoft.studio.model.parameter.ParameterPackage;
-import org.bonitasoft.studio.model.process.AbstractProcess;
+import org.bonitasoft.bpm.model.configuration.Configuration;
+import org.bonitasoft.bpm.model.configuration.ConfigurationPackage;
+import org.bonitasoft.bpm.model.parameter.Parameter;
+import org.bonitasoft.bpm.model.parameter.ParameterFactory;
+import org.bonitasoft.bpm.model.parameter.ParameterPackage;
+import org.bonitasoft.bpm.model.process.AbstractProcess;
 import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.edit.command.AddCommand;

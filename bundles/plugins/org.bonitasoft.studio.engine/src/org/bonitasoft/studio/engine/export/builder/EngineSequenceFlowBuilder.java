@@ -20,17 +20,17 @@ import org.bonitasoft.engine.bpm.process.impl.FlowElementBuilder;
 import org.bonitasoft.studio.engine.export.DecisionTableUtil;
 import org.bonitasoft.studio.engine.export.EngineExpressionUtil;
 import org.bonitasoft.studio.engine.i18n.Messages;
-import org.bonitasoft.studio.model.expression.Expression;
-import org.bonitasoft.studio.model.process.ANDGateway;
-import org.bonitasoft.studio.model.process.BoundaryEvent;
-import org.bonitasoft.studio.model.process.CatchLinkEvent;
-import org.bonitasoft.studio.model.process.Connection;
-import org.bonitasoft.studio.model.process.SequenceFlow;
-import org.bonitasoft.studio.model.process.SequenceFlowConditionType;
-import org.bonitasoft.studio.model.process.SourceElement;
-import org.bonitasoft.studio.model.process.TargetElement;
-import org.bonitasoft.studio.model.process.ThrowLinkEvent;
-import org.bonitasoft.studio.model.process.util.ProcessSwitch;
+import org.bonitasoft.bpm.model.expression.Expression;
+import org.bonitasoft.bpm.model.process.ANDGateway;
+import org.bonitasoft.bpm.model.process.BoundaryEvent;
+import org.bonitasoft.bpm.model.process.CatchLinkEvent;
+import org.bonitasoft.bpm.model.process.Connection;
+import org.bonitasoft.bpm.model.process.SequenceFlow;
+import org.bonitasoft.bpm.model.process.SequenceFlowConditionType;
+import org.bonitasoft.bpm.model.process.SourceElement;
+import org.bonitasoft.bpm.model.process.TargetElement;
+import org.bonitasoft.bpm.model.process.ThrowLinkEvent;
+import org.bonitasoft.bpm.model.process.util.ProcessSwitch;
 
 
 /**
@@ -100,7 +100,7 @@ public class EngineSequenceFlowBuilder extends ProcessSwitch<SequenceFlow> {
 				for(Connection c : target.getOutgoing()){
 					String sourceId = sequenceFlow.getSource().getName();
 					String targetId = c.getTarget().getName();
-					org.bonitasoft.studio.model.expression.Expression transitionCondition = sequenceFlow.getCondition();
+					org.bonitasoft.bpm.model.expression.Expression transitionCondition = sequenceFlow.getCondition();
 					if(sequenceFlow.isIsDefault()) {
 						builder.addDefaultTransition(sourceId,targetId);
 					}else if(null != transitionCondition && transitionCondition.getContent() != null && !transitionCondition.getContent().isEmpty()) {

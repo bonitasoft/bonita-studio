@@ -21,10 +21,10 @@ import java.time.OffsetDateTime;
 import java.util.Date;
 import java.util.function.Function;
 
+import org.bonitasoft.bpm.model.process.Contract;
+import org.bonitasoft.bpm.model.process.ContractInput;
 import org.bonitasoft.studio.common.Strings;
 import org.bonitasoft.studio.contract.core.mapping.treeMaching.TreeResult;
-import org.bonitasoft.studio.model.process.Contract;
-import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.web.designer.model.contract.DataReference;
 import org.bonitasoft.web.designer.model.contract.EditMode;
 import org.bonitasoft.web.designer.model.contract.LeafContractInput;

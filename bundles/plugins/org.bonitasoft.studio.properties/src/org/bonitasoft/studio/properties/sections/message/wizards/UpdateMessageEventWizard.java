@@ -16,10 +16,10 @@
 package org.bonitasoft.studio.properties.sections.message.wizards;
 
 import org.bonitasoft.studio.common.emf.tools.EMFModelUpdater;
-import org.bonitasoft.studio.model.process.MainProcess;
-import org.bonitasoft.studio.model.process.Message;
-import org.bonitasoft.studio.model.process.ProcessFactory;
-import org.bonitasoft.studio.model.process.ThrowMessageEvent;
+import org.bonitasoft.bpm.model.process.MainProcess;
+import org.bonitasoft.bpm.model.process.Message;
+import org.bonitasoft.bpm.model.process.ProcessFactory;
+import org.bonitasoft.bpm.model.process.ThrowMessageEvent;
 import org.bonitasoft.studio.properties.i18n.Messages;
 import org.bonitasoft.studio.properties.sections.message.ThrowEventSection;
 import org.bonitasoft.studio.properties.sections.message.commands.AbstractMessageCommand;

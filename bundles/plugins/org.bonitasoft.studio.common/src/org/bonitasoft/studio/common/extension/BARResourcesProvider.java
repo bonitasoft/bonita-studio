@@ -15,8 +15,8 @@
 package org.bonitasoft.studio.common.extension;
 
 import org.bonitasoft.engine.bpm.bar.BusinessArchiveBuilder;
-import org.bonitasoft.studio.model.configuration.Configuration;
-import org.bonitasoft.studio.model.process.AbstractProcess;
+import org.bonitasoft.bpm.model.configuration.Configuration;
+import org.bonitasoft.bpm.model.process.AbstractProcess;
 import org.eclipse.core.runtime.IStatus;
 
 public interface BARResourcesProvider {

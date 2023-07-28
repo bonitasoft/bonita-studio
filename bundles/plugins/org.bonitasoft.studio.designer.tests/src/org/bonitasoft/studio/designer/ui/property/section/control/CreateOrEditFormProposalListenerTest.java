@@ -15,9 +15,9 @@
 package org.bonitasoft.studio.designer.ui.property.section.control;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.bonitasoft.studio.model.expression.builders.ExpressionBuilder.anExpression;
-import static org.bonitasoft.studio.model.process.builders.ContractBuilder.aContract;
-import static org.bonitasoft.studio.model.process.builders.FormMappingBuilder.aFormMapping;
+import static org.bonitasoft.bpm.model.expression.builders.ExpressionBuilder.anExpression;
+import static org.bonitasoft.bpm.model.process.builders.ContractBuilder.aContract;
+import static org.bonitasoft.bpm.model.process.builders.FormMappingBuilder.aFormMapping;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.spy;
@@ -31,8 +31,8 @@ import org.bonitasoft.studio.designer.core.operation.CreateUIDArtifactOperation;
 import org.bonitasoft.studio.designer.core.operation.NewFormOperationFactoryDelegate;
 import org.bonitasoft.studio.designer.core.repository.WebPageFileStore;
 import org.bonitasoft.studio.designer.core.repository.WebPageRepositoryStore;
-import org.bonitasoft.studio.model.process.Contract;
-import org.bonitasoft.studio.model.process.builders.TaskBuilder;
+import org.bonitasoft.bpm.model.process.Contract;
+import org.bonitasoft.bpm.model.process.builders.TaskBuilder;
 import org.eclipse.ui.progress.IProgressService;
 import org.junit.Test;
 import org.junit.runner.RunWith;

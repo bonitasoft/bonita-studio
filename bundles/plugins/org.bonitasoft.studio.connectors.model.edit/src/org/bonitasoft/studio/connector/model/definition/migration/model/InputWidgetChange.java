@@ -17,16 +17,16 @@ package org.bonitasoft.studio.connector.model.definition.migration.model;
 import java.util.Objects;
 
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
-import org.bonitasoft.studio.connector.model.definition.Array;
-import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
-import org.bonitasoft.studio.connector.model.definition.Input;
-import org.bonitasoft.studio.connector.model.definition.List;
-import org.bonitasoft.studio.connector.model.definition.WidgetComponent;
+import org.bonitasoft.bpm.connector.model.definition.Array;
+import org.bonitasoft.bpm.connector.model.definition.ConnectorDefinition;
+import org.bonitasoft.bpm.connector.model.definition.Input;
+import org.bonitasoft.bpm.connector.model.definition.List;
+import org.bonitasoft.bpm.connector.model.definition.WidgetComponent;
 import org.bonitasoft.studio.connector.model.i18n.Messages;
-import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration;
-import org.bonitasoft.studio.model.expression.AbstractExpression;
-import org.bonitasoft.studio.model.expression.ListExpression;
-import org.bonitasoft.studio.model.expression.TableExpression;
+import org.bonitasoft.bpm.model.connectorconfiguration.ConnectorConfiguration;
+import org.bonitasoft.bpm.model.expression.AbstractExpression;
+import org.bonitasoft.bpm.model.expression.ListExpression;
+import org.bonitasoft.bpm.model.expression.TableExpression;
 
 public class InputWidgetChange implements DefinitionInputChange {
 

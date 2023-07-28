@@ -17,7 +17,7 @@
  */
 package org.bonitasoft.studio.common.gmf.tools.tree;
 
-import org.bonitasoft.studio.model.process.DataType;
+import org.bonitasoft.bpm.model.process.DataType;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 

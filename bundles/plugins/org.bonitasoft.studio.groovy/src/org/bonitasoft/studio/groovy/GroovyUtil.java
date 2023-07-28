@@ -27,28 +27,28 @@ import org.bonitasoft.engine.expression.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
-import org.bonitasoft.studio.connector.model.definition.Output;
-import org.bonitasoft.studio.model.expression.Expression;
-import org.bonitasoft.studio.model.expression.ExpressionFactory;
-import org.bonitasoft.studio.model.expression.Operation;
-import org.bonitasoft.studio.model.parameter.Parameter;
-import org.bonitasoft.studio.model.process.AbstractProcess;
-import org.bonitasoft.studio.model.process.Activity;
-import org.bonitasoft.studio.model.process.BusinessObjectData;
-import org.bonitasoft.studio.model.process.Connection;
-import org.bonitasoft.studio.model.process.ContractInput;
-import org.bonitasoft.studio.model.process.Data;
-import org.bonitasoft.studio.model.process.DataAware;
-import org.bonitasoft.studio.model.process.Document;
-import org.bonitasoft.studio.model.process.Element;
-import org.bonitasoft.studio.model.process.JavaObjectData;
-import org.bonitasoft.studio.model.process.MultiInstanceType;
-import org.bonitasoft.studio.model.process.MultiInstantiable;
-import org.bonitasoft.studio.model.process.Pool;
-import org.bonitasoft.studio.model.process.SequenceFlow;
-import org.bonitasoft.studio.model.process.SourceElement;
-import org.bonitasoft.studio.model.process.StartTimerEvent;
-import org.bonitasoft.studio.model.process.Task;
+import org.bonitasoft.bpm.connector.model.definition.Output;
+import org.bonitasoft.bpm.model.expression.Expression;
+import org.bonitasoft.bpm.model.expression.ExpressionFactory;
+import org.bonitasoft.bpm.model.expression.Operation;
+import org.bonitasoft.bpm.model.parameter.Parameter;
+import org.bonitasoft.bpm.model.process.AbstractProcess;
+import org.bonitasoft.bpm.model.process.Activity;
+import org.bonitasoft.bpm.model.process.BusinessObjectData;
+import org.bonitasoft.bpm.model.process.Connection;
+import org.bonitasoft.bpm.model.process.ContractInput;
+import org.bonitasoft.bpm.model.process.Data;
+import org.bonitasoft.bpm.model.process.DataAware;
+import org.bonitasoft.bpm.model.process.Document;
+import org.bonitasoft.bpm.model.process.Element;
+import org.bonitasoft.bpm.model.process.JavaObjectData;
+import org.bonitasoft.bpm.model.process.MultiInstanceType;
+import org.bonitasoft.bpm.model.process.MultiInstantiable;
+import org.bonitasoft.bpm.model.process.Pool;
+import org.bonitasoft.bpm.model.process.SequenceFlow;
+import org.bonitasoft.bpm.model.process.SourceElement;
+import org.bonitasoft.bpm.model.process.StartTimerEvent;
+import org.bonitasoft.bpm.model.process.Task;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jdt.core.IField;
 import org.eclipse.jdt.core.IType;
@@ -153,7 +153,7 @@ public class GroovyUtil {
                     getEngineExpressionReturnType(expressionConstants.getEngineConstantName()),
                     null,
                     getDescriptionForEngineVariable(expressionConstants.getEngineConstantName()));
-            scriptVariable.setCategory(org.bonitasoft.studio.common.ExpressionConstants.ENGINE_CONSTANT_TYPE);
+            scriptVariable.setCategory(org.bonitasoft.bpm.model.util.ExpressionConstants.ENGINE_CONSTANT_TYPE);
             result.add(scriptVariable);
         }
     }
@@ -206,7 +206,7 @@ public class GroovyUtil {
     private static Expression createExpression(
             final ExpressionConstants engineConstant) {
         final Expression exp = ExpressionFactory.eINSTANCE.createExpression();
-        exp.setType(org.bonitasoft.studio.common.ExpressionConstants.ENGINE_CONSTANT_TYPE);
+        exp.setType(org.bonitasoft.bpm.model.util.ExpressionConstants.ENGINE_CONSTANT_TYPE);
         exp.setContent(engineConstant.getEngineConstantName());
         exp.setName(engineConstant.getEngineConstantName());
         exp.setReturnType(getEngineExpressionReturnType(engineConstant.getEngineConstantName()));
@@ -389,19 +389,19 @@ public class GroovyUtil {
     }
 
     public static ScriptVariable createScriptVariable(final Expression e, final EObject context) {
-        if (org.bonitasoft.studio.common.ExpressionConstants.MULTIINSTANCE_ITERATOR_TYPE.equals(e.getType())) {
+        if (org.bonitasoft.bpm.model.util.ExpressionConstants.MULTIINSTANCE_ITERATOR_TYPE.equals(e.getType())) {
             final ScriptVariable scriptVariable = new ScriptVariable(e.getName(), e.getReturnType(), null,
                     Messages.multiInstanceIteratorDescription);
-            scriptVariable.setCategory("step" + org.bonitasoft.studio.common.ExpressionConstants.VARIABLE_TYPE);
+            scriptVariable.setCategory("step" + org.bonitasoft.bpm.model.util.ExpressionConstants.VARIABLE_TYPE);
             return scriptVariable;
-        } else if (org.bonitasoft.studio.common.ExpressionConstants.CONTRACT_INPUT_TYPE
+        } else if (org.bonitasoft.bpm.model.util.ExpressionConstants.CONTRACT_INPUT_TYPE
                 .equals(e.getType())) {
             final ContractInput input = (ContractInput) e.getReferencedElements().get(0);
             final ScriptVariable scriptVariable = new ScriptVariable(input.getName(), e.getReturnType(), null,
                     input.getDescription());
-            scriptVariable.setCategory(org.bonitasoft.studio.common.ExpressionConstants.CONTRACT_INPUT_TYPE);
+            scriptVariable.setCategory(org.bonitasoft.bpm.model.util.ExpressionConstants.CONTRACT_INPUT_TYPE);
             return scriptVariable;
-        } else if (org.bonitasoft.studio.common.ExpressionConstants.VARIABLE_TYPE.equals(e.getType())) {
+        } else if (org.bonitasoft.bpm.model.util.ExpressionConstants.VARIABLE_TYPE.equals(e.getType())) {
             final Data data = (Data) e.getReferencedElements().get(0);
             MultiInstantiable multiInstantiable = ModelHelper.getFirstContainerOfType(context, MultiInstantiable.class);
             if (multiInstantiable != null
@@ -410,15 +410,15 @@ public class GroovyUtil {
                     && Objects.equals(multiInstantiable.getIteratorExpression().getReturnType(), e.getReturnType())) {
                 ScriptVariable scriptVariable = new ScriptVariable(e.getName(), e.getReturnType(), null,
                         Messages.multiInstanceIteratorDescription);
-                scriptVariable.setCategory("step" + org.bonitasoft.studio.common.ExpressionConstants.VARIABLE_TYPE);
+                scriptVariable.setCategory("step" + org.bonitasoft.bpm.model.util.ExpressionConstants.VARIABLE_TYPE);
                 return scriptVariable;
             }
             ScriptVariable scriptVariable = createScriptVariable(data);
             final AbstractProcess parentProcess = ModelHelper.getParentProcess(context);
             boolean isProcessData = false;
             String type = data instanceof BusinessObjectData
-                    ? org.bonitasoft.studio.common.ExpressionConstants.BUSINESS_DATA_TYPE
-                    : org.bonitasoft.studio.common.ExpressionConstants.VARIABLE_TYPE;
+                    ? org.bonitasoft.bpm.model.util.ExpressionConstants.BUSINESS_DATA_TYPE
+                    : org.bonitasoft.bpm.model.util.ExpressionConstants.VARIABLE_TYPE;
             if (parentProcess != null) {
                 for (final Data d : parentProcess.getData()) {
                     if (d.getName().equals(data.getName())) {
@@ -436,38 +436,38 @@ public class GroovyUtil {
             }
 
             return scriptVariable;
-        } else if (org.bonitasoft.studio.common.ExpressionConstants.PARAMETER_TYPE
+        } else if (org.bonitasoft.bpm.model.util.ExpressionConstants.PARAMETER_TYPE
                 .equals(e.getType())) {
             final Parameter parameter = (Parameter) e.getReferencedElements()
                     .get(0);
             final ScriptVariable scriptVariable = createScriptVariable(parameter);
-            scriptVariable.setCategory(org.bonitasoft.studio.common.ExpressionConstants.PARAMETER_TYPE);
+            scriptVariable.setCategory(org.bonitasoft.bpm.model.util.ExpressionConstants.PARAMETER_TYPE);
             return scriptVariable;
-        } else if (org.bonitasoft.studio.common.ExpressionConstants.CONNECTOR_OUTPUT_TYPE
+        } else if (org.bonitasoft.bpm.model.util.ExpressionConstants.CONNECTOR_OUTPUT_TYPE
                 .equals(e.getType())) {
             final Output output = (Output) e.getReferencedElements().get(0);
             final ScriptVariable scriptVariable = createScriptVariable(output);
-            scriptVariable.setCategory(org.bonitasoft.studio.common.ExpressionConstants.CONNECTOR_OUTPUT_TYPE);
+            scriptVariable.setCategory(org.bonitasoft.bpm.model.util.ExpressionConstants.CONNECTOR_OUTPUT_TYPE);
             return scriptVariable;
-        } else if (org.bonitasoft.studio.common.ExpressionConstants.ENGINE_CONSTANT_TYPE
+        } else if (org.bonitasoft.bpm.model.util.ExpressionConstants.ENGINE_CONSTANT_TYPE
                 .equals(e.getType())) {
             final ScriptVariable scriptVariable = new ScriptVariable(e.getContent(),
                     getEngineExpressionReturnType(e.getName()));
-            scriptVariable.setCategory(org.bonitasoft.studio.common.ExpressionConstants.ENGINE_CONSTANT_TYPE);
+            scriptVariable.setCategory(org.bonitasoft.bpm.model.util.ExpressionConstants.ENGINE_CONSTANT_TYPE);
             return scriptVariable;
-        } else if (org.bonitasoft.studio.common.ExpressionConstants.DOCUMENT_TYPE.equals(e.getType())) {
+        } else if (org.bonitasoft.bpm.model.util.ExpressionConstants.DOCUMENT_TYPE.equals(e.getType())) {
             final ScriptVariable scriptVariable = new ScriptVariable(e.getContent(), e.getReturnType(), null,
                     expressionDocumentation(e, context));
-            scriptVariable.setCategory(org.bonitasoft.studio.common.ExpressionConstants.DOCUMENT_TYPE);
+            scriptVariable.setCategory(org.bonitasoft.bpm.model.util.ExpressionConstants.DOCUMENT_TYPE);
             return scriptVariable;
-        } else if (org.bonitasoft.studio.common.ExpressionConstants.DOCUMENT_REF_TYPE.equals(e.getType())) {
+        } else if (org.bonitasoft.bpm.model.util.ExpressionConstants.DOCUMENT_REF_TYPE.equals(e.getType())) {
             final ScriptVariable scriptVariable = new ScriptVariable(e.getContent(), e.getReturnType(), null,
                     expressionDocumentation(e, context));
-            scriptVariable.setCategory(org.bonitasoft.studio.common.ExpressionConstants.DOCUMENT_REF_TYPE);
+            scriptVariable.setCategory(org.bonitasoft.bpm.model.util.ExpressionConstants.DOCUMENT_REF_TYPE);
             return scriptVariable;
-        } else if (org.bonitasoft.studio.common.ExpressionConstants.DAO_TYPE.equals(e.getType())) {
+        } else if (org.bonitasoft.bpm.model.util.ExpressionConstants.DAO_TYPE.equals(e.getType())) {
             final ScriptVariable scriptVariable = new ScriptVariable(e.getContent(), e.getReturnType());
-            scriptVariable.setCategory(org.bonitasoft.studio.common.ExpressionConstants.DAO_TYPE);
+            scriptVariable.setCategory(org.bonitasoft.bpm.model.util.ExpressionConstants.DAO_TYPE);
             return scriptVariable;
         }
         return null;

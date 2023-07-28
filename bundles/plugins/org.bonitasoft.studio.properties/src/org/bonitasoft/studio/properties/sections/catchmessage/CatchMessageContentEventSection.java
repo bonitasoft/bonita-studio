@@ -16,7 +16,7 @@ package org.bonitasoft.studio.properties.sections.catchmessage;
 
 import java.util.List;
 
-import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.bpm.model.util.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.ui.properties.AbstractBonitaDescriptionSection;
@@ -24,17 +24,17 @@ import org.bonitasoft.studio.expression.editor.ExpressionProviderService;
 import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFilter;
 import org.bonitasoft.studio.expression.editor.operation.OperationsComposite;
 import org.bonitasoft.studio.expression.editor.operation.PropertyOperationsComposite;
-import org.bonitasoft.studio.model.expression.Expression;
-import org.bonitasoft.studio.model.expression.ExpressionFactory;
-import org.bonitasoft.studio.model.expression.ListExpression;
-import org.bonitasoft.studio.model.expression.Operation;
-import org.bonitasoft.studio.model.expression.Operator;
-import org.bonitasoft.studio.model.expression.TableExpression;
-import org.bonitasoft.studio.model.process.AbstractCatchMessageEvent;
-import org.bonitasoft.studio.model.process.Data;
-import org.bonitasoft.studio.model.process.Message;
-import org.bonitasoft.studio.model.process.MessageFlow;
-import org.bonitasoft.studio.model.process.ProcessPackage;
+import org.bonitasoft.bpm.model.expression.Expression;
+import org.bonitasoft.bpm.model.expression.ExpressionFactory;
+import org.bonitasoft.bpm.model.expression.ListExpression;
+import org.bonitasoft.bpm.model.expression.Operation;
+import org.bonitasoft.bpm.model.expression.Operator;
+import org.bonitasoft.bpm.model.expression.TableExpression;
+import org.bonitasoft.bpm.model.process.AbstractCatchMessageEvent;
+import org.bonitasoft.bpm.model.process.Data;
+import org.bonitasoft.bpm.model.process.Message;
+import org.bonitasoft.bpm.model.process.MessageFlow;
+import org.bonitasoft.bpm.model.process.ProcessPackage;
 import org.bonitasoft.studio.properties.i18n.Messages;
 import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.common.util.EList;
@@ -107,7 +107,7 @@ public class CatchMessageContentEventSection extends AbstractBonitaDescriptionSe
                     private void mapContentForMessage(final Message message) {
                         final TableExpression throwMessageContent = message.getMessageContent();
                         for (final ListExpression row : throwMessageContent.getExpressions()) {
-                            final List<org.bonitasoft.studio.model.expression.Expression> col = row.getExpressions();
+                            final List<org.bonitasoft.bpm.model.expression.Expression> col = row.getExpressions();
                             if (col.size() == 2) {
                                 final String throwMessageContentExpressionName = col.get(0).getName();
                                 if (throwMessageContentExpressionName != null

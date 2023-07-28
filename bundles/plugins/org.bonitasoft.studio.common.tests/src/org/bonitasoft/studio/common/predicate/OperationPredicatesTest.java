@@ -17,8 +17,8 @@ package org.bonitasoft.studio.common.predicate;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.bonitasoft.studio.common.predicate.OperationPredicates.withLeftOperand;
 import static org.bonitasoft.studio.common.predicate.OperationPredicates.withRightOperand;
-import static org.bonitasoft.studio.model.expression.builders.ExpressionBuilder.anExpression;
-import static org.bonitasoft.studio.model.expression.builders.OperationBuilder.anOperation;
+import static org.bonitasoft.bpm.model.expression.builders.ExpressionBuilder.anExpression;
+import static org.bonitasoft.bpm.model.expression.builders.OperationBuilder.anOperation;
 
 import org.junit.Test;
 

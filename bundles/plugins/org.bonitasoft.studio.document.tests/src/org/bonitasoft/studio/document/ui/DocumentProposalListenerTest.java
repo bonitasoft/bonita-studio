@@ -20,8 +20,8 @@ import static org.mockito.Mockito.when;
 
 import org.bonitasoft.studio.document.ui.dialog.DocumentWizardDialog;
 import org.bonitasoft.studio.document.ui.wizard.DocumentWizard;
-import org.bonitasoft.studio.model.process.Document;
-import org.bonitasoft.studio.model.process.ProcessFactory;
+import org.bonitasoft.bpm.model.process.Document;
+import org.bonitasoft.bpm.model.process.ProcessFactory;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.dialogs.Dialog;
 import org.junit.After;

@@ -16,8 +16,8 @@ package org.bonitasoft.studio.common.predicate;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
-import org.bonitasoft.studio.model.expression.Expression;
-import org.bonitasoft.studio.model.expression.Operation;
+import org.bonitasoft.bpm.model.expression.Expression;
+import org.bonitasoft.bpm.model.expression.Operation;
 
 import com.google.common.base.Predicate;
 

@@ -18,9 +18,9 @@ package org.bonitasoft.studio.contract.ui.property.input;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.bonitasoft.studio.model.process.ContractInput;
-import org.bonitasoft.studio.model.process.ContractInputType;
-import org.bonitasoft.studio.model.process.ProcessFactory;
+import org.bonitasoft.bpm.model.process.ContractInput;
+import org.bonitasoft.bpm.model.process.ContractInputType;
+import org.bonitasoft.bpm.model.process.ProcessFactory;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

@@ -24,7 +24,7 @@ import java.util.jar.JarFile;
 import org.bonitasoft.plugin.analyze.report.model.ConnectorImplementation;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.store.AbstractEMFRepositoryStore;
-import org.bonitasoft.studio.connector.model.implementation.util.ConnectorImplementationXMLProcessor;
+import org.bonitasoft.bpm.connector.model.implementation.util.ConnectorImplementationXMLProcessor;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.xmi.XMLResource;
 

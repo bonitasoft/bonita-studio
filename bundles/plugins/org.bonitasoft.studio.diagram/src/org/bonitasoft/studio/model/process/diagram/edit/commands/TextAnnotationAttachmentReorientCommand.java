@@ -17,9 +17,9 @@
  */
 package org.bonitasoft.studio.model.process.diagram.edit.commands;
 
-import org.bonitasoft.studio.model.process.Element;
-import org.bonitasoft.studio.model.process.TextAnnotation;
-import org.bonitasoft.studio.model.process.TextAnnotationAttachment;
+import org.bonitasoft.bpm.model.process.Element;
+import org.bonitasoft.bpm.model.process.TextAnnotation;
+import org.bonitasoft.bpm.model.process.TextAnnotationAttachment;
 import org.bonitasoft.studio.model.process.diagram.edit.policies.ProcessBaseItemSemanticEditPolicy;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.IAdaptable;

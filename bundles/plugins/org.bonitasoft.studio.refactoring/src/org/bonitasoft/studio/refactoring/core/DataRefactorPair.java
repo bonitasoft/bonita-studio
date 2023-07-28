@@ -16,7 +16,7 @@
  */
 package org.bonitasoft.studio.refactoring.core;
 
-import org.bonitasoft.studio.model.process.Data;
+import org.bonitasoft.bpm.model.process.Data;
 import org.bonitasoft.studio.refactoring.core.RefactorPair;
 
 public class DataRefactorPair extends RefactorPair<Data,Data> {

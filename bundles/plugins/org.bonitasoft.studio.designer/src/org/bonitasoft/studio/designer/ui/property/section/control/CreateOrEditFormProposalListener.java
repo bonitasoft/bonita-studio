@@ -27,8 +27,8 @@ import org.bonitasoft.studio.designer.core.operation.NewFormOperationFactoryDele
 import org.bonitasoft.studio.designer.core.repository.WebPageFileStore;
 import org.bonitasoft.studio.designer.core.repository.WebPageRepositoryStore;
 import org.bonitasoft.studio.designer.i18n.Messages;
-import org.bonitasoft.studio.model.expression.Expression;
-import org.bonitasoft.studio.model.process.FormMapping;
+import org.bonitasoft.bpm.model.expression.Expression;
+import org.bonitasoft.bpm.model.process.FormMapping;
 import org.eclipse.e4.core.di.annotations.Creatable;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.dialogs.MessageDialog;

@@ -14,7 +14,7 @@
  */
 package org.bonitasoft.studio.common.gmf.tools.tree;
 
-import org.bonitasoft.studio.model.connectorconfiguration.ConnectorParameter;
+import org.bonitasoft.bpm.model.connectorconfiguration.ConnectorParameter;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 

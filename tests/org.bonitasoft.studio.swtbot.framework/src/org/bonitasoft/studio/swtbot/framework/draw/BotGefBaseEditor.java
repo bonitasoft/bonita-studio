@@ -10,7 +10,7 @@ package org.bonitasoft.studio.swtbot.framework.draw;
 
 import java.util.List;
 
-import org.bonitasoft.studio.model.process.Element;
+import org.bonitasoft.bpm.model.process.Element;
 import org.bonitasoft.studio.swtbot.framework.BotBase;
 import org.bonitasoft.studio.swtbot.framework.exception.EmptyDiagramSelectionException;
 import org.bonitasoft.studio.swtbot.framework.exception.SemanticElementNotFoundException;

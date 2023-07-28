@@ -24,7 +24,7 @@ import org.bonitasoft.studio.application.operation.extension.participant.configu
 import org.bonitasoft.studio.common.repository.core.migration.dependencies.configuration.ProcessConfigurationChange;
 import org.bonitasoft.studio.common.repository.extension.update.preview.ChangePreview;
 import org.bonitasoft.studio.connectors.repository.DatabaseConnectorPropertiesRepositoryStore;
-import org.bonitasoft.studio.model.configuration.Configuration;
+import org.bonitasoft.bpm.model.configuration.Configuration;
 
 public class JarRemovedChange
         implements ChangePreview, ProcessConfigurationChange, DatabaseConnectorConfigurationChange {

@@ -17,7 +17,7 @@ package org.bonitasoft.studio.properties.sections.general.link;
 
 import org.bonitasoft.studio.common.ui.properties.ExtensibleGridPropertySection;
 import org.bonitasoft.studio.common.ui.properties.IExtensibleGridPropertySectionContribution;
-import org.bonitasoft.studio.model.process.CatchLinkEvent;
+import org.bonitasoft.bpm.model.process.CatchLinkEvent;
 import org.bonitasoft.studio.properties.i18n.Messages;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;

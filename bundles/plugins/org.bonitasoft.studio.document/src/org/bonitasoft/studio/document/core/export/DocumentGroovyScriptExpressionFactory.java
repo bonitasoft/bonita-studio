@@ -23,8 +23,8 @@ import java.util.stream.Collectors;
 
 import org.bonitasoft.engine.bpm.contract.FileInputValue;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
-import org.bonitasoft.studio.model.expression.Expression;
-import org.bonitasoft.studio.model.process.ContractInput;
+import org.bonitasoft.bpm.model.expression.Expression;
+import org.bonitasoft.bpm.model.process.ContractInput;
 
 public class DocumentGroovyScriptExpressionFactory {
 

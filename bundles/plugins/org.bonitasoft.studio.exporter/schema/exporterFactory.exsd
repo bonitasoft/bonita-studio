@@ -79,7 +79,7 @@
                   
                </documentation>
                <appInfo>
-                  <meta.attribute kind="java" basedOn=":org.bonitasoft.studio.exporter.extension.IBonitaTransformer"/>
+                  <meta.attribute kind="java" basedOn=":org.bonitasoft.bonita2bpmn.extension.IBonitaTransformer"/>
                </appInfo>
             </annotation>
          </attribute>

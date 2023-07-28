@@ -14,8 +14,8 @@
  */
 package org.bonitasoft.studio.designer.ui.property.filter;
 
-import org.bonitasoft.studio.model.process.Lane;
-import org.bonitasoft.studio.model.process.Pool;
+import org.bonitasoft.bpm.model.process.Lane;
+import org.bonitasoft.bpm.model.process.Pool;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.viewers.IFilter;

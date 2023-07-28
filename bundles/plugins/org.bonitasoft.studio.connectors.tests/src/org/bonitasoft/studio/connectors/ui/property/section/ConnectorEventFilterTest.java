@@ -16,8 +16,8 @@
  */
 package org.bonitasoft.studio.connectors.ui.property.section;
 
-import static org.bonitasoft.studio.model.process.builders.ConnectorBuilder.aConnector;
-import static org.bonitasoft.studio.model.process.builders.TaskBuilder.aTask;
+import static org.bonitasoft.bpm.model.process.builders.ConnectorBuilder.aConnector;
+import static org.bonitasoft.bpm.model.process.builders.TaskBuilder.aTask;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;

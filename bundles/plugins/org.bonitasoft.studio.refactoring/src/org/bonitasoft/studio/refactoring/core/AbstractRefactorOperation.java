@@ -32,9 +32,9 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.bpm.model.util.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
-import org.bonitasoft.studio.model.expression.Expression;
+import org.bonitasoft.bpm.model.expression.Expression;
 import org.bonitasoft.studio.refactoring.core.script.ConditionExpressionScriptContrainer;
 import org.bonitasoft.studio.refactoring.core.script.GroovyExpressionScriptContrainer;
 import org.bonitasoft.studio.refactoring.core.script.GroovyScriptRefactoringOperationFactory;

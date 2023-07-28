@@ -16,7 +16,7 @@
  */
 package org.bonitasoft.studio.contract.ui.property.constraint.edit.editor;
 
-import org.bonitasoft.studio.model.process.ContractConstraint;
+import org.bonitasoft.bpm.model.process.ContractConstraint;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;

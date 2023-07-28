@@ -15,11 +15,11 @@
 package org.bonitasoft.studio.properties.sections.iteration;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.bonitasoft.studio.model.expression.builders.ExpressionBuilder.anExpression;
-import static org.bonitasoft.studio.model.process.builders.DataBuilder.aData;
-import static org.bonitasoft.studio.model.process.builders.TaskBuilder.aTask;
+import static org.bonitasoft.bpm.model.expression.builders.ExpressionBuilder.anExpression;
+import static org.bonitasoft.bpm.model.process.builders.DataBuilder.aData;
+import static org.bonitasoft.bpm.model.process.builders.TaskBuilder.aTask;
 
-import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.bpm.model.util.ExpressionConstants;
 import org.junit.Before;
 import org.junit.Test;
 

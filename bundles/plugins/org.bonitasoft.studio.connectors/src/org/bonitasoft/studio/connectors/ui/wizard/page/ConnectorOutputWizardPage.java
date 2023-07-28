@@ -13,7 +13,7 @@ package org.bonitasoft.studio.connectors.ui.wizard.page;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.bpm.model.util.ExpressionConstants;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.provider.DefinitionResourceProvider;
 import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFilter;

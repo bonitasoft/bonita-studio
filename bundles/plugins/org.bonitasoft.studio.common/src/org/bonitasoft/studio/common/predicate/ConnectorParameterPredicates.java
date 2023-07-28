@@ -17,8 +17,7 @@ package org.bonitasoft.studio.common.predicate;
 import java.util.Objects;
 import java.util.function.Predicate;
 
-import org.bonitasoft.studio.model.connectorconfiguration.ConnectorParameter;
-
+import org.bonitasoft.bpm.model.connectorconfiguration.ConnectorParameter;
 
 public class ConnectorParameterPredicates {
 

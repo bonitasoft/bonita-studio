@@ -15,9 +15,9 @@
 package org.bonitasoft.studio.common.gmf.tools.tree;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.bonitasoft.studio.model.connectorconfiguration.builders.ConnectorParameterBuilder.aConnectorParameter;
+import static org.bonitasoft.bpm.model.connectorconfiguration.builders.ConnectorParameterBuilder.aConnectorParameter;
 
-import org.bonitasoft.studio.model.connectorconfiguration.ConnectorParameter;
+import org.bonitasoft.bpm.model.connectorconfiguration.ConnectorParameter;
 import org.junit.Before;
 import org.junit.Test;
 

@@ -19,21 +19,21 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
+import org.bonitasoft.bpm.model.expression.Expression;
+import org.bonitasoft.bpm.model.expression.ExpressionPackage;
+import org.bonitasoft.bpm.model.process.BusinessObjectData;
+import org.bonitasoft.bpm.model.process.ContractInput;
+import org.bonitasoft.bpm.model.process.Data;
+import org.bonitasoft.bpm.model.process.DataAware;
+import org.bonitasoft.bpm.model.process.MultiInstantiable;
+import org.bonitasoft.bpm.model.process.Pool;
+import org.bonitasoft.bpm.model.process.ProcessPackage;
+import org.bonitasoft.bpm.model.util.ExpressionConstants;
+import org.bonitasoft.bpm.model.util.ModelSearch;
 import org.bonitasoft.studio.common.DataUtil;
-import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.EMFModelUpdater;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
-import org.bonitasoft.studio.common.model.ModelSearch;
-import org.bonitasoft.studio.model.expression.Expression;
-import org.bonitasoft.studio.model.expression.ExpressionPackage;
-import org.bonitasoft.studio.model.process.BusinessObjectData;
-import org.bonitasoft.studio.model.process.ContractInput;
-import org.bonitasoft.studio.model.process.Data;
-import org.bonitasoft.studio.model.process.DataAware;
-import org.bonitasoft.studio.model.process.MultiInstantiable;
-import org.bonitasoft.studio.model.process.Pool;
-import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.command.CompoundCommand;
@@ -76,7 +76,7 @@ public class RefactorDataOperation extends AbstractRefactorOperation<Data, Data,
                 updateDataReferenceInVariableExpressions(compoundCommand);
                 updateDataReferenceInExpressions(compoundCommand, !shouldUpdateReferencesInScripts(pairToRefactor));
                 if (pairToRefactor.getNewValue() instanceof BusinessObjectData) {
-                    updateContractInputDataReference(compoundCommand, pairToRefactor,pairToRefactor.getNewValueName());
+                    updateContractInputDataReference(compoundCommand, pairToRefactor, pairToRefactor.getNewValueName());
                 }
                 if (updateDataReferences) {
                     updateDataReferenceInMultinstanciation(compoundCommand);
@@ -117,7 +117,7 @@ public class RefactorDataOperation extends AbstractRefactorOperation<Data, Data,
     }
 
     private void updateContractInputDataReference(final CompoundCommand cc,
-            final DataRefactorPair pairToRefactor,String newName) {
+            final DataRefactorPair pairToRefactor, String newName) {
         ModelSearch modelSearch = new ModelSearch(Collections::emptyList);
         Pool pool = modelSearch.getDirectParentOfType(dataContainer, Pool.class);
         modelSearch.getAllItemsOfType(pool, ContractInput.class).stream()
@@ -174,14 +174,16 @@ public class RefactorDataOperation extends AbstractRefactorOperation<Data, Data,
                 cc.append(
                         SetCommand.create(getEditingDomain(), exp, ExpressionPackage.Literals.EXPRESSION__CONTENT, ""));
                 // update return type
-                if(exp.isReturnTypeFixed()) {
-                    cc.append(SetCommand.create(getEditingDomain(), exp, ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE,
+                if (exp.isReturnTypeFixed()) {
+                    cc.append(SetCommand.create(getEditingDomain(), exp,
+                            ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE,
                             exp.getReturnType()));
                 } else {
-                    cc.append(SetCommand.create(getEditingDomain(), exp, ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE,
+                    cc.append(SetCommand.create(getEditingDomain(), exp,
+                            ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE,
                             String.class.getName()));
                 }
-               
+
                 cc.append(SetCommand.create(getEditingDomain(), exp, ExpressionPackage.Literals.EXPRESSION__TYPE,
                         ExpressionConstants.CONSTANT_TYPE));
                 // update referenced data

@@ -19,35 +19,35 @@ import static org.junit.Assert.assertEquals;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collections;
 
+import org.bonitasoft.bpm.model.connectorconfiguration.ConnectorConfiguration;
+import org.bonitasoft.bpm.model.connectorconfiguration.ConnectorConfigurationFactory;
+import org.bonitasoft.bpm.model.connectorconfiguration.ConnectorParameter;
+import org.bonitasoft.bpm.model.expression.Expression;
+import org.bonitasoft.bpm.model.expression.ExpressionFactory;
+import org.bonitasoft.bpm.model.expression.Operation;
+import org.bonitasoft.bpm.model.expression.Operator;
+import org.bonitasoft.bpm.model.process.AbstractProcess;
+import org.bonitasoft.bpm.model.process.Activity;
+import org.bonitasoft.bpm.model.process.Connector;
+import org.bonitasoft.bpm.model.process.Data;
+import org.bonitasoft.bpm.model.process.DataType;
+import org.bonitasoft.bpm.model.process.Element;
+import org.bonitasoft.bpm.model.process.MainProcess;
+import org.bonitasoft.bpm.model.process.Pool;
+import org.bonitasoft.bpm.model.process.ProcessFactory;
+import org.bonitasoft.bpm.model.process.ProcessPackage;
+import org.bonitasoft.bpm.model.process.SequenceFlow;
+import org.bonitasoft.bpm.model.process.SequenceFlowConditionType;
+import org.bonitasoft.bpm.model.util.ExpressionConstants;
+import org.bonitasoft.bpm.model.util.ModelSearch;
 import org.bonitasoft.studio.common.DataTypeLabels;
 import org.bonitasoft.studio.common.DataUtil;
-import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.EMFModelUpdater;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
-import org.bonitasoft.studio.common.model.ModelSearch;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.diagram.custom.commands.NewDiagramCommandHandler;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
-import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration;
-import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfigurationFactory;
-import org.bonitasoft.studio.model.connectorconfiguration.ConnectorParameter;
-import org.bonitasoft.studio.model.expression.Expression;
-import org.bonitasoft.studio.model.expression.ExpressionFactory;
-import org.bonitasoft.studio.model.expression.Operation;
-import org.bonitasoft.studio.model.expression.Operator;
-import org.bonitasoft.studio.model.process.AbstractProcess;
-import org.bonitasoft.studio.model.process.Activity;
-import org.bonitasoft.studio.model.process.Connector;
-import org.bonitasoft.studio.model.process.Data;
-import org.bonitasoft.studio.model.process.DataType;
-import org.bonitasoft.studio.model.process.Element;
-import org.bonitasoft.studio.model.process.MainProcess;
-import org.bonitasoft.studio.model.process.Pool;
-import org.bonitasoft.studio.model.process.ProcessFactory;
-import org.bonitasoft.studio.model.process.ProcessPackage;
-import org.bonitasoft.studio.model.process.SequenceFlow;
-import org.bonitasoft.studio.model.process.SequenceFlowConditionType;
 import org.bonitasoft.studio.refactoring.core.RefactorDataOperation;
 import org.bonitasoft.studio.refactoring.core.RefactoringOperationType;
 import org.bonitasoft.studio.tests.util.InitialProjectRule;
@@ -70,7 +70,7 @@ public class DataRefactorIT {
 
     @Rule
     public InitialProjectRule projectRule = InitialProjectRule.INSTANCE;
-    
+
     private Data processData;
     private Data processData2;
     private Data localData;
@@ -89,9 +89,11 @@ public class DataRefactorIT {
         activity.setCollectionDataToMultiInstantiate(processData);
         activity.setListDataContainingOutputResults(processData);
         editingDomain.getCommandStack()
-                .execute(AddCommand.create(editingDomain, process, ProcessPackage.Literals.CONTAINER__ELEMENTS, activity));
+                .execute(AddCommand.create(editingDomain, process, ProcessPackage.Literals.CONTAINER__ELEMENTS,
+                        activity));
         editingDomain.getCommandStack()
-                .execute(SetCommand.create(editingDomain, processData, ProcessPackage.Literals.ELEMENT__NAME, newDataName));
+                .execute(SetCommand.create(editingDomain, processData, ProcessPackage.Literals.ELEMENT__NAME,
+                        newDataName));
 
         assertEquals("There are too many datas. The old one migth not be removed.", 2, process.getData().size());
         assertEquals("Data name has not been updated correctly in multinstantiation", newDataName,
@@ -141,8 +143,10 @@ public class DataRefactorIT {
         assertEquals("There are too many datas. The old one migth not be removed.", 2, process.getData().size());
         assertEquals("Data name has not been updated correctly in expression", newDataName,
                 ((Element) variableExpression.getReferencedElements().get(0)).getName());
-        assertEquals("Data name has not been updated correctly in expression", newDataName, variableExpression.getName());
-        assertEquals("Data name has not been updated correctly in expression", newDataName, variableExpression.getContent());
+        assertEquals("Data name has not been updated correctly in expression", newDataName,
+                variableExpression.getName());
+        assertEquals("Data name has not been updated correctly in expression", newDataName,
+                variableExpression.getContent());
 
     }
 
@@ -214,7 +218,8 @@ public class DataRefactorIT {
     }
 
     @Test
-    public void testRenameInGroovyScriptConnector() throws InvocationTargetException, InterruptedException, ReadFileStoreException {
+    public void testRenameInGroovyScriptConnector()
+            throws InvocationTargetException, InterruptedException, ReadFileStoreException {
         final String newDataName = "newDataName";
         final String newDataType = DataTypeLabels.integerDataType;
         final AbstractProcess process = initTestForGlobalDataRefactor(newDataName, newDataType);
@@ -252,7 +257,8 @@ public class DataRefactorIT {
 
         final ConnectorConfiguration groovyScriptConnectorConfiguration = ConnectorConfigurationFactory.eINSTANCE
                 .createConnectorConfiguration();
-        final ConnectorParameter connectorParameter = ConnectorConfigurationFactory.eINSTANCE.createConnectorParameter();
+        final ConnectorParameter connectorParameter = ConnectorConfigurationFactory.eINSTANCE
+                .createConnectorParameter();
         final Expression scriptUsingData = ExpressionFactory.eINSTANCE.createExpression();
         scriptUsingData.setType(ExpressionConstants.SCRIPT_TYPE);
         scriptUsingData.setName(processData.getName());
@@ -292,7 +298,8 @@ public class DataRefactorIT {
     }
 
     @Test
-    public void testDeleteDataWithReferenceInScript() throws InvocationTargetException, InterruptedException, ReadFileStoreException {
+    public void testDeleteDataWithReferenceInScript()
+            throws InvocationTargetException, InterruptedException, ReadFileStoreException {
         final AbstractProcess process = initTestForGlobalDataRefactor(null);
 
         final Activity activity = getActivity(process);
@@ -333,7 +340,8 @@ public class DataRefactorIT {
     }
 
     @Test
-    public void testDeleteSeveralDataWithReferenceInScript() throws InvocationTargetException, InterruptedException, ReadFileStoreException {
+    public void testDeleteSeveralDataWithReferenceInScript()
+            throws InvocationTargetException, InterruptedException, ReadFileStoreException {
         final AbstractProcess process = initTestForGlobalDataRefactor(null);
 
         final Activity activity = getActivity(process);
@@ -365,7 +373,8 @@ public class DataRefactorIT {
     }
 
     @Test
-    public void testDeleteDataWithReferenceInScriptAndOperations() throws InvocationTargetException, InterruptedException, ReadFileStoreException {
+    public void testDeleteDataWithReferenceInScriptAndOperations()
+            throws InvocationTargetException, InterruptedException, ReadFileStoreException {
         final AbstractProcess process = initTestForGlobalDataRefactor(null);
 
         final Activity activity = (Activity) new ModelSearch(Collections::emptyList)
@@ -452,7 +461,8 @@ public class DataRefactorIT {
     }
 
     @Test
-    public void testDeleteSeveralDataWithReferenceInOperations() throws InvocationTargetException, InterruptedException, ReadFileStoreException {
+    public void testDeleteSeveralDataWithReferenceInOperations()
+            throws InvocationTargetException, InterruptedException, ReadFileStoreException {
         final AbstractProcess process = initTestForGlobalDataRefactor(null);
 
         final Expression variableExpression = addOperationOnFirstActivity(process, processData);
@@ -494,22 +504,26 @@ public class DataRefactorIT {
     }
 
     @Test
-    public void testDeleteDataWithReferenceInCondition() throws InvocationTargetException, InterruptedException, ReadFileStoreException {
+    public void testDeleteDataWithReferenceInCondition()
+            throws InvocationTargetException, InterruptedException, ReadFileStoreException {
         final AbstractProcess process = initTestForGlobalDataRefactor(null);
 
         final Expression conditionExpression = createSequenceFlowWithConditionExpression(process);
 
         refactorDataOperation.run(new NullProgressMonitor());
         assertEquals("The data has not been removed", 1, process.getData().size());
-        assertEquals("Referenced Data has been removed from script", 0, conditionExpression.getReferencedElements().size());
+        assertEquals("Referenced Data has been removed from script", 0,
+                conditionExpression.getReferencedElements().size());
 
         editingDomain.getCommandStack().undo();
         assertEquals("The data has not been readded on undo", 2, process.getData().size());
-        assertEquals("Referenced Data has been removed from script", 1, conditionExpression.getReferencedElements().size());
+        assertEquals("Referenced Data has been removed from script", 1,
+                conditionExpression.getReferencedElements().size());
     }
 
     @Test
-    public void testDeleteDataWithReferenceInPatternExpression() throws InvocationTargetException, InterruptedException, ReadFileStoreException {
+    public void testDeleteDataWithReferenceInPatternExpression()
+            throws InvocationTargetException, InterruptedException, ReadFileStoreException {
         final AbstractProcess process = initTestForGlobalDataRefactor(null);
 
         final Expression patternExpr = createConnectorWithPatternExpression(process);
@@ -525,7 +539,8 @@ public class DataRefactorIT {
     }
 
     @Test
-    public void testRenameDataWithReferenceInPatternExpression() throws InvocationTargetException, InterruptedException, ReadFileStoreException {
+    public void testRenameDataWithReferenceInPatternExpression()
+            throws InvocationTargetException, InterruptedException, ReadFileStoreException {
         final String newDataName = "newDataName";
         final AbstractProcess process = initTestForGlobalDataRefactor(newDataName);
 
@@ -550,7 +565,8 @@ public class DataRefactorIT {
 
         final ConnectorConfiguration groovyScriptConnectorConfiguration = ConnectorConfigurationFactory.eINSTANCE
                 .createConnectorConfiguration();
-        final ConnectorParameter connectorParameter = ConnectorConfigurationFactory.eINSTANCE.createConnectorParameter();
+        final ConnectorParameter connectorParameter = ConnectorConfigurationFactory.eINSTANCE
+                .createConnectorParameter();
         final Expression patternExpr = ExpressionFactory.eINSTANCE.createExpression();
         patternExpr.setType(ExpressionConstants.PATTERN_TYPE);
         patternExpr.setName(processData.getName());
@@ -566,7 +582,8 @@ public class DataRefactorIT {
     }
 
     @Test
-    public void testRenameDataWithReferenceInCondition() throws InvocationTargetException, InterruptedException, ReadFileStoreException {
+    public void testRenameDataWithReferenceInCondition()
+            throws InvocationTargetException, InterruptedException, ReadFileStoreException {
         final String newDataName = "newDataName";
         final AbstractProcess process = initTestForGlobalDataRefactor(newDataName);
 
@@ -600,10 +617,10 @@ public class DataRefactorIT {
         conditionExpression.getReferencedElements().add(EcoreUtil.copy(processData));
         sequenceFlow.setCondition(conditionExpression);
         editingDomain.getCommandStack().execute(
-                new AddCommand(editingDomain, process, ProcessPackage.Literals.ABSTRACT_PROCESS__CONNECTIONS, sequenceFlow));
+                new AddCommand(editingDomain, process, ProcessPackage.Literals.ABSTRACT_PROCESS__CONNECTIONS,
+                        sequenceFlow));
         return conditionExpression;
     }
-
 
     @Before
     public void setUp() throws Exception {
@@ -619,7 +636,7 @@ public class DataRefactorIT {
 
     /**
      * @return an AbstractProcess with a global data and a local data on an activity.
-     * @throws ReadFileStoreException 
+     * @throws ReadFileStoreException
      */
 
     private AbstractProcess createProcessWithData() throws ReadFileStoreException {
@@ -642,7 +659,8 @@ public class DataRefactorIT {
             editingDomain.getCommandStack().execute(
                     AddCommand.create(editingDomain, process, ProcessPackage.Literals.DATA_AWARE__DATA, processData2));
 
-            final Activity activity = new ModelSearch(Collections::emptyList).getAllItemsOfType(mainProcess, Activity.class)
+            final Activity activity = new ModelSearch(Collections::emptyList)
+                    .getAllItemsOfType(mainProcess, Activity.class)
                     .get(0);
             localData = ProcessFactory.eINSTANCE.createData();
             localData.setDatasourceId("BOS");
@@ -650,7 +668,6 @@ public class DataRefactorIT {
             localData.setDataType(ModelHelper.getDataTypeForID(mainProcess, DataTypeLabels.stringDataType));
             editingDomain.getCommandStack().execute(
                     AddCommand.create(editingDomain, activity, ProcessPackage.Literals.DATA_AWARE__DATA, localData));
-
 
         }
         return process;
@@ -664,11 +681,13 @@ public class DataRefactorIT {
         return initTestForDataRefactor(newDataName, processData);
     }
 
-    private AbstractProcess initTestForDataRefactor(final String newDataName, final Data dataToRefactor) throws ReadFileStoreException {
+    private AbstractProcess initTestForDataRefactor(final String newDataName, final Data dataToRefactor)
+            throws ReadFileStoreException {
         return initTestForDataRefactor(newDataName, dataToRefactor.getDataType().getName(), dataToRefactor);
     }
 
-    private AbstractProcess initTestForGlobalDataRefactor(final String newDataName, final String newDataType) throws ReadFileStoreException {
+    private AbstractProcess initTestForGlobalDataRefactor(final String newDataName, final String newDataType)
+            throws ReadFileStoreException {
         return initTestForDataRefactor(newDataName, newDataType, processData);
     }
 
@@ -682,7 +701,8 @@ public class DataRefactorIT {
         }
         refactorDataOperation.setDataContainer(process);
         if (newDataName != null) {
-            final Data newProcessData = createNewProcessData(newDataName, ModelHelper.getDataTypeForID(process, newDataType),
+            final Data newProcessData = createNewProcessData(newDataName,
+                    ModelHelper.getDataTypeForID(process, newDataType),
                     dataToRefactor);
             EMFModelUpdater<Data> emfModelUpdater = new EMFModelUpdater<Data>();
             Data workingCopy = emfModelUpdater.from(dataToRefactor).getWorkingCopy();

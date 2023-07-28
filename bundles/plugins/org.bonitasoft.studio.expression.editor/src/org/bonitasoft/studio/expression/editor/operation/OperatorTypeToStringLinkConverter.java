@@ -14,7 +14,7 @@
  */
 package org.bonitasoft.studio.expression.editor.operation;
 
-import org.bonitasoft.studio.model.expression.Operator;
+import org.bonitasoft.bpm.model.expression.Operator;
 import org.eclipse.core.databinding.conversion.Converter;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 

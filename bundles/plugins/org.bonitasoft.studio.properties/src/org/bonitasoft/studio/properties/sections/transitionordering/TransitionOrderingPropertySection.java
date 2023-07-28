@@ -17,10 +17,10 @@
 package org.bonitasoft.studio.properties.sections.transitionordering;
 
 import org.bonitasoft.studio.common.ui.properties.AbstractBonitaDescriptionSection;
-import org.bonitasoft.studio.model.process.Connection;
-import org.bonitasoft.studio.model.process.Element;
-import org.bonitasoft.studio.model.process.ProcessPackage;
-import org.bonitasoft.studio.model.process.SourceElement;
+import org.bonitasoft.bpm.model.process.Connection;
+import org.bonitasoft.bpm.model.process.Element;
+import org.bonitasoft.bpm.model.process.ProcessPackage;
+import org.bonitasoft.bpm.model.process.SourceElement;
 import org.bonitasoft.studio.properties.i18n.Messages;
 import org.eclipse.core.databinding.observable.list.IObservableList;
 import org.eclipse.emf.common.command.CompoundCommand;

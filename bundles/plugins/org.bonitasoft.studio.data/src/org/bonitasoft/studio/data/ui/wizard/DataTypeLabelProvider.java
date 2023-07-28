@@ -17,7 +17,7 @@
 package org.bonitasoft.studio.data.ui.wizard;
 
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
-import org.bonitasoft.studio.model.process.DataType;
+import org.bonitasoft.bpm.model.process.DataType;
 import org.eclipse.jface.viewers.LabelProvider;
 
 /**

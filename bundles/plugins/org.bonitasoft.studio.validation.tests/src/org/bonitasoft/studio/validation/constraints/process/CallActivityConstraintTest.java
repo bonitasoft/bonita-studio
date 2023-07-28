@@ -15,22 +15,22 @@
 package org.bonitasoft.studio.validation.constraints.process;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.bonitasoft.studio.model.process.builders.DataBuilder.aData;
-import static org.bonitasoft.studio.model.process.builders.PoolBuilder.aPool;
+import static org.bonitasoft.bpm.model.process.builders.DataBuilder.aData;
+import static org.bonitasoft.bpm.model.process.builders.PoolBuilder.aPool;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
-import org.bonitasoft.studio.model.expression.builders.ExpressionBuilder;
-import org.bonitasoft.studio.model.process.InputMappingAssignationType;
-import org.bonitasoft.studio.model.process.Pool;
-import org.bonitasoft.studio.model.process.builders.CallActivityBuilder;
-import org.bonitasoft.studio.model.process.builders.ContractBuilder;
-import org.bonitasoft.studio.model.process.builders.ContractInputBuilder;
-import org.bonitasoft.studio.model.process.builders.InputMappingBuilder;
-import org.bonitasoft.studio.model.process.builders.PoolBuilder;
+import org.bonitasoft.bpm.model.expression.builders.ExpressionBuilder;
+import org.bonitasoft.bpm.model.process.InputMappingAssignationType;
+import org.bonitasoft.bpm.model.process.Pool;
+import org.bonitasoft.bpm.model.process.builders.CallActivityBuilder;
+import org.bonitasoft.bpm.model.process.builders.ContractBuilder;
+import org.bonitasoft.bpm.model.process.builders.ContractInputBuilder;
+import org.bonitasoft.bpm.model.process.builders.InputMappingBuilder;
+import org.bonitasoft.bpm.model.process.builders.PoolBuilder;
 import org.bonitasoft.studio.properties.sections.callActivity.CallActivityHelper;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;

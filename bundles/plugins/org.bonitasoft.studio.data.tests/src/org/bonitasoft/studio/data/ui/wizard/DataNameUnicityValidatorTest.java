@@ -15,11 +15,11 @@
 package org.bonitasoft.studio.data.ui.wizard;
 
 import static org.bonitasoft.studio.assertions.StatusAssert.assertThat;
-import static org.bonitasoft.studio.model.process.builders.DataBuilder.aData;
+import static org.bonitasoft.bpm.model.process.builders.DataBuilder.aData;
 
 import java.util.Collections;
 
-import org.bonitasoft.studio.model.process.Data;
+import org.bonitasoft.bpm.model.process.Data;
 import org.eclipse.core.runtime.IStatus;
 import org.junit.Rule;
 import org.junit.Test;

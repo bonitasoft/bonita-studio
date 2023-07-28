@@ -17,9 +17,9 @@
  */
 package org.bonitasoft.studio.model.process.diagram.edit.commands;
 
-import org.bonitasoft.studio.model.process.Activity;
-import org.bonitasoft.studio.model.process.Container;
-import org.bonitasoft.studio.model.process.ProcessFactory;
+import org.bonitasoft.bpm.model.process.Activity;
+import org.bonitasoft.bpm.model.process.Container;
+import org.bonitasoft.bpm.model.process.ProcessFactory;
 import org.bonitasoft.studio.model.process.diagram.providers.ElementInitializers;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.IAdaptable;

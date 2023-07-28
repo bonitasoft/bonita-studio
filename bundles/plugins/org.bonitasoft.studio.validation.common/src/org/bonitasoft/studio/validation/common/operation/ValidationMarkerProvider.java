@@ -26,7 +26,7 @@ import java.util.stream.Stream;
 
 import org.bonitasoft.studio.common.Triple;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.model.process.MainProcess;
+import org.bonitasoft.bpm.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditorPlugin;
 import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditorUtil;
 import org.bonitasoft.studio.model.process.diagram.providers.ProcessMarkerNavigationProvider;

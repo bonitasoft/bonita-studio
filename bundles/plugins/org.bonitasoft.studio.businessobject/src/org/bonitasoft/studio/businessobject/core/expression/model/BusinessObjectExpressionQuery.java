@@ -17,7 +17,7 @@ package org.bonitasoft.studio.businessobject.core.expression.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.bonitasoft.studio.model.expression.Expression;
+import org.bonitasoft.bpm.model.expression.Expression;
 
 /**
  * @author Romain Bioteau

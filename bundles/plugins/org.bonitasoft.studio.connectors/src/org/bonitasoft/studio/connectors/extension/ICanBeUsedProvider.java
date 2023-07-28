@@ -17,8 +17,8 @@
  */
 package org.bonitasoft.studio.connectors.extension;
 
-import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
-import org.bonitasoft.studio.model.process.Connector;
+import org.bonitasoft.bpm.connector.model.definition.ConnectorDefinition;
+import org.bonitasoft.bpm.model.process.Connector;
 
 /**
  * @author Aurelien Pupier

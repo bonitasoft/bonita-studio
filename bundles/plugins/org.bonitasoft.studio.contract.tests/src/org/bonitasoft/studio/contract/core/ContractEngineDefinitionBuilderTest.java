@@ -15,27 +15,27 @@
 package org.bonitasoft.studio.contract.core;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.bonitasoft.studio.model.process.builders.ContractBuilder.aContract;
-import static org.bonitasoft.studio.model.process.builders.ContractConstraintBuilder.aContractConstraint;
-import static org.bonitasoft.studio.model.process.builders.ContractInputBuilder.aContractInput;
+import static org.bonitasoft.bpm.model.process.builders.ContractBuilder.aContract;
+import static org.bonitasoft.bpm.model.process.builders.ContractConstraintBuilder.aContractConstraint;
+import static org.bonitasoft.bpm.model.process.builders.ContractInputBuilder.aContractInput;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import org.bonitasoft.bpm.model.process.Contract;
+import org.bonitasoft.bpm.model.process.ContractInput;
+import org.bonitasoft.bpm.model.process.ContractInputMapping;
+import org.bonitasoft.bpm.model.process.ContractInputType;
+import org.bonitasoft.bpm.model.process.Data;
+import org.bonitasoft.bpm.model.process.DataType;
+import org.bonitasoft.bpm.model.process.ProcessFactory;
 import org.bonitasoft.engine.bpm.contract.Type;
 import org.bonitasoft.engine.bpm.process.impl.ContractDefinitionBuilder;
 import org.bonitasoft.engine.bpm.process.impl.ContractInputDefinitionBuilder;
 import org.bonitasoft.engine.bpm.process.impl.ProcessDefinitionBuilder;
 import org.bonitasoft.engine.bpm.process.impl.UserTaskDefinitionBuilder;
 import org.bonitasoft.studio.common.Messages;
-import org.bonitasoft.studio.model.process.Contract;
-import org.bonitasoft.studio.model.process.ContractInput;
-import org.bonitasoft.studio.model.process.ContractInputMapping;
-import org.bonitasoft.studio.model.process.ContractInputType;
-import org.bonitasoft.studio.model.process.Data;
-import org.bonitasoft.studio.model.process.DataType;
-import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -69,7 +69,8 @@ public class ContractEngineDefinitionBuilderTest {
      */
     @Before
     public void setUp() throws Exception {
-        when(contractInputDefinitionBuilder.addComplexInput(any(), any(), anyBoolean())).thenReturn(contractInputDefinitionBuilder);
+        when(contractInputDefinitionBuilder.addComplexInput(any(), any(), anyBoolean()))
+                .thenReturn(contractInputDefinitionBuilder);
         when(contractDefBuilder.addComplexInput(any(), any(), anyBoolean())).thenReturn(contractInputDefinitionBuilder);
         when(processBuilder.addContract()).thenReturn(contractDefBuilder);
         aContract = ProcessFactory.eINSTANCE.createContract();
@@ -84,12 +85,19 @@ public class ContractEngineDefinitionBuilderTest {
 
     @Test
     public void should_appliesTo_a_contract() throws Exception {
-        assertThat(new TaskContractEngineDefinitionBuilder().appliesTo(ProcessFactory.eINSTANCE.createTask(), aContract)).isTrue();
-        assertThat(new TaskContractEngineDefinitionBuilder().appliesTo(ProcessFactory.eINSTANCE.createPool(), aContract)).isFalse();
-        assertThat(new TaskContractEngineDefinitionBuilder().appliesTo(ProcessFactory.eINSTANCE.createTask(), null)).isFalse();
+        assertThat(
+                new TaskContractEngineDefinitionBuilder().appliesTo(ProcessFactory.eINSTANCE.createTask(), aContract))
+                        .isTrue();
+        assertThat(
+                new TaskContractEngineDefinitionBuilder().appliesTo(ProcessFactory.eINSTANCE.createPool(), aContract))
+                        .isFalse();
+        assertThat(new TaskContractEngineDefinitionBuilder().appliesTo(ProcessFactory.eINSTANCE.createTask(), null))
+                .isFalse();
         assertThat(userTaskengineContractBuilder.appliesTo(null, null)).isFalse();
-        assertThat(new ProcessContractEngineBuilder().appliesTo(ProcessFactory.eINSTANCE.createTask(), aContract)).isFalse();
-        assertThat(new ProcessContractEngineBuilder().appliesTo(ProcessFactory.eINSTANCE.createPool(), aContract)).isTrue();
+        assertThat(new ProcessContractEngineBuilder().appliesTo(ProcessFactory.eINSTANCE.createTask(), aContract))
+                .isFalse();
+        assertThat(new ProcessContractEngineBuilder().appliesTo(ProcessFactory.eINSTANCE.createPool(), aContract))
+                .isTrue();
         assertThat(new ProcessContractEngineBuilder().appliesTo(ProcessFactory.eINSTANCE.createPool(), null)).isFalse();
         assertThat(userTaskengineContractBuilder.appliesTo(null, null)).isFalse();
     }
@@ -138,7 +146,8 @@ public class ContractEngineDefinitionBuilderTest {
         verify(contractDefBuilder).addInput("isMarried", Type.BOOLEAN, null, false);
     }
 
-    private ContractInput addInput(final Contract contract, final String inputName, final ContractInputType type, final String description) {
+    private ContractInput addInput(final Contract contract, final String inputName, final ContractInputType type,
+            final String description) {
         final ContractInput contractInput = ProcessFactory.eINSTANCE.createContractInput();
         contractInput.setName(inputName);
         contractInput.setType(type);
@@ -147,7 +156,8 @@ public class ContractEngineDefinitionBuilderTest {
         return contractInput;
     }
 
-    private ContractInput addInput(final ContractInput parentInput, final String inputName, final ContractInputType type, final String description) {
+    private ContractInput addInput(final ContractInput parentInput, final String inputName,
+            final ContractInputType type, final String description) {
         final ContractInput contractInput = ProcessFactory.eINSTANCE.createContractInput();
         contractInput.setName(inputName);
         contractInput.setType(type);
@@ -171,12 +181,14 @@ public class ContractEngineDefinitionBuilderTest {
     public void should_build_create_a_contract_with_constraint() throws Exception {
         final ContractInput nameInput = addInput(aContract, "name", ContractInputType.TEXT, "name of an employee");
         aContract.getConstraints().add(
-                aContractConstraint().withName("myConstraint").withExpression("name.length < 50").withErrorMessage("name is too long")
+                aContractConstraint().withName("myConstraint").withExpression("name.length < 50")
+                        .withErrorMessage("name is too long")
                         .havingInput(nameInput.getName()).build());
         userTaskengineContractBuilder.build(aContract);
         verify(taskBuilder).addContract();
         verify(contractDefBuilder).addInput("name", Type.TEXT, "name of an employee", nameInput.isMultiple());
-        verify(contractDefBuilder).addConstraint("myConstraint", "name.length < 50", "name is too long", nameInput.getName());
+        verify(contractDefBuilder).addConstraint("myConstraint", "name.length < 50", "name is too long",
+                nameInput.getName());
     }
 
     @Test
@@ -205,7 +217,8 @@ public class ContractEngineDefinitionBuilderTest {
 
     @Test
     public void should_create_complex_input_recursively() throws Exception {
-        final ContractInput employeeInput = addInput(aContract, "employee", ContractInputType.COMPLEX, "employee complex type");
+        final ContractInput employeeInput = addInput(aContract, "employee", ContractInputType.COMPLEX,
+                "employee complex type");
         addInput(employeeInput, "firstName", ContractInputType.TEXT, null);
         addInput(employeeInput, "lastName", ContractInputType.TEXT, null);
         addInput(employeeInput, "birthDate", ContractInputType.DATE, null);
@@ -227,7 +240,8 @@ public class ContractEngineDefinitionBuilderTest {
 
     @Test
     public void should_add_a_file_contrac_input() throws Exception {
-        userTaskengineContractBuilder.build(aContract().havingInput(aContractInput().withName("myFile").withType(ContractInputType.FILE)).build());
+        userTaskengineContractBuilder.build(
+                aContract().havingInput(aContractInput().withName("myFile").withType(ContractInputType.FILE)).build());
 
         verify(contractDefBuilder).addFileInput("myFile", null, false);
     }

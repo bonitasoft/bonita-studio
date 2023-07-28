@@ -18,7 +18,7 @@ package org.bonitasoft.studio.engine.operation;
 
 import java.io.UnsupportedEncodingException;
 
-import org.bonitasoft.studio.model.process.AbstractProcess;
+import org.bonitasoft.bpm.model.process.AbstractProcess;
 import org.eclipse.core.runtime.IProgressMonitor;
 
 public class CaseDetailURLBuilder extends AbstractProcessRelatedURLBuilder {

@@ -25,7 +25,7 @@ import org.bonitasoft.studio.diagram.custom.editPolicies.CustomResizableEditPoli
 import org.bonitasoft.studio.diagram.custom.figures.VerticalLabel;
 import org.bonitasoft.studio.diagram.custom.parts.CustomPoolEditPart.CustomPoolFigure;
 import org.bonitasoft.studio.diagram.custom.providers.DiagramColorProvider;
-import org.bonitasoft.studio.model.process.Element;
+import org.bonitasoft.bpm.model.process.Element;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.LaneEditPart;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.MainProcessEditPart;
 import org.eclipse.draw2d.ColorConstants;

@@ -5,14 +5,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
 
-import org.bonitasoft.studio.common.ExpressionConstants;
-import org.bonitasoft.studio.model.expression.Expression;
-import org.bonitasoft.studio.model.expression.Operation;
-import org.bonitasoft.studio.model.process.ContractInput;
-import org.bonitasoft.studio.model.process.ContractInputType;
-import org.bonitasoft.studio.model.process.Document;
-import org.bonitasoft.studio.model.process.builders.ContractInputBuilder;
-import org.bonitasoft.studio.model.process.builders.DocumentBuilder;
+import org.bonitasoft.bpm.model.util.ExpressionConstants;
+import org.bonitasoft.bpm.model.expression.Expression;
+import org.bonitasoft.bpm.model.expression.Operation;
+import org.bonitasoft.bpm.model.process.ContractInput;
+import org.bonitasoft.bpm.model.process.ContractInputType;
+import org.bonitasoft.bpm.model.process.Document;
+import org.bonitasoft.bpm.model.process.builders.ContractInputBuilder;
+import org.bonitasoft.bpm.model.process.builders.DocumentBuilder;
 import org.junit.Test;
 
 public class DocumentUpdateOperationBuilderTest {

@@ -16,12 +16,12 @@
  */
 package org.bonitasoft.studio.connector.wizard.office.templating;
 
-import static org.bonitasoft.studio.model.expression.builders.ExpressionBuilder.aConstantExpression;
-import static org.bonitasoft.studio.model.expression.builders.ExpressionBuilder.aVariableExpression;
-import static org.bonitasoft.studio.model.expression.builders.ListExpressionBuilder.aListExpression;
-import static org.bonitasoft.studio.model.expression.builders.TableExpressionBuilder.aTableExpression;
-import static org.bonitasoft.studio.model.process.builders.BusinessObjectDataBuilder.aBusinessData;
-import static org.bonitasoft.studio.model.process.builders.DataBuilder.aData;
+import static org.bonitasoft.bpm.model.expression.builders.ExpressionBuilder.aConstantExpression;
+import static org.bonitasoft.bpm.model.expression.builders.ExpressionBuilder.aVariableExpression;
+import static org.bonitasoft.bpm.model.expression.builders.ListExpressionBuilder.aListExpression;
+import static org.bonitasoft.bpm.model.expression.builders.TableExpressionBuilder.aTableExpression;
+import static org.bonitasoft.bpm.model.process.builders.BusinessObjectDataBuilder.aBusinessData;
+import static org.bonitasoft.bpm.model.process.builders.DataBuilder.aData;
 
 import org.bonitasoft.studio.assertions.StatusAssert;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelFileStore;

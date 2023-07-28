@@ -26,6 +26,13 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.bonitasoft.bpm.connector.model.definition.Category;
+import org.bonitasoft.bpm.connector.model.definition.ConnectorDefinition;
+import org.bonitasoft.bpm.connector.model.definition.ConnectorDefinitionFactory;
+import org.bonitasoft.bpm.connector.model.definition.DocumentRoot;
+import org.bonitasoft.bpm.connector.model.definition.util.ConnectorDefinitionAdapterFactory;
+import org.bonitasoft.bpm.connector.model.definition.util.ConnectorDefinitionResourceImpl;
+import org.bonitasoft.bpm.connector.model.definition.util.ConnectorDefinitionXMLProcessor;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.filestore.EMFFileStore;
@@ -33,9 +40,6 @@ import org.bonitasoft.studio.common.repository.model.IDefinitionRepositoryStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.common.repository.store.AbstractEMFRepositoryStore;
-import org.bonitasoft.studio.connector.model.definition.util.ConnectorDefinitionAdapterFactory;
-import org.bonitasoft.studio.connector.model.definition.util.ConnectorDefinitionResourceImpl;
-import org.bonitasoft.studio.connector.model.definition.util.ConnectorDefinitionXMLProcessor;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -51,7 +55,6 @@ import org.osgi.framework.Bundle;
 
 public abstract class AbstractDefinitionRepositoryStore<T extends EMFFileStore> extends AbstractEMFRepositoryStore<T>
         implements IDefinitionRepositoryStore<T> {
-
 
     @Override
     public List<ConnectorDefinition> getDefinitions() {

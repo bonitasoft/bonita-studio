@@ -16,7 +16,7 @@ package org.bonitasoft.studio.expression.editor.viewer;
 
 import java.util.List;
 
-import org.bonitasoft.studio.model.expression.Expression;
+import org.bonitasoft.bpm.model.expression.Expression;
 
 public interface IAddLineListener {
 

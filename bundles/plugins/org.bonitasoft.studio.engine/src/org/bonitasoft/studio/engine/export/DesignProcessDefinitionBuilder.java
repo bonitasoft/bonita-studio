@@ -16,20 +16,20 @@ package org.bonitasoft.studio.engine.export;
 
 import java.util.List;
 
+import org.bonitasoft.bpm.model.process.AbstractProcess;
+import org.bonitasoft.bpm.model.process.Connection;
+import org.bonitasoft.bpm.model.process.FlowElement;
+import org.bonitasoft.bpm.model.process.SourceElement;
+import org.bonitasoft.bpm.model.process.SubProcessEvent;
+import org.bonitasoft.bpm.model.util.IModelSearch;
 import org.bonitasoft.engine.bpm.process.DesignProcessDefinition;
 import org.bonitasoft.engine.bpm.process.InvalidProcessDefinitionException;
 import org.bonitasoft.engine.bpm.process.impl.ProcessDefinitionBuilder;
-import org.bonitasoft.studio.common.model.IModelSearch;
 import org.bonitasoft.studio.engine.export.builder.AbstractProcessBuilder;
 import org.bonitasoft.studio.engine.export.builder.EngineFlowElementBuilder;
 import org.bonitasoft.studio.engine.export.builder.EngineProcessBuilder;
 import org.bonitasoft.studio.engine.export.builder.EngineSequenceFlowBuilder;
 import org.bonitasoft.studio.engine.export.builder.IEngineDefinitionBuilderProvider;
-import org.bonitasoft.studio.model.process.AbstractProcess;
-import org.bonitasoft.studio.model.process.Connection;
-import org.bonitasoft.studio.model.process.FlowElement;
-import org.bonitasoft.studio.model.process.SourceElement;
-import org.bonitasoft.studio.model.process.SubProcessEvent;
 
 /**
  * @author Mickael Istria
@@ -55,7 +55,8 @@ public class DesignProcessDefinitionBuilder {
         return modelSearch;
     }
 
-    public DesignProcessDefinition createDefinition(final AbstractProcess process) throws InvalidProcessDefinitionException {
+    public DesignProcessDefinition createDefinition(final AbstractProcess process)
+            throws InvalidProcessDefinitionException {
         final ProcessDefinitionBuilder processBuilder = createProcessDefinitionBuilderInstance(process);
         final String decription = process.getDocumentation();
         if (decription != null) {
@@ -87,7 +88,7 @@ public class DesignProcessDefinitionBuilder {
         }
         final List<SubProcessEvent> elements = modelSearch.getAllItemsOfType(process, SubProcessEvent.class);
         for (final SubProcessEvent flowElement : elements) {
-                flowElementSwitch.doSwitch(flowElement);
+            flowElementSwitch.doSwitch(flowElement);
         }
     }
 

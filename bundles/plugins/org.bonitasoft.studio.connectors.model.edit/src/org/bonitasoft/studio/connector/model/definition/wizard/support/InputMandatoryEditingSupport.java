@@ -14,7 +14,7 @@
  */
 package org.bonitasoft.studio.connector.model.definition.wizard.support;
 
-import org.bonitasoft.studio.connector.model.definition.ConnectorDefinitionPackage;
+import org.bonitasoft.bpm.connector.model.definition.ConnectorDefinitionPackage;
 import org.bonitasoft.studio.connector.model.i18n.Messages;
 import org.eclipse.core.databinding.Binding;
 import org.eclipse.core.databinding.DataBindingContext;

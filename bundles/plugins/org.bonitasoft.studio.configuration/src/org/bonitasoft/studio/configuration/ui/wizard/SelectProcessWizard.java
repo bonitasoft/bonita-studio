@@ -17,8 +17,8 @@
 package org.bonitasoft.studio.configuration.ui.wizard;
 
 import org.bonitasoft.studio.configuration.ui.wizard.page.SelectProcessWizardPage;
-import org.bonitasoft.studio.model.process.AbstractProcess;
-import org.bonitasoft.studio.model.process.MainProcess;
+import org.bonitasoft.bpm.model.process.AbstractProcess;
+import org.bonitasoft.bpm.model.process.MainProcess;
 import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.jface.wizard.Wizard;
 

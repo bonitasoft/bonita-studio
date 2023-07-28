@@ -20,12 +20,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bonitasoft.studio.common.BonitaConstants;
-import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.bpm.model.util.ExpressionConstants;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.expression.editor.provider.IOperatorEditor;
-import org.bonitasoft.studio.model.expression.Expression;
-import org.bonitasoft.studio.model.expression.Operator;
-import org.bonitasoft.studio.model.process.XMLData;
+import org.bonitasoft.bpm.model.expression.Expression;
+import org.bonitasoft.bpm.model.expression.Operator;
+import org.bonitasoft.bpm.model.process.XMLData;
 import org.bonitasoft.studio.xml.repository.XSDRepositoryStore;
 import org.bonitasoft.studio.xml.ui.XSDContentProvider.Append;
 import org.eclipse.jface.layout.GridDataFactory;

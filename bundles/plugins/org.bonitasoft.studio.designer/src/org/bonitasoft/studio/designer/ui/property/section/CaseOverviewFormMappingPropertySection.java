@@ -15,7 +15,7 @@
 package org.bonitasoft.studio.designer.ui.property.section;
 
 import org.bonitasoft.studio.designer.i18n.Messages;
-import org.bonitasoft.studio.model.process.ProcessPackage;
+import org.bonitasoft.bpm.model.process.ProcessPackage;
 import org.eclipse.emf.ecore.EReference;
 
 /**

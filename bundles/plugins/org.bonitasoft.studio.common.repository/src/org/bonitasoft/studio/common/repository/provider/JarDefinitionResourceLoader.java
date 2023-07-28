@@ -19,8 +19,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.connector.model.definition.Category;
-import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
+import org.bonitasoft.bpm.connector.model.definition.Category;
+import org.bonitasoft.bpm.connector.model.definition.ConnectorDefinition;
 import org.eclipse.jface.resource.ImageDescriptor;
 
 public class JarDefinitionResourceLoader implements DefinitionImageResourceLoader {

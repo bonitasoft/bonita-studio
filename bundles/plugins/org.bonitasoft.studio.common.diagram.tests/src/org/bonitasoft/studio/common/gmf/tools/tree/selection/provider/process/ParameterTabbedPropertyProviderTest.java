@@ -15,8 +15,8 @@
 package org.bonitasoft.studio.common.gmf.tools.tree.selection.provider.process;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.bonitasoft.studio.model.parameter.builders.ParameterBuilder.aParameter;
-import static org.bonitasoft.studio.model.process.builders.DataBuilder.aData;
+import static org.bonitasoft.bpm.model.parameter.builders.ParameterBuilder.aParameter;
+import static org.bonitasoft.bpm.model.process.builders.DataBuilder.aData;
 
 import org.junit.Test;
 

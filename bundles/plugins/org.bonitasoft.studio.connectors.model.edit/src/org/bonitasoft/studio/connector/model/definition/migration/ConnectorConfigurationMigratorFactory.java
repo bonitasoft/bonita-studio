@@ -16,7 +16,7 @@ package org.bonitasoft.studio.connector.model.definition.migration;
 
 import javax.inject.Inject;
 
-import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
+import org.bonitasoft.bpm.connector.model.definition.ConnectorDefinition;
 import org.eclipse.e4.core.di.annotations.Creatable;
 
 @Creatable

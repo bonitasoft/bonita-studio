@@ -8,7 +8,7 @@ Bundle-Activator: org.bonitasoft.studio.parameters.ParameterPlugin
 Bundle-Vendor: BonitaSoft S.A.
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
- org.bonitasoft.studio.model,
+ org.bonitasoft.bpm.model,
  org.bonitasoft.studio.expression.editor,
  org.eclipse.gmf.runtime.diagram.ui.properties,
  org.bonitasoft.studio.pics,

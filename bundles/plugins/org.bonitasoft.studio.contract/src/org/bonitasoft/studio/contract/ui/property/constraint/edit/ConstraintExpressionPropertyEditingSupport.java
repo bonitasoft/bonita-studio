@@ -16,8 +16,8 @@ package org.bonitasoft.studio.contract.ui.property.constraint.edit;
 
 import org.bonitasoft.studio.contract.ui.property.constraint.edit.editor.ConstraintEditorFactory;
 import org.bonitasoft.studio.contract.ui.property.constraint.edit.editor.ContractConstraintExpressionDialogCellEditor;
-import org.bonitasoft.studio.model.process.ContractConstraint;
-import org.bonitasoft.studio.model.process.ProcessPackage;
+import org.bonitasoft.bpm.model.process.ContractConstraint;
+import org.bonitasoft.bpm.model.process.ProcessPackage;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColumnViewer;

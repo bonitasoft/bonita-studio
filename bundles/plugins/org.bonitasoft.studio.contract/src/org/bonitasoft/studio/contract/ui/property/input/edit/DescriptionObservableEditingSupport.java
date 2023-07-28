@@ -19,7 +19,7 @@ import static org.bonitasoft.studio.common.ui.jface.databinding.UpdateStrategyFa
 
 import org.bonitasoft.studio.common.ui.jface.databinding.CustomTextEMFObservableValueEditingSupport;
 import org.bonitasoft.studio.contract.i18n.Messages;
-import org.bonitasoft.studio.model.process.ProcessPackage;
+import org.bonitasoft.bpm.model.process.ProcessPackage;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.emf.ecore.EObject;

@@ -17,8 +17,8 @@ package org.bonitasoft.studio.document.core.export;
 import org.bonitasoft.engine.bpm.process.impl.ProcessDefinitionBuilder;
 import org.bonitasoft.studio.engine.contribution.BuildProcessDefinitionException;
 import org.bonitasoft.studio.engine.contribution.IEngineDefinitionBuilder;
-import org.bonitasoft.studio.model.process.Document;
-import org.bonitasoft.studio.model.process.Pool;
+import org.bonitasoft.bpm.model.process.Document;
+import org.bonitasoft.bpm.model.process.Pool;
 import org.eclipse.emf.ecore.EObject;
 
 public class DocumentEngineDefinitionBuilder implements IEngineDefinitionBuilder<ProcessDefinitionBuilder> {

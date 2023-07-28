@@ -17,7 +17,7 @@
 
 package org.bonitasoft.studio.common.gmf.tools.tree;
 
-import org.bonitasoft.studio.model.expression.Operation;
+import org.bonitasoft.bpm.model.expression.Operation;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 

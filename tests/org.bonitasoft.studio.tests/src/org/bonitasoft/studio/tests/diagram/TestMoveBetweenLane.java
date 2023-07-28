@@ -16,7 +16,7 @@ package org.bonitasoft.studio.tests.diagram;
 
 import static org.junit.Assert.assertTrue;
 
-import org.bonitasoft.studio.model.process.Element;
+import org.bonitasoft.bpm.model.process.Element;
 import org.bonitasoft.studio.swtbot.framework.SWTBotTestUtil;
 import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
 import org.eclipse.draw2d.IFigure;

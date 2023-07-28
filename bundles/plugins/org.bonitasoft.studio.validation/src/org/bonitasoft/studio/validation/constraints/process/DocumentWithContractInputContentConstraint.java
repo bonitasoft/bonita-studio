@@ -17,9 +17,9 @@ package org.bonitasoft.studio.validation.constraints.process;
 import static com.google.common.base.Preconditions.checkArgument;
 import static org.bonitasoft.studio.common.predicate.ContractInputPredicates.withMultipleInHierarchy;
 
-import org.bonitasoft.studio.model.process.ContractInput;
-import org.bonitasoft.studio.model.process.ContractInputType;
-import org.bonitasoft.studio.model.process.Document;
+import org.bonitasoft.bpm.model.process.ContractInput;
+import org.bonitasoft.bpm.model.process.ContractInputType;
+import org.bonitasoft.bpm.model.process.Document;
 import org.bonitasoft.studio.validation.constraints.AbstractLiveValidationMarkerConstraint;
 import org.bonitasoft.studio.validation.i18n.Messages;
 import org.eclipse.core.runtime.IStatus;
@@ -39,7 +39,7 @@ public class DocumentWithContractInputContentConstraint extends AbstractLiveVali
         final EObject eObj = ctx.getTarget();
         checkArgument(eObj instanceof Document);
         final Document document = (Document) eObj;
-        if (document.getDocumentType().equals(org.bonitasoft.studio.model.process.DocumentType.CONTRACT)) {
+        if (document.getDocumentType().equals(org.bonitasoft.bpm.model.process.DocumentType.CONTRACT)) {
             final ContractInput contractInput = document.getContractInput();
             if (contractInput == null) {
                 return ctx.createFailureStatus(NLS.bind(Messages.missingFileContractInput, document.getName()));

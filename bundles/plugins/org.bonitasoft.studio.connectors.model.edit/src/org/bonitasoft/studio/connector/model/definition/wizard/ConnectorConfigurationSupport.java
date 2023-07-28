@@ -14,20 +14,20 @@
  */
 package org.bonitasoft.studio.connector.model.definition.wizard;
 
-import org.bonitasoft.studio.common.ExpressionConstants;
-import org.bonitasoft.studio.connector.model.definition.Array;
-import org.bonitasoft.studio.connector.model.definition.Input;
-import org.bonitasoft.studio.connector.model.definition.ScriptEditor;
-import org.bonitasoft.studio.connector.model.definition.TextArea;
-import org.bonitasoft.studio.connector.model.definition.WidgetComponent;
-import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration;
-import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfigurationFactory;
-import org.bonitasoft.studio.model.connectorconfiguration.ConnectorParameter;
-import org.bonitasoft.studio.model.expression.AbstractExpression;
-import org.bonitasoft.studio.model.expression.Expression;
-import org.bonitasoft.studio.model.expression.ExpressionFactory;
-import org.bonitasoft.studio.model.expression.ListExpression;
-import org.bonitasoft.studio.model.expression.TableExpression;
+import org.bonitasoft.bpm.model.util.ExpressionConstants;
+import org.bonitasoft.bpm.connector.model.definition.Array;
+import org.bonitasoft.bpm.connector.model.definition.Input;
+import org.bonitasoft.bpm.connector.model.definition.ScriptEditor;
+import org.bonitasoft.bpm.connector.model.definition.TextArea;
+import org.bonitasoft.bpm.connector.model.definition.WidgetComponent;
+import org.bonitasoft.bpm.model.connectorconfiguration.ConnectorConfiguration;
+import org.bonitasoft.bpm.model.connectorconfiguration.ConnectorConfigurationFactory;
+import org.bonitasoft.bpm.model.connectorconfiguration.ConnectorParameter;
+import org.bonitasoft.bpm.model.expression.AbstractExpression;
+import org.bonitasoft.bpm.model.expression.Expression;
+import org.bonitasoft.bpm.model.expression.ExpressionFactory;
+import org.bonitasoft.bpm.model.expression.ListExpression;
+import org.bonitasoft.bpm.model.expression.TableExpression;
 
 public class ConnectorConfigurationSupport {
 
@@ -79,7 +79,7 @@ public class ConnectorConfigurationSupport {
         if (widget instanceof Array) {
             final TableExpression expression = ExpressionFactory.eINSTANCE.createTableExpression();
             return expression;
-        } else if (widget instanceof org.bonitasoft.studio.connector.model.definition.List) {
+        } else if (widget instanceof org.bonitasoft.bpm.connector.model.definition.List) {
             final ListExpression expression = ExpressionFactory.eINSTANCE.createListExpression();
             return expression;
         } else {

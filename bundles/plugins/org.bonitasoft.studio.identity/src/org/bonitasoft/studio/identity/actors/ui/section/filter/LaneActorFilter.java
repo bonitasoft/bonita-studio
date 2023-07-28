@@ -16,7 +16,7 @@
  */
 package org.bonitasoft.studio.identity.actors.ui.section.filter;
 
-import org.bonitasoft.studio.model.process.Lane;
+import org.bonitasoft.bpm.model.process.Lane;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.jface.viewers.IFilter;

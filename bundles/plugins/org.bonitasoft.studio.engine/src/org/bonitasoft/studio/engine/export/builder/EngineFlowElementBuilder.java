@@ -21,6 +21,62 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
+import org.bonitasoft.bpm.model.connectorconfiguration.ConnectorParameter;
+import org.bonitasoft.bpm.model.expression.Expression;
+import org.bonitasoft.bpm.model.expression.ListExpression;
+import org.bonitasoft.bpm.model.expression.Operation;
+import org.bonitasoft.bpm.model.process.AbstractCatchMessageEvent;
+import org.bonitasoft.bpm.model.process.AbstractProcess;
+import org.bonitasoft.bpm.model.process.AbstractTimerEvent;
+import org.bonitasoft.bpm.model.process.Activity;
+import org.bonitasoft.bpm.model.process.ActorFilter;
+import org.bonitasoft.bpm.model.process.BoundaryEvent;
+import org.bonitasoft.bpm.model.process.BoundaryMessageEvent;
+import org.bonitasoft.bpm.model.process.BoundarySignalEvent;
+import org.bonitasoft.bpm.model.process.BoundaryTimerEvent;
+import org.bonitasoft.bpm.model.process.BusinessObjectData;
+import org.bonitasoft.bpm.model.process.CallActivity;
+import org.bonitasoft.bpm.model.process.Connection;
+import org.bonitasoft.bpm.model.process.Correlation;
+import org.bonitasoft.bpm.model.process.CorrelationTypeActive;
+import org.bonitasoft.bpm.model.process.Data;
+import org.bonitasoft.bpm.model.process.DataAware;
+import org.bonitasoft.bpm.model.process.Element;
+import org.bonitasoft.bpm.model.process.EndErrorEvent;
+import org.bonitasoft.bpm.model.process.EndEvent;
+import org.bonitasoft.bpm.model.process.EndMessageEvent;
+import org.bonitasoft.bpm.model.process.EndSignalEvent;
+import org.bonitasoft.bpm.model.process.EndTerminatedEvent;
+import org.bonitasoft.bpm.model.process.FlowElement;
+import org.bonitasoft.bpm.model.process.InputMapping;
+import org.bonitasoft.bpm.model.process.InputMappingAssignationType;
+import org.bonitasoft.bpm.model.process.IntermediateCatchMessageEvent;
+import org.bonitasoft.bpm.model.process.IntermediateCatchSignalEvent;
+import org.bonitasoft.bpm.model.process.IntermediateCatchTimerEvent;
+import org.bonitasoft.bpm.model.process.IntermediateErrorCatchEvent;
+import org.bonitasoft.bpm.model.process.IntermediateThrowMessageEvent;
+import org.bonitasoft.bpm.model.process.IntermediateThrowSignalEvent;
+import org.bonitasoft.bpm.model.process.Lane;
+import org.bonitasoft.bpm.model.process.Message;
+import org.bonitasoft.bpm.model.process.MultiInstanceType;
+import org.bonitasoft.bpm.model.process.MultiInstantiable;
+import org.bonitasoft.bpm.model.process.NonInterruptingBoundaryTimerEvent;
+import org.bonitasoft.bpm.model.process.OperationContainer;
+import org.bonitasoft.bpm.model.process.OutputMapping;
+import org.bonitasoft.bpm.model.process.Pool;
+import org.bonitasoft.bpm.model.process.ReceiveTask;
+import org.bonitasoft.bpm.model.process.SearchIndex;
+import org.bonitasoft.bpm.model.process.SendTask;
+import org.bonitasoft.bpm.model.process.SourceElement;
+import org.bonitasoft.bpm.model.process.StartErrorEvent;
+import org.bonitasoft.bpm.model.process.StartEvent;
+import org.bonitasoft.bpm.model.process.StartMessageEvent;
+import org.bonitasoft.bpm.model.process.StartSignalEvent;
+import org.bonitasoft.bpm.model.process.StartTimerEvent;
+import org.bonitasoft.bpm.model.process.SubProcessEvent;
+import org.bonitasoft.bpm.model.process.Task;
+import org.bonitasoft.bpm.model.util.ExpressionConstants;
+import org.bonitasoft.bpm.model.util.IModelSearch;
 import org.bonitasoft.engine.bpm.flownode.GatewayType;
 import org.bonitasoft.engine.bpm.flownode.TaskPriority;
 import org.bonitasoft.engine.bpm.flownode.TimerType;
@@ -48,65 +104,9 @@ import org.bonitasoft.engine.operation.OperationBuilder;
 import org.bonitasoft.engine.operation.OperatorType;
 import org.bonitasoft.studio.common.DataUtil;
 import org.bonitasoft.studio.common.DateUtil;
-import org.bonitasoft.studio.common.ExpressionConstants;
-import org.bonitasoft.studio.common.model.IModelSearch;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.engine.export.EngineExpressionUtil;
-import org.bonitasoft.studio.model.connectorconfiguration.ConnectorParameter;
-import org.bonitasoft.studio.model.expression.Expression;
-import org.bonitasoft.studio.model.expression.ListExpression;
-import org.bonitasoft.studio.model.expression.Operation;
-import org.bonitasoft.studio.model.process.AbstractCatchMessageEvent;
-import org.bonitasoft.studio.model.process.AbstractProcess;
-import org.bonitasoft.studio.model.process.AbstractTimerEvent;
-import org.bonitasoft.studio.model.process.Activity;
-import org.bonitasoft.studio.model.process.ActorFilter;
-import org.bonitasoft.studio.model.process.BoundaryEvent;
-import org.bonitasoft.studio.model.process.BoundaryMessageEvent;
-import org.bonitasoft.studio.model.process.BoundarySignalEvent;
-import org.bonitasoft.studio.model.process.BoundaryTimerEvent;
-import org.bonitasoft.studio.model.process.BusinessObjectData;
-import org.bonitasoft.studio.model.process.CallActivity;
-import org.bonitasoft.studio.model.process.Connection;
-import org.bonitasoft.studio.model.process.Correlation;
-import org.bonitasoft.studio.model.process.CorrelationTypeActive;
-import org.bonitasoft.studio.model.process.Data;
-import org.bonitasoft.studio.model.process.DataAware;
-import org.bonitasoft.studio.model.process.Element;
-import org.bonitasoft.studio.model.process.EndErrorEvent;
-import org.bonitasoft.studio.model.process.EndEvent;
-import org.bonitasoft.studio.model.process.EndMessageEvent;
-import org.bonitasoft.studio.model.process.EndSignalEvent;
-import org.bonitasoft.studio.model.process.EndTerminatedEvent;
-import org.bonitasoft.studio.model.process.FlowElement;
-import org.bonitasoft.studio.model.process.InputMapping;
-import org.bonitasoft.studio.model.process.InputMappingAssignationType;
-import org.bonitasoft.studio.model.process.IntermediateCatchMessageEvent;
-import org.bonitasoft.studio.model.process.IntermediateCatchSignalEvent;
-import org.bonitasoft.studio.model.process.IntermediateCatchTimerEvent;
-import org.bonitasoft.studio.model.process.IntermediateErrorCatchEvent;
-import org.bonitasoft.studio.model.process.IntermediateThrowMessageEvent;
-import org.bonitasoft.studio.model.process.IntermediateThrowSignalEvent;
-import org.bonitasoft.studio.model.process.Lane;
-import org.bonitasoft.studio.model.process.Message;
-import org.bonitasoft.studio.model.process.MultiInstanceType;
-import org.bonitasoft.studio.model.process.MultiInstantiable;
-import org.bonitasoft.studio.model.process.NonInterruptingBoundaryTimerEvent;
-import org.bonitasoft.studio.model.process.OperationContainer;
-import org.bonitasoft.studio.model.process.OutputMapping;
-import org.bonitasoft.studio.model.process.Pool;
-import org.bonitasoft.studio.model.process.ReceiveTask;
-import org.bonitasoft.studio.model.process.SearchIndex;
-import org.bonitasoft.studio.model.process.SendTask;
-import org.bonitasoft.studio.model.process.SourceElement;
-import org.bonitasoft.studio.model.process.StartErrorEvent;
-import org.bonitasoft.studio.model.process.StartEvent;
-import org.bonitasoft.studio.model.process.StartMessageEvent;
-import org.bonitasoft.studio.model.process.StartSignalEvent;
-import org.bonitasoft.studio.model.process.StartTimerEvent;
-import org.bonitasoft.studio.model.process.SubProcessEvent;
-import org.bonitasoft.studio.model.process.Task;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 
@@ -166,9 +166,9 @@ public class EngineFlowElementBuilder extends AbstractProcessBuilder {
             taskBuilder.setTargetFlowNode(EngineExpressionUtil.createExpression(message.getTargetElementExpression()));
             if (message.getMessageContent() != null) {
                 for (final ListExpression row : message.getMessageContent().getExpressions()) {
-                    final List<org.bonitasoft.studio.model.expression.Expression> col = row.getExpressions();
-                    final org.bonitasoft.studio.model.expression.Expression idExp = col.get(0);
-                    final org.bonitasoft.studio.model.expression.Expression messageContentExp = col.get(1);
+                    final List<org.bonitasoft.bpm.model.expression.Expression> col = row.getExpressions();
+                    final org.bonitasoft.bpm.model.expression.Expression idExp = col.get(0);
+                    final org.bonitasoft.bpm.model.expression.Expression messageContentExp = col.get(1);
                     if (col.size() == 2) {
                         if (idExp.getContent() != null
                                 && !idExp.getContent().isEmpty()
@@ -182,10 +182,10 @@ public class EngineFlowElementBuilder extends AbstractProcessBuilder {
             }
             if (message.getCorrelation() != null) {
                 for (final ListExpression row : message.getCorrelation().getCorrelationAssociation().getExpressions()) {
-                    final List<org.bonitasoft.studio.model.expression.Expression> col = row.getExpressions();
+                    final List<org.bonitasoft.bpm.model.expression.Expression> col = row.getExpressions();
                     if (col.size() == 2) {
-                        final org.bonitasoft.studio.model.expression.Expression correlationKeyExp = col.get(0);
-                        final org.bonitasoft.studio.model.expression.Expression valueExpression = col.get(1);
+                        final org.bonitasoft.bpm.model.expression.Expression correlationKeyExp = col.get(0);
+                        final org.bonitasoft.bpm.model.expression.Expression valueExpression = col.get(1);
                         if (correlationKeyExp.getContent() != null
                                 && !correlationKeyExp.getContent().isEmpty()
                                 && valueExpression.getContent() != null
@@ -216,10 +216,10 @@ public class EngineFlowElementBuilder extends AbstractProcessBuilder {
             }
             if (receiveTask.getCorrelation() != null) {
                 for (final ListExpression row : receiveTask.getCorrelation().getExpressions()) {
-                    final List<org.bonitasoft.studio.model.expression.Expression> col = row.getExpressions();
+                    final List<org.bonitasoft.bpm.model.expression.Expression> col = row.getExpressions();
                     if (col.size() == 2) {
-                        final org.bonitasoft.studio.model.expression.Expression correlationKeyExp = col.get(0);
-                        final org.bonitasoft.studio.model.expression.Expression valueExpression = col.get(1);
+                        final org.bonitasoft.bpm.model.expression.Expression correlationKeyExp = col.get(0);
+                        final org.bonitasoft.bpm.model.expression.Expression valueExpression = col.get(1);
                         if (correlationKeyExp.getContent() != null
                                 && !correlationKeyExp.getContent().isEmpty()
                                 && valueExpression.getContent() != null
@@ -282,10 +282,10 @@ public class EngineFlowElementBuilder extends AbstractProcessBuilder {
             final CatchMessageEventTriggerDefinitionBuilder triggerBuilder) {
         if (messageEvent.getCorrelation() != null) {
             for (final ListExpression row : messageEvent.getCorrelation().getExpressions()) {
-                final List<org.bonitasoft.studio.model.expression.Expression> col = row.getExpressions();
+                final List<org.bonitasoft.bpm.model.expression.Expression> col = row.getExpressions();
                 if (col.size() == 2) {
-                    final org.bonitasoft.studio.model.expression.Expression correlationKeyExp = col.get(0);
-                    final org.bonitasoft.studio.model.expression.Expression valueExpression = col.get(1);
+                    final org.bonitasoft.bpm.model.expression.Expression correlationKeyExp = col.get(0);
+                    final org.bonitasoft.bpm.model.expression.Expression valueExpression = col.get(1);
                     if (correlationKeyExp.getContent() != null
                             && !correlationKeyExp.getContent().isEmpty()
                             && valueExpression.getContent() != null
@@ -322,10 +322,10 @@ public class EngineFlowElementBuilder extends AbstractProcessBuilder {
     protected void addThrowMessageCorrelation(final Message message,
             final ThrowMessageEventTriggerBuilder triggerBuilder) {
         for (final ListExpression row : message.getCorrelation().getCorrelationAssociation().getExpressions()) {
-            final List<org.bonitasoft.studio.model.expression.Expression> col = row.getExpressions();
+            final List<org.bonitasoft.bpm.model.expression.Expression> col = row.getExpressions();
             if (col.size() == 2) {
-                final org.bonitasoft.studio.model.expression.Expression correlationKeyExp = col.get(0);
-                final org.bonitasoft.studio.model.expression.Expression valueExpression = col.get(1);
+                final org.bonitasoft.bpm.model.expression.Expression correlationKeyExp = col.get(0);
+                final org.bonitasoft.bpm.model.expression.Expression valueExpression = col.get(1);
                 if (correlationKeyExp.getContent() != null
                         && !correlationKeyExp.getContent().isEmpty()
                         && valueExpression.getContent() != null
@@ -340,9 +340,9 @@ public class EngineFlowElementBuilder extends AbstractProcessBuilder {
     protected void addThrowMessageContent(final Message message,
             final ThrowMessageEventTriggerBuilder triggerBuilder) {
         for (final ListExpression row : message.getMessageContent().getExpressions()) {
-            final List<org.bonitasoft.studio.model.expression.Expression> col = row.getExpressions();
-            final org.bonitasoft.studio.model.expression.Expression idExp = col.get(0);
-            final org.bonitasoft.studio.model.expression.Expression messageContentExp = col.get(1);
+            final List<org.bonitasoft.bpm.model.expression.Expression> col = row.getExpressions();
+            final org.bonitasoft.bpm.model.expression.Expression idExp = col.get(0);
+            final org.bonitasoft.bpm.model.expression.Expression messageContentExp = col.get(1);
             if (col.size() == 2) {
                 if (idExp.getContent() != null
                         && !idExp.getContent().isEmpty()
@@ -365,10 +365,10 @@ public class EngineFlowElementBuilder extends AbstractProcessBuilder {
                     EngineExpressionUtil.createExpression(message.getTargetElementExpression()));
             if (message.getMessageContent() != null) {
                 for (final ListExpression row : message.getMessageContent().getExpressions()) {
-                    final List<org.bonitasoft.studio.model.expression.Expression> col = row.getExpressions();
+                    final List<org.bonitasoft.bpm.model.expression.Expression> col = row.getExpressions();
                     if (col.size() == 2) {
-                        final org.bonitasoft.studio.model.expression.Expression idExp = col.get(0);
-                        final org.bonitasoft.studio.model.expression.Expression messageContentExp = col.get(1);
+                        final org.bonitasoft.bpm.model.expression.Expression idExp = col.get(0);
+                        final org.bonitasoft.bpm.model.expression.Expression messageContentExp = col.get(1);
                         if (idExp.getContent() != null
                                 && !idExp.getContent().isEmpty()
                                 && messageContentExp.getContent() != null
@@ -692,7 +692,7 @@ public class EngineFlowElementBuilder extends AbstractProcessBuilder {
     }
 
     @Override
-    public FlowElement caseANDGateway(final org.bonitasoft.studio.model.process.ANDGateway gateway) {
+    public FlowElement caseANDGateway(final org.bonitasoft.bpm.model.process.ANDGateway gateway) {
         final GatewayDefinitionBuilder gatewayBuilder = builder.addGateway(gateway.getName(), GatewayType.PARALLEL);
         addDisplayTitle(gatewayBuilder, gateway);
         addDisplayDescription(gatewayBuilder, gateway);
@@ -701,7 +701,7 @@ public class EngineFlowElementBuilder extends AbstractProcessBuilder {
     }
 
     @Override
-    public FlowElement caseInclusiveGateway(final org.bonitasoft.studio.model.process.InclusiveGateway gateway) {
+    public FlowElement caseInclusiveGateway(final org.bonitasoft.bpm.model.process.InclusiveGateway gateway) {
         final GatewayDefinitionBuilder gatewayBuilder = builder.addGateway(gateway.getName(), GatewayType.INCLUSIVE);
         addDisplayTitle(gatewayBuilder, gateway);
         addDisplayDescription(gatewayBuilder, gateway);
@@ -710,7 +710,7 @@ public class EngineFlowElementBuilder extends AbstractProcessBuilder {
     }
 
     @Override
-    public FlowElement caseXORGateway(final org.bonitasoft.studio.model.process.XORGateway gateway) {
+    public FlowElement caseXORGateway(final org.bonitasoft.bpm.model.process.XORGateway gateway) {
         final GatewayDefinitionBuilder gatewayBuilder = builder.addGateway(gateway.getName(), GatewayType.EXCLUSIVE);
         addDisplayTitle(gatewayBuilder, gateway);
         addDisplayTitle(gatewayBuilder, gateway);

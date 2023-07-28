@@ -24,28 +24,28 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import org.bonitasoft.bonita2bpmn.extension.BonitaModelExporterImpl;
+import org.bonitasoft.bonita2bpmn.extension.IBonitaModelExporter;
+import org.bonitasoft.bonita2bpmn.transfo.BonitaToBPMNExporter;
+import org.bonitasoft.bonita2bpmn.transfo.ConnectorTransformationXSLProvider;
+import org.bonitasoft.bpm.model.expression.Expression;
+import org.bonitasoft.bpm.model.expression.TableExpression;
+import org.bonitasoft.bpm.model.process.AbstractProcess;
+import org.bonitasoft.bpm.model.process.CatchMessageEvent;
+import org.bonitasoft.bpm.model.process.Element;
+import org.bonitasoft.bpm.model.process.Lane;
+import org.bonitasoft.bpm.model.process.MainProcess;
+import org.bonitasoft.bpm.model.process.Message;
+import org.bonitasoft.bpm.model.process.Pool;
+import org.bonitasoft.bpm.model.process.ThrowMessageEvent;
+import org.bonitasoft.bpm.model.util.ExpressionConstants;
+import org.bonitasoft.bpm.model.util.IModelSearch;
+import org.bonitasoft.bpm.model.util.ModelSearch;
 import org.bonitasoft.studio.assertions.StatusAssert;
-import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.ProductVersion;
-import org.bonitasoft.studio.common.model.IModelSearch;
-import org.bonitasoft.studio.common.model.ModelSearch;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.connectors.repository.ConnectorDefRepositoryStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
-import org.bonitasoft.studio.exporter.bpmn.transfo.BonitaToBPMNExporter;
-import org.bonitasoft.studio.exporter.bpmn.transfo.OSGIConnectorTransformationXSLProvider;
-import org.bonitasoft.studio.exporter.extension.BonitaModelExporterImpl;
-import org.bonitasoft.studio.exporter.extension.IBonitaModelExporter;
-import org.bonitasoft.studio.model.expression.Expression;
-import org.bonitasoft.studio.model.expression.TableExpression;
-import org.bonitasoft.studio.model.process.AbstractProcess;
-import org.bonitasoft.studio.model.process.CatchMessageEvent;
-import org.bonitasoft.studio.model.process.Element;
-import org.bonitasoft.studio.model.process.Lane;
-import org.bonitasoft.studio.model.process.MainProcess;
-import org.bonitasoft.studio.model.process.Message;
-import org.bonitasoft.studio.model.process.Pool;
-import org.bonitasoft.studio.model.process.ThrowMessageEvent;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.MainProcessEditPart;
 import org.bonitasoft.studio.swtbot.framework.application.BotApplicationWorkbenchWindow;
 import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
@@ -87,7 +87,7 @@ public class BPMNExportImportMessageDataTest {
 
     @Rule
     public final SWTGefBotRule rule = new SWTGefBotRule(bot);
-    
+
     @After
     public void cleanup() throws CoreException {
         resource.unload();
@@ -139,17 +139,19 @@ public class BPMNExportImportMessageDataTest {
         final SWTBotGefEditor editor1 = bot.gefEditor(bot.activeEditor().getTitle());
         final SWTBotGefEditPart step1Part = editor1.getEditPart("Step1").parent();
         final MainProcessEditPart mped = (MainProcessEditPart) step1Part.part().getRoot().getChildren().get(0);
-        DiagramRepositoryStore dStore = RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
+        DiagramRepositoryStore dStore = RepositoryManager.getInstance()
+                .getRepositoryStore(DiagramRepositoryStore.class);
         ConnectorDefRepositoryStore connectorDefStore = RepositoryManager.getInstance()
                 .getRepositoryStore(ConnectorDefRepositoryStore.class);
         List<AbstractProcess> allProcesses = dStore.getAllProcesses();
-        IModelSearch modelSearch = new ModelSearch(() -> allProcesses, () -> connectorDefStore.getDefinitions());
+        IModelSearch modelSearch = new ModelSearch(() -> allProcesses);
 
         final IBonitaModelExporter exporter = new BonitaModelExporterImpl(mped.resolveSemanticElement().eResource(),
                 modelSearch);
         final File bpmnFileExported = tmpFolder.newFile("testMessageDataTestValue.bpmn");
         BonitaToBPMNExporter bonitaToBPMNExporter = new BonitaToBPMNExporter();
-        bonitaToBPMNExporter.export(exporter, modelSearch, bpmnFileExported, new OSGIConnectorTransformationXSLProvider(), ProductVersion.CURRENT_VERSION);
+        bonitaToBPMNExporter.export(exporter, modelSearch, connectorDefStore::getDefinitions, bpmnFileExported,
+                ConnectorTransformationXSLProvider.DEFAULT, ProductVersion.CURRENT_VERSION);
         StatusAssert.assertThat(bonitaToBPMNExporter.getStatus()).hasSeverity(IStatus.INFO);
 
         final ResourceSet resourceSet1 = new ResourceSetImpl();
@@ -170,8 +172,9 @@ public class BPMNExportImportMessageDataTest {
             }
         });
 
-        for (final Element element : ((Lane) ((Pool) mainProcessAfterReimport.getElements().get(0)).getElements().get(0))
-                .getElements()) {
+        for (final Element element : ((Lane) ((Pool) mainProcessAfterReimport.getElements().get(0)).getElements()
+                .get(0))
+                        .getElements()) {
             if (element instanceof ThrowMessageEvent) {
                 throwMessageEvent = (ThrowMessageEvent) element;
                 break;
@@ -185,6 +188,5 @@ public class BPMNExportImportMessageDataTest {
             }
         }
     }
-
 
 }

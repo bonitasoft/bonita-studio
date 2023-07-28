@@ -20,7 +20,7 @@ package org.bonitasoft.studio.sqlbuilder.ex.builder.viewer;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.bonitasoft.studio.model.expression.Expression;
+import org.bonitasoft.bpm.model.expression.Expression;
 import org.eclipse.datatools.modelbase.sql.query.QueryValueExpression;
 import org.eclipse.datatools.sqltools.sqlbuilder.expressionbuilder.caseexpr.CaseSearchTable;
 import org.eclipse.datatools.sqltools.sqlbuilder.expressionbuilder.caseexpr.CaseSimpleTable;

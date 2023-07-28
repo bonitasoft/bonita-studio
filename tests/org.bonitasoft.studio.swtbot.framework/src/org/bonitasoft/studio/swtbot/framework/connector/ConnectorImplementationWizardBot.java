@@ -24,17 +24,17 @@ public class ConnectorImplementationWizardBot extends BotWizardDialog {
     }
 
     public ConnectorImplementationWizardBot withImplementationId(String id) {
-        bot.textWithId("org.bonitasoft.studio.connector.model.implementation.wizard.idText").setText(id);
+        bot.textWithId("org.bonitasoft.bpm.connector.model.implementation.wizard.idText").setText(id);
         return this;
     }
 
     public ConnectorImplementationWizardBot withImplementationVersion(String version) {
-        bot.textWithId("org.bonitasoft.studio.connector.model.implementation.wizard.versionText").setText(version);
+        bot.textWithId("org.bonitasoft.bpm.connector.model.implementation.wizard.versionText").setText(version);
         return this;
     }
 
     public ConnectorImplementationWizardBot withClassName(String className) {
-        bot.textWithId("org.bonitasoft.studio.connector.model.implementation.wizard.classNameText").setText(className);
+        bot.textWithId("org.bonitasoft.bpm.connector.model.implementation.wizard.classNameText").setText(className);
         return this;
     }
 

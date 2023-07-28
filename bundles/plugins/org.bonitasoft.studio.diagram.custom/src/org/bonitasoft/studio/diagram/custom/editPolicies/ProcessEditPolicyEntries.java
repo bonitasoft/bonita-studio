@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bonitasoft.studio.diagram.custom.tools.ToolAndToolEntry;
-import org.bonitasoft.studio.model.process.ProcessPackage;
+import org.bonitasoft.bpm.model.process.ProcessPackage;
 import org.bonitasoft.studio.model.process.diagram.part.ProcessPaletteFactory;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.gef.EditDomain;

@@ -16,11 +16,11 @@ package org.bonitasoft.studio.common.predicate;
 
 import java.util.Objects;
 
+import org.bonitasoft.bpm.model.expression.Expression;
+import org.bonitasoft.bpm.model.parameter.Parameter;
+import org.bonitasoft.bpm.model.process.ContractInput;
+import org.bonitasoft.bpm.model.process.Element;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
-import org.bonitasoft.studio.model.expression.Expression;
-import org.bonitasoft.studio.model.parameter.Parameter;
-import org.bonitasoft.studio.model.process.ContractInput;
-import org.bonitasoft.studio.model.process.Element;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 
@@ -61,7 +61,8 @@ public class ExpressionPredicates {
         };
     }
 
-    public static java.util.function.Predicate<Expression> containingReferencedElement(final EObject referencedElement) {
+    public static java.util.function.Predicate<Expression> containingReferencedElement(
+            final EObject referencedElement) {
         return exp -> isElementIsReferencedInScript(exp, referencedElement);
     }
 

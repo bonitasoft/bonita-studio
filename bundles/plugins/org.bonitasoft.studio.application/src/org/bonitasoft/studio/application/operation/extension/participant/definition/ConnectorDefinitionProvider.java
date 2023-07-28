@@ -16,7 +16,7 @@ package org.bonitasoft.studio.application.operation.extension.participant.defini
 
 import java.util.Optional;
 
-import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
+import org.bonitasoft.bpm.connector.model.definition.ConnectorDefinition;
 
 public interface ConnectorDefinitionProvider {
 

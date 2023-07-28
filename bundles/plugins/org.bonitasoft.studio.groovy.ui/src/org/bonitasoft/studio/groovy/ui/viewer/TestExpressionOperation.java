@@ -44,12 +44,12 @@ import org.bonitasoft.studio.engine.export.BarExporter;
 import org.bonitasoft.studio.engine.export.EngineExpressionUtil;
 import org.bonitasoft.studio.groovy.repository.GroovyFileStore;
 import org.bonitasoft.studio.groovy.repository.GroovyRepositoryStore;
-import org.bonitasoft.studio.model.configuration.Configuration;
-import org.bonitasoft.studio.model.configuration.ConfigurationFactory;
-import org.bonitasoft.studio.model.configuration.Fragment;
-import org.bonitasoft.studio.model.configuration.FragmentContainer;
-import org.bonitasoft.studio.model.process.AbstractProcess;
-import org.bonitasoft.studio.model.process.ProcessFactory;
+import org.bonitasoft.bpm.model.configuration.Configuration;
+import org.bonitasoft.bpm.model.configuration.ConfigurationFactory;
+import org.bonitasoft.bpm.model.configuration.Fragment;
+import org.bonitasoft.bpm.model.configuration.FragmentContainer;
+import org.bonitasoft.bpm.model.process.AbstractProcess;
+import org.bonitasoft.bpm.model.process.ProcessFactory;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
@@ -62,7 +62,7 @@ public class TestExpressionOperation implements IRunnableWithProgress {
     private static final String TEST_EXPRESSION_POOL = "TEST_EXPRESSION_POOL";
     private Serializable result;
     private Map<String, Serializable> inputValues = new HashMap<String, Serializable>();
-    private org.bonitasoft.studio.model.expression.Expression expression;
+    private org.bonitasoft.bpm.model.expression.Expression expression;
     private Set<DependencyFileStore> additionalJars;
 
     /*
@@ -158,7 +158,7 @@ public class TestExpressionOperation implements IRunnableWithProgress {
         return result;
     }
 
-    public void setExpression(final org.bonitasoft.studio.model.expression.Expression expression) {
+    public void setExpression(final org.bonitasoft.bpm.model.expression.Expression expression) {
         this.expression = expression;
     }
 

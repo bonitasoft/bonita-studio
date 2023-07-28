@@ -15,8 +15,8 @@
 package org.bonitasoft.studio.connector.model.implementation.wizard;
 
 import org.bonitasoft.studio.connector.model.i18n.Messages;
-import org.bonitasoft.studio.connector.model.implementation.ConnectorImplementation;
-import org.bonitasoft.studio.model.process.Connector;
+import org.bonitasoft.bpm.connector.model.implementation.ConnectorImplementation;
+import org.bonitasoft.bpm.model.process.Connector;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.beans.typed.PojoProperties;
 import org.eclipse.core.databinding.validation.IValidator;

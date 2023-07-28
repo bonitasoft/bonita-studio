@@ -16,7 +16,7 @@ package org.bonitasoft.studio.common.repository.core.migration.dependencies.conn
 
 import java.util.Collection;
 
-import org.bonitasoft.studio.connector.model.implementation.ConnectorImplementation;
+import org.bonitasoft.bpm.connector.model.implementation.ConnectorImplementation;
 
 public interface ConnectorImplementationChange {
 

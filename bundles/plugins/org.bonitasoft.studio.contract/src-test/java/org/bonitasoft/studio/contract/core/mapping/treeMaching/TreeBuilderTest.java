@@ -3,7 +3,7 @@ package org.bonitasoft.studio.contract.core.mapping.treeMaching;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 import static org.bonitasoft.studio.model.businessObject.BusinessObjectBuilder.aBO;
-import static org.bonitasoft.studio.model.process.builders.ContractInputBuilder.aContractInput;
+import static org.bonitasoft.bpm.model.process.builders.ContractInputBuilder.aContractInput;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -14,11 +14,11 @@ import java.util.Optional;
 import org.bonitasoft.engine.bdm.model.field.RelationField;
 import org.bonitasoft.studio.model.businessObject.FieldBuilder.RelationFieldBuilder;
 import org.bonitasoft.studio.model.businessObject.FieldBuilder.SimpleFieldBuilder;
-import org.bonitasoft.studio.model.process.BusinessObjectData;
-import org.bonitasoft.studio.model.process.Contract;
-import org.bonitasoft.studio.model.process.ContractInputType;
-import org.bonitasoft.studio.model.process.ProcessFactory;
-import org.bonitasoft.studio.model.process.builders.ContractBuilder;
+import org.bonitasoft.bpm.model.process.BusinessObjectData;
+import org.bonitasoft.bpm.model.process.Contract;
+import org.bonitasoft.bpm.model.process.ContractInputType;
+import org.bonitasoft.bpm.model.process.ProcessFactory;
+import org.bonitasoft.bpm.model.process.builders.ContractBuilder;
 import org.junit.Before;
 import org.junit.Test;
 

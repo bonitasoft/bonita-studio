@@ -30,6 +30,12 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.bonitasoft.bpm.model.process.AbstractProcess;
+import org.bonitasoft.bpm.model.process.MainProcess;
+import org.bonitasoft.bpm.model.process.ProcessPackage;
+import org.bonitasoft.bpm.model.process.provider.ProcessItemProviderAdapterFactory;
+import org.bonitasoft.bpm.model.process.util.ProcessResourceImpl;
+import org.bonitasoft.bpm.model.process.util.migration.MigrationPolicy;
 import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.editingdomain.BonitaEditingDomainUtil;
 import org.bonitasoft.studio.common.emf.tools.EMFResourceUtil;
@@ -41,30 +47,27 @@ import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.common.repository.store.AbstractEMFRepositoryStore;
 import org.bonitasoft.studio.diagram.custom.Activator;
 import org.bonitasoft.studio.diagram.custom.i18n.Messages;
-import org.bonitasoft.studio.model.process.AbstractProcess;
-import org.bonitasoft.studio.model.process.MainProcess;
-import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditorUtil;
-import org.bonitasoft.studio.model.process.provider.ProcessItemProviderAdapterFactory;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.xmi.FeatureNotFoundException;
+import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.eclipse.emf.edapt.internal.common.URIUtils;
 import org.eclipse.emf.edapt.migration.MigrationException;
-import org.eclipse.emf.edapt.migration.execution.Migrator;
-import org.eclipse.emf.edapt.spi.history.Release;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.provider.ReflectiveItemProviderAdapterFactory;
 import org.eclipse.emf.edit.provider.resource.ResourceItemProviderAdapterFactory;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
+import org.eclipse.gmf.runtime.emf.core.resources.GMFResource;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.gmf.runtime.notation.util.NotationAdapterFactory;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -309,7 +312,19 @@ public class DiagramRepositoryStore extends AbstractEMFRepositoryStore<DiagramFi
             diagramResource = getTmpEMFResource("beforeImport.proc",
                     copyIs.getFile());
 
-            diagramResource.load(Collections.EMPTY_MAP);
+            // migrate GMF if required
+            EList<Resource> resources = getEditingDomain().getResourceSet().getResources();
+            GMFResource gmf = new GMFResource(diagramResource.getURI());
+            resources.add(gmf);
+            gmf.load(((XMLResource) diagramResource).getDefaultLoadOptions());
+            gmf.save(((XMLResource) diagramResource).getDefaultSaveOptions());
+            gmf.unload();
+            resources.remove(gmf);
+
+            // force migration
+            Map<String, MigrationPolicy> migrateOptions = Map.of(ProcessResourceImpl.OPTION_MIGRATION_POLICY,
+                    MigrationPolicy.ALWAYS_MIGRATE_POLICY);
+            diagramResource.load(migrateOptions);
             if (diagramResource.getContents().isEmpty()) {
                 throw new IOException("Resource is empty.");
             }
@@ -319,7 +334,7 @@ public class DiagramRepositoryStore extends AbstractEMFRepositoryStore<DiagramFi
                     .map(MainProcess.class::cast)
                     .findFirst()
                     .orElseThrow(() -> new IOException(
-                            "Resource content is invalid. There should be only one MainProcess per .proc file."));
+                            "Resource content is invalid. There should be one MainProcess per .proc file."));
 
             //Sanitize model
             new RemoveDanglingReferences(diagram).execute();
@@ -327,8 +342,6 @@ public class DiagramRepositoryStore extends AbstractEMFRepositoryStore<DiagramFi
                     .ifPresent(d -> new RemoveDanglingReferences(d).execute());
             diagram.eResource().getContents().removeIf(this::isFormDiagram);
 
-            applyTransformations(diagram);
-            
             try {
                 diagramResource.save(ProcessDiagramEditorUtil.getSaveOptions());
             } catch (final IOException e) {
@@ -367,24 +380,7 @@ public class DiagramRepositoryStore extends AbstractEMFRepositoryStore<DiagramFi
     }
 
     @Override
-    protected Release getRelease(final Migrator targetMigrator,
-            final Resource resource) {
-        final String modelVersion = getModelVersion(resource);
-        return getRelease(targetMigrator, modelVersion);
-    }
-
-    public Release getRelease(final Migrator targetMigrator,
-            final String modelVersion) {
-        for (final Release release : targetMigrator.getReleases()) {
-            if (release.getLabel().equals(modelVersion)) {
-                return release;
-            }
-        }
-        return targetMigrator.getReleases().iterator().next(); // First release
-        // of all time
-    }
-
-    private String getModelVersion(final Resource resource) {
+    protected String getModelVersion(final Resource resource) {
         try (InputStream is = URIUtils.getInputStream(resource.getURI())) {
             return DiagramCompatibilityValidator.readModelVersion(is);
         } catch (IOException | FeatureNotFoundException e) {
@@ -439,7 +435,7 @@ public class DiagramRepositoryStore extends AbstractEMFRepositoryStore<DiagramFi
         }
         return computedProcessesList;
     }
-    
+
     @Override
     public int getImportOrder() {
         return 999;

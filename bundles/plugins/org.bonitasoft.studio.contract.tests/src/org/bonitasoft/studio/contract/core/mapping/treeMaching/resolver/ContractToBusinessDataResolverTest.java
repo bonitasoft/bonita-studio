@@ -23,9 +23,9 @@ import java.util.List;
 import java.util.Optional;
 
 import org.bonitasoft.studio.contract.core.mapping.treeMaching.BusinessDataStore;
-import org.bonitasoft.studio.model.process.BusinessObjectData;
-import org.bonitasoft.studio.model.process.ProcessFactory;
-import org.bonitasoft.studio.model.process.builders.ContractInputBuilder;
+import org.bonitasoft.bpm.model.process.BusinessObjectData;
+import org.bonitasoft.bpm.model.process.ProcessFactory;
+import org.bonitasoft.bpm.model.process.builders.ContractInputBuilder;
 import org.junit.Before;
 import org.junit.Test;
 

@@ -20,12 +20,12 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.bpm.model.util.ExpressionConstants;
 import org.bonitasoft.studio.expression.editor.ExpressionProviderService;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionEditor;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionProvider;
-import org.bonitasoft.studio.model.expression.Expression;
-import org.bonitasoft.studio.model.process.XMLData;
+import org.bonitasoft.bpm.model.expression.Expression;
+import org.bonitasoft.bpm.model.process.XMLData;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.xml.Messages;
@@ -62,7 +62,7 @@ public class XPathExpressionProvider implements IExpressionProvider {
 	}
 
 	/* (non-Javadoc)
-	 * @see org.bonitasoft.studio.expression.editor.provider.IExpressionProvider#getIcon(org.bonitasoft.studio.model.expression.Expression)
+	 * @see org.bonitasoft.studio.expression.editor.provider.IExpressionProvider#getIcon(org.bonitasoft.bpm.model.expression.Expression)
 	 */
 	public Image getIcon(Expression expression) {
 		return Pics.getImage(PicsConstants.xml);
@@ -76,7 +76,7 @@ public class XPathExpressionProvider implements IExpressionProvider {
 	}
 
 	/* (non-Javadoc)
-	 * @see org.bonitasoft.studio.expression.editor.provider.IExpressionProvider#getProposalLabel(org.bonitasoft.studio.model.expression.Expression)
+	 * @see org.bonitasoft.studio.expression.editor.provider.IExpressionProvider#getProposalLabel(org.bonitasoft.bpm.model.expression.Expression)
 	 */
 	public String getProposalLabel(Expression expression) {
 		return null;
@@ -106,7 +106,7 @@ public class XPathExpressionProvider implements IExpressionProvider {
 	}
 
 	/* (non-Javadoc)
-	 * @see org.bonitasoft.studio.expression.editor.provider.IExpressionProvider#getExpressionEditor(org.bonitasoft.studio.model.expression.Expression)
+	 * @see org.bonitasoft.studio.expression.editor.provider.IExpressionProvider#getExpressionEditor(org.bonitasoft.bpm.model.expression.Expression)
 	 */
 	public IExpressionEditor getExpressionEditor(Expression expression,EObject context) {
 		return new XPathExpressionEditor();

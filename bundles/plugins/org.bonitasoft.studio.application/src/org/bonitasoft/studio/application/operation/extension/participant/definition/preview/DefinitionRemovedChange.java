@@ -18,7 +18,7 @@ import java.util.List;
 
 import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.common.repository.extension.update.preview.ChangePreview;
-import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
+import org.bonitasoft.bpm.connector.model.definition.ConnectorDefinition;
 
 public class DefinitionRemovedChange implements ChangePreview {
 

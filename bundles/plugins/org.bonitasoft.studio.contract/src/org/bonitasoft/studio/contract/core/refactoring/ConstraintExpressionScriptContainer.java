@@ -17,8 +17,8 @@ package org.bonitasoft.studio.contract.core.refactoring;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
-import org.bonitasoft.studio.model.process.ContractConstraint;
-import org.bonitasoft.studio.model.process.ProcessPackage;
+import org.bonitasoft.bpm.model.process.ContractConstraint;
+import org.bonitasoft.bpm.model.process.ProcessPackage;
 import org.bonitasoft.studio.refactoring.core.RefactorPair;
 import org.bonitasoft.studio.refactoring.core.script.IScriptRefactoringOperation;
 import org.bonitasoft.studio.refactoring.core.script.IScriptRefactoringOperationFactory;

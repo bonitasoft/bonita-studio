@@ -5,19 +5,24 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.connectors.configuration;
 
 import java.util.HashMap;
 
+import org.bonitasoft.bpm.connector.model.implementation.ConnectorImplementation;
+import org.bonitasoft.bpm.model.configuration.Configuration;
+import org.bonitasoft.bpm.model.configuration.DefinitionMapping;
+import org.bonitasoft.bpm.model.configuration.util.ConfigurationAdapterFactory;
+import org.bonitasoft.bpm.model.configuration.util.ConfigurationResourceFactoryImpl;
+import org.bonitasoft.bpm.model.process.AbstractProcess;
+import org.bonitasoft.bpm.model.process.util.ProcessAdapterFactory;
 import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IDefinitionRepositoryStore;
@@ -25,18 +30,11 @@ import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.common.repository.provider.DefinitionResourceProvider;
 import org.bonitasoft.studio.configuration.extension.IProcessConfigurationWizardPage;
-import org.bonitasoft.studio.connector.model.implementation.ConnectorImplementation;
 import org.bonitasoft.studio.connector.model.implementation.IImplementationRepositoryStore;
 import org.bonitasoft.studio.connectors.ConnectorPlugin;
 import org.bonitasoft.studio.connectors.i18n.Messages;
 import org.bonitasoft.studio.connectors.repository.ConnectorDefRepositoryStore;
 import org.bonitasoft.studio.connectors.repository.ConnectorImplRepositoryStore;
-import org.bonitasoft.studio.model.configuration.Configuration;
-import org.bonitasoft.studio.model.configuration.DefinitionMapping;
-import org.bonitasoft.studio.model.configuration.util.ConfigurationAdapterFactory;
-import org.bonitasoft.studio.model.configuration.util.ConfigurationResourceFactoryImpl;
-import org.bonitasoft.studio.model.process.AbstractProcess;
-import org.bonitasoft.studio.model.process.util.ProcessAdapterFactory;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.emf.common.command.BasicCommandStack;
@@ -173,9 +171,11 @@ public class ConnectorConfigurationWizardPage extends WizardPage
     }
 
     protected void openImplementationSelection() {
-        final DefinitionMapping connectorAssociation = (DefinitionMapping) ((IStructuredSelection) viewer.getSelection())
-                .getFirstElement();
-        final SelectConnectorImplementationWizard wizard = new SelectConnectorImplementationWizard(connectorAssociation);
+        final DefinitionMapping connectorAssociation = (DefinitionMapping) ((IStructuredSelection) viewer
+                .getSelection())
+                        .getFirstElement();
+        final SelectConnectorImplementationWizard wizard = new SelectConnectorImplementationWizard(
+                connectorAssociation);
         final WizardDialog dialog = new WizardDialog(Display.getDefault().getActiveShell(), wizard);
         if (dialog.open() == Dialog.OK) {
             final ConnectorImplementation impl = wizard.getConnectorImplementation();
@@ -218,8 +218,9 @@ public class ConnectorConfigurationWizardPage extends WizardPage
     }
 
     protected void clearImplementation() {
-        final DefinitionMapping connectorAssociation = (DefinitionMapping) ((IStructuredSelection) viewer.getSelection())
-                .getFirstElement();
+        final DefinitionMapping connectorAssociation = (DefinitionMapping) ((IStructuredSelection) viewer
+                .getSelection())
+                        .getFirstElement();
         final String implId = NamingUtils.toConnectorImplementationFilename(connectorAssociation.getImplementationId(),
                 connectorAssociation.getImplementationVersion(), false);
         connectorAssociation.setImplementationId(null);
@@ -241,7 +242,8 @@ public class ConnectorConfigurationWizardPage extends WizardPage
             final BasicCommandStack commandStack = new BasicCommandStack();
 
             // Create the editing domain with our adapterFactory and command stack.
-            editingDomain = new AdapterFactoryEditingDomain(adapterFactory, commandStack, new HashMap<Resource, Boolean>());
+            editingDomain = new AdapterFactoryEditingDomain(adapterFactory, commandStack,
+                    new HashMap<Resource, Boolean>());
             editingDomain.getResourceSet().getResourceFactoryRegistry().getExtensionToFactoryMap().put("conf",
                     new ConfigurationResourceFactoryImpl());
         }
@@ -259,8 +261,8 @@ public class ConnectorConfigurationWizardPage extends WizardPage
     /*
      * (non-Javadoc)
      * @see
-     * org.bonitasoft.studio.configuration.extension.IProcessConfigurationWizardPage#updatePage(org.bonitasoft.studio.model.
-     * process.AbstractProcess, org.bonitasoft.studio.model.configuration.Configuration)
+     * org.bonitasoft.studio.configuration.extension.IProcessConfigurationWizardPage#updatePage(org.bonitasoft.bpm.model.
+     * process.AbstractProcess, org.bonitasoft.bpm.model.configuration.Configuration)
      */
     @Override
     public void updatePage(final AbstractProcess process, final Configuration configuration) {
@@ -290,7 +292,8 @@ public class ConnectorConfigurationWizardPage extends WizardPage
                 final ConnectorImplementation impl = getImplStore().getImplementation(implementationId,
                         implementationVersion);
                 if (impl == null) {
-                    return NLS.bind(Messages.implementationNotFound, implementationId + " (" + implementationVersion + ")");
+                    return NLS.bind(Messages.implementationNotFound,
+                            implementationId + " (" + implementationVersion + ")");
                 }
 
             }

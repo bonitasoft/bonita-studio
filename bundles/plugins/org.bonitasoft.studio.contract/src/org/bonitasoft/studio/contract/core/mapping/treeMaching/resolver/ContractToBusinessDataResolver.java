@@ -19,9 +19,9 @@ import java.util.Optional;
 import org.bonitasoft.studio.contract.core.mapping.treeMaching.BusinessDataStore;
 import org.bonitasoft.studio.contract.core.mapping.treeMaching.TreeBuilder;
 import org.bonitasoft.studio.contract.core.mapping.treeMaching.TreeResult;
-import org.bonitasoft.studio.model.process.BusinessObjectData;
-import org.bonitasoft.studio.model.process.Contract;
-import org.bonitasoft.studio.model.process.ContractInput;
+import org.bonitasoft.bpm.model.process.BusinessObjectData;
+import org.bonitasoft.bpm.model.process.Contract;
+import org.bonitasoft.bpm.model.process.ContractInput;
 
 public class ContractToBusinessDataResolver {
 

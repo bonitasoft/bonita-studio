@@ -19,7 +19,7 @@ package org.bonitasoft.studio.diagram.custom.editPolicies;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.diagram.custom.actions.OpenLatestSubprocessCommand;
-import org.bonitasoft.studio.model.process.CallActivity;
+import org.bonitasoft.bpm.model.process.CallActivity;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.EditPart;

@@ -14,11 +14,12 @@
  */
 package org.bonitasoft.studio.common;
 
+import org.bonitasoft.bpm.model.process.util.migration.HistoryUtils;
+
 public class ModelVersion {
 
     //Process model
-    public static final String VERSION_6_0_0_ALPHA = "6.0.0-Alpha";
-    public static final String CURRENT_DIAGRAM_VERSION = "7.12.0-004";
+    public static final String CURRENT_DIAGRAM_VERSION = HistoryUtils.CURRENT_MODEL_VERSION;
 
     //Organization model
     public static final String CURRENT_ORGANIZATION_NAMESPACE = "http://documentation.bonitasoft.com/organization-xml-schema/1.1";

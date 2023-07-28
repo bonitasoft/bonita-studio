@@ -19,8 +19,8 @@ package org.bonitasoft.studio.common.repository.core.migration.dependencies;
 import java.util.Collection;
 import java.util.function.BiConsumer;
 
-import org.bonitasoft.studio.model.configuration.Configuration;
-import org.bonitasoft.studio.model.process.Pool;
+import org.bonitasoft.bpm.model.configuration.Configuration;
+import org.bonitasoft.bpm.model.process.Pool;
 
 public interface ConfigurationCollector {
     

@@ -22,8 +22,8 @@ import javax.inject.Inject;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.provider.IBOSArchiveFileStoreProvider;
-import org.bonitasoft.studio.model.configuration.Configuration;
-import org.bonitasoft.studio.model.process.AbstractProcess;
+import org.bonitasoft.bpm.model.configuration.Configuration;
+import org.bonitasoft.bpm.model.process.AbstractProcess;
 import org.eclipse.emf.common.util.URI;
 
 /**
@@ -36,8 +36,8 @@ public class DiagramFileStoreBOSArchiveProvider implements IBOSArchiveFileStoreP
 
     /*
      * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.repository.provider.IBOSArchiveFileStoreProvider#getFileStoreForConfiguration(org.bonitasoft.studio.model.process.
-     * AbstractProcess, org.bonitasoft.studio.model.configuration.Configuration)
+     * @see org.bonitasoft.studio.common.repository.provider.IBOSArchiveFileStoreProvider#getFileStoreForConfiguration(org.bonitasoft.bpm.model.process.
+     * AbstractProcess, org.bonitasoft.bpm.model.configuration.Configuration)
      */
     @Override
     public Set<IRepositoryFileStore<?>> getFileStoreForConfiguration(final AbstractProcess process, final Configuration configuration) {

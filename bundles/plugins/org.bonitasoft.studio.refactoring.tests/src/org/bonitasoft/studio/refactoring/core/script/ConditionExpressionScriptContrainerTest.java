@@ -16,18 +16,18 @@ package org.bonitasoft.studio.refactoring.core.script;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.bonitasoft.studio.model.expression.builders.ExpressionBuilder.anExpression;
+import static org.bonitasoft.bpm.model.expression.builders.ExpressionBuilder.anExpression;
 import static org.bonitasoft.studio.refactoring.core.script.ReferenceDiff.newReferenceDiff;
 import static org.mockito.Mockito.spy;
 
-import org.bonitasoft.studio.common.ExpressionConstants;
-import org.bonitasoft.studio.model.expression.Expression;
-import org.bonitasoft.studio.model.expression.assertions.ExpressionAssert;
-import org.bonitasoft.studio.model.expression.provider.ExpressionItemProviderAdapterFactory;
-import org.bonitasoft.studio.model.process.Data;
-import org.bonitasoft.studio.model.process.ProcessPackage;
-import org.bonitasoft.studio.model.process.builders.DataBuilder;
-import org.bonitasoft.studio.model.process.builders.StringDataTypeBuilder;
+import org.bonitasoft.bpm.model.util.ExpressionConstants;
+import org.bonitasoft.bpm.model.expression.Expression;
+import org.bonitasoft.bpm.model.expression.assertions.ExpressionAssert;
+import org.bonitasoft.bpm.model.expression.provider.ExpressionItemProviderAdapterFactory;
+import org.bonitasoft.bpm.model.process.Data;
+import org.bonitasoft.bpm.model.process.ProcessPackage;
+import org.bonitasoft.bpm.model.process.builders.DataBuilder;
+import org.bonitasoft.bpm.model.process.builders.StringDataTypeBuilder;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.transaction.impl.TransactionalEditingDomainImpl;

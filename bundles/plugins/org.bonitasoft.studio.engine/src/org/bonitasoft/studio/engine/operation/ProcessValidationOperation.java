@@ -11,7 +11,7 @@ package org.bonitasoft.studio.engine.operation;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.bonitasoft.studio.model.process.AbstractProcess;
+import org.bonitasoft.bpm.model.process.AbstractProcess;
 import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.NotEnabledException;

@@ -14,7 +14,7 @@
  */
 package org.bonitasoft.studio.contract.core.refactoring;
 
-import org.bonitasoft.studio.model.process.ContractInput;
+import org.bonitasoft.bpm.model.process.ContractInput;
 import org.bonitasoft.studio.refactoring.core.RefactorPair;
 
 public class ContractInputRefactorPair extends RefactorPair<ContractInput, ContractInput> {

@@ -15,11 +15,25 @@
 package org.bonitasoft.studio.common.model;
 
 import java.util.List;
+import java.util.function.Supplier;
 
-import org.bonitasoft.studio.model.process.AbstractProcess;
+import org.bonitasoft.bpm.model.process.AbstractProcess;
 
-public interface IProcessContextProvider {
+/**
+ * @deprecated just use {@link Supplier} instead
+ */
+@FunctionalInterface
+public interface IProcessContextProvider extends Supplier<List<AbstractProcess>> {
 
     List<AbstractProcess> getAllProcesses();
+
+    /*
+     * (non-Javadoc)
+     * @see java.util.function.Supplier#get()
+     */
+    @Override
+    default List<AbstractProcess> get() {
+        return getAllProcesses();
+    }
 
 }

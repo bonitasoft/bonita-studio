@@ -15,11 +15,11 @@
 package org.bonitasoft.studio.common.gmf.tools.tree.selection.provider.process;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.bonitasoft.studio.model.process.builders.PoolBuilder.aPool;
+import static org.bonitasoft.bpm.model.process.builders.PoolBuilder.aPool;
 
-import org.bonitasoft.studio.model.kpi.DatabaseKPIBinding;
-import org.bonitasoft.studio.model.kpi.KPIParameterMapping;
-import org.bonitasoft.studio.model.kpi.KpiFactory;
+import org.bonitasoft.bpm.model.kpi.DatabaseKPIBinding;
+import org.bonitasoft.bpm.model.kpi.KPIParameterMapping;
+import org.bonitasoft.bpm.model.kpi.KpiFactory;
 import org.junit.Test;
 
 public class KPITabbedPropertyProviderTest {

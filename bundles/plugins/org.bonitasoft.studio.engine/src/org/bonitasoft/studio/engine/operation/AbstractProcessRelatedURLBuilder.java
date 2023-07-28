@@ -23,8 +23,8 @@ import org.bonitasoft.studio.common.repository.preferences.OrganizationPreferenc
 import org.bonitasoft.studio.configuration.ConfigurationPlugin;
 import org.bonitasoft.studio.configuration.preferences.ConfigurationPreferenceConstants;
 import org.bonitasoft.studio.diagram.custom.repository.ProcessConfigurationRepositoryStore;
-import org.bonitasoft.studio.model.configuration.Configuration;
-import org.bonitasoft.studio.model.process.AbstractProcess;
+import org.bonitasoft.bpm.model.configuration.Configuration;
+import org.bonitasoft.bpm.model.process.AbstractProcess;
 
 public abstract class AbstractProcessRelatedURLBuilder extends AbstractBonitaURLBuilder {
 

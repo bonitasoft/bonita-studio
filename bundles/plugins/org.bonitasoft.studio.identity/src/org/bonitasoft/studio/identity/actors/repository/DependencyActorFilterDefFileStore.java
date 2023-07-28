@@ -29,7 +29,7 @@ import org.bonitasoft.studio.common.repository.provider.DefinitionImageResourceL
 import org.bonitasoft.studio.common.repository.provider.JarBundleResourceLoader;
 import org.bonitasoft.studio.common.repository.provider.JarDefinitionResourceLoader;
 import org.bonitasoft.studio.common.repository.store.AbstractEMFRepositoryStore;
-import org.bonitasoft.studio.connector.model.definition.util.ConnectorDefinitionXMLProcessor;
+import org.bonitasoft.bpm.connector.model.definition.util.ConnectorDefinitionXMLProcessor;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.xmi.XMLResource;
 

@@ -22,12 +22,12 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
-import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration;
-import org.bonitasoft.studio.model.connectorconfiguration.ConnectorParameter;
-import org.bonitasoft.studio.model.expression.AbstractExpression;
-import org.bonitasoft.studio.model.expression.ExpressionFactory;
-import org.bonitasoft.studio.model.expression.ListExpression;
-import org.bonitasoft.studio.model.expression.TableExpression;
+import org.bonitasoft.bpm.model.connectorconfiguration.ConnectorConfiguration;
+import org.bonitasoft.bpm.model.connectorconfiguration.ConnectorParameter;
+import org.bonitasoft.bpm.model.expression.AbstractExpression;
+import org.bonitasoft.bpm.model.expression.ExpressionFactory;
+import org.bonitasoft.bpm.model.expression.ListExpression;
+import org.bonitasoft.bpm.model.expression.TableExpression;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
@@ -45,7 +45,7 @@ public class GroovyConnectorConfigurationConverter {
     public ConnectorConfiguration convert(final ConnectorConfiguration connectorConfiguration) {
         checkConnectorConfiguration(connectorConfiguration);
         final ConnectorConfiguration configuration = EcoreUtil.copy(connectorConfiguration);
-        final org.bonitasoft.studio.model.expression.Expression fakeExpression = getFakeExpression(configuration);
+        final org.bonitasoft.bpm.model.expression.Expression fakeExpression = getFakeExpression(configuration);
         configuration.getParameters().stream()
                 .filter(withInputName(SCRIPT_INPUT))
                 .findFirst()
@@ -59,9 +59,9 @@ public class GroovyConnectorConfigurationConverter {
         return configuration;
     }
 
-    private org.bonitasoft.studio.model.expression.Expression createConstantScriptExpression(
-            final org.bonitasoft.studio.model.expression.Expression fakeExpression) {
-        final org.bonitasoft.studio.model.expression.Expression scriptExpression = ExpressionHelper
+    private org.bonitasoft.bpm.model.expression.Expression createConstantScriptExpression(
+            final org.bonitasoft.bpm.model.expression.Expression fakeExpression) {
+        final org.bonitasoft.bpm.model.expression.Expression scriptExpression = ExpressionHelper
                 .createConstantExpression(
                         fakeExpression.getContent(), String.class.getName());
         scriptExpression.setName(fakeExpression.getName());
@@ -80,18 +80,18 @@ public class GroovyConnectorConfigurationConverter {
         }
     }
 
-    private org.bonitasoft.studio.model.expression.TableExpression createVariableExpression(
-            final org.bonitasoft.studio.model.expression.Expression fakeExpression) {
+    private org.bonitasoft.bpm.model.expression.TableExpression createVariableExpression(
+            final org.bonitasoft.bpm.model.expression.Expression fakeExpression) {
         final TableExpression variableExpression = ExpressionFactory.eINSTANCE.createTableExpression();
         for (final EObject dep : fakeExpression.getReferencedElements()) {
-            final org.bonitasoft.studio.model.expression.Expression depValueExpression = ExpressionHelper
+            final org.bonitasoft.bpm.model.expression.Expression depValueExpression = ExpressionHelper
                     .createExpressionFromEObject(dep);
             if (depValueExpression != null) {
                 final ListExpression depLine = ExpressionFactory.eINSTANCE.createListExpression();
-                final org.bonitasoft.studio.model.expression.Expression depNameExpression = ExpressionHelper
+                final org.bonitasoft.bpm.model.expression.Expression depNameExpression = ExpressionHelper
                         .createConstantExpression(
                                 depValueExpression.getName(), String.class.getName());
-                final EList<org.bonitasoft.studio.model.expression.Expression> expressions = depLine.getExpressions();
+                final EList<org.bonitasoft.bpm.model.expression.Expression> expressions = depLine.getExpressions();
                 expressions.addAll(Arrays.asList(depNameExpression, depValueExpression));
                 variableExpression.getExpressions().add(depLine);
             }
@@ -99,13 +99,13 @@ public class GroovyConnectorConfigurationConverter {
         return variableExpression;
     }
 
-    private org.bonitasoft.studio.model.expression.Expression getFakeExpression(
+    private org.bonitasoft.bpm.model.expression.Expression getFakeExpression(
             final ConnectorConfiguration configuration) {
         for (final ConnectorParameter param : configuration.getParameters()) {
             if (FAKE_SCRIPT_EXPRESSION.equals(param.getKey())) {
                 final AbstractExpression expression = param.getExpression();
-                if (expression instanceof org.bonitasoft.studio.model.expression.Expression) {
-                    return (org.bonitasoft.studio.model.expression.Expression) expression;
+                if (expression instanceof org.bonitasoft.bpm.model.expression.Expression) {
+                    return (org.bonitasoft.bpm.model.expression.Expression) expression;
                 }
             }
         }

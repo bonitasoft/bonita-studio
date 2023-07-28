@@ -19,9 +19,9 @@ package org.bonitasoft.studio.common.palette;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import org.bonitasoft.studio.common.Messages;
-import org.bonitasoft.studio.model.process.FlowElement;
-import org.bonitasoft.studio.model.process.ProcessFactory;
-import org.bonitasoft.studio.model.process.builders.ActivityBuilder;
+import org.bonitasoft.bpm.model.process.FlowElement;
+import org.bonitasoft.bpm.model.process.ProcessFactory;
+import org.bonitasoft.bpm.model.process.builders.ActivityBuilder;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

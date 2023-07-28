@@ -15,7 +15,7 @@
 package org.bonitasoft.studio.common.diagram.dialog;
 
 import static org.bonitasoft.studio.assertions.StatusAssert.assertThat;
-import static org.bonitasoft.studio.model.process.builders.MainProcessBuilder.aMainProcess;
+import static org.bonitasoft.bpm.model.process.builders.MainProcessBuilder.aMainProcess;
 
 import java.util.Collections;
 

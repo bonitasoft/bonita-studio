@@ -27,7 +27,7 @@ import org.bonitasoft.studio.diagram.custom.commands.UpdatePoolSizeCommand;
 import org.bonitasoft.studio.diagram.custom.parts.CustomMainProcessEditPart;
 import org.bonitasoft.studio.diagram.custom.parts.CustomPoolCompartmentEditPart;
 import org.bonitasoft.studio.diagram.custom.parts.CustomPoolEditPart;
-import org.bonitasoft.studio.model.process.Pool;
+import org.bonitasoft.bpm.model.process.Pool;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.MessageFlowEditPart;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.SequenceFlowEditPart;
 import org.bonitasoft.studio.pics.Pics;

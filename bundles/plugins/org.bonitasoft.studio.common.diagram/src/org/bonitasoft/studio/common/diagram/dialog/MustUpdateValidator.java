@@ -15,7 +15,7 @@
 package org.bonitasoft.studio.common.diagram.dialog;
 
 import org.bonitasoft.studio.common.Messages;
-import org.bonitasoft.studio.model.process.AbstractProcess;
+import org.bonitasoft.bpm.model.process.AbstractProcess;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.validation.MultiValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;

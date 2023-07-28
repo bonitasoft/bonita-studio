@@ -14,7 +14,7 @@
  */
 package org.bonitasoft.studio.parameters.action;
 
-import org.bonitasoft.studio.model.parameter.Parameter;
+import org.bonitasoft.bpm.model.parameter.Parameter;
 import org.bonitasoft.studio.refactoring.core.RefactorPair;
 
 public class ParameterRefactorPair extends RefactorPair<Parameter, Parameter> {

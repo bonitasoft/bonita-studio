@@ -19,7 +19,7 @@ package org.bonitasoft.studio.properties.sections.iteration;
 import java.util.List;
 
 import org.bonitasoft.studio.common.DataUtil;
-import org.bonitasoft.studio.model.process.Data;
+import org.bonitasoft.bpm.model.process.Data;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 

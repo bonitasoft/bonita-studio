@@ -19,7 +19,7 @@ package org.bonitasoft.studio.expression.editor.provider;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.bpm.model.util.ExpressionConstants;
 import org.bonitasoft.studio.expression.editor.ExpressionProviderService;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.viewers.IStructuredContentProvider;

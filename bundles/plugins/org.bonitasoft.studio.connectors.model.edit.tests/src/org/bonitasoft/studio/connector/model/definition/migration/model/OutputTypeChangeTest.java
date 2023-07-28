@@ -16,13 +16,13 @@ package org.bonitasoft.studio.connector.model.definition.migration.model;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
-import static org.bonitasoft.studio.model.expression.builders.ExpressionBuilder.anExpression;
-import static org.bonitasoft.studio.model.expression.builders.OperationBuilder.anOperation;
-import static org.bonitasoft.studio.model.process.builders.ConnectorBuilder.aConnector;
+import static org.bonitasoft.bpm.model.expression.builders.ExpressionBuilder.anExpression;
+import static org.bonitasoft.bpm.model.expression.builders.OperationBuilder.anOperation;
+import static org.bonitasoft.bpm.model.process.builders.ConnectorBuilder.aConnector;
 
-import org.bonitasoft.studio.connector.model.definition.ConnectorDefinitionFactory;
-import org.bonitasoft.studio.connector.model.definition.Output;
-import org.bonitasoft.studio.model.process.Connector;
+import org.bonitasoft.bpm.connector.model.definition.ConnectorDefinitionFactory;
+import org.bonitasoft.bpm.connector.model.definition.Output;
+import org.bonitasoft.bpm.model.process.Connector;
 import org.junit.Test;
 
 public class OutputTypeChangeTest {

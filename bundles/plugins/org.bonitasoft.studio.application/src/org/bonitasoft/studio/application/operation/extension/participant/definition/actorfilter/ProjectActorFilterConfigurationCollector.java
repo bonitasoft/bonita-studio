@@ -27,8 +27,8 @@ import org.bonitasoft.studio.common.repository.filestore.DefinitionConfiguration
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.identity.actors.repository.ActorFilterConfRepositoryStore;
-import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration;
-import org.bonitasoft.studio.model.process.ActorFilter;
+import org.bonitasoft.bpm.model.connectorconfiguration.ConnectorConfiguration;
+import org.bonitasoft.bpm.model.process.ActorFilter;
 
 
 public class ProjectActorFilterConfigurationCollector implements ConnectorConfigurationCollector {

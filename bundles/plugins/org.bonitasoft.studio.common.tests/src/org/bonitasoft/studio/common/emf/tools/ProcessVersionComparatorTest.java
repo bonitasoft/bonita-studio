@@ -15,7 +15,7 @@
 package org.bonitasoft.studio.common.emf.tools;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.bonitasoft.studio.model.process.builders.PoolBuilder.aPool;
+import static org.bonitasoft.bpm.model.process.builders.PoolBuilder.aPool;
 
 import org.junit.Test;
 

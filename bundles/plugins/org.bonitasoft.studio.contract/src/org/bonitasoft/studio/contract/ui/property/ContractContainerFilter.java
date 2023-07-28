@@ -17,8 +17,8 @@ package org.bonitasoft.studio.contract.ui.property;
 import static com.google.common.base.Predicates.instanceOf;
 import static com.google.common.base.Predicates.or;
 
-import org.bonitasoft.studio.model.process.ContractContainer;
-import org.bonitasoft.studio.model.process.Lane;
+import org.bonitasoft.bpm.model.process.ContractContainer;
+import org.bonitasoft.bpm.model.process.Lane;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.jface.viewers.IFilter;
 

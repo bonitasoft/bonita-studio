@@ -17,13 +17,13 @@ package org.bonitasoft.studio.connectors.ui.wizard;
 
 import java.util.Set;
 
+import org.bonitasoft.bpm.model.connectorconfiguration.ConnectorConfiguration;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.filestore.DefinitionConfigurationFileStore;
 import org.bonitasoft.studio.common.repository.provider.ExtendedConnectorDefinition;
 import org.bonitasoft.studio.connectors.repository.ConnectorConfRepositoryStore;
 import org.bonitasoft.studio.connectors.repository.ConnectorDefRepositoryStore;
 import org.bonitasoft.studio.connectors.ui.wizard.page.SelectConnectorConfigurationWizardPage;
-import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.jface.wizard.IWizardPage;

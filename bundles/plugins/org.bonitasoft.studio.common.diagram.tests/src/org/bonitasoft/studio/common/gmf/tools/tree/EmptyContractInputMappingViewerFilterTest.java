@@ -18,8 +18,8 @@ package org.bonitasoft.studio.common.gmf.tools.tree;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.bonitasoft.studio.model.process.ContractInputMapping;
-import org.bonitasoft.studio.model.process.ProcessFactory;
+import org.bonitasoft.bpm.model.process.ContractInputMapping;
+import org.bonitasoft.bpm.model.process.ProcessFactory;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

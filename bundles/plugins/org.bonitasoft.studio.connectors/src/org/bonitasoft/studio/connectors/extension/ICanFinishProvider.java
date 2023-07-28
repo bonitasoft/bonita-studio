@@ -17,7 +17,7 @@
  */
 package org.bonitasoft.studio.connectors.extension;
 
-import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration;
+import org.bonitasoft.bpm.model.connectorconfiguration.ConnectorConfiguration;
 
 /**
  * @author Aurelien Pupier

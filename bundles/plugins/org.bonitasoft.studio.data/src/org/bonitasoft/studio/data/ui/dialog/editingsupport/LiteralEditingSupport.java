@@ -17,7 +17,7 @@
 package org.bonitasoft.studio.data.ui.dialog.editingsupport;
 
 import org.bonitasoft.studio.data.i18n.Messages;
-import org.bonitasoft.studio.model.process.EnumType;
+import org.bonitasoft.bpm.model.process.EnumType;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.EditingSupport;

@@ -22,8 +22,8 @@ import org.bonitasoft.studio.diagram.custom.decorator.subprocessevent.ErrorSubPr
 import org.bonitasoft.studio.diagram.custom.decorator.subprocessevent.MessageSubProcessEventDecorator;
 import org.bonitasoft.studio.diagram.custom.decorator.subprocessevent.SignalSubProcessEventDecorator;
 import org.bonitasoft.studio.diagram.custom.decorator.subprocessevent.TimerSubProcessEventDecorator;
-import org.bonitasoft.studio.model.process.Activity;
-import org.bonitasoft.studio.model.process.SubProcessEvent;
+import org.bonitasoft.bpm.model.process.Activity;
+import org.bonitasoft.bpm.model.process.SubProcessEvent;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gmf.runtime.common.core.service.AbstractProvider;

@@ -20,7 +20,7 @@ import java.util.Locale;
 import java.util.Set;
 
 import org.bonitasoft.studio.common.ui.jface.TableColumnSorter;
-import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
+import org.bonitasoft.bpm.connector.model.definition.ConnectorDefinition;
 import org.bonitasoft.studio.connector.model.i18n.Messages;
 import org.eclipse.core.databinding.beans.PojoObservables;
 import org.eclipse.emf.databinding.EMFDataBindingContext;

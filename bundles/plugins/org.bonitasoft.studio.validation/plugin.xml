@@ -24,7 +24,7 @@
                   {0}
                </message>
                <target
-                     class="Element:http://www.bonitasoft.org/ns/studio/process">
+                     class="Element:http://www.bonitasoft.org/ns/bpm/process">
                   <event
                         name="Set">
                      <feature
@@ -54,7 +54,7 @@
                   {0}
                </message>
                <target
-                     class="AbstractProcess:http://www.bonitasoft.org/ns/studio/process">
+                     class="AbstractProcess:http://www.bonitasoft.org/ns/bpm/process">
                   <event
                         name="Set">
                      <feature
@@ -85,7 +85,7 @@
                   
                </message>
                <target
-                     class="Assignable:http://www.bonitasoft.org/ns/studio/process">
+                     class="Assignable:http://www.bonitasoft.org/ns/bpm/process">
                   <event
                         name="Set">
                      <feature
@@ -100,7 +100,7 @@
                   </event>
                </target>
                <target
-                     class="Task:http://www.bonitasoft.org/ns/studio/process">
+                     class="Task:http://www.bonitasoft.org/ns/bpm/process">
                   <event
                         name="Set">
                      <feature
@@ -136,7 +136,7 @@
                   {0}
                </message>
                <target
-                     class="AbstractTimerEvent:http://www.bonitasoft.org/ns/studio/process">
+                     class="AbstractTimerEvent:http://www.bonitasoft.org/ns/bpm/process">
                   <event
                         name="Set">
                      <feature
@@ -172,7 +172,7 @@
                   {0}
                </message>
                <target
-                     class="CallActivity:http://www.bonitasoft.org/ns/studio/process">
+                     class="CallActivity:http://www.bonitasoft.org/ns/bpm/process">
                </target>
             </constraint>
             <constraint
@@ -187,7 +187,7 @@
                   {0}
                </message>
                <target
-                     class="CallActivity:http://www.bonitasoft.org/ns/studio/process">
+                     class="CallActivity:http://www.bonitasoft.org/ns/bpm/process">
                </target>
             </constraint>
             <constraint
@@ -202,7 +202,7 @@
                   {0}
                </message>
                <target
-                     class="XORGateway:http://www.bonitasoft.org/ns/studio/process">
+                     class="XORGateway:http://www.bonitasoft.org/ns/bpm/process">
                   <event
                         name="Add">
                      <feature
@@ -238,7 +238,7 @@
                   {0}
                </message>
                <target
-                     class="EndErrorEvent:http://www.bonitasoft.org/ns/studio/process">
+                     class="EndErrorEvent:http://www.bonitasoft.org/ns/bpm/process">
                   <event
                         name="Set">
                      <feature
@@ -274,7 +274,7 @@
                   {0}
                </message>
                <target
-                     class="BoundaryEvent:http://www.bonitasoft.org/ns/studio/process">
+                     class="BoundaryEvent:http://www.bonitasoft.org/ns/bpm/process">
                   <event
                         name="Add">
                      <feature
@@ -310,7 +310,7 @@
                   {0}
                </message>
                <target
-                     class="SignalEvent:http://www.bonitasoft.org/ns/studio/process">
+                     class="SignalEvent:http://www.bonitasoft.org/ns/bpm/process">
                   <event
                         name="Set">
                      <feature
@@ -346,7 +346,7 @@
                   {0}
                </message>
                <target
-                     class="SubProcessEvent:http://www.bonitasoft.org/ns/studio/process">
+                     class="SubProcessEvent:http://www.bonitasoft.org/ns/bpm/process">
                </target>
             </constraint>
             <constraint
@@ -361,7 +361,7 @@
                   {0}
                </message>
                <target
-                     class="Message:http://www.bonitasoft.org/ns/studio/process">
+                     class="Message:http://www.bonitasoft.org/ns/bpm/process">
                   <event
                         name="Unset">
                      <feature
@@ -388,7 +388,7 @@
                   %Validation_loopMissingCondition
                </message>
                <target
-                     class="Activity:http://www.bonitasoft.org/ns/studio/process">
+                     class="Activity:http://www.bonitasoft.org/ns/bpm/process">
                   <event
                         name="Set">
                      <feature
@@ -418,7 +418,7 @@
                   
                </description>
                <target
-                     class="Expression:http://www.bonitasoft.org/ns/studio/expression">
+                     class="Expression:http://www.bonitasoft.org/ns/bpm/expression">
                   <event
                         name="Set">
                      <feature
@@ -445,7 +445,7 @@
                   %Validation_nomessage
                </message>
                <target
-                     class="ThrowMessageEvent:http://www.bonitasoft.org/ns/studio/process">
+                     class="ThrowMessageEvent:http://www.bonitasoft.org/ns/bpm/process">
                   <event
                         name="Add">
                      <feature
@@ -482,7 +482,7 @@
                   
                </message>
                <target
-                     class="FlowElement:http://www.bonitasoft.org/ns/studio/process">
+                     class="FlowElement:http://www.bonitasoft.org/ns/bpm/process">
                   <event
                         name="Add">
                      <feature
@@ -518,7 +518,7 @@
                   {0}
                </message>
                <target
-                     class="Pool:http://www.bonitasoft.org/ns/studio/process">
+                     class="Pool:http://www.bonitasoft.org/ns/bpm/process">
                </target>
             </constraint>
             <constraint
@@ -533,13 +533,13 @@
                   {0}
                </message>
                <target
-                     class="FlowElement:http://www.bonitasoft.org/ns/studio/process">
+                     class="FlowElement:http://www.bonitasoft.org/ns/bpm/process">
                </target>
                <target
-                     class="BoundaryEvent:http://www.bonitasoft.org/ns/studio/process">
+                     class="BoundaryEvent:http://www.bonitasoft.org/ns/bpm/process">
                </target>
                  <target
-                     class="SubProcessEvent:http://www.bonitasoft.org/ns/studio/process">
+                     class="SubProcessEvent:http://www.bonitasoft.org/ns/bpm/process">
                </target>
             </constraint>
             <constraint
@@ -554,7 +554,7 @@
                   {0}
                </message>
                <target
-                     class="AbstractCatchMessageEvent:http://www.bonitasoft.org/ns/studio/process">
+                     class="AbstractCatchMessageEvent:http://www.bonitasoft.org/ns/bpm/process">
                   <event
                         name="Unset">
                      <feature
@@ -590,7 +590,7 @@
                   {0}
                </message>
                <target
-                     class="Pool:http://www.bonitasoft.org/ns/studio/process">
+                     class="Pool:http://www.bonitasoft.org/ns/bpm/process">
                </target>
             </constraint>
             <constraint
@@ -605,7 +605,7 @@
                   {0}
                </message>
                <target
-                     class="ThrowLinkEvent:http://www.bonitasoft.org/ns/studio/process">
+                     class="ThrowLinkEvent:http://www.bonitasoft.org/ns/bpm/process">
                   <event
                         name="Set">
                      <feature
@@ -641,7 +641,7 @@
                   {0}
                </message>
                <target
-                     class="CatchLinkEvent:http://www.bonitasoft.org/ns/studio/process">
+                     class="CatchLinkEvent:http://www.bonitasoft.org/ns/bpm/process">
                   <event
                         name="Add">
                      <feature
@@ -677,7 +677,7 @@
                   {0}
                </message>
                <target
-                     class="SequenceFlow:http://www.bonitasoft.org/ns/studio/process">
+                     class="SequenceFlow:http://www.bonitasoft.org/ns/bpm/process">
                </target>
             </constraint>
             <constraint
@@ -693,7 +693,7 @@
                </message>
                <description></description>
                <target
-                     class="Expression:http://www.bonitasoft.org/ns/studio/expression">
+                     class="Expression:http://www.bonitasoft.org/ns/bpm/expression">
                   <event
                         name="Set">
                      <feature
@@ -720,10 +720,10 @@
                   {0}
                </message>
                <target
-                     class="Expression:http://www.bonitasoft.org/ns/studio/expression">
+                     class="Expression:http://www.bonitasoft.org/ns/bpm/expression">
                </target>
                <target
-                     class="Connector:http://www.bonitasoft.org/ns/studio/process">
+                     class="Connector:http://www.bonitasoft.org/ns/bpm/process">
                </target>
             </constraint>
              <constraint
@@ -738,10 +738,10 @@
                   {0}
                </message>
                <target
-                     class="Expression:http://www.bonitasoft.org/ns/studio/expression">
+                     class="Expression:http://www.bonitasoft.org/ns/bpm/expression">
                </target>
                <target
-                     class="Connector:http://www.bonitasoft.org/ns/studio/process">
+                     class="Connector:http://www.bonitasoft.org/ns/bpm/process">
                </target>
             </constraint>
             <constraint
@@ -756,7 +756,7 @@
                   {0}
                </message>
                <target
-                     class="ConnectableElement:http://www.bonitasoft.org/ns/studio/process">
+                     class="ConnectableElement:http://www.bonitasoft.org/ns/bpm/process">
                </target>
             </constraint>
             <constraint
@@ -771,7 +771,7 @@
                   {0}
                </message>
                <target
-                     class="SourceElement:http://www.bonitasoft.org/ns/studio/process">
+                     class="SourceElement:http://www.bonitasoft.org/ns/bpm/process">
                </target>
             </constraint>
             <constraint
@@ -786,7 +786,7 @@
                   {0}
                </message>
                <target
-                     class="Pool:http://www.bonitasoft.org/ns/studio/process">
+                     class="Pool:http://www.bonitasoft.org/ns/bpm/process">
                </target>
             </constraint>
             <constraint
@@ -801,7 +801,7 @@
                   {0}
                </message>
                <target
-                     class="Activity:http://www.bonitasoft.org/ns/studio/process"></target>
+                     class="Activity:http://www.bonitasoft.org/ns/bpm/process"></target>
             </constraint>
             <constraint
                   class="org.bonitasoft.studio.validation.constraints.process.MultiInstanceConstraintInput"
@@ -815,7 +815,7 @@
                   {0}
                </message>
                <target
-                     class="Activity:http://www.bonitasoft.org/ns/studio/process">
+                     class="Activity:http://www.bonitasoft.org/ns/bpm/process">
                </target>
             </constraint>
             <constraint
@@ -831,7 +831,7 @@
                   {0}
                </message>
                <target
-                     class="AbstractCatchMessageEvent:http://www.bonitasoft.org/ns/studio/process">
+                     class="AbstractCatchMessageEvent:http://www.bonitasoft.org/ns/bpm/process">
                   <event
                         name="Unset">
                      <feature
@@ -846,7 +846,7 @@
                   </event>
                </target>
                <target
-                     class="Activity:http://www.bonitasoft.org/ns/studio/process">
+                     class="Activity:http://www.bonitasoft.org/ns/bpm/process">
                   <event
                         name="Unset">
                      <feature
@@ -874,7 +874,7 @@
                   {0}
                </message>
                <target
-                     class="Connector:http://www.bonitasoft.org/ns/studio/process">
+                     class="Connector:http://www.bonitasoft.org/ns/bpm/process">
                       </target>
              </constraint>
               <constraint
@@ -890,7 +890,7 @@
                     {0}
                  </message>
                  <target
-                       class="Connector:http://www.bonitasoft.org/ns/studio/process">
+                       class="Connector:http://www.bonitasoft.org/ns/bpm/process">
                  </target>
               </constraint>
               <constraint
@@ -906,7 +906,7 @@
                     {0}
                  </message>
                  <target
-                       class="Connector:http://www.bonitasoft.org/ns/studio/process">
+                       class="Connector:http://www.bonitasoft.org/ns/bpm/process">
                  </target>
               </constraint>
             <constraint
@@ -922,7 +922,7 @@
                   {0}
                </message>
                <target
-                     class="Operation:http://www.bonitasoft.org/ns/studio/expression">
+                     class="Operation:http://www.bonitasoft.org/ns/bpm/expression">
                </target>
             </constraint>
             <constraint
@@ -938,7 +938,7 @@
                   {0}
                </message>
                <target
-                     class="Operation:http://www.bonitasoft.org/ns/studio/expression">
+                     class="Operation:http://www.bonitasoft.org/ns/bpm/expression">
                </target>
             </constraint>
             <constraint
@@ -954,7 +954,7 @@
                   {0}
                </message>
                <target
-                     class="Connector:http://www.bonitasoft.org/ns/studio/process">
+                     class="Connector:http://www.bonitasoft.org/ns/bpm/process">
                </target>
             </constraint>
               <constraint
@@ -970,7 +970,7 @@
                   {0}
                </message>
                <target
-                     class="Expression:http://www.bonitasoft.org/ns/studio/expression">
+                     class="Expression:http://www.bonitasoft.org/ns/bpm/expression">
                </target>
             </constraint>
             <constraint
@@ -985,7 +985,7 @@
                   {0}
                </message>
                <target
-                     class="MultiInstantiable:http://www.bonitasoft.org/ns/studio/process">
+                     class="MultiInstantiable:http://www.bonitasoft.org/ns/bpm/process">
                </target>
             </constraint>
             <constraint
@@ -1000,7 +1000,7 @@
                   {0}
                </message>
                <target
-                     class="FormMapping:http://www.bonitasoft.org/ns/studio/process">
+                     class="FormMapping:http://www.bonitasoft.org/ns/bpm/process">
                      </target>
              </constraint>
   			 <constraint
@@ -1016,7 +1016,7 @@
                   {0}
                </message>
                <target
-                     class="ContractConstraint:http://www.bonitasoft.org/ns/studio/process">
+                     class="ContractConstraint:http://www.bonitasoft.org/ns/bpm/process">
                </target>
             </constraint>
       <constraint
@@ -1032,7 +1032,7 @@
             {0}
          </message>
          <target
-               class="SequenceFlow:http://www.bonitasoft.org/ns/studio/process">
+               class="SequenceFlow:http://www.bonitasoft.org/ns/bpm/process">
          </target>
       </constraint>
       <constraint
@@ -1047,7 +1047,7 @@
             {0}
          </message>
          <target
-               class="Document:http://www.bonitasoft.org/ns/studio/process">
+               class="Document:http://www.bonitasoft.org/ns/bpm/process">
          </target>
       </constraint>
       <constraint
@@ -1062,7 +1062,7 @@
             {0}
          </message>
          <target
-               class="FormMapping:http://www.bonitasoft.org/ns/studio/process">
+               class="FormMapping:http://www.bonitasoft.org/ns/bpm/process">
          </target>
       </constraint>
       <constraint
@@ -1077,7 +1077,7 @@
             {0}
          </message>
          <target
-               class="Event:http://www.bonitasoft.org/ns/studio/process">
+               class="Event:http://www.bonitasoft.org/ns/bpm/process">
          </target>
       </constraint>
       <constraint
@@ -1092,7 +1092,7 @@
             {0}
          </message>
          <target
-               class="Operator:http://www.bonitasoft.org/ns/studio/expression">
+               class="Operator:http://www.bonitasoft.org/ns/bpm/expression">
          </target>
       </constraint>
       <constraint
@@ -1107,7 +1107,7 @@
             {0}
          </message>
          <target
-               class="Expression:http://www.bonitasoft.org/ns/studio/expression">
+               class="Expression:http://www.bonitasoft.org/ns/bpm/expression">
          </target>
          </constraint>
 		<constraint
@@ -1123,10 +1123,10 @@
             {0}
          </message>
          <target
-               class="Pool:http://www.bonitasoft.org/ns/studio/process">
+               class="Pool:http://www.bonitasoft.org/ns/bpm/process">
          </target>
          <target
-               class="Activity:http://www.bonitasoft.org/ns/studio/process">
+               class="Activity:http://www.bonitasoft.org/ns/bpm/process">
          </target>
       </constraint>
   <constraint
@@ -1142,7 +1142,7 @@
         {0}
      </message>
      <target
-           class="MainProcess:http://www.bonitasoft.org/ns/studio/process">
+           class="MainProcess:http://www.bonitasoft.org/ns/bpm/process">
      </target>
   </constraint>
   <constraint
@@ -1158,7 +1158,7 @@
         {0}
      </message>
      <target
-           class="ContractInput:http://www.bonitasoft.org/ns/studio/process">
+           class="ContractInput:http://www.bonitasoft.org/ns/bpm/process">
      </target>
   </constraint>
   <constraint
@@ -1174,7 +1174,7 @@
         {0}
      </message>
      <target
-           class="Connector:http://www.bonitasoft.org/ns/studio/process">
+           class="Connector:http://www.bonitasoft.org/ns/bpm/process">
      </target>
   </constraint>
   <constraint
@@ -1190,7 +1190,7 @@
         {0}
      </message>
      <target
-           class="Connector:http://www.bonitasoft.org/ns/studio/process">
+           class="Connector:http://www.bonitasoft.org/ns/bpm/process">
      </target>
   </constraint>
   <constraint
@@ -1206,7 +1206,7 @@
         {0}
      </message>
      <target
-           class="Pool:http://www.bonitasoft.org/ns/studio/process">
+           class="Pool:http://www.bonitasoft.org/ns/bpm/process">
      </target>
   </constraint>
   <constraint
@@ -1222,30 +1222,30 @@
         {0}
      </message>
      <target
-           class="Configuration:http://www.bonitasoft.org/ns/studio/configuration">
+           class="Configuration:http://www.bonitasoft.org/ns/bpm/configuration">
      </target>
   </constraint>
          </constraints>
          <package
-               namespaceUri="http://www.bonitasoft.org/ns/studio/process">
+               namespaceUri="http://www.bonitasoft.org/ns/bpm/process">
          </package>
          <package
-               namespaceUri="http://www.bonitasoft.org/ns/studio/form">
+               namespaceUri="http://www.bonitasoft.org/ns/bpm/form">
          </package>
          <package
-               namespaceUri="http://www.bonitasoft.org/ns/studio/kpi">
+               namespaceUri="http://www.bonitasoft.org/ns/bpm/kpi">
          </package>
          <package
-               namespaceUri="http://www.bonitasoft.org/ns/studio/process/simulation">
+               namespaceUri="http://www.bonitasoft.org/ns/bpm/process/simulation">
          </package>
          <package
                namespaceUri="http://www.eclipse.org/gmf/runtime/1.0.2/notation">
          </package>
          <package
-               namespaceUri="http://www.bonitasoft.org/ns/studio/expression">
+               namespaceUri="http://www.bonitasoft.org/ns/bpm/expression">
          </package>
          <package
-               namespaceUri="http://www.bonitasoft.org/ns/studio/configuration">
+               namespaceUri="http://www.bonitasoft.org/ns/bpm/configuration">
          </package>
          <constraints
                categories="org.bonitasoft.studio.validation.constraints.businessobject">
@@ -1262,7 +1262,7 @@
                   {0}
                </message>
                <target
-                     class="BusinessObjectData:http://www.bonitasoft.org/ns/studio/process">
+                     class="BusinessObjectData:http://www.bonitasoft.org/ns/bpm/process">
                </target>
             </constraint>
             <constraint
@@ -1278,7 +1278,7 @@
                   {0}
                </message>
                <target
-                     class="Expression:http://www.bonitasoft.org/ns/studio/expression">
+                     class="Expression:http://www.bonitasoft.org/ns/bpm/expression">
                </target>
             </constraint>
          </constraints>

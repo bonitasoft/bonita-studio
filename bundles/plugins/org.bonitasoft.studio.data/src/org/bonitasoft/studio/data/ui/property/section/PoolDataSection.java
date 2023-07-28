@@ -23,7 +23,7 @@ import org.bonitasoft.studio.data.i18n.Messages;
 import org.bonitasoft.studio.data.ui.property.section.control.BusinessDataViewer;
 import org.bonitasoft.studio.data.ui.property.section.control.DataWizardFactory;
 import org.bonitasoft.studio.data.ui.property.section.control.ProcessDataViewer;
-import org.bonitasoft.studio.model.process.ProcessPackage;
+import org.bonitasoft.bpm.model.process.ProcessPackage;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;

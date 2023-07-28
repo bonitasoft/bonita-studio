@@ -16,7 +16,7 @@
  */
 package org.bonitasoft.studio.properties.sections.iteration;
 
-import org.bonitasoft.studio.model.process.ProcessFactory;
+import org.bonitasoft.bpm.model.process.ProcessFactory;
 
 
 /**

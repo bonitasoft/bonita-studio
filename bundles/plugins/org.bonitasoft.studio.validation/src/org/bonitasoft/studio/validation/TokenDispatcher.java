@@ -21,20 +21,20 @@ import java.util.List;
 
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.model.process.ANDGateway;
-import org.bonitasoft.studio.model.process.Activity;
-import org.bonitasoft.studio.model.process.BoundaryEvent;
-import org.bonitasoft.studio.model.process.CatchLinkEvent;
-import org.bonitasoft.studio.model.process.Connection;
-import org.bonitasoft.studio.model.process.FlowElement;
-import org.bonitasoft.studio.model.process.InclusiveGateway;
-import org.bonitasoft.studio.model.process.NonInterruptingBoundaryTimerEvent;
-import org.bonitasoft.studio.model.process.Pool;
-import org.bonitasoft.studio.model.process.ProcessPackage;
-import org.bonitasoft.studio.model.process.SequenceFlow;
-import org.bonitasoft.studio.model.process.SourceElement;
-import org.bonitasoft.studio.model.process.TargetElement;
-import org.bonitasoft.studio.model.process.ThrowLinkEvent;
+import org.bonitasoft.bpm.model.process.ANDGateway;
+import org.bonitasoft.bpm.model.process.Activity;
+import org.bonitasoft.bpm.model.process.BoundaryEvent;
+import org.bonitasoft.bpm.model.process.CatchLinkEvent;
+import org.bonitasoft.bpm.model.process.Connection;
+import org.bonitasoft.bpm.model.process.FlowElement;
+import org.bonitasoft.bpm.model.process.InclusiveGateway;
+import org.bonitasoft.bpm.model.process.NonInterruptingBoundaryTimerEvent;
+import org.bonitasoft.bpm.model.process.Pool;
+import org.bonitasoft.bpm.model.process.ProcessPackage;
+import org.bonitasoft.bpm.model.process.SequenceFlow;
+import org.bonitasoft.bpm.model.process.SourceElement;
+import org.bonitasoft.bpm.model.process.TargetElement;
+import org.bonitasoft.bpm.model.process.ThrowLinkEvent;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
@@ -120,7 +120,7 @@ public class TokenDispatcher {
     }
 
     private boolean allIncomingTokenSet(final FlowElement sourceFlowElement) {
-        for (final org.bonitasoft.studio.model.process.Connection c : sourceFlowElement.getIncoming()) {
+        for (final org.bonitasoft.bpm.model.process.Connection c : sourceFlowElement.getIncoming()) {
             if (c instanceof SequenceFlow) {
                 final String pathToken = ((SequenceFlow) c).getPathToken();
                 if (pathToken == null || pathToken.isEmpty()) {
@@ -163,7 +163,7 @@ public class TokenDispatcher {
             tagetElement = ((CatchLinkEvent) sourceFlowElement).getFrom().get(0);
         }
         if(tagetElement != null){
-            for(final org.bonitasoft.studio.model.process.Connection c : tagetElement.getIncoming()){
+            for(final org.bonitasoft.bpm.model.process.Connection c : tagetElement.getIncoming()){
                 if(c instanceof SequenceFlow){
                     incomingFlow = (SequenceFlow)c;
                     if (incomingFlow.getPathToken()!=null && !incomingFlow.getPathToken().isEmpty()){
@@ -184,7 +184,7 @@ public class TokenDispatcher {
 
     protected int countOutgoingSequenceFlows(final SourceElement sourceFlowElement) {
         int cpt =0 ;
-        for(final org.bonitasoft.studio.model.process.Connection c : sourceFlowElement.getOutgoing()){
+        for(final org.bonitasoft.bpm.model.process.Connection c : sourceFlowElement.getOutgoing()){
             if(c instanceof SequenceFlow){
                 final TargetElement elem = c.getTarget();
                 if(elem instanceof ThrowLinkEvent){
@@ -212,7 +212,7 @@ public class TokenDispatcher {
 
     protected int countIncomingSequenceFlows(final FlowElement sourceFlowElement) {
         int cpt = 0 ;
-        for(final org.bonitasoft.studio.model.process.Connection c : sourceFlowElement.getIncoming()){
+        for(final org.bonitasoft.bpm.model.process.Connection c : sourceFlowElement.getIncoming()){
             if(c instanceof SequenceFlow){
                 final SourceElement elem = c.getSource();
                 if(elem instanceof CatchLinkEvent){
@@ -238,7 +238,7 @@ public class TokenDispatcher {
 
     protected boolean sameTokenForAllIncomingFlows(final FlowElement sourceFlowElement) {
         String lastToken = null;
-        for (final org.bonitasoft.studio.model.process.Connection c : sourceFlowElement.getIncoming()) {
+        for (final org.bonitasoft.bpm.model.process.Connection c : sourceFlowElement.getIncoming()) {
             if (c instanceof SequenceFlow) {
                 final String pathToken = ((SequenceFlow) c).getPathToken();
                 if (lastToken != null && pathToken != null && !pathToken.equals(lastToken)) {

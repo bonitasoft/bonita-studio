@@ -22,7 +22,7 @@ import java.util.List;
 
 import org.bonitasoft.studio.common.BonitaConstants;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
-import org.bonitasoft.studio.model.process.XMLData;
+import org.bonitasoft.bpm.model.process.XMLData;
 import org.bonitasoft.studio.xml.Messages;
 import org.bonitasoft.studio.xml.repository.XSDRepositoryStore;
 import org.bonitasoft.studio.xml.ui.XSDContentProvider.Append;

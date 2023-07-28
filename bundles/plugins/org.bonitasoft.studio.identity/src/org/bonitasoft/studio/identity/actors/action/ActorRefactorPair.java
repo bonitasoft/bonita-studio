@@ -14,7 +14,7 @@
  */
 package org.bonitasoft.studio.identity.actors.action;
 
-import org.bonitasoft.studio.model.process.Actor;
+import org.bonitasoft.bpm.model.process.Actor;
 import org.bonitasoft.studio.refactoring.core.RefactorPair;
 
 public class ActorRefactorPair extends RefactorPair<Actor, Actor> {

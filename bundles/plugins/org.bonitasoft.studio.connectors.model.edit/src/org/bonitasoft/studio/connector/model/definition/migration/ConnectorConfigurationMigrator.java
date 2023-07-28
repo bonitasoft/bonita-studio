@@ -17,9 +17,9 @@ package org.bonitasoft.studio.connector.model.definition.migration;
 import java.util.Objects;
 import java.util.Optional;
 
-import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
-import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration;
-import org.bonitasoft.studio.model.process.Connector;
+import org.bonitasoft.bpm.connector.model.definition.ConnectorDefinition;
+import org.bonitasoft.bpm.model.connectorconfiguration.ConnectorConfiguration;
+import org.bonitasoft.bpm.model.process.Connector;
 
 public class ConnectorConfigurationMigrator {
 

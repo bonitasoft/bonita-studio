@@ -15,16 +15,16 @@
 package org.bonitasoft.studio.validation.constraints;
 
 import static org.bonitasoft.studio.assertions.StatusAssert.assertThat;
-import static org.bonitasoft.studio.model.expression.builders.ExpressionBuilder.aConstantExpression;
-import static org.bonitasoft.studio.model.expression.builders.ExpressionBuilder.aVariableExpression;
-import static org.bonitasoft.studio.model.process.builders.DataBuilder.aData;
+import static org.bonitasoft.bpm.model.expression.builders.ExpressionBuilder.aConstantExpression;
+import static org.bonitasoft.bpm.model.expression.builders.ExpressionBuilder.aVariableExpression;
+import static org.bonitasoft.bpm.model.process.builders.DataBuilder.aData;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import org.bonitasoft.studio.expression.editor.provider.ExpressionTypeLabelProvider;
-import org.bonitasoft.studio.model.expression.Expression;
+import org.bonitasoft.bpm.model.expression.Expression;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.validation.IValidationContext;

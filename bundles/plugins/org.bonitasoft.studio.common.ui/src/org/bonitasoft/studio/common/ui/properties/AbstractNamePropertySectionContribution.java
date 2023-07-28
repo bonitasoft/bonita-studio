@@ -16,12 +16,12 @@ package org.bonitasoft.studio.common.ui.properties;
 
 import org.bonitasoft.studio.common.Messages;
 import org.bonitasoft.studio.common.ui.widgets.GTKStyleHandler;
-import org.bonitasoft.studio.model.process.Element;
-import org.bonitasoft.studio.model.process.MainProcess;
-import org.bonitasoft.studio.model.process.MessageFlow;
-import org.bonitasoft.studio.model.process.Pool;
-import org.bonitasoft.studio.model.process.SequenceFlow;
-import org.bonitasoft.studio.model.process.TextAnnotation;
+import org.bonitasoft.bpm.model.process.Element;
+import org.bonitasoft.bpm.model.process.MainProcess;
+import org.bonitasoft.bpm.model.process.MessageFlow;
+import org.bonitasoft.bpm.model.process.Pool;
+import org.bonitasoft.bpm.model.process.SequenceFlow;
+import org.bonitasoft.bpm.model.process.TextAnnotation;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;

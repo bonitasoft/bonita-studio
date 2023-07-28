@@ -19,8 +19,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.connector.model.implementation.ConnectorImplementationFactory;
-import org.bonitasoft.studio.connector.model.implementation.DocumentRoot;
+import org.bonitasoft.bpm.connector.model.implementation.ConnectorImplementationFactory;
+import org.bonitasoft.bpm.connector.model.implementation.DocumentRoot;
 import org.eclipse.e4.core.di.annotations.Creatable;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;

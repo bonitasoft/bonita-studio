@@ -18,7 +18,7 @@ import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.verify;
 
-import org.bonitasoft.studio.model.process.ContractConstraint;
+import org.bonitasoft.bpm.model.process.ContractConstraint;
 import org.bonitasoft.studio.swt.rules.RealmWithDisplay;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.wizard.WizardDialog;

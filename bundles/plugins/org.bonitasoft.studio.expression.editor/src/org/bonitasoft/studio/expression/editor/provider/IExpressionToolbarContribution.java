@@ -18,7 +18,7 @@
 package org.bonitasoft.studio.expression.editor.provider;
 
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
-import org.bonitasoft.studio.model.expression.Expression;
+import org.bonitasoft.bpm.model.expression.Expression;
 import org.eclipse.jface.action.IContributionItem;
 
 /**

@@ -25,7 +25,6 @@ import org.bonitasoft.studio.common.repository.core.DatabaseHandler;
 import org.bonitasoft.studio.common.repository.core.ProjectDependenciesStore;
 import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
 import org.bonitasoft.studio.common.repository.core.migration.report.MigrationReport;
-import org.bonitasoft.studio.common.repository.migration.ProcessModelTransformation;
 import org.bonitasoft.studio.common.repository.store.LocalDependenciesStore;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -54,7 +53,7 @@ public interface IRepository extends IFileStoreChangeListener, IJavaContainer {
     IRepository open(IProgressMonitor monitor);
 
     void close(IProgressMonitor monitor);
-    
+
     <T> T getRepositoryStore(final Class<T> repositoryStoreClass);
 
     Optional<IRepositoryStore<? extends IRepositoryFileStore>> getRepositoryStoreByName(String storeName);
@@ -87,23 +86,21 @@ public interface IRepository extends IFileStoreChangeListener, IJavaContainer {
 
     void addProjectListener(IBonitaProjectListener listener);
 
-    List<ProcessModelTransformation> getProcessModelTransformations();
-    
     LocalDependenciesStore getLocalDependencyStore();
 
-    void rename(String name, IProgressMonitor monitor) 
+    void rename(String name, IProgressMonitor monitor)
             throws InvocationTargetException, InterruptedException;
-    
+
     boolean closeAllEditors(boolean save);
-    
+
     String getBonitaRuntimeVersion();
 
     List<IBonitaProjectListener> getProjectListeners();
-    
+
     void disableOpenIntroListener();
-    
+
     boolean isOpenIntroListenerEnabled();
 
     String getProjectId();
-    
+
 }

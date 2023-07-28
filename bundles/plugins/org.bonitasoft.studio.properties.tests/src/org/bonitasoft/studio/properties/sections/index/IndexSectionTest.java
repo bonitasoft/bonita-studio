@@ -16,7 +16,7 @@ package org.bonitasoft.studio.properties.sections.index;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.bpm.model.util.ExpressionConstants;
 import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFilter;
 import org.bonitasoft.studio.swt.rules.RealmWithDisplay;
 import org.junit.Rule;

@@ -19,7 +19,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.bonitasoft.studio.common.emf.tools.EMFModelUpdater;
-import org.bonitasoft.studio.model.configuration.Configuration;
+import org.bonitasoft.bpm.model.configuration.Configuration;
 import org.eclipse.e4.core.di.annotations.Creatable;
 import org.eclipse.emf.ecore.resource.Resource;
 

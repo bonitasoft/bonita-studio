@@ -15,10 +15,10 @@
 package org.bonitasoft.studio.engine.export.expression.converter.comparison;
 
 import org.bonitasoft.engine.expression.InvalidExpressionException;
-import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.bpm.model.util.ExpressionConstants;
 import org.bonitasoft.studio.engine.export.EngineExpressionUtil;
 import org.bonitasoft.studio.engine.export.expression.converter.IExpressionConverter;
-import org.bonitasoft.studio.model.expression.Expression;
+import org.bonitasoft.bpm.model.expression.Expression;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 
 public class ComparisonExpressionConverter implements IExpressionConverter {

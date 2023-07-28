@@ -22,24 +22,24 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import org.bonitasoft.bpm.connector.model.definition.Array;
+import org.bonitasoft.bpm.connector.model.definition.Component;
+import org.bonitasoft.bpm.connector.model.definition.ConnectorDefinition;
+import org.bonitasoft.bpm.connector.model.definition.ConnectorDefinitionFactory;
+import org.bonitasoft.bpm.connector.model.definition.ConnectorDefinitionPackage;
+import org.bonitasoft.bpm.connector.model.definition.Group;
+import org.bonitasoft.bpm.connector.model.definition.Input;
+import org.bonitasoft.bpm.connector.model.definition.Orientation;
+import org.bonitasoft.bpm.connector.model.definition.Page;
+import org.bonitasoft.bpm.connector.model.definition.RadioGroup;
+import org.bonitasoft.bpm.connector.model.definition.ScriptEditor;
+import org.bonitasoft.bpm.connector.model.definition.Select;
+import org.bonitasoft.bpm.connector.model.definition.Widget;
+import org.bonitasoft.bpm.connector.model.definition.WidgetComponent;
 import org.bonitasoft.studio.common.FileUtil;
 import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.ui.jface.databinding.DialogSupport;
-import org.bonitasoft.studio.connector.model.definition.Array;
-import org.bonitasoft.studio.connector.model.definition.Component;
-import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
-import org.bonitasoft.studio.connector.model.definition.ConnectorDefinitionFactory;
-import org.bonitasoft.studio.connector.model.definition.ConnectorDefinitionPackage;
-import org.bonitasoft.studio.connector.model.definition.Group;
-import org.bonitasoft.studio.connector.model.definition.Input;
-import org.bonitasoft.studio.connector.model.definition.Orientation;
-import org.bonitasoft.studio.connector.model.definition.Page;
-import org.bonitasoft.studio.connector.model.definition.RadioGroup;
-import org.bonitasoft.studio.connector.model.definition.ScriptEditor;
-import org.bonitasoft.studio.connector.model.definition.Select;
-import org.bonitasoft.studio.connector.model.definition.Widget;
-import org.bonitasoft.studio.connector.model.definition.WidgetComponent;
 import org.bonitasoft.studio.connector.model.definition.dialog.suport.CaptionEditingSupport;
 import org.bonitasoft.studio.connector.model.definition.dialog.suport.RadioGroupItemEditingSupport;
 import org.bonitasoft.studio.connector.model.definition.dialog.suport.SelectItemEditingSupport;
@@ -150,7 +150,8 @@ public class SelectPageWidgetDialog extends Dialog {
             }
 
         }
-        if (original != null && original instanceof WidgetComponent && ((WidgetComponent) original).getInputName() != null) {
+        if (original != null && original instanceof WidgetComponent
+                && ((WidgetComponent) original).getInputName() != null) {
             alreadyBoundInputs.remove(((WidgetComponent) original).getInputName());
         }
         orientations = new ArrayList<Orientation>();
@@ -466,11 +467,11 @@ public class SelectPageWidgetDialog extends Dialog {
         showDocumentButton.setText(Messages.showDocuments);
         showDocumentButton.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 
-        if (widget instanceof org.bonitasoft.studio.connector.model.definition.Text) {
+        if (widget instanceof org.bonitasoft.bpm.connector.model.definition.Text) {
             context.bindValue(SWTObservables.observeSelection(showDocumentButton),
                     EMFObservables.observeValue(widget,
                             ConnectorDefinitionPackage.Literals.TEXT__SHOW_DOCUMENTS));
-        } else if (widget instanceof org.bonitasoft.studio.connector.model.definition.List) {
+        } else if (widget instanceof org.bonitasoft.bpm.connector.model.definition.List) {
             context.bindValue(SWTObservables.observeSelection(showDocumentButton),
                     EMFObservables.observeValue(widget,
                             ConnectorDefinitionPackage.Literals.LIST__SHOW_DOCUMENTS));

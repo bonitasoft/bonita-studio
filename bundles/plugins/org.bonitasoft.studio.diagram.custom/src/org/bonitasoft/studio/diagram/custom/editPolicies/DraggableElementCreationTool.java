@@ -22,7 +22,7 @@ import java.util.stream.Stream;
 
 import org.bonitasoft.studio.common.diagram.tools.FiguresHelper;
 import org.bonitasoft.studio.common.gmf.tools.GMFTools;
-import org.bonitasoft.studio.model.process.SubProcessEvent;
+import org.bonitasoft.bpm.model.process.SubProcessEvent;
 import org.bonitasoft.studio.model.process.diagram.edit.commands.SequenceFlowCreateCommand;
 import org.bonitasoft.studio.model.process.diagram.edit.commands.TextAnnotationAttachmentCreateCommand;
 import org.bonitasoft.studio.model.process.diagram.providers.ProcessElementTypes;

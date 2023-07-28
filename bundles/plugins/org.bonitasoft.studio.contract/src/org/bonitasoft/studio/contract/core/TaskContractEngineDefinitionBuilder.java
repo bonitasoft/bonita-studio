@@ -16,7 +16,7 @@ package org.bonitasoft.studio.contract.core;
 
 import org.bonitasoft.engine.bpm.process.impl.ContractDefinitionBuilder;
 import org.bonitasoft.engine.bpm.process.impl.UserTaskDefinitionBuilder;
-import org.bonitasoft.studio.model.process.Task;
+import org.bonitasoft.bpm.model.process.Task;
 import org.eclipse.emf.ecore.EObject;
 
 

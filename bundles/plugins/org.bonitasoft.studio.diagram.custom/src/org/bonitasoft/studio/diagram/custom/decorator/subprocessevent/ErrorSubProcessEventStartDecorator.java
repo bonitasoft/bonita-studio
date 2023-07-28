@@ -19,7 +19,7 @@ package org.bonitasoft.studio.diagram.custom.decorator.subprocessevent;
 
 import org.bonitasoft.studio.common.diagram.tools.FiguresHelper;
 import org.bonitasoft.studio.common.figures.DecoratorSVGFigure;
-import org.bonitasoft.studio.model.process.StartErrorEvent;
+import org.bonitasoft.bpm.model.process.StartErrorEvent;
 import org.eclipse.gmf.runtime.diagram.ui.services.decorator.IDecoratorTarget;
 
 /**

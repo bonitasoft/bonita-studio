@@ -21,11 +21,11 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.Mockito.doCallRealMethod;
 
-import org.bonitasoft.studio.model.expression.builders.ExpressionBuilder;
-import org.bonitasoft.studio.model.process.Document;
-import org.bonitasoft.studio.model.process.DocumentType;
-import org.bonitasoft.studio.model.process.builders.ContractInputBuilder;
-import org.bonitasoft.studio.model.process.builders.DocumentBuilder;
+import org.bonitasoft.bpm.model.expression.builders.ExpressionBuilder;
+import org.bonitasoft.bpm.model.process.Document;
+import org.bonitasoft.bpm.model.process.DocumentType;
+import org.bonitasoft.bpm.model.process.builders.ContractInputBuilder;
+import org.bonitasoft.bpm.model.process.builders.DocumentBuilder;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

@@ -25,6 +25,11 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import org.bonitasoft.bpm.connector.model.implementation.ConnectorImplementation;
+import org.bonitasoft.bpm.connector.model.implementation.ConnectorImplementationFactory;
+import org.bonitasoft.bpm.connector.model.implementation.util.ConnectorImplementationAdapterFactory;
+import org.bonitasoft.bpm.connector.model.implementation.util.ConnectorImplementationResourceImpl;
+import org.bonitasoft.bpm.connector.model.implementation.util.ConnectorImplementationXMLProcessor;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.filestore.EMFFileStore;
@@ -32,9 +37,6 @@ import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.common.repository.store.AbstractEMFRepositoryStore;
-import org.bonitasoft.studio.connector.model.implementation.util.ConnectorImplementationAdapterFactory;
-import org.bonitasoft.studio.connector.model.implementation.util.ConnectorImplementationResourceImpl;
-import org.bonitasoft.studio.connector.model.implementation.util.ConnectorImplementationXMLProcessor;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -119,10 +121,10 @@ public abstract class AbstractConnectorImplRepositoryStore<T extends EMFFileStor
                 final ConnectorImplementationResourceImpl r = (ConnectorImplementationResourceImpl) rSet.getResources()
                         .get(0);
                 final Resource resource = new XMLResourceImpl(resourceURI);
-                final org.bonitasoft.studio.connector.model.implementation.DocumentRoot root = ConnectorImplementationFactory.eINSTANCE
+                final org.bonitasoft.bpm.connector.model.implementation.DocumentRoot root = ConnectorImplementationFactory.eINSTANCE
                         .createDocumentRoot();
                 final ConnectorImplementation definition = EcoreUtil
-                        .copy(((org.bonitasoft.studio.connector.model.implementation.DocumentRoot) r.getContents()
+                        .copy(((org.bonitasoft.bpm.connector.model.implementation.DocumentRoot) r.getContents()
                                 .get(0)).getConnectorImplementation());
                 root.setConnectorImplementation(definition);
                 resource.getContents().add(root);

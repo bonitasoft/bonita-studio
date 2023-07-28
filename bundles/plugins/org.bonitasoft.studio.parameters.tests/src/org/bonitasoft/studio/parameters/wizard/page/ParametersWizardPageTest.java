@@ -19,8 +19,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.bonitasoft.studio.model.parameter.Parameter;
-import org.bonitasoft.studio.model.parameter.ParameterFactory;
+import org.bonitasoft.bpm.model.parameter.Parameter;
+import org.bonitasoft.bpm.model.parameter.ParameterFactory;
 import org.bonitasoft.studio.parameters.i18n.Messages;
 import org.junit.After;
 import org.junit.Before;

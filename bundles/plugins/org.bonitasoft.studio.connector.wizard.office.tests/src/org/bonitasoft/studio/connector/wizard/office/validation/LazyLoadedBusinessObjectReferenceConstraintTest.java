@@ -16,21 +16,21 @@
  */
 package org.bonitasoft.studio.connector.wizard.office.validation;
 
-import static org.bonitasoft.studio.model.expression.builders.ExpressionBuilder.aConstantExpression;
-import static org.bonitasoft.studio.model.expression.builders.ExpressionBuilder.aVariableExpression;
-import static org.bonitasoft.studio.model.expression.builders.ListExpressionBuilder.aListExpression;
-import static org.bonitasoft.studio.model.expression.builders.TableExpressionBuilder.aTableExpression;
-import static org.bonitasoft.studio.model.process.builders.BusinessObjectDataBuilder.aBusinessData;
-import static org.bonitasoft.studio.model.process.builders.ConnectorBuilder.aConnector;
+import static org.bonitasoft.bpm.model.expression.builders.ExpressionBuilder.aConstantExpression;
+import static org.bonitasoft.bpm.model.expression.builders.ExpressionBuilder.aVariableExpression;
+import static org.bonitasoft.bpm.model.expression.builders.ListExpressionBuilder.aListExpression;
+import static org.bonitasoft.bpm.model.expression.builders.TableExpressionBuilder.aTableExpression;
+import static org.bonitasoft.bpm.model.process.builders.BusinessObjectDataBuilder.aBusinessData;
+import static org.bonitasoft.bpm.model.process.builders.ConnectorBuilder.aConnector;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.verify;
 
-import org.bonitasoft.studio.model.connectorconfiguration.builders.ConnectorConfigurationBuilder;
-import org.bonitasoft.studio.model.connectorconfiguration.builders.ConnectorParameterBuilder;
-import org.bonitasoft.studio.model.expression.builders.TableExpressionBuilder;
-import org.bonitasoft.studio.model.process.Connector;
-import org.bonitasoft.studio.model.process.ProcessFactory;
+import org.bonitasoft.bpm.model.connectorconfiguration.builders.ConnectorConfigurationBuilder;
+import org.bonitasoft.bpm.model.connectorconfiguration.builders.ConnectorParameterBuilder;
+import org.bonitasoft.bpm.model.expression.builders.TableExpressionBuilder;
+import org.bonitasoft.bpm.model.process.Connector;
+import org.bonitasoft.bpm.model.process.ProcessFactory;
 import org.eclipse.emf.validation.IValidationContext;
 import org.junit.Before;
 import org.junit.Test;

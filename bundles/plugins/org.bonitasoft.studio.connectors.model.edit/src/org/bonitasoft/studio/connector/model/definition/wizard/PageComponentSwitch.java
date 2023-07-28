@@ -18,34 +18,34 @@ package org.bonitasoft.studio.connector.model.definition.wizard;
 
 import java.util.ArrayList;
 
-import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.bpm.model.util.ExpressionConstants;
 import org.bonitasoft.studio.common.IBonitaVariableContext;
 import org.bonitasoft.studio.common.repository.provider.ExtendedConnectorDefinition;
-import org.bonitasoft.studio.connector.model.definition.Array;
-import org.bonitasoft.studio.connector.model.definition.Checkbox;
-import org.bonitasoft.studio.connector.model.definition.Component;
-import org.bonitasoft.studio.connector.model.definition.Group;
-import org.bonitasoft.studio.connector.model.definition.Input;
-import org.bonitasoft.studio.connector.model.definition.List;
-import org.bonitasoft.studio.connector.model.definition.Password;
-import org.bonitasoft.studio.connector.model.definition.RadioGroup;
-import org.bonitasoft.studio.connector.model.definition.ScriptEditor;
-import org.bonitasoft.studio.connector.model.definition.Select;
-import org.bonitasoft.studio.connector.model.definition.Text;
-import org.bonitasoft.studio.connector.model.definition.TextArea;
-import org.bonitasoft.studio.connector.model.definition.WidgetComponent;
-import org.bonitasoft.studio.connector.model.definition.util.ConnectorDefinitionSwitch;
+import org.bonitasoft.bpm.connector.model.definition.Array;
+import org.bonitasoft.bpm.connector.model.definition.Checkbox;
+import org.bonitasoft.bpm.connector.model.definition.Component;
+import org.bonitasoft.bpm.connector.model.definition.Group;
+import org.bonitasoft.bpm.connector.model.definition.Input;
+import org.bonitasoft.bpm.connector.model.definition.List;
+import org.bonitasoft.bpm.connector.model.definition.Password;
+import org.bonitasoft.bpm.connector.model.definition.RadioGroup;
+import org.bonitasoft.bpm.connector.model.definition.ScriptEditor;
+import org.bonitasoft.bpm.connector.model.definition.Select;
+import org.bonitasoft.bpm.connector.model.definition.Text;
+import org.bonitasoft.bpm.connector.model.definition.TextArea;
+import org.bonitasoft.bpm.connector.model.definition.WidgetComponent;
+import org.bonitasoft.bpm.connector.model.definition.util.ConnectorDefinitionSwitch;
 import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFilter;
 import org.bonitasoft.studio.expression.editor.pattern.PatternExpressionViewer;
 import org.bonitasoft.studio.expression.editor.viewer.CheckBoxExpressionViewer;
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionCollectionViewer;
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
-import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration;
-import org.bonitasoft.studio.model.expression.AbstractExpression;
-import org.bonitasoft.studio.model.expression.Expression;
-import org.bonitasoft.studio.model.expression.ExpressionFactory;
-import org.bonitasoft.studio.model.expression.ListExpression;
-import org.bonitasoft.studio.model.expression.TableExpression;
+import org.bonitasoft.bpm.model.connectorconfiguration.ConnectorConfiguration;
+import org.bonitasoft.bpm.model.expression.AbstractExpression;
+import org.bonitasoft.bpm.model.expression.Expression;
+import org.bonitasoft.bpm.model.expression.ExpressionFactory;
+import org.bonitasoft.bpm.model.expression.ListExpression;
+import org.bonitasoft.bpm.model.expression.TableExpression;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -261,7 +261,7 @@ public class PageComponentSwitch extends ConnectorDefinitionSwitch<Component> im
         if( widget instanceof Array){
             final TableExpression expression = ExpressionFactory.eINSTANCE.createTableExpression() ;
             return expression ;
-        }else if( widget instanceof org.bonitasoft.studio.connector.model.definition.List){
+        }else if( widget instanceof org.bonitasoft.bpm.connector.model.definition.List){
             final ListExpression expression = ExpressionFactory.eINSTANCE.createListExpression() ;
             return expression ;
         }else{

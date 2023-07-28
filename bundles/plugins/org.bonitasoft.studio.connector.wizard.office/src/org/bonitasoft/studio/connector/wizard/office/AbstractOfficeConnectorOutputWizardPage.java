@@ -18,16 +18,16 @@ package org.bonitasoft.studio.connector.wizard.office;
 
 import java.util.Objects;
 
-import org.bonitasoft.studio.connector.model.definition.Component;
-import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
-import org.bonitasoft.studio.connector.model.definition.Page;
-import org.bonitasoft.studio.connector.model.definition.Widget;
+import org.bonitasoft.bpm.connector.model.definition.Component;
+import org.bonitasoft.bpm.connector.model.definition.ConnectorDefinition;
+import org.bonitasoft.bpm.connector.model.definition.Page;
+import org.bonitasoft.bpm.connector.model.definition.Widget;
 import org.bonitasoft.studio.connector.model.definition.wizard.PageComponentSwitch;
 import org.bonitasoft.studio.connector.model.definition.wizard.PageComponentSwitchBuilder;
 import org.bonitasoft.studio.connector.wizard.office.i18n.Messages;
 import org.bonitasoft.studio.connectors.ui.wizard.ConnectorAvailableExpressionTypeFilter;
 import org.bonitasoft.studio.connectors.ui.wizard.page.ConnectorOutputWizardPage;
-import org.bonitasoft.studio.model.process.Connector;
+import org.bonitasoft.bpm.model.process.Connector;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.jface.layout.GridDataFactory;

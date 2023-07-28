@@ -29,10 +29,10 @@ import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.extension.BARResourcesProvider;
 import org.bonitasoft.studio.document.core.repository.DocumentFileStore;
 import org.bonitasoft.studio.document.core.repository.DocumentRepositoryStore;
-import org.bonitasoft.studio.model.configuration.Configuration;
-import org.bonitasoft.studio.model.process.AbstractProcess;
-import org.bonitasoft.studio.model.process.Document;
-import org.bonitasoft.studio.model.process.Pool;
+import org.bonitasoft.bpm.model.configuration.Configuration;
+import org.bonitasoft.bpm.model.process.AbstractProcess;
+import org.bonitasoft.bpm.model.process.Document;
+import org.bonitasoft.bpm.model.process.Pool;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 
@@ -48,7 +48,7 @@ public class DocumentBarResourceProvider implements BARResourcesProvider {
             final DocumentRepositoryStore store = RepositoryManager.getInstance()
                     .getRepositoryStore(DocumentRepositoryStore.class);
             for (final Document document : documents) {
-                if (document.getDocumentType().equals(org.bonitasoft.studio.model.process.DocumentType.INTERNAL)) {
+                if (document.getDocumentType().equals(org.bonitasoft.bpm.model.process.DocumentType.INTERNAL)) {
                     final String documentID = document.getDefaultValueIdOfDocumentStore();
                     if (documentID != null) {
                         final DocumentFileStore artifact = store.getChild(documentID, true);

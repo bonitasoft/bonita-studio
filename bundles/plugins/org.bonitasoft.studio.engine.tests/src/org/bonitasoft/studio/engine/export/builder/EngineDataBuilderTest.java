@@ -16,8 +16,8 @@ package org.bonitasoft.studio.engine.export.builder;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
-import static org.bonitasoft.studio.model.expression.builders.ExpressionBuilder.aGroovyScriptExpression;
-import static org.bonitasoft.studio.model.process.builders.BusinessObjectDataBuilder.aBusinessData;
+import static org.bonitasoft.bpm.model.expression.builders.ExpressionBuilder.aGroovyScriptExpression;
+import static org.bonitasoft.bpm.model.process.builders.BusinessObjectDataBuilder.aBusinessData;
 
 import java.util.List;
 
@@ -25,7 +25,7 @@ import org.bonitasoft.engine.bpm.businessdata.BusinessDataDefinition;
 import org.bonitasoft.engine.bpm.flownode.FlowElementContainerDefinition;
 import org.bonitasoft.engine.bpm.process.impl.ProcessDefinitionBuilder;
 import org.bonitasoft.studio.engine.export.EngineExpressionUtil;
-import org.bonitasoft.studio.model.process.BusinessObjectData;
+import org.bonitasoft.bpm.model.process.BusinessObjectData;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -44,7 +44,7 @@ public class EngineDataBuilderTest {
 
     /**
      * Test method for
-     * {@link org.bonitasoft.studio.engine.ex.exporter.switcher.DataSwitchEx#caseBusinessObjectData(org.bonitasoft.studio.model.process.BusinessObjectData)}.
+     * {@link org.bonitasoft.studio.engine.ex.exporter.switcher.DataSwitchEx#caseBusinessObjectData(org.bonitasoft.bpm.model.process.BusinessObjectData)}.
      */
     @Test
     public void shouldCaseBusinessObjecType_addBusinessObjectDataInProcessDefinition() throws Exception {

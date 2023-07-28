@@ -20,7 +20,7 @@ import java.util.Collections;
 
 import org.bonitasoft.studio.common.editingdomain.transaction.AlwaysValidEMFOperationTransaction;
 import org.bonitasoft.studio.common.editingdomain.transaction.AlwaysValidTriggerCommandTransaction;
-import org.bonitasoft.studio.model.process.util.ProcessAdapterFactory;
+import org.bonitasoft.bpm.model.process.util.ProcessAdapterFactory;
 import org.eclipse.core.commands.operations.DefaultOperationHistory;
 import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.transaction.impl.EMFCommandTransaction;

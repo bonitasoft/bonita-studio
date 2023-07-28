@@ -15,9 +15,9 @@
 package org.bonitasoft.studio.common.gmf.tools.tree.selection.provider.process;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.bonitasoft.studio.model.process.builders.ActorFilterBuilder.anActorFilter;
-import static org.bonitasoft.studio.model.process.builders.ConnectorBuilder.aConnector;
-import static org.bonitasoft.studio.model.process.builders.TaskBuilder.aTask;
+import static org.bonitasoft.bpm.model.process.builders.ActorFilterBuilder.anActorFilter;
+import static org.bonitasoft.bpm.model.process.builders.ConnectorBuilder.aConnector;
+import static org.bonitasoft.bpm.model.process.builders.TaskBuilder.aTask;
 
 import org.bonitasoft.engine.bpm.connector.ConnectorEvent;
 import org.junit.Test;

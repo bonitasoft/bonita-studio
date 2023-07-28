@@ -14,10 +14,10 @@
  */
 package org.bonitasoft.studio.designer.core.bar;
 
-import org.bonitasoft.studio.model.process.Element;
-import org.bonitasoft.studio.model.process.FormMapping;
-import org.bonitasoft.studio.model.process.ProcessPackage;
-import org.bonitasoft.studio.model.process.Task;
+import org.bonitasoft.bpm.model.process.Element;
+import org.bonitasoft.bpm.model.process.FormMapping;
+import org.bonitasoft.bpm.model.process.ProcessPackage;
+import org.bonitasoft.bpm.model.process.Task;
 
 public abstract class FormMappingException extends Exception {
 

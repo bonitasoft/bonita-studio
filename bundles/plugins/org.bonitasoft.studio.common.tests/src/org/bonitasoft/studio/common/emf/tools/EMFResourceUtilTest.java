@@ -21,7 +21,7 @@ import java.io.File;
 import java.io.InputStream;
 import java.nio.file.Files;
 
-import org.bonitasoft.studio.model.process.ProcessPackage;
+import org.bonitasoft.bpm.model.process.ProcessPackage;
 import org.eclipse.core.runtime.FileLocator;
 import org.junit.After;
 import org.junit.Before;

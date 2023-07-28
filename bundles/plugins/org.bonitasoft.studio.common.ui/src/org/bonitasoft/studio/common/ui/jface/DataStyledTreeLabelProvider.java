@@ -20,8 +20,8 @@ import java.util.Set;
 
 import org.bonitasoft.studio.common.Messages;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
-import org.bonitasoft.studio.model.process.Data;
-import org.bonitasoft.studio.model.process.JavaObjectData;
+import org.bonitasoft.bpm.model.process.Data;
+import org.bonitasoft.bpm.model.process.JavaObjectData;
 import org.eclipse.core.databinding.observable.map.IMapChangeListener;
 import org.eclipse.core.databinding.observable.map.IObservableMap;
 import org.eclipse.core.databinding.observable.map.MapChangeEvent;

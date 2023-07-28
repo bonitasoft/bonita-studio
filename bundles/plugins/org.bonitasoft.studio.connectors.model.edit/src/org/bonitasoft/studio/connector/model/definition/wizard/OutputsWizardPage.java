@@ -20,10 +20,10 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.bonitasoft.studio.common.NamingUtils;
-import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
-import org.bonitasoft.studio.connector.model.definition.ConnectorDefinitionFactory;
-import org.bonitasoft.studio.connector.model.definition.ConnectorDefinitionPackage;
-import org.bonitasoft.studio.connector.model.definition.Output;
+import org.bonitasoft.bpm.connector.model.definition.ConnectorDefinition;
+import org.bonitasoft.bpm.connector.model.definition.ConnectorDefinitionFactory;
+import org.bonitasoft.bpm.connector.model.definition.ConnectorDefinitionPackage;
+import org.bonitasoft.bpm.connector.model.definition.Output;
 import org.bonitasoft.studio.connector.model.definition.wizard.support.OutputNameEditingSupport;
 import org.bonitasoft.studio.connector.model.definition.wizard.support.OutputTypeEditingSupport;
 import org.bonitasoft.studio.connector.model.i18n.Messages;

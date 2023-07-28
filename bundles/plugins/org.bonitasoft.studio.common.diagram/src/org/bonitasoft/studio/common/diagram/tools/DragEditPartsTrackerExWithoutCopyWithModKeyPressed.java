@@ -17,7 +17,7 @@
  */
 package org.bonitasoft.studio.common.diagram.tools;
 
-import org.bonitasoft.studio.model.process.SubProcessEvent;
+import org.bonitasoft.bpm.model.process.SubProcessEvent;
 import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.gef.EditPart;

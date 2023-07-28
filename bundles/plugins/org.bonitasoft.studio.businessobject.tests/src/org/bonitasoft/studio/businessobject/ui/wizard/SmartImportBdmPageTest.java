@@ -123,7 +123,8 @@ public class SmartImportBdmPageTest {
         BusinessObjectModelRepositoryStore repositoryStore = mock(BusinessObjectModelRepositoryStore.class);
         when(repositoryStore.getChild("bom.xml", true)).thenReturn(existingBdm != null ? fileStore : null);
         RepositoryAccessor repositoryAccessor = mock(RepositoryAccessor.class);
-        when(repositoryAccessor.getRepositoryStore(BusinessObjectModelRepositoryStore.class)).thenReturn(repositoryStore);
+        when(repositoryAccessor.getRepositoryStore(BusinessObjectModelRepositoryStore.class))
+                .thenReturn(repositoryStore);
         return repositoryAccessor;
     }
 

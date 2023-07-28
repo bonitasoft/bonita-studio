@@ -21,9 +21,9 @@ package org.bonitasoft.studio.diagram.custom.anchors;
 import java.util.List;
 
 import org.bonitasoft.studio.common.diagram.tools.FiguresHelper;
-import org.bonitasoft.studio.model.process.Event;
-import org.bonitasoft.studio.model.process.Gateway;
-import org.bonitasoft.studio.model.process.MessageEvent;
+import org.bonitasoft.bpm.model.process.Event;
+import org.bonitasoft.bpm.model.process.Gateway;
+import org.bonitasoft.bpm.model.process.MessageEvent;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.MessageFlowEditPart;
 import org.eclipse.draw2d.AbstractConnectionAnchor;
 import org.eclipse.draw2d.IFigure;

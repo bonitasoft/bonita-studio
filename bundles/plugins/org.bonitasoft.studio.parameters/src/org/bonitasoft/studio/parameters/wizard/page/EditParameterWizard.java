@@ -21,8 +21,8 @@ import java.util.Set;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
-import org.bonitasoft.studio.model.parameter.Parameter;
-import org.bonitasoft.studio.model.process.AbstractProcess;
+import org.bonitasoft.bpm.model.parameter.Parameter;
+import org.bonitasoft.bpm.model.process.AbstractProcess;
 import org.bonitasoft.studio.parameters.ParameterPlugin;
 import org.bonitasoft.studio.parameters.action.RefactorParametersOperation;
 import org.bonitasoft.studio.parameters.i18n.Messages;

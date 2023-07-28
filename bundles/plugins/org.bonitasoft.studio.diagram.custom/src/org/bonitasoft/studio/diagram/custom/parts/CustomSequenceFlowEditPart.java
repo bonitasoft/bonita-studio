@@ -17,11 +17,11 @@ package org.bonitasoft.studio.diagram.custom.parts;
 
 import org.bonitasoft.studio.diagram.custom.Activator;
 import org.bonitasoft.studio.diagram.custom.editPolicies.SequenceFlowCreationEditPolicy;
-import org.bonitasoft.studio.model.expression.ExpressionPackage;
-import org.bonitasoft.studio.model.process.Gateway;
-import org.bonitasoft.studio.model.process.ProcessPackage;
-import org.bonitasoft.studio.model.process.SequenceFlow;
-import org.bonitasoft.studio.model.process.SequenceFlowConditionType;
+import org.bonitasoft.bpm.model.expression.ExpressionPackage;
+import org.bonitasoft.bpm.model.process.Gateway;
+import org.bonitasoft.bpm.model.process.ProcessPackage;
+import org.bonitasoft.bpm.model.process.SequenceFlow;
+import org.bonitasoft.bpm.model.process.SequenceFlowConditionType;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.SequenceFlowEditPart;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.SequenceFlowNameEditPart;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;

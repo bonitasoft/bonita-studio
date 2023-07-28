@@ -19,10 +19,10 @@ package org.bonitasoft.studio.properties.sections.appearance;
 
 import org.bonitasoft.studio.common.ui.properties.ExtensibleGridPropertySection;
 import org.bonitasoft.studio.common.ui.properties.IExtensibleGridPropertySectionContribution;
-import org.bonitasoft.studio.model.process.BoundaryEvent;
-import org.bonitasoft.studio.model.process.Connection;
-import org.bonitasoft.studio.model.process.Event;
-import org.bonitasoft.studio.model.process.Gateway;
+import org.bonitasoft.bpm.model.process.BoundaryEvent;
+import org.bonitasoft.bpm.model.process.Connection;
+import org.bonitasoft.bpm.model.process.Event;
+import org.bonitasoft.bpm.model.process.Gateway;
 import org.bonitasoft.studio.properties.i18n.Messages;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;

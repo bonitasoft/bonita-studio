@@ -23,23 +23,24 @@ import java.nio.file.StandardCopyOption;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Stream;
+import java.util.Optional;
+import java.util.Set;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.bonitasoft.bpm.model.process.ProcessPackage;
+import org.bonitasoft.bpm.model.process.util.ProcessResourceImpl;
+import org.bonitasoft.bpm.model.process.util.migration.MigrationPolicy;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.platform.tools.CopyInputStream;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
 import org.bonitasoft.studio.common.repository.filestore.EMFFileStore;
-import org.bonitasoft.studio.common.repository.migration.ProcessModelTransformation;
 import org.eclipse.emf.common.command.BasicCommandStack;
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.eclipse.emf.edapt.internal.migration.execution.ValidationLevel;
 import org.eclipse.emf.edapt.migration.MigrationException;
@@ -57,7 +58,6 @@ import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
-
 /**
  * @author Romain Bioteau
  */
@@ -67,8 +67,6 @@ public abstract class AbstractEMFRepositoryStore<T extends EMFFileStore<?>>
     private AdapterFactoryLabelProvider labelProvider;
 
     private final ComposedAdapterFactory adapterFactory;
-
-    private Migrator migrator;
 
     public AbstractEMFRepositoryStore() {
         super();
@@ -80,22 +78,6 @@ public abstract class AbstractEMFRepositoryStore<T extends EMFFileStore<?>>
                 .addAdapterFactory(new ReflectiveItemProviderAdapterFactory());
         addAdapterFactory(adapterFactory);
 
-    }
-
-    /**
-     * public for test purpose
-     *
-     * @return
-     */
-    public Migrator initializeMigrator() {
-        if (migrator == null) {
-            try {
-                migrator = new SingleResourceMigrator();
-            } catch (final MigrationException e) {
-                BonitaStudioLog.error(e, CommonRepositoryPlugin.PLUGIN_ID);
-            }
-        }
-        return migrator;
     }
 
     public AdapterFactoryLabelProvider getLabelProvider() {
@@ -118,8 +100,12 @@ public abstract class AbstractEMFRepositoryStore<T extends EMFFileStore<?>>
     }
 
     protected EditingDomain createAdapterFactoryEditingDomain() {
-        return new AdapterFactoryEditingDomain(adapterFactory,
+        var domain = new AdapterFactoryEditingDomain(adapterFactory,
                 new BasicCommandStack(), new HashMap<>());
+        // always migrate the .proc resource to the latest version
+        domain.getResourceSet().getLoadOptions().put(ProcessResourceImpl.OPTION_MIGRATION_POLICY,
+                MigrationPolicy.ALWAYS_MIGRATE_POLICY);
+        return domain;
     }
 
     @Override
@@ -156,7 +142,8 @@ public abstract class AbstractEMFRepositoryStore<T extends EMFFileStore<?>>
             throw new IOException(fileName);
         }
         final Migrator targetMigrator = getMigrator(nsURI);
-        if (targetMigrator != null) {
+        // proc resource and associates are already auto-migrated at resource loading
+        if (targetMigrator != null && !targetMigrator.getNsURIs().contains(ProcessPackage.eNS_URI)) {
             final Release release = getRelease(targetMigrator, resource);
             if (release != null && !release.isLatestRelease()) {
                 try {
@@ -225,16 +212,34 @@ public abstract class AbstractEMFRepositoryStore<T extends EMFFileStore<?>>
     }
 
     public Migrator getMigrator(final String nsURI) {
-        Migrator targetMigrator = initializeMigrator();
-        if (!targetMigrator.getNsURIs().contains(nsURI)) {
-            return MigratorRegistry.getInstance().getMigrator(nsURI);
-        }
-        return targetMigrator;
+        return MigratorRegistry.getInstance().getMigrator(nsURI);
     }
 
     protected Release getRelease(final Migrator targetMigrator,
             final Resource resource) {
-        return targetMigrator.getRelease(resource.getURI()).iterator().next();
+        Set<Release> uriReleases = targetMigrator.getRelease(resource.getURI());
+        if (uriReleases.size() == 1) {
+            // only 1 release, version is probably in namespace
+            return uriReleases.iterator().next();
+        } else {
+            final String modelVersion = getModelVersion(resource);
+            Optional<Release> matchingRelease = targetMigrator.getReleases().stream().filter(uriReleases::contains)
+                    .filter(r -> modelVersion == null || modelVersion.equals(r.getLabel())).findFirst();
+            return matchingRelease.orElseGet(() ->
+            // take first release when none match
+            targetMigrator.getReleases().stream().filter(uriReleases::contains).findFirst().orElse(null));
+        }
+    }
+
+    /**
+     * Get the model version, loading the resource when necessary
+     * 
+     * @param resource the model resource
+     * @return model version or null when no clue
+     */
+    protected String getModelVersion(final Resource resource) {
+        // by default, we do not know how to get the version
+        return null;
     }
 
     protected void performMigration(final Migrator migrator,
@@ -255,32 +260,11 @@ public abstract class AbstractEMFRepositoryStore<T extends EMFFileStore<?>>
     protected Resource getTmpEMFResource(final String fileName,
             final File originalFile) throws IOException {
         final EditingDomain editingDomain = getEditingDomain();
-        var tmpFile = Files.createTempFile(null,fileName);
+        var tmpFile = Files.createTempFile(null, fileName);
         Files.copy(originalFile.toPath(), tmpFile, StandardCopyOption.REPLACE_EXISTING);
         return editingDomain.getResourceSet()
                 .createResource(
                         URI.createFileURI(tmpFile.toFile().getAbsolutePath()));
-    }
-
-    protected void applyTransformations(EObject modelObject) {
-        findTransformers(modelObject)
-                .forEach(transformer -> transformer.transform(modelObject));
-        modelObject.eAllContents()
-                .forEachRemaining(eObject -> findTransformers(eObject)
-                        .forEach(transformer -> transformer.transform(eObject)));
-        getRepository()
-                .getProcessModelTransformations().stream().flatMap(t -> t.markedForRemoval().stream())
-                .forEach(EcoreUtil::remove);
-        getRepository()
-                .getProcessModelTransformations().stream()
-                .forEach(ProcessModelTransformation::clear);
-    }
-
-    private Stream<ProcessModelTransformation> findTransformers(EObject eObject) {
-        return getRepository()
-                .getProcessModelTransformations()
-                .stream()
-                .filter(t -> t.appliesTo(eObject));
     }
 
 }

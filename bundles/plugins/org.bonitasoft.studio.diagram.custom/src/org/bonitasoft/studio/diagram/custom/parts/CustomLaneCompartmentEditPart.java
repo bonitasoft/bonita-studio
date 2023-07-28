@@ -22,7 +22,7 @@ import org.bonitasoft.studio.common.gmf.tools.GMFTools;
 import org.bonitasoft.studio.diagram.custom.editPolicies.CustomDragDropEditPolicy;
 import org.bonitasoft.studio.diagram.custom.editPolicies.CustomSnapFeedbackPolicy;
 import org.bonitasoft.studio.diagram.custom.figures.CustomShapeCompartmentFigure;
-import org.bonitasoft.studio.model.process.Container;
+import org.bonitasoft.bpm.model.process.Container;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.LaneLaneCompartmentEditPart;
 import org.bonitasoft.studio.model.process.diagram.edit.policies.LaneLaneCompartmentCanonicalEditPolicy;
 import org.eclipse.draw2d.IFigure;

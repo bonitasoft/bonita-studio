@@ -19,7 +19,7 @@ package org.bonitasoft.studio.diagram.custom.decorator;
 
 import org.bonitasoft.studio.common.figures.CustomSVGFigure;
 import org.bonitasoft.studio.common.figures.DecoratorSVGFigure;
-import org.bonitasoft.studio.model.process.SubProcessEvent;
+import org.bonitasoft.bpm.model.process.SubProcessEvent;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EObject;

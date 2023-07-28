@@ -28,9 +28,9 @@
 //import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 //import org.bonitasoft.studio.engine.command.RunProcessCommand;
 //import org.bonitasoft.studio.engine.i18n.Messages;
-//import org.bonitasoft.studio.model.process.AbstractProcess;
-//import org.bonitasoft.studio.model.process.MainProcess;
-//import org.bonitasoft.studio.model.process.ProcessPackage;
+//import org.bonitasoft.bpm.model.process.AbstractProcess;
+//import org.bonitasoft.bpm.model.process.MainProcess;
+//import org.bonitasoft.bpm.model.process.ProcessPackage;
 //import org.eclipse.core.commands.Command;
 //import org.eclipse.core.commands.ExecutionEvent;
 //import org.eclipse.emf.ecore.EObject;

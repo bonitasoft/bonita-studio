@@ -49,7 +49,6 @@ public class QueryNameValidationConstraintTest {
     @Mock
     private IValidationContext context;
 
-
     @Before
     public void setUp() throws Exception {
         when(context.createFailureStatus(any())).thenReturn(ValidationStatus.error("error"));
@@ -61,13 +60,15 @@ public class QueryNameValidationConstraintTest {
 
         final IStatus status = constraint.performBatchValidation(context);
 
-        verify(context).createFailureStatus(NLS.bind(Messages.conflictingQueryNamesInBusinessObject, "Employee", "findByName"));
+        verify(context).createFailureStatus(
+                NLS.bind(Messages.conflictingQueryNamesInBusinessObject, "Employee", "findByName"));
         StatusAssert.assertThat(status).isNotOK();
     }
 
     @Test
     public void should_not_fail_if_no_query_name_is_conflicting() throws Exception {
-        doReturn(aBusinessObjectModelFileStoreWithBo(aBoWithoutConflictingQueryNames())).when(constraint).getCurrentBDM();
+        doReturn(aBusinessObjectModelFileStoreWithBo(aBoWithoutConflictingQueryNames())).when(constraint)
+                .getCurrentBDM();
 
         final IStatus status = constraint.performBatchValidation(context);
 

@@ -21,11 +21,11 @@ import java.net.URL;
 import java.util.List;
 
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
-import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.bpm.model.util.ExpressionConstants;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.ui.properties.Well;
-import org.bonitasoft.studio.connector.model.definition.Array;
+import org.bonitasoft.bpm.connector.model.definition.Array;
 import org.bonitasoft.studio.connector.model.definition.wizard.ConnectorConfigurationSupport;
 import org.bonitasoft.studio.connector.model.definition.wizard.PageComponentSwitchBuilder;
 import org.bonitasoft.studio.connector.wizard.office.FilteredGeneratedConnectorConfigurationWizardPage;
@@ -35,9 +35,9 @@ import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFil
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionCollectionViewer;
 import org.bonitasoft.studio.expression.editor.viewer.IAddLineListener;
 import org.bonitasoft.studio.expression.editor.viewer.IExpressionModeListener;
-import org.bonitasoft.studio.model.connectorconfiguration.ConnectorParameter;
-import org.bonitasoft.studio.model.expression.Expression;
-import org.bonitasoft.studio.model.expression.TableExpression;
+import org.bonitasoft.bpm.model.connectorconfiguration.ConnectorParameter;
+import org.bonitasoft.bpm.model.expression.Expression;
+import org.bonitasoft.bpm.model.expression.TableExpression;
 import org.bonitasoft.studio.preferences.browser.OpenBrowserOperation;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.databinding.EMFDataBindingContext;

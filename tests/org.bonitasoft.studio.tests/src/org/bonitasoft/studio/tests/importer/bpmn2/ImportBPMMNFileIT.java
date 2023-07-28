@@ -19,8 +19,8 @@ import static org.junit.Assert.assertNotNull;
 
 import java.io.IOException;
 
-import org.bonitasoft.studio.model.process.MainProcess;
-import org.bonitasoft.studio.model.process.Pool;
+import org.bonitasoft.bpm.model.process.MainProcess;
+import org.bonitasoft.bpm.model.process.Pool;
 import org.bonitasoft.studio.swtbot.framework.projectExplorer.ProjectExplorerBot;
 import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;

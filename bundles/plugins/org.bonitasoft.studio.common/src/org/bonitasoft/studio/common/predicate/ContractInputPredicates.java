@@ -17,8 +17,8 @@ package org.bonitasoft.studio.common.predicate;
 import java.util.Objects;
 import java.util.function.Predicate;
 
-import org.bonitasoft.studio.model.process.ContractInput;
-import org.bonitasoft.studio.model.process.ContractInputType;
+import org.bonitasoft.bpm.model.process.ContractInput;
+import org.bonitasoft.bpm.model.process.ContractInputType;
 
 public class ContractInputPredicates {
 

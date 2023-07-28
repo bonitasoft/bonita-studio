@@ -49,7 +49,6 @@ import org.bonitasoft.studio.tests.importer.api.ProcBuilderTests;
 import org.bonitasoft.studio.tests.importer.bos.ImportBOSArchiveIT;
 import org.bonitasoft.studio.tests.importer.bpmn2.TestImportBPMN2;
 import org.bonitasoft.studio.tests.migration.DocumentMigrationIT;
-import org.bonitasoft.studio.tests.migration.EdaptHistoryIT;
 import org.bonitasoft.studio.tests.organization.TestExportOrganization;
 import org.bonitasoft.studio.tests.organization.TestImportOrganization;
 import org.bonitasoft.studio.tests.parameter.TestParametersRefactoring;
@@ -78,7 +77,6 @@ import org.junit.runners.Suite;
         BonitaProjectIT.class,
         TestPatchedBundles.class,
         TestSpecificWizardIds.class,
-        EdaptHistoryIT.class,
         TestBugs.class,
         ProductVersionIT.class,
         TestFullScenario.class,

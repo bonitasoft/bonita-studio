@@ -69,7 +69,8 @@ public class SmartImportBdmModelTest {
         assertThat(model.getSmartImportableUnits())
                 .extracting(SmartImportableUnit::getImportAction)
                 .allMatch(ImportAction.OVERWRITE::equals);
-        assertThat(model.getSmartImportableUnits()).flatExtracting(SmartImportableUnit::getSmartImportableUnits).hasSize(3);
+        assertThat(model.getSmartImportableUnits()).flatExtracting(SmartImportableUnit::getSmartImportableUnits)
+                .hasSize(3);
         assertThat(model.getSmartImportableUnits()).flatExtracting(SmartImportableUnit::getSmartImportableUnits)
                 .allMatch(SmartImportBusinessObjectModel.class::isInstance);
         assertThat(model.getSmartImportableUnits()).flatExtracting(SmartImportableUnit::getSmartImportableUnits)
@@ -107,7 +108,8 @@ public class SmartImportBdmModelTest {
         assertThat(model.getSmartImportableUnits())
                 .extracting(SmartImportableUnit::getImportAction)
                 .allMatch(ImportAction.OVERWRITE::equals);
-        assertThat(model.getSmartImportableUnits()).flatExtracting(SmartImportableUnit::getSmartImportableUnits).hasSize(5);
+        assertThat(model.getSmartImportableUnits()).flatExtracting(SmartImportableUnit::getSmartImportableUnits)
+                .hasSize(5);
         assertThat(model.getSmartImportableUnits()).flatExtracting(SmartImportableUnit::getSmartImportableUnits)
                 .allMatch(SmartImportBusinessObjectModel.class::isInstance);
         assertThat(model.getSmartImportableUnits()).flatExtracting(SmartImportableUnit::getSmartImportableUnits)
@@ -143,7 +145,8 @@ public class SmartImportBdmModelTest {
         assertThat(model.getSmartImportableUnits())
                 .extracting(SmartImportableUnit::getImportAction)
                 .allMatch(ImportAction.OVERWRITE::equals);
-        assertThat(model.getSmartImportableUnits()).flatExtracting(SmartImportableUnit::getSmartImportableUnits).hasSize(4);
+        assertThat(model.getSmartImportableUnits()).flatExtracting(SmartImportableUnit::getSmartImportableUnits)
+                .hasSize(4);
         assertThat(model.getSmartImportableUnits()).flatExtracting(SmartImportableUnit::getSmartImportableUnits)
                 .allMatch(SmartImportBusinessObjectModel.class::isInstance);
         assertThat(model.getSmartImportableUnits()).flatExtracting(SmartImportableUnit::getSmartImportableUnits)
@@ -215,7 +218,7 @@ public class SmartImportBdmModelTest {
                 .withField(SimpleFieldBuilder.aStringField("otherField").build())
                 .build();
 
-        ConflictResult conflictResult= new SmartImportBdmModel(null, null, null)
+        ConflictResult conflictResult = new SmartImportBdmModel(null, null, null)
                 .computeConflictStatus(Arrays.asList(existingBo), importedBo);
         assertThat(conflictResult.getStatus()).isEqualTo(ConflictStatus.CONFLICTING);
         assertThat(conflictResult.getConflictingObjectName()).isEqualTo(existingBo.getQualifiedName());

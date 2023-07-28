@@ -20,7 +20,7 @@ import java.util.Map;
 
 import org.bonitasoft.engine.bdm.model.field.RelationField;
 import org.bonitasoft.studio.contract.i18n.Messages;
-import org.bonitasoft.studio.model.process.BusinessObjectData;
+import org.bonitasoft.bpm.model.process.BusinessObjectData;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;

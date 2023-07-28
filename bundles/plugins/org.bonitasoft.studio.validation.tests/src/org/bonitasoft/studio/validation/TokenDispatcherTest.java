@@ -17,12 +17,12 @@
 package org.bonitasoft.studio.validation;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.bonitasoft.studio.model.process.builders.PoolBuilder.aPool;
-import static org.bonitasoft.studio.model.process.builders.StartEventBuilder.aStartEvent;
-import static org.bonitasoft.studio.model.process.builders.TaskBuilder.aTask;
+import static org.bonitasoft.bpm.model.process.builders.PoolBuilder.aPool;
+import static org.bonitasoft.bpm.model.process.builders.StartEventBuilder.aStartEvent;
+import static org.bonitasoft.bpm.model.process.builders.TaskBuilder.aTask;
 
-import org.bonitasoft.studio.model.process.ProcessFactory;
-import org.bonitasoft.studio.model.process.builders.TaskBuilder;
+import org.bonitasoft.bpm.model.process.ProcessFactory;
+import org.bonitasoft.bpm.model.process.builders.TaskBuilder;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

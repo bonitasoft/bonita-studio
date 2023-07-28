@@ -6,7 +6,7 @@ Bundle-Version: 9.0.0.qualifier
 Bundle-Vendor: BonitaSoft S.A.
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Require-Bundle: org.eclipse.gmf.runtime.lite.svg,
- org.bonitasoft.studio.model,
+ org.bonitasoft.bpm.model;visibility:=reexport,
  org.bonitasoft.studio.common,
  org.eclipse.gmf.runtime.diagram.ui.render,
  org.eclipse.gmf.runtime.diagram.ui.providers,
@@ -26,7 +26,7 @@ Require-Bundle: org.eclipse.gmf.runtime.lite.svg,
  org.eclipse.gmf.runtime.diagram.ui,
  org.eclipse.ui.ide,
  org.bonitasoft.studio.common.ui,
- org.bonitasoft.studio.connectors.model
+ org.bonitasoft.bpm.connector.model
 Export-Package: org.bonitasoft.studio.common.diagram,
  org.bonitasoft.studio.common.diagram.dialog,
  org.bonitasoft.studio.common.diagram.editor,

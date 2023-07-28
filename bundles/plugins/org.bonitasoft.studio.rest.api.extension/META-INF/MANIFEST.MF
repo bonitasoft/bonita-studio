@@ -44,7 +44,7 @@ Require-Bundle: org.eclipse.ui,
  org.bonitasoft.studio.dependencies,
  org.bonitasoft.studio.businessobject,
  org.bonitasoft.studio.engine,
- org.bonitasoft.studio.model,
+ org.bonitasoft.bpm.model,
  org.bonitasoft.studio.preferences,
  org.eclipse.jdt.ui,
  org.eclipse.ui.console,
@@ -76,8 +76,7 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.ui.navigator.resources,
  org.eclipse.wst.sse.ui,
  org.eclipse.core.databinding.property,
- org.bonitasoft.studio.designer,
- org.bonitasoft.studio.migration
+ org.bonitasoft.studio.designer
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Import-Package: javax.annotation;version="1.2.0",
  javax.inject;version="1.0.0",

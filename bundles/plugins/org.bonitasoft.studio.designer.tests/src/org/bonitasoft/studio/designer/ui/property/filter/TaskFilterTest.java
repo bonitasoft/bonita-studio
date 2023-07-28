@@ -15,8 +15,8 @@
 package org.bonitasoft.studio.designer.ui.property.filter;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.bonitasoft.studio.model.process.builders.PoolBuilder.aPool;
-import static org.bonitasoft.studio.model.process.builders.TaskBuilder.aTask;
+import static org.bonitasoft.bpm.model.process.builders.PoolBuilder.aPool;
+import static org.bonitasoft.bpm.model.process.builders.TaskBuilder.aTask;
 
 import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
 import org.junit.Before;

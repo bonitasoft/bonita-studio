@@ -18,8 +18,8 @@ import org.bonitasoft.engine.bpm.process.impl.DocumentListDefinitionBuilder;
 import org.bonitasoft.engine.bpm.process.impl.ProcessDefinitionBuilder;
 import org.bonitasoft.studio.engine.contribution.BuildProcessDefinitionException;
 import org.bonitasoft.studio.engine.export.EngineExpressionUtil;
-import org.bonitasoft.studio.model.expression.Expression;
-import org.bonitasoft.studio.model.process.Document;
+import org.bonitasoft.bpm.model.expression.Expression;
+import org.bonitasoft.bpm.model.process.Document;
 
 public class MultipleDocumentEngineDefinitionBuilder implements IDefinitionBuildable {
 

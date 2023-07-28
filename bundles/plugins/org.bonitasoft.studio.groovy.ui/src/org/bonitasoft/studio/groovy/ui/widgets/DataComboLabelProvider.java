@@ -17,7 +17,7 @@
  */
 package org.bonitasoft.studio.groovy.ui.widgets;
 
-import org.bonitasoft.studio.model.process.Data;
+import org.bonitasoft.bpm.model.process.Data;
 import org.eclipse.jface.viewers.LabelProvider;
 
 /**

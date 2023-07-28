@@ -1,9 +1,9 @@
 package org.bonitasoft.studio.document.ui.validator;
 
 import org.bonitasoft.studio.assertions.StatusAssert;
-import org.bonitasoft.studio.model.process.AdditionalResource;
-import org.bonitasoft.studio.model.process.Pool;
-import org.bonitasoft.studio.model.process.ProcessFactory;
+import org.bonitasoft.bpm.model.process.AdditionalResource;
+import org.bonitasoft.bpm.model.process.Pool;
+import org.bonitasoft.bpm.model.process.ProcessFactory;
 import org.junit.Before;
 import org.junit.Test;
 

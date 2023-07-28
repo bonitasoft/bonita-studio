@@ -2,7 +2,7 @@
   <targetJRE path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-11"/>
   <locations>
     <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-      <repository location="https://update-site.bonitasoft.com/p2/4.24"/>
+      <repository location="https://update-site.bonitasoft.com/p2/4.24/"/>
       <unit id="org.eclipse.swtbot.eclipse.feature.group" version="0.0.0"/>
       <unit id="org.eclipse.swtbot.eclipse.gef.feature.group" version="0.0.0"/>
       <unit id="org.eclipse.swtbot.eclipse.test.junit.feature.group" version="0.0.0"/>
@@ -70,6 +70,14 @@
       <unit id="org.codehaus.groovy.m2eclipse.feature.feature.group" version="0.0.0"/>
       <unit id="org.codehaus.groovy30.feature.feature.group" version="0.0.0"/>
     </location>
+    <location includeConfigurePhase="true" includeSource="true" includeMode="planner" type="InstallableUnit" includeAllPlatforms="false">
+      <repository location="mvn:org.bonitasoft.bpm:org.bonitasoft.bpm.eclipse-repository:8.0.0-SNAPSHOT:zip"/>
+      <unit id="org.bonitasoft.bonita2bpmn.feature.feature.group" version="0.0.0"/>
+      <unit id="org.bonitasoft.bpm.connector.feature.feature.group" version="0.0.0"/>
+      <unit id="org.bonitasoft.bpm.definitions.feature.feature.group" version="0.0.0"/>
+      <unit id="org.bonitasoft.bpm.model.feature.feature.group" version="0.0.0"/>
+      <unit id="org.bonitasoft.bpm.tests.feature.feature.group" version="0.0.0"/>
+    </location>
     <location missingManifest="generate" includeDependencyScopes="compile,runtime,system" includeSource="true" includeDependencyDepth="infinite" type="Maven">
       <dependencies>
         <dependency>
@@ -97,15 +105,16 @@
           <type>jar</type>
         </dependency>
         <dependency>
+          <groupId>com.sun.activation</groupId>
+          <artifactId>jakarta.activation</artifactId>
+          <version>2.0.1</version>
+          <type>jar</type>
+        </dependency>
+        <dependency>
           <groupId>jakarta.xml.bind</groupId>
           <artifactId>jakarta.xml.bind-api</artifactId>
           <version>2.3.3</version>
           <type>jar</type>
-        </dependency>
-        <dependency>
-          <groupId>com.sun.activation</groupId>
-          <artifactId>jakarta.activation</artifactId>
-          <version>2.0.1</version>
         </dependency>
         <dependency>
           <groupId>jakarta.xml.soap</groupId>
@@ -114,15 +123,15 @@
           <type>jar</type>
         </dependency>
         <dependency>
-          <groupId>org.jdom</groupId>
-          <artifactId>jdom2</artifactId>
-          <version>2.0.6.1</version>
-          <type>jar</type>
-        </dependency>
-        <dependency>
           <groupId>org.assertj</groupId>
           <artifactId>assertj-core</artifactId>
           <version>3.23.1</version>
+          <type>jar</type>
+        </dependency>
+        <dependency>
+          <groupId>org.jdom</groupId>
+          <artifactId>jdom2</artifactId>
+          <version>2.0.6.1</version>
           <type>jar</type>
         </dependency>
         <dependency>

@@ -39,8 +39,8 @@ Require-Bundle: org.eclipse.core.runtime,
  org.bonitasoft.studio.common;visibility:=reexport,
  org.bonitasoft.studio.pics;visibility:=reexport,
  org.bonitasoft.studio.common.diagram;visibility:=reexport,
- org.bonitasoft.studio.model;visibility:=reexport,
- org.bonitasoft.studio.model.edit;visibility:=reexport,
+ org.bonitasoft.bpm.model;visibility:=reexport,
+ org.bonitasoft.bpm.model.edit;visibility:=reexport,
  org.eclipse.ocl.ecore;visibility:=reexport,
  org.eclipse.emf.validation;visibility:=reexport,
  org.eclipse.gef;visibility:=reexport,
@@ -48,3 +48,4 @@ Require-Bundle: org.eclipse.core.runtime,
 Bundle-ActivationPolicy: lazy
 Import-Package: org.bonitasoft.studio.common
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Automatic-Module-Name: org.bonitasoft.studio.diagram

@@ -19,13 +19,13 @@
 //package org.bonitasoft.studio.common.gmf.tools;
 //
 //import org.bonitasoft.studio.common.HookDefinition;
-//import org.bonitasoft.studio.model.process.AbstractProcess;
-//import org.bonitasoft.studio.model.process.Activity;
-//import org.bonitasoft.studio.model.process.ConnectableElement;
-//import org.bonitasoft.studio.model.process.Connector;
-//import org.bonitasoft.studio.model.process.SubProcess;
-//import org.bonitasoft.studio.model.process.Task;
-//import org.bonitasoft.studio.model.process.TimerEvent;
+//import org.bonitasoft.bpm.model.process.AbstractProcess;
+//import org.bonitasoft.bpm.model.process.Activity;
+//import org.bonitasoft.bpm.model.process.ConnectableElement;
+//import org.bonitasoft.bpm.model.process.Connector;
+//import org.bonitasoft.bpm.model.process.SubProcess;
+//import org.bonitasoft.bpm.model.process.Task;
+//import org.bonitasoft.bpm.model.process.TimerEvent;
 //import org.eclipse.core.commands.ExecutionException;
 //import org.eclipse.core.runtime.IAdaptable;
 //import org.eclipse.core.runtime.IProgressMonitor;

@@ -15,7 +15,7 @@
 package org.bonitasoft.studio.contract.ui.wizard;
 
 import org.bonitasoft.studio.common.ui.jface.DataStyledTreeLabelProvider;
-import org.bonitasoft.studio.model.process.Document;
+import org.bonitasoft.bpm.model.process.Document;
 import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.jface.viewers.ViewerCell;
 

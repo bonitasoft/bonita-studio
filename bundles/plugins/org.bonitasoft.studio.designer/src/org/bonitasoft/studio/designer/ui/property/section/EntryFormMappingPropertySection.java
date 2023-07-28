@@ -23,7 +23,7 @@ import org.bonitasoft.studio.designer.i18n.Messages;
 import org.bonitasoft.studio.designer.ui.property.section.control.CreateOrEditFormProposalListener;
 import org.bonitasoft.studio.designer.ui.property.section.control.FormMappingRadioGroup;
 import org.bonitasoft.studio.designer.ui.property.section.control.FormReferenceExpressionValidator;
-import org.bonitasoft.studio.model.process.ProcessPackage;
+import org.bonitasoft.bpm.model.process.ProcessPackage;
 import org.eclipse.core.databinding.observable.Realm;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;

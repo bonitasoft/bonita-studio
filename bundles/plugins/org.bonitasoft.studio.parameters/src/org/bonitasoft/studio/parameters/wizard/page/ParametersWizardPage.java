@@ -18,8 +18,8 @@ import java.util.Set;
 
 import org.bonitasoft.studio.common.databinding.validator.GroovyReferenceValidator;
 import org.bonitasoft.studio.common.databinding.validator.InputLengthValidator;
-import org.bonitasoft.studio.model.parameter.Parameter;
-import org.bonitasoft.studio.model.parameter.ParameterPackage;
+import org.bonitasoft.bpm.model.parameter.Parameter;
+import org.bonitasoft.bpm.model.parameter.ParameterPackage;
 import org.bonitasoft.studio.parameters.i18n.Messages;
 import org.bonitasoft.studio.parameters.property.section.editingsupport.ParameterTypeEditingSupport;
 import org.bonitasoft.studio.parameters.property.section.provider.ParameterTypeLabelProvider;

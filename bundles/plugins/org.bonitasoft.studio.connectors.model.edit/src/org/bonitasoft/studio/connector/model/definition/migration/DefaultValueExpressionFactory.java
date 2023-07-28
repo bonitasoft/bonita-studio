@@ -16,18 +16,18 @@ package org.bonitasoft.studio.connector.model.definition.migration;
 
 import java.util.Objects;
 
-import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.bpm.model.util.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
-import org.bonitasoft.studio.connector.model.definition.Array;
-import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
-import org.bonitasoft.studio.connector.model.definition.Input;
-import org.bonitasoft.studio.connector.model.definition.List;
-import org.bonitasoft.studio.connector.model.definition.ScriptEditor;
-import org.bonitasoft.studio.connector.model.definition.TextArea;
-import org.bonitasoft.studio.connector.model.definition.WidgetComponent;
-import org.bonitasoft.studio.model.expression.AbstractExpression;
-import org.bonitasoft.studio.model.expression.Expression;
-import org.bonitasoft.studio.model.expression.ExpressionFactory;
+import org.bonitasoft.bpm.connector.model.definition.Array;
+import org.bonitasoft.bpm.connector.model.definition.ConnectorDefinition;
+import org.bonitasoft.bpm.connector.model.definition.Input;
+import org.bonitasoft.bpm.connector.model.definition.List;
+import org.bonitasoft.bpm.connector.model.definition.ScriptEditor;
+import org.bonitasoft.bpm.connector.model.definition.TextArea;
+import org.bonitasoft.bpm.connector.model.definition.WidgetComponent;
+import org.bonitasoft.bpm.model.expression.AbstractExpression;
+import org.bonitasoft.bpm.model.expression.Expression;
+import org.bonitasoft.bpm.model.expression.ExpressionFactory;
 import org.eclipse.e4.core.di.annotations.Creatable;
 
 @Creatable

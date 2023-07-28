@@ -15,12 +15,12 @@
 package org.bonitasoft.studio.expression.editor.operation;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.bonitasoft.studio.model.expression.builders.ExpressionBuilder.anExpression;
-import static org.bonitasoft.studio.model.expression.builders.OperationBuilder.anOperation;
-import static org.bonitasoft.studio.model.expression.builders.OperatorBuilder.anOperator;
+import static org.bonitasoft.bpm.model.expression.builders.ExpressionBuilder.anExpression;
+import static org.bonitasoft.bpm.model.expression.builders.OperationBuilder.anOperation;
+import static org.bonitasoft.bpm.model.expression.builders.OperatorBuilder.anOperator;
 
 import org.bonitasoft.engine.bpm.document.DocumentValue;
-import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.bpm.model.util.ExpressionConstants;
 import org.bonitasoft.studio.swt.rules.RealmWithDisplay;
 import org.eclipse.core.databinding.observable.Realm;
 import org.eclipse.core.databinding.observable.value.WritableValue;

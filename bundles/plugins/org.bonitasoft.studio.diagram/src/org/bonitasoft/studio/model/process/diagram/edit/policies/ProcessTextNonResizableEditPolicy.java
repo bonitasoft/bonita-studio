@@ -21,7 +21,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.bonitasoft.studio.common.diagram.tools.CustomTextDirectEditManager;
-import org.bonitasoft.studio.model.process.Activity;
+import org.bonitasoft.bpm.model.process.Activity;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.ProcessEditPartFactory;
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.Figure;

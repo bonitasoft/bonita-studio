@@ -23,8 +23,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.bonitasoft.studio.common.gmf.tools.GMFTools;
-import org.bonitasoft.studio.model.process.Container;
-import org.bonitasoft.studio.model.process.SequenceFlow;
+import org.bonitasoft.bpm.model.process.Container;
+import org.bonitasoft.bpm.model.process.SequenceFlow;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.SequenceFlowEditPart;
 import org.bonitasoft.studio.model.process.diagram.providers.ProcessElementTypes;
 import org.eclipse.emf.ecore.EObject;

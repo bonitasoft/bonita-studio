@@ -21,6 +21,17 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.bonitasoft.bpm.connector.model.implementation.ConnectorImplementation;
+import org.bonitasoft.bpm.model.configuration.Configuration;
+import org.bonitasoft.bpm.model.configuration.ConfigurationFactory;
+import org.bonitasoft.bpm.model.configuration.ConfigurationPackage;
+import org.bonitasoft.bpm.model.configuration.DefinitionMapping;
+import org.bonitasoft.bpm.model.configuration.Fragment;
+import org.bonitasoft.bpm.model.configuration.FragmentContainer;
+import org.bonitasoft.bpm.model.kpi.DatabaseKPIBinding;
+import org.bonitasoft.bpm.model.kpi.KpiPackage;
+import org.bonitasoft.bpm.model.process.AbstractProcess;
+import org.bonitasoft.bpm.model.process.Connector;
 import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.Pair;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
@@ -32,17 +43,6 @@ import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.common.repository.provider.DefinitionResourceProvider;
 import org.bonitasoft.studio.common.repository.store.SourceRepositoryStore;
 import org.bonitasoft.studio.connector.model.implementation.AbstractConnectorImplRepositoryStore;
-import org.bonitasoft.studio.connector.model.implementation.ConnectorImplementation;
-import org.bonitasoft.studio.model.configuration.Configuration;
-import org.bonitasoft.studio.model.configuration.ConfigurationFactory;
-import org.bonitasoft.studio.model.configuration.ConfigurationPackage;
-import org.bonitasoft.studio.model.configuration.DefinitionMapping;
-import org.bonitasoft.studio.model.configuration.Fragment;
-import org.bonitasoft.studio.model.configuration.FragmentContainer;
-import org.bonitasoft.studio.model.kpi.DatabaseKPIBinding;
-import org.bonitasoft.studio.model.kpi.KpiPackage;
-import org.bonitasoft.studio.model.process.AbstractProcess;
-import org.bonitasoft.studio.model.process.Connector;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -82,7 +82,8 @@ public abstract class AbstractConnectorConfigurationSynchronizer implements ICon
             final String defVersion = definition.getSecond();
             boolean exists = false;
             for (final DefinitionMapping association : configuration.getDefinitionMappings()) {
-                if (association.getType().equals(getFragmentContainerId()) && association.getDefinitionId().equals(defId)
+                if (association.getType().equals(getFragmentContainerId())
+                        && association.getDefinitionId().equals(defId)
                         && association.getDefinitionVersion().equals(defVersion)) {
                     exists = true;
                     updateAssociation(configuration, association, cc, editingDomain);
@@ -203,7 +204,8 @@ public abstract class AbstractConnectorConfigurationSynchronizer implements ICon
             final FragmentContainer connectorContainer = ConfigurationFactory.eINSTANCE.createFragmentContainer();
             connectorContainer.setId(implementationId);
             editingDomain.getCommandStack().execute(
-                    AddCommand.create(editingDomain, container, ConfigurationPackage.Literals.FRAGMENT_CONTAINER__CHILDREN,
+                    AddCommand.create(editingDomain, container,
+                            ConfigurationPackage.Literals.FRAGMENT_CONTAINER__CHILDREN,
                             connectorContainer));
             updateJarDependencies(connectorContainer, implementation, editingDomain, cc, forceDriver);
         }
@@ -234,7 +236,8 @@ public abstract class AbstractConnectorConfigurationSynchronizer implements ICon
                 final Fragment depFragment = ConfigurationFactory.eINSTANCE.createFragment();
                 depFragment.setExported(true);
                 depFragment
-                        .setKey(implementation.getImplementationId() + " -- " + implementation.getImplementationVersion());
+                        .setKey(implementation.getImplementationId() + " -- "
+                                + implementation.getImplementationVersion());
                 depFragment.setValue(jar);
                 depFragment.setType(getFragmentContainerId());
                 editingDomain.getCommandStack().execute(
@@ -299,7 +302,8 @@ public abstract class AbstractConnectorConfigurationSynchronizer implements ICon
                         break;
                     }
                 }
-                if (!kpis.isEmpty() && defId.equals(DB_CONNECTOR_FOR_KPI_ID) && defVersion.equals(DB_CONNECTOR_VERSION)) {
+                if (!kpis.isEmpty() && defId.equals(DB_CONNECTOR_FOR_KPI_ID)
+                        && defVersion.equals(DB_CONNECTOR_VERSION)) {
                     exists = true;
                 }
                 if (!exists) {

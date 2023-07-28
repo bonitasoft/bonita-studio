@@ -16,7 +16,7 @@
  */
 package org.bonitasoft.studio.connector.model.definition.dialog;
 
-import org.bonitasoft.studio.connector.model.definition.ConnectorDefinitionPackage;
+import org.bonitasoft.bpm.connector.model.definition.ConnectorDefinitionPackage;
 import org.bonitasoft.studio.connector.model.i18n.Messages;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.jface.viewers.LabelProvider;

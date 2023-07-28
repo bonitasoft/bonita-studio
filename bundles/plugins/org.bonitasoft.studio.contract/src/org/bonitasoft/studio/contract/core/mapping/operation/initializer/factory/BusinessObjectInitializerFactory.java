@@ -25,7 +25,7 @@ import org.bonitasoft.studio.contract.core.mapping.operation.initializer.Multipl
 import org.bonitasoft.studio.contract.core.mapping.operation.initializer.MultipleCompositionBusinessObjectQueryInitializer;
 import org.bonitasoft.studio.contract.core.mapping.operation.initializer.NewBusinessObjectInitializer;
 import org.bonitasoft.studio.contract.core.mapping.operation.initializer.NewBusinessObjectListInitializer;
-import org.bonitasoft.studio.model.process.BusinessObjectData;
+import org.bonitasoft.bpm.model.process.BusinessObjectData;
 
 public class BusinessObjectInitializerFactory extends AbsractInitializerFactory {
 

@@ -5,8 +5,8 @@ import static com.google.common.base.Predicates.instanceOf;
 import static com.google.common.base.Predicates.not;
 
 import org.bonitasoft.studio.common.ui.views.BonitaPropertiesBrowserPage;
-import org.bonitasoft.studio.model.process.Activity;
-import org.bonitasoft.studio.model.process.SendTask;
+import org.bonitasoft.bpm.model.process.Activity;
+import org.bonitasoft.bpm.model.process.SendTask;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.viewers.ISelection;

@@ -20,16 +20,16 @@ package org.bonitasoft.studio.engine.export;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.bpm.model.util.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
-import org.bonitasoft.studio.model.expression.Expression;
-import org.bonitasoft.studio.model.expression.ExpressionFactory;
-import org.bonitasoft.studio.model.parameter.Parameter;
-import org.bonitasoft.studio.model.process.Data;
-import org.bonitasoft.studio.model.process.decision.DecisionTable;
-import org.bonitasoft.studio.model.process.decision.DecisionTableAction;
-import org.bonitasoft.studio.model.process.decision.DecisionTableLine;
-import org.bonitasoft.studio.model.process.decision.transitions.TakeTransitionAction;
+import org.bonitasoft.bpm.model.expression.Expression;
+import org.bonitasoft.bpm.model.expression.ExpressionFactory;
+import org.bonitasoft.bpm.model.parameter.Parameter;
+import org.bonitasoft.bpm.model.process.Data;
+import org.bonitasoft.bpm.model.process.decision.DecisionTable;
+import org.bonitasoft.bpm.model.process.decision.DecisionTableAction;
+import org.bonitasoft.bpm.model.process.decision.DecisionTableLine;
+import org.bonitasoft.bpm.model.process.decision.transitions.TakeTransitionAction;
 import org.eclipse.emf.ecore.EObject;
 
 public class DecisionTableUtil {

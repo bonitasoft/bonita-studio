@@ -17,11 +17,11 @@ package org.bonitasoft.studio.identity.actors.ui.wizard.page;
 import java.util.List;
 
 import org.bonitasoft.studio.common.repository.provider.ExtendedConnectorDefinition;
-import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
-import org.bonitasoft.studio.connector.model.implementation.ConnectorImplementation;
+import org.bonitasoft.bpm.connector.model.definition.ConnectorDefinition;
+import org.bonitasoft.bpm.connector.model.implementation.ConnectorImplementation;
 import org.bonitasoft.studio.connectors.ui.wizard.page.SelectAdvancedConnectorDefinitionWizardPage;
 import org.bonitasoft.studio.identity.i18n.Messages;
-import org.bonitasoft.studio.model.process.Connector;
+import org.bonitasoft.bpm.model.process.Connector;
 import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.jface.viewers.ITreeContentProvider;

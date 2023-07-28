@@ -16,7 +16,7 @@ package org.bonitasoft.studio.contract.core.mapping.operation.initializer.factor
 
 import org.bonitasoft.studio.contract.core.mapping.FieldToContractInputMapping;
 import org.bonitasoft.studio.contract.core.mapping.operation.initializer.IPropertyInitializer;
-import org.bonitasoft.studio.model.process.BusinessObjectData;
+import org.bonitasoft.bpm.model.process.BusinessObjectData;
 
 public interface InitializerFactory {
 

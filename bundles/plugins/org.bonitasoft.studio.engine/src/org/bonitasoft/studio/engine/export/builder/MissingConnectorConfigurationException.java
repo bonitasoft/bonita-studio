@@ -1,7 +1,7 @@
 package org.bonitasoft.studio.engine.export.builder;
 
-import org.bonitasoft.studio.model.process.ConnectableElement;
-import org.bonitasoft.studio.model.process.Connector;
+import org.bonitasoft.bpm.model.process.ConnectableElement;
+import org.bonitasoft.bpm.model.process.Connector;
 
 public class MissingConnectorConfigurationException extends RuntimeException {
 

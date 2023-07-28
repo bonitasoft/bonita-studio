@@ -23,7 +23,7 @@ import java.util.Set;
 
 import org.bonitasoft.studio.common.figures.CustomSVGFigure;
 import org.bonitasoft.studio.common.figures.DecoratorSVGFigure;
-import org.bonitasoft.studio.model.process.ProcessPackage;
+import org.bonitasoft.bpm.model.process.ProcessPackage;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.draw2d.Viewport;

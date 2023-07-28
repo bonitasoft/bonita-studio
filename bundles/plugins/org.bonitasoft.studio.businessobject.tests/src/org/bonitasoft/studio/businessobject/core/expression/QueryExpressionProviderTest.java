@@ -28,9 +28,9 @@ import org.bonitasoft.engine.bdm.model.field.SimpleField;
 import org.bonitasoft.studio.businessobject.core.expression.model.BusinessObjectExpressionQuery;
 import org.bonitasoft.studio.businessobject.core.expression.model.QueryExpressionModel;
 import org.bonitasoft.studio.businessobject.ui.expression.QueryExpressionEditor;
-import org.bonitasoft.studio.common.ExpressionConstants;
-import org.bonitasoft.studio.model.expression.Expression;
-import org.bonitasoft.studio.model.expression.assertions.ExpressionAssert;
+import org.bonitasoft.bpm.model.util.ExpressionConstants;
+import org.bonitasoft.bpm.model.expression.Expression;
+import org.bonitasoft.bpm.model.expression.assertions.ExpressionAssert;
 import org.junit.Before;
 import org.junit.Test;
 

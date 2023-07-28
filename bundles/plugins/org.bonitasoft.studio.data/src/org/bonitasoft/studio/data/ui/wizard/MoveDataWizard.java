@@ -18,7 +18,7 @@
 
 package org.bonitasoft.studio.data.ui.wizard;
 
-import org.bonitasoft.studio.model.process.DataAware;
+import org.bonitasoft.bpm.model.process.DataAware;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.Wizard;

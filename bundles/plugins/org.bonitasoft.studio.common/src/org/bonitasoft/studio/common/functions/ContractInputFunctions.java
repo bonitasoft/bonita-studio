@@ -19,10 +19,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
 
-import org.bonitasoft.studio.model.process.ContractInput;
-import org.bonitasoft.studio.model.process.ContractInputType;
+import org.bonitasoft.bpm.model.process.ContractInput;
+import org.bonitasoft.bpm.model.process.ContractInputType;
 import org.eclipse.emf.ecore.EObject;
-
 
 public class ContractInputFunctions {
 

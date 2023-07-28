@@ -16,7 +16,7 @@
  */
 package org.bonitasoft.studio.connector.wizard.office.converter;
 
-import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
+import org.bonitasoft.bpm.connector.model.definition.ConnectorDefinition;
 import org.bonitasoft.studio.connector.model.definition.wizard.PageComponentSwitch;
 import org.bonitasoft.studio.connector.wizard.office.AbstractOfficeConnectorOutputWizardPage;
 import org.bonitasoft.studio.connector.wizard.office.i18n.Messages;
@@ -33,7 +33,7 @@ public class DocumentConverterConnectorOutputWizardPage extends AbstractOfficeCo
 
     /*
      * (non-Javadoc)
-     * @see org.bonitasoft.studio.connector.wizard.office.AbstractOfficeConnectorOutputWizardPage#doSwitch(org.bonitasoft.studio.connector.model.definition.
+     * @see org.bonitasoft.studio.connector.wizard.office.AbstractOfficeConnectorOutputWizardPage#doSwitch(org.bonitasoft.bpm.connector.model.definition.
      * ConnectorDefinition, org.bonitasoft.studio.connector.model.definition.wizard.PageComponentSwitch)
      */
     @Override

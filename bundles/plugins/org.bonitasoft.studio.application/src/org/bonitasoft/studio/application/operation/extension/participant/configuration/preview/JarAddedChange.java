@@ -24,9 +24,9 @@ import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.common.FragmentTypes;
 import org.bonitasoft.studio.common.repository.core.migration.dependencies.configuration.ProcessConfigurationChange;
 import org.bonitasoft.studio.common.repository.extension.update.preview.ChangePreview;
-import org.bonitasoft.studio.model.configuration.Configuration;
-import org.bonitasoft.studio.model.configuration.ConfigurationFactory;
-import org.bonitasoft.studio.model.configuration.Fragment;
+import org.bonitasoft.bpm.model.configuration.Configuration;
+import org.bonitasoft.bpm.model.configuration.ConfigurationFactory;
+import org.bonitasoft.bpm.model.configuration.Fragment;
 
 
 public class JarAddedChange implements ChangePreview, ProcessConfigurationChange {

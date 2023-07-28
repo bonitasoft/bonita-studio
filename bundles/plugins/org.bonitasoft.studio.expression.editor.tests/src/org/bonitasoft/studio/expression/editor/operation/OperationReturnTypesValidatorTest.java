@@ -14,10 +14,10 @@
  */
 package org.bonitasoft.studio.expression.editor.operation;
 
-import static org.bonitasoft.studio.model.expression.builders.ExpressionBuilder.anExpression;
-import static org.bonitasoft.studio.model.process.builders.DataBuilder.aData;
-import static org.bonitasoft.studio.model.process.builders.JavaObjectDataBuilder.aJavaObjectData;
-import static org.bonitasoft.studio.model.process.builders.LongDataTypeBuilder.aLongDataType;
+import static org.bonitasoft.bpm.model.expression.builders.ExpressionBuilder.anExpression;
+import static org.bonitasoft.bpm.model.process.builders.DataBuilder.aData;
+import static org.bonitasoft.bpm.model.process.builders.JavaObjectDataBuilder.aJavaObjectData;
+import static org.bonitasoft.bpm.model.process.builders.LongDataTypeBuilder.aLongDataType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,15 +25,15 @@ import java.util.List;
 import org.assertj.core.api.Assertions;
 import org.bonitasoft.engine.bpm.document.DocumentValue;
 import org.bonitasoft.studio.assertions.StatusAssert;
-import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.bpm.model.util.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.expression.editor.i18n.Messages;
-import org.bonitasoft.studio.model.expression.Expression;
-import org.bonitasoft.studio.model.expression.ExpressionFactory;
-import org.bonitasoft.studio.model.expression.Operation;
-import org.bonitasoft.studio.model.expression.Operator;
-import org.bonitasoft.studio.model.process.ProcessFactory;
-import org.bonitasoft.studio.model.process.Task;
+import org.bonitasoft.bpm.model.expression.Expression;
+import org.bonitasoft.bpm.model.expression.ExpressionFactory;
+import org.bonitasoft.bpm.model.expression.Operation;
+import org.bonitasoft.bpm.model.expression.Operator;
+import org.bonitasoft.bpm.model.process.ProcessFactory;
+import org.bonitasoft.bpm.model.process.Task;
 import org.eclipse.core.runtime.IStatus;
 import org.junit.Test;
 

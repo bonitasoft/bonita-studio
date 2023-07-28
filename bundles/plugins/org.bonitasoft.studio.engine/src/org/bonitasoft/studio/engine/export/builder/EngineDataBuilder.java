@@ -22,21 +22,21 @@ import org.bonitasoft.engine.bpm.process.impl.FlowElementBuilder;
 import org.bonitasoft.engine.bpm.process.impl.ProcessDefinitionBuilder;
 import org.bonitasoft.engine.expression.Expression;
 import org.bonitasoft.studio.engine.export.EngineExpressionUtil;
-import org.bonitasoft.studio.model.process.BooleanType;
-import org.bonitasoft.studio.model.process.BusinessObjectData;
-import org.bonitasoft.studio.model.process.BusinessObjectType;
-import org.bonitasoft.studio.model.process.Data;
-import org.bonitasoft.studio.model.process.DateType;
-import org.bonitasoft.studio.model.process.DoubleType;
-import org.bonitasoft.studio.model.process.EnumType;
-import org.bonitasoft.studio.model.process.FloatType;
-import org.bonitasoft.studio.model.process.IntegerType;
-import org.bonitasoft.studio.model.process.JavaObjectData;
-import org.bonitasoft.studio.model.process.JavaType;
-import org.bonitasoft.studio.model.process.LongType;
-import org.bonitasoft.studio.model.process.StringType;
-import org.bonitasoft.studio.model.process.XMLType;
-import org.bonitasoft.studio.model.process.util.ProcessSwitch;
+import org.bonitasoft.bpm.model.process.BooleanType;
+import org.bonitasoft.bpm.model.process.BusinessObjectData;
+import org.bonitasoft.bpm.model.process.BusinessObjectType;
+import org.bonitasoft.bpm.model.process.Data;
+import org.bonitasoft.bpm.model.process.DateType;
+import org.bonitasoft.bpm.model.process.DoubleType;
+import org.bonitasoft.bpm.model.process.EnumType;
+import org.bonitasoft.bpm.model.process.FloatType;
+import org.bonitasoft.bpm.model.process.IntegerType;
+import org.bonitasoft.bpm.model.process.JavaObjectData;
+import org.bonitasoft.bpm.model.process.JavaType;
+import org.bonitasoft.bpm.model.process.LongType;
+import org.bonitasoft.bpm.model.process.StringType;
+import org.bonitasoft.bpm.model.process.XMLType;
+import org.bonitasoft.bpm.model.process.util.ProcessSwitch;
 
 /**
  * @author Romain Bioteau

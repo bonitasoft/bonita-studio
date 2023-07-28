@@ -17,12 +17,12 @@
 package org.bonitasoft.studio.configuration;
 
 import static org.bonitasoft.studio.assertions.StatusAssert.assertThat;
-import static org.bonitasoft.studio.model.configuration.builders.ConfigurationBuilder.aConfiguration;
-import static org.bonitasoft.studio.model.configuration.builders.DefinitionMappingBuilder.aDefinitionMapping;
-import static org.bonitasoft.studio.model.parameter.builders.ParameterBuilder.aParameter;
-import static org.bonitasoft.studio.model.process.builders.PoolBuilder.aPool;
+import static org.bonitasoft.bpm.model.configuration.builders.ConfigurationBuilder.aConfiguration;
+import static org.bonitasoft.bpm.model.configuration.builders.DefinitionMappingBuilder.aDefinitionMapping;
+import static org.bonitasoft.bpm.model.parameter.builders.ParameterBuilder.aParameter;
+import static org.bonitasoft.bpm.model.process.builders.PoolBuilder.aPool;
 
-import org.bonitasoft.studio.model.configuration.Configuration;
+import org.bonitasoft.bpm.model.configuration.Configuration;
 import org.eclipse.core.runtime.IStatus;
 import org.junit.Test;
 

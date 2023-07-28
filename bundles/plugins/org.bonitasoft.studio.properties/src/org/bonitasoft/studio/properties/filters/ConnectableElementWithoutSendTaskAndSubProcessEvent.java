@@ -14,12 +14,12 @@
  */
 package org.bonitasoft.studio.properties.filters;
 
-import org.bonitasoft.studio.model.process.ConnectableElement;
-import org.bonitasoft.studio.model.process.ErrorEvent;
-import org.bonitasoft.studio.model.process.MainProcess;
-import org.bonitasoft.studio.model.process.SendTask;
-import org.bonitasoft.studio.model.process.SignalEvent;
-import org.bonitasoft.studio.model.process.TimerEvent;
+import org.bonitasoft.bpm.model.process.ConnectableElement;
+import org.bonitasoft.bpm.model.process.ErrorEvent;
+import org.bonitasoft.bpm.model.process.MainProcess;
+import org.bonitasoft.bpm.model.process.SendTask;
+import org.bonitasoft.bpm.model.process.SignalEvent;
+import org.bonitasoft.bpm.model.process.TimerEvent;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.jface.viewers.IFilter;
 

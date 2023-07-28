@@ -16,7 +16,7 @@ package org.bonitasoft.studio.document.ui.editingSupport;
 
 import org.bonitasoft.studio.document.core.repository.DocumentFileStore;
 import org.bonitasoft.studio.document.ui.dialog.SelectResourceDialog;
-import org.bonitasoft.studio.model.configuration.Resource;
+import org.bonitasoft.bpm.model.configuration.Resource;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.DialogCellEditor;

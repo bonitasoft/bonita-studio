@@ -16,7 +16,7 @@ package org.bonitasoft.studio.validation.constraints.connector;
 
 import static org.bonitasoft.studio.connector.model.definition.CloudProblematicsConnectors.WARNING_CONNECTORS;
 
-import org.bonitasoft.studio.model.process.Connector;
+import org.bonitasoft.bpm.model.process.Connector;
 import org.bonitasoft.studio.validation.constraints.AbstractLiveValidationMarkerConstraint;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.validation.IValidationContext;
