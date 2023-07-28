@@ -15,12 +15,6 @@
 
 package org.bonitasoft.studio.test.swtbot.suite;
 
-import org.bonitasoft.studio.tests.actors.ActorDefinitionTranslationsTest;
-import org.bonitasoft.studio.tests.actors.ActorFilterDefinitionTest;
-import org.bonitasoft.studio.tests.actors.ActorFilterDefinitionWizardPageTest;
-import org.bonitasoft.studio.tests.actors.ActorFilterEditionTest;
-import org.bonitasoft.studio.tests.actors.ActorFilterImplementationTest;
-import org.bonitasoft.studio.tests.actors.SWTBotActorFilterExportTests;
 import org.bonitasoft.studio.tests.applicationDescriptor.ApplicationDescriptorIT;
 import org.bonitasoft.studio.tests.applicationDescriptor.ApplicationDescriptorOverviewIT;
 import org.bonitasoft.studio.tests.applicationDescriptor.OpenExistingApplicationIT;
@@ -32,17 +26,9 @@ import org.bonitasoft.studio.tests.conditions.SWTBOTTestConditions;
 import org.bonitasoft.studio.tests.configuration.ConfigurationDialogIT;
 import org.bonitasoft.studio.tests.configuration.JavaDependenciesConfigurationIT;
 import org.bonitasoft.studio.tests.connectors.AdvancedDBConnectorsTest;
-import org.bonitasoft.studio.tests.connectors.ConnectorDefinitionTranslationsTest;
-import org.bonitasoft.studio.tests.connectors.ConnectorDefinitionWizardPageTest;
 import org.bonitasoft.studio.tests.connectors.ConnectorEditedInAsingleCommandIT;
-import org.bonitasoft.studio.tests.connectors.ConnectorEditionTest;
-import org.bonitasoft.studio.tests.connectors.ConnectorImplementationTest;
 import org.bonitasoft.studio.tests.connectors.RichTextEditorIT;
-import org.bonitasoft.studio.tests.connectors.SWTBotConnectorDefinitionTest;
-import org.bonitasoft.studio.tests.connectors.SWTBotConnectorExportTests;
 import org.bonitasoft.studio.tests.connectors.TestDatabaseConnectorOutputMode;
-import org.bonitasoft.studio.tests.connectors.TestLoadSaveConnectorConfiguration;
-import org.bonitasoft.studio.tests.connectors.TestTextAreaInConnectorWizard;
 import org.bonitasoft.studio.tests.connectors.sforce.TestSForceConnection;
 import org.bonitasoft.studio.tests.connectors.sforce.TestSForceCreateObject;
 import org.bonitasoft.studio.tests.connectors.sforce.TestSForceDeleteObject;
@@ -63,6 +49,7 @@ import org.bonitasoft.studio.tests.diagram.TestBoundariesCreation;
 import org.bonitasoft.studio.tests.diagram.TestMoveBetweenLane;
 import org.bonitasoft.studio.tests.diagram.TestRenameDiagram;
 import org.bonitasoft.studio.tests.diagram.TestUndoRedoStackLimit;
+import org.bonitasoft.studio.tests.diagram.TestWebPurchase;
 import org.bonitasoft.studio.tests.dialog.OpenNameAndVersionDiagramForDiagramTest;
 import org.bonitasoft.studio.tests.dialog.OpenNameAndVersionForDiagramDialogTest;
 import org.bonitasoft.studio.tests.document.TestDocument;
@@ -86,11 +73,9 @@ import org.bonitasoft.studio.tests.iteration.MultiInstantiationIT;
 import org.bonitasoft.studio.tests.organization.OrganizationIT;
 import org.bonitasoft.studio.tests.organization.TestOrganizationPassword;
 import org.bonitasoft.studio.tests.preferences.MavenConfigurationIT;
-import org.bonitasoft.studio.tests.processzoo.examples.TestWebPurchase;
 import org.bonitasoft.studio.tests.project.ProjectCompositionIT;
 import org.bonitasoft.studio.tests.project.ProjectOverviewIT;
 import org.bonitasoft.studio.tests.projectExplorer.ProjectExplorerBdmIT;
-import org.bonitasoft.studio.tests.projectExplorer.ProjectExplorerConnectorIT;
 import org.bonitasoft.studio.tests.projectExplorer.ProjectExplorerDiagramIT;
 import org.bonitasoft.studio.tests.projectExplorer.ProjectExplorerLivingApplicationIT;
 import org.bonitasoft.studio.tests.projectExplorer.ProjectExplorerOrganizationIT;
@@ -117,7 +102,6 @@ import org.junit.runners.Suite;
         ProjectExplorerOrganizationIT.class,
         ProjectExplorerBdmIT.class,
         ProjectExplorerLivingApplicationIT.class,
-        ProjectExplorerConnectorIT.class,
         ProjectExplorerRestApiIT.class,
         DeployWizardIT.class,
         ImportBPMMNFileIT.class,
@@ -127,26 +111,12 @@ import org.junit.runners.Suite;
         TestRenameDiagram.class,
         TestDatabaseConnectorOutputMode.class,
         TestPatternExpressionViewer.class,
-        TestLoadSaveConnectorConfiguration.class,
         ConfigurationDialogIT.class,
-        ActorDefinitionTranslationsTest.class,
-        ActorFilterDefinitionTest.class,
-        ActorFilterDefinitionWizardPageTest.class,
-        ActorFilterEditionTest.class,
-        ActorFilterImplementationTest.class,
-        SWTBotActorFilterExportTests.class,
-        ConnectorEditionTest.class,
-        ConnectorDefinitionWizardPageTest.class,
-        ConnectorImplementationTest.class,
-        TestTextAreaInConnectorWizard.class,
-        SWTBotConnectorExportTests.class,
-        SWTBotConnectorDefinitionTest.class,
         TestDecisionTable.class,
         TestThrowCatchMessage.class,
         TestWebPurchase.class,
         TestUndoRedoStackLimit.class,
         OpenNameAndVersionDiagramForDiagramTest.class,
-        ConnectorDefinitionTranslationsTest.class,
         CopyPasteTests.class,
         NewRunTest.class,
         DataWizardIT.class,

@@ -17,7 +17,6 @@ package org.bonitasoft.studio.connectors.ui.wizard;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IDefinitionRepositoryStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
-import org.bonitasoft.studio.common.repository.store.SourceRepositoryStore;
 import org.bonitasoft.studio.connector.model.implementation.provider.ConnectorImplementationContentProvider;
 import org.bonitasoft.studio.connector.model.implementation.provider.ConnectorImplementationLabelProvider;
 import org.bonitasoft.studio.connector.model.implementation.wizard.AbstractSelectImplementationWizard;
@@ -25,7 +24,6 @@ import org.bonitasoft.studio.connectors.ConnectorPlugin;
 import org.bonitasoft.studio.connectors.i18n.Messages;
 import org.bonitasoft.studio.connectors.repository.ConnectorDefRepositoryStore;
 import org.bonitasoft.studio.connectors.repository.ConnectorImplRepositoryStore;
-import org.bonitasoft.studio.connectors.repository.ConnectorSourceRepositoryStore;
 import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 
@@ -61,12 +59,6 @@ public class SelectUserConnectorImplementationWizard extends AbstractSelectImple
     @Override
     protected String getPageTitle() {
         return Messages.selectConnectorImplementationTitle;
-    }
-
-    @Override
-    protected SourceRepositoryStore getSourceStore() {
-        return (SourceRepositoryStore) RepositoryManager.getInstance()
-                .getRepositoryStore(ConnectorSourceRepositoryStore.class);
     }
 
     @Override

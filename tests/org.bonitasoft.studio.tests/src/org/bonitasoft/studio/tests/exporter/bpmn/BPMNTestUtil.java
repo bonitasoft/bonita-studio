@@ -49,7 +49,7 @@ public class BPMNTestUtil {
     }
 
     protected static File importBPMNFile(final URL bpmnResource) {
-        final BPMNToProc bpmnToProc = new BPMNToProc(new File(bpmnResource.getFile()).getAbsolutePath());
+        final BPMNToProc bpmnToProc = new BPMNToProc();
         final File destFile = bpmnToProc.createDiagram(bpmnResource, new NullProgressMonitor());
         destFile.deleteOnExit();
         return destFile;

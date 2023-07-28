@@ -36,7 +36,7 @@ public class BPMNToProcFactory extends ImporterFactory {
      */
     @Override
     public ToProcProcessor createProcessor(final String resourceName) {
-        return new BPMNToProc(resourceName);
+        return new BPMNToProc();
     }
 
 }

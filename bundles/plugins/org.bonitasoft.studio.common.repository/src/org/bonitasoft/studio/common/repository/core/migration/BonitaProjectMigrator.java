@@ -29,6 +29,7 @@ import org.bonitasoft.studio.common.repository.core.migration.step.ExtensionsMod
 import org.bonitasoft.studio.common.repository.core.migration.step.GitIgnoreMigrationStep;
 import org.bonitasoft.studio.common.repository.core.migration.step.JavaDependenciesMigrationStep;
 import org.bonitasoft.studio.common.repository.core.migration.step.MultiModuleMigrationStep;
+import org.bonitasoft.studio.common.repository.core.migration.step.ProvidedGroovyScriptRemovedStep;
 import org.bonitasoft.studio.common.repository.core.migration.step.RemoveLegacyFolderStep;
 import org.bonitasoft.studio.common.repository.core.migration.step.SplitGroovyAllIntoModulesStep;
 import org.bonitasoft.studio.common.repository.core.migration.step.UpdateBonitaRuntimeVersionInPomStep;
@@ -47,6 +48,7 @@ public class BonitaProjectMigrator {
             new CreatePomMigrationStep(),
             new RemoveLegacyFolderStep(),
             new UpdateBonitaRuntimeVersionInPomStep(),
+            new UpdateMavenPluginVersionInPomStep(),
             new SplitGroovyAllIntoModulesStep(),
             new JavaDependenciesMigrationStep(DependenciesUpdateOperationFactory.get()),
             new BdmModelArtifactMigrationStep(true),
@@ -54,8 +56,8 @@ public class BonitaProjectMigrator {
             new GitIgnoreMigrationStep(),
             new DeleteProjectSettingsMigrationStep(),
             new UpdateProjectDescriptionMigrationStep(),
-            new UpdateMavenPluginVersionInPomStep(),
-            new ExtensionsModuleMigrationStep());
+            new ExtensionsModuleMigrationStep(),
+            new ProvidedGroovyScriptRemovedStep());
 
     private Path project;
 

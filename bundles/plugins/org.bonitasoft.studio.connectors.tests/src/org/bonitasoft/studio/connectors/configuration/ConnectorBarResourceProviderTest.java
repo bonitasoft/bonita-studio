@@ -20,28 +20,24 @@ import static org.bonitasoft.bpm.model.configuration.builders.DefinitionMappingB
 import static org.bonitasoft.bpm.model.configuration.builders.FragmentBuilder.aFragment;
 import static org.bonitasoft.bpm.model.configuration.builders.FragmentContainerBuilder.aFragmentContainer;
 import static org.bonitasoft.bpm.model.process.builders.PoolBuilder.aPool;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import org.bonitasoft.bpm.connector.model.implementation.ConnectorImplementation;
+import org.bonitasoft.bpm.connector.model.implementation.ConnectorImplementationFactory;
+import org.bonitasoft.bpm.model.configuration.Configuration;
 import org.bonitasoft.engine.bpm.bar.BarResource;
 import org.bonitasoft.engine.bpm.bar.BusinessArchiveBuilder;
 import org.bonitasoft.studio.common.FragmentTypes;
 import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.filestore.PackageFileStore;
-import org.bonitasoft.bpm.connector.model.implementation.ConnectorImplementation;
-import org.bonitasoft.bpm.connector.model.implementation.ConnectorImplementationFactory;
 import org.bonitasoft.studio.connectors.repository.ConnectorImplFileStore;
 import org.bonitasoft.studio.connectors.repository.ConnectorImplRepositoryStore;
-import org.bonitasoft.studio.connectors.repository.ConnectorSourceRepositoryStore;
 import org.bonitasoft.studio.dependencies.repository.DependencyFileStore;
 import org.bonitasoft.studio.dependencies.repository.DependencyRepositoryStore;
-import org.bonitasoft.bpm.model.configuration.Configuration;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -59,9 +55,6 @@ public class ConnectorBarResourceProviderTest {
 
     @Mock
     private DependencyRepositoryStore depStore;
-
-    @Mock
-    private ConnectorSourceRepositoryStore connectorSourceStore;
 
     @Mock
     private RepositoryAccessor repositoryAccessor;
@@ -82,31 +75,6 @@ public class ConnectorBarResourceProviderTest {
     public void initRepositoryAccessor() throws Exception {
         when(repositoryAccessor.getRepositoryStore(ConnectorImplRepositoryStore.class)).thenReturn(connectorImplStore);
         when(repositoryAccessor.getRepositoryStore(DependencyRepositoryStore.class)).thenReturn(depStore);
-        when(repositoryAccessor.getRepositoryStore(ConnectorSourceRepositoryStore.class))
-                .thenReturn(connectorSourceStore);
-    }
-
-    @Test
-    public void should_add_implementation_jar_in_bar_resource_from_source() throws Exception {
-        final ConnectorBarResourceProvider provider = spy(new ConnectorBarResourceProvider(repositoryAccessor));
-        doReturn(fileRule.newFile("myConnectorImpl-1.0.0.jar")).when(provider).exportJar(anyString(),
-                any(PackageFileStore.class));
-        doReturn(true).when(provider).classInSourceProject("org.test.MyConnector");
-        when(myConnectorImplFileStore.getContent())
-                .thenReturn(aConnectorImplementation("myConnectorDef", "1.0.0", "myConnectorImpl", "1.0.0",
-                        "org.test.MyConnector"));
-        when(myConnectorImplFileStore.canBeShared()).thenReturn(true);
-        when(connectorSourceStore.getChild("org.test", true)).thenReturn(connectorSourceFileStore);
-        when(connectorImplStore.getImplementationFileStore("myConnectorImpl", "1.0.0"))
-                .thenReturn(myConnectorImplFileStore);
-        final BusinessArchiveBuilder builder = mock(BusinessArchiveBuilder.class);
-        provider.addResourcesForConfiguration(builder, aPool().build(),
-                connectorConfiguration("myConnectorDef", "1.0.0", "myConnectorImpl", "1.0.0"));
-
-        final ArgumentCaptor<BarResource> barResourceCaptor = ArgumentCaptor.forClass(BarResource.class);
-        verify(builder).addClasspathResource(barResourceCaptor.capture());
-
-        assertThat(barResourceCaptor.getValue().getName()).isEqualTo("myConnectorImpl-1.0.0.jar");
     }
 
     @Test

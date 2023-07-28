@@ -43,15 +43,6 @@ public class ActorFilterBarResourceProvider extends ConnectorBarResourceProvider
 
     /*
      * (non-Javadoc)
-     * @see org.bonitasoft.studio.connectors.configuration.ConnectorBarResourceProvider#getSourceStore()
-     */
-    @Override
-    protected SourceRepositoryStore<?> getSourceStore() {
-        return repositoryAccessor.getRepositoryStore(ActorFilterSourceRepositoryStore.class);
-    }
-
-    /*
-     * (non-Javadoc)
      * @see org.bonitasoft.studio.connectors.configuration.ConnectorBarResourceProvider#getImplementationStore()
      */
     @Override

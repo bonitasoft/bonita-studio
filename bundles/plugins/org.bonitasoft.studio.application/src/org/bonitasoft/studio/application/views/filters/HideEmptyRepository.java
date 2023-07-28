@@ -40,7 +40,7 @@ public class HideEmptyRepository extends ViewerFilter {
             if (store != null) {
                 try {
                     IFolder resource = store.getResource();
-                    if (resource.exists()) {
+                    if (resource != null && resource.exists()) {
                         IResource[] members = resource.members();
                         if (store instanceof WebWidgetRepositoryStore) {
                             return Stream.of(members)

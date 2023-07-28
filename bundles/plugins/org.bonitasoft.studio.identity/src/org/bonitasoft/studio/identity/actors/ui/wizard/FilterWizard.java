@@ -41,6 +41,7 @@ import org.bonitasoft.studio.identity.i18n.Messages;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.jface.wizard.IWizardPage;
+import org.eclipse.osgi.util.NLS;
 
 public class FilterWizard extends ConnectorWizard {
 
@@ -108,7 +109,7 @@ public class FilterWizard extends ConnectorWizard {
             if (connectorDefinitionLabel == null && def != null) {
                 connectorDefinitionLabel = def.getId();
             }
-            p.setTitle(Messages.bind(Messages.filterWizardTitle, connectorDefinitionLabel,
+            p.setTitle(NLS.bind(Messages.filterWizardTitle, connectorDefinitionLabel,
                     connectorWorkingCopy.getDefinitionVersion()));
             p.setDescription(Messages.filterWizardMessage);
         }

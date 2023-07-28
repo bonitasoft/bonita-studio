@@ -14,25 +14,21 @@
  */
 package org.bonitasoft.studio.connector.model.implementation.wizard;
 
-import org.bonitasoft.studio.common.repository.filestore.AbstractFileStore;
+import org.bonitasoft.bpm.connector.model.implementation.ConnectorImplementation;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
-import org.bonitasoft.studio.common.repository.store.SourceRepositoryStore;
-import org.bonitasoft.bpm.connector.model.implementation.ConnectorImplementation;
 import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.wizard.Wizard;
 
-/**
- * @author Romain Bioteau
- */
+
 public abstract class AbstractSelectImplementationWizard extends Wizard {
 
     private SelectConnectorImplementationWizardPage page;
     private ConnectorImplementation implemenetation;
 
-    public AbstractSelectImplementationWizard() {
+    protected AbstractSelectImplementationWizard() {
         setDefaultPageImageDescriptor(Pics.getWizban());
     }
 
@@ -42,8 +38,6 @@ public abstract class AbstractSelectImplementationWizard extends Wizard {
                 getLabelProvider());
         addPage(page);
     }
-
-    protected abstract SourceRepositoryStore<? extends AbstractFileStore> getSourceStore();
 
     protected abstract IRepositoryStore<? extends IRepositoryFileStore> getImplementationStore();
 

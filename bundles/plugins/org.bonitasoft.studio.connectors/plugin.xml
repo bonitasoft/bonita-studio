@@ -8,36 +8,6 @@
    <extension
          point="org.eclipse.ui.commands">
       <command
-            defaultHandler="org.bonitasoft.studio.connectors.handler.NewConnectorDefinitionHandler"
-            id="org.bonitasoft.studio.connectors.newDefinition"
-            name="%newConnectorDefinition">
-      </command>
-      <command
-            defaultHandler="org.bonitasoft.studio.connectors.handler.EditConnectorDefinitionHandler"
-            id="org.bonitasoft.studio.connectors.editDefinition"
-            name="%editDefinition">
-      </command>
-      <command
-            defaultHandler="org.bonitasoft.studio.connectors.handler.ExportConnectorHandler"
-            id="org.bonitasoft.studio.connectors.exportConnector"
-            name="%exportConnector">
-      </command>
-      <command
-            defaultHandler="org.bonitasoft.studio.connectors.handler.ImportConnectorHandler"
-            id="org.bonitasoft.studio.connectors.importConnector"
-            name="%importConnector">
-      </command>
-      <command
-            defaultHandler="org.bonitasoft.studio.connectors.handler.NewConnectorImplementationHandler"
-            id="org.bonitasoft.studio.connectors.newImplementation"
-            name="%newConnectorImplementation">
-      </command>
-      <command
-            defaultHandler="org.bonitasoft.studio.connectors.handler.EditConnectorImplementationHandler"
-            id="org.bonitasoft.studio.connectors.editImplementation"
-            name="%editConnectorImplementation">
-      </command>
-      <command
             defaultHandler="org.bonitasoft.studio.connectors.handler.TestConnectorWizardHandler"
             id="org.bonitasoft.studio.connectors.testConnector"
             name="%testConnector">
@@ -97,9 +67,6 @@
       </repositoryStore>
       <repositoryStore
             class="org.bonitasoft.studio.connectors.repository.ConnectorDefRepositoryStore">
-      </repositoryStore>
-      <repositoryStore
-            class="org.bonitasoft.studio.connectors.repository.ConnectorSourceRepositoryStore">
       </repositoryStore>
       <repositoryStore
             class="org.bonitasoft.studio.connectors.repository.DatabaseConnectorPropertiesRepositoryStore">

@@ -40,7 +40,7 @@ public class GroovyCompilationUnitFactory {
         final IJavaProject javaProject = javaProject();
         if (javaProject != null) {
             final IPackageFragment packageFragment = javaProject
-                    .findPackageFragmentRoot(javaProject.getPath().append("src-providedGroovy"))
+                    .findPackageFragmentRoot(javaProject.getPath().append("src-groovy"))
                     .getPackageFragment("");//default package
             return packageFragment.createCompilationUnit(GroovyFileStore.EXPRESSION_SCRIPT_NAME, script, true, monitor);
         }

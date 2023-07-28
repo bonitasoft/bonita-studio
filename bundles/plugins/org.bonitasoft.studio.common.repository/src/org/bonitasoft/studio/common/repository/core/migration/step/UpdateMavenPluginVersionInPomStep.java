@@ -47,7 +47,7 @@ public class UpdateMavenPluginVersionInPomStep implements MigrationStep {
                 properties.setProperty(versionProperty, plugin.getVersion());
                 var pluginManagement = model.getBuild().getPluginManagement();
                 pluginManagement.addPlugin(plugin.toManagedPlugin());
-                report.added(String.format("`%s:%s` has been added to the managed plugins list.", plugin.getGroupId(),
+                report.added(String.format("`%s:%s` has been added to the managed plug-ins list.", plugin.getGroupId(),
                         plugin.getArtifactId()));
             }
         }
@@ -59,7 +59,7 @@ public class UpdateMavenPluginVersionInPomStep implements MigrationStep {
 
     @Override
     public boolean appliesTo(String sourceVersion) {
-        return Version.parseVersion(sourceVersion).compareTo(new Version("8.0.0")) >= 0;
+        return Version.parseVersion(sourceVersion).compareTo(new Version("7.13.0")) >= 0;
     }
 
 }

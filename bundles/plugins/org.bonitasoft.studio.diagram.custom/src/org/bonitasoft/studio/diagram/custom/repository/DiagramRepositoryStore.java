@@ -334,7 +334,7 @@ public class DiagramRepositoryStore extends AbstractEMFRepositoryStore<DiagramFi
                     .map(MainProcess.class::cast)
                     .findFirst()
                     .orElseThrow(() -> new IOException(
-                            "Resource content is invalid. There should be one MainProcess per .proc file."));
+                            "Resource content is invalid. There should be only one MainProcess per .proc file."));
 
             //Sanitize model
             new RemoveDanglingReferences(diagram).execute();

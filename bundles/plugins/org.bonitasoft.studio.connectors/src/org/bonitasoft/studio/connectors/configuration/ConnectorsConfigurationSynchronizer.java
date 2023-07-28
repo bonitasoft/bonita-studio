@@ -37,13 +37,11 @@ import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.filestore.EMFFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.common.repository.provider.DefinitionResourceProvider;
-import org.bonitasoft.studio.common.repository.store.SourceRepositoryStore;
 import org.bonitasoft.studio.configuration.AbstractConnectorConfigurationSynchronizer;
 import org.bonitasoft.studio.connector.model.implementation.AbstractConnectorImplRepositoryStore;
 import org.bonitasoft.studio.connectors.ConnectorPlugin;
 import org.bonitasoft.studio.connectors.repository.ConnectorDefRepositoryStore;
 import org.bonitasoft.studio.connectors.repository.ConnectorImplRepositoryStore;
-import org.bonitasoft.studio.connectors.repository.ConnectorSourceRepositoryStore;
 import org.bonitasoft.studio.connectors.repository.DatabaseConnectorPropertiesFileStore;
 import org.bonitasoft.studio.connectors.repository.DatabaseConnectorPropertiesRepositoryStore;
 import org.bonitasoft.studio.dependencies.repository.DependencyRepositoryStore;
@@ -165,11 +163,6 @@ public class ConnectorsConfigurationSynchronizer extends AbstractConnectorConfig
                 }
             }
         }
-    }
-
-    @Override
-    protected SourceRepositoryStore getSourcerepositoryStore() {
-        return RepositoryManager.getInstance().getRepositoryStore(ConnectorSourceRepositoryStore.class);
     }
 
     @Override

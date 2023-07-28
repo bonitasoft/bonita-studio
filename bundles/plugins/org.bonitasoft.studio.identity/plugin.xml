@@ -60,21 +60,6 @@
          </commandParameter>
       </command>
       <command
-            defaultHandler="org.bonitasoft.studio.identity.actors.ui.handler.NewFilterDefinitionHandler"
-            name="%newFilterDef"
-            id="org.bonitasoft.studio.actors.newFilterDef">
-      </command>
-      <command
-            defaultHandler="org.bonitasoft.studio.identity.actors.ui.handler.EditFilterDefinitionHandler"
-            name="%editFilterDef"
-            id="org.bonitasoft.studio.actors.editFilterDef">
-      </command>
-      <command
-            defaultHandler="org.bonitasoft.studio.identity.actors.ui.handler.NewFilterImplementationHandler"
-            name="%newFilterImpl"
-            id="org.bonitasoft.studio.actors.newFilterImpl">
-      </command>
-      <command
             name="%installOrganization"
             id="org.bonitasoft.studio.engine.installOrganization">
          <commandParameter
@@ -82,21 +67,6 @@
                optional="false"
                id="artifact">
          </commandParameter>
-      </command>
-      <command
-            defaultHandler="org.bonitasoft.studio.identity.actors.ui.handler.EditFilterImplementationHandler"
-            name="%editFilterImpl"
-            id="org.bonitasoft.studio.actors.editFilterImpl">
-      </command>
-      <command
-            defaultHandler="org.bonitasoft.studio.identity.actors.ui.handler.ExportActorFilterHandler"
-            name="%export_Label"
-            id="org.bonitasoft.studio.actors.filter.export">
-      </command>
-      <command
-            defaultHandler="org.bonitasoft.studio.identity.actors.ui.handler.ImportActorFilterHandler"
-            name="%import_Label"
-            id="org.bonitasoft.studio.actors.filter.import">
       </command>
    </extension>
    <extension
@@ -171,9 +141,6 @@
          point="org.bonitasoft.studio.repositoryStore">
       <repositoryStore
             class="org.bonitasoft.studio.identity.organization.repository.OrganizationRepositoryStore">
-      </repositoryStore>
-      <repositoryStore
-            class="org.bonitasoft.studio.identity.actors.repository.ActorFilterSourceRepositoryStore">
       </repositoryStore>
       <repositoryStore
             class="org.bonitasoft.studio.identity.actors.repository.ActorFilterDefRepositoryStore">
@@ -303,63 +270,6 @@
                   <iterate>
                      <test
                            property="org.bonitasoft.studio.organization.isOrganizationFolder">
-                     </test>
-                  </iterate>
-               </and>
-            </with>
-         </activeWhen>
-      </handler>
-      <handler
-            class="org.bonitasoft.studio.identity.actors.ui.handler.ExportActorFilterHandler"
-            commandId="org.bonitasoft.studio.application.export">
-         <activeWhen>
-            <with
-                  variable="activeMenuSelection">
-               <and>
-                  <count
-                        value="1">
-                  </count>
-                  <iterate>
-                     <test
-                           property="org.bonitasoft.studio.actors.isActorFilterImplFolder">
-                     </test>
-                  </iterate>
-               </and>
-            </with>
-         </activeWhen>
-      </handler>
-      <handler
-            class="org.bonitasoft.studio.identity.actors.ui.handler.ExportSingleActorFilterHandler"
-            commandId="org.bonitasoft.studio.application.export">
-         <activeWhen>
-            <with
-                  variable="activeMenuSelection">
-               <and>
-                  <count
-                        value="1">
-                  </count>
-                  <iterate>
-                     <test
-                           property="org.bonitasoft.studio.actors.isActorFilterImplFile">
-                     </test>
-                  </iterate>
-               </and>
-            </with>
-         </activeWhen>
-      </handler>
-      <handler
-            class="org.bonitasoft.studio.identity.actors.ui.handler.ExportActorFilterFromDefinitionHandler"
-            commandId="org.bonitasoft.studio.application.export">
-         <activeWhen>
-            <with
-                  variable="activeMenuSelection">
-               <and>
-                  <count
-                        value="1">
-                  </count>
-                  <iterate>
-                     <test
-                           property="org.bonitasoft.studio.actors.isActorFilterDefFile">
                      </test>
                   </iterate>
                </and>

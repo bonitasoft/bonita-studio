@@ -242,10 +242,10 @@ public class Messages extends NLS {
     public static String validationSuccessMsg;
     public static String validationWarningMessage;
 
-    public static String bonitaSqlProvidedScriptDeprecationMessage;
-    public static String bonitaUsersProvidedScriptDeprecationMessage;
-    public static String bonitaXMLProvidedScriptDeprecationMessage;
-    public static String bonitaTypesProvidedScriptDeprecationMessage;
+    public static String bonitaSqlProvidedScriptRemovedMessage;
+    public static String bonitaUsersProvidedScriptRemovedMessage;
+    public static String bonitaXMLProvidedScriptRemovedMessage;
+    public static String bonitaTypesProvidedScriptRemovedMessage;
 
     public static String validate;
 

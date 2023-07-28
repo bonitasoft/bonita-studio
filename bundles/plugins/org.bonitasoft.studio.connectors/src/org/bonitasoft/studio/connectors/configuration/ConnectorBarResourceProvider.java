@@ -14,8 +14,6 @@
  */
 package org.bonitasoft.studio.connectors.configuration;
 
-import static com.google.common.io.Files.toByteArray;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -50,10 +48,8 @@ import org.bonitasoft.studio.common.repository.filestore.EMFFileStore;
 import org.bonitasoft.studio.common.repository.filestore.PackageFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
-import org.bonitasoft.studio.common.repository.store.SourceRepositoryStore;
 import org.bonitasoft.studio.connector.model.implementation.IImplementationRepositoryStore;
 import org.bonitasoft.studio.connectors.repository.ConnectorImplRepositoryStore;
-import org.bonitasoft.studio.connectors.repository.ConnectorSourceRepositoryStore;
 import org.bonitasoft.studio.dependencies.repository.DependencyRepositoryStore;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
@@ -156,13 +152,9 @@ public class ConnectorBarResourceProvider implements BARResourcesProvider {
 
             if (implementationContainer.isPresent()) {
                 for (final Fragment fragment : implementationContainer.get().getFragments().stream()
-                        .filter(fragment -> fragment.isExported())
+                        .filter(Fragment::isExported)
                         .collect(Collectors.toList())) {
-                    if (customImpl && NamingUtils.toConnectorImplementationJarName(implementation)
-                            .equals(fragment.getValue())) { //Generate jar from source file
-                        addImplementationJar(builder, implementation);
-                    }
-                    final IRepositoryFileStore jarFile = dependencyStore.getChild(fragment.getValue(), true);
+                    var jarFile = dependencyStore.getChild(fragment.getValue(), true);
                     if (jarFile != null) {
                         resources.add(new BarResource(jarFile.getName(), jarFile.toByteArray()));
                     }
@@ -179,31 +171,6 @@ public class ConnectorBarResourceProvider implements BARResourcesProvider {
         }
     }
 
-    private boolean addImplementationJar(final BusinessArchiveBuilder builder, final ConnectorImplementation impl)
-            throws InvocationTargetException,
-            InterruptedException, IOException, JavaModelException {
-        final SourceRepositoryStore<?> sourceStore = getSourceStore();
-        final String connectorJarName = NamingUtils.toConnectorImplementationJarName(impl);
-        final String qualifiedClassName = impl.getImplementationClassname();
-        String packageName = "";
-        if (qualifiedClassName.indexOf(".") != -1) {
-            packageName = qualifiedClassName.substring(0, qualifiedClassName.lastIndexOf("."));
-        }
-        final PackageFileStore file = (PackageFileStore) sourceStore.getChild(packageName, true);
-        if (file == null) {
-            return false;
-        }
-        if (classInSourceProject(qualifiedClassName)) {
-            final File tmpFile = exportJar(connectorJarName, file);
-            try {
-                builder.addClasspathResource(new BarResource(connectorJarName, toByteArray(tmpFile)));
-            } finally {
-                tmpFile.delete();
-            }
-            return true;
-        }
-        return false;
-    }
 
     protected boolean classInSourceProject(final String qualifiedClassName) throws JavaModelException {
         return repositoryAccessor.getCurrentRepository()
@@ -218,10 +185,6 @@ public class ConnectorBarResourceProvider implements BARResourcesProvider {
         Files.delete(tmpFile);
         file.exportAsJar(tmpFile.toFile().getAbsolutePath(), false);
         return tmpFile.toFile();
-    }
-
-    protected SourceRepositoryStore<?> getSourceStore() {
-        return repositoryAccessor.getRepositoryStore(ConnectorSourceRepositoryStore.class);
     }
 
     protected void addImplementation(final BusinessArchiveBuilder builder, final String connectorImplementationFilename,

@@ -64,16 +64,16 @@ public class ProvidedScriptsDeprecationConstraint extends AbstractLiveValidation
             return context.createSuccessStatus();
         }
         if(scriptText.contains("BonitaTypes.")){
-            return context.createFailureStatus(Messages.bonitaTypesProvidedScriptDeprecationMessage);
+            return context.createFailureStatus(Messages.bonitaTypesProvidedScriptRemovedMessage);
         }
         if(scriptText.contains("BonitaXML.")){
-            return context.createFailureStatus(Messages.bonitaXMLProvidedScriptDeprecationMessage);
+            return context.createFailureStatus(Messages.bonitaXMLProvidedScriptRemovedMessage);
         }
         if(scriptText.contains("BonitaUsers.")){
-            return context.createFailureStatus(Messages.bonitaUsersProvidedScriptDeprecationMessage);
+            return context.createFailureStatus(Messages.bonitaUsersProvidedScriptRemovedMessage);
         }
         if(scriptText.contains("BonitaSql.")){
-            return context.createFailureStatus(Messages.bonitaSqlProvidedScriptDeprecationMessage);
+            return context.createFailureStatus(Messages.bonitaSqlProvidedScriptRemovedMessage);
         }
         return context.createSuccessStatus();
     }

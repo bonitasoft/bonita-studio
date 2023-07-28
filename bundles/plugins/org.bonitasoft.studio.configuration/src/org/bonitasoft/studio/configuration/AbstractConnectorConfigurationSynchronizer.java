@@ -248,25 +248,11 @@ public abstract class AbstractConnectorConfigurationSynchronizer implements ICon
     }
 
     protected List<String> jarDependencies(final ConnectorImplementation implementation) {
-        final AbstractConnectorImplRepositoryStore<EMFFileStore> store = getImplementationStore();
-        SourceRepositoryStore connectorSourceStore = getSourcerepositoryStore();
-        final IRepositoryFileStore fileStore = store.getImplementationFileStore(implementation.getImplementationId(),
-                implementation.getImplementationVersion());
-        final List<String> dependencies = implementation.getJarDependencies() == null ? new ArrayList<>()
+        return implementation.getJarDependencies() == null ? new ArrayList<>()
                 : newArrayList(implementation
                         .getJarDependencies()
                         .getJarDependency());
-
-        if (fileStore != null && fileStore.canBeShared() && hasSources(connectorSourceStore, fileStore)) {
-            final String implementationJar = NamingUtils.toConnectorImplementationJarName(implementation);
-            if (!dependencies.contains(implementationJar)) {
-                dependencies.add(implementationJar);
-            }
-        }
-        return dependencies;
     }
-
-    protected abstract SourceRepositoryStore getSourcerepositoryStore();
 
     private boolean hasSources(SourceRepositoryStore connectorSourceStore, IRepositoryFileStore implementation) {
         try {

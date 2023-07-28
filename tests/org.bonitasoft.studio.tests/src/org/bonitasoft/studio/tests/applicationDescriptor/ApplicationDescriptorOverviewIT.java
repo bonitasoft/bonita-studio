@@ -27,10 +27,12 @@ import org.bonitasoft.studio.la.application.handler.NewApplicationHandler;
 import org.bonitasoft.studio.la.application.repository.ApplicationRepositoryStore;
 import org.bonitasoft.studio.swtbot.framework.application.BotApplicationWorkbenchWindow;
 import org.bonitasoft.studio.swtbot.framework.la.BotApplicationEditor;
+import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -38,6 +40,9 @@ import org.junit.runner.RunWith;
 public class ApplicationDescriptorOverviewIT {
 
     private final SWTGefBot bot = new SWTGefBot();
+    
+    @Rule
+    public final SWTGefBotRule swtGefBotRule = new SWTGefBotRule(bot);
 
     private RepositoryAccessor repositoryAccessor;
 

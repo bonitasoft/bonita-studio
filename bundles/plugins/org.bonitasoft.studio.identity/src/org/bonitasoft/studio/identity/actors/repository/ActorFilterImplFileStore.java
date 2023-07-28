@@ -18,24 +18,17 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.ClassGenerator;
-import org.bonitasoft.studio.common.repository.filestore.EMFFileStore;
-import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
-import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
-import org.bonitasoft.studio.common.repository.store.AbstractEMFRepositoryStore;
-import org.bonitasoft.studio.common.ui.jface.FileActionDialog;
 import org.bonitasoft.bpm.connector.model.implementation.ConnectorImplementation;
 import org.bonitasoft.bpm.connector.model.implementation.ConnectorImplementationFactory;
 import org.bonitasoft.bpm.connector.model.implementation.DocumentRoot;
-import org.bonitasoft.studio.identity.IdentityPlugin;
-import org.bonitasoft.studio.identity.actors.ui.wizard.FilterImplementationWizard;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.repository.filestore.EMFFileStore;
+import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
+import org.bonitasoft.studio.common.repository.store.AbstractEMFRepositoryStore;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.xmi.XMLResource;
-import org.eclipse.jface.wizard.WizardDialog;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbenchPart;
 
 /**
@@ -80,43 +73,12 @@ public class ActorFilterImplFileStore extends EMFFileStore<ConnectorImplementati
 
     @Override
     protected IWorkbenchPart doOpen() {
-        ConnectorImplementation connectorImplementation;
-        try {
-            connectorImplementation = getContent();
-            FilterImplementationWizard wizard = new FilterImplementationWizard(connectorImplementation);
-            WizardDialog wd = new WizardDialog(Display.getDefault().getActiveShell(), wizard);
-            wd.open();
-        } catch (ReadFileStoreException e) {
-            BonitaStudioLog.warning(e.getMessage(), IdentityPlugin.PLUGIN_ID);
-        }
         return null;
     }
 
     @Override
     protected void doDelete() {
-        if (FileActionDialog.confirmDeletionQuestion(getName())) {
-            ConnectorImplementation implementation = null;
-            try {
-                implementation = getContent();
-            } catch (ReadFileStoreException e) {
-                BonitaStudioLog.warning(e.getMessage(), IdentityPlugin.PLUGIN_ID);
-            }
-            super.doDelete();
-            if (implementation != null) {
-                String className = implementation.getImplementationClassname();
-                ActorFilterSourceRepositoryStore sourceStore = getRepositoryAccessor()
-                        .getRepositoryStore(ActorFilterSourceRepositoryStore.class);
-                IRepositoryFileStore sourceFile = sourceStore.getChild(className, true);
-                String abstarctClassName = ClassGenerator.getAbstractClassName(className);
-                IRepositoryFileStore abstractFile = sourceStore.getChild(abstarctClassName, true);
-                if (sourceFile != null && FileActionDialog.confirmDeletionQuestion(sourceFile.getName())) {
-                    sourceFile.delete();
-                    if (abstractFile != null) {
-                        abstractFile.delete();
-                    }
-                }
-            }
-        }
+    
     }
 
 }

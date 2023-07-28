@@ -151,7 +151,7 @@ public class ProcessConfigurationRepositoryStore extends AbstractEMFRepositorySt
                         .findFirst();
                 if (!configuration.isPresent()) {
                     throw new IOException(
-                            "Resource content is invalid. There should be one Configuration per .conf file.");
+                            "Resource content is invalid. There should be only one Configuration per .conf file.");
                 }
                 return new FileInputStream(new File(confResource.getURI()
                         .toFileString()));

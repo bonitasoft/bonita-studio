@@ -26,87 +26,94 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 
 public class MigrationReport {
 
-    private List<String> removed = new ArrayList<>();
-    private List<String> added = new ArrayList<>();
-    private List<String> updated = new ArrayList<>();
-    private String title = "Migration notes";
-    private List<IRunnableWithProgress> postMigrationOperations = new ArrayList<>();
+	private List<String> removed = new ArrayList<>();
+	private List<String> added = new ArrayList<>();
+	private List<String> updated = new ArrayList<>();
+	private String title = "Migration notes";
+	private List<IRunnableWithProgress> postMigrationOperations = new ArrayList<>();
 
-    public void removed(String message) {
-        removed.add(message);
-    }
+	public void removed(String message) {
+		if (!removed.contains(message)) {
+			removed.add(message);
+		}
+	}
 
-    public void added(String message) {
-        added.add(message);
-    }
+	public void added(String message) {
+		if(!added.contains(message)) {
+			added.add(message);
+		}
+	}
 
-    public void updated(String message) {
-        updated.add(message);
-    }
+	public void updated(String message) {
+		if(!updated.contains(message)) {
+			updated.add(message);
+		}
+	}
 
-    public MigrationReport merge(MigrationReport report) {
-        removed.forEach(report::removed);
-        added.forEach(report::added);
-        updated.forEach(report::updated);
-        postMigrationOperations.forEach(report::addPostMigrationOperation);
-        return report;
-    }
+	public MigrationReport merge(MigrationReport report) {
+		removed.forEach(report::removed);
+		added.forEach(report::added);
+		updated.forEach(report::updated);
+		postMigrationOperations.forEach(report::addPostMigrationOperation);
+		return report;
+	}
 
-    public String getTitle() {
-        return title;
-    }
+	public String getTitle() {
+		return title;
+	}
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
+	public void setTitle(String title) {
+		this.title = title;
+	}
 
-    public String getDate() {
-        return ZonedDateTime.now().format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.LONG));
-    }
+	public String getDate() {
+		return ZonedDateTime.now().format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.LONG));
+	}
 
-    public boolean hasAdditions() {
-        return !added.isEmpty();
-    }
+	public boolean hasAdditions() {
+		return !added.isEmpty();
+	}
 
-    public boolean hasUpdates() {
-        return !updated.isEmpty();
-    }
+	public boolean hasUpdates() {
+		return !updated.isEmpty();
+	}
 
-    public boolean hasRemovals() {
-        return !removed.isEmpty();
-    }
+	public boolean hasRemovals() {
+		return !removed.isEmpty();
+	}
 
-    public List<String> additions() {
-        return added;
-    }
+	public List<String> additions() {
+		return added;
+	}
 
-    public List<String> updates() {
-        return updated;
-    }
+	public List<String> updates() {
+		return updated;
+	}
 
-    public List<String> removals() {
-        return removed;
-    }
+	public List<String> removals() {
+		return removed;
+	}
 
-    public static MigrationReport emptyReport() {
-        return new MigrationReport();
-    }
+	public static MigrationReport emptyReport() {
+		return new MigrationReport();
+	}
 
-    public boolean isEmpty() {
-        return !hasAdditions() && !hasRemovals() && !hasUpdates();
-    }
+	public boolean isEmpty() {
+		return !hasAdditions() && !hasRemovals() && !hasUpdates();
+	}
 
-    public void addPostMigrationOperation(IRunnableWithProgress operation) {
-        this.postMigrationOperations.add(operation);
-    }
+	public void addPostMigrationOperation(IRunnableWithProgress operation) {
+		this.postMigrationOperations.add(operation);
+	}
 
-    public List<IRunnableWithProgress> getPostMigrationOperations() {
-        return postMigrationOperations;
-    }
-    
-    public void executePostMigrationOperations(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-        for(var operation : postMigrationOperations) {
-            operation.run(monitor);
-        }
-    }
+	public List<IRunnableWithProgress> getPostMigrationOperations() {
+		return postMigrationOperations;
+	}
+
+	public void executePostMigrationOperations(IProgressMonitor monitor)
+			throws InvocationTargetException, InterruptedException {
+		for (var operation : postMigrationOperations) {
+			operation.run(monitor);
+		}
+	}
 }

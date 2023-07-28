@@ -231,30 +231,17 @@ public class BPMNToProc extends ToProcProcessor {
             "parameterRef", "resourceRef", "signalRef",
             "eventDefinitionRef", "attachedToRef" };
 
-    /**
-     * @param resourceName
-     */
-    public BPMNToProc(final String resourceName) {
-        final File f = new File(resourceName);
-        if (f.exists()) {
-            this.resourceName = f.getName();
-        } else {
-            this.resourceName = resourceName;
-        }
-
-    }
 
     @Override
     public File createDiagram(URL sourceBPMNUrl, final IProgressMonitor progressMonitor) {
         progressMonitor.beginTask(Messages.importFromBPMN,
                 IProgressMonitor.UNKNOWN);
+        this.resourceName = new File(sourceBPMNUrl.getFile()).getName();
         status = new MultiStatus(ImporterPlugin.PLUGIN_ID, 0, null, null);
         builder = new ProcBuilder(progressMonitor);
-
-        InputStream stream = null;
-        try {
+        try(var stream = sourceBPMNUrl.openStream()) {
             boolean hadBeenPreProcessed = false;
-            stream = sourceBPMNUrl.openStream();
+           
             final Document document = DocumentBuilderFactory.newInstance()
                     .newDocumentBuilder().parse(stream);
             if (!ModelPackage.eNS_URI.equals(document.getDocumentElement()
@@ -280,15 +267,7 @@ public class BPMNToProc extends ToProcProcessor {
 
         } catch (final Exception ex) {
             BonitaStudioLog.error(ex);
-        } finally {
-            if (stream != null) {
-                try {
-                    stream.close();
-                } catch (final IOException e) {
-                    BonitaStudioLog.error(e);
-                }
-            }
-        }
+        } 
 
         final ResourceSet resourceSet = new ResourceSetImpl();
         final Map<String, Object> extensionToFactoryMap = resourceSet

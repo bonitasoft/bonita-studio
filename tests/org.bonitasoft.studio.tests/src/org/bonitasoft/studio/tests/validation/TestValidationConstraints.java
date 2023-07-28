@@ -25,19 +25,17 @@ import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.List;
 
-import org.bonitasoft.studio.common.repository.AbstractRepository;
+import org.bonitasoft.bpm.model.process.AbstractProcess;
+import org.bonitasoft.bpm.model.process.Element;
+import org.bonitasoft.bpm.model.process.MainProcess;
+import org.bonitasoft.bpm.model.process.Pool;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.importer.bos.operation.ImportBosArchiveOperation;
-import org.bonitasoft.bpm.model.process.AbstractProcess;
-import org.bonitasoft.bpm.model.process.Element;
-import org.bonitasoft.bpm.model.process.MainProcess;
-import org.bonitasoft.bpm.model.process.Pool;
 import org.bonitasoft.studio.tests.util.InitialProjectRule;
-import org.bonitasoft.studio.validation.constraints.connector.ConnectorExistenceConstraint;
 import org.bonitasoft.studio.validation.constraints.process.AssignableConstraint;
 import org.bonitasoft.studio.validation.constraints.process.XORGatewayConstraint;
 import org.eclipse.core.resources.IMarker;
@@ -133,30 +131,6 @@ public class TestValidationConstraints {
         assertEquals(1, assignableStatus.size());
         for (final IConstraintStatus st : assignableStatus) {
             assertTrue(st.getSeverity() == IMarker.SEVERITY_INFO);
-        }
-    }
-
-    @Test
-    public void testConnectorExistenceConstraint() throws Exception {
-        final MainProcess diagram = getDiagramFromArchive("testConnectorExistence.bos", "MyDiagram19", "1.0");
-        
-        final Pool processWithoutError = getProcess(diagram, "Pool19", "1.0");
-        final Pool processWithErrors = getProcess(diagram, "Pool20", "1.0");
-        
-        IStatus[] status = getStatuses(batchValidator.validate(processWithErrors));
-        List<IConstraintStatus> assignableStatus = getStatusForConstraint(status, ConnectorExistenceConstraint.ID);
-        assertFalse(assignableStatus.isEmpty());
-        assertEquals(1, assignableStatus.size());
-        for (final IConstraintStatus st : assignableStatus) {
-            assertFalse(st.isOK());
-        }
-
-        status = getStatuses(batchValidator.validate(processWithoutError));
-        assignableStatus = getStatusForConstraint(status, ConnectorExistenceConstraint.ID);
-        assertFalse(assignableStatus.isEmpty());
-        assertEquals(1, assignableStatus.size());
-        for (final IConstraintStatus st : assignableStatus) {
-            assertTrue(st.isOK());
         }
     }
     

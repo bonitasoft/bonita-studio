@@ -18,22 +18,21 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import org.bonitasoft.bpm.connector.model.definition.Category;
+import org.bonitasoft.bpm.connector.model.definition.ConnectorDefinition;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.core.maven.AddDependencyOperation;
-import org.bonitasoft.studio.common.ui.jface.FileActionDialog;
 import org.bonitasoft.studio.common.ui.jface.SWTBotConstants;
-import org.bonitasoft.bpm.connector.model.definition.Category;
-import org.bonitasoft.bpm.connector.model.definition.ConnectorDefinition;
 import org.bonitasoft.studio.connectors.repository.ConnectorDefRepositoryStore;
-import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
-import org.bonitasoft.studio.preferences.pages.BonitaAdvancedPreferencePage;
 import org.bonitasoft.studio.swtbot.framework.SWTBotTestUtil;
+import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -44,6 +43,9 @@ import org.junit.runner.RunWith;
 public class TestDatabaseConnectorOutputMode implements SWTBotConstants {
 
     private SWTGefBot bot = new SWTGefBot();
+    
+    @Rule
+    public SWTGefBotRule swtBotRule = new SWTGefBotRule(bot);
 
     private static final String DATA_NAME_1 = "myData1";
     private static final String QUERY1 = "SELECT col1 from MyTable WHERE id='${" + DATA_NAME_1 + "}'";

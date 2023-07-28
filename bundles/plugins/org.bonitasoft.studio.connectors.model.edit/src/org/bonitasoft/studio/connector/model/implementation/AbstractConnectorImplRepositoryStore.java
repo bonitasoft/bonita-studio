@@ -14,47 +14,31 @@
  */
 package org.bonitasoft.studio.connector.model.implementation;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.bonitasoft.bpm.connector.model.implementation.ConnectorImplementation;
-import org.bonitasoft.bpm.connector.model.implementation.ConnectorImplementationFactory;
 import org.bonitasoft.bpm.connector.model.implementation.util.ConnectorImplementationAdapterFactory;
-import org.bonitasoft.bpm.connector.model.implementation.util.ConnectorImplementationResourceImpl;
-import org.bonitasoft.bpm.connector.model.implementation.util.ConnectorImplementationXMLProcessor;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.filestore.EMFFileStore;
+import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
-import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.common.repository.store.AbstractEMFRepositoryStore;
-import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.emf.ecore.xmi.XMLResource;
-import org.eclipse.emf.ecore.xmi.impl.XMLResourceImpl;
-import org.eclipse.emf.edapt.internal.migration.execution.ValidationLevel;
-import org.eclipse.emf.edapt.migration.MigrationException;
-import org.eclipse.emf.edapt.migration.execution.Migrator;
-import org.eclipse.emf.edapt.spi.history.Release;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 
-/**
- * @author Romain Bioteau
- */
+
 public abstract class AbstractConnectorImplRepositoryStore<T extends EMFFileStore> extends AbstractEMFRepositoryStore<T>
         implements IImplementationRepositoryStore {
 
+	
+	@Override
+	public void createRepositoryStore(IRepository repository) {
+		this.repository = repository;
+	}
+	
     @Override
     protected void addAdapterFactory(final ComposedAdapterFactory adapterFactory) {
         adapterFactory.addAdapterFactory(new ConnectorImplementationAdapterFactory());
@@ -107,48 +91,5 @@ public abstract class AbstractConnectorImplRepositoryStore<T extends EMFFileStor
         }
         return null;
     }
-
-    @Override
-    protected void performMigration(final Migrator migrator, final URI resourceURI,
-            final Release release) throws MigrationException {
-        migrator.setLevel(ValidationLevel.NONE);
-        final ResourceSet rSet = migrator.migrateAndLoad(
-                Collections.singletonList(resourceURI), release,
-                null, AbstractRepository.NULL_PROGRESS_MONITOR);
-        if (!rSet.getResources().isEmpty()) {
-            FileOutputStream fos = null;
-            try {
-                final ConnectorImplementationResourceImpl r = (ConnectorImplementationResourceImpl) rSet.getResources()
-                        .get(0);
-                final Resource resource = new XMLResourceImpl(resourceURI);
-                final org.bonitasoft.bpm.connector.model.implementation.DocumentRoot root = ConnectorImplementationFactory.eINSTANCE
-                        .createDocumentRoot();
-                final ConnectorImplementation definition = EcoreUtil
-                        .copy(((org.bonitasoft.bpm.connector.model.implementation.DocumentRoot) r.getContents()
-                                .get(0)).getConnectorImplementation());
-                root.setConnectorImplementation(definition);
-                resource.getContents().add(root);
-                final Map<String, String> options = new HashMap<String, String>();
-                options.put(XMLResource.OPTION_ENCODING, "UTF-8");
-                options.put(XMLResource.OPTION_XML_VERSION, "1.0");
-                final File target = new File(resourceURI.toFileString());
-                fos = new FileOutputStream(target);
-                new ConnectorImplementationXMLProcessor().save(fos, resource, options);
-            } catch (final Exception e) {
-                BonitaStudioLog.error(e);
-            } finally {
-                if (fos != null) {
-                    try {
-                        fos.close();
-                    } catch (final IOException e) {
-                        BonitaStudioLog.error(e);
-                    }
-                }
-            }
-        }
-
-    }
-
-    protected abstract IRepositoryStore<? extends IRepositoryFileStore> getSourceRepositoryStore();
 
 }

@@ -14,27 +14,13 @@
  */
 package org.bonitasoft.studio.connectors.repository;
 
-import java.util.Optional;
-
-import org.bonitasoft.studio.common.repository.RepositoryManager;
-import org.bonitasoft.studio.common.repository.model.IRenamable;
-import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
-import org.bonitasoft.studio.common.repository.provider.DefinitionResourceProvider;
 import org.bonitasoft.studio.common.repository.store.AbstractEMFRepositoryStore;
 import org.bonitasoft.studio.connector.model.definition.AbstractDefFileStore;
-import org.bonitasoft.studio.connector.model.definition.dialog.ConnectorDefinitionWizardDialog;
 import org.bonitasoft.studio.connectors.ConnectorPlugin;
-import org.bonitasoft.studio.connectors.ui.wizard.ConnectorDefinitionWizard;
-import org.eclipse.jface.wizard.WizardDialog;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.IWorkbenchPart;
 import org.osgi.framework.Bundle;
 
-/**
- * @author Romain Bioteau
- * @author Baptiste Mesta
- */
-public class ConnectorDefFileStore extends AbstractDefFileStore implements IRenamable {
+
+public class ConnectorDefFileStore extends AbstractDefFileStore {
 
     public ConnectorDefFileStore(String fileName, AbstractEMFRepositoryStore<ConnectorDefFileStore> store) {
         super(fileName, store);
@@ -43,34 +29,6 @@ public class ConnectorDefFileStore extends AbstractDefFileStore implements IRena
     @Override
     protected Bundle getBundle() {
         return ConnectorPlugin.getDefault().getBundle();
-    }
-
-    @Override
-    protected IWorkbenchPart doOpen() {
-        ConnectorDefRepositoryStore repositoryFileStore = RepositoryManager.getInstance()
-                .getRepositoryStore(ConnectorDefRepositoryStore.class);
-        final DefinitionResourceProvider messageProvider = DefinitionResourceProvider.getInstance(repositoryFileStore,
-                ConnectorPlugin.getDefault().getBundle());
-        ConnectorDefinitionWizard wizard;
-        try {
-            wizard = new ConnectorDefinitionWizard(getContent(), messageProvider);
-        } catch (ReadFileStoreException e) {
-            return null;
-        }
-        WizardDialog wd = new ConnectorDefinitionWizardDialog(Display.getCurrent().getActiveShell(), wizard,
-                messageProvider);
-        wd.open();
-        return null;
-    }
-
-    @Override
-    public void rename(String newName) {
-        doOpen();
-    }
-
-    @Override
-    public Optional<String> retrieveNewName() {
-        return Optional.of("");
     }
 
 }

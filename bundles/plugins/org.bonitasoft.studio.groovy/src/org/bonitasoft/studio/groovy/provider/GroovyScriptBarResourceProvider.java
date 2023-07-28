@@ -27,6 +27,11 @@ import java.util.Set;
 
 import javax.inject.Inject;
 
+import org.bonitasoft.bpm.model.configuration.Configuration;
+import org.bonitasoft.bpm.model.configuration.ConfigurationPackage;
+import org.bonitasoft.bpm.model.configuration.Fragment;
+import org.bonitasoft.bpm.model.configuration.FragmentContainer;
+import org.bonitasoft.bpm.model.process.AbstractProcess;
 import org.bonitasoft.engine.bpm.bar.BarResource;
 import org.bonitasoft.engine.bpm.bar.BusinessArchiveBuilder;
 import org.bonitasoft.studio.common.FragmentTypes;
@@ -38,14 +43,7 @@ import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.jdt.CreateJarOperation;
 import org.bonitasoft.studio.groovy.GroovyPlugin;
 import org.bonitasoft.studio.groovy.Messages;
-import org.bonitasoft.studio.groovy.repository.GroovyFileStore;
 import org.bonitasoft.studio.groovy.repository.GroovyRepositoryStore;
-import org.bonitasoft.studio.groovy.repository.ProvidedGroovyRepositoryStore;
-import org.bonitasoft.bpm.model.configuration.Configuration;
-import org.bonitasoft.bpm.model.configuration.ConfigurationPackage;
-import org.bonitasoft.bpm.model.configuration.Fragment;
-import org.bonitasoft.bpm.model.configuration.FragmentContainer;
-import org.bonitasoft.bpm.model.process.AbstractProcess;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
@@ -71,22 +69,7 @@ public class GroovyScriptBarResourceProvider implements BARResourcesProvider {
         if (configuration != null) {
             addGroovyScriptDependenciesToClasspath(builder, configuration, configuration.getProcessDependencies());
         }
-        addProvidedScriptsToClasspath(builder);
         return Status.OK_STATUS;
-    }
-
-    private void addProvidedScriptsToClasspath(final BusinessArchiveBuilder builder)
-            throws InvocationTargetException, InterruptedException, IOException {
-        final Set<ICompilationUnit> compilationUnits = new HashSet<>();
-        final ProvidedGroovyRepositoryStore providedStore = repositoryAccessor
-                .getRepositoryStore(ProvidedGroovyRepositoryStore.class);
-        for (final GroovyFileStore file : providedStore.getChildren()) {
-            if (!file.getName().startsWith(GroovyFileStore.EXPRESSION_SCRIPT_NAME)) {
-                compilationUnits.add(file.getCompilationUnit());
-            }
-        }
-        addGroovyCompilationUnitToClasspath(builder, compilationUnits,
-                ProvidedGroovyRepositoryStore.EXPORTED_PROVIDED_JAR_NAME);
     }
 
     protected void addGroovyScriptDependenciesToClasspath(

@@ -18,19 +18,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.entry;
 import static org.junit.Assert.assertNotSame;
 
-import org.apache.maven.model.Model;
 import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
 import org.apache.maven.project.MavenProject;
 import org.bonitasoft.engine.connector.AbstractConnector;
 import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.BonitaProjectNature;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.core.maven.BonitaProjectBuilder;
-import org.bonitasoft.studio.common.repository.core.maven.model.MavenPlugin;
 import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
-import org.bonitasoft.studio.groovy.repository.ProvidedGroovyRepositoryStore;
 import org.bonitasoft.studio.identity.organization.repository.OrganizationRepositoryStore;
 import org.bonitasoft.studio.tests.util.InitialProjectRule;
 import org.eclipse.core.resources.ICommand;
@@ -48,7 +44,6 @@ public class BonitaProjectIT {
 
     @Rule
     public InitialProjectRule projectRule = InitialProjectRule.INSTANCE;
-    private MavenXpp3Reader reader = new MavenXpp3Reader();
 
     @Test
     public void should_create_a_bonita_project() throws Exception {
@@ -89,17 +84,8 @@ public class BonitaProjectIT {
                 .getRepositoryStore(OrganizationRepositoryStore.class);
         assertNotSame(0, orgaStore.getChildren().size());
 
-        // Check provided scripts 
-        ProvidedGroovyRepositoryStore providedScriptStore = currentRepository
-                .getRepositoryStore(ProvidedGroovyRepositoryStore.class);
-        assertNotSame(0, providedScriptStore.getChildren().size());
-
         IJavaProject javaProject = currentRepository.getJavaProject();
-        assertThat(javaProject.getClasspathEntryFor(javaProject.getPath().append("src-connectors"))).isNotNull();
-        assertThat(javaProject.getClasspathEntryFor(javaProject.getPath().append("src-filters"))).isNotNull();
         assertThat(javaProject.getClasspathEntryFor(javaProject.getPath().append("src-groovy"))).isNotNull();
-        assertThat(javaProject.getClasspathEntryFor(javaProject.getPath().append("src-providedGroovy"))).isNotNull();
-        assertThat(javaProject.findType("BonitaUsers")).isNotNull(); // provided script are compiling
         assertThat(javaProject.findType(AbstractConnector.class.getName())).isNotNull(); // classes in dependencies are in classpath
     }
 
