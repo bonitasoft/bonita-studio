@@ -22,11 +22,11 @@ import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import org.bonitasoft.bpm.model.util.ExpressionConstants;
 import org.bonitasoft.bpm.model.expression.Expression;
 import org.bonitasoft.bpm.model.expression.assertions.ExpressionAssert;
 import org.bonitasoft.bpm.model.expression.builders.ExpressionBuilder;
 import org.bonitasoft.bpm.model.process.builders.DataBuilder;
+import org.bonitasoft.bpm.model.util.ExpressionConstants;
 import org.bonitasoft.studio.swt.rules.RealmWithDisplay;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.ValidationStatusProvider;

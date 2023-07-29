@@ -23,15 +23,14 @@ import static org.mockito.Mockito.verify;
 
 import java.util.List;
 
-import org.bonitasoft.engine.bpm.document.DocumentValue;
-import org.bonitasoft.bpm.model.util.ExpressionConstants;
-import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.bpm.model.expression.Expression;
 import org.bonitasoft.bpm.model.expression.ExpressionFactory;
 import org.bonitasoft.bpm.model.expression.Operation;
 import org.bonitasoft.bpm.model.expression.Operator;
 import org.bonitasoft.bpm.model.process.Document;
 import org.bonitasoft.bpm.model.process.ProcessFactory;
+import org.bonitasoft.bpm.model.util.ExpressionConstants;
+import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.eclipse.emf.common.command.CompoundCommand;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -175,7 +174,7 @@ public class ReadOnlyExpressionViewerTest {
 
         roew.updateRightOperand(new CompoundCommand(), operation, ExpressionConstants.SET_DOCUMENT_OPERATOR, newLeftOperand);
 
-        verify(roew).appendCommandToSetReturnType(any(CompoundCommand.class), any(Expression.class), eq(DocumentValue.class.getName()));
+        verify(roew).appendCommandToSetReturnType(any(CompoundCommand.class), any(Expression.class), eq(ExpressionConstants.DOCUMENT_VALUE_RETURN_TYPE));
     }
 
     protected Operation createEmptyOperation() {
@@ -216,7 +215,7 @@ public class ReadOnlyExpressionViewerTest {
 
         roew.updateRightOperand(new CompoundCommand(), operation, ExpressionConstants.SET_DOCUMENT_OPERATOR, newLeftOperand);
 
-        verify(roew).appendCommandToSetReturnType(any(CompoundCommand.class), any(Expression.class), eq(DocumentValue.class.getName()));
+        verify(roew).appendCommandToSetReturnType(any(CompoundCommand.class), any(Expression.class), eq(ExpressionConstants.DOCUMENT_VALUE_RETURN_TYPE));
     }
 
     @Test
@@ -266,6 +265,6 @@ public class ReadOnlyExpressionViewerTest {
         operation.setRightOperand(oldRightOperand);
         roew.updateRightOperand(new CompoundCommand(), operation, ExpressionConstants.SET_DOCUMENT_OPERATOR, null);
 
-        verify(roew, times(0)).appendCommandToSetReturnType(any(CompoundCommand.class), any(Expression.class), eq(DocumentValue.class.getName()));
+        verify(roew, times(0)).appendCommandToSetReturnType(any(CompoundCommand.class), any(Expression.class), eq(ExpressionConstants.DOCUMENT_VALUE_RETURN_TYPE));
     }
 }

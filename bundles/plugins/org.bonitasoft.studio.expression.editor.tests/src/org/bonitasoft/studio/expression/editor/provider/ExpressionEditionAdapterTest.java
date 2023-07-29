@@ -25,8 +25,6 @@ import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.util.List;
 
-import org.bonitasoft.bpm.model.util.ExpressionConstants;
-import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.bpm.model.expression.Expression;
 import org.bonitasoft.bpm.model.expression.builders.ExpressionBuilder;
 import org.bonitasoft.bpm.model.parameter.Parameter;
@@ -34,6 +32,8 @@ import org.bonitasoft.bpm.model.process.Data;
 import org.bonitasoft.bpm.model.process.Document;
 import org.bonitasoft.bpm.model.process.DocumentType;
 import org.bonitasoft.bpm.model.process.builders.StringDataTypeBuilder;
+import org.bonitasoft.bpm.model.util.ExpressionConstants;
+import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.junit.Test;
 
 public class ExpressionEditionAdapterTest {

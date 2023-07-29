@@ -25,6 +25,5 @@ Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-ActivationPolicy: lazy
 Export-Package: org.bonitasoft.studio.xml.api,org.bonitasoft.studio.xm
  l.repository,org.bonitasoft.studio.xml.ui
-Import-Package: org.bonitasoft.engine.bpm.bar,
- org.eclipse.wst.xml.core.internal,
+Import-Package: org.eclipse.wst.xml.core.internal,
  org.eclipse.wst.xml.core.internal.catalog.provisional

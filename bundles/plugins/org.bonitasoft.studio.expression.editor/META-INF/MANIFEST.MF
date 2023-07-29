@@ -62,11 +62,9 @@ Require-Bundle: org.eclipse.ui,
  org.bonitasoft.studio.preferences,
  org.eclipse.nebula.widgets.richtext,
  org.eclipse.e4.ui.services,
- org.bonitasoft.studio.common.ui
+ org.bonitasoft.studio.common.ui,
+ org.bonitasoft.engine.bonita-process-definition-model
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Import-Package: javax.annotation;version="1.2.0",
- javax.inject;version="1.0.0",
- org.bonitasoft.engine.bpm.contract,
- org.bonitasoft.engine.bpm.document,
- org.bonitasoft.engine.expression
+ javax.inject;version="1.0.0"
 Bundle-ActivationPolicy: lazy

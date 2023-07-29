@@ -156,11 +156,6 @@
                         <filters>
                             <filter>
                                 <type>eclipse-plugin</type>
-                                <id>org.bonitasoft.studioEx.console.libs</id>
-                                <removeAll />
-                            </filter>
-                            <filter>
-                                <type>eclipse-plugin</type>
                                 <id>org.eclipse.m2e.editor.lemminx</id>
                                 <removeAll />
                             </filter>
@@ -313,37 +308,6 @@
     </repositories>
 
     <profiles>
-        <profile>
-            <id>jdk11-tests</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-toolchains-plugin</artifactId>
-                        <version>3.1.0</version>
-                        <executions>
-                            <execution>
-                                <phase>validate</phase>
-                                <goals>
-                                    <goal>toolchain</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                        <configuration>
-                            <toolchains>
-                                <jdk>
-                                    <version>11</version>
-                                    <vendor>OpenJDK</vendor>
-                                </jdk>
-                            </toolchains>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
         <profile>
             <id>default</id>
             <activation>

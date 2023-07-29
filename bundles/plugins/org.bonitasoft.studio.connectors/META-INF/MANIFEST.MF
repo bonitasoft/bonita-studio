@@ -66,20 +66,11 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.e4.ui.services,
  org.eclipse.m2e.maven.runtime,
  jakarta.xml.soap-api,
- org.bonitasoft.studio.common.ui
+ org.bonitasoft.studio.common.ui,
+ org.bonitasoft.engine.bonita-client
 Import-Package: javax.activation;version="1.1.0",
  javax.annotation;version="1.2.0",
  javax.inject;version="1.0.0",
- org.bonitasoft.engine.api,
- org.bonitasoft.engine.bpm,
- org.bonitasoft.engine.bpm.bar,
- org.bonitasoft.engine.bpm.connector,
- org.bonitasoft.engine.bpm.process,
- org.bonitasoft.engine.connector,
- org.bonitasoft.engine.exception,
- org.bonitasoft.engine.expression,
- org.bonitasoft.engine.operation,
- org.bonitasoft.engine.session,
  org.bonitasoft.plugin.analyze.report.model
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-11

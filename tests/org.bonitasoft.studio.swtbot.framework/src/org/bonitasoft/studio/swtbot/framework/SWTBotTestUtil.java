@@ -181,7 +181,7 @@ public class SWTBotTestUtil implements SWTBotConstants {
     }
 
     public static boolean testingBosSp() {
-        return Platform.getBundle("org.bonitasoft.studioEx.console.libs") != null;
+        return Platform.getBundle("com.bonitasoft.studio.runtime-bundle") != null;
     }
 
     public static void selectTabbedPropertyView(final SWTBot viewerBot, final String tabText) {

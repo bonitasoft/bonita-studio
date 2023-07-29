@@ -16,8 +16,6 @@ package org.bonitasoft.studio.expression.editor.operation;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.bonitasoft.bpm.model.util.ExpressionConstants;
-import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.bpm.model.expression.Expression;
 import org.bonitasoft.bpm.model.expression.ExpressionFactory;
 import org.bonitasoft.bpm.model.expression.Operation;
@@ -26,6 +24,8 @@ import org.bonitasoft.bpm.model.process.JavaObjectData;
 import org.bonitasoft.bpm.model.process.Pool;
 import org.bonitasoft.bpm.model.process.ProcessFactory;
 import org.bonitasoft.bpm.model.process.XMLData;
+import org.bonitasoft.bpm.model.util.ExpressionConstants;
+import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.junit.Test;
 
 /**

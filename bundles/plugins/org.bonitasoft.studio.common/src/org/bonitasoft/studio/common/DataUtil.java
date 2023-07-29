@@ -29,8 +29,11 @@ import org.bonitasoft.bpm.model.process.LongType;
 import org.bonitasoft.bpm.model.process.StringType;
 import org.bonitasoft.bpm.model.process.XMLType;
 
-public class DataUtil extends org.bonitasoft.bpm.model.process.util.DataUtil {
+public class DataUtil {
 
+	public static String getTechnicalTypeFor(Data data) {
+		return org.bonitasoft.bpm.model.process.util.DataUtil.getTechnicalTypeFor(data);
+	}
     public static String getDisplayTypeName(Data data) {
         DataType type = data.getDataType();
         String typeName = null;

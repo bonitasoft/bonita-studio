@@ -47,7 +47,6 @@ import org.bonitasoft.bpm.model.process.ProcessFactory;
 import org.bonitasoft.bpm.model.process.SearchIndex;
 import org.bonitasoft.bpm.model.process.StringType;
 import org.bonitasoft.bpm.model.util.ExpressionConstants;
-import org.bonitasoft.engine.bpm.document.DocumentValue;
 import org.bonitasoft.studio.common.DataUtil;
 import org.bonitasoft.studio.common.Messages;
 import org.eclipse.core.runtime.Assert;
@@ -349,7 +348,7 @@ public class ExpressionHelper {
     }
 
     private static boolean isDocumentValue(Output output) {
-        return Objects.equals(DocumentValue.class.getName(), output.getType());
+        return Objects.equals(ExpressionConstants.DOCUMENT_VALUE_RETURN_TYPE, output.getType());
     }
 
     public static Data dataFromIteratorExpression(final MultiInstantiable parentFlowElement,

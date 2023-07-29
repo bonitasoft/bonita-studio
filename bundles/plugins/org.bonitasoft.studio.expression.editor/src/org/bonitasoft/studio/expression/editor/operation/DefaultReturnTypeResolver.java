@@ -14,9 +14,8 @@
  */
 package org.bonitasoft.studio.expression.editor.operation;
 
-import org.bonitasoft.engine.bpm.document.DocumentValue;
-import org.bonitasoft.bpm.model.util.ExpressionConstants;
 import org.bonitasoft.bpm.model.expression.Operation;
+import org.bonitasoft.bpm.model.util.ExpressionConstants;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 
 public class DefaultReturnTypeResolver {
@@ -31,7 +30,7 @@ public class DefaultReturnTypeResolver {
         Operation operation = (Operation) operationObservable.getValue();
         final String type = operation.getOperator().getType();
         if (ExpressionConstants.SET_DOCUMENT_OPERATOR.equals(type)) {
-            return DocumentValue.class.getName();
+            return ExpressionConstants.DOCUMENT_VALUE_RETURN_TYPE;
         }
         if (ExpressionConstants.JAVA_METHOD_OPERATOR.equals(type) && !operation.getOperator().getInputTypes().isEmpty()) {
             return operation.getOperator().getInputTypes().get(0);

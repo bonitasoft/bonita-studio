@@ -241,7 +241,7 @@ public class TestDocument {
 
         final BotExpressionEditorDialog editRightOperand = botOperationComposite.editRightOperand();
         Assertions.assertThat(editRightOperand.selectScriptTab().getReturnType())
-                .isEqualTo(DocumentValue.class.getName());
+                .isEqualTo(ExpressionConstants.DOCUMENT_VALUE_RETURN_TYPE);
 
         editRightOperand.cancel();
 

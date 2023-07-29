@@ -260,6 +260,10 @@ along with this program. If not, see &lt;http://www.gnu.org/licenses/&gt;.
    <requires>
       <import feature="org.bonitasoft.bpm.definitions.feature" version="8.0.0.qualifier"/>
       <import feature="org.bonitasoft.bonita2bpmn.feature" version="8.0.0.qualifier"/>
+      <import feature="org.bonitasoft.project.report.model.feature" version="0.2.0.qualifier"/>
+      <import feature="com.fasterxml.jackson.feature" version="2.15.2.qualifier"/>
+      <import feature="org.bonitasoft.artifacts.model.feature" version="1.0.0.qualifier"/>
+      <import feature="org.bonitasoft.bonita2bar.feature" version="8.0.0.qualifier"/>
    </requires>
 
    <plugin
@@ -543,13 +547,6 @@ along with this program. If not, see &lt;http://www.gnu.org/licenses/&gt;.
          unpack="false"/>
 
    <plugin
-         id="javax.activation"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="javax.annotation"
          download-size="0"
          install-size="0"
@@ -649,6 +646,20 @@ along with this program. If not, see &lt;http://www.gnu.org/licenses/&gt;.
 
    <plugin
          id="org.bonitasoft.studio.common.ui"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.bonitasoft.engine.bonita-client"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.bonitasoft.engine.bonita-common"
          download-size="0"
          install-size="0"
          version="0.0.0"

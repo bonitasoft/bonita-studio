@@ -48,12 +48,9 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourceAttributes;
-import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.edapt.migration.MigrationException;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -84,7 +81,7 @@ public abstract class AbstractFileStore<T>
     private CommandExecutor commandExecutor = new CommandExecutor();
     private MigrationReport report = MigrationReport.emptyReport();
 
-    public AbstractFileStore(final String fileName,
+    protected AbstractFileStore(final String fileName,
             final IRepositoryStore<? extends IRepositoryFileStore<T>> parentStore) {
         name = fileName;
         store = parentStore;

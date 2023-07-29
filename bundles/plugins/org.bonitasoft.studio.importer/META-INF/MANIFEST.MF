@@ -42,8 +42,8 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.core.databinding.property,
  org.eclipse.e4.ui.model.workbench,
  org.eclipse.e4.core.di.annotations,
- org.bonitasoft.spec.bpmn
-Import-Package: org.bonitasoft.engine.bpm.connector
+ org.bonitasoft.spec.bpmn,
+ org.bonitasoft.engine.bonita-process-definition-model
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Automatic-Module-Name: org.bonitasoft.studio.importer

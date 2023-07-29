@@ -25,18 +25,13 @@
 				<artifactId>maven-dependency-plugin</artifactId>
 				<executions>
 					<execution>
-						<id>dependency-report-model</id>
+						<id>copy-maven3-model-jdom-support</id>
 						<phase>process-sources</phase>
 						<goals>
 							<goal>copy</goal>
 						</goals>
 						<configuration>
 							<artifactItems>
-								<artifactItem>
-									<groupId>org.bonitasoft.maven</groupId>
-									<artifactId>bonita-project-report-model</artifactId>
-									<version>${bonita-project-report-model.version}</version>
-								</artifactItem>
 								<artifactItem>
                                     <groupId>org.commonjava.maven</groupId>
                                     <artifactId>maven3-model-jdom-support</artifactId>

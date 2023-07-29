@@ -14,11 +14,11 @@
  */
 package org.bonitasoft.studio.expression.editor.viewer;
 
+import org.bonitasoft.bpm.model.expression.Expression;
+import org.bonitasoft.bpm.model.expression.ExpressionFactory;
 import org.bonitasoft.bpm.model.util.ExpressionConstants;
 import org.bonitasoft.studio.common.ui.widgets.MagicComposite;
 import org.bonitasoft.studio.expression.editor.i18n.Messages;
-import org.bonitasoft.bpm.model.expression.Expression;
-import org.bonitasoft.bpm.model.expression.ExpressionFactory;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.core.databinding.UpdateValueStrategy;
@@ -47,7 +47,7 @@ import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
 /**
  * @author Romain Bioteau
  */
-public class CheckBoxExpressionViewer extends ExpressionViewer implements ExpressionConstants {
+public class CheckBoxExpressionViewer extends ExpressionViewer {
 
     private MagicComposite mc;
     private Button checkBoxControl;
