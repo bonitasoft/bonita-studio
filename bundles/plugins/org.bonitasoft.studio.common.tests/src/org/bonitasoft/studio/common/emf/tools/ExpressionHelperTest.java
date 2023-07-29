@@ -33,7 +33,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.bonitasoft.engine.bpm.contract.FileInputValue;
-import org.bonitasoft.engine.bpm.document.DocumentValue;
 import org.bonitasoft.bpm.model.util.ExpressionConstants;
 import org.bonitasoft.studio.common.Messages;
 import org.bonitasoft.bpm.connector.model.definition.ConnectorDefinitionFactory;
@@ -137,7 +136,7 @@ public class ExpressionHelperTest {
         expression.setContent("Titi2014");
         expression.setType(ExpressionConstants.SCRIPT_TYPE);
         expression.setInterpreter(ExpressionConstants.GROOVY);
-        expression.setReturnType(DocumentValue.class.getName());
+        expression.setReturnType(ExpressionConstants.DOCUMENT_VALUE_RETURN_TYPE);
         expression.getReferencedElements().add(ProcessFactory.eINSTANCE.createData());
 
         ExpressionHelper.clearExpression(expression);

@@ -10,38 +10,13 @@
 		<version>9.0.0-SNAPSHOT</version>
 	</parent>
 	<groupId>org.bonitasoft.studio.bundles.plugins</groupId>
-	<artifactId>org.bonitasoft.studio.console.libs</artifactId>
+	<artifactId>org.bonitasoft.studio.runtime-bundle</artifactId>
 	<packaging>eclipse-plugin</packaging>
 
 	<properties>
 		<tomcat.bundle.dir>${basedir}/tomcat</tomcat.bundle.dir>
-		<lib.dir>lib</lib.dir>
     </properties>
 
-	<dependencies>
-		<dependency>
-			<groupId>org.bonitasoft.engine</groupId>
-			<artifactId>bonita-client</artifactId>
-			<version>${bonita-runtime.version}</version>
-			<exclusions>
-				<exclusion>
-					<groupId>javax.xml.bind</groupId>
-					<artifactId>jsr173_api</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		<dependency>
-			<groupId>org.bonitasoft.engine</groupId>
-			<artifactId>bonita-common</artifactId>
-			<version>${bonita-runtime.version}</version>
-			<exclusions>
-				<exclusion>
-					<groupId>javax.xml.bind</groupId>
-					<artifactId>jsr173_api</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-	</dependencies>
 	<build>
 		<plugins>
 			<plugin>
@@ -114,31 +89,12 @@
 							<overWriteSnapshots>true</overWriteSnapshots>
 						</configuration>
 					</execution>
-					<execution>
-						<id>Retrieve bonita-client dependencies</id>
-						<phase>process-sources</phase>
-						<goals>
-							<goal>copy-dependencies</goal>
-						</goals>
-						<configuration>
-							<stripVersion>true</stripVersion>
-							<stripClassifier>true</stripClassifier>
-							<outputDirectory>${lib.dir}</outputDirectory>
-							<overWriteReleases>true</overWriteReleases>
-							<overWriteSnapshots>true</overWriteSnapshots>
-							<overWriteIfNewer>true</overWriteIfNewer>
-							<includeScope>runtime</includeScope>
-						</configuration>
-					</execution>
 				</executions>
 			</plugin>
 			<plugin>
 				<artifactId>maven-clean-plugin</artifactId>
 				<configuration>
 					<filesets>
-						<fileset>
-							<directory>${lib.dir}</directory>
-						</fileset>
 						<fileset>
 							<directory>${tomcat.bundle.dir}</directory>
 						</fileset>
@@ -167,69 +123,6 @@
 						</configuration>
 						<goals>
 							<goal>run</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-
-			<plugin>
-				<groupId>org.apache.felix</groupId>
-				<artifactId>maven-bundle-plugin</artifactId>
-				<extensions>true</extensions>
-				<configuration>
-					<manifestLocation>META-INF/</manifestLocation>
-					<supportedProjectTypes>
-						<supportedProjectType>eclipse-plugin</supportedProjectType>
-					</supportedProjectTypes>
-					<instructions>
-						<_removeheaders>
-							Bnd-LastModified,
-							Build-Jdk,
-							Built-By,
-							Tool,
-							Include-Resource,
-							Private-Package,
-							Embedded-Artifacts,
-							Embed-Transitive,
-							Embed-StripVersion,
-							Embed-Directory,
-							Embed-Dependency,
-							Created-By
-						</_removeheaders>
-						<_exportcontents>
-							!org.bonitasoft.engine.*.impl.db;version="0.0.0",
-							!org.bonitasoft.engine.*.impl.db.archive;version="0.0.0",
-							org.bonitasoft.engine.*;version="0.0.0"
-						</_exportcontents>
-						<_nouses>true</_nouses>
-						<_noee>true</_noee>
-						<Bundle-SymbolicName>${project.artifactId};singleton:=true</Bundle-SymbolicName>
-						<Automatic-Module-Name>${project.artifactId}</Automatic-Module-Name>
-						<Bundle-Name>Bonita Community Tomcat Bundle</Bundle-Name>
-						<Bundle-Vendor>Bonitasoft S.A.</Bundle-Vendor>
-						<Bundle-Version>${osgiVersion}</Bundle-Version>
-						<Bundle-RequiredExecutionEnvironment>JavaSE-11</Bundle-RequiredExecutionEnvironment>
-						<Embed-Transitive>true</Embed-Transitive>
-						<Embed-Directory>${lib.dir}</Embed-Directory>
-						<Embed-StripVersion>true</Embed-StripVersion>
-						<Eclipse-BundleShape>dir</Eclipse-BundleShape>
-						<Include-Resource>
-							{maven-resources}, {maven-dependencies},
-							tomcat=tomcat
-						</Include-Resource>
-						<Bundle-ClassPath>.,{maven-dependencies}</Bundle-ClassPath>
-						<Import-Package>!*</Import-Package>
-						<Embed-Dependency>*;scope=compile|runtime</Embed-Dependency>
-						<Require-Bundle>javax.activation;bundle-version="1.1.0"</Require-Bundle>
-					</instructions>
-					<niceManifest>true</niceManifest>
-				</configuration>
-				<executions>
-					<execution>
-						<id>Generate bundle MANIFEST.MF</id>
-						<phase>package</phase>
-						<goals>
-							<goal>manifest</goal>
 						</goals>
 					</execution>
 				</executions>

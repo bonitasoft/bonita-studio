@@ -16,15 +16,10 @@
  */
 package org.bonitasoft.studio.expression.editor.provider;
 
-import org.bonitasoft.bpm.model.util.ExpressionConstants;
 import org.bonitasoft.bpm.model.expression.Expression;
 import org.eclipse.emf.ecore.EObject;
 
-/**
- * @author Romain Bioteau
- *
- */
-public interface IExpressionNatureProvider extends ExpressionConstants {
+public interface IExpressionNatureProvider {
 
     /**
      *

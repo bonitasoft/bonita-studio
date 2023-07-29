@@ -25,13 +25,16 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Stream;
 
-import org.bonitasoft.engine.api.APIClient;
+import org.bonitasoft.engine.api.ApiAccessType;
 import org.bonitasoft.engine.session.APISession;
-import org.bonitasoft.studio.common.BonitaHomeUtil;
+import org.bonitasoft.engine.util.APITypeManager;
+import org.bonitasoft.studio.common.Activator;
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
@@ -89,7 +92,6 @@ import org.eclipse.wst.server.core.ServerCore;
 import org.eclipse.wst.server.core.internal.ProjectProperties;
 import org.eclipse.wst.server.core.internal.ServerType;
 import org.osgi.framework.Bundle;
-import org.osgi.framework.FrameworkUtil;
 
 public class BOSWebServerManager implements IBonitaProjectListener {
 
@@ -101,6 +103,13 @@ public class BOSWebServerManager implements IBonitaProjectListener {
     protected static final String TOMCAT_SERVER_TYPE = "org.eclipse.jst.server.tomcat.90";
     protected static final String TOMCAT_RUNTIME_TYPE = "org.eclipse.jst.server.tomcat.runtime.90";
     protected static final String START_TIMEOUT = "start-timeout";
+    private static final String HTTP = "HTTP";
+    private static final String SERVER_URL = "server.url";
+    private static final String APPLICATION_NAME = "application.name";
+    private static final String BONITA_APPLICATION = "bonita";
+    private static final String BONITA_CLIENT_HOST_DEFAULT = "bonita.client.host.default";
+    private static final String BONITA_CLIENT_PORT_DEFAULT = "bonita.client.port.default";
+
 
     protected final String tomcatInstanceLocation = new File(new File(ResourcesPlugin
             .getWorkspace().getRoot().getLocation().toFile(), "tomcat"), "server")
@@ -222,7 +231,7 @@ public class BOSWebServerManager implements IBonitaProjectListener {
             var rule = ResourcesPlugin.getWorkspace().getRoot();
             // Avoid workspace deadlock
             Job.getJobManager().beginRule(rule, monitor);
-            BonitaHomeUtil.configureBonitaClient();
+            configureBonitaClient();
             copyTomcatBundleInWorkspace(monitor);
             updateRuntimeLocationIfNeeded();
             var type = ServerCore.findRuntimeType(TOMCAT_RUNTIME_TYPE);
@@ -602,7 +611,25 @@ public class BOSWebServerManager implements IBonitaProjectListener {
     }
 
     private static Bundle getTomcatBundle() {
-        return FrameworkUtil.getBundle(APIClient.class);
+        return EnginePlugin.getDefault().getBundle();
     }
-
+    
+    private static synchronized void configureBonitaClient() {
+        try {
+            final String host = System.getProperty(BONITA_CLIENT_HOST_DEFAULT, "localhost");
+            final int serverPort = Integer
+                    .parseInt(System.getProperty(BONITA_CLIENT_PORT_DEFAULT, "8080"));
+            BonitaStudioLog.debug("Configuring bonita client on host " + host + ":" + serverPort + " with API_TYPE=" + HTTP,
+                    Activator.PLUGIN_ID);
+            final Map<String, String> parameters = new HashMap<>();
+            parameters.put(SERVER_URL, "http://" + host + ":" + serverPort);
+            parameters.put(APPLICATION_NAME, BONITA_APPLICATION);
+            parameters.put("basicAuthentication.active", "true");
+            parameters.put("basicAuthentication.username", "http-api");
+            parameters.put("basicAuthentication.password", "h11p-@p1");
+            APITypeManager.setAPITypeAndParams(ApiAccessType.valueOf(HTTP), parameters);
+        } catch (final Exception e) {
+            BonitaStudioLog.error(e);
+        }
+    }
 }

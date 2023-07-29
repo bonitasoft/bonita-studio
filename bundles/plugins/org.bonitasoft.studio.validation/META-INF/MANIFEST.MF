@@ -36,17 +36,13 @@ Require-Bundle: org.eclipse.ui,
  org.bonitasoft.studio.groovy.ui,
  org.bonitasoft.studio.identity,
  org.bonitasoft.studio.properties,
- org.eclipse.m2e.maven.runtime
+ org.eclipse.m2e.maven.runtime,
+ org.bonitasoft.engine.bonita-common
 Bundle-ActivationPolicy: lazy
 Bundle-Localization: plugin
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-Vendor: BonitaSoft S.A.
 Import-Package: javax.inject;version="1.0.0",
- org.bonitasoft.engine.bdm,
- org.bonitasoft.engine.bdm.model,
- org.bonitasoft.engine.bdm.model.field,
- org.bonitasoft.engine.expression,
- org.bonitasoft.engine.operation,
  org.bonitasoft.plugin.analyze.report.model,
  org.bonitasoft.studio.businessobject.core.repository,
  org.bonitasoft.studio.properties.i18n

@@ -103,76 +103,64 @@
             <unit id="org.bonitasoft.bpm.definitions.feature.feature.group" version="0.0.0"/>
             <unit id="org.bonitasoft.bpm.model.feature.feature.group" version="0.0.0"/>
             <unit id="org.bonitasoft.bpm.tests.feature.feature.group" version="0.0.0"/>
+            <unit id="org.bonitasoft.project.report.model.feature.feature.group" version="0.0.0"/>
+            <unit id="com.fasterxml.jackson.feature.feature.group" version="0.0.0"/>
+            <unit id="org.bonitasoft.artifacts.model.feature.feature.group" version="0.0.0"/>
+            <unit id="org.bonitasoft.bonita2bar.feature.feature.group" version="0.0.0"/>
         </location>
-            <location includeDependencyDepth="infinite" includeDependencyScopes="compile,runtime,system" includeSource="true" missingManifest="generate" type="Maven">
-                <dependencies>
-                    <dependency>
-                        <groupId>com.fasterxml.jackson.core</groupId>
-                        <artifactId>jackson-annotations</artifactId>
-                        <version>2.13.3</version>
-                        <type>jar</type>
-                    </dependency>
-                    <dependency>
-                        <groupId>com.fasterxml.jackson.core</groupId>
-                        <artifactId>jackson-core</artifactId>
-                        <version>2.13.3</version>
-                        <type>jar</type>
-                    </dependency>
-                    <dependency>
-                        <groupId>com.fasterxml.jackson.core</groupId>
-                        <artifactId>jackson-databind</artifactId>
-                        <version>2.13.3</version>
-                        <type>jar</type>
-                    </dependency>
-                    <dependency>
-                        <groupId>com.fasterxml.jackson.module</groupId>
-                        <artifactId>jackson-module-jaxb-annotations</artifactId>
-                        <version>2.13.3</version>
-                        <type>jar</type>
-                    </dependency>
-                    <dependency>
-                        <groupId>com.sun.activation</groupId>
-                        <artifactId>jakarta.activation</artifactId>
-                        <version>2.0.1</version>
-                        <type>jar</type>
-                    </dependency>
-                    <dependency>
-                        <groupId>jakarta.xml.bind</groupId>
-                        <artifactId>jakarta.xml.bind-api</artifactId>
-                        <version>2.3.3</version>
-                        <type>jar</type>
-                    </dependency>
-                    <dependency>
-                        <groupId>jakarta.xml.soap</groupId>
-                        <artifactId>jakarta.xml.soap-api</artifactId>
-                        <version>1.4.2</version>
-                        <type>jar</type>
-                    </dependency>
-                    <dependency>
-                        <groupId>org.assertj</groupId>
-                        <artifactId>assertj-core</artifactId>
-                        <version>3.23.1</version>
-                        <type>jar</type>
-                    </dependency>
-                    <dependency>
-                        <groupId>org.jdom</groupId>
-                        <artifactId>jdom2</artifactId>
-                        <version>2.0.6.1</version>
-                        <type>jar</type>
-                    </dependency>
-                    <dependency>
-                        <groupId>org.mockito</groupId>
-                        <artifactId>mockito-core</artifactId>
-                        <version>4.6.1</version>
-                        <type>jar</type>
-                    </dependency>
-                    <dependency>
-                        <groupId>org.mockito</groupId>
-                        <artifactId>mockito-junit-jupiter</artifactId>
-                        <version>4.6.1</version>
-                        <type>jar</type>
-                    </dependency>
-                </dependencies>
-            </location>
-        </locations>
+ <location includeDependencyDepth="infinite" includeDependencyScopes="compile,runtime,system" includeSource="false" missingManifest="generate" type="Maven">
+            <dependencies>
+                <dependency>
+                    <groupId>commons-io</groupId>
+                    <artifactId>commons-io</artifactId>
+                    <version>2.8.0</version>
+                    <type>jar</type>
+                </dependency>
+                <dependency>
+                    <groupId>org.apache.commons</groupId>
+                    <artifactId>commons-lang3</artifactId>
+                    <version>3.12.0</version>
+                    <type>jar</type>
+                </dependency>
+            </dependencies>
+        </location>
+        <location includeDependencyDepth="infinite" includeDependencyScopes="compile,runtime,system" includeSource="false" missingManifest="generate" type="Maven">
+            <dependencies>
+                <dependency>
+                    <groupId>jakarta.xml.soap</groupId>
+                    <artifactId>jakarta.xml.soap-api</artifactId>
+                    <version>1.4.2</version>
+                    <type>jar</type>
+                </dependency>
+                <dependency>
+                    <groupId>org.assertj</groupId>
+                    <artifactId>assertj-core</artifactId>
+                    <version>3.23.1</version>
+                    <type>jar</type>
+                </dependency>
+                <dependency>
+                    <groupId>org.mockito</groupId>
+                    <artifactId>mockito-core</artifactId>
+                    <version>4.6.1</version>
+                    <type>jar</type>
+                </dependency>
+                <dependency>
+                    <groupId>org.mockito</groupId>
+                    <artifactId>mockito-junit-jupiter</artifactId>
+                    <version>4.6.1</version>
+                    <type>jar</type>
+                </dependency>
+            </dependencies>
+        </location>
+        <location includeDependencyDepth="none" includeDependencyScopes="compile,runtime,system" includeSource="false" missingManifest="generate" type="Maven">
+            <dependencies>
+                <dependency>
+                    <groupId>org.jdom</groupId>
+                    <artifactId>jdom2</artifactId>
+                    <version>2.0.6.1</version>
+                    <type>jar</type>
+                </dependency>
+            </dependencies>
+        </location>
+    </locations>
 </target>

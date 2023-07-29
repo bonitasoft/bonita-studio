@@ -20,19 +20,18 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.bonitasoft.engine.bpm.contract.FileInputValue;
-import org.bonitasoft.engine.bpm.document.DocumentValue;
-import org.bonitasoft.bpm.model.util.ExpressionConstants;
-import org.bonitasoft.studio.common.emf.tools.ModelHelper;
-import org.bonitasoft.studio.common.ui.PlatformUtil;
-import org.bonitasoft.studio.expression.editor.i18n.Messages;
-import org.bonitasoft.studio.expression.editor.provider.ExpressionTypeLabelProvider;
-import org.bonitasoft.studio.expression.editor.provider.IExpressionValidator;
 import org.bonitasoft.bpm.model.expression.Expression;
 import org.bonitasoft.bpm.model.expression.Operation;
 import org.bonitasoft.bpm.model.process.BusinessObjectData;
 import org.bonitasoft.bpm.model.process.JavaObjectData;
 import org.bonitasoft.bpm.model.process.Task;
+import org.bonitasoft.bpm.model.util.ExpressionConstants;
+import org.bonitasoft.engine.bpm.contract.FileInputValue;
+import org.bonitasoft.studio.common.emf.tools.ModelHelper;
+import org.bonitasoft.studio.common.ui.PlatformUtil;
+import org.bonitasoft.studio.expression.editor.i18n.Messages;
+import org.bonitasoft.studio.expression.editor.provider.ExpressionTypeLabelProvider;
+import org.bonitasoft.studio.expression.editor.provider.IExpressionValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
@@ -317,7 +316,7 @@ public class OperationReturnTypesValidator implements IExpressionValidator {
         if (expression != null && expression.getContent() != null && !expression.getContent().isEmpty()) {
             final String typeName = storageExpression.getReturnType();
             final String actionExpressionReturnType = expression.getReturnType();
-            if (!((DocumentValue.class.getName().equals(actionExpressionReturnType)
+            if (!((ExpressionConstants.DOCUMENT_VALUE_RETURN_TYPE.equals(actionExpressionReturnType)
                     || FileInputValue.class.getName().equals(actionExpressionReturnType))
                     && typeName.equals(String.class.getName()))) {
                 return isTask

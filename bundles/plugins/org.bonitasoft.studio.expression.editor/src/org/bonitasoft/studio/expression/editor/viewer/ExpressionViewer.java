@@ -129,7 +129,7 @@ import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
 /**
  * @author Romain Bioteau
  */
-public class ExpressionViewer extends ContentViewer implements ExpressionConstants, SWTBotConstants,
+public class ExpressionViewer extends ContentViewer implements SWTBotConstants,
         IContentProposalListener, IBonitaContentProposalListener2, IBonitaVariableContext,
         IExpressionValidationListener,
         IValueChangeListener {
@@ -836,11 +836,11 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
         final Expression selectedExpression = getSelectedExpression();
         Assert.isNotNull(selectedExpression);
         String expressionType = selectedExpression.getType();
-        if (input.equals(selectedExpression.getName()) && CONSTANT_TYPE.equals(expressionType)) {
+        if (input.equals(selectedExpression.getName()) && ExpressionConstants.CONSTANT_TYPE.equals(expressionType)) {
             return expressionType;
         }
         if (expressionType == null) {
-            return CONSTANT_TYPE;
+            return ExpressionConstants.CONSTANT_TYPE;
         }
         if (ExpressionConstants.SCRIPT_TYPE.equals(expressionType)) {
             return ExpressionConstants.SCRIPT_TYPE;
@@ -866,7 +866,7 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
                 .filter(expr -> Objects.equals(expr.getType(), expressionType))
                 .findFirst()
                 .map(Expression::getType)
-                .orElse(CONSTANT_TYPE);
+                .orElse(ExpressionConstants.CONSTANT_TYPE);
     }
 
     protected void internalRefresh() {

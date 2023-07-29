@@ -22,11 +22,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Stream;
 
-import org.bonitasoft.engine.api.APIClient;
-import org.bonitasoft.engine.expression.ExpressionConstants;
-import org.bonitasoft.studio.common.emf.tools.ModelHelper;
-import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.bpm.connector.model.definition.Output;
 import org.bonitasoft.bpm.model.expression.Expression;
 import org.bonitasoft.bpm.model.expression.ExpressionFactory;
@@ -49,13 +44,17 @@ import org.bonitasoft.bpm.model.process.SequenceFlow;
 import org.bonitasoft.bpm.model.process.SourceElement;
 import org.bonitasoft.bpm.model.process.StartTimerEvent;
 import org.bonitasoft.bpm.model.process.Task;
+import org.bonitasoft.engine.expression.ExpressionConstants;
+import org.bonitasoft.studio.common.emf.tools.ModelHelper;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jdt.core.IField;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
-import org.osgi.framework.FrameworkUtil;
 
 /**
  * @author Romain Bioteau
@@ -494,7 +493,7 @@ public class GroovyUtil {
                 if ("apiAccessor".equals(name)) {
                     try {
                         final String apiAccessorExtClassName = "com.bonitasoft.engine.api.APIAccessor";
-                        FrameworkUtil.getBundle(APIClient.class).loadClass(apiAccessorExtClassName);
+                        Platform.getBundle("com.bonitasoft.engine.bonita-client-sp").loadClass(apiAccessorExtClassName);
                         return apiAccessorExtClassName;
                     } catch (final Exception e) {
                         return exp.getReturnType();

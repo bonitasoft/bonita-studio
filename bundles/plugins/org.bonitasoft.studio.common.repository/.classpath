@@ -7,7 +7,6 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
-	<classpathentry exported="true" kind="lib" path="lib/bonita-project-report-model.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/maven3-model-jdom-support.jar" sourcepath="/home/romain/.m2/repository/org/commonjava/maven/maven3-model-jdom-support/1.6/maven3-model-jdom-support-1.6-sources.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

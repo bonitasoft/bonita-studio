@@ -23,17 +23,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.assertj.core.api.Assertions;
-import org.bonitasoft.engine.bpm.document.DocumentValue;
-import org.bonitasoft.studio.assertions.StatusAssert;
-import org.bonitasoft.bpm.model.util.ExpressionConstants;
-import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
-import org.bonitasoft.studio.expression.editor.i18n.Messages;
 import org.bonitasoft.bpm.model.expression.Expression;
 import org.bonitasoft.bpm.model.expression.ExpressionFactory;
 import org.bonitasoft.bpm.model.expression.Operation;
 import org.bonitasoft.bpm.model.expression.Operator;
 import org.bonitasoft.bpm.model.process.ProcessFactory;
 import org.bonitasoft.bpm.model.process.Task;
+import org.bonitasoft.bpm.model.util.ExpressionConstants;
+import org.bonitasoft.studio.assertions.StatusAssert;
+import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
+import org.bonitasoft.studio.expression.editor.i18n.Messages;
 import org.eclipse.core.runtime.IStatus;
 import org.junit.Test;
 
@@ -126,7 +125,7 @@ public class OperationReturnTypesValidatorTest {
     public void testValidateSetDocumentListOperationInValid() {
         final OperationReturnTypesValidator validator = new OperationReturnTypesValidator();
         final Expression dataExpression = ExpressionHelper.createConstantExpression("doc", String.class.getName());
-        final Expression expr = ExpressionHelper.createGroovyScriptExpression("doc", DocumentValue.class.getName());
+        final Expression expr = ExpressionHelper.createGroovyScriptExpression("doc", ExpressionConstants.DOCUMENT_VALUE_RETURN_TYPE);
         createOperation(dataExpression, expr, ExpressionConstants.SET_LIST_DOCUMENT_OPERATOR);
         final IStatus status = validator.validate(expr);
         Assertions.assertThat(status.isOK()).isFalse();

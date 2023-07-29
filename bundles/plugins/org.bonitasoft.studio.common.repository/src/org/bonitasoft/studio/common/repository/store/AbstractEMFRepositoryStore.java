@@ -68,7 +68,7 @@ public abstract class AbstractEMFRepositoryStore<T extends EMFFileStore<?>>
 
     private final ComposedAdapterFactory adapterFactory;
 
-    public AbstractEMFRepositoryStore() {
+    protected AbstractEMFRepositoryStore() {
         super();
         adapterFactory = new ComposedAdapterFactory(
                 ComposedAdapterFactory.Descriptor.Registry.INSTANCE);

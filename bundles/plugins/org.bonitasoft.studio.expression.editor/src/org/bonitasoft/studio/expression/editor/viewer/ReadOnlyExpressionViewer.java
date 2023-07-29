@@ -16,14 +16,13 @@ package org.bonitasoft.studio.expression.editor.viewer;
 
 import java.util.List;
 
-import org.bonitasoft.engine.bpm.document.DocumentValue;
-import org.bonitasoft.bpm.model.util.ExpressionConstants;
-import org.bonitasoft.studio.expression.editor.i18n.Messages;
 import org.bonitasoft.bpm.model.expression.Expression;
 import org.bonitasoft.bpm.model.expression.ExpressionPackage;
 import org.bonitasoft.bpm.model.expression.Operation;
 import org.bonitasoft.bpm.model.expression.Operator;
 import org.bonitasoft.bpm.model.process.Document;
+import org.bonitasoft.bpm.model.util.ExpressionConstants;
+import org.bonitasoft.studio.expression.editor.i18n.Messages;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.ecore.EReference;
@@ -144,11 +143,11 @@ public class ReadOnlyExpressionViewer extends ExpressionViewer {
                 if (ExpressionConstants.CONSTANT_TYPE.equals(right.getType())
                         && isPrimitiveType(newLeftOperand.getReturnType())) {
                     appendCommandToSetReturnType(cc, right, newLeftOperand.getReturnType());
-                } else if (DocumentValue.class.getName().equals(right.getReturnType())) {
-                    appendCommandToSetReturnType(cc, right, DocumentValue.class.getName());
+                } else if (ExpressionConstants.DOCUMENT_VALUE_RETURN_TYPE.equals(right.getReturnType())) {
+                    appendCommandToSetReturnType(cc, right, ExpressionConstants.DOCUMENT_VALUE_RETURN_TYPE);
                 }
             } else if (canSwitchToDocumentValueWithGroovyScript(newOperatorType, right)) {
-                appendCommandToSetReturnType(cc, right, DocumentValue.class.getName());
+                appendCommandToSetReturnType(cc, right, ExpressionConstants.DOCUMENT_VALUE_RETURN_TYPE);
                 appendCommandToScriptType(cc, right);
             } else if (canSwitchToListWithGroovyScript(newOperatorType, right)) {
                 appendCommandToSetReturnType(cc, right, List.class.getName());
@@ -165,7 +164,7 @@ public class ReadOnlyExpressionViewer extends ExpressionViewer {
 
     private boolean canSwitchToDocumentValueWithGroovyScript(final String newOperatorType, final Expression right) {
         return isDocumentSimpleOperator(newOperatorType)
-                && !DocumentValue.class.getName().equals(right.getReturnType())
+                && !ExpressionConstants.DOCUMENT_VALUE_RETURN_TYPE.equals(right.getReturnType())
                 && isExpressionEmpty(right);
     }
 

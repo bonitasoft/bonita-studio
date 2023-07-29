@@ -50,13 +50,15 @@ along with this program. If not, see &lt;http://www.gnu.org/licenses/&gt;.
    </requires>
 
    <plugin
-         id="org.bonitasoft.studio.console.libs"
+         id="org.bonitasoft.studio.local.repository"
          download-size="0"
          install-size="0"
-         version="0.0.0"/>
+         version="0.0.0"
+         fragment="true"
+         unpack="false"/>
 
    <plugin
-         id="org.bonitasoft.studio.local.repository"
+         id="org.bonitasoft.studio.runtime-bundle"
          download-size="0"
          install-size="0"
          version="0.0.0"

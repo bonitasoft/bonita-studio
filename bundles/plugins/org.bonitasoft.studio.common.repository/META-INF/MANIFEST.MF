@@ -4,7 +4,6 @@ Bundle-Name: Repository Common Plugin
 Bundle-SymbolicName: org.bonitasoft.studio.common.repository;singleton:=true
 Bundle-Version: 9.0.0.qualifier
 Bundle-ClassPath: .,
- lib/bonita-project-report-model.jar,
  lib/maven3-model-jdom-support.jar
 Bundle-Activator: org.bonitasoft.studio.common.repository.CommonRepositoryPlugin
 Bundle-Vendor: BonitaSoft S.A.
@@ -12,7 +11,6 @@ Bundle-Localization: plugin
 Export-Package: org.apache.maven.io.util,
  org.apache.maven.model.io.jdom,
  org.apache.maven.settings.io.jdom,
- org.bonitasoft.plugin.analyze.report.model,
  org.bonitasoft.studio.common.repository,
  org.bonitasoft.studio.common.repository.core,
  org.bonitasoft.studio.common.repository.core.internal,
@@ -82,14 +80,14 @@ Require-Bundle: org.bonitasoft.studio.common,
  org.eclipse.e4.ui.model.workbench,
  org.bonitasoft.studio.common.ui,
  org.eclipse.m2e.core.ui,
- wrapped.org.jdom.jdom2
+ wrapped.org.jdom.jdom2,
+ org.bonitasoft.maven.bonita-project-report-model;visibility:=reexport
 Import-Package: javax.annotation;version="1.2.0",
  javax.inject;version="1.0.0",
- javax.xml.bind.annotation.adapters;version="2.3.3",
+ javax.xml.bind.annotation.adapters,
  org.bonitasoft.engine.connector,
  org.bonitasoft.engine.filter,
- org.bonitasoft.engine.session,
- org.bonitasoft.plugin.analyze.report.model
+ org.bonitasoft.engine.session
 Model-Fragment: fragment.e4xmi
 Bundle-ActivationPolicy: lazy
 Automatic-Module-Name: org.bonitasoft.studio.common.repository

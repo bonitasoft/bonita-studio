@@ -19,7 +19,6 @@ import static org.bonitasoft.bpm.model.expression.builders.ExpressionBuilder.anE
 import static org.bonitasoft.bpm.model.expression.builders.OperationBuilder.anOperation;
 import static org.bonitasoft.bpm.model.expression.builders.OperatorBuilder.anOperator;
 
-import org.bonitasoft.engine.bpm.document.DocumentValue;
 import org.bonitasoft.bpm.model.util.ExpressionConstants;
 import org.bonitasoft.studio.swt.rules.RealmWithDisplay;
 import org.eclipse.core.databinding.observable.Realm;
@@ -57,7 +56,7 @@ public class DefaultReturnTypeResolverTest {
 
         final String returnType = defaultReturnTypeResolver.guessRightOperandReturnType();
 
-        assertThat(returnType).isEqualTo(DocumentValue.class.getName());
+        assertThat(returnType).isEqualTo(ExpressionConstants.DOCUMENT_VALUE_RETURN_TYPE);
     }
 
     @Test
