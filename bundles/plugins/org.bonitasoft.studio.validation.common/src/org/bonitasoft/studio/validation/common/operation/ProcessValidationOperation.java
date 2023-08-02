@@ -18,8 +18,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bonitasoft.bpm.model.process.Pool;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.bpm.model.process.AbstractProcess;
 import org.bonitasoft.studio.ui.util.ProcessValidationStatus;
 import org.bonitasoft.studio.validation.common.ValidationCommonPlugin;
 import org.bonitasoft.studio.validation.common.i18n.Messages;
@@ -35,12 +35,12 @@ import org.eclipse.ui.actions.WorkspaceModifyOperation;
 
 public class ProcessValidationOperation extends WorkspaceModifyOperation {
 
-    private final List<AbstractProcess> listOfProcessesToValidate = new ArrayList<>();
+    private final List<Pool> listOfProcessesToValidate = new ArrayList<>();
     private MultiStatus status = new MultiStatus(ValidationCommonPlugin.PLUGIN_ID ,-1, null, null);
     private boolean forceMarkerUpdate = false;
     private boolean dependencyConstraintsOnly = false;
 
-    public ProcessValidationOperation addProcess(final AbstractProcess process) {
+    public ProcessValidationOperation addProcess(final Pool process) {
         if(process.eResource() == null) {
             BonitaStudioLog.warning(String.format("Process %s (%s) resource is not loaded and can't be validated.",
                     process.getName(),
@@ -61,7 +61,7 @@ public class ProcessValidationOperation extends WorkspaceModifyOperation {
         return this;
     }
 
-    public ProcessValidationOperation addProcesses(final List<AbstractProcess> processes) {
+    public ProcessValidationOperation addProcesses(final List<Pool> processes) {
         processes.stream().forEach(this::addProcess);
         return this;
     }

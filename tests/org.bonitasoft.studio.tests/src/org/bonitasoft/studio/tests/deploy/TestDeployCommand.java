@@ -23,6 +23,10 @@ import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.List;
 
+import org.bonitasoft.bpm.model.process.Element;
+import org.bonitasoft.bpm.model.process.MainProcess;
+import org.bonitasoft.bpm.model.process.Pool;
+import org.bonitasoft.bpm.model.process.ProcessPackage;
 import org.bonitasoft.engine.api.ProcessAPI;
 import org.bonitasoft.engine.api.ProcessManagementAPI;
 import org.bonitasoft.engine.bpm.process.ProcessDefinition;
@@ -41,11 +45,6 @@ import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.engine.command.RunProcessCommand;
 import org.bonitasoft.studio.engine.operation.ProcessSelector;
 import org.bonitasoft.studio.importer.bos.operation.ImportBosArchiveOperation;
-import org.bonitasoft.bpm.model.process.AbstractProcess;
-import org.bonitasoft.bpm.model.process.Element;
-import org.bonitasoft.bpm.model.process.MainProcess;
-import org.bonitasoft.bpm.model.process.Pool;
-import org.bonitasoft.bpm.model.process.ProcessPackage;
 import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditor;
 import org.bonitasoft.studio.tests.util.Await;
 import org.bonitasoft.studio.tests.util.InitialProjectRule;
@@ -80,7 +79,7 @@ public class TestDeployCommand {
         importBos("ProcessForSubProcessLoopTest-2-1.0.bos");
 
         /* And deploy it twice */
-        final AbstractProcess selectedProcess = (AbstractProcess) mainProcess.getElements().get(0);
+        final Pool selectedProcess = (Pool) mainProcess.getElements().get(0);
         final RunProcessCommand runProcessCommand = new RunProcessCommand(true);
         runProcessCommand.execute(ProcessSelector.createExecutionEvent(selectedProcess));
         runProcessCommand.execute(ProcessSelector.createExecutionEvent(selectedProcess));
@@ -98,7 +97,7 @@ public class TestDeployCommand {
         final MainProcess mainProcess = (MainProcess) processEditor.getDiagramEditPart().resolveSemanticElement();
 
         /* Run a first time */
-        final AbstractProcess selectedProcess = (AbstractProcess) mainProcess.getElements().get(0);
+        final Pool selectedProcess = (Pool) mainProcess.getElements().get(0);
         final RunProcessCommand runProcessCommand = new RunProcessCommand(true);
         runProcessCommand.execute(ProcessSelector.createExecutionEvent(selectedProcess));
 

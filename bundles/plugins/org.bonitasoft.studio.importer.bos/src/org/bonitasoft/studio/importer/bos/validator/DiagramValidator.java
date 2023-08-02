@@ -16,12 +16,13 @@ package org.bonitasoft.studio.importer.bos.validator;
 
 import java.lang.reflect.InvocationTargetException;
 
+import org.bonitasoft.bpm.model.process.MainProcess;
+import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.importer.bos.i18n.Messages;
 import org.bonitasoft.studio.importer.bos.operation.ImportBosArchiveOperation;
 import org.bonitasoft.studio.importer.bos.status.ImportBosArchiveStatusBuilder;
-import org.bonitasoft.bpm.model.process.AbstractProcess;
 import org.bonitasoft.studio.validation.common.operation.BatchValidationOperation;
 import org.bonitasoft.studio.validation.common.operation.BatchValidatorFactory;
 import org.bonitasoft.studio.validation.common.operation.OffscreenEditPartFactory;
@@ -52,11 +53,11 @@ public class DiagramValidator implements BosImporterStatusProvider {
             }
             subMonitor.setTaskName(String.format(Messages.validatingDiagramWithProgess, current, nbDiagrams));
             try {
-                final AbstractProcess process = (AbstractProcess) diagramFileStore.getContent();
+                MainProcess process = (MainProcess) diagramFileStore.getContent();
                 subMonitor.subTask(String.format(Messages.validatingDiagram, process.getName(), process.getVersion()));
                 final RunProcessesValidationOperation validationAction = new RunProcessesValidationOperation(
                         batchValidationOperation);
-                validationAction.addProcess(process);
+                ModelHelper.getAllProcesses(process).stream().forEach(validationAction::addProcess);
                 validationAction.run(new NullProgressMonitor());
                 if (validationAction.getStatus() != null && !validationAction.getStatus().isOK()) {
                     statusBuilder.addStatus(process, validationAction.getStatus());

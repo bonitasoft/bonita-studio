@@ -14,8 +14,8 @@ import org.bonitasoft.studio.common.ui.jface.FileActionDialog;
 import org.bonitasoft.studio.common.ui.jface.ValidationDialog;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
-import org.bonitasoft.bpm.model.process.AbstractProcess;
 import org.bonitasoft.bpm.model.process.MainProcess;
+import org.bonitasoft.bpm.model.process.Pool;
 import org.bonitasoft.studio.validation.common.i18n.Messages;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -39,7 +39,7 @@ import com.google.common.base.Predicates;
 
 public class RunProcessesValidationOperation implements IRunnableWithProgress {
 
-    private final List<AbstractProcess> listOfProcessesToValidate = new ArrayList<>();
+    private final List<Pool> listOfProcessesToValidate = new ArrayList<>();
     private IStatus status;
     private final BatchValidationOperation validationOperation;
 
@@ -48,7 +48,7 @@ public class RunProcessesValidationOperation implements IRunnableWithProgress {
         this.validationOperation = validationOperation;
     }
 
-    public RunProcessesValidationOperation addProcess(final AbstractProcess process) {
+    public RunProcessesValidationOperation addProcess(final Pool process) {
         if (process.eResource() == null) {
             throw new IllegalArgumentException(String.format("Process %s (%s) is not in an EMF Resource",
                     process.getName(),
@@ -58,7 +58,7 @@ public class RunProcessesValidationOperation implements IRunnableWithProgress {
         return this;
     }
 
-    public RunProcessesValidationOperation addProcesses(final List<AbstractProcess> processes) {
+    public RunProcessesValidationOperation addProcesses(final List<Pool> processes) {
         processes.stream().forEach(this::addProcess);
         return this;
     }
@@ -158,7 +158,7 @@ public class RunProcessesValidationOperation implements IRunnableWithProgress {
 
     @Override
     public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-        for (final AbstractProcess p : listOfProcessesToValidate) {
+        for (final Pool p : listOfProcessesToValidate) {
             final Resource eResource = p.eResource();
             if (eResource != null) {
                 for (final EObject diagram : filter(eResource.getContents(), Predicates.instanceOf(Diagram.class))) {
@@ -180,7 +180,7 @@ public class RunProcessesValidationOperation implements IRunnableWithProgress {
         return TransactionUtil.getEditingDomain(eResource);
     }
 
-    protected DiagramFileStore asDiagramFileStore(final AbstractProcess process) {
+    protected DiagramFileStore asDiagramFileStore(final Pool process) {
         final DiagramRepositoryStore store = RepositoryManager.getInstance()
                 .getRepositoryStore(DiagramRepositoryStore.class);
         final Resource eResource = process.eResource();

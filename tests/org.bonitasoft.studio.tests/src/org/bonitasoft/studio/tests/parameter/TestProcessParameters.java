@@ -21,19 +21,19 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.Properties;
 
+import org.bonitasoft.bpm.model.configuration.Configuration;
+import org.bonitasoft.bpm.model.configuration.ConfigurationFactory;
+import org.bonitasoft.bpm.model.parameter.Parameter;
+import org.bonitasoft.bpm.model.parameter.ParameterFactory;
+import org.bonitasoft.bpm.model.process.FormMappingType;
+import org.bonitasoft.bpm.model.process.Pool;
+import org.bonitasoft.bpm.model.process.Task;
 import org.bonitasoft.engine.bpm.bar.BusinessArchive;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.configuration.ConfigurationSynchronizer;
 import org.bonitasoft.studio.diagram.custom.commands.NewDiagramCommandHandler;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.engine.export.BarExporter;
-import org.bonitasoft.bpm.model.configuration.Configuration;
-import org.bonitasoft.bpm.model.configuration.ConfigurationFactory;
-import org.bonitasoft.bpm.model.parameter.Parameter;
-import org.bonitasoft.bpm.model.parameter.ParameterFactory;
-import org.bonitasoft.bpm.model.process.AbstractProcess;
-import org.bonitasoft.bpm.model.process.FormMappingType;
-import org.bonitasoft.bpm.model.process.Task;
 import org.bonitasoft.studio.parameters.action.ExportParametersAction;
 import org.bonitasoft.studio.parameters.action.ImportParametersAction;
 import org.bonitasoft.studio.tests.util.InitialProjectRule;
@@ -47,9 +47,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
-/**
- * @author Romain Bioteau
- */
 public class TestProcessParameters {
 
     @Rule
@@ -59,14 +56,14 @@ public class TestProcessParameters {
     public TemporaryFolder tmpFolder = new TemporaryFolder();
     
     private static final String CONF_NAME = "TestConfiguration";
-    private static AbstractProcess pool;
+    private static Pool pool;
 
     @Before
     public void setUp() throws Exception {
         if (pool == null) {
             final DiagramFileStore diagramFileStore = new NewDiagramCommandHandler().newDiagram();
             diagramFileStore.open();
-            pool = (AbstractProcess) EcoreUtil.copy(diagramFileStore.getContent()).getElements().get(0);
+            pool = (Pool) EcoreUtil.copy(diagramFileStore.getContent()).getElements().get(0);
             final Configuration conf = ConfigurationFactory.eINSTANCE.createConfiguration();
 
             conf.setName(CONF_NAME);

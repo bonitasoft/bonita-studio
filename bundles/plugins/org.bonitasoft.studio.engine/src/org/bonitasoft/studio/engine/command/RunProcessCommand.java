@@ -20,6 +20,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import org.bonitasoft.bpm.model.process.MainProcess;
+import org.bonitasoft.bpm.model.process.Pool;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
@@ -36,8 +38,6 @@ import org.bonitasoft.studio.engine.i18n.Messages;
 import org.bonitasoft.studio.engine.operation.ProcessSelector;
 import org.bonitasoft.studio.engine.operation.RunOperationExecutionContext;
 import org.bonitasoft.studio.engine.operation.RunProcessOperation;
-import org.bonitasoft.bpm.model.process.AbstractProcess;
-import org.bonitasoft.bpm.model.process.MainProcess;
 import org.bonitasoft.studio.ui.dialog.SkippableProgressMonitorJobsDialog;
 import org.bonitasoft.studio.validation.common.operation.BatchValidationOperation;
 import org.bonitasoft.studio.validation.common.operation.BatchValidatorFactory;
@@ -88,14 +88,14 @@ public class RunProcessCommand extends AbstractHandler {
                 BonitaStudioLog.error(e);
             }
         }
-       final Set<AbstractProcess> executableProcesses = processSelector.getExecutableProcesses();
+       final Set<Pool> executableProcesses = processSelector.getExecutableProcesses();
         if (executableProcesses.isEmpty()) {
             MessageDialog.openInformation(Display.getDefault().getActiveShell(), Messages.noProcessToRunTitle,
                     Messages.noProcessToRun);
             return ValidationStatus.cancel(Messages.noProcessToRunTitle);
         }
 
-        final List<AbstractProcess> processes = new ArrayList<>(executableProcesses);
+        final List<Pool> processes = new ArrayList<>(executableProcesses);
         final RunProcessesValidationOperation validationOperation = new RunProcessesValidationOperation(
                 new BatchValidationOperation(
                         new OffscreenEditPartFactory(

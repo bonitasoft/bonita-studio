@@ -20,22 +20,23 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
-import org.bonitasoft.bpm.model.util.ExpressionConstants;
-import org.bonitasoft.studio.common.emf.tools.ModelHelper;
-import org.bonitasoft.studio.common.repository.AbstractRepository;
-import org.bonitasoft.studio.common.repository.RepositoryManager;
-import org.bonitasoft.studio.common.repository.core.maven.AddDependencyOperation;
-import org.bonitasoft.studio.common.ui.jface.SWTBotConstants;
+import org.bonitasoft.bonita2bar.process.expression.EngineExpressionUtil;
 import org.bonitasoft.bpm.connector.model.definition.Category;
 import org.bonitasoft.bpm.connector.model.definition.ConnectorDefinition;
-import org.bonitasoft.studio.connectors.repository.ConnectorDefRepositoryStore;
-import org.bonitasoft.studio.engine.export.EngineExpressionUtil;
-import org.bonitasoft.studio.expression.editor.i18n.Messages;
 import org.bonitasoft.bpm.model.expression.Expression;
 import org.bonitasoft.bpm.model.expression.ExpressionPackage;
 import org.bonitasoft.bpm.model.process.Connector;
 import org.bonitasoft.bpm.model.process.MainProcess;
 import org.bonitasoft.bpm.model.process.ProcessPackage;
+import org.bonitasoft.bpm.model.util.ExpressionConstants;
+import org.bonitasoft.engine.expression.InvalidExpressionException;
+import org.bonitasoft.studio.common.emf.tools.ModelHelper;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.core.maven.AddDependencyOperation;
+import org.bonitasoft.studio.common.ui.jface.SWTBotConstants;
+import org.bonitasoft.studio.connectors.repository.ConnectorDefRepositoryStore;
+import org.bonitasoft.studio.expression.editor.i18n.Messages;
 import org.bonitasoft.studio.swtbot.framework.SWTBotTestUtil;
 import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
 import org.eclipse.core.runtime.Platform;
@@ -83,7 +84,7 @@ public class TestPatternExpressionViewer implements SWTBotConstants {
     }
 
     @Test
-    public void testPatternExpressionViewer() {
+    public void testPatternExpressionViewer() throws InvalidExpressionException {
         SWTBotTestUtil.createNewDiagram(bot);
         bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_DATA).show();
         createData(DATA_NAME_1);
@@ -124,7 +125,7 @@ public class TestPatternExpressionViewer implements SWTBotConstants {
         assertTrue("Groovy expression not found", found);
     }
 
-    private void checkPatternExpressionModel() {
+    private void checkPatternExpressionModel() throws InvalidExpressionException {
         final DiagramEditPart diagramEp = (DiagramEditPart) bot.gefEditor(bot.activeEditor().getTitle()).mainEditPart()
                 .part();
         final MainProcess diagram = (MainProcess) diagramEp.resolveSemanticElement();

@@ -16,12 +16,12 @@ package org.bonitasoft.studio.configuration.ui.handler;
 
 import java.util.List;
 
+import org.bonitasoft.bpm.model.process.MainProcess;
+import org.bonitasoft.bpm.model.process.Pool;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.configuration.preferences.ConfigurationPreferenceConstants;
 import org.bonitasoft.studio.configuration.ui.wizard.ConfigurationWizard;
 import org.bonitasoft.studio.configuration.ui.wizard.ConfigurationWizardDialog;
-import org.bonitasoft.bpm.model.process.AbstractProcess;
-import org.bonitasoft.bpm.model.process.MainProcess;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
@@ -43,10 +43,6 @@ public class ConfigureHandler extends AbstractHandler {
 
     private IStatus status;
 
-    public ConfigureHandler() {
-
-    }
-
     /*
      * (non-Javadoc)
      * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
@@ -59,10 +55,10 @@ public class ConfigureHandler extends AbstractHandler {
             @Override
             public void run() {
                 String configuration = null;
-                AbstractProcess process = null;
+                Pool process = null;
                 if (event != null) {
                     configuration = event.getParameter("configuration");
-                    process = (AbstractProcess) event.getParameters().get("process");
+                    process = (Pool) event.getParameters().get("process");
                 }
                 if (configuration == null || configuration.isEmpty()) {
                     configuration = ConfigurationPreferenceConstants.LOCAL_CONFIGURATION;
@@ -100,7 +96,7 @@ public class ConfigureHandler extends AbstractHandler {
     }
 
     @SuppressWarnings("rawtypes")
-    private AbstractProcess getSelectedProcess() {
+    private Pool getSelectedProcess() {
         if (PlatformUI.getWorkbench().getActiveWorkbenchWindow() != null
                 && PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage() != null) {
             final IEditorPart part = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
@@ -110,7 +106,7 @@ public class ConfigureHandler extends AbstractHandler {
                     final List selection = ((DiagramEditor) part).getDiagramGraphicalViewer().getSelectedEditParts();
                     if (!selection.isEmpty() && selection.get(0) instanceof IGraphicalEditPart) {
                         final IGraphicalEditPart selectedPart = (IGraphicalEditPart) selection.get(0);
-                        return ModelHelper.getParentProcess(selectedPart.resolveSemanticElement());
+                        return ModelHelper.getParentPool(selectedPart.resolveSemanticElement());
                     }
                 }
             }

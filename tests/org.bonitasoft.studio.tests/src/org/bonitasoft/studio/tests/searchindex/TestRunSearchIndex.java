@@ -6,6 +6,8 @@ import static org.junit.Assert.assertNotNull;
 
 import java.net.URL;
 
+import org.bonitasoft.bpm.model.process.MainProcess;
+import org.bonitasoft.bpm.model.process.Pool;
 import org.bonitasoft.engine.api.ProcessAPI;
 import org.bonitasoft.engine.bpm.process.ProcessDefinition;
 import org.bonitasoft.engine.bpm.process.ProcessInstance;
@@ -18,8 +20,6 @@ import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.engine.command.RunProcessCommand;
 import org.bonitasoft.studio.engine.operation.ProcessSelector;
 import org.bonitasoft.studio.importer.bos.operation.ImportBosArchiveOperation;
-import org.bonitasoft.bpm.model.process.AbstractProcess;
-import org.bonitasoft.bpm.model.process.MainProcess;
 import org.bonitasoft.studio.tests.util.InitialProjectRule;
 import org.eclipse.core.runtime.FileLocator;
 import org.junit.After;
@@ -65,7 +65,7 @@ public class TestRunSearchIndex {
         assertEquals("SearchIndex", mainProcess.getName());
 
         final RunProcessCommand runProcessCommand = new RunProcessCommand(true);
-        runProcessCommand.execute(ProcessSelector.createExecutionEvent((AbstractProcess) mainProcess.getElements().get(0)));
+        runProcessCommand.execute(ProcessSelector.createExecutionEvent((Pool) mainProcess.getElements().get(0)));
 
         assertNotNull("The url is null:", runProcessCommand.getUrl());
         final String urlGivenToBrowser = runProcessCommand.getUrl().toString();

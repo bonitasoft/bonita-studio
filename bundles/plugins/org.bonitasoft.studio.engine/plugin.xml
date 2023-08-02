@@ -152,12 +152,6 @@
      </keyword>
   </extension>
   <extension
-        point="org.bonitasoft.studio.common.barResourcesProvider">
-     <barResourceProvider
-           providerClass="org.bonitasoft.studio.engine.contribution.AdditionalResourcesBARResourcesProvider">
-     </barResourceProvider>
-  </extension>
-  <extension
         point="org.eclipse.ui.commandImages">
      <image
            commandId="org.bonitasoft.studio.engine.resetServerCommand"

@@ -21,7 +21,7 @@ import org.bonitasoft.bpm.model.configuration.Configuration;
 import org.bonitasoft.bpm.model.configuration.DefinitionMapping;
 import org.bonitasoft.bpm.model.configuration.util.ConfigurationAdapterFactory;
 import org.bonitasoft.bpm.model.configuration.util.ConfigurationResourceFactoryImpl;
-import org.bonitasoft.bpm.model.process.AbstractProcess;
+import org.bonitasoft.bpm.model.process.Pool;
 import org.bonitasoft.bpm.model.process.util.ProcessAdapterFactory;
 import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
@@ -265,7 +265,7 @@ public class ConnectorConfigurationWizardPage extends WizardPage
      * process.AbstractProcess, org.bonitasoft.bpm.model.configuration.Configuration)
      */
     @Override
-    public void updatePage(final AbstractProcess process, final Configuration configuration) {
+    public void updatePage(final Pool process, final Configuration configuration) {
         if (process != null && configuration != null && viewer != null && !viewer.getControl().isDisposed()) {
             this.configuration = configuration;
             viewer.setInput(configuration);

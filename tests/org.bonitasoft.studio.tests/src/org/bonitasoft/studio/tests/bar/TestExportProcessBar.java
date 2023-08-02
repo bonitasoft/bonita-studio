@@ -24,6 +24,8 @@ import java.net.URL;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+import org.bonitasoft.bpm.model.process.MainProcess;
+import org.bonitasoft.bpm.model.process.Pool;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
@@ -33,8 +35,6 @@ import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.engine.operation.ExportBarOperation;
 import org.bonitasoft.studio.importer.bos.operation.ImportBosArchiveOperation;
-import org.bonitasoft.bpm.model.process.AbstractProcess;
-import org.bonitasoft.bpm.model.process.MainProcess;
 import org.bonitasoft.studio.tests.util.InitialProjectRule;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -72,7 +72,7 @@ public class TestExportProcessBar  {
         assertNotNull(diagram);
         final MainProcess diagramElement = diagram.getContent();
         assertNotNull(diagramElement);
-        final AbstractProcess proc = (AbstractProcess) diagramElement.getElements().get(0);
+        var proc = (Pool) diagramElement.getElements().get(0);
 
         /* Export to the specified folder */
         final File targetFolder = new File(System.getProperty("java.io.tmpdir") + File.separator + "testExportBar");

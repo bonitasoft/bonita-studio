@@ -36,26 +36,23 @@ import java.util.zip.ZipInputStream;
 
 import javax.inject.Inject;
 
-import org.bonitasoft.engine.bpm.bar.BarResource;
+import org.bonitasoft.bonita2bar.form.FormBuilder;
+import org.bonitasoft.bpm.model.configuration.Configuration;
+import org.bonitasoft.bpm.model.process.AbstractProcess;
+import org.bonitasoft.bpm.model.process.FormMapping;
+import org.bonitasoft.bpm.model.process.FormMappingType;
+import org.bonitasoft.bpm.model.process.ProcessPackage;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.provider.IBOSArchiveFileStoreProvider;
 import org.bonitasoft.studio.designer.UIDesignerPlugin;
-import org.bonitasoft.studio.designer.core.bar.BarResourceCreationException;
-import org.bonitasoft.studio.designer.core.bar.CustomPageBarResourceBuilder;
-import org.bonitasoft.studio.designer.core.bar.CustomPageBarResourceBuilderFactory;
 import org.bonitasoft.studio.designer.core.repository.WebFragmentFileStore;
 import org.bonitasoft.studio.designer.core.repository.WebFragmentRepositoryStore;
 import org.bonitasoft.studio.designer.core.repository.WebPageFileStore;
 import org.bonitasoft.studio.designer.core.repository.WebPageRepositoryStore;
 import org.bonitasoft.studio.designer.core.repository.WebWidgetFileStore;
 import org.bonitasoft.studio.designer.core.repository.WebWidgetRepositoryStore;
-import org.bonitasoft.bpm.model.configuration.Configuration;
-import org.bonitasoft.bpm.model.process.AbstractProcess;
-import org.bonitasoft.bpm.model.process.FormMapping;
-import org.bonitasoft.bpm.model.process.FormMappingType;
-import org.bonitasoft.bpm.model.process.ProcessPackage;
 import org.eclipse.e4.core.di.annotations.Creatable;
 
 import com.google.common.base.Function;
@@ -73,13 +70,13 @@ public class WebFormBOSArchiveFileStoreProvider implements IBOSArchiveFileStoreP
 
     private final RepositoryAccessor repositoryAccessor;
 
-    private final CustomPageBarResourceBuilder customPageBarResourceBuilder;
+    private final FormBuilder formBuilder;
 
     @Inject
     public WebFormBOSArchiveFileStoreProvider(final RepositoryAccessor repositoryAccessor,
-            final CustomPageBarResourceBuilderFactory customPageBarResourceFactory) {
+            FormBuilder formBuilder) {
         this.repositoryAccessor = repositoryAccessor;
-        this.customPageBarResourceBuilder = customPageBarResourceFactory.create();
+        this.formBuilder = formBuilder;
     }
 
     @Override
@@ -98,7 +95,7 @@ public class WebFormBOSArchiveFileStoreProvider implements IBOSArchiveFileStoreP
                 result.add(fStore);
                 try {
                     result.addAll(getRelatedFileStore(fStore));
-                } catch (final BarResourceCreationException | IOException e) {
+                } catch (final  IOException e) {
                     BonitaStudioLog.error("Failed to retrieve related form resources", e);
                 }
             }
@@ -107,9 +104,8 @@ public class WebFormBOSArchiveFileStoreProvider implements IBOSArchiveFileStoreP
     }
 
     protected Set<String> findFormRelatedEntries(final WebPageFileStore fStore)
-            throws BarResourceCreationException, IOException {
-        final BarResource barResource = customPageBarResourceBuilder.newBarResource(fStore.getName(), fStore.getId());
-        final byte[] zipContent = barResource.getContent();
+            throws IOException {
+        final byte[] zipContent = formBuilder.export(fStore.getId());
         return zipEntries(zipContent);
     }
 
@@ -190,7 +186,7 @@ public class WebFormBOSArchiveFileStoreProvider implements IBOSArchiveFileStoreP
     }
 
     public Set<IRepositoryFileStore<?>> getRelatedFileStore(final WebPageFileStore webPageFileStore)
-            throws BarResourceCreationException, IOException {
+            throws IOException {
         final Set<String> zipEntries = findFormRelatedEntries(webPageFileStore);
         final Set<IRepositoryFileStore<?>> result = new HashSet<>();
         result.addAll(relatedFragments(zipEntries));

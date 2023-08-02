@@ -17,11 +17,11 @@ package org.bonitasoft.studio.validation.constraints.process;
 import java.util.List;
 import java.util.Objects;
 
+import org.bonitasoft.bpm.model.expression.Expression;
+import org.bonitasoft.bpm.model.process.CallActivity;
+import org.bonitasoft.bpm.model.process.Pool;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
-import org.bonitasoft.bpm.model.expression.Expression;
-import org.bonitasoft.bpm.model.process.AbstractProcess;
-import org.bonitasoft.bpm.model.process.CallActivity;
 import org.bonitasoft.studio.validation.constraints.AbstractLiveValidationMarkerConstraint;
 import org.bonitasoft.studio.validation.i18n.Messages;
 import org.eclipse.core.runtime.IStatus;
@@ -44,8 +44,8 @@ public class CallActivityWarningConstraint extends AbstractLiveValidationMarkerC
                 final DiagramRepositoryStore diagramStore = RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
                 final Expression subprocessVersion = subProcess.getCalledActivityVersion();
                 if (subprocessVersion != null) {
-                    List<AbstractProcess> allProcesses = diagramStore.hasComputedProcesses() ? diagramStore.getComputedProcesses() : diagramStore.getAllProcesses();
-                    final AbstractProcess subProc = findProcess(subprocessName.getContent(), subprocessVersion.getContent(), allProcesses);
+                    List<Pool> allProcesses = diagramStore.hasComputedProcesses() ? diagramStore.getComputedProcesses() : diagramStore.getAllProcesses();
+                    final Pool subProc = findProcess(subprocessName.getContent(), subprocessVersion.getContent(), allProcesses);
                     if (subProc == null) {
                         return ctx.createFailureStatus(Messages.Validation_Subprocess_Not_Found);
                     }
@@ -55,7 +55,7 @@ public class CallActivityWarningConstraint extends AbstractLiveValidationMarkerC
         return ctx.createSuccessStatus();
     }
 
-    private AbstractProcess findProcess(String processName, String processVersion, List<AbstractProcess> allProcesses) {
+    private Pool findProcess(String processName, String processVersion, List<Pool> allProcesses) {
         return allProcesses.stream()
                 .filter(p -> Objects.equals(p.getName(), processName))
                 .filter(p -> Objects.equals(p.getVersion(), processVersion))

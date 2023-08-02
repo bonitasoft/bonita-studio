@@ -60,8 +60,7 @@ Require-Bundle: org.eclipse.core.runtime,
  com.fasterxml.jackson.core.jackson-databind
 Bundle-Activator: org.bonitasoft.studio.contract.ContractPlugin
 Bundle-ActivationPolicy: lazy
-Export-Package: org.bonitasoft.studio.contract.core,
- org.bonitasoft.studio.contract.core.validation,
+Export-Package: org.bonitasoft.studio.contract.core.validation,
  org.bonitasoft.studio.contract.i18n;x-friends:="org.bonitasoft.studio.swtbot.framework,org.bonitasoft.studio.tests,org.bonitasoft.studio.validation"
 Import-Package: javax.annotation;version="1.2.0",
  javax.inject;version="1.0.0",

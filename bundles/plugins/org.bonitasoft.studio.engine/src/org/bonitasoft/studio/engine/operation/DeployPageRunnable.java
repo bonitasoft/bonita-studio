@@ -21,12 +21,11 @@ import java.io.IOException;
 import java.nio.file.Files;
 
 import org.apache.http.HttpException;
+import org.bonitasoft.bonita2bar.form.FormBuilder;
 import org.bonitasoft.engine.api.PageAPI;
-import org.bonitasoft.studio.common.ui.IDisplayable;
 import org.bonitasoft.engine.page.Page;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.designer.core.bar.FormBuilder;
-import org.bonitasoft.studio.designer.core.exception.PageIncompatibleException;
+import org.bonitasoft.studio.common.ui.IDisplayable;
 import org.bonitasoft.studio.designer.core.repository.WebPageFileStore;
 import org.bonitasoft.studio.engine.http.HttpClientFactory;
 import org.bonitasoft.studio.engine.i18n.Messages;
@@ -53,7 +52,7 @@ public class DeployPageRunnable extends DeployCustomPageOperation {
             tmpFile = File.createTempFile(getCustomPageId(), ".zip");
             Files.write(tmpFile.toPath(), formBuilder.export(pageFileStore.getId()));
             return tmpFile;
-        } catch (PageIncompatibleException | IOException e) {
+        } catch (IOException e) {
             if (tmpFile != null) {
                 tmpFile.delete();
             }

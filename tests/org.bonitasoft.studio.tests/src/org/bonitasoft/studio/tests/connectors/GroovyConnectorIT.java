@@ -18,14 +18,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.net.URL;
 
+import org.bonitasoft.bpm.model.process.MainProcess;
+import org.bonitasoft.bpm.model.process.Pool;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.engine.command.RunProcessCommand;
 import org.bonitasoft.studio.engine.operation.ProcessSelector;
 import org.bonitasoft.studio.importer.bos.operation.ImportBosArchiveOperation;
-import org.bonitasoft.bpm.model.process.AbstractProcess;
-import org.bonitasoft.bpm.model.process.MainProcess;
 import org.bonitasoft.studio.tests.util.InitialProjectRule;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -57,7 +57,7 @@ public class GroovyConnectorIT {
 
         final RunProcessCommand runProcessCommand = new RunProcessCommand(true);
         final Status status = (Status) runProcessCommand
-                .execute(ProcessSelector.createExecutionEvent((AbstractProcess) mainProcess.getElements().get(0)));
+                .execute(ProcessSelector.createExecutionEvent((Pool) mainProcess.getElements().get(0)));
         assertThat(status.isOK()).isTrue();
 
     }

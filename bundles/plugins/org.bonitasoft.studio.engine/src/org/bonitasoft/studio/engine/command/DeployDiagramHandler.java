@@ -21,6 +21,7 @@ import java.util.stream.Collectors;
 
 import javax.inject.Named;
 
+import org.bonitasoft.bpm.model.process.Pool;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
@@ -31,7 +32,6 @@ import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.engine.EnginePlugin;
 import org.bonitasoft.studio.engine.i18n.Messages;
 import org.bonitasoft.studio.engine.operation.DeployProcessOperation;
-import org.bonitasoft.bpm.model.process.AbstractProcess;
 import org.bonitasoft.studio.ui.dialog.MultiStatusDialog;
 import org.bonitasoft.studio.ui.dialog.SkippableProgressMonitorJobsDialog;
 import org.bonitasoft.studio.validation.common.operation.BatchValidationOperation;
@@ -77,7 +77,7 @@ public class DeployDiagramHandler {
         }
 
         DiagramFileStore diagramFileStore = retrieveDiagram(repositoryAccessor, fileName);
-        List<AbstractProcess> processes = processUUID != null ? diagamStore.getComputedProcesses().stream()
+        List<Pool> processes = processUUID != null ? diagamStore.getComputedProcesses().stream()
                 .filter(process -> Objects.equals(processUUID, ModelHelper.getEObjectID(process)))
                 .collect(Collectors.toList()) : diagramFileStore.getProcesses(false);
         IStatus validationStatus = ValidationStatus.ok();
@@ -159,7 +159,7 @@ public class DeployDiagramHandler {
         return new DeployProcessOperation();
     }
 
-    private IStatus validateDiagram(List<AbstractProcess> processes) {
+    private IStatus validateDiagram(List<Pool> processes) {
         RunProcessesValidationOperation validationOperation = new RunProcessesValidationOperation(
                 new BatchValidationOperation(
                         new OffscreenEditPartFactory(

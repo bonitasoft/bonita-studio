@@ -116,8 +116,8 @@ public class ModelHelper {
         return res;
     }
 
-    public static List<AbstractProcess> getAllProcesses(final Element eObject) {
-        final List<AbstractProcess> res = new ArrayList<>();
+    public static List<Pool> getAllProcesses(final Element eObject) {
+        final List<Pool> res = new ArrayList<>();
         final MainProcess mainProcess = getMainProcess(eObject);
         if (mainProcess != null) {
             findAllProcesses(mainProcess, res);
@@ -125,24 +125,22 @@ public class ModelHelper {
         return res;
     }
 
-    private static List<AbstractProcess> findAllProcesses(final Element element,
-            final List<AbstractProcess> processes) {
-        final List<AbstractProcess> oldwayFindProcesses = oldwayFindProcesses(element, processes);
-        return oldwayFindProcesses;
+    private static List<Pool> findAllProcesses(final Element element,
+            final List<Pool> processes) {
+    	return oldwayFindProcesses(element, processes);
     }
 
-    protected static List<AbstractProcess> oldwayFindProcesses(final Element element,
-            final List<AbstractProcess> processes) {
-        if (element instanceof AbstractProcess && !(element instanceof MainProcess)) {
+    protected static List<Pool> oldwayFindProcesses(final Element element,
+            final List<Pool> processes) {
+        if (element instanceof Pool && !(element instanceof MainProcess)) {
 
-            processes.add((AbstractProcess) element);
+            processes.add((Pool) element);
         }
 
         if (element instanceof Container) {
             for (final Element e : ((Container) element).getElements()) {
                 oldwayFindProcesses(e, processes);
             }
-
         }
         return processes;
     }
@@ -451,8 +449,8 @@ public class ModelHelper {
     protected static AbstractProcess findOldProcesses(final Element element,
             final String procName) {
         final MainProcess proc = getMainProcess(element);
-        final List<AbstractProcess> processes = getAllProcesses(proc);
-        for (final AbstractProcess p : processes) {
+        final List<Pool> processes = getAllProcesses(proc);
+        for (final Pool p : processes) {
             if (procName.equals(p.getName())) {
                 return p;
             }
@@ -541,13 +539,10 @@ public class ModelHelper {
         return null;
     }
 
-    /**
-     * @param subProcessName
-     */
-    public static AbstractProcess findProcess(final String subProcessName, final String version,
+    public static Pool findProcess(final String subProcessName, final String version,
             final List<? extends Element> elements) {
         if (version == null || version.trim().isEmpty()) {// it's the latest version
-            final List<AbstractProcess> processes = new ArrayList<>();
+            final List<Pool> processes = new ArrayList<>();
             findProcessRecursivly(subProcessName, version, elements, processes);
             if (!processes.isEmpty()) {
                 Collections.sort(processes, new ProcessVersionComparator());
@@ -555,12 +550,12 @@ public class ModelHelper {
             }
         } else {
             for (final Element item : elements) {
-                if (item instanceof AbstractProcess) {
-                    final AbstractProcess process = (AbstractProcess) item;
+                if (item instanceof Pool) {
+                    final Pool process = (Pool) item;
                     if (process.getName().equals(subProcessName) && version.equals(process.getVersion())) {
                         return process;
                     } else {
-                        final AbstractProcess res = findProcess(subProcessName, version, process.getElements());
+                        final Pool res = findProcess(subProcessName, version, process.getElements());
                         if (res != null) {
                             return res;
                         }
@@ -580,11 +575,11 @@ public class ModelHelper {
      */
     private static void findProcessRecursivly(final String subProcessName, final String version,
             final List<? extends Element> elements,
-            final List<AbstractProcess> processes) {
+            final List<Pool> processes) {
         // TODO : use the version argument
         for (final Element item : elements) {
-            if (item instanceof AbstractProcess) {
-                final AbstractProcess process = (AbstractProcess) item;
+            if (item instanceof Pool) {
+                final Pool process = (Pool) item;
                 if (process.getName().equals(subProcessName)) {
                     processes.add(process);
                 } else {

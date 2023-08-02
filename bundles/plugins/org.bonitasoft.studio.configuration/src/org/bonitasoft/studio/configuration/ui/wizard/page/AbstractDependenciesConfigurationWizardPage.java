@@ -38,7 +38,7 @@ import org.bonitasoft.bpm.model.configuration.ConfigurationFactory;
 import org.bonitasoft.bpm.model.configuration.ConfigurationPackage;
 import org.bonitasoft.bpm.model.configuration.Fragment;
 import org.bonitasoft.bpm.model.configuration.FragmentContainer;
-import org.bonitasoft.bpm.model.process.AbstractProcess;
+import org.bonitasoft.bpm.model.process.Pool;
 import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -377,7 +377,7 @@ public abstract class AbstractDependenciesConfigurationWizardPage extends Wizard
      * org.bonitasoft.bpm.model.configuration.Configuration)
      */
     @Override
-    public void updatePage(final AbstractProcess process, final Configuration configuration) {
+    public void updatePage(final Pool process, final Configuration configuration) {
         if (process != null && configuration != null && treeViewer != null && !treeViewer.getTree().isDisposed()) {
             this.configuration = configuration;
             treeViewer.setContentProvider(new TreeDependenciesContentProvider());

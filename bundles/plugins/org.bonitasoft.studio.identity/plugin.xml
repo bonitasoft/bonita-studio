@@ -168,12 +168,6 @@
       </synchronier>
    </extension>
    <extension
-         point="org.bonitasoft.studio.common.barResourcesProvider">
-      <barResourceProvider
-            providerClass="org.bonitasoft.studio.identity.actors.configuration.ActorFilterBarResourceProvider">
-      </barResourceProvider>
-   </extension>
-   <extension
          point="org.bonitasoft.studio.bosArchiveProvider">
       <bosArchiveProvider
             providerClass="org.bonitasoft.studio.identity.actors.repository.ActorFilterResourceProvider">

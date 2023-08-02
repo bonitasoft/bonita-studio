@@ -8,12 +8,6 @@
       </repositoryStore>
    </extension>
    <extension
-         point="org.bonitasoft.studio.common.barResourcesProvider">
-      <barResourceProvider
-            providerClass="org.bonitasoft.studio.groovy.provider.GroovyScriptBarResourceProvider">
-      </barResourceProvider>
-   </extension>
-   <extension
          point="org.bonitasoft.studio.bosArchiveProvider">
       <bosArchiveProvider
             providerClass="org.bonitasoft.studio.groovy.provider.GroovyResourceProvider">

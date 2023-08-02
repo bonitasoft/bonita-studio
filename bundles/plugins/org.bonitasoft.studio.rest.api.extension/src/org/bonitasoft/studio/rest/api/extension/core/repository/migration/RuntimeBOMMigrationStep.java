@@ -119,12 +119,12 @@ public class RuntimeBOMMigrationStep implements MavenModelMigration {
 
     @Override
     public boolean appliesTo(Model model, ProjectMetadata metadata) {
-        if (model.getDependencyManagement() != null) {
+        if (model.getParent() == null && model.getDependencyManagement() != null) {
             return model.getDependencyManagement().getDependencies()
                     .stream()
                     .noneMatch(isRuntimeBOM());
         }
-        return true;
+        return model.getParent() == null;
     }
 
     private Predicate<Dependency> isRuntimeBOM() {

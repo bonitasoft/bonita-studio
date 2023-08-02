@@ -19,13 +19,13 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bonitasoft.bpm.model.configuration.Configuration;
+import org.bonitasoft.bpm.model.process.Pool;
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.configuration.extension.IConfigurationExportAction;
 import org.bonitasoft.studio.configuration.extension.IProcessConfigurationWizardPage;
 import org.bonitasoft.studio.configuration.i18n.Messages;
-import org.bonitasoft.bpm.model.configuration.Configuration;
-import org.bonitasoft.bpm.model.process.AbstractProcess;
 import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -146,7 +146,7 @@ public class ConfigurationWizardDialog extends WizardDialog implements ISelectio
     @Override
     protected Control createContents(Composite parent) {
         Control contents = super.createContents(parent);
-        AbstractProcess process = ((ConfigurationWizard) getWizard()).getProcess();
+        Pool process = ((ConfigurationWizard) getWizard()).getProcess();
         if (process != null) {
             updateSelectedProcess(process);
             setTitleImage(Pics.getImage(Pics.getWizban()));
@@ -181,7 +181,7 @@ public class ConfigurationWizardDialog extends WizardDialog implements ISelectio
         }
     }
 
-    public void updateSelectedProcess(AbstractProcess process) {
+    public void updateSelectedProcess(Pool process) {
         ConfigurationWizard confWizard = (ConfigurationWizard) getWizard();
         enableControls();
         if (!confWizard.getProcess().equals(process)) {
@@ -236,7 +236,7 @@ public class ConfigurationWizardDialog extends WizardDialog implements ISelectio
         return result;
     }
 
-    protected AbstractProcess getProcess() {
+    protected Pool getProcess() {
         ConfigurationWizard wiard = (ConfigurationWizard) getWizard();
         return wiard.getProcess();
     }

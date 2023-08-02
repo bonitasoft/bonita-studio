@@ -20,6 +20,7 @@ import org.bonitasoft.studio.configuration.extension.IProcessConfigurationWizard
 import org.bonitasoft.bpm.model.configuration.Configuration;
 import org.bonitasoft.bpm.model.parameter.Parameter;
 import org.bonitasoft.bpm.model.process.AbstractProcess;
+import org.bonitasoft.bpm.model.process.Pool;
 import org.bonitasoft.studio.parameters.action.ExportParametersAction;
 import org.bonitasoft.studio.parameters.action.ImportParametersAction;
 import org.bonitasoft.studio.parameters.i18n.Messages;
@@ -148,7 +149,7 @@ public class ParametersConfigurationWizardPage extends WizardPage implements IPr
     }
 
     @Override
-    public void updatePage(final AbstractProcess process, final Configuration configuration) {
+    public void updatePage(final Pool process, final Configuration configuration) {
         this.process = process;
         this.configuration = configuration;
         configurationValidator = new ConfigurationValidator(process);

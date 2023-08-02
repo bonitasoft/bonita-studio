@@ -36,7 +36,6 @@ import org.bonitasoft.studio.engine.BOSWebServerManager;
 import org.bonitasoft.studio.engine.EnginePlugin;
 import org.bonitasoft.studio.engine.i18n.Messages;
 import org.bonitasoft.studio.engine.preferences.EnginePreferenceConstants;
-import org.bonitasoft.bpm.model.process.AbstractProcess;
 import org.bonitasoft.bpm.model.process.Actor;
 import org.bonitasoft.bpm.model.process.Contract;
 import org.bonitasoft.bpm.model.process.FormMappingType;
@@ -61,7 +60,7 @@ import org.eclipse.swt.widgets.Display;
 public class RunProcessOperation implements IRunnableWithProgress, Runnable {
 
     private IStatus status;
-    private AbstractProcess processToRun;
+    private Pool processToRun;
     private URL url;
     private final ProcessSelector processSelector;
     private final RunOperationExecutionContext executionContext;
@@ -84,7 +83,7 @@ public class RunProcessOperation implements IRunnableWithProgress, Runnable {
         final String configurationId = executionContext.getConfigurationId();
         deployOperation.setConfigurationId(configurationId);
         deployOperation.setDisablePopup(executionContext.synchronousExecution());
-        for (final AbstractProcess process : processSelector.getExecutableProcesses()) {
+        for (final Pool process : processSelector.getExecutableProcesses()) {
             deployOperation.addProcessToDeploy(process);
         }
         status = deployOperation.run(monitor);
@@ -241,11 +240,11 @@ public class RunProcessOperation implements IRunnableWithProgress, Runnable {
         }
     }
 
-    private boolean hasInstanciationForm(final AbstractProcess processToRun) {
+    private boolean hasInstanciationForm(final Pool processToRun) {
         return !FormMappingType.NONE.equals(processToRun.getFormMapping().getType());
     }
 
-    private boolean hasInitiator(final AbstractProcess p) {
+    private boolean hasInitiator(final Pool p) {
         return p.getActors().stream().anyMatch(Actor::isInitiator);
     }
 

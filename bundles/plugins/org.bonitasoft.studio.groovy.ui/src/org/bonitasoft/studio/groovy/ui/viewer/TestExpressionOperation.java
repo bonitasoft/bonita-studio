@@ -22,6 +22,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.bonitasoft.bonita2bar.process.expression.EngineExpressionUtil;
+import org.bonitasoft.bpm.model.configuration.Configuration;
+import org.bonitasoft.bpm.model.configuration.ConfigurationFactory;
+import org.bonitasoft.bpm.model.configuration.Fragment;
+import org.bonitasoft.bpm.model.configuration.FragmentContainer;
+import org.bonitasoft.bpm.model.process.AbstractProcess;
+import org.bonitasoft.bpm.model.process.Pool;
+import org.bonitasoft.bpm.model.process.ProcessFactory;
 import org.bonitasoft.engine.api.ProcessAPI;
 import org.bonitasoft.engine.bpm.bar.BusinessArchive;
 import org.bonitasoft.engine.bpm.process.IllegalProcessStateException;
@@ -41,15 +49,8 @@ import org.bonitasoft.studio.configuration.ConfigurationSynchronizer;
 import org.bonitasoft.studio.dependencies.repository.DependencyFileStore;
 import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.engine.export.BarExporter;
-import org.bonitasoft.studio.engine.export.EngineExpressionUtil;
 import org.bonitasoft.studio.groovy.repository.GroovyFileStore;
 import org.bonitasoft.studio.groovy.repository.GroovyRepositoryStore;
-import org.bonitasoft.bpm.model.configuration.Configuration;
-import org.bonitasoft.bpm.model.configuration.ConfigurationFactory;
-import org.bonitasoft.bpm.model.configuration.Fragment;
-import org.bonitasoft.bpm.model.configuration.FragmentContainer;
-import org.bonitasoft.bpm.model.process.AbstractProcess;
-import org.bonitasoft.bpm.model.process.ProcessFactory;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
@@ -80,11 +81,11 @@ public class TestExpressionOperation implements IRunnableWithProgress {
             session = BOSEngineManager.getInstance().loginDefaultTenant(monitor);
             processApi = BOSEngineManager.getInstance().getProcessAPI(session);
             Assert.isNotNull(processApi);
-            final AbstractProcess proc = createAbstractProcess();
+            var process = createProcess();
 
             final Configuration configuration = ConfigurationFactory.eINSTANCE.createConfiguration();
             configuration.setName("TestExpressionConfiguration");
-            new ConfigurationSynchronizer(proc, configuration).synchronize();
+            new ConfigurationSynchronizer(process, configuration).synchronize();
             for (final FragmentContainer fc : configuration.getProcessDependencies()) {
                 if (additionalJars != null && FragmentTypes.OTHER.equals(fc.getId())) {
                     for (final DependencyFileStore f : additionalJars) {
@@ -111,10 +112,10 @@ public class TestExpressionOperation implements IRunnableWithProgress {
                 }
             }
 
-            final BusinessArchive businessArchive = BarExporter.getInstance().createBusinessArchive(proc,
+            final BusinessArchive businessArchive = BarExporter.getInstance().createBusinessArchive(process,
                     configuration);
 
-            undeployProcess(proc, processApi);
+            undeployProcess(process, processApi);
             final ProcessDefinition def = processApi.deploy(businessArchive);
             procId = def.getId();
             processApi.enableProcess(procId);
@@ -147,8 +148,8 @@ public class TestExpressionOperation implements IRunnableWithProgress {
         return fragment;
     }
 
-    private AbstractProcess createAbstractProcess() {
-        final AbstractProcess proc = ProcessFactory.eINSTANCE.createPool();
+    private Pool createProcess() {
+        var proc = ProcessFactory.eINSTANCE.createPool();
         proc.setName(TEST_EXPRESSION_POOL);
         proc.setVersion("1.0");
         return proc;

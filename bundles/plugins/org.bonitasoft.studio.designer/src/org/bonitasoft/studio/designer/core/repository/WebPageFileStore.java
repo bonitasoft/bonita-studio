@@ -30,6 +30,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.bonitasoft.bonita2bar.form.FormBuilder;
 import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.net.HttpClientFactory;
@@ -41,9 +42,7 @@ import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.common.ui.IDisplayable;
 import org.bonitasoft.studio.designer.UIDesignerPlugin;
 import org.bonitasoft.studio.designer.core.PageDesignerURLFactory;
-import org.bonitasoft.studio.designer.core.bar.FormBuilder;
 import org.bonitasoft.studio.designer.core.bar.RestFormBuilder;
-import org.bonitasoft.studio.designer.core.exception.PageIncompatibleException;
 import org.bonitasoft.studio.designer.i18n.Messages;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.resources.IFile;
@@ -151,7 +150,7 @@ public class WebPageFileStore extends InFolderJSONFileStore
                 .openBufferedStream();) {
             IFile zipFile = webPageFolder.getFile(String.format("custompage_%s.zip", getCustomPageName()));
             zipFile.create(inputStream, true, new NullProgressMonitor());
-        } catch (PageIncompatibleException | IOException e) {
+        } catch (IOException e) {
             return ValidationStatus.error(String.format("An error occured while building %s", getName()), e);
         } catch (CoreException e) {
             return e.getStatus();

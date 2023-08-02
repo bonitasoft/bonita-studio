@@ -22,6 +22,8 @@ import static org.junit.Assert.assertTrue;
 import java.net.URL;
 import java.util.List;
 
+import org.bonitasoft.bpm.model.process.MainProcess;
+import org.bonitasoft.bpm.model.process.Pool;
 import org.bonitasoft.engine.api.ProcessAPI;
 import org.bonitasoft.engine.bpm.flownode.HumanTaskInstance;
 import org.bonitasoft.engine.bpm.process.ProcessDefinition;
@@ -39,8 +41,6 @@ import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.engine.command.RunProcessCommand;
 import org.bonitasoft.studio.engine.operation.ProcessSelector;
 import org.bonitasoft.studio.importer.bos.operation.ImportBosArchiveOperation;
-import org.bonitasoft.bpm.model.process.AbstractProcess;
-import org.bonitasoft.bpm.model.process.MainProcess;
 import org.bonitasoft.studio.tests.util.Await;
 import org.bonitasoft.studio.tests.util.EngineAPIUtil;
 import org.bonitasoft.studio.tests.util.InitialProjectRule;
@@ -106,7 +106,7 @@ public class TestSubprocess {
 
         final RunProcessCommand runProcessCommand = new RunProcessCommand(true);
         runProcessCommand
-                .execute(ProcessSelector.createExecutionEvent((AbstractProcess) mainProcess.getElements().get(0)));
+                .execute(ProcessSelector.createExecutionEvent((Pool) mainProcess.getElements().get(0)));
         final String urlGivenToBrowser = runProcessCommand.getUrl().toString();
         assertFalse("The url contains null:" + urlGivenToBrowser, urlGivenToBrowser.contains("null"));
         final long processId = processApi.getProcessDefinitionId("ActivityToAdmin", "1.0");
@@ -142,7 +142,7 @@ public class TestSubprocess {
         assertEquals("DynamicSubprocess", mainProcess2.getName());
 
         runProcessCommand
-                .execute(ProcessSelector.createExecutionEvent((AbstractProcess) mainProcess2.getElements().get(0)));
+                .execute(ProcessSelector.createExecutionEvent((Pool) mainProcess2.getElements().get(0)));
 
         Await.waitUntil(() -> {
             List<HumanTaskInstance> currentTasks;
@@ -181,7 +181,7 @@ public class TestSubprocess {
 
         final RunProcessCommand runProcessCommand = new RunProcessCommand(true);
         runProcessCommand
-                .execute(ProcessSelector.createExecutionEvent((AbstractProcess) mainProcess.getElements().get(0)));
+                .execute(ProcessSelector.createExecutionEvent((Pool) mainProcess.getElements().get(0)));
         final long processId = processApi.getProcessDefinitionId("InvokeCalculator", "1.0");
         final ProcessDefinition processDef = processApi.getProcessDefinition(processId);
         assertNotNull(processDef);
@@ -222,7 +222,7 @@ public class TestSubprocess {
         final MainProcess mainProcess = store.getChild("ParentSubProcEvent-1.0.proc", true).getContent();
         RunProcessCommand runProcessCommand = new RunProcessCommand(true);
         runProcessCommand
-                .execute(ProcessSelector.createExecutionEvent((AbstractProcess) mainProcess.getElements().get(0)));
+                .execute(ProcessSelector.createExecutionEvent((Pool) mainProcess.getElements().get(0)));
         final String urlGivenToBrowser = runProcessCommand.getUrl().toString();
         assertFalse("The url contains null:" + urlGivenToBrowser, urlGivenToBrowser.contains("null"));
 
@@ -239,7 +239,7 @@ public class TestSubprocess {
 
         runProcessCommand = new RunProcessCommand(true);
         runProcessCommand
-                .execute(ProcessSelector.createExecutionEvent((AbstractProcess) mainProcess.getElements().get(0)));
+                .execute(ProcessSelector.createExecutionEvent((Pool) mainProcess.getElements().get(0)));
         final String urlGivenToBrowser2 = runProcessCommand.getUrl().toString();
         assertFalse("The url contains null:" + urlGivenToBrowser2, urlGivenToBrowser2.contains("null"));
         

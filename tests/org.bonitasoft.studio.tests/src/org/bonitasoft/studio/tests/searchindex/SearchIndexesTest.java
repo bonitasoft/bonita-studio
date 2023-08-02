@@ -9,23 +9,20 @@
 package org.bonitasoft.studio.tests.searchindex;
 
 import static org.bonitasoft.studio.assertions.StatusAssert.assertThat;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 import java.util.List;
 
-import org.bonitasoft.studio.assertions.StatusAssert;
+import org.bonitasoft.bpm.model.process.MainProcess;
+import org.bonitasoft.bpm.model.process.Pool;
+import org.bonitasoft.bpm.model.process.SearchIndex;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.ui.jface.SWTBotConstants;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
-import org.bonitasoft.bpm.model.process.AbstractProcess;
-import org.bonitasoft.bpm.model.process.MainProcess;
-import org.bonitasoft.bpm.model.process.Pool;
-import org.bonitasoft.bpm.model.process.SearchIndex;
 import org.bonitasoft.studio.swtbot.framework.SWTBotTestUtil;
-import org.bonitasoft.studio.swtbot.framework.diagram.BotProcessDiagramPerspective;
-import org.bonitasoft.studio.swtbot.framework.draw.BotGefProcessDiagramEditor;
 import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
@@ -88,7 +85,7 @@ public class SearchIndexesTest {
         
         final MainProcess mainProcess = (MainProcess) ((IGraphicalEditPart) gmfEditor.mainEditPart().part())
                 .resolveSemanticElement();
-        final List<AbstractProcess> processes = ModelHelper.getAllProcesses(mainProcess);
+        final List<Pool> processes = ModelHelper.getAllProcesses(mainProcess);
         assertNotNull("at least one pool should be on diagram ", processes.size() == 1);
         Pool pool = (Pool) processes.get(0); 
         for (int i = 0; i < 5; i++) {

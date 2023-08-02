@@ -27,9 +27,9 @@ import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.bpm.model.expression.Expression;
-import org.bonitasoft.bpm.model.process.AbstractProcess;
 import org.bonitasoft.bpm.model.process.CallActivity;
 import org.bonitasoft.bpm.model.process.MainProcess;
+import org.bonitasoft.bpm.model.process.Pool;
 import org.bonitasoft.bpm.model.process.ProcessPackage;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.emf.ecore.EObject;
@@ -45,14 +45,14 @@ public class ProcessSelector {
 
     public static final String PROCESS = "process";
     private final ExecutionEvent event;
-    private Optional<AbstractProcess> processFromEvent;
+    private Optional<Pool> processFromEvent;
 
     public ProcessSelector(final ExecutionEvent event) {
         this.event = event;
     }
 
-    public AbstractProcess getSelectedProcess() {
-        Optional<AbstractProcess> processFromEvent = getProcessFromEvent();
+    public Pool getSelectedProcess() {
+        Optional<Pool> processFromEvent = getProcessFromEvent();
         if (processFromEvent.isPresent()) {
             return processFromEvent.get();
         }
@@ -64,47 +64,47 @@ public class ProcessSelector {
             if (selectedEditParts != null && !selectedEditParts.isEmpty()) {
                 final Object selectedEp = selectedEditParts.iterator().next();
                 if (selectedEp != null) {
-                    return ModelHelper.getParentProcess(((IGraphicalEditPart) selectedEp).resolveSemanticElement());
+                    return ModelHelper.getParentPool(((IGraphicalEditPart) selectedEp).resolveSemanticElement());
                 }
             } else {
                 final EObject element = ((DiagramEditor) editor).getDiagramEditPart().resolveSemanticElement();
-                return ModelHelper.getParentProcess(element);
+                return ModelHelper.getParentPool(element);
             }
         }
         return null;
     }
 
-    private Optional<AbstractProcess> getProcessFromEvent() {
+    private Optional<Pool> getProcessFromEvent() {
         if (processFromEvent == null) {
             DiagramRepositoryStore diagramStore = RepositoryManager.getInstance()
                     .getRepositoryStore(DiagramRepositoryStore.class);
-            List<AbstractProcess> allProcesses = diagramStore.hasComputedProcesses()
+            List<Pool> allProcesses = diagramStore.hasComputedProcesses()
                     ? diagramStore.getComputedProcesses()
                     : diagramStore.getAllProcesses();
             processFromEvent = Optional.ofNullable(event)
                     .map(e -> e.getParameters().get(PROCESS))
-                    .filter(AbstractProcess.class::isInstance)
-                    .map(AbstractProcess.class::cast)
+                    .filter(Pool.class::isInstance)
+                    .map(Pool.class::cast)
                     .map(p -> getProcessToRun(p, allProcesses));
         }
         return processFromEvent;
 
     }
 
-    public Set<AbstractProcess> getExecutableProcesses() {
-        final Set<AbstractProcess> result = new TreeSet<>((p1, p2) -> {
+    public Set<Pool> getExecutableProcesses() {
+        final Set<Pool> result = new TreeSet<>((p1, p2) -> {
             final String s1 = p1.getName() + "--" + p1.getVersion();
             final String s2 = p2.getName() + "--" + p2.getVersion();
             return s1.compareTo(s2);
         });
-        Optional<AbstractProcess> processFromEvent = getProcessFromEvent();
+        Optional<Pool> processFromEvent = getProcessFromEvent();
         DiagramRepositoryStore diagramStore = RepositoryManager.getInstance()
                 .getRepositoryStore(DiagramRepositoryStore.class);
-        List<AbstractProcess> allProcesses = diagramStore.hasComputedProcesses() ? diagramStore.getComputedProcesses()
+        List<Pool> allProcesses = diagramStore.hasComputedProcesses() ? diagramStore.getComputedProcesses()
                 : diagramStore.getAllProcesses();
         if (processFromEvent.isPresent()) {
-            AbstractProcess selectedProcess = processFromEvent.get();
-            final Set<AbstractProcess> calledProcesses = new HashSet<>();
+        	Pool selectedProcess = processFromEvent.get();
+            final Set<Pool> calledProcesses = new HashSet<>();
             findCalledProcesses(selectedProcess, allProcesses, calledProcesses);
             if (!calledProcesses.isEmpty()) {
                 result.addAll(calledProcesses);
@@ -116,26 +116,26 @@ public class ProcessSelector {
             final MainProcess processInEditor = getProcessInEditor();
             if (processInEditor instanceof MainProcess) {
                 for (final EObject p : ModelHelper.getAllItemsOfType(processInEditor, ProcessPackage.Literals.POOL)) {
-                    result.add((AbstractProcess) p);
-                    final Set<AbstractProcess> calledProcesses = new HashSet<>();
-                    findCalledProcesses((AbstractProcess) p, allProcesses, calledProcesses);
+                    result.add((Pool) p);
+                    final Set<Pool> calledProcesses = new HashSet<>();
+                    findCalledProcesses((Pool) p, allProcesses, calledProcesses);
                     if (!calledProcesses.isEmpty()) {
                         result.addAll(calledProcesses);
                     }
                 }
-            } else if (processInEditor != null) {
-                final Set<AbstractProcess> calledProcesses = new HashSet<>();
-                findCalledProcesses(processInEditor, allProcesses, calledProcesses);
+            } else if (processInEditor instanceof Pool) {
+                final Set<Pool> calledProcesses = new HashSet<>();
+                findCalledProcesses((Pool) processInEditor, allProcesses, calledProcesses);
                 if (!calledProcesses.isEmpty()) {
                     result.addAll(calledProcesses);
                 }
-                result.add(processInEditor);
+                result.add((Pool) processInEditor);
             }
         }
         return result;
     }
 
-    private AbstractProcess getProcessToRun(AbstractProcess processFromEvent, List<AbstractProcess> allProcesses) {
+    private Pool getProcessToRun(Pool processFromEvent, List<Pool> allProcesses) {
         if (processFromEvent.eIsProxy()) {
             return allProcesses.stream()
                     .filter(p -> Objects.equals(p.getName(), processFromEvent.getName())
@@ -146,8 +146,8 @@ public class ProcessSelector {
         return processFromEvent;
     }
 
-    private void findCalledProcesses(final AbstractProcess process, List<AbstractProcess> allProcesses,
-            final Set<AbstractProcess> result) {
+    private void findCalledProcesses(final Pool process, List<Pool> allProcesses,
+            final Set<Pool> result) {
         final List<CallActivity> callActivities = ModelHelper.getAllItemsOfType(process,
                 ProcessPackage.Literals.CALL_ACTIVITY);
         for (final CallActivity callActivity : callActivities) {
@@ -159,7 +159,7 @@ public class ProcessSelector {
                         && !calledVersion.getContent().isEmpty()) {
                     version = calledVersion.getContent();
                 }
-                final AbstractProcess subProcess = ModelHelper.findProcess(calledName.getContent(), version,
+                final Pool subProcess = ModelHelper.findProcess(calledName.getContent(), version,
                         allProcesses);
                 if (subProcess != null && !containsSubProcess(subProcess, result)) {
                     result.add(subProcess);
@@ -169,9 +169,9 @@ public class ProcessSelector {
         }
     }
 
-    private boolean containsSubProcess(final AbstractProcess subProcess, final Set<AbstractProcess> result) {
+    private boolean containsSubProcess(final Pool subProcess, final Set<Pool> result) {
         final String currentSubProcessId = subProcess.getName() + "--" + subProcess.getVersion();
-        for (final AbstractProcess process : result) {
+        for (final Pool process : result) {
             final String id = process.getName() + "--" + process.getVersion();
             if (id.equals(currentSubProcessId)) {
                 return true;
@@ -192,7 +192,7 @@ public class ProcessSelector {
         return null;
     }
 
-    public static ExecutionEvent createExecutionEvent(final AbstractProcess processToRun) {
+    public static ExecutionEvent createExecutionEvent(final Pool processToRun) {
         final Map<String, Object> param = new HashMap<>();
         param.put(PROCESS, processToRun);
         return new ExecutionEvent(null, param, null, null);

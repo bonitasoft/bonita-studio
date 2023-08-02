@@ -20,16 +20,7 @@ import static org.bonitasoft.bpm.model.connectorconfiguration.builders.Connector
 import static org.bonitasoft.bpm.model.expression.builders.ExpressionBuilder.aConstantExpression;
 import static org.bonitasoft.bpm.model.expression.builders.ExpressionBuilder.aGroovyScriptExpression;
 
-import java.lang.reflect.InvocationTargetException;
-
-import org.bonitasoft.bpm.model.util.ExpressionConstants;
-import org.bonitasoft.studio.common.repository.AbstractRepository;
-import org.bonitasoft.studio.common.repository.RepositoryManager;
-import org.bonitasoft.studio.common.repository.core.maven.AddDependencyOperation;
-import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.bpm.connector.model.implementation.ConnectorImplementation;
-import org.bonitasoft.studio.connectors.operation.TestConnectorOperation;
-import org.bonitasoft.studio.connectors.repository.ConnectorImplRepositoryStore;
 import org.bonitasoft.bpm.model.connectorconfiguration.ConnectorConfiguration;
 import org.bonitasoft.bpm.model.connectorconfiguration.ConnectorConfigurationFactory;
 import org.bonitasoft.bpm.model.connectorconfiguration.ConnectorParameter;
@@ -39,6 +30,13 @@ import org.bonitasoft.bpm.model.expression.Operation;
 import org.bonitasoft.bpm.model.expression.Operator;
 import org.bonitasoft.bpm.model.process.Connector;
 import org.bonitasoft.bpm.model.process.ProcessFactory;
+import org.bonitasoft.bpm.model.util.ExpressionConstants;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.core.maven.AddDependencyOperation;
+import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
+import org.bonitasoft.studio.connectors.operation.TestConnectorOperation;
+import org.bonitasoft.studio.connectors.repository.ConnectorImplRepositoryStore;
 import org.bonitasoft.studio.tests.util.InitialProjectRule;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.junit.Assert;
@@ -61,7 +59,7 @@ public class TestConnectorOperationIT {
     }
     
     @Test
-    public void testBasicGroovyScript() throws InvocationTargetException, InterruptedException, ReadFileStoreException {
+    public void testBasicGroovyScript() throws Exception {
         TestConnectorOperation testConnectorOperation = createOperation();
 
         testConnectorOperation.run(new NullProgressMonitor());
@@ -71,7 +69,7 @@ public class TestConnectorOperationIT {
                 testConnectorOperation.getResult().values().iterator().next());
     }
 
-    private TestConnectorOperation createOperation() throws ReadFileStoreException {
+    private TestConnectorOperation createOperation() throws Exception {
         TestConnectorOperation testConnectorOperation = new TestConnectorOperation();
         ConnectorConfiguration configuration = createConnectorConfiguration();
         testConnectorOperation.setConnectorConfiguration(configuration);

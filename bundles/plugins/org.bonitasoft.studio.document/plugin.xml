@@ -28,12 +28,6 @@
       </propertySections>
    </extension>
    <extension
-         point="org.bonitasoft.studio.common.barResourcesProvider">
-      <barResourceProvider
-            providerClass="org.bonitasoft.studio.document.core.expression.DocumentBarResourceProvider">
-      </barResourceProvider>
-   </extension>
-   <extension
          point="org.bonitasoft.studio.expression.expressionProvider">
       <expressionProvider
             providerClass="org.bonitasoft.studio.document.core.expression.DocumentObjectExpressionProvider">
@@ -53,12 +47,6 @@
       <bosArchiveProvider
             providerClass="org.bonitasoft.studio.document.core.repository.DocumentFilseStoreProvider">
       </bosArchiveProvider>
-   </extension>
-   <extension
-         point="org.bonitasoft.studio.engine.definition.builder">
-      <EngineDefinitionBuilder
-            class="org.bonitasoft.studio.document.core.export.DocumentEngineDefinitionBuilder">
-      </EngineDefinitionBuilder>
    </extension>
    <extension
          point="org.bonitasoft.studio.configuration.synchronizer">

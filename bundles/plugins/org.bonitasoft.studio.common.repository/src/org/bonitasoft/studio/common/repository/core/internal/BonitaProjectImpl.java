@@ -168,7 +168,7 @@ public class BonitaProjectImpl implements BonitaProject {
     public void refresh(IProgressMonitor monitor) throws CoreException {
         refresh(false, monitor);
     }
-
+    
     @Override
     public void refresh(boolean updateConfiguration, IProgressMonitor monitor) throws CoreException {
         monitor.beginTask(Messages.refresh, IProgressMonitor.UNKNOWN);

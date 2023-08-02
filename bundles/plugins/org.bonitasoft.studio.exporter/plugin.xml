@@ -19,12 +19,6 @@
       </exporterFactory>
    </extension>
    <extension
-         point="org.bonitasoft.studio.common.barResourcesProvider">
-      <barResourceProvider
-            providerClass="org.bonitasoft.studio.exporter.bpmn.BPMNBarResourceProvider">
-      </barResourceProvider>
-   </extension>
-   <extension
          id="org.bonitasoft.studio.exporter.fragment"
          point="org.eclipse.e4.workbench.model">
       <fragment

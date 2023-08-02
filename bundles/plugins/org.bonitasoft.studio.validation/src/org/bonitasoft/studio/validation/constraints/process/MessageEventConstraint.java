@@ -28,6 +28,7 @@ import org.bonitasoft.bpm.model.process.AbstractCatchMessageEvent;
 import org.bonitasoft.bpm.model.process.AbstractProcess;
 import org.bonitasoft.bpm.model.process.CorrelationTypeActive;
 import org.bonitasoft.bpm.model.process.Message;
+import org.bonitasoft.bpm.model.process.Pool;
 import org.bonitasoft.bpm.model.process.ProcessPackage;
 import org.bonitasoft.studio.validation.ValidationPlugin;
 import org.bonitasoft.studio.validation.constraints.AbstractLiveValidationMarkerConstraint;
@@ -36,6 +37,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.validation.IValidationContext;
+import org.eclipse.osgi.util.NLS;
 
 /**
  * @author Romain Bioteau
@@ -73,10 +75,10 @@ public class MessageEventConstraint extends AbstractLiveValidationMarkerConstrai
         else {
             if (ExpressionConstants.CONSTANT_TYPE.equals(event.getTargetProcessExpression().getType())) {
                 final DiagramRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
-                final List<AbstractProcess> processes = store.findProcesses(event.getTargetProcessExpression().getContent());
+                final List<Pool> processes = store.findProcesses(event.getTargetProcessExpression().getContent());
                 if (processes.isEmpty()) {
                     return ctx
-                            .createFailureStatus(Messages.bind(Messages.processDoesNotExist, event.getTargetProcessExpression().getContent(), event.getName()));
+                            .createFailureStatus(NLS.bind(Messages.processDoesNotExist, event.getTargetProcessExpression().getContent(), event.getName()));
                 }
                 final Expression targetElem = event.getTargetElementExpression();
                 if (targetElem != null && targetElem.getContent() != null && !targetElem.getContent().isEmpty()
@@ -87,7 +89,7 @@ public class MessageEventConstraint extends AbstractLiveValidationMarkerConstrai
                         for (final AbstractCatchMessageEvent ev : events) {
                             if (targetElemName.equals(ev.getName())) {
                                 if (event.getCorrelation().getCorrelationType() != CorrelationTypeActive.INACTIVE) {
-                                    final List<String> targetKeyList = new ArrayList<String>();
+                                    final List<String> targetKeyList = new ArrayList<>();
                                     final TableExpression correlation = ev.getCorrelation();
                                     if (correlation != null) {
                                         for (final ListExpression listExpression : correlation.getExpressions()) {
@@ -95,21 +97,21 @@ public class MessageEventConstraint extends AbstractLiveValidationMarkerConstrai
                                         }
                                     }
                                     final MultiStatus multi = new MultiStatus(ValidationPlugin.PLUGIN_ID, IStatus.OK, "", null);
-                                    final List<String> eventKeyList = new ArrayList<String>();
+                                    final List<String> eventKeyList = new ArrayList<>();
                                     for (final ListExpression listExpression : event.getCorrelation().getCorrelationAssociation().getExpressions()) {
-                                        if (listExpression.getExpressions().size() > 0) {
+                                        if (!listExpression.getExpressions().isEmpty()) {
                                             final String eventKeyName = listExpression.getExpressions().get(0).getContent();
                                             eventKeyList.add(eventKeyName);
                                             if (!targetKeyList.contains(eventKeyName)) {
                                                 final String[] messageArgs = { eventKeyName, event.getSource().getName(), targetElemName };
-                                                multi.add(ctx.createFailureStatus(Messages.bind(Messages.Validation_CorrelationKeyNotUsed, messageArgs)));
+                                                multi.add(ctx.createFailureStatus(NLS.bind(Messages.Validation_CorrelationKeyNotUsed, messageArgs)));
                                             }
                                         }
                                     }
                                     for (final String eventKey : targetKeyList) {
                                         if (!eventKeyList.contains(eventKey)) {
                                             final String[] messageArgs = { eventKey, targetElemName, event.getSource().getName() };
-                                            multi.add(ctx.createFailureStatus(Messages.bind(Messages.Validation_CorrelationKeyNotDefine, messageArgs)));
+                                            multi.add(ctx.createFailureStatus(NLS.bind(Messages.Validation_CorrelationKeyNotDefine, messageArgs)));
                                         }
                                     }
                                     if (!multi.isOK()) {
@@ -120,7 +122,7 @@ public class MessageEventConstraint extends AbstractLiveValidationMarkerConstrai
                             }
                         }
                     }
-                    return ctx.createFailureStatus(Messages.bind(Messages.targetCatchMessageNotExists, targetElemName, event.getTargetProcessExpression()
+                    return ctx.createFailureStatus(NLS.bind(Messages.targetCatchMessageNotExists, targetElemName, event.getTargetProcessExpression()
                             .getContent()));
                 }
             }

@@ -24,7 +24,6 @@ import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Paths;
 
-import org.bonitasoft.bpm.model.process.AbstractProcess;
 import org.bonitasoft.bpm.model.process.Pool;
 import org.bonitasoft.engine.bpm.bar.BusinessArchive;
 import org.bonitasoft.engine.bpm.bar.form.model.FormMappingModel;
@@ -47,12 +46,10 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.swt.widgets.Display;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
-@Ignore
 public class ExportBarIT {
 
     @Rule
@@ -106,7 +103,7 @@ public class ExportBarIT {
         final File targetBarFolder = tmpFolder.newFolder("targetBarFolder");
         final ExportBarOperation exportBarOperation = new ExportBarOperation();
         final DiagramFileStore diagram = (DiagramFileStore) importBosArchiveOperation.getFileStoresToOpen().get(0);
-        AbstractProcess process = diagram.getProcesses(true).get(0);
+        var process = diagram.getProcesses(true).get(0);
         Pool pool = ModelHelper.getParentPool(process);
 
         var commonResourcesToCopy = new File(FileLocator.toFileURL(ExportBarIT.class.getResource("/_common")).getFile());

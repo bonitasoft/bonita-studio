@@ -22,6 +22,7 @@ import java.util.Set;
 
 import org.bonitasoft.bpm.connector.model.definition.ConnectorDefinitionPackage;
 import org.bonitasoft.bpm.connector.model.implementation.ConnectorImplementationPackage;
+import org.bonitasoft.bpm.model.configuration.ConfigurationPackage;
 import org.bonitasoft.bpm.model.connectorconfiguration.ConnectorConfigurationPackage;
 import org.bonitasoft.bpm.model.expression.ExpressionPackage;
 import org.bonitasoft.bpm.model.kpi.KpiPackage;
@@ -36,6 +37,7 @@ public final class BonitaEditingDomainRegistry implements TransactionalEditingDo
 
     static {
         List.of(ProcessPackage.eINSTANCE,
+        		ConfigurationPackage.eINSTANCE,
                 ConnectorDefinitionPackage.eINSTANCE,
                 ExpressionPackage.eINSTANCE,
                 ParameterPackage.eINSTANCE,
@@ -108,7 +110,7 @@ public final class BonitaEditingDomainRegistry implements TransactionalEditingDo
     }
 
     public synchronized void removeAll() {
-        final Set<String> registeredIds = new HashSet<String>(domains.keySet());
+        final Set<String> registeredIds = new HashSet<>(domains.keySet());
         for (final String registeredId : registeredIds) {
             EditingDomainManager.getInstance().assertDynamicallyRegistered(registeredId);
 
