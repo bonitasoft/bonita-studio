@@ -19,6 +19,8 @@ import static org.junit.Assert.assertFalse;
 
 import java.net.URL;
 
+import org.bonitasoft.bpm.model.process.MainProcess;
+import org.bonitasoft.bpm.model.process.Pool;
 import org.bonitasoft.engine.api.ProcessAPI;
 import org.bonitasoft.engine.bpm.flownode.HumanTaskInstance;
 import org.bonitasoft.engine.exception.BonitaHomeNotSetException;
@@ -38,8 +40,6 @@ import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.engine.command.RunProcessCommand;
 import org.bonitasoft.studio.engine.operation.ProcessSelector;
 import org.bonitasoft.studio.importer.bos.operation.ImportBosArchiveOperation;
-import org.bonitasoft.bpm.model.process.AbstractProcess;
-import org.bonitasoft.bpm.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditor;
 import org.bonitasoft.studio.tests.util.Await;
 import org.bonitasoft.studio.tests.util.InitialProjectRule;
@@ -94,7 +94,7 @@ public class TestNonInterruptingBoundaryTimerEvent {
 
         final RunProcessCommand runProcessCommand = new RunProcessCommand(true);
         runProcessCommand
-                .execute(ProcessSelector.createExecutionEvent((AbstractProcess) mainProcess.getElements().get(0)));
+                .execute(ProcessSelector.createExecutionEvent((Pool) mainProcess.getElements().get(0)));
         final String urlGivenToBrowser = runProcessCommand.getUrl().toString();
         assertFalse("The url contains null:" + urlGivenToBrowser, urlGivenToBrowser.contains("null"));
         final long processId = processApi.getProcessDefinitionId("TestNonInterruptingTimerEvent", "1.0");

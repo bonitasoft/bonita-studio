@@ -33,10 +33,10 @@ import org.bonitasoft.bpm.model.expression.Expression;
 import org.bonitasoft.bpm.model.expression.ExpressionFactory;
 import org.bonitasoft.bpm.model.expression.ListExpression;
 import org.bonitasoft.bpm.model.expression.TableExpression;
-import org.bonitasoft.bpm.model.process.AbstractProcess;
 import org.bonitasoft.bpm.model.process.CorrelationTypeActive;
 import org.bonitasoft.bpm.model.process.MainProcess;
 import org.bonitasoft.bpm.model.process.Message;
+import org.bonitasoft.bpm.model.process.Pool;
 import org.bonitasoft.bpm.model.process.ProcessFactory;
 import org.bonitasoft.bpm.model.process.ProcessPackage;
 import org.bonitasoft.bpm.model.process.ThrowMessageEvent;
@@ -607,13 +607,13 @@ public class MessageEventWizardPage extends WizardPage implements
             final Expression procName = (Expression) ((StructuredSelection) processExpressionViewer
                     .getSelection()).getFirstElement();
             if (procName.getType().equals(ExpressionConstants.CONSTANT_TYPE)) {
-                final AbstractProcess proc = getProcessOnDiagram(
+                final Pool proc = getProcessOnDiagram(
                         ModelHelper.getMainProcess(element),
                         procName.getContent());
                 final DiagramRepositoryStore store = RepositoryManager
                         .getInstance().getRepositoryStore(
                                 DiagramRepositoryStore.class);
-                final List<AbstractProcess> processes = store
+                final List<Pool> processes = store
                         .findProcesses(procName.getContent());
                 if (proc != null) {
                     processes.add(proc);
@@ -627,9 +627,9 @@ public class MessageEventWizardPage extends WizardPage implements
         }
     }
 
-    private AbstractProcess getProcessOnDiagram(final MainProcess mainProcess,
+    private Pool getProcessOnDiagram(final MainProcess mainProcess,
             final String procName) {
-        for (final AbstractProcess proc : ModelHelper.getAllProcesses(mainProcess)) {
+        for (final Pool proc : ModelHelper.getAllProcesses(mainProcess)) {
             if (proc.getName().equals(procName)) {
                 return proc;
             }

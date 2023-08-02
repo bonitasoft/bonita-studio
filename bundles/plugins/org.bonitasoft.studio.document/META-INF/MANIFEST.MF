@@ -6,7 +6,6 @@ Bundle-Version: 9.0.0.qualifier
 Bundle-Vendor: BonitaSoft S.A.
 Bundle-Localization: plugin
 Export-Package: org.bonitasoft.studio.document,
- org.bonitasoft.studio.document.core.export,
  org.bonitasoft.studio.document.core.expression,
  org.bonitasoft.studio.document.core.repository,
  org.bonitasoft.studio.document.i18n,

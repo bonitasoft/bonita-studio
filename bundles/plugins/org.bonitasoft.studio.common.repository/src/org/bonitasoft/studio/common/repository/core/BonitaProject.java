@@ -21,7 +21,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.log.BonitaStudioLogger;
 import org.bonitasoft.studio.common.repository.BonitaProjectNature;
 import org.bonitasoft.studio.common.repository.core.internal.BonitaProjectImpl;
 import org.bonitasoft.studio.common.repository.core.maven.BonitaProjectBuilder;
@@ -32,7 +31,6 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.preferences.IScopeContext;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.m2e.core.MavenPlugin;
@@ -90,7 +88,7 @@ public interface BonitaProject extends GitProject, IAdaptable {
     void refresh(boolean updateConfiguration, IProgressMonitor monitor) throws CoreException;
 
     boolean exists();
-
+    
     static List<IProject> getRelatedProjects(String id) {
         var relatedProjects = new ArrayList<IProject>();
         var bdmParentProject = getBdmParentProject(id);
@@ -168,5 +166,7 @@ public interface BonitaProject extends GitProject, IAdaptable {
     static BonitaProject create(String projectId) {
         return new BonitaProjectImpl(projectId);
     }
+
+
 
 }

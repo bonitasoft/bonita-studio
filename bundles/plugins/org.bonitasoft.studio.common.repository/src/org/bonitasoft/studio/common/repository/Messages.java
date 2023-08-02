@@ -143,6 +143,8 @@ public final class Messages extends NLS {
     public static String migrating;
     public static String refresh;
     public static String reservedId;
+	public static String buildProjectClasspath;
+	public static String installLocalDependencies;
 
     private Messages() {
         // Do not instantiate

@@ -24,6 +24,7 @@ import java.util.Set;
 import org.bonitasoft.bpm.connector.model.implementation.ConnectorImplementation;
 import org.bonitasoft.bpm.model.connectorconfiguration.ConnectorConfiguration;
 import org.bonitasoft.bpm.model.process.Connector;
+import org.bonitasoft.engine.expression.InvalidExpressionException;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
@@ -52,110 +53,117 @@ public class TestConnectorUtil {
 
 	private static final String BDM_JAR_NAME = "bdm-client-pojo.jar";
 
-    public static boolean testConnectorWithConfiguration(
-			final ConnectorConfiguration configuration,
-			final String connectorDefId,
-			final String connectorDefVersion,
-			final Connector connector,
-			final Shell shell,
-			IWizardContainer wd ) {
+	public static boolean testConnectorWithConfiguration(final ConnectorConfiguration configuration,
+			final String connectorDefId, final String connectorDefVersion, final Connector connector, final Shell shell,
+			IWizardContainer wd) {
 		IImplementationRepositoryStore implStore = getImplementationStore();
-		final List<ConnectorImplementation> implementations =  implStore.getImplementations(connectorDefId,connectorDefVersion);
+		final List<ConnectorImplementation> implementations = implStore.getImplementations(connectorDefId,
+				connectorDefVersion);
 
-		ConnectorImplementation impl = null ;
-		if(implementations.isEmpty()){
+		ConnectorImplementation impl = null;
+		if (implementations.isEmpty()) {
 			Display.getDefault().syncExec(new Runnable() {
 
 				@Override
 				public void run() {
-					MessageDialog.openError(Display.getDefault().getActiveShell(), Messages.noImplementationFoundTitle,Messages.bind(Messages.noImplementationFoundMsg,connectorDefId+"-"+connectorDefVersion)) ;
+					MessageDialog.openError(Display.getDefault().getActiveShell(), Messages.noImplementationFoundTitle,
+							Messages.bind(Messages.noImplementationFoundMsg,
+									connectorDefId + "-" + connectorDefVersion));
 				}
-			}) ;
+			});
 			return false;
-		}else if(implementations.size() == 1){
+		} else if (implementations.size() == 1) {
 			impl = implementations.get(0);
-		}else{
-			impl = openImplementationSelection(connectorDefId, connectorDefVersion) ;
-			if(impl == null){
+		} else {
+			impl = openImplementationSelection(connectorDefId, connectorDefVersion);
+			if (impl == null) {
 				return false;
 			}
 		}
-        DependencyRepositoryStore depStore = RepositoryManager.getInstance()
-                .getRepositoryStore(DependencyRepositoryStore.class);
-		final Set<String> jars = TestConnectorOperation.checkImplementationDependencies(impl, AbstractRepository.NULL_PROGRESS_MONITOR);
-		//Always add BDM jar if present, so filtering it from selection dialog
+		DependencyRepositoryStore depStore = RepositoryManager.getInstance()
+				.getRepositoryStore(DependencyRepositoryStore.class);
+		final Set<String> jars = TestConnectorOperation.checkImplementationDependencies(impl,
+				AbstractRepository.NULL_PROGRESS_MONITOR);
+		// Always add BDM jar if present, so filtering it from selection dialog
 		jars.add(BDM_JAR_NAME);
-        int retCode = Window.OK;
-        ManageConnectorJarDialog jd = null;
-        if (depStore.getChildren().stream().map(IRepositoryFileStore::getName).anyMatch(jar -> !jars.contains(jar))) {
-            jd = new ManageConnectorJarDialog(shell,
-                    Messages.connectorAdditionalDependencyTitle, Messages.connectorAdditionalDependencyMessage);
-            jd.setFilter(new ViewerFilter() {
+		int retCode = Window.OK;
+		ManageConnectorJarDialog jd = null;
+		if (depStore.getChildren().stream().map(IRepositoryFileStore::getName).anyMatch(jar -> !jars.contains(jar))) {
+			jd = new ManageConnectorJarDialog(shell, Messages.connectorAdditionalDependencyTitle,
+					Messages.connectorAdditionalDependencyMessage);
+			jd.setFilter(new ViewerFilter() {
 
-                @Override
-                public boolean select(Viewer viewer, Object parentElement, Object element) {
-                    if (element instanceof IRepositoryFileStore) {
-                        if (jars.contains(((IRepositoryFileStore) element).getName())) {
-                            return false;
-                        }
-                    }
-                    return true;
-                }
-            });
-            retCode = jd.open();
-        }
-		if(retCode == Window.OK){
-			TestConnectorOperation operation = new TestConnectorOperation() ;
-			operation.setImplementation(impl) ;
-			operation.setConnectorConfiguration(configuration) ;
-			operation.setConnectorOutput(connector);
-			Set<DependencyFileStore> additionalJars = jd != null ? jd.getSelectedJars() :new HashSet<>();
-			//Always add BDM jar if present
-			DependencyFileStore bdmJarFileStore = depStore.getChild(BDM_JAR_NAME, false);
-            if(bdmJarFileStore != null) {
-			    additionalJars.add(bdmJarFileStore);
-			}
-            operation.setAdditionalJars(additionalJars);
-			Object result = null ;
-			try {
-				wd.run(true, false, operation) ;
-				if(operation.getStatus().isOK()){
-					result = operation.getResult() ;
-				}else{
-					if(operation.getStatus().getSeverity() == IStatus.WARNING){
-						MessageDialog.openWarning(Display.getDefault().getActiveShell(), Messages.testConnectorTitle, operation.getStatus().getMessage());
-					}else{
-						MessageDialog.openError(Display.getDefault().getActiveShell(), Messages.testConnectorTitle, operation.getStatus().getMessage());
+				@Override
+				public boolean select(Viewer viewer, Object parentElement, Object element) {
+					if (element instanceof IRepositoryFileStore) {
+						if (jars.contains(((IRepositoryFileStore) element).getName())) {
+							return false;
+						}
 					}
-					
+					return true;
+				}
+			});
+			retCode = jd.open();
+		}
+		if (retCode == Window.OK) {
+			TestConnectorOperation operation = new TestConnectorOperation();
+			operation.setImplementation(impl);
+			try {
+				operation.setConnectorConfiguration(configuration);
+				operation.setConnectorOutput(connector);
+			} catch (InvalidExpressionException e) {
+				BonitaStudioLog.error(e);
+			}
+			Set<DependencyFileStore> additionalJars = jd != null ? jd.getSelectedJars() : new HashSet<>();
+			// Always add BDM jar if present
+			DependencyFileStore bdmJarFileStore = depStore.getChild(BDM_JAR_NAME, false);
+			if (bdmJarFileStore != null) {
+				additionalJars.add(bdmJarFileStore);
+			}
+			operation.setAdditionalJars(additionalJars);
+			Object result = null;
+			try {
+				wd.run(true, false, operation);
+				if (operation.getStatus().isOK()) {
+					result = operation.getResult();
+				} else {
+					if (operation.getStatus().getSeverity() == IStatus.WARNING) {
+						MessageDialog.openWarning(Display.getDefault().getActiveShell(), Messages.testConnectorTitle,
+								operation.getStatus().getMessage());
+					} else {
+						MessageDialog.openError(Display.getDefault().getActiveShell(), Messages.testConnectorTitle,
+								operation.getStatus().getMessage());
+					}
+
 				}
 			} catch (InvocationTargetException e) {
-				result = e ;
-				BonitaStudioLog.error(e) ;
+				result = e;
+				BonitaStudioLog.error(e);
 			} catch (InterruptedException e) {
-				result = e ;
-				BonitaStudioLog.error(e) ;
+				result = e;
+				BonitaStudioLog.error(e);
 			}
-			if(result != null){
-				TestConnectorResultDialog dialog = new TestConnectorResultDialog(Display.getDefault().getActiveShell(), result) ;
-				dialog.open() ;
+			if (result != null) {
+				TestConnectorResultDialog dialog = new TestConnectorResultDialog(Display.getDefault().getActiveShell(),
+						result);
+				dialog.open();
 			}
 		}
-		return false; //Keep wizard open on after test operation
+		return false; // Keep wizard open on after test operation
 	}
 
-	
 	protected static IImplementationRepositoryStore getImplementationStore() {
-		return (IImplementationRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ConnectorImplRepositoryStore.class);
+		return (IImplementationRepositoryStore) RepositoryManager.getInstance()
+				.getRepositoryStore(ConnectorImplRepositoryStore.class);
 	}
-	
-	protected static ConnectorImplementation openImplementationSelection(String defId,String defVersion) {
-        SelectConnectorImplementationWizard wizard = new SelectConnectorImplementationWizard(defId,defVersion) ;
-        WizardDialog dialog = new WizardDialog(Display.getDefault().getActiveShell(),wizard ) ;
-        if(dialog.open() == Dialog.OK){
-            return  wizard.getConnectorImplementation() ;
-        }
-        return null;
-    }
-	
+
+	protected static ConnectorImplementation openImplementationSelection(String defId, String defVersion) {
+		SelectConnectorImplementationWizard wizard = new SelectConnectorImplementationWizard(defId, defVersion);
+		WizardDialog dialog = new WizardDialog(Display.getDefault().getActiveShell(), wizard);
+		if (dialog.open() == Dialog.OK) {
+			return wizard.getConnectorImplementation();
+		}
+		return null;
+	}
+
 }

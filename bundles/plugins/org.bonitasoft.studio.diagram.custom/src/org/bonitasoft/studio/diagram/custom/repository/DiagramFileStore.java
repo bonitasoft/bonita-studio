@@ -151,7 +151,7 @@ public class DiagramFileStore extends EMFFileStore<MainProcess> implements IDepl
         return editor instanceof ProcessDiagramEditor;
     }
 
-    public List<AbstractProcess> getProcesses(boolean reloadResource) {
+    public List<Pool> getProcesses(boolean reloadResource) {
         try {
             if (reloadResource && getOpenedEditor() == null) {
                 Resource emfResource = getEMFResource();

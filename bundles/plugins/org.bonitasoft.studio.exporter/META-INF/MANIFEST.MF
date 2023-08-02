@@ -8,7 +8,6 @@ Bundle-Activator: org.bonitasoft.studio.exporter.Activator
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
 Export-Package: org.bonitasoft.studio.exporter,
- org.bonitasoft.studio.exporter.bpmn,
  org.bonitasoft.studio.exporter.handler,
  org.bonitasoft.studio.exporter.runtime
 Require-Bundle: org.eclipse.core.runtime,

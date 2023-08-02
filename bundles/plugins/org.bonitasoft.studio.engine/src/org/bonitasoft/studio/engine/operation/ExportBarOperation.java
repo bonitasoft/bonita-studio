@@ -21,6 +21,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.bonitasoft.bpm.model.configuration.Configuration;
+import org.bonitasoft.bpm.model.configuration.ConfigurationFactory;
+import org.bonitasoft.bpm.model.process.Pool;
 import org.bonitasoft.engine.bpm.bar.BusinessArchive;
 import org.bonitasoft.engine.bpm.bar.BusinessArchiveFactory;
 import org.bonitasoft.studio.common.ModelVersion;
@@ -39,10 +42,6 @@ import org.bonitasoft.studio.diagram.custom.repository.ProcessConfigurationRepos
 import org.bonitasoft.studio.engine.EnginePlugin;
 import org.bonitasoft.studio.engine.export.BarExporter;
 import org.bonitasoft.studio.engine.i18n.Messages;
-import org.bonitasoft.bpm.model.configuration.Configuration;
-import org.bonitasoft.bpm.model.configuration.ConfigurationFactory;
-import org.bonitasoft.bpm.model.process.AbstractProcess;
-import org.bonitasoft.bpm.model.process.MainProcess;
 import org.bonitasoft.studio.ui.util.StatusCollectors;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -51,24 +50,15 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.osgi.util.NLS;
 
-/**
- * @author Romain Bioteau
- */
 public class ExportBarOperation implements IRunnableWithProgress {
 
-    private final List<AbstractProcess> processes;
-    private final List<File> generatedBars;
+    private final List<Pool> processes = new ArrayList<>();
+    private final List<File> generatedBars = new ArrayList<>();
     protected String configurationId;
     private String targetFolderPath;
     public IStatus status = Status.OK_STATUS;
 
-    public ExportBarOperation() {
-        processes = new ArrayList<>();
-        generatedBars = new ArrayList<>();
-    }
-
-    public void addProcessToDeploy(final AbstractProcess process) {
-        Assert.isTrue(!(process instanceof MainProcess), "process can't be a MainProcess");
+    public void addProcessToDeploy(final Pool process) {
         if (!processes.contains(process)) {
             processes.add(process);
         }
@@ -115,7 +105,7 @@ public class ExportBarOperation implements IRunnableWithProgress {
             }
         }
         
-        for (final AbstractProcess process : processes) {
+        for (final Pool process : processes) {
             final File targetFolder = new File(targetFolderPath);
             if (!targetFolder.exists()) {
                 targetFolder.mkdirs();
@@ -136,7 +126,7 @@ public class ExportBarOperation implements IRunnableWithProgress {
         monitor.done();
     }
 
-    protected IStatus exportBar(final AbstractProcess process, final File outputFile, final IProgressMonitor monitor) {
+    protected IStatus exportBar(final Pool process, final File outputFile, final IProgressMonitor monitor) {
         monitor.beginTask(NLS.bind(Messages.buildingBar, process.getName(), process.getVersion()),
                 IProgressMonitor.UNKNOWN);
         try {
@@ -169,7 +159,7 @@ public class ExportBarOperation implements IRunnableWithProgress {
         return status;
     }
     
-    private Configuration getConfiguration(final AbstractProcess process, String configurationId) {
+    private Configuration getConfiguration(final Pool process, String configurationId) {
         Configuration configuration = null;
         final ProcessConfigurationRepositoryStore processConfStore = getProcessConfigurationRepositoryStore();
         Configuration emptyConfig = ConfigurationFactory.eINSTANCE.createConfiguration();
@@ -197,7 +187,7 @@ public class ExportBarOperation implements IRunnableWithProgress {
         return configuration;
     }
 
-    private void synchronizeConfiguration(AbstractProcess process, Configuration configuration) {
+    private void synchronizeConfiguration(Pool process, Configuration configuration) {
         new ConfigurationSynchronizer(process, configuration).synchronize();
     }
 
@@ -209,7 +199,7 @@ public class ExportBarOperation implements IRunnableWithProgress {
         return !PlatformUtil.isACommunityBonitaProduct();
     }
 
-    private IStatus validateConfiguration(Collection<AbstractProcess> processes, String configurationId) {
+    private IStatus validateConfiguration(Collection<Pool> processes, String configurationId) {
         return processes.stream()
                 .map(process ->  new ConfigurationValidator(process).validate(getConfiguration(process, configurationId)))
                 .collect(StatusCollectors.toMultiStatus());

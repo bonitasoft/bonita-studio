@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 
 import javax.inject.Named;
 
+import org.bonitasoft.bpm.model.process.Pool;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
@@ -22,7 +23,6 @@ import org.bonitasoft.studio.configuration.ConfigurationPlugin;
 import org.bonitasoft.studio.configuration.preferences.ConfigurationPreferenceConstants;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.engine.operation.ExportBarOperation;
-import org.bonitasoft.bpm.model.process.AbstractProcess;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -50,7 +50,7 @@ public class BuildDiagramHandler {
 
         @Override
         public void run() {
-            List<AbstractProcess> processes = retrieveProcesses(repositoryAccessor, fileName, processUUID);
+            List<Pool> processes = retrieveProcesses(repositoryAccessor, fileName, processUUID);
             ExportBarOperation exportBarOperation = getExportOperation();
             processes.forEach(exportBarOperation::addProcessToDeploy);
             exportBarOperation.setTargetFolder(destinationPath);
@@ -87,7 +87,7 @@ public class BuildDiagramHandler {
         return runnable.getStatus();
     }
 
-    private List<AbstractProcess> retrieveProcesses(RepositoryAccessor repositoryAccessor, String fileName,
+    private List<Pool> retrieveProcesses(RepositoryAccessor repositoryAccessor, String fileName,
             String processUUID) {
         return repositoryAccessor.getRepositoryStore(DiagramRepositoryStore.class)
                 .getChild(fileName, true)

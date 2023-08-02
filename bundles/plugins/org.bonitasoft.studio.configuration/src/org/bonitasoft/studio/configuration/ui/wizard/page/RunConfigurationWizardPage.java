@@ -16,13 +16,13 @@ package org.bonitasoft.studio.configuration.ui.wizard.page;
 
 import java.util.List;
 
+import org.bonitasoft.bpm.model.configuration.Configuration;
+import org.bonitasoft.bpm.model.configuration.ConfigurationPackage;
+import org.bonitasoft.bpm.model.process.Pool;
 import org.bonitasoft.studio.common.CommandExecutor;
 import org.bonitasoft.studio.configuration.ConfigurationPlugin;
 import org.bonitasoft.studio.configuration.extension.IProcessConfigurationWizardPage;
 import org.bonitasoft.studio.configuration.i18n.Messages;
-import org.bonitasoft.bpm.model.configuration.Configuration;
-import org.bonitasoft.bpm.model.configuration.ConfigurationPackage;
-import org.bonitasoft.bpm.model.process.AbstractProcess;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.ui.widget.TextWidget;
 import org.eclipse.core.databinding.UpdateValueStrategy;
@@ -95,7 +95,7 @@ public class RunConfigurationWizardPage extends WizardPage implements IProcessCo
     }
 
     @Override
-    public void updatePage(AbstractProcess process, Configuration configuration) {
+    public void updatePage(Pool process, Configuration configuration) {
         if (context != null) {
             context.dispose();
         }

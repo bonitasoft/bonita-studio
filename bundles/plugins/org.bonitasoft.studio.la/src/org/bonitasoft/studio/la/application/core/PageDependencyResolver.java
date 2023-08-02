@@ -11,10 +11,10 @@ package org.bonitasoft.studio.la.application.core;
 import java.util.Optional;
 import java.util.stream.Stream;
 
+import org.bonitasoft.bonita2bar.form.FormBuilder;
 import org.bonitasoft.engine.api.PageAPI;
 import org.bonitasoft.studio.common.core.IRunnableWithStatus;
 import org.bonitasoft.studio.designer.core.PageDesignerURLFactory;
-import org.bonitasoft.studio.designer.core.bar.FormBuilder;
 import org.bonitasoft.studio.designer.core.bar.RestFormBuilder;
 import org.bonitasoft.studio.designer.core.repository.WebPageFileStore;
 import org.bonitasoft.studio.designer.core.repository.WebPageRepositoryStore;

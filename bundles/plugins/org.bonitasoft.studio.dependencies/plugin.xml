@@ -7,10 +7,4 @@
          class="org.bonitasoft.studio.dependencies.repository.DependencyRepositoryStore">
    </repositoryStore>
 </extension>
-<extension
-      point="org.bonitasoft.studio.common.barResourcesProvider">
-   <barResourceProvider
-         providerClass="org.bonitasoft.studio.dependencies.provider.JarBarResourceProvider">
-   </barResourceProvider>
-</extension>
 </plugin>

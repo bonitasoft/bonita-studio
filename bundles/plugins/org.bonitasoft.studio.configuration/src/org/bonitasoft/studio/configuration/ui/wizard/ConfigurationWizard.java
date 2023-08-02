@@ -38,8 +38,8 @@ import org.bonitasoft.studio.diagram.custom.repository.ProcessConfigurationFileS
 import org.bonitasoft.studio.diagram.custom.repository.ProcessConfigurationRepositoryStore;
 import org.bonitasoft.bpm.model.configuration.Configuration;
 import org.bonitasoft.bpm.model.configuration.ConfigurationFactory;
-import org.bonitasoft.bpm.model.process.AbstractProcess;
 import org.bonitasoft.bpm.model.process.MainProcess;
+import org.bonitasoft.bpm.model.process.Pool;
 import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -61,7 +61,7 @@ public class ConfigurationWizard extends Wizard {
     private static final String CLASS_ATTRIBUTE = "class";
 
     private MainProcess diagram;
-    private AbstractProcess process;
+    private Pool process;
     private Configuration configurationWorkingCopy;
     private String configurationName;
     private final ProcessConfigurationRepositoryStore processConfStore;
@@ -78,7 +78,7 @@ public class ConfigurationWizard extends Wizard {
         return false;
     }
 
-    public ConfigurationWizard(final MainProcess diagram, final AbstractProcess selectedProcess,
+    public ConfigurationWizard(final MainProcess diagram, final Pool selectedProcess,
             final String configurationName) {
         this();
         Assert.isNotNull(selectedProcess);
@@ -166,11 +166,11 @@ public class ConfigurationWizard extends Wizard {
         }
     }
 
-    public AbstractProcess getProcess() {
+    public Pool getProcess() {
         return process;
     }
 
-    public void setProcess(final AbstractProcess process) {
+    public void setProcess(final Pool process) {
         this.process = process;
         final Configuration configuration = getConfigurationFromProcess(process, configurationName);
         if (configuration != null) {
@@ -219,7 +219,7 @@ public class ConfigurationWizard extends Wizard {
         return super.getStartingPage();
     }
 
-    private Configuration getConfigurationFromProcess(final AbstractProcess process, final String confName) {
+    private Configuration getConfigurationFromProcess(final Pool process, final String confName) {
         final String id = ModelHelper.getEObjectID(getProcess());
         Configuration configuration = null;
         if (ConfigurationPreferenceConstants.LOCAL_CONFIGURATION.equals(confName)) {

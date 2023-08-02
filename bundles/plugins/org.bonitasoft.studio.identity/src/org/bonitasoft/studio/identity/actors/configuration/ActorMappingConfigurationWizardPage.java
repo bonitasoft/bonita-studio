@@ -18,6 +18,16 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
+import org.bonitasoft.bpm.model.actormapping.ActorMapping;
+import org.bonitasoft.bpm.model.actormapping.Groups;
+import org.bonitasoft.bpm.model.actormapping.Membership;
+import org.bonitasoft.bpm.model.actormapping.MembershipType;
+import org.bonitasoft.bpm.model.actormapping.Roles;
+import org.bonitasoft.bpm.model.actormapping.Users;
+import org.bonitasoft.bpm.model.actormapping.util.ActorMappingAdapterFactory;
+import org.bonitasoft.bpm.model.configuration.Configuration;
+import org.bonitasoft.bpm.model.process.AbstractProcess;
+import org.bonitasoft.bpm.model.process.Pool;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.core.ActiveOrganizationProvider;
@@ -36,15 +46,6 @@ import org.bonitasoft.studio.identity.organization.model.organization.Organizati
 import org.bonitasoft.studio.identity.organization.model.organization.Role;
 import org.bonitasoft.studio.identity.organization.model.organization.User;
 import org.bonitasoft.studio.identity.organization.repository.OrganizationRepositoryStore;
-import org.bonitasoft.bpm.model.actormapping.ActorMapping;
-import org.bonitasoft.bpm.model.actormapping.Groups;
-import org.bonitasoft.bpm.model.actormapping.Membership;
-import org.bonitasoft.bpm.model.actormapping.MembershipType;
-import org.bonitasoft.bpm.model.actormapping.Roles;
-import org.bonitasoft.bpm.model.actormapping.Users;
-import org.bonitasoft.bpm.model.actormapping.util.ActorMappingAdapterFactory;
-import org.bonitasoft.bpm.model.configuration.Configuration;
-import org.bonitasoft.bpm.model.process.AbstractProcess;
 import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
@@ -341,7 +342,7 @@ public class ActorMappingConfigurationWizardPage extends WizardPage
     }
 
     @Override
-    public void updatePage(final AbstractProcess process, final Configuration configuration) {
+    public void updatePage(Pool process, final Configuration configuration) {
         this.configuration = configuration;
         this.process = process;
         if (this.configuration != null && mappingTree != null && !mappingTree.getTree().isDisposed()

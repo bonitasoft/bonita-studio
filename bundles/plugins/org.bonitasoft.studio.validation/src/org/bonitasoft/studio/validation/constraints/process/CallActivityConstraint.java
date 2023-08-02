@@ -27,6 +27,7 @@ import org.bonitasoft.bpm.model.process.Data;
 import org.bonitasoft.bpm.model.process.InputMapping;
 import org.bonitasoft.bpm.model.process.InputMappingAssignationType;
 import org.bonitasoft.bpm.model.process.OutputMapping;
+import org.bonitasoft.bpm.model.process.Pool;
 import org.bonitasoft.studio.properties.sections.callActivity.CallActivityHelper;
 import org.bonitasoft.studio.properties.sections.callActivity.CallActivitySelectionProvider;
 import org.bonitasoft.studio.validation.constraints.AbstractLiveValidationMarkerConstraint;
@@ -103,7 +104,7 @@ public class CallActivityConstraint extends AbstractLiveValidationMarkerConstrai
         }));
         
         DiagramRepositoryStore diagramRepoStore = repositoryAccessor.getRepositoryStore(DiagramRepositoryStore.class);
-        List<AbstractProcess> allProcesses = diagramRepoStore.hasComputedProcesses() ? diagramRepoStore.getComputedProcesses() : diagramRepoStore.getAllProcesses();
+        List<Pool> allProcesses = diagramRepoStore.hasComputedProcesses() ? diagramRepoStore.getComputedProcesses() : diagramRepoStore.getAllProcesses();
         return new CallActivityHelper(allProcesses, callActivitySelectionProvider);
     }
 

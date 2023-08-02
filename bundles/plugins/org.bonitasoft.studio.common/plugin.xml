@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <plugin>
-   <extension-point id="barResourcesProvider" name="Extension Point to add Resources to BAR at export" schema="schema/barResourcesProvider.exsd"/>
   <extension-point id="introModelPageId" name="introModelPageId" schema="schema/introModelPageId.exsd"/>
 
    <extension

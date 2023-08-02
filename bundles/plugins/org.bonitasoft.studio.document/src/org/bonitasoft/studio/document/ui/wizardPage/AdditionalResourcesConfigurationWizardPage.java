@@ -14,14 +14,14 @@
  */
 package org.bonitasoft.studio.document.ui.wizardPage;
 
+import org.bonitasoft.bpm.model.configuration.Configuration;
+import org.bonitasoft.bpm.model.configuration.Resource;
+import org.bonitasoft.bpm.model.process.Pool;
 import org.bonitasoft.studio.configuration.extension.IProcessConfigurationWizardPage;
 import org.bonitasoft.studio.document.DocumentPlugin;
 import org.bonitasoft.studio.document.i18n.Messages;
 import org.bonitasoft.studio.document.ui.editingSupport.AdditionalResourcesFileEditingSupport;
 import org.bonitasoft.studio.document.ui.validator.AdditionalResourceProjectPathValidator;
-import org.bonitasoft.bpm.model.configuration.Configuration;
-import org.bonitasoft.bpm.model.configuration.Resource;
-import org.bonitasoft.bpm.model.process.AbstractProcess;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.ui.viewer.LabelProviderBuilder;
 import org.eclipse.core.databinding.validation.IValidator;
@@ -115,7 +115,7 @@ public class AdditionalResourcesConfigurationWizardPage extends WizardPage imple
     }
 
     @Override
-    public void updatePage(AbstractProcess process, Configuration configuration) {
+    public void updatePage(Pool process, Configuration configuration) {
         if (process != null && configuration != null && viewer != null && !viewer.getTable().isDisposed()) {
             viewer.setInput(configuration.getAdditionalResources());
         }

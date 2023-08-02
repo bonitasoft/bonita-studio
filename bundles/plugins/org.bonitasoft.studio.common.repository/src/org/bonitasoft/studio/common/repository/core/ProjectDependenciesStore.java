@@ -57,5 +57,7 @@ public interface ProjectDependenciesStore {
     List<Issue> findIssues(Dependency dependency);
 
     MultiStatus getStatus(Dependency dep);
+    
+    Optional<DependencyReport> getReport();
 
 }

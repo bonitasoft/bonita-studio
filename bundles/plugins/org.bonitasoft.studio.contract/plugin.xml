@@ -57,15 +57,6 @@
       </expressionProvider>
    </extension>
    <extension
-         point="org.bonitasoft.studio.engine.definition.builder">
-           <EngineDefinitionBuilder
-                 class="org.bonitasoft.studio.contract.core.ProcessContractEngineBuilder">
-           </EngineDefinitionBuilder>
-           <EngineDefinitionBuilder
-                 class="org.bonitasoft.studio.contract.core.TaskContractEngineDefinitionBuilder">
-           </EngineDefinitionBuilder>
-   </extension>
-   <extension
          point="org.bonitasoft.studio.designer.formOperationFactory">
       <factory
             class="org.bonitasoft.studio.contract.core.operation.NewFormFromContractOperationFactory"></factory>

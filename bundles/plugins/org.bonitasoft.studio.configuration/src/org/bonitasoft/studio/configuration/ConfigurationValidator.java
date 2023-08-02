@@ -18,7 +18,6 @@ import java.util.Collections;
 
 import org.bonitasoft.bpm.model.configuration.Configuration;
 import org.bonitasoft.bpm.model.parameter.Parameter;
-import org.bonitasoft.bpm.model.process.AbstractProcess;
 import org.bonitasoft.bpm.model.process.Element;
 import org.bonitasoft.bpm.model.process.FormMapping;
 import org.bonitasoft.bpm.model.process.FormMappingType;
@@ -36,9 +35,9 @@ import org.eclipse.osgi.util.NLS;
 
 public class ConfigurationValidator implements IValidator<Configuration> {
 
-    private AbstractProcess process;
+    private Pool process;
 
-    public ConfigurationValidator(AbstractProcess process) {
+    public ConfigurationValidator(Pool process) {
         this.process = process;
     }
 

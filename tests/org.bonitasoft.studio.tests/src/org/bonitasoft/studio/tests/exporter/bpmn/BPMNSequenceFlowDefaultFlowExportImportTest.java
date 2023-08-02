@@ -93,8 +93,7 @@ public class BPMNSequenceFlowDefaultFlowExportImportTest {
                 .getRepositoryStore(DiagramRepositoryStore.class);
         ConnectorDefRepositoryStore connectorDefStore = RepositoryManager.getInstance()
                 .getRepositoryStore(ConnectorDefRepositoryStore.class);
-        List<AbstractProcess> allProcesses = dStore.getAllProcesses();
-        IModelSearch modelSearch = new ModelSearch(() -> allProcesses);
+        IModelSearch modelSearch = new ModelSearch(dStore::getAllProcesses);
         final IBonitaModelExporter exporter = new BonitaModelExporterImpl(mped.resolveSemanticElement().eResource(),
                 modelSearch);
         final File bpmnFileExported = tmpFolder.newFile("PoolToTestDefaultFlowInBPMN.bpmn");

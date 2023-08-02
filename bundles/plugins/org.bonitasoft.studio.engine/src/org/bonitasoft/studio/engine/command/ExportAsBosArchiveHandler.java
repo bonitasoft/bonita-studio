@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.zip.ZipOutputStream;
 
+import org.bonitasoft.bpm.model.process.MainProcess;
 import org.bonitasoft.engine.bpm.bar.BusinessArchive;
 import org.bonitasoft.engine.bpm.bar.BusinessArchiveFactory;
 import org.bonitasoft.studio.common.FileUtil;
@@ -40,8 +41,6 @@ import org.bonitasoft.studio.diagram.custom.repository.ProcessConfigurationRepos
 import org.bonitasoft.studio.engine.EnginePlugin;
 import org.bonitasoft.studio.engine.export.BarExporter;
 import org.bonitasoft.studio.engine.i18n.Messages;
-import org.bonitasoft.bpm.model.process.AbstractProcess;
-import org.bonitasoft.bpm.model.process.MainProcess;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
@@ -131,7 +130,7 @@ public class ExportAsBosArchiveHandler extends AbstractHandler {
         } catch (IOException e1) {
             throw new ExecutionException(e1.getMessage());
         }
-        for (final AbstractProcess process : diagramFile.getProcesses(true)) {
+        for (var process : diagramFile.getProcesses(true)) {
             try {
                 String processUUID = ModelHelper.getEObjectID(process);
                 IRepositoryFileStore file = processConfStore

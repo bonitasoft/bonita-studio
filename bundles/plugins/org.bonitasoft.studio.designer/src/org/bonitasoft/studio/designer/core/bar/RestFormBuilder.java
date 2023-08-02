@@ -22,6 +22,7 @@ import java.net.http.HttpResponse.BodyHandlers;
 
 import javax.inject.Inject;
 
+import org.bonitasoft.bonita2bar.form.FormBuilder;
 import org.bonitasoft.studio.common.net.HttpClientFactory;
 import org.bonitasoft.studio.designer.core.PageDesignerURLFactory;
 import org.bonitasoft.studio.designer.core.exception.PageIncompatibleException;
@@ -38,10 +39,10 @@ public class RestFormBuilder implements FormBuilder {
     }
 
     @Override
-    public byte[] export(String formId) throws IOException, PageIncompatibleException {
+    public byte[] export(String formId) throws IOException {
         try {
             return get(pageDesignerURLFactory.exportPage(formId).toString(), formId);
-        } catch (InterruptedException e) {
+        } catch (InterruptedException | PageIncompatibleException e) {
             throw new IOException(String.format("Failed to export custom page for form %s", formId), e);
         }
     }

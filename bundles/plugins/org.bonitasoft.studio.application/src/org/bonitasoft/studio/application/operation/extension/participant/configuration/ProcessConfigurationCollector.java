@@ -80,7 +80,7 @@ public class ProcessConfigurationCollector implements DependentArtifactCollector
                 .forEach(e -> action.accept(e.getKey(), e.getValue()));
     }
     
-    private Collection<AbstractProcess> getProcesses(){
+    private Collection<Pool> getProcesses(){
         DiagramRepositoryStore diagramRepositoryStore = repositoryAccessor
                 .getRepositoryStore(DiagramRepositoryStore.class);
         if (!diagramRepositoryStore.hasComputedProcesses()) {

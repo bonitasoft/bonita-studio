@@ -57,7 +57,8 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.wst.server.core,
  org.eclipse.osgi.services,
  org.eclipse.e4.core.services,
- org.bonitasoft.studio.common.ui
+ org.bonitasoft.studio.common.ui,
+ org.bonitasoft.bonita2bar
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-ActivationPolicy: lazy
 Import-Package: javax.annotation;version="1.2.0",

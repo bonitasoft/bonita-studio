@@ -95,12 +95,6 @@
       </configurationWizardPage>
    </extension>
    <extension
-         point="org.bonitasoft.studio.common.barResourcesProvider">
-      <barResourceProvider
-            providerClass="org.bonitasoft.studio.connectors.configuration.ConnectorBarResourceProvider">
-      </barResourceProvider>
-   </extension>
-   <extension
          point="org.bonitasoft.studio.bosArchiveProvider">
       <bosArchiveProvider
             providerClass="org.bonitasoft.studio.connectors.repository.ConnectorResourceProvider">

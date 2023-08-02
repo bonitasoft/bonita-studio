@@ -29,40 +29,9 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
-import org.bonitasoft.engine.api.ProcessAPI;
-import org.bonitasoft.engine.bpm.bar.BusinessArchive;
-import org.bonitasoft.engine.bpm.connector.ConnectorEvent;
-import org.bonitasoft.engine.bpm.process.ActivationState;
-import org.bonitasoft.engine.bpm.process.IllegalProcessStateException;
-import org.bonitasoft.engine.bpm.process.ProcessActivationException;
-import org.bonitasoft.engine.bpm.process.ProcessDefinition;
-import org.bonitasoft.engine.bpm.process.ProcessDefinitionNotFoundException;
-import org.bonitasoft.engine.bpm.process.ProcessDeploymentInfo;
-import org.bonitasoft.engine.bpm.process.ProcessDeploymentInfoCriterion;
-import org.bonitasoft.engine.exception.DeletionException;
-import org.bonitasoft.engine.expression.Expression;
-import org.bonitasoft.engine.session.APISession;
-import org.bonitasoft.engine.session.InvalidSessionException;
-import org.bonitasoft.bpm.model.util.ExpressionConstants;
-import org.bonitasoft.studio.common.FragmentTypes;
-import org.bonitasoft.studio.common.emf.tools.ModelHelper;
-import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.AbstractRepository;
-import org.bonitasoft.studio.common.repository.RepositoryManager;
-import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
-import org.bonitasoft.studio.configuration.ConfigurationSynchronizer;
+import org.bonitasoft.bonita2bar.process.builder.GroovyConnectorConfigurationConverter;
+import org.bonitasoft.bonita2bar.process.expression.EngineExpressionUtil;
 import org.bonitasoft.bpm.connector.model.implementation.ConnectorImplementation;
-import org.bonitasoft.studio.connectors.ConnectorPlugin;
-import org.bonitasoft.studio.connectors.configuration.ConnectorsConfigurationSynchronizer;
-import org.bonitasoft.studio.connectors.i18n.Messages;
-import org.bonitasoft.studio.connectors.repository.DatabaseConnectorPropertiesFileStore;
-import org.bonitasoft.studio.connectors.repository.DatabaseConnectorPropertiesRepositoryStore;
-import org.bonitasoft.studio.dependencies.repository.DependencyFileStore;
-import org.bonitasoft.studio.dependencies.repository.DependencyRepositoryStore;
-import org.bonitasoft.studio.engine.BOSEngineManager;
-import org.bonitasoft.studio.engine.export.BarExporter;
-import org.bonitasoft.studio.engine.export.EngineExpressionUtil;
-import org.bonitasoft.studio.engine.export.builder.GroovyConnectorConfigurationConverter;
 import org.bonitasoft.bpm.model.configuration.Configuration;
 import org.bonitasoft.bpm.model.configuration.ConfigurationFactory;
 import org.bonitasoft.bpm.model.configuration.ConfigurationPackage;
@@ -85,8 +54,41 @@ import org.bonitasoft.bpm.model.process.Data;
 import org.bonitasoft.bpm.model.process.Document;
 import org.bonitasoft.bpm.model.process.JavaObjectData;
 import org.bonitasoft.bpm.model.process.JavaType;
+import org.bonitasoft.bpm.model.process.Pool;
 import org.bonitasoft.bpm.model.process.ProcessFactory;
 import org.bonitasoft.bpm.model.process.util.ProcessAdapterFactory;
+import org.bonitasoft.bpm.model.util.ExpressionConstants;
+import org.bonitasoft.engine.api.ProcessAPI;
+import org.bonitasoft.engine.bpm.bar.BusinessArchive;
+import org.bonitasoft.engine.bpm.connector.ConnectorEvent;
+import org.bonitasoft.engine.bpm.process.ActivationState;
+import org.bonitasoft.engine.bpm.process.IllegalProcessStateException;
+import org.bonitasoft.engine.bpm.process.ProcessActivationException;
+import org.bonitasoft.engine.bpm.process.ProcessDefinition;
+import org.bonitasoft.engine.bpm.process.ProcessDefinitionNotFoundException;
+import org.bonitasoft.engine.bpm.process.ProcessDeploymentInfo;
+import org.bonitasoft.engine.bpm.process.ProcessDeploymentInfoCriterion;
+import org.bonitasoft.engine.exception.DeletionException;
+import org.bonitasoft.engine.expression.Expression;
+import org.bonitasoft.engine.expression.InvalidExpressionException;
+import org.bonitasoft.engine.session.APISession;
+import org.bonitasoft.engine.session.InvalidSessionException;
+import org.bonitasoft.studio.common.FragmentTypes;
+import org.bonitasoft.studio.common.emf.tools.ModelHelper;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
+import org.bonitasoft.studio.configuration.ConfigurationSynchronizer;
+import org.bonitasoft.studio.connectors.ConnectorPlugin;
+import org.bonitasoft.studio.connectors.configuration.ConnectorsConfigurationSynchronizer;
+import org.bonitasoft.studio.connectors.i18n.Messages;
+import org.bonitasoft.studio.connectors.repository.DatabaseConnectorPropertiesFileStore;
+import org.bonitasoft.studio.connectors.repository.DatabaseConnectorPropertiesRepositoryStore;
+import org.bonitasoft.studio.dependencies.repository.DependencyFileStore;
+import org.bonitasoft.studio.dependencies.repository.DependencyRepositoryStore;
+import org.bonitasoft.studio.engine.BOSEngineManager;
+import org.bonitasoft.studio.engine.export.BarExporter;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -157,7 +159,7 @@ public class TestConnectorOperation implements IRunnableWithProgress {
             session = BOSEngineManager.getInstance().loginDefaultTenant(AbstractRepository.NULL_PROGRESS_MONITOR);
             processApi = BOSEngineManager.getInstance().getProcessAPI(session);
             Assert.isNotNull(processApi);
-            final AbstractProcess proc = createAbstractProcess(implementation);
+            var proc = createProcess(implementation);
 
             final Configuration configuration = ConfigurationFactory.eINSTANCE.createConfiguration();
             configuration.setName("TestConnectorConfiguration");
@@ -288,8 +290,8 @@ public class TestConnectorOperation implements IRunnableWithProgress {
         return editingDomain;
     }
 
-    private AbstractProcess createAbstractProcess(final ConnectorImplementation implemen) {
-        final AbstractProcess proc = ProcessFactory.eINSTANCE.createPool();
+    private Pool createProcess(final ConnectorImplementation implemen) {
+    	Pool proc = ProcessFactory.eINSTANCE.createPool();
         proc.setName(TEST_CONNECTOR_POOL);
         proc.setVersion("1.0");
         final Connector connector = ProcessFactory.eINSTANCE.createConnector();
@@ -321,7 +323,7 @@ public class TestConnectorOperation implements IRunnableWithProgress {
         }
     }
 
-    protected void addInputParameters(final String inputName, final AbstractExpression expression) {
+    protected void addInputParameters(final String inputName, final AbstractExpression expression) throws InvalidExpressionException {
         final Expression exp = EngineExpressionUtil.createExpression(expression);
         if (exp != null) {
             inputParameters.put(inputName, exp);
@@ -329,7 +331,7 @@ public class TestConnectorOperation implements IRunnableWithProgress {
         }
     }
 
-    protected void addOutput(final Operation operation, final int cpt) {
+    protected void addOutput(final Operation operation, final int cpt) throws InvalidExpressionException {
         final Operation operationCopy = EcoreUtil.copy(operation);
         operationCopy.getLeftOperand().setType(ExpressionConstants.VARIABLE_TYPE);
         operationCopy.getLeftOperand().setReturnType(operation.getRightOperand().getReturnType());
@@ -383,14 +385,14 @@ public class TestConnectorOperation implements IRunnableWithProgress {
         return dependencies;
     }
 
-    public void setConnectorOutput(final Connector connector) {
+    public void setConnectorOutput(final Connector connector) throws InvalidExpressionException {
         int i = 0;
         for (final Operation output : connector.getOutputs()) {
             addOutput(output, i++);
         }
     }
 
-    public void setConnectorConfiguration(final ConnectorConfiguration configuration) {
+    public void setConnectorConfiguration(final ConnectorConfiguration configuration) throws InvalidExpressionException {
         final GroovyConnectorConfigurationConverter groovyConnectorConfigurationConverter = new GroovyConnectorConfigurationConverter();
         connectorConfiguration = configuration;
         ConnectorConfiguration convertedConfiguration = configuration;
