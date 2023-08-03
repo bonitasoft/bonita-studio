@@ -19,10 +19,10 @@ package org.bonitasoft.studio.connectors.ui.wizard.page;
 
 import org.bonitasoft.bpm.connector.model.definition.Category;
 import org.bonitasoft.bpm.connector.model.definition.ConnectorDefinition;
+import org.bonitasoft.bpm.model.connectorconfiguration.ConnectorConfiguration;
 import org.bonitasoft.studio.connectors.i18n.Messages;
 import org.bonitasoft.studio.connectors.ui.provider.ConnectorConfigurationContentProvider;
 import org.bonitasoft.studio.connectors.ui.provider.ConnectorConfigurationLabelProvider;
-import org.bonitasoft.bpm.model.connectorconfiguration.ConnectorConfiguration;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.DoubleClickEvent;

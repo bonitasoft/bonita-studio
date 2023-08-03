@@ -21,6 +21,8 @@ import java.util.stream.Collectors;
 
 import org.apache.maven.model.Dependency;
 import org.assertj.core.api.Assertions;
+import org.bonitasoft.bpm.model.connectorconfiguration.ConnectorParameter;
+import org.bonitasoft.bpm.model.process.Connector;
 import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.application.ui.control.model.dependency.BonitaMarketplace;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
@@ -33,8 +35,6 @@ import org.bonitasoft.studio.common.ui.jface.SWTBotConstants;
 import org.bonitasoft.studio.connectors.repository.ConnectorDefRepositoryStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.identity.actors.repository.ActorFilterDefRepositoryStore;
-import org.bonitasoft.bpm.model.connectorconfiguration.ConnectorParameter;
-import org.bonitasoft.bpm.model.process.Connector;
 import org.bonitasoft.studio.swtbot.framework.application.BotApplicationWorkbenchWindow;
 import org.bonitasoft.studio.swtbot.framework.conditions.AssertionCondition;
 import org.bonitasoft.studio.swtbot.framework.conditions.BonitaBPMConditions;

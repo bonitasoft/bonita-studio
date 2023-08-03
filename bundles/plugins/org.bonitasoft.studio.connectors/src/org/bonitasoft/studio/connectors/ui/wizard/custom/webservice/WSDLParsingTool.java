@@ -53,10 +53,10 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
 
+import org.bonitasoft.bpm.model.expression.Expression;
 import org.bonitasoft.bpm.model.util.ExpressionConstants;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.connectors.i18n.Messages;
-import org.bonitasoft.bpm.model.expression.Expression;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.ResourceSet;

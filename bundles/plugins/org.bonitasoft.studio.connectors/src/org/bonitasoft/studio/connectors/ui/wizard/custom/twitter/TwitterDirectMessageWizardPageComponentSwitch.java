@@ -17,14 +17,14 @@ package org.bonitasoft.studio.connectors.ui.wizard.custom.twitter;
 import java.io.InputStream;
 import java.net.URL;
 
+import org.bonitasoft.bpm.connector.model.definition.Text;
+import org.bonitasoft.bpm.model.connectorconfiguration.ConnectorConfiguration;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.provider.ExtendedConnectorDefinition;
-import org.bonitasoft.bpm.connector.model.definition.Text;
 import org.bonitasoft.studio.connector.model.definition.wizard.PageComponentSwitch;
 import org.bonitasoft.studio.connectors.i18n.Messages;
 import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFilter;
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
-import org.bonitasoft.bpm.model.connectorconfiguration.ConnectorConfiguration;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.layout.GridDataFactory;

@@ -14,8 +14,8 @@
  */
 package org.bonitasoft.studio.connectors.configuration;
 
-import org.bonitasoft.studio.connector.model.implementation.provider.ConnectorImplementationContentProvider;
 import org.bonitasoft.bpm.model.configuration.DefinitionMapping;
+import org.bonitasoft.studio.connector.model.implementation.provider.ConnectorImplementationContentProvider;
 import org.bonitasoft.studio.connectors.ui.wizard.SelectUserConnectorImplementationWizard;
 import org.eclipse.jface.viewers.IContentProvider;
 

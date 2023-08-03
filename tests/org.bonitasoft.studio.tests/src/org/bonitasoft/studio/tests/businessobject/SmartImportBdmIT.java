@@ -22,7 +22,6 @@ import java.io.InputStream;
 import java.net.URL;
 
 import org.bonitasoft.engine.bdm.model.BusinessObject;
-import org.bonitasoft.studio.businessobject.core.repository.AbstractBDMFileStore;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelFileStore;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
 import org.bonitasoft.studio.common.ZipUtil;

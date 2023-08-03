@@ -14,12 +14,12 @@
  */
 package org.bonitasoft.studio.validation.constraints.process;
 
-import org.bonitasoft.studio.common.FragmentTypes;
+import org.bonitasoft.bpm.model.configuration.Configuration;
+import org.bonitasoft.bpm.model.configuration.Fragment;
+import org.bonitasoft.bpm.model.util.FragmentTypes;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.core.maven.ProjectDependenciesResolver;
-import org.bonitasoft.bpm.model.configuration.Configuration;
-import org.bonitasoft.bpm.model.configuration.Fragment;
 import org.bonitasoft.studio.validation.constraints.AbstractLiveValidationMarkerConstraint;
 import org.bonitasoft.studio.validation.i18n.Messages;
 import org.eclipse.core.runtime.CoreException;

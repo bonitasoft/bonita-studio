@@ -16,13 +16,13 @@ package org.bonitasoft.studio.connectors.ui.wizard.page;
 
 import java.util.Set;
 
+import org.bonitasoft.bpm.model.process.Connector;
+import org.bonitasoft.bpm.model.process.ProcessPackage;
 import org.bonitasoft.studio.common.repository.provider.ExtendedConnectorDefinition;
 import org.bonitasoft.studio.common.ui.widgets.LifeCycleWidget;
 import org.bonitasoft.studio.connector.model.definition.wizard.SelectNameAndDescWizardPage;
 import org.bonitasoft.studio.connectors.i18n.Messages;
 import org.bonitasoft.studio.connectors.ui.wizard.ConnectorWizard;
-import org.bonitasoft.bpm.model.process.Connector;
-import org.bonitasoft.bpm.model.process.ProcessPackage;
 import org.bonitasoft.studio.ui.widget.ComboWidget;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.conversion.Converter;

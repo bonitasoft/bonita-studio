@@ -21,14 +21,14 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.bonitasoft.bpm.model.connectorconfiguration.ConnectorConfiguration;
+import org.bonitasoft.bpm.model.process.ActorFilter;
 import org.bonitasoft.studio.application.operation.extension.participant.definition.ConnectorConfigurationCollector;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.repository.filestore.DefinitionConfigurationFileStore;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.identity.actors.repository.ActorFilterConfRepositoryStore;
-import org.bonitasoft.bpm.model.connectorconfiguration.ConnectorConfiguration;
-import org.bonitasoft.bpm.model.process.ActorFilter;
 
 
 public class ProjectActorFilterConfigurationCollector implements ConnectorConfigurationCollector {

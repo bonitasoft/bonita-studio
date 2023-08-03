@@ -16,8 +16,8 @@
  */
 package org.bonitasoft.studio.connectors.ui.property.section;
 
-import org.bonitasoft.engine.bpm.connector.ConnectorEvent;
 import org.bonitasoft.bpm.model.process.Connector;
+import org.bonitasoft.engine.bpm.connector.ConnectorEvent;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 

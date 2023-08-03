@@ -19,13 +19,13 @@ package org.bonitasoft.studio.configuration;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.bonitasoft.bpm.model.configuration.Configuration;
+import org.bonitasoft.bpm.model.process.AbstractProcess;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.provider.IBOSArchiveFileStoreProvider;
 import org.bonitasoft.studio.configuration.repository.EnvironmentRepositoryStore;
-import org.bonitasoft.bpm.model.configuration.Configuration;
-import org.bonitasoft.bpm.model.process.AbstractProcess;
 
 /**
  * @author Romain Bioteau

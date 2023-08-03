@@ -14,9 +14,9 @@
  */
 package org.bonitasoft.studio.validation.constraints.process;
 
-import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.bpm.model.configuration.Configuration;
 import org.bonitasoft.bpm.model.process.Pool;
+import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.validation.IValidationContext;
 

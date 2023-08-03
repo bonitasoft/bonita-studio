@@ -17,6 +17,9 @@ package org.bonitasoft.studio.tests.dialog;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import org.bonitasoft.bpm.model.process.MainProcess;
+import org.bonitasoft.bpm.model.process.Pool;
+import org.bonitasoft.bpm.model.process.ProcessFactory;
 import org.bonitasoft.studio.common.Messages;
 import org.bonitasoft.studio.common.ModelVersion;
 import org.bonitasoft.studio.common.NamingUtils;
@@ -24,9 +27,6 @@ import org.bonitasoft.studio.common.diagram.dialog.OpenNameAndVersionForDiagramD
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
-import org.bonitasoft.bpm.model.process.MainProcess;
-import org.bonitasoft.bpm.model.process.Pool;
-import org.bonitasoft.bpm.model.process.ProcessFactory;
 import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.widgets.Display;

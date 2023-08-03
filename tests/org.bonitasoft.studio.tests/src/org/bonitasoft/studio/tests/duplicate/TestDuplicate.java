@@ -16,13 +16,13 @@ package org.bonitasoft.studio.tests.duplicate;
 
 import static org.junit.Assert.assertTrue;
 
+import org.bonitasoft.bpm.model.process.AbstractProcess;
+import org.bonitasoft.bpm.model.process.MainProcess;
 import org.bonitasoft.studio.common.CommandExecutor;
 import org.bonitasoft.studio.common.Messages;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
-import org.bonitasoft.bpm.model.process.AbstractProcess;
-import org.bonitasoft.bpm.model.process.MainProcess;
 import org.bonitasoft.studio.swtbot.framework.SWTBotTestUtil;
 import org.bonitasoft.studio.swtbot.framework.application.BotApplicationWorkbenchWindow;
 import org.eclipse.jface.dialogs.IDialogConstants;

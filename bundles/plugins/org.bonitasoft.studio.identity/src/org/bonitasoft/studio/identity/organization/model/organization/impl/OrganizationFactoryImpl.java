@@ -17,7 +17,26 @@
  */
 package org.bonitasoft.studio.identity.organization.model.organization.impl;
 
-import org.bonitasoft.studio.identity.organization.model.organization.*;
+import org.bonitasoft.studio.identity.organization.model.organization.ContactData;
+import org.bonitasoft.studio.identity.organization.model.organization.CustomUserInfoDefinition;
+import org.bonitasoft.studio.identity.organization.model.organization.CustomUserInfoDefinitions;
+import org.bonitasoft.studio.identity.organization.model.organization.CustomUserInfoValue;
+import org.bonitasoft.studio.identity.organization.model.organization.CustomUserInfoValuesType;
+import org.bonitasoft.studio.identity.organization.model.organization.DocumentRoot;
+import org.bonitasoft.studio.identity.organization.model.organization.Group;
+import org.bonitasoft.studio.identity.organization.model.organization.Groups;
+import org.bonitasoft.studio.identity.organization.model.organization.Membership;
+import org.bonitasoft.studio.identity.organization.model.organization.Memberships;
+import org.bonitasoft.studio.identity.organization.model.organization.MetaDatasType;
+import org.bonitasoft.studio.identity.organization.model.organization.Metadata;
+import org.bonitasoft.studio.identity.organization.model.organization.Organization;
+import org.bonitasoft.studio.identity.organization.model.organization.OrganizationFactory;
+import org.bonitasoft.studio.identity.organization.model.organization.OrganizationPackage;
+import org.bonitasoft.studio.identity.organization.model.organization.PasswordType;
+import org.bonitasoft.studio.identity.organization.model.organization.Role;
+import org.bonitasoft.studio.identity.organization.model.organization.Roles;
+import org.bonitasoft.studio.identity.organization.model.organization.User;
+import org.bonitasoft.studio.identity.organization.model.organization.Users;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;

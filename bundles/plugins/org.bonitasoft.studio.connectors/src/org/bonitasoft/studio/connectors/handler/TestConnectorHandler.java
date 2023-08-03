@@ -15,9 +15,9 @@
 package org.bonitasoft.studio.connectors.handler;
 
 import org.bonitasoft.bpm.connector.model.implementation.ConnectorImplementation;
-import org.bonitasoft.studio.connectors.operation.TestConnectorOperation;
 import org.bonitasoft.bpm.model.connectorconfiguration.ConnectorConfiguration;
 import org.bonitasoft.engine.expression.InvalidExpressionException;
+import org.bonitasoft.studio.connectors.operation.TestConnectorOperation;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;

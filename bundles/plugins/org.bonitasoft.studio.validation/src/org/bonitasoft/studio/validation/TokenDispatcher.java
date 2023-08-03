@@ -19,8 +19,6 @@ package org.bonitasoft.studio.validation;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.bonitasoft.studio.common.emf.tools.ModelHelper;
-import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.bpm.model.process.ANDGateway;
 import org.bonitasoft.bpm.model.process.Activity;
 import org.bonitasoft.bpm.model.process.BoundaryEvent;
@@ -35,6 +33,8 @@ import org.bonitasoft.bpm.model.process.SequenceFlow;
 import org.bonitasoft.bpm.model.process.SourceElement;
 import org.bonitasoft.bpm.model.process.TargetElement;
 import org.bonitasoft.bpm.model.process.ThrowLinkEvent;
+import org.bonitasoft.studio.common.emf.tools.ModelHelper;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;

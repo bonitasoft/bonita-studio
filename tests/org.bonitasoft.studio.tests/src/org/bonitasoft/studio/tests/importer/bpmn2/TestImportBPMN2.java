@@ -25,14 +25,14 @@ import java.net.URL;
 import java.util.Objects;
 import java.util.Optional;
 
-import org.bonitasoft.studio.common.emf.tools.ModelHelper;
-import org.bonitasoft.studio.importer.bpmn.BPMNToProc;
 import org.bonitasoft.bpm.model.process.BoundaryEvent;
 import org.bonitasoft.bpm.model.process.CallActivity;
 import org.bonitasoft.bpm.model.process.Event;
 import org.bonitasoft.bpm.model.process.MainProcess;
 import org.bonitasoft.bpm.model.process.Pool;
 import org.bonitasoft.bpm.model.process.TextAnnotation;
+import org.bonitasoft.studio.common.emf.tools.ModelHelper;
+import org.bonitasoft.studio.importer.bpmn.BPMNToProc;
 import org.bonitasoft.studio.tests.util.InitialProjectRule;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.NullProgressMonitor;

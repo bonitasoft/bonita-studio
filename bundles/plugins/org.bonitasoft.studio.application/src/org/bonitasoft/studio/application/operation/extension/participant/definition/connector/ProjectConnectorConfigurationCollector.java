@@ -21,6 +21,9 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.bonitasoft.bpm.model.connectorconfiguration.ConnectorConfiguration;
+import org.bonitasoft.bpm.model.process.ActorFilter;
+import org.bonitasoft.bpm.model.process.Connector;
 import org.bonitasoft.studio.application.operation.extension.participant.definition.ConnectorConfigurationCollector;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
@@ -28,9 +31,6 @@ import org.bonitasoft.studio.common.repository.filestore.DefinitionConfiguration
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.connectors.repository.ConnectorConfRepositoryStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
-import org.bonitasoft.bpm.model.connectorconfiguration.ConnectorConfiguration;
-import org.bonitasoft.bpm.model.process.ActorFilter;
-import org.bonitasoft.bpm.model.process.Connector;
 
 public class ProjectConnectorConfigurationCollector implements ConnectorConfigurationCollector {
 

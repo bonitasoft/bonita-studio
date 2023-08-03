@@ -18,13 +18,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.bonitasoft.bpm.model.util.ExpressionConstants;
-import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.bpm.model.connectorconfiguration.ConnectorParameter;
 import org.bonitasoft.bpm.model.expression.AbstractExpression;
 import org.bonitasoft.bpm.model.expression.Expression;
 import org.bonitasoft.bpm.model.process.Connector;
 import org.bonitasoft.bpm.model.process.Pool;
+import org.bonitasoft.bpm.model.util.ExpressionConstants;
+import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.validation.i18n.Messages;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;

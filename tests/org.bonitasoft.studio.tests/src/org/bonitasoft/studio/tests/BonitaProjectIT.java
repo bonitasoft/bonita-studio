@@ -18,7 +18,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.entry;
 import static org.junit.Assert.assertNotSame;
 
-import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
 import org.apache.maven.project.MavenProject;
 import org.bonitasoft.engine.connector.AbstractConnector;
 import org.bonitasoft.studio.common.ProductVersion;

@@ -16,9 +16,9 @@
  */
 package org.bonitasoft.studio.groovy.ui.providers;
 
-import org.bonitasoft.studio.common.FragmentTypes;
 import org.bonitasoft.bpm.model.configuration.Configuration;
 import org.bonitasoft.bpm.model.configuration.FragmentContainer;
+import org.bonitasoft.bpm.model.util.FragmentTypes;
 import org.eclipse.emf.ecore.EStructuralFeature;
 
 

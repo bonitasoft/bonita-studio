@@ -20,6 +20,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.apache.maven.model.Dependency;
+import org.bonitasoft.bpm.model.process.Element;
 import org.bonitasoft.plugin.analyze.report.model.Implementation;
 import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.application.ui.control.model.dependency.BonitaArtifactDependency;
@@ -33,7 +34,6 @@ import org.bonitasoft.studio.common.repository.provider.ConnectorDefinitionRegis
 import org.bonitasoft.studio.common.repository.provider.ExtendedConnectorDefinition;
 import org.bonitasoft.studio.common.ui.views.BonitaPropertiesBrowserPage;
 import org.bonitasoft.studio.identity.actors.repository.ActorFilterDefRepositoryStore;
-import org.bonitasoft.bpm.model.process.Element;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
 import org.eclipse.swt.widgets.Composite;

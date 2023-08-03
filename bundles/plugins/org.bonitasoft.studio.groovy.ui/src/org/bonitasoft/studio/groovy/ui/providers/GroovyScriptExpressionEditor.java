@@ -25,6 +25,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.bonitasoft.bpm.model.expression.Expression;
+import org.bonitasoft.bpm.model.expression.ExpressionPackage;
 import org.bonitasoft.bpm.model.util.ExpressionConstants;
 import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.databinding.validator.InputLengthValidator;
@@ -53,8 +55,6 @@ import org.bonitasoft.studio.groovy.ui.viewer.proposal.model.Category;
 import org.bonitasoft.studio.groovy.ui.viewer.proposal.model.DescriptionProvider;
 import org.bonitasoft.studio.groovy.ui.viewer.proposal.model.ScriptExpressionContext;
 import org.bonitasoft.studio.groovy.ui.viewer.proposal.model.ScriptProposal;
-import org.bonitasoft.bpm.model.expression.Expression;
-import org.bonitasoft.bpm.model.expression.ExpressionPackage;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.preferences.BonitaThemeConstants;

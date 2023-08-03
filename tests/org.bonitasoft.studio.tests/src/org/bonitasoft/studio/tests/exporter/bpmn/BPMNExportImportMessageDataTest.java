@@ -21,7 +21,6 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 
 import org.bonitasoft.bonita2bpmn.extension.BonitaModelExporterImpl;
@@ -30,7 +29,6 @@ import org.bonitasoft.bonita2bpmn.transfo.BonitaToBPMNExporter;
 import org.bonitasoft.bonita2bpmn.transfo.ConnectorTransformationXSLProvider;
 import org.bonitasoft.bpm.model.expression.Expression;
 import org.bonitasoft.bpm.model.expression.TableExpression;
-import org.bonitasoft.bpm.model.process.AbstractProcess;
 import org.bonitasoft.bpm.model.process.CatchMessageEvent;
 import org.bonitasoft.bpm.model.process.Element;
 import org.bonitasoft.bpm.model.process.Lane;

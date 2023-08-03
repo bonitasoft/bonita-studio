@@ -16,14 +16,13 @@
  */
 package org.bonitasoft.studio.identity.actors.ui.wizard.page;
 
+import org.bonitasoft.bpm.connector.model.definition.ConnectorDefinition;
+import org.bonitasoft.bpm.model.process.Connector;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
-import org.bonitasoft.studio.common.repository.provider.DefinitionResourceProvider;
 import org.bonitasoft.studio.common.ui.jface.FileActionDialog;
-import org.bonitasoft.bpm.connector.model.definition.ConnectorDefinition;
 import org.bonitasoft.studio.identity.actors.repository.ActorFilterDefRepositoryStore;
 import org.bonitasoft.studio.identity.i18n.Messages;
-import org.bonitasoft.bpm.model.process.Connector;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;

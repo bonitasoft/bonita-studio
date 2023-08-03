@@ -14,11 +14,11 @@
  */
 package org.bonitasoft.studio.validation.constraints;
 
-import org.bonitasoft.studio.expression.editor.operation.OperatorLabelProvider;
-import org.bonitasoft.studio.expression.editor.operation.OperatorViewerFilter;
 import org.bonitasoft.bpm.model.expression.Expression;
 import org.bonitasoft.bpm.model.expression.Operation;
 import org.bonitasoft.bpm.model.expression.Operator;
+import org.bonitasoft.studio.expression.editor.operation.OperatorLabelProvider;
+import org.bonitasoft.studio.expression.editor.operation.OperatorViewerFilter;
 import org.bonitasoft.studio.validation.i18n.Messages;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.validation.IValidationContext;

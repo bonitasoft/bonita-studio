@@ -16,9 +16,9 @@
  */
 package org.bonitasoft.studio.configuration.ui.wizard.page;
 
-import org.bonitasoft.studio.configuration.i18n.Messages;
 import org.bonitasoft.bpm.model.process.AbstractProcess;
 import org.bonitasoft.bpm.model.process.MainProcess;
+import org.bonitasoft.studio.configuration.i18n.Messages;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.beans.PojoObservables;

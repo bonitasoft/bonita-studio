@@ -18,16 +18,16 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
 
-import org.bonitasoft.studio.common.Messages;
-import org.bonitasoft.studio.common.emf.tools.ModelHelper;
-import org.bonitasoft.studio.common.ui.jface.SWTBotConstants;
-import org.bonitasoft.studio.diagram.custom.editPolicies.ActivitySwitchEditPolicy;
-import org.bonitasoft.studio.diagram.custom.figures.SlideMenuBarFigure;
 import org.bonitasoft.bpm.model.process.Activity;
 import org.bonitasoft.bpm.model.process.Element;
 import org.bonitasoft.bpm.model.process.Lane;
 import org.bonitasoft.bpm.model.process.MainProcess;
 import org.bonitasoft.bpm.model.process.Pool;
+import org.bonitasoft.studio.common.Messages;
+import org.bonitasoft.studio.common.emf.tools.ModelHelper;
+import org.bonitasoft.studio.common.ui.jface.SWTBotConstants;
+import org.bonitasoft.studio.diagram.custom.editPolicies.ActivitySwitchEditPolicy;
+import org.bonitasoft.studio.diagram.custom.figures.SlideMenuBarFigure;
 import org.bonitasoft.studio.swtbot.framework.SWTBotTestUtil;
 import org.bonitasoft.studio.swtbot.framework.application.BotApplicationWorkbenchWindow;
 import org.bonitasoft.studio.swtbot.framework.conditions.AssertionCondition;

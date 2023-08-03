@@ -14,11 +14,11 @@
  */
 package org.bonitasoft.studio.validation.constraints.process;
 
-import org.bonitasoft.studio.common.repository.RepositoryManager;
-import org.bonitasoft.studio.document.core.repository.DocumentRepositoryStore;
 import org.bonitasoft.bpm.model.process.Document;
 import org.bonitasoft.bpm.model.process.DocumentType;
 import org.bonitasoft.bpm.model.process.Pool;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.document.core.repository.DocumentRepositoryStore;
 import org.bonitasoft.studio.validation.constraints.AbstractLiveValidationMarkerConstraint;
 import org.bonitasoft.studio.validation.i18n.Messages;
 import org.eclipse.core.runtime.IStatus;

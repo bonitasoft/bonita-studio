@@ -11,6 +11,8 @@ package org.bonitasoft.studio.validation.constraints.process;
 
 import java.util.List;
 
+import org.bonitasoft.bpm.model.expression.Expression;
+import org.bonitasoft.bpm.model.util.ExpressionConstants;
 import org.bonitasoft.engine.bdm.BDMQueryUtil;
 import org.bonitasoft.engine.bdm.model.BusinessObject;
 import org.bonitasoft.engine.bdm.model.BusinessObjectModel;
@@ -18,12 +20,10 @@ import org.bonitasoft.engine.bdm.model.Query;
 import org.bonitasoft.engine.bdm.model.QueryParameter;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelFileStore;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
-import org.bonitasoft.bpm.model.util.ExpressionConstants;
 import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
-import org.bonitasoft.bpm.model.expression.Expression;
 import org.bonitasoft.studio.validation.ValidationPlugin;
 import org.bonitasoft.studio.validation.constraints.AbstractLiveValidationMarkerConstraint;
 import org.bonitasoft.studio.validation.i18n.Messages;

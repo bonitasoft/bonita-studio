@@ -18,13 +18,13 @@ import static org.junit.Assert.assertNotNull;
 
 import java.net.URL;
 
+import org.bonitasoft.bpm.model.process.AbstractProcess;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.importer.bos.operation.ImportBosArchiveOperation;
-import org.bonitasoft.bpm.model.process.AbstractProcess;
 import org.bonitasoft.studio.tests.util.InitialProjectRule;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.NullProgressMonitor;

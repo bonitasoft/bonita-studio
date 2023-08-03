@@ -20,12 +20,12 @@ import java.util.List;
 import java.util.Objects;
 
 import org.apache.maven.artifact.Artifact;
+import org.bonitasoft.bpm.model.configuration.Configuration;
 import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.application.operation.extension.participant.configuration.DatabaseConnectorConfigurationChange;
 import org.bonitasoft.studio.common.repository.core.migration.dependencies.configuration.ProcessConfigurationChange;
 import org.bonitasoft.studio.common.repository.extension.update.preview.ChangePreview;
 import org.bonitasoft.studio.connectors.repository.DatabaseConnectorPropertiesRepositoryStore;
-import org.bonitasoft.bpm.model.configuration.Configuration;
 
 public class JarUpdatedChange
         implements ChangePreview, ProcessConfigurationChange, DatabaseConnectorConfigurationChange {

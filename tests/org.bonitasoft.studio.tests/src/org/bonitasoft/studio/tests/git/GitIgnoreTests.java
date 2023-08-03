@@ -29,7 +29,6 @@ import java.util.stream.Collectors;
 import org.apache.commons.io.input.NullInputStream;
 import org.bonitasoft.studio.assertions.StatusAssert;
 import org.bonitasoft.studio.common.core.IRunnableWithStatus;
-import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.core.team.GitProject;

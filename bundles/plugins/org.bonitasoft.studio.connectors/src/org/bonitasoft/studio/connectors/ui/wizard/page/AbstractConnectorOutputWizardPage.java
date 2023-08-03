@@ -17,12 +17,12 @@
  */
 package org.bonitasoft.studio.connectors.ui.wizard.page;
 
+import org.bonitasoft.bpm.model.process.Connector;
 import org.bonitasoft.studio.common.IBonitaVariableContext;
 import org.bonitasoft.studio.common.repository.provider.DefinitionResourceProvider;
 import org.bonitasoft.studio.common.repository.provider.ExtendedConnectorDefinition;
 import org.bonitasoft.studio.connectors.i18n.Messages;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionNatureProvider;
-import org.bonitasoft.bpm.model.process.Connector;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.databinding.wizard.WizardPageSupport;

@@ -18,11 +18,11 @@ package org.bonitasoft.studio.configuration.ui.wizard;
 
 import java.lang.reflect.InvocationTargetException;
 
+import org.bonitasoft.bpm.model.configuration.Configuration;
+import org.bonitasoft.bpm.model.process.AbstractProcess;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.configuration.i18n.Messages;
 import org.bonitasoft.studio.configuration.ui.wizard.page.ImportConfigurationWizardPage;
-import org.bonitasoft.bpm.model.configuration.Configuration;
-import org.bonitasoft.bpm.model.process.AbstractProcess;
 import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.IAction;

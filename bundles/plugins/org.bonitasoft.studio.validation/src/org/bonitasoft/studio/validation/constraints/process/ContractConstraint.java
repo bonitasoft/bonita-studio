@@ -16,10 +16,10 @@ package org.bonitasoft.studio.validation.constraints.process;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
-import org.bonitasoft.studio.common.emf.tools.ModelHelper;
-import org.bonitasoft.studio.contract.core.validation.ContractConstraintInputValidator;
 import org.bonitasoft.bpm.model.process.ContractContainer;
 import org.bonitasoft.bpm.model.process.Element;
+import org.bonitasoft.studio.common.emf.tools.ModelHelper;
+import org.bonitasoft.studio.contract.core.validation.ContractConstraintInputValidator;
 import org.bonitasoft.studio.validation.constraints.AbstractLiveValidationMarkerConstraint;
 import org.bonitasoft.studio.validation.i18n.Messages;
 import org.eclipse.core.runtime.IStatus;

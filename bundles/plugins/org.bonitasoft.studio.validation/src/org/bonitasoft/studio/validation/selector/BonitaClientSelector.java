@@ -17,8 +17,8 @@
  */
 package org.bonitasoft.studio.validation.selector;
 
-import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.bpm.model.process.MainProcess;
+import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.validation.model.IClientSelector;
 import org.eclipse.gmf.runtime.notation.Shape;

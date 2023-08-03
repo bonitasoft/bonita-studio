@@ -22,8 +22,6 @@ import java.util.stream.Collectors;
 import org.bonitasoft.studio.common.ModelVersion;
 import org.bonitasoft.studio.common.model.validator.ModelNamespaceValidator;
 import org.bonitasoft.studio.common.model.validator.XMLModelCompatibilityValidator;
-import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
-import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.connector.model.implementation.AbstractConnectorImplRepositoryStore;
 import org.eclipse.core.runtime.IStatus;
 

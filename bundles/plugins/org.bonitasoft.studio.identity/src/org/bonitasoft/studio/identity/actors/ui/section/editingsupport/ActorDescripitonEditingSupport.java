@@ -16,11 +16,11 @@
  */
 package org.bonitasoft.studio.identity.actors.ui.section.editingsupport;
 
-import org.bonitasoft.studio.common.emf.tools.ModelHelper;
-import org.bonitasoft.studio.identity.i18n.Messages;
 import org.bonitasoft.bpm.model.process.AbstractProcess;
 import org.bonitasoft.bpm.model.process.Actor;
 import org.bonitasoft.bpm.model.process.ProcessPackage;
+import org.bonitasoft.studio.common.emf.tools.ModelHelper;
+import org.bonitasoft.studio.identity.i18n.Messages;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;

@@ -16,16 +16,16 @@
  */
 package org.bonitasoft.studio.configuration.ui.wizard.page;
 
+import org.bonitasoft.bpm.model.configuration.Configuration;
+import org.bonitasoft.bpm.model.configuration.ConfigurationPackage;
+import org.bonitasoft.bpm.model.configuration.Fragment;
+import org.bonitasoft.bpm.model.configuration.FragmentContainer;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.configuration.ConfigurationPlugin;
 import org.bonitasoft.studio.configuration.i18n.Messages;
 import org.bonitasoft.studio.dependencies.repository.DependencyRepositoryStore;
-import org.bonitasoft.bpm.model.configuration.Configuration;
-import org.bonitasoft.bpm.model.configuration.ConfigurationPackage;
-import org.bonitasoft.bpm.model.configuration.Fragment;
-import org.bonitasoft.bpm.model.configuration.FragmentContainer;
 import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.swt.graphics.Image;

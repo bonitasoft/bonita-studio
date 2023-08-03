@@ -21,6 +21,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.bonitasoft.bpm.model.process.MainProcess;
 import org.bonitasoft.engine.api.ProcessAPI;
 import org.bonitasoft.engine.bpm.process.ActivationState;
 import org.bonitasoft.engine.bpm.process.ProcessDeploymentInfo;
@@ -34,7 +35,6 @@ import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.engine.BOSEngineManager;
-import org.bonitasoft.bpm.model.process.MainProcess;
 import org.bonitasoft.studio.swtbot.framework.projectExplorer.DiagramProjectExplorerBot;
 import org.bonitasoft.studio.swtbot.framework.projectExplorer.ProjectExplorerBot;
 import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;

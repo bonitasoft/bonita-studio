@@ -23,10 +23,10 @@ import static org.junit.Assert.assertTrue;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.core.maven.AddDependencyOperation;
-import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.connectors.repository.ConnectorDefRepositoryStore;
 import org.bonitasoft.studio.tests.util.InitialProjectRule;
 import org.eclipse.core.runtime.IConfigurationElement;

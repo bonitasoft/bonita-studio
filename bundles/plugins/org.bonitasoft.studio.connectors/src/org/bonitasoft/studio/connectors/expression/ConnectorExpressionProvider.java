@@ -19,14 +19,14 @@ import java.util.Set;
 
 import javax.inject.Inject;
 
+import org.bonitasoft.bpm.connector.model.definition.ConnectorDefinition;
+import org.bonitasoft.bpm.model.expression.Expression;
+import org.bonitasoft.bpm.model.process.Connector;
 import org.bonitasoft.bpm.model.util.ExpressionConstants;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
-import org.bonitasoft.bpm.connector.model.definition.ConnectorDefinition;
 import org.bonitasoft.studio.connectors.repository.ConnectorDefRepositoryStore;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionEditor;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionProvider;
-import org.bonitasoft.bpm.model.expression.Expression;
-import org.bonitasoft.bpm.model.process.Connector;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.swt.graphics.Image;
 

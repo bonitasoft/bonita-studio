@@ -16,8 +16,8 @@
  */
 package org.bonitasoft.studio.identity.actors.ui.wizard;
 
-import org.bonitasoft.studio.identity.actors.ui.wizard.page.SelectRoleMappingWizardPage;
 import org.bonitasoft.bpm.model.actormapping.ActorMapping;
+import org.bonitasoft.studio.identity.actors.ui.wizard.page.SelectRoleMappingWizardPage;
 import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jface.wizard.Wizard;

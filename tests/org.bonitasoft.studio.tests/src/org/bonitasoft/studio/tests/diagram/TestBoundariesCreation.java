@@ -16,11 +16,11 @@ package org.bonitasoft.studio.tests.diagram;
 
 import static org.junit.Assert.assertTrue;
 
-import org.bonitasoft.studio.common.Messages;
 import org.bonitasoft.bpm.model.process.BoundaryMessageEvent;
 import org.bonitasoft.bpm.model.process.BoundarySignalEvent;
 import org.bonitasoft.bpm.model.process.BoundaryTimerEvent;
 import org.bonitasoft.bpm.model.process.IntermediateErrorCatchEvent;
+import org.bonitasoft.studio.common.Messages;
 import org.bonitasoft.studio.swtbot.framework.SWTBotTestUtil;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.gef.EditPart;

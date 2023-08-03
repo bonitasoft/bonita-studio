@@ -25,7 +25,6 @@ import org.bonitasoft.engine.api.TenantAdministrationAPI;
 import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.engine.tenant.TenantResourceState;
 import org.bonitasoft.studio.businessobject.core.operation.DeployBDMOperation;
-import org.bonitasoft.studio.businessobject.core.operation.GenerateBDMOperation;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelFileStore;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
 import org.bonitasoft.studio.common.repository.RepositoryManager;

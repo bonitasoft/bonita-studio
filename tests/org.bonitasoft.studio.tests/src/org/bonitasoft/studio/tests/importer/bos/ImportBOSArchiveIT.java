@@ -41,7 +41,6 @@ import org.bonitasoft.studio.importer.bos.operation.ImportConflictsChecker;
 import org.bonitasoft.studio.tests.util.InitialProjectRule;
 import org.bonitasoft.studio.ui.dialog.SkippableProgressMonitorJobsDialog;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.e4.core.contexts.ContextInjectionFactory;

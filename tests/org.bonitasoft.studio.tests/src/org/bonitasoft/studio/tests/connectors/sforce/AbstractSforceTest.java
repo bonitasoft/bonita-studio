@@ -29,7 +29,6 @@ import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotText;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Rule;
 
 import com.sforce.ws.ConnectionException;

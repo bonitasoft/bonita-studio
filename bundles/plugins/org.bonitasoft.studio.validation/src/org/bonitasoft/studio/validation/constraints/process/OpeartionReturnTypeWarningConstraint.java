@@ -14,14 +14,14 @@
  */
 package org.bonitasoft.studio.validation.constraints.process;
 
-import org.bonitasoft.studio.common.emf.tools.ModelHelper;
-import org.bonitasoft.studio.expression.editor.operation.OperationReturnTypesValidator;
 import org.bonitasoft.bpm.model.expression.Expression;
 import org.bonitasoft.bpm.model.expression.ExpressionPackage;
 import org.bonitasoft.bpm.model.expression.Operation;
 import org.bonitasoft.bpm.model.process.Element;
 import org.bonitasoft.bpm.model.process.FlowElement;
 import org.bonitasoft.bpm.model.process.ProcessPackage;
+import org.bonitasoft.studio.common.emf.tools.ModelHelper;
+import org.bonitasoft.studio.expression.editor.operation.OperationReturnTypesValidator;
 import org.bonitasoft.studio.validation.constraints.AbstractLiveValidationMarkerConstraint;
 import org.bonitasoft.studio.validation.i18n.Messages;
 import org.eclipse.core.runtime.IStatus;

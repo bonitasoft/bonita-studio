@@ -20,13 +20,13 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import org.bonitasoft.studio.common.emf.tools.ModelHelper;
-import org.bonitasoft.studio.common.ui.jface.TableColumnSorter;
-import org.bonitasoft.studio.identity.i18n.Messages;
 import org.bonitasoft.bpm.model.process.AbstractProcess;
 import org.bonitasoft.bpm.model.process.Actor;
 import org.bonitasoft.bpm.model.process.Element;
 import org.bonitasoft.bpm.model.process.ProcessPackage;
+import org.bonitasoft.studio.common.emf.tools.ModelHelper;
+import org.bonitasoft.studio.common.ui.jface.TableColumnSorter;
+import org.bonitasoft.studio.identity.i18n.Messages;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;

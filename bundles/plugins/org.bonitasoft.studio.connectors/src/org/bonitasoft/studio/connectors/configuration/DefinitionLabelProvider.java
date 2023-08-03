@@ -16,9 +16,9 @@
  */
 package org.bonitasoft.studio.connectors.configuration;
 
+import org.bonitasoft.bpm.model.configuration.DefinitionMapping;
 import org.bonitasoft.studio.common.repository.model.IDefinitionRepositoryStore;
 import org.bonitasoft.studio.common.repository.provider.DefinitionResourceProvider;
-import org.bonitasoft.bpm.model.configuration.DefinitionMapping;
 import org.eclipse.swt.graphics.Image;
 
 

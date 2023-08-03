@@ -34,6 +34,9 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
+import org.bonitasoft.bpm.model.connectorconfiguration.ConnectorParameter;
+import org.bonitasoft.bpm.model.expression.AbstractExpression;
+import org.bonitasoft.bpm.model.expression.Expression;
 import org.bonitasoft.bpm.model.util.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
@@ -46,9 +49,6 @@ import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFil
 import org.bonitasoft.studio.expression.editor.provider.ExpressionLabelProvider;
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionSynchronizer;
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewerCellEditor;
-import org.bonitasoft.bpm.model.connectorconfiguration.ConnectorParameter;
-import org.bonitasoft.bpm.model.expression.AbstractExpression;
-import org.bonitasoft.bpm.model.expression.Expression;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.xml.ui.SelectPathDialog;
 import org.bonitasoft.studio.xml.ui.XSDContentProvider;

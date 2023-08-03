@@ -24,6 +24,9 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.bonitasoft.bpm.connector.model.definition.ConnectorDefinition;
+import org.bonitasoft.bpm.model.connectorconfiguration.ConnectorConfiguration;
+import org.bonitasoft.bpm.model.process.Connector;
 import org.bonitasoft.plugin.analyze.report.model.Definition;
 import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.application.operation.extension.participant.definition.preview.DefinitionUpdatePreviewResult;
@@ -34,10 +37,7 @@ import org.bonitasoft.studio.common.repository.extension.update.DependencyUpdate
 import org.bonitasoft.studio.common.repository.extension.update.participant.ExtensionUpdateParticipant;
 import org.bonitasoft.studio.common.repository.extension.update.preview.PreviewMessageProvider;
 import org.bonitasoft.studio.common.repository.extension.update.preview.PreviewResult;
-import org.bonitasoft.bpm.connector.model.definition.ConnectorDefinition;
 import org.bonitasoft.studio.connector.model.definition.migration.ConnectorConfigurationMigratorFactory;
-import org.bonitasoft.bpm.model.connectorconfiguration.ConnectorConfiguration;
-import org.bonitasoft.bpm.model.process.Connector;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;

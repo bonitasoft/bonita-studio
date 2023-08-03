@@ -35,7 +35,6 @@ import org.bonitasoft.engine.expression.ExpressionEvaluationException;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
-import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.dependencies.repository.DependencyFileStore;
 import org.bonitasoft.studio.groovy.GroovyDocumentUtil;
 import org.bonitasoft.studio.groovy.ScriptVariable;

@@ -28,7 +28,6 @@ import org.bonitasoft.studio.identity.organization.model.organization.Organizati
 import org.bonitasoft.studio.identity.organization.model.organization.PasswordType;
 import org.bonitasoft.studio.identity.organization.model.organization.User;
 import org.bonitasoft.studio.identity.organization.model.organization.Users;
-import org.bonitasoft.studio.identity.organization.repository.OrganizationFileStore;
 import org.bonitasoft.studio.identity.organization.repository.OrganizationRepositoryStore;
 import org.eclipse.e4.core.di.annotations.Execute;
 

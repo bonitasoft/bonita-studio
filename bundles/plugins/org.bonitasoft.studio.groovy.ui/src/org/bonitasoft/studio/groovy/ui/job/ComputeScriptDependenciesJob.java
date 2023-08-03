@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.bonitasoft.bpm.model.expression.Expression;
 import org.bonitasoft.bpm.model.util.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.expression.editor.ExpressionProviderService;
@@ -31,7 +32,6 @@ import org.bonitasoft.studio.groovy.BonitaScriptGroovyCompilationUnit;
 import org.bonitasoft.studio.groovy.GroovyUtil;
 import org.bonitasoft.studio.groovy.ScriptVariable;
 import org.bonitasoft.studio.groovy.ui.Activator;
-import org.bonitasoft.bpm.model.expression.Expression;
 import org.codehaus.groovy.ast.Variable;
 import org.codehaus.groovy.ast.stmt.BlockStatement;
 import org.eclipse.core.runtime.IProgressMonitor;

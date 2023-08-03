@@ -14,10 +14,7 @@
  */
 package org.bonitasoft.studio.application.maven;
 
-import java.util.Map;
-
 import org.bonitasoft.studio.application.ApplicationPlugin;
-import org.bonitasoft.studio.common.CommandExecutor;
 import org.eclipse.ui.IStartup;
 
 public class CheckMavenConfigurationStartup implements IStartup {

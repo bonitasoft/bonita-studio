@@ -20,13 +20,13 @@ import java.util.Collection;
 import java.util.List;
 
 import org.apache.maven.artifact.Artifact;
-import org.bonitasoft.studio.application.i18n.Messages;
-import org.bonitasoft.studio.common.FragmentTypes;
-import org.bonitasoft.studio.common.repository.core.migration.dependencies.configuration.ProcessConfigurationChange;
-import org.bonitasoft.studio.common.repository.extension.update.preview.ChangePreview;
 import org.bonitasoft.bpm.model.configuration.Configuration;
 import org.bonitasoft.bpm.model.configuration.ConfigurationFactory;
 import org.bonitasoft.bpm.model.configuration.Fragment;
+import org.bonitasoft.bpm.model.util.FragmentTypes;
+import org.bonitasoft.studio.application.i18n.Messages;
+import org.bonitasoft.studio.common.repository.core.migration.dependencies.configuration.ProcessConfigurationChange;
+import org.bonitasoft.studio.common.repository.extension.update.preview.ChangePreview;
 
 
 public class JarAddedChange implements ChangePreview, ProcessConfigurationChange {

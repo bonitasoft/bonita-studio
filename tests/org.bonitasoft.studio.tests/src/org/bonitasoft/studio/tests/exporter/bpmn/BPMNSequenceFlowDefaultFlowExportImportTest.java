@@ -19,7 +19,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -27,7 +26,6 @@ import org.bonitasoft.bonita2bpmn.extension.BonitaModelExporterImpl;
 import org.bonitasoft.bonita2bpmn.extension.IBonitaModelExporter;
 import org.bonitasoft.bonita2bpmn.transfo.BonitaToBPMNExporter;
 import org.bonitasoft.bonita2bpmn.transfo.ConnectorTransformationXSLProvider;
-import org.bonitasoft.bpm.model.process.AbstractProcess;
 import org.bonitasoft.bpm.model.process.MainProcess;
 import org.bonitasoft.bpm.model.process.SequenceFlow;
 import org.bonitasoft.bpm.model.util.IModelSearch;

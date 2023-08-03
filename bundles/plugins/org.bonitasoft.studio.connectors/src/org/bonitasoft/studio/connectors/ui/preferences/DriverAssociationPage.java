@@ -18,14 +18,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import org.bonitasoft.bpm.connector.model.definition.Category;
+import org.bonitasoft.bpm.connector.model.definition.ConnectorDefinition;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.provider.DefinitionResourceProvider;
 import org.bonitasoft.studio.common.repository.provider.ExtendedCategory;
 import org.bonitasoft.studio.common.repository.provider.ExtendedConnectorDefinition;
-import org.bonitasoft.bpm.connector.model.definition.Category;
-import org.bonitasoft.bpm.connector.model.definition.ConnectorDefinition;
 import org.bonitasoft.studio.connectors.ConnectorPlugin;
 import org.bonitasoft.studio.connectors.i18n.Messages;
 import org.bonitasoft.studio.connectors.repository.ConnectorDefRepositoryStore;

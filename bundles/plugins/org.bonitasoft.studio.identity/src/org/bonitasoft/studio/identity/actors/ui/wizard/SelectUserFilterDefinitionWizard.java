@@ -16,18 +16,16 @@
  */
 package org.bonitasoft.studio.identity.actors.ui.wizard;
 
-import org.bonitasoft.studio.common.repository.RepositoryManager;
-import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
-import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
-import org.bonitasoft.studio.common.repository.provider.DefinitionResourceProvider;
 import org.bonitasoft.bpm.connector.model.definition.ConnectorDefinition;
-import org.bonitasoft.studio.identity.IdentityPlugin;
-import org.bonitasoft.studio.identity.actors.repository.ActorFilterDefRepositoryStore;
-import org.bonitasoft.studio.identity.actors.ui.wizard.page.SelectUserFilterDefinitionWizardPage;
-import org.bonitasoft.studio.identity.i18n.Messages;
 import org.bonitasoft.bpm.model.connectorconfiguration.ConnectorConfigurationFactory;
 import org.bonitasoft.bpm.model.process.Connector;
 import org.bonitasoft.bpm.model.process.ProcessFactory;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
+import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
+import org.bonitasoft.studio.identity.actors.repository.ActorFilterDefRepositoryStore;
+import org.bonitasoft.studio.identity.actors.ui.wizard.page.SelectUserFilterDefinitionWizardPage;
+import org.bonitasoft.studio.identity.i18n.Messages;
 import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.jface.wizard.Wizard;
 

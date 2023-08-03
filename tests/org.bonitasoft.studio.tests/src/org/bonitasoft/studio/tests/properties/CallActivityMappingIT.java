@@ -18,8 +18,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.IOException;
 
-import org.bonitasoft.studio.common.ui.jface.SWTBotConstants;
 import org.bonitasoft.bpm.model.process.InputMappingAssignationType;
+import org.bonitasoft.studio.common.ui.jface.SWTBotConstants;
 import org.bonitasoft.studio.swtbot.framework.SWTBotTestUtil;
 import org.bonitasoft.studio.swtbot.framework.application.BotApplicationWorkbenchWindow;
 import org.bonitasoft.studio.swtbot.framework.diagram.BotProcessDiagramPerspective;

@@ -19,14 +19,14 @@ package org.bonitasoft.studio.connectors.ui.wizard.page;
 
 import java.util.List;
 
+import org.bonitasoft.bpm.model.expression.Expression;
+import org.bonitasoft.bpm.model.expression.ExpressionPackage;
+import org.bonitasoft.bpm.model.expression.Operation;
 import org.bonitasoft.bpm.model.util.ExpressionConstants;
 import org.bonitasoft.studio.connectors.i18n.Messages;
 import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFilter;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionValidator;
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
-import org.bonitasoft.bpm.model.expression.Expression;
-import org.bonitasoft.bpm.model.expression.ExpressionPackage;
-import org.bonitasoft.bpm.model.expression.Operation;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.databinding.EMFDataBindingContext;

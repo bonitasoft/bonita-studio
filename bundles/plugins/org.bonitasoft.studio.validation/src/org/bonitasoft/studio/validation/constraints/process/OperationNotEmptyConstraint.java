@@ -17,11 +17,11 @@ package org.bonitasoft.studio.validation.constraints.process;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.bonitasoft.bpm.model.util.ExpressionConstants;
 import org.bonitasoft.bpm.model.expression.Operation;
 import org.bonitasoft.bpm.model.expression.Operator;
 import org.bonitasoft.bpm.model.process.AbstractCatchMessageEvent;
 import org.bonitasoft.bpm.model.process.Activity;
+import org.bonitasoft.bpm.model.util.ExpressionConstants;
 import org.bonitasoft.studio.validation.constraints.AbstractLiveValidationMarkerConstraint;
 import org.bonitasoft.studio.validation.i18n.Messages;
 import org.eclipse.core.runtime.IStatus;
