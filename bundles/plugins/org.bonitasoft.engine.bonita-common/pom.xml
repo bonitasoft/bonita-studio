@@ -36,6 +36,11 @@
 									<artifactId>bonita-common</artifactId>
 									<version>${bonita-runtime.version}</version>
 								</artifactItem>
+								<artifactItem>
+									<groupId>org.bonitasoft.engine</groupId>
+									<artifactId>bonita-application-model</artifactId>
+									<version>${bonita-runtime.version}</version>
+								</artifactItem>
 							</artifactItems>
 							<stripVersion>true</stripVersion>
 							<stripClassifier>true</stripClassifier>
