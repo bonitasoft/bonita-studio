@@ -16,6 +16,7 @@ import org.bonitasoft.studio.common.event.BdmEvents;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.core.maven.AddDependencyOperation;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.CoreException;
@@ -24,6 +25,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.e4.core.services.events.IEventBroker;
+import org.eclipse.m2e.core.ui.internal.UpdateMavenProjectJob;
 import org.osgi.service.event.Event;
 import org.osgi.service.event.EventHandler;
 
@@ -42,7 +44,10 @@ public class DeployedBDMEventHandler implements EventHandler {
             var addBDMClientDependencyOperation = new AddDependencyOperation(parametrized);
             try {
                 addBDMClientDependencyOperation.disableAnalyze().run(new NullProgressMonitor());
-                RepositoryManager.getInstance().getCurrentProject().ifPresent(p -> {
+               var project = RepositoryManager.getInstance().getCurrentProject();
+                project.ifPresent(p -> {
+                	   new UpdateMavenProjectJob(new IProject[] { p.getAppProject() }, false, false, false, false, true)
+                       		.run(new NullProgressMonitor());
                     try {
                         p.getAppProject().build(IncrementalProjectBuilder.INCREMENTAL_BUILD, new NullProgressMonitor());
                     } catch (CoreException e) {
