@@ -97,7 +97,7 @@ public class BarExporter {
 					.formBuilder(new RestFormBuilder(PageDesignerURLFactory.INSTANCE))
 					.processRegistry(diagramStore)
 					.sourcePathProvider(
-							SourcePathProvider.of(project.getParentProject().getLocation().toFile().toPath()))
+							SourcePathProvider.of(project.getAppProject().getLocation().toFile().toPath()))
 					.workingDirectory(workdir).build());
 			var result = barBuilder.build(process, configuration.getName());
 			return result.getBusinessArchives().get(0);
@@ -135,7 +135,7 @@ public class BarExporter {
 		}
 		if (configurationId.equals(ConfigurationPreferenceConstants.LOCAL_CONFIGURATION)) {
 			final String id = ModelHelper.getEObjectID(process);
-			IRepositoryFileStore file = processConfStore.getChild(id + ".conf", true);
+			var file = processConfStore.getChild(id + ".conf", true);
 			if (file == null) {
 				file = processConfStore.createRepositoryFileStore(id + ".conf");
 				configuration = ConfigurationFactory.eINSTANCE.createConfiguration();
@@ -144,7 +144,7 @@ public class BarExporter {
 				file.save(configuration);
 			}
 			try {
-				configuration = (Configuration) file.getContent();
+				configuration = file.getContent();
 			} catch (final ReadFileStoreException e) {
 				BonitaStudioLog.error("Failed to read process configuration", e);
 			}
