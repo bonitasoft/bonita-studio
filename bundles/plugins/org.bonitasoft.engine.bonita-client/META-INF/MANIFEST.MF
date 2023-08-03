@@ -1,0 +1,26 @@
+Manifest-Version: 1.0
+Automatic-Module-Name: org.bonitasoft.engine.bonita-client
+Build-Jdk-Spec: 11
+Bundle-ClassPath: 
+ .,
+ lib/bonita-client.jar,
+ lib/mxparser.jar,
+ lib/xmlpull.jar,
+ lib/xstream.jar
+Bundle-ManifestVersion: 2
+Bundle-Name: Bonita Client Bundle
+Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-SymbolicName: org.bonitasoft.engine.bonita-client;singleton:=true
+Bundle-Vendor: Bonitasoft S.A.
+Bundle-Version: 9.0.0.qualifier
+Export-Package: org.bonitasoft.engine.api,
+ org.bonitasoft.engine.api.impl,
+ org.bonitasoft.engine.bdm,
+ org.bonitasoft.engine.exception,
+ org.bonitasoft.engine.util
+Require-Bundle: com.sun.xml.bind.jaxb-osgi,
+ org.glassfish.hk2.osgi-resource-locator,
+ com.sun.activation.jakarta.activation,
+ org.bonitasoft.engine.bonita-common;visibility:=reexport,
+ org.apache.httpcomponents.httpclient,
+ org.apache.httpcomponents.httpcore
