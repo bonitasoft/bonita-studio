@@ -16,10 +16,10 @@ package org.bonitasoft.studio.connectors.ui.wizard.page;
 
 import java.util.Objects;
 
-import org.bonitasoft.bpm.model.util.ExpressionConstants;
 import org.bonitasoft.bpm.connector.model.definition.Output;
-import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFilter;
 import org.bonitasoft.bpm.model.expression.Expression;
+import org.bonitasoft.bpm.model.util.ExpressionConstants;
+import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFilter;
 import org.eclipse.jface.viewers.Viewer;
 
 public class DefaultDatabaseOutputAvailableExpressionTypeFilter extends AvailableExpressionTypeFilter {

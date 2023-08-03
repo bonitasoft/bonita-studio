@@ -34,7 +34,6 @@ import org.bonitasoft.bonita2bpmn.extension.BonitaModelExporterImpl;
 import org.bonitasoft.bonita2bpmn.extension.IBonitaModelExporter;
 import org.bonitasoft.bonita2bpmn.transfo.BonitaToBPMNExporter;
 import org.bonitasoft.bonita2bpmn.transfo.ConnectorTransformationXSLProvider;
-import org.bonitasoft.bpm.model.process.AbstractProcess;
 import org.bonitasoft.bpm.model.process.Element;
 import org.bonitasoft.bpm.model.process.Lane;
 import org.bonitasoft.bpm.model.process.MainProcess;

@@ -27,6 +27,7 @@ import java.util.stream.Collectors;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.model.Dependency;
 import org.apache.maven.project.MavenProject;
+import org.bonitasoft.bpm.model.configuration.Configuration;
 import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.application.operation.extension.participant.configuration.preview.JarAddedChange;
 import org.bonitasoft.studio.application.operation.extension.participant.configuration.preview.JarRemovedChange;
@@ -44,7 +45,6 @@ import org.bonitasoft.studio.common.repository.extension.update.preview.PreviewM
 import org.bonitasoft.studio.common.repository.extension.update.preview.PreviewResult;
 import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.connectors.repository.DatabaseConnectorPropertiesRepositoryStore;
-import org.bonitasoft.bpm.model.configuration.Configuration;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;

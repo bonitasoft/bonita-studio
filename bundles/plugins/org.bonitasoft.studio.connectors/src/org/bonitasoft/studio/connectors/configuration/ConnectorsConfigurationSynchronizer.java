@@ -31,7 +31,7 @@ import org.bonitasoft.bpm.model.kpi.KpiPackage;
 import org.bonitasoft.bpm.model.process.AbstractProcess;
 import org.bonitasoft.bpm.model.process.ActorFilter;
 import org.bonitasoft.bpm.model.process.Connector;
-import org.bonitasoft.studio.common.FragmentTypes;
+import org.bonitasoft.bpm.model.util.FragmentTypes;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.filestore.EMFFileStore;

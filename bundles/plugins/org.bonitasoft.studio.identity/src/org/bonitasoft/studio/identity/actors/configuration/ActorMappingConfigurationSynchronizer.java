@@ -16,7 +16,6 @@
  */
 package org.bonitasoft.studio.identity.actors.configuration;
 
-import org.bonitasoft.studio.common.repository.extension.IConfigurationSynchronizer;
 import org.bonitasoft.bpm.model.actormapping.ActorMapping;
 import org.bonitasoft.bpm.model.actormapping.ActorMappingFactory;
 import org.bonitasoft.bpm.model.actormapping.ActorMappingPackage;
@@ -25,6 +24,7 @@ import org.bonitasoft.bpm.model.configuration.Configuration;
 import org.bonitasoft.bpm.model.configuration.ConfigurationPackage;
 import org.bonitasoft.bpm.model.process.AbstractProcess;
 import org.bonitasoft.bpm.model.process.Actor;
+import org.bonitasoft.studio.common.repository.extension.IConfigurationSynchronizer;
 import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.edit.command.AddCommand;

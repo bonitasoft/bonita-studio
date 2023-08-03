@@ -21,14 +21,14 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
-import org.bonitasoft.bpm.model.util.ExpressionConstants;
-import org.bonitasoft.studio.common.emf.tools.ModelHelper;
-import org.bonitasoft.studio.common.ui.jface.SWTBotConstants;
 import org.bonitasoft.bpm.model.expression.assertions.ExpressionAssert;
 import org.bonitasoft.bpm.model.process.AbstractProcess;
 import org.bonitasoft.bpm.model.process.MultiInstanceType;
 import org.bonitasoft.bpm.model.process.MultiInstantiable;
 import org.bonitasoft.bpm.model.process.assertions.MultiInstantiableAssert;
+import org.bonitasoft.bpm.model.util.ExpressionConstants;
+import org.bonitasoft.studio.common.emf.tools.ModelHelper;
+import org.bonitasoft.studio.common.ui.jface.SWTBotConstants;
 import org.bonitasoft.studio.properties.i18n.Messages;
 import org.bonitasoft.studio.swtbot.framework.SWTBotTestUtil;
 import org.bonitasoft.studio.swtbot.framework.application.BotApplicationWorkbenchWindow;

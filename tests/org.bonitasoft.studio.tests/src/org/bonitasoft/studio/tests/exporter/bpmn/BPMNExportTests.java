@@ -21,13 +21,11 @@ import java.io.File;
 import java.io.FileReader;
 import java.nio.file.Files;
 import java.util.Collections;
-import java.util.List;
 
 import org.bonitasoft.bonita2bpmn.extension.BonitaModelExporterImpl;
 import org.bonitasoft.bonita2bpmn.extension.IBonitaModelExporter;
 import org.bonitasoft.bonita2bpmn.transfo.BonitaToBPMNExporter;
 import org.bonitasoft.bonita2bpmn.transfo.ConnectorTransformationXSLProvider;
-import org.bonitasoft.bpm.model.process.AbstractProcess;
 import org.bonitasoft.bpm.model.process.MainProcess;
 import org.bonitasoft.bpm.model.util.IModelSearch;
 import org.bonitasoft.bpm.model.util.ModelSearch;

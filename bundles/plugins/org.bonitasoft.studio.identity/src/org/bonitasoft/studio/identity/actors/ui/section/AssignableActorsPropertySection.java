@@ -18,6 +18,10 @@ package org.bonitasoft.studio.identity.actors.ui.section;
 
 import javax.inject.Inject;
 
+import org.bonitasoft.bpm.model.process.Actor;
+import org.bonitasoft.bpm.model.process.Assignable;
+import org.bonitasoft.bpm.model.process.Lane;
+import org.bonitasoft.bpm.model.process.ProcessPackage;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.ui.jface.BonitaStudioFontRegistry;
@@ -25,10 +29,6 @@ import org.bonitasoft.studio.common.ui.jface.databinding.converter.BooleanInvers
 import org.bonitasoft.studio.connector.model.definition.migration.ConnectorConfigurationMigratorFactory;
 import org.bonitasoft.studio.connector.model.definition.migration.ConnectorConfigurationToConnectorDefinitionConverter;
 import org.bonitasoft.studio.identity.i18n.Messages;
-import org.bonitasoft.bpm.model.process.Actor;
-import org.bonitasoft.bpm.model.process.Assignable;
-import org.bonitasoft.bpm.model.process.Lane;
-import org.bonitasoft.bpm.model.process.ProcessPackage;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.conversion.Converter;
 import org.eclipse.core.databinding.observable.value.IObservableValue;

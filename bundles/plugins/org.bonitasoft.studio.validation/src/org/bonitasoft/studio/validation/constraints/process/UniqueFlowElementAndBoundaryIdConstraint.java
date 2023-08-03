@@ -17,13 +17,13 @@ package org.bonitasoft.studio.validation.constraints.process;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.bpm.model.process.Activity;
 import org.bonitasoft.bpm.model.process.BoundaryEvent;
 import org.bonitasoft.bpm.model.process.Container;
 import org.bonitasoft.bpm.model.process.Element;
 import org.bonitasoft.bpm.model.process.FlowElement;
 import org.bonitasoft.bpm.model.process.SubProcessEvent;
+import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.validation.constraints.AbstractLiveValidationMarkerConstraint;
 import org.bonitasoft.studio.validation.i18n.Messages;
 import org.eclipse.core.runtime.IStatus;

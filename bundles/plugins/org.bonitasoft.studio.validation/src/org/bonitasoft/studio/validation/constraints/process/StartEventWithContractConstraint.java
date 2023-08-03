@@ -16,7 +16,6 @@ package org.bonitasoft.studio.validation.constraints.process;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
-import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.bpm.model.process.ContractContainer;
 import org.bonitasoft.bpm.model.process.Event;
 import org.bonitasoft.bpm.model.process.StartEvent;
@@ -24,6 +23,7 @@ import org.bonitasoft.bpm.model.process.StartMessageEvent;
 import org.bonitasoft.bpm.model.process.StartSignalEvent;
 import org.bonitasoft.bpm.model.process.StartTimerEvent;
 import org.bonitasoft.bpm.model.process.util.ProcessSwitch;
+import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.validation.constraints.AbstractLiveValidationMarkerConstraint;
 import org.bonitasoft.studio.validation.i18n.Messages;
 import org.eclipse.core.runtime.IStatus;

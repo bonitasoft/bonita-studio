@@ -16,9 +16,9 @@
  */
 package org.bonitasoft.studio.groovy.ui.providers;
 
+import org.bonitasoft.bpm.model.expression.Expression;
 import org.bonitasoft.studio.expression.editor.ExpressionProviderService;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionProvider;
-import org.bonitasoft.bpm.model.expression.Expression;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;

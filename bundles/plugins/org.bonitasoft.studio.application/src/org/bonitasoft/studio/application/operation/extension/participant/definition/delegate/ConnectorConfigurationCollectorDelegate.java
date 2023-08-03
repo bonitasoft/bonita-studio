@@ -19,8 +19,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.bonitasoft.studio.application.operation.extension.participant.definition.ConnectorConfigurationCollector;
 import org.bonitasoft.bpm.model.connectorconfiguration.ConnectorConfiguration;
+import org.bonitasoft.studio.application.operation.extension.participant.definition.ConnectorConfigurationCollector;
 
 public class ConnectorConfigurationCollectorDelegate implements ConnectorConfigurationCollector {
 

@@ -16,6 +16,9 @@ package org.bonitasoft.studio.identity.actors.ui.wizard.page;
 
 import java.util.List;
 
+import org.bonitasoft.bpm.model.actormapping.ActorMapping;
+import org.bonitasoft.bpm.model.actormapping.ActorMappingFactory;
+import org.bonitasoft.bpm.model.actormapping.MembershipType;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
@@ -25,9 +28,6 @@ import org.bonitasoft.studio.identity.organization.model.organization.Organizati
 import org.bonitasoft.studio.identity.organization.model.organization.OrganizationFactory;
 import org.bonitasoft.studio.identity.organization.model.organization.Role;
 import org.bonitasoft.studio.identity.organization.ui.provider.content.GroupContentProvider;
-import org.bonitasoft.bpm.model.actormapping.ActorMapping;
-import org.bonitasoft.bpm.model.actormapping.ActorMappingFactory;
-import org.bonitasoft.bpm.model.actormapping.MembershipType;
 import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;

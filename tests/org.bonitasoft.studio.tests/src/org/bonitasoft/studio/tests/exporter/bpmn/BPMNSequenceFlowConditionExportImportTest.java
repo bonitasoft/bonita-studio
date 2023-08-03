@@ -19,10 +19,6 @@ import static org.junit.Assert.assertNotNull;
 
 import java.io.IOException;
 
-import org.bonitasoft.bpm.model.util.ExpressionConstants;
-import org.bonitasoft.studio.common.emf.tools.ModelHelper;
-import org.bonitasoft.studio.diagram.custom.commands.NewDiagramCommandHandler;
-import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.bpm.model.expression.Expression;
 import org.bonitasoft.bpm.model.expression.ExpressionFactory;
 import org.bonitasoft.bpm.model.process.AbstractProcess;
@@ -30,6 +26,10 @@ import org.bonitasoft.bpm.model.process.MainProcess;
 import org.bonitasoft.bpm.model.process.ProcessPackage;
 import org.bonitasoft.bpm.model.process.SequenceFlow;
 import org.bonitasoft.bpm.model.process.SequenceFlowConditionType;
+import org.bonitasoft.bpm.model.util.ExpressionConstants;
+import org.bonitasoft.studio.common.emf.tools.ModelHelper;
+import org.bonitasoft.studio.diagram.custom.commands.NewDiagramCommandHandler;
+import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.tests.util.InitialProjectRule;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.edit.command.SetCommand;

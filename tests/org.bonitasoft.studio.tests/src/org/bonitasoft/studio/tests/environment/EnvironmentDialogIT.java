@@ -1,5 +1,14 @@
 package org.bonitasoft.studio.tests.environment;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertEquals;
+
+import org.bonitasoft.bpm.model.process.Pool;
+import org.bonitasoft.studio.common.ui.jface.SWTBotConstants;
+import org.bonitasoft.studio.swtbot.framework.application.BotApplicationWorkbenchWindow;
+import org.bonitasoft.studio.swtbot.framework.projectExplorer.EnvironmentsProjectExplorerBot;
+import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
+import org.bonitasoft.studio.tests.util.ProjectUtil;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
@@ -11,16 +20,6 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertEquals;
-
-import org.bonitasoft.studio.common.ui.jface.SWTBotConstants;
-import org.bonitasoft.bpm.model.process.Pool;
-import org.bonitasoft.studio.swtbot.framework.application.BotApplicationWorkbenchWindow;
-import org.bonitasoft.studio.swtbot.framework.projectExplorer.EnvironmentsProjectExplorerBot;
-import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
-import org.bonitasoft.studio.tests.util.ProjectUtil;
 
 @RunWith(SWTBotJunit4ClassRunner.class)
 public class EnvironmentDialogIT {

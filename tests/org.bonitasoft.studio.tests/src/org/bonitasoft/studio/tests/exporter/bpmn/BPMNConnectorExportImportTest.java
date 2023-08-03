@@ -23,7 +23,6 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 
 import org.bonitasoft.bonita2bpmn.extension.BonitaModelExporterImpl;
@@ -34,7 +33,6 @@ import org.bonitasoft.bpm.model.connectorconfiguration.ConnectorConfiguration;
 import org.bonitasoft.bpm.model.connectorconfiguration.ConnectorParameter;
 import org.bonitasoft.bpm.model.expression.Expression;
 import org.bonitasoft.bpm.model.expression.Operation;
-import org.bonitasoft.bpm.model.process.AbstractProcess;
 import org.bonitasoft.bpm.model.process.Connector;
 import org.bonitasoft.bpm.model.process.Element;
 import org.bonitasoft.bpm.model.process.Lane;

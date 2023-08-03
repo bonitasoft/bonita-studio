@@ -19,9 +19,9 @@ package org.bonitasoft.studio.connectors.configuration;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.bonitasoft.studio.common.FragmentTypes;
 import org.bonitasoft.bpm.model.configuration.Configuration;
 import org.bonitasoft.bpm.model.configuration.DefinitionMapping;
+import org.bonitasoft.bpm.model.util.FragmentTypes;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.Viewer;

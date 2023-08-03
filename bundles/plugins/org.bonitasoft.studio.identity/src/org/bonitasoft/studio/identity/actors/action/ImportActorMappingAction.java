@@ -20,15 +20,15 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.configuration.extension.IConfigurationImportAction;
-import org.bonitasoft.studio.identity.i18n.Messages;
 import org.bonitasoft.bpm.model.actormapping.ActorMapping;
 import org.bonitasoft.bpm.model.actormapping.ActorMappingsType;
 import org.bonitasoft.bpm.model.actormapping.DocumentRoot;
 import org.bonitasoft.bpm.model.actormapping.util.ActorMappingResourceFactoryImpl;
 import org.bonitasoft.bpm.model.configuration.Configuration;
 import org.bonitasoft.bpm.model.process.AbstractProcess;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.configuration.extension.IConfigurationImportAction;
+import org.bonitasoft.studio.identity.i18n.Messages;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.emf.common.util.URI;

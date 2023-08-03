@@ -16,10 +16,10 @@
  */
 package org.bonitasoft.studio.configuration.ui.wizard.page;
 
-import org.bonitasoft.studio.common.FragmentTypes;
+import org.bonitasoft.bpm.model.configuration.FragmentContainer;
+import org.bonitasoft.bpm.model.util.FragmentTypes;
 import org.bonitasoft.studio.configuration.ConfigurationPlugin;
 import org.bonitasoft.studio.configuration.i18n.Messages;
-import org.bonitasoft.bpm.model.configuration.FragmentContainer;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.jface.viewers.LabelProvider;

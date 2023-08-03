@@ -17,7 +17,6 @@ package org.bonitasoft.studio.tests.businessobject;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.File;
-import java.nio.charset.Charset;
 import java.nio.file.Files;
 
 import org.bonitasoft.engine.bdm.model.BusinessObjectModel;
@@ -27,7 +26,6 @@ import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelR
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
-import org.bonitasoft.studio.dependencies.repository.DependencyRepositoryStore;
 import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.importer.bos.operation.ImportBosArchiveOperation;
 import org.bonitasoft.studio.tests.util.InitialProjectRule;

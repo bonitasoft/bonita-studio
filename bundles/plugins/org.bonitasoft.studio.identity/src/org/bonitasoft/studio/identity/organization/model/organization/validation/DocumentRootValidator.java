@@ -6,7 +6,6 @@ package org.bonitasoft.studio.identity.organization.model.organization.validatio
 
 import org.bonitasoft.studio.identity.organization.model.organization.Organization;
 import org.eclipse.emf.common.util.EMap;
-
 import org.eclipse.emf.ecore.util.FeatureMap;
 
 /**

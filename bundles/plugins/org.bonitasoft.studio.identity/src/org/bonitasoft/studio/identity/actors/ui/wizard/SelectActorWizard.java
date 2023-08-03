@@ -18,9 +18,9 @@ package org.bonitasoft.studio.identity.actors.ui.wizard;
 
 import java.util.List;
 
-import org.bonitasoft.studio.identity.actors.ui.wizard.page.SelectActorWizardPage;
 import org.bonitasoft.bpm.model.process.AbstractProcess;
 import org.bonitasoft.bpm.model.process.Actor;
+import org.bonitasoft.studio.identity.actors.ui.wizard.page.SelectActorWizardPage;
 import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.jface.wizard.Wizard;
 

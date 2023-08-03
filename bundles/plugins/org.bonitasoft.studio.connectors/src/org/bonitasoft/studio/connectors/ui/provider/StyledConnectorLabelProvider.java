@@ -17,11 +17,11 @@ package org.bonitasoft.studio.connectors.ui.provider;
 import java.util.Objects;
 import java.util.function.Consumer;
 
-import org.bonitasoft.studio.common.repository.model.IDefinitionRepositoryStore;
 import org.bonitasoft.bpm.connector.model.definition.ConnectorDefinition;
-import org.bonitasoft.studio.connectors.i18n.Messages;
 import org.bonitasoft.bpm.model.expression.Expression;
 import org.bonitasoft.bpm.model.process.Connector;
+import org.bonitasoft.studio.common.repository.model.IDefinitionRepositoryStore;
+import org.bonitasoft.studio.connectors.i18n.Messages;
 import org.bonitasoft.studio.ui.ColorConstants;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.resource.JFaceResources;

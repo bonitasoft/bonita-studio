@@ -16,7 +16,6 @@ package org.bonitasoft.studio.tests.util;
 
 import java.lang.reflect.InvocationTargetException;
 
-import org.bonitasoft.studio.common.repository.Messages;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
 import org.eclipse.ui.PlatformUI;

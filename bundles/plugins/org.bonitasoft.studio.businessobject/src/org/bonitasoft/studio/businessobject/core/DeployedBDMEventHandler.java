@@ -16,7 +16,6 @@ import org.bonitasoft.studio.common.event.BdmEvents;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.core.maven.AddDependencyOperation;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.CoreException;
@@ -25,58 +24,55 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.e4.core.services.events.IEventBroker;
-import org.eclipse.m2e.core.ui.internal.UpdateMavenProjectJob;
 import org.osgi.service.event.Event;
 import org.osgi.service.event.EventHandler;
 
 public class DeployedBDMEventHandler implements EventHandler {
 
-    @PostConstruct
-    public void registerHandler(IEventBroker eventBroker) {
-        eventBroker.subscribe(BdmEvents.BDM_DEPLOYED_TOPIC, this);
-    }
+	@PostConstruct
+	public void registerHandler(IEventBroker eventBroker) {
+		eventBroker.subscribe(BdmEvents.BDM_DEPLOYED_TOPIC, this);
+	}
 
-    @Override
-    public void handleEvent(final Event event) {
-        var dependency = event.getProperty(BdmEvents.DEPENDENCY_PROPERTY);
-        if (dependency instanceof Dependency) {
-            var parametrized = parametrized((Dependency) dependency);
-            var addBDMClientDependencyOperation = new AddDependencyOperation(parametrized);
-            try {
-                addBDMClientDependencyOperation.disableAnalyze().run(new NullProgressMonitor());
-               var project = RepositoryManager.getInstance().getCurrentProject();
-                project.ifPresent(p -> {
-                	   new UpdateMavenProjectJob(new IProject[] { p.getAppProject() }, false, false, false, false, true)
-                       		.run(new NullProgressMonitor());
-                    try {
-                        p.getAppProject().build(IncrementalProjectBuilder.INCREMENTAL_BUILD, new NullProgressMonitor());
-                    } catch (CoreException e) {
-                        BonitaStudioLog.error(e);
-                    }
-                });
-            } catch (CoreException e) {
-                BonitaStudioLog.error(e);
-            }
+	@Override
+	public void handleEvent(final Event event) {
+		var dependency = event.getProperty(BdmEvents.DEPENDENCY_PROPERTY);
+		if (dependency instanceof Dependency) {
+			var parametrized = parametrized((Dependency) dependency);
+			var addBDMClientDependencyOperation = new AddDependencyOperation(parametrized);
+			try {
+				addBDMClientDependencyOperation.disableAnalyze().run(new NullProgressMonitor());
+				var project = RepositoryManager.getInstance().getCurrentProject();
+				project.ifPresent(p -> {
+					try {
+						p.getAppProject().build(IncrementalProjectBuilder.INCREMENTAL_BUILD, new NullProgressMonitor());
+					} catch (CoreException e) {
+						BonitaStudioLog.error(e);
+					}
+				});
+			} catch (CoreException e) {
+				BonitaStudioLog.error(e);
+			}
 
-            new WorkspaceJob("Update Project BDM dependency") {
+			new WorkspaceJob("Update Project BDM dependency") {
 
-                @Override
-                public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
-                    // Update bdm model and dao list cache
-                    RepositoryManager.getInstance().getCurrentRepository()
-                            .map(r -> r.getRepositoryStore(BusinessObjectModelRepositoryStore.class))
-                            .ifPresent(BusinessObjectModelRepositoryStore::updateBusinessObjectDao);
-                    return Status.OK_STATUS;
-                }
-            }.schedule();
-        }
-    }
+				@Override
+				public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
+					// Update bdm model and dao list cache
+					RepositoryManager.getInstance().getCurrentRepository()
+							.map(r -> r.getRepositoryStore(BusinessObjectModelRepositoryStore.class))
+							.ifPresent(BusinessObjectModelRepositoryStore::updateBusinessObjectDao);
+					return Status.OK_STATUS;
+				}
+			}.schedule();
+		}
+	}
 
-    private static Dependency parametrized(Dependency modelMavenDependency) {
-        var dep = modelMavenDependency.clone();
-        dep.setGroupId("${project.groupId}");
-        dep.setVersion("${project.version}");
-        return dep;
-    }
+	private static Dependency parametrized(Dependency modelMavenDependency) {
+		var dep = modelMavenDependency.clone();
+		dep.setGroupId("${project.groupId}");
+		dep.setVersion("${project.version}");
+		return dep;
+	}
 
 }

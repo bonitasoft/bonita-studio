@@ -22,10 +22,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.bpm.model.configuration.ConfigurationPackage;
 import org.bonitasoft.bpm.model.configuration.Fragment;
 import org.bonitasoft.bpm.model.configuration.FragmentContainer;
+import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.viewers.IStructuredContentProvider;

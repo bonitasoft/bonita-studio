@@ -17,13 +17,13 @@ package org.bonitasoft.studio.connectors.ui.wizard.page;
 
 import java.io.File;
 
+import org.bonitasoft.bpm.connector.model.implementation.ConnectorImplementation;
+import org.bonitasoft.bpm.model.process.Connector;
 import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.databinding.validator.EmptyInputValidator;
 import org.bonitasoft.studio.common.repository.model.IDefinitionRepositoryStore;
-import org.bonitasoft.bpm.connector.model.implementation.ConnectorImplementation;
 import org.bonitasoft.studio.connectors.ConnectorPlugin;
 import org.bonitasoft.studio.connectors.i18n.Messages;
-import org.bonitasoft.bpm.model.process.Connector;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.beans.PojoProperties;
 import org.eclipse.core.databinding.validation.IValidator;

@@ -17,6 +17,7 @@ package org.bonitasoft.studio.application.actions;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Optional;
 
+import org.bonitasoft.bpm.model.process.MainProcess;
 import org.bonitasoft.studio.common.diagram.Identifier;
 import org.bonitasoft.studio.common.diagram.dialog.OpenNameAndVersionForDiagramDialog;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
@@ -26,7 +27,6 @@ import org.bonitasoft.studio.common.repository.filestore.FileStoreFinder;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
-import org.bonitasoft.bpm.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditor;
 import org.bonitasoft.studio.properties.operation.RenameDiagramOperation;
 import org.eclipse.core.commands.AbstractHandler;

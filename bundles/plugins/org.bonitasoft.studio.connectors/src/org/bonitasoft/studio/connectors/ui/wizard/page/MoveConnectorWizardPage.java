@@ -19,14 +19,14 @@ import static org.bonitasoft.studio.common.databinding.validator.ValidatorFactor
 
 import java.util.Objects;
 
-import org.bonitasoft.engine.bpm.connector.ConnectorEvent;
-import org.bonitasoft.studio.common.databinding.validator.MultiValidator;
-import org.bonitasoft.studio.common.emf.tools.ModelHelper;
-import org.bonitasoft.studio.connectors.i18n.Messages;
 import org.bonitasoft.bpm.model.process.AbstractProcess;
 import org.bonitasoft.bpm.model.process.Activity;
 import org.bonitasoft.bpm.model.process.ConnectableElement;
 import org.bonitasoft.bpm.model.process.Element;
+import org.bonitasoft.engine.bpm.connector.ConnectorEvent;
+import org.bonitasoft.studio.common.databinding.validator.MultiValidator;
+import org.bonitasoft.studio.common.emf.tools.ModelHelper;
+import org.bonitasoft.studio.connectors.i18n.Messages;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory;
 import org.eclipse.core.databinding.beans.typed.PojoProperties;

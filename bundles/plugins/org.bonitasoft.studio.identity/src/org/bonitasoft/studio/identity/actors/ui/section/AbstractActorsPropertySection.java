@@ -24,6 +24,14 @@ import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
+import org.bonitasoft.bpm.connector.model.definition.ConnectorDefinition;
+import org.bonitasoft.bpm.model.process.AbstractProcess;
+import org.bonitasoft.bpm.model.process.Actor;
+import org.bonitasoft.bpm.model.process.ActorFilter;
+import org.bonitasoft.bpm.model.process.Assignable;
+import org.bonitasoft.bpm.model.process.Connector;
+import org.bonitasoft.bpm.model.process.Lane;
+import org.bonitasoft.bpm.model.process.ProcessPackage;
 import org.bonitasoft.studio.common.CommandExecutor;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
@@ -31,7 +39,6 @@ import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.core.ProjectDependenciesStore;
 import org.bonitasoft.studio.common.ui.properties.AbstractBonitaDescriptionSection;
-import org.bonitasoft.bpm.connector.model.definition.ConnectorDefinition;
 import org.bonitasoft.studio.connector.model.definition.migration.ConnectorConfigurationMigrator;
 import org.bonitasoft.studio.connector.model.definition.migration.ConnectorConfigurationMigratorFactory;
 import org.bonitasoft.studio.connector.model.definition.migration.ConnectorConfigurationToConnectorDefinitionConverter;
@@ -42,13 +49,6 @@ import org.bonitasoft.studio.identity.actors.ui.wizard.ActorFilterDefinitionWiza
 import org.bonitasoft.studio.identity.actors.ui.wizard.AddActorWizard;
 import org.bonitasoft.studio.identity.actors.ui.wizard.FilterWizard;
 import org.bonitasoft.studio.identity.i18n.Messages;
-import org.bonitasoft.bpm.model.process.AbstractProcess;
-import org.bonitasoft.bpm.model.process.Actor;
-import org.bonitasoft.bpm.model.process.ActorFilter;
-import org.bonitasoft.bpm.model.process.Assignable;
-import org.bonitasoft.bpm.model.process.Connector;
-import org.bonitasoft.bpm.model.process.Lane;
-import org.bonitasoft.bpm.model.process.ProcessPackage;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.ui.widget.DynamicButtonWidget;
