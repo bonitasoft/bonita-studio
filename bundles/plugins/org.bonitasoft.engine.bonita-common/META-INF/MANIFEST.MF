@@ -3,7 +3,8 @@ Automatic-Module-Name: org.bonitasoft.engine.bonita-common
 Build-Jdk-Spec: 11
 Bundle-ClassPath: 
  .,
- lib/bonita-common.jar
+ lib/bonita-common.jar,
+ lib/bonita-application-model.jar
 Bundle-ManifestVersion: 2
 Bundle-Name: Bonita Common Bundle
 Bundle-RequiredExecutionEnvironment: JavaSE-11
@@ -66,7 +67,6 @@ Export-Package: org.bonitasoft.engine,
  org.bonitasoft.engine.form,
  org.bonitasoft.engine.home,
  org.bonitasoft.engine.identity,
- org.bonitasoft.engine.identity.impl,
  org.bonitasoft.engine.io,
  org.bonitasoft.engine.job,
  org.bonitasoft.engine.job.impl,
@@ -100,4 +100,5 @@ Require-Bundle: com.fasterxml.jackson.core.jackson-annotations,
  org.bonitasoft.engine.bonita-process-definition-model,
  org.bonitasoft.engine.bonita-form-mapping-model;visibility:=reexport,
  org.bonitasoft.engine.bonita-business-object-model;visibility:=reexport,
- org.bonitasoft.engine.bonita-profile-model;visibility:=reexport
+ org.bonitasoft.engine.bonita-profile-model;visibility:=reexport,
+ org.bonitasoft.engine.bonita-organization-model;visibility:=reexport
