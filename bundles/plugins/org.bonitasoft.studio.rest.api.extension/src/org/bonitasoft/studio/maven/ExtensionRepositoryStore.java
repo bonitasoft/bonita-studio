@@ -168,7 +168,7 @@ public class ExtensionRepositoryStore
     @Override
     public void refresh() {
         final IFolder folder = getResource();
-        if (!folder.isSynchronized(IResource.DEPTH_ONE)) {
+        if (folder != null && !folder.isSynchronized(IResource.DEPTH_ONE)) {
             try {
                 folder.refreshLocal(IResource.DEPTH_ONE, AbstractRepository.NULL_PROGRESS_MONITOR);
             } catch (CoreException e) {

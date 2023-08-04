@@ -65,7 +65,8 @@ public class MultiModuleMigrationStep implements MigrationStep {
             }
             Files.createDirectory(app);
             storeFolders().stream()
-                    .filter(not(BonitaProject.BDM_MODULE::equals))
+                    .filter(not(BonitaProject.BDM_MODULE::equals)
+                    		.and(not(BonitaProject.EXTENSIONS_MODULE::equals)))
                     .filter(folderName -> Files.exists(project.resolve(folderName)))
                     .forEach(moveStoreFolders(project, app));
             var migrationNotes = project.resolve(MigrationReportWriter.DEFAULT_REPORT_FILE_NAME);

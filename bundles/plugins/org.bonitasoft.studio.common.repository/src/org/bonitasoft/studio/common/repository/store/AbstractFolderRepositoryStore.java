@@ -36,7 +36,9 @@ public abstract class AbstractFolderRepositoryStore<T extends IRepositoryFileSto
     public T getChild(final String folderName, boolean force) {
         if (folderName != null) {
             final IFolder folder = getResource().getFolder(folderName);
-            refresh(folder);
+            if(force) {
+            	refresh(folder);
+            }
             if (folder.exists()) {
                 return createRepositoryFileStore(folderName);
             }

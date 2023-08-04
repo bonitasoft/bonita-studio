@@ -19,7 +19,10 @@ import static com.google.common.base.Preconditions.checkArgument;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.apache.maven.artifact.DependencyResolutionRequiredException;
 import org.apache.maven.project.MavenProject;
@@ -38,7 +41,6 @@ import org.bonitasoft.studio.common.ModelVersion;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
-import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.configuration.ConfigurationPlugin;
 import org.bonitasoft.studio.configuration.ConfigurationSynchronizer;
@@ -87,12 +89,11 @@ public class BarExporter {
 			var report = reportStore.getReport()
 					.orElseGet(() -> reportStore.analyze(new NullProgressMonitor()).orElseThrow());
 			var mavenProject = getMavenProject(project.getAppProject(), new NullProgressMonitor());
-			var classpath = mavenProject.getCompileClasspathElements();
 			var barBuilder = BarBuilderFactory.create(BuildConfig.builder()
 					.allowEmptyFormMapping(Platform
 							.getBundle("com.bonitasoft.studio.runtime-bundle") != null)
 					.includeParameters(true)
-					.classpathResolver(ClasspathResolver.of(classpath))
+					.classpathResolver(ClasspathResolver.of(buildClasspath(mavenProject)))
 					.dependencyReport(report)
 					.formBuilder(new RestFormBuilder(PageDesignerURLFactory.INSTANCE))
 					.processRegistry(diagramStore)
@@ -112,6 +113,14 @@ public class BarExporter {
 		}
 	}
 	
+	private List<String> buildClasspath(MavenProject mavenProject) throws DependencyResolutionRequiredException {
+		 return Stream
+                 .concat(mavenProject.getCompileClasspathElements().stream(),
+                		 mavenProject.getRuntimeClasspathElements().stream())
+                 .distinct()
+                 .collect(Collectors.toList());
+	}
+
 	private MavenProject getMavenProject(IProject project, IProgressMonitor monitor) throws CoreException {
 		IMavenProjectFacade projectFacade = MavenPlugin.getMavenProjectRegistry().getProject(project);
 		if (projectFacade == null) {

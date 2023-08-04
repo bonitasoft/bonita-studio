@@ -26,7 +26,8 @@ import org.codehaus.plexus.util.xml.Xpp3Dom;
 
 public class ProjectDefaultConfiguration implements DefaultPluginVersions {
 
-    public static final String BONITA_RUNTIME_VERSION = "bonita.runtime.version";
+    private static final String CONFIGURATION_TAG_NAME = "configuration";
+	public static final String BONITA_RUNTIME_VERSION = "bonita.runtime.version";
     private static final String ENCODING_CHARSET = "UTF-8";
     private static final String JAVA_VERSION = "11";
 
@@ -52,7 +53,7 @@ public class ProjectDefaultConfiguration implements DefaultPluginVersions {
 
     public ProjectDefaultConfiguration(String bonitaRuntimeVersion) {
         var installPlugin = new MavenPlugin(APACHE_MAVEN_PLUGIN_GROUP_ID, MAVEN_INSTALL_PLUGIN, MAVEN_INSTALL_PLUGIN_VERSION);
-        installPlugin.setConfiguration(installPluginConfiguration());
+        installPlugin.setConfiguration(skipPluginConfiguration());
         addPlugin(installPlugin);
         addPlugin(new MavenPlugin(APACHE_MAVEN_PLUGIN_GROUP_ID, MAVEN_SOURCE_PLUGIN, MAVEN_SOURCE_PLUGIN_VERSION));
         addPlugin(new MavenPlugin(APACHE_MAVEN_PLUGIN_GROUP_ID, MAVEN_COMPILER_PLUGIN, MAVEN_COMPILER_PLUGIN_VERSION));
@@ -67,18 +68,21 @@ public class ProjectDefaultConfiguration implements DefaultPluginVersions {
         addPlugin(jarPlugin);
         addPlugin(new MavenPlugin(APACHE_MAVEN_PLUGIN_GROUP_ID, MAVEN_RESOURCES_PLUGIN, MAVEN_RESOURCES_PLUGIN_VERSION));
         var deployPlugin = new MavenPlugin(APACHE_MAVEN_PLUGIN_GROUP_ID, MAVEN_DEPLOY_PLUGIN, MAVEN_DEPLOY_PLUGIN_VERSION);
-        deployPlugin.setConfiguration(deployPluginConfiguration());
+        deployPlugin.setConfiguration(skipPluginConfiguration());
         addPlugin(deployPlugin);
         addPlugin(new MavenPlugin(APACHE_MAVEN_PLUGIN_GROUP_ID, MAVEN_SHADE_PLUGIN, MAVEN_SHADE_PLUGIN_VERSION));
         addPlugin(new MavenPlugin(CODEHAUS_PLUGIN_GROUP_ID, FLATTEN_MAVEN_PLUGIN, FLATTEN_MAVEN_PLUGIN_VERSION));
         MavenPlugin bonitProjectPlugin = new MavenPlugin(BONITA_PROJECT_MAVEN_PLUGIN_GROUP_ID, BONITA_PROJECT_MAVEN_PLUGIN_ARTIFACT_ID,
                 BONITA_PROJECT_MAVEN_PLUGIN_DEFAULT_VERSION);
         bonitProjectPlugin.addDependency(bonitaBusinessDataGeneratorDependency());
+        bonitProjectPlugin.addExecution(pluginExecution("process-bonita-artifacts", null, 
+        		List.of("business-archive", "uid-page"), null));
         addPlugin(bonitProjectPlugin);
         MavenPlugin buildHelperPlugin = new MavenPlugin(CODEHAUS_PLUGIN_GROUP_ID, BUILD_HELPER_MAVEN_PLUGIN,
                 BUILD_HELPER_MAVEN_PLUGIN_VERSION);
-        buildHelperPlugin.addExecution(pluginExecution("generate-sources", List.of("add-source"),
+        buildHelperPlugin.addExecution(pluginExecution("add-source-folder", null, List.of("add-source"),
                 createBuilderHelperMavenPluginConfiguration()));
+      
         addPlugin(buildHelperPlugin);
 
         PROVIDED_DEPENDENCIES.stream().forEach(this::addDependency);
@@ -100,23 +104,15 @@ public class ProjectDefaultConfiguration implements DefaultPluginVersions {
     }
 
     private Object jarPluginConfiguration() {
-        Xpp3Dom pluginConfiguration = new Xpp3Dom("configuration");
+        Xpp3Dom pluginConfiguration = new Xpp3Dom(CONFIGURATION_TAG_NAME);
         Xpp3Dom skipIfEmpty = new Xpp3Dom("skipIfEmpty");
         skipIfEmpty.setValue(Boolean.TRUE.toString());
         pluginConfiguration.addChild(skipIfEmpty);
         return pluginConfiguration;
     }
     
-    private Object deployPluginConfiguration() {
-        Xpp3Dom pluginConfiguration = new Xpp3Dom("configuration");
-        Xpp3Dom skipIfEmpty = new Xpp3Dom("skip");
-        skipIfEmpty.setValue(Boolean.TRUE.toString());
-        pluginConfiguration.addChild(skipIfEmpty);
-        return pluginConfiguration;
-    }
-    
-    private Object installPluginConfiguration() {
-        Xpp3Dom pluginConfiguration = new Xpp3Dom("configuration");
+    private Object skipPluginConfiguration() {
+        Xpp3Dom pluginConfiguration = new Xpp3Dom(CONFIGURATION_TAG_NAME);
         Xpp3Dom skipIfEmpty = new Xpp3Dom("skip");
         skipIfEmpty.setValue(Boolean.TRUE.toString());
         pluginConfiguration.addChild(skipIfEmpty);
@@ -160,7 +156,7 @@ public class ProjectDefaultConfiguration implements DefaultPluginVersions {
     }
 
     private Xpp3Dom createBuilderHelperMavenPluginConfiguration() {
-        Xpp3Dom pluginConfiguration = new Xpp3Dom("configuration");
+        Xpp3Dom pluginConfiguration = new Xpp3Dom(CONFIGURATION_TAG_NAME);
         Xpp3Dom sources = new Xpp3Dom("sources");
         Xpp3Dom srcGroovy = new Xpp3Dom("source");
         srcGroovy.setValue("src-groovy");
@@ -168,12 +164,17 @@ public class ProjectDefaultConfiguration implements DefaultPluginVersions {
         pluginConfiguration.addChild(sources);
         return pluginConfiguration;
     }
-
-    private PluginExecution pluginExecution(String phase, List<String> goals, Object configuration) {
+    
+    private PluginExecution pluginExecution(String id, String phase, List<String> goals, Object configuration) {
         PluginExecution execution = new PluginExecution();
-        execution.setPhase(phase);
+        execution.setId(id);
+        if(phase != null) {
+        	execution.setPhase(phase);
+        }
         execution.setGoals(goals);
-        execution.setConfiguration(configuration);
+        if(configuration != null) {
+        	execution.setConfiguration(configuration);
+        }
         return execution;
     }
 
