@@ -167,14 +167,20 @@ public class ProjectMigrationListener implements IResourceChangeListener, IResou
                 repository.close(new NullProgressMonitor());
             }
             RepositoryManager.getInstance().setCurrentRepository(null);
-            BonitaProject.getRelatedProjects(projectRoot.getName()).stream()
-                    .forEach(p -> {
-                        try {
-                            p.delete(false, true, new NullProgressMonitor());
-                        } catch (CoreException e) {
-                            BonitaStudioLog.error(e);
-                        }
-                    });
+            // Close legacy extensions project if any opened
+            for(var p : project.getWorkspace().getRoot().getProjects()) {
+            	if(!project.equals(p) &&  project.getLocation().isPrefixOf(p.getLocation())){
+            	    p.delete(false, true, new NullProgressMonitor());
+            	}
+            }
+         	BonitaProject.getRelatedProjects(projectRoot.getName()).stream()
+            .forEach(p -> {
+                try {
+                    p.delete(false, true, new NullProgressMonitor());
+                } catch (CoreException e) {
+                    BonitaStudioLog.error(e);
+                }
+            });
             var op = new ImportBonitaProjectOperation(projectRoot);
             op.run(new NullProgressMonitor());
             var report = op.getReport();
