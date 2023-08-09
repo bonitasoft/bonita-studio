@@ -94,7 +94,7 @@ public class DeployBDMOperationTest {
         final InOrder inOrder = inOrder(tenantAdminAPI);
         inOrder.verify(tenantAdminAPI).pause();
         inOrder.verify(tenantAdminAPI).uninstallBusinessDataModel();
-        inOrder.verify(tenantAdminAPI).installBusinessDataModel(any());
+        inOrder.verify(tenantAdminAPI).updateBusinessDataModel(any());
         inOrder.verify(tenantAdminAPI).resume();
     }
 
@@ -108,7 +108,7 @@ public class DeployBDMOperationTest {
         inOrder.verify(tenantAdminAPI).pause();
         verify(operationUnderTest).forceH2Drop();
         inOrder.verify(tenantAdminAPI).cleanAndUninstallBusinessDataModel();
-        inOrder.verify(tenantAdminAPI).installBusinessDataModel(any());
+        inOrder.verify(tenantAdminAPI).updateBusinessDataModel(any());
         inOrder.verify(tenantAdminAPI).resume();
     }
 
@@ -122,7 +122,7 @@ public class DeployBDMOperationTest {
         inOrder.verify(tenantAdminAPI).pause();
         inOrder.verify(tenantAdminAPI).uninstallBusinessDataModel();
         inOrder.verify(tenantAdminAPI).resume();
-        verify(tenantAdminAPI, never()).installBusinessDataModel(any(byte[].class));
+        verify(tenantAdminAPI, never()).updateBusinessDataModel(any(byte[].class));
     }
 
 }
