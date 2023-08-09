@@ -161,7 +161,7 @@ public class DeployBDMOperation implements IRunnableWithProgress {
                 // ignore exception
             }
             if (containsBusinessObjects(bom)) {
-                tenantManagementAPI.installBusinessDataModel(fileStore.toByteArray());
+                tenantManagementAPI.updateBusinessDataModel(fileStore.toByteArray());
             }
             tenantManagementAPI.resume();
             updateDeployRequiredProperty();

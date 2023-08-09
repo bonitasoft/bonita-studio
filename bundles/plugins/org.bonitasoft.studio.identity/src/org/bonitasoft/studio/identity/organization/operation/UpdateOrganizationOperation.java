@@ -29,7 +29,7 @@ public class UpdateOrganizationOperation extends PublishOrganizationOperation {
     
     @Override
     protected void importOrganization(IdentityAPI identityAPI) throws IOException, OrganizationImportException {
-        identityAPI.importOrganization(toString(organization), ImportPolicy.MERGE_DUPLICATES);
+        identityAPI.importOrganizationWithWarnings(toString(organization), ImportPolicy.MERGE_DUPLICATES);
     }
 
 }
