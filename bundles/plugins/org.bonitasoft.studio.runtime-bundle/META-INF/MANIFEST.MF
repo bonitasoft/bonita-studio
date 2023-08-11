@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Runtime Bundle Fragment
 Bundle-SymbolicName: org.bonitasoft.studio.runtime-bundle
-Bundle-Version: 9.0.0.qualifier
+Bundle-Version: 9.0.0.W32
 Bundle-Vendor: Bonitasoft S.A.
 Fragment-Host: org.bonitasoft.studio.engine
 Bundle-RequiredExecutionEnvironment: JavaSE-11
