@@ -24,6 +24,7 @@ import org.bonitasoft.studio.common.repository.core.ActiveOrganizationProvider;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
+import org.bonitasoft.studio.common.ui.IDisplayable;
 import org.bonitasoft.studio.common.ui.jface.BonitaErrorDialog;
 import org.bonitasoft.studio.identity.IdentityPlugin;
 import org.bonitasoft.studio.identity.organization.model.organization.Organization;
@@ -95,7 +96,8 @@ public class InstallOrganizationHandler extends AbstractHandler {
 
     protected PublishOrganizationOperation publishOperation(Organization organization) {
         final String activeOrganization = new ActiveOrganizationProvider().getActiveOrganization();
-        return Objects.equals(organization.getName(), activeOrganization) ? new UpdateOrganizationOperation(organization)
+        var name = IDisplayable.toDisplayName(organization).orElse("");
+        return Objects.equals(name, activeOrganization) ? new UpdateOrganizationOperation(organization)
                 : new CleanPublishOrganizationOperation(organization);
     }
 

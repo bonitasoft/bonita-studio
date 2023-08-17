@@ -15,6 +15,8 @@
 package org.bonitasoft.studio.identity.organization.operation;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 import org.bonitasoft.engine.api.IdentityAPI;
 import org.bonitasoft.engine.exception.DeletionException;
@@ -31,7 +33,7 @@ public class CleanPublishOrganizationOperation extends PublishOrganizationOperat
     protected void importOrganization(IdentityAPI identityAPI)
             throws IOException, DeletionException, OrganizationImportException {
         identityAPI.deleteOrganization();
-        identityAPI.importOrganization(toString(organization));
+		identityAPI.importOrganization(Files.readString(Paths.get(organization.eResource().getURI().toFileString())));
     }
 
 }

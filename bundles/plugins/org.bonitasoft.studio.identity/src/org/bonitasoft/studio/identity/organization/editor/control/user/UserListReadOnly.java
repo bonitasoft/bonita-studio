@@ -14,27 +14,61 @@
  */
 package org.bonitasoft.studio.identity.organization.editor.control.user;
 
+import static org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory.neverUpdateValueStrategy;
+import static org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory.updateValueStrategy;
+
+import java.util.Objects;
+
+import org.bonitasoft.studio.identity.i18n.Messages;
 import org.bonitasoft.studio.identity.organization.editor.formpage.AbstractOrganizationFormPage;
+import org.bonitasoft.studio.identity.organization.model.organization.User;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
+import org.bonitasoft.studio.ui.notification.BonitaNotificator;
 import org.bonitasoft.studio.ui.widget.DynamicButtonWidget;
 import org.eclipse.core.databinding.DataBindingContext;
+import org.eclipse.core.databinding.conversion.IConverter;
+import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.jface.layout.LayoutConstants;
 import org.eclipse.swt.widgets.Composite;
 
 public class UserListReadOnly extends UserList {
 
     public UserListReadOnly(Composite parent, AbstractOrganizationFormPage formPage, DataBindingContext ctx) {
         super(parent, formPage, ctx);
-
-        var buttonWidget = new DynamicButtonWidget.Builder()
+        
+        var buttonContainer = formPage.getToolkit().createComposite(section);
+        buttonContainer.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).spacing(2, LayoutConstants.getSpacing().y).create());
+        new DynamicButtonWidget.Builder()
                 .withImage(Pics.getImage(PicsConstants.edit_simple))
                 .withHotImage(Pics.getImage(PicsConstants.edit_simple_hot))
                 .withToolkit(formPage.getToolkit())
                 .onClick(e -> formPage.getEditor().setActivePage("users"))
-                .createIn(section);
+                .createIn(buttonContainer);
+        var setDefaultButton = new DynamicButtonWidget.Builder()
+                .withImage(Pics.getImage(PicsConstants.organization_user))
+                .withTooltipText("Set as default")
+                .withToolkit(formPage.getToolkit())
+                .onClick(e -> updateDefaultUserPreference(selectionObservable.getValue().getUserName()))
+                .createIn(buttonContainer);
+        
+        ctx.bindValue(selectionObservable, 
+        		setDefaultButton.observeEnable(), 
+        		updateValueStrategy().withConverter(IConverter.<User,Boolean>create(user -> user != null && !formPage.isDefaultUser(user))).create(), 
+        		neverUpdateValueStrategy().create());
 
-        section.setTextClient(buttonWidget.getContainer());
+        section.setTextClient(buttonContainer);
     }
+    
+	private void updateDefaultUserPreference(String newName) {
+		if (!Objects.equals(newName, activeOrganizationProvider.getDefaultUser())) {
+			activeOrganizationProvider.saveDefaultUser(newName);
+			BonitaNotificator.openInfoNotification(Messages.defaultUserUpdatedTitle,
+					String.format(Messages.defaultUserUpdated, newName));
+			refreshUserList();
+		}
+	}
+
 
     @Override
     protected void createToolbar(Composite parent) {

@@ -17,9 +17,7 @@ package org.bonitasoft.studio.identity.organization.operation;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.bonitasoft.engine.api.IdentityAPI;
 import org.bonitasoft.engine.api.ProcessAPI;
@@ -44,21 +42,11 @@ import org.bonitasoft.studio.common.repository.core.ActiveOrganizationProvider;
 import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.identity.IdentityPlugin;
 import org.bonitasoft.studio.identity.i18n.Messages;
-import org.bonitasoft.studio.identity.organization.model.organization.DocumentRoot;
 import org.bonitasoft.studio.identity.organization.model.organization.Organization;
-import org.bonitasoft.studio.identity.organization.model.organization.OrganizationFactory;
-import org.bonitasoft.studio.identity.organization.model.organization.util.OrganizationXMLProcessor;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.emf.ecore.xmi.XMLResource;
-import org.eclipse.emf.ecore.xmi.impl.XMLResourceImpl;
-import org.eclipse.emf.ecore.xmi.util.XMLProcessor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 
-/**
- * @author Romain Bioteau
- */
 public abstract class PublishOrganizationOperation implements IRunnableWithProgress {
 
     protected final Organization organization;
@@ -82,10 +70,14 @@ public abstract class PublishOrganizationOperation implements IRunnableWithProgr
     public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
         Assert.isNotNull(organization);
 
-        monitor.beginTask(String.format(Messages.deployingOrganization, organization.getName()), IProgressMonitor.UNKNOWN);
+        var organizationName = organization.eResource() != null ?  organization.eResource().getURI().lastSegment() : "";
+        if(organizationName != null && organizationName.endsWith(".xml")) {
+        	organizationName = organizationName.substring(0, organizationName.length() - 4);
+        }
+        monitor.beginTask(String.format(Messages.deployingOrganization, organizationName), IProgressMonitor.UNKNOWN);
 
         var flushSession = false;
-        BonitaStudioLog.info("Loading organization " + organization.getName() + " in portal...", IdentityPlugin.PLUGIN_ID);
+        BonitaStudioLog.info("Importing " + organizationName + " organization in runtime...", IdentityPlugin.PLUGIN_ID);
         try {
             if (session == null) {
                 session = BOSEngineManager.getInstance().loginDefaultTenant(AbstractRepository.NULL_PROGRESS_MONITOR);
@@ -100,7 +92,7 @@ public abstract class PublishOrganizationOperation implements IRunnableWithProgr
                 processApi.deleteArchivedProcessInstances(info.getProcessId(), 0, Integer.MAX_VALUE);
             }
             importOrganization(identityAPI);
-            new ActiveOrganizationProvider().saveActiveOrganization(organization.getName());
+            new ActiveOrganizationProvider().saveActiveOrganization(organizationName);
             if (shouldApplyAllProfileToUsers()) {
                 applyAllProfileToUsers(identityAPI, BOSEngineManager.getInstance().getProfileAPI(session));
             }
@@ -130,28 +122,6 @@ public abstract class PublishOrganizationOperation implements IRunnableWithProgr
 
     protected abstract void importOrganization(IdentityAPI identityAPI)
             throws IOException, DeletionException, OrganizationImportException;
-
-    protected String toString(final Organization organization) throws IOException {
-        final XMLResource resource = createResourceFromOrganization(organization);
-        final XMLProcessor processor = new OrganizationXMLProcessor();
-        final Map<String, Object> options = new HashMap<>();
-        options.put(XMLResource.OPTION_ENCODING, "UTF-8");
-        options.put(XMLResource.OPTION_XML_VERSION, "1.0");
-        options.put(XMLResource.OPTION_KEEP_DEFAULT_CONTENT, Boolean.TRUE);
-        return processor.saveToString(resource, options);
-    }
-
-    private XMLResource createResourceFromOrganization(final Organization organization) {
-        final DocumentRoot root = OrganizationFactory.eINSTANCE.createDocumentRoot();
-        final Organization exportedCopy = EcoreUtil.copy(organization);
-        exportedCopy.setName(null);
-        exportedCopy.setDescription(null);
-        root.setOrganization(exportedCopy);
-        final XMLResource resource = new XMLResourceImpl();
-        resource.setEncoding("UTF-8");
-        resource.getContents().add(root);
-        return resource;
-    }
 
     protected void applyAllProfileToUsers(final IdentityAPI identityAPI, final ProfileAPI profileAPI)
             throws SearchException {

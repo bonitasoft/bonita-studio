@@ -22,7 +22,7 @@ public abstract class AbstractEditorContribution
     protected IEditorInput input;
     protected RepositoryAccessor repositoryAccessor;
 
-    public AbstractEditorContribution() {
+    protected AbstractEditorContribution() {
         this.repositoryAccessor = repositoryAccessor();
         this.input = initEditorInput();
     }

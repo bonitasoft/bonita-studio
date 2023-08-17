@@ -32,20 +32,42 @@ import org.bonitasoft.studio.configuration.ui.dialog.DetailsEnvironmentDialog;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.ui.editors.DirtyEditorChecker;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.eclipse.emf.edit.command.SetCommand;
+import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbenchPart;
 
 public class EnvironmentFileStore extends EMFFileStore<Environment> {
+	
+	private static final String ENVIRONMENT_CONTENT_TYPE = "Environment";
 
     public EnvironmentFileStore(String fileName, IRepositoryStore<EnvironmentFileStore> store) {
         super(fileName, store);
+    }
+    
+    @Override
+    protected Resource doCreateEMFResource() {
+        final URI uri = getResourceURI();
+        try {
+            final EditingDomain editingDomain = getParentStore().getEditingDomain(uri);
+            final ResourceSet resourceSet = editingDomain.getResourceSet();
+            var emfResource = resourceSet.createResource(uri, ENVIRONMENT_CONTENT_TYPE);
+            if (getResource().exists()) {
+            	emfResource.load(Map.of());
+            } 
+            return emfResource;
+        } catch (final Exception e) {
+            BonitaStudioLog.error(e);
+        }
+        return null;
     }
 
     @Override

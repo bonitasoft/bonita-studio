@@ -94,12 +94,11 @@ public class RepositoryFileStoreDisplayable implements IDisplayable {
                     }
                 }
             } else if (store instanceof OrganizationFileStore) {
-                try {
-                    return ((OrganizationFileStore) store).getContent().getName();
-                } catch (ReadFileStoreException e) {
-                    BonitaStudioLog.warning(e.getMessage(), getClass());
-                    return store.getName();
-                }
+                   String name = ((OrganizationFileStore) store).getResource().getName();
+                   if(name.endsWith(".xml")) {
+                	   name = name.substring(0, name.length() -4);
+                   }
+				return name;
             } else
                 try {
                     return ((EMFFileStore) store).getLabelProvider().getText(store.getContent());

@@ -9,13 +9,6 @@
       </package>
    </extension>
    <extension
-         point="org.eclipse.emf.ecore.extension_parser">
-      <parser
-            type="organization"
-            class="org.bonitasoft.studio.identity.organization.model.organization.util.OrganizationResourceFactoryImpl">
-      </parser>
-   </extension>
-   <extension
          point="org.eclipse.ui.menus">
       <menuContribution
             allPopups="false"
@@ -321,7 +314,8 @@
       <content-type
             base-type="org.eclipse.core.runtime.xml"
             default-charset="UTF-8"
-            file-extensions="organization"
+            describer="org.bonitasoft.studio.identity.organization.editor.OrganizationContentDescriber"
+            file-extensions="xml"
             id="org.bonitasoft.studio.identity.organization.contentType"
             name="Organization"
             priority="normal">
@@ -345,6 +339,13 @@
       <dashboardContribution
             class="org.bonitasoft.studio.identity.organization.overview.OrganizationOverviewContribution">
       </dashboardContribution>
+   </extension>
+   <extension
+         point="org.eclipse.emf.ecore.content_parser">
+      <parser
+            class="org.bonitasoft.studio.identity.organization.model.organization.util.OrganizationResourceFactoryImpl"
+            contentTypeIdentifier="Organization">
+      </parser>
    </extension>
 
 </plugin>

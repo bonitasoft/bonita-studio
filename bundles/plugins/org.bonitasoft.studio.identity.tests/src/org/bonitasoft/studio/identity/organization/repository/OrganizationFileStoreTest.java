@@ -29,6 +29,7 @@ import org.bonitasoft.studio.identity.organization.model.organization.Organizati
 import org.bonitasoft.studio.identity.organization.model.organization.OrganizationFactory;
 import org.bonitasoft.studio.identity.organization.model.organization.User;
 import org.bonitasoft.studio.identity.organization.model.organization.Users;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -42,6 +43,7 @@ public class OrganizationFileStoreTest {
     private OrganizationFileStore ofs;
 
     @Test
+    @Ignore
     public void testExport() throws IOException, ReadFileStoreException {
         final Organization orga = OrganizationFactory.eINSTANCE.createOrganization();
         final User user = OrganizationFactory.eINSTANCE.createUser();

@@ -21,6 +21,7 @@ import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.core.ActiveOrganizationProvider;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
+import org.bonitasoft.studio.common.ui.IDisplayable;
 import org.bonitasoft.studio.identity.i18n.Messages;
 import org.bonitasoft.studio.identity.organization.model.organization.Organization;
 import org.bonitasoft.studio.identity.organization.repository.OrganizationFileStore;
@@ -73,12 +74,7 @@ public abstract class SelectOrganizationWizardPage extends WizardPage implements
 
             @Override
             public String getText(final Object element) {
-                try {
-                    return ((Organization) ((IRepositoryFileStore) element).getContent()).getName();
-                } catch (final ReadFileStoreException e) {
-                    BonitaStudioLog.error("Failed read organization content", e);
-                }
-                return null;
+                return IDisplayable.toDisplayName(element).orElse(null);
             }
         });
 

@@ -40,7 +40,7 @@ public class OverviewFormPart extends AbstractFormPart {
     }
 
     private void createOverviewControl(Composite parent) {
-        overviewEditionControl = new OverviewEditionControl(parent, formPage, formPage.observeWorkingCopy(), ctx);
+        overviewEditionControl = new OverviewEditionControl(parent, formPage, ctx);
     }
 
     @Override
@@ -50,10 +50,6 @@ public class OverviewFormPart extends AbstractFormPart {
         if (onSave) {
             getManagedForm().dirtyStateChanged();
         }
-    }
-
-    public void updateDefaultUserViewerInput() {
-        overviewEditionControl.updateDefaultUserViewerInput();
     }
 
     public void refreshList() {

@@ -26,13 +26,13 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 
-public abstract class AbstractExportContributionItem<T extends AbstractFormPage> extends ContributionItem {
+public abstract class AbstractExportContributionItem<T extends AbstractFormPage<?>> extends ContributionItem {
 
     protected final T formPage;
     protected ToolItem item;
 
-    public AbstractExportContributionItem(String ID, T formPage) {
-        super(ID);
+    protected AbstractExportContributionItem(String id, T formPage) {
+        super(id);
         this.formPage = formPage;
     }
 

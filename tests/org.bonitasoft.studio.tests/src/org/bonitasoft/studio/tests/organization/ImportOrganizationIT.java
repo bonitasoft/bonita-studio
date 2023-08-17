@@ -26,7 +26,6 @@ import java.net.URL;
 import java.util.ArrayList;
 
 import org.bonitasoft.studio.common.repository.RepositoryManager;
-import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.identity.organization.model.organization.Membership;
 import org.bonitasoft.studio.identity.organization.model.organization.Organization;
 import org.bonitasoft.studio.identity.organization.model.organization.User;
@@ -37,11 +36,8 @@ import org.eclipse.core.runtime.FileLocator;
 import org.junit.Rule;
 import org.junit.Test;
 
-/**
- * @author Aur�lie Zara
- */
 
-public class TestImportOrganization {
+public class ImportOrganizationIT {
 
     @Rule
     public InitialProjectRule projectRule = InitialProjectRule.INSTANCE;
@@ -67,8 +63,8 @@ public class TestImportOrganization {
         final User user2 = organizationTest.getUsers().getUser().get(1);
         assertEquals("user1 firstname is not imported correctly", user1.getFirstName(), "Aurore");
         assertEquals("user1 lastname is not imported correctly", user1.getLastName(), "Richard");
-        final ArrayList<Membership> userms = new ArrayList<Membership>();
-        final ArrayList<Membership> userms2 = new ArrayList<Membership>();
+        final ArrayList<Membership> userms = new ArrayList<>();
+        final ArrayList<Membership> userms2 = new ArrayList<>();
         for (final Membership ms : organizationTest.getMemberships().getMembership()) {
             if (ms.getUserName().equals(user1.getUserName())) {
                 userms.add(ms);
@@ -108,7 +104,7 @@ public class TestImportOrganization {
         assertTrue("organization to import does not exist", toImport.exists());
         try (FileInputStream fis = new FileInputStream(toImport)) {
             String id = toImport.getName();
-            final IRepositoryFileStore fStore = organizationStore.importInputStream(id, fis);
+            var fStore = organizationStore.importInputStream(id, fis);
             assertNull(id + " was imported", fStore);
         }
     }
@@ -121,13 +117,13 @@ public class TestImportOrganization {
         assertTrue("organization to import does not exist", toImport.exists());
         try (FileInputStream fis = new FileInputStream(toImport)) {
             String id = toImport.getName();
-            final IRepositoryFileStore fStore = organizationStore.importInputStream(id, fis);
+            var fStore = organizationStore.importInputStream(id, fis);
             assertNotNull(id + " was imported", fStore);
         }
     }
 
     private File getFileToImport(String organizationName) throws IOException {
-        final URL archiveURL = TestImportOrganization.class.getResource(organizationName);
+        final URL archiveURL = ImportOrganizationIT.class.getResource(organizationName);
         assertNotNull("filePath should not be null", archiveURL.getPath());
         return new File(FileLocator.toFileURL(archiveURL).getFile());
     }

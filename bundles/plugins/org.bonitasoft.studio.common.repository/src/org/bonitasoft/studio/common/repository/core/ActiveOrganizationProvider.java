@@ -42,7 +42,7 @@ public class ActiveOrganizationProvider {
     }
 
     public String getActiveOrganizationFileName() {
-        return String.format("%s.organization", getActiveOrganization());
+        return String.format("%s.xml", getActiveOrganization());
     }
 
     public String getDefaultUser() {

@@ -16,7 +16,6 @@ package org.bonitasoft.studio.identity.organization.editor.formpage.group;
 
 import org.bonitasoft.studio.identity.organization.editor.OrganizationEditor;
 import org.bonitasoft.studio.identity.organization.editor.formpage.AbstractOrganizationFormPage;
-import org.bonitasoft.studio.identity.organization.model.organization.util.OrganizationXMLProcessor;
 import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.jface.text.DocumentEvent;
 import org.eclipse.ui.forms.AbstractFormPart;
@@ -24,7 +23,6 @@ import org.eclipse.ui.forms.AbstractFormPart;
 public class GroupFormPage extends AbstractOrganizationFormPage {
 
     private GroupFormPart groupFormPart;
-    private OrganizationXMLProcessor xmlProcessor;
 
     public GroupFormPage(String id, String title, IEclipseContext context, OrganizationEditor editor) {
         super(id, title, context, editor);

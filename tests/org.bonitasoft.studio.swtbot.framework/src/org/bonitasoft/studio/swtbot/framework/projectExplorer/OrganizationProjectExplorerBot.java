@@ -30,7 +30,7 @@ import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
 
 public class OrganizationProjectExplorerBot extends ProjectExplorerBot {
 
-    private static final String ORGA_EXT = ".organization";
+    private static final String ORGA_EXT = "." + OrganizationRepositoryStore.ORGANIZATION_EXT;
     private ActiveOrganizationProvider activeOrganizationProvider;
 
     public OrganizationProjectExplorerBot(SWTGefBot bot) {

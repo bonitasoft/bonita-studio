@@ -43,11 +43,11 @@ import org.junit.runner.RunWith;
 public class ProjectExplorerOrganizationIT {
 
     private SWTGefBot bot = new SWTGefBot();
-    private RepositoryAccessor repositoryAccessor;
-    private Optional<String> ext = Optional.of("." + OrganizationRepositoryStore.ORGANIZATION_EXT);
-
     @Rule
     public SWTGefBotRule botRule = new SWTGefBotRule(bot);
+    
+    private RepositoryAccessor repositoryAccessor;
+    private Optional<String> ext = Optional.of("." + OrganizationRepositoryStore.ORGANIZATION_EXT);
 
     @Before
     public void init() throws Exception {
@@ -108,9 +108,8 @@ public class ProjectExplorerOrganizationIT {
         Function<OrganizationFileStore, String> toDisplayName = s -> IDisplayable.toDisplayName(s).orElse("");
         List<String> existingOrgaNameList = repositoryAccessor.getRepositoryStore(OrganizationRepositoryStore.class)
                 .getChildren().stream().map(toDisplayName).collect(Collectors.toList());
-        String newName = StringIncrementer.getNextIncrement(Messages.defaultOrganizationName,
+        return StringIncrementer.getNextIncrement(Messages.defaultOrganizationName,
                 existingOrgaNameList);
-        return newName;
     }
 
 }

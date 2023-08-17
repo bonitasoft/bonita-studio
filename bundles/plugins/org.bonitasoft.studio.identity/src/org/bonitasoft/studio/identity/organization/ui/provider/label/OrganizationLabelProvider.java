@@ -18,7 +18,6 @@ import org.bonitasoft.studio.common.repository.core.ActiveOrganizationProvider;
 import org.bonitasoft.studio.common.ui.IDisplayable;
 import org.bonitasoft.studio.common.ui.jface.BonitaStudioFontRegistry;
 import org.bonitasoft.studio.identity.i18n.Messages;
-import org.bonitasoft.studio.identity.organization.model.organization.Organization;
 import org.eclipse.core.runtime.Adapters;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.StyledCellLabelProvider;
@@ -52,8 +51,6 @@ public class OrganizationLabelProvider extends StyledCellLabelProvider implement
         IDisplayable display = Adapters.adapt(element, IDisplayable.class);
         if (display != null) {
             return display.getDisplayName();
-        } else if (element instanceof Organization) {
-            return ((Organization) element).getName();
         }
         return null;
     }

@@ -59,13 +59,6 @@
             class="org.bonitasoft.studio.configuration.environment.EnvironmentPackage">
       </package>
    </extension>
-   <extension
-         point="org.eclipse.emf.ecore.extension_parser">
-      <parser
-            type="xml"
-            class="org.bonitasoft.studio.configuration.environment.util.EnvironmentResourceFactoryImpl">
-      </parser>
-   </extension>
     <extension
          point="org.eclipse.emf.edapt.migrators">
       <migrator
@@ -171,5 +164,24 @@
             properties="isEnvironmentFolder"
             type="org.eclipse.core.runtime.IAdaptable">
       </propertyTester>
+   </extension>
+   <extension
+         point="org.eclipse.core.contenttype.contentTypes">
+      <content-type
+            base-type="org.eclipse.core.runtime.xml"
+            default-charset="UTF-8"
+            describer="org.bonitasoft.studio.configuration.environment.util.EnvironmentContentDescriber"
+            file-extensions="xml"
+            id="org.bonitasoft.studio.configuration.environment.contentType"
+            name="Environment"
+            priority="normal">
+      </content-type>
+   </extension>
+   <extension
+         point="org.eclipse.emf.ecore.content_parser">
+      <parser
+            class="org.bonitasoft.studio.configuration.environment.util.EnvironmentResourceFactoryImpl"
+            contentTypeIdentifier="Environment">
+      </parser>
    </extension>
 </plugin>

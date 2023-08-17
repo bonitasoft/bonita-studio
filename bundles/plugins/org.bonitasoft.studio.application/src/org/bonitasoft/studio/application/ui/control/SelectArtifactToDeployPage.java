@@ -41,6 +41,7 @@ import org.bonitasoft.studio.common.repository.core.ActiveOrganizationProvider;
 import org.bonitasoft.studio.common.repository.ui.viewer.CheckboxRepositoryTreeViewer;
 import org.bonitasoft.studio.common.repository.ui.viewer.FileStoreObservableFactory;
 import org.bonitasoft.studio.common.repository.ui.viewer.FileStoreTreeStructureAdvisor;
+import org.bonitasoft.studio.common.ui.IDisplayable;
 import org.bonitasoft.studio.configuration.ConfigurationPlugin;
 import org.bonitasoft.studio.configuration.extension.IEnvironmentProvider;
 import org.bonitasoft.studio.configuration.preferences.ConfigurationPreferenceConstants;
@@ -621,7 +622,7 @@ public class SelectArtifactToDeployPage implements ControlSupplier {
             if (proposals != null && proposals.length > 0) {
                 ActiveOrganizationProvider activeOrganizationProvider = new ActiveOrganizationProvider();
                 if (Objects.equals(activeOrganizationProvider.getActiveOrganization(),
-                        selectedOrganization.getName())) {
+                		IDisplayable.toDisplayName(selectedOrganization).orElse(null))) {
                     usernameObservable.setValue(activeOrganizationProvider.getDefaultUser());
                 } else {
                     usernameObservable.setValue(proposals[0]);
