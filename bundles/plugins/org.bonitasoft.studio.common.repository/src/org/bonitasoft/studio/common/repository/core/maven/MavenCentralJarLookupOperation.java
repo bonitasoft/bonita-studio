@@ -113,7 +113,7 @@ public class MavenCentralJarLookupOperation implements IRunnableWithProgress {
                     if (status == DependencyLookup.Status.FOUND) {
                         var fileName = file.getName();
                         var document = searchResponse.getResponse().getDocs().get(0);
-                        var gav = new GAV(document.getG(), document.getA(), document.getV(), null, document.getP(), Artifact.SCOPE_COMPILE);
+                        var gav = new GAV(document.getG(), document.getA(), document.getV(), null, Objects.equals(document.getP(), "bundle") ? "jar" : document.getP(), Artifact.SCOPE_COMPILE);
                         for(var doc : searchResponse.getResponse().getDocs()) {
                             String classifier = findMatchingClassifier(fileName, doc);
                             if(classifier != null) {
