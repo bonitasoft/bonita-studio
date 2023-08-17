@@ -41,7 +41,6 @@ import org.bonitasoft.studio.identity.organization.model.organization.DocumentRo
 import org.bonitasoft.studio.identity.organization.model.organization.Organization;
 import org.bonitasoft.studio.identity.organization.model.organization.OrganizationFactory;
 import org.bonitasoft.studio.identity.organization.model.organization.User;
-import org.bonitasoft.studio.identity.organization.model.organization.util.OrganizationXMLProcessor;
 import org.bonitasoft.studio.identity.organization.operation.CleanPublishOrganizationOperation;
 import org.bonitasoft.studio.identity.organization.operation.PublishOrganizationOperation;
 import org.bonitasoft.studio.identity.organization.operation.UpdateOrganizationOperation;
@@ -57,10 +56,9 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.emf.ecore.xmi.XMLResource;
-import org.eclipse.emf.ecore.xmi.impl.XMLResourceImpl;
-import org.eclipse.emf.ecore.xmi.util.XMLProcessor;
+import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.swt.widgets.Display;
@@ -72,26 +70,44 @@ import org.eclipse.ui.ide.IDE;
 
 import com.google.common.io.Files;
 
-/**
- * @author Romain Bioteau
- */
 public class OrganizationFileStore extends EMFFileStore<Organization>
         implements IDeployable, IRenamable, ITenantResource {
 
-    private static final String DEPLOY_ORGA_CMD = "org.bonitasoft.studio.organization.publish";
-    public static final String ORGANIZATION_EXT = ".organization";
+    private static final String ORGANIZATION_CONTENT_TYPE = "Organization";
+	private static final String DEPLOY_ORGA_CMD = "org.bonitasoft.studio.organization.publish";
+    public static final String ORGANIZATION_EXT = ".xml";
     private ActiveOrganizationProvider activeOrganizationProvider;
 
     public OrganizationFileStore(final String fileName, final OrganizationRepositoryStore store) {
         super(fileName, store);
         activeOrganizationProvider = new ActiveOrganizationProvider();
     }
-
+    
     @Override
     protected Organization doGetContent() throws ReadFileStoreException {
         Object root = super.doGetContent();
         if (root instanceof DocumentRoot) {
             return ((DocumentRoot) root).getOrganization();
+        }
+        if (root instanceof Organization) {
+            return (Organization) root;
+        }
+        return null;
+    }
+    
+    @Override
+    protected Resource doCreateEMFResource() {
+        final URI uri = getResourceURI();
+        try {
+            final EditingDomain editingDomain = getParentStore().getEditingDomain(uri);
+            final ResourceSet resourceSet = editingDomain.getResourceSet();
+            var emfResource = resourceSet.createResource(uri, ORGANIZATION_CONTENT_TYPE);
+            if (getResource().exists()) {
+                emfResource.load(Map.of());
+            }
+            return emfResource;
+        } catch (final Exception e) {
+            BonitaStudioLog.error(e);
         }
         return null;
     }
@@ -116,15 +132,11 @@ public class OrganizationFileStore extends EMFFileStore<Organization>
                 organization.setMemberships(OrganizationFactory.eINSTANCE.createMemberships());
             }
             root.setOrganization(organization);
+            organization.setName(null);
+            organization.setDescription(null);
             emfResource.getContents().add(root);
             try {
-                final Map<Object, Object> options = new HashMap<>();
-                options.put(XMLResource.OPTION_ENCODING, "UTF-8");
-                options.put(XMLResource.OPTION_XML_VERSION, "1.0");
-                if (emfResource instanceof XMLResourceImpl) {
-                    options.putAll(((XMLResourceImpl) emfResource).getDefaultSaveOptions());
-                }
-                emfResource.save(options);
+                emfResource.save(Map.of());
             } catch (final IOException e) {
                 BonitaStudioLog.error(e);
             }
@@ -134,17 +146,6 @@ public class OrganizationFileStore extends EMFFileStore<Organization>
     @Override
     public IStatus export(String targetAbsoluteFilePath) throws IOException {
         checkWritePermission(new File(targetAbsoluteFilePath));
-        Organization organization;
-        try {
-            organization = getContent();
-        } catch (ReadFileStoreException e) {
-            return new Status(IStatus.ERROR, IdentityPlugin.PLUGIN_ID, e.getMessage());
-        }
-        DocumentRoot root = OrganizationFactory.eINSTANCE.createDocumentRoot();
-        Organization exportedCopy = EcoreUtil.copy(organization);
-        exportedCopy.setName(null);
-        exportedCopy.setDescription(null);
-        root.setOrganization(exportedCopy);
         File to = new File(targetAbsoluteFilePath);
         if (targetAbsoluteFilePath.endsWith(".xml")) {
             to.getParentFile().mkdirs();
@@ -153,8 +154,7 @@ public class OrganizationFileStore extends EMFFileStore<Organization>
         }
         File target = null;
         if (to.isDirectory()) {
-            String targetFilename = organization.getName() + ".xml";
-            target = new File(to, targetFilename);
+            target = new File(to, getResource().getName());
         } else {
             target = to;
         }
@@ -165,14 +165,7 @@ public class OrganizationFileStore extends EMFFileStore<Organization>
                 return ValidationStatus.cancel("");
             }
         }
-        Resource resource = new XMLResourceImpl(URI.createFileURI(target.getAbsolutePath()));
-        resource.getContents().add(root);
-        Map<String, Object> options = new HashMap<>();
-        options.put(XMLResource.OPTION_ENCODING, "UTF-8");
-        options.put(XMLResource.OPTION_XML_VERSION, "1.0");
-        options.put(XMLResource.OPTION_KEEP_DEFAULT_CONTENT, Boolean.TRUE);
-        XMLProcessor processor = new OrganizationXMLProcessor();
-        Files.write(processor.saveToString(resource, options).getBytes("UTF-8"), target);
+        Files.copy(getResource().getLocation().toFile(), target);
         return ValidationStatus.ok();
     }
 
@@ -215,20 +208,11 @@ public class OrganizationFileStore extends EMFFileStore<Organization>
 
     @Override
     public void rename(String newName) {
-        Organization organization;
-        try {
-            organization = getContent();
-        } catch (ReadFileStoreException e) {
-            BonitaStudioLog.warning(e.getMessage(), IdentityPlugin.PLUGIN_ID);
-            return;
-        }
-        String oldName = organization.getName();
+    	var oldName = IDisplayable.toDisplayName(this).orElse(null);
         String newNameWithoutExtension = stripExtension(newName, ORGANIZATION_EXT);
-        organization.setName(newNameWithoutExtension);
         if (Objects.equals(activeOrganizationProvider.getActiveOrganization(), oldName)) {
             activeOrganizationProvider.saveActiveOrganization(newNameWithoutExtension);
         }
-        doSave(organization);
         renameLegacy(newName);
     }
 
@@ -255,7 +239,7 @@ public class OrganizationFileStore extends EMFFileStore<Organization>
             BonitaStudioLog.warning(e.getMessage(), IdentityPlugin.PLUGIN_ID);
         }
         return organization != null
-                && Objects.equals(activeOrganizationProvider.getActiveOrganization(), organization.getName());
+                && Objects.equals(activeOrganizationProvider.getActiveOrganization(), IDisplayable.toDisplayName(this).orElse(null));
     }
 
     @Override
@@ -267,7 +251,8 @@ public class OrganizationFileStore extends EMFFileStore<Organization>
         } catch (ReadFileStoreException e1) {
             return new Status(IStatus.ERROR, IdentityPlugin.PLUGIN_ID, e1.getMessage());
         }
-        PublishOrganizationOperation operation = Objects.equals(organization.getName(), activeOrganization)
+        String name = IDisplayable.toDisplayName(organization).orElse(null);
+		PublishOrganizationOperation operation = Objects.equals(name, activeOrganization)
                 ? new UpdateOrganizationOperation(organization)
                 : new CleanPublishOrganizationOperation(organization);
         if (!PlatformUtil.isACommunityBonitaProduct()) {
@@ -280,7 +265,7 @@ public class OrganizationFileStore extends EMFFileStore<Organization>
             updateDefaultUserPreference(defaultUsername);
             return ValidationStatus
                     .info(String.format(org.bonitasoft.studio.identity.i18n.Messages.organizationDeployed,
-                            organization.getName()));
+                    		name));
         } catch (InvocationTargetException | InterruptedException e) {
             BonitaStudioLog.error(e);
             return new Status(IStatus.ERROR, IdentityPlugin.PLUGIN_ID,

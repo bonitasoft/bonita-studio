@@ -23,7 +23,6 @@ import java.util.stream.Stream;
 import org.bonitasoft.studio.common.databinding.validator.EmptyInputValidator;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.core.ActiveOrganizationProvider;
-import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.common.ui.IDisplayable;
 import org.bonitasoft.studio.common.ui.jface.TableColumnSorter;
@@ -50,7 +49,6 @@ import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.layout.LayoutConstants;
 import org.eclipse.jface.viewers.ArrayContentProvider;
-import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.TableLayout;
 import org.eclipse.jface.viewers.TableViewer;
@@ -93,7 +91,7 @@ public class DeployOrganizationControlSupplier implements ControlSupplier {
     }
 
     private void initializeOrganizationFileStore() {
-        String orgaName = orgaToDeploy.map(Organization::getName)
+        String orgaName = orgaToDeploy.map( organization -> IDisplayable.toDisplayName(organization).orElse(null))
                 .orElse(activeOrganizationprovider.getActiveOrganization());
         organizationRepositoryStore.getChildren().stream()
                 .filter(orga -> {
@@ -104,7 +102,7 @@ public class DeployOrganizationControlSupplier implements ControlSupplier {
                 .ifPresent(fileStoreObservable::setValue);
     }
 
-    private void createDefaultUserTextWidget(DataBindingContext ctx, final Composite mainComposite,
+	private void createDefaultUserTextWidget(DataBindingContext ctx, final Composite mainComposite,
             IObservableValue<OrganizationFileStore> fileStoreObservable) {
         SimpleContentProposalProvider proposalProvider = new SimpleContentProposalProvider(usernames());
         proposalProvider.setFiltering(true);
@@ -143,8 +141,7 @@ public class DeployOrganizationControlSupplier implements ControlSupplier {
         viewer.getTable()
                 .setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 120).create());
         TableLayout layout = new TableLayout();
-        layout.addColumnData(new ColumnWeightData(30));
-        layout.addColumnData(new ColumnWeightData(70));
+        layout.addColumnData(new ColumnWeightData(1));
         viewer.getTable().setLayout(layout);
         viewer.getTable().setLinesVisible(true);
         viewer.getTable().setHeaderVisible(true);
@@ -154,21 +151,6 @@ public class DeployOrganizationControlSupplier implements ControlSupplier {
         TableColumn nameColumn = column.getColumn();
         column.getColumn().setText(Messages.name);
         column.setLabelProvider(new OrganizationLabelProvider());
-
-        column = new TableViewerColumn(viewer, SWT.FILL);
-        column.getColumn().setText(Messages.description);
-        column.setLabelProvider(new ColumnLabelProvider() {
-
-            @Override
-            public String getText(final Object element) {
-                try {
-                    return ((Organization) ((IRepositoryFileStore) element).getContent()).getDescription();
-                } catch (final ReadFileStoreException e) {
-                    BonitaStudioLog.error("Failed read organization content", e);
-                }
-                return null;
-            }
-        });
 
         TableColumnSorter sorter = new TableColumnSorter(viewer);
         sorter.setColumn(nameColumn);

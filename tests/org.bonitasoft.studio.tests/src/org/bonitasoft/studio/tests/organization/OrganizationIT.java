@@ -56,9 +56,6 @@ public class OrganizationIT {
     private static final String PROFESSIONAL_SUFFIX = "professional";
     private static final String PERSONNAL_SUFFIX = "personnal";
 
-    private static final String ORGA_NAME = "OrgaIT";
-    private static final String ORGA_DESCRIPTION = "Organization built by the organization intergation test";
-
     private static final String GROUP1 = "OrgaITGroup1";
     private static final String GROUP2 = "OrgaITGroup2";
     private static final String SUBGROUP = "OrgaITSubgroup";
@@ -108,12 +105,11 @@ public class OrganizationIT {
         // Create new Organization
         projectExplorerBot.newOrganization();
         projectExplorerBot.waitUntilActiveEditorTitleIs(toOrgaFullName(orgaName), Optional.empty());
+        
         BotOrganizationEditor botOrganizationEditor = new BotOrganizationEditor(bot, toOrgaFullName(orgaName));
 
         // Configure general information (Overview)
         botOrganizationEditor.overviewPage()
-                .setName(ORGA_NAME)
-                .setDescription(ORGA_DESCRIPTION)
                 .save();
 
         // Configure groups
@@ -193,19 +189,15 @@ public class OrganizationIT {
                 .setCustomInformation(CUSTOM_INFORMATION_NAME, CUSTOM_INFORMATION_VALUE)
                 .save();
 
-        validateOrganizationContent();
+        validateOrganizationContent(toOrgaFullName(orgaName));
     }
 
-    private void validateOrganizationContent() throws Exception {
+    private void validateOrganizationContent(String oragName) throws Exception {
         OrganizationFileStore fileStore = repositoryAccessor.getRepositoryStore(OrganizationRepositoryStore.class)
-                .getChild(toOrgaFullName(ORGA_NAME), false);
+                .getChild(oragName, false);
         assertThat(fileStore).isNotNull();
 
         Organization organization = fileStore.getContent();
-
-        assertThat(organization.getName()).isEqualTo(ORGA_NAME);
-        assertThat(organization.getDescription()).isEqualTo(ORGA_DESCRIPTION);
-
         validateGroups(organization);
         validateRoles(organization);
         validateCustomInformationDefinitions(organization);
@@ -306,9 +298,8 @@ public class OrganizationIT {
         List<String> existingOrgaNameList = repositoryAccessor.getRepositoryStore(OrganizationRepositoryStore.class)
                 .getChildren().stream().map(IDisplayable::toDisplayName).filter(Optional::isPresent).map(Optional::get)
                 .collect(Collectors.toList());
-        String newName = StringIncrementer.getNextIncrement(Messages.defaultOrganizationName,
+        return StringIncrementer.getNextIncrement(Messages.defaultOrganizationName,
                 existingOrgaNameList);
-        return newName;
     }
 
     private String toOrgaFullName(String orgaName) {

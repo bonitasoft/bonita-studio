@@ -40,7 +40,7 @@ public abstract class EMFFileStore<T extends EObject> extends AbstractFileStore<
 
     protected Resource eResource;
 
-    public EMFFileStore(final String fileName, final IRepositoryStore<? extends EMFFileStore<T>> store) {
+    protected EMFFileStore(final String fileName, final IRepositoryStore<? extends EMFFileStore<T>> store) {
         super(fileName, store);
     }
 

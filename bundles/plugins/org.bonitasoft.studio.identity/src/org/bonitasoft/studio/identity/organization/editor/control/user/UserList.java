@@ -25,6 +25,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.bonitasoft.studio.common.NamingUtils;
+import org.bonitasoft.studio.common.repository.core.ActiveOrganizationProvider;
 import org.bonitasoft.studio.common.ui.jface.SWTBotConstants;
 import org.bonitasoft.studio.identity.i18n.Messages;
 import org.bonitasoft.studio.identity.organization.editor.comparator.UserComparator;
@@ -82,13 +83,14 @@ public class UserList {
     public static final String REMOVE_BUTTON_ID = "deleteUserButtonId";
     public static final String DEFAULT_USER_PASSWORD = "bpm";
 
-    private AbstractOrganizationFormPage formPage;
+    protected AbstractOrganizationFormPage formPage;
     private DataBindingContext ctx;
     protected Section section;
     private TableViewer viewer;
-    private IObservableValue<User> selectionObservable;
+    protected IObservableValue<User> selectionObservable;
     private IObservableList<User> input;
     private List<User> usersToFilter = new ArrayList<>();
+    protected ActiveOrganizationProvider activeOrganizationProvider = new ActiveOrganizationProvider();
 
     private ToolItem deleteItem;
 
@@ -169,14 +171,14 @@ public class UserList {
         TableViewerColumn column = new TableViewerColumn(viewer, SWT.NONE);
         Image userImage = Pics.getImage(PicsConstants.organization_user);
         column.setLabelProvider(new LabelProviderBuilder<User>()
-                .withTextProvider(formPage::toUserDisplayName)
+                .withStyledStringProvider(formPage::toUserDisplayNameStyledString)
                 .withImageProvider(usr -> userImage)
-                .withStatusProvider(groupStatusProvider(new UserListValidator(formPage.observeWorkingCopy(), ctx)))
+                .withStatusProvider(userStatusProvider(new UserListValidator(formPage.observeWorkingCopy(), ctx)))
                 .shouldRefreshAllLabels(viewer)
-                .createColumnLabelProvider());
+                .createStyledCellLabelProvider());
     }
 
-    public Function<User, IStatus> groupStatusProvider(IValidator<User> validators) {
+    private Function<User, IStatus> userStatusProvider(IValidator<User> validators) {
         return element -> Stream.of(validators)
                 .map(v -> v.validate(element))
                 .map(status -> status instanceof MultiStatus ? Arrays.asList(status.getChildren()) : Arrays.asList(status))

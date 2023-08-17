@@ -43,13 +43,12 @@ public class CreateOrganizationHandler extends NewFileHandler {
                 : fileName;
         OrganizationFileStore fileStore = repositoryStore
                 .createRepositoryFileStore(String.format("%s%s", fileNameTrimed, ORGANIZATION_EXT));
-        fileStore.save(createOrganization(fileNameTrimed));
+        fileStore.save(createOrganization());
         return fileStore;
     }
 
-    private Organization createOrganization(String name) {
+    private Organization createOrganization() {
         Organization organization = OrganizationFactory.eINSTANCE.createOrganization();
-        organization.setName(name);
         organization.setGroups(OrganizationFactory.eINSTANCE.createGroups());
         organization.setUsers(OrganizationFactory.eINSTANCE.createUsers());
         organization.setRoles(OrganizationFactory.eINSTANCE.createRoles());

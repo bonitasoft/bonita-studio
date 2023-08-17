@@ -14,33 +14,17 @@
  */
 package org.bonitasoft.studio.swtbot.framework.organization;
 
-import org.bonitasoft.studio.identity.i18n.Messages;
 import org.bonitasoft.studio.swtbot.framework.BotBase;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotMultiPageEditor;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 
 public class BotOrganizationOverviewEditor extends BotBase {
 
-    private BotOrganizationEditor botOrganizationEditor;
     private SWTBotMultiPageEditor editor;
 
-    public BotOrganizationOverviewEditor(SWTGefBot bot, SWTBotMultiPageEditor editor,
-            BotOrganizationEditor botOrganizationEditor) {
+    public BotOrganizationOverviewEditor(SWTGefBot bot, SWTBotMultiPageEditor editor) {
         super(bot);
         this.editor = editor;
-        this.botOrganizationEditor = botOrganizationEditor;
-    }
-
-    public BotOrganizationOverviewEditor setName(String name) {
-        bot.toolbarButtonWithId("org.bonitasoft.studio.ui.widget.textWidget.editButton").click();
-        bot.textWithLabel(Messages.name).setText(name);
-        bot.toolbarButtonWithId("org.bonitasoft.studio.ui.widget.textWidget.validateEdit").click();
-        return this;
-    }
-
-    public BotOrganizationOverviewEditor setDescription(String description) {
-        bot.textWithLabel(Messages.description).setText(description);
-        return this;
     }
 
     public BotOrganizationOverviewEditor save() {

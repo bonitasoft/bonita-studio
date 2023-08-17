@@ -30,7 +30,7 @@ public class BotOrganizationEditor extends BotBase {
     public BotOrganizationEditor(SWTGefBot bot, String editorName) {
         super(bot);
         this.editor = bot.multipageEditorByTitle(editorName);
-        this.botOrganizationOverviewEditor = new BotOrganizationOverviewEditor(bot, editor, this);
+        this.botOrganizationOverviewEditor = new BotOrganizationOverviewEditor(bot, editor);
         this.botOrganizationGroupEditor = new BotOrganizationGroupEditor(bot, editor, this);
         this.botOrganizationRoleEditor = new BotOrganizationRoleEditor(bot, editor, this);
         this.botOrganizationUserEditor = new BotOrganizationUserEditor(bot, editor);

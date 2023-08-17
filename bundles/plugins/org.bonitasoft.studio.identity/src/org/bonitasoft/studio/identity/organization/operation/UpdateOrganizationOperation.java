@@ -15,6 +15,8 @@
 package org.bonitasoft.studio.identity.organization.operation;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 import org.bonitasoft.engine.api.IdentityAPI;
 import org.bonitasoft.engine.identity.ImportPolicy;
@@ -29,7 +31,7 @@ public class UpdateOrganizationOperation extends PublishOrganizationOperation {
     
     @Override
     protected void importOrganization(IdentityAPI identityAPI) throws IOException, OrganizationImportException {
-        identityAPI.importOrganizationWithWarnings(toString(organization), ImportPolicy.MERGE_DUPLICATES);
+    	identityAPI.importOrganizationWithWarnings(Files.readString(Paths.get(organization.eResource().getURI().toFileString())), ImportPolicy.MERGE_DUPLICATES);
     }
 
 }

@@ -88,7 +88,7 @@ public class OverviewFormPage extends AbstractOrganizationFormPage {
 
     @Override
     public void updateDefaultUserViewerInput() {
-        overviewFormPart.updateDefaultUserViewerInput();
+        toolBarManager.update(true);
     }
 
 }

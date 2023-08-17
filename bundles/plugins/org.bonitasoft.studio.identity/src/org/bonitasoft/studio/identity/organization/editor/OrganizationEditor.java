@@ -118,12 +118,11 @@ public class OrganizationEditor extends AbstractEditor<Organization> {
     protected Optional<Organization> xmlToModel(byte[] xml) {
         try (InputStream is = new ByteArrayInputStream(xml)) {
             OrganizationResourceImpl resource = (OrganizationResourceImpl) xmlProcessor.load(is, null);
-            Optional<Organization> orga = resource.getContents().stream()
+            return resource.getContents().stream()
                     .filter(DocumentRoot.class::isInstance)
                     .map(DocumentRoot.class::cast)
                     .map(DocumentRoot::getOrganization)
                     .findFirst();
-            return orga;
         } catch (IOException e) {
             BonitaStudioLog.error(e);
             return Optional.empty();

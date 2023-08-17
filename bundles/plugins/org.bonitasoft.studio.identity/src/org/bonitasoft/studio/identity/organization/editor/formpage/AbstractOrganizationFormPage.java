@@ -15,9 +15,12 @@
 package org.bonitasoft.studio.identity.organization.editor.formpage;
 
 import java.io.IOException;
+import java.util.Objects;
 import java.util.Optional;
 
 import org.bonitasoft.studio.common.Strings;
+import org.bonitasoft.studio.common.repository.core.ActiveOrganizationProvider;
+import org.bonitasoft.studio.identity.i18n.Messages;
 import org.bonitasoft.studio.identity.organization.editor.OrganizationEditor;
 import org.bonitasoft.studio.identity.organization.editor.contribution.DeployContributionItem;
 import org.bonitasoft.studio.identity.organization.editor.contribution.ExportContributionItem;
@@ -39,6 +42,7 @@ import org.eclipse.jface.text.DocumentRewriteSession;
 import org.eclipse.jface.text.DocumentRewriteSessionType;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IDocumentListener;
+import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.ui.forms.AbstractFormPart;
@@ -154,11 +158,22 @@ public abstract class AbstractOrganizationFormPage extends AbstractFormPage<Orga
     }
 
     public String toUserDisplayName(User user) {
+    	var text = user.getUserName();
         if (Strings.hasText(user.getFirstName()) && Strings.hasText(user.getLastName())) {
-            return String.format("%s %s", user.getFirstName(), user.getLastName());
+            text = String.format("%s %s", user.getFirstName(), user.getLastName());
         }
-        return user.getUserName();
+        return text;
     }
+    
+    public StyledString toUserDisplayNameStyledString(User user) {
+    	var text = toUserDisplayName(user);
+        return isDefaultUser(user) ? new StyledString(text).append(" ").append(Messages.defaultUserOrganizationTitle, StyledString.QUALIFIER_STYLER) :  new StyledString(text);
+    }
+    
+    public boolean isDefaultUser(User user) {
+ 		String defaultUser = new ActiveOrganizationProvider().getDefaultUser();
+ 		return Objects.equals(user.getUserName(), defaultUser);
+ 	}
 
     public IObservableList<User> observeUsers() {
         IObservableValue<Users> groupsObservable = EMFObservables.observeDetailValue(Realm.getDefault(),

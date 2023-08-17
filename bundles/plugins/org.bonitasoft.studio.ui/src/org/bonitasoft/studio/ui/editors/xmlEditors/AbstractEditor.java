@@ -86,7 +86,6 @@ public abstract class AbstractEditor<T> extends FormEditor implements IElementSt
             sourceEditorIndex = addPage(createSourceEditor(), getEditorInput());
             setPageText(sourceEditorIndex, Messages.source);
             initVariablesAndListeners();
-            //  addPageChangedListener(e -> formPage.reflow()); // TODO -> a mon avis osef
             customizeTabItem();
         } catch (final PartInitException e) {
             throw new RuntimeException("fail to create editor", e);
@@ -98,7 +97,6 @@ public abstract class AbstractEditor<T> extends FormEditor implements IElementSt
         if (Objects.equals(getCurrentPage(), sourceEditorIndex)) {
             formPages.stream().findFirst().ifPresent(AbstractFormPage::update); // update shared working copy
         }
-        // TODO else ?
         super.pageChange(newPageIndex);
     }
 
