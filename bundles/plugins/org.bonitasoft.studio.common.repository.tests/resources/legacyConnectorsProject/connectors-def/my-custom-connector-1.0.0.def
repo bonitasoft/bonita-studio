@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definition:ConnectorDefinition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:definition="http://www.bonitasoft.org/ns/connector/definition/6.1">
+  <id>my-custom-connector</id>
+  <version>1.0.0</version>
+  <category icon="scripting.png" id="Script"/>
+  <input name="Entrée1" type="java.lang.String"/>
+  <page id="myPage">
+    <widget xsi:type="definition:Text" id="toto" inputName="Entrée1"/>
+  </page>
+</definition:ConnectorDefinition>

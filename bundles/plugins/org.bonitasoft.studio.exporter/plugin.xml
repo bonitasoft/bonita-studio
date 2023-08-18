@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin>
+
+   <extension-point id="exporterExtension" name="ExporterExtension" schema="schema/exporterExtension.exsd"/>
+   <extension-point id="cssGenerator" name="Css Generator" schema="schema/cssGenerator.exsd"/>
+   <extension-point id="barApplicationResourceProvider" name="Extension Point to add Application Resources to BAR at export" schema="schema/barApplicationResourcesProvider.exsd"/>
+   <extension-point id="exporterFactory" name="exporterFactory" schema="schema/exporterFactory.exsd"/>
+   <extension-point id="formsExporter" name="Forms Exporter" schema="schema/org.bonitasoft.studio.exporter.formsExporter.exsd"/>
+
+  
+   <extension
+         point="org.bonitasoft.studio.exporter.exporterFactory">
+      <exporterFactory
+            targetExtension="bpmn"
+            menuIcon="icons/bpmn.png"
+            priority="0"
+            menuLabel="BPMN 2.0"
+            class="org.bonitasoft.bonita2bpmn.transfo.BonitaToBPMN">
+      </exporterFactory>
+   </extension>
+   <extension
+         id="org.bonitasoft.studio.exporter.fragment"
+         point="org.eclipse.e4.workbench.model">
+      <fragment
+            uri="fragment.e4xmi">
+      </fragment>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commandImages">
+      <image
+            commandId="org.bonitasoft.studio.exportBosArchive"
+            icon="icons/export.png">
+      </image>
+      <image
+            commandId="org.bonitasoft.studio.exporter.exportAsBPMN"
+            icon="icons/bpmn.png">
+      </image>
+   </extension>
+
+</plugin>
