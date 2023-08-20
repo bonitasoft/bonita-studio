@@ -100,7 +100,8 @@ public class ActorMappingConfigurationWizardPage extends WizardPage
     public void createControl(final Composite parent) {
         deployedOrganization = Optional.ofNullable(RepositoryManager.getInstance()
                 .getRepositoryStore(OrganizationRepositoryStore.class)
-                .getChild(String.format("%s.organization", new ActiveOrganizationProvider().getActiveOrganization()),
+                .getChild(String.format("%s.%s", new ActiveOrganizationProvider().getActiveOrganization(), 
+                		OrganizationRepositoryStore.ORGANIZATION_EXT),
                         true))
                 .map(t -> {
                     try {
