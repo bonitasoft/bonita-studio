@@ -20,14 +20,12 @@ import java.util.Properties;
 
 import org.apache.maven.model.Dependency;
 import org.apache.maven.model.DependencyManagement;
-import org.apache.maven.model.Model;
 import org.apache.maven.model.PluginExecution;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
 
 public class ProjectDefaultConfiguration implements DefaultPluginVersions {
 
     private static final String CONFIGURATION_TAG_NAME = "configuration";
-	public static final String BONITA_RUNTIME_VERSION = "bonita.runtime.version";
     private static final String ENCODING_CHARSET = "UTF-8";
     private static final String JAVA_VERSION = "11";
 
@@ -87,8 +85,11 @@ public class ProjectDefaultConfiguration implements DefaultPluginVersions {
 
         PROVIDED_DEPENDENCIES.stream().forEach(this::addDependency);
 
-        properties.setProperty(BONITA_RUNTIME_VERSION, bonitaRuntimeVersion);
-        properties.setProperty("maven.compiler.release", JAVA_VERSION);
+        properties.setProperty(ProjectMetadata.BONITA_RUNTIME_VERSION, bonitaRuntimeVersion);
+        properties.setProperty("java.version", JAVA_VERSION);
+        properties.setProperty("maven.compiler.release", "${java.version}");
+        properties.setProperty("maven.compiler.source", "${java.version}");
+        properties.setProperty("maven.compiler.target", "${java.version}");
         properties.setProperty("project.build.sourceEncoding", ENCODING_CHARSET);
         properties.setProperty("project.reporting.outputEncoding", ENCODING_CHARSET);
         plugins.stream()
@@ -99,7 +100,7 @@ public class ProjectDefaultConfiguration implements DefaultPluginVersions {
         var dep = new Dependency();
         dep.setGroupId("org.bonitasoft.engine.data");
         dep.setArtifactId("bonita-business-data-generator");
-        dep.setVersion(String.format("${%s}", BONITA_RUNTIME_VERSION));
+        dep.setVersion(String.format("${%s}", ProjectMetadata.BONITA_RUNTIME_VERSION));
         return dep;
     }
 
@@ -138,10 +139,10 @@ public class ProjectDefaultConfiguration implements DefaultPluginVersions {
     }
 
     public static Dependency runtimeBOMImportDependency() {
-        var runtimeBOM = bonitaBusinessDataGeneratorDependency();
+        var runtimeBOM = new Dependency();
         runtimeBOM.setGroupId(RUNTIME_BOM_GROUP_ID);
         runtimeBOM.setArtifactId(RUNTIME_BOM_ARTIFACT_ID);
-        runtimeBOM.setVersion(String.format("${%s}", BONITA_RUNTIME_VERSION));
+        runtimeBOM.setVersion(String.format("${%s}", ProjectMetadata.BONITA_RUNTIME_VERSION));
         runtimeBOM.setType("pom");
         runtimeBOM.setScope("import");
         return runtimeBOM;
@@ -178,16 +179,4 @@ public class ProjectDefaultConfiguration implements DefaultPluginVersions {
         return execution;
     }
 
-    public static boolean isInternalDependency(Dependency dependency) {
-        return PROVIDED_DEPENDENCIES.stream()
-                .map(MavenDependency::toGAV)
-                .anyMatch(new GAV(dependency)::isSameAs);
-    }
-
-    public static String getBonitaRuntimeVersion(Model model) {
-        if (model.getProperties().containsKey(BONITA_RUNTIME_VERSION)) {
-            return model.getProperties().getProperty(BONITA_RUNTIME_VERSION);
-        }
-        return null;
-    }
 }

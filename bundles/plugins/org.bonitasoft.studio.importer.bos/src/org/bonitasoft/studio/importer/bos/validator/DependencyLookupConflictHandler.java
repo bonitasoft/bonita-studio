@@ -30,8 +30,8 @@ import org.bonitasoft.studio.common.repository.core.maven.MavenProjectHelper;
 import org.bonitasoft.studio.common.repository.core.maven.migration.model.ConflictVersion;
 import org.bonitasoft.studio.common.repository.core.maven.migration.model.ConflictVersion.Status;
 import org.bonitasoft.studio.common.repository.core.maven.migration.model.DependencyLookup;
+import org.bonitasoft.studio.common.repository.core.maven.model.AppProjectConfiguration;
 import org.bonitasoft.studio.common.repository.core.maven.model.GAV;
-import org.bonitasoft.studio.common.repository.core.maven.model.ProjectDefaultConfiguration;
 import org.bonitasoft.studio.importer.bos.i18n.Messages;
 import org.eclipse.core.databinding.observable.list.IObservableList;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
@@ -83,7 +83,7 @@ public class DependencyLookupConflictHandler implements IValidator<DependencyLoo
     private void computeDependenciesConflicts(Model model, Collection<DependencyLookup> dependencies) {
         for (var dl : dependencies) {
             model.getDependencies().stream()
-                    .filter(not(ProjectDefaultConfiguration::isInternalDependency))
+                    .filter(not(AppProjectConfiguration::isInternalDependency))
                     .filter(dep -> sameDependencyWithADifferentVersion(dl.getGAV(), dep) 
                             || sameLocalSnapshotDependency(dl, dep))
                     .findFirst()

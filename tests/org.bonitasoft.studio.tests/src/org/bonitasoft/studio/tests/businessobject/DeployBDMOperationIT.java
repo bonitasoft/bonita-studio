@@ -27,15 +27,17 @@ import org.bonitasoft.engine.tenant.TenantResourceState;
 import org.bonitasoft.studio.businessobject.core.operation.DeployBDMOperation;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelFileStore;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
 import org.bonitasoft.studio.engine.BOSEngineManager;
+import org.bonitasoft.studio.tests.util.Await;
 import org.bonitasoft.studio.tests.util.InitialProjectRule;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jdt.core.IJavaProject;
-import org.eclipse.jdt.core.IType;
+import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.m2e.core.MavenPlugin;
 import org.eclipse.m2e.core.embedder.ICallable;
 import org.eclipse.m2e.core.embedder.IMaven;
@@ -88,9 +90,15 @@ public class DeployBDMOperationIT {
                     is);
         }
         var currentRepository = RepositoryManager.getInstance().getCurrentRepository().orElseThrow();
-        final IJavaProject javaProject = currentRepository.getJavaProject();
-        final IType iType = javaProject.findType("org.bonita.CompanyUser");
-        assertThat(iType).isNotNull();
+        Await.waitUntil(() -> {
+        	final IJavaProject javaProject = currentRepository.getJavaProject();
+            try {
+				return javaProject.findType("org.bonita.CompanyUser") != null;
+			} catch (JavaModelException e) {
+				BonitaStudioLog.error(e);
+				return false;
+			}
+        }, 5000, 100);
 
         final DeployBDMOperation operation = new DeployBDMOperation(businessObjectDefinitionFileStore);
         operation.run(null);

@@ -77,5 +77,8 @@ public interface DefaultPluginVersions {
     
     static final String RUNTIME_BOM_GROUP_ID = "org.bonitasoft.runtime";
     static final String RUNTIME_BOM_ARTIFACT_ID = "bonita-runtime-bom";
+    
+    static final String BONITA_PROJECT_GROUP_ID = "org.bonitasoft";
+    static final String BONITA_PROJECT_ARTIFACT_ID = "bonita-project";
 
 }

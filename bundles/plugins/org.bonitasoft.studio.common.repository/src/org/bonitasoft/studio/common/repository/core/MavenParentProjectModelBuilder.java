@@ -16,14 +16,12 @@ package org.bonitasoft.studio.common.repository.core;
 
 import java.util.List;
 
-import org.apache.maven.model.Build;
 import org.apache.maven.model.Model;
-import org.apache.maven.model.PluginManagement;
+import org.apache.maven.model.Parent;
 import org.apache.maven.model.Repository;
 import org.apache.maven.model.RepositoryPolicy;
 import org.bonitasoft.studio.common.ProductVersion;
-import org.bonitasoft.studio.common.repository.core.maven.model.MavenPlugin;
-import org.bonitasoft.studio.common.repository.core.maven.model.ProjectDefaultConfiguration;
+import org.bonitasoft.studio.common.repository.core.maven.model.DefaultPluginVersions;
 
 public class MavenParentProjectModelBuilder implements MavenModelBuilder{
 
@@ -103,23 +101,15 @@ public class MavenParentProjectModelBuilder implements MavenModelBuilder{
         model.setPackaging("pom");
 
         var bonitaRuntimeVersion = bonitaVersion == null ? ProductVersion.BONITA_RUNTIME_VERSION : bonitaVersion;
-        ProjectDefaultConfiguration defaultConfiguration = new ProjectDefaultConfiguration(bonitaRuntimeVersion);
-        defaultConfiguration.getProperties()
-                .forEach((key, value) -> model.addProperty(key.toString(), value.toString()));
 
-        model.setDependencyManagement(defaultConfiguration.getDependencyManagement());
+        var bonitaProjectParent = new Parent();
+        bonitaProjectParent.setGroupId(DefaultPluginVersions.BONITA_PROJECT_GROUP_ID);
+        bonitaProjectParent.setArtifactId(DefaultPluginVersions.BONITA_PROJECT_ARTIFACT_ID);
+        bonitaProjectParent.setVersion(bonitaRuntimeVersion);
+        model.setParent(bonitaProjectParent); 
         
         model.getModules().add(APP_MODULE_NAME);
 
-        Build build = new Build();
-
-        PluginManagement pluginManagement = new PluginManagement();
-        defaultConfiguration.getPlugins().stream()
-                .map(MavenPlugin::toManagedPlugin)
-                .forEach(pluginManagement::addPlugin);
-
-        build.setPluginManagement(pluginManagement);
-        model.setBuild(build);
         if(useSnapshotRepository) {
             var pluginRepository = new Repository();
             pluginRepository.setId("ossrh-snapshots");

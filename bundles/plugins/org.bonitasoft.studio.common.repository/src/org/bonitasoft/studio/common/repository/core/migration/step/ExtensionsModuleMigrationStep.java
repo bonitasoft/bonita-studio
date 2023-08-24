@@ -21,6 +21,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.stream.Stream;
 
+import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Model;
 import org.bonitasoft.studio.common.FileUtil;
 import org.bonitasoft.studio.common.repository.core.BonitaProject;
@@ -70,7 +71,7 @@ public class ExtensionsModuleMigrationStep implements MigrationStep {
                 Stream.of(restApiExtensionsFolder.listFiles())
                         .filter(File::isDirectory)
                         .filter(file -> new File(file, POM_FILE_NAME).exists())
-                        .forEach(file -> moveProjects(file.toPath(), extensions, extensionsParentModel));
+                        .forEach(file -> moveProjects(file.toPath(), extensions, extensionsParentModel, appModel));
                 Files.delete(restApiExtensionsFolder.toPath());
             }
             var themesFolder = app.resolve("themes").toFile();
@@ -78,10 +79,10 @@ public class ExtensionsModuleMigrationStep implements MigrationStep {
                 Stream.of(themesFolder.listFiles())
                         .filter(File::isDirectory)
                         .filter(file -> new File(file, POM_FILE_NAME).exists())
-                        .forEach(file -> moveProjects(file.toPath(), extensions, extensionsParentModel));
+                        .forEach(file -> moveProjects(file.toPath(), extensions, extensionsParentModel, appModel));
                 Files.delete(themesFolder.toPath());
             }
-
+            saveMavenModel(appModel, project.resolve(BonitaProject.APP_MODULE));
             MavenProjectHelper.saveModel(extensionsPomFile, extensionsParentModel);
         } catch (IOException e) {
             throw new CoreException(Status.error("Failed to update project layout to multi-module.", e));
@@ -89,15 +90,25 @@ public class ExtensionsModuleMigrationStep implements MigrationStep {
         return report;
     }
 
-    private void moveProjects(Path sourceDirectory, Path extensions, Model parentModel) {
+    private void moveProjects(Path sourceDirectory, Path extensions, Model parentModel, Model appModel) {
         try {
             Path project = extensions.resolve(sourceDirectory.getFileName());
             FileUtil.copyDirectory(sourceDirectory, project);
             parentModel.addModule(sourceDirectory.getFileName().toString());
             FileUtil.deleteDir(sourceDirectory);
+            
+            var extensionModel = loadMavenModel(project);
+            var dependency = new Dependency();
+            dependency.setGroupId("${project.groupId}");
+            dependency.setArtifactId(extensionModel.getArtifactId());
+            dependency.setVersion("${project.version}");
+            dependency.setType("zip");
+            appModel.getDependencies().add(dependency);
         } catch (IOException e) {
             throw new UncheckedIOException(e);
-        }
+        }catch (CoreException e) {
+			throw new RuntimeException(e);
+		}
     }
 
     @Override

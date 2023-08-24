@@ -23,7 +23,7 @@ import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.Messages;
 import org.bonitasoft.studio.common.repository.core.InputStreamSupplier;
-import org.bonitasoft.studio.common.repository.core.maven.model.ProjectDefaultConfiguration;
+import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
 import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.store.AbstractRepositoryStore;
 import org.bonitasoft.studio.importer.bos.BosArchiveImporterPlugin;
@@ -32,6 +32,7 @@ import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.osgi.util.NLS;
 
 import com.google.common.base.Splitter;
 
@@ -116,9 +117,9 @@ public class BosArchive {
     }
 
     private IStatus validateArchiveCompatibility() throws IOException {
-        Model mavenProject = getMavenProject();
-        if (mavenProject != null && ProjectDefaultConfiguration.getBonitaRuntimeVersion(mavenProject) != null) {
-            bonitaVersion = ProjectDefaultConfiguration.getBonitaRuntimeVersion(mavenProject);
+        var rootProject = getRootMavenModel();
+        if (rootProject != null && ProjectMetadata.getBonitaRuntimeVersion(rootProject) != null) {
+            bonitaVersion = ProjectMetadata.getBonitaRuntimeVersion(rootProject);
         } else {
             final Properties manifest = readManifest();
             String manifestVersion = manifest.getProperty(VERSION);
@@ -128,7 +129,7 @@ public class BosArchive {
         }
         if (!canImport(this.bonitaVersion)) {
             return ValidationStatus
-                    .error(Messages.bind(Messages.incompatibleProductVersion,
+                    .error(NLS.bind(Messages.incompatibleProductVersion,
                             ProductVersion
                                     .toMinorVersionString(ProductVersion.minorVersion(ProductVersion.CURRENT_VERSION)),
                             ProductVersion.toMinorVersionString(ProductVersion.minorVersion(bonitaVersion))));
@@ -241,9 +242,6 @@ public class BosArchive {
                     .orElse(null);
                 if(pomEntry != null) {
                     mavenProject = loadMavenModel(pomEntry).orElse(null);
-                    mavenProject.getProperties()
-                        .setProperty(ProjectDefaultConfiguration.BONITA_RUNTIME_VERSION, 
-                                rootProject.getProperties().getProperty(ProjectDefaultConfiguration.BONITA_RUNTIME_VERSION, ProductVersion.BONITA_RUNTIME_VERSION));
                 }else {
                     mavenProject = rootProject;
                 }

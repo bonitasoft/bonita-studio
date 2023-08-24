@@ -2,17 +2,17 @@
 <project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>com.bonitasoft.serenity</groupId>
-  <artifactId>serenity-parent</artifactId>
-  <version>0.0.19-SNAPSHOT</version>
+  <groupId>com.bonitasoft.acm.example</groupId>
+  <artifactId>credit-card-dispute-resolution-parent</artifactId>
+  <version>2.0.1</version>
   <packaging>pom</packaging>
   <modules>
     <module>app</module>
     <module>bdm</module>
   </modules>
   <properties>
-    <maven-install-plugin.version>3.0.0-M1</maven-install-plugin.version>
     <maven.compiler.release>11</maven.compiler.release>
+    <maven-install-plugin.version>3.0.0-M1</maven-install-plugin.version>
     <maven-jar-plugin.version>3.3.0</maven-jar-plugin.version>
     <maven-source-plugin.version>3.2.1</maven-source-plugin.version>
     <bonita-project-maven-plugin.version>0.1.0</bonita-project-maven-plugin.version>
@@ -25,7 +25,7 @@
     <bonita.runtime.version>8.0.0</bonita.runtime.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven-resources-plugin.version>3.3.0</maven-resources-plugin.version>
-    <maven-deploy-plugin.version>99.0.0</maven-deploy-plugin.version>
+    <maven-deploy-plugin.version>3.0.0</maven-deploy-plugin.version>
   </properties>
   <dependencyManagement>
     <dependencies>
