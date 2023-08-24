@@ -18,15 +18,20 @@
         <localRepository.compatibleVersions.skip>false</localRepository.compatibleVersions.skip>
         <goOfflineCmdLine>
             de.qaware.maven:go-offline-maven-plugin:resolve-dependencies
-            -Dlocal.remote.repo.url=file:///${settings.localRepository}
             -Dmaven.repo.local=${repository.dir}
-            -Dbonita-project-maven-plugin.version=${bonita-project-report-model.version}
-            -Dbonita.runtime.version=${bonita-runtime.version}
         </goOfflineCmdLine>
+        <local.remote.repo.url>file:///${settings.localRepository}</local.remote.repo.url>
         <mavenSettingsArg></mavenSettingsArg>
     </properties>
 
     <build>
+    	<resources>
+            <resource>
+                <directory>src/template</directory>
+                <filtering>true</filtering>
+                <targetPath>${project.build.directory}/current</targetPath>
+            </resource>
+        </resources>
         <plugins>
             <plugin>
                 <artifactId>maven-clean-plugin</artifactId>
@@ -48,16 +53,18 @@
                     </execution>
                     <execution>
                         <id>clean-repository-remote-repositories</id>
-                        <phase>process-resources</phase>
+                        <phase>prepare-package</phase>
                         <goals>
                             <goal>clean</goal>
                         </goals>
                         <configuration>
+                            <excludeDefaultDirectories>true</excludeDefaultDirectories>
                             <filesets>
                                 <fileset>
                                     <directory>${repository.dir}</directory>
                                     <includes>
                                         <include>**/_remote.repositories</include>
+                                        <include>**/*.lastUpdated</include>
                                     </includes>
                                     <followSymlinks>false</followSymlinks>
                                 </fileset>
@@ -75,9 +82,9 @@
                         <goals>
                             <goal>exec</goal>
                         </goals>
-                        <phase>generate-resources</phase>
+                        <phase>compile</phase>
                         <configuration>
-                            <workingDirectory>${project.basedir}/src/template</workingDirectory>
+                            <workingDirectory>${project.build.directory}/current</workingDirectory>
                             <executable>${mavenWrapper}</executable>
                             <useMavenLogger>true</useMavenLogger>
                             <skip>${localRepository.skip}</skip>
@@ -108,9 +115,6 @@
                 <goOfflineCmdLine>
                     de.qaware.maven:go-offline-maven-plugin:resolve-dependencies
                     -Dmaven.repo.local=${settings.localRepository}
-                    -Dlocal.remote.repo.url=file:///${settings.localRepository}
-                    -Dbonita-project-maven-plugin.version=${bonita-project-report-model.version}
-                    -Dbonita.runtime.version=${bonita-runtime.version}
                 </goOfflineCmdLine>
             </properties>
         </profile> 

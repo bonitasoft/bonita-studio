@@ -25,7 +25,6 @@ import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.core.BonitaProject;
 import org.bonitasoft.studio.common.repository.core.maven.MavenProjectHelper;
-import org.bonitasoft.studio.common.repository.core.maven.model.ProjectDefaultConfiguration;
 import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
 import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.eclipse.core.resources.IFolder;
@@ -88,8 +87,7 @@ public class UpdateProjectMetadataOperation implements IWorkspaceRunnable {
         parentModel.setGroupId(metadata.getGroupId());
         parentModel.setVersion(metadata.getVersion());
         parentModel.setArtifactId(newProjectId + PARENT_SUFFIX);
-        parentModel.getProperties().setProperty(ProjectDefaultConfiguration.BONITA_RUNTIME_VERSION,
-                metadata.getBonitaRuntimeVersion());
+        parentModel.getParent().setVersion(metadata.getBonitaRuntimeVersion());
 
         MavenProjectHelper.saveModel(parentProject, parentModel, new NullProgressMonitor());
 

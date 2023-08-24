@@ -18,8 +18,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import org.bonitasoft.bpm.model.process.AbstractProcess;
-import org.bonitasoft.bpm.model.process.Pool;
 import org.bonitasoft.studio.application.ui.control.model.Artifact;
 import org.bonitasoft.studio.application.ui.control.model.BuildableArtifact;
 import org.bonitasoft.studio.application.ui.control.model.BusinessObjectModelArtifact;
@@ -103,14 +101,14 @@ public class RepositoryModelBuilder {
 
     public void createProcessArtifacts(RepositoryStore parent, DiagramFileStore fStore) {
         final List<Artifact> processes = parent.getArtifacts();
-        for (AbstractProcess procModel : fStore.getProcesses(false)) {
+        for (var procModel : fStore.getProcesses(false)) {
             ProcessArtifact defaultProcess = new ProcessArtifact(parent, procModel.getName());
             ProcessArtifact process = (ProcessArtifact) processes.stream().filter(defaultProcess::equals).findFirst()
                     .orElse(defaultProcess);
             if (!processes.contains(process)) {
                 processes.add(process);
             }
-            process.addVersion((Pool) procModel, fStore);
+            process.addVersion(procModel, fStore);
         }
     }
 }

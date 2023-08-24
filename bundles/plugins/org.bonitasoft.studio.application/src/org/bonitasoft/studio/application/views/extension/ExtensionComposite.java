@@ -41,8 +41,8 @@ import org.bonitasoft.studio.common.CommandExecutor;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.core.maven.MavenProjectHelper;
+import org.bonitasoft.studio.common.repository.core.maven.model.AppProjectConfiguration;
 import org.bonitasoft.studio.common.repository.core.maven.model.GAV;
-import org.bonitasoft.studio.common.repository.core.maven.model.ProjectDefaultConfiguration;
 import org.bonitasoft.studio.common.ui.jface.SWTBotConstants;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
@@ -270,7 +270,7 @@ public class ExtensionComposite extends Composite {
                             result.setHasExtensionIssues(true);
                         }
                         bonitaDependencies.add(new BonitaDependencyTuple(dep, bonitaDependency.get()));
-                    } else if (!ProjectDefaultConfiguration.isInternalDependency(dep)
+                    } else if (!AppProjectConfiguration.isInternalDependency(dep)
                             && currentBdmModelDependency.map(GAV::new).filter(new GAV(dep)::equals).isEmpty()) {
                         BonitaArtifactDependency bonitaDep = bonitaArtifactDependencyConverter
                                 .toBonitaArtifactDependency(dep);

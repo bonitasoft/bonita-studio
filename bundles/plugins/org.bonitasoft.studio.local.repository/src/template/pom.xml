@@ -4,29 +4,14 @@
     xmlns="http://maven.apache.org/POM/4.0.0"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.bonitasoft</groupId>
+        <artifactId>bonita-project</artifactId>
+        <version>${bonita-runtime.version}</version>
+    </parent>
     <groupId>org.bonitasoft.template</groupId>
     <artifactId>bonita-projet-template</artifactId>
     <version>1.0.0-SNAPSHOT</version>
-    <properties>
-        <maven.compiler.release>11</maven.compiler.release>
-        <maven-install-plugin.version>3.1.1</maven-install-plugin.version>
-        <maven-jar-plugin.version>3.3.0</maven-jar-plugin.version>
-        <maven-shade-plugin.version>3.5.0</maven-shade-plugin.version>
-        <maven-compiler-plugin.version>3.11.0</maven-compiler-plugin.version>
-        <maven-source-plugin.version>3.3.0</maven-source-plugin.version>
-        <build-helper-maven-plugin.version>3.4.0</build-helper-maven-plugin.version>
-        <maven-clean-plugin.version>3.2.0</maven-clean-plugin.version>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <flatten-maven-plugin.version>1.5.0</flatten-maven-plugin.version>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven-resources-plugin.version>3.3.1</maven-resources-plugin.version>
-        <maven-deploy-plugin.version>3.1.1</maven-deploy-plugin.version>
-        <maven-dependency-plugin.version>3.6.0</maven-dependency-plugin.version>
-        <maven-assembly-plugin.version>3.6.0</maven-assembly-plugin.version>
-        <maven-javadoc-plugin.version>3.5.0</maven-javadoc-plugin.version>
-        <maven-surefire-plugin.version>3.1.2</maven-surefire-plugin.version>
-        <maven-failsafe-plugin.version>3.1.2</maven-failsafe-plugin.version>
-    </properties>
     
      <!-- 
         The local repo is set to ${repository.dir} by the maven exec plugin that calls this pom (see the root pom.xml of this Studio plugin).
@@ -43,6 +28,18 @@
           <snapshots>
             <checksumPolicy>ignore</checksumPolicy>
           </snapshots>
+        </repository>
+         <repository>
+            <id>ossrh-snapshots</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+            <snapshots>
+                <enabled>true</enabled>
+                <checksumPolicy>ignore</checksumPolicy>
+            </snapshots>
+            <releases>
+                <enabled>false</enabled>
+                <checksumPolicy>ignore</checksumPolicy>
+            </releases>
         </repository>
     </repositories>
     <pluginRepositories>
@@ -69,18 +66,7 @@
             </releases>
         </pluginRepository>
     </pluginRepositories>
-    
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>org.bonitasoft.runtime</groupId>
-                <artifactId>bonita-runtime-bom</artifactId>
-                <version>${bonita.runtime.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
+
     <dependencies>
         <dependency>
             <groupId>org.bonitasoft.engine</groupId>
@@ -182,77 +168,25 @@
             <artifactId>bonita-business-data-client-resources</artifactId>
             <version>${bonita.runtime.version}</version>
         </dependency>
+        <dependency>
+              <groupId>org.bonitasoft.web</groupId>
+              <artifactId>ui-designer-artifact-builder</artifactId>
+              <version>${ui-designer-artifact-builder.version}</version>
+         </dependency>
+         <dependency>
+              <groupId>org.bonitasoft.bpm</groupId>
+              <artifactId>org.bonitasoft.bonita2bar</artifactId>
+              <version>${bonita-process-model.version}</version>
+          </dependency>
+          <dependency>
+              <groupId>org.bonitasoft</groupId>
+              <artifactId>bonita-project-assemblies</artifactId>
+              <version>${bonita.runtime.version}</version>
+          </dependency>
     </dependencies>
     <build>
         <pluginManagement>
            <plugins>
-             <plugin>
-              <artifactId>maven-install-plugin</artifactId>
-              <version>${maven-install-plugin.version}</version>
-            </plugin>
-            <plugin>
-              <artifactId>maven-compiler-plugin</artifactId>
-              <version>${maven-compiler-plugin.version}</version>
-            </plugin>
-            <plugin>
-              <artifactId>maven-clean-plugin</artifactId>
-              <version>${maven-clean-plugin.version}</version>
-            </plugin>
-            <plugin>
-              <artifactId>maven-jar-plugin</artifactId>
-              <version>${maven-jar-plugin.version}</version>
-            </plugin>
-             <plugin>
-              <artifactId>maven-source-plugin</artifactId>
-              <version>${maven-source-plugin.version}</version>
-            </plugin>
-            <plugin>
-              <artifactId>maven-resources-plugin</artifactId>
-              <version>${maven-resources-plugin.version}</version>
-            </plugin>
-            <plugin>
-              <artifactId>maven-deploy-plugin</artifactId>
-              <version>${maven-deploy-plugin.version}</version>
-            </plugin>
-            <plugin>
-              <artifactId>maven-dependency-plugin</artifactId>
-              <version>${maven-dependency-plugin.version}</version>
-            </plugin>
-            <plugin>
-              <artifactId>maven-shade-plugin</artifactId>
-              <version>${maven-shade-plugin.version}</version>
-            </plugin>
-            <plugin>
-              <groupId>org.codehaus.mojo</groupId>
-              <artifactId>flatten-maven-plugin</artifactId>
-              <version>${flatten-maven-plugin.version}</version>
-            </plugin>
-            <plugin>
-              <groupId>org.bonitasoft.maven</groupId>
-              <artifactId>bonita-project-maven-plugin</artifactId>
-              <version>${bonita-project-maven-plugin.version}</version>
-            </plugin>
-            <plugin>
-              <groupId>org.codehaus.mojo</groupId>
-              <artifactId>build-helper-maven-plugin</artifactId>
-              <version>${build-helper-maven-plugin.version}</version>
-            </plugin>
-            <plugin>
-              <artifactId>maven-javadoc-plugin</artifactId>
-              <version>${maven-javadoc-plugin.version}</version>
-            </plugin>
-            <plugin>
-              <artifactId>maven-surefire-plugin</artifactId>
-              <version>${maven-surefire-plugin.version}</version>
-            </plugin>
-            <plugin>
-              <artifactId>maven-failsafe-plugin</artifactId>
-              <version>${maven-failsafe-plugin.version}</version>
-            </plugin>
-            <plugin>
-              <artifactId>maven-assembly-plugin</artifactId>
-              <version>${maven-assembly-plugin.version}</version>
-            </plugin>
             <plugin>
                 <groupId>de.qaware.maven</groupId>
                 <artifactId>go-offline-maven-plugin</artifactId>
@@ -305,6 +239,18 @@
             </plugin>
             <plugin>
               <artifactId>maven-resources-plugin</artifactId>
+            </plugin>
+            <plugin>
+              <artifactId>maven-assembly-plugin</artifactId>
+            </plugin>
+            <plugin>
+              <artifactId>maven-javadoc-plugin</artifactId>
+            </plugin>
+            <plugin>
+              <artifactId>maven-surefire-plugin</artifactId>
+            </plugin>
+             <plugin>
+              <artifactId>maven-failsafe-plugin</artifactId>
             </plugin>
             <plugin>
               <artifactId>maven-source-plugin</artifactId>

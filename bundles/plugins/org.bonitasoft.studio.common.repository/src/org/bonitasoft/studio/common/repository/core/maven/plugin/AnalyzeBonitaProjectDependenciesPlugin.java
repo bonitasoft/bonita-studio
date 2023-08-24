@@ -52,7 +52,7 @@ public class AnalyzeBonitaProjectDependenciesPlugin {
 	public IStatus execute(IProgressMonitor monitor) throws CoreException {
 		monitor.beginTask(Messages.analyzeProjectDependencies, IProgressMonitor.UNKNOWN);
 		IMaven maven = maven();
-		var mavenProject = getMavenProject(project.getAppProject(), monitor);
+		var mavenProject = getMavenProject(project.getParentProject(), monitor);
 		if (mavenProject == null) {
 			return new Status(IStatus.ERROR, getClass(),
 					"An error occured while executing bonita project plugin. Cannot resolve the Maven project.");

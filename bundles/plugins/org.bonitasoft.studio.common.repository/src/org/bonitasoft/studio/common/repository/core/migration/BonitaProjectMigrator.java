@@ -22,7 +22,11 @@ import java.util.List;
 import org.bonitasoft.studio.common.Strings;
 import org.bonitasoft.studio.common.repository.core.migration.dependencies.operation.DependenciesUpdateOperationFactory;
 import org.bonitasoft.studio.common.repository.core.migration.report.MigrationReport;
+import org.bonitasoft.studio.common.repository.core.migration.step.ApplicationAssemblyConfigurationStep;
+import org.bonitasoft.studio.common.repository.core.migration.step.BdmAssemblyConfigurationStep;
 import org.bonitasoft.studio.common.repository.core.migration.step.BdmModelArtifactMigrationStep;
+import org.bonitasoft.studio.common.repository.core.migration.step.BonitaProjectParentVersionStep;
+import org.bonitasoft.studio.common.repository.core.migration.step.CleanParentStep;
 import org.bonitasoft.studio.common.repository.core.migration.step.CreatePomMigrationStep;
 import org.bonitasoft.studio.common.repository.core.migration.step.DeleteProjectSettingsMigrationStep;
 import org.bonitasoft.studio.common.repository.core.migration.step.ExtensionsModuleMigrationStep;
@@ -32,8 +36,6 @@ import org.bonitasoft.studio.common.repository.core.migration.step.MultiModuleMi
 import org.bonitasoft.studio.common.repository.core.migration.step.ProvidedGroovyScriptRemovedStep;
 import org.bonitasoft.studio.common.repository.core.migration.step.RemoveLegacyFolderStep;
 import org.bonitasoft.studio.common.repository.core.migration.step.SplitGroovyAllIntoModulesStep;
-import org.bonitasoft.studio.common.repository.core.migration.step.UpdateBonitaRuntimeVersionInPomStep;
-import org.bonitasoft.studio.common.repository.core.migration.step.UpdateMavenPluginVersionInPomStep;
 import org.bonitasoft.studio.common.repository.core.migration.step.UpdateProjectDescriptionMigrationStep;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
@@ -47,8 +49,6 @@ public class BonitaProjectMigrator {
     private static final List<MigrationStep> STEPS = List.of(
             new CreatePomMigrationStep(),
             new RemoveLegacyFolderStep(),
-            new UpdateBonitaRuntimeVersionInPomStep(),
-            new UpdateMavenPluginVersionInPomStep(),
             new SplitGroovyAllIntoModulesStep(),
             new JavaDependenciesMigrationStep(DependenciesUpdateOperationFactory.get()),
             new BdmModelArtifactMigrationStep(true),
@@ -56,8 +56,12 @@ public class BonitaProjectMigrator {
             new GitIgnoreMigrationStep(),
             new DeleteProjectSettingsMigrationStep(),
             new UpdateProjectDescriptionMigrationStep(),
+            new CleanParentStep(),
             new ExtensionsModuleMigrationStep(),
-            new ProvidedGroovyScriptRemovedStep());
+            new ProvidedGroovyScriptRemovedStep(),
+            new BonitaProjectParentVersionStep(),
+            new ApplicationAssemblyConfigurationStep(),
+            new BdmAssemblyConfigurationStep());
 
     private Path project;
 
