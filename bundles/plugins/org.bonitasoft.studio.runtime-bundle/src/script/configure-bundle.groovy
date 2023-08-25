@@ -27,6 +27,8 @@ def slowQueryLogger = configurationNode.'Loggers'.'Logger'.find { it.'@name' == 
 assert slowQueryLogger : "org.hibernate.SQL_SLOW logger not found in $loggerConfigFile"
 slowQueryLogger.'@level' = 'WARN'
 
+println success()
+
 println "Set REST API authorization API log level to DEBUG"
 configurationNode.'Loggers'.appendNode{
     Logger(level:'DEBUG', name:'org.bonitasoft.engine.authorization.PermissionServiceImpl')

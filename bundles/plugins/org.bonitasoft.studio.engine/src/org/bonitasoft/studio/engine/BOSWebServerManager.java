@@ -163,23 +163,9 @@ public class BOSWebServerManager implements IBonitaProjectListener {
                 PlatformUtil.copyResource(new File(bundleLocation), tomcatFolder, monitor);
                 BonitaStudioLog.debug("Tomcat bundle copied in workspace.",
                         EnginePlugin.PLUGIN_ID);
-                addBonitaWar(tomcatFolderInWorkspace, monitor);
             }
         } catch (final IOException e) {
             BonitaStudioLog.error(e, EnginePlugin.PLUGIN_ID);
-        }
-    }
-
-    protected void addBonitaWar(final File targetFolder, final IProgressMonitor monitor) throws IOException {
-        final File webappDir = new File(targetFolder, "webapps");
-        final File targetBonitaWarFile = new File(webappDir, "bonita.war");
-        if (!targetBonitaWarFile.exists()) {
-            BonitaStudioLog.debug("Copying Bonita war in tomcat/server/webapps...", EnginePlugin.PLUGIN_ID);
-            final URL url = getTomcatBundle().getResource("tomcat/server/webapp");
-            final File bonitaWarFile = new File(FileLocator.toFileURL(url).getFile(), "bonita.war");
-            PlatformUtil.copyResource(webappDir, bonitaWarFile, monitor);
-            BonitaStudioLog.debug("Bonita war copied in tomcat/server/webapps.",
-                    EnginePlugin.PLUGIN_ID);
         }
     }
 
