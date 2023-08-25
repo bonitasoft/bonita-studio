@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Groovy UI Tests Fragments
 Bundle-SymbolicName: org.bonitasoft.studio.groovy.ui.tests
-Bundle-Version: 9.0.0.qualifier
+Bundle-Version: 9.0.0.W34
 Bundle-Vendor: Bonitasoft S.A.
 Fragment-Host: org.bonitasoft.studio.groovy.ui;bundle-version="7.16.0"
 Automatic-Module-Name: org.bonitasoft.studio.groovy.ui.tests
