@@ -78,9 +78,7 @@ Export-Package: org.bonitasoft.engine,
  org.bonitasoft.engine.search.impl,
  org.bonitasoft.engine.session,
  org.bonitasoft.engine.session.impl,
- org.bonitasoft.engine.tenant,
- org.bonitasoft.engine.theme,
- org.bonitasoft.engine.theme.exception
+ org.bonitasoft.engine.tenant
 Import-Package: org.slf4j
 Require-Bundle: com.fasterxml.jackson.core.jackson-annotations,
  com.fasterxml.jackson.core.jackson-core,

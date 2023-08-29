@@ -40,6 +40,8 @@ public class ApplicationAssemblyConfigurationStep implements MigrationStep {
 				.filter(plugin -> plugin.hasExecutions() || plugin.hasConfiguration()).map(MavenPlugin::toPlugin)
 				.forEach(build::addPlugin);
 		model.setBuild(build);
+		appProjectConfiguration.getProfiles().clear();
+		appProjectConfiguration.getProfiles().forEach(model::addProfile);
 		saveMavenModel(model, appModule);
 		report.updated("Application module build configuration has been updated to support Maven build.");
 		return report;
