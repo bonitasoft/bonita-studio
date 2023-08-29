@@ -105,6 +105,7 @@ public class MavenAppModuleModelBuilder implements MavenModelBuilder {
                 .forEach(build::addPlugin);
 
         model.setBuild(build);
+        appProjectConfiguration.getProfiles().forEach(model::addProfile);
         return model;
     }
 

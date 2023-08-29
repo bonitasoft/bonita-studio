@@ -39,6 +39,10 @@ public interface DefaultPluginVersions {
     static final String MAVEN_SUREFIRE_PLUGIN = "maven-surefire-plugin";
     static final String MAVEN_SUREFIRE_PLUGIN_VERSION = "3.1.2";
     
+    static final String GROOVY_MAVEN_PLUGIN_GROUP_ID = "org.codehaus.gmaven";
+    static final String GROOVY_MAVEN_PLUGIN_ARTIFACT_ID = "groovy-maven-plugin";
+    static final String GROOVY_MAVEN_PLUGIN_VERSION = "2.1.1";
+    
     static final String MAVEN_FAILSAFE_PLUGIN = "maven-failsafe-plugin";
     static final String MAVEN_FAILSAFE_PLUGIN_VERSION = "3.1.2";
     
@@ -80,5 +84,8 @@ public interface DefaultPluginVersions {
     
     static final String BONITA_PROJECT_GROUP_ID = "org.bonitasoft";
     static final String BONITA_PROJECT_ARTIFACT_ID = "bonita-project";
+    
+    static final String EXEC_MAVEN_PLUGIN_GROUP_ID = "org.codehaus.mojo";
+    static final String EXEC_MAVEN_PLUGIN_ARTIFACT_ID = "exec-maven-plugin";
 
 }
