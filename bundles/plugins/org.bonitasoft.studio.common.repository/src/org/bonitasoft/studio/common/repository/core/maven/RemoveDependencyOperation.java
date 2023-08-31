@@ -16,54 +16,52 @@ package org.bonitasoft.studio.common.repository.core.maven;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Model;
 import org.bonitasoft.studio.common.repository.core.maven.model.GAV;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 
 public class RemoveDependencyOperation extends MavenModelOperation {
 
-    private final List<Dependency> dependenciesToRemove;
+	private final List<Dependency> dependenciesToRemove;
 
-    public RemoveDependencyOperation(List<Dependency> dependenciesToRemove) {
-        this.dependenciesToRemove = dependenciesToRemove;
-    }
+	public RemoveDependencyOperation(List<Dependency> dependenciesToRemove) {
+		this.dependenciesToRemove = dependenciesToRemove;
+	}
 
-    public RemoveDependencyOperation(Dependency dependencyToRemove) {
-        this(List.of(dependencyToRemove));
-    }
+	public RemoveDependencyOperation(Dependency dependencyToRemove) {
+		this(List.of(dependencyToRemove));
+	}
 
-    public RemoveDependencyOperation(String groupId,
-            String artifactId,
-            String version,
-            String scope) {
-        this(createDependency(groupId, artifactId, version, scope));
-    }
+	public RemoveDependencyOperation(String groupId, String artifactId, String version, String scope) {
+		this(createDependency(groupId, artifactId, version, scope));
+	}
 
-    @Override
-    public void run(IProgressMonitor monitor) throws CoreException {
-        Model model = readModel(getCurrentProject());
+	@Override
+	public void run(IProgressMonitor monitor) throws CoreException {
+		IProject currentProject = getCurrentProject();
+		var mavenProject = MavenProjectHelper.getMavenProject(currentProject);
+		Model model = readModel(currentProject);
 
-        List<Dependency> removeDependencies = dependenciesToRemove.stream()
-                .map(dependency -> model.getDependencies().stream()
-                        .filter(existingDep -> new GAV(existingDep).equals(new GAV(dependency)))
-                        .findFirst()
-                        .orElse(null))
-                .filter(Objects::nonNull)
-                .collect(Collectors.toList());
+		for (Dependency dep : dependenciesToRemove) {
+			var removed = model.getDependencies()
+					.removeIf(dependency -> Objects.equals(new GAV(dependency), new GAV(dep)));
+			if (!removed && Objects.equals(mavenProject.getGroupId(), dep.getGroupId())
+					&& Objects.equals(mavenProject.getVersion(), dep.getVersion())) {
+				var depWithProperties = dep.clone();
+				depWithProperties.setGroupId("${project.groupId}");
+				depWithProperties.setVersion("${project.version}");
+				removed = model.getDependencies()
+						.removeIf(dependency -> Objects.equals(new GAV(dependency), new GAV(depWithProperties)));
+			}
+			getLocalStore().remove(dep);
+			modelUpdated = modelUpdated || removed;
+		}
 
-        if (!removeDependencies.isEmpty()) {
-            for (Dependency dep : removeDependencies) {
-                model.getDependencies().remove(dep);
-                getLocalStore().remove(dep);
-            }
-            modelUpdated = true;
-        }
-        
-        saveModel(getCurrentProject(), model, monitor);
-    }
+		saveModel(currentProject, model, monitor);
+	}
 
 }

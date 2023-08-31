@@ -30,8 +30,6 @@ import org.bonitasoft.studio.engine.operation.GetApiSessionOperation;
 import org.bonitasoft.studio.maven.ExtensionRepositoryStore;
 import org.bonitasoft.studio.maven.ImportProjectException;
 import org.bonitasoft.studio.maven.operation.DeployCustomPageProjectOperation;
-import org.bonitasoft.studio.pics.Pics;
-import org.bonitasoft.studio.rest.api.extension.RestAPIExtensionActivator;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -108,5 +106,10 @@ public class DependencyThemeFileStore extends ThemeFileStore {
             return (X) theme;
         }
         return super.getAdapter(adapter);
+    }
+    
+    @Override
+    public boolean isInClasspath() {
+    	return true;
     }
 }

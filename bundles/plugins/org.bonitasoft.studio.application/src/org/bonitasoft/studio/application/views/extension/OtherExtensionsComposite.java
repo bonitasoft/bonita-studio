@@ -270,7 +270,7 @@ public class OtherExtensionsComposite extends Composite {
                 .createIn(composite);
     }
 
-    private void createTitle(Composite parent) {
+	private void createTitle(Composite parent) {
         var title = new Label(parent, SWT.WRAP);
         title.setLayoutData(GridDataFactory.fillDefaults().create());
         title.setText(Messages.unknownExtensionsTitle);

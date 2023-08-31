@@ -71,6 +71,7 @@ public class RepositoryModelBuilder {
                 .stream()
                 .map(fStore -> createArtifact(store, fStore))
                 .filter(Objects::nonNull)
+                .filter(Artifact::isInClasspath)
                 .forEach(store::add);
         return store;
     }

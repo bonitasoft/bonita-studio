@@ -28,7 +28,6 @@ import java.util.zip.ZipFile;
 
 import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Model;
-import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
 import org.bonitasoft.plugin.analyze.report.model.Artifact;
 import org.bonitasoft.plugin.analyze.report.model.CustomPage;
 import org.bonitasoft.plugin.analyze.report.model.Definition;
@@ -37,11 +36,16 @@ import org.bonitasoft.plugin.analyze.report.model.RestAPIExtension;
 import org.bonitasoft.plugin.analyze.report.model.Theme;
 import org.bonitasoft.studio.common.Strings;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.repository.core.BonitaProject;
 import org.bonitasoft.studio.common.repository.core.ProjectDependenciesStore;
+import org.bonitasoft.studio.common.repository.core.maven.MavenProjectHelper;
 import org.bonitasoft.studio.common.repository.store.LocalDependenciesStore;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
-import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.m2e.core.MavenPlugin;
 import org.eclipse.swt.graphics.Image;
 
 public class BonitaArtifactDependencyConverter {
@@ -50,13 +54,14 @@ public class BonitaArtifactDependencyConverter {
     private LocalDependenciesStore localDependenciesStore;
     private Map<ArtifactType, Image> defaultIconsMap;
     private Object matchingArtifact;
-    private MavenXpp3Reader pomReader;
+	private BonitaProject bonitaProject;
 
     public BonitaArtifactDependencyConverter(ProjectDependenciesStore dependenciesStore,
-            LocalDependenciesStore localDependenciesStore) {
+            LocalDependenciesStore localDependenciesStore,
+            String projectId) {
         this.dependenciesStore = dependenciesStore;
         this.localDependenciesStore = localDependenciesStore;
-        this.pomReader = new MavenXpp3Reader();
+        this.bonitaProject = BonitaProject.create(projectId);
 
         defaultIconsMap = new EnumMap<>(ArtifactType.class);
         defaultIconsMap.put(ArtifactType.CONNECTOR, Pics.getImage(PicsConstants.connectorDefaultIcon));
@@ -77,6 +82,15 @@ public class BonitaArtifactDependencyConverter {
         ArtifactType type = findType(dep);
         bonitaDep.setArtifactType(type);
         bonitaDep.setStatus(dependenciesStore.getStatus(dep));
+        
+        try {
+			var metadata = bonitaProject.getProjectMetadata(new NullProgressMonitor());
+			bonitaDep.setProjectExtension(Objects.equals(dep.getGroupId(), metadata.getGroupId()) 
+					&& Objects.equals(dep.getVersion(), metadata.getVersion()) 
+					&& bonitaProject.getExtensionsProjects().stream().anyMatch(p -> Objects.equals(artifactId(p), dep.getArtifactId())));
+		} catch (CoreException e) {
+			BonitaStudioLog.error(e);
+		}
         if (Objects.equals(type, ArtifactType.OTHER)) {
             return bonitaDep;
         }
@@ -97,7 +111,17 @@ public class BonitaArtifactDependencyConverter {
         return bonitaDep;
     }
 
-    private void fillConnector(Dependency dep, BonitaArtifactDependency bonitaDep) {
+    private String artifactId(IProject p) {
+		try {
+			var model = MavenProjectHelper.getMavenModel(p);
+			return model.getArtifactId();
+		} catch (CoreException e) {
+			BonitaStudioLog.error(e);
+			return null;
+		}
+	}
+
+	private void fillConnector(Dependency dep, BonitaArtifactDependency bonitaDep) {
         var file = matchingArtifact instanceof Definition
                 ? ((Definition) matchingArtifact).getArtifact().getFile()
                 : ((Implementation) matchingArtifact).getArtifact().getFile();
@@ -117,8 +141,8 @@ public class BonitaArtifactDependencyConverter {
                                     dep.getArtifactId())))
                     .map(entry -> {
                         try (InputStream is = archiveFile.getInputStream(entry)) {
-                            return pomReader.read(is);
-                        } catch (IOException | XmlPullParserException e) {
+                            return MavenPlugin.getMaven().readModel(is);
+                        } catch (IOException | CoreException e) {
                             BonitaStudioLog.error(e);
                             return null;
                         }

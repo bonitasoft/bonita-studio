@@ -39,9 +39,9 @@ public interface DefaultPluginVersions {
     static final String MAVEN_SUREFIRE_PLUGIN = "maven-surefire-plugin";
     static final String MAVEN_SUREFIRE_PLUGIN_VERSION = "3.1.2";
     
-    static final String GROOVY_MAVEN_PLUGIN_GROUP_ID = "org.codehaus.gmaven";
-    static final String GROOVY_MAVEN_PLUGIN_ARTIFACT_ID = "groovy-maven-plugin";
-    static final String GROOVY_MAVEN_PLUGIN_VERSION = "2.1.1";
+    static final String GROOVY_MAVEN_PLUGIN_GROUP_ID = "org.codehaus.gmavenplus";
+    static final String GROOVY_MAVEN_PLUGIN_ARTIFACT_ID = "gmavenplus-plugin";
+    static final String GROOVY_MAVEN_PLUGIN_VERSION = "3.0.0";
     
     static final String MAVEN_FAILSAFE_PLUGIN = "maven-failsafe-plugin";
     static final String MAVEN_FAILSAFE_PLUGIN_VERSION = "3.1.2";

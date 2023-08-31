@@ -22,8 +22,10 @@ import java.util.stream.Stream;
 import org.apache.maven.model.Model;
 import org.bonitasoft.studio.common.RestAPIExtensionNature;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.core.BonitaProject;
+import org.bonitasoft.studio.common.repository.core.maven.MavenModelOperation;
 import org.bonitasoft.studio.common.repository.core.maven.MavenProjectHelper;
 import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
 import org.bonitasoft.studio.common.repository.model.IRepository;
@@ -50,8 +52,6 @@ public class UpdateProjectMetadataOperation implements IWorkspaceRunnable {
     private static final String BDM_DAO_CLIENT_SUFFIX = "-bdm-dao-client";
     private static final String BDM_MODEL_SUFFIX = "-bdm-model";
     private static final String BDM_PARENT_SUFFIX = "-bdm-parent";
-    private static final String BONITA_VERSION_PROPERTY = "bonita.version";
-    private static final String BONITA_RUNTIME_VERSION_PROPERTY = "bonita-runtime.version";
     private static final String APP_MODULE_SUFFIX = "-app";
     private static final String PARENT_SUFFIX = "-parent";
     private static final String EXTENSIONS_PARENT_SUFFIX = "-extensions";
@@ -145,6 +145,7 @@ public class UpdateProjectMetadataOperation implements IWorkspaceRunnable {
                     false,
                     true,
                     true).run(new NullProgressMonitor());
+            MavenModelOperation.scheduleAnalyzeProjectDependenciesJob(RepositoryManager.getInstance().getAccessor());
         }
     }
 

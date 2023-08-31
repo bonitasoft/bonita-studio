@@ -15,6 +15,7 @@
     <elements xsi:type="commands:Handler" xmi:id="_9em5YFt0Eem1IowXlZ1N2Q" elementId="org.bonitasoft.studio.theme.deleteHandler" contributionURI="bundleclass://org.bonitasoft.studio.rest.api.extension/org.bonitasoft.studio.theme.handler.DeleteThemeHandler" command="_6yeDQFt0Eem1IowXlZ1N2Q"/>
     <elements xsi:type="commands:Handler" xmi:id="_pmsOcCWZEeuku6hN8lb9Sw" elementId="org.bonitasoft.studio.rest.api.extension.newJavaClassHandler" contributionURI="bundleclass://org.bonitasoft.studio.rest.api.extension/org.bonitasoft.studio.rest.api.extension.ui.handler.NewJavaClassHandler" command="_tZmfYCWZEeuku6hN8lb9Sw"/>
     <elements xsi:type="commands:Handler" xmi:id="_dvz7kO-CEeuki-Tdh7kfpQ" elementId="org.bonitasoft.studio.maven.extension.deploy.from.dependency.handler" contributionURI="bundleclass://org.bonitasoft.studio.rest.api.extension/org.bonitasoft.studio.maven.ui.handler.DeployExtensionFromDependencyHandler" command="_7nvDAO-BEeuki-Tdh7kfpQ"/>
+    <elements xsi:type="commands:Handler" xmi:id="_ZVKvoEaAEe6J2PSE3Um4kw" elementId="org.bonitasoft.studio.maven.import.project.extension.handler" contributionURI="bundleclass://org.bonitasoft.studio.rest.api.extension/org.bonitasoft.studio.maven.ui.handler.ImportProjectExtensionHandler" command="_cZ0-AEaBEe6Fg__gMYtI0Q"/>
   </fragments>
   <fragments xsi:type="fragment:StringModelFragment" xmi:id="_MDSS4GtsEeWUnsGmiq8DQg" featurename="commands" parentElementId="org.eclipse.e4.legacy.ide.application">
     <elements xsi:type="commands:Command" xmi:id="_2OMEUGtqEeWUnsGmiq8DQg" elementId="org.bonitasoft.studio.rest.api.extension.newCommand" commandName="%newAndMore"/>
@@ -40,6 +41,7 @@
       <parameters xmi:id="_M0RngO-CEeuki-Tdh7kfpQ" elementId="version" name="version" optional="false"/>
       <parameters xmi:id="_M-_pwO-CEeuki-Tdh7kfpQ" elementId="classifier" name="classifier"/>
     </elements>
+    <elements xsi:type="commands:Command" xmi:id="_cZ0-AEaBEe6Fg__gMYtI0Q" elementId="org.bonitasoft.studio.maven.import.project.extension.command" commandName="%importProjectExtension"/>
   </fragments>
   <fragments xsi:type="fragment:StringModelFragment" xmi:id="_JOq_EHZVEeW6kO-p0oSgKw" featurename="addons" parentElementId="org.eclipse.e4.legacy.ide.application">
     <elements xsi:type="application:Addon" xmi:id="_xmqtoOpkEemi2fumwpsySA" elementId="org.bonitasoft.studio.rest.api.extension.businessArchive.validator.addon" contributionURI="bundleclass://org.bonitasoft.studio.rest.api.extension/org.bonitasoft.studio.rest.api.extension.core.validation.FormsCustomPermissionsValidator"/>

@@ -142,7 +142,13 @@ public class ProjectMetadata {
 		if (mavenProject == null) {
 			return read(projectPom);
 		}
-		return read(mavenProject);
+		var metadata = read(mavenProject);
+		// Ignore bonita-project parent description
+		var model = read(projectPom);
+		if(model != null) {
+			metadata.setDescription(model.getDescription());
+		}
+		return metadata;
 	}
 
 	public static ProjectMetadata read(MavenProject mavenProject) {

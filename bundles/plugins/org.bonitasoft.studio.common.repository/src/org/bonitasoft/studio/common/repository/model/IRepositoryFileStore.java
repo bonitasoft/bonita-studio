@@ -79,5 +79,9 @@ public interface IRepositoryFileStore<T> extends IAdaptable {
     default MigrationReport getMigrationReport() {
         return MigrationReport.emptyReport();
     }
+    
+    default boolean isInClasspath() {
+    	return true;
+    }
 
 }

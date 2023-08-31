@@ -3,9 +3,31 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Bonita Main UI plugin
 Bundle-SymbolicName: org.bonitasoft.studio.application;singleton:=true
 Bundle-Version: 9.0.0.qualifier
-Bundle-Localization: plugin
+Bundle-ClassPath: .
 Bundle-Activator: org.bonitasoft.studio.application.ApplicationPlugin
 Bundle-Vendor: BonitaSoft S.A.
+Bundle-Localization: plugin
+Export-Package: org.bonitasoft.studio.application,
+ org.bonitasoft.studio.application.actions,
+ org.bonitasoft.studio.application.actions.coolbar,
+ org.bonitasoft.studio.application.contribution,
+ org.bonitasoft.studio.application.coolbar,
+ org.bonitasoft.studio.application.handler,
+ org.bonitasoft.studio.application.i18n,
+ org.bonitasoft.studio.application.maven.preference,
+ org.bonitasoft.studio.application.operation,
+ org.bonitasoft.studio.application.operation.extension.participant.configuration,
+ org.bonitasoft.studio.application.operation.extension.participant.preview,
+ org.bonitasoft.studio.application.ui.control,
+ org.bonitasoft.studio.application.ui.control.model,
+ org.bonitasoft.studio.application.ui.control.model.dependency,
+ org.bonitasoft.studio.application.views,
+ org.bonitasoft.studio.application.views.extension,
+ org.bonitasoft.studio.application.views.extension.card,
+ org.bonitasoft.studio.application.views.extension.card.zoom,
+ org.bonitasoft.studio.application.views.overview,
+ org.bonitasoft.studio.application.views.process,
+ org.bonitasoft.studio.application.views.provider
 Require-Bundle: org.bonitasoft.studio.diagram,
  org.eclipse.ui.ide,
  org.eclipse.core.filesystem,
@@ -81,32 +103,10 @@ Require-Bundle: org.bonitasoft.studio.diagram,
  org.bonitasoft.engine.bonita-client
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-ActivationPolicy: lazy
+Automatic-Module-Name: org.bonitasoft.studio.application
 Import-Package: javax.annotation;version="1.2.0",
  javax.inject;version="1.0.0",
  org.eclipse.e4.core.di.annotations,
  org.eclipse.e4.ui.workbench.renderers.swt,
  org.osgi.service.event;version="1.3.0",
  org.slf4j;version="1.7.30"
-Export-Package: org.bonitasoft.studio.application,
- org.bonitasoft.studio.application.actions,
- org.bonitasoft.studio.application.actions.coolbar,
- org.bonitasoft.studio.application.contribution,
- org.bonitasoft.studio.application.coolbar,
- org.bonitasoft.studio.application.handler,
- org.bonitasoft.studio.application.i18n,
- org.bonitasoft.studio.application.maven.preference,
- org.bonitasoft.studio.application.operation,
- org.bonitasoft.studio.application.operation.extension.participant.configuration,
- org.bonitasoft.studio.application.operation.extension.participant.preview,
- org.bonitasoft.studio.application.ui.control,
- org.bonitasoft.studio.application.ui.control.model,
- org.bonitasoft.studio.application.ui.control.model.dependency,
- org.bonitasoft.studio.application.views,
- org.bonitasoft.studio.application.views.extension,
- org.bonitasoft.studio.application.views.extension.card,
- org.bonitasoft.studio.application.views.extension.card.zoom,
- org.bonitasoft.studio.application.views.overview,
- org.bonitasoft.studio.application.views.process,
- org.bonitasoft.studio.application.views.provider
-Bundle-ClassPath: .
-Automatic-Module-Name: org.bonitasoft.studio.application

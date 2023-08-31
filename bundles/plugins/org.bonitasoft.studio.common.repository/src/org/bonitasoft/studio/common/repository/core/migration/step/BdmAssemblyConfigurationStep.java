@@ -25,7 +25,6 @@ import org.apache.maven.model.PluginExecution;
 import org.bonitasoft.studio.common.repository.core.BonitaProject;
 import org.bonitasoft.studio.common.repository.core.migration.MigrationStep;
 import org.bonitasoft.studio.common.repository.core.migration.report.MigrationReport;
-import org.codehaus.plexus.util.xml.Xpp3Dom;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.osgi.framework.Version;
@@ -70,21 +69,9 @@ public class BdmAssemblyConfigurationStep implements MigrationStep {
 		plugin.setArtifactId("maven-assembly-plugin");
 		var execution = new PluginExecution();
 		execution.setId("bdm-descriptor-archive");
-		execution.setPhase("package");
 		execution.setGoals(List.of("single"));
-		execution.setConfiguration(createAssemblyPluginConfiguration());
 		plugin.addExecution(execution);
 		return plugin;
-	}
-
-	private Xpp3Dom createAssemblyPluginConfiguration() {
-		Xpp3Dom pluginConfiguration = new Xpp3Dom("configuration");
-		Xpp3Dom descriptorRefs = new Xpp3Dom("descriptorRefs");
-		Xpp3Dom descriptorRef = new Xpp3Dom("descriptorRef");
-		descriptorRef.setValue("bdm-assembly");
-		descriptorRefs.addChild(descriptorRef);
-		pluginConfiguration.addChild(descriptorRefs);
-		return pluginConfiguration;
 	}
 
 	@Override

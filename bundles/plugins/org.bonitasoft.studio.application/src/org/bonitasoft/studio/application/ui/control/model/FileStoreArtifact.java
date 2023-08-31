@@ -70,5 +70,10 @@ public class FileStoreArtifact implements Artifact, IValidable {
         }
         return ValidationStatus.ok();
     }
+    
+    @Override
+    public boolean isInClasspath() {
+    	return fStore.isInClasspath();
+    }
 
 }

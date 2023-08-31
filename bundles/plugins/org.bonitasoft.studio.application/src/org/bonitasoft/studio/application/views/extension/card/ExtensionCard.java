@@ -220,7 +220,7 @@ public class ExtensionCard extends Composite {
                     .onClick(e -> updateListeners.stream().forEach(l -> l.updateExtension(bonitaDep, dep)))
                     .createIn(toolbarComposite);
             columnUsed++;
-        } else if (!bonitaDep.isFromMarketplace()) {
+        } else if (!bonitaDep.isFromMarketplace() && !bonitaDep.isProjectExtension()) {
             new DynamicButtonWidget.Builder()
                     .withId(SWTBotConstants.updateExtensionFromCard(bonitaDep.getArtifactId()))
                     .withLabel(Messages.upgradeExtension)
@@ -246,7 +246,7 @@ public class ExtensionCard extends Composite {
                 .createIn(toolbarComposite);
     }
 
-    protected List<DynamicButtonWidget.Builder> getToolbarContributions() {
+	protected List<DynamicButtonWidget.Builder> getToolbarContributions() {
         return new ArrayList<>();
     }
 
