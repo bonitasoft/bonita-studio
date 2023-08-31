@@ -120,7 +120,8 @@ public class ExtensionComposite extends Composite {
         var currentRepository = repositoryAccessor.getCurrentRepository().orElseThrow();
         bonitaArtifactDependencyConverter = new BonitaArtifactDependencyConverter(
                 currentRepository.getProjectDependenciesStore(),
-                currentRepository.getLocalDependencyStore());
+                currentRepository.getLocalDependencyStore(),
+                currentRepository.getProjectId());
 
         var eclipseContext = EclipseContextFactory.create();
         errorHandler = ContextInjectionFactory.make(ExceptionDialogHandler.class, eclipseContext);
@@ -160,6 +161,9 @@ public class ExtensionComposite extends Composite {
                 .addDropdownItem(Messages.addRestApiExtension, null,
                         e -> commandExecutor.executeCommand(ProjectOverviewEditorPart.IMPORT_EXTENSION_COMMAND,
                                 Map.of(ImportExtensionHandler.EXTENSION_TYPE_PARAMETER, ArtifactType.REST_API.name())))
+                .addDropdownItem(Messages.addProjectExtension, null,
+                        e -> commandExecutor.executeCommand(ProjectOverviewEditorPart.IMPORT_PROJECT_EXTENSION_COMMAND,
+                                Map.of()))
                 .addDropdownItem(Messages.addOther, null,
                         e -> commandExecutor.executeCommand(ProjectOverviewEditorPart.IMPORT_EXTENSION_COMMAND,
                                 Map.of(ImportExtensionHandler.EXTENSION_TYPE_PARAMETER, ArtifactType.OTHER.name())))

@@ -14,8 +14,7 @@ import java.util.Properties;
 
 import org.bonitasoft.plugin.analyze.report.model.RestAPIExtension;
 import org.bonitasoft.studio.common.extension.properties.ExtensionPagePropertiesReader;
-import org.bonitasoft.studio.ui.dialog.ExceptionDialogHandler;
-import org.eclipse.swt.widgets.Display;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 
 public class DependencyRestAPIExtensionDescriptor extends RestAPIExtensionDescriptor {
 
@@ -30,11 +29,13 @@ public class DependencyRestAPIExtensionDescriptor extends RestAPIExtensionDescri
     public Properties getPageProperties() {
         File file = new File(extension.getArtifact().getFile());
         try {
-            return ExtensionPagePropertiesReader.getPageProperties(file).orElseThrow();
+        	if(file.exists()) {
+        		return ExtensionPagePropertiesReader.getPageProperties(file).orElseThrow();
+        	}
         } catch (IOException e) {
-            new ExceptionDialogHandler().openErrorDialog(Display.getDefault().getActiveShell(), e.getMessage(), e);
-            return new Properties();
+            BonitaStudioLog.error(e);
         }
+        return new Properties();
     }
     
     @Override

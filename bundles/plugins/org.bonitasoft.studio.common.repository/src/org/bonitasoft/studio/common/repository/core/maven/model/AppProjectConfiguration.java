@@ -28,12 +28,12 @@ import org.codehaus.plexus.util.xml.Xpp3Dom;
 
 public class AppProjectConfiguration implements DefaultPluginVersions {
 
-	private static final String PACKAGE_PHASE = "package";
+	private static final String EXECUTE_GOAL = "execute";
 	private static final String CONFIGURATION_TAG_NAME = "configuration";
 	public static final String BONITA_RUNTIME_VERSION = "bonita.runtime.version";
-	private static final String BUNDLE_TOMCAT_ID = "bundle";
+	private static final String BUNDLE_ID = "bundle";
 	private static final String DOCKER_ID = "docker";
-	private static final String ENTERPRISE_BASE_IMAGE_NAME = "bonitasoft.jfrog.io/docker/bonita-subscription:${bonita.runtime.version}";
+	private static final String ENTERPRISE_BASE_IMAGE_NAME = "bonitasoft.jfrog.io/docker/bonita-subscription";
 
 	public static final List<MavenDependency> PROVIDED_DEPENDENCIES = List.of(new BonitaCommonDependency(),
 			new MavenDependency(CODEHAUS_GROOVY_GROUPID, "groovy", null),
@@ -57,8 +57,8 @@ public class AppProjectConfiguration implements DefaultPluginVersions {
 	public AppProjectConfiguration() {
 		var groovyMavenPlugin = new MavenPlugin(GROOVY_MAVEN_PLUGIN_GROUP_ID,
 				GROOVY_MAVEN_PLUGIN_ARTIFACT_ID, GROOVY_MAVEN_PLUGIN_VERSION);
-		groovyMavenPlugin.addExecution(pluginExecution("bonita-project-properties", null, List.of("execute"), null));
-		groovyMavenPlugin.addExecution(pluginExecution("generate-application-properties", null, List.of("execute"), null));
+		groovyMavenPlugin.addExecution(pluginExecution("bonita-project-properties", null, List.of(EXECUTE_GOAL), null));
+		groovyMavenPlugin.addExecution(pluginExecution("generate-application-properties", null, List.of(EXECUTE_GOAL), null));
 		addPlugin(groovyMavenPlugin);
 		var bonitProjectPlugin = new MavenPlugin(BONITA_PROJECT_MAVEN_PLUGIN_GROUP_ID,
 				BONITA_PROJECT_MAVEN_PLUGIN_ARTIFACT_ID, BONITA_PROJECT_MAVEN_PLUGIN_DEFAULT_VERSION);
@@ -72,19 +72,18 @@ public class AppProjectConfiguration implements DefaultPluginVersions {
 		addPlugin(buildHelperPlugin);
 		var assemblyPlugin = new MavenPlugin(APACHE_MAVEN_PLUGIN_GROUP_ID, MAVEN_ASSEMBLY_PLUGIN,
 				MAVEN_ASSEMBLY_PLUGIN_VERSION);
-		assemblyPlugin.addExecution(pluginExecution("application-archive", PACKAGE_PHASE, List.of("single"),
-				createAssemblyPluginConfiguration("application-assembly", "${bonita.applicationOutput}")));
+		assemblyPlugin.addExecution(pluginExecution("application-archive", null, List.of("single"), null));
 		addPlugin(assemblyPlugin);
 
 		PROVIDED_DEPENDENCIES.stream().forEach(this::addDependency);
 
-		profiles.add(createBunldeProfile());
+		profiles.add(createBundleProfile());
 		profiles.add(createDockerProfile());
 	}
 
-	private Profile createBunldeProfile() {
+	private Profile createBundleProfile() {
 		var bundleProfile = new Profile();
-		bundleProfile.setId(BUNDLE_TOMCAT_ID);
+		bundleProfile.setId(BUNDLE_ID);
 		bundleProfile.addDependency(bundleDependency());
 		var buildBase = new BuildBase();
 		buildBase.addPlugin(bundleAssembly());
@@ -96,7 +95,7 @@ public class AppProjectConfiguration implements DefaultPluginVersions {
 		var bundleProfile = new Profile();
 		bundleProfile.setId(DOCKER_ID);
 		if(!PlatformUtil.isACommunityBonitaProduct()) {
-			bundleProfile.addProperty("docker.baseImageName", ENTERPRISE_BASE_IMAGE_NAME);
+			bundleProfile.addProperty("docker.baseImageRepository", ENTERPRISE_BASE_IMAGE_NAME);
 		}
 		var buildBase = new BuildBase();
 		buildBase.addPlugin(groovyMavenPlugin("generate-docker-resources"));
@@ -111,14 +110,14 @@ public class AppProjectConfiguration implements DefaultPluginVersions {
 		groovyMavenPlugin.setArtifactId(GROOVY_MAVEN_PLUGIN_ARTIFACT_ID);
 		var execution = new PluginExecution();
 		execution.setId(id);
-		execution.addGoal("execute");
+		execution.addGoal(EXECUTE_GOAL);
 		groovyMavenPlugin.addExecution(execution);
 		return groovyMavenPlugin;
 	}
 
 	private Dependency bundleDependency() {
 		var bundleDependency = new Dependency();
-		bundleDependency.setGroupId("org.bonitasoft.distrib");
+		bundleDependency.setGroupId(PlatformUtil.isACommunityBonitaProduct() ? "org.bonitasoft.distrib" : "com.bonitasoft.distrib");
 		bundleDependency.setArtifactId(PlatformUtil.isACommunityBonitaProduct() ? "bundle-tomcat" : "bundle-tomcat-sp");
 		bundleDependency.setVersion("${bonita.runtime.version}");
 		bundleDependency.setType("zip");
@@ -129,11 +128,8 @@ public class AppProjectConfiguration implements DefaultPluginVersions {
 		var assemblyPlugin = new Plugin();
 		assemblyPlugin.setArtifactId(MAVEN_ASSEMBLY_PLUGIN);
 		var bundleExecution = new PluginExecution();
-		bundleExecution.setId("bundle-tomcat-archive");
-		bundleExecution.setPhase(PACKAGE_PHASE);
+		bundleExecution.setId(PlatformUtil.isACommunityBonitaProduct() ? "bundle-archive" : "bundle-archive-enterprise");
 		bundleExecution.addGoal("single");
-		bundleExecution.setConfiguration(createAssemblyPluginConfiguration(
-				PlatformUtil.isACommunityBonitaProduct() ? "bundle-tomcat-assembly" : "bundle-tomcat-sp-assembly", null));
 		assemblyPlugin.addExecution(bundleExecution);
 		return assemblyPlugin;
 	}
@@ -143,10 +139,8 @@ public class AppProjectConfiguration implements DefaultPluginVersions {
 		execPlugin.setGroupId(EXEC_MAVEN_PLUGIN_GROUP_ID);
 		execPlugin.setArtifactId(EXEC_MAVEN_PLUGIN_ARTIFACT_ID);
 		var dockerPlugin = new PluginExecution();
-		dockerPlugin.setId("docker-image");
-		dockerPlugin.setPhase(PACKAGE_PHASE);
+		dockerPlugin.setId("build-image");
 		dockerPlugin.addGoal("exec");
-		dockerPlugin.setConfiguration(createExecPluginConfiguration());
 		execPlugin.addExecution(dockerPlugin);
 		return execPlugin;
 	}
@@ -178,36 +172,6 @@ public class AppProjectConfiguration implements DefaultPluginVersions {
 		srcGroovy.setValue("src-groovy");
 		sources.addChild(srcGroovy);
 		pluginConfiguration.addChild(sources);
-		return pluginConfiguration;
-	}
-
-	private Xpp3Dom createAssemblyPluginConfiguration(String assemblyDescriptor, String outputDirectory) {
-		Xpp3Dom pluginConfiguration = new Xpp3Dom(CONFIGURATION_TAG_NAME);
-		if (outputDirectory != null) {
-			var outputDirectoryDom = new Xpp3Dom("outputDirectory");
-			outputDirectoryDom.setValue(outputDirectory);
-			pluginConfiguration.addChild(outputDirectoryDom);
-		}
-		Xpp3Dom descriptorRefs = new Xpp3Dom("descriptorRefs");
-		Xpp3Dom descriptorRef = new Xpp3Dom("descriptorRef");
-		descriptorRef.setValue(assemblyDescriptor);
-		descriptorRefs.addChild(descriptorRef);
-		pluginConfiguration.addChild(descriptorRefs);
-		return pluginConfiguration;
-	}
-
-	private Xpp3Dom createExecPluginConfiguration() {
-		Xpp3Dom pluginConfiguration = new Xpp3Dom(CONFIGURATION_TAG_NAME);
-		var workingDirectory = new Xpp3Dom("workingDirectory");
-		workingDirectory.setValue("${bonita.applicationOutput}");
-		var executable = new Xpp3Dom("executable");
-		executable.setValue("docker");
-		var commandlineArgs = new Xpp3Dom("commandlineArgs");
-		commandlineArgs.setValue(
-				" build \".\" --build-arg BONITA_BASE_IMAGE=\"${docker.baseImageName}\" --no-cache=\"${docker.noCache}\" --tag \"${docker.imageName}\"");
-		pluginConfiguration.addChild(workingDirectory);
-		pluginConfiguration.addChild(executable);
-		pluginConfiguration.addChild(commandlineArgs);
 		return pluginConfiguration;
 	}
 

@@ -41,6 +41,7 @@ public class BonitaArtifactDependency implements Comparable<BonitaArtifactDepend
     private boolean fromMarketplace = true;
     private String scmUrl;
     private MultiStatus status = new MultiStatus(getClass(), 0, "");
+	private boolean isProjectExtension = false;
 
     public String getName() {
         return name;
@@ -197,32 +198,41 @@ public class BonitaArtifactDependency implements Comparable<BonitaArtifactDepend
         this.status = status;
     }
     
+	public boolean isProjectExtension() {
+		return isProjectExtension;
+	}
+	
+	public void setProjectExtension(boolean isProjectExtension) {
+		this.isProjectExtension = isProjectExtension;
+	}
+	
     @Override
-    public int hashCode() {
-        return Objects.hash(artifactId, artifactType, bonitaMinVersion, description, fromMarketplace, groupId, icon,
-                iconImage, localDependency, name, scmUrl, scope, status, type, versions);
-    }
+	public int hashCode() {
+		return Objects.hash(artifactId, artifactType, bonitaMinVersion, description, fromMarketplace, groupId, icon,
+				iconImage, isProjectExtension, localDependency, name, scmUrl, scope, status, type, versions);
+	}
 
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        BonitaArtifactDependency other = (BonitaArtifactDependency) obj;
-        return Objects.equals(artifactId, other.artifactId) && artifactType == other.artifactType
-                && Objects.equals(bonitaMinVersion, other.bonitaMinVersion)
-                && Objects.equals(description, other.description) && fromMarketplace == other.fromMarketplace
-                && Objects.equals(groupId, other.groupId) && Objects.equals(icon, other.icon)
-                && Objects.equals(iconImage, other.iconImage) && localDependency == other.localDependency
-                && Objects.equals(name, other.name) && Objects.equals(scmUrl, other.scmUrl)
-                && Objects.equals(scope, other.scope) && Objects.equals(status, other.status)
-                && Objects.equals(type, other.type) && Objects.equals(versions, other.versions);
-    }
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		BonitaArtifactDependency other = (BonitaArtifactDependency) obj;
+		return Objects.equals(artifactId, other.artifactId) && artifactType == other.artifactType
+				&& Objects.equals(bonitaMinVersion, other.bonitaMinVersion)
+				&& Objects.equals(description, other.description) && fromMarketplace == other.fromMarketplace
+				&& Objects.equals(groupId, other.groupId) && Objects.equals(icon, other.icon)
+				&& Objects.equals(iconImage, other.iconImage) && isProjectExtension == other.isProjectExtension
+				&& localDependency == other.localDependency && Objects.equals(name, other.name)
+				&& Objects.equals(scmUrl, other.scmUrl) && Objects.equals(scope, other.scope)
+				&& Objects.equals(status, other.status) && Objects.equals(type, other.type)
+				&& Objects.equals(versions, other.versions);
+	}
 
-    @Override
+	@Override
     public int compareTo(BonitaArtifactDependency o) {
         if (o instanceof BonitaArtifactDependency) {
             BonitaArtifactDependency otherDep = o;
@@ -235,5 +245,6 @@ public class BonitaArtifactDependency implements Comparable<BonitaArtifactDepend
         }
         return 0;
     }
+
 
 }

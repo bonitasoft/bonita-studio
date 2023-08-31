@@ -17,6 +17,7 @@ package org.bonitasoft.studio.application.ui.control.model;
 import org.bonitasoft.studio.common.repository.model.IBuildable;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.ui.IDisplayable;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -36,5 +37,5 @@ public class BuildableArtifact extends FileStoreArtifact implements IBuildable {
     public String getName() {
         return IDisplayable.toDisplayName(fStore).orElse("");
     }
-
+    
 }

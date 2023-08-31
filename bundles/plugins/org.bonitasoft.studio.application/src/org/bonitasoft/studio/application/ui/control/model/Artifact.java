@@ -17,7 +17,11 @@ package org.bonitasoft.studio.application.ui.control.model;
 public interface Artifact {
 
     String getName();
-
+    
     Object getParent();
+    
+    default boolean isInClasspath() {
+ 	   return true;
+     }
 
 }

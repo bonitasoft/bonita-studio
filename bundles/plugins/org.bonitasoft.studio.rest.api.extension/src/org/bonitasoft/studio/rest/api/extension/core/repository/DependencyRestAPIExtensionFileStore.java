@@ -106,4 +106,9 @@ public class DependencyRestAPIExtensionFileStore extends RestAPIExtensionFileSto
         }
         return super.getAdapter(adapter);
     }
+    
+    @Override
+    public boolean isInClasspath() {
+    	return true;
+    }
 }

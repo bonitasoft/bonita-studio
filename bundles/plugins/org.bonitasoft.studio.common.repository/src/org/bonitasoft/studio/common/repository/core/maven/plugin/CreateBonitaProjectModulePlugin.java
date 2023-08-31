@@ -24,14 +24,12 @@ import org.apache.maven.execution.MavenExecutionResult;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.project.ProjectBuilder;
 import org.apache.maven.project.ProjectBuildingException;
-import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.m2e.core.MavenPlugin;
@@ -42,98 +40,96 @@ import org.eclipse.m2e.core.project.IMavenProjectFacade;
 
 public class CreateBonitaProjectModulePlugin {
 
-    private Path project;
-    private String projectId;
-    private String goal;
-    private static Object lock = new Object();
+	private Path project;
+	private String projectId;
+	private String goal;
+	private static Object lock = new Object();
 
-    public CreateBonitaProjectModulePlugin(Path project, String projectId, String goal) {
-        this.project = project;
-        this.projectId = projectId;
-        this.goal = goal;
-    }
+	public CreateBonitaProjectModulePlugin(Path project, String projectId, String goal) {
+		this.project = project;
+		this.projectId = projectId;
+		this.goal = goal;
+	}
 
-    public IStatus execute(IProgressMonitor monitor) throws CoreException {
-        synchronized (lock) {
-            try {
-                Job.getJobManager().join(ResourcesPlugin.FAMILY_AUTO_BUILD, monitor);
-            } catch (OperationCanceledException | InterruptedException e) {
-                BonitaStudioLog.error(e);
-            }
-            IMaven maven = maven();
-            var mavenProject = getMavenProject();
-            if (mavenProject == null) {
-                return new Status(IStatus.ERROR, getClass(),
-                        "An error occured while executing bonita project plugin. Cannot resolve the Maven project.");
-            }
-            var ctx = maven.createExecutionContext();
-            var request = ctx.getExecutionRequest();
-            request.setGoals(List.of("bonita-project:"+ goal));
-            var properties = new Properties();
-            properties.setProperty("bonitaProjectId", projectId);
-            request.setUserProperties(properties);
-            request.setPom(mavenProject.getFile());
-            var executionResult = ctx.execute(mavenProject, new ICallable<MavenExecutionResult>() {
+	public IStatus execute(IProgressMonitor monitor) throws CoreException {
+		synchronized (lock) {
+			var schedulingRule = ResourcesPlugin.getWorkspace().getRuleFactory().buildRule();
+			Job.getJobManager().beginRule(schedulingRule, monitor);
+			try {
+				IMaven maven = maven();
+				var mavenProject = getMavenProject();
+				if (mavenProject == null) {
+					return new Status(IStatus.ERROR, getClass(),
+							"An error occured while executing bonita project plugin. Cannot resolve the Maven project.");
+				}
+				var ctx = maven.createExecutionContext();
+				var request = ctx.getExecutionRequest();
+				request.setGoals(List.of("bonita-project:" + goal));
+				var properties = new Properties();
+				properties.setProperty("bonitaProjectId", projectId);
+				request.setUserProperties(properties);
+				request.setPom(mavenProject.getFile());
+				var executionResult = ctx.execute(mavenProject, new ICallable<MavenExecutionResult>() {
 
-                @Override
-                public MavenExecutionResult call(IMavenExecutionContext context, IProgressMonitor monitor)
-                        throws CoreException {
-                    return maven.lookup(Maven.class).execute(request);
-                }
+					@Override
+					public MavenExecutionResult call(IMavenExecutionContext context, IProgressMonitor monitor)
+							throws CoreException {
+						return maven.lookup(Maven.class).execute(request);
+					}
 
-            }, monitor);
+				}, monitor);
 
-            if (executionResult.getBuildSummary(executionResult.getProject()) instanceof BuildSuccess) {
-                return Status.OK_STATUS;
-            } else {
-                throw new CoreException(
-                        new Status(IStatus.ERROR, getClass(),
-                                "Failed to execute bonita-project-maven-plugin:" + goal,
-                                executionResult.hasExceptions() ? executionResult.getExceptions().get(0) : null));
-            }
-        }
-    }
-    
-    private MavenProject getMavenProject(IProject project, IProgressMonitor monitor) throws CoreException {
-        IMavenProjectFacade projectFacade = MavenPlugin.getMavenProjectRegistry().getProject(project);
-        if (projectFacade == null) {
-            return null;
-        }
-        return projectFacade.getMavenProject(monitor);
-    }
+				if (executionResult.getBuildSummary(executionResult.getProject()) instanceof BuildSuccess) {
+					return Status.OK_STATUS;
+				} else {
+					throw new CoreException(new Status(IStatus.ERROR, getClass(),
+							"Failed to execute bonita-project-maven-plugin:" + goal,
+							executionResult.hasExceptions() ? executionResult.getExceptions().get(0) : null));
+				}
+			} finally {
+				Job.getJobManager().endRule(schedulingRule);
+			}
+		}
+	}
 
-    private MavenProject getMavenProject() throws CoreException {
-        var p = ResourcesPlugin.getWorkspace().getRoot().getProject(projectId);
-        if(p != null && p.exists()) {
-           var mavenProject =  getMavenProject(p, new NullProgressMonitor());
-           if(mavenProject != null) {
-               return mavenProject;
-           }
-        }
-        var maven = maven();
-        var projectBuilder = maven.lookup(ProjectBuilder.class);
-        var context = maven.createExecutionContext();
-        return context.execute(new ICallable<MavenProject>() {
+	private MavenProject getMavenProject(IProject project, IProgressMonitor monitor) throws CoreException {
+		IMavenProjectFacade projectFacade = MavenPlugin.getMavenProjectRegistry().getProject(project);
+		if (projectFacade == null) {
+			return null;
+		}
+		return projectFacade.getMavenProject(monitor);
+	}
 
-            @Override
-            public MavenProject call(IMavenExecutionContext context, IProgressMonitor monitor)
-                    throws CoreException {
-                var buildRequest = context.newProjectBuildingRequest();
-                try {
-                    var result = projectBuilder.build(project.resolve("pom.xml").toFile(), buildRequest);
-                    return result.getProject();
-                } catch (ProjectBuildingException e) {
-                    throw new CoreException(Status.error("Failed to build Maven project ", e));
-                }
-            }
+	private MavenProject getMavenProject() throws CoreException {
+		var p = ResourcesPlugin.getWorkspace().getRoot().getProject(projectId);
+		if (p != null && p.exists()) {
+			var mavenProject = getMavenProject(p, new NullProgressMonitor());
+			if (mavenProject != null) {
+				return mavenProject;
+			}
+		}
+		var maven = maven();
+		var projectBuilder = maven.lookup(ProjectBuilder.class);
+		var context = maven.createExecutionContext();
+		return context.execute(new ICallable<MavenProject>() {
 
-        }, new NullProgressMonitor());
+			@Override
+			public MavenProject call(IMavenExecutionContext context, IProgressMonitor monitor) throws CoreException {
+				var buildRequest = context.newProjectBuildingRequest();
+				try {
+					var result = projectBuilder.build(project.resolve("pom.xml").toFile(), buildRequest);
+					return result.getProject();
+				} catch (ProjectBuildingException e) {
+					throw new CoreException(Status.error("Failed to build Maven project ", e));
+				}
+			}
 
-    }
+		}, new NullProgressMonitor());
 
+	}
 
-    IMaven maven() {
-        return MavenPlugin.getMaven();
-    }
+	IMaven maven() {
+		return MavenPlugin.getMaven();
+	}
 
 }

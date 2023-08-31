@@ -105,6 +105,11 @@
         </dependency>
         <dependency>
             <groupId>org.codehaus.groovy</groupId>
+            <artifactId>groovy-ant</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.groovy</groupId>
             <artifactId>groovy-json</artifactId>
             <scope>provided</scope>
         </dependency>
@@ -267,6 +272,10 @@
             <plugin>
               <groupId>org.codehaus.mojo</groupId>
               <artifactId>flatten-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+              <groupId>org.codehaus.gmavenplus</groupId>
+              <artifactId>gmavenplus-plugin</artifactId>
             </plugin>
         </plugins>
     </build>

@@ -97,7 +97,8 @@ public class ProjectOverviewEditorPart extends EditorPart implements EventHandle
     public static final String IMPORT_EXTENSION_COMMAND = "org.bonitasoft.studio.application.import.extension.command";
     public static final String UPDATE_GAV_COMMAND = "org.bonitasoft.studio.application.update.gav.command";
     public static final String EDIT_PROJECT_COMMAND = "org.bonitasoft.studio.application.edit.project.command";
-
+	public static final String IMPORT_PROJECT_EXTENSION_COMMAND = "org.bonitasoft.studio.maven.import.project.extension.command";
+	
     private RepositoryAccessor repositoryAccessor;
     private LocalResourceManager localResourceManager;
     private ExceptionDialogHandler errorHandler;

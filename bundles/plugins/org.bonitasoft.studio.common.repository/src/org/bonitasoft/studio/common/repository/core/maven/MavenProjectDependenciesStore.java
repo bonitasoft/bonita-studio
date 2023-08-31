@@ -56,7 +56,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
-import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
@@ -90,11 +89,6 @@ public class MavenProjectDependenciesStore implements ProjectDependenciesStore {
 
     @Override
     public Optional<DependencyReport> analyze(IProgressMonitor monitor) {
-        try {
-            Job.getJobManager().join(ResourcesPlugin.FAMILY_AUTO_BUILD, monitor);
-        } catch (OperationCanceledException | InterruptedException e) {
-           BonitaStudioLog.error(e);
-        }
         ISchedulingRule rule = ResourcesPlugin.getWorkspace().getRoot();
         Job.getJobManager().beginRule(rule, monitor);
         LOCK.lock();

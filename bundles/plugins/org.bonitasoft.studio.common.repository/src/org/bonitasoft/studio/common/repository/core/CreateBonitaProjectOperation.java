@@ -53,7 +53,6 @@ import org.eclipse.m2e.core.ui.internal.UpdateMavenProjectJob;
 
 public class CreateBonitaProjectOperation implements IWorkspaceRunnable {
 
-    private static final String APP_MODULE = "app";
     private IProject project;
     private final IWorkspace workspace;
     private final ProjectMetadata metadata;
@@ -88,7 +87,7 @@ public class CreateBonitaProjectOperation implements IWorkspaceRunnable {
                 AbstractRepository.NULL_PROGRESS_MONITOR);
         createDefaultPomFile(project.getLocation().toFile().toPath(), metadata);
 
-        IFolder appModule = project.getFolder(APP_MODULE);
+        IFolder appModule = project.getFolder(BonitaProject.APP_MODULE);
         appModule.create(true, true, monitor);
         var pomFile = appModule.getFile(IMavenConstants.POM_FILE_NAME);
         var mavenProjectHelper = new MavenProjectHelper();
@@ -112,8 +111,7 @@ public class CreateBonitaProjectOperation implements IWorkspaceRunnable {
         List<IMavenProjectImportResult> projects = MavenPlugin.getProjectConfigurationManager().importProjects(
                 List.of(projectInfo),
                 projectImportConfiguration, monitor);
-        IProject appProject = projects.get(0).getProject();
-        return appProject;
+        return projects.get(0).getProject();
     }
 
     private Collection<String> appProjectNatures() {

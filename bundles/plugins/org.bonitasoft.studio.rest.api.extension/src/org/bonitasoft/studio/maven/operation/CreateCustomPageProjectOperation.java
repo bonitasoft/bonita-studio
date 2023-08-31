@@ -13,14 +13,18 @@ import static com.google.common.collect.Sets.newHashSet;
 
 import java.io.File;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 import org.apache.maven.archetype.catalog.Archetype;
+import org.apache.maven.model.Dependency;
 import org.bonitasoft.studio.common.RestAPIExtensionNature;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.core.BonitaProject;
 import org.bonitasoft.studio.common.repository.core.ProjectDescriptionBuilder;
+import org.bonitasoft.studio.common.repository.core.maven.AddDependencyOperation;
+import org.bonitasoft.studio.common.repository.core.maven.MavenProjectHelper;
 import org.bonitasoft.studio.maven.ExtensionRepositoryStore;
 import org.bonitasoft.studio.maven.i18n.Messages;
 import org.bonitasoft.studio.maven.model.CustomPageArchetypeConfiguration;
@@ -32,6 +36,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.egit.core.op.ConnectProviderOperation;
 import org.eclipse.m2e.core.internal.IMavenConstants;
@@ -114,11 +119,33 @@ public abstract class CreateCustomPageProjectOperation extends AbstractMavenProj
     protected abstract Archetype getArchetype() ;
 
     protected void projectCreated(IProject project) throws CoreException {
+    	addDependencyToAppProject();
+    	
         var display = PlatformUI.getWorkbench().getDisplay();
-        display.asyncExec(() ->  display.timerExec(500, () -> refreshProjectExplorerView()));
+        display.asyncExec(() ->  display.timerExec(500, this::refreshProjectExplorerView));
     }
 
-    private void refreshProjectExplorerView() {
+    protected void addDependencyToAppProject() throws CoreException {
+    	var bonitaProject = BonitaProject.create(repositoryStore.getRepository().getProjectId());
+    	var appModel = MavenProjectHelper.getMavenModel(bonitaProject.getAppProject());
+    	var extensionDependency = new Dependency();
+    	var existingDependency = appModel.getDependencies()
+                  .stream()
+                  .filter(dep -> Objects.equals(dep.getGroupId(), archetypeConfiguration.getGroupId()))
+                  .filter(dep -> Objects.equals(dep.getArtifactId(), archetypeConfiguration.getPageName()))
+                  .filter(dep -> Objects.equals(dep.getType(), "zip"))
+                  .findFirst();
+    	if(existingDependency.isEmpty()) {
+    		extensionDependency.setGroupId("${project.groupId}");
+        	extensionDependency.setArtifactId(archetypeConfiguration.getPageName());
+        	extensionDependency.setVersion("${project.version}");
+        	extensionDependency.setType("zip");
+    		appModel.getDependencies().add(extensionDependency);
+    		new AddDependencyOperation(extensionDependency).run(new NullProgressMonitor());
+    	}
+    }
+
+	private void refreshProjectExplorerView() {
         IViewPart viewPart = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
                 .findView("org.bonitasoft.studio.application.project.explorer");
         if (viewPart != null) {

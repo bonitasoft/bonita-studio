@@ -30,11 +30,11 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class CreateBonitaProjectOperationTest {
+class CreateBonitaProjectOperationTest {
 
     @AfterEach
     @BeforeEach
-    public void cleanWorkspace() throws Exception {
+    void cleanWorkspace() throws Exception {
         Stream.of(ResourcesPlugin.getWorkspace().getRoot().getProjects()).forEach(p -> {
             try {
                 p.delete(true, new NullProgressMonitor());
@@ -45,7 +45,7 @@ public class CreateBonitaProjectOperationTest {
     }
 
     @Test
-    public void createBonitaProject() throws Exception {
+    void createBonitaProject() throws Exception {
         var metadata = new ProjectMetadata();
         metadata.setName("procurement");
         metadata.setArtifactId("procurement");
