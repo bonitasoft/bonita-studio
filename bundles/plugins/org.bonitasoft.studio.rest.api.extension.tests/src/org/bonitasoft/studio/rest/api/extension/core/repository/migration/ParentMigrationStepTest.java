@@ -77,7 +77,7 @@ public class ParentMigrationStepTest {
         migrationStep.migrate(model, metadata);
 
         // Then
-        assertThat(model.getProperties()).containsOnlyKeys("groovy.version");
+        assertThat(model.getProperties()).isEmpty();
     }
     
     @Test

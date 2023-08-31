@@ -45,7 +45,7 @@ public class Java11MigrationStepTest {
     }
     
     @Test
-    public void should_add_java_version_property() throws Exception {
+    public void should_remove_java_version_property() throws Exception {
         // Given
         Model model = loadModel("pom_from_1_0_5.xml");
 
@@ -53,7 +53,7 @@ public class Java11MigrationStepTest {
         migrationStep.migrate(model, metadata);
 
         // Then
-        assertThat(model.getProperties()).contains(entry("java.version", "11"));
+        assertThat(model.getProperties()).doesNotContainKey("java.version");
     }
     
     @Test
@@ -78,8 +78,8 @@ public class Java11MigrationStepTest {
                     assertThat(c.getChild("target")).isNull();
                 });
         
-        assertThat(model.getProperties().get("maven.compiler.source")).isEqualTo("${java.version}");
-        assertThat(model.getProperties().get("maven.compiler.target")).isEqualTo("${java.version}");
+        assertThat(model.getProperties()).doesNotContainKey("maven.compiler.source")
+        		.doesNotContainKey("maven.compiler.target"); 
     }
     
     private Optional<Xpp3Dom> findPluginConfiguration(Model model, String groupId, String artifactId) {

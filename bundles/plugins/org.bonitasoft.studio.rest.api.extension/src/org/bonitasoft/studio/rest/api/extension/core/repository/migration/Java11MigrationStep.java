@@ -31,41 +31,28 @@ import org.codehaus.plexus.util.xml.Xpp3Dom;
 public class Java11MigrationStep implements MavenModelMigration {
 
     private static final String JAVA_VERSION_PROPERTY = "java.version";
-    private static final String JAVA_VERSION = "11";
 
     @Override
     public MigrationReport migrate(Model model, ProjectMetadata metadata) {
         MigrationReport report = new MigrationReport();
         Properties properties = model.getProperties();
 
-        properties.setProperty("maven-compiler-plugin.version", "3.8.1");
-
-        AtomicReference<String> existingJavaVersion = new AtomicReference<>("1.8");
-        if (properties.containsKey(JAVA_VERSION_PROPERTY)) {
-            existingJavaVersion.set(properties.getProperty(JAVA_VERSION_PROPERTY));
-        }
-        properties.setProperty(JAVA_VERSION_PROPERTY, JAVA_VERSION);
-
-        if (properties.containsKey("maven.compiler.target")) {
-            existingJavaVersion.set(properties.getProperty("maven.compiler.target"));
-        }
-        properties.setProperty("maven.compiler.target", "${java.version}");
-        properties.setProperty("maven.compiler.source", "${java.version}");
+        // Remove properties defined in Bonita project parent
+        properties.remove("maven-compiler-plugin.version");
+        properties.remove(JAVA_VERSION_PROPERTY);
+        properties.remove("maven.compiler.target");
+        properties.remove("maven.compiler.source");
+        properties.remove("maven.compiler.release");
 
         Build build = model.getBuild();
         if (build != null) {
             findPlugin(model.getBuild().getPlugins(), "org.apache.maven.plugins", "maven-compiler-plugin")
                     .ifPresent(p -> {
-                        p.setVersion("${maven-compiler-plugin.version}");
+                        p.setVersion(null);
                         Xpp3Dom configuration = (Xpp3Dom) p.getConfiguration();
                         removeNode("source", configuration);
                         removeNode("target", configuration);
                     });
-
-            if (!JAVA_VERSION.equals(existingJavaVersion.get())) {
-                report.updated(String.format("Java version has been updated from `%s` to `%s`",
-                        existingJavaVersion.get(), JAVA_VERSION));
-            }
         }
 
         return report;
@@ -112,9 +99,7 @@ public class Java11MigrationStep implements MavenModelMigration {
                         .map(Xpp3Dom::getValue)
                         .map("1.8"::equals)
                         .orElse(false);
-        var notValidJavaVersionProperty = !Objects.equals(model.getProperties().getProperty(JAVA_VERSION_PROPERTY),
-                JAVA_VERSION);
-        return notValidJavaVersionProperty || hasJava8Source || hasJava8Target;
+        return model.getProperties().contains(JAVA_VERSION_PROPERTY) || hasJava8Source || hasJava8Target;
     }
 
 }

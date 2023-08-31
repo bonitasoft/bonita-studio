@@ -120,7 +120,7 @@ public class ConnectorConfRepositoryStore extends AbstractEMFRepositoryStore<Def
         // first load the resource
         final Map<Object, Object> loadOptions = new HashMap<>();
         //Ignore unknown features
-        loadOptions.put(XMIResource.OPTION_RECORD_UNKNOWN_FEATURE, Boolean.TRUE);
+        loadOptions.put(XMLResource.OPTION_RECORD_UNKNOWN_FEATURE, Boolean.TRUE);
         final XMLOptions options = new XMLOptionsImpl();
         options.setProcessAnyXML(true);
         loadOptions.put(XMLResource.OPTION_XML_OPTIONS, options);
