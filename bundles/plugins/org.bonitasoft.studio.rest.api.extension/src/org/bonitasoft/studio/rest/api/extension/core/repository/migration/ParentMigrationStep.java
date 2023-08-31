@@ -68,6 +68,10 @@ public class ParentMigrationStep implements MavenModelMigration {
                 "java.version",
                 reportUpdateMessage, 
                 "** `java.version` property has been removed. The `maven-compiler-plugin` java version is now configured in the parent pom.");
+        removeProperty(properties,
+                "groovy.version",
+                reportUpdateMessage, 
+                "** `groovy.version` property has been removed. The `groovy.verison` property can now be inherited from the parent pom if needed.");
 
         // Remove obsolete bonita versions properties
         removeProperty(properties,

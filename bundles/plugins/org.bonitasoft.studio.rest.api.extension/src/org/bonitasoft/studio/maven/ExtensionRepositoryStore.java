@@ -315,6 +315,11 @@ public class ExtensionRepositoryStore
                     hasBeenMigrated = true;
                 }
             }
+	        String parentArtifactId = String.format("%s-extensions", metadata.getProjectId());
+			if(!Objects.equals(model.getParent().getArtifactId(), parentArtifactId)){
+				model.getParent().setArtifactId(parentArtifactId);
+				MavenProjectHelper.update(pomFile.getLocation().toFile(), model);
+            }
             if (hasBeenMigrated) {
                 var file = ((IFolder) pomFile.getParent())
                         .getFile(MigrationReportWriter.DEFAULT_REPORT_FILE_NAME);
