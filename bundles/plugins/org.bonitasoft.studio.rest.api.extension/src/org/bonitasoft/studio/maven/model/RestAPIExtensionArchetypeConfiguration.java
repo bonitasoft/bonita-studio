@@ -39,8 +39,6 @@ public class RestAPIExtensionArchetypeConfiguration extends CustomPageArchetypeC
 
     private boolean enableBDMDependencies;
 
-    private String bdmVersion;
-
     public static RestAPIExtensionArchetypeConfiguration defaultArchetypeConfiguration(ProjectMetadata projectMetadata, boolean addBdmDependency) {
         final RestAPIExtensionArchetypeConfiguration configuration = new RestAPIExtensionArchetypeConfiguration();
         configuration.setJavaPackage(projectMetadata.getGroupId()+".rest.api");
@@ -56,8 +54,6 @@ public class RestAPIExtensionArchetypeConfiguration extends CustomPageArchetypeC
         configuration.getPermissions().add("myPermission");
         configuration.getUrlParameters().add("p");
         configuration.getUrlParameters().add("c");
-        configuration.setBdmGroupId("!");
-        configuration.setBdmVersion("!");
         configuration.setEnableBDMDependencies(addBdmDependency);
         return configuration;
     }
@@ -114,10 +110,6 @@ public class RestAPIExtensionArchetypeConfiguration extends CustomPageArchetypeC
         this.bdmGroupId = bdmGroupId;
     }
 
-    public void setBdmVersion(String bdmVersion) {
-        this.bdmVersion = bdmVersion;
-    }
-
     public boolean isEnableBDMDependencies() {
         return enableBDMDependencies;
     }
@@ -147,8 +139,6 @@ public class RestAPIExtensionArchetypeConfiguration extends CustomPageArchetypeC
         properties.setProperty("pathTemplate", pathTemplate);
         properties.setProperty("permissionNames", Joiner.on(",").join(permissions));
         properties.setProperty("urlParameters", urlParameters.isEmpty() ? "!" : Joiner.on(",").join(urlParameters));
-        properties.setProperty("bdmGroupId", "!");
-        properties.setProperty("bdmVersion", "!");
         properties.setProperty("wrapper", "false");
         return properties;
     }

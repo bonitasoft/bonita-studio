@@ -49,7 +49,7 @@ public class CreateRestAPIExtensionProjectIT {
     @After
     public void tearDown() throws Exception {
         final IFolder createdFolder = RepositoryManager.getInstance().getRepositoryStore(ExtensionRepositoryStore.class).getResource()
-                .getFolder("my-rest-api");
+                .getFolder("resourceNameRestAPI");
         if (createdFolder.exists()) {
             createdFolder.delete(true, AbstractRepository.NULL_PROGRESS_MONITOR);
         }
@@ -61,8 +61,8 @@ public class CreateRestAPIExtensionProjectIT {
     public void should_create_a_rest_api_extension_project_in_workspace() throws Exception {
     	var repositoryAccessor = RepositoryManager.getInstance().getAccessor();
     	new DefineBusinessDataModelHandler().defineBusinessDataModel(repositoryAccessor, PlatformUI.getWorkbench().getProgressService());
-    	
-        var metadata = RepositoryManager.getInstance().getCurrentProject().orElseThrow().getProjectMetadata(new NullProgressMonitor());
+    	var bonitaProject = RepositoryManager.getInstance().getCurrentProject().orElseThrow();
+        var metadata = bonitaProject.getProjectMetadata(new NullProgressMonitor());
         RestAPIExtensionArchetypeConfiguration defaultArchetypeConfiguration = RestAPIExtensionArchetypeConfiguration.defaultArchetypeConfiguration(metadata);
         defaultArchetypeConfiguration.setBonitaVersion(ProductVersion.BONITA_RUNTIME_VERSION);
         defaultArchetypeConfiguration.setEnableBDMDependencies(true);
@@ -100,7 +100,11 @@ public class CreateRestAPIExtensionProjectIT {
         assertThat(mavenModel.getDependencies()).extracting("groupId", "artifactId", "version")
         	.contains(tuple("${project.groupId}", String.format("%s-bdm-model", metadata.getProjectId()),"${project.version}"));
         
-        
+        var appModel = MavenProjectHelper.getMavenModel(bonitaProject.getAppProject());
+        assertThat(appModel.getDependencies())
+        		.as("Extension zip dependency has been added to the application module dependencies.")
+        		.extracting("groupId", "artifactId", "version", "type")
+    			.contains(tuple("${project.groupId}", "resourceNameRestAPI","${project.version}", "zip"));
 
         //Check that there is no problems on eclipse project
         newProject.build(IncrementalProjectBuilder.FULL_BUILD, AbstractRepository.NULL_PROGRESS_MONITOR);
@@ -115,6 +119,14 @@ public class CreateRestAPIExtensionProjectIT {
         if (sb.length() > 0) {
             fail(sb.toString());
         }
+        
+        var apiStore = RepositoryManager.getInstance().getRepositoryStore(ExtensionRepositoryStore.class).getChild("resourceNameRestAPI", false);
+        apiStore.delete();
+        appModel = MavenProjectHelper.getMavenModel(bonitaProject.getAppProject());
+        assertThat(appModel.getDependencies())
+        		.as("Extension zip dependency has been removed from the application module dependencies.")
+        		.extracting("groupId", "artifactId", "version", "type")
+    			.doesNotContain(tuple("${project.groupId}", "resourceNameRestAPI","${project.version}", "zip"));
     }
 
 }
