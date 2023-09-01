@@ -15,6 +15,7 @@
 package org.bonitasoft.studio.common.repository.core.maven;
 
 import java.util.Objects;
+import java.util.concurrent.locks.ReentrantLock;
 
 import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Model;
@@ -33,80 +34,85 @@ import org.eclipse.core.runtime.Status;
 
 public abstract class MavenModelOperation implements IWorkspaceRunnable {
 
-    private boolean disableAnalyze;
+	private boolean disableAnalyze;
 
-    protected boolean modelUpdated = false;
-    
-    private IProject project;
-    
-    public MavenModelOperation setProject(IProject project) {
-        this.project = project;
-        return this;
-    }
+	protected boolean modelUpdated = false;
 
-    protected Model readModel(IProject project) throws CoreException {
-        return MavenProjectHelper.getMavenModel(project);
-    }
+	private ReentrantLock saveLock = new ReentrantLock();
 
-    protected void saveModel(IProject project, Model model, IProgressMonitor monitor) throws CoreException {
-        if (modelUpdated) {
-            MavenProjectHelper.saveModel(project, model, false, monitor);
+	private IProject project;
 
-            if (!disableAnalyze && getRepositoryAccessor().hasActiveRepository()) {
-                var projectDependenciesStore = getRepositoryAccessor().getCurrentRepository()
-                        .map(IRepository::getProjectDependenciesStore)
-                        .filter(Objects::nonNull)
-                        .orElse(null);
-                if (projectDependenciesStore != null) {
-                    projectDependenciesStore.analyze(monitor);
-                }
-            }
-            modelUpdated = false;
-        }
-    }
+	public MavenModelOperation setProject(IProject project) {
+		this.project = project;
+		return this;
+	}
 
-    public static void scheduleAnalyzeProjectDependenciesJob(RepositoryAccessor repositoryAccessor) {
-        new WorkspaceJob("Analyze project dependencies") {
+	protected Model readModel(IProject project) throws CoreException {
+		return MavenProjectHelper.getMavenModel(project);
+	}
 
-            @Override
-            public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
-                repositoryAccessor.getCurrentRepository()
-                        .map(IRepository::getProjectDependenciesStore)
-                        .ifPresent(projectDepStore -> projectDepStore.analyze(monitor));
-                return Status.OK_STATUS;
-            }
+	protected void saveModel(IProject project, Model model, IProgressMonitor monitor) throws CoreException {
+		if (modelUpdated) {
+			saveLock.lock();
+			try {
+				MavenProjectHelper.saveModel(project, model, false, monitor);
 
-            @Override
-            public boolean belongsTo(Object family) {
-                return Objects.equals(ProjectDependenciesStore.ANALYZE_PPROJECT_DEPENDENCIES_FAMILY, family);
-            }
-        }.schedule();
-    }
+				if (!disableAnalyze && getRepositoryAccessor().hasActiveRepository()) {
+					var projectDependenciesStore = getRepositoryAccessor().getCurrentRepository()
+							.map(IRepository::getProjectDependenciesStore).filter(Objects::nonNull).orElse(null);
+					if (projectDependenciesStore != null) {
+						projectDependenciesStore.analyze(monitor);
+					}
+				}
+				modelUpdated = false;
+			} finally {
+				saveLock.unlock();
+			}
+		}
+	}
 
-    public MavenModelOperation disableAnalyze() {
-        this.disableAnalyze = true;
-        return this;
-    }
+	public static void scheduleAnalyzeProjectDependenciesJob(RepositoryAccessor repositoryAccessor) {
+		new WorkspaceJob("Analyze project dependencies") {
 
-    protected IProject getCurrentProject() {
-        return project != null ? project : RepositoryManager.getInstance().getCurrentRepository().map(IRepository::getProject).orElse(null);
-    }
+			@Override
+			public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
+				repositoryAccessor.getCurrentRepository().map(IRepository::getProjectDependenciesStore)
+						.ifPresent(projectDepStore -> projectDepStore.analyze(monitor));
+				return Status.OK_STATUS;
+			}
 
-    protected RepositoryAccessor getRepositoryAccessor() {
-        return RepositoryManager.getInstance().getAccessor();
-    }
+			@Override
+			public boolean belongsTo(Object family) {
+				return Objects.equals(ProjectDependenciesStore.ANALYZE_PPROJECT_DEPENDENCIES_FAMILY, family);
+			}
+		}.schedule();
+	}
 
-    protected LocalDependenciesStore getLocalStore() {
-        return getRepositoryAccessor().getCurrentRepository().map(IRepository::getLocalDependencyStore).orElse(null);
-    }
+	public MavenModelOperation disableAnalyze() {
+		this.disableAnalyze = true;
+		return this;
+	}
 
-    static Dependency createDependency(String groupId, String artifactId, String version, String scope) {
-        Dependency dependency = new Dependency();
-        dependency.setArtifactId(artifactId);
-        dependency.setGroupId(groupId);
-        dependency.setVersion(version);
-        dependency.setScope(scope);
-        return dependency;
-    }
+	protected IProject getCurrentProject() {
+		return project != null ? project
+				: RepositoryManager.getInstance().getCurrentRepository().map(IRepository::getProject).orElse(null);
+	}
+
+	protected RepositoryAccessor getRepositoryAccessor() {
+		return RepositoryManager.getInstance().getAccessor();
+	}
+
+	protected LocalDependenciesStore getLocalStore() {
+		return getRepositoryAccessor().getCurrentRepository().map(IRepository::getLocalDependencyStore).orElse(null);
+	}
+
+	static Dependency createDependency(String groupId, String artifactId, String version, String scope) {
+		Dependency dependency = new Dependency();
+		dependency.setArtifactId(artifactId);
+		dependency.setGroupId(groupId);
+		dependency.setVersion(version);
+		dependency.setScope(scope);
+		return dependency;
+	}
 
 }
