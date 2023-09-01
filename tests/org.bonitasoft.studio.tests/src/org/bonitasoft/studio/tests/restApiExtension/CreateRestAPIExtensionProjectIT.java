@@ -10,9 +10,12 @@ package org.bonitasoft.studio.tests.restApiExtension;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
+import static org.assertj.core.api.Assertions.tuple;
 
 import org.apache.maven.model.Model;
 import org.bonitasoft.studio.assertions.StatusAssert;
+import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
+import org.bonitasoft.studio.businessobject.ui.handler.DefineBusinessDataModelHandler;
 import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
@@ -33,6 +36,7 @@ import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.m2e.core.MavenPlugin;
 import org.eclipse.m2e.core.project.ProjectImportConfiguration;
 import org.eclipse.swt.SWT;
+import org.eclipse.ui.PlatformUI;
 import org.junit.After;
 import org.junit.Rule;
 import org.junit.Test;
@@ -49,13 +53,19 @@ public class CreateRestAPIExtensionProjectIT {
         if (createdFolder.exists()) {
             createdFolder.delete(true, AbstractRepository.NULL_PROGRESS_MONITOR);
         }
+        var bdmFileStore = RepositoryManager.getInstance().getRepositoryStore(BusinessObjectModelRepositoryStore.class).getChild("bom.xml", false);
+        bdmFileStore.delete();
     }
 
     @Test
     public void should_create_a_rest_api_extension_project_in_workspace() throws Exception {
+    	var repositoryAccessor = RepositoryManager.getInstance().getAccessor();
+    	new DefineBusinessDataModelHandler().defineBusinessDataModel(repositoryAccessor, PlatformUI.getWorkbench().getProgressService());
+    	
         var metadata = RepositoryManager.getInstance().getCurrentProject().orElseThrow().getProjectMetadata(new NullProgressMonitor());
         RestAPIExtensionArchetypeConfiguration defaultArchetypeConfiguration = RestAPIExtensionArchetypeConfiguration.defaultArchetypeConfiguration(metadata);
         defaultArchetypeConfiguration.setBonitaVersion(ProductVersion.BONITA_RUNTIME_VERSION);
+        defaultArchetypeConfiguration.setEnableBDMDependencies(true);
         final CreateRestAPIExtensionProjectOperation operation = new CreateRestAPIExtensionProjectOperation(
                 RepositoryManager.getInstance().getRepositoryStore(ExtensionRepositoryStore.class),
                 MavenPlugin.getProjectConfigurationManager(),
@@ -87,6 +97,10 @@ public class CreateRestAPIExtensionProjectIT {
         assertThat(mavenModel.getParent().getGroupId()).isEqualTo("com.company");
         assertThat(mavenModel.getParent().getVersion()).isEqualTo("0.0.1");
         assertThat(mavenModel.getProperties()).doesNotContainKey("bonita-runtime.version");
+        assertThat(mavenModel.getDependencies()).extracting("groupId", "artifactId", "version")
+        	.contains(tuple("${project.groupId}", String.format("%s-bdm-model", metadata.getProjectId()),"${project.version}"));
+        
+        
 
         //Check that there is no problems on eclipse project
         newProject.build(IncrementalProjectBuilder.FULL_BUILD, AbstractRepository.NULL_PROGRESS_MONITOR);
