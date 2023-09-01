@@ -56,7 +56,7 @@ public class ProjectUtil {
 
     public static void removeUserExtensions() throws CoreException {
         IProject project = RepositoryManager.getInstance().getAccessor().getCurrentRepository().orElseThrow().getProject();
-        Model mavenModel = new MavenProjectHelper().getMavenModel(project);
+        Model mavenModel = MavenProjectHelper.getMavenModel(project);
         var dependenciesToRemove = mavenModel.getDependencies()
                 .stream()
                 .filter(not(AppProjectConfiguration::isInternalDependency))
