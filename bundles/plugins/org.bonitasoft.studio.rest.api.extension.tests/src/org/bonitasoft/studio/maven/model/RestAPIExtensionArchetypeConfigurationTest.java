@@ -30,7 +30,6 @@ public class RestAPIExtensionArchetypeConfigurationTest {
         assertThat(configuration.getPathTemplate()).isEqualTo("resourceName");
         assertThat(configuration.getPermissions()).containsOnly("myPermission");
         assertThat(configuration.getUrlParameters()).contains("p", "c");
-        assertThat(configuration.getBdmGroupId()).isEqualTo("!");
         assertThat(configuration.isEnableBDMDependencies()).isFalse();
     }
 
@@ -47,8 +46,6 @@ public class RestAPIExtensionArchetypeConfigurationTest {
         assertThat(properties).containsEntry("httpVerb", "GET");
         assertThat(properties).containsEntry("permissionNames", "myPermission");
         assertThat(properties).containsEntry("urlParameters", "p,c");
-        assertThat(properties).containsEntry("bdmGroupId", "!");
-        assertThat(properties).containsEntry("bdmVersion", "!");
     }
 
     @Test
