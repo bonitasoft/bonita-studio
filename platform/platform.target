@@ -78,7 +78,6 @@
             <unit id="org.bonitasoft.bpm.definitions.feature.feature.group" version="0.0.0"/>
             <unit id="org.bonitasoft.bpm.model.feature.feature.group" version="0.0.0"/>
             <unit id="org.bonitasoft.bpm.tests.feature.feature.group" version="0.0.0"/>
-            <unit id="org.bonitasoft.project.report.model.feature.feature.group" version="0.0.0"/>
             <unit id="com.fasterxml.jackson.feature.feature.group" version="0.0.0"/>
             <unit id="org.bonitasoft.bonita2bar.feature.feature.group" version="0.0.0"/>
         </location>
@@ -126,6 +125,54 @@
                 </dependency>
             </dependencies>
         </location>
+        <location includeDependencyDepth="none" includeDependencyScopes="compile,runtime,system" includeSource="true" missingManifest="generate" type="Maven">
+                <feature id="org.bonitasoft.project.report.model.feature" label="Bonita Project Report Model Feature" provider-name="Bonitasoft S.A" version="0.2.0.qualifier">
+                    <description url="https://github.com/bonitasoft/bonita-process-model">
+      Bonita Project Report Model Feature
+   </description>
+                    <copyright url="https://www.bonitasoft.com/">
+      Copyright (C) 2023 BonitaSoft S.A.
+   BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
+   </copyright>
+                    <license url="http://www.gnu.org/licenses/gpl-2.0.html">
+      This program is free software: you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation, either version 2.0 of the License, or
+   (at your option) any later version.
+   
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+   
+   You should have received a copy of the GNU General Public License
+   along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+   </license>
+                </feature>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.bonitasoft.maven</groupId>
+                        <artifactId>bonita-project-report-model</artifactId>
+                        <version>0.2.0-SNAPSHOT</version>
+                        <type>jar</type>
+                    </dependency>
+                </dependencies>
+                 <repositories>
+                    <repository>
+                        <id>ossrh-snapshots</id>
+                        <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+                    </repository>
+                </repositories>
+                <instructions><![CDATA[
+Bundle-Name:           ${mvnGroupId}:${mvnArtifactId}:${mvnVersion}
+version:               ${version_cleanup;${mvnVersion}}
+Bundle-SymbolicName:   ${mvnGroupId}.${mvnArtifactId}
+Bundle-Version:        ${version}
+Import-Package:        *;resolution:=optional
+Export-Package:        *;version="${version}";-noimport:=true
+DynamicImport-Package: *
+]]></instructions>
+            </location>
         <location includeDependencyDepth="none" includeDependencyScopes="compile,runtime,system" includeSource="false" missingManifest="generate" type="Maven">
             <dependencies>
                 <dependency>
