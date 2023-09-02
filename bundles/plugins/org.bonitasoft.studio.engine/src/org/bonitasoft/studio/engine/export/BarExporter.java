@@ -16,9 +16,11 @@ package org.bonitasoft.studio.engine.export;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -30,12 +32,16 @@ import org.bonitasoft.bonita2bar.BarBuilderFactory;
 import org.bonitasoft.bonita2bar.BarBuilderFactory.BuildConfig;
 import org.bonitasoft.bonita2bar.BuildBarException;
 import org.bonitasoft.bonita2bar.ClasspathResolver;
+import org.bonitasoft.bonita2bar.ConnectorImplementationRegistry;
+import org.bonitasoft.bonita2bar.ConnectorImplementationRegistry.ConnectorImplementationJar;
 import org.bonitasoft.bonita2bar.SourcePathProvider;
 import org.bonitasoft.bpm.model.configuration.Configuration;
 import org.bonitasoft.bpm.model.configuration.ConfigurationFactory;
 import org.bonitasoft.bpm.model.process.AbstractProcess;
 import org.bonitasoft.bpm.model.process.Pool;
 import org.bonitasoft.engine.bpm.bar.BusinessArchive;
+import org.bonitasoft.plugin.analyze.report.model.DependencyReport;
+import org.bonitasoft.plugin.analyze.report.model.Implementation;
 import org.bonitasoft.studio.common.FileUtil;
 import org.bonitasoft.studio.common.ModelVersion;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
@@ -94,7 +100,7 @@ public class BarExporter {
 							.getBundle("com.bonitasoft.studio.runtime-bundle") != null)
 					.includeParameters(true)
 					.classpathResolver(ClasspathResolver.of(buildClasspath(mavenProject)))
-					.dependencyReport(report)
+					.connectorImplementationRegistry(getConnectorImplementationRegistry(report))
 					.formBuilder(new RestFormBuilder(PageDesignerURLFactory.INSTANCE))
 					.processRegistry(diagramStore)
 					.sourcePathProvider(
@@ -112,6 +118,23 @@ public class BarExporter {
 			}
 		}
 	}
+	
+	private ConnectorImplementationRegistry getConnectorImplementationRegistry(DependencyReport dependencyReport) {
+	        var implementations = new ArrayList<ConnectorImplementationJar>();
+	        dependencyReport.getConnectorImplementations().stream()
+	                .map(BarExporter::toConnectorImplementationJar)
+	                .forEach(implementations::add);
+	        dependencyReport.getFilterImplementations().stream()
+	                .map(BarExporter::toConnectorImplementationJar)
+	                .forEach(implementations::add);
+	        return ConnectorImplementationRegistry.of(implementations);
+	    }
+	
+	private static ConnectorImplementationJar toConnectorImplementationJar(Implementation implementation) {
+        return ConnectorImplementationJar.of(implementation.getImplementationId(),
+                implementation.getImplementationVersion(), new File(implementation.getArtifact().getFile()),
+                implementation.getJarEntry());
+    }
 	
 	private List<String> buildClasspath(MavenProject mavenProject) throws DependencyResolutionRequiredException {
 		 return Stream
