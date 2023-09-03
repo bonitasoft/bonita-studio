@@ -119,7 +119,6 @@ public class AppProjectConfiguration implements DefaultPluginVersions {
 		var bundleDependency = new Dependency();
 		bundleDependency.setGroupId(PlatformUtil.isACommunityBonitaProduct() ? "org.bonitasoft.distrib" : "com.bonitasoft.distrib");
 		bundleDependency.setArtifactId(PlatformUtil.isACommunityBonitaProduct() ? "bundle-tomcat" : "bundle-tomcat-sp");
-		bundleDependency.setVersion("${bonita.runtime.version}");
 		bundleDependency.setType("zip");
 		return bundleDependency;
 	}
