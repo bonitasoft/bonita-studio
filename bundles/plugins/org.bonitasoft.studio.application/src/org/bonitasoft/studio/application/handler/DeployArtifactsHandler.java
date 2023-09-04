@@ -207,7 +207,7 @@ public class DeployArtifactsHandler {
             Map<String, Object> deployOptions,
             IWizardContainer container) {
         MultiStatus status = new MultiStatus(ApplicationPlugin.PLUGIN_ID, 0, null, null);
-        if (!dirtyEditorChecker.checkDirtyState(container, true)) {
+        if (!dirtyEditorChecker.checkDirtyState(container, false)) {
             return null;
         }
         try {
