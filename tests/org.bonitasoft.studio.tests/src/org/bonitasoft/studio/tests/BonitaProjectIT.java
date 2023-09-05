@@ -25,6 +25,7 @@ import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.BonitaProjectNature;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.core.maven.BonitaProjectBuilder;
+import org.bonitasoft.studio.common.repository.core.maven.model.AppProjectConfiguration;
 import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
 import org.bonitasoft.studio.identity.organization.repository.OrganizationRepositoryStore;
 import org.bonitasoft.studio.tests.util.InitialProjectRule;
@@ -85,6 +86,7 @@ public class BonitaProjectIT {
 
         IJavaProject javaProject = currentRepository.getJavaProject();
         assertThat(javaProject.getClasspathEntryFor(javaProject.getPath().append("src-groovy"))).isNotNull();
+        assertThat(javaProject.getClasspathEntryFor(javaProject.getPath().append(AppProjectConfiguration.GENERATED_GROOVY_SOURCES_FODLER))).isNotNull();
         assertThat(javaProject.findType(AbstractConnector.class.getName())).isNotNull(); // classes in dependencies are in classpath
     }
 

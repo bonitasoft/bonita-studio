@@ -39,6 +39,7 @@ import org.bonitasoft.studio.groovy.ui.job.ComputeScriptDependenciesJob;
 import org.bonitasoft.bpm.model.expression.Expression;
 import org.bonitasoft.bpm.model.process.BusinessObjectData;
 import org.bonitasoft.bpm.model.process.ContractInput;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.e4.core.di.annotations.Creatable;
 import org.eclipse.jdt.core.JavaModelException;
 
@@ -109,7 +110,7 @@ public class FieldToContractInputMappingExpressionBuilder {
         job.getNodes().add(new ScriptVariable(data.getName(), data.getDataType().toString()));
         job.setContext(ModelHelper.getParentPool(data));
         groovyScriptExpression.getReferencedElements().addAll(job.findDependencies());
-        groovyCompilationUnit.delete(true, AbstractRepository.NULL_PROGRESS_MONITOR);
+        groovyCompilationUnit.delete(true,  new NullProgressMonitor());
     }
 
     private List<ScriptVariable> availableDao() {
@@ -129,7 +130,7 @@ public class FieldToContractInputMappingExpressionBuilder {
             throws JavaModelException {
         return (BonitaScriptGroovyCompilationUnit) new GroovyCompilationUnitFactory(repositoryAccessor).newCompilationUnit(
                 groovyScriptExpression.getContent(),
-                AbstractRepository.NULL_PROGRESS_MONITOR);
+                new NullProgressMonitor());
     }
 
     private ContractInput rootContractInput(final ContractInput contractInput) {

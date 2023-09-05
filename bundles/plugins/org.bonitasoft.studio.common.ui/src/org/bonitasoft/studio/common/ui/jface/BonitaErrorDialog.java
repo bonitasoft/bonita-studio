@@ -145,7 +145,9 @@ public class BonitaErrorDialog extends ErrorDialog {
                 addStackTraceToList(list, targetException);
             }
         }
-		addStackTraceToList(list, exception);
+        if(exception != null) {
+            addStackTraceToList(list, exception);
+        }
 	}
 
     protected Throwable getStatusException() {

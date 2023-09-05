@@ -52,6 +52,7 @@ public class ProvidedContentFilter extends ViewerFilter {
         HIDDEN_RESOURCES.add(Path.fromOSString("web_fragments/.metadata"));
         HIDDEN_RESOURCES.add(Path.fromOSString("bin"));
         HIDDEN_RESOURCES.add(Path.fromOSString("target"));
+        HIDDEN_RESOURCES.add(Path.fromOSString("target/generated-groovy-sources"));
         HIDDEN_RESOURCES.add(Path.fromOSString("pom.xml"));
         HIDDEN_RESOURCES.add(Path.fromOSString("bdm/pom.xml"));
         HIDDEN_RESOURCES.add(Path.fromOSString("extensions/pom.xml"));
