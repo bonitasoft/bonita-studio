@@ -36,6 +36,7 @@ import org.bonitasoft.bpm.model.util.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.core.maven.model.AppProjectConfiguration;
 import org.bonitasoft.studio.common.ui.PlatformUtil;
 import org.bonitasoft.studio.validation.ValidationPlugin;
 import org.eclipse.core.resources.IFile;
@@ -94,7 +95,7 @@ public class ProcessScriptsCompiler {
 
         public GroovySourceWriter() {
             IProject project = RepositoryManager.getInstance().getCurrentRepository().orElseThrow().getProject();
-            srcFolder = project.getFolder("src-groovy");
+            srcFolder = project.getFolder(AppProjectConfiguration.GENERATED_GROOVY_SOURCES_FODLER);
         }
 
         public ProcessScriptsCompilationResult collectCompilationErrors() {
@@ -127,7 +128,7 @@ public class ProcessScriptsCompiler {
                             result.add(entry.getKey(), errorMessages);
                         }
                     } catch (CoreException e) {
-                        e.printStackTrace();
+                       BonitaStudioLog.error(e);
                     }
                 }
             }
@@ -147,6 +148,7 @@ public class ProcessScriptsCompiler {
                 if (sourceFilePath.toFile().exists()) {
                     BonitaStudioLog.warning("Expression class name collision ! Some script validation will be ignored.", ValidationPlugin.PLUGIN_ID);
                 }
+                Files.createDirectories(sourceFilePath.getParent());
                 Files.writeString(sourceFilePath, expression.getContent(),
                         StandardCharsets.UTF_8);
                 sourceIndex.put(uuid, sourceFilePath);

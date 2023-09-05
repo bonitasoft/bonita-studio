@@ -92,7 +92,7 @@ public class ExtensionRepositoryStore
     @Override
     public void createRepositoryStore(IRepository repository) {
         this.repository = repository;
-        if (getResource().exists()) {
+        if (getResource() != null && getResource().exists()) {
             importProjects();
         }
     }

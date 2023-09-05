@@ -23,6 +23,7 @@ import static org.bonitasoft.studio.model.businessObject.FieldBuilder.aSimpleFie
 import static org.bonitasoft.bpm.model.process.builders.BusinessObjectDataBuilder.aBusinessData;
 import static org.bonitasoft.bpm.model.process.builders.ContractInputBuilder.aContractInput;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
@@ -59,6 +60,7 @@ import org.eclipse.text.edits.MalformedTreeException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -184,7 +186,7 @@ public class FieldToContractInputMappingExpressionBuilderTest {
         expressionBuilder.toExpression(aBusinessData().withName("myEmployee").build(),
                 mapping, false);
 
-        verify(groovyCompilationUnit).delete(true, AbstractRepository.NULL_PROGRESS_MONITOR);
+        verify(groovyCompilationUnit).delete(eq(true), any());
     }
 
     @Test

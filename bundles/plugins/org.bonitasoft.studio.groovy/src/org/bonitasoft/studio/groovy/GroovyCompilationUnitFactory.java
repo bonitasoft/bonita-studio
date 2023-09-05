@@ -17,6 +17,7 @@ package org.bonitasoft.studio.groovy;
 import javax.inject.Inject;
 
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.common.repository.core.maven.model.AppProjectConfiguration;
 import org.bonitasoft.studio.common.repository.model.IJavaContainer;
 import org.bonitasoft.studio.groovy.repository.GroovyFileStore;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -36,13 +37,16 @@ public class GroovyCompilationUnitFactory {
         this.repositoryAccessor = repositoryAccessor;
     }
 
-    public ICompilationUnit newCompilationUnit(final String script, final IProgressMonitor monitor) throws JavaModelException {
+    public ICompilationUnit newCompilationUnit(final String script, final IProgressMonitor monitor)
+            throws JavaModelException {
         final IJavaProject javaProject = javaProject();
         if (javaProject != null) {
             final IPackageFragment packageFragment = javaProject
-                    .findPackageFragmentRoot(javaProject.getPath().append("src-groovy"))
+                    .findPackageFragmentRoot(
+                            javaProject.getPath().append(AppProjectConfiguration.GENERATED_GROOVY_SOURCES_FODLER))
                     .getPackageFragment("");//default package
-            return packageFragment.createCompilationUnit(GroovyFileStore.EXPRESSION_SCRIPT_NAME, script, true, monitor);
+            return packageFragment.createCompilationUnit(GroovyFileStore.EXPRESSION_SCRIPT_NAME, script, true,
+                    monitor);
         }
         return null;
     }

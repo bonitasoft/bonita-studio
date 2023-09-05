@@ -80,8 +80,9 @@ public class FileNameValidator extends TypedValidator<String, IStatus> {
 
     private List<String> getExistingFileNames() {
         return store.getChildren().stream()
-                .map(file -> file.getName().substring(0,
-                        file.getName().length() - extension.toString().length()))
+                .map(IRepositoryFileStore::getName)
+                .map(filename -> filename.length() > extension.toString().length() ? filename.substring(0,
+                        filename.length() - extension.toString().length()) : filename)
                 .filter(filename -> !currentFileName.filter(filename::equals).isPresent())
                 .map(String::toLowerCase)
                 .collect(Collectors.toList());

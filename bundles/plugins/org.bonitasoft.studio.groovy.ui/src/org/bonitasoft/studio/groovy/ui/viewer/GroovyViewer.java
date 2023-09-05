@@ -16,6 +16,9 @@ package org.bonitasoft.studio.groovy.ui.viewer;
 
 import static com.google.common.collect.Lists.newArrayList;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -34,6 +37,7 @@ import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.core.maven.model.AppProjectConfiguration;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.diagram.custom.repository.ProcessConfigurationFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.ProcessConfigurationRepositoryStore;
@@ -48,13 +52,15 @@ import org.bonitasoft.studio.groovy.BonitaScriptGroovyCompilationUnit;
 import org.bonitasoft.studio.groovy.GroovyUtil;
 import org.bonitasoft.studio.groovy.ScriptVariable;
 import org.bonitasoft.studio.groovy.repository.GroovyFileStore;
-import org.bonitasoft.studio.groovy.repository.GroovyRepositoryStore;
 import org.bonitasoft.studio.groovy.ui.Activator;
 import org.bonitasoft.studio.groovy.ui.Messages;
 import org.bonitasoft.studio.groovy.ui.job.UnknownElementsIndexer;
 import org.codehaus.groovy.eclipse.editor.GroovyEditor;
 import org.codehaus.groovy.eclipse.preferences.PreferenceConstants;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jdt.internal.ui.JavaPlugin;
@@ -135,15 +141,7 @@ public class GroovyViewer implements IDocumentListener {
         this.restrictScriptSize = restrictScriptSize;
         enbaleSyntaxHighligthing();
         if (input == null) {
-        	var store = RepositoryManager.getInstance()
-                    .getRepositoryStore(GroovyRepositoryStore.class);
-            GroovyFileStore tmpGroovyFileStore = store.getChild(GroovyFileStore.EXPRESSION_SCRIPT_NAME, true);
-            if (tmpGroovyFileStore != null) {
-                tmpGroovyFileStore.delete();
-            }
-            tmpGroovyFileStore = store.createRepositoryFileStore(GroovyFileStore.EXPRESSION_SCRIPT_NAME);
-            tmpGroovyFileStore.save("");
-            this.input = new FileEditorInput(tmpGroovyFileStore.getResource());
+            this.input = new FileEditorInput(createTempSourceFile());
         } else {
             this.input = input;
         }
@@ -189,6 +187,26 @@ public class GroovyViewer implements IDocumentListener {
                 dispose();
             }
         });
+    }
+
+    private IFile createTempSourceFile() {
+        var appProject = RepositoryManager.getInstance().getCurrentProject().orElseThrow().getAppProject();
+        var tmpScriptFile = appProject.getFile(AppProjectConfiguration.GENERATED_GROOVY_SOURCES_FODLER + "/"
+                + GroovyFileStore.EXPRESSION_SCRIPT_NAME);
+        try {
+            if(tmpScriptFile.exists()) {
+                tmpScriptFile.delete(true, new NullProgressMonitor());
+            }
+            if(!tmpScriptFile.getParent().exists()) {
+                Files.createDirectories(tmpScriptFile.getLocation().toFile().toPath().getParent());
+                tmpScriptFile.getParent().refreshLocal(IResource.DEPTH_ONE, new NullProgressMonitor());
+            }
+            tmpScriptFile.create(new ByteArrayInputStream(new byte[0]), true, new NullProgressMonitor());
+            tmpScriptFile.setDerived(false, new NullProgressMonitor());
+        } catch (CoreException | IOException e) {
+            BonitaStudioLog.error(e);
+        }
+        return tmpScriptFile;
     }
 
     private IEclipseContext createGroovyEditorContext() {
@@ -313,18 +331,11 @@ public class GroovyViewer implements IDocumentListener {
         return nodes;
     }
 
-    
     public void dispose() {
         SourceViewer viewer = (SourceViewer) editor.getViewer();
-        if(viewer != null) {
+        if (viewer != null) {
             // Stops reconciler thread before deleting groovy file
             viewer.unconfigure();
-        }
-        var store = RepositoryManager.getInstance()
-                .getRepositoryStore(GroovyRepositoryStore.class);
-        GroovyFileStore fStore = store.getChild(GroovyFileStore.EXPRESSION_SCRIPT_NAME, true);
-        if (fStore != null) {
-            fStore.delete();
         }
         final IColumnSupport columSupport = (IColumnSupport) editor.getAdapter(IColumnSupport.class);
         if (columSupport != null) {
