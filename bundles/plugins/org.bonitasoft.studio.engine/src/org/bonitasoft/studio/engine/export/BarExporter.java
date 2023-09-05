@@ -106,7 +106,7 @@ public class BarExporter {
 					.sourcePathProvider(
 							SourcePathProvider.of(project.getAppProject().getLocation().toFile().toPath()))
 					.workingDirectory(workdir).build());
-			var result = barBuilder.build(process, configuration.getName());
+			var result = barBuilder.build(process, configuration);
 			return result.getBusinessArchives().get(0);
 		} catch (IOException | CoreException | DependencyResolutionRequiredException e) {
 			throw new BuildBarException(e);
