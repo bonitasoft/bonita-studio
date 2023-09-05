@@ -18,10 +18,12 @@ public class SaveBeforeDeployDialog {
     public static DeployStrategy open(String resourceName) {
         int choice = open(Messages.saveBeforeTitle,
                 String.format(Messages.saveBeforeMessage, resourceName),
-                IDialogConstants.CANCEL_LABEL, Messages.saveAndDeploy);
+                IDialogConstants.CANCEL_LABEL, Messages.deployCurrent, Messages.saveAndDeploy);
         switch (choice) {
-            case 1:
+            case 2:
                 return DeployStrategy.SAVE_AND_DEPLOY;
+            case 1:
+                return DeployStrategy.DEPLOY_CURRENT;
             default:
                 return DeployStrategy.CANCEL;
         }
@@ -48,7 +50,7 @@ public class SaveBeforeDeployDialog {
     }
 
     public enum DeployStrategy {
-        SAVE_AND_DEPLOY, CANCEL
+        SAVE_AND_DEPLOY, DEPLOY_CURRENT, CANCEL
     }
 
 }
