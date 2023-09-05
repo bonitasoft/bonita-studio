@@ -202,7 +202,6 @@ public class GroovyViewer implements IDocumentListener {
                 tmpScriptFile.getParent().refreshLocal(IResource.DEPTH_ONE, new NullProgressMonitor());
             }
             tmpScriptFile.create(new ByteArrayInputStream(new byte[0]), true, new NullProgressMonitor());
-            tmpScriptFile.setDerived(false, new NullProgressMonitor());
         } catch (CoreException | IOException e) {
             BonitaStudioLog.error(e);
         }
