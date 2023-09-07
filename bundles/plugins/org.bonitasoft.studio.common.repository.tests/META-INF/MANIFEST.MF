@@ -14,4 +14,4 @@ Require-Bundle: org.bonitasoft.studio.tests-utils,
  org.objenesis,
  junit-jupiter-api,
  org.mockito.junit-jupiter,
- org.junit.jupiter.params;bundle-version="5.8.1"
+ org.junit.jupiter.params

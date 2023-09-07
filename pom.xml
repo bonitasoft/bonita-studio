@@ -108,6 +108,7 @@
                     <configuration>
                         <useUIHarness>false</useUIHarness>
                         <showEclipseLog>true</showEclipseLog>
+                        <providerHint>junit58withvintage</providerHint>
                     </configuration>
                 </plugin>
                 <plugin>

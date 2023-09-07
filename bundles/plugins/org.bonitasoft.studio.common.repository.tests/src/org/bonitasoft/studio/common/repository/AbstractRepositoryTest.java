@@ -21,11 +21,10 @@ import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.util.Arrays;
+import java.util.List;
 
 import org.bonitasoft.studio.common.extension.ExtensionContextInjectionFactory;
 import org.bonitasoft.studio.common.repository.core.BonitaProject;
@@ -71,7 +70,7 @@ class AbstractRepositoryTest {
 
     @Test
     void should_not_refresh_project_when_deleting_a_closed_repository() throws Exception {
-        final AbstractRepository repository = newRepository();
+        final AbstractRepository repository = newRepository(List.of());
 
         repository.delete(monitor);
 
@@ -80,7 +79,7 @@ class AbstractRepositoryTest {
 
     @Test
     void should_refresh_project_when_deleting_an_open_repository() throws Exception {
-        final AbstractRepository repository = newRepository();
+        final AbstractRepository repository = newRepository(List.of());
         doReturn(true).when(project).isOpen();
 
         repository.delete(monitor);
@@ -111,19 +110,23 @@ class AbstractRepositoryTest {
         when(repositoryStore1.getChild("name.xml", false)).thenReturn(fileStore1);
         when(repositoryStore2.getChild("name.xml", false)).thenReturn(fileStore2);
 
-        AbstractRepository repository = newRepository();
-        doReturn(Arrays.asList(repositoryStore1, repositoryStore2)).when(repository).getAllStores();
+        AbstractRepository repository = newRepository(List.of(repositoryStore1, repositoryStore2));
 
         assertThat(repository.getFileStore(resource1)).isEqualTo(fileStore1);
         assertThat(repository.getFileStore(resource2)).isEqualTo(fileStore2);
     }
 
-    private AbstractRepository newRepository() throws CoreException, MigrationException {
+    private AbstractRepository newRepository(List<IRepositoryStore<? extends IRepositoryFileStore>> allStores) throws CoreException, MigrationException {
         lenient().doReturn(project).when(bonitaProject).getAppProject();
-        return spy(new TestRepository(workspace, bonitaProject,
+        return new TestRepository(workspace, bonitaProject,
                 extensionContextInjectionFactory,
                 jdtTypeHierarchyManager, 
-                eventBroker));
+                eventBroker) {
+            @Override
+            public List<IRepositoryStore<? extends IRepositoryFileStore>> getAllStores() {
+                return allStores;
+            }
+        };
     }
     
 }
