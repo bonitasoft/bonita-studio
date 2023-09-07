@@ -30,7 +30,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-public class RepositoryNameValidatorTest {
+class RepositoryNameValidatorTest {
 
     @Mock
     private RepositoryManager repoManager;
@@ -53,31 +53,31 @@ public class RepositoryNameValidatorTest {
     }
 
     @Test
-    public void testNotValid_withExisting() throws Exception {
+    void testNotValid_withExisting() throws Exception {
         RepositoryNameValidator validator = createFixture(() -> true );
         Assertions.assertThat(validator.isValid("existing")).isEqualTo(String.format(Messages.projectAlreadyExist,"existing"));
     }
 
     @Test
-    public void testValid_withExisting_if_not_new() throws Exception {
+    void testValid_withExisting_if_not_new() throws Exception {
         RepositoryNameValidator validator = createFixture(() -> false );
         Assertions.assertThat(validator.isValid("existing")).isNull();
     }
 
     @Test
-    public void testNotValid_withEmpty() throws Exception {
+    void testNotValid_withEmpty() throws Exception {
         RepositoryNameValidator validator = createFixture(() -> false );
         Assertions.assertThat(validator.isValid("")).isEqualTo(Messages.createNewProject_emptyText);
     }
 
     @Test
-    public void testNotValid_withinvalidFileCharactersAsterisk() throws Exception {
+    void testNotValid_withinvalidFileCharactersAsterisk() throws Exception {
         RepositoryNameValidator validator = createFixture(() -> false );
         Assertions.assertThat(validator.isValid("a*")).isEqualTo(String.format(Messages.createNewProject_invalidCharacter, "*"));
     }
 
     @Test
-    public void testNotValid_withinvalidFileCharactersDoubleQuote() throws Exception {
+    void testNotValid_withinvalidFileCharactersDoubleQuote() throws Exception {
         RepositoryNameValidator validator = createFixture(() -> false );
         Assertions.assertThat(validator.isValid("a\""))
                 .isEqualTo(String.format(Messages.createNewProject_invalidCharacter, "\""));

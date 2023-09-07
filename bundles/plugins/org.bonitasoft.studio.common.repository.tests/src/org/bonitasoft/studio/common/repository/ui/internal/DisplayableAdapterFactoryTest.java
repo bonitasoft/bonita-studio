@@ -26,10 +26,10 @@ import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.core.runtime.Adapters;
 import org.junit.jupiter.api.Test;
 
-public class DisplayableAdapterFactoryTest {
+class DisplayableAdapterFactoryTest {
 
     @Test
-    public void should_adapt_repository_as_displayable() throws Exception {
+    void should_adapt_repository_as_displayable() throws Exception {
         var repository = mock(IRepository.class); 
         when(repository.getProjectId()).thenReturn("my-project");
         when(repository.isShared()).thenReturn(true);

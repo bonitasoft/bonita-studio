@@ -22,7 +22,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-import org.bonitasoft.studio.common.FileUtil;
 import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.repository.core.BonitaProject;
 import org.bonitasoft.studio.common.repository.core.CreateBonitaProjectOperation;
@@ -36,24 +35,19 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.m2e.core.internal.IMavenConstants;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 import org.osgi.framework.Version;
 
 class UpdateProjectDescriptionMigrationStepTest {
 
+    @TempDir
     private Path tmpDir;
 
     @BeforeEach
     void setup() throws Exception {
-        tmpDir = Files.createTempDirectory(UpdateProjectDescriptionMigrationStepTest.class.getSimpleName());
         Files.createDirectory(tmpDir.resolve("app"));
-    }
-
-    @AfterEach
-    void cleaup() throws Exception {
-        FileUtil.deleteDir(tmpDir);
     }
 
     @Test

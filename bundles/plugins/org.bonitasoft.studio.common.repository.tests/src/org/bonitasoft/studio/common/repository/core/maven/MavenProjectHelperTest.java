@@ -9,7 +9,7 @@ import org.apache.maven.model.Model;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class MavenProjectHelperTest {
+class MavenProjectHelperTest {
 
     private static final String EXISTING_DEP_GROUP_ID = "existingGroupdId";
     private static final String EXISTING_DEP_ARTIFACT_ID = "existingArtifactId";
@@ -42,7 +42,7 @@ public class MavenProjectHelperTest {
     }
 
     @Test
-    public void should_return_same_existing_dependency() {
+    void should_return_same_existing_dependency() {
         Dependency newDependency = new Dependency();
         newDependency.setGroupId(EXISTING_DEP_GROUP_ID);
         newDependency.setArtifactId(EXISTING_DEP_ARTIFACT_ID);
@@ -72,7 +72,7 @@ public class MavenProjectHelperTest {
     }
 
     @Test
-    public void should_not_find_any_same_existing_dependency() {
+    void should_not_find_any_same_existing_dependency() {
         Dependency newDependency = new Dependency();
         newDependency.setGroupId("other");
         newDependency.setArtifactId(EXISTING_DEP_ARTIFACT_ID);
@@ -92,7 +92,7 @@ public class MavenProjectHelperTest {
     }
 
     @Test
-    public void should_manage_null_or_empty_classifier() {
+    void should_manage_null_or_empty_classifier() {
         Optional<Dependency> existingDependency = helper.findDependencyInAnyVersion(mavenModel,
                 EXISTING_DEP_GROUP_ID,
                 EXISTING_DEP_ARTIFACT_ID_2,

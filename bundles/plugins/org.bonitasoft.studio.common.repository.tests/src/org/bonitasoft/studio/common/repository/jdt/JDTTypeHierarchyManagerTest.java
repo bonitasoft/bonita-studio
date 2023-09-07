@@ -38,7 +38,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-public class JDTTypeHierarchyManagerTest {
+class JDTTypeHierarchyManagerTest {
 
     @Mock
     private IType type;
@@ -61,7 +61,7 @@ public class JDTTypeHierarchyManagerTest {
     }
 
     @Test
-    public void testGetTypeHierarchy() throws JavaModelException {
+    void testGetTypeHierarchy() throws JavaModelException {
         final JDTTypeHierarchyManager jdtTypeHierarchyManager = new JDTTypeHierarchyManager();
         final JDTTypeHierarchyManager spy = spy(jdtTypeHierarchyManager);
         assertThat(spy.getTypeHierarchy(type)).isEqualTo(typeHierarchy);
@@ -71,7 +71,7 @@ public class JDTTypeHierarchyManagerTest {
     }
 
     @Test
-    public void testClearCache() throws JavaModelException {
+    void testClearCache() throws JavaModelException {
         final JDTTypeHierarchyManager jdtTypeHierarchyManager = new JDTTypeHierarchyManager();
         final JDTTypeHierarchyManager spy = spy(jdtTypeHierarchyManager);
         assertThat(spy.getTypeHierarchy(type)).isEqualTo(typeHierarchy);
@@ -81,7 +81,7 @@ public class JDTTypeHierarchyManagerTest {
     }
 
     @Test
-    public void should_clear_cache_when_catching_a_file_store_event_related_to_a_jar() throws JavaModelException {
+    void should_clear_cache_when_catching_a_file_store_event_related_to_a_jar() throws JavaModelException {
         final JDTTypeHierarchyManager jdtTypeHierarchyManager = spy(new JDTTypeHierarchyManager());
 
         final FileStoreChangeEvent event = mock(FileStoreChangeEvent.class, RETURNS_DEEP_STUBS);
@@ -93,7 +93,7 @@ public class JDTTypeHierarchyManagerTest {
     }
 
     @Test
-    public void should_not_clear_cache_when_catching_a_file_store_event_not_related_to_ajar() throws JavaModelException {
+    void should_not_clear_cache_when_catching_a_file_store_event_not_related_to_ajar() throws JavaModelException {
         final JDTTypeHierarchyManager jdtTypeHierarchyManager = spy(new JDTTypeHierarchyManager());
 
         final FileStoreChangeEvent event = mock(FileStoreChangeEvent.class, RETURNS_DEEP_STUBS);
@@ -105,7 +105,7 @@ public class JDTTypeHierarchyManagerTest {
     }
 
     @Test
-    public void should_not_clear_cache_when_catching_a_file_store_event_with_no_fileStore() throws JavaModelException {
+    void should_not_clear_cache_when_catching_a_file_store_event_with_no_fileStore() throws JavaModelException {
         final JDTTypeHierarchyManager jdtTypeHierarchyManager = spy(new JDTTypeHierarchyManager());
 
         final FileStoreChangeEvent event = mock(FileStoreChangeEvent.class, RETURNS_DEEP_STUBS);
@@ -117,7 +117,7 @@ public class JDTTypeHierarchyManagerTest {
     }
 
     @Test
-    public void should_not_clear_cache_when_catching_a_file_store_event_with_no_resources() throws JavaModelException {
+    void should_not_clear_cache_when_catching_a_file_store_event_with_no_resources() throws JavaModelException {
         final JDTTypeHierarchyManager jdtTypeHierarchyManager = spy(new JDTTypeHierarchyManager());
 
         final FileStoreChangeEvent event = mock(FileStoreChangeEvent.class, RETURNS_DEEP_STUBS);

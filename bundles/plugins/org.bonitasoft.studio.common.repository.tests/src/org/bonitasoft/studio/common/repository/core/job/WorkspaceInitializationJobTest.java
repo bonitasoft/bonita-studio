@@ -37,7 +37,7 @@ import org.osgi.framework.BundleContext;
  * @author Romain Bioteau
  */
 @ExtendWith(MockitoExtension.class)
-public class WorkspaceInitializationJobTest {
+class WorkspaceInitializationJobTest {
 
     @Mock(strictness = Strictness.LENIENT)
     private WorkspaceInitializationJob workspaceInitializationJob;
@@ -61,13 +61,13 @@ public class WorkspaceInitializationJobTest {
     }
 
     @Test
-    public void should_belong_to_workspace_init_family() throws Exception {
+    void should_belong_to_workspace_init_family() throws Exception {
         //Expect
         assertThat(workspaceInitializationJob.belongsTo(WorkspaceInitializationJob.WORKSPACE_INIT_FAMILY)).isTrue();
     }
 
     @Test
-    public void should_trigger_repository_initialization() throws Exception {
+    void should_trigger_repository_initialization() throws Exception {
         //Given
         workspaceInitializationJob.setRepositoryAccessor(repositoryAccessor);
 

@@ -28,13 +28,13 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-public class MavenArtifactParserTest {
+class MavenArtifactParserTest {
 
     @Mock
     private DefaultArtifactFactory artifactFactory;
 
     @Test
-    public void should_parse_filename_to_artifact() throws Exception {
+    void should_parse_filename_to_artifact() throws Exception {
         final MavenArtifactParser parser = newParser();
 
         parser.parse(Paths.get("org", "bonitasoft", "web", "rest-api-extension-archetype", "1.0.2-SNAPSHOT",
@@ -48,7 +48,7 @@ public class MavenArtifactParserTest {
     }
 
     @Test
-    public void should_parse_filename_to_artifact_with_source_classifier() throws Exception {
+    void should_parse_filename_to_artifact_with_source_classifier() throws Exception {
         final MavenArtifactParser parser = newParser();
 
         parser.parse(Paths.get("org", "bonitasoft", "web", "bonita-web-extensions", "7.2.0-SNAPSHOT",

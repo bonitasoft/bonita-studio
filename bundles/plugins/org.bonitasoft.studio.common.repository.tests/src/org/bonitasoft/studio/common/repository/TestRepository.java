@@ -21,7 +21,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.e4.core.services.events.IEventBroker;
 
-public class TestRepository extends AbstractRepository{
+class TestRepository extends AbstractRepository{
 
     public TestRepository(IWorkspace workspace, BonitaProject project,
             ExtensionContextInjectionFactory extensionContextInjectionFactory,

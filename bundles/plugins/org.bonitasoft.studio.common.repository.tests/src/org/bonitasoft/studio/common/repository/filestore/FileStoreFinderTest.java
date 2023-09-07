@@ -43,7 +43,7 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.ui.IWorkbenchPart;
 import org.junit.jupiter.api.Test;
 
-public class FileStoreFinderTest {
+class FileStoreFinderTest {
 
     private static final String DIAGRAMS_FOLDER_NAME = "Diagrams";
     private static final String ORGANIZATION_FOLDER_NAME = "Organization";
@@ -51,7 +51,7 @@ public class FileStoreFinderTest {
     private static final String DOCUMENT_NAME = "doc.pdf";
 
     @Test
-    public void should_find_element_to_rename() {
+    void should_find_element_to_rename() {
         FileStoreFinder finder = spy(FileStoreFinder.class);
 
         IFile file = mock(IFile.class);
@@ -78,7 +78,7 @@ public class FileStoreFinderTest {
     }
 
     @Test
-    public void should_find_element_to_deploy() {
+    void should_find_element_to_deploy() {
         FileStoreFinder finder = spy(FileStoreFinder.class);
 
         IFile file = mock(IFile.class);

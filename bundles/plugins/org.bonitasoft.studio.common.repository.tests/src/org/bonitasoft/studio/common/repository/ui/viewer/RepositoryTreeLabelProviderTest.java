@@ -26,7 +26,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-public class RepositoryTreeLabelProviderTest {
+class RepositoryTreeLabelProviderTest {
 
     public static interface AdaptableRepositoryStore extends IRepositoryStore, IAdaptable {
     }
@@ -41,14 +41,14 @@ public class RepositoryTreeLabelProviderTest {
     AdaptableRepositoryFileStore repoFileStore;
 
     @Test
-    public void testGetTextForIRepositoryStore() {
+    void testGetTextForIRepositoryStore() {
         IDisplayable displayable = () -> "myName";
         Mockito.doReturn(displayable).when(repoStore).getAdapter(IDisplayable.class);
         Assertions.assertThat(new RepositoryTreeLabelProvider().getText(repoStore)).isEqualTo("myName");
     }
 
     @Test
-    public void testGetTextForIRepositoryFileStore() {
+    void testGetTextForIRepositoryFileStore() {
         IDisplayable displayable = () -> "myName";
         Mockito.doReturn(displayable).when(repoFileStore).getAdapter(IDisplayable.class);
         Assertions.assertThat(new RepositoryTreeLabelProvider().getText(repoFileStore)).isEqualTo("myName");

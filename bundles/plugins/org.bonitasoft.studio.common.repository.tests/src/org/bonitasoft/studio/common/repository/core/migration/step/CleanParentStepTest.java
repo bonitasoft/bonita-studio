@@ -23,8 +23,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.Comparator;
-import java.util.stream.Stream;
 
 import org.apache.maven.model.Model;
 import org.bonitasoft.studio.common.repository.core.maven.model.DefaultPluginVersions;
@@ -32,26 +30,21 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.m2e.core.MavenPlugin;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
 class CleanParentStepTest {
 
+    @TempDir
 	private Path project;
 
 	@BeforeEach
 	void setup() throws Exception {
-		project = Files.createTempDirectory("myProject");
 		copyDirectory(
 				new File(FileLocator.toFileURL(CleanParentStepTest.class.getResource("/legacyParentPom")).getFile())
 						.getAbsolutePath(),
 				project.toFile().getAbsolutePath());
-	}
-
-	@AfterEach
-	void cleanup() throws Exception {
-		deleteDir(project);
 	}
 
 	@Test
@@ -120,12 +113,6 @@ class CleanParentStepTest {
 	private static Model load(Path project) throws IOException, CoreException {
 		try (var is = Files.newInputStream(project.resolve("pom.xml"))) {
 			return MavenPlugin.getMaven().readModel(is);
-		}
-	}
-
-	private static void deleteDir(Path directory) throws IOException {
-		try (Stream<Path> pathStream = Files.walk(directory)) {
-			pathStream.sorted(Comparator.reverseOrder()).map(Path::toFile).forEach(File::delete);
 		}
 	}
 
