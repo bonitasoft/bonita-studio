@@ -156,6 +156,7 @@ public class MultiModuleMigrationStep implements MigrationStep {
         storeFolders.add("documentation");
         storeFolders.add("src");
         storeFolders.add(LocalDependenciesStore.NAME);
+        storeFolders.add("process_configurations");
         return storeFolders;
     }
 
