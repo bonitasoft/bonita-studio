@@ -97,7 +97,7 @@ public class GitCloneIT {
     }
 
     private RevCommit getLastCommit(Repository repository)
-            throws GitAPIException, MissingObjectException, IncorrectObjectTypeException, IOException {
+            throws Exception {
         RevCommit youngestCommit = null;
         try (var git = new Git(repository);
                 var walk = new RevWalk(git.getRepository());) {

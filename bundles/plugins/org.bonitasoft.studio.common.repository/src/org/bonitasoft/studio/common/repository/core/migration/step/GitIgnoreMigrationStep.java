@@ -15,16 +15,15 @@
 package org.bonitasoft.studio.common.repository.core.migration.step;
 
 import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.UncheckedIOException;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,19 +42,21 @@ public class GitIgnoreMigrationStep implements MigrationStep {
     public MigrationReport run(Path project, IProgressMonitor monitor) throws CoreException {
         var report = MigrationReport.emptyReport();
         try {
-            updateGitIgnore(project, report, project.resolve(Constants.GITIGNORE_FILENAME),
-                    GitProject.getParentGitIgnoreTemplate());
+            var parentEntries = updateGitIgnore(project, report, project.resolve(Constants.GITIGNORE_FILENAME),
+                    GitProject.getParentGitIgnoreTemplate(), List.of());
             updateGitIgnore(project, report, project
                     .resolve(BonitaProject.APP_MODULE)
                     .resolve(Constants.GITIGNORE_FILENAME),
-                    GitProject.getGitignoreTemplateFileURL());
+                    GitProject.getGitignoreTemplateFileURL(),
+                    parentEntries);
         } catch (IOException e) {
             throw new CoreException(Status.error("Failed to update .gitignore file.", e));
         }
         return report;
     }
 
-    private void updateGitIgnore(Path project, MigrationReport report, Path gitIgnore, URL gitIgnoreTemplate)
+    private List<String> updateGitIgnore(Path project, MigrationReport report, Path gitIgnore, URL gitIgnoreTemplate,
+            List<String> parentEntries)
             throws CoreException {
         if (Files.exists(gitIgnore)) {
             try (var is = Files.newInputStream(gitIgnore)) {
@@ -64,14 +65,26 @@ public class GitIgnoreMigrationStep implements MigrationStep {
                 if (!entriesToAdd.isEmpty()) {
                     existingEntries.add(System.lineSeparator());
                     existingEntries.addAll(entriesToAdd);
+                }
+                var entriesRemoved = existingEntries.removeIf(entry -> !entry.startsWith("/")
+                        && !entry.isBlank()
+                        && parentEntries.contains(entry));
+                entriesRemoved = existingEntries.removeIf(entry -> !entry.isBlank()
+                            && entry.startsWith("/lib/") || entry.equals("/template")) || entriesRemoved;
+                if (entriesRemoved || !entriesToAdd.isEmpty()) {
                     String newContent = existingEntries.stream().reduce("",
                             (s1, s2) -> s1 + System.lineSeparator() + s2);
+                    Files.writeString(gitIgnore, newContent, StandardCharsets.UTF_8);
                     report.updated(String.format("`%s` file has been updated.", project.relativize(gitIgnore)));
-                    Files.copy(new ByteArrayInputStream(newContent.getBytes(StandardCharsets.UTF_8)), gitIgnore, StandardCopyOption.REPLACE_EXISTING);
                 }
             } catch (IOException e) {
                 throw new CoreException(Status.error("Failed to update .gitignore file.", e));
             }
+        }
+        try (var input = Files.newInputStream(gitIgnore)) {
+            return readEntries(input, StandardCharsets.UTF_8);
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
         }
     }
 
@@ -82,7 +95,9 @@ public class GitIgnoreMigrationStep implements MigrationStep {
             List<String> entries = new ArrayList<>();
             String line;
             while ((line = br.readLine()) != null) {
-                if (lineIsValid(line) && !existingEntries.contains(line)) {
+                if (lineIsValid(line)
+                        && !existingEntries.contains(line)
+                        && !line.equals("/process_configurations")) {
                     entries.add(line);
                 }
             }
@@ -96,7 +111,7 @@ public class GitIgnoreMigrationStep implements MigrationStep {
 
     private static List<String> readEntries(InputStream is, Charset encoding) throws IOException {
         try (BufferedReader br = new BufferedReader(new InputStreamReader(is, encoding))) {
-            List<String> entries = new ArrayList<>();
+            var entries = new ArrayList<String>();
             String line;
             while ((line = br.readLine()) != null) {
                 entries.add(line);
