@@ -33,7 +33,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-public class RepositoryTreeContentProviderTest {
+class RepositoryTreeContentProviderTest {
 
     @Mock
     IRepositoryStore<?> repoStore;
@@ -47,32 +47,32 @@ public class RepositoryTreeContentProviderTest {
     }
 
     @Test
-    public void testGetChildren() {
+    void testGetChildren() {
         Mockito.doReturn(Arrays.asList(new IRepositoryFileStore[] { repoFileStore })).when(repoStore).getChildren();
         final Object[] children = new RepositoryTreeContentProvider().getChildren(repoStore);
         Assertions.assertThat(children).contains(repoFileStore);
     }
 
     @Test
-    public void testGetChildrenReturnEmptyListIfNotARepositoryStore() {
+    void testGetChildrenReturnEmptyListIfNotARepositoryStore() {
         final Object[] children = new RepositoryTreeContentProvider().getChildren(new Object());
         Assertions.assertThat(children).isNotNull();
         Assertions.assertThat(children).isEmpty();
     }
 
     @Test
-    public void testGetParent() {
+    void testGetParent() {
         Mockito.doReturn(repoStore).when(repoFileStore).getParentStore();
         Assertions.assertThat(new RepositoryTreeContentProvider().getParent(repoFileStore)).isEqualTo(repoStore);
     }
 
     @Test
-    public void testGetParentReturnNullIfNotARepositoryFileStore() {
+    void testGetParentReturnNullIfNotARepositoryFileStore() {
         Assertions.assertThat(new RepositoryTreeContentProvider().getParent(new Object())).isEqualTo(null);
     }
 
     @Test
-    public void should_have_no_child() {
+    void should_have_no_child() {
         //Given
         final RepositoryTreeContentProvider repositoryTreeContentProvider = new RepositoryTreeContentProvider();
         doReturn(true).when(repoStore).isEmpty();
@@ -82,7 +82,7 @@ public class RepositoryTreeContentProviderTest {
     }
 
     @Test
-    public void should_have_children() {
+    void should_have_children() {
         //Given
         final RepositoryTreeContentProvider repositoryTreeContentProvider = new RepositoryTreeContentProvider();
         doReturn(false).when(repoStore).isEmpty();
@@ -93,12 +93,12 @@ public class RepositoryTreeContentProviderTest {
     }
 
     @Test
-    public void testHasChildrenReturnFalseIfNotARepositoryFileStore() {
+    void testHasChildrenReturnFalseIfNotARepositoryFileStore() {
         Assertions.assertThat(new RepositoryTreeContentProvider().hasChildren(new Object())).isFalse();
     }
 
     @Test
-    public void testGetElementsReturnATable() {
+    void testGetElementsReturnATable() {
         final Collection<Object> collec = Collections.emptyList();
         final Object[] elements = new RepositoryTreeContentProvider().getElements(collec);
         Assertions.assertThat(elements).isInstanceOf(Object[].class);
@@ -106,7 +106,7 @@ public class RepositoryTreeContentProviderTest {
     }
 
     @Test
-    public void testGetElementsReturnEmptyListIfNotACollection() {
+    void testGetElementsReturnEmptyListIfNotACollection() {
         final Object[] elements = new RepositoryTreeContentProvider().getElements(new Object());
         Assertions.assertThat(elements).isInstanceOf(Object[].class);
         Assertions.assertThat(elements).isNotNull();

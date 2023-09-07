@@ -43,7 +43,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
  * @author Romain Bioteau
  */
 @ExtendWith(MockitoExtension.class)
-public class CreateJarOperationTest {
+class CreateJarOperationTest {
 
     @Mock
     private IPackageFragment packageFragment;
@@ -80,7 +80,7 @@ public class CreateJarOperationTest {
     }
 
     @Test
-    public void should_run_a_JarExportRunnable() throws Exception {
+    void should_run_a_JarExportRunnable() throws Exception {
         //When
         operation.run(monitor);
 
@@ -89,7 +89,7 @@ public class CreateJarOperationTest {
     }
 
     @Test
-    public void should_configure_JarPackageData_to_overwrite_existing_file() throws Exception {
+    void should_configure_JarPackageData_to_overwrite_existing_file() throws Exception {
         //When
         operation.run(monitor);
 
@@ -98,7 +98,7 @@ public class CreateJarOperationTest {
     }
 
     @Test
-    public void should_configure_JarPackageData_to_with_target_file_path() throws Exception {
+    void should_configure_JarPackageData_to_with_target_file_path() throws Exception {
         //When
         operation.run(monitor);
 
@@ -107,7 +107,7 @@ public class CreateJarOperationTest {
     }
 
     @Test
-    public void should_configure_JarPackageData_enable_deprecation_awareness() throws Exception {
+    void should_configure_JarPackageData_enable_deprecation_awareness() throws Exception {
         //When
         operation.run(monitor);
 
@@ -116,7 +116,7 @@ public class CreateJarOperationTest {
     }
 
     @Test
-    public void should_configure_JarPackageData_set_compilation_units_to_export() throws Exception {
+    void should_configure_JarPackageData_set_compilation_units_to_export() throws Exception {
         //When
         operation.run(monitor);
 
@@ -125,7 +125,7 @@ public class CreateJarOperationTest {
     }
 
     @Test
-    public void should_configure_JarPackageData_include_java_source_file() throws Exception {
+    void should_configure_JarPackageData_include_java_source_file() throws Exception {
         //When
         operation.includeSources().run(monitor);
 
@@ -134,7 +134,7 @@ public class CreateJarOperationTest {
     }
 
     @Test
-    public void should_configure_JarPackageData_not_include_java_source_file() throws Exception {
+    void should_configure_JarPackageData_not_include_java_source_file() throws Exception {
         //When
         operation.run(monitor);
 
@@ -143,7 +143,7 @@ public class CreateJarOperationTest {
     }
 
     @Test
-    public void should_retrieve_status_from_export_runnable() throws Exception {
+    void should_retrieve_status_from_export_runnable() throws Exception {
         //When
         operation.run(monitor);
 
@@ -152,7 +152,7 @@ public class CreateJarOperationTest {
     }
 
     @Test
-    public void should_retrieve_an_error_status_if_operation_is_not_ran() throws Exception {
+    void should_retrieve_an_error_status_if_operation_is_not_ran() throws Exception {
         //When
         //!operation.run(monitor);
 

@@ -27,10 +27,10 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.junit.jupiter.api.Test;
 
-public class SourceRepositoryStoreTest {
+class SourceRepositoryStoreTest {
 
     @Test
-    public void should_not_use_super_implementation_if_there_is_no_compatible_extensions() throws Exception {
+    void should_not_use_super_implementation_if_there_is_no_compatible_extensions() throws Exception {
         final SourceRepositoryStore sourceRepositoryStore = mock(SourceRepositoryStore.class);
         doReturn(Collections.emptySet()).when(sourceRepositoryStore).getCompatibleExtensions();
         doCallRealMethod().when(sourceRepositoryStore).getChildren();
@@ -44,7 +44,7 @@ public class SourceRepositoryStoreTest {
     }
 
     @Test
-    public void should_use_super_implementation_if_there_is_compatible_extensions() throws Exception {
+    void should_use_super_implementation_if_there_is_compatible_extensions() throws Exception {
         final SourceRepositoryStore sourceRepositoryStore = mock(SourceRepositoryStore.class);
         doReturn(Collections.singleton("groovy")).when(sourceRepositoryStore).getCompatibleExtensions();
         doCallRealMethod().when(sourceRepositoryStore).getChildren();

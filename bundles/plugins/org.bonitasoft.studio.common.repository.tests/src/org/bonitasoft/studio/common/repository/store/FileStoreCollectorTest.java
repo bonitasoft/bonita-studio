@@ -28,7 +28,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
  * @author Romain Bioteau
  */
 @ExtendWith(MockitoExtension.class)
-public class FileStoreCollectorTest {
+class FileStoreCollectorTest {
 
     @Mock
     private IResource root;
@@ -40,7 +40,7 @@ public class FileStoreCollectorTest {
     private IResource dotStartingResource;
 
     @Test
-    public void should_collect_resources_with_defined_extension() throws Exception {
+    void should_collect_resources_with_defined_extension() throws Exception {
         //Given
         final FileStoreCollector fileStoreCollector = new FileStoreCollector(root, "proc");
         doReturn("proc").when(procResource).getFileExtension();
@@ -54,7 +54,7 @@ public class FileStoreCollectorTest {
     }
 
     @Test
-    public void should_collect_all_visible_resources_if_not_extension_is_defined() throws Exception {
+    void should_collect_all_visible_resources_if_not_extension_is_defined() throws Exception {
         //Given
         final FileStoreCollector fileStoreCollector = new FileStoreCollector(root, null);
         doReturn("myDiagram").when(procResource).getName();
@@ -71,7 +71,7 @@ public class FileStoreCollectorTest {
     }
 
     @Test
-    public void should_skip_hidden_resources() throws Exception {
+    void should_skip_hidden_resources() throws Exception {
         //Given
         final FileStoreCollector fileStoreCollector = new FileStoreCollector(root, null);
         when(hiddenResource.isHidden()).thenReturn(true);
@@ -86,7 +86,7 @@ public class FileStoreCollectorTest {
     }
 
     @Test
-    public void should_skip_dot_starting_resources() throws Exception {
+    void should_skip_dot_starting_resources() throws Exception {
         //Given
         final FileStoreCollector fileStoreCollector = new FileStoreCollector(root, null);
         when(dotStartingResource.getName()).thenReturn(".svn");
@@ -99,7 +99,7 @@ public class FileStoreCollectorTest {
     }
 
     @Test
-    public void should_not_collect_unrelevant_extension() throws Exception {
+    void should_not_collect_unrelevant_extension() throws Exception {
         //Given
         final FileStoreCollector fileStoreCollector = new FileStoreCollector(root, "png");
         doReturn("proc").when(procResource).getFileExtension();
@@ -112,7 +112,7 @@ public class FileStoreCollectorTest {
     }
 
     @Test
-    public void should_visit_root_folder() throws Exception {
+    void should_visit_root_folder() throws Exception {
         //Given
         final FileStoreCollector fileStoreCollector = new FileStoreCollector(root);
 

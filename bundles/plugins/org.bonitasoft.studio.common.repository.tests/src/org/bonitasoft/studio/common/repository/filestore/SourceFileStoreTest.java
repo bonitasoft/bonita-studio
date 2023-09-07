@@ -40,7 +40,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
  *
  */
 @ExtendWith(MockitoExtension.class)
-public class SourceFileStoreTest {
+class SourceFileStoreTest {
 
 	@Mock
 	private IRepositoryStore<?> parentStore;

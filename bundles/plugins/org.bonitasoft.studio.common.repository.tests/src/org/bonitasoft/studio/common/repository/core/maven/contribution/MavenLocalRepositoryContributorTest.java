@@ -42,7 +42,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-public class MavenLocalRepositoryContributorTest {
+class MavenLocalRepositoryContributorTest {
 
     private MavenLocalRepositoryContributor contributor;
     @Mock
@@ -69,7 +69,7 @@ public class MavenLocalRepositoryContributorTest {
     }
 
     @Test
-    public void should_install_artifact_not_in_local_repository() throws Exception {
+    void should_install_artifact_not_in_local_repository() throws Exception {
         final Artifact artifactToInstall = mock(Artifact.class);
         when(artifactFile.exists()).thenReturn(true);
         when(catalog.parseDependencies()).thenReturn(Set.of(artifactToInstall));
@@ -82,7 +82,7 @@ public class MavenLocalRepositoryContributorTest {
     }
 
     @Test
-    public void should_not_install_artifact_already_in_local_repository() throws Exception {
+    void should_not_install_artifact_already_in_local_repository() throws Exception {
         final Artifact artifactToInstall = mock(Artifact.class);
         final File file = mock(File.class);
         when(file.exists()).thenReturn(true);

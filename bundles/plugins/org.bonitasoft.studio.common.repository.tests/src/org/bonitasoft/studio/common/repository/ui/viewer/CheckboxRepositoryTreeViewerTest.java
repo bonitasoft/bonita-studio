@@ -35,7 +35,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class CheckboxRepositoryTreeViewerTest {
+class CheckboxRepositoryTreeViewerTest {
 
     
     private Shell shell;
@@ -51,7 +51,7 @@ public class CheckboxRepositoryTreeViewerTest {
     }
 
     @Test
-    public void should_check_default_selection() throws Exception {
+    void should_check_default_selection() throws Exception {
         final CheckboxRepositoryTreeViewer viewer = new CheckboxRepositoryTreeViewer(new Composite(shell, SWT.NONE));
         final IRepositoryFileStore aSelectedFileStore = mock(IRepositoryFileStore.class);
         viewer.bindTree(new DataBindingContext(), toList(aRepositoryStoreWithChildren(aSelectedFileStore)));
@@ -62,7 +62,7 @@ public class CheckboxRepositoryTreeViewerTest {
     }
 
     @Test
-    public void should_have_an_error_status_if_no_element_is_checked() throws Exception {
+    void should_have_an_error_status_if_no_element_is_checked() throws Exception {
         final CheckboxRepositoryTreeViewer viewer = new CheckboxRepositoryTreeViewer(new Composite(shell, SWT.NONE));
         final IRepositoryFileStore aSelectedFileStore = mock(IRepositoryFileStore.class);
         final DataBindingContext context = new DataBindingContext();
@@ -74,7 +74,7 @@ public class CheckboxRepositoryTreeViewerTest {
     }
 
     @Test
-    public void should_not_have_an_error_status_if_at_least_one_element_is_checked() throws Exception {
+    void should_not_have_an_error_status_if_at_least_one_element_is_checked() throws Exception {
         final CheckboxRepositoryTreeViewer viewer = new CheckboxRepositoryTreeViewer(new Composite(shell, SWT.NONE));
         final IRepositoryFileStore aSelectedFileStore = mock(IRepositoryFileStore.class);
         final DataBindingContext context = new DataBindingContext();
