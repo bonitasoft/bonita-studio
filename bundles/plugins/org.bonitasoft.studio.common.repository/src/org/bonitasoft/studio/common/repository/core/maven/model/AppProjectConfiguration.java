@@ -89,11 +89,36 @@ public class AppProjectConfiguration implements DefaultPluginVersions {
     private Profile createBundleProfile() {
         var bundleProfile = new Profile();
         bundleProfile.setId(BUNDLE_ID);
-        bundleProfile.addDependency(bundleDependency());
         var buildBase = new BuildBase();
+        buildBase.addPlugin(unpackBundleDependency());
+        buildBase.addPlugin(configureBundle());
         buildBase.addPlugin(bundleAssembly());
         bundleProfile.setBuild(buildBase);
         return bundleProfile;
+    }
+    
+
+    private Plugin unpackBundleDependency() {
+        var dependencyPlugin = new Plugin();
+        dependencyPlugin.setArtifactId(MAVEN_DEPENDENCY_PLUGIN);
+        var bundleExecution = new PluginExecution();
+        bundleExecution
+                .setId(PlatformUtil.isACommunityBonitaProduct() ? "prepare-bundle" : "prepare-bundle-enterprise");
+        bundleExecution.addGoal("unpack");
+        dependencyPlugin.addExecution(bundleExecution);
+        return dependencyPlugin;
+    }
+    
+    private Plugin configureBundle() {
+        var groovyPlugin = new Plugin();
+        groovyPlugin.setGroupId(GROOVY_MAVEN_PLUGIN_GROUP_ID);
+        groovyPlugin.setArtifactId(GROOVY_MAVEN_PLUGIN_ARTIFACT_ID);
+        var configureBundleExecution = new PluginExecution();
+        configureBundleExecution
+                .setId("configure-bundle");
+        configureBundleExecution.addGoal(EXECUTE_GOAL);
+        groovyPlugin.addExecution(configureBundleExecution);
+        return groovyPlugin;
     }
 
     private Profile createDockerProfile() {
@@ -118,15 +143,6 @@ public class AppProjectConfiguration implements DefaultPluginVersions {
         execution.addGoal(EXECUTE_GOAL);
         groovyMavenPlugin.addExecution(execution);
         return groovyMavenPlugin;
-    }
-
-    private Dependency bundleDependency() {
-        var bundleDependency = new Dependency();
-        bundleDependency.setGroupId(
-                PlatformUtil.isACommunityBonitaProduct() ? "org.bonitasoft.distrib" : "com.bonitasoft.distrib");
-        bundleDependency.setArtifactId(PlatformUtil.isACommunityBonitaProduct() ? "bundle-tomcat" : "bundle-tomcat-sp");
-        bundleDependency.setType("zip");
-        return bundleDependency;
     }
 
     private Plugin bundleAssembly() {
