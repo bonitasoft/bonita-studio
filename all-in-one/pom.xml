@@ -26,7 +26,7 @@
 		<product.short.name>BonitaStudioCommunity</product.short.name>
 		<productId>org.bonitasoft.studio.product</productId>
 		<macosx.appName>${product.short.name}-${branding.version}.app</macosx.appName>
-		<signServiceURL></signServiceURL>
+        <root.dir>${project.build.directory}/${product.short.name}-${branding.version}</root.dir>
 	</properties>
 
 	<build>
@@ -532,7 +532,10 @@
 			</build>
 		</profile>
 		<profile>
-			<id>sign</id>
+			<id>windows-codesign</id>
+			 <properties>
+                <codesign.argLine>sign -username="${env.ESIGNER_CREDS_USR}" -password="${env.ESIGNER_CREDS_PSW}" -credential_id="${env.ESIGNER_CREDENTIAL_ID}" -totp_secret="${env.ESIGNER_TOTP}" -override</codesign.argLine>
+            </properties>
 			<build>
 				<plugins>
 					<plugin>
@@ -546,28 +549,8 @@
 									<goal>exec</goal>
 								</goals>
 								<configuration>
-									<executable>./sign.sh</executable>
-									<arguments>
-										<argument>${product.short.name}.exe</argument>
-										<argument>${signServiceURL}</argument>
-										<argument>${product.short.name}.exe</argument>
-										<argument>${project.build.directory}/products/${productId}/win32/win32/x86_64/</argument>
-									</arguments>
-								</configuration>
-							</execution>
-							<execution>
-								<id>sign-osx-app</id>
-								<phase>process-resources</phase>
-								<goals>
-									<goal>exec</goal>
-								</goals>
-								<configuration>
-									<executable>./sign-macosx.sh</executable>
-									<arguments>
-										<argument>${product.short.name}-${branding.version}.app</argument>
-										<argument>${macSignServiceURL}</argument>
-										<argument>${project.build.directory}/products/${productId}/macosx/cocoa/x86_64/</argument>
-									</arguments>
+									<executable>CodeSignTool</executable>
+									<commandlineArgs>${codesign.argLine} -input_file_path=${project.build.directory}/products/${productId}/win32/win32/x86_64/${product.short.name}.exe</commandlineArgs>
 								</configuration>
 							</execution>
 							<execution>
@@ -577,29 +560,8 @@
 									<goal>exec</goal>
 								</goals>
 								<configuration>
-									<executable>./sign.sh</executable>
-									<arguments>
-										<argument>${product.short.name}-${branding.version}-x86_64.exe</argument>
-										<argument>${signServiceURL}</argument>
-										<argument>${product.short.name}-${branding.version}-x86_64.exe</argument>
-										<argument>${project.build.directory}/installers/output/</argument>
-									</arguments>
-								</configuration>
-							</execution>
-							<execution>
-								<id>build-and-sign-osx-dmg</id>
-								<phase>verify</phase>
-								<goals>
-									<goal>exec</goal>
-								</goals>
-								<configuration>
-									<executable>./sign.sh</executable>
-									<arguments>
-										<argument>${product.short.name}-${branding.version}.app.zip</argument>
-										<argument>${macBuildAndSignInstallerServiceURL}</argument>
-										<argument>${product.short.name}-${branding.version}-macOs.dmg</argument>
-										<argument>${project.build.directory}/installers/output/</argument>
-									</arguments>
+                                    <executable>CodeSignTool</executable>
+                                    <commandlineArgs>${codesign.argLine} -input_file_path=${project.build.directory}/installers/output/${product.short.name}-${branding.version}-x86_64.exe</commandlineArgs>
 								</configuration>
 							</execution>
 						</executions>
@@ -607,5 +569,49 @@
 				</plugins>
 			</build>
 		</profile>
+		<profile>
+            <id>macos-codesign</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>exec-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>sign-osx-app</id>
+                                <phase>process-resources</phase>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                                <configuration>
+                                    <executable>./sign-macosx.sh</executable>
+                                    <arguments>
+                                        <argument>${product.short.name}-${branding.version}.app</argument>
+                                        <argument>${macSignServiceURL}</argument>
+                                        <argument>${project.build.directory}/products/${productId}/macosx/cocoa/x86_64/</argument>
+                                    </arguments>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>build-and-sign-osx-dmg</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                                <configuration>
+                                    <executable>./sign.sh</executable>
+                                    <arguments>
+                                        <argument>${product.short.name}-${branding.version}.app.zip</argument>
+                                        <argument>${macBuildAndSignInstallerServiceURL}</argument>
+                                        <argument>${product.short.name}-${branding.version}-macOs.dmg</argument>
+                                        <argument>${project.build.directory}/installers/output/</argument>
+                                    </arguments>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
 	</profiles>
 </project>
