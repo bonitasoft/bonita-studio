@@ -15,9 +15,11 @@
 package org.bonitasoft.studio.common.repository.core.migration.step;
 
 import java.nio.file.Path;
+import java.util.List;
 import java.util.Objects;
 
 import org.apache.maven.model.Dependency;
+import org.apache.maven.model.License;
 import org.apache.maven.model.Parent;
 import org.apache.maven.model.Plugin;
 import org.bonitasoft.studio.common.ProductVersion;
@@ -71,6 +73,10 @@ public class CleanParentStep implements MigrationStep {
      	parent.setArtifactId(DefaultPluginVersions.BONITA_PROJECT_ARTIFACT_ID);
      	parent.setVersion(ProductVersion.BONITA_RUNTIME_VERSION);
      	model.setParent(parent);
+     	if(model.getLicenses().isEmpty()) {
+     	   // Set empty license to avoid inheriting from the GPLv2 parent license
+     	   model.setLicenses(List.of(new License()));
+     	}
 		saveMavenModel(model, project);
 		report.updated("This project now depends on the Bonita project parent pom. This parent pom configures all the required plugins and dependencies versions for a given Bonita version.");
 		return report;

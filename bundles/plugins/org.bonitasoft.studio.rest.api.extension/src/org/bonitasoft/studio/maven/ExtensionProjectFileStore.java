@@ -109,7 +109,7 @@ public class ExtensionProjectFileStore<T extends ExtensionProjectDescriptor> ext
 			final ExtensionProjectDescriptor content = getContent();
 			return content.getDisplayName();
 		} catch (final ReadFileStoreException e) {
-			return null;
+			return "";
 		}
 	}
 
@@ -118,7 +118,7 @@ public class ExtensionProjectFileStore<T extends ExtensionProjectDescriptor> ext
 			final ExtensionProjectDescriptor content = getContent();
 			return content.getDescription();
 		} catch (final ReadFileStoreException e) {
-			return null;
+			return "";
 		}
 	}
 

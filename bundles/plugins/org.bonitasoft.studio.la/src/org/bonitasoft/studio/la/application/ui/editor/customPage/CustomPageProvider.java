@@ -56,11 +56,9 @@ public class CustomPageProvider implements IResourceChangeListener {
                     .stream()
                     .filter(webPageFileStore -> Objects.equals(webPageFileStore.getType(),
                             WebPageFileStore.LAYOUT_TYPE))
-                    .map(fileStore -> {
-                        return new CustomPageDescriptor(
+                    .map(fileStore -> new CustomPageDescriptor(
                                 CustomPageDescriptor.CUSTOMPAGE_PREFIX + fileStore.getCustomPageName(),
-                                IDisplayable.toDisplayName(fileStore).orElse(""), fileStore.getDescription());
-                    })
+                                IDisplayable.toDisplayName(fileStore).orElse(""), fileStore.getDescription()))
                     .forEach(layouts::add);
         }
         return layouts;
