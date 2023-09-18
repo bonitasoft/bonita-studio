@@ -16,6 +16,7 @@ package org.bonitasoft.studio.common.repository.core;
 
 import java.util.List;
 
+import org.apache.maven.model.License;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.Parent;
 import org.apache.maven.model.Repository;
@@ -107,6 +108,9 @@ public class MavenParentProjectModelBuilder implements MavenModelBuilder{
         bonitaProjectParent.setArtifactId(DefaultPluginVersions.BONITA_PROJECT_ARTIFACT_ID);
         bonitaProjectParent.setVersion(bonitaRuntimeVersion);
         model.setParent(bonitaProjectParent); 
+        
+        // Set an empty license to avoid inheriting the parent GPLv2 license.
+        model.setLicenses(List.of(new License()));
         
         model.getModules().add(APP_MODULE_NAME);
 

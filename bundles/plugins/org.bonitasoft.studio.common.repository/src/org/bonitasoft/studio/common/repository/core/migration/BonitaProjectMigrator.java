@@ -34,6 +34,7 @@ import org.bonitasoft.studio.common.repository.core.migration.step.GitIgnoreMigr
 import org.bonitasoft.studio.common.repository.core.migration.step.JavaDependenciesMigrationStep;
 import org.bonitasoft.studio.common.repository.core.migration.step.MultiModuleMigrationStep;
 import org.bonitasoft.studio.common.repository.core.migration.step.ProvidedGroovyScriptRemovedStep;
+import org.bonitasoft.studio.common.repository.core.migration.step.RemoveFlattenPluginExecutionStep;
 import org.bonitasoft.studio.common.repository.core.migration.step.RemoveLegacyFolderStep;
 import org.bonitasoft.studio.common.repository.core.migration.step.SplitGroovyAllIntoModulesStep;
 import org.bonitasoft.studio.common.repository.core.migration.step.UpdateProjectDescriptionMigrationStep;
@@ -61,7 +62,8 @@ public class BonitaProjectMigrator {
             new ProvidedGroovyScriptRemovedStep(),
             new BonitaProjectParentVersionStep(),
             new ApplicationAssemblyConfigurationStep(),
-            new BdmAssemblyConfigurationStep());
+            new BdmAssemblyConfigurationStep(),
+            new RemoveFlattenPluginExecutionStep());
 
     private Path project;
 
