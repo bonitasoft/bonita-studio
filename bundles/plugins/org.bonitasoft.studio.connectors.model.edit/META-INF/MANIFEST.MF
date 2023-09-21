@@ -5,7 +5,6 @@ Bundle-SymbolicName: org.bonitasoft.studio.connectors.model.edit;singleton:=true
 Automatic-Module-Name: org.bonitasoft.studio.connectors.model.edit
 Bundle-Version: 9.0.0.qualifier
 Bundle-ClassPath: .
-Bundle-Activator: org.bonitasoft.bpm.connector.model.definition.provider.ConnectorEditPlugin$Implementation
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
 Bundle-RequiredExecutionEnvironment: JavaSE-11
