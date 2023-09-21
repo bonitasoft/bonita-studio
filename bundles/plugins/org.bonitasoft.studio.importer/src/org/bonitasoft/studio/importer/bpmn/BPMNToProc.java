@@ -17,6 +17,7 @@ package org.bonitasoft.studio.importer.bpmn;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.nio.file.Files;
@@ -236,7 +237,12 @@ public class BPMNToProc extends ToProcProcessor {
     public File createDiagram(URL sourceBPMNUrl, final IProgressMonitor progressMonitor) {
         progressMonitor.beginTask(Messages.importFromBPMN,
                 IProgressMonitor.UNKNOWN);
-        this.resourceName = new File(sourceBPMNUrl.getFile()).getName();
+        try {
+            this.resourceName = new File(URLDecoder.decode(sourceBPMNUrl.getFile(), "UTF-8")).getName();
+        } catch (UnsupportedEncodingException e) {
+            BonitaStudioLog.error(e);
+            return null;
+        }
         status = new MultiStatus(ImporterPlugin.PLUGIN_ID, 0, null, null);
         builder = new ProcBuilder(progressMonitor);
         try(var stream = sourceBPMNUrl.openStream()) {
