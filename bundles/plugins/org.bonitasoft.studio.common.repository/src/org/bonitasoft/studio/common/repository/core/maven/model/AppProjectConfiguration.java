@@ -68,7 +68,7 @@ public class AppProjectConfiguration implements DefaultPluginVersions {
                 BONITA_PROJECT_MAVEN_PLUGIN_ARTIFACT_ID, BONITA_PROJECT_MAVEN_PLUGIN_DEFAULT_VERSION);
         bonitProjectPlugin.addExecution(
                 pluginExecution("process-bonita-artifacts", null,
-                        List.of("business-archive", "uid-page", "merge-configuration"), null));
+                        List.of("copy-provided-pages", "business-archive", "uid-page", "merge-configuration"), null));
         addPlugin(bonitProjectPlugin);
         var buildHelperPlugin = new MavenPlugin(CODEHAUS_PLUGIN_GROUP_ID, BUILD_HELPER_MAVEN_PLUGIN,
                 BUILD_HELPER_MAVEN_PLUGIN_VERSION);
