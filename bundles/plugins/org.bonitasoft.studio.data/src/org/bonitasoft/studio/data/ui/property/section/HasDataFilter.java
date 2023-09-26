@@ -14,14 +14,14 @@
  */
 package org.bonitasoft.studio.data.ui.property.section;
 
-import org.bonitasoft.studio.model.process.CatchMessageEvent;
-import org.bonitasoft.studio.model.process.Lane;
-import org.bonitasoft.studio.model.process.MainProcess;
-import org.bonitasoft.studio.model.process.ProcessPackage;
-import org.bonitasoft.studio.model.process.SendTask;
-import org.bonitasoft.studio.model.process.StartSignalEvent;
-import org.bonitasoft.studio.model.process.StartTimerEvent;
-import org.bonitasoft.studio.model.process.TimerEvent;
+import org.bonitasoft.bpm.model.process.CatchMessageEvent;
+import org.bonitasoft.bpm.model.process.CatchSignalEvent;
+import org.bonitasoft.bpm.model.process.Lane;
+import org.bonitasoft.bpm.model.process.MainProcess;
+import org.bonitasoft.bpm.model.process.ProcessPackage;
+import org.bonitasoft.bpm.model.process.SendTask;
+import org.bonitasoft.bpm.model.process.StartTimerEvent;
+import org.bonitasoft.bpm.model.process.TimerEvent;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.jface.viewers.IFilter;
@@ -50,7 +50,7 @@ public class HasDataFilter implements IFilter {
                     || eObject instanceof TimerEvent
                     || eObject instanceof MainProcess
                     || eObject instanceof SendTask
-                    || eObject instanceof StartSignalEvent
+                    || eObject instanceof CatchSignalEvent
                     || eObject instanceof StartTimerEvent) {
                 return false;
             }
