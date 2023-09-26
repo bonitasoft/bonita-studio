@@ -31,5 +31,7 @@ public interface MavenModelBuilder {
     void setDescription(String description);
 
     void setVersion(String version);
+
+    void setIncludeAdminApp(boolean includeAdminApp);
     
 }

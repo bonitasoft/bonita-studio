@@ -34,6 +34,7 @@ public class MavenParentProjectModelBuilder implements MavenModelBuilder{
     private String description;
     private String bonitaVersion;
     private boolean useSnapshotRepository;
+    private boolean includeAdminApp;
     
     public MavenParentProjectModelBuilder() {
         this(false);
@@ -91,6 +92,10 @@ public class MavenParentProjectModelBuilder implements MavenModelBuilder{
         this.bonitaVersion = bonitaVersion;
     }
     
+    @Override
+    public void setIncludeAdminApp(boolean includeAdminApp) {
+      this.includeAdminApp = includeAdminApp;
+    }
 
     @Override
     public Model toMavenModel() {

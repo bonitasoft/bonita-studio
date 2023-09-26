@@ -91,7 +91,9 @@ public class CreateBonitaProjectOperation implements IWorkspaceRunnable {
         appModule.create(true, true, monitor);
         var pomFile = appModule.getFile(IMavenConstants.POM_FILE_NAME);
         var mavenProjectHelper = new MavenProjectHelper();
-        Model appModel = newProjectBuilder(metadata, new MavenAppModuleModelBuilder()).toMavenModel();
+        MavenAppModuleModelBuilder mavenProjectBuilder = new MavenAppModuleModelBuilder();
+        mavenProjectBuilder.setIncludeAdminApp(metadata.includeAdminApp());
+        Model appModel = newProjectBuilder(metadata, mavenProjectBuilder).toMavenModel();
         mavenProjectHelper.saveModel(pomFile, appModel, new NullProgressMonitor());
         IProject appProject = importAppModuleProject(pomFile, appModel.getArtifactId() + "-app", monitor);
         appProject.setDescription(new ProjectDescriptionBuilder()

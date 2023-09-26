@@ -202,6 +202,12 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
                 dependenciesLookup.stream()
                         .forEach(dl -> dl.setSelected(true));
             }
+            
+            if(importedMavenModel != null) {
+                importedMavenModel.getDependencies().stream()
+                    .filter(dep -> Objects.equals("application", dep.getClassifier()))
+                    .forEach(dependencies::add);
+            }
 
             var dependenciesLookupToInstall = dependenciesLookup.stream()
                     .filter(DependencyLookup::isSelected)
@@ -220,6 +226,7 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
                 }
             }
 
+            
             if (!dependencies.isEmpty()) {
                 doUpdateProjectDependencies(monitor, statusBuilder);
             }
