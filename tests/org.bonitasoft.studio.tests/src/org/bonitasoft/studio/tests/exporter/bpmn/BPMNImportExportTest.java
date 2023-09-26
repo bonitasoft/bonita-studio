@@ -472,8 +472,8 @@ public class BPMNImportExportTest {
             resource2 = resourceSet1.createResource(URI.createFileURI(bpmnFileExported.getAbsolutePath()));
             resource2.load(Collections.emptyMap());
 
-            final DocumentRoot model1 = (DocumentRoot) resource1.getContents().get(0);
-            final DocumentRoot model2 = (DocumentRoot) resource2.getContents().get(0);
+            final DocumentRoot originalBPMNRoot = (DocumentRoot) resource1.getContents().get(0);
+            final DocumentRoot exportedBPMNRoot = (DocumentRoot) resource2.getContents().get(0);
             int nbProcess1 = 0;
             final Set<String> processNames = new HashSet<>();
             final List<String> activityNames = new ArrayList<>();
@@ -487,7 +487,7 @@ public class BPMNImportExportTest {
             int nbDataObject1 = 0;
             int nbProperty1 = 0;
 
-            for (final TRootElement rootElement : model1.getDefinitions().getRootElement()) {
+            for (final TRootElement rootElement : originalBPMNRoot.getDefinitions().getRootElement()) {
                 if (rootElement instanceof TProcess) {
                     nbProcess1++;
                     final String processName = ((TProcess) rootElement).getName() != null
@@ -553,7 +553,7 @@ public class BPMNImportExportTest {
             int nbDataObject2 = 0;
             int nbProperty2 = 0;
 
-            for (final TRootElement rootElement : model2.getDefinitions().getRootElement()) {
+            for (final TRootElement rootElement : exportedBPMNRoot.getDefinitions().getRootElement()) {
                 if (rootElement instanceof TProcess) {
                     nbProcess2++;
                     final String processName = ((TProcess) rootElement).getName() != null
@@ -600,7 +600,7 @@ public class BPMNImportExportTest {
             final Collection<String> ids = new HashSet<>();
             final Collection<String> duplicatedIds = new HashSet<>();
             final Collection<EObject> noIds = new HashSet<>();
-            for (final Iterator<EObject> iterator = model2.eAllContents(); iterator.hasNext();) {
+            for (final Iterator<EObject> iterator = exportedBPMNRoot.eAllContents(); iterator.hasNext();) {
                 final EObject object = iterator.next();
                 if (object instanceof TBaseElement) {
                     final String id = ((TBaseElement) object).getId();

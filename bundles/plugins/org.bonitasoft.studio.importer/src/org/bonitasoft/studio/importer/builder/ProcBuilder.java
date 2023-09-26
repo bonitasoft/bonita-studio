@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.Set;
 
 import org.bonitasoft.engine.bpm.connector.ConnectorEvent;
@@ -428,7 +429,7 @@ public class ProcBuilder implements IProcBuilder {
         data.setMultiple(isMultiple);
         data.setTransient(isTransient);
         if (defaultValueContent != null) {
-            data.setDefaultValue(createExpression(defaultValueContent, defaultValueReturnType, defaultValueInterpreter, expressionType));
+            data.setDefaultValue(createExpression(Objects.equals(ExpressionConstants.SCRIPT_TYPE, expressionType) ? "init()" : defaultValueContent, defaultValueContent, defaultValueReturnType, defaultValueInterpreter, expressionType));
         }
 
         if (currentStep instanceof DataAware) {
@@ -472,11 +473,11 @@ public class ProcBuilder implements IProcBuilder {
      */
     @Override
     public void addDescription(final String description) throws ProcBuilderException {
-        if (currentElement != null && currentElement instanceof Element) {
+        if (currentElement instanceof Element) {
             commandStack.append(SetCommand.create(editingDomain, currentElement, ProcessPackage.eINSTANCE.getElement_Documentation(), description));
-        } else if (currentStep != null && currentStep instanceof Element) {
+        } else if (currentStep instanceof Element) {
             commandStack.append(SetCommand.create(editingDomain, currentStep, ProcessPackage.eINSTANCE.getElement_Documentation(), description));
-        } else if (currentContainer != null && currentContainer instanceof Element) {
+        } else if (currentContainer instanceof Element) {
             commandStack.append(SetCommand.create(editingDomain, currentContainer, ProcessPackage.eINSTANCE.getElement_Documentation(), description));
         } else {
             throw new ProcBuilderException("Impossible to set description on null element");
@@ -537,13 +538,6 @@ public class ProcBuilder implements IProcBuilder {
         execute();
     }
 
-    private Node createLabel(final View owner, final String hint) {
-        final DecorationNode rv = NotationFactory.eINSTANCE.createDecorationNode();
-        rv.setType(hint);
-        ViewUtil.insertChildView(owner, rv, ViewUtil.APPEND, true);
-        return rv;
-    }
-
     private void handleSequenceFlowAnchors(final Point sourceAnchor,
             final Point targetAnchor,
             final ConnectionViewAndElementDescriptor newObject) {
@@ -602,12 +596,29 @@ public class ProcBuilder implements IProcBuilder {
 
     @Override
     public void addSequenceFlowCondition(final String content, final String interpreter, final String expressionType) {
-        final Expression condition = createExpression(content, Boolean.class.getName(), interpreter, expressionType);
+        final Expression condition = createExpression(Objects.equals(ExpressionConstants.SCRIPT_TYPE, expressionType) ? String.format("conditionTo%s()", camelCase((((SequenceFlow) currentElement).getTarget()).getName(), ' ')) : content, content, Boolean.class.getName(), interpreter, expressionType);
         condition.setReturnTypeFixed(true);
         commandStack.append(SetCommand.create(editingDomain, currentElement, ProcessPackage.eINSTANCE.getSequenceFlow_ConditionType(),
                 SequenceFlowConditionType.EXPRESSION));
         commandStack.append(SetCommand.create(editingDomain, currentElement, ProcessPackage.eINSTANCE.getSequenceFlow_Condition(), condition));
         execute();
+    }
+
+    private static String camelCase(String text, char delimiter) {
+        var builder = new StringBuilder();
+        boolean shouldConvertNextCharToLower = false;
+        for (int i = 0; i < text.length(); i++) {
+            char currentChar = text.charAt(i);
+            if (currentChar == delimiter) {
+                shouldConvertNextCharToLower = false;
+            } else if (shouldConvertNextCharToLower) {
+                builder.append(Character.toLowerCase(currentChar));
+            } else {
+                builder.append(Character.toUpperCase(currentChar));
+                shouldConvertNextCharToLower = true;
+            }
+        }
+        return builder.toString();
     }
 
     @Override
@@ -807,7 +818,7 @@ public class ProcBuilder implements IProcBuilder {
                 ((IHintedType) type).getSemanticHint(), hint);
         final CreateViewAndElementRequest createRequest = createCreationRequest(location, size, viewDescriptor);
 
-        if (container == null || !(container instanceof Element)) {
+        if (!(container instanceof Element)) {
             throw new ProcBuilderException("Impossible to find the parent EditPart");
         }
 
@@ -1097,7 +1108,7 @@ public class ProcBuilder implements IProcBuilder {
 
         final ConnectorParameter parameter = ConnectorConfigurationFactory.eINSTANCE.createConnectorParameter();
         parameter.setKey(parameterKey);
-        parameter.setExpression(createExpression(valueContent, "java.lang.String", ExpressionConstants.GROOVY, ExpressionConstants.SCRIPT_TYPE));
+        parameter.setExpression(createExpression(String.format("%s()", parameterKey), valueContent, String.class.getName(), ExpressionConstants.GROOVY, ExpressionConstants.SCRIPT_TYPE));
 
         commandStack.append(AddCommand.create(editingDomain, currentConnector.getConfiguration(),
                 ConnectorConfigurationPackage.eINSTANCE.getConnectorConfiguration_Parameters(), parameter));
@@ -1115,7 +1126,7 @@ public class ProcBuilder implements IProcBuilder {
 
         final ConnectorParameter parameter = ConnectorConfigurationFactory.eINSTANCE.createConnectorParameter();
         parameter.setKey(parameterKey);
-        parameter.setExpression(createExpression(valueContent, valueReturnType, valueInterpreter, expressionType));
+        parameter.setExpression(createExpression(ExpressionConstants.SCRIPT_TYPE.equals(expressionType) ? String.format("%s()", parameterKey) : valueContent, valueContent, valueReturnType, valueInterpreter, expressionType));
 
         commandStack.append(AddCommand.create(editingDomain, currentConnector.getConfiguration(),
                 ConnectorConfigurationPackage.eINSTANCE.getConnectorConfiguration_Parameters(), parameter));
@@ -1135,10 +1146,10 @@ public class ProcBuilder implements IProcBuilder {
         final Operator assignment = ExpressionFactory.eINSTANCE.createOperator();
         assignment.setType(ExpressionConstants.ASSIGNMENT_OPERATOR);
         parameter.setOperator(assignment);
-        parameter.setRightOperand(createExpression(valueContent, valueReturnType, valueInterpreter, expressionType));
+        parameter.setRightOperand(createExpression(ExpressionConstants.SCRIPT_TYPE.equals(expressionType) ? "computeOutput()" : valueContent, valueContent, valueReturnType, valueInterpreter, expressionType));
         for (final Data data : ModelHelper.getAccessibleData(currentElement, true)) {
             if (targetDataId.equals(data.getName())) {
-                parameter.setLeftOperand(createExpression(targetDataId, DataUtil.getTechnicalTypeFor(data), null, ExpressionConstants.VARIABLE_TYPE));
+                parameter.setLeftOperand(createExpression(targetDataId, targetDataId, DataUtil.getTechnicalTypeFor(data), null, ExpressionConstants.VARIABLE_TYPE));
                 break;
             }
         }
@@ -1482,9 +1493,9 @@ public class ProcBuilder implements IProcBuilder {
                 targetProcessIdForExpression = targetProcess.getName();
             }
             commandStack.append(SetCommand.create(editingDomain, currentStep, ProcessPackage.Literals.CALL_ACTIVITY__CALLED_ACTIVITY_NAME,
-                    createExpression(targetProcessIdForExpression, String.class.getName(), null, ExpressionConstants.CONSTANT_TYPE)));
+                    createExpression(targetProcessIdForExpression, targetProcessIdForExpression, String.class.getName(), null, ExpressionConstants.CONSTANT_TYPE)));
             commandStack.append(SetCommand.create(editingDomain, currentStep, ProcessPackage.Literals.CALL_ACTIVITY__CALLED_ACTIVITY_VERSION,
-                    createExpression(targetProcessVersion, String.class.getName(), null, ExpressionConstants.CONSTANT_TYPE)));
+                    createExpression(targetProcessVersion, targetProcessVersion, String.class.getName(), null, ExpressionConstants.CONSTANT_TYPE)));
             execute();
         } else {
             throw new ProcBuilderException("Can't add target process on current element");
@@ -1543,7 +1554,7 @@ public class ProcBuilder implements IProcBuilder {
         data.setDataType(datatypes.get(dataTypeId));
         data.setMultiple(isMultiple);
         if (defaultValue != null) {
-            data.setDefaultValue(createExpression(defaultValue, "", "", ""));
+            data.setDefaultValue(createExpression(defaultValue, defaultValue, String.class.getName(), "", ExpressionConstants.CONSTANT_TYPE));
         }
 
         if (currentStep instanceof DataAware) {
@@ -1561,36 +1572,32 @@ public class ProcBuilder implements IProcBuilder {
         execute();
     }
 
-    protected Expression createExpression(final String defaultValueContent, final String defaultValueReturnType, final String defaultValueInterpreter,
+    protected Expression createExpression(final String name,
+            final String content,
+            final String returnType,
+            final String interpreter,
             final String expressionType) {
         final Expression exp = ExpressionFactory.eINSTANCE.createExpression();
-        if (ExpressionConstants.GROOVY.equals(defaultValueInterpreter)) {
-            exp.setName("groovyExpression");
-            exp.setContent(defaultValueContent);
-        } else {
-            exp.setName(defaultValueContent);
-            exp.setContent(defaultValueContent);
-        }
-
-        exp.setReturnType(defaultValueReturnType);
+        exp.setName(name);
+        exp.setContent(content);
+        exp.setReturnType(returnType);
         if (ExpressionConstants.CONSTANT_TYPE.equals(expressionType)) {
             exp.setInterpreter(null);
-            exp.setType(expressionType != null ? expressionType : ExpressionConstants.CONSTANT_TYPE);
-        } else if (ExpressionConstants.GROOVY.equals(defaultValueInterpreter)) {//TODO: official groovy language to set?
-            exp.setType(expressionType != null ? expressionType : ExpressionConstants.SCRIPT_TYPE);
+            exp.setType(ExpressionConstants.CONSTANT_TYPE);
+        } else if (ExpressionConstants.GROOVY.equals(interpreter)) {
+            exp.setType(ExpressionConstants.SCRIPT_TYPE);
             exp.setInterpreter(ExpressionConstants.GROOVY);
-
         } else if (ExpressionConstants.VARIABLE_TYPE.equals(expressionType)) {
             exp.setInterpreter(null);
             exp.setType(ExpressionConstants.VARIABLE_TYPE);
-            final Data originalData = dataByName.get(defaultValueContent);
+            final Data originalData = dataByName.get(content);
             if (originalData != null) {
                 final Data copiedData = (Data) ExpressionHelper.createDependencyFromEObject(originalData);
                 if (copiedData != null) {
                     exp.getReferencedElements().add(copiedData);
                 }
             }
-            exp.setContent(defaultValueContent);
+            exp.setContent(content);
         } else {
             exp.setInterpreter(null);
             exp.setType(expressionType != null ? expressionType : ExpressionConstants.CONSTANT_TYPE);
@@ -1720,7 +1727,7 @@ public class ProcBuilder implements IProcBuilder {
         commandStack.append(SetCommand.create(diagramPart.getEditingDomain(), currentStep, ProcessPackage.eINSTANCE.getMultiInstantiable_LoopCondition(),
                 loopConditionExpression));
         commandStack.append(SetCommand.create(diagramPart.getEditingDomain(), currentStep, ProcessPackage.eINSTANCE.getMultiInstantiable_LoopMaximum(),
-                createExpression(maxLoopExpression, Integer.class.getName(), ExpressionConstants.GROOVY, ExpressionConstants.SCRIPT_TYPE)));
+                createExpression("maximumLoop()", maxLoopExpression, Integer.class.getName(), ExpressionConstants.GROOVY, ExpressionConstants.SCRIPT_TYPE)));
         if (testTime != null) {
             commandStack.append(SetCommand.create(diagramPart.getEditingDomain(), currentStep, ProcessPackage.eINSTANCE.getMultiInstantiable_TestBefore(),
                     testTime == TestTimeType.BEFORE ? true : false));

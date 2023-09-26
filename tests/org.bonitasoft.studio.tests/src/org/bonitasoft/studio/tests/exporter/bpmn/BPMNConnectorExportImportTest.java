@@ -178,7 +178,7 @@ public class BPMNConnectorExportImportTest {
                     operation.getOperator().getType());
             final Expression rightOperand = operation.getRightOperand();
             if (rightOperand != null) {
-                if ("groovyExpression".equals(rightOperand.getName())) {
+                if ("computeOutput()".equals(rightOperand.getName())) {
                     assertEquals(ExpressionConstants.SCRIPT_TYPE, rightOperand.getType());
                     assertEquals("Wrong return type for Groovy connector output", String.class.getName(),
                             rightOperand.getReturnType());
