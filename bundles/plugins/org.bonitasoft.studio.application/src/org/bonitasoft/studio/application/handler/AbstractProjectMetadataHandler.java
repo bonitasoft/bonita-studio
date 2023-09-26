@@ -120,7 +120,7 @@ public abstract class AbstractProjectMetadataHandler {
         if (Strings.isNullOrEmpty(metadata.getArtifactId())) {
             metadata.setArtifactId(ProjectMetadata.toArtifactId(metadata.getName()));
         }
-        SetProjectMetadataOperation operation = createOperation(mavenProjectHelper, metadata, repositoryAccessor);
+        SetProjectMetadataOperation operation = createOperation(mavenProjectHelper, metadata, repositoryAccessor, container);
         try {
             container.run(true, false, operation);
         } catch (InvocationTargetException | InterruptedException e) {
@@ -133,6 +133,6 @@ public abstract class AbstractProjectMetadataHandler {
     }
 
     protected abstract SetProjectMetadataOperation createOperation(MavenProjectHelper mavenProjectHelper,
-            ProjectMetadata metadata, RepositoryAccessor repositoryAccessor);
+            ProjectMetadata metadata, RepositoryAccessor repositoryAccessor, IWizardContainer container);
 
 }

@@ -29,6 +29,8 @@ public class BonitaMarketPlaceItem {
      * Allow to know if this dependency is already present/installed in the marketplace.
      */
     private boolean installed;
+    
+    private boolean installable = true;
 
     /**
      * Allow to know if this dependency is selected/added to be installed (with the wizard) in the marketplace.
@@ -98,5 +100,13 @@ public class BonitaMarketPlaceItem {
      */
     public void setUpdatable(boolean updatable) {
         this.updatable = updatable;
+    }
+
+    public boolean isInstallable() {
+        return installable;
+    }
+    
+    public void setInstallable(boolean installable) {
+        this.installable = installable;
     }
 }

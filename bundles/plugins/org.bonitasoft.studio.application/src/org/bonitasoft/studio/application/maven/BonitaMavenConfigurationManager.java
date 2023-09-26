@@ -179,7 +179,7 @@ public class BonitaMavenConfigurationManager {
                 && op.getResult().getStatus() == Status.FOUND;
     }
 
-    private static boolean isBARAccessAvailable(IProgressMonitor monitor)
+    public static boolean isBARAccessAvailable(IProgressMonitor monitor)
             throws InvocationTargetException, InterruptedException {
         // Testing Bonita artifact repository
         var op = new DependencyGetOperation(

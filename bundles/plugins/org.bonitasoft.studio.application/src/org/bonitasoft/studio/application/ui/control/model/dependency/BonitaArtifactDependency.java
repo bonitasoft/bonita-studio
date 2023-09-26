@@ -72,6 +72,9 @@ public class BonitaArtifactDependency implements Comparable<BonitaArtifactDepend
             case BonitaMarketplace.ACTOR_FILTER_TYPE:
                 setArtifactType(ArtifactType.ACTOR_FILTER);
                 break;
+            case BonitaMarketplace.APPLICATION_TYPE:
+                setArtifactType(ArtifactType.APPLICATION);
+                break;
             default:
                 setArtifactType(ArtifactType.OTHER);
         }
@@ -155,6 +158,10 @@ public class BonitaArtifactDependency implements Comparable<BonitaArtifactDepend
     public String getScope() {
         return scope;
     }
+    
+    public boolean isEnterprise() {
+        return getGroupId().startsWith("com.bonitasoft");
+    }
 
     public void setLocalDependency(boolean localDependency) {
         this.localDependency = localDependency;
@@ -168,9 +175,16 @@ public class BonitaArtifactDependency implements Comparable<BonitaArtifactDepend
         var dependency = new Dependency();
         dependency.setGroupId(getGroupId());
         dependency.setArtifactId(getArtifactId());
-        dependency.setVersion(getBestVersion());
+        String bestVersion = getBestVersion();
+        if(bestVersion != null && !bestVersion.isBlank()) {
+            dependency.setVersion(bestVersion);
+        }
         if (scope != null) {
             dependency.setScope(scope);
+        }
+        if(getArtifactType() == ArtifactType.APPLICATION) {
+            dependency.setClassifier("application");
+            dependency.setType("zip");
         }
         return dependency;
     }

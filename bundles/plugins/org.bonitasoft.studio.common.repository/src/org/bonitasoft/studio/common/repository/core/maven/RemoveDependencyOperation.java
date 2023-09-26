@@ -48,7 +48,7 @@ public class RemoveDependencyOperation extends MavenModelOperation {
 
 		for (Dependency dep : dependenciesToRemove) {
 			var removed = model.getDependencies()
-					.removeIf(dependency -> Objects.equals(new GAV(dependency), new GAV(dep)));
+					.removeIf(dependency -> new GAV(dependency).isSameAs(new GAV(dep)));
 			if (!removed && Objects.equals(mavenProject.getGroupId(), dep.getGroupId())
 					&& Objects.equals(mavenProject.getVersion(), dep.getVersion())) {
 				var depWithProperties = dep.clone();

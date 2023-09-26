@@ -29,12 +29,14 @@ import java.util.stream.Stream;
 import org.apache.maven.artifact.versioning.ComparableVersion;
 import org.apache.maven.model.Dependency;
 import org.bonitasoft.studio.application.i18n.Messages;
+import org.bonitasoft.studio.application.maven.BonitaMavenConfigurationManager;
 import org.bonitasoft.studio.application.ui.control.model.dependency.BonitaArtifactDependency;
 import org.bonitasoft.studio.application.ui.control.model.dependency.BonitaArtifactDependencyVersion;
 import org.bonitasoft.studio.application.ui.control.model.dependency.BonitaMarketPlaceItem;
 import org.bonitasoft.studio.application.ui.control.model.dependency.BonitaMarketplace;
 import org.bonitasoft.studio.common.Strings;
 import org.bonitasoft.studio.common.repository.core.maven.MavenProjectHelper;
+import org.bonitasoft.studio.common.ui.PlatformUtil;
 import org.bonitasoft.studio.common.ui.jface.SWTBotConstants;
 import org.bonitasoft.studio.preferences.BonitaThemeConstants;
 import org.bonitasoft.studio.ui.dialog.ExceptionDialogHandler;
@@ -85,8 +87,10 @@ public class BonitaMarketplacePage implements ControlSupplier {
     public static final String ACTOR_FILTER_TYPE = org.bonitasoft.studio.identity.i18n.Messages.actorFilterType;
     public static final String ALL_TYPE = Messages.all;
     public static final String DATABASE_DRIVER_TYPE = Messages.databaseDriver;
+    public static final String APPLICATION_TYPE = org.bonitasoft.studio.common.repository.Messages.application;
 
     private static final Map<String, String> EXTENSIONS_TYPE = Map.of(
+            APPLICATION_TYPE, BonitaMarketplace.APPLICATION_TYPE,
             CONNECTOR_TYPE, BonitaMarketplace.CONNECTOR_TYPE,
             ACTOR_FILTER_TYPE, BonitaMarketplace.ACTOR_FILTER_TYPE,
             DATABASE_DRIVER_TYPE, BonitaMarketplace.DATABASE_DRIVER_TYPE);
@@ -123,7 +127,7 @@ public class BonitaMarketplacePage implements ControlSupplier {
     }
 
     public BonitaMarketplacePage(IProject project) {
-        this(project, ALL_TYPE, CONNECTOR_TYPE, ACTOR_FILTER_TYPE);
+        this(project, ALL_TYPE, APPLICATION_TYPE, CONNECTOR_TYPE, ACTOR_FILTER_TYPE);
     }
 
     @Override
@@ -201,11 +205,11 @@ public class BonitaMarketplacePage implements ControlSupplier {
                     .collect(Collectors.toList());
             knownDependencies = project != null ? helper.getMavenModel(project).getDependencies()
                     : Collections.emptyList();
-            splitDependencies();
-        } catch (CoreException e) {
+            var barAccessible = BonitaMavenConfigurationManager.isBARAccessAvailable(monitor);
+            splitDependencies(barAccessible);
+        } catch (CoreException | InvocationTargetException | InterruptedException e) {
             new ExceptionDialogHandler().openErrorDialog(Display.getDefault().getActiveShell(), e.getMessage(), e);
         }
-
     }
 
     private void createSearchComposite(Composite parent) {
@@ -311,7 +315,7 @@ public class BonitaMarketplacePage implements ControlSupplier {
         }
 
         //Searching with the installed extension display off -> dont display the installed extensions
-        if (!radioObservableValue.getValue().booleanValue()) {
+        if (radioObservableValue != null && !radioObservableValue.getValue().booleanValue()) {
             return filteredDependencies.stream().filter(Predicate.not(BonitaMarketPlaceItem::isInstalled))
                     .collect(Collectors.toList());
         } else {
@@ -384,18 +388,26 @@ public class BonitaMarketplacePage implements ControlSupplier {
                         .map(BonitaArtifactDependencyVersion::getVersion)
                         .orElse(""));
 
-        Button addButton = latestCompatibleVersion.isPresent() && !marketItem.isInstalled()
+        
+        Button addButton = latestCompatibleVersion.isPresent() && !marketItem.isInstalled() && marketItem.isInstallable()
                 ? createAddButton(marketItem, heading)
                 : null;
 
-        if (addButton == null && marketItem.isInstalled()) {
-            createInstalledLabel(heading);
+        if (addButton == null) {
+            if(marketItem.isInstalled()) {
+                createInstalledLabel(heading);
+            }else if(!marketItem.isInstallable()) {
+                createEnterpriseLabel(heading);
+            }
         }
 
         Label version = createLabel(heading, SWT.WRAP);
         version.setLayoutData(
                 GridDataFactory.fillDefaults().grab(true, false).span(2, 1).create());
-        version.setText(String.format("%s: %s", Messages.version, versionToDisplay));
+        // Some dependency versions are managed by the bonita-project
+        if(versionToDisplay != null && !versionToDisplay.isBlank()) {
+            version.setText(String.format("%s: %s", Messages.version, versionToDisplay));
+        }
         version.setFont(JFaceResources.getFontRegistry().getItalic(JFaceResources.DEFAULT_FONT));
 
         Label description = createLabel(contentComposite, SWT.WRAP);
@@ -435,6 +447,16 @@ public class BonitaMarketplacePage implements ControlSupplier {
         installed.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME, BonitaThemeConstants.GAV_TEXT_COLOR);
     }
 
+    private void createEnterpriseLabel(Composite composite) {
+        Label enterpriseOnly = new Label(composite, SWT.WRAP);
+        enterpriseOnly.setLayoutData(GridDataFactory.fillDefaults().align(SWT.END, SWT.CENTER).create());
+        enterpriseOnly.setText(Messages.enterpriseOnly);
+        enterpriseOnly.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME, BonitaThemeConstants.GAV_TEXT_COLOR);
+        if(!PlatformUtil.isACommunityBonitaProduct()) { // BAR not accessible but using Studio SP
+            enterpriseOnly.setToolTipText(Messages.configureBARTooltip);
+        }
+    }
+    
     private void addHoverListener(List<Control> controls) {
         controls.forEach(control -> control.addMouseTrackListener(new MouseTrackAdapter() {
 
@@ -543,7 +565,7 @@ public class BonitaMarketplacePage implements ControlSupplier {
      * - Else it is ignored (we do not offer the possibility to downgrade a dependency).
      * If a dependency is completely new, then is is added to the "new dependencies list".
      */
-    private void splitDependencies() {
+    private void splitDependencies(boolean barAccessible) {
         for (BonitaArtifactDependency dep : dependencies) {
             var marketPlaceItem = new BonitaMarketPlaceItem(dep);
             knownDependencies.stream()
@@ -553,13 +575,15 @@ public class BonitaMarketplacePage implements ControlSupplier {
                     .ifPresent(matchingDependency -> {
                         dep.getLatestCompatibleVersion()
                                 .map(BonitaArtifactDependencyVersion::getVersion)
+                                .filter(Objects::nonNull)
                                 .ifPresent(version -> {
-                                    marketPlaceItem.setUpdatable(
+                                    marketPlaceItem.setUpdatable(!version.isBlank() &&
                                             !existingVersionEqualsOrGreater(matchingDependency.getVersion(), version));
-                                    marketPlaceItem.setInstalled(
+                                    marketPlaceItem.setInstalled(version.isBlank() ||
                                             existingVersionEqualsOrGreater(matchingDependency.getVersion(), version));
                                 });
                     });
+            marketPlaceItem.setInstallable(!dep.isEnterprise() || (dep.isEnterprise() && !PlatformUtil.isACommunityBonitaProduct() && barAccessible));
             marketPlaceItems.add(marketPlaceItem);
         }
     }
