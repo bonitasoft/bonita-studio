@@ -41,7 +41,7 @@ public class FormalExpressionFunction implements Function<Expression, TFormalExp
     }
 
     protected TFormalExpression addContent(final Expression bonitaExpression, final TFormalExpression formalExpression) {
-        FeatureMapUtil.addText(formalExpression.getMixed(), bonitaExpression.getContent());
+        FeatureMapUtil.addCDATA(formalExpression.getMixed(), bonitaExpression.getContent());
         return formalExpression;
     }
 
@@ -58,7 +58,8 @@ public class FormalExpressionFunction implements Function<Expression, TFormalExp
         requireNonNull(bonitaExpression);
         final TFormalExpression formalExpression = newTFormalExpression();
         formalExpression.setId(EcoreUtil.generateUUID());
-        formalExpression.setEvaluatesToTypeRef(newQName(JAVA_XMLNS, bonitaExpression.getReturnType()));
+        var returnType = bonitaExpression.getReturnType() == null || bonitaExpression.getReturnType().isBlank() ? String.class.getName() : bonitaExpression.getReturnType();
+        formalExpression.setEvaluatesToTypeRef(newQName(JAVA_XMLNS, returnType));
         formalExpression.setLanguage(getFormalExpressionLanguage());
         return addContent(bonitaExpression, formalExpression);
     }
