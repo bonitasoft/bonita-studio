@@ -14,12 +14,8 @@
  */
 package org.bonitasoft.studio.data.ui.property.section;
 
-import org.bonitasoft.studio.data.ui.property.section.AbstractDataSection;
 import org.eclipse.swt.widgets.Composite;
 
-/**
- * @author Aurelien Pupier
- */
 public class DataSection extends AbstractDataSection {
 
     /*
