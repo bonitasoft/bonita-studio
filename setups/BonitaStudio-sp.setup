@@ -87,6 +87,16 @@
                             &lt;name>snapshots&lt;/name>
                             &lt;url>https://bonitasoft.jfrog.io/artifactory/snapshots&lt;/url>
                         &lt;/repository>
+                        &lt;repository>
+                            &lt;releases>
+        				        &lt;enabled>false&lt;/enabled>
+        					&lt;/releases>
+        					&lt;snapshots>
+        						&lt;enabled>true&lt;/enabled>
+        					&lt;/snapshots>
+                            &lt;id>ossrh-snapshots&lt;/id>
+                            &lt;url>https://oss.sonatype.org/content/repositories/snapshots&lt;/url>
+                        &lt;/repository>
                     &lt;/repositories>
                     &lt;pluginRepositories>
                         &lt;pluginRepository>
@@ -107,6 +117,16 @@
                             &lt;id>snapshots&lt;/id>
                             &lt;name>snapshots&lt;/name>
                             &lt;url>https://bonitasoft.jfrog.io/artifactory/snapshots&lt;/url>
+                        &lt;/pluginRepository>
+                        &lt;pluginRepository>
+                            &lt;releases>
+        				        &lt;enabled>false&lt;/enabled>
+        					&lt;/releases>
+        					&lt;snapshots>
+        						&lt;enabled>true&lt;/enabled>
+        					&lt;/snapshots>
+                            &lt;id>ossrh-snapshots&lt;/id>
+                            &lt;url>https://oss.sonatype.org/content/repositories/snapshots&lt;/url>
                         &lt;/pluginRepository>
                     &lt;/pluginRepositories>
                 &lt;/profile>
