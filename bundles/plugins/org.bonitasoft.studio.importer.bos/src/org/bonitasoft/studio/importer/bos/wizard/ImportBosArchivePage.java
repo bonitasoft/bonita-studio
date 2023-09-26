@@ -572,8 +572,10 @@ public class ImportBosArchivePage implements ControlSupplier, Supplier<ImportArc
         ProjectMetadata metadata = mavenProject != null ? ProjectMetadata.read(mavenProject)
                 : ProjectMetadata.fromBosFileName(selectedFile.getName());
         if(rootProject != null) {
-        	 var bonitaRuntimeVersion = ProjectMetadata.getBonitaRuntimeVersion(rootProject);
-            metadata.setBonitaRuntimeVersion(bonitaRuntimeVersion);
+            var bonitaRuntimeVersion = ProjectMetadata.getBonitaRuntimeVersion(rootProject);
+            if(bonitaRuntimeVersion != null) {
+                metadata.setBonitaRuntimeVersion(bonitaRuntimeVersion);
+            }
         }
     
         List<String> existingProjectNames = repositoryAccessor.getAllRepositories().stream()

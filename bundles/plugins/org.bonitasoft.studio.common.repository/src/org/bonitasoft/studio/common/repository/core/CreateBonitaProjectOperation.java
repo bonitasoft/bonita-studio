@@ -136,7 +136,7 @@ public class CreateBonitaProjectOperation implements IWorkspaceRunnable {
         mavenProjectBuilder.setArtifactId(artifactId);
         mavenProjectBuilder.setGroupId(metadata.getGroupId());
         String bonitaRuntimeVersion = metadata.getBonitaRuntimeVersion();
-        var minorVersionString = ProductVersion.toMinorVersionString(ProductVersion.minorVersion(bonitaRuntimeVersion));
+        var minorVersionString = bonitaRuntimeVersion == null ? null : ProductVersion.toMinorVersionString(ProductVersion.minorVersion(bonitaRuntimeVersion));
         if (!Objects.equals(minorVersionString, ProductVersion.minorVersion())) {
             bonitaRuntimeVersion = ProductVersion.BONITA_RUNTIME_VERSION;
         }
