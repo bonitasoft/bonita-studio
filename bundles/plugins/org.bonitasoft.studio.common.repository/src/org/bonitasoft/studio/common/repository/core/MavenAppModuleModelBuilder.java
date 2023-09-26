@@ -29,6 +29,7 @@ public class MavenAppModuleModelBuilder implements MavenModelBuilder {
     private String displayName;
     private String description;
     private String bonitaVersion;
+    private boolean includeAdminApp;
 
     public String getArtifactId() {
         return artifactId;
@@ -77,6 +78,11 @@ public class MavenAppModuleModelBuilder implements MavenModelBuilder {
     public void setBonitaVersion(String bonitaVersion) {
         this.bonitaVersion = bonitaVersion;
     }
+    
+    @Override
+    public void setIncludeAdminApp(boolean includeAdminApp) {
+       this.includeAdminApp = includeAdminApp;
+    }
 
     @Override
     public Model toMavenModel() {
@@ -92,10 +98,10 @@ public class MavenAppModuleModelBuilder implements MavenModelBuilder {
         parent.setVersion(version);
         model.setParent(parent);
 
-        var appProjectConfiguration = new AppProjectConfiguration();
+        var appProjectConfiguration = new AppProjectConfiguration(includeAdminApp);
 
         appProjectConfiguration.getDependencies().stream()
-                .map(MavenDependency::toProvidedDependency)
+                .map(MavenDependency::toDependency)
                 .forEach(model::addDependency);
 
         Build build = new Build();

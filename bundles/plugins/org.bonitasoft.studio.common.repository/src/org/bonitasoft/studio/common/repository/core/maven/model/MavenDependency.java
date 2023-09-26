@@ -25,6 +25,8 @@ public class MavenDependency {
     private final String artifactId;
     private final String version;
     private final String type;
+    private String classifier;
+    private String scope = Artifact.SCOPE_PROVIDED;
 
     public MavenDependency(String groupId, String artifactId, String version, String type) {
         this.groupId = groupId;
@@ -33,22 +35,32 @@ public class MavenDependency {
         this.type = type;
     }
     
+    public MavenDependency(String groupId, String artifactId, String version, String type, String classifier, String scope) {
+        this.groupId = groupId;
+        this.artifactId = artifactId;
+        this.version = version;
+        this.type = type;
+        this.classifier = classifier;
+        this.scope = scope;
+    }
+    
     public MavenDependency(String groupId, String artifactId, String version) {
         this(groupId, artifactId, version, "jar");
     }
     
-    public Dependency toProvidedDependency() {
+    public Dependency toDependency() {
         Dependency dependency = new Dependency();
         dependency.setGroupId(groupId);
         dependency.setArtifactId(artifactId);
         dependency.setVersion(version);
         dependency.setType(type);
-        dependency.setScope(Artifact.SCOPE_PROVIDED);
+        dependency.setClassifier(classifier);
+        dependency.setScope(scope);
         return dependency;
     }
     
     public GAV toGAV() {
-        return new GAV(groupId, artifactId, version, null, type, Artifact.SCOPE_PROVIDED);
+        return new GAV(groupId, artifactId, version, classifier, type, scope);
     }
 
 }

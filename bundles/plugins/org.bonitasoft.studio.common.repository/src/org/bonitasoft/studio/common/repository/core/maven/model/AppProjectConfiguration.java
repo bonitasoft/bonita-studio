@@ -57,7 +57,7 @@ public class AppProjectConfiguration implements DefaultPluginVersions {
     private List<MavenDependency> dependencies = new ArrayList<>();
     private List<Profile> profiles = new ArrayList<>();
 
-    public AppProjectConfiguration() {
+    public AppProjectConfiguration(boolean includeAdminApp) {
         var groovyMavenPlugin = new MavenPlugin(GROOVY_MAVEN_PLUGIN_GROUP_ID,
                 GROOVY_MAVEN_PLUGIN_ARTIFACT_ID, GROOVY_MAVEN_PLUGIN_VERSION);
         groovyMavenPlugin.addExecution(pluginExecution("bonita-project-properties", null, List.of(EXECUTE_GOAL), null));
@@ -81,6 +81,9 @@ public class AppProjectConfiguration implements DefaultPluginVersions {
         addPlugin(assemblyPlugin);
 
         PROVIDED_DEPENDENCIES.stream().forEach(this::addDependency);
+        if(includeAdminApp) {
+            addDependency(new BonitaAdminAppDependency());
+        }
 
         profiles.add(createBundleProfile());
         profiles.add(createDockerProfile());

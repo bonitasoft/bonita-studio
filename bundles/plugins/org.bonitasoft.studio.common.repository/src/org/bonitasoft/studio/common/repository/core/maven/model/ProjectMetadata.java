@@ -47,6 +47,7 @@ public class ProjectMetadata {
 	private String version;
 	private String bonitaRuntimeVersion;
 	private boolean useSnapshotRepository;
+    private boolean includeAdminApp;
 
 	public String getName() {
 		return name;
@@ -288,5 +289,13 @@ public class ProjectMetadata {
 		return Objects.equals(parent.getGroupId(), "org.bonitasoft")
 				&& Objects.equals(parent.getArtifactId(), "bonita-project");
 	}
+
+    public boolean includeAdminApp() {
+        return includeAdminApp;
+    }
+    
+    public void setIncludeAdminApp(boolean includeAdminApp) {
+        this.includeAdminApp = includeAdminApp;
+    }
 
 }

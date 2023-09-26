@@ -188,6 +188,18 @@
               <artifactId>bonita-project-assemblies</artifactId>
               <version>${bonita.runtime.version}</version>
           </dependency>
+          <dependency>
+              <groupId>org.bonitasoft.web.application</groupId>
+              <artifactId>bonita-admin-application</artifactId>
+              <type>zip</type>
+              <classifier>application</classifier>
+          </dependency>
+          <dependency>
+              <groupId>org.bonitasoft.web.application</groupId>
+              <artifactId>bonita-user-application</artifactId>
+              <type>zip</type>
+              <classifier>application</classifier>
+          </dependency>
     </dependencies>
     <build>
         <pluginManagement>

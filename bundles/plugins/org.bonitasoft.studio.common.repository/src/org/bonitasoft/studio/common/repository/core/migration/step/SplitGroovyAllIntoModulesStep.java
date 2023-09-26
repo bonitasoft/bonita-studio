@@ -34,7 +34,7 @@ public class SplitGroovyAllIntoModulesStep implements MigrationStep {
         if (model.getDependencies().removeIf(has(DefaultPluginVersions.CODEHAUS_GROOVY_GROUPID, "groovy-all"))) {
             ProjectDefaultConfiguration.PROVIDED_DEPENDENCIES
                     .stream()
-                    .map(MavenDependency::toProvidedDependency)
+                    .map(MavenDependency::toDependency)
                     .filter(has(DefaultPluginVersions.CODEHAUS_GROOVY_GROUPID))
                     .forEach(model.getDependencies()::add);
 
