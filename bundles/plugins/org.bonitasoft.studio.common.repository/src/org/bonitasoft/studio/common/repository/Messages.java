@@ -116,6 +116,7 @@ public final class Messages extends NLS {
     public static String form;
     public static String restApi;
     public static String other;
+    public static String application;
 
     public static String dependenciesInstallationMsg;
     public static String dependenciesInstallation;
@@ -144,6 +145,7 @@ public final class Messages extends NLS {
     public static String refresh;
     public static String reservedId;
 	public static String installLocalDependencies;
+
 
     private Messages() {
         // Do not instantiate

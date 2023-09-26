@@ -454,6 +454,8 @@ public class Messages extends NLS {
 	public static String importProjectExtensionTitle;
 	public static String importProjectExtensionDesc;
 	public static String selectProjectExtensionsFromList;
+    public static String enterpriseOnly;
+    public static String configureBARTooltip;
 
     static {
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);

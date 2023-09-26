@@ -36,6 +36,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.stream.Collectors;
 
@@ -82,6 +83,7 @@ public class BonitaMarketplace {
     public static final String CONNECTOR_TYPE = "Connector";
     public static final String ACTOR_FILTER_TYPE = "Actor filter";
     public static final String DATABASE_DRIVER_TYPE = "Database driver";
+    public static final String APPLICATION_TYPE = "Application";
 
     private List<BonitaArtifactDependency> dependencies;
     private LocalResourceManager manager;
@@ -261,6 +263,18 @@ public class BonitaMarketplace {
             }
             dependencies = loader.load(localStore.toPath().resolve(MARKETPLACE_DESCRIPTOR_NAME));
         }
+    }
+    
+
+    public Optional<BonitaArtifactDependency> find(String groupId, String artifactId, ArtifactType type, IProgressMonitor monitor) {
+        if(dependencies == null) {
+            loadDependencies(monitor);
+        }
+        return dependencies.stream()
+                .filter(dep -> Objects.equals(dep.getGroupId(), groupId))
+                .filter(dep -> Objects.equals(dep.getArtifactId(), artifactId))
+                .filter(dep -> Objects.equals(dep.getArtifactType(), type))
+                .findFirst();
     }
 
     private String getLatestTag() throws IOException {

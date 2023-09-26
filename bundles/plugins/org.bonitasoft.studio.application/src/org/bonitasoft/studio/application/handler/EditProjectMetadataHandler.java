@@ -51,7 +51,7 @@ public class EditProjectMetadataHandler extends AbstractProjectMetadataHandler {
     }
 
     protected SetProjectMetadataOperation createOperation(MavenProjectHelper mavenProjectHelper,
-            ProjectMetadata metadata, RepositoryAccessor repositoryAccessor) {
+            ProjectMetadata metadata, RepositoryAccessor repositoryAccessor, IWizardContainer container) {
         return new SetProjectMetadataOperation(metadata, repositoryAccessor, mavenProjectHelper);
     }
 

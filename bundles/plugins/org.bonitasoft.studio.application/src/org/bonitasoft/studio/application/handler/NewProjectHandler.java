@@ -16,6 +16,7 @@ package org.bonitasoft.studio.application.handler;
 
 import static org.bonitasoft.studio.ui.wizard.WizardPageBuilder.newPage;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,14 +24,19 @@ import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.application.operation.SetProjectMetadataOperation;
 import org.bonitasoft.studio.application.ui.control.BonitaMarketplacePage;
 import org.bonitasoft.studio.application.ui.control.ProjectMetadataPage;
+import org.bonitasoft.studio.application.ui.control.model.dependency.ArtifactType;
 import org.bonitasoft.studio.application.ui.control.model.dependency.BonitaArtifactDependency;
+import org.bonitasoft.studio.application.ui.control.model.dependency.BonitaMarketplace;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.core.maven.MavenProjectHelper;
 import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
+import org.bonitasoft.studio.common.ui.PlatformUtil;
 import org.bonitasoft.studio.ui.dialog.ExceptionDialogHandler;
 import org.bonitasoft.studio.ui.wizard.WizardBuilder;
 import org.bonitasoft.studio.ui.wizard.WizardPageBuilder;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.jface.wizard.IWizardContainer;
 
 public class NewProjectHandler extends AbstractProjectMetadataHandler {
 
@@ -73,9 +79,25 @@ public class NewProjectHandler extends AbstractProjectMetadataHandler {
     }
 
     protected SetProjectMetadataOperation createOperation(MavenProjectHelper mavenProjectHelper,
-            ProjectMetadata metadata, RepositoryAccessor repositoryAccessor) {
+            ProjectMetadata metadata, RepositoryAccessor repositoryAccessor, IWizardContainer container) {
+        var additionalDependencies = bonitaMarketplacePage.getSelectedDependencies();
+        try {
+            container.run(true, false, monitor -> {
+                if(PlatformUtil.isACommunityBonitaProduct()) {
+                    BonitaMarketplace.getInstance()
+                    .find("org.bonitasoft.web.application", "bonita-admin-application", ArtifactType.APPLICATION, monitor)
+                    .ifPresent(additionalDependencies::add);
+                }else {
+                    BonitaMarketplace.getInstance()
+                    .find("com.bonitasoft.web.application", "bonita-admin-application-sp", ArtifactType.APPLICATION, monitor)
+                    .ifPresent(additionalDependencies::add);
+                }
+            });
+        } catch (InvocationTargetException | InterruptedException e) {
+            BonitaStudioLog.error(e);
+        }
         return new SetProjectMetadataOperation(metadata, repositoryAccessor, mavenProjectHelper)
-                .additionalDependencies(bonitaMarketplacePage.getSelectedDependencies().stream()
+                .additionalDependencies(additionalDependencies.stream()
                         .map(BonitaArtifactDependency::toMavenDependency)
                         .collect(Collectors.toList()))
                 .createNewProject();
