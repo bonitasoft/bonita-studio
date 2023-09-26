@@ -130,7 +130,6 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.util.FeatureMapUtil;
 import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.eclipse.emf.ecore.xmi.impl.ElementHandlerImpl;
-import org.eclipse.emf.ecore.xml.type.XMLTypePackage;
 import org.omg.spec.bpmn.di.BPMNEdge;
 import org.omg.spec.bpmn.di.BPMNPlane;
 import org.omg.spec.bpmn.di.BPMNShape;
@@ -597,7 +596,7 @@ public class BonitaToBPMNExporter {
                 .addAll(modelSearch.getAllItemsOfType(pool, TextAnnotation.class).stream().map(source -> {
                     final TTextAnnotation annotation = ModelFactory.eINSTANCE.createTTextAnnotation();
                     final TText text = ModelFactory.eINSTANCE.createTText();
-                    text.getMixed().add(XMLTypePackage.Literals.XML_TYPE_DOCUMENT_ROOT__TEXT, source.getText());
+                    FeatureMapUtil.addCDATA(text.getMixed(), source.getText());
                     annotation.setText(text);
                     annotation.setId(EcoreUtil.generateUUID());
                     final List<TextAnnotationAttachment> textAnnotationAttachments = modelSearch.getAllItemsOfType(
@@ -696,6 +695,7 @@ public class BonitaToBPMNExporter {
         tDataInputAssociation.setTargetRef(tDataInput.getId());
         final EList<TAssignment> assignment = tDataInputAssociation.getAssignment();
         final TAssignment tAssignment = ModelFactory.eINSTANCE.createTAssignment();
+        tAssignment.setId(EcoreUtil.generateUUID());
 
         final TFormalExpression toExpression = ModelFactory.eINSTANCE.createTFormalExpression();
         toExpression.setId(EcoreUtil.generateUUID());
@@ -831,7 +831,7 @@ public class BonitaToBPMNExporter {
         modelSearch.getAllItemsOfType(pool, SequenceFlow.class).stream().forEach(bonitaFlow -> {
             final TSequenceFlow bpmnFlow = ModelFactory.eINSTANCE.createTSequenceFlow();
             setCommonAttributes(bonitaFlow, bpmnFlow);
-            if (bonitaFlow.getCondition() != null
+            if (!bonitaFlow.isIsDefault() && bonitaFlow.getCondition() != null
                     && bonitaFlow.getCondition().hasContent()) {
                 bpmnFlow.setConditionExpression(convertExpression(
                         bonitaFlow.getCondition()));
@@ -1062,7 +1062,7 @@ public class BonitaToBPMNExporter {
         final String documentation = bonitaElement.getDocumentation();
         if (documentation != null && !documentation.isEmpty()) {
             final TDocumentation doc = ModelFactory.eINSTANCE.createTDocumentation();
-            FeatureMapUtil.addText(doc.getMixed(), documentation);
+            FeatureMapUtil.addCDATA(doc.getMixed(), documentation);
             bpmnElement.getDocumentation().add(doc);
         }
     }
