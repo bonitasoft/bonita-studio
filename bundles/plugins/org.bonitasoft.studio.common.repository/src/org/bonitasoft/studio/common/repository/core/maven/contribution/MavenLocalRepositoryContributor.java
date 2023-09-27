@@ -74,7 +74,7 @@ public class MavenLocalRepositoryContributor {
     }
 
     protected File toPomFile(final Artifact artifact) {
-        File file = new File(internalRepositoryRootFolder, targetRepository.pathOf(artifact));
+        File file = toArtifactFile(artifact);
         if (!file.exists()) {
             throw new IllegalStateException(
                     String.format("No file found for artifact %s in studio embedded repository", artifact));
@@ -82,7 +82,10 @@ public class MavenLocalRepositoryContributor {
         if (file.getName().endsWith(".pom")) {
             return file;
         }
-        return new File(internalRepositoryRootFolder, targetRepository.pathOf(artifact).replace(".jar", ".pom"));
+        if(artifact.hasClassifier()) {
+            return new File(internalRepositoryRootFolder, targetRepository.pathOf(artifact).replace(".jar", ".pom").replace(".zip", ".pom").replace("-"+ artifact.getClassifier(), ""));
+        }
+        return new File(internalRepositoryRootFolder, targetRepository.pathOf(artifact).replace(".jar", ".pom").replace(".zip", ".pom"));
     }
 
 }
