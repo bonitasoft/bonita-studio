@@ -577,8 +577,8 @@ public class ImportBosArchivePage implements ControlSupplier, Supplier<ImportArc
             var bonitaRuntimeVersion = ProjectMetadata.getBonitaRuntimeVersion(rootProject);
             if(bonitaRuntimeVersion != null) {
                 metadata.setBonitaRuntimeVersion(bonitaRuntimeVersion);
-                // Do not include admin app if bos file version is lower or equal to 9.0.0
-                if(new ComparableVersion(bonitaRuntimeVersion).compareTo(new ComparableVersion("9.0.0")) <= 0){
+                // Do not include admin app if bos file version is greater or equal to 9.0.0
+                if(new ComparableVersion(bonitaRuntimeVersion).compareTo(new ComparableVersion("9.0.0")) >= 0){
                     metadata.setIncludeAdminApp(false);
                 }
             }
