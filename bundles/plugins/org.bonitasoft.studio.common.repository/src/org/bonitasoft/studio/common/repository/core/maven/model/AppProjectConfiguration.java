@@ -63,6 +63,8 @@ public class AppProjectConfiguration implements DefaultPluginVersions {
         groovyMavenPlugin.addExecution(pluginExecution("bonita-project-properties", null, List.of(EXECUTE_GOAL), null));
         groovyMavenPlugin
                 .addExecution(pluginExecution("generate-application-properties", null, List.of(EXECUTE_GOAL), null));
+        groovyMavenPlugin
+                .addExecution(pluginExecution("generate-classpath-assembly", null, List.of(EXECUTE_GOAL), null));
         addPlugin(groovyMavenPlugin);
         var bonitProjectPlugin = new MavenPlugin(BONITA_PROJECT_MAVEN_PLUGIN_GROUP_ID,
                 BONITA_PROJECT_MAVEN_PLUGIN_ARTIFACT_ID, BONITA_PROJECT_MAVEN_PLUGIN_DEFAULT_VERSION);
@@ -78,6 +80,7 @@ public class AppProjectConfiguration implements DefaultPluginVersions {
         var assemblyPlugin = new MavenPlugin(APACHE_MAVEN_PLUGIN_GROUP_ID, MAVEN_ASSEMBLY_PLUGIN,
                 MAVEN_ASSEMBLY_PLUGIN_VERSION);
         assemblyPlugin.addExecution(pluginExecution("application-archive", null, List.of("single"), null));
+        assemblyPlugin.addExecution(pluginExecution("application-classpath", null, List.of("single"), null));
         addPlugin(assemblyPlugin);
 
         PROVIDED_DEPENDENCIES.stream().forEach(this::addDependency);
