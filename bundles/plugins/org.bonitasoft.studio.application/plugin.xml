@@ -206,15 +206,28 @@
                      value="77">
                </parameter>
             </command>
-            <command
-                  commandId="org.bonitasoft.studio.application.command.openExternalBrowser"
-                  label="%reportIssue"
-                  style="push">
-               <parameter
-                     name="org.bonitasoft.studio.application.command.openExternalBrowser.redirectId"
-                     value="709">
-               </parameter>
-            </command>
+            <menu
+                  id="org.bonitasoft.studio.menu.help.reportIssue"
+                  label="%reportIssue">
+               <command
+                     commandId="org.bonitasoft.studio.application.command.openExternalBrowser"
+                     label="%reportVulnerabilityIssue"
+                     style="push">
+                  <parameter
+                        name="org.bonitasoft.studio.application.command.openExternalBrowser.redirectId"
+                        value="760">
+                  </parameter>
+               </command>
+               <command
+                     commandId="org.bonitasoft.studio.application.command.openExternalBrowser"
+                     label="%reportIssue"
+                     style="push">
+                  <parameter
+                        name="org.bonitasoft.studio.application.command.openExternalBrowser.redirectId"
+                        value="709">
+                  </parameter>
+               </command>
+            </menu>
             <command
                   commandId="org.bonitasoft.studio.application.command.openExternalBrowser"
                   label="%productFeedback"
