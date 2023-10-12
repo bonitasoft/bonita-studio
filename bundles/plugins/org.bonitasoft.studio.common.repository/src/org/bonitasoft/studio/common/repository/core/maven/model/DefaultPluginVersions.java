@@ -41,19 +41,19 @@ public interface DefaultPluginVersions {
     
     static final String GROOVY_MAVEN_PLUGIN_GROUP_ID = "org.codehaus.gmavenplus";
     static final String GROOVY_MAVEN_PLUGIN_ARTIFACT_ID = "gmavenplus-plugin";
-    static final String GROOVY_MAVEN_PLUGIN_VERSION = "3.0.0";
+    static final String GROOVY_MAVEN_PLUGIN_VERSION = "3.0.2";
     
     static final String MAVEN_FAILSAFE_PLUGIN = "maven-failsafe-plugin";
     static final String MAVEN_FAILSAFE_PLUGIN_VERSION = "3.1.2";
     
     static final String MAVEN_SHADE_PLUGIN = "maven-shade-plugin";
-    static final String MAVEN_SHADE_PLUGIN_VERSION = "3.5.0";
+    static final String MAVEN_SHADE_PLUGIN_VERSION = "3.5.1";
     
     static final String MAVEN_SOURCE_PLUGIN = "maven-source-plugin";
     static final String MAVEN_SOURCE_PLUGIN_VERSION = "3.3.0";
     
     static final String MAVEN_JAVADOC_PLUGIN = "maven-javadoc-plugin";
-    static final String MAVEN_JAVADOC_PLUGIN_VERSION = "3.5.0";
+    static final String MAVEN_JAVADOC_PLUGIN_VERSION = "3.6.0";
     
     static final String MAVEN_DEPLOY_PLUGIN = "maven-deploy-plugin";
     static final String MAVEN_DEPLOY_PLUGIN_VERSION = "3.1.1";
@@ -71,7 +71,7 @@ public interface DefaultPluginVersions {
     static final String FLATTEN_MAVEN_PLUGIN_VERSION = "1.5.0";
     
     static final String BONITA_PROJECT_MAVEN_PLUGIN_ARTIFACT_ID = "bonita-project-maven-plugin";
-    static final String BONITA_PROJECT_MAVEN_PLUGIN_DEFAULT_VERSION = "0.2.0-SNAPSHOT";
+    static final String BONITA_PROJECT_MAVEN_PLUGIN_DEFAULT_VERSION = "1.0.0-beta-02";
 
     static final String BUILD_HELPER_MAVEN_PLUGIN = "build-helper-maven-plugin";
     static final String BUILD_HELPER_MAVEN_PLUGIN_VERSION = "3.4.0";
