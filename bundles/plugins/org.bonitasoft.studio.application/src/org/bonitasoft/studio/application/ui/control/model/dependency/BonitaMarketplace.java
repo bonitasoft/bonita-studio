@@ -296,10 +296,12 @@ public class BonitaMarketplace {
             if(response.statusCode() != 200) {
                 String body = "";
                 try (var is = response.body()) {
+                    if(is != null) {
                      body = new BufferedReader(
                             new InputStreamReader(is, StandardCharsets.UTF_8))
                               .lines()
                               .collect(Collectors.joining(System.lineSeparator()));
+                    }
                 }
                 throw new IOException(String.format("GET %s request failed with status: %s %s", response.uri(), response.statusCode(), body));
             }
