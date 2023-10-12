@@ -142,6 +142,7 @@ public class DependencyGetOperation implements IRunnableWithProgress {
         if (internalRepository != null) {
             request.setLocalRepository(internalRepository);
         }
+        request.setInteractiveMode(false);
         request.setGoals(
                 List.of(String.format("org.apache.maven.plugins:maven-dependency-plugin:%s:purge-local-repository",
                         DefaultPluginVersions.MAVEN_DEPENDENCY_PLUGIN_VERSION)));

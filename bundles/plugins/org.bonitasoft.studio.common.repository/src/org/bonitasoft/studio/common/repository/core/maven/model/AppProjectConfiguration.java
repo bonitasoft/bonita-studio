@@ -16,7 +16,9 @@ package org.bonitasoft.studio.common.repository.core.maven.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
+import org.apache.maven.artifact.Artifact;
 import org.apache.maven.model.BuildBase;
 import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Model;
@@ -220,7 +222,12 @@ public class AppProjectConfiguration implements DefaultPluginVersions {
     }
 
     public static boolean isInternalDependency(Dependency dependency) {
-        return PROVIDED_DEPENDENCIES.stream().map(MavenDependency::toGAV).anyMatch(new GAV(dependency)::isSameAs);
+        var internalDependencies = new ArrayList<>(PROVIDED_DEPENDENCIES);
+        // legacy internal dependency 
+        internalDependencies.add(new MavenDependency("com.bonitasoft.engine", "bonita-common-sp", null, "jar", null, Artifact.SCOPE_PROVIDED));
+        internalDependencies.add(new MavenDependency("org.bonitasoft.engine", "bonita-common", null, "jar", null, Artifact.SCOPE_PROVIDED));
+        internalDependencies.add(new MavenDependency(CODEHAUS_GROOVY_GROUPID, "groovy-all", null, "pom", null, Artifact.SCOPE_PROVIDED));
+        return internalDependencies.stream().map(MavenDependency::toGAV).anyMatch(new GAV(dependency)::isSameAs);
     }
 
     public static String getBonitaRuntimeVersion(Model model) {
@@ -228,5 +235,17 @@ public class AppProjectConfiguration implements DefaultPluginVersions {
             return model.getProperties().getProperty(BONITA_RUNTIME_VERSION);
         }
         return null;
+    }
+
+    public static boolean isBdmDependency(Dependency dep) {
+        return isLegacyBdmDependency(dep) || (Objects.equals(dep.getGroupId(), "${project.groupId}")
+                && Objects.equals(dep.getVersion(), "${project.version}")
+                && dep.getArtifactId().endsWith("-bdm-model"));
+    }
+
+    private static boolean isLegacyBdmDependency(Dependency dep) {
+        return Objects.equals(Artifact.SCOPE_PROVIDED, dep.getScope())
+                && Objects.equals(dep.getArtifactId(), "bdm-client")
+                && Objects.equals(dep.getVersion(), "1.0.0");
     }
 }
