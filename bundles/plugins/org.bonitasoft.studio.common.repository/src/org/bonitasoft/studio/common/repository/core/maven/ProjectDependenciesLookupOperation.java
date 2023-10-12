@@ -56,6 +56,7 @@ public class ProjectDependenciesLookupOperation implements IRunnableWithProgress
                 .stream()
                 .filter(dep -> !Objects.equals(dep.getScope(), Artifact.SCOPE_PROVIDED))
                 .filter(dep -> !Objects.equals("application", dep.getClassifier()))
+                .filter(dep -> dep.getVersion() != null)
                 .map(dep -> {
                     var op = new DependencyGetOperation(new GAV(dep));
                     repositories.stream()

@@ -32,6 +32,7 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.zip.ZipFile;
 
+import org.apache.maven.artifact.Artifact;
 import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Model;
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
@@ -49,6 +50,7 @@ import org.bonitasoft.studio.common.repository.core.maven.ProjectDependenciesLoo
 import org.bonitasoft.studio.common.repository.core.maven.migration.ProjectDependenciesMigrationOperation;
 import org.bonitasoft.studio.common.repository.core.maven.migration.model.ConflictVersion;
 import org.bonitasoft.studio.common.repository.core.maven.migration.model.DependencyLookup;
+import org.bonitasoft.studio.common.repository.core.maven.model.AppProjectConfiguration;
 import org.bonitasoft.studio.common.repository.core.migration.dependencies.operation.DependenciesUpdateOperationFactory;
 import org.bonitasoft.studio.common.repository.filestore.FileStoreChangeEvent;
 import org.bonitasoft.studio.common.repository.filestore.FileStoreChangeEvent.EventType;
@@ -206,6 +208,11 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
             if(importedMavenModel != null) {
                 importedMavenModel.getDependencies().stream()
                     .filter(dep -> Objects.equals("application", dep.getClassifier()))
+                    .forEach(dependencies::add);
+                importedMavenModel.getDependencies().stream()
+                    .filter(dep -> (dep.getVersion() == null || Objects.equals(Artifact.SCOPE_PROVIDED, dep.getScope())) 
+                            && !AppProjectConfiguration.isInternalDependency(dep)
+                            && !AppProjectConfiguration.isBdmDependency(dep))
                     .forEach(dependencies::add);
             }
 
