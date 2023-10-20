@@ -146,7 +146,7 @@
             </dependencies>
         </location>
   <location includeDependencyDepth="none" includeDependencyScopes="compile,runtime,system" includeSource="true" missingManifest="generate" type="Maven">
-                <feature id="org.bonitasoft.project.report.model.feature" label="Bonita Project Report Model Feature" provider-name="Bonitasoft S.A" version="1.0.0.beta-01">
+                <feature id="org.bonitasoft.project.report.model.feature" label="Bonita Project Report Model Feature" provider-name="Bonitasoft S.A" version="1.0.0.beta-02">
                     <description url="https://github.com/bonitasoft/bonita-process-model">
       Bonita Project Report Model Feature
    </description>
@@ -173,7 +173,7 @@
                     <dependency>
                         <groupId>org.bonitasoft.maven</groupId>
                         <artifactId>bonita-project-report-model</artifactId>
-                        <version>1.0.0-beta-01</version>
+                        <version>1.0.0-beta-02</version>
                         <type>jar</type>
                     </dependency>
                 </dependencies>
