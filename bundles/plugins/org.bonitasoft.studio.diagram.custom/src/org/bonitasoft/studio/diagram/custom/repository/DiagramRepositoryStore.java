@@ -414,7 +414,7 @@ public class DiagramRepositoryStore extends AbstractEMFRepositoryStore<DiagramFi
 	}
 
 	public boolean hasComputedProcesses() {
-		return computedProcessesList != null;
+		return computedProcessesList != null && computedProcessesList.stream().noneMatch(EObject::eIsProxy);
 	}
 
 	public List<Pool> getComputedProcesses() {
