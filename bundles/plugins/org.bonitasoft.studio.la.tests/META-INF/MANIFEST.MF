@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: LA TestsFragment
 Bundle-SymbolicName: org.bonitasoft.studio.la.tests
-Bundle-Version: 10.0.0.qualifier
+Bundle-Version: 10.0.0.W43
 Bundle-Vendor: Bonitasoft S.A.
 Fragment-Host: org.bonitasoft.studio.la;bundle-version="7.16.0"
 Import-Package: org.junit.jupiter.api
