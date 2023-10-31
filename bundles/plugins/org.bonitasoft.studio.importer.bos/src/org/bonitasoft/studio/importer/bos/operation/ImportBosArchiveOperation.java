@@ -210,6 +210,9 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
                     .filter(dep -> Objects.equals("application", dep.getClassifier()))
                     .forEach(dependencies::add);
                 importedMavenModel.getDependencies().stream()
+                    .filter(dep -> Objects.equals("${project.groupId}", dep.getGroupId()) && Objects.equals("${project.version}", dep.getVersion()))
+                    .forEach(dependencies::add);
+                importedMavenModel.getDependencies().stream()
                     .filter(dep -> (dep.getVersion() == null || Objects.equals(Artifact.SCOPE_PROVIDED, dep.getScope())) 
                             && !AppProjectConfiguration.isInternalDependency(dep)
                             && !AppProjectConfiguration.isBdmDependency(dep))
@@ -232,14 +235,13 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
                                     dl.dependencyFileName()));
                 }
             }
+  
+            doImport(importArchiveModel, statusBuilder, monitor);
 
-            
             if (!dependencies.isEmpty()) {
                 doUpdateProjectDependencies(monitor, statusBuilder);
             }
             
-            doImport(importArchiveModel, statusBuilder, monitor);
-
             monitor.subTask("");
 
             dependenciesLookup.stream()
@@ -413,15 +415,16 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
                 (int) importArchiveModel.getStores().stream().flatMap(AbstractFolderModel::importableUnits).count());
         importArchiveModel.getStores().stream()
         .sorted(storeImportOrderComparator())
-        .forEachOrdered(s -> 
-            s.importableUnits()
-            // Ensure .artifact-descriptor.properties is imported before bom.xml
-            .sorted(Comparator.comparing(ImportableUnit::getName))
-            .forEachOrdered(unit -> {
-                monitor.subTask(NLS.bind(Messages.importing, unit.getName()));
-                importUnit(unit, importArchiveModel.getBosArchive(), statusBuilder, monitor);
-                monitor.worked(1);
-            }));
+        .forEachOrdered(s -> {
+                s.importableUnits()
+                // Ensure .artifact-descriptor.properties is imported before bom.xml
+                .sorted(Comparator.comparing(ImportableUnit::getName))
+                .forEachOrdered(unit -> {
+                    monitor.subTask(NLS.bind(Messages.importing, unit.getName()));
+                    importUnit(unit, importArchiveModel.getBosArchive(), statusBuilder, monitor);
+                    monitor.worked(1);
+                });
+            });
         migrateUID(monitor);
     }
 

@@ -77,7 +77,7 @@ public class QuickDeployHandler {
                 IRepositoryFileStore fStore = repositoryAccessor.getCurrentRepository()
                         .orElseThrow()
                         .getRepositoryStore(ExtensionRepositoryStore.class)
-                        .getChild(projectPath.substring(projectPath.lastIndexOf("/")+1,projectPath.length()), false);
+                        .getChild(Paths.get(projectPath).getFileName().toString(), false);
 
                 if (fStore instanceof ExtensionProjectFileStore) {
                     customPageFilseStore = (ExtensionProjectFileStore) fStore;
