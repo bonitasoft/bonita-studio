@@ -60,11 +60,12 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.internal.forms.widgets.ResourceManagerManger;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class BonitaMarketplace {
 
-    private static final String DEFAULT_MARKETPLACE_VERSION = "1.0.22";
+    private static final String DEFAULT_MARKETPLACE_VERSION = "1.1.2";
 
     private static final String MARKETPLACE_VERSION_PROPERTY = "marketplace.version";
 
@@ -92,7 +93,7 @@ public class BonitaMarketplace {
     private ObjectMapper objectMapper;
 
     private BonitaMarketplace() {
-        objectMapper = new ObjectMapper();
+        objectMapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         manager = new ResourceManagerManger().getResourceManager(Display.getDefault());
         // Correspond to the css class wizardHighlightBackground -> we can't use css here :'(
         iconBackground = PreferenceUtil.isDarkTheme()
