@@ -97,7 +97,7 @@
             <unit id="org.codehaus.groovy30.feature.feature.group" version="0.0.0"/>
         </location>
         <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-            <repository location="mvn:org.bonitasoft.bpm:org.bonitasoft.bpm.eclipse-repository:8.0.0-SNAPSHOT:zip"/>
+            <repository location="mvn:org.bonitasoft.bpm:org.bonitasoft.bpm.eclipse-repository:8.0.0:zip"/>
             <unit id="org.bonitasoft.bonita2bpmn.feature.feature.group" version="0.0.0"/>
             <unit id="org.bonitasoft.bpm.connector.feature.feature.group" version="0.0.0"/>
             <unit id="org.bonitasoft.bpm.definitions.feature.feature.group" version="0.0.0"/>
@@ -146,7 +146,7 @@
             </dependencies>
         </location>
   <location includeDependencyDepth="none" includeDependencyScopes="compile,runtime,system" includeSource="true" missingManifest="generate" type="Maven">
-                <feature id="org.bonitasoft.project.report.model.feature" label="Bonita Project Report Model Feature" provider-name="Bonitasoft S.A" version="1.0.0.beta-02">
+                <feature id="org.bonitasoft.project.report.model.feature" label="Bonita Project Report Model Feature" provider-name="Bonitasoft S.A" version="1.0.0">
                     <description url="https://github.com/bonitasoft/bonita-process-model">
       Bonita Project Report Model Feature
    </description>
@@ -173,7 +173,7 @@
                     <dependency>
                         <groupId>org.bonitasoft.maven</groupId>
                         <artifactId>bonita-project-report-model</artifactId>
-                        <version>1.0.0-beta-02</version>
+                        <version>1.0.0</version>
                         <type>jar</type>
                     </dependency>
                 </dependencies>
