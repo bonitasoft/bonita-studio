@@ -14,10 +14,7 @@
  */
 package org.bonitasoft.studio.la.application.repository;
 
-import static com.google.common.collect.Sets.newHashSet;
-
 import java.io.InputStream;
-import java.util.Collections;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
@@ -70,7 +67,7 @@ public class ApplicationRepositoryStore extends AbstractRepositoryStore<Applicat
      */
     @Override
     public Set<String> getCompatibleExtensions() {
-        return Collections.unmodifiableSet(newHashSet(XML_EXTENSION));
+        return Set.of(XML_EXTENSION);
     }
 
     public Stream<ApplicationNode> findByProfile(String profile) {
@@ -89,6 +86,14 @@ public class ApplicationRepositoryStore extends AbstractRepositoryStore<Applicat
                 return null;
             }
         };
+    }
+    
+    @Override
+    public ApplicationFileStore getChild(String fileName, boolean force) {
+        if(fileName != null && fileName.endsWith(".xml")) {
+            return super.getChild(fileName, force);
+        }
+        return null;
     }
 
     public Optional<ApplicationFileStore> findFileStoreByToken(String token) {
