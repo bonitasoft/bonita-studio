@@ -414,7 +414,14 @@ public class DiagramRepositoryStore extends AbstractEMFRepositoryStore<DiagramFi
 	}
 
 	public boolean hasComputedProcesses() {
-		return computedProcessesList != null && computedProcessesList.stream().noneMatch(EObject::eIsProxy);
+	    if(computedProcessesList != null) {
+		    var unloadResourcesFound = computedProcessesList.stream().anyMatch(EObject::eIsProxy);
+		    if(unloadResourcesFound) {
+		        BonitaStudioLog.debug("Computed processes contains unloaded resources. Reloading all project diagrams...", Activator.class);
+		    }
+		    return !unloadResourcesFound;
+		}
+	    return false;
 	}
 
 	public List<Pool> getComputedProcesses() {
