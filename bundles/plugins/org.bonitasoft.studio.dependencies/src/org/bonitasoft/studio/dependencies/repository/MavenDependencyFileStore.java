@@ -41,7 +41,10 @@ public class MavenDependencyFileStore extends DependencyFileStore {
         this.artifact = artifact;
         this.projectDependenciesResolver = new ProjectDependenciesResolver(getRepositoryAccessor());
     }
-
+    
+    public Artifact getArtifact() {
+        return artifact;
+    }
 
     @Override
     protected InputStream doGetContent() throws ReadFileStoreException {

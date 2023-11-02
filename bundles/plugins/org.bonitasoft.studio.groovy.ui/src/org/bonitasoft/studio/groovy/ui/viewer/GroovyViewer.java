@@ -192,7 +192,7 @@ public class GroovyViewer implements IDocumentListener {
     private IFile createTempSourceFile() {
         var appProject = RepositoryManager.getInstance().getCurrentProject().orElseThrow().getAppProject();
         var tmpScriptFile = appProject.getFile(AppProjectConfiguration.GENERATED_GROOVY_SOURCES_FODLER + "/"
-                + GroovyFileStore.EXPRESSION_SCRIPT_NAME);
+                + GroovyFileStore.tmpScriptName());
         try {
             if(tmpScriptFile.exists()) {
                 tmpScriptFile.delete(true, new NullProgressMonitor());
