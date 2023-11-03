@@ -129,7 +129,10 @@ public abstract class CustomPageProposalProvider implements IContentProposalProv
         IResource resource = delta.getResource();
         return ("json".equals(resource.getFileExtension()) && !".index.json".equals(resource.getName()))
                 && resource.getLocation() != null
-                && provider.getWebPageStore().getResource().getLocation().isPrefixOf(resource.getLocation());
+                && (provider.getWebPageStore() != null
+                    && provider.getWebPageStore().getResource() != null 
+                    && provider.getWebPageStore().getResource().getLocation() != null
+                    && provider.getWebPageStore().getResource().getLocation().isPrefixOf(resource.getLocation()));
     }
 
     protected abstract Collection<CustomPageDescriptor> getCustomPageDescriptors(CustomPageProvider provider);

@@ -52,7 +52,10 @@ public class ThemeProposalProvider extends CustomPageProposalProvider implements
     protected boolean shouldUpdateProposals(IResourceDelta delta) {
         IResource resource = delta.getResource();
         return ("page.properties".equals(resource.getName()) || "pom.xml".equals(resource.getName()))
-                && provider.getThemeStore().getResource().getLocation().isPrefixOf(resource.getLocation());
+                && (provider.getThemeStore() != null
+                    && provider.getThemeStore().getResource() != null 
+                    && provider.getThemeStore().getResource().getLocation() != null
+                    && provider.getThemeStore().getResource().getLocation().isPrefixOf(resource.getLocation()));
     }
 
     @Override

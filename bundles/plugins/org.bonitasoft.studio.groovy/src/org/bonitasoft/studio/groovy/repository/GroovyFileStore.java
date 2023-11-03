@@ -46,7 +46,6 @@ import org.eclipse.ui.ide.IDE;
 public class GroovyFileStore extends AbstractFileStore<String> {
 
     private static final String UTF_8 = "UTF-8";
-    public static final String EXPRESSION_SCRIPT_NAME = "BonitaScriptContext.groovy";
 
     public GroovyFileStore(final String fileName, final GroovyRepositoryStore parentStore) {
         super(fileName, parentStore);
@@ -160,6 +159,10 @@ public class GroovyFileStore extends AbstractFileStore<String> {
     @Override
     public IFile getResource() {
         return getParentStore().getResource().getFile(getName());
+    }
+
+    public static String tmpScriptName() {
+        return String.format("BonitaTmpScript%s.groovy", System.currentTimeMillis());
     }
 
 }

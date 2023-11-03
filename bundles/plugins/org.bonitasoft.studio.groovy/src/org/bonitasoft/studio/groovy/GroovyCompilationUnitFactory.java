@@ -45,7 +45,7 @@ public class GroovyCompilationUnitFactory {
                     .findPackageFragmentRoot(
                             javaProject.getPath().append(AppProjectConfiguration.GENERATED_GROOVY_SOURCES_FODLER))
                     .getPackageFragment("");//default package
-            return packageFragment.createCompilationUnit(GroovyFileStore.EXPRESSION_SCRIPT_NAME, script, true,
+            return packageFragment.createCompilationUnit(GroovyFileStore.tmpScriptName(), script, true,
                     monitor);
         }
         return null;

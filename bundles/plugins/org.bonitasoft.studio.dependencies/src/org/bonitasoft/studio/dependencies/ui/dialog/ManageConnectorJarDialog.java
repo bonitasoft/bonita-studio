@@ -18,11 +18,11 @@
 package org.bonitasoft.studio.dependencies.ui.dialog;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
-import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.common.repository.provider.FileStoreLabelProvider;
 import org.bonitasoft.studio.dependencies.i18n.Messages;
 import org.bonitasoft.studio.dependencies.repository.DependencyFileStore;
@@ -30,9 +30,7 @@ import org.bonitasoft.studio.dependencies.repository.DependencyRepositoryStore;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.beans.PojoProperties;
-import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.dialogs.Dialog;
@@ -46,8 +44,6 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
@@ -61,24 +57,26 @@ import org.eclipse.swt.widgets.Text;
 public class ManageConnectorJarDialog extends Dialog {
 
 	protected TreeViewer treeViewer;
-	private final IRepositoryStore libStore;
+	private final DependencyRepositoryStore dependencyStore;
 
 	protected DataBindingContext context;
 	private ViewerFilter searchFilter;
-	protected CheckboxTableViewer languageViewer;
+	protected CheckboxTableViewer viewer;
 
 	protected Set<DependencyFileStore> selectedJars = new HashSet<>();
 	private ViewerFilter filter;
 	private String title;
 	private String infoLabel;
+    private List<DependencyFileStore> dependencies;
 
 
 	public ManageConnectorJarDialog(Shell parentShell) {
 		super(parentShell);
-		libStore = RepositoryManager.getInstance().getRepositoryStore(DependencyRepositoryStore.class) ;
+		dependencyStore = RepositoryManager.getInstance().getRepositoryStore(DependencyRepositoryStore.class) ;
+		dependencies = dependencyStore.findJarDependencies();
 	}
 
-	public ManageConnectorJarDialog(Shell parentShell,String label,String infoLabel) {
+	public ManageConnectorJarDialog(Shell parentShell, String label, String infoLabel) {
 		this(parentShell);
 		this.title = label;
 		this.infoLabel = infoLabel;
@@ -99,25 +97,22 @@ public class ManageConnectorJarDialog extends Dialog {
 		context = new DataBindingContext() ;
 		Composite composite = (Composite) super.createDialogArea(parent);
 		composite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(15, 15).create());
+		composite.setLayoutData(GridDataFactory.fillDefaults().grab(true,true).hint(400, 400).create());
 		if(infoLabel != null){
 			addLabel(composite);
 		}
 		
 		createTree(composite);
 
-		UpdateValueStrategy selectionStartegy = new UpdateValueStrategy() ;
-		selectionStartegy.setAfterGetValidator(new IValidator() {
+		var selectionStartegy = new UpdateValueStrategy() ;
+		selectionStartegy.setAfterGetValidator(value -> {
+        	if( value == null){
+        		return ValidationStatus.error("Selection is empty") ;
+        	}
+        	return Status.OK_STATUS;
+        }) ;
 
-			@Override
-			public IStatus validate(Object value) {
-				if( value == null){
-					return ValidationStatus.error("Selection is empty") ;
-				}
-				return Status.OK_STATUS;
-			}
-		}) ;
-
-		context.bindSet(ViewersObservables.observeCheckedElements(languageViewer, IRepositoryFileStore.class.getName()), PojoProperties.set(ManageConnectorJarDialog.class,"selectedJars").observe(this)) ;
+		context.bindSet(ViewersObservables.observeCheckedElements(viewer, IRepositoryFileStore.class.getName()), PojoProperties.set(ManageConnectorJarDialog.class,"selectedJars").observe(this)) ;
 
 
 		return composite;
@@ -141,34 +136,29 @@ public class ManageConnectorJarDialog extends Dialog {
 			}
 		};
 
-		//new Label(composite,SWT.NONE) ; //FILLER
-
-		languageViewer = CheckboxTableViewer.newCheckList(composite, SWT.BORDER | SWT.FULL_SELECTION | SWT.MULTI | SWT.V_SCROLL) ;
-		languageViewer.getTable().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 190).create()) ;
-		languageViewer.getTable().setLinesVisible(true) ;
-		languageViewer.getTable().setHeaderVisible(false) ;
+		viewer = CheckboxTableViewer.newCheckList(composite, SWT.BORDER | SWT.FULL_SELECTION | SWT.MULTI | SWT.V_SCROLL) ;
+		viewer.getTable().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 190).create()) ;
+		viewer.getTable().setLinesVisible(true) ;
+		viewer.getTable().setHeaderVisible(false) ;
 		final TableLayout layout = new TableLayout() ;
 		layout.addColumnData(new ColumnWeightData(65)) ;
-		languageViewer.getTable().setLayout(layout) ;
-		languageViewer.setContentProvider(new ArrayContentProvider()) ;
-		languageViewer.setLabelProvider(new FileStoreLabelProvider()) ;
-		languageViewer.addFilter(searchFilter) ;
+		viewer.getTable().setLayout(layout) ;
+		viewer.setContentProvider(new ArrayContentProvider()) ;
+		viewer.setLabelProvider(new FileStoreLabelProvider()) ;
+		viewer.addFilter(searchFilter) ;
 		if(filter != null){
-			languageViewer.addFilter(filter);
+			viewer.addFilter(filter);
 		}
-		languageViewer.setInput(libStore.getChildren()) ;
-		languageViewer.getTable().setFocus() ;
+		
+		viewer.setInput(dependencies);
+		viewer.getTable().setFocus() ;
 
-
-		searchText.addModifyListener(new ModifyListener() {
-
-			@Override
-			public void modifyText(ModifyEvent e) {
-				languageViewer.refresh() ;
-			}
-		}) ;
-
+		searchText.addModifyListener(e -> viewer.refresh()) ;
 	}
+	
+    public boolean hasDependencies() {
+        return !dependencies.isEmpty();
+    }
 
 	protected void addLabel(Composite composite){
 		final Label label = new Label(composite, SWT.WRAP);

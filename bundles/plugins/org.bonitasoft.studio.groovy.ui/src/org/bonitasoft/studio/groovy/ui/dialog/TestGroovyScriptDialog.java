@@ -105,7 +105,7 @@ public class TestGroovyScriptDialog extends Dialog {
     private void evaluateScript() {
         try {
             final ManageConnectorJarDialog mcjd = new ManageConnectorJarDialog(Display.getDefault().getActiveShell());
-            final int retCode = mcjd.open();
+            final int retCode = mcjd.hasDependencies() ? mcjd.open() : Window.OK;
             if (retCode == Window.OK) {
                 TestGroovyScriptUtil.evaluateExpression(unit.getSource(), returnType, TestGroovyScriptUtil.getVariableValues(unit, nodes, propertyValues),
                         mcjd.getSelectedJars());
