@@ -33,7 +33,6 @@ import java.nio.file.Path;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -90,6 +89,7 @@ public class UIDesignerServerManager implements IBonitaProjectListener {
     private static final String PORTAL_BASE_URL = "designer.bonita.portal.url";
     private static final String BONITA_DATA_REPOSITORY_ORIGIN = "designer.bonita.bdm.url";
     private static final int UID_DEFAULT_PORT = 8081;
+    private static final String UID_TMP_FOLDER = "designer.workspace-uid.path";
     private PageDesignerURLFactory pageDesignerURLBuilder;
     private boolean started = false;
     private UIDWorkspaceSynchronizer synchronizer;
@@ -361,9 +361,10 @@ public class UIDesignerServerManager implements IBonitaProjectListener {
         commandList.add(getPreferenceStore().get(BonitaPreferenceConstants.UID_JVM_OPTS, "-Xmx256m"));
         commandList.add(workspaceSystemProperties.getWorspacePathLocation(quotePath));
         commandList.add(workspaceSystemProperties.activateSpringProfile("studio"));
+        commandList.add(aSystemProperty(UID_TMP_FOLDER, tmpFolder(quotePath)));
         commandList.add(aSystemProperty(UID_SERVER_PORT, String.valueOf(port)));
         commandList.add(aSystemProperty(UID_LOGGING_FILE,
-                quotePath ? String.format("\"%s\"", getLogFile().getAbsolutePath()) : getLogFile().getAbsolutePath()));
+                quotePath ?  "\"" +  getLogFile().getAbsolutePath() + "\"" : getLogFile().getAbsolutePath()));
         if (workspaceResourceServerPort > 0) {
             commandList.add(workspaceSystemProperties.getRestAPIURL(workspaceResourceServerPort));
         }
@@ -409,6 +410,13 @@ public class UIDesignerServerManager implements IBonitaProjectListener {
             Files.copy(execJar.toPath(), uiDesignerJar);
         }
         return uiDesignerJar.toFile().getCanonicalFile().getAbsolutePath();
+    }
+    
+    protected String tmpFolder(boolean quotePath) throws IOException {
+        Bundle uiDesignerBundle = Platform.getBundle(UIDesignerPlugin.PLUGIN_ID);
+        IPath stateLocation = Platform.getStateLocation(uiDesignerBundle);
+        var tmpFolder = stateLocation.append("uid-tmp-workspace").toFile();
+        return quotePath ? "\"" +  tmpFolder.toURI() + "\"" : tmpFolder.toURI().toString();
     }
 
     protected ILaunchManager getLaunchManager() {
