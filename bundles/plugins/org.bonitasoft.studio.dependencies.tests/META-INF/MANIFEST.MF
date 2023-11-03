@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Dependencies Tests Fragment
 Bundle-SymbolicName: org.bonitasoft.studio.dependencies.tests
-Bundle-Version: 10.0.0.qualifier
+Bundle-Version: 10.0.0.W44
 Bundle-Vendor: Bonitasoft S.A.
 Fragment-Host: org.bonitasoft.studio.dependencies;bundle-version="7.16.0"
 Import-Package: org.junit.jupiter.api

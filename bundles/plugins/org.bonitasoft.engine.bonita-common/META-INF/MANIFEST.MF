@@ -9,7 +9,7 @@ Bundle-Name: Bonita Common Bundle
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-SymbolicName: org.bonitasoft.engine.bonita-common;singleton:=true
 Bundle-Vendor: Bonitasoft S.A.
-Bundle-Version: 10.0.0.qualifier
+Bundle-Version: 10.0.0.W44
 Export-Package: org.bonitasoft.engine,
  org.bonitasoft.engine.api,
  org.bonitasoft.engine.api.impl,
