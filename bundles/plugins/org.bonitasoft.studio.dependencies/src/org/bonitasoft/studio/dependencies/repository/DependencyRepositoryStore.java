@@ -217,6 +217,13 @@ public class DependencyRepositoryStore extends AbstractRepositoryStore<Dependenc
                 .filter(dep -> Objects.equals(jarName, dep.getName()))
                 .findFirst();
     }
+    
+    public List<DependencyFileStore> findJarDependencies() {
+        return getChildren().stream()
+                .filter(dep -> dep instanceof MavenDependencyFileStore
+                        && "jar".equals(((MavenDependencyFileStore) dep).getArtifact().getType()))
+                .collect(Collectors.toList());
+    }
 
     /**
      * This store must be migrated first
@@ -225,5 +232,7 @@ public class DependencyRepositoryStore extends AbstractRepositoryStore<Dependenc
     public int getImportOrder() {
         return 0;
     }
+
+
 
 }

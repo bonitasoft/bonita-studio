@@ -507,7 +507,7 @@ public class GroovyScriptExpressionEditor extends SelectionAwareExpressionEditor
                 if (variables.isEmpty()) {
                     final ManageConnectorJarDialog mcjd = new ManageConnectorJarDialog(
                             Display.getDefault().getActiveShell());
-                    final int retCode = mcjd.open();
+                    final int retCode = mcjd.hasDependencies() ? mcjd.open() : Window.OK;
                     if (retCode == Window.OK) {
                         try {
                             TestGroovyScriptUtil.evaluateExpression(groovyViewer.getGroovyCompilationUnit().getSource(),

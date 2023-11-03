@@ -46,7 +46,7 @@ public class ManageJarDialog extends Dialog {
 
     protected TableViewer tableViewer;
     private Button removeButton;
-    private final IRepositoryStore<?> libStore;
+    private final DependencyRepositoryStore libStore;
 
     protected DataBindingContext context;
     private ViewerFilter searchFilter;
@@ -81,7 +81,7 @@ public class ManageJarDialog extends Dialog {
         tableViewer.setContentProvider(new ArrayContentProvider());
         tableViewer.addFilter(searchFilter);
         tableViewer.setLabelProvider(new FileStoreLabelProvider());
-        tableViewer.setInput(libStore.getChildren());
+        tableViewer.setInput(libStore.findJarDependencies());
 
         tableViewer.addSelectionChangedListener(e -> {
             if (removeButton != null) {
