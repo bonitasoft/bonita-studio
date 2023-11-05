@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -493,7 +494,8 @@ public class EngineFlowElementBuilder extends AbstractProcessBuilder {
         } else {
             final List<EObject> referencedElements = mapping.getProcessSource().getReferencedElements();
             String type = LeftOperand.TYPE_DATA;
-            if (!referencedElements.isEmpty()) {
+            if (!referencedElements.isEmpty()
+                    && Objects.equals(ExpressionConstants.VARIABLE_TYPE, mapping.getProcessSource().getType())) {
                 type = getLeftOperandTypeForData(referencedElements.get(0));
             }
             builder.setType(type);
