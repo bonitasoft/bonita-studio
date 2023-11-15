@@ -64,6 +64,24 @@
                             </filesets>
                         </configuration>
                     </execution>
+                    <execution>
+                        <id>clean-optional-dependencies</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>clean</goal>
+                        </goals>
+                        <configuration>
+                            <filesets>
+                                <fileset>
+                                    <directory>${repository.dir}</directory>
+                                    <includes>
+                                        <include>log4j/**/*</include>
+                                    </includes>
+                                    <followSymlinks>false</followSymlinks>
+                                </fileset>
+                            </filesets>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
             <plugin>
