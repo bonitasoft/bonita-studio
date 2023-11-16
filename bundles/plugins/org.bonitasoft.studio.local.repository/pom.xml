@@ -73,7 +73,7 @@
                     </execution>
                     <execution>
                         <id>clean-optional-dependencies</id>
-                        <phase>process-resources</phase>
+                        <phase>prepare-package</phase>
                         <goals>
                             <goal>clean</goal>
                         </goals>
