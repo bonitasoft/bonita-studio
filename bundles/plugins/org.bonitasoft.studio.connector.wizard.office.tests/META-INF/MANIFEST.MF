@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Office Connector Wizard Tests Fragment
 Bundle-SymbolicName: org.bonitasoft.studio.connector.wizard.office.tests
-Bundle-Version: 9.0.0.qualifier
+Bundle-Version: 9.0.1.qualifier
 Bundle-Vendor: Bonitasoft S.A.
 Fragment-Host: org.bonitasoft.studio.connector.wizard.office;bundle-version="7.16.0"
 Import-Package: org.junit.jupiter.api
