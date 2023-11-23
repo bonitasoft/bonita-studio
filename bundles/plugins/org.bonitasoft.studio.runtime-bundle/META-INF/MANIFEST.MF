@@ -5,4 +5,4 @@ Bundle-SymbolicName: org.bonitasoft.studio.runtime-bundle
 Bundle-Version: 10.0.0.qualifier
 Bundle-Vendor: Bonitasoft S.A.
 Fragment-Host: org.bonitasoft.studio.engine
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17

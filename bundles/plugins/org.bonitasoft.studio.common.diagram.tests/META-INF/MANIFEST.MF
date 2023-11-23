@@ -6,7 +6,7 @@ Bundle-Version: 10.0.0.qualifier
 Fragment-Host: org.bonitasoft.studio.common.diagram;bundle-version="7.16.0"
 Import-Package: org.junit.jupiter.api
 Automatic-Module-Name: org.bonitasoft.studio.common.diagram.tests
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Require-Bundle: org.junit,
  assertj-core,
  org.mockito.mockito-core,

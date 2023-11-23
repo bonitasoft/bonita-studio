@@ -75,4 +75,4 @@ Import-Package: javax.activation;version="1.1.0",
  org.bonitasoft.engine.operation;version="1.0.0",
  org.bonitasoft.plugin.analyze.report.model
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17

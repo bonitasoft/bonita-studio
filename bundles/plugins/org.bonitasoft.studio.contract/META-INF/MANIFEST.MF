@@ -5,7 +5,7 @@ Bundle-Localization: plugin
 Bundle-SymbolicName: org.bonitasoft.studio.contract;singleton:=true
 Bundle-Version: 10.0.0.qualifier
 Bundle-Vendor: Bonitasoft S.A.
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.ui;bundle-version="3.105.0",
  org.bonitasoft.bpm.model,

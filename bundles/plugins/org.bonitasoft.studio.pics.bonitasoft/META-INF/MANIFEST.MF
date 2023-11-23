@@ -4,5 +4,5 @@ Bundle-Name: Pics for Bonitasoft
 Bundle-SymbolicName: org.bonitasoft.studio.pics.bonitasoft
 Bundle-Version: 10.0.0.qualifier
 Fragment-Host: org.bonitasoft.studio.pics
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Bundle-Vendor: BonitaSoft S.A.

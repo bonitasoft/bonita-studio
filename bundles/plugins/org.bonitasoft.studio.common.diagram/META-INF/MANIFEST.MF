@@ -4,7 +4,7 @@ Bundle-Name: Diagram Utils
 Bundle-SymbolicName: org.bonitasoft.studio.common.diagram;singleton:=true
 Bundle-Version: 10.0.0.qualifier
 Bundle-Vendor: BonitaSoft S.A.
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Require-Bundle: org.eclipse.gmf.runtime.lite.svg,
  org.bonitasoft.bpm.model;visibility:=reexport,
  org.bonitasoft.studio.common,

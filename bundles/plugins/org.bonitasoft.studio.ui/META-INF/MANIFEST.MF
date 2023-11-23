@@ -65,6 +65,6 @@ Require-Bundle: org.eclipse.jface,
  org.eclipse.e4.ui.css.swt.theme,
  org.bonitasoft.studio.common.ui;visibility:=reexport,
  org.bonitasoft.engine.bonita-common
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Bundle-ActivationPolicy: lazy
 Import-Package: javax.inject;version="1.0.0"

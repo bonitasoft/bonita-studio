@@ -8,5 +8,5 @@ Bundle-Vendor: BonitaSoft S.A.
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.bonitasoft.studio.pics
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Bundle-ActivationPolicy: lazy

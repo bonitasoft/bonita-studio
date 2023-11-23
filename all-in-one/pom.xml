@@ -280,11 +280,11 @@
 			</activation>
 			<properties>
 				<if.task>net.sf.antcontrib.logic.IfTask</if.task>
-				<jre.url>https://github.com/adoptium/temurin11-binaries/releases/download/jdk-11.0.14%2B9/</jre.url>
-            	<jre.winx86.x64.url>OpenJDK11U-jdk_x64_windows_hotspot_11.0.14_9</jre.winx86.x64.url>
-				<jre.linuxx86.x64.url>OpenJDK11U-jdk_x64_linux_hotspot_11.0.14_9</jre.linuxx86.x64.url>
-				<jre.osx.url>OpenJDK11U-jdk_x64_mac_hotspot_11.0.14_9</jre.osx.url>
-				<jre.folder.name>jdk-11.0.14+9</jre.folder.name>
+				<jre.url>https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.9%2B9</jre.url>
+            	<jre.winx86.x64.url>OpenJDK17U-jdk_x64_windows_hotspot_17.0.9_9</jre.winx86.x64.url>
+				<jre.linuxx86.x64.url>OpenJDK17U-jdk_x64_linux_hotspot_17.0.9_9</jre.linuxx86.x64.url>
+				<jre.osx.url>OpenJDK17U-jdk_x64_mac_hotspot_17.0.9_9</jre.osx.url>
+				<jre.folder.name>jdk-17.0.9+9</jre.folder.name>
 			</properties>
 			<build>
 				<plugins>
@@ -434,7 +434,7 @@
 												<isset property="jre.present" />
 											</not>
 											<then>
-												<get src="${jre.url}/${jre.winx86.x64.url}.zip"
+												<get src="${jre.url}.1/${jre.winx86.x64.url}.zip"
 													dest="${user.home}" verbose="true" />
 												<unzip
 													src="${user.home}/${jre.winx86.x64.url}.zip"

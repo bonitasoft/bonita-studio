@@ -29,7 +29,7 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.jdt.groovy.core,
  org.bonitasoft.studio.ui,
  org.bonitasoft.studio.preferences
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Bundle-ActivationPolicy: lazy
 Export-Package: org.bonitasoft.studio.parameters.action,org.bonitasoft
  .studio.parameters.i18n,org.bonitasoft.studio.parameters.wizard.page

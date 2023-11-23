@@ -5,7 +5,7 @@ Bundle-SymbolicName: org.bonitasoft.studio.sap.mock
 Bundle-Version: 10.0.0.qualifier
 Bundle-Activator: org.bonitasoft.studio.sap.mock.Activator
 Require-Bundle: org.eclipse.core.runtime
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Automatic-Module-Name: org.bonitasoft.studio.sap.mock
 Bundle-ActivationPolicy: lazy
 Export-Package: com.sap.conn.jco,

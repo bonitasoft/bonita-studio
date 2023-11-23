@@ -21,7 +21,7 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.jdt.core,
  org.bonitasoft.studio.ui,
  org.bonitasoft.studio.common.ui
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Bundle-ActivationPolicy: lazy
 Export-Package: org.bonitasoft.studio.scripting,org.bonitasoft.studio.
  scripting.extensions,org.bonitasoft.studio.scripting.i18n;x-friends:=

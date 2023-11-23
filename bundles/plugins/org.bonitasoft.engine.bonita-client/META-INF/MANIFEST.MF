@@ -9,7 +9,7 @@ Bundle-ClassPath:
  lib/xstream.jar
 Bundle-ManifestVersion: 2
 Bundle-Name: Bonita Client Bundle
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Bundle-SymbolicName: org.bonitasoft.engine.bonita-client;singleton:=true
 Bundle-Vendor: Bonitasoft S.A.
 Bundle-Version: 10.0.0.qualifier

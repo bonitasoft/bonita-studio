@@ -56,7 +56,7 @@
                     <includes>
                         <include>**/*TestSuite.java</include>
                     </includes>
-                    <argLine>-Xmx1g ${jacocoAgentArgs} -DLAZYLOAD_ENGINE -Dbonita.studio.skipReleaseNote -Ddisable.notifications -Dbonita.noregister=1 -Declipse.log.level=${tests.log.level}</argLine>
+                    <argLine>${jvm.modules.arg} -Xmx1g ${jacocoAgentArgs} -DLAZYLOAD_ENGINE -Dbonita.studio.skipReleaseNote -Ddisable.notifications -Dbonita.noregister=1 -Declipse.log.level=${tests.log.level}</argLine>
                     <appArgLine>-pluginCustomization ${m2eSettingsCustomizationFile} -nl en -clean</appArgLine>
                     <osgiDataDirectory>${target.test.dir}</osgiDataDirectory>
                 </configuration>

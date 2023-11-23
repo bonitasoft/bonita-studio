@@ -26,7 +26,7 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.emf.databinding.edit,
  org.bonitasoft.bpm.model.edit,
  org.bonitasoft.studio.common.ui
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Bundle-ActivationPolicy: lazy
 Export-Package: org.bonitasoft.studio.refactoring.core,
  org.bonitasoft.studio.refactoring.core.emf,

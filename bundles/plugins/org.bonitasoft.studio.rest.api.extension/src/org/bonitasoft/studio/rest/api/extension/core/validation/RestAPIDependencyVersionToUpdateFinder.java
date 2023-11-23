@@ -46,7 +46,7 @@ public class RestAPIDependencyVersionToUpdateFinder extends DependencyVersionToU
     private static final String SOURCE_TAG = "source";
     private static final String TARGET_TAG = "target";
     private static final String RELEASE_TAG = "release";
-    private static final String JAVA_VERSION = "11";
+    private static final String JAVA_VERSION = "17";
     public static final String BONITA_VERSION_PROPERTY = "bonita.version";
     public static final String VERSION_TAG = "version";
 

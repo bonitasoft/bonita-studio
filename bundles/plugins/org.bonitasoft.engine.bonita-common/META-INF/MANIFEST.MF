@@ -6,7 +6,7 @@ Bundle-ClassPath:
  lib/bonita-common.jar
 Bundle-ManifestVersion: 2
 Bundle-Name: Bonita Common Bundle
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Bundle-SymbolicName: org.bonitasoft.engine.bonita-common;singleton:=true
 Bundle-Vendor: Bonitasoft S.A.
 Bundle-Version: 10.0.0.qualifier

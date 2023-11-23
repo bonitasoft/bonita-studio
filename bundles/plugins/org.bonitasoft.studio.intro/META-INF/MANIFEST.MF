@@ -20,7 +20,7 @@ Require-Bundle: org.eclipse.ui,
  org.bonitasoft.studio.preferences,
  org.eclipse.e4.ui.workbench,
  org.bonitasoft.studio.common.ui
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Bundle-ActivationPolicy: lazy
 Export-Package: org.bonitasoft.studio.intro,
  org.bonitasoft.studio.intro.configurer,

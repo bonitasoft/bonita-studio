@@ -24,7 +24,7 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.ui.ide,
  org.bonitasoft.studio.ui,
  org.eclipse.emf.validation
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Bundle-ActivationPolicy: lazy
 Export-Package: org.bonitasoft.studio.validation.common,
  org.bonitasoft.studio.validation.common.operation
