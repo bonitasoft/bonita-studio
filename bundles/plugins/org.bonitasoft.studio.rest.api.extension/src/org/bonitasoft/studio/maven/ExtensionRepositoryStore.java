@@ -48,6 +48,7 @@ import org.bonitasoft.studio.rest.api.extension.core.repository.PathTemplate;
 import org.bonitasoft.studio.rest.api.extension.core.repository.RestAPIExtensionFileStore;
 import org.bonitasoft.studio.rest.api.extension.core.repository.migration.BonitaVersionMigrationStep;
 import org.bonitasoft.studio.rest.api.extension.core.repository.migration.Groovy3MigrationStep;
+import org.bonitasoft.studio.rest.api.extension.core.repository.migration.GroovyCompilerPluginStep;
 import org.bonitasoft.studio.rest.api.extension.core.repository.migration.Java11MigrationStep;
 import org.bonitasoft.studio.rest.api.extension.core.repository.migration.ParentMigrationStep;
 import org.bonitasoft.studio.rest.api.extension.core.repository.migration.RuntimeBOMMigrationStep;
@@ -82,7 +83,8 @@ public class ExtensionRepositoryStore
             new Java11MigrationStep(),
             new BonitaVersionMigrationStep(),
             new RuntimeBOMMigrationStep(),
-            new BdmModelArtifactMigrationStep());
+            new BdmModelArtifactMigrationStep(),
+            new GroovyCompilerPluginStep());
 
     private static final List<MavenModelMigration> MIGRATION_STEPS = List.of(
             new ParentMigrationStep());

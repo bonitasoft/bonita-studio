@@ -111,7 +111,7 @@ import org.osgi.framework.Version;
  */
 public class BonitaStudioApplication extends IDEApplication implements IApplication, IJobChangeListener {
 
-    private static final String REQUIRED_JAVA_VERSION = "11"; //$NON-NLS-1$
+    private static final String REQUIRED_JAVA_VERSION = "17"; //$NON-NLS-1$
 
     private Display display;
     /** A map indicating whether the workspace at given URL needs migration and what's its original version was (before IDE erases the version.ini file) */

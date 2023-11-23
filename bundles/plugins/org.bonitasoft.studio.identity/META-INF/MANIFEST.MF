@@ -57,7 +57,7 @@ Import-Package: javax.inject;version="1.0.0",
  org.bonitasoft.studio.common.ui.jface,
  org.bonitasoft.studio.expression.editor.filter
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Export-Package: org.bonitasoft.studio.identity;uses:="org.osgi.framework,org.eclipse.ui.plugin",
  org.bonitasoft.studio.identity.actors.repository;
   uses:="org.bonitasoft.bpm.connector.model.implementation,

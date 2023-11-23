@@ -32,7 +32,7 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.core.expressions,
  org.bonitasoft.studio.common.ui,
  org.eclipse.e4.core.di
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Bundle-ActivationPolicy: lazy
 Export-Package: org.bonitasoft.studio.configuration,
  org.bonitasoft.studio.configuration.environment,

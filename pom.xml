@@ -11,7 +11,7 @@
     <name>Bonita Studio</name>
     <properties>
         <tychoVersion>2.7.5</tychoVersion>
-        <java.version>11</java.version>
+        <java.version>17</java.version>
         <os-jvm-flags></os-jvm-flags>
         <branding.version>2024.1-SNAPSHOT</branding.version>
         <bonita-runtime.version>10.0-SNAPSHOT</bonita-runtime.version>
@@ -133,7 +133,7 @@
                     <artifactId>target-platform-configuration</artifactId>
                     <version>${tychoVersion}</version>
                     <configuration>
-                        <executionEnvironment>JavaSE-11</executionEnvironment>
+                        <executionEnvironment>JavaSE-17</executionEnvironment>
                         <environments>
                             <environment>
                                 <os>linux</os>

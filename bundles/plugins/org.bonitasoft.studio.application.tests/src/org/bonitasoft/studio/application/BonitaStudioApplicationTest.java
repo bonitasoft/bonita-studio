@@ -69,7 +69,7 @@ class BonitaStudioApplicationTest {
 
     @Test
     void should_start_run_workbench_if_java_version_is_valid() throws Exception {
-        doReturn("11").when(application).getJavaVersion();
+        doReturn("17").when(application).getJavaVersion();
 
         final Object result = application.start(null);
 

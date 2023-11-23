@@ -41,7 +41,7 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.datatools.connectivity,
  org.eclipse.datatools.modelbase.sql.query,
  org.bonitasoft.studio.common.ui
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Bundle-ActivationPolicy: lazy
 Export-Package: org.bonitasoft.studio.sqlbuilder.ex,org.bonitasoft.stu
  dio.sqlbuilder.ex.action,org.bonitasoft.studio.sqlbuilder.ex.builder,

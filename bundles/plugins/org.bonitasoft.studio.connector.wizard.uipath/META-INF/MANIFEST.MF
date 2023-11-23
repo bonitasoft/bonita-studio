@@ -19,6 +19,6 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.jface.databinding,
  org.eclipse.core.databinding.property,
  org.eclipse.core.databinding.beans
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Automatic-Module-Name: org.bonitasoft.studio.connector.wizard.uipath
 Bundle-ActivationPolicy: lazy

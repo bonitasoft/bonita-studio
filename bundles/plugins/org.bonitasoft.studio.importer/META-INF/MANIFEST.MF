@@ -45,5 +45,5 @@ Require-Bundle: org.eclipse.ui,
  org.bonitasoft.spec.bpmn,
  org.bonitasoft.engine.bonita-process-definition-model
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Automatic-Module-Name: org.bonitasoft.studio.importer

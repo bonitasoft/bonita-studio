@@ -75,7 +75,7 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.core.databinding.property,
  org.bonitasoft.studio.dependencies,
  org.bonitasoft.engine.bonita-client
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Bundle-ActivationPolicy: lazy
 Import-Package: org.bonitasoft.studio.dependencies.ui.dialog,
  org.eclipse.ui.part

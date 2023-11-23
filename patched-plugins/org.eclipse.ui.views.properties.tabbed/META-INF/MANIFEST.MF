@@ -14,7 +14,7 @@ Require-Bundle: org.eclipse.ui.forms;visibility:=reexport,
  org.eclipse.e4.ui.workbench,
  org.eclipse.jface
 Bundle-ManifestVersion: 2
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Bundle-Vendor: Bonitasoft S.A.
 Export-Package: org.eclipse.ui.internal.views.properties.tabbed;x-inte
  rnal:=true,org.eclipse.ui.internal.views.properties.tabbed.css;x-inte

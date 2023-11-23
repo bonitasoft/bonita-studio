@@ -32,6 +32,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.net.HttpClientFactory;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.designer.core.PageDesignerURLFactory;
@@ -76,12 +77,18 @@ public abstract class CreateUIDArtifactOperation implements IRunnableWithProgres
     protected String artifactName = DEFAULT_PAGE_NAME;
     protected RepositoryAccessor repositoryAccessor;
     protected ObjectMapper objectMapper = new ObjectMapper();
+    private boolean disableOpenBrowser;
 
     protected CreateUIDArtifactOperation(PageDesignerURLFactory pageDesignerURLBuilder,
             RepositoryAccessor repositoryAccessor) {
         this.repositoryAccessor = repositoryAccessor;
         checkArgument(pageDesignerURLBuilder != null);
         this.pageDesignerURLBuilder = pageDesignerURLBuilder;
+    }
+    
+    public CreateUIDArtifactOperation disableOpenBrowser() {
+        this.disableOpenBrowser = true;
+        return this;
     }
 
     @Override
@@ -141,6 +148,10 @@ public abstract class CreateUIDArtifactOperation implements IRunnableWithProgres
     }
 
     protected void openArtifact(String artifactId) throws InvocationTargetException {
+        if(disableOpenBrowser) {
+            BonitaStudioLog.debug("Open browser disabled.", CreateUIDArtifactOperation.class);
+            return ;
+        }
         try {
             switch (getArtifactType()) {
                 case FORM:

@@ -62,7 +62,7 @@ Require-Bundle: org.bonitasoft.bpm.model,
  org.bonitasoft.bonita2bar;visibility:=reexport,
  org.eclipse.m2e.maven.runtime,
  org.eclipse.m2e.core
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Bundle-ActivationPolicy: lazy
 Import-Package: javax.annotation;version="1.2.0",
  javax.inject;version="1.0.0"

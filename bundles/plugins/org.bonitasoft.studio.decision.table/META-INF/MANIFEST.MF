@@ -4,7 +4,7 @@ Bundle-Name: Core for Decision Table Support
 Bundle-SymbolicName: org.bonitasoft.studio.decision.table
 Bundle-Version: 10.0.0.qualifier
 Bundle-Vendor: BonitaSoft S.A.
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Require-Bundle: org.bonitasoft.bpm.model,
  org.bonitasoft.studio.expression.editor,
  org.bonitasoft.studio.common,

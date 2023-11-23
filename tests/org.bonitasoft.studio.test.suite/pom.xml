@@ -82,7 +82,7 @@
                         <include>**/*TestSuite.java</include>
                     </includes>
                     
-                    <argLine>${javaOPTS} ${jacocoAgentArgs} ${additionalArgs}</argLine>
+                    <argLine>${jvm.modules.arg} ${javaOPTS} ${jacocoAgentArgs} ${additionalArgs}</argLine>
                     <appArgLine>-pluginCustomization ${m2eSettingsCustomizationFile} -nl en -clean</appArgLine>
                     <osgiDataDirectory>${target.test.dir}</osgiDataDirectory>
                 </configuration>

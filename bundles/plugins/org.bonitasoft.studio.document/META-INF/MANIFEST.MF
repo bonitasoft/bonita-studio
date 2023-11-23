@@ -42,7 +42,7 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.e4.ui.services,
  javax.inject,
  org.bonitasoft.engine.bonita-common
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Import-Package: org.bonitasoft.studio.common
 Bundle-ActivationPolicy: lazy
 Bundle-Activator: org.bonitasoft.studio.document.DocumentPlugin
