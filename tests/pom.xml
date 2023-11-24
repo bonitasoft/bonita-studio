@@ -14,7 +14,7 @@
 
     <properties>
         <test.workspace.dir>${user.home}/lé test</test.workspace.dir>
-        <jvm.modules.arg>--add-opens java.base/java.util=ALL-UNNAMED --add-opens java.base/java.lang=ALL-UNNAMED</jvm.modules.arg>
+        <jvm.modules.arg>--add-opens=java.base/java.util=ALL-UNNAMED --add-opens=java.base/java.lang=ALL-UNNAMED</jvm.modules.arg>
     </properties>
 
     <modules>
