@@ -57,7 +57,6 @@ public class UpdateProjectDescriptionMigrationStep implements MigrationStep {
         if (!Files.exists(appDescriptor)) {
             throw new CoreException(Status.error("App project descriptor not found."));
         }
-        var appDescription = BonitaProjectMigrator.readDescriptor(appDescriptor);
         var newAppDescription = new ProjectDescriptionBuilder()
                 .withProjectName(parentModel.getArtifactId() + "-app")
                 .havingNatures(BonitaProject.NATRUES)

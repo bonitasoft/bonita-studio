@@ -68,7 +68,7 @@ class UpdateProjectDescriptionMigrationStepTest {
     void stepDoesNotApplyToNewerVersion() throws Exception {
         var step = new UpdateProjectDescriptionMigrationStep();
         var current = new Version(ProductVersion.CURRENT_VERSION);
-        var nextVersion = new Version(current.getMajor(), current.getMinor(), current.getMinor() + 1);
+        var nextVersion = new Version(current.getMajor(), current.getMinor(), current.getMicro() + 1);
 
         assertThat(step.appliesTo(nextVersion.toString())).isFalse();
     }
