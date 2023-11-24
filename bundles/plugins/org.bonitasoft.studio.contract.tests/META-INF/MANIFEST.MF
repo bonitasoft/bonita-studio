@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Contract Tests Fragment
 Bundle-SymbolicName: org.bonitasoft.studio.contract.tests
-Bundle-Version: 7.15.6.qualifier
+Bundle-Version: 7.15.7.qualifier
 Bundle-Vendor: Bonitasoft S.A.
 Fragment-Host: org.bonitasoft.studio.contract;bundle-version="7.15.0"
 Automatic-Module-Name: org.bonitasoft.studio.contract.tests
