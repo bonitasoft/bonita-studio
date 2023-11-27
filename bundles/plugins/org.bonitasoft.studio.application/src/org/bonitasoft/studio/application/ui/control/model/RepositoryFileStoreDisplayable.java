@@ -32,7 +32,6 @@ import org.bonitasoft.studio.designer.core.repository.NamedJSONFileStore;
 import org.bonitasoft.studio.designer.core.repository.WebPageFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.groovy.repository.GroovyFileStore;
-import org.bonitasoft.studio.identity.actors.repository.ActorFilterDefFileStore;
 import org.bonitasoft.studio.identity.organization.repository.OrganizationFileStore;
 import org.bonitasoft.studio.identity.organization.styler.ActiveOrganizationStyler;
 import org.bonitasoft.studio.pics.Pics;
@@ -62,7 +61,7 @@ public class RepositoryFileStoreDisplayable implements IDisplayable {
                         .getParentStore();
                 ConnectorDefinition def;
                 try {
-                    def = ((ActorFilterDefFileStore) store).getContent();
+                    def = ((AbstractDefFileStore) store).getContent();
                 } catch (ReadFileStoreException e) {
                     return store.getName();
                 }
