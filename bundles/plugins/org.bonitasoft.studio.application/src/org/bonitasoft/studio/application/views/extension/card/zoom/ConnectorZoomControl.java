@@ -36,12 +36,12 @@ import org.bonitasoft.studio.application.views.extension.card.zoom.usage.Connect
 import org.bonitasoft.studio.application.views.overview.ProjectOverviewEditorPart;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.gmf.tools.GMFTools;
+import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.provider.ConnectorDefinitionRegistry;
 import org.bonitasoft.studio.common.repository.provider.ExtendedConnectorDefinition;
-import org.bonitasoft.studio.common.ui.jface.SWTBotConstants;
-import org.bonitasoft.studio.common.ui.views.BonitaPropertiesBrowserPage;
+import org.bonitasoft.studio.common.views.BonitaPropertiesBrowserPage;
 import org.bonitasoft.studio.connectors.repository.ConnectorDefRepositoryStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
@@ -314,9 +314,19 @@ public class ConnectorZoomControl extends AbstractZoomControl {
                 .map(def -> registry.find(def.getDefinitionId(), def.getDefinitionVersion()))
                 .filter(Optional::isPresent)
                 .map(Optional::get)
-                .sorted(Comparator.nullsLast(Comparator.comparing(ExtendedConnectorDefinition::getConnectorDefinitionLabel)))
+                .sorted(definitionLabelComparator())
                 .collect(Collectors.toList());
     }
+    
+    private Comparator<? super ExtendedConnectorDefinition> definitionLabelComparator() {
+        return (def1, def2) -> {
+            if(def1.getConnectorDefinitionLabel() != null && def2.getConnectorDefinitionLabel() != null) {
+                return def1.getConnectorDefinitionLabel().compareTo(def2.getConnectorDefinitionLabel());
+            }
+            return 0;
+        };
+    }
+
 
     protected List<Implementation> getImplementations(ExtendedConnectorDefinition def) {
         return projectDependenciesStore.getConnectorImplementations().stream()
