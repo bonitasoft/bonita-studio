@@ -314,8 +314,17 @@ public class ConnectorZoomControl extends AbstractZoomControl {
                 .map(def -> registry.find(def.getDefinitionId(), def.getDefinitionVersion()))
                 .filter(Optional::isPresent)
                 .map(Optional::get)
-                .sorted(Comparator.nullsLast(Comparator.comparing(ExtendedConnectorDefinition::getConnectorDefinitionLabel)))
+                .sorted(definitionLabelComparator())
                 .collect(Collectors.toList());
+    }
+
+    private Comparator<? super ExtendedConnectorDefinition> definitionLabelComparator() {
+        return (def1, def2) -> {
+            if(def1.getConnectorDefinitionLabel() != null && def2.getConnectorDefinitionLabel() != null) {
+                return def1.getConnectorDefinitionLabel().compareTo(def2.getConnectorDefinitionLabel());
+            }
+            return 0;
+        };
     }
 
     protected List<Implementation> getImplementations(ExtendedConnectorDefinition def) {
