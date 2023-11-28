@@ -17,6 +17,7 @@ package org.bonitasoft.studio.application.views.extension.card.zoom;
 import static org.bonitasoft.studio.ui.wizard.WizardPageBuilder.newPage;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -313,7 +314,7 @@ public class ConnectorZoomControl extends AbstractZoomControl {
                 .map(def -> registry.find(def.getDefinitionId(), def.getDefinitionVersion()))
                 .filter(Optional::isPresent)
                 .map(Optional::get)
-                .sorted((def1, def2) -> def1.getConnectorDefinitionLabel().compareTo(def2.getConnectorDefinitionLabel()))
+                .sorted(Comparator.nullsLast(Comparator.comparing(ExtendedConnectorDefinition::getConnectorDefinitionLabel)))
                 .collect(Collectors.toList());
     }
 
