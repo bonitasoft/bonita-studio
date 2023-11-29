@@ -327,16 +327,7 @@ public class ConnectorZoomControl extends AbstractZoomControl {
         };
     }
 
-
-    private Comparator<? super ExtendedConnectorDefinition> definitionLabelComparator() {
-        return (def1, def2) -> {
-            if(def1.getConnectorDefinitionLabel() != null && def2.getConnectorDefinitionLabel() != null) {
-                return def1.getConnectorDefinitionLabel().compareTo(def2.getConnectorDefinitionLabel());
-            }
-            return 0;
-        };
-    }
-
+    
     protected List<Implementation> getImplementations(ExtendedConnectorDefinition def) {
         return projectDependenciesStore.getConnectorImplementations().stream()
                 .filter(impl -> Objects.equals(impl.getDefinitionId(), def.getId()))
