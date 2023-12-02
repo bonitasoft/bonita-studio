@@ -7,7 +7,7 @@
    </configIni>
 
    <launcherArgs>
-      <vmArgs>--add-opens=java.base/java.util=ALL-UNNAMED --add-opens=java.base/java.lang=ALL-UNNAMED -Xmx1g -Xms512m  -Dosgi.requiredJavaVersion=17 -Dfile.encoding=UTF8 -Dworkspace.recovery.mode=false
+      <vmArgs>--add-opens=java.base/java.util=ALL-UNNAMED --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.xml/javax.xml.namespace=ALL-UNNAMED --add-opens=java.xml/com.sun.org.apache.xerces.internal.dom=ALL-UNNAMED --add-opens=java.xml/com.sun.org.apache.xerces.internal.xni=ALL-UNNAMED -Xmx1g -Xms512m -Dosgi.requiredJavaVersion=17 -Dfile.encoding=UTF8 -Dworkspace.recovery.mode=false
       </vmArgs>
       <vmArgsMac>-XstartOnFirstThread
       </vmArgsMac>

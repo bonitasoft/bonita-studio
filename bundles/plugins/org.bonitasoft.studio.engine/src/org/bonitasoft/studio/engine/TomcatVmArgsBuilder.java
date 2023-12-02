@@ -74,7 +74,14 @@ public class TomcatVmArgsBuilder {
                 "\"" + getDBLocation().getAbsolutePath() + "\"");
         addSystemProperty(args, "bonita.csrf.cookie.path", "\"/\"");
         addSystemProperty(args, "bonita.runtime.logger.sysout", "Console");
-        final String res = args.toString();
+        var res = args.toString();
+        // Additional jvm args for XStream serialization
+        res = res + " --add-opens=java.xml/javax.xml.namespace=ALL-UNNAMED";
+        res = res + " --add-opens=java.xml/com.sun.org.apache.xerces.internal.dom=ALL-UNNAMED";
+        res = res + " --add-opens=java.xml/com.sun.org.apache.xerces.internal.xni=ALL-UNNAMED";
+        res = res + " --add-opens=java.base/java.time=ALL-UNNAMED";
+        res = res + " --add-opens=java.base/java.time.chrono=ALL-UNNAMED";
+        res = res + " --add-opens=java.base/java.text=ALL-UNNAMED";
         if (System.getProperty("log.tomcat.vm.args") != null) {
             BonitaStudioLog.info(res, EnginePlugin.PLUGIN_ID);
         }
