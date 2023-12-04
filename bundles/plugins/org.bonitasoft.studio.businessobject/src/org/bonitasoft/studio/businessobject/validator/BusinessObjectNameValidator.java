@@ -62,7 +62,7 @@ public class BusinessObjectNameValidator implements IBDMValidator<BusinessObject
     }
 
     protected IStatus validateJavaConvention(String name) {
-        return JavaConventions.validateJavaTypeName(name, JavaCore.VERSION_11, JavaCore.VERSION_11);
+        return JavaConventions.validateJavaTypeName(name, JavaCore.VERSION_17, JavaCore.VERSION_17);
     }
 
     private IStatus validateWhiteSpaceCharacter(String name) {
