@@ -23,7 +23,7 @@
         <image-overlay-plugin.version>1.1.3</image-overlay-plugin.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.release>${java.version}</maven.compiler.release>
-        <groovy-maven-plugin.groovy.version>3.0.13</groovy-maven-plugin.groovy.version>
+        <groovy-maven-plugin.groovy.version>3.0.19</groovy-maven-plugin.groovy.version>
         <!-- Must be synched with org.bonitasoft.studio.common.repository.core.maven.model.DefaultPluginVersions.MAVEN_DEPENDENCY_PLUGIN_VERSION -->
         <maven-dependency-plugin.version>3.6.0</maven-dependency-plugin.version>
         <maven-assembly-plugin.version>3.6.0</maven-assembly-plugin.version>
