@@ -71,7 +71,7 @@ public class QueryParameterNameValidator implements IBDMValidator<QueryParameter
     }
 
     protected IStatus validateJavaConvention(String name) {
-        return JavaConventions.validateFieldName(name, JavaCore.VERSION_11, JavaCore.VERSION_11);
+        return JavaConventions.validateFieldName(name, JavaCore.VERSION_17, JavaCore.VERSION_17);
     }
 
     @Override

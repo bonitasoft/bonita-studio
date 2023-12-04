@@ -40,7 +40,7 @@ public class GroupIdValidator extends MavenIdValidator {
 
     protected IStatus validateJavaPackageName(Object value) {
         try {
-            return JavaConventions.validatePackageName(value.toString(), JavaCore.VERSION_11, JavaCore.VERSION_11);
+            return JavaConventions.validatePackageName(value.toString(), JavaCore.VERSION_17, JavaCore.VERSION_17);
         } catch (IllegalStateException e) {
             //avoid stacktrace in tests
             return Status.OK_STATUS;
