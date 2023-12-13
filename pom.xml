@@ -28,7 +28,7 @@
         <maven-dependency-plugin.version>3.6.0</maven-dependency-plugin.version>
         <maven-assembly-plugin.version>3.6.0</maven-assembly-plugin.version>
         <maven3-model-jdom-support.version>1.6</maven3-model-jdom-support.version>
-        <jacocoVersion>0.8.8</jacocoVersion>
+        <jacocoVersion>0.8.11</jacocoVersion>
     </properties>
     <modules>
         <module>platform</module>
