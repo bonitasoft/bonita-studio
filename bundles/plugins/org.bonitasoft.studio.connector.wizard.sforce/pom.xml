@@ -18,14 +18,6 @@
         <salesforce-partner.version>59.0.0</salesforce-partner.version>
     </properties>
 
-	<dependencies>
-		<dependency>
-			<groupId>com.force.api</groupId>
-			<artifactId>force-partner-api</artifactId>
-			<version>59.0.0</version>
-		</dependency>
-	</dependencies>
-
     <build>
         <plugins>
             <plugin>
