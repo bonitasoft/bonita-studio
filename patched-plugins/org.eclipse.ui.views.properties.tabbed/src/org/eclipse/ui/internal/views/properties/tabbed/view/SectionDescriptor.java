@@ -20,6 +20,7 @@ import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.InvalidRegistryObjectException;
 import org.eclipse.core.runtime.Platform;
@@ -127,7 +128,7 @@ public class SectionDescriptor extends AbstractSectionDescriptor {
 		IStatus status = new Status(IStatus.ERROR, pluginId,
 				TabbedPropertyViewStatusCodes.SECTION_ERROR, message, exception);
 		Bundle bundle = FrameworkUtil.getBundle(SectionDescriptor.class);
-		Platform.getLog(bundle).log(status);
+		ILog.of(bundle).log(status);
 	}
 
 	@Override
@@ -183,6 +184,7 @@ public class SectionDescriptor extends AbstractSectionDescriptor {
 	@Override
     public ISection getSectionClass() {
         ISection section = null;
+        // patch by BonitaSoft
         final Workbench workbench = (Workbench) PlatformUI.getWorkbench();
         try {
             section = (ISection) ContextInjectionFactory
@@ -194,6 +196,7 @@ public class SectionDescriptor extends AbstractSectionDescriptor {
             handleSectionError(new CoreException(
                     new Status(IStatus.ERROR, "org.eclipse.ui.views.properties.tabbed", e.getMessage(), e)));
         }
+        // end patch by BonitaSoft
 
         return section;
     }

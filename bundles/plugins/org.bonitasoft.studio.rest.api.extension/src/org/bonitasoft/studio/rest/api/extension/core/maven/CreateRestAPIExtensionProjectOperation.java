@@ -10,20 +10,12 @@ package org.bonitasoft.studio.rest.api.extension.core.maven;
 
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.StandardCopyOption;
-import java.util.HashMap;
 import java.util.Set;
-import java.util.jar.JarFile;
 
-import org.apache.maven.archetype.catalog.Archetype;
-import org.apache.maven.artifact.Artifact;
-import org.apache.maven.artifact.DefaultArtifact;
-import org.apache.maven.artifact.handler.DefaultArtifactHandler;
 import org.apache.maven.model.Dependency;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelFileStore;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
-import org.bonitasoft.studio.common.repository.core.maven.ProjectDependenciesResolver;
 import org.bonitasoft.studio.maven.ExtensionRepositoryStore;
 import org.bonitasoft.studio.maven.model.RestAPIExtensionArchetype;
 import org.bonitasoft.studio.maven.model.RestAPIExtensionArchetypeConfiguration;
@@ -36,40 +28,21 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.m2e.core.MavenPlugin;
-import org.eclipse.m2e.core.project.IProjectConfigurationManager;
+import org.eclipse.m2e.core.project.IArchetype;
 import org.eclipse.m2e.core.project.ProjectImportConfiguration;
-
-import groovy.lang.Binding;
-import groovy.lang.GroovyShell;
+import org.eclipse.m2e.core.ui.internal.archetype.ArchetypeGenerator;
 
 public class CreateRestAPIExtensionProjectOperation extends CreateCustomPageProjectOperation {
 
     public CreateRestAPIExtensionProjectOperation(ExtensionRepositoryStore repositoryStore,
-            IProjectConfigurationManager projectConfigurationManager,
             ProjectImportConfiguration projectImportConfiguration,
             RestAPIExtensionArchetypeConfiguration archetypeConfiguration) {
-        super(repositoryStore, projectConfigurationManager, projectImportConfiguration, archetypeConfiguration);
+        super(repositoryStore, projectImportConfiguration, archetypeConfiguration);
     }
 
     @Override
     protected void projectCreated(IProject project) throws CoreException {
-        //archetype-post-generate.groovy doesn't work with m2e maven-archetype embedded version...
-        // TODO fix me after updating m2e to 2.x+
         RestAPIExtensionArchetypeConfiguration archetypeConfiguration = (RestAPIExtensionArchetypeConfiguration) getArchetypeConfiguration();
-        var archetypeJarFile = ProjectDependenciesResolver.resolveFile(toArtifact(RestAPIExtensionArchetype.INSTANCE));
-        if (archetypeJarFile.exists()) {
-            try (var jar = new JarFile(archetypeJarFile)) {
-                var scriptEntry = jar.getEntry("META-INF/archetype-post-generate.groovy");
-                if (scriptEntry != null) {
-                    var groovyShell = newGroovyShell(archetypeConfiguration);
-                    var scriptFile = Files.createTempFile("archetype-post-generate", ".groovy");
-                    Files.copy(jar.getInputStream(scriptEntry), scriptFile, StandardCopyOption.REPLACE_EXISTING);
-                    groovyShell.evaluate(scriptFile.toFile());
-                }
-            } catch (IOException e) {
-                throw new CoreException(Status.error("Failed to execute archetype-post-generate.groovy", e));
-            }
-        }
         if (archetypeConfiguration.isEnableBDMDependencies()) {
             var bdmStore = RepositoryManager.getInstance().getAccessor()
                     .getRepositoryStore(BusinessObjectModelRepositoryStore.class);
@@ -88,23 +61,6 @@ public class CreateRestAPIExtensionProjectOperation extends CreateCustomPageProj
             MavenPlugin.getProjectConfigurationManager().updateProjectConfiguration(project, new NullProgressMonitor());
         }
         super.projectCreated(project);
-    }
-
-    private GroovyShell newGroovyShell(RestAPIExtensionArchetypeConfiguration archetypeConfiguration) {
-        var variables = new HashMap<String, Object>();
-        var request = new HashMap<String, Object>();
-        var location = repositoryStore.getResource().getLocation();
-        request.put("properties", archetypeConfiguration.toProperties());
-        request.put("outputDirectory", location.toFile().getAbsolutePath());
-        request.put("artifactId", archetypeConfiguration.getPageName());
-        variables.put("request", request);
-        var binding = new Binding(variables);
-        return new GroovyShell(CreateCustomPageProjectOperation.class.getClassLoader(), binding);
-    }
-
-    private Artifact toArtifact(Archetype instance) {
-        return new DefaultArtifact(instance.getGroupId(), instance.getArtifactId(), instance.getVersion(), null, "jar",
-                null, new DefaultArtifactHandler("jar"));
     }
 
     /* Dirty string replacement to control the location of the dependency in the dependency list */
@@ -136,7 +92,7 @@ public class CreateRestAPIExtensionProjectOperation extends CreateCustomPageProj
     }
 
     @Override
-    protected Archetype getArchetype() {
+    protected IArchetype getArchetype() {
         return RestAPIExtensionArchetype.INSTANCE;
     }
 

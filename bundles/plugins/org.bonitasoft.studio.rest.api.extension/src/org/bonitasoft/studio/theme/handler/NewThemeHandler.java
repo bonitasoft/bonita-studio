@@ -32,7 +32,6 @@ import org.eclipse.e4.ui.services.IServiceConstants;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardDialog;
-import org.eclipse.m2e.core.MavenPlugin;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
@@ -64,7 +63,7 @@ public class NewThemeHandler extends AbstractHandler {
 
     protected NewThemeWizard newWizard(RepositoryAccessor repositoryAccessor, ProjectMetadata projectMetadata, WidgetFactory widgetFactory, IWorkspace workspace) {
         return new NewThemeWizard(projectMetadata, repositoryAccessor.getRepositoryStore(ExtensionRepositoryStore.class),
-                MavenPlugin.getProjectConfigurationManager(), new MavenProjectConfiguration(), workspace, widgetFactory);
+                 new MavenProjectConfiguration(), workspace, widgetFactory);
     }
 
     protected WizardDialog newWizardDialog(final Wizard wizard, String finishLabel) {

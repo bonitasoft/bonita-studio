@@ -14,19 +14,19 @@
  */
 package org.bonitasoft.studio.common.ui.properties;
 
-import org.bonitasoft.studio.common.Messages;
-import org.bonitasoft.studio.common.databinding.validator.InputLengthValidator;
-import org.bonitasoft.studio.common.ui.widgets.GTKStyleHandler;
 import org.bonitasoft.bpm.model.process.Element;
 import org.bonitasoft.bpm.model.process.ProcessPackage;
 import org.bonitasoft.bpm.model.process.TextAnnotation;
+import org.bonitasoft.studio.common.Messages;
+import org.bonitasoft.studio.common.databinding.validator.InputLengthValidator;
+import org.bonitasoft.studio.common.ui.widgets.GTKStyleHandler;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.edit.EMFEditObservables;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.jface.databinding.fieldassist.ControlDecorationSupport;
-import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.SWT;
@@ -42,28 +42,29 @@ public class DescriptionPropertySectionContribution implements IExtensibleGridPr
     private int vSpan;
 
     public DescriptionPropertySectionContribution(int vSpan) {
-	this.vSpan = vSpan;
+        this.vSpan = vSpan;
     }
 
     @Override
     public void createControl(final Composite composite, final TabbedPropertySheetWidgetFactory widgetFactory,
-	    final ExtensibleGridPropertySection page) {
-	composite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).span(1, vSpan).create());
-	final Text text = widgetFactory.createText(composite, "", GTKStyleHandler.removeBorderFlag(SWT.BORDER | SWT.MULTI | SWT.WRAP));
-	text.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 120).create());
+            final ExtensibleGridPropertySection page) {
+        composite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).span(1, vSpan).create());
+        final Text text = widgetFactory.createText(composite, "",
+                GTKStyleHandler.removeBorderFlag(SWT.BORDER | SWT.MULTI | SWT.WRAP));
+        text.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 120).create());
 
-	context = new EMFDataBindingContext();
-	final UpdateValueStrategy strategy = new UpdateValueStrategy();
-	strategy.setBeforeSetValidator(new InputLengthValidator(Messages.GeneralSection_Description, 254));
-	ControlDecorationSupport.create(context.bindValue(
-		SWTObservables.observeDelayedValue(400, SWTObservables.observeText(text, SWT.Modify)),
-		EMFEditObservables.observeValue(editingDomain, element, ProcessPackage.Literals.ELEMENT__DOCUMENTATION),
-		strategy, null), SWT.LEFT | SWT.TOP);
+        context = new EMFDataBindingContext();
+        final UpdateValueStrategy strategy = new UpdateValueStrategy();
+        strategy.setBeforeSetValidator(new InputLengthValidator(Messages.GeneralSection_Description, 254));
+        ControlDecorationSupport.create(context.bindValue(
+                WidgetProperties.text(SWT.Modify).observeDelayed(400, text),
+                EMFEditObservables.observeValue(editingDomain, element, ProcessPackage.Literals.ELEMENT__DOCUMENTATION),
+                strategy, null), SWT.LEFT | SWT.TOP);
     }
 
     @Override
     public String getLabel() {
-	return Messages.GeneralSection_Description;
+        return Messages.GeneralSection_Description;
     }
 
     @Override
@@ -73,29 +74,29 @@ public class DescriptionPropertySectionContribution implements IExtensibleGridPr
 
     @Override
     public void setEObject(final EObject object) {
-	element = (Element) object;
+        element = (Element) object;
     }
 
     @Override
     public void setEditingDomain(final TransactionalEditingDomain editingDomain) {
-	this.editingDomain = editingDomain;
+        this.editingDomain = editingDomain;
     }
 
     @Override
     public boolean isRelevantFor(final EObject eObject) {
-	return eObject instanceof Element && !(eObject instanceof TextAnnotation);
+        return eObject instanceof Element && !(eObject instanceof TextAnnotation);
     }
 
     @Override
     public void setSelection(final ISelection selection) {
-	// NOTHING
+        // NOTHING
     }
 
     @Override
     public void dispose() {
-	if (context != null) {
-	    context.dispose();
-	}
+        if (context != null) {
+            context.dispose();
+        }
     }
 
 }

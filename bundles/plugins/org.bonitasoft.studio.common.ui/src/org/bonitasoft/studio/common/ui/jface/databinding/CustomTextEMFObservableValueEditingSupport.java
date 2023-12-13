@@ -30,7 +30,7 @@ import org.eclipse.emf.databinding.edit.EditingDomainEObjectObservableValue;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.transaction.util.TransactionUtil;
-import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.jface.databinding.viewers.ObservableValueEditingSupport;
 import org.eclipse.jface.resource.JFaceColors;
 import org.eclipse.jface.viewers.CellEditor;
@@ -68,7 +68,7 @@ public abstract class CustomTextEMFObservableValueEditingSupport extends Observa
      */
     @Override
     protected IObservableValue doCreateCellEditorObservable(final CellEditor cellEditor) {
-        return SWTObservables.observeText(cellEditor.getControl(), SWT.Modify);
+        return WidgetProperties.text(SWT.Modify).observe(cellEditor.getControl());
     }
 
     /*
@@ -79,7 +79,8 @@ public abstract class CustomTextEMFObservableValueEditingSupport extends Observa
     @Override
     protected IObservableValue doCreateElementObservable(final Object element, final ViewerCell cell) {
         checkArgument(element instanceof EObject);
-        final IObservableValue observableValue = EMFEditObservables.observeValue(TransactionUtil.getEditingDomain(element), (EObject) element,
+        final IObservableValue observableValue = EMFEditObservables.observeValue(
+                TransactionUtil.getEditingDomain(element), (EObject) element,
                 featureToEdit);
         observableValue.addValueChangeListener(new ColumnViewerUpdateListener(getViewer(), element));
         return observableValue;
@@ -92,7 +93,8 @@ public abstract class CustomTextEMFObservableValueEditingSupport extends Observa
      */
     @Override
     protected Binding createBinding(final IObservableValue target, final IObservableValue model) {
-        final Binding binding = dbc.bindValue(target, model, targetToModelConvertStrategy(observedElement(model)), null);
+        final Binding binding = dbc.bindValue(target, model, targetToModelConvertStrategy(observedElement(model)),
+                null);
         final IObservableValue validationStatus = binding.getValidationStatus();
         validationStatus.addValueChangeListener(new IValueChangeListener() {
 
@@ -128,7 +130,8 @@ public abstract class CustomTextEMFObservableValueEditingSupport extends Observa
         updateTextEditorFeedback(status);
         messageManager.removeAllMessages();
         if (!status.isOK() && getViewer().isCellEditorActive()) {
-            messageManager.addMessage(null, status.getMessage(), null, new StatusToMessageSeverity(status).toMessageSeverity());
+            messageManager.addMessage(null, status.getMessage(), null,
+                    new StatusToMessageSeverity(status).toMessageSeverity());
         }
     }
 

@@ -9,6 +9,7 @@
 package org.bonitasoft.studio.tests.restApiExtension;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.awaitility.Awaitility.await;
 import static org.bonitasoft.studio.assertions.StatusAssert.assertThat;
 
 import java.io.File;
@@ -36,7 +37,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.m2e.core.MavenPlugin;
 import org.eclipse.m2e.core.project.ProjectImportConfiguration;
 import org.eclipse.ui.PlatformUI;
 import org.junit.Before;
@@ -73,7 +73,6 @@ public class BuildAndDeployRestAPIExtensionIT {
         defaultArchetypeConfiguration.setBonitaVersion(ProductVersion.BONITA_RUNTIME_VERSION);
         final CreateRestAPIExtensionProjectOperation operation = new CreateRestAPIExtensionProjectOperation(
                 RepositoryManager.getInstance().getRepositoryStore(ExtensionRepositoryStore.class),
-                MavenPlugin.getProjectConfigurationManager(),
                 new ProjectImportConfiguration(),
                 defaultArchetypeConfiguration);
 
@@ -146,9 +145,11 @@ public class BuildAndDeployRestAPIExtensionIT {
                     new HttpClientFactory(), fileStore);
             PlatformUI.getWorkbench().getProgressService().run(true, false, deployRestAPIExtensionOperation::run);
             StatusAssert.assertThat(deployRestAPIExtensionOperation.getStatus()).isOK();
-            final Page updatedPage = deployRestAPIExtensionOperation.getDeployedPage();
-            assertThat(updatedPage).isNotNull();
-            assertThat(updatedPage.getDisplayName()).isEqualTo("My updated test Rest API");
+            await().untilAsserted(() -> {
+                final Page updatedPage = deployRestAPIExtensionOperation.findCustomPage(fileStore.getPageId());
+                assertThat(updatedPage).isNotNull();
+                assertThat(updatedPage.getDisplayName()).isEqualTo("My updated test Rest API");
+            });
         } finally {
             sessionOperation.logout();
         }

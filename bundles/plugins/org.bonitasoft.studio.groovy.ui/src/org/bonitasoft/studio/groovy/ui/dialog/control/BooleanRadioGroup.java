@@ -17,7 +17,7 @@ package org.bonitasoft.studio.groovy.ui.dialog.control;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.SelectObservableValue;
-import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Button;
@@ -41,8 +41,8 @@ public class BooleanRadioGroup extends Composite {
 
     public void bindControl(final DataBindingContext dbc, final IObservableValue modelObservable) {
         final SelectObservableValue selectObservableValue = new SelectObservableValue(Boolean.class);
-        selectObservableValue.addOption(Boolean.TRUE, SWTObservables.observeSelection(trueButton));
-        selectObservableValue.addOption(Boolean.FALSE, SWTObservables.observeSelection(falseButton));
+        selectObservableValue.addOption(Boolean.TRUE, WidgetProperties.buttonSelection().observe(trueButton));
+        selectObservableValue.addOption(Boolean.FALSE, WidgetProperties.buttonSelection().observe(falseButton));
         selectObservableValue.setValue(Boolean.TRUE);
         dbc.bindValue(selectObservableValue, modelObservable);
     }

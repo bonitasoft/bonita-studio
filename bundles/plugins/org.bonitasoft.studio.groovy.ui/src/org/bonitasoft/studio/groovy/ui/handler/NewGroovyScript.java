@@ -28,13 +28,11 @@ import org.eclipse.ui.PlatformUI;
 
 public class NewGroovyScript extends AbstractHandler {
 
-    private FileStoreFinder selectionFinder = new FileStoreFinder();
-
     @Override
     @Execute
     public Object execute(ExecutionEvent event) throws ExecutionException {
         final NewGroovyClassWizard wizard = new NewGroovyClassWizard();
-        wizard.init(PlatformUI.getWorkbench(), (IStructuredSelection) selectionFinder.getSelectionInExplorer());
+        wizard.init(PlatformUI.getWorkbench(), (IStructuredSelection) new FileStoreFinder().getSelectionInExplorer());
         new WizardDialog(Display.getDefault().getActiveShell(), wizard).open();
         AbstractFileStore.refreshExplorerView();
         return null;

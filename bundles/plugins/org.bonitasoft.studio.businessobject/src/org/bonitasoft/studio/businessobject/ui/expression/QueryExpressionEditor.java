@@ -21,36 +21,36 @@ import static com.google.common.collect.Lists.newArrayList;
 
 import java.util.List;
 
+import org.bonitasoft.bpm.model.expression.Expression;
+import org.bonitasoft.bpm.model.expression.ExpressionPackage;
+import org.bonitasoft.bpm.model.util.ExpressionConstants;
 import org.bonitasoft.studio.businessobject.core.expression.QueryExpressionProvider;
 import org.bonitasoft.studio.businessobject.core.expression.model.BusinessObjectExpressionQuery;
 import org.bonitasoft.studio.businessobject.core.expression.model.QueryExpressionModel;
 import org.bonitasoft.studio.businessobject.i18n.Messages;
-import org.bonitasoft.bpm.model.util.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFilter;
 import org.bonitasoft.studio.expression.editor.provider.ExpressionColumnLabelProvider;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionEditor;
 import org.bonitasoft.studio.expression.editor.provider.SelectionAwareExpressionEditor;
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
-import org.bonitasoft.bpm.model.expression.Expression;
-import org.bonitasoft.bpm.model.expression.ExpressionPackage;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.ui.viewer.LabelProviderBuilder;
 import org.eclipse.core.databinding.UpdateValueStrategy;
-import org.eclipse.core.databinding.beans.PojoObservables;
+import org.eclipse.core.databinding.beans.typed.PojoProperties;
 import org.eclipse.core.databinding.observable.Realm;
 import org.eclipse.core.databinding.observable.list.IObservableList;
+import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.IValueChangeListener;
 import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.jface.databinding.swt.SWTObservables;
-import org.eclipse.jface.databinding.viewers.IViewerObservableValue;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.jface.databinding.viewers.ObservableListContentProvider;
-import org.eclipse.jface.databinding.viewers.ViewersObservables;
+import org.eclipse.jface.databinding.viewers.typed.ViewerProperties;
 import org.eclipse.jface.fieldassist.ControlDecoration;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -71,9 +71,9 @@ import org.eclipse.swt.widgets.Text;
 
 public class QueryExpressionEditor extends SelectionAwareExpressionEditor implements IExpressionEditor {
 
-    private IViewerObservableValue observeBOSingleSelection;
+    private IObservableValue<BusinessObjectExpressionQuery> observeBOSingleSelection;
 
-    private IViewerObservableValue observeQuerySingleSelection;
+    private IObservableValue<Expression> observeQuerySingleSelection;
 
     private final QueryExpressionProvider queryExpressionProvider;
 
@@ -102,11 +102,10 @@ public class QueryExpressionEditor extends SelectionAwareExpressionEditor implem
 
         final QueryExpressionModel queryExpresisonModel = getQueryExpressionModel();
 
-        final IObservableList observeBoList = PojoObservables.observeList(queryExpresisonModel, "businessObjects");
+        final IObservableList observeBoList = PojoProperties.list("businessObjects").observe(queryExpresisonModel);
         createBusinessObjectComboViewer(composite, observeBoList);
 
-        final IObservableList observeQueryList = PojoObservables.observeDetailList(observeBOSingleSelection,
-                "queryExpressions", Expression.class);
+        var observeQueryList = PojoProperties.list("queryExpressions", Expression.class).observeDetail(observeBOSingleSelection);
         createQueryComboViewer(composite, observeQueryList);
         createQueryTextContent(composite, ctx);
         createQueryParametersTable(composite);
@@ -215,7 +214,7 @@ public class QueryExpressionEditor extends SelectionAwareExpressionEditor implem
         final Text queryContentText = new Text(queryContentComposite,
                 SWT.BORDER | SWT.READ_ONLY | SWT.V_SCROLL | SWT.H_SCROLL | SWT.WRAP | SWT.MULTI);
         queryContentText.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 80).create());
-        ctx.bindValue(SWTObservables.observeText(queryContentText),
+        ctx.bindValue(WidgetProperties.text().observe(queryContentText),
                 EMFObservables.observeDetailValue(Realm.getDefault(), observeQuerySingleSelection,
                         ExpressionPackage.Literals.EXPRESSION__CONTENT));
     }
@@ -231,7 +230,7 @@ public class QueryExpressionEditor extends SelectionAwareExpressionEditor implem
 
         final Text returnTypeText = new Text(returnTypeComposite, SWT.BORDER | SWT.READ_ONLY);
         returnTypeText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
-        ctx.bindValue(SWTObservables.observeText(returnTypeText),
+        ctx.bindValue(WidgetProperties.text().observe(returnTypeText),
                 EMFObservables.observeDetailValue(Realm.getDefault(), observeQuerySingleSelection,
                         ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE));
     }
@@ -266,13 +265,17 @@ public class QueryExpressionEditor extends SelectionAwareExpressionEditor implem
 
         queryCombo.setInput(observeQueryList);
 
-        observeQuerySingleSelection = ViewersObservables.observeSingleSelection(queryCombo);
+        observeQuerySingleSelection = ViewerProperties.singleSelection(Expression.class).observe(queryCombo);
         observeBOSingleSelection.addValueChangeListener(new IValueChangeListener() {
 
             @Override
             public void handleValueChange(final ValueChangeEvent event) {
                 if (event.diff.getOldValue() != null && observeQuerySingleSelection.getValue() == null) {
-                    observeQuerySingleSelection.setValue(observeQueryList.get(0));
+                    Object object = observeQueryList.get(0);
+                    if(object instanceof Expression expression) {
+                        observeQuerySingleSelection.setValue(expression);
+                    }
+                    
                 }
             }
         });
@@ -304,7 +307,7 @@ public class QueryExpressionEditor extends SelectionAwareExpressionEditor implem
 
         boCombo.setInput(observeBoList);
 
-        observeBOSingleSelection = ViewersObservables.observeSingleSelection(boCombo);
+        observeBOSingleSelection = ViewerProperties.singleSelection(BusinessObjectExpressionQuery.class).observe(boCombo);
     }
 
     @Override

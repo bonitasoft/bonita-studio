@@ -8,7 +8,6 @@
  *******************************************************************************/
 package org.bonitasoft.studio.maven.ui.handler;
 
-import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Paths;
 

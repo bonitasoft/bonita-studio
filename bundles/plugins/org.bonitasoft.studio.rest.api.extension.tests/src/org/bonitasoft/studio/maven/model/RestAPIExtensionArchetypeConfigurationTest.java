@@ -11,7 +11,7 @@ package org.bonitasoft.studio.maven.model;
 import static com.google.common.collect.Lists.newArrayList;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.util.Properties;
+import java.util.Map;
 
 import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
 import org.bonitasoft.studio.maven.i18n.Messages;
@@ -37,15 +37,15 @@ public class RestAPIExtensionArchetypeConfigurationTest {
     public void should_transform_configuration_of_rest_api_extension_archetype_as_properties() throws Exception {
         final RestAPIExtensionArchetypeConfiguration configuration = RestAPIExtensionArchetypeConfiguration.defaultArchetypeConfiguration(ProjectMetadata.defaultMetadata());
 
-        final Properties properties = configuration.toProperties();
+        final Map<String, String> properties = configuration.toProperties();
 
-        assertThat(properties).containsEntry("apiName", "resourceNameRestAPI");
-        assertThat(properties).containsEntry("apiDisplayName", Messages.defaultAPIDisplayName);
-        assertThat(properties).containsEntry("apiDesc", Messages.defaultAPIDisplayDescription);
-        assertThat(properties).containsEntry("pathTemplate", "resourceName");
-        assertThat(properties).containsEntry("httpVerb", "GET");
-        assertThat(properties).containsEntry("permissionNames", "myPermission");
-        assertThat(properties).containsEntry("urlParameters", "p,c");
+        assertThat(properties).containsEntry("apiName", "resourceNameRestAPI")
+                .containsEntry("apiDisplayName", Messages.defaultAPIDisplayName)
+                .containsEntry("apiDesc", Messages.defaultAPIDisplayDescription)
+                .containsEntry("pathTemplate", "resourceName")
+                .containsEntry("httpVerb", "GET")
+                .containsEntry("permissionNames", "myPermission")
+                .containsEntry("urlParameters", "p,c");
     }
 
     @Test
@@ -53,7 +53,7 @@ public class RestAPIExtensionArchetypeConfigurationTest {
         final RestAPIExtensionArchetypeConfiguration configuration = RestAPIExtensionArchetypeConfiguration.defaultArchetypeConfiguration(ProjectMetadata.defaultMetadata());
 
         configuration.getPermissions().add("newPermission");
-        final Properties properties = configuration.toProperties();
+        final Map<String, String> properties = configuration.toProperties();
 
         assertThat(properties).containsEntry("permissionNames", "myPermission,newPermission");
     }
@@ -63,7 +63,7 @@ public class RestAPIExtensionArchetypeConfigurationTest {
         final RestAPIExtensionArchetypeConfiguration configuration = RestAPIExtensionArchetypeConfiguration.defaultArchetypeConfiguration(ProjectMetadata.defaultMetadata());
 
         configuration.getUrlParameters().addAll(newArrayList("userId", "startDate"));
-        final Properties properties = configuration.toProperties();
+        final Map<String, String> properties = configuration.toProperties();
 
         assertThat(properties).containsEntry("urlParameters", "p,c,userId,startDate");
     }

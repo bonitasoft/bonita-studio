@@ -7,158 +7,21 @@
 package org.eclipse.datatools.modelbase.sql.query.impl;
 
 import org.eclipse.datatools.modelbase.sql.accesscontrol.SQLAccessControlPackage;
-
 import org.eclipse.datatools.modelbase.sql.constraints.SQLConstraintsPackage;
-
-import org.eclipse.datatools.modelbase.sql.accesscontrol.impl.SQLAccessControlPackageImpl;
-
-import org.eclipse.datatools.modelbase.sql.constraints.impl.SQLConstraintsPackageImpl;
-
 import org.eclipse.datatools.modelbase.sql.datatypes.SQLDataTypesPackage;
-
-import org.eclipse.datatools.modelbase.sql.datatypes.impl.SQLDataTypesPackageImpl;
-
 import org.eclipse.datatools.modelbase.sql.expressions.SQLExpressionsPackage;
-
-import org.eclipse.datatools.modelbase.sql.query.CallStatement;
-import org.eclipse.datatools.modelbase.sql.expressions.impl.SQLExpressionsPackageImpl;
-
-import org.eclipse.datatools.modelbase.sql.query.ColumnName;
-import org.eclipse.datatools.modelbase.sql.query.CursorReference;
-import org.eclipse.datatools.modelbase.sql.query.Grouping;
-import org.eclipse.datatools.modelbase.sql.query.GroupingExpression;
-import org.eclipse.datatools.modelbase.sql.query.GroupingSets;
-import org.eclipse.datatools.modelbase.sql.query.GroupingSetsElement;
-import org.eclipse.datatools.modelbase.sql.query.GroupingSetsElementExpression;
-import org.eclipse.datatools.modelbase.sql.query.GroupingSetsElementSublist;
-import org.eclipse.datatools.modelbase.sql.query.GroupingSpecification;
-import org.eclipse.datatools.modelbase.sql.query.MergeInsertSpecification;
-import org.eclipse.datatools.modelbase.sql.query.MergeOnCondition;
-import org.eclipse.datatools.modelbase.sql.query.MergeOperationSpecification;
-import org.eclipse.datatools.modelbase.sql.query.MergeSourceTable;
-import org.eclipse.datatools.modelbase.sql.query.MergeTargetTable;
-import org.eclipse.datatools.modelbase.sql.query.MergeUpdateSpecification;
-import org.eclipse.datatools.modelbase.sql.query.NullOrderingType;
-import org.eclipse.datatools.modelbase.sql.query.OrderByOrdinal;
-import org.eclipse.datatools.modelbase.sql.query.OrderByResultColumn;
-import org.eclipse.datatools.modelbase.sql.query.OrderBySpecification;
-import org.eclipse.datatools.modelbase.sql.query.OrderByValueExpression;
-import org.eclipse.datatools.modelbase.sql.query.OrderingSpecType;
-import org.eclipse.datatools.modelbase.sql.query.Predicate;
-import org.eclipse.datatools.modelbase.sql.query.PredicateBasic;
-import org.eclipse.datatools.modelbase.sql.query.PredicateBetween;
-import org.eclipse.datatools.modelbase.sql.query.PredicateComparisonOperator;
-import org.eclipse.datatools.modelbase.sql.query.PredicateExists;
-import org.eclipse.datatools.modelbase.sql.query.PredicateIn;
-import org.eclipse.datatools.modelbase.sql.query.PredicateInValueList;
-import org.eclipse.datatools.modelbase.sql.query.PredicateInValueRowSelect;
-import org.eclipse.datatools.modelbase.sql.query.PredicateInValueSelect;
-import org.eclipse.datatools.modelbase.sql.query.PredicateIsNull;
-import org.eclipse.datatools.modelbase.sql.query.PredicateLike;
-import org.eclipse.datatools.modelbase.sql.query.PredicateQuantified;
-import org.eclipse.datatools.modelbase.sql.query.PredicateQuantifiedRowSelect;
-import org.eclipse.datatools.modelbase.sql.query.PredicateQuantifiedType;
-import org.eclipse.datatools.modelbase.sql.query.PredicateQuantifiedValueSelect;
-import org.eclipse.datatools.modelbase.sql.query.ProcedureReference;
-import org.eclipse.datatools.modelbase.sql.query.QueryChangeStatement;
-import org.eclipse.datatools.modelbase.sql.query.QueryCombined;
-import org.eclipse.datatools.modelbase.sql.query.QueryCombinedOperator;
-import org.eclipse.datatools.modelbase.sql.query.QueryDeleteStatement;
-import org.eclipse.datatools.modelbase.sql.query.QueryExpressionBody;
-import org.eclipse.datatools.modelbase.sql.query.QueryExpressionRoot;
-import org.eclipse.datatools.modelbase.sql.query.QueryInsertStatement;
-import org.eclipse.datatools.modelbase.sql.query.QueryMergeStatement;
-import org.eclipse.datatools.modelbase.sql.query.QueryNested;
-import org.eclipse.datatools.modelbase.sql.query.QueryResultSpecification;
-import org.eclipse.datatools.modelbase.sql.query.QuerySearchCondition;
-import org.eclipse.datatools.modelbase.sql.query.QuerySelect;
-import org.eclipse.datatools.modelbase.sql.query.QuerySelectStatement;
-import org.eclipse.datatools.modelbase.sql.query.QueryStatement;
-import org.eclipse.datatools.modelbase.sql.query.QueryUpdateStatement;
-import org.eclipse.datatools.modelbase.sql.query.QueryValueExpression;
-import org.eclipse.datatools.modelbase.sql.query.QueryValues;
-import org.eclipse.datatools.modelbase.sql.query.ResultColumn;
-import org.eclipse.datatools.modelbase.sql.query.ResultTableAllColumns;
-import org.eclipse.datatools.modelbase.sql.query.SQLQueryModelFactory;
-import org.eclipse.datatools.modelbase.sql.query.SQLQueryModelPackage;
-import org.eclipse.datatools.modelbase.sql.query.SQLQueryObject;
-import org.eclipse.datatools.modelbase.sql.query.SearchConditionCombined;
-import org.eclipse.datatools.modelbase.sql.query.SearchConditionCombinedOperator;
-import org.eclipse.datatools.modelbase.sql.query.SearchConditionNested;
-import org.eclipse.datatools.modelbase.sql.query.SuperGroup;
-import org.eclipse.datatools.modelbase.sql.query.SuperGroupElement;
-import org.eclipse.datatools.modelbase.sql.query.SuperGroupElementExpression;
-import org.eclipse.datatools.modelbase.sql.query.SuperGroupElementSublist;
-import org.eclipse.datatools.modelbase.sql.query.SuperGroupType;
-import org.eclipse.datatools.modelbase.sql.query.TableCorrelation;
-import org.eclipse.datatools.modelbase.sql.query.TableExpression;
-import org.eclipse.datatools.modelbase.sql.query.TableFunction;
-import org.eclipse.datatools.modelbase.sql.query.TableInDatabase;
-import org.eclipse.datatools.modelbase.sql.query.TableJoined;
-import org.eclipse.datatools.modelbase.sql.query.TableJoinedOperator;
-import org.eclipse.datatools.modelbase.sql.query.TableNested;
-import org.eclipse.datatools.modelbase.sql.query.TableQueryLateral;
-import org.eclipse.datatools.modelbase.sql.query.TableReference;
-import org.eclipse.datatools.modelbase.sql.query.UpdatabilityExpression;
-import org.eclipse.datatools.modelbase.sql.query.UpdatabilityType;
-import org.eclipse.datatools.modelbase.sql.query.UpdateAssignmentExpression;
-import org.eclipse.datatools.modelbase.sql.query.UpdateOfColumn;
-import org.eclipse.datatools.modelbase.sql.query.UpdateSource;
-import org.eclipse.datatools.modelbase.sql.query.UpdateSourceExprList;
-import org.eclipse.datatools.modelbase.sql.query.UpdateSourceQuery;
-import org.eclipse.datatools.modelbase.sql.query.ValueExpressionAtomic;
-import org.eclipse.datatools.modelbase.sql.query.ValueExpressionCase;
-import org.eclipse.datatools.modelbase.sql.query.ValueExpressionCaseElse;
-import org.eclipse.datatools.modelbase.sql.query.ValueExpressionCaseSearch;
-import org.eclipse.datatools.modelbase.sql.query.ValueExpressionCaseSearchContent;
-import org.eclipse.datatools.modelbase.sql.query.ValueExpressionCaseSimple;
-import org.eclipse.datatools.modelbase.sql.query.ValueExpressionCaseSimpleContent;
-import org.eclipse.datatools.modelbase.sql.query.ValueExpressionCast;
-import org.eclipse.datatools.modelbase.sql.query.ValueExpressionColumn;
-import org.eclipse.datatools.modelbase.sql.query.ValueExpressionCombined;
-import org.eclipse.datatools.modelbase.sql.query.ValueExpressionCombinedOperator;
-import org.eclipse.datatools.modelbase.sql.query.ValueExpressionDefaultValue;
-import org.eclipse.datatools.modelbase.sql.query.ValueExpressionFunction;
-import org.eclipse.datatools.modelbase.sql.query.ValueExpressionLabeledDuration;
-import org.eclipse.datatools.modelbase.sql.query.ValueExpressionLabeledDurationType;
-import org.eclipse.datatools.modelbase.sql.query.ValueExpressionNested;
-import org.eclipse.datatools.modelbase.sql.query.ValueExpressionNullValue;
-import org.eclipse.datatools.modelbase.sql.query.ValueExpressionRow;
-import org.eclipse.datatools.modelbase.sql.query.ValueExpressionScalarSelect;
-import org.eclipse.datatools.modelbase.sql.query.ValueExpressionSimple;
-import org.eclipse.datatools.modelbase.sql.query.ValueExpressionUnaryOperator;
-import org.eclipse.datatools.modelbase.sql.query.ValueExpressionVariable;
-import org.eclipse.datatools.modelbase.sql.query.ValuesRow;
-import org.eclipse.datatools.modelbase.sql.query.WithTableReference;
-import org.eclipse.datatools.modelbase.sql.query.WithTableSpecification;
-
+import org.eclipse.datatools.modelbase.sql.query.*;
 import org.eclipse.datatools.modelbase.sql.routines.SQLRoutinesPackage;
-
-import org.eclipse.datatools.modelbase.sql.routines.impl.SQLRoutinesPackageImpl;
-
 import org.eclipse.datatools.modelbase.sql.schema.SQLSchemaPackage;
-
-import org.eclipse.datatools.modelbase.sql.schema.impl.SQLSchemaPackageImpl;
-
 import org.eclipse.datatools.modelbase.sql.statements.SQLStatementsPackage;
-
-import org.eclipse.datatools.modelbase.sql.statements.impl.SQLStatementsPackageImpl;
-
 import org.eclipse.datatools.modelbase.sql.tables.SQLTablesPackage;
-
-import org.eclipse.datatools.modelbase.sql.tables.impl.SQLTablesPackageImpl;
-
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EEnum;
 import org.eclipse.emf.ecore.EOperation;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
-
-import org.eclipse.emf.ecore.EcorePackage;
-
 import org.eclipse.emf.ecore.impl.EPackageImpl;
-import org.eclipse.emf.ecore.impl.EcorePackageImpl;
 
 /**
  * <!-- begin-user-doc -->

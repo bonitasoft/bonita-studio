@@ -69,6 +69,7 @@ public class BarExporterTest {
                 .selectExecutionTab();
         executionTab.selectInstantiationFormTab().selectNone();
         new BotGefProcessDiagramEditor(bot).selectElement("Step1");
+        bot.sleep(100);       
         executionTab.selectFormTab().selectNone();
 
         // get the GEF editor to activate tools
@@ -77,12 +78,12 @@ public class BarExporterTest {
         // Create 2 Pools
         gmfEditor.activateTool("Pool");
         gmfEditor.click(200, 500);
-
+        bot.sleep(1000);       
         new BotProcessDiagramPropertiesViewFolder(bot).selectExecutionTab().selectInstantiationFormTab().selectNone();
 
         gmfEditor.activateTool("Pool");
         gmfEditor.click(200, 800);
-
+        bot.sleep(1000);       
         new BotProcessDiagramPropertiesViewFolder(bot).selectExecutionTab().selectInstantiationFormTab().selectNone();
 
         // Save Diagram

@@ -1,0 +1,1 @@
+This is a fork to do a lighter version of the org.eclipse.gmf.tooling.runtime plugin which is no longer maitained.

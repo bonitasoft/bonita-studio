@@ -16,7 +16,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
-import org.apache.maven.archetype.catalog.Archetype;
 import org.apache.maven.model.Dependency;
 import org.bonitasoft.studio.common.RestAPIExtensionNature;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
@@ -39,10 +38,13 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.egit.core.op.ConnectProviderOperation;
+import org.eclipse.m2e.core.MavenPlugin;
 import org.eclipse.m2e.core.internal.IMavenConstants;
-import org.eclipse.m2e.core.project.IProjectConfigurationManager;
-import org.eclipse.m2e.core.project.IProjectCreationListener;
+import org.eclipse.m2e.core.project.IArchetype;
+import org.eclipse.m2e.core.project.IMavenProjectImportResult;
 import org.eclipse.m2e.core.project.ProjectImportConfiguration;
+import org.eclipse.m2e.core.ui.internal.M2EUIPluginActivator;
+import org.eclipse.m2e.core.ui.internal.archetype.ArchetypeGenerator;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.navigator.CommonViewer;
@@ -53,19 +55,15 @@ public abstract class CreateCustomPageProjectOperation extends AbstractMavenProj
     private static final String PAGE_PROPERTY_PATH = "src/main/resources/page.properties";
     private final IStatus status = Status.OK_STATUS;
     private List<IProject> projects;
-    private final IProjectConfigurationManager projectConfigurationManager;
     private final CustomPageArchetypeConfiguration archetypeConfiguration;
     protected final ExtensionRepositoryStore repositoryStore;
     private final ProjectImportConfiguration projectImportConfiguration;
 
     protected CreateCustomPageProjectOperation(
             final ExtensionRepositoryStore repositoryStore,
-            final IProjectConfigurationManager projectConfigurationManager,
             final ProjectImportConfiguration projectImportConfiguration,
             final CustomPageArchetypeConfiguration archetypeConfiguration) {
-        super(true);
         this.repositoryStore = repositoryStore;
-        this.projectConfigurationManager = projectConfigurationManager;
         this.archetypeConfiguration = archetypeConfiguration;
         this.projectImportConfiguration = projectImportConfiguration;
     }
@@ -78,30 +76,33 @@ public abstract class CreateCustomPageProjectOperation extends AbstractMavenProj
     protected IProject doRun(final IProgressMonitor monitor) throws CoreException {
         monitor.beginTask(Messages.creatingRestAPIExtensionProject, IProgressMonitor.UNKNOWN);
         var location = prepareProjectLocation(monitor);
-        projects = projectConfigurationManager.createArchetypeProjects(location,
+        var mavenProjects  = archetypeGenerator().createArchetypeProjects(location,
                 getArchetype(),
                 archetypeConfiguration.getGroupId(),
                 archetypeConfiguration.getPageName(),
                 archetypeConfiguration.getVersion(),
                 archetypeConfiguration.getJavaPackage(),
                 archetypeConfiguration.toProperties(),
-                projectImportConfiguration,
-                new IProjectCreationListener() {
-
-                    @Override
-                    public void projectCreated(IProject project) {
-                        try {
-                            CreateCustomPageProjectOperation.this.projectCreated(project);
-                        } catch (CoreException e) {
-                            BonitaStudioLog.error(e);
-                        }
-                    }
-                },
+                false,
                 monitor);
-        final IProject project = projects.get(0);
+        projects = MavenPlugin.getProjectConfigurationManager()
+                .importProjects(mavenProjects, projectImportConfiguration, project -> {
+                    try {
+                        CreateCustomPageProjectOperation.this.projectCreated(project);
+                    } catch (CoreException e) {
+                        BonitaStudioLog.error(e);
+                    }
+                }, monitor)
+                .stream().filter(r -> r.getProject() != null && r.getProject().exists())
+                .map(IMavenProjectImportResult::getProject).toList();
+        var project = projects.get(0);
         configure(project, monitor);
         repositoryStore.getResource().getProject().refreshLocal(IResource.DEPTH_INFINITE, monitor);
         return project;
+    }
+
+    ArchetypeGenerator archetypeGenerator() {
+        return M2EUIPluginActivator.getDefault().getArchetypePlugin().getGenerator();
     }
 
     IPath prepareProjectLocation(final IProgressMonitor monitor) throws CoreException {
@@ -116,7 +117,7 @@ public abstract class CreateCustomPageProjectOperation extends AbstractMavenProj
         return bonitaProject.getExtensionsParentProject().getLocation();
     }
 
-    protected abstract Archetype getArchetype() ;
+    protected abstract IArchetype getArchetype() ;
 
     protected void projectCreated(IProject project) throws CoreException {
     	addDependencyToAppProject();

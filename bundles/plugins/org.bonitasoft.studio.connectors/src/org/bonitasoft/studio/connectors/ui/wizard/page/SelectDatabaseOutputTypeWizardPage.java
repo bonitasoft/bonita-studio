@@ -34,7 +34,7 @@ import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.jface.databinding.swt.ISWTObservableValue;
-import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.jface.fieldassist.ControlDecoration;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -101,12 +101,12 @@ public class SelectDatabaseOutputTypeWizardPage extends AbstractConnectorConfigu
         final Button tableModeRadio = createTableChoice(choicesComposite, context);
         final Button scriptModeRadio = createScriptModeControl(mainComposite);
 
-        final IObservableValue singleValue = SWTObservables.observeSelection(singleModeRadio);
-        final IObservableValue oneRowValue = SWTObservables.observeSelection(oneRowModeRadio);
-        final IObservableValue oneColValue = SWTObservables.observeSelection(nRowModeRadio);
-        final IObservableValue tableValue = SWTObservables.observeSelection(tableModeRadio);
-        scriptValue = SWTObservables.observeSelection(scriptModeRadio);
-        graphicalModeSelectionValue = SWTObservables.observeSelection(gModeRadio);
+        final IObservableValue singleValue = WidgetProperties.buttonSelection().observe(singleModeRadio);
+        final IObservableValue oneRowValue = WidgetProperties.buttonSelection().observe(oneRowModeRadio);
+        final IObservableValue oneColValue = WidgetProperties.buttonSelection().observe(nRowModeRadio);
+        final IObservableValue tableValue = WidgetProperties.buttonSelection().observe(tableModeRadio);
+        scriptValue = WidgetProperties.buttonSelection().observe(scriptModeRadio);
+        graphicalModeSelectionValue = WidgetProperties.buttonSelection().observe(gModeRadio);
 
         radioGroupObservable = new SelectObservableValue(String.class);
         radioGroupObservable.addOption(SINGLE, singleValue);
@@ -115,7 +115,7 @@ public class SelectDatabaseOutputTypeWizardPage extends AbstractConnectorConfigu
         radioGroupObservable.addOption(TABLE, tableValue);
         radioGroupObservable.addOption(null, scriptValue);
 
-        context.bindValue(SWTObservables.observeEnabled(alwaysUseScriptCheckbox), scriptValue);
+        context.bindValue(WidgetProperties.enabled().observe(alwaysUseScriptCheckbox), scriptValue);
         final UpdateValueStrategy deselectStrategy = new UpdateValueStrategy();
         deselectStrategy.setConverter(new Converter(Boolean.class, Boolean.class) {
 
@@ -125,9 +125,9 @@ public class SelectDatabaseOutputTypeWizardPage extends AbstractConnectorConfigu
             }
         });
 
-        context.bindValue(graphicalModeSelectionValue, SWTObservables.observeSelection(alwaysUseScriptCheckbox),
+        context.bindValue(graphicalModeSelectionValue, WidgetProperties.buttonSelection().observe(alwaysUseScriptCheckbox),
                 deselectStrategy, new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER));
-        context.bindValue(graphicalModeSelectionValue, SWTObservables.observeEnabled(choicesComposite));
+        context.bindValue(graphicalModeSelectionValue, WidgetProperties.enabled().observe(choicesComposite));
 
         final UpdateValueStrategy disabledStrategy = new UpdateValueStrategy();
         disabledStrategy.setConverter(new Converter(Boolean.class, Boolean.class) {
@@ -208,7 +208,7 @@ public class SelectDatabaseOutputTypeWizardPage extends AbstractConnectorConfigu
 
     protected void parseQuery() {
         if (graphicalModeSelectionValue != null) {
-            final IObservableValue enableGraphicalMode = SWTObservables.observeEnabled(gModeRadio);
+            final IObservableValue enableGraphicalMode = WidgetProperties.enabled().observe(gModeRadio);
             if (SQLQueryUtil.isGraphicalModeSupportedFor(scriptExpression)) {
                 enableGraphicalMode.setValue(true);
                 if (!editing) {
@@ -265,7 +265,7 @@ public class SelectDatabaseOutputTypeWizardPage extends AbstractConnectorConfigu
 
     protected void updateQuery() {
         if (graphicalModeSelectionValue != null) {
-            final IObservableValue enableGraphicalMode = SWTObservables.observeEnabled(gModeRadio);
+            final IObservableValue enableGraphicalMode = WidgetProperties.enabled().observe(gModeRadio);
             if (SQLQueryUtil.isGraphicalModeSupportedFor(scriptExpression)) {
                 enableGraphicalMode.setValue(true);
                 updateEnabledChoices();
@@ -358,8 +358,8 @@ public class SelectDatabaseOutputTypeWizardPage extends AbstractConnectorConfigu
             }
 
         });
-        singleModeRadioObserveEnabled = SWTObservables.observeEnabled(singleRadio);
-        context.bindValue(SWTObservables.observeImage(singleIcon), singleModeRadioObserveEnabled, null, selectImageStrategy);
+        singleModeRadioObserveEnabled = WidgetProperties.enabled().observe(singleRadio);
+        context.bindValue(WidgetProperties.image().observe(singleIcon), singleModeRadioObserveEnabled, null, selectImageStrategy);
 
         return singleRadio;
     }
@@ -391,8 +391,8 @@ public class SelectDatabaseOutputTypeWizardPage extends AbstractConnectorConfigu
             }
 
         });
-        oneRowNColModeRadioObserveEnabled = SWTObservables.observeEnabled(oneRowRadio);
-        context.bindValue(SWTObservables.observeImage(oneRowIcon), oneRowNColModeRadioObserveEnabled, null,
+        oneRowNColModeRadioObserveEnabled = WidgetProperties.enabled().observe(oneRowRadio);
+        context.bindValue(WidgetProperties.image().observe(oneRowIcon), oneRowNColModeRadioObserveEnabled, null,
                 selectImageStrategy);
 
         return oneRowRadio;
@@ -426,8 +426,8 @@ public class SelectDatabaseOutputTypeWizardPage extends AbstractConnectorConfigu
 
         });
 
-        nRowsOneColModeRadioObserveEnabled = SWTObservables.observeEnabled(oneColRadio);
-        context.bindValue(SWTObservables.observeImage(oneColIcon), nRowsOneColModeRadioObserveEnabled, null,
+        nRowsOneColModeRadioObserveEnabled = WidgetProperties.enabled().observe(oneColRadio);
+        context.bindValue(WidgetProperties.image().observe(oneColIcon), nRowsOneColModeRadioObserveEnabled, null,
                 selectImageStrategy);
 
         return oneColRadio;
@@ -461,8 +461,8 @@ public class SelectDatabaseOutputTypeWizardPage extends AbstractConnectorConfigu
             }
 
         });
-        tableObserveEnabled = SWTObservables.observeEnabled(tableRadio);
-        context.bindValue(SWTObservables.observeImage(tableIcon), tableObserveEnabled, null, selectImageStrategy);
+        tableObserveEnabled = WidgetProperties.enabled().observe(tableRadio);
+        context.bindValue(WidgetProperties.image().observe(tableIcon), tableObserveEnabled, null, selectImageStrategy);
 
         return tableRadio;
     }

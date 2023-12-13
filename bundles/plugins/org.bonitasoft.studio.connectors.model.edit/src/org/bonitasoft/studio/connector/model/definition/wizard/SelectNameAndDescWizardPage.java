@@ -21,10 +21,10 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
-import org.bonitasoft.studio.common.databinding.validator.InputLengthValidator;
-import org.bonitasoft.studio.connector.model.i18n.Messages;
 import org.bonitasoft.bpm.model.process.Connector;
 import org.bonitasoft.bpm.model.process.ProcessPackage;
+import org.bonitasoft.studio.common.databinding.validator.InputLengthValidator;
+import org.bonitasoft.studio.connector.model.i18n.Messages;
 import org.bonitasoft.studio.ui.widget.TextAreaWidget;
 import org.bonitasoft.studio.ui.widget.TextWidget;
 import org.bonitasoft.studio.ui.widget.TextWidget.Builder;
@@ -38,7 +38,7 @@ import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.jface.databinding.wizard.WizardPageSupport;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.wizard.IWizard;
@@ -135,11 +135,11 @@ public class SelectNameAndDescWizardPage extends WizardPage implements IWizardPa
             }
         });
 
-        context.bindValue(SWTObservables.observeText(nameText, SWT.Modify),
+        context.bindValue(WidgetProperties.text(SWT.Modify).observe(nameText),
                 EMFObservables.observeValue(connector, ProcessPackage.Literals.ELEMENT__NAME), nameStrategy, null);
         UpdateValueStrategy descStrategy = new UpdateValueStrategy();
         descStrategy.setBeforeSetValidator(new InputLengthValidator(Messages.dataDescriptionLabel, 255));
-        context.bindValue(SWTObservables.observeText(descText, SWT.Modify),
+        context.bindValue(WidgetProperties.text(SWT.Modify).observe(descText),
                 EMFObservables.observeValue(connector, ProcessPackage.Literals.ELEMENT__DOCUMENTATION), descStrategy, null);
 
         return composite;

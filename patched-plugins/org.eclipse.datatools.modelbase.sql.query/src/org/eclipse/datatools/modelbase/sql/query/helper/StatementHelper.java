@@ -3791,7 +3791,7 @@ public class StatementHelper {
     public void addNewName(Table selectedTable) {
         boolean done = false;
         String token = selectedTable.getName();
-        Integer value = new Integer(0);
+        Integer value = Integer.valueOf(0);
         if (nameList == null)
            nameList = new Hashtable();
         Integer number = (Integer) nameList.get(token);
@@ -3905,13 +3905,13 @@ public class StatementHelper {
        Integer number = (Integer) nameList.get(token);
        int value = 1;
        if (number == null) {
-          nameList.put(token, new Integer(value));
+          nameList.put(token, Integer.valueOf(value));
        }
        else {
           value = number.intValue();
           value++;
           nameList.remove(token);
-          nameList.put(token, new Integer(value));
+          nameList.put(token, Integer.valueOf(value));
        }
 
        return token + value;

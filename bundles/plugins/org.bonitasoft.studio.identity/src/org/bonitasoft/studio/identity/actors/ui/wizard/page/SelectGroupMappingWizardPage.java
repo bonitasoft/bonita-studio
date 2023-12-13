@@ -33,12 +33,12 @@ import org.bonitasoft.studio.identity.organization.model.organization.Organizati
 import org.bonitasoft.studio.identity.organization.model.organization.OrganizationFactory;
 import org.bonitasoft.studio.identity.organization.ui.provider.content.GroupContentProvider;
 import org.eclipse.core.databinding.DataBindingContext;
-import org.eclipse.core.databinding.beans.PojoObservables;
+import org.eclipse.core.databinding.beans.typed.PojoProperties;
 import org.eclipse.core.databinding.observable.set.IObservableSet;
 import org.eclipse.core.databinding.validation.MultiValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.jface.databinding.viewers.ViewersObservables;
+import org.eclipse.jface.databinding.viewers.typed.ViewerProperties;
 import org.eclipse.jface.databinding.wizard.WizardPageSupport;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -48,6 +48,7 @@ import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.TableLayout;
 import org.eclipse.jface.viewers.TableViewerColumn;
+import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.TableColumn;
@@ -107,7 +108,7 @@ public class SelectGroupMappingWizardPage extends SelectOrganizationWizardPage {
         
         context = new DataBindingContext();
 		
-        final IObservableSet checkedElementsObservable =  ViewersObservables.observeCheckedElements(availableGroupViewer, String.class) ;
+        final IObservableSet checkedElementsObservable =  ViewerProperties.checkedElements(String.class).observe((Viewer)availableGroupViewer);
         final MultiValidator notEmptyValidator = new MultiValidator() {
 
         	@Override
@@ -120,7 +121,7 @@ public class SelectGroupMappingWizardPage extends SelectOrganizationWizardPage {
         }  ;
 
         context.addValidationStatusProvider(notEmptyValidator);
-		context.bindSet(checkedElementsObservable, PojoObservables.observeSet(this, "selectedGroups"));
+		context.bindSet(checkedElementsObservable, PojoProperties.set("selectedGroups").observe(this));
 		
 		WizardPageSupport.create(this, context);
 		setControl(mainComposite);

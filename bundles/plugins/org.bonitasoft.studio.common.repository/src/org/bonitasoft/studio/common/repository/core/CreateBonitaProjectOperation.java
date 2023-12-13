@@ -27,29 +27,19 @@ import java.util.Set;
 import org.apache.maven.model.Model;
 import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.Strings;
-import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.BonitaProjectNature;
 import org.bonitasoft.studio.common.repository.core.maven.BonitaProjectBuilder;
 import org.bonitasoft.studio.common.repository.core.maven.MavenProjectHelper;
 import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRunnable;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jdt.core.JavaCore;
-import org.eclipse.m2e.core.MavenPlugin;
 import org.eclipse.m2e.core.internal.IMavenConstants;
-import org.eclipse.m2e.core.project.IMavenProjectImportResult;
-import org.eclipse.m2e.core.project.MavenProjectInfo;
-import org.eclipse.m2e.core.project.ProjectImportConfiguration;
-import org.eclipse.m2e.core.ui.internal.UpdateMavenProjectJob;
 
 public class CreateBonitaProjectOperation implements IWorkspaceRunnable {
 
@@ -70,50 +60,44 @@ public class CreateBonitaProjectOperation implements IWorkspaceRunnable {
         if (Strings.isNullOrEmpty(projectId)) {
             projectId = ProjectMetadata.toArtifactId(metadata.getName());
         }
-        project = workspace.getRoot().getProject(projectId);
-        if (project.exists()) {
+        if (workspace.getRoot().getProject(projectId).exists()) {
             throw new CoreException(new Status(IStatus.ERROR, getClass(),
                     String.format("%s project already exists.", metadata.getName())));
         }
-        project.create(AbstractRepository.NULL_PROGRESS_MONITOR);
-        project.open(AbstractRepository.NULL_PROGRESS_MONITOR);
-        project.setDescription(
+        var projectRoot = workspace.getRoot().getLocation().toFile().toPath().resolve(projectId);
+        var appModule = projectRoot.resolve(BonitaProject.APP_MODULE);
+        try {
+            Files.createDirectories(appModule);
+        } catch (IOException e) {
+            throw new CoreException(Status.error("Failed to create folder.", e));
+        }
+        createDefaultPomFile(projectRoot, metadata);
+
+        var pomFile = appModule.resolve(IMavenConstants.POM_FILE_NAME);
+        MavenAppModuleModelBuilder mavenProjectBuilder = new MavenAppModuleModelBuilder();
+        mavenProjectBuilder.setIncludeAdminApp(metadata.includeAdminApp());
+        Model appModel = newProjectBuilder(metadata, mavenProjectBuilder).toMavenModel();
+        MavenProjectHelper.saveModel(pomFile, appModel);
+
+        var importBonitaProjectOperation = new ImportBonitaProjectOperation(projectRoot.toFile()).newProject();
+        importBonitaProjectOperation.run(monitor);
+        var bonitaProject = importBonitaProjectOperation.getBonitaProject();
+        project = bonitaProject.getParentProject();
+        bonitaProject.getParentProject().setDescription(
                 new ProjectDescriptionBuilder()
                         .withProjectName(project.getName())
                         .withComment(ProductVersion.CURRENT_VERSION)
                         .havingNatures(List.of(IMavenConstants.NATURE_ID))
                         .havingBuilders(List.of(IMavenConstants.BUILDER_ID))
                         .build(),
-                AbstractRepository.NULL_PROGRESS_MONITOR);
-        createDefaultPomFile(project.getLocation().toFile().toPath(), metadata);
-
-        IFolder appModule = project.getFolder(BonitaProject.APP_MODULE);
-        appModule.create(true, true, monitor);
-        var pomFile = appModule.getFile(IMavenConstants.POM_FILE_NAME);
-        var mavenProjectHelper = new MavenProjectHelper();
-        MavenAppModuleModelBuilder mavenProjectBuilder = new MavenAppModuleModelBuilder();
-        mavenProjectBuilder.setIncludeAdminApp(metadata.includeAdminApp());
-        Model appModel = newProjectBuilder(metadata, mavenProjectBuilder).toMavenModel();
-        mavenProjectHelper.saveModel(pomFile, appModel, new NullProgressMonitor());
-        IProject appProject = importAppModuleProject(pomFile, appModel.getArtifactId() + "-app", monitor);
+                monitor);
+        IProject appProject = bonitaProject.getAppProject();
         appProject.setDescription(new ProjectDescriptionBuilder()
                 .withProjectName(appProject.getName())
                 .withComment(ProductVersion.CURRENT_VERSION)
                 .havingNatures(appProjectNatures())
                 .havingBuilders(appProjectBuilders())
                 .build(), monitor);
-        new UpdateMavenProjectJob(new IProject[] { project }, false, false, false, true, true).run(monitor);
-    }
-
-    private IProject importAppModuleProject(IFile pomFile, String nameTemplate, IProgressMonitor monitor)
-            throws CoreException {
-        var projectImportConfiguration = new ProjectImportConfiguration();
-        projectImportConfiguration.setProjectNameTemplate(nameTemplate);
-        var projectInfo = new MavenProjectInfo(null, pomFile.getLocation().toFile(), null, null);
-        List<IMavenProjectImportResult> projects = MavenPlugin.getProjectConfigurationManager().importProjects(
-                List.of(projectInfo),
-                projectImportConfiguration, monitor);
-        return projects.get(0).getProject();
     }
 
     private Collection<String> appProjectNatures() {
@@ -138,7 +122,8 @@ public class CreateBonitaProjectOperation implements IWorkspaceRunnable {
         mavenProjectBuilder.setArtifactId(artifactId);
         mavenProjectBuilder.setGroupId(metadata.getGroupId());
         String bonitaRuntimeVersion = metadata.getBonitaRuntimeVersion();
-        var minorVersionString = bonitaRuntimeVersion == null ? null : ProductVersion.toMinorVersionString(ProductVersion.minorVersion(bonitaRuntimeVersion));
+        var minorVersionString = bonitaRuntimeVersion == null ? null
+                : ProductVersion.toMinorVersionString(ProductVersion.minorVersion(bonitaRuntimeVersion));
         if (!Objects.equals(minorVersionString, ProductVersion.minorVersion())) {
             bonitaRuntimeVersion = ProductVersion.BONITA_RUNTIME_VERSION;
         }
@@ -154,7 +139,8 @@ public class CreateBonitaProjectOperation implements IWorkspaceRunnable {
         if (Files.exists(pomFile)) {
             backupExistingPomFile(pomFile, metadata);
         }
-        var builder = newProjectBuilder(metadata, new MavenParentProjectModelBuilder(metadata.isUseSnapshotRepository()));
+        var builder = newProjectBuilder(metadata,
+                new MavenParentProjectModelBuilder(metadata.isUseSnapshotRepository()));
         MavenProjectHelper.saveModel(project.resolve("pom.xml"), builder.toMavenModel());
     }
 
@@ -166,7 +152,7 @@ public class CreateBonitaProjectOperation implements IWorkspaceRunnable {
         metadata.setVersion(model.getVersion());
         if (model.getName() != null && !model.getName().isBlank()) {
             metadata.setName(model.getName());
-        }else {
+        } else {
             metadata.setName(model.getArtifactId());
         }
         if (model.getDescription() != null && !model.getDescription().isBlank()) {

@@ -19,15 +19,15 @@ import java.io.FileInputStream;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.ui.jface.databinding.DialogSupport;
 import org.bonitasoft.bpm.connector.model.definition.Category;
 import org.bonitasoft.bpm.connector.model.definition.ConnectorDefinitionFactory;
 import org.bonitasoft.bpm.connector.model.definition.ConnectorDefinitionPackage;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.ui.jface.databinding.DialogSupport;
 import org.bonitasoft.studio.connector.model.i18n.Messages;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
-import org.eclipse.core.databinding.beans.PojoProperties;
+import org.eclipse.core.databinding.beans.typed.PojoProperties;
 import org.eclipse.core.databinding.conversion.Converter;
 import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
@@ -35,7 +35,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.jface.databinding.fieldassist.ControlDecorationSupport;
-import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -108,7 +108,7 @@ public class NewCategoryDialog extends Dialog {
             }
         });
 
-        ControlDecorationSupport.create(context.bindValue(SWTObservables.observeText(idText, SWT.Modify),
+        ControlDecorationSupport.create(context.bindValue(WidgetProperties.text(SWT.Modify).observe(idText),
                 EMFObservables.observeValue(category, ConnectorDefinitionPackage.Literals.CATEGORY__ID), idStrategy, null),
                 SWT.LEFT);
 
@@ -119,8 +119,8 @@ public class NewCategoryDialog extends Dialog {
         final Text displayNameText = new Text(mainComposite, SWT.BORDER);
         displayNameText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 
-        context.bindValue(SWTObservables.observeText(displayNameText, SWT.Modify),
-                PojoProperties.value(NewCategoryDialog.class, "displayName").observe(this));
+        context.bindValue( WidgetProperties.text(SWT.Modify).observe(displayNameText),
+                PojoProperties.value(NewCategoryDialog.class, "displayName", String.class).observe(this));
 
         final Label parentCategoryLabel = new Label(mainComposite, SWT.NONE);
         parentCategoryLabel.setLayoutData(GridDataFactory.fillDefaults().align(SWT.END, SWT.CENTER).create());
@@ -128,7 +128,7 @@ public class NewCategoryDialog extends Dialog {
 
         final Combo parentCategoryCombo = new Combo(mainComposite, SWT.BORDER | SWT.READ_ONLY);
         parentCategoryCombo.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
-        Set<String> categories = new HashSet<String>(existingCatIds);
+        Set<String> categories = new HashSet<>(existingCatIds);
         categories.add("");
         parentCategoryCombo.setItems(categories.toArray(new String[] {}));
 
@@ -143,7 +143,7 @@ public class NewCategoryDialog extends Dialog {
                 return fromObject;
             }
         });
-        context.bindValue(SWTObservables.observeText(parentCategoryCombo),
+        context.bindValue(WidgetProperties.text().observe(parentCategoryCombo),
                 EMFObservables.observeValue(category, ConnectorDefinitionPackage.Literals.CATEGORY__PARENT_CATEGORY_ID), str,
                 null);
 

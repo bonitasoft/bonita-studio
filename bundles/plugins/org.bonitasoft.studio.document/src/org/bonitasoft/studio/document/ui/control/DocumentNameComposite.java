@@ -26,14 +26,14 @@ import static org.bonitasoft.studio.common.ui.jface.databinding.UpdateStrategyFa
 import java.util.List;
 import java.util.Objects;
 
-import org.bonitasoft.studio.common.emf.tools.ModelHelper;
-import org.bonitasoft.studio.document.i18n.Messages;
 import org.bonitasoft.bpm.model.process.Document;
 import org.bonitasoft.bpm.model.process.ProcessPackage;
+import org.bonitasoft.studio.common.emf.tools.ModelHelper;
+import org.bonitasoft.studio.document.i18n.Messages;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
@@ -65,7 +65,7 @@ public class DocumentNameComposite {
         checkArgument(context != null);
         checkArgument(emfDataBindingContext != null);
         emfDataBindingContext.bindValue(
-                SWTObservables.observeText(documentNameText, SWT.Modify),
+                WidgetProperties.text(SWT.Modify).observe(documentNameText),
                 EMFObservables.observeValue(document, ProcessPackage.Literals.ELEMENT__NAME),
                 updateValueStrategy().withValidator(
                         multiValidator()

@@ -28,11 +28,10 @@ import org.bonitasoft.studio.importer.ImporterRegistry;
 import org.bonitasoft.studio.importer.i18n.Messages;
 import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.core.databinding.DataBindingContext;
-import org.eclipse.core.databinding.beans.PojoObservables;
 import org.eclipse.core.databinding.beans.typed.PojoProperties;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.validation.ValidationStatus;
-import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.jface.databinding.viewers.typed.ViewerProperties;
 import org.eclipse.jface.databinding.wizard.WizardPageSupport;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -133,8 +132,8 @@ public class ImportFileWizardPage extends WizardPage {
         final Text text = new Text(mainComposite, SWT.BORDER);
         text.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 
-        final IObservableValue filePathObservable = PojoObservables.observeValue(importFileData, "filePath");
-        dbc.bindValue(SWTObservables.observeText(text, SWT.Modify), filePathObservable,
+        final IObservableValue filePathObservable = PojoProperties.value("filePath").observe(importFileData);
+        dbc.bindValue(WidgetProperties.text(SWT.Modify).observe(text), filePathObservable,
                 updateValueStrategy()
                         .withValidator(pathValidator(Messages.selectFileToImport).overrideMessage(Messages.invalidFilePath))
                         .create(),

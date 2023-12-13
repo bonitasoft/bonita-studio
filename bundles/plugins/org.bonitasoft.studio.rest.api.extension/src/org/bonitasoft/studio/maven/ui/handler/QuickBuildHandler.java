@@ -64,7 +64,6 @@ public class QuickBuildHandler {
                 }
             }, false, new NullProgressMonitor(), Display.getDefault());
             final BuildCustomPageOperation operation = selectedExtension.newBuildOperation();
-            operation.setGoals("clean install");
             ModalContext.run(operation.asWorkspaceModifyOperation(), true, new NullProgressMonitor(),
                     Display.getDefault());
             return operation.getStatus();

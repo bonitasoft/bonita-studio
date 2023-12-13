@@ -7,23 +7,11 @@
 package org.eclipse.datatools.modelbase.sql.query.impl;
 
 
-import java.util.Collection;
-
-import org.eclipse.datatools.modelbase.sql.query.NullOrderingType;
 import org.eclipse.datatools.modelbase.sql.query.OrderByOrdinal;
-import org.eclipse.datatools.modelbase.sql.query.OrderingSpecType;
-import org.eclipse.datatools.modelbase.sql.query.QuerySelectStatement;
 import org.eclipse.datatools.modelbase.sql.query.SQLQueryModelPackage;
 import org.eclipse.emf.common.notify.Notification;
-import org.eclipse.emf.common.notify.NotificationChain;
-
 import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.emf.ecore.InternalEObject;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-
-import org.eclipse.emf.ecore.util.InternalEList;
 
 /**
  * <!-- begin-user-doc -->
@@ -106,7 +94,7 @@ public class OrderByOrdinalImpl extends OrderBySpecificationImpl implements Orde
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
         switch (featureID) {
             case SQLQueryModelPackage.ORDER_BY_ORDINAL__ORDINAL_VALUE:
-                return new Integer(getOrdinalValue());
+                return Integer.valueOf(getOrdinalValue());
         }
         return super.eGet(featureID, resolve, coreType);
     }

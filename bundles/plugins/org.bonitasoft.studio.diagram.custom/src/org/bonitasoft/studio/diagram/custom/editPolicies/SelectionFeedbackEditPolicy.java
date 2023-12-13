@@ -18,9 +18,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.bonitasoft.bpm.model.process.BoundaryEvent;
 import org.bonitasoft.studio.common.diagram.tools.FiguresHelper;
 import org.bonitasoft.studio.common.figures.CustomSVGFigure;
-import org.bonitasoft.bpm.model.process.BoundaryEvent;
 import org.eclipse.draw2d.FigureListener;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.IFigure;
@@ -29,16 +29,12 @@ import org.eclipse.draw2d.Viewport;
 import org.eclipse.draw2d.geometry.Insets;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
-import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.LayerConstants;
 import org.eclipse.gef.editparts.ZoomListener;
 import org.eclipse.gef.editparts.ZoomManager;
 import org.eclipse.gef.editpolicies.SelectionEditPolicy;
-import org.eclipse.gmf.runtime.diagram.core.listener.DiagramEventBroker;
-import org.eclipse.gmf.runtime.diagram.core.listener.NotificationListener;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramRootEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.draw2d.ui.graphics.ColorRegistry;
@@ -60,25 +56,17 @@ public class SelectionFeedbackEditPolicy extends SelectionEditPolicy implements 
     private RoundedRectangle feedBackFigure;
     private IFigure layer;
     private FigureListener figureListener;
-    private IFigure sourceFigure;
     private int selectionColor;
     private boolean useSelectionColor;
     private ZoomManager zoomManager;
-    private NotificationListener styleListener = new NotificationListener() {
-
-        public void notifyChanged(Notification notification) {
-            hideFeedback();
-            showSelection();
-        }
-    };
+    private boolean isActive;
 
     public SelectionFeedbackEditPolicy(final EClass eClass) {
-
         feedBackFigure = new RoundedRectangle() {
 
             @Override
             protected void outlineShape(Graphics graphics) {
-               // None
+                // None
             }
 
             @Override
@@ -95,11 +83,8 @@ public class SelectionFeedbackEditPolicy extends SelectionEditPolicy implements 
         figureListener = source -> {
             hideFeedback();
             List<?> selectedEditPart = getHost().getViewer().getSelectedEditParts();
-            if (selectedEditPart.contains(getHost())) {
-
-                if (!figureIsDisplayed()) {
-                    showFeedback(zoomManager.getZoom());
-                }
+            if (selectedEditPart.contains(getHost()) && !figureIsDisplayed()) {
+                showFeedback(zoomManager.getZoom());
             }
         };
 
@@ -110,25 +95,20 @@ public class SelectionFeedbackEditPolicy extends SelectionEditPolicy implements 
         super.activate();
         this.zoomManager = ((DiagramRootEditPart) getHost().getRoot()).getZoomManager();
         zoomManager.addZoomListener(this);
-        TransactionalEditingDomain editingDomain = ((IGraphicalEditPart) getHost()).getEditingDomain();
-        View view = ((IGraphicalEditPart) getHost()).getNotationView();
-        DiagramEventBroker.getInstance(editingDomain).addNotificationListener(view,
-                NotationPackage.eINSTANCE.getLineStyle_LineColor(), styleListener);
+        var sourceFigure = getHostFigure();
+        sourceFigure.addFigureListener(figureListener);
+        isActive = true;
     }
 
     @Override
     public void showSelection() {
-        if (sourceFigure == null) {
-            sourceFigure = getHostFigure();
-            sourceFigure.addFigureListener(figureListener);
+        if (isActive) {
+            if (zoomManager != null) {
+                showFeedback(zoomManager.getZoom());
+            } else {
+                showFeedback(1);
+            }
         }
-
-        if (zoomManager != null) {
-            showFeedback(zoomManager.getZoom());
-        } else {
-            showFeedback(1);
-        }
-
     }
 
     void showFeedback(double zoom) {
@@ -139,13 +119,14 @@ public class SelectionFeedbackEditPolicy extends SelectionEditPolicy implements 
         if (figureIsDisplayed()) {
             return;
         }
-
+        IFigure hostFigure = getHostFigure();
         if (((IGraphicalEditPart) getHost()).resolveSemanticElement() instanceof BoundaryEvent) {
-            Rectangle bounds = sourceFigure.getBounds().getCopy();
+            
+            Rectangle bounds = hostFigure.getBounds().getCopy();
             //get the absolute coordinate of bounds
-            sourceFigure.translateToAbsolute(bounds);
+            hostFigure.translateToAbsolute(bounds);
 
-            IFigure parentFigure = sourceFigure.getParent();
+            IFigure parentFigure = hostFigure.getParent();
             while (parentFigure != null) {
                 if (parentFigure instanceof Viewport) {
                     Viewport viewport = (Viewport) parentFigure;
@@ -165,15 +146,14 @@ public class SelectionFeedbackEditPolicy extends SelectionEditPolicy implements 
 
             Point dest = new Point(
                     bounds.x - 1
-                            - (feedBackFigure.getSize().width - sourceFigure.getBounds().width * zoomManager.getZoom())
+                            - (feedBackFigure.getSize().width - hostFigure.getBounds().width * zoomManager.getZoom())
                                     / 2,
                     bounds.y - (feedBackFigure.getSize().height
-                            - sourceFigure.getBounds().height * zoomManager.getZoom()) / 2);
+                            - hostFigure.getBounds().height * zoomManager.getZoom()) / 2);
 
             feedBackFigure.setLocation(dest);
 
         } else {
-
             if (((IGraphicalEditPart) getHost()).getContentPane() instanceof CustomSVGFigure) {
                 useSelectionColor = true;
                 selectionColor = ((LineStyle) ((View) getHost().getModel())
@@ -182,7 +162,7 @@ public class SelectionFeedbackEditPolicy extends SelectionEditPolicy implements 
                 useSelectionColor = false;
             }
 
-            Rectangle bounds = sourceFigure.getBounds().getCopy();
+            Rectangle bounds = hostFigure.getBounds().getCopy();
             //get the absolute coordinate of bounds
             feedBackFigure.translateToAbsolute(bounds);
 
@@ -205,8 +185,8 @@ public class SelectionFeedbackEditPolicy extends SelectionEditPolicy implements 
             feedBackFigure.setBounds(bounds.getCopy().expand(in));
 
             Point dest = new Point(
-                    bounds.x - 1 - (feedBackFigure.getSize().width - sourceFigure.getBounds().width) / 2,
-                    bounds.y - (feedBackFigure.getSize().height - sourceFigure.getBounds().height) / 2);
+                    bounds.x - 1 - (feedBackFigure.getSize().width - hostFigure.getBounds().width) / 2,
+                    bounds.y - (feedBackFigure.getSize().height - hostFigure.getBounds().height) / 2);
 
             feedBackFigure.setLocation(dest);
         }
@@ -223,7 +203,9 @@ public class SelectionFeedbackEditPolicy extends SelectionEditPolicy implements 
 
     @Override
     public void hideSelection() {
-        hideFeedback();
+        if (isActive) {
+            hideFeedback();
+        }
     }
 
     private void hideFeedback() {
@@ -248,14 +230,11 @@ public class SelectionFeedbackEditPolicy extends SelectionEditPolicy implements 
     public void deactivate() {
         super.deactivate();
         zoomManager.removeZoomListener(this);
-        TransactionalEditingDomain editingDomain = ((IGraphicalEditPart) getHost()).getEditingDomain();
-        View view = ((IGraphicalEditPart) getHost()).getNotationView();
-        DiagramEventBroker.getInstance(editingDomain).removeNotificationListener(view,
-                NotationPackage.eINSTANCE.getLineStyle_LineColor(), styleListener);
         feedbackFigures.clear();
-        sourceFigure = null;
+        getHostFigure().removeFigureListener(figureListener);
         layer = null;
         feedBackFigure = null;
+        isActive = false;
     }
 
     @Override

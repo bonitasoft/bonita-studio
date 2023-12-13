@@ -19,7 +19,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Properties;
 
-import org.apache.maven.Maven;
 import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.execution.MavenExecutionRequest;
 import org.apache.maven.execution.MavenExecutionResult;
@@ -30,24 +29,17 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.m2e.core.MavenPlugin;
 import org.eclipse.m2e.core.embedder.ICallable;
-import org.eclipse.m2e.core.embedder.IMaven;
 import org.eclipse.m2e.core.embedder.IMavenExecutionContext;
 
 public class MavenInstallFileOperation {
 
-    private final IMaven mavenEngine;
     private ArtifactRepository internalRepository;
     private ArtifactRepository localRepository;
 
-    public MavenInstallFileOperation(final IMaven mavenEngine) {
-        this.mavenEngine = mavenEngine;
-    }
-    
-    public MavenInstallFileOperation(final IMaven mavenEngine,
-            ArtifactRepository internalRepository,
-            ArtifactRepository localRepository ) {
-        this.mavenEngine = mavenEngine;
+    public MavenInstallFileOperation(ArtifactRepository internalRepository,
+            ArtifactRepository localRepository) {
         this.internalRepository = internalRepository;
         this.localRepository = localRepository;
     }
@@ -55,21 +47,22 @@ public class MavenInstallFileOperation {
     public MavenExecutionResult execute(final Properties configuration,
             final IProgressMonitor monitor)
             throws CoreException {
-        final IMavenExecutionContext context = mavenEngine.createExecutionContext();
+        var context = MavenPlugin.getMaven().createExecutionContext();
         final MavenExecutionRequest request = context.getExecutionRequest();
-        if(internalRepository != null) {
+        if (internalRepository != null) {
             request.setLocalRepository(internalRepository);
             request.setOffline(true);
         }
-        request.setGoals(List.of(String.format("org.apache.maven.plugins:maven-install-plugin:%s:install-file", DefaultPluginVersions.MAVEN_INSTALL_PLUGIN_VERSION)));
+        request.setGoals(List.of(String.format("org.apache.maven.plugins:maven-install-plugin:%s:install-file",
+                DefaultPluginVersions.MAVEN_INSTALL_PLUGIN_VERSION)));
         request.setUpdateSnapshots(internalRepository == null);
         request.setInteractiveMode(false);
         request.setCacheNotFound(true);
-        var maven = mavenEngine.lookup(Maven.class);
         return context.execute(new ICallable<MavenExecutionResult>() {
 
             @Override
-            public MavenExecutionResult call(final IMavenExecutionContext context, final IProgressMonitor innerMonitor)
+            public MavenExecutionResult call(final IMavenExecutionContext context,
+                    final IProgressMonitor innerMonitor)
                     throws CoreException {
                 final Properties systemProperties = request.getSystemProperties();
                 for (final Object key : configuration.keySet()) {
@@ -77,11 +70,11 @@ public class MavenInstallFileOperation {
                 }
                 request.setSystemProperties(systemProperties);
                 innerMonitor.setTaskName(String.format("Installing %s:%s:%s in %s repository",
-                        configuration.getProperty("groupId"), 
-                        configuration.getProperty("artifactId"), 
-                        configuration.getProperty("version"), 
+                        configuration.getProperty("groupId"),
+                        configuration.getProperty("artifactId"),
+                        configuration.getProperty("version"),
                         internalRepository != null ? internalRepository.getId() : "local"));
-                return maven.execute(request);
+                return context.execute(request);
             }
         }, monitor);
 
@@ -96,7 +89,8 @@ public class MavenInstallFileOperation {
     protected void logError(final String groupId, final String artifactId, final String type, final String version,
             final Throwable exception) {
         BonitaStudioLog.error(
-                String.format("Failed to install artifact %s:%s:%s:%s in the local repository", groupId, artifactId, type,
+                String.format("Failed to install artifact %s:%s:%s:%s in the local repository", groupId, artifactId,
+                        type,
                         version),
                 exception, CommonRepositoryPlugin.PLUGIN_ID);
     }
@@ -127,7 +121,7 @@ public class MavenInstallFileOperation {
                 properties.setProperty("pomFile", pomFile.getAbsolutePath());
             }
         }
-        if(localRepository != null) {
+        if (localRepository != null) {
             properties.setProperty("localRepositoryPath", localRepository.getBasedir());
         }
         final MavenExecutionResult executionResult = execute(properties,

@@ -62,7 +62,6 @@ public class RunProcessCommand extends AbstractHandler {
     protected boolean runSynchronously;
     private IStatus status;
     private URL url;
-    private FileStoreFinder fileStoreFinder;
 
     public RunProcessCommand() {
         this(false);
@@ -70,7 +69,6 @@ public class RunProcessCommand extends AbstractHandler {
 
     public RunProcessCommand(final boolean runSynchronously) {
         this.runSynchronously = runSynchronously;
-        fileStoreFinder = new FileStoreFinder();
     }
 
     @Override
@@ -190,7 +188,7 @@ public class RunProcessCommand extends AbstractHandler {
     @Override
     public boolean isEnabled() {
         if (RepositoryManager.getInstance().getCurrentRepository().filter(IRepository::isLoaded).isPresent()) {
-            boolean diagramSelectedInExplorer = fileStoreFinder
+            boolean diagramSelectedInExplorer = new FileStoreFinder()
                     .findSelectedFileStore(RepositoryManager.getInstance().getCurrentRepository().orElseThrow())
                     .filter(DiagramFileStore.class::isInstance).isPresent();
             if (diagramSelectedInExplorer) {

@@ -24,10 +24,10 @@ import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.sqlbuilder.ex.Messages;
 import org.bonitasoft.studio.sqlbuilder.ex.SQLBuilderExPlugin;
 import org.eclipse.core.databinding.DataBindingContext;
-import org.eclipse.core.databinding.beans.PojoProperties;
+import org.eclipse.core.databinding.beans.typed.PojoProperties;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.DialogSettings;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -111,7 +111,7 @@ public class ConnectionInfoDialog extends Dialog {
 		labelControl.setText(label);
 		final Text textControl = new Text(dialogArea, style);
 		textControl.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).hint(250, SWT.DEFAULT).create());
-		context.bindValue(SWTObservables.observeText(textControl, SWT.Modify), modelObservable);
+		context.bindValue(WidgetProperties.text(SWT.Modify).observe(textControl), modelObservable);
 	}
 
 	@Override

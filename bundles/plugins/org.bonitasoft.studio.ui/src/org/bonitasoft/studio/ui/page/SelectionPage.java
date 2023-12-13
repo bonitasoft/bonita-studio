@@ -30,7 +30,7 @@ import org.eclipse.core.databinding.observable.list.IObservableList;
 import org.eclipse.core.databinding.validation.MultiValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.jface.databinding.viewers.ViewersObservables;
+import org.eclipse.jface.databinding.viewers.typed.ViewerProperties;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -78,7 +78,7 @@ public abstract class SelectionPage<T extends IRepositoryStore<? extends IReposi
 
         ColumnViewerToolTipSupport.enableFor(tableViewer);
 
-        IObservableList<IRepositoryFileStore<?>> multiSelection = ViewersObservables.observeMultiSelection(tableViewer);
+        IObservableList<IRepositoryFileStore> multiSelection = ViewerProperties.multipleSelection(IRepositoryFileStore.class).observe(tableViewer);
         ctx.addValidationStatusProvider(new MultiValidator() {
 
             @Override

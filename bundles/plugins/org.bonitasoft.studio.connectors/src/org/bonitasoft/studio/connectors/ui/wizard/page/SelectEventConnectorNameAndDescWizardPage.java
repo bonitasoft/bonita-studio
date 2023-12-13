@@ -30,8 +30,7 @@ import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.jface.databinding.swt.SWTObservables;
-import org.eclipse.jface.databinding.swt.WidgetProperties;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
@@ -139,11 +138,11 @@ public class SelectEventConnectorNameAndDescWizardPage extends SelectNameAndDesc
             }
         });
 
-        context.bindValue(SWTObservables.observeText(namedErrorText, SWT.Modify),
+        context.bindValue(WidgetProperties.text(SWT.Modify).observe(namedErrorText),
                 EMFObservables.observeValue(connector, ProcessPackage.Literals.CONNECTOR__NAMED_ERROR));
         namedErrorText.setEnabled(connector.isThrowErrorEvent());
         context.bindValue(WidgetProperties.text().observe(connectorFailsCombo),
-                SWTObservables.observeEnabled(namedErrorText),
+                WidgetProperties.enabled().observe(namedErrorText),
                 enableNamedErrorStrategyTarget, new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER));
 
     }

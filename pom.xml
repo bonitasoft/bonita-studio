@@ -111,7 +111,7 @@
                     <configuration>
                         <useUIHarness>false</useUIHarness>
                         <showEclipseLog>true</showEclipseLog>
-                        <providerHint>junit58withvintage</providerHint>
+                        <providerHint>junit59withvintage</providerHint>
                     </configuration>
                 </plugin>
                 <plugin>
@@ -159,11 +159,6 @@
                             </artifact>
                         </target>
                         <filters>
-                            <filter>
-                                <type>eclipse-plugin</type>
-                                <id>org.eclipse.m2e.editor.lemminx</id>
-                                <removeAll />
-                            </filter>
                             <filter>
                                 <type>eclipse-plugin</type>
                                 <id>org.eclipse.emf.compare.doc</id>

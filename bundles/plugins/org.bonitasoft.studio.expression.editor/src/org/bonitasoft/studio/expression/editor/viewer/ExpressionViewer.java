@@ -27,6 +27,13 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
 
+import org.bonitasoft.bpm.model.expression.Expression;
+import org.bonitasoft.bpm.model.expression.ExpressionFactory;
+import org.bonitasoft.bpm.model.expression.ExpressionPackage;
+import org.bonitasoft.bpm.model.expression.provider.ExpressionItemProvider;
+import org.bonitasoft.bpm.model.expression.provider.ExpressionItemProviderAdapterFactory;
+import org.bonitasoft.bpm.model.process.Element;
+import org.bonitasoft.bpm.model.process.SearchIndex;
 import org.bonitasoft.bpm.model.util.ExpressionConstants;
 import org.bonitasoft.studio.common.IBonitaVariableContext;
 import org.bonitasoft.studio.common.databinding.validator.EmptyInputValidator;
@@ -52,13 +59,6 @@ import org.bonitasoft.studio.expression.editor.provider.IExpressionNatureProvide
 import org.bonitasoft.studio.expression.editor.provider.IExpressionProvider;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionValidator;
 import org.bonitasoft.studio.expression.editor.widget.ContentAssistText;
-import org.bonitasoft.bpm.model.expression.Expression;
-import org.bonitasoft.bpm.model.expression.ExpressionFactory;
-import org.bonitasoft.bpm.model.expression.ExpressionPackage;
-import org.bonitasoft.bpm.model.expression.provider.ExpressionItemProvider;
-import org.bonitasoft.bpm.model.expression.provider.ExpressionItemProviderAdapterFactory;
-import org.bonitasoft.bpm.model.process.Element;
-import org.bonitasoft.bpm.model.process.SearchIndex;
 import org.bonitasoft.studio.refactoring.core.AbstractRefactorOperation;
 import org.eclipse.core.databinding.Binding;
 import org.eclipse.core.databinding.DataBindingContext;
@@ -85,10 +85,8 @@ import org.eclipse.emf.edit.command.RemoveCommand;
 import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.transaction.util.TransactionUtil;
-import org.eclipse.jface.databinding.swt.ISWTObservableValue;
-import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
-import org.eclipse.jface.databinding.viewers.ViewersObservables;
+import org.eclipse.jface.databinding.viewers.typed.ViewerProperties;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.fieldassist.ContentProposalAdapter;
 import org.eclipse.jface.fieldassist.ControlDecoration;
@@ -657,8 +655,7 @@ public class ExpressionViewer extends ContentViewer implements SWTBotConstants,
         targetToModelNameStrategy.setConverter(getNameConverter());
 
         if (textControl instanceof Text) {
-            final ISWTObservableValue textDelayedObservableValue = SWTObservables.observeDelayedValue(200,
-                    SWTObservables.observeText(textControl, SWT.Modify));
+            var textDelayedObservableValue = WidgetProperties.text(SWT.Modify).observeDelayed(200, textControl);
             expressionBinding = internalDataBindingContext.bindValue(textDelayedObservableValue, nameObservable,
                     targetToModelNameStrategy, updateValueStrategy().create());
         } else {
@@ -668,7 +665,7 @@ public class ExpressionViewer extends ContentViewer implements SWTBotConstants,
         }
 
         bindEditableText(typeObservable);
-        internalDataBindingContext.bindValue(ViewersObservables.observeSingleSelection(contentAssistText),
+        internalDataBindingContext.bindValue(ViewerProperties.singleSelection().observe(contentAssistText),
                 getSelectedExpressionObservable());
         if (externalDataBindingContext != null) {
             externalDataBindingContext.addBinding(expressionBinding);
@@ -735,7 +732,7 @@ public class ExpressionViewer extends ContentViewer implements SWTBotConstants,
     }
 
     private IObservableValue getSelectedExpressionObservable() {
-        return ViewersObservables.observeSingleSelection(this);
+        return ViewerProperties.singleSelection().observe(this);
     }
 
     protected void bindEditableText(final IObservableValue typeObservable) {
@@ -772,7 +769,7 @@ public class ExpressionViewer extends ContentViewer implements SWTBotConstants,
 
         });
 
-        internalDataBindingContext.bindValue(SWTObservables.observeEditable(textControl), typeObservable,
+        internalDataBindingContext.bindValue(WidgetProperties.editable().observe(textControl), typeObservable,
                 new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER), modelToTargetTypeStrategy);
     }
 

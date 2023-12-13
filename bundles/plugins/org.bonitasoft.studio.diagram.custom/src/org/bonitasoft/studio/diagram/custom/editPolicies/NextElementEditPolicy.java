@@ -20,12 +20,12 @@ package org.bonitasoft.studio.diagram.custom.editPolicies;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bonitasoft.bpm.model.process.BoundaryEvent;
 import org.bonitasoft.studio.common.diagram.tools.BonitaUnspecifiedTypeCreationTool;
 import org.bonitasoft.studio.common.diagram.tools.FiguresHelper;
 import org.bonitasoft.studio.common.gmf.tools.GMFTools;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.diagram.custom.tools.ToolAndToolEntry;
-import org.bonitasoft.bpm.model.process.BoundaryEvent;
 import org.eclipse.draw2d.Button;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.geometry.Rectangle;
@@ -49,16 +49,11 @@ public class NextElementEditPolicy extends AbstractSingleSelectionEditPolicy imp
 	public static final String NEXT_ELEMENT_ROLE = "nextElement"; //$NON-NLS-1$
 
 	private IFigure layer;
-	private List<IFigure> figures;
-	private List<Tool> tools;
+	private List<IFigure> figures = new ArrayList<>();
+	private List<Tool> tools = new ArrayList<>();
 	private IFigure textAnnotationFigure;
 	private ZoomManager zoomManager;
 
-
-	public NextElementEditPolicy() {
-		figures = new ArrayList<IFigure>();
-		tools = new ArrayList<Tool>();
-	}
 
 	@Override
 	public void activate() {
@@ -98,14 +93,10 @@ public class NextElementEditPolicy extends AbstractSingleSelectionEditPolicy imp
 			boolean toolAreBelow = element instanceof BoundaryEvent;
 
 			List<ToolAndToolEntry> allowedChildren = NextElementPaletteProvider.getAllowedNextTypes((GraphicalEditPart) getHost());
-			//Set<Tool> allowedChildren = list.keySet();
 			IFigure feedbackFigure = SelectionFeedbackEditPolicy.getFeedbackFigure(getHost());
-
 			if (feedbackFigure == null) {
 				feedbackFigure = getHostFigure();
 			}
-			
-			//feedbackFigure.getBounds().performScale(zoomManager.getZoom()) ;
 			
 			Rectangle b = feedbackFigure.getBounds().getCopy();
 			Rectangle bounds = new Rectangle(b.x, b.y, b.width, 70) ;

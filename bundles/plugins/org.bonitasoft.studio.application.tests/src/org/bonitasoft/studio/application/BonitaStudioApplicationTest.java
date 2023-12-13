@@ -90,7 +90,7 @@ class BonitaStudioApplicationTest {
     @Test
     void add_auto_build_job_listener_that_cancel_autobuild_jobs_until_workbench_is_ready()
             throws Exception {
-        doReturn("11").when(application).getJavaVersion();
+        doReturn("17").when(application).getJavaVersion();
 
         application.start(null);
 
@@ -110,7 +110,7 @@ class BonitaStudioApplicationTest {
         job.schedule();
         Job.getJobManager().join(ResourcesPlugin.FAMILY_AUTO_BUILD, null);
 
-        assertThat(job.getResult()).isNull();
+        assertThat(job.getResult()).isEqualTo(Status.CANCEL_STATUS);
 
         doReturn(true).when(application).isWorkbenchRunning();
         job.schedule();

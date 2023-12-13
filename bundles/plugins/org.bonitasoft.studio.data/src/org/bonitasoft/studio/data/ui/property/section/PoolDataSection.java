@@ -16,6 +16,7 @@ package org.bonitasoft.studio.data.ui.property.section;
 
 import javax.inject.Inject;
 
+import org.bonitasoft.bpm.model.process.ProcessPackage;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.ui.properties.AbstractBonitaDescriptionSection;
@@ -23,10 +24,9 @@ import org.bonitasoft.studio.data.i18n.Messages;
 import org.bonitasoft.studio.data.ui.property.section.control.BusinessDataViewer;
 import org.bonitasoft.studio.data.ui.property.section.control.DataWizardFactory;
 import org.bonitasoft.studio.data.ui.property.section.control.ProcessDataViewer;
-import org.bonitasoft.bpm.model.process.ProcessPackage;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
-import org.eclipse.jface.databinding.viewers.ViewersObservables;
+import org.eclipse.jface.databinding.viewers.typed.ViewerProperties;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ISelection;
@@ -62,12 +62,12 @@ public class PoolDataSection extends AbstractBonitaDescriptionSection {
                 businessObjectModelRepositoryStore);
         repositoryAccessor.getWorkspace().addResourceChangeListener(businessDataComposite);
         businessDataComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-        businessDataComposite.bindControl(context, ViewersObservables.observeSingleSelection(selectionProvider));
+        businessDataComposite.bindControl(context, ViewerProperties.singleSelection().observe(selectionProvider));
 
         final ProcessDataViewer processDataViewer = new ProcessDataViewer(mainComposite, getWidgetFactory(), ProcessPackage.Literals.DATA_AWARE__DATA,
                 new DataWizardFactory(ProcessPackage.Literals.DATA_AWARE__DATA));
         processDataViewer.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-        processDataViewer.bindControl(context, ViewersObservables.observeSingleSelection(selectionProvider));
+        processDataViewer.bindControl(context, ViewerProperties.singleSelection().observe(selectionProvider));
     }
     
     @Override

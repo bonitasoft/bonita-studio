@@ -12,6 +12,6 @@ Require-Bundle: org.bonitasoft.studio.tests-utils,
  org.mockito.mockito-core,
  net.bytebuddy.byte-buddy,
  org.objenesis,
- junit-jupiter-api,
  org.mockito.junit-jupiter,
- org.junit.jupiter.params
+ junit-jupiter-params,
+ junit-jupiter-api

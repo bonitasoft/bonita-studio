@@ -37,8 +37,8 @@ import org.eclipse.core.databinding.observable.value.SelectObservableValue;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.jface.databinding.swt.WidgetProperties;
-import org.eclipse.jface.databinding.viewers.ViewersObservables;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
+import org.eclipse.jface.databinding.viewers.typed.ViewerProperties;
 import org.eclipse.jface.fieldassist.ControlDecoration;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -107,8 +107,8 @@ public class RelationFieldDetailsControl extends Composite {
         eagerDecorator.setDescriptionText(Messages.alwaysLoadHint);
 
         SelectObservableValue<FetchType> radioGroupObservable = new SelectObservableValue<>(FetchType.class);
-        radioGroupObservable.addOption(FetchType.LAZY, WidgetProperties.selection().observe(lazyRadio));
-        radioGroupObservable.addOption(FetchType.EAGER, WidgetProperties.selection().observe(eagerRadio));
+        radioGroupObservable.addOption(FetchType.LAZY, WidgetProperties.buttonSelection().observe(lazyRadio));
+        radioGroupObservable.addOption(FetchType.EAGER, WidgetProperties.buttonSelection().observe(eagerRadio));
 
         IObservableValue<FetchType> fetchTypeObservable = EMFObservables.observeDetailValue(Realm.getDefault(),
                 selectedFieldObservable, BusinessDataModelPackage.Literals.RELATION_FIELD__FETCH_TYPE);
@@ -147,7 +147,7 @@ public class RelationFieldDetailsControl extends Composite {
                 .createLabelProvider());
         relationComboViewer.setInput(RelationType.values());
 
-        IObservableValue<RelationType> selection = ViewersObservables.observeSingleSelection(relationComboViewer);
+        IObservableValue<RelationType> selection = ViewerProperties.singleSelection(RelationType.class).observe(relationComboViewer);
         IObservableValue<RelationType> relationTypeObservable = EMFObservables.observeDetailValue(Realm.getDefault(),
                 selectedFieldObservable, BusinessDataModelPackage.Literals.RELATION_FIELD__TYPE);
 

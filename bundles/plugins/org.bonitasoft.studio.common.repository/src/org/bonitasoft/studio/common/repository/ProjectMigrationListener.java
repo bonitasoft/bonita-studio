@@ -268,7 +268,7 @@ public class ProjectMigrationListener implements IResourceChangeListener, IResou
                 && !Objects.equals(project.getName(), "server_configuration")
                 && delta.getResource().exists()
                 // New project layout
-                && (project.getFolder(BonitaProject.APP_MODULE).exists()
+                && ((project.getFolder(BonitaProject.APP_MODULE).exists() && Strings.hasText(project.getDescription().getComment()))
                         // Legacy project layout
                         || (project.hasNature(BonitaProjectNature.NATURE_ID)
                                 && Strings.hasText(project.getDescription().getComment())));

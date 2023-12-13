@@ -23,10 +23,9 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
-import org.apache.maven.model.Model;
 import org.bonitasoft.studio.common.FileUtil;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.core.maven.MavenProjectHelper;
 import org.bonitasoft.studio.common.repository.core.migration.BonitaProjectMigrator;
 import org.bonitasoft.studio.common.repository.core.migration.report.MigrationReport;
@@ -37,10 +36,13 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.m2e.core.MavenPlugin;
+import org.eclipse.m2e.core.internal.IMavenToolbox;
+import org.eclipse.m2e.core.internal.preferences.MavenPreferenceConstants;
 import org.eclipse.m2e.core.project.IProjectConfigurationManager;
 import org.eclipse.m2e.core.project.LocalProjectScanner;
 import org.eclipse.m2e.core.project.MavenProjectInfo;
 import org.eclipse.m2e.core.project.ProjectImportConfiguration;
+import org.eclipse.m2e.core.ui.internal.M2EUIPluginActivator;
 
 public class ImportBonitaProjectOperation implements IWorkspaceRunnable {
 
@@ -48,19 +50,27 @@ public class ImportBonitaProjectOperation implements IWorkspaceRunnable {
     private File projectRoot;
     private IProjectConfigurationManager projectConfigurationManager;
     private String projectId;
+    private boolean isNewProject;
 
     public ImportBonitaProjectOperation(File projectRoot) {
         this.projectRoot = projectRoot;
         this.projectConfigurationManager = MavenPlugin.getProjectConfigurationManager();
     }
 
+    public ImportBonitaProjectOperation newProject() {
+        this.isNewProject = true;
+        return this;
+    }
+
     @Override
     public void run(final IProgressMonitor monitor) throws CoreException {
         if (projectRoot == null || !projectRoot.exists()
-                || !projectRoot.toPath().resolve(".project").toFile().exists()) {
+                || (!isNewProject && !projectRoot.toPath().resolve(".project").toFile().exists())) {
             throw new CoreException(Status.error(String.format("No project found at %s", projectRoot)));
         }
-        report = new BonitaProjectMigrator(projectRoot.toPath()).run(monitor);
+        if (!isNewProject) {
+            report = new BonitaProjectMigrator(projectRoot.toPath()).run(monitor);
+        }
         var appPomFile = projectRoot.toPath().resolve("app").resolve("pom.xml").toFile();
         var mavenModel = MavenProjectHelper.readModel(appPomFile);
         projectId = mavenModel.getArtifactId();
@@ -70,7 +80,9 @@ public class ImportBonitaProjectOperation implements IWorkspaceRunnable {
                     Status.error(String.format("A project with id %s already exists in the workspace.", projectId)));
         }
 
-        removeUidProvidedWidgets();
+        if (!isNewProject) {
+            removeUidProvidedWidgets();
+        }
         var projectInWs = ResourcesPlugin.getWorkspace().getRoot().getLocation().append(projectId).toFile();
         if (!Objects.equals(projectRoot.toPath(), projectInWs.toPath())) {
             try {
@@ -79,15 +91,14 @@ public class ImportBonitaProjectOperation implements IWorkspaceRunnable {
                 throw new CoreException(Status.error("Failed to copy project in workspace.", e));
             }
             // Remove source project when present in workspace
-            if(Objects.equals(projectRoot.toPath().getParent(), projectInWs.toPath().getParent())){
+            if (Objects.equals(projectRoot.toPath().getParent(), projectInWs.toPath().getParent())) {
                 FileUtil.deleteDir(projectRoot);
             }
         }
 
         var pomFile = projectInWs.toPath().resolve("pom.xml").toFile();
         var localProjectScanner = new LocalProjectScanner(
-                ResourcesPlugin.getWorkspace().getRoot().getLocation().toFile(),
-                pomFile.getParentFile().getAbsolutePath(),
+                List.of(pomFile.getParentFile().getAbsolutePath()),
                 false,
                 MavenPlugin.getMavenModelManager());
         try {
@@ -95,19 +106,41 @@ public class ImportBonitaProjectOperation implements IWorkspaceRunnable {
         } catch (InterruptedException e) {
             throw new CoreException(Status.error("Failed to scan local projects", e));
         }
-
-        var projectImportConfiguration = new BonitaProjectImportConfiguration(projectId);
-        projectConfigurationManager.importProjects(
-                flatten(localProjectScanner.getProjects()).stream()
-                        .filter(bdmProjects()).collect(Collectors.toList()),
-                projectImportConfiguration, monitor);
-
-        projectConfigurationManager.importProjects(
-                flatten(localProjectScanner.getProjects()).stream()
-                        .filter(Predicate.not(bdmProjects())).collect(Collectors.toList()),
-                projectImportConfiguration, monitor);
+        var store = M2EUIPluginActivator.getDefault().getPreferenceStore();
+        store.setValue(MavenPreferenceConstants.P_AUTO_UPDATE_CONFIGURATION, false);
+        try {
+            for (var mavenProject : flatten(localProjectScanner.getProjects()).stream()
+                    .sorted((p1, p2) -> bdmProjects().test(p1) ? -1 : 1).toList()) {
+                var importConfiguration = createProjectImportConfiguration(mavenProject);
+                if (importConfiguration != null) {
+                    projectConfigurationManager.importProjects(List.of(mavenProject),
+                            importConfiguration,
+                            monitor);
+                }
+            }
+        } finally {
+            store.setValue(MavenPreferenceConstants.P_AUTO_UPDATE_CONFIGURATION, true);
+        }
     }
 
+    private ProjectImportConfiguration createProjectImportConfiguration(MavenProjectInfo mavenProject)
+            throws CoreException {
+        try (var in = Files.newInputStream(mavenProject.getPomFile().toPath())) {
+            var projectImportConfiguration = new ProjectImportConfiguration();
+            var model = IMavenToolbox.of(MavenPlugin.getMaven()).readModel(in);
+            if (projectId.equals(model.getArtifactId())) {
+                projectImportConfiguration.setProjectNameTemplate(projectId + "-app");
+            } else if ((projectId + "-parent").equals(model.getArtifactId())) {
+                projectImportConfiguration.setProjectNameTemplate(projectId);
+            } else {
+                projectImportConfiguration.setProjectNameTemplate("[artifactId]");
+            }
+            return projectImportConfiguration;
+        } catch (IOException e) {
+            BonitaStudioLog.error(e);
+            return null;
+        }
+    }
 
     protected void removeUidProvidedWidgets() throws CoreException {
         var widgetsFolder = projectRoot.toPath().resolve("app").resolve("web_widgets");
@@ -145,7 +178,7 @@ public class ImportBonitaProjectOperation implements IWorkspaceRunnable {
         for (MavenProjectInfo t : projects) {
             flatList.add(t);
             if (t.getProjects() != null) {
-                flatList.addAll((List<MavenProjectInfo>) flatten(t.getProjects()));
+                flatList.addAll(flatten(t.getProjects()));
             }
         }
         return flatList;
@@ -153,28 +186,6 @@ public class ImportBonitaProjectOperation implements IWorkspaceRunnable {
 
     public MigrationReport getReport() {
         return report;
-    }
-
-    class BonitaProjectImportConfiguration extends ProjectImportConfiguration {
-
-        private String projectId;
-
-        public BonitaProjectImportConfiguration(String projectId) {
-            this.projectId = projectId;
-        }
-
-        @Override
-        public String getProjectName(Model model) {
-            if (projectId.equals(model.getArtifactId())) {
-                setProjectNameTemplate(projectId + "-app");
-            } else if ((projectId + "-parent").equals(model.getArtifactId())) {
-                setProjectNameTemplate(projectId);
-            } else {
-                setProjectNameTemplate("[artifactId]");
-            }
-            return super.getProjectName(model);
-        }
-
     }
 
 }

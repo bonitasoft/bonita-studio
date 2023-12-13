@@ -17,25 +17,22 @@ package org.bonitasoft.studio.connector.model.implementation.wizard;
 import java.io.File;
 import java.util.List;
 
+import org.bonitasoft.bpm.connector.model.definition.ConnectorDefinition;
+import org.bonitasoft.bpm.connector.model.implementation.ConnectorImplementation;
+import org.bonitasoft.bpm.connector.model.implementation.ConnectorImplementationPackage;
 import org.bonitasoft.studio.common.FileUtil;
 import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.databinding.validator.EmptyInputValidator;
 import org.bonitasoft.studio.common.databinding.validator.InputLengthValidator;
-import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.RepositoryManager;
-import org.bonitasoft.studio.common.repository.filestore.AbstractFileStore;
 import org.bonitasoft.studio.common.repository.provider.DefinitionResourceProvider;
-import org.bonitasoft.studio.common.repository.store.SourceRepositoryStore;
 import org.bonitasoft.studio.common.ui.jface.SWTBotConstants;
-import org.bonitasoft.bpm.connector.model.definition.ConnectorDefinition;
 import org.bonitasoft.studio.connector.model.i18n.Messages;
-import org.bonitasoft.bpm.connector.model.implementation.ConnectorImplementation;
-import org.bonitasoft.bpm.connector.model.implementation.ConnectorImplementationPackage;
 import org.bonitasoft.studio.dependencies.repository.DependencyFileStore;
 import org.bonitasoft.studio.dependencies.ui.dialog.SelectJarsDialog;
 import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.conversion.Converter;
+import org.eclipse.core.databinding.observable.Realm;
 import org.eclipse.core.databinding.validation.MultiValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
@@ -43,14 +40,12 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.jdt.core.IPackageFragment;
-import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.JavaConventions;
 import org.eclipse.jdt.core.JavaCore;
-import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.ui.wizards.NewTypeWizardPage;
 import org.eclipse.jface.databinding.swt.ISWTObservableValue;
-import org.eclipse.jface.databinding.swt.SWTObservables;
-import org.eclipse.jface.databinding.viewers.ViewersObservables;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
+import org.eclipse.jface.databinding.viewers.typed.ViewerProperties;
 import org.eclipse.jface.databinding.wizard.WizardPageSupport;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -168,8 +163,8 @@ public abstract class AbstractImplementationWizardPage extends NewTypeWizardPage
             return Status.OK_STATUS;
         });
 
-        final ISWTObservableValue observableIdText = SWTObservables.observeText(idText, SWT.Modify);
-        final ISWTObservableValue observableVersionText = SWTObservables.observeText(versionText, SWT.Modify);
+        final ISWTObservableValue observableIdText =  WidgetProperties.text(SWT.Modify).observe(idText);
+        final ISWTObservableValue observableVersionText =  WidgetProperties.text(SWT.Modify).observe(versionText);
         final MultiValidator definitionValidator = new MultiValidator() {
 
             @Override
@@ -211,7 +206,7 @@ public abstract class AbstractImplementationWizardPage extends NewTypeWizardPage
                         GridDataFactory.fillDefaults().grab(true, false).hint(SWT.DEFAULT, 50).span(2, 1).create());
         final UpdateValueStrategy descStrategy = new UpdateValueStrategy();
         descStrategy.setBeforeSetValidator(new InputLengthValidator(Messages.description, 255));
-        context.bindValue(SWTObservables.observeText(descriptionText, SWT.Modify), EMFObservables
+        context.bindValue( WidgetProperties.text(SWT.Modify).observe(descriptionText), EMFObservables
                 .observeValue(implementation,
                         ConnectorImplementationPackage.Literals.CONNECTOR_IMPLEMENTATION__DESCRIPTION),
                 descStrategy, null);
@@ -399,8 +394,8 @@ public abstract class AbstractImplementationWizardPage extends NewTypeWizardPage
             }
         });
 
-        observeClassText = SWTObservables.observeText(classNameText, SWT.Modify);
-        observePackageText = SWTObservables.observeText(packageText, SWT.Modify);
+        observeClassText = WidgetProperties.text(SWT.Modify).observe(classNameText);
+        observePackageText =  WidgetProperties.text(SWT.Modify).observe(packageText);
 
         context.bindValue(observeClassText,
                 EMFObservables.observeValue(implementation,
@@ -451,7 +446,7 @@ public abstract class AbstractImplementationWizardPage extends NewTypeWizardPage
             }
         });
 
-        context.bindValue(ViewersObservables.observeInput(viewer),
+        context.bindValue(ViewerProperties.input().observe(Realm.getDefault(), viewer),
                 EMFObservables.observeValue(implementation.getJarDependencies(),
                         ConnectorImplementationPackage.Literals.JAR_DEPENDENCIES__JAR_DEPENDENCY));
 

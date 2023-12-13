@@ -75,6 +75,7 @@ public class TabbedPropertyRegistryFactory {
 		if (data == null) {
 			data = new CacheData();
 		    /*
+             * Patch by BonitaSoft
              * use here custom TabbedPropertyRegistry
              * that are aware of viewID in which they are used
              */

@@ -23,6 +23,13 @@ import java.util.Objects;
 
 import javax.inject.Inject;
 
+import org.bonitasoft.bpm.model.process.CallActivity;
+import org.bonitasoft.bpm.model.process.ContractInput;
+import org.bonitasoft.bpm.model.process.Data;
+import org.bonitasoft.bpm.model.process.InputMapping;
+import org.bonitasoft.bpm.model.process.InputMappingAssignationType;
+import org.bonitasoft.bpm.model.process.ProcessFactory;
+import org.bonitasoft.bpm.model.process.ProcessPackage;
 import org.bonitasoft.bpm.model.util.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
@@ -34,13 +41,6 @@ import org.bonitasoft.studio.common.ui.properties.AbstractBonitaDescriptionSecti
 import org.bonitasoft.studio.common.ui.widgets.MagicComposite;
 import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFilter;
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
-import org.bonitasoft.bpm.model.process.CallActivity;
-import org.bonitasoft.bpm.model.process.ContractInput;
-import org.bonitasoft.bpm.model.process.Data;
-import org.bonitasoft.bpm.model.process.InputMapping;
-import org.bonitasoft.bpm.model.process.InputMappingAssignationType;
-import org.bonitasoft.bpm.model.process.ProcessFactory;
-import org.bonitasoft.bpm.model.process.ProcessPackage;
 import org.bonitasoft.studio.properties.i18n.Messages;
 import org.eclipse.core.databinding.conversion.Converter;
 import org.eclipse.core.databinding.conversion.IConverter;
@@ -52,8 +52,8 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.command.AddCommand;
 import org.eclipse.emf.edit.command.RemoveCommand;
 import org.eclipse.emf.edit.command.SetCommand;
-import org.eclipse.jface.databinding.swt.SWTObservables;
-import org.eclipse.jface.databinding.viewers.ViewersObservables;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
+import org.eclipse.jface.databinding.viewers.typed.ViewerProperties;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -190,11 +190,11 @@ public class InputParametersMappingSection extends AbstractBonitaDescriptionSect
         targetParameterLabel.setLayoutData(GridDataFactory.swtDefaults().span(2, 1).create());
 
         final IObservableValue inputMappibngsObservable = CustomEMFEditObservables.observeDetailValue(Realm.getDefault(),
-                ViewersObservables.observeSingleSelection(selectionProvider),
+                ViewerProperties.singleSelection().observe(selectionProvider),
                 ProcessPackage.Literals.CALL_ACTIVITY__INPUT_MAPPINGS);
-        dbc.bindValue(SWTObservables.observeVisible(sourceParameterLabel), inputMappibngsObservable,
+        dbc.bindValue(WidgetProperties.visible().observe(sourceParameterLabel), inputMappibngsObservable,
                 neverUpdateValueStrategy().create(), updateValueStrategy().withConverter(hideIfEmpty()).create());
-        dbc.bindValue(SWTObservables.observeVisible(targetParameterLabel), inputMappibngsObservable,
+        dbc.bindValue(WidgetProperties.visible().observe(targetParameterLabel), inputMappibngsObservable,
                 neverUpdateValueStrategy().create(), updateValueStrategy().withConverter(hideIfEmpty()).create());
 
         final Button addLineButton = getWidgetFactory().createButton(composite, Messages.Add, SWT.FLAT);
@@ -360,14 +360,14 @@ public class InputParametersMappingSection extends AbstractBonitaDescriptionSect
                         ExpressionConstants.SCRIPT_TYPE, ExpressionConstants.PARAMETER_TYPE,
                         ExpressionConstants.DOCUMENT_TYPE));
 
-        dbc.bindValue(ViewersObservables.observeInput(srcCombo),
-                ViewersObservables.observeSingleSelection(selectionProvider));
+        dbc.bindValue(ViewerProperties.input().observe(Realm.getDefault(), srcCombo),
+                ViewerProperties.singleSelection().observe(selectionProvider));
         if (mapping.getProcessSource() == null) {
             getEditingDomain().getCommandStack().execute(
                     SetCommand.create(getEditingDomain(), mapping, ProcessPackage.Literals.INPUT_MAPPING__PROCESS_SOURCE,
                             ExpressionHelper.createConstantExpression("", String.class.getName())));
         }
-        dbc.bindValue(ViewersObservables.observeSingleSelection(srcCombo),
+        dbc.bindValue(ViewerProperties.singleSelection().observe(srcCombo),
                 EMFObservables.observeValue(mapping, ProcessPackage.Literals.INPUT_MAPPING__PROCESS_SOURCE));
         return srcCombo;
     }

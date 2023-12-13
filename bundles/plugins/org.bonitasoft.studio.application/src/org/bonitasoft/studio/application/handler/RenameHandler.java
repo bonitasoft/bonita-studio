@@ -33,11 +33,10 @@ import org.eclipse.ui.actions.RenameResourceAction;
 
 public class RenameHandler extends AbstractHandler {
 
-    private FileStoreFinder selectionFinder = new FileStoreFinder();
-
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
         var repo = RepositoryManager.getInstance().getCurrentRepository().orElseThrow();
+        var selectionFinder = new FileStoreFinder();
         Optional<IRenamable> renamable = selectionFinder.findElementToRename(repo);
         if (renamable.isPresent()) {
             renamable
@@ -54,6 +53,7 @@ public class RenameHandler extends AbstractHandler {
     @Override
     public boolean isEnabled() {
         if (RepositoryManager.getInstance().getCurrentRepository().filter(IRepository::isLoaded).isPresent()) {
+            var selectionFinder = new FileStoreFinder();
             var currentRepository = RepositoryManager.getInstance().getCurrentRepository().orElseThrow();
             Optional<IStructuredSelection> selection = selectionFinder.getCurrentStructuredSelection();
             if (selection.isPresent() && selection.get().toList().size() == 1) {

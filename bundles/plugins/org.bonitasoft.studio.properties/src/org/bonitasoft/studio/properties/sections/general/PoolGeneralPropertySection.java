@@ -22,14 +22,14 @@ import java.util.Optional;
 
 import javax.inject.Inject;
 
+import org.bonitasoft.bpm.model.process.Pool;
+import org.bonitasoft.bpm.model.process.ProcessPackage;
 import org.bonitasoft.studio.common.databinding.validator.EAttributeValidatorFactory;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.ui.jface.databinding.CustomEMFEditObservables;
 import org.bonitasoft.studio.common.ui.properties.AbstractBonitaDescriptionSection;
 import org.bonitasoft.studio.data.ui.property.section.PoolAdaptableSelectionProvider;
 import org.bonitasoft.studio.diagram.custom.refactoring.ProcessNamingTools;
-import org.bonitasoft.bpm.model.process.Pool;
-import org.bonitasoft.bpm.model.process.ProcessPackage;
 import org.bonitasoft.studio.properties.i18n.Messages;
 import org.bonitasoft.studio.ui.dialog.ExceptionDialogHandler;
 import org.bonitasoft.studio.ui.validator.LengthValidator;
@@ -45,7 +45,7 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
-import org.eclipse.jface.databinding.viewers.ViewersObservables;
+import org.eclipse.jface.databinding.viewers.typed.ViewerProperties;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.layout.LayoutConstants;
@@ -116,7 +116,7 @@ public class PoolGeneralPropertySection extends AbstractBonitaDescriptionSection
                         .create())
                 .widthHint(350)
                 .bindTo(CustomEMFEditObservables.observeDetailValue(Realm.getDefault(),
-                        ViewersObservables.observeSingleSelection(selectionProvider),
+                        ViewerProperties.singleSelection().observe(selectionProvider),
                         ProcessPackage.Literals.ELEMENT__NAME))
                 .inContext(context)
                 .adapt(widgetFactory)
@@ -131,7 +131,7 @@ public class PoolGeneralPropertySection extends AbstractBonitaDescriptionSection
                 .fill()
                 .verticalSpan(3)
                 .bindTo(CustomEMFEditObservables.observeDetailValue(Realm.getDefault(),
-                        ViewersObservables.observeSingleSelection(selectionProvider),
+                        ViewerProperties.singleSelection().observe(selectionProvider),
                         ProcessPackage.Literals.ELEMENT__DOCUMENTATION))
                 .withTargetToModelStrategy(updateValueStrategy().withValidator(new MultiValidator.Builder()
                         .havingValidators(new LengthValidator.Builder().maxLength(MAX_DESC_LENGTH)
@@ -153,7 +153,7 @@ public class PoolGeneralPropertySection extends AbstractBonitaDescriptionSection
                         .withValidator(getEAttributeValidator(ProcessPackage.Literals.ABSTRACT_PROCESS__VERSION)))
                 .widthHint(180)
                 .bindTo(CustomEMFEditObservables.observeDetailValue(Realm.getDefault(),
-                        ViewersObservables.observeSingleSelection(selectionProvider),
+                        ViewerProperties.singleSelection().observe(selectionProvider),
                         ProcessPackage.Literals.ABSTRACT_PROCESS__VERSION))
                 .inContext(context)
                 .adapt(widgetFactory)
@@ -172,7 +172,7 @@ public class PoolGeneralPropertySection extends AbstractBonitaDescriptionSection
                                 .create()))
                         .create())
                 .bindTo(CustomEMFEditObservables.observeDetailValue(Realm.getDefault(),
-                        ViewersObservables.observeSingleSelection(selectionProvider),
+                        ViewerProperties.singleSelection().observe(selectionProvider),
                         ProcessPackage.Literals.POOL__DISPLAY_NAME))
                 .inContext(context)
                 .adapt(widgetFactory)

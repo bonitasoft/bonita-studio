@@ -19,7 +19,6 @@ import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.List;
 
-import org.apache.maven.Maven;
 import org.apache.maven.execution.BuildSuccess;
 import org.apache.maven.execution.MavenExecutionResult;
 import org.bonitasoft.engine.bdm.model.BusinessObjectModel;
@@ -29,7 +28,6 @@ import org.bonitasoft.studio.businessobject.i18n.Messages;
 import org.bonitasoft.studio.common.event.BdmEvents;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
-import org.bonitasoft.studio.common.repository.core.maven.MavenProjectHelper;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -42,7 +40,6 @@ import org.eclipse.e4.core.services.events.IEventBroker;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.m2e.core.MavenPlugin;
 import org.eclipse.m2e.core.embedder.ICallable;
-import org.eclipse.m2e.core.embedder.IMaven;
 import org.eclipse.m2e.core.embedder.IMavenExecutionContext;
 import org.eclipse.ui.PlatformUI;
 
@@ -73,7 +70,6 @@ public class GenerateBDMOperation implements IRunnableWithProgress {
         } catch (ReadFileStoreException e1) {
             throw new InvocationTargetException(e1);
         }
-        var project = RepositoryManager.getInstance().getCurrentProject().orElseThrow();
         if (containsBusinessObjects(model)) {
             monitor.beginTask(Messages.generatingJarFromBDMModel, IProgressMonitor.UNKNOWN);
             BonitaStudioLog.debug(Messages.generatingJarFromBDMModel, BusinessObjectPlugin.PLUGIN_ID);
@@ -86,8 +82,9 @@ public class GenerateBDMOperation implements IRunnableWithProgress {
                 throw new InvocationTargetException(e);
             }
             try {
+                var project = RepositoryManager.getInstance().getCurrentProject().orElseThrow();
                 var bdmModelProject = project.getBdmModelProject();
-                var status = mavenInstall(bdmModelProject, new NullProgressMonitor());
+                var status = generateSources(bdmModelProject, monitor);
                 if (!status.isOK()) {
                     throw new CoreException(status);
                 }
@@ -99,32 +96,25 @@ public class GenerateBDMOperation implements IRunnableWithProgress {
             eventBroker().send(BdmEvents.BDM_DEPLOYED_TOPIC, data);
         }
     }
-
-    private IStatus mavenInstall(IProject bdmModelProject, IProgressMonitor monitor) throws CoreException {
-        IMaven maven = MavenPlugin.getMaven();
-        var mavenProject = MavenProjectHelper.getMavenProject(bdmModelProject);
+    
+    private IStatus generateSources(IProject bdmModelProject, IProgressMonitor monitor) throws CoreException {
+        var mavenProject = MavenPlugin.getMavenProjectRegistry().getProject(bdmModelProject);
         if (mavenProject == null) {
             return new Status(IStatus.ERROR, getClass(),
-                    "An error occured while installing the bdm artifacts. Cannot resolve the Maven project.");
+                    "An error occured while generating sources for the bdm model. Cannot resolve the Maven project.");
         }
-        var projectRegistry = MavenPlugin.getMavenProjectRegistry();
-        List<String> goals = List.of("install");
-        var ctx = maven.createExecutionContext();
+        var ctx = mavenProject.createExecutionContext();
         var request = ctx.getExecutionRequest();
-        request.setGoals(goals);
+        request.setGoals(List.of("generate-sources"));
         request.setNoSnapshotUpdates(true);
-        request.setPom(mavenProject.getFile());
-        var projectFacade = projectRegistry.getProject(bdmModelProject);
-        if(projectFacade == null) {
-            projectFacade = projectRegistry.create(bdmModelProject.getFile("pom.xml"), true, monitor);
-        }
-        var executionResult = projectRegistry.execute(projectFacade,
+        request.setPom(mavenProject.getPomFile());
+        var executionResult = MavenPlugin.getMavenProjectRegistry().execute(mavenProject,
                 new ICallable<MavenExecutionResult>() {
 
                     @Override
                     public MavenExecutionResult call(IMavenExecutionContext context, IProgressMonitor monitor)
                             throws CoreException {
-                        return maven.lookup(Maven.class).execute(request);
+                        return context.execute(request);
                     }
 
                 }, monitor);
@@ -135,6 +125,7 @@ public class GenerateBDMOperation implements IRunnableWithProgress {
         }
         return Status.OK_STATUS;
     }
+
 
     protected IEventBroker eventBroker() {
         return PlatformUI.getWorkbench().getService(IEventBroker.class);

@@ -14,6 +14,7 @@
  */
 package org.bonitasoft.studio.designer.ui.property.section.control;
 
+import org.bonitasoft.bpm.model.process.ProcessPackage;
 import org.bonitasoft.bpm.model.util.ExpressionConstants;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.ui.jface.databinding.CustomEMFEditObservables;
@@ -21,21 +22,19 @@ import org.bonitasoft.studio.designer.core.repository.WebPageRepositoryStore;
 import org.bonitasoft.studio.designer.i18n.Messages;
 import org.bonitasoft.studio.designer.ui.property.section.FormReferenceProposalLabelProvider;
 import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFilter;
-import org.bonitasoft.bpm.model.process.ProcessPackage;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.observable.Realm;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
-import org.eclipse.jface.databinding.swt.WidgetProperties;
-import org.eclipse.jface.databinding.viewers.ViewersObservables;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
+import org.eclipse.jface.databinding.viewers.typed.ViewerProperties;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
-
 
 public class InternalMappingComposite extends Composite implements BonitaPreferenceConstants {
 
@@ -82,8 +81,10 @@ public class InternalMappingComposite extends Composite implements BonitaPrefere
     }
 
     public void doBindControl(final DataBindingContext context, final IObservableValue formMappingObservable) {
-        context.bindValue(ViewersObservables.observeInput(targetFormExpressionViewer), formMappingObservable);
-        context.bindValue(ViewersObservables.observeSingleSelection(targetFormExpressionViewer),
+        context.bindValue(
+                ViewerProperties.<FormReferenceExpressionViewer, Object> input().observe(targetFormExpressionViewer),
+                formMappingObservable);
+        context.bindValue(ViewerProperties.singleSelection().observe(targetFormExpressionViewer),
                 CustomEMFEditObservables.observeDetailValue(Realm.getDefault(), formMappingObservable,
                         ProcessPackage.Literals.FORM_MAPPING__TARGET_FORM));
         doBindInfo(context, formMappingObservable);

@@ -51,9 +51,7 @@ import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.common.repository.store.AbstractRepositoryStore;
 import org.bonitasoft.studio.common.repository.store.FileStoreCollector;
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Adapters;
 import org.eclipse.core.runtime.CoreException;
@@ -66,7 +64,6 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.emf.edapt.migration.MigrationException;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IType;
-import org.eclipse.m2e.core.ui.internal.UpdateMavenProjectJob;
 import org.xml.sax.SAXException;
 
 import com.google.common.io.ByteSource;
@@ -218,11 +215,6 @@ public class BusinessObjectModelRepositoryStore<F extends AbstractBDMFileStore<?
         plugin.execute(new NullProgressMonitor());
         var importBdmModules = new ImportMavenModuleOperation(parentProjectPath.resolve(STORE_NAME).toFile());
         importBdmModules.run(monitor);
-        project.getBdmParentProject().refreshLocal(IResource.DEPTH_INFINITE, monitor);
-        project.getBdmModelProject().build(IncrementalProjectBuilder.INCREMENTAL_BUILD, monitor);
-        new UpdateMavenProjectJob(new IProject[] { project.getAppProject() }, false, false, false, false, true)
-   			.run(new NullProgressMonitor());
-        project.getAppProject().build(IncrementalProjectBuilder.INCREMENTAL_BUILD, monitor);
         return createBdmFolderLinkInAppProject(project);
     }
 

@@ -36,9 +36,8 @@ import org.eclipse.core.databinding.validation.MultiValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.databinding.swt.ISWTObservableValue;
-import org.eclipse.jface.databinding.swt.SWTObservables;
-import org.eclipse.jface.databinding.swt.WidgetProperties;
-import org.eclipse.jface.databinding.viewers.ViewersObservables;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
+import org.eclipse.jface.databinding.viewers.typed.ViewerProperties;
 import org.eclipse.jface.databinding.wizard.WizardPageSupport;
 import org.eclipse.jface.fieldassist.ControlDecoration;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -128,7 +127,7 @@ public class NewRestAPIProjectAdvancedConfigurationPage extends WizardPage {
         });
         final TableViewer viewer = permissionViewer.getViewer();
         context.bindValue(WidgetProperties.enabled().observe(removeButton),
-                ViewersObservables.observeSingleSelection(viewer), null,
+                ViewerProperties.singleSelection().observe(viewer), null,
                 updateValueStrategy().withConverter(convertToEnablement()).create());
     }
 
@@ -175,7 +174,7 @@ public class NewRestAPIProjectAdvancedConfigurationPage extends WizardPage {
         targetURL.setLayoutData(
                 GridDataFactory.fillDefaults().grab(true, false).hint(WIDTH_HINT, SWT.DEFAULT).indent(10, 0).create());
 
-        final ISWTObservableValue templateTextObservable = SWTObservables.observeText(pathTemplateText, SWT.Modify);
+        final ISWTObservableValue templateTextObservable = WidgetProperties.text(SWT.Modify).observe(pathTemplateText);
         context.bindValue(templateTextObservable,
                 PojoProperties.value("pathTemplate", String.class).observe(configuration),
                 updateValueStrategy().withValidator(multiValidator()

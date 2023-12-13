@@ -22,13 +22,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.bonitasoft.studio.common.emf.tools.ModelHelper;
-import org.bonitasoft.studio.common.ui.properties.AbstractPropertySectionContribution;
-import org.bonitasoft.studio.common.ui.properties.ExtensibleGridPropertySection;
 import org.bonitasoft.bpm.model.process.CatchSignalEvent;
 import org.bonitasoft.bpm.model.process.Element;
 import org.bonitasoft.bpm.model.process.ProcessPackage;
 import org.bonitasoft.bpm.model.process.SignalEvent;
+import org.bonitasoft.studio.common.emf.tools.ModelHelper;
+import org.bonitasoft.studio.common.ui.properties.AbstractPropertySectionContribution;
+import org.bonitasoft.studio.common.ui.properties.ExtensibleGridPropertySection;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.properties.i18n.Messages;
@@ -40,7 +40,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.edit.EMFEditObservables;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.jface.fieldassist.ControlDecoration;
 import org.eclipse.jface.fieldassist.FieldDecoration;
 import org.eclipse.jface.fieldassist.FieldDecorationRegistry;
@@ -118,7 +118,7 @@ public class SignalEventEventSelectionContribution extends AbstractPropertySecti
 	    for (String code : codes) {
 		combo.add(code);
 	    }
-	    context.bindValue(SWTObservables.observeText(combo),
+	    context.bindValue(WidgetProperties.text().observe(combo),
 		    EMFEditObservables.observeValue(editingDomain, eObject,
 			    ProcessPackage.Literals.SIGNAL_EVENT__SIGNAL_CODE),
 		    new UpdateValueStrategy()

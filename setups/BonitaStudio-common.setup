@@ -7,7 +7,7 @@
     xmlns:setup="http://www.eclipse.org/oomph/setup/1.0"
     xmlns:setup.p2="http://www.eclipse.org/oomph/setup/p2/1.0"
     xmlns:setup.targlets="http://www.eclipse.org/oomph/setup/targlets/1.0"
-    xsi:schemaLocation="http://www.eclipse.org/oomph/setup/jdt/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/JDT.ecore http://www.eclipse.org/oomph/setup/targlets/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/SetupTarglets.ecore"
+    xsi:schemaLocation="http://www.eclipse.org/oomph/setup/jdt/1.0 https://raw.githubusercontent.com/eclipse-oomph/oomph/master/setups/models/JDT.ecore http://www.eclipse.org/oomph/setup/targlets/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/SetupTarglets.ecore"
     id="BonitaStudio-common"
     name="BonitaStudio-common">
   <setupTask
@@ -23,7 +23,7 @@
   <setupTask
       xsi:type="setup:VariableTask"
       name="eclipse.target.platform"
-      defaultValue="2022-06"
+      defaultValue="2023-09"
       storageURI="scope://Workspace"/>
   <setupTask
       xsi:type="setup:CompoundTask"
@@ -101,11 +101,11 @@
       <setupTask
           xsi:type="setup:PreferenceTask"
           key="/instance/org.eclipse.jdt.core/org.eclipse.jdt.core.compiler.codegen.targetPlatform"
-          value="11"/>
+          value="17"/>
       <setupTask
           xsi:type="setup:PreferenceTask"
           key="/instance/org.eclipse.jdt.core/org.eclipse.jdt.core.compiler.compliance"
-          value="11"/>
+          value="17"/>
       <setupTask
           xsi:type="setup:PreferenceTask"
           key="/instance/org.eclipse.jdt.core/org.eclipse.jdt.core.compiler.problem.includeNullInfoFromAsserts"
@@ -149,7 +149,7 @@
       <setupTask
           xsi:type="setup:PreferenceTask"
           key="/instance/org.eclipse.jdt.core/org.eclipse.jdt.core.compiler.source"
-          value="11"/>
+          value="17"/>
     </setupTask>
     <setupTask
         xsi:type="setup:CompoundTask"
@@ -364,7 +364,7 @@
   <setupTask
       xsi:type="jdt:JRETask"
       version="JavaSE-17"
-      location="${jre.location-11}">
+      location="${jre.location-17}">
     <description>Define the JRE needed to compile and run the Java projects of ${scope.project.label}</description>
   </setupTask>
   <setupTask
@@ -405,7 +405,10 @@
     <requirement
         name="org.codehaus.groovy30.feature.feature.group"/>
     <requirement
-        name="org.eclipse.emf.ecoretools.sdk.feature.group"/>
+        name="org.eclipse.emf.ecoretools.design.feature.group"/>
+    <requirement
+        name="org.eclipse.emf.ecoretools.sdk.feature.group"
+        optional="true"/>
     <requirement
         name="de.jcup.asciidoctoreditor.feature.group"/>
     <requirement
@@ -414,26 +417,20 @@
         name="org.eclipse.emf.edapt.runtime.feature.feature.group"/>
     <requirement
         name="org.sonarlint.eclipse.feature.feature.group"/>
+    <requirement
+        name="org.eclipse.cbi.targetplatform.feature.feature.group"/>
     <repository
         url="https://projectlombok.org/p2"/>
     <repository
-        url="https://groovy.jfrog.io/artifactory/plugins-release/e4.24"/>
-    <repository
-        url="https://groovy.jfrog.io/artifactory/plugins-snapshot/e4.25">
-      <annotation
-          source="comment">
-        <detail
-            key="comment">
-          <value>Eclipse Groovy does not seem to work with Eclipse 4.25 yet...</value>
-        </detail>
-      </annotation>
-    </repository>
+        url="https://groovy.jfrog.io/artifactory/plugins-release/e4.29"/>
     <repository
         url="https://de-jcup.github.io/update-site-eclipse-asciidoctor-editor/update-site"/>
     <repository
         url="https://download.eclipse.org/edapt/releases/15x/"/>
     <repository
         url="https://eclipse-uc.sonarlint.org"/>
+    <repository
+        url="https://download.eclipse.org/cbi/updates/tpd/nightly/N202305061445"/>
     <description>Install the tools needed in the IDE to work with the source code for ${scope.project.label}</description>
   </setupTask>
   <setupTask
@@ -459,12 +456,12 @@
                 &lt;toolchain>
              &lt;type>jdk&lt;/type>
              &lt;provides>
-                 &lt;version>11&lt;/version>
+                 &lt;version>17&lt;/version>
                  &lt;vendor>OpenJDK&lt;/vendor>
-                 &lt;id>OpenJDK-11&lt;/id>
+                 &lt;id>OpenJDK-17&lt;/id>
              &lt;/provides>
              &lt;configuration>
-                &lt;jdkHome>${jre.location-11}&lt;/jdkHome>
+                &lt;jdkHome>${jre.location-17}&lt;/jdkHome>
              &lt;/configuration>
           &lt;/toolchain>
         &lt;/toolchains>
@@ -506,7 +503,16 @@
       <requirement
           name="org.eclipse.m2e.feature.feature.group"/>
       <requirement
-          name="org.eclipse.m2e.sse.ui.feature.feature.group"/>
+          name="org.eclipse.m2e.sse.ui.feature.feature.group"
+          optional="true">
+        <annotation
+            source="Comment">
+          <detail
+              key="text">
+            <value>This feature is no longer needed starting 10.0.0 (based on 2023-09)</value>
+          </detail>
+        </annotation>
+      </requirement>
       <requirement
           name="org.eclipse.jst.server_adapters.ext.feature.feature.group"/>
       <requirement
@@ -608,6 +614,27 @@
       <sourceLocator
           rootFolder="${git.clone.bonita-studio-sp.location}/subscription/bundles/features/dependencies-feature"/>
       <repositoryList
+          name="2023-09">
+        <repository
+            url="https://download.eclipse.org/releases/2023-09"/>
+        <repository
+            url="https://download.eclipse.org/technology/swtbot/releases/4.1.0/"/>
+        <repository
+            url="https://download.eclipse.org/nebula/releases/3.0.0/"/>
+        <repository
+            url="https://de-jcup.github.io/update-site-eclipse-asciidoctor-editor/update-site/"/>
+        <repository
+            url="https://de-jcup.github.io/update-site-eclipse-yaml-editor/update-site/"/>
+        <repository
+            url="https://hallvard.github.io/plantuml/"/>
+        <repository
+            url="https://download.eclipse.org/technology/babel/update-site/R0.20.0/2022-12/"/>
+        <repository
+            url="https://groovy.jfrog.io/artifactory/plugins-release/e4.29"/>
+        <repository
+            url="https://download.eclipse.org/mylyn/releases/3.25/"/>
+      </repositoryList>
+      <repositoryList
           name="2022-06">
         <repository
             url="https://download.eclipse.org/releases/2022-06"/>
@@ -655,5 +682,5 @@
       </repositoryList>
     </targlet>
   </setupTask>
-  <description>Bonita Studio - Development environment - Common configuration.\r\nReady for Eclipse IDE for RCP and RAP Developers - 2022-06.</description>
+  <description>Bonita Studio - Development environment - Common configuration.\r\nReady for Eclipse IDE for RCP and RAP Developers - 2023-09.</description>
 </setup:CompoundTask>

@@ -14,14 +14,17 @@
  */
 package org.bonitasoft.studio.common.diagram.tools;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
 
 import org.bonitasoft.studio.common.gmf.command.InsertElementOnSequenceFlowCommand;
 import org.bonitasoft.bpm.model.process.Lane;
 import org.bonitasoft.bpm.model.process.ProcessPackage;
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.draw2d.geometry.Dimension;
@@ -35,6 +38,8 @@ import org.eclipse.gef.ConnectionEditPart;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPartViewer;
 import org.eclipse.gef.LayerConstants;
+import org.eclipse.gef.Request;
+import org.eclipse.gef.RequestConstants;
 import org.eclipse.gef.SnapToHelper;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.editparts.LayerManager;
@@ -51,8 +56,11 @@ import org.eclipse.gmf.runtime.diagram.ui.tools.UnspecifiedTypeCreationTool;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.PolylineConnectionEx;
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
 import org.eclipse.gmf.runtime.notation.Connector;
+import org.eclipse.gmf.runtime.notation.View;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 
 /**
@@ -455,8 +463,7 @@ public class BonitaUnspecifiedTypeCreationTool extends UnspecifiedTypeCreationTo
         ViewAndElementDescriptor descriptor = null;
         if (!objects.isEmpty()) {
             Object desc = objects.iterator().next();
-
-            if (desc != null && desc instanceof ViewAndElementDescriptor) {
+            if (desc instanceof ViewAndElementDescriptor) {
                 descriptor = (ViewAndElementDescriptor) desc;
             }
         }
@@ -465,10 +472,40 @@ public class BonitaUnspecifiedTypeCreationTool extends UnspecifiedTypeCreationTo
                 super.selectAddedObject(viewer,
                         Collections.singletonList(viewer.getRootEditPart().getChildren().get(0)));
             } else {
-                super.selectAddedObject(viewer, objects);
+                select(viewer, objects);
             }
         } else {
-            super.selectAddedObject(viewer, objects);
+            select(viewer, objects);
+        }
+    }
+    
+    private void select(EditPartViewer viewer, Collection objects) {
+        final List editparts = new ArrayList();
+        for (Iterator i = objects.iterator(); i.hasNext();) {
+            Object object = i.next();
+            if (object instanceof IAdaptable) {
+                Object editPart =
+                    viewer.getEditPartRegistry().get(
+                        ((IAdaptable)object).getAdapter(View.class));
+                if (editPart != null)
+                    editparts.add(editPart);
+            }
+        }
+
+        if (!editparts.isEmpty()) {
+            // automatically put the first shape into edit-mode
+            Display.getCurrent().asyncExec(() -> {
+                viewer.setSelection(new StructuredSelection(editparts));
+                EditPart editPart = (EditPart) editparts.get(0);
+                //
+                // add active test since test scripts are failing on this
+                // basically, the editpart has been deleted when this 
+                // code is being executed. (see RATLC00527114)
+                if ( editPart.isActive() ) {
+                    editPart.performRequest(new Request(RequestConstants.REQ_DIRECT_EDIT));
+                    revealEditPart((EditPart)editparts.get(0));
+                }
+            });
         }
     }
 
@@ -531,6 +568,8 @@ public class BonitaUnspecifiedTypeCreationTool extends UnspecifiedTypeCreationTo
         }
 
     }
+    
+    
 
     @Override
     public void setViewer(EditPartViewer viewer) {

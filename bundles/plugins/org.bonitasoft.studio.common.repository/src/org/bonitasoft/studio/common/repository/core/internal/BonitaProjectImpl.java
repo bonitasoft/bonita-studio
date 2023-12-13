@@ -172,7 +172,7 @@ public class BonitaProjectImpl implements BonitaProject {
     @Override
     public void refresh(boolean updateConfiguration, IProgressMonitor monitor) throws CoreException {
         monitor.beginTask(Messages.refresh, IProgressMonitor.UNKNOWN);
-        var job = new UpdateMavenProjectJob(getRelatedProjects().toArray(IProject[]::new), false, false,
+        var job = new UpdateMavenProjectJob(getRelatedProjects(), false, false,
                 updateConfiguration,
                 true, true);
         job.addJobChangeListener(new JobChangeAdapter() {

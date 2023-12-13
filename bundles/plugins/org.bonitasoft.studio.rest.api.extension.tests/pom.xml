@@ -12,8 +12,24 @@
     <groupId>org.bonitasoft.studio.bundles.plugins</groupId>
     <artifactId>org.bonitasoft.studio.rest.api.extension.tests</artifactId>
     <packaging>eclipse-test-plugin</packaging>
-   
+
     <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.eclipse.tycho</groupId>
+                    <artifactId>tycho-surefire-plugin</artifactId>
+                    <configuration>
+                        <application>org.eclipse.ui.ide.workbench</application>
+                        <useUIHarness>true</useUIHarness>
+                        <useUIThread>true</useUIThread>
+                        <argLine>-Dbonita.noregister=1 -Dbonita.studio.skipReleaseNote</argLine>
+                        <!-- We need these bindings to avoid DI exceptions 'Unable to create class' -->
+                        <appArgLine>-lifeCycleURI bundleclass://org.bonitasoft.studio.application/org.bonitasoft.studio.application.LifeCycleManager</appArgLine>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
         <testResources>
             <testResource>
                 <directory>resources</directory>

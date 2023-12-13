@@ -55,7 +55,7 @@ public abstract class MavenModelOperation implements IWorkspaceRunnable {
 		if (modelUpdated) {
 			saveLock.lock();
 			try {
-				MavenProjectHelper.saveModel(project, model, false, monitor);
+				MavenProjectHelper.saveModel(project, model, monitor);
 
 				if (!disableAnalyze && getRepositoryAccessor().hasActiveRepository()) {
 					var projectDependenciesStore = getRepositoryAccessor().getCurrentRepository()

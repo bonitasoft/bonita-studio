@@ -14,25 +14,19 @@
  */
 package org.bonitasoft.studio.diagram.custom.handlers;
 
+import org.bonitasoft.bpm.model.process.MainProcess;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.filestore.FileStoreFinder;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.diagram.custom.actions.DuplicateDiagramAction;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
-import org.bonitasoft.bpm.model.process.MainProcess;
 import org.eclipse.e4.core.di.annotations.Execute;
 
 public class DuplicateDiagramHandler {
 
-    private FileStoreFinder fileStoreFinder;
-
-    public DuplicateDiagramHandler() {
-        fileStoreFinder = new FileStoreFinder();
-    }
-
     @Execute
     public void execute(RepositoryAccessor repositoryAccessor) {
-        DiagramFileStore fileStore = fileStoreFinder
+        DiagramFileStore fileStore = new FileStoreFinder()
                 .findSelectedFileStore(repositoryAccessor.getCurrentRepository().orElseThrow())
                 .filter(DiagramFileStore.class::isInstance)
                 .map(DiagramFileStore.class::cast)

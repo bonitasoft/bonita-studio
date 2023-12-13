@@ -22,26 +22,26 @@ import static org.bonitasoft.studio.common.ui.jface.databinding.UpdateStrategyFa
 import static org.bonitasoft.studio.common.ui.jface.databinding.UpdateStrategyFactory.updateValueStrategy;
 
 import java.util.List;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-import org.bonitasoft.studio.common.emf.tools.ModelHelper;
-import org.bonitasoft.studio.document.i18n.Messages;
-import org.bonitasoft.studio.document.ui.ContractInputLabelProvider;
 import org.bonitasoft.bpm.model.process.ContractInput;
 import org.bonitasoft.bpm.model.process.ContractInputType;
 import org.bonitasoft.bpm.model.process.Document;
 import org.bonitasoft.bpm.model.process.ProcessPackage;
+import org.bonitasoft.studio.common.emf.tools.ModelHelper;
+import org.bonitasoft.studio.document.i18n.Messages;
+import org.bonitasoft.studio.document.ui.ContractInputLabelProvider;
 import org.eclipse.core.databinding.ValidationStatusProvider;
 import org.eclipse.core.databinding.conversion.Converter;
 import org.eclipse.core.databinding.conversion.IConverter;
+import org.eclipse.core.databinding.observable.Realm;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.databinding.fieldassist.ControlDecorationSupport;
 import org.eclipse.jface.databinding.viewers.IViewerObservableValue;
-import org.eclipse.jface.databinding.viewers.ViewersObservables;
+import org.eclipse.jface.databinding.viewers.typed.ViewerProperties;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -79,7 +79,7 @@ public abstract class FileContractInputSelectionComposite extends Composite {
         checkArgument(document != null);
         checkArgument(context != null);
         checkArgument(emfDataBindingContext != null);
-        final IObservableValue observeInput = ViewersObservables.observeInput(getContractInputComboViewer());
+        final IObservableValue observeInput = ViewerProperties.input().observe(Realm.getDefault(), getContractInputComboViewer());
         final IObservableValue multipleDocumentObervable = EMFObservables.observeValue(document,
                 ProcessPackage.Literals.DOCUMENT__MULTIPLE);
         emfDataBindingContext.bindValue(observeInput,
@@ -87,8 +87,8 @@ public abstract class FileContractInputSelectionComposite extends Composite {
                 neverUpdateValueStrategy().create(),
                 updateValueStrategy().withConverter(toInputList(document, context)).create());
 
-        final IViewerObservableValue observeSingleSelection = ViewersObservables
-                .observeSingleSelection(getContractInputComboViewer());
+        final IViewerObservableValue observeSingleSelection = ViewerProperties.singleSelection()
+                .observe(getContractInputComboViewer());
         ControlDecorationSupport.create(emfDataBindingContext.bindValue(observeSingleSelection,
                 EMFObservables.observeValue(document, ProcessPackage.Literals.DOCUMENT__CONTRACT_INPUT)), SWT.LEFT);
         emfDataBindingContext.addValidationStatusProvider(

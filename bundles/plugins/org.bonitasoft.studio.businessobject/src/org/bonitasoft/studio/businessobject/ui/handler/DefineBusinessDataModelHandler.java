@@ -19,8 +19,10 @@ import java.lang.reflect.InvocationTargetException;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelFileStore;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
 import org.bonitasoft.studio.businessobject.i18n.Messages;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.ui.dialog.ExceptionDialogHandler;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Status;
@@ -47,18 +49,30 @@ public class DefineBusinessDataModelHandler {
                 });
             } catch (InvocationTargetException | InterruptedException e) {
                 new ExceptionDialogHandler().openErrorDialog(Display.getCurrent().getActiveShell(),
-                       new CoreException(Status.error("Failed to create the BDM.", e)));
+                        new CoreException(Status.error("Failed to create the BDM.", e)));
                 return;
+            }
+            var store = bomRepositoryStore.getResource();
+            try {
+                progressService.run(true, false, monitor -> {
+                    try {
+                        store.refreshLocal(IResource.DEPTH_ONE, monitor);
+                    } catch (CoreException e) {
+                        throw new InvocationTargetException(e);
+                    }
+                });
+            } catch (InvocationTargetException | InterruptedException e) {
+                BonitaStudioLog.error(e);
             }
             bdmFileStore = bomRepositoryStore.getChild(
                     BusinessObjectModelFileStore.BOM_FILENAME,
                     true);
             if (bdmFileStore == null) {
                 new ExceptionDialogHandler().openErrorDialog(Display.getCurrent().getActiveShell(),
-                        new CoreException(Status.error("Failed to create the BDM.")));
+                        new CoreException(Status.error("Failed to create the BDM. bom.xml file not found")));
             }
         }
-        if(bdmFileStore != null) {
+        if (bdmFileStore != null) {
             bdmFileStore.open();
         }
     }
@@ -72,7 +86,7 @@ public class DefineBusinessDataModelHandler {
             bdmStore.createBdmModule(project, monitor);
         }
         // Folder link is broken, recreate it.
-        if(project != null && project.getBdmParentProject().exists() && !bdmStore.getResource().exists()) {
+        if (project != null && project.getBdmParentProject().exists() && !bdmStore.getResource().exists()) {
             bdmStore.createBdmFolderLinkInAppProject(project);
         }
     }

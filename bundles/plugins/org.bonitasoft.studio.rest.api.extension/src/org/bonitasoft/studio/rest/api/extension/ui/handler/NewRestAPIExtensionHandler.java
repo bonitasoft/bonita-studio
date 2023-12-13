@@ -36,7 +36,6 @@ import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.e4.ui.services.IServiceConstants;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.wizard.WizardDialog;
-import org.eclipse.m2e.core.MavenPlugin;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
@@ -69,7 +68,7 @@ public class NewRestAPIExtensionHandler extends AbstractHandler {
             IWorkspace workspace, RestAPIAddressResolver addressReolver) throws CoreException {
         return new NewRestAPIExtensionWizard(projectMetadata,
                 repositoryAccessor.getRepositoryStore(ExtensionRepositoryStore.class),
-                MavenPlugin.getProjectConfigurationManager(), new MavenProjectConfiguration(), workspace, widgetFactory,
+                new MavenProjectConfiguration(), workspace, widgetFactory,
                 bdmExists(repositoryAccessor), addressReolver);
     }
 

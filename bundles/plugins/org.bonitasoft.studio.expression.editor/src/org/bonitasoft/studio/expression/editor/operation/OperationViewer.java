@@ -34,7 +34,7 @@ import org.bonitasoft.bpm.model.process.BusinessObjectData;
 import org.bonitasoft.bpm.model.process.Document;
 import org.bonitasoft.bpm.model.process.Task;
 import org.eclipse.core.databinding.UpdateValueStrategy;
-import org.eclipse.core.databinding.beans.PojoObservables;
+import org.eclipse.core.databinding.beans.typed.PojoProperties;
 import org.eclipse.core.databinding.conversion.Converter;
 import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.core.databinding.observable.ChangeEvent;
@@ -50,9 +50,8 @@ import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.emf.edit.domain.EditingDomain;
-import org.eclipse.jface.databinding.swt.SWTObservables;
-import org.eclipse.jface.databinding.viewers.ViewerProperties;
-import org.eclipse.jface.databinding.viewers.ViewersObservables;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
+import org.eclipse.jface.databinding.viewers.typed.ViewerProperties;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -184,9 +183,9 @@ public class OperationViewer extends Composite implements IBonitaVariableContext
             }
         });
 
-        context.bindValue(SWTObservables.observeText(getOperatorLink()), operatorTypeObservedValue, null, uvsOperator);
-        context.bindValue(SWTObservables.observeText(getOperatorLink()), operatorExpressionObserveValue, null, uvsOperator);
-        context.bindValue(SWTObservables.observeTooltipText(getOperatorLink()),
+        context.bindValue(WidgetProperties.text().observe(getOperatorLink()), operatorTypeObservedValue, null, uvsOperator);
+        context.bindValue(WidgetProperties.text().observe(getOperatorLink()), operatorExpressionObserveValue, null, uvsOperator);
+        context.bindValue(WidgetProperties.tooltipText().observe(getOperatorLink()),
                 operatorExpressionObserveValue);
     }
 
@@ -198,7 +197,7 @@ public class OperationViewer extends Composite implements IBonitaVariableContext
             storageViewer.setContext(eObjectContext);
         }
         storageViewer.setExternalDataBindingContext(context);
-        context.bindValue(ViewersObservables.observeInput(storageViewer), operationObservable);
+        context.bindValue(ViewerProperties.input().observe(Realm.getDefault(), storageViewer), operationObservable);
 
         final IObservableValue leftOperandObservableValue = CustomEMFEditObservables.observeDetailValue(Realm.getDefault(),
                 operationObservable,
@@ -223,7 +222,7 @@ public class OperationViewer extends Composite implements IBonitaVariableContext
 
         });
 
-        context.bindValue(ViewersObservables.observeSingleSelection(storageViewer), leftOperandObservableValue);
+        context.bindValue(ViewerProperties.singleSelection().observe(storageViewer), leftOperandObservableValue);
         storageViewer.addExpressionValidator(new TransientDataValidator());
         storageViewer.addSelectionChangedListener(new StorageViewerChangedListener(this));
         storageViewer.getEraseControl().addListener(SWT.ALL, new Listener() {
@@ -241,7 +240,7 @@ public class OperationViewer extends Composite implements IBonitaVariableContext
             getActionExpression().setExpressionNatureProvider(actionExpressionProvider);
         }
         getActionExpression().setExternalDataBindingContext(context);
-        context.bindValue(ViewersObservables.observeInput(getActionExpression()), operationObservable);
+        context.bindValue(ViewerProperties.input().observe(Realm.getDefault(), getActionExpression()), operationObservable);
 
         getActionExpression().addExpressionValidator(new OperationReturnTypesValidator());
 
@@ -259,7 +258,7 @@ public class OperationViewer extends Composite implements IBonitaVariableContext
                 ViewerProperties.singleSelection().observe(getActionExpression()),
                 actionExpressionObservableValue);
 
-        context.bindValue(PojoObservables.observeValue(getActionExpression(), "defaultReturnType"),
+        context.bindValue(PojoProperties.value("defaultReturnType").observe(getActionExpression()),
                 CustomEMFEditObservables.observeDetailValue(Realm.getDefault(),
                         leftOperandObservableValue,
                         ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE),

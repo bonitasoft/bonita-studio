@@ -69,19 +69,15 @@
             <configuration>
               <source>
                 <repository>
-                  <url>https://download.eclipse.org/technology/swtbot/releases/4.0.0/</url>
+                  <url>https://download.eclipse.org/technology/swtbot/releases/4.1.0/</url>
                   <layout>p2</layout>
                 </repository>
                 <repository>
-                  <url>https://download.eclipse.org/releases/2022-06</url>
+                  <url>https://download.eclipse.org/releases/2023-09</url>
                   <layout>p2</layout>
                 </repository>
                 <repository>
-                  <url>http://download.eclipse.org/modeling/gmp/gmf-tooling/updates/releases-3.2.1</url>
-                  <layout>p2</layout>
-                </repository>
-                <repository>
-                  <url>https://download.eclipse.org/nebula/releases/2.6.0/</url>
+                  <url>https://download.eclipse.org/nebula/releases/3.0.0/</url>
                   <layout>p2</layout>
                 </repository>
                 <repository>
@@ -93,15 +89,15 @@
                   <layout>p2</layout>
                 </repository>
                 <repository>
-                  <url>http://hallvard.github.io/plantuml/</url>
+                  <url>https://hallvard.github.io/plantuml/</url>
                   <layout>p2</layout>
                 </repository>
                 <repository>
-                  <url>https://download.eclipse.org/technology/babel/update-site/R0.19.2/2021-12/</url>
+                  <url>https://download.eclipse.org/technology/babel/update-site/R0.20.0/2022-12/</url>
                   <layout>p2</layout>
                 </repository>
                 <repository>
-                  <url>https://groovy.jfrog.io/artifactory/plugins-release/e4.24</url>
+                  <url>https://groovy.jfrog.io/artifactory/plugins-release/e4.29</url>
                   <layout>p2</layout>
                 </repository>
               </source>
@@ -160,10 +156,6 @@
                 </iu>
                 <iu>
                   <id>org.eclipse.m2e.feature.feature.group</id>
-                  <version>0.0.0</version>
-                </iu>
-                <iu>
-                  <id>org.eclipse.m2e.sse.ui.feature.feature.group</id>
                   <version>0.0.0</version>
                 </iu>
                 <iu>
@@ -291,16 +283,12 @@
                   <version>0.0.0</version>
                 </iu>
                 <iu>
-                  <id>org.eclipse.gmf.tooling.runtime</id>
-                  <version>0.0.0</version>
-                </iu>
-                <iu>
                   <id>org.eclipse.nebula.widgets.richtext.feature.feature.group</id>
                   <version>0.0.0</version>
                 </iu>
                 <iu>
                   <id>de.jcup.asciidoctoreditor.feature.group</id>
-                  <version>2.5.1</version>
+                  <version>3.1.1</version>
                 </iu>
                 <iu>
                   <id>de.jcup.yamleditor.feature.group</id>
@@ -308,7 +296,7 @@
                 </iu>
                 <iu>
                   <id>net.sourceforge.plantuml.feature.feature.group</id>
-                  <version>1.1.26</version>
+                  <version>1.1.30</version>
                 </iu>
                 <iu>
                   <id>org.eclipse.babel.nls_eclipse_es.feature.group</id>

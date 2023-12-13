@@ -45,7 +45,6 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.e4.core.di.annotations.Creatable;
 import org.eclipse.m2e.core.MavenPlugin;
 import org.eclipse.m2e.core.project.IMavenProjectFacade;
-import org.eclipse.m2e.core.ui.internal.UpdateMavenProjectJob;
 import org.jdom2.Document;
 import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
@@ -78,22 +77,20 @@ public class MavenProjectHelper {
         }
     }
 
-    @SuppressWarnings("restriction")
-    public static void saveModel(IProject project, Model model, boolean updateConfiguration, IProgressMonitor monitor)
-            throws CoreException {
-        saveModel(project, model, monitor);
-        new UpdateMavenProjectJob(new IProject[] { project }, false, false, updateConfiguration, false, true)
-                .run(monitor);
-    }
-
     public static void saveModel(IProject project, Model model, IProgressMonitor monitor) throws CoreException {
         var pomFile = project.getFile(POM_FILE_NAME);
         saveModel(pomFile, model, monitor);
     }
 
     public static void saveModel(IFile pomFile, Model model, IProgressMonitor monitor) throws CoreException {
+        saveModel(pomFile, model, true, monitor);
+    }
+    
+    public static void saveModel(IFile pomFile, Model model, boolean forceRefresh, IProgressMonitor monitor) throws CoreException {
         saveModel(pomFile.getLocation().toFile().toPath(), model);
-        pomFile.refreshLocal(IResource.DEPTH_ONE, monitor);
+        if(forceRefresh) {
+            pomFile.refreshLocal(IResource.DEPTH_ONE, monitor);
+        }
     }
 
     public static Model saveModel(Path pomFile, Model model) throws CoreException {

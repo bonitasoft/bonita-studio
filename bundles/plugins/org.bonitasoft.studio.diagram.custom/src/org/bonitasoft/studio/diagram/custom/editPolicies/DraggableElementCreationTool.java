@@ -20,9 +20,9 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.bonitasoft.bpm.model.process.SubProcessEvent;
 import org.bonitasoft.studio.common.diagram.tools.FiguresHelper;
 import org.bonitasoft.studio.common.gmf.tools.GMFTools;
-import org.bonitasoft.bpm.model.process.SubProcessEvent;
 import org.bonitasoft.studio.model.process.diagram.edit.commands.SequenceFlowCreateCommand;
 import org.bonitasoft.studio.model.process.diagram.edit.commands.TextAnnotationAttachmentCreateCommand;
 import org.bonitasoft.studio.model.process.diagram.providers.ProcessElementTypes;
@@ -42,6 +42,7 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.DragTracker;
 import org.eclipse.gef.Request;
+import org.eclipse.gef.RequestConstants;
 import org.eclipse.gef.SnapToHelper;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.CompoundCommand;
@@ -77,6 +78,7 @@ import org.eclipse.gmf.runtime.notation.Node;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Display;
 
 /**
  * @author Mickael Istria
@@ -146,7 +148,7 @@ public class DraggableElementCreationTool extends CreationTool implements DragTr
     protected boolean handleDrag() {
         dragged = true;
         if (getTargetEditPart() != null) {
-            helper = (SnapToHelper) getTargetEditPart().getAdapter(SnapToHelper.class);
+            helper = getTargetEditPart().getAdapter(SnapToHelper.class);
         }
 
         updateTargetUnderMouse();
@@ -161,7 +163,7 @@ public class DraggableElementCreationTool extends CreationTool implements DragTr
         super.handleMove();
         redrawFeedback();
         if (getTargetEditPart() != null) {
-            helper = (SnapToHelper) getTargetEditPart().getAdapter(SnapToHelper.class);
+            helper = getTargetEditPart().getAdapter(SnapToHelper.class);
         }
         return true;
     }
@@ -486,7 +488,14 @@ public class DraggableElementCreationTool extends CreationTool implements DragTr
             createdNode.ifPresent(n -> {
                 final IGraphicalEditPart targetEditPart = (IGraphicalEditPart) editPart.getViewer()
                         .getEditPartRegistry().get(n);
-                editPart.getViewer().select(targetEditPart);
+                Display.getDefault().asyncExec(() -> {
+                    editPart.getViewer().select(targetEditPart);
+                    // Should be uncommented to have a consistent behavior between all creation request
+//                    if ( targetEditPart.isActive() ) {
+//                        targetEditPart.performRequest(new Request(RequestConstants.REQ_DIRECT_EDIT));
+//                        revealEditPart(targetEditPart);
+//                    }
+                 });
             });
         }
     }
