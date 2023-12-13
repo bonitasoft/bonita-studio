@@ -18,22 +18,22 @@
  
 package org.bonitasoft.studio.data.ui.wizard;
 
+import org.bonitasoft.bpm.model.process.AbstractProcess;
+import org.bonitasoft.bpm.model.process.DataAware;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.ui.jface.DataAwareElementViewerFilter;
 import org.bonitasoft.studio.data.i18n.Messages;
-import org.bonitasoft.bpm.model.process.AbstractProcess;
-import org.bonitasoft.bpm.model.process.DataAware;
 import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
-import org.eclipse.core.databinding.beans.PojoProperties;
+import org.eclipse.core.databinding.beans.typed.PojoProperties;
 import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
-import org.eclipse.jface.databinding.viewers.ViewersObservables;
+import org.eclipse.jface.databinding.viewers.typed.ViewerProperties;
 import org.eclipse.jface.databinding.wizard.WizardPageSupport;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.wizard.IWizardPage;
@@ -104,7 +104,7 @@ public class MoveDataWizardPage extends WizardPage implements
 				return ValidationStatus.ok();
 			}
 		});
-		context.bindValue(ViewersObservables.observeSingleSelection(modelTree.getViewer()), PojoProperties.value(MoveDataWizardPage.class, "selectedDataAwareElement").observe(this),selectionStrategy,null);
+		context.bindValue(ViewerProperties.singleSelection().observe(modelTree.getViewer()), PojoProperties.value(MoveDataWizardPage.class, "selectedDataAwareElement").observe(this),selectionStrategy,null);
 		
 		WizardPageSupport.create(this, context);
 		setControl(mainComposite);

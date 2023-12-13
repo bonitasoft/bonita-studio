@@ -17,6 +17,7 @@ package org.bonitasoft.studio.swtbot.framework.rule;
 import java.lang.reflect.InvocationTargetException;
 
 import org.bonitasoft.studio.application.actions.coolbar.NormalCoolBarHandler;
+import org.bonitasoft.studio.application.maven.handler.TestMavenRepositoriesConnectionHandler;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
@@ -29,6 +30,7 @@ import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.bonitasoft.studio.preferences.pages.BonitaAdvancedPreferencePage;
 import org.bonitasoft.studio.swtbot.framework.conditions.BonitaBPMConditions;
 import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.widgets.Display;
@@ -179,6 +181,7 @@ public class SWTGefBotRule implements TestRule {
                 || !repositoryManager.getRepository(defaultProjectMetadta.getArtifactId()).exists()) {
             try {
                 PlatformUI.getWorkbench().getProgressService().run(true, false, monitor -> {
+                    Job.getJobManager().join(TestMavenRepositoriesConnectionHandler.TEST_CONNECTION_FAMILY, monitor);
                     repositoryManager.getAccessor().createNewRepository(defaultProjectMetadta, monitor);
                 });
             } catch (InvocationTargetException | InterruptedException e) {

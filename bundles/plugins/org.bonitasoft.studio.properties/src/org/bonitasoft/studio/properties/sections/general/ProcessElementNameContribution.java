@@ -18,6 +18,14 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Optional;
 
+import org.bonitasoft.bpm.model.expression.Expression;
+import org.bonitasoft.bpm.model.process.AbstractCatchMessageEvent;
+import org.bonitasoft.bpm.model.process.Element;
+import org.bonitasoft.bpm.model.process.Lane;
+import org.bonitasoft.bpm.model.process.MainProcess;
+import org.bonitasoft.bpm.model.process.Message;
+import org.bonitasoft.bpm.model.process.Pool;
+import org.bonitasoft.bpm.model.process.ProcessPackage;
 import org.bonitasoft.studio.common.databinding.validator.EAttributeValidatorFactory;
 import org.bonitasoft.studio.common.diagram.Identifier;
 import org.bonitasoft.studio.common.diagram.dialog.OpenNameAndVersionDialog;
@@ -33,14 +41,6 @@ import org.bonitasoft.studio.common.ui.properties.AbstractNamePropertySectionCon
 import org.bonitasoft.studio.diagram.custom.parts.CustomPoolEditPart;
 import org.bonitasoft.studio.diagram.custom.refactoring.ProcessNamingTools;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
-import org.bonitasoft.bpm.model.expression.Expression;
-import org.bonitasoft.bpm.model.process.AbstractCatchMessageEvent;
-import org.bonitasoft.bpm.model.process.Element;
-import org.bonitasoft.bpm.model.process.Lane;
-import org.bonitasoft.bpm.model.process.MainProcess;
-import org.bonitasoft.bpm.model.process.Message;
-import org.bonitasoft.bpm.model.process.Pool;
-import org.bonitasoft.bpm.model.process.ProcessPackage;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.LaneEditPart;
 import org.bonitasoft.studio.properties.i18n.Messages;
 import org.bonitasoft.studio.properties.operation.RenameDiagramOperation;
@@ -66,7 +66,7 @@ import org.eclipse.gmf.runtime.diagram.ui.editparts.ITextAwareEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
 import org.eclipse.jface.databinding.fieldassist.ControlDecorationSupport;
 import org.eclipse.jface.databinding.swt.ISWTObservableValue;
-import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -216,7 +216,7 @@ public class ProcessElementNameContribution extends AbstractNamePropertySectionC
 
     @Override
     protected void createBinding(final EMFDataBindingContext context) {
-        observable = SWTObservables.observeDelayedValue(250, SWTObservables.observeText(text, SWT.Modify));
+        observable = WidgetProperties.text(SWT.Modify).observeDelayed(250, text);
 
         final IObservableValue nameObservable = EMFEditObservables.observeValue(editingDomain, element,
                 ProcessPackage.Literals.ELEMENT__NAME);

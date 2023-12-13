@@ -56,7 +56,6 @@ import org.bonitasoft.studio.theme.DependencyThemeFileStore;
 import org.bonitasoft.studio.theme.ThemeFileStore;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Adapters;
@@ -263,7 +262,7 @@ public class ExtensionRepositoryStore
         for (ExtensionProjectFileStore fStore : filesToMigrate) {
             migrate(fStore, monitor);
         }
-        new UpdateMavenProjectJob(getBonitaProject().getExtensionsProjects().toArray(IProject[]::new),
+        new UpdateMavenProjectJob(getBonitaProject().getExtensionsProjects(),
                 false,
                 false,
                 true,

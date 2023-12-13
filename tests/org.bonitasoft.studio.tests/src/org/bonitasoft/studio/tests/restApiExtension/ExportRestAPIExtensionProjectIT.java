@@ -29,7 +29,6 @@ import org.bonitasoft.studio.tests.util.InitialProjectRule;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.m2e.core.MavenPlugin;
 import org.eclipse.m2e.core.project.ProjectImportConfiguration;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.IProgressService;
@@ -63,7 +62,6 @@ public class ExportRestAPIExtensionProjectIT {
         configuration.setPageName(pageName);
         final CreateRestAPIExtensionProjectOperation operation = new CreateRestAPIExtensionProjectOperation(
                 RepositoryManager.getInstance().getRepositoryStore(ExtensionRepositoryStore.class),
-                MavenPlugin.getProjectConfigurationManager(),
                 new ProjectImportConfiguration(),
                 configuration);
 

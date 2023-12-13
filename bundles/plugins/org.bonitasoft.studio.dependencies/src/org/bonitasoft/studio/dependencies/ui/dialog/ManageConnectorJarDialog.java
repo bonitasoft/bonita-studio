@@ -29,10 +29,10 @@ import org.bonitasoft.studio.dependencies.repository.DependencyFileStore;
 import org.bonitasoft.studio.dependencies.repository.DependencyRepositoryStore;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
-import org.eclipse.core.databinding.beans.PojoProperties;
+import org.eclipse.core.databinding.beans.typed.PojoProperties;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.databinding.viewers.ViewersObservables;
+import org.eclipse.jface.databinding.viewers.typed.ViewerProperties;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -112,7 +112,7 @@ public class ManageConnectorJarDialog extends Dialog {
         	return Status.OK_STATUS;
         }) ;
 
-		context.bindSet(ViewersObservables.observeCheckedElements(viewer, IRepositoryFileStore.class.getName()), PojoProperties.set(ManageConnectorJarDialog.class,"selectedJars").observe(this)) ;
+		context.bindSet(ViewerProperties.checkedElements(IRepositoryFileStore.class).observe((Viewer) viewer), PojoProperties.set(ManageConnectorJarDialog.class,"selectedJars").observe(this)) ;
 
 
 		return composite;

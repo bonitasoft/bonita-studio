@@ -20,6 +20,10 @@ package org.bonitasoft.studio.properties.sections.userxp;
 
 import javax.inject.Inject;
 
+import org.bonitasoft.bpm.model.process.ProcessPackage;
+import org.bonitasoft.bpm.model.process.ReceiveTask;
+import org.bonitasoft.bpm.model.process.SendTask;
+import org.bonitasoft.bpm.model.process.Task;
 import org.bonitasoft.bpm.model.util.ExpressionConstants;
 import org.bonitasoft.studio.common.ui.jface.databinding.CustomEMFEditObservables;
 import org.bonitasoft.studio.common.ui.properties.ExtensibleGridPropertySection;
@@ -27,16 +31,12 @@ import org.bonitasoft.studio.common.ui.properties.IExtensibleGridPropertySection
 import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFilter;
 import org.bonitasoft.studio.expression.editor.viewer.DefaultExpressionNameResolver;
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
-import org.bonitasoft.bpm.model.process.ProcessPackage;
-import org.bonitasoft.bpm.model.process.ReceiveTask;
-import org.bonitasoft.bpm.model.process.SendTask;
-import org.bonitasoft.bpm.model.process.Task;
 import org.bonitasoft.studio.properties.i18n.Messages;
 import org.eclipse.core.databinding.observable.Realm;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
-import org.eclipse.jface.databinding.viewers.ViewersObservables;
+import org.eclipse.jface.databinding.viewers.typed.ViewerProperties;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.SWT;
@@ -85,9 +85,9 @@ public class ExpectedDurationPropertySectionContribution implements IExtensibleG
         viewer.setMessage(Messages.dueDateCalculationHint);
         viewer.setExpressionNameResolver(new DefaultExpressionNameResolver("dueDateCalculation"));
         viewer.addFilter(new AvailableExpressionTypeFilter(ExpressionConstants.CONSTANT_TYPE,ExpressionConstants.VARIABLE_TYPE,ExpressionConstants.SCRIPT_TYPE,ExpressionConstants.PARAMETER_TYPE));
-        context.bindValue(ViewersObservables.observeInput(viewer),  ViewersObservables.observeSingleSelection(selectionProvider));
-        context.bindValue(ViewersObservables.observeSingleSelection(viewer), 
-                CustomEMFEditObservables.observeDetailValue(Realm.getDefault(), ViewersObservables.observeSingleSelection(selectionProvider), ProcessPackage.Literals.TASK__EXPECTED_DURATION));
+        context.bindValue(ViewerProperties.input().observe(Realm.getDefault(), viewer),  ViewerProperties.singleSelection().observe(selectionProvider));
+        context.bindValue(ViewerProperties.singleSelection().observe(viewer), 
+                CustomEMFEditObservables.observeDetailValue(Realm.getDefault(), ViewerProperties.singleSelection().observe(selectionProvider), ProcessPackage.Literals.TASK__EXPECTED_DURATION));
     }
 
     @Override

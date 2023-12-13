@@ -140,7 +140,6 @@ public class PaletteToolTransferDropTargetListenerWithSelection extends PaletteT
                     final EditPart editPart = (EditPart) editparts.get(0);
                     viewer.setSelection(new StructuredSelection(editPart));
                     if (editPart.isActive()) {
-                        revealEditPart(editPart);
                         editPart.performRequest(new Request(RequestConstants.REQ_DIRECT_EDIT));
                         revealEditPart(editPart);
                     }

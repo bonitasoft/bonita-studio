@@ -36,14 +36,13 @@ import org.eclipse.ui.ide.IDE;
 
 public class OpenHandler extends AbstractHandler {
 
-    private FileStoreFinder fileStoreFinder = new FileStoreFinder();
-
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
-        ISelection selection = fileStoreFinder.getSelectionInExplorer();
+        var finder = new FileStoreFinder();
+        ISelection selection =  finder.getSelectionInExplorer();
         IResource resource = ((IAdaptable) ((IStructuredSelection) selection).getFirstElement())
                 .getAdapter(IResource.class);
-        Optional<? extends IRepositoryFileStore> fileStore = fileStoreFinder.findFileStore(resource,
+        Optional<? extends IRepositoryFileStore> fileStore =  finder.findFileStore(resource,
                 RepositoryManager.getInstance().getCurrentRepository().orElseThrow());
         if (fileStore.isPresent()) {
             fileStore.get().open();
@@ -60,7 +59,7 @@ public class OpenHandler extends AbstractHandler {
     @Override
     public boolean isEnabled() {
         if (RepositoryManager.getInstance().getCurrentRepository().filter(IRepository::isLoaded).isPresent()) {
-            ISelection selection = fileStoreFinder.getSelectionInExplorer();
+            ISelection selection =  new FileStoreFinder().getSelectionInExplorer();
             if (selection instanceof IStructuredSelection
                     && ((IStructuredSelection) selection).size() == 1) {
                 Object sel = ((IStructuredSelection) selection).getFirstElement();

@@ -25,7 +25,7 @@ import org.bonitasoft.studio.diagram.custom.i18n.Messages;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.eclipse.core.databinding.DataBindingContext;
-import org.eclipse.core.databinding.beans.PojoObservables;
+import org.eclipse.core.databinding.beans.typed.PojoProperties;
 import org.eclipse.core.databinding.observable.IObservable;
 import org.eclipse.core.databinding.observable.list.IObservableList;
 import org.eclipse.core.databinding.observable.list.WritableList;
@@ -35,7 +35,7 @@ import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.databinding.viewers.ObservableListTreeContentProvider;
 import org.eclipse.jface.databinding.viewers.TreeStructureAdvisor;
-import org.eclipse.jface.databinding.viewers.ViewersObservables;
+import org.eclipse.jface.databinding.viewers.typed.ViewerProperties;
 import org.eclipse.jface.databinding.wizard.WizardPageSupport;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.DoubleClickEvent;
@@ -95,8 +95,8 @@ public abstract class AbstractManageDiagramWizardPage extends WizardPage impleme
                 new ObservableListTreeContentProvider(diagramListObservableFactory(), diagramTreeStructure()));
         treeViewer.setLabelProvider(new DiagramLabelProvider(new FileStoreLabelProvider()));
 
-        final IObservableList selectionObservable = PojoObservables.observeList(this, "selectedDiagrams");
-        context.bindList(ViewersObservables.observeMultiSelection(diagramTree.getViewer()),
+        final IObservableList selectionObservable = PojoProperties.list(AbstractManageDiagramWizardPage.class, "selectedDiagrams").observe(this);
+        context.bindList(ViewerProperties.multipleSelection().observe(diagramTree.getViewer()),
                 selectionObservable);
         context.addValidationStatusProvider(new MultiValidator() {
 

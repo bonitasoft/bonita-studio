@@ -20,7 +20,7 @@ import org.bonitasoft.studio.ui.wizard.listener.WizardDoubleClickListener;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.validation.ValidationStatus;
-import org.eclipse.jface.databinding.viewers.ViewersObservables;
+import org.eclipse.jface.databinding.viewers.typed.ViewerProperties;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -69,7 +69,7 @@ public class SelectRestAPIExtensionControlSupplier implements ControlSupplier {
         restApiExtensionViewer.setLabelProvider(new RestAPIExtensionLabelProvider());
         restApiExtensionViewer.setInput(repositoryStore.getChildren());
         restApiExtensionViewer.addDoubleClickListener(new WizardDoubleClickListener((WizardDialog) wizardContainer));
-        ctx.bindValue(ViewersObservables.observeSingleSelection(restApiExtensionViewer), fileStoreObservable,
+        ctx.bindValue(ViewerProperties.singleSelection().observe(restApiExtensionViewer), fileStoreObservable,
                 updateValueStrategy().withValidator(value -> value == null
                         ? ValidationStatus.error(Messages.emptySelectionErrorMessage) : ValidationStatus.ok()).create(),
                 null);

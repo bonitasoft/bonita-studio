@@ -36,17 +36,12 @@ import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.Test;
 
-public class BosArchiveTest {
-
-    @Rule
-    public ExpectedException expectedException = ExpectedException.none();
+class BosArchiveTest {
 
     @Test
-    public void should_not_fail_when_bosArchive_is_valid() throws Exception {
+    void should_not_fail_when_bosArchive_is_valid() throws Exception {
         final BosArchive bosArchive = newBosArchive(loadArchiveFile("/customer_support_2.0.bos"));
 
         final IStatus status = bosArchive.validate();
@@ -55,7 +50,7 @@ public class BosArchiveTest {
     }
 
     @Test
-    public void should_fail_when_archiveFile_has_not_a_bos_archive_structure() throws Exception {
+    void should_fail_when_archiveFile_has_not_a_bos_archive_structure() throws Exception {
         final BosArchive bosArchive = newBosArchive(loadArchiveFile("/invalidArchive.bos"));
 
         final IStatus status = bosArchive.validate();
@@ -64,7 +59,7 @@ public class BosArchiveTest {
     }
 
     @Test
-    public void should_fail_when_archiveFile_version_is_incompatible() throws Exception {
+    void should_fail_when_archiveFile_version_is_incompatible() throws Exception {
         final BosArchive bosArchive = newBosArchive(loadArchiveFile("/archiveWithIncompatibleManifest.bos"));
         doReturn(false).when(bosArchive).canImport("600.1.1");
         
@@ -74,7 +69,7 @@ public class BosArchiveTest {
     }
 
     @Test
-    public void should_validate_beta_manifest() throws Exception {
+    void should_validate_beta_manifest() throws Exception {
         final BosArchive bosArchive = newBosArchive(loadArchiveFile("/archiveWithBetaManifest.bos"));
 
         final IStatus status = bosArchive.validate();
@@ -83,7 +78,7 @@ public class BosArchiveTest {
     }
 
     @Test
-    public void should_build_an_importModel_from_bosArchive() throws Exception {
+    void should_build_an_importModel_from_bosArchive() throws Exception {
         final BosArchive bosArchive = newBosArchive(loadArchiveFile("/customer_support_2.0.bos"));
 
         final ImportArchiveModel importArchiveModel = bosArchive

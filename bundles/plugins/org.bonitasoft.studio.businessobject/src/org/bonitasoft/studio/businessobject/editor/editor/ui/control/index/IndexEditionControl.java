@@ -38,7 +38,7 @@ import org.eclipse.core.databinding.observable.list.WritableList;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.jface.databinding.viewers.ObservableListContentProvider;
-import org.eclipse.jface.databinding.viewers.ViewersObservables;
+import org.eclipse.jface.databinding.viewers.typed.ViewerProperties;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.resource.JFaceResources;
@@ -165,7 +165,7 @@ public class IndexEditionControl extends Composite {
 
         availableAttributesTableViewer.setContentProvider(new ObservableListContentProvider());
         availableAttributesTableViewer.setInput(actualsFieldsObservable);
-        selectedAvailableAttributeObservable = ViewersObservables.observeMultiSelection(availableAttributesTableViewer);
+        selectedAvailableAttributeObservable = ViewerProperties.multipleSelection(Field.class).observe(availableAttributesTableViewer);
 
         availableAttributesTableViewer.getTable().addMouseMoveListener(e -> updateCursor(e, availableAttributesTableViewer));
         availableAttributesTableViewer.addDragSupport(DND.DROP_MOVE, new Transfer[] { FieldTransfer.getInstance() },
@@ -239,7 +239,7 @@ public class IndexEditionControl extends Composite {
 
         indexedAttributesTableViewer.setContentProvider(new ObservableListContentProvider());
         indexedAttributesTableViewer.setInput(indexedFieldsObservable);
-        selectedIndexedAttributeObservable = ViewersObservables.observeMultiSelection(indexedAttributesTableViewer);
+        selectedIndexedAttributeObservable = ViewerProperties.multiplePostSelection(Field.class).observe(indexedAttributesTableViewer);
 
         indexedAttributesTableViewer.addDropSupport(DND.DROP_MOVE | DND.DROP_MOVE | DND.DROP_DEFAULT,
                 new Transfer[] { FieldTransfer.getInstance() },

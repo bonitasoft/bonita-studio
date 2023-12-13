@@ -34,13 +34,7 @@ import org.eclipse.core.commands.ExecutionException;
 public class ExportOrganizationHandler extends AbstractHandler {
 
     private static final String ORGANIZATION_TO_EXPORT_PARAMETER = "organizationToExport";
-
-    FileStoreFinder fileStoreFinder;
-
-    public ExportOrganizationHandler() {
-        fileStoreFinder = new FileStoreFinder();
-    }
-
+    
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
         OrganizationRepositoryStore repositoryStore = RepositoryManager.getInstance()
@@ -67,7 +61,7 @@ public class ExportOrganizationHandler extends AbstractHandler {
 
     private Set<Object> getSelection() {
         Set<Object> res = new HashSet<>();
-        fileStoreFinder.findSelectedFileStore(RepositoryManager.getInstance().getCurrentRepository().orElseThrow())
+        new FileStoreFinder().findSelectedFileStore(RepositoryManager.getInstance().getCurrentRepository().orElseThrow())
                 .filter(OrganizationFileStore.class::isInstance)
                 .map(OrganizationFileStore.class::cast)
                 .ifPresent(res::add);
@@ -76,10 +70,7 @@ public class ExportOrganizationHandler extends AbstractHandler {
     
     @Override
     public boolean isEnabled() {
-        if (RepositoryManager.getInstance().hasActiveRepository()) {
-            return true;
-        }
-        return false;
+        return RepositoryManager.getInstance().hasActiveRepository();
     }
 
 }

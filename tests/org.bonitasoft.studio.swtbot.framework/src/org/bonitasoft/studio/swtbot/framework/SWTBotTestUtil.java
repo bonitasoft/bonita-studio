@@ -369,6 +369,7 @@ public class SWTBotTestUtil implements SWTBotConstants {
         toolbarFigure.translateToAbsolute(location);
 
         gmfEditor.drag(location.x, location.y, dropLocation.x, dropLocation.y);
+        new SWTBot().sleep(1000);
     }
 
     private static int computeYPaletteDelta(final int elementIndex) {

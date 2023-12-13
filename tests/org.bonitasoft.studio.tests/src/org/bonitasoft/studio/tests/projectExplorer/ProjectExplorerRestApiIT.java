@@ -23,8 +23,8 @@ import org.bonitasoft.studio.swtbot.framework.projectExplorer.ExtensionProjectEx
 import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.m2e.core.MavenPlugin;
 import org.eclipse.m2e.core.project.ProjectImportConfiguration;
+import org.eclipse.m2e.core.ui.internal.M2EUIPluginActivator;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.junit.Before;
 import org.junit.Rule;
@@ -76,7 +76,6 @@ public class ProjectExplorerRestApiIT {
         defaultArchetypeConfiguration.setPathTemplate(pathTemplate);
         final CreateRestAPIExtensionProjectOperation operation = new CreateRestAPIExtensionProjectOperation(
                 RepositoryManager.getInstance().getRepositoryStore(ExtensionRepositoryStore.class),
-                MavenPlugin.getProjectConfigurationManager(),
                 new ProjectImportConfiguration(),
                 defaultArchetypeConfiguration);
 

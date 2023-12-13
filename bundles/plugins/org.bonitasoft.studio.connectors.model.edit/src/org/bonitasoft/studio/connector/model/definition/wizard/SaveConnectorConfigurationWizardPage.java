@@ -17,18 +17,18 @@
  */
 package org.bonitasoft.studio.connector.model.definition.wizard;
 
+import org.bonitasoft.bpm.model.connectorconfiguration.ConnectorConfiguration;
 import org.bonitasoft.studio.common.repository.model.IDefinitionRepositoryStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.connector.model.i18n.Messages;
-import org.bonitasoft.bpm.model.connectorconfiguration.ConnectorConfiguration;
 import org.eclipse.core.databinding.UpdateValueStrategy;
-import org.eclipse.core.databinding.beans.PojoProperties;
+import org.eclipse.core.databinding.beans.typed.PojoProperties;
 import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
@@ -81,7 +81,7 @@ public class SaveConnectorConfigurationWizardPage extends SelectConnectorConfigu
                 return Status.OK_STATUS;
             }
         }) ;
-        context.bindValue(SWTObservables.observeText(nameText, SWT.Modify), PojoProperties.value(SaveConnectorConfigurationWizardPage.class, "confName").observe(this), targetToModel, null) ;
+        context.bindValue(WidgetProperties.text(SWT.Modify).observe(nameText), PojoProperties.value(SaveConnectorConfigurationWizardPage.class, "confName", String.class).observe(this), targetToModel, null) ;
 
     }
 

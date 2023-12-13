@@ -16,6 +16,7 @@
  */
 package org.bonitasoft.studio.maven.model;
 
+import java.util.Map;
 import java.util.Properties;
 
 import org.apache.maven.model.Model;
@@ -82,7 +83,7 @@ public abstract class CustomPageArchetypeConfiguration {
         return model;
     }
 
-    public abstract Properties toProperties();
+    public abstract Map<String, String> toProperties();
     
     public abstract String getArtifactLabel() ;
 

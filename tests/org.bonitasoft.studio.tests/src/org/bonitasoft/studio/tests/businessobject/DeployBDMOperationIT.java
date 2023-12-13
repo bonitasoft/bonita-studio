@@ -16,11 +16,6 @@ package org.bonitasoft.studio.tests.businessobject;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.util.Properties;
-
-import org.apache.maven.Maven;
-import org.apache.maven.execution.MavenExecutionRequest;
-import org.apache.maven.execution.MavenExecutionResult;
 import org.bonitasoft.engine.api.TenantAdministrationAPI;
 import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.engine.tenant.TenantResourceState;
@@ -29,25 +24,15 @@ import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelF
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
-import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
 import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.tests.util.Await;
 import org.bonitasoft.studio.tests.util.InitialProjectRule;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaModelException;
-import org.eclipse.m2e.core.MavenPlugin;
-import org.eclipse.m2e.core.embedder.ICallable;
-import org.eclipse.m2e.core.embedder.IMaven;
-import org.eclipse.m2e.core.embedder.IMavenExecutionContext;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-
-import com.google.common.collect.Lists;
 
 public class DeployBDMOperationIT {
 
@@ -108,44 +93,7 @@ public class DeployBDMOperationIT {
         assertThat(tenantManagementAPI.getBusinessDataModelResource().getState())
                 .isEqualTo(TenantResourceState.INSTALLED);
         assertThat(tenantManagementAPI.isPaused()).isFalse();
-
-        var metadata = ProjectMetadata.defaultMetadata();
-        MavenExecutionResult executionResult = resolveMavenDependency(metadata.getGroupId(),
-                metadata.getArtifactId() + "-bdm-model", metadata.getVersion());
-        assertThat(executionResult.hasExceptions())
-                .overridingErrorMessage("BDM model maven dependency not installed in local repository:\n%s",
-                        getException(executionResult))
-                .isFalse();
     }
 
-    // Update assertj to use lazy message initialization and avoid this
-    private Throwable getException(MavenExecutionResult executionResult) {
-        return !executionResult.getExceptions().isEmpty() ? executionResult.getExceptions().get(0) : null;
-    }
-
-    private MavenExecutionResult resolveMavenDependency(String groupId, String artifactId, String version)
-            throws CoreException {
-        IMaven maven = MavenPlugin.getMaven();
-        final IMavenExecutionContext context = maven.createExecutionContext();
-        final MavenExecutionRequest request = context.getExecutionRequest();
-        request.setGoals(Lists.newArrayList("dependency:get"));
-        request.setUpdateSnapshots(true);
-        request.setInteractiveMode(false);
-        request.setCacheNotFound(true);
-        return context.execute(new ICallable<MavenExecutionResult>() {
-
-            @Override
-            public MavenExecutionResult call(final IMavenExecutionContext context, final IProgressMonitor innerMonitor)
-                    throws CoreException {
-                final Properties systemProperties = request.getSystemProperties();
-                systemProperties.setProperty("groupId", groupId);
-                systemProperties.setProperty("artifactId", artifactId);
-                systemProperties.setProperty("version", version);
-                systemProperties.setProperty("packaging", "jar");
-                request.setSystemProperties(systemProperties);
-                return maven.lookup(Maven.class).execute(request);
-            }
-        }, new NullProgressMonitor());
-    }
 
 }

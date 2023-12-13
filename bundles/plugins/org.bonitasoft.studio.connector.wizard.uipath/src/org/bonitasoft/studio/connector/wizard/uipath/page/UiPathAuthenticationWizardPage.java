@@ -16,22 +16,22 @@ package org.bonitasoft.studio.connector.wizard.uipath.page;
 
 import java.util.Objects;
 
-import org.bonitasoft.bpm.model.util.ExpressionConstants;
-import org.bonitasoft.studio.common.databinding.validator.EmptyInputValidator;
-import org.bonitasoft.studio.common.ui.widgets.CustomStackLayout;
 import org.bonitasoft.bpm.connector.model.definition.Checkbox;
 import org.bonitasoft.bpm.connector.model.definition.ConnectorDefinitionFactory;
 import org.bonitasoft.bpm.connector.model.definition.Input;
 import org.bonitasoft.bpm.connector.model.definition.Text;
+import org.bonitasoft.bpm.model.connectorconfiguration.ConnectorParameter;
+import org.bonitasoft.bpm.model.expression.Expression;
+import org.bonitasoft.bpm.model.util.ExpressionConstants;
+import org.bonitasoft.studio.common.databinding.validator.EmptyInputValidator;
+import org.bonitasoft.studio.common.ui.widgets.CustomStackLayout;
 import org.bonitasoft.studio.connector.model.definition.wizard.ConnectorConfigurationSupport;
 import org.bonitasoft.studio.connector.model.definition.wizard.GeneratedConnectorWizardPage;
 import org.bonitasoft.studio.connector.model.definition.wizard.PageComponentSwitchBuilder;
 import org.bonitasoft.studio.connector.wizard.uipath.i18n.Messages;
 import org.bonitasoft.studio.connector.wizard.uipath.switchBuilder.UIPathPageComponentSwitchBuilder;
-import org.bonitasoft.bpm.model.connectorconfiguration.ConnectorParameter;
-import org.bonitasoft.bpm.model.expression.Expression;
 import org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory;
-import org.eclipse.core.databinding.beans.PojoProperties;
+import org.eclipse.core.databinding.beans.typed.PojoProperties;
 import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.SelectObservableValue;
@@ -39,7 +39,7 @@ import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
-import org.eclipse.jface.databinding.swt.WidgetProperties;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.layout.LayoutConstants;
@@ -212,8 +212,8 @@ public class UiPathAuthenticationWizardPage extends GeneratedConnectorWizardPage
         cloud.setLayoutData(GridDataFactory.fillDefaults().create());
 
         modeObservable = new SelectObservableValue();
-        modeObservable.addOption(Mode.PREMISE, WidgetProperties.selection().observe(onPremise));
-        modeObservable.addOption(Mode.CLOUD, WidgetProperties.selection().observe(cloud));
+        modeObservable.addOption(Mode.PREMISE, WidgetProperties.buttonSelection().observe(onPremise));
+        modeObservable.addOption(Mode.CLOUD, WidgetProperties.buttonSelection().observe(cloud));
 
         modeObservable.addValueChangeListener(e -> {
             Boolean isCloud = Objects.equals(Mode.CLOUD, modeObservable.getValue());

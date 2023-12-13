@@ -23,12 +23,12 @@ import org.bonitasoft.studio.businessobject.i18n.Messages;
 import org.bonitasoft.studio.common.databinding.validator.EmptyInputValidator;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
-import org.eclipse.core.databinding.beans.PojoObservables;
+import org.eclipse.core.databinding.beans.typed.PojoProperties;
 import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
-import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.jface.databinding.wizard.WizardPageSupport;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -94,7 +94,7 @@ public class ExportBusinessDataModelWizardPage extends WizardPage {
                 return validateFilePath(value);
             }
         });
-        context.bindValue(SWTObservables.observeText(destinationText, SWT.Modify), PojoObservables.observeValue(this, "destinationPath"),
+        context.bindValue(WidgetProperties.text(SWT.Modify).observe(destinationText), PojoProperties.value("destinationPath", String.class).observe(this),
                 targetToModelStrategy, null);
 
         final Button browseButton = new Button(composite, SWT.PUSH);

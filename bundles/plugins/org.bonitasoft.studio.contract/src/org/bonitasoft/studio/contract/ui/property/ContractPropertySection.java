@@ -25,6 +25,15 @@ import java.util.Objects;
 
 import javax.inject.Inject;
 
+import org.bonitasoft.bpm.model.process.BusinessObjectData;
+import org.bonitasoft.bpm.model.process.Contract;
+import org.bonitasoft.bpm.model.process.ContractConstraint;
+import org.bonitasoft.bpm.model.process.ContractContainer;
+import org.bonitasoft.bpm.model.process.ContractInput;
+import org.bonitasoft.bpm.model.process.ContractInputType;
+import org.bonitasoft.bpm.model.process.Data;
+import org.bonitasoft.bpm.model.process.ProcessPackage;
+import org.bonitasoft.bpm.model.process.Task;
 import org.bonitasoft.studio.businessobject.ui.expression.CreateBusinessDataProposalListener;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.ui.jface.databinding.CustomEMFEditObservables;
@@ -45,15 +54,6 @@ import org.bonitasoft.studio.data.ui.property.section.PoolAdaptableSelectionProv
 import org.bonitasoft.studio.designer.ui.contribution.CreateAndEditFormContributionItem;
 import org.bonitasoft.studio.document.ui.DocumentProposalListener;
 import org.bonitasoft.studio.groovy.ui.viewer.GroovySourceViewerFactory;
-import org.bonitasoft.bpm.model.process.BusinessObjectData;
-import org.bonitasoft.bpm.model.process.Contract;
-import org.bonitasoft.bpm.model.process.ContractConstraint;
-import org.bonitasoft.bpm.model.process.ContractContainer;
-import org.bonitasoft.bpm.model.process.ContractInput;
-import org.bonitasoft.bpm.model.process.ContractInputType;
-import org.bonitasoft.bpm.model.process.Data;
-import org.bonitasoft.bpm.model.process.ProcessPackage;
-import org.bonitasoft.bpm.model.process.Task;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory;
 import org.eclipse.core.databinding.UpdateValueStrategy;
@@ -73,8 +73,8 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.databinding.swt.ISWTObservableValue;
-import org.eclipse.jface.databinding.swt.WidgetProperties;
-import org.eclipse.jface.databinding.viewers.ViewersObservables;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
+import org.eclipse.jface.databinding.viewers.typed.ViewerProperties;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -186,7 +186,7 @@ public class ContractPropertySection extends AbstractBonitaDescriptionSection {
     @Override
     protected void createContent(final Composite parent) {
         final IObservableValue observeContractValue = CustomEMFEditObservables.observeDetailValue(Realm.getDefault(),
-                ViewersObservables.observeSingleSelection(selectionProvider),
+                ViewerProperties.singleSelection().observe(selectionProvider),
                 ProcessPackage.Literals.CONTRACT_CONTAINER__CONTRACT);
         init(observeContractValue);
 
@@ -354,10 +354,10 @@ public class ContractPropertySection extends AbstractBonitaDescriptionSection {
         final ISWTObservableValue observeEnabled = WidgetProperties.enabled().observe(button);
 
         final IObservableValue observeVariables = CustomEMFEditObservables.observeDetailValue(Realm.getDefault(),
-                ViewersObservables.observeSingleSelection(poolSelectionProvider),
+                ViewerProperties.singleSelection().observe(poolSelectionProvider),
                 ProcessPackage.Literals.DATA_AWARE__DATA);
         final IObservableValue observeDocuments = CustomEMFEditObservables.observeDetailValue(Realm.getDefault(),
-                ViewersObservables.observeSingleSelection(poolSelectionProvider),
+                ViewerProperties.singleSelection().observe(poolSelectionProvider),
                 ProcessPackage.Literals.POOL__DOCUMENTS);
         context.bindValue(observeEnabled, observeVariables,
                 neverUpdateValueStrategy().create(),
@@ -418,34 +418,34 @@ public class ContractPropertySection extends AbstractBonitaDescriptionSection {
 
     protected void bindRemoveButtonEnablement(final Button button, final Viewer viewer) {
         context.bindValue(WidgetProperties.enabled().observe(button),
-                ViewersObservables.observeSingleSelection(viewer),
+                ViewerProperties.singleSelection().observe(viewer),
                 new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER),
                 emptySelectionToBooleanStrategy());
     }
 
     protected void bindUpButtonEnablement(final Button button, final Viewer viewer) {
         context.bindValue(WidgetProperties.enabled().observe(button),
-                ViewersObservables.observeSingleSelection(viewer),
+                ViewerProperties.singleSelection().observe(viewer),
                 new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER),
                 isFirstElementToBooleanStrategy());
     }
 
     protected void bindDownButtonEnablement(final Button button, final Viewer viewer) {
         context.bindValue(WidgetProperties.enabled().observe(button),
-                ViewersObservables.observeSingleSelection(viewer),
+                ViewerProperties.singleSelection().observe(viewer),
                 new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER),
                 isLastElementToBooleanStrategy());
     }
 
     protected void bindAddChildButtonEnablement(final Button button, final Viewer viewer) {
         context.bindValue(WidgetProperties.enabled().observe(button),
-                ViewersObservables.observeSingleSelection(viewer),
+                ViewerProperties.singleSelection().observe(viewer),
                 new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER),
                 emptySelectionAndComplexTypeToBooleanStrategy());
 
         context.bindValue(
                 WidgetProperties.enabled().observe(button),
-                EMFObservables.observeDetailValue(Realm.getDefault(), ViewersObservables.observeSingleSelection(viewer),
+                EMFObservables.observeDetailValue(Realm.getDefault(), ViewerProperties.singleSelection().observe(viewer),
                         ProcessPackage.Literals.CONTRACT_INPUT__TYPE),
                 new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER),
                 complexTypeToBooleanStrategy());

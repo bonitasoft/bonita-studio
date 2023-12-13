@@ -16,11 +16,11 @@ package org.bonitasoft.studio.properties.sections.callActivity;
 
 import javax.inject.Inject;
 
+import org.bonitasoft.bpm.model.process.CallActivity;
 import org.bonitasoft.bpm.model.util.ExpressionConstants;
 import org.bonitasoft.studio.common.ui.properties.AbstractBonitaDescriptionSection;
 import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFilter;
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
-import org.bonitasoft.bpm.model.process.CallActivity;
 import org.bonitasoft.studio.properties.i18n.Messages;
 import org.bonitasoft.studio.properties.sections.general.ProcessNamesExpressionNatureProvider;
 import org.bonitasoft.studio.properties.sections.general.ProcessVersionsExpressionNatureProvider;
@@ -30,7 +30,7 @@ import org.eclipse.e4.ui.workbench.modeling.EPartService;
 import org.eclipse.e4.ui.workbench.modeling.EPartService.PartState;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.jface.databinding.viewers.ViewersObservables;
+import org.eclipse.jface.databinding.viewers.typed.ViewerProperties;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ISelection;
@@ -96,7 +96,7 @@ public class CallActivitySection extends AbstractBonitaDescriptionSection {
                 ExpressionConstants.SCRIPT_TYPE, ExpressionConstants.PARAMETER_TYPE }));
         nameViewer.setExpressionNatureProvider(new ProcessNamesExpressionNatureProvider());
 
-        IObservableValue diagramSelection = ViewersObservables.observeSingleSelection(selectionProvider);
+        IObservableValue diagramSelection = ViewerProperties.singleSelection().observe(selectionProvider);
         diagramSelection.addValueChangeListener(event -> {
             Object value = (EObject) event.diff.getNewValue();
             if (value instanceof CallActivity) {

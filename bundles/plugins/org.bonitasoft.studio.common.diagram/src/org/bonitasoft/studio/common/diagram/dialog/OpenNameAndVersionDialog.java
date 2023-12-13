@@ -24,6 +24,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import org.bonitasoft.bpm.model.process.AbstractProcess;
+import org.bonitasoft.bpm.model.process.Element;
+import org.bonitasoft.bpm.model.process.MainProcess;
+import org.bonitasoft.bpm.model.process.ProcessPackage;
 import org.bonitasoft.studio.common.Messages;
 import org.bonitasoft.studio.common.databinding.validator.EAttributeValidatorFactory;
 import org.bonitasoft.studio.common.diagram.Identifier;
@@ -34,19 +38,15 @@ import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.common.ui.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.ui.jface.databinding.DialogSupport;
-import org.bonitasoft.bpm.model.process.AbstractProcess;
-import org.bonitasoft.bpm.model.process.Element;
-import org.bonitasoft.bpm.model.process.MainProcess;
-import org.bonitasoft.bpm.model.process.ProcessPackage;
 import org.bonitasoft.studio.ui.databinding.UpdateValueStrategyFactory;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
-import org.eclipse.core.databinding.beans.PojoProperties;
+import org.eclipse.core.databinding.beans.typed.PojoProperties;
 import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.databinding.validation.MultiValidator;
 import org.eclipse.jface.databinding.fieldassist.ControlDecorationSupport;
 import org.eclipse.jface.databinding.swt.ISWTObservableValue;
-import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -164,7 +164,7 @@ public class OpenNameAndVersionDialog extends Dialog {
         nameText.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, "org.bonitasoft.studio.common.diagram.dialog.name.text");
         nameText.setLayoutData(
                 GridDataFactory.fillDefaults().grab(true, false).hint(200, SWT.DEFAULT).indent(10, 0).create());
-        final ISWTObservableValue observeNameText = SWTObservables.observeText(nameText, SWT.Modify);
+        final ISWTObservableValue observeNameText = WidgetProperties.text(SWT.Modify).observe(nameText);
         ControlDecorationSupport.create(
                 dbc.bindValue(observeNameText, PojoProperties.value("name").observe(identifier), nameUpdateStrategy(),
                         null),
@@ -174,7 +174,7 @@ public class OpenNameAndVersionDialog extends Dialog {
         versionLabel.setText(Messages.version);
         final Text versionText = new Text(res, SWT.BORDER);
         versionText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).indent(10, 0).create());
-        final ISWTObservableValue observeVersionText = SWTObservables.observeText(versionText, SWT.Modify);
+        final ISWTObservableValue observeVersionText = WidgetProperties.text(SWT.Modify).observe(versionText);
         ControlDecorationSupport.create(dbc.bindValue(observeVersionText,
                 PojoProperties.value("version").observe(identifier),
                 versionUpdateStrategy(), null), SWT.LEFT);

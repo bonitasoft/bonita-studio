@@ -18,7 +18,7 @@ import static com.google.common.base.Preconditions.checkState;
 import static com.google.common.collect.Iterables.find;
 
 import org.bonitasoft.studio.common.Messages;
-import org.eclipse.core.databinding.beans.PojoObservables;
+import org.eclipse.core.databinding.beans.typed.PojoProperties;
 import org.eclipse.core.databinding.observable.Realm;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.validation.IValidator;
@@ -47,8 +47,8 @@ public class UniqueValidator implements IValidator {
     public IStatus validate(final Object value) {
         checkState(iterable != null);
         if (value != null) {
-            return find(iterable, hasSamePropertyValue(value), null) == null ? ValidationStatus.ok() :
-                    ValidationStatus.error(Messages.bind(Messages.unicityErrorMessage, value));
+            return find(iterable, hasSamePropertyValue(value), null) == null ? ValidationStatus.ok()
+                    : ValidationStatus.error(Messages.bind(Messages.unicityErrorMessage, value));
         }
         return ValidationStatus.ok();
     }
@@ -60,7 +60,8 @@ public class UniqueValidator implements IValidator {
             public boolean apply(final Object input) {
                 Object currentPropertyValue = input;
                 if (propertyName != null) {
-                    final IObservableValue observeValue = PojoObservables.observeValue(new SimpleRealm(), input, propertyName);
+                    final IObservableValue observeValue = PojoProperties.value(propertyName).observe(new SimpleRealm(),
+                            input);
                     currentPropertyValue = observeValue.getValue();
                 }
                 return value.equals(currentPropertyValue);

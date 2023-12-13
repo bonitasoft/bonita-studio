@@ -43,7 +43,7 @@ import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.WritableValue;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.jface.databinding.viewers.ViewersObservables;
+import org.eclipse.jface.databinding.viewers.typed.ViewerProperties;
 import org.eclipse.jface.fieldassist.SimpleContentProposalProvider;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -155,7 +155,7 @@ public class DeployOrganizationControlSupplier implements ControlSupplier {
         TableColumnSorter sorter = new TableColumnSorter(viewer);
         sorter.setColumn(nameColumn);
 
-        ctx.bindValue(ViewersObservables.observeSingleSelection(viewer),
+        ctx.bindValue(ViewerProperties.singleSelection().observe(viewer),
                 fileStoreObservable,
                 updateValueStrategy()
                         .withValidator(value -> value == null ? ValidationStatus.error("") : ValidationStatus.ok())

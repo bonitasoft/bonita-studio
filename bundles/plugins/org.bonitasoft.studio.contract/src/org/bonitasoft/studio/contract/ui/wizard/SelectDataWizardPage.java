@@ -27,13 +27,6 @@ import static org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory.updateV
 import java.util.List;
 import java.util.Objects;
 
-import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelFileStore;
-import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
-import org.bonitasoft.studio.businessobject.ui.BusinessObjectDataStyledLabelProvider;
-import org.bonitasoft.studio.common.NamingUtils;
-import org.bonitasoft.studio.common.ui.widgets.CustomStackLayout;
-import org.bonitasoft.studio.contract.i18n.Messages;
-import org.bonitasoft.studio.contract.ui.wizard.GenerationOptions.EditMode;
 import org.bonitasoft.bpm.model.process.BusinessObjectData;
 import org.bonitasoft.bpm.model.process.Contract;
 import org.bonitasoft.bpm.model.process.ContractInput;
@@ -43,10 +36,17 @@ import org.bonitasoft.bpm.model.process.DocumentType;
 import org.bonitasoft.bpm.model.process.Pool;
 import org.bonitasoft.bpm.model.process.ProcessPackage;
 import org.bonitasoft.bpm.model.process.Task;
+import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelFileStore;
+import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
+import org.bonitasoft.studio.businessobject.ui.BusinessObjectDataStyledLabelProvider;
+import org.bonitasoft.studio.common.NamingUtils;
+import org.bonitasoft.studio.common.ui.widgets.CustomStackLayout;
+import org.bonitasoft.studio.contract.i18n.Messages;
+import org.bonitasoft.studio.contract.ui.wizard.GenerationOptions.EditMode;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.core.databinding.DataBindingContext;
-import org.eclipse.core.databinding.beans.PojoProperties;
+import org.eclipse.core.databinding.beans.typed.PojoProperties;
 import org.eclipse.core.databinding.conversion.Converter;
 import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.core.databinding.observable.Realm;
@@ -63,10 +63,10 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.jface.databinding.swt.WidgetProperties;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.jface.databinding.viewers.IViewerObservableValue;
 import org.eclipse.jface.databinding.viewers.ObservableListContentProvider;
-import org.eclipse.jface.databinding.viewers.ViewersObservables;
+import org.eclipse.jface.databinding.viewers.typed.ViewerProperties;
 import org.eclipse.jface.databinding.wizard.WizardPageSupport;
 import org.eclipse.jface.fieldassist.ControlDecoration;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -185,8 +185,8 @@ public class SelectDataWizardPage extends WizardPage {
         editModeCcontrolDecoration.setMarginWidth(-5);
 
         SelectObservableValue creationTypeObservable = new SelectObservableValue<EditMode>(EditMode.class);
-        creationTypeObservable.addOption(EditMode.CREATE, WidgetProperties.selection().observe(createButton));
-        creationTypeObservable.addOption(EditMode.EDIT, WidgetProperties.selection().observe(editButton));
+        creationTypeObservable.addOption(EditMode.CREATE, WidgetProperties.buttonSelection().observe(createButton));
+        creationTypeObservable.addOption(EditMode.EDIT, WidgetProperties.buttonSelection().observe(editButton));
         editButton.setEnabled(contract.eContainer() instanceof Task);
         generateOptions.setEditMode(contract.eContainer() instanceof Task ? EditMode.EDIT : EditMode.CREATE);
         dbc.bindValue(creationTypeObservable, generateOptions.getEditModeObservable());
@@ -207,8 +207,8 @@ public class SelectDataWizardPage extends WizardPage {
         documentButton = new Button(buttonComposite, SWT.RADIO);
         documentButton.setText(Messages.document);
         selectionTypeObservable = new SelectObservableValue<>(Boolean.class);
-        selectionTypeObservable.addOption(Boolean.TRUE, WidgetProperties.selection().observe(businessVariableButton));
-        selectionTypeObservable.addOption(Boolean.FALSE, WidgetProperties.selection().observe(documentButton));
+        selectionTypeObservable.addOption(Boolean.TRUE, WidgetProperties.buttonSelection().observe(businessVariableButton));
+        selectionTypeObservable.addOption(Boolean.FALSE, WidgetProperties.buttonSelection().observe(documentButton));
 
         if (availableBusinessData.isEmpty()) {
             setBusinessDataTypeSelected(false);
@@ -241,8 +241,8 @@ public class SelectDataWizardPage extends WizardPage {
                 .setLabelProvider(new BusinessObjectDataStyledLabelProvider(businessObjectStore, labelMaps));
         businessDataTableViewer
                 .setInput(new WritableList(availableBusinessData, ProcessPackage.Literals.BUSINESS_OBJECT_DATA));
-        final IViewerObservableValue observeSingleSelection = ViewersObservables
-                .observeSingleSelection(businessDataTableViewer);
+        final IViewerObservableValue observeSingleSelection = ViewerProperties.singleSelection()
+                .observe(businessDataTableViewer);
         dbc.bindValue(observeSingleSelection, selectedDataObservable);
         businessVariableButton.addSelectionListener(createBusinessVariableSelectionAdapter());
     }
@@ -273,8 +273,8 @@ public class SelectDataWizardPage extends WizardPage {
         documentTableViewer.setContentProvider(contentProvider);
         documentTableViewer.setLabelProvider(new DocumentStyledLabelProvider());
         documentTableViewer.setInput(new WritableList(availableDocuments, ProcessPackage.Literals.DOCUMENT));
-        final IViewerObservableValue observeSingleSelection = ViewersObservables
-                .observeSingleSelection(documentTableViewer);
+        final IViewerObservableValue observeSingleSelection = ViewerProperties.singleSelection()
+                .observe(documentTableViewer);
         dbc.bindValue(observeSingleSelection, selectedDataObservable,
                 updateValueStrategy().withValidator(createDefaultValueAlreadyDefinedValidator()).create(), null);
         documentButton.addSelectionListener(createDocumentSelectionAdapter());

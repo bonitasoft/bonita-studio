@@ -206,14 +206,6 @@ public class ImportExtensionHandler {
                     extensionTypeHandler,
                     updateExtensionDecorator);
         }
-        try {
-            container.run(true, false,
-                    monitor -> new UpdateMavenProjectJob(new IProject[] { currentRepository.getProject() }, false, false,
-                            false, false, true)
-                            .run(monitor));
-        } catch (InvocationTargetException | InterruptedException e) {
-            BonitaStudioLog.error(e);
-        }
         return result;
     }
 

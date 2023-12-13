@@ -1,0 +1,5 @@
+*This plugin is deprecated.*
+
+We no longer regenerate the diagrams, and the GMF tooling does no longer exist anyway.
+
+When we want new diagrams, it's easier to start over with a newer technology.

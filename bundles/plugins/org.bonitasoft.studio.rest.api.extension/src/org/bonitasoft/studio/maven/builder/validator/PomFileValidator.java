@@ -75,7 +75,7 @@ public class PomFileValidator extends AbstractCustomPageValidator {
         markerManager.deleteMarkers(pomFile, POM_VALIDATION_MARKER);
         ResolverConfiguration resolverConfiguration = configurationManager.getResolverConfiguration(project);
         if (resolverConfiguration != null) {
-            MavenExecutionContext context = projectManager.createExecutionContext(pomFile, resolverConfiguration);
+            var context = projectManager.createExecutionContext(pomFile, resolverConfiguration);
             ICallable<IProject> callable = (ctx, mntr) -> {
                 IMavenProjectFacade projectFacade = projectManager.getProject(project);
                 if (projectFacade == null || projectFacade.isStale()) {

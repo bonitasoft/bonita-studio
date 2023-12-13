@@ -16,8 +16,10 @@ package org.bonitasoft.studio.tests.util;
 
 import java.lang.reflect.InvocationTargetException;
 
+import org.bonitasoft.studio.application.maven.handler.TestMavenRepositoriesConnectionHandler;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.ui.PlatformUI;
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;
@@ -45,6 +47,7 @@ public class InitialProjectRule implements TestRule {
         if (repositoryManager.getRepository(defaultProjectMetadta.getArtifactId()) == null
                 || !repositoryManager.getRepository(defaultProjectMetadta.getArtifactId()).exists()) {
             PlatformUI.getWorkbench().getProgressService().run(true, false, monitor -> {
+                Job.getJobManager().join(TestMavenRepositoriesConnectionHandler.TEST_CONNECTION_FAMILY, monitor);
                 repositoryManager.getAccessor().createNewRepository(defaultProjectMetadta, monitor);
             });
         }

@@ -48,11 +48,10 @@ import org.eclipse.ui.internal.ide.IDEWorkbenchMessages;
 
 public class DeleteHandler extends AbstractHandler {
 
-    private FileStoreFinder selectionFinder = new FileStoreFinder();
 
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
-        IStructuredSelection selection = (IStructuredSelection) selectionFinder.getSelectionInExplorer();
+        IStructuredSelection selection = (IStructuredSelection) new FileStoreFinder().getSelectionInExplorer();
         List<IResource> selectedResources = new ArrayList<>();
         for (Object sel : selection.toList()) {
             selectedResources.add(((IAdaptable) sel).getAdapter(IResource.class));
@@ -101,7 +100,7 @@ public class DeleteHandler extends AbstractHandler {
                 && PlatformUI.getWorkbench().getActiveWorkbenchWindow() != null
                 && PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage() != null
                 && PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActivePart() instanceof BonitaProjectExplorer) {
-            ISelection selection = selectionFinder.getSelectionInExplorer();
+            ISelection selection =  new FileStoreFinder().getSelectionInExplorer();
             var currentRepository = RepositoryManager.getInstance().getCurrentRepository().orElseThrow();
             return selection instanceof IStructuredSelection
                     ? selectionCanBeDeleted((IStructuredSelection) selection, currentRepository)

@@ -25,12 +25,12 @@ import org.bonitasoft.studio.common.ui.jface.databinding.DialogSupport;
 import org.bonitasoft.studio.dependencies.i18n.Messages;
 import org.bonitasoft.studio.dependencies.repository.DependencyFileStore;
 import org.eclipse.core.databinding.UpdateValueStrategy;
-import org.eclipse.core.databinding.beans.PojoProperties;
+import org.eclipse.core.databinding.beans.typed.PojoProperties;
 import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.databinding.viewers.ViewersObservables;
+import org.eclipse.jface.databinding.viewers.typed.ViewerProperties;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
@@ -64,8 +64,8 @@ public class SelectJarsDialog extends ManageJarDialog {
             }
         }) ;
 
-        context.bindList(ViewersObservables.observeMultiSelection(tableViewer), PojoProperties.list(SelectJarsDialog.class,"selectedJars").observe(this)) ;
-        context.bindValue(ViewersObservables.observeSingleSelection(tableViewer), PojoProperties.value(SelectJarsDialog.class,"selectedJar").observe(this), selectionStartegy, null) ;
+        context.bindList(ViewerProperties.multipleSelection().observe(tableViewer), PojoProperties.list(SelectJarsDialog.class,"selectedJars").observe(this)) ;
+        context.bindValue(ViewerProperties.singleSelection().observe(tableViewer), PojoProperties.value(SelectJarsDialog.class,"selectedJar").observe(this), selectionStartegy, null) ;
 
         return control ;
     }

@@ -52,6 +52,7 @@ import org.bonitasoft.studio.identity.i18n.Messages;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.ui.widget.DynamicButtonWidget;
+import org.eclipse.core.databinding.observable.Realm;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.jobs.Job;
@@ -61,7 +62,7 @@ import org.eclipse.emf.databinding.edit.EMFEditObservables;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.edit.command.RemoveCommand;
-import org.eclipse.jface.databinding.viewers.ViewersObservables;
+import org.eclipse.jface.databinding.viewers.typed.ViewerProperties;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -441,9 +442,9 @@ public abstract class AbstractActorsPropertySection extends AbstractBonitaDescri
             emfDatabindingContext = new EMFDataBindingContext();
             final AbstractProcess process = ModelHelper.getParentProcess(assignable);
             if (process != null) {
-                emfDatabindingContext.bindValue(ViewersObservables.observeInput(actorComboViewer),
+                emfDatabindingContext.bindValue(ViewerProperties.input().observe(Realm.getDefault(), actorComboViewer),
                         EMFObservables.observeValue(process, ProcessPackage.Literals.ABSTRACT_PROCESS__ACTORS));
-                emfDatabindingContext.bindValue(ViewersObservables.observeSingleSelection(actorComboViewer),
+                emfDatabindingContext.bindValue(ViewerProperties.singleSelection().observe(actorComboViewer),
                         EMFEditObservables.observeValue(getEditingDomain(), assignable,
                                 ProcessPackage.Literals.ASSIGNABLE__ACTOR));
             }

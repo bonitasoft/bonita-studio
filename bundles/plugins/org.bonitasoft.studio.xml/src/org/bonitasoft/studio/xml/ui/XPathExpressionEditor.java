@@ -23,8 +23,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.bonitasoft.studio.common.BonitaConstants;
+import org.bonitasoft.bpm.model.expression.Expression;
+import org.bonitasoft.bpm.model.expression.ExpressionPackage;
+import org.bonitasoft.bpm.model.process.Data;
+import org.bonitasoft.bpm.model.process.XMLData;
 import org.bonitasoft.bpm.model.util.ExpressionConstants;
+import org.bonitasoft.studio.common.BonitaConstants;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.ui.jface.DataStyledTreeLabelProvider;
 import org.bonitasoft.studio.common.ui.jface.TableColumnSorter;
@@ -33,10 +37,6 @@ import org.bonitasoft.studio.expression.editor.provider.IExpressionEditor;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionProvider;
 import org.bonitasoft.studio.expression.editor.provider.SelectionAwareExpressionEditor;
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
-import org.bonitasoft.bpm.model.expression.Expression;
-import org.bonitasoft.bpm.model.expression.ExpressionPackage;
-import org.bonitasoft.bpm.model.process.Data;
-import org.bonitasoft.bpm.model.process.XMLData;
 import org.bonitasoft.studio.xml.Messages;
 import org.bonitasoft.studio.xml.api.XPathReturnType;
 import org.bonitasoft.studio.xml.repository.XSDRepositoryStore;
@@ -49,9 +49,8 @@ import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.jface.databinding.swt.ISWTObservableValue;
-import org.eclipse.jface.databinding.swt.SWTObservables;
-import org.eclipse.jface.databinding.viewers.ViewersObservables;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
+import org.eclipse.jface.databinding.viewers.typed.ViewerProperties;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ColumnWeightData;
@@ -344,20 +343,20 @@ public class XPathExpressionEditor extends SelectionAwareExpressionEditor implem
                 return fromObject != null;
             }
         });
-        dataBindingContext.bindValue(ViewersObservables.observeSingleSelection(viewer), referenceObservable, selectionToReferencedData,
+        dataBindingContext.bindValue(ViewerProperties.singleSelection().observe(viewer), referenceObservable, selectionToReferencedData,
                 referencedDataToSelection);
-        final ISWTObservableValue observeText = SWTObservables.observeText(text, SWT.Modify);
+        var observeText = WidgetProperties.text(SWT.Modify).observe(text);
         dataBindingContext.bindValue(observeText, nameObservable, selectionToName, new UpdateValueStrategy(
                 UpdateValueStrategy.POLICY_NEVER));
         dataBindingContext.bindValue(observeText, contentObservable);
 
-        dataBindingContext.bindValue(SWTObservables.observeEnabled(xsdViewer.getTree()), ViewersObservables.observeSingleSelection(viewer),
+        dataBindingContext.bindValue(WidgetProperties.enabled().observe(xsdViewer.getTree()), ViewerProperties.singleSelection().observe(viewer),
                 new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER), enableStrategy);
-        dataBindingContext.bindValue(ViewersObservables.observeSingleSelection(xsdViewer), contentObservable, selectionToContent, contentToSelection);
-        dataBindingContext.bindValue(ViewersObservables.observeSingleSelection(xsdViewer), returnTypeObservable, selectionToReturnType,
+        dataBindingContext.bindValue(ViewerProperties.singleSelection().observe(xsdViewer), contentObservable, selectionToContent, contentToSelection);
+        dataBindingContext.bindValue(ViewerProperties.singleSelection().observe(xsdViewer), returnTypeObservable, selectionToReturnType,
                 new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER));
 
-        dataBindingContext.bindValue(ViewersObservables.observeSingleSelection(typeCombo), returnTypeObservable);
+        dataBindingContext.bindValue(ViewerProperties.singleSelection().observe(typeCombo), returnTypeObservable);
     }
 
     private void createXPathChooser(final Composite parent) {

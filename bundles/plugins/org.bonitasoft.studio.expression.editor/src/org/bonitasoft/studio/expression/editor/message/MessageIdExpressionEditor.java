@@ -19,6 +19,8 @@ package org.bonitasoft.studio.expression.editor.message;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.bonitasoft.bpm.model.expression.Expression;
+import org.bonitasoft.bpm.model.expression.ExpressionPackage;
 import org.bonitasoft.bpm.model.util.ExpressionConstants;
 import org.bonitasoft.studio.common.ui.jface.TableColumnSorter;
 import org.bonitasoft.studio.expression.editor.ExpressionProviderService;
@@ -27,14 +29,12 @@ import org.bonitasoft.studio.expression.editor.provider.IExpressionEditor;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionProvider;
 import org.bonitasoft.studio.expression.editor.provider.SelectionAwareExpressionEditor;
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
-import org.bonitasoft.bpm.model.expression.Expression;
-import org.bonitasoft.bpm.model.expression.ExpressionPackage;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.jface.databinding.swt.SWTObservables;
-import org.eclipse.jface.databinding.viewers.ViewersObservables;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
+import org.eclipse.jface.databinding.viewers.typed.ViewerProperties;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ColumnWeightData;
@@ -134,17 +134,17 @@ public class MessageIdExpressionEditor extends SelectionAwareExpressionEditor im
         IObservableValue nameModelObservable = EMFObservables.observeValue(inputExpression, ExpressionPackage.Literals.EXPRESSION__NAME);
         IObservableValue contentModelObservable = EMFObservables.observeValue(inputExpression, ExpressionPackage.Literals.EXPRESSION__CONTENT);
 
-        Set<String> input = new HashSet<String>();
+        Set<String> input = new HashSet<>();
         IExpressionProvider provider = ExpressionProviderService.getInstance().getExpressionProvider(ExpressionConstants.MESSAGE_ID_TYPE);
         for (Expression e : provider.getExpressions(context)) {
             input.add(e.getName());
         }
         viewer.setInput(input);
 
-        dataBindingContext.bindValue(SWTObservables.observeText(valueText, SWT.Modify), nameModelObservable);
-        dataBindingContext.bindValue(SWTObservables.observeText(valueText, SWT.Modify), contentModelObservable);
-        dataBindingContext.bindValue(ViewersObservables.observeSingleSelection(viewer), nameModelObservable);
-        dataBindingContext.bindValue(ViewersObservables.observeSingleSelection(viewer), contentModelObservable);
+        dataBindingContext.bindValue(WidgetProperties.text(SWT.Modify).observe(valueText), nameModelObservable);
+        dataBindingContext.bindValue(WidgetProperties.text(SWT.Modify).observe(valueText), contentModelObservable);
+        dataBindingContext.bindValue(ViewerProperties.singleSelection().observe(viewer), nameModelObservable);
+        dataBindingContext.bindValue(ViewerProperties.singleSelection().observe(viewer), contentModelObservable);
     }
 
     /*

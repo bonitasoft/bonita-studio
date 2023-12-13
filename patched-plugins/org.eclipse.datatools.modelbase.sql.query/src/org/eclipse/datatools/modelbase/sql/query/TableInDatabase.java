@@ -7,9 +7,8 @@
 package org.eclipse.datatools.modelbase.sql.query;
 
 
-import org.eclipse.emf.common.util.EList;
-
 import org.eclipse.datatools.modelbase.sql.tables.Table;
+import org.eclipse.emf.common.util.EList;
 
 /**
  * <!-- begin-user-doc -->

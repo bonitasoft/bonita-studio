@@ -36,26 +36,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.bonitasoft.studio.common.DateUtil;
-import org.bonitasoft.bpm.model.util.ExpressionConstants;
-import org.bonitasoft.studio.common.IBonitaVariableContext;
-import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
-import org.bonitasoft.studio.common.emf.tools.ModelHelper;
-import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
-import org.bonitasoft.studio.common.extension.IWidgetContribtution;
-import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.RepositoryManager;
-import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
-import org.bonitasoft.studio.common.ui.DateWidgetUtil;
-import org.bonitasoft.studio.data.DataPlugin;
-import org.bonitasoft.studio.data.i18n.Messages;
-import org.bonitasoft.studio.data.ui.dialog.EnumDataTypeDialog;
-import org.bonitasoft.studio.data.ui.wizard.provider.BooleanExpressionNatureProvider;
-import org.bonitasoft.studio.data.ui.wizard.provider.NowDateExpressionNatureProvider;
-import org.bonitasoft.studio.data.ui.wizard.provider.OptionsExpressionNatureProvider;
-import org.bonitasoft.studio.data.util.DataUtil;
-import org.bonitasoft.studio.expression.editor.provider.ExpressionContentProvider;
-import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
 import org.bonitasoft.bpm.model.expression.Expression;
 import org.bonitasoft.bpm.model.expression.ExpressionFactory;
 import org.bonitasoft.bpm.model.expression.ExpressionPackage;
@@ -78,6 +58,26 @@ import org.bonitasoft.bpm.model.process.Task;
 import org.bonitasoft.bpm.model.process.XMLData;
 import org.bonitasoft.bpm.model.process.XMLType;
 import org.bonitasoft.bpm.model.process.util.ProcessSwitch;
+import org.bonitasoft.bpm.model.util.ExpressionConstants;
+import org.bonitasoft.studio.common.DateUtil;
+import org.bonitasoft.studio.common.IBonitaVariableContext;
+import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
+import org.bonitasoft.studio.common.emf.tools.ModelHelper;
+import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
+import org.bonitasoft.studio.common.extension.IWidgetContribtution;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
+import org.bonitasoft.studio.common.ui.DateWidgetUtil;
+import org.bonitasoft.studio.data.DataPlugin;
+import org.bonitasoft.studio.data.i18n.Messages;
+import org.bonitasoft.studio.data.ui.dialog.EnumDataTypeDialog;
+import org.bonitasoft.studio.data.ui.wizard.provider.BooleanExpressionNatureProvider;
+import org.bonitasoft.studio.data.ui.wizard.provider.NowDateExpressionNatureProvider;
+import org.bonitasoft.studio.data.ui.wizard.provider.OptionsExpressionNatureProvider;
+import org.bonitasoft.studio.data.util.DataUtil;
+import org.bonitasoft.studio.expression.editor.provider.ExpressionContentProvider;
+import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.preferences.BonitaThemeConstants;
@@ -114,9 +114,9 @@ import org.eclipse.jdt.core.search.IJavaSearchScope;
 import org.eclipse.jdt.core.search.SearchEngine;
 import org.eclipse.jdt.internal.ui.dialogs.OpenTypeSelectionDialog;
 import org.eclipse.jface.databinding.swt.ISWTObservableValue;
-import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.jface.databinding.viewers.IViewerObservableValue;
-import org.eclipse.jface.databinding.viewers.ViewersObservables;
+import org.eclipse.jface.databinding.viewers.typed.ViewerProperties;
 import org.eclipse.jface.databinding.wizard.WizardPageSupport;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -143,7 +143,6 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
@@ -425,7 +424,7 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
 
                 @Override
                 protected IStatus validate() {
-                    final IViewerObservableValue selectedType = ViewersObservables.observeSingleSelection(typeCombo);
+                    final IViewerObservableValue selectedType = ViewerProperties.singleSelection().observe(typeCombo);
                     final DataType type = (DataType) selectedType.getValue();
                     String technicalTypeFor = DataUtil
                             .getTechnicalTypeFor(ModelHelper.getMainProcess(container), type.getName()).replace(
@@ -529,7 +528,7 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
     }
 
     protected void bindIsMultipleData() {
-        emfDatabindingContext.bindValue(SWTObservables.observeSelection(multiplicityButton),
+        emfDatabindingContext.bindValue(WidgetProperties.buttonSelection().observe(multiplicityButton),
                 EMFObservables.observeValue(data, ProcessPackage.Literals.DATA__MULTIPLE));
         final UpdateValueStrategy startegy = new UpdateValueStrategy();
         final IObservableValue returnTypeObservable = EMFObservables.observeValue(data.getDefaultValue(),
@@ -569,13 +568,13 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
 
         });
 
-        emfDatabindingContext.bindValue(SWTObservables.observeSelection(multiplicityButton),
+        emfDatabindingContext.bindValue(WidgetProperties.buttonSelection().observe(multiplicityButton),
                 returnTypeObservable, startegy, new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER));
     }
 
     protected void bindGenerateDataCheckbox() {
         if (generateDataCheckbox != null) {
-            emfDatabindingContext.bindValue(SWTObservables.observeSelection(generateDataCheckbox),
+            emfDatabindingContext.bindValue(WidgetProperties.buttonSelection().observe(generateDataCheckbox),
                     EMFObservables.observeValue(data, ProcessPackage.Literals.DATA__GENERATED));
         }
     }
@@ -585,7 +584,7 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
         if (nameText != null && !nameText.isDisposed() && nameText.getText() != null) {
             previousName = nameText.getText();
         }
-        final ISWTObservableValue observeText = SWTObservables.observeText(nameText, SWT.Modify);
+        final ISWTObservableValue observeText = WidgetProperties.text(SWT.Modify).observe(nameText);
 
         emfDatabindingContext.bindValue(observeText,
                 EMFObservables.observeValue(data, ProcessPackage.Literals.ELEMENT__NAME),
@@ -597,7 +596,7 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
                         .create(),
                 null);
 
-        emfDatabindingContext.bindValue(SWTObservables.observeText(descriptionText, SWT.Modify),
+        emfDatabindingContext.bindValue(WidgetProperties.text(SWT.Modify).observe(descriptionText),
                 EMFObservables.observeValue(data, ProcessPackage.Literals.ELEMENT__DOCUMENTATION),
                 updateValueStrategy().withValidator(maxLengthValidator(Messages.dataDescriptionLabel, 255)).create(),
                 null);
@@ -660,13 +659,13 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
 
     protected void bindDataTypeCombo() {
         final AbstractProcess process = ModelHelper.getMainProcess(container);
-        emfDatabindingContext.bindValue(ViewersObservables.observeInput(typeCombo),
+        emfDatabindingContext.bindValue(ViewerProperties.input().observe(Realm.getDefault(), typeCombo),
                 EMFObservables.observeValue(process, ProcessPackage.Literals.ABSTRACT_PROCESS__DATATYPES));
         final IObservableValue modelObservable = EMFObservables.observeValue(data,
                 ProcessPackage.Literals.DATA__DATA_TYPE);
         modelObservable.addValueChangeListener(typeChangeListener);
 
-        observeSingleSelectionTypeCombo = ViewersObservables.observeSingleSelection(typeCombo);
+        observeSingleSelectionTypeCombo = ViewerProperties.singleSelection().observe(typeCombo);
         emfDatabindingContext.bindValue(observeSingleSelectionTypeCombo,
                 modelObservable,
                 UpdateStrategyFactory.updateValueStrategy()
@@ -703,7 +702,7 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
         }
 
         defaultValueViewer.setInput(data);
-        observeSingleSelectionDefaultValueExpression = ViewersObservables.observeSingleSelection(defaultValueViewer);
+        observeSingleSelectionDefaultValueExpression = ViewerProperties.singleSelection().observe(defaultValueViewer);
         emfDatabindingContext.bindValue(observeSingleSelectionDefaultValueExpression,
                 EMFObservables.observeValue(data, ProcessPackage.Literals.DATA__DEFAULT_VALUE));
     }
@@ -712,7 +711,7 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
         if (data.isMultiple()) {
             return multipleReturnType;
         }
-        final IViewerObservableValue selectedType = ViewersObservables.observeSingleSelection(typeCombo);
+        final IViewerObservableValue selectedType = ViewerProperties.singleSelection().observe(typeCombo);
         final DataType type = (DataType) selectedType.getValue();
         if (data instanceof JavaObjectData) {
             final String className = ((JavaObjectData) data).getClassName();
@@ -735,10 +734,10 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
 
     protected void bindTransientButton() {
         if (isTransientButton != null && !isTransientButton.isDisposed()) {
-            final ISWTObservableValue observeSelection = SWTObservables.observeSelection(isTransientButton);
+            final ISWTObservableValue observeSelection = WidgetProperties.buttonSelection().observe(isTransientButton);
             emfDatabindingContext.bindValue(observeSelection,
                     EMFObservables.observeValue(data, ProcessPackage.Literals.DATA__TRANSIENT));
-            emfDatabindingContext.bindValue(observeSelection, SWTObservables.observeVisible(transientDataWarning), null,
+            emfDatabindingContext.bindValue(observeSelection, WidgetProperties.visible().observe(transientDataWarning), null,
                     new UpdateValueStrategy(
                             UpdateValueStrategy.POLICY_NEVER));
         }
@@ -767,7 +766,7 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
                     return Status.OK_STATUS;
                 }
             });
-            emfDatabindingContext.bindValue(SWTObservables.observeText(classText, SWT.Modify),
+            emfDatabindingContext.bindValue(WidgetProperties.text(SWT.Modify).observe(classText),
                     EMFObservables.observeValue(data, ProcessPackage.Literals.JAVA_OBJECT_DATA__CLASS_NAME),
                     classNameStrategy, null);
         }
@@ -806,7 +805,7 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
             });
             final IObservableValue observeValue = EMFObservables.observeValue(data,
                     ProcessPackage.Literals.XML_DATA__NAMESPACE);
-            final ISWTObservableValue observeText = SWTObservables.observeText(nsCombo);
+            final ISWTObservableValue observeText = WidgetProperties.text().observe(nsCombo);
             emfDatabindingContext.bindValue(observeText,
                     observeValue);
             observeText.addValueChangeListener(new IValueChangeListener() {
@@ -842,7 +841,7 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
             });
             final IObservableValue observeValue = EMFObservables.observeValue(data,
                     ProcessPackage.Literals.XML_DATA__TYPE);
-            final ISWTObservableValue observeText = SWTObservables.observeText(elementCombo);
+            final ISWTObservableValue observeText = WidgetProperties.text().observe(elementCombo);
             emfDatabindingContext.bindValue(observeText,
                     observeValue, strategy, null);
             observeText.addValueChangeListener(new IValueChangeListener() {

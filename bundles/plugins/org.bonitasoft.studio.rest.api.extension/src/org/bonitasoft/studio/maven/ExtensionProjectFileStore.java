@@ -70,7 +70,6 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
-import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.window.Window;
 import org.eclipse.m2e.core.MavenPlugin;
@@ -301,11 +300,7 @@ public class ExtensionProjectFileStore<T extends ExtensionProjectDescriptor> ext
 	}
 
 	public BuildCustomPageOperation newBuildOperation() throws ReadFileStoreException {
-		return new BuildCustomPageOperation(getContent(), DebugPlugin.getDefault().getLaunchManager());
-	}
-
-	public BuildCustomPageOperation newBuildOperation(final String mavenGoals) throws ReadFileStoreException {
-		return new BuildCustomPageOperation(getContent(), DebugPlugin.getDefault().getLaunchManager(), mavenGoals);
+		return new BuildCustomPageOperation(getContent());
 	}
 
 	public String getPageId() {
@@ -424,7 +419,7 @@ public class ExtensionProjectFileStore<T extends ExtensionProjectDescriptor> ext
 			BuildCustomPageOperation buildOperation = newBuildOperation();
 			buildOperation.run(monitor);
 
-			if (!Objects.equals(buildOperation.getStatus().getSeverity(), ValidationStatus.ERROR)) {
+			if (!Objects.equals(buildOperation.getStatus().getSeverity(), IStatus.ERROR)) {
 				String archiveName = buildOperation.getArchiveName();
 				IFile file = restApiFolder.getFile(archiveName);
 				file.create(buildOperation.getArchiveContent(), true, new NullProgressMonitor());

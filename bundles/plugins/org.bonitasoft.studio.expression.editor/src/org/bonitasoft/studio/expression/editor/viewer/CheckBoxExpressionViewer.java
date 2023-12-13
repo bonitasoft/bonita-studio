@@ -26,7 +26,7 @@ import org.eclipse.core.databinding.conversion.Converter;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.ecore.EReference;
-import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.fieldassist.ControlDecoration;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -203,7 +203,7 @@ public class CheckBoxExpressionViewer extends ExpressionViewer {
             });
 
             internalDataBindingContext.bindValue(
-                    SWTObservables.observeSelection(checkBoxControl),
+                    WidgetProperties.buttonSelection().observe(checkBoxControl),
                     nameObservable,
                     targetToModelNameStrategy,
                     modelToTargetNameStrategy);

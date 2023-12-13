@@ -8,7 +8,8 @@
  *******************************************************************************/
 package org.bonitasoft.studio.maven.model;
 
-import java.util.Properties;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
 import org.bonitasoft.studio.maven.i18n.Messages;
@@ -26,12 +27,12 @@ public class ThemeArchetypeConfiguration extends CustomPageArchetypeConfiguratio
     }
 
     @Override
-    public Properties toProperties() {
-        final Properties properties = new Properties();
-        properties.setProperty("name", getPageName());
-        properties.setProperty("displayName", getPageDisplayName());
-        properties.setProperty("description", getPageDescription());
-        properties.setProperty("wrapper","false");
+    public Map<String, String> toProperties() {
+        final Map<String, String> properties = new HashMap<>();
+        properties.put("name", getPageName());
+        properties.put("displayName", getPageDisplayName());
+        properties.put("description", getPageDescription());
+        properties.put("wrapper","false");
         return properties;
     }
 

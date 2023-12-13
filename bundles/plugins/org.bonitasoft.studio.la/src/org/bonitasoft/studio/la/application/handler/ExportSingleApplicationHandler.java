@@ -24,21 +24,13 @@ import org.eclipse.swt.widgets.Display;
 
 public class ExportSingleApplicationHandler extends AbstractHandler {
 
-    private ExportApplicationFileAction exportApplicationFileAction;
-    private FileStoreFinder fileStoreFinder;
-
-    public ExportSingleApplicationHandler() {
-        exportApplicationFileAction = new ExportApplicationFileAction();
-        fileStoreFinder = new FileStoreFinder();
-    }
-
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
-        fileStoreFinder.findSelectedFileStore(RepositoryManager.getInstance().getCurrentRepository().orElseThrow())
+        new FileStoreFinder().findSelectedFileStore(RepositoryManager.getInstance().getCurrentRepository().orElseThrow())
                 .filter(ApplicationFileStore.class::isInstance)
                 .map(ApplicationFileStore.class::cast)
                 .ifPresent(
-                        fileStore -> exportApplicationFileAction.export(Display.getDefault().getActiveShell(), fileStore));
+                        fileStore -> new ExportApplicationFileAction().export(Display.getDefault().getActiveShell(), fileStore));
         return null;
     }
 

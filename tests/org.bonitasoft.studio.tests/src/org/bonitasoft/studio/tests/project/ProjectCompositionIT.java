@@ -44,10 +44,14 @@ import org.bonitasoft.studio.tests.importer.bos.ImportBOSArchiveWizardIT;
 import org.bonitasoft.studio.tests.util.ProjectUtil;
 import org.bonitasoft.studio.tests.util.ResourceMarkerHelper;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.OperationCanceledException;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.resource.JFaceResources;
+import org.eclipse.m2e.core.internal.jobs.MavenJob;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.exceptions.WidgetNotFoundException;
@@ -74,11 +78,13 @@ public class ProjectCompositionIT {
     private MavenProjectHelper mavenProjectHelper;
 
     @Before
-    public void setUp() throws CoreException {
+    public void setUp() throws CoreException, OperationCanceledException, InterruptedException {
         repositoryAccessor = RepositoryManager.getInstance().getAccessor();
         mavenProjectHelper = new MavenProjectHelper();
         ProjectUtil.removeUserExtensions();
         BonitaMarketplace.getInstance().loadDependencies(new NullProgressMonitor());
+        Job.getJobManager().join(IncrementalProjectBuilder.AUTO_BUILD, new NullProgressMonitor());
+        Job.getJobManager().join(MavenJob.FAMILY_M2, new NullProgressMonitor());
     }
 
     @After

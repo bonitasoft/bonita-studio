@@ -23,7 +23,6 @@ Require-Bundle: assertj-core,
  org.eclipse.ui,
  org.mockito.mockito-core,
  org.eclipse.swtbot.swt.finder,
- org.apache.log4j,
  org.bonitasoft.bpm.model.tests-utils;visibility:=reexport
 Import-Package: org.bonitasoft.engine.bdm.model,
  org.bonitasoft.engine.bdm.model.field,

@@ -34,7 +34,7 @@ import org.eclipse.core.databinding.conversion.Converter;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.emf.databinding.edit.EMFEditObservables;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
@@ -75,14 +75,14 @@ public class AssignableActorsPropertySection extends AbstractActorsPropertySecti
             useLaneActorButton.setEnabled(current instanceof Lane);
             final IObservableValue value = EMFEditObservables.observeValue(getEditingDomain(), assignable,
                     ProcessPackage.Literals.TASK__OVERRIDE_ACTORS_OF_THE_LANE);
-            emfDatabindingContext.bindValue(SWTObservables.observeSelection(taskActorButton), value);
-            emfDatabindingContext.bindValue(SWTObservables.observeSelection(useLaneActorButton), value,
+            emfDatabindingContext.bindValue(WidgetProperties.buttonSelection().observe(taskActorButton), value);
+            emfDatabindingContext.bindValue(WidgetProperties.buttonSelection().observe(useLaneActorButton), value,
                     new UpdateValueStrategy(),
                     new UpdateValueStrategy().setConverter(new BooleanInverserConverter()));
             final UpdateValueStrategy updateValueStrategy = new UpdateValueStrategy()
                     .setConverter(new BooleanInverserConverter());
-            emfDatabindingContext.bindValue(SWTObservables.observeEnabled(actorComboViewer.getControl()),
-                    SWTObservables.observeSelection(useLaneActorButton), new UpdateValueStrategy(), updateValueStrategy);
+            emfDatabindingContext.bindValue(WidgetProperties.enabled().observe(actorComboViewer.getControl()),
+                    WidgetProperties.buttonSelection().observe(useLaneActorButton), new UpdateValueStrategy(), updateValueStrategy);
 
             databindactorDefinedInLaneLabel(assignable);
 
@@ -97,7 +97,7 @@ public class AssignableActorsPropertySection extends AbstractActorsPropertySecti
                     parentLane,
                     ProcessPackage.Literals.ASSIGNABLE__ACTOR);
             emfDatabindingContext.bindValue(
-                    SWTObservables.observeText(actorDefinedInLaneLabel),
+                    WidgetProperties.text().observe(actorDefinedInLaneLabel),
                     observeActorDefinedInLane,
                     new UpdateValueStrategy(),
                     new UpdateValueStrategy().setConverter(new Converter(Object.class, String.class) {

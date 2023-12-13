@@ -9,8 +9,9 @@
 package org.bonitasoft.studio.maven.model;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Properties;
+import java.util.Map;
 
 import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
@@ -127,19 +128,19 @@ public class RestAPIExtensionArchetypeConfiguration extends CustomPageArchetypeC
     }
 
     @Override
-    public Properties toProperties() {
-        final Properties properties = new Properties();
-        properties.setProperty("bonitaVersion", bonitaVersion);
-        properties.setProperty("sp", "false");
-        properties.setProperty("language", getLanguage());
-        properties.setProperty("apiName", getPageName());
-        properties.setProperty("apiDisplayName", getPageDisplayName());
-        properties.setProperty("apiDesc", getPageDescription());
-        properties.setProperty("httpVerb", httpVerb);
-        properties.setProperty("pathTemplate", pathTemplate);
-        properties.setProperty("permissionNames", Joiner.on(",").join(permissions));
-        properties.setProperty("urlParameters", urlParameters.isEmpty() ? "!" : Joiner.on(",").join(urlParameters));
-        properties.setProperty("wrapper", "false");
+    public Map<String, String> toProperties() {
+        final Map<String, String> properties = new HashMap<>();
+        properties.put("bonitaVersion", bonitaVersion);
+        properties.put("sp", "false");
+        properties.put("language", getLanguage());
+        properties.put("apiName", getPageName());
+        properties.put("apiDisplayName", getPageDisplayName());
+        properties.put("apiDesc", getPageDescription());
+        properties.put("httpVerb", httpVerb);
+        properties.put("pathTemplate", pathTemplate);
+        properties.put("permissionNames", Joiner.on(",").join(permissions));
+        properties.put("urlParameters", urlParameters.isEmpty() ? "!" : Joiner.on(",").join(urlParameters));
+        properties.put("wrapper", "false");
         return properties;
     }
 

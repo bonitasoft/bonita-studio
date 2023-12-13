@@ -368,7 +368,7 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
             Model mavenModel = mavenProjectHelper.getMavenModel(currentRepository.getProject());
             dependencies.stream()
                     .forEach(dep -> updateProjectModel(dep, mavenModel, mavenProjectHelper, statusBuilder));
-            mavenProjectHelper.saveModel(currentRepository.getProject(), mavenModel, false, monitor);
+            mavenProjectHelper.saveModel(currentRepository.getProject(), mavenModel, monitor);
             ProjectDependenciesStore projectDependenciesStore = currentRepository.getProjectDependenciesStore();
             if (projectDependenciesStore != null) {
                 currentRepository.getProject().build(IncrementalProjectBuilder.INCREMENTAL_BUILD, monitor);

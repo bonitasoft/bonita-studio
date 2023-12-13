@@ -17,19 +17,19 @@ package org.bonitasoft.studio.common.diagram.dialog;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bonitasoft.bpm.model.process.AbstractProcess;
+import org.bonitasoft.bpm.model.process.MainProcess;
 import org.bonitasoft.studio.common.Messages;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.common.ui.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.ui.jface.databinding.DialogSupport;
-import org.bonitasoft.bpm.model.process.AbstractProcess;
-import org.bonitasoft.bpm.model.process.MainProcess;
 import org.eclipse.core.databinding.DataBindingContext;
-import org.eclipse.core.databinding.beans.PojoProperties;
+import org.eclipse.core.databinding.beans.typed.PojoProperties;
 import org.eclipse.core.databinding.validation.MultiValidator;
 import org.eclipse.jface.databinding.fieldassist.ControlDecorationSupport;
 import org.eclipse.jface.databinding.swt.ISWTObservableValue;
-import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
@@ -97,7 +97,7 @@ public class OpenNameAndVersionForDiagramDialog extends OpenNameAndVersionDialog
         poolNameText.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY,
                 "org.bonitasoft.studio.common.diagram.dialog.poolName.text");
 
-        final ISWTObservableValue observePoolNameText = SWTObservables.observeText(poolNameText, SWT.Modify);
+        final ISWTObservableValue observePoolNameText = WidgetProperties.text(SWT.Modify).observe(poolNameText);
         ControlDecorationSupport.create(dbc.bindValue(observePoolNameText,
                 PojoProperties.value("newName").observe(pnv),
                 nameUpdateStrategy(),
@@ -108,7 +108,7 @@ public class OpenNameAndVersionForDiagramDialog extends OpenNameAndVersionDialog
         final Text poolVersionText = new Text(pnvCompo, SWT.BORDER);
         poolVersionText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).hint(100, SWT.DEFAULT).create());
 
-        final ISWTObservableValue observePoolVersionText = SWTObservables.observeText(poolVersionText, SWT.Modify);
+        final ISWTObservableValue observePoolVersionText = WidgetProperties.text(SWT.Modify).observe(poolVersionText);
         ControlDecorationSupport.create(dbc.bindValue(observePoolVersionText,
                 PojoProperties.value("newVersion").observe(pnv),
                 versionUpdateStrategy(),

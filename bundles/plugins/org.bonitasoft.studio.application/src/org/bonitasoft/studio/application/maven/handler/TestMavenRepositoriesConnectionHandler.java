@@ -15,6 +15,7 @@
 package org.bonitasoft.studio.application.maven.handler;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.Objects;
 
 import javax.inject.Named;
 
@@ -38,7 +39,7 @@ import org.eclipse.ui.PlatformUI;
 public class TestMavenRepositoriesConnectionHandler {
 
     public static final String SHOW_RESULT_PARAM = "org.bonitasoft.studio.application.command.checkMavenConfiguration.showResult";
-
+    public static final Object TEST_CONNECTION_FAMILY = new Object();
     @Execute
     public void execute(@Optional @Named(SHOW_RESULT_PARAM) String showResult) {
         var job = new CheckRemoteAcessJob();
@@ -93,6 +94,11 @@ public class TestMavenRepositoriesConnectionHandler {
             } catch (InvocationTargetException | InterruptedException e) {
                 return Status.error("Failed to check Maven configuration", e);
             }
+        }
+        
+        @Override
+        public boolean belongsTo(Object family) {
+            return Objects.equals(family, TEST_CONNECTION_FAMILY);
         }
 
         public Result getCheckResult() {

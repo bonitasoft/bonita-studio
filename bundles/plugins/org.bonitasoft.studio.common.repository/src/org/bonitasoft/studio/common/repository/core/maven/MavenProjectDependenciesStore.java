@@ -125,7 +125,7 @@ public class MavenProjectDependenciesStore implements ProjectDependenciesStore {
                         .forEach(this::addMarker);
             }
            if(updateMavenProject) {
-        	    new UpdateMavenProjectJob(new IProject[] { project.getAppProject() }, false, false,
+        	    new UpdateMavenProjectJob(List.of(project.getAppProject()), false, false,
                         false,
                         true, true).schedule();
            }
