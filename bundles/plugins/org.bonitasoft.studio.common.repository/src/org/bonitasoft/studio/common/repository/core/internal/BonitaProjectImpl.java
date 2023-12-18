@@ -50,6 +50,8 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.m2e.core.MavenPlugin;
 import org.eclipse.m2e.core.ui.internal.UpdateMavenProjectJob;
 
+import com.google.common.base.Objects;
+
 public class BonitaProjectImpl implements BonitaProject {
 
     private String id;
@@ -79,7 +81,10 @@ public class BonitaProjectImpl implements BonitaProject {
 
     private Model getMavenModel() throws CoreException {
         var appProject = getAppProject();
-        var mavenFacade = MavenPlugin.getMavenProjectRegistry().create(appProject, new NullProgressMonitor());
+        var mavenFacade = MavenPlugin.getMavenProjectRegistry().getProjects().stream()
+        		.filter(facade -> Objects.equal(appProject, facade.getProject()))
+        		.findFirst()
+        		.orElse(null);
         if (mavenFacade != null && mavenFacade.getMavenProject() != null) {
             return mavenFacade.getMavenProject().getModel();
         }

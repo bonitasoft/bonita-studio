@@ -360,7 +360,8 @@ public class ExtensionCard extends Composite {
             return bonitaDep.getLatestCompatibleVersion()
                     .map(latest -> {
                         try {
-                            return latest.compareTo(new ComparableVersion(dep.getVersion())) < 0;
+                        	var depVersion = dep.getVersion();
+                            return depVersion != null && latest.compareTo(new ComparableVersion(depVersion)) < 0;
                         } catch (IllegalArgumentException e) {
                             // version badly formatted, unable to compare
                             BonitaStudioLog.error(e);

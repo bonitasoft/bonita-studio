@@ -23,6 +23,7 @@ import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.execution.MavenExecutionRequest;
 import org.apache.maven.execution.MavenExecutionResult;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.repository.BuildScheduler;
 import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
 import org.bonitasoft.studio.common.repository.core.maven.model.DefaultPluginVersions;
 import org.eclipse.core.runtime.CoreException;
@@ -47,37 +48,38 @@ public class MavenInstallFileOperation {
     public MavenExecutionResult execute(final Properties configuration,
             final IProgressMonitor monitor)
             throws CoreException {
-        var context = MavenPlugin.getMaven().createExecutionContext();
-        final MavenExecutionRequest request = context.getExecutionRequest();
-        if (internalRepository != null) {
-            request.setLocalRepository(internalRepository);
-            request.setOffline(true);
-        }
-        request.setGoals(List.of(String.format("org.apache.maven.plugins:maven-install-plugin:%s:install-file",
-                DefaultPluginVersions.MAVEN_INSTALL_PLUGIN_VERSION)));
-        request.setUpdateSnapshots(internalRepository == null);
-        request.setInteractiveMode(false);
-        request.setCacheNotFound(true);
-        return context.execute(new ICallable<MavenExecutionResult>() {
-
-            @Override
-            public MavenExecutionResult call(final IMavenExecutionContext context,
-                    final IProgressMonitor innerMonitor)
-                    throws CoreException {
-                final Properties systemProperties = request.getSystemProperties();
-                for (final Object key : configuration.keySet()) {
-                    systemProperties.setProperty((String) key, configuration.getProperty((String) key));
-                }
-                request.setSystemProperties(systemProperties);
-                innerMonitor.setTaskName(String.format("Installing %s:%s:%s in %s repository",
-                        configuration.getProperty("groupId"),
-                        configuration.getProperty("artifactId"),
-                        configuration.getProperty("version"),
-                        internalRepository != null ? internalRepository.getId() : "local"));
-                return context.execute(request);
+        return BuildScheduler.callWithBuildRule(() -> {
+            var context = MavenPlugin.getMaven().createExecutionContext();
+            final MavenExecutionRequest request = context.getExecutionRequest();
+            if (internalRepository != null) {
+                request.setLocalRepository(internalRepository);
+                request.setOffline(true);
             }
-        }, monitor);
+            request.setGoals(List.of(String.format("org.apache.maven.plugins:maven-install-plugin:%s:install-file",
+                    DefaultPluginVersions.MAVEN_INSTALL_PLUGIN_VERSION)));
+            request.setUpdateSnapshots(internalRepository == null);
+            request.setInteractiveMode(false);
+            request.setCacheNotFound(true);
+            return context.execute(new ICallable<MavenExecutionResult>() {
 
+                @Override
+                public MavenExecutionResult call(final IMavenExecutionContext context,
+                        final IProgressMonitor innerMonitor)
+                        throws CoreException {
+                    final Properties systemProperties = request.getSystemProperties();
+                    for (final Object key : configuration.keySet()) {
+                        systemProperties.setProperty((String) key, configuration.getProperty((String) key));
+                    }
+                    request.setSystemProperties(systemProperties);
+                    innerMonitor.setTaskName(String.format("Installing %s:%s:%s in %s repository",
+                            configuration.getProperty("groupId"),
+                            configuration.getProperty("artifactId"),
+                            configuration.getProperty("version"),
+                            internalRepository != null ? internalRepository.getId() : "local"));
+                    return context.execute(request);
+                }
+            }, monitor);
+        });
     }
 
     public void installFile(final String groupId, final String artifactId, final String version, final String type,

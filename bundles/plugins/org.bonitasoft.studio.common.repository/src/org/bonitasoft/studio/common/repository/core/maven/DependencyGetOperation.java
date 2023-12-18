@@ -32,6 +32,7 @@ import org.apache.maven.execution.MavenExecutionRequest;
 import org.apache.maven.execution.MavenExecutionResult;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
+import org.bonitasoft.studio.common.repository.BuildScheduler;
 import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
 import org.bonitasoft.studio.common.repository.Messages;
 import org.bonitasoft.studio.common.repository.core.maven.contribution.DependencyCatalog;
@@ -85,9 +86,12 @@ public class DependencyGetOperation implements IRunnableWithProgress {
 
     @Override
     public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-        monitor.beginTask(String.format(Messages.lookupDependencyFor, gav),
-                IProgressMonitor.UNKNOWN);
-        result = runGetDependency();
+        BuildScheduler.callWithBuildRule(() -> {
+            monitor.beginTask(String.format(Messages.lookupDependencyFor, gav),
+                    IProgressMonitor.UNKNOWN);
+            result = runGetDependency();
+            return (Void) null;
+        }, monitor);
     }
 
     private DependencyLookup runGetDependency() {
@@ -104,8 +108,11 @@ public class DependencyGetOperation implements IRunnableWithProgress {
                             gav,
                             repository,
                             artifact);
-                }else if(!executionResult.getExceptions().isEmpty()) {
-                    BonitaStudioLog.warning(String.format("Maven dependency remote resolution failed: %s", executionResult.getExceptions().get(0).getLocalizedMessage()), CommonRepositoryPlugin.PLUGIN_ID);
+                } else if (!executionResult.getExceptions().isEmpty()) {
+                    BonitaStudioLog.warning(
+                            String.format("Maven dependency remote resolution failed: %s",
+                                    executionResult.getExceptions().get(0).getLocalizedMessage()),
+                            CommonRepositoryPlugin.PLUGIN_ID);
                 }
             }
         } catch (CoreException e) {
@@ -178,7 +185,7 @@ public class DependencyGetOperation implements IRunnableWithProgress {
         userProperties.setProperty("artifactId", gav.getArtifactId());
         userProperties.setProperty("version", gav.getVersion());
         userProperties.setProperty("packaging", gav.getType() == null ? "jar" : gav.getType());
-        
+
         if (gav.getClassifier() != null) {
             userProperties.setProperty("classifier", gav.getClassifier());
         }

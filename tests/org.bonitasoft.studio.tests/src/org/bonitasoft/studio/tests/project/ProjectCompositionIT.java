@@ -44,14 +44,10 @@ import org.bonitasoft.studio.tests.importer.bos.ImportBOSArchiveWizardIT;
 import org.bonitasoft.studio.tests.util.ProjectUtil;
 import org.bonitasoft.studio.tests.util.ResourceMarkerHelper;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.OperationCanceledException;
-import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.resource.JFaceResources;
-import org.eclipse.m2e.core.internal.jobs.MavenJob;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.exceptions.WidgetNotFoundException;
@@ -75,16 +71,12 @@ public class ProjectCompositionIT {
 
     private RepositoryAccessor repositoryAccessor;
 
-    private MavenProjectHelper mavenProjectHelper;
 
     @Before
-    public void setUp() throws CoreException, OperationCanceledException, InterruptedException {
+    public void setUp() throws Exception {
         repositoryAccessor = RepositoryManager.getInstance().getAccessor();
-        mavenProjectHelper = new MavenProjectHelper();
         ProjectUtil.removeUserExtensions();
         BonitaMarketplace.getInstance().loadDependencies(new NullProgressMonitor());
-        Job.getJobManager().join(IncrementalProjectBuilder.AUTO_BUILD, new NullProgressMonitor());
-        Job.getJobManager().join(MavenJob.FAMILY_M2, new NullProgressMonitor());
     }
 
     @After
@@ -157,6 +149,16 @@ public class ProjectCompositionIT {
                 .setArtifactId("bonita-connector-groovy")
                 .setVersion("1.1.2")
                 .finish();
+        
+        bot.waitUntil(new AssertionCondition() {
+
+            @Override
+            protected void makeAssert() throws Exception {
+                assertThat(connectorDefinitionRegistry.getDefinitions().stream()
+                        .map(ExtendedConnectorDefinition::getId))
+                                .anyMatch("scripting-groovy-script"::equals);
+            }
+        }, 20000, 100);
 
         projectDetailsBot
                 .findExtensionCardByArtifactId("bonita-connector-groovy")
@@ -164,7 +166,7 @@ public class ProjectCompositionIT {
         bot.waitWhile(Conditions.shellIsActive(JFaceResources.getString("ProgressMonitorDialog.title")), 15000);
 
         var project = repositoryAccessor.getCurrentRepository().orElseThrow().getProject();
-        var mavenModel = mavenProjectHelper.getMavenModel(project);
+        var mavenModel = MavenProjectHelper.getMavenModel(project);
         var groovyConnectorDependencies = mavenModel.getDependencies().stream()
                 .filter(d -> d.getArtifactId().equals("bonita-connector-groovy"))
                 .collect(Collectors.toList());

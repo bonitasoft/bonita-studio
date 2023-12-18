@@ -8,6 +8,7 @@
  *******************************************************************************/
 package org.bonitasoft.studio.diagram.custom.parts;
 
+import org.bonitasoft.bpm.model.process.MainProcess;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepository;
@@ -16,7 +17,6 @@ import org.bonitasoft.studio.designer.ui.property.section.control.WebPageNameRes
 import org.bonitasoft.studio.diagram.custom.Activator;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
-import org.bonitasoft.bpm.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditor;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
@@ -64,8 +64,12 @@ public class CustomProcessDiagramEditor extends ProcessDiagramEditor {
                 }
             }
         }
-        super.init(site, input);
-        repositoryAccessor.getWorkspace().addResourceChangeListener(webPageNameResourceChangeListener);
+        if(input.exists()) {
+	        super.init(site, input);
+	        repositoryAccessor.getWorkspace().addResourceChangeListener(webPageNameResourceChangeListener);
+        }else {
+        	throw new PartInitException(Status.error(String.format("Editor input %s does not exist.", input)));
+        }
     }
 
     @Override
