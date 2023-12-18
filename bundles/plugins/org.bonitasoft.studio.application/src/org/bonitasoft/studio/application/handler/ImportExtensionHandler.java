@@ -46,7 +46,6 @@ import org.bonitasoft.studio.common.repository.extension.update.DependencyUpdate
 import org.bonitasoft.studio.common.repository.store.LocalDependenciesStore;
 import org.bonitasoft.studio.ui.dialog.ExceptionDialogHandler;
 import org.bonitasoft.studio.ui.wizard.WizardBuilder;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -150,7 +149,7 @@ public class ImportExtensionHandler {
     protected Model loadMavenModel(MavenProjectHelper mavenProjectHelper,
             org.bonitasoft.studio.common.repository.model.IRepository currentRepository) {
         try {
-            return mavenProjectHelper.getMavenModel(currentRepository.getProject());
+            return MavenProjectHelper.getMavenModel(currentRepository.getProject());
         } catch (CoreException e) {
             BonitaStudioLog.error(e);
             return null;
@@ -205,6 +204,14 @@ public class ImportExtensionHandler {
                     mavenModel,
                     extensionTypeHandler,
                     updateExtensionDecorator);
+        }
+        try {
+            container.run(true, false,
+                    monitor -> new UpdateMavenProjectJob(List.of(currentRepository.getProject()), false, false,
+                            false, false, true)
+                            .run(monitor));
+        } catch (InvocationTargetException | InterruptedException e) {
+            BonitaStudioLog.error(e);
         }
         return result;
     }

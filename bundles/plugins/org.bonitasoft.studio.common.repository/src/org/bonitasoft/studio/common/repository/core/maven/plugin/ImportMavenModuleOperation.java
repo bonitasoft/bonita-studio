@@ -20,12 +20,12 @@ import java.util.Collection;
 import java.util.List;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.repository.BuildScheduler;
 import org.eclipse.core.resources.IWorkspaceRunnable;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.m2e.core.MavenPlugin;
-import org.eclipse.m2e.core.internal.MavenPluginActivator;
 import org.eclipse.m2e.core.internal.preferences.MavenPreferenceConstants;
 import org.eclipse.m2e.core.project.IProjectConfigurationManager;
 import org.eclipse.m2e.core.project.LocalProjectScanner;
@@ -45,43 +45,31 @@ public class ImportMavenModuleOperation implements IWorkspaceRunnable {
 
     @Override
     public void run(final IProgressMonitor monitor) throws CoreException {
-        if (projectRoot == null || !projectRoot.exists()
-                || !projectRoot.toPath().resolve("pom.xml").toFile().exists()) {
-            throw new CoreException(Status.error(String.format("No project found at %s", projectRoot)));
-        }
-        //        var pomFile = projectRoot.toPath().resolve("pom.xml").toFile();
-        //        var mavenModel = MavenProjectHelper.readModel(pomFile);
-        //        IProject targetProject = ResourcesPlugin.getWorkspace().getRoot().getProject(mavenModel.getArtifactId());
-        //        if (targetProject.exists()) {
-        //            throw new CoreException(Status.error(
-        //                    String.format("A project named %s already exists in the workspace.", mavenModel.getArtifactId())));
-        //        }
-        //        var projectsToImport = new ArrayList<MavenProjectInfo>();
-        //        projectsToImport.add(new MavenProjectInfo(null, pomFile, null, null));
-        //        var modules = mavenModel.getModules().stream()
-        //                .map(module -> pomFile.getParentFile().toPath().resolve(module).resolve("pom.xml").toFile())
-        //                .filter(File::exists)
-        //                .map(f -> new MavenProjectInfo(null, f, null, null))
-        //                .toList();
-        //        projectsToImport.addAll(modules);
-        var scanner = new LocalProjectScanner(List.of(projectRoot.getAbsolutePath()), false,
-                MavenPlugin.getMavenModelManager());
-        try {
-            scanner.run(monitor);
-        } catch (InterruptedException e) {
-            BonitaStudioLog.error(e);
-        }
-        var store = M2EUIPluginActivator.getDefault().getPreferenceStore();
-        store.setValue(MavenPreferenceConstants.P_AUTO_UPDATE_CONFIGURATION, false);
-        try {
-            var projectImportConfiguration = new ProjectImportConfiguration();
-            projectImportConfiguration.setProjectNameTemplate("[artifactId]");
-            projectConfigurationManager.importProjects(
-                    flatten(scanner.getProjects()),
-                    projectImportConfiguration, monitor);
-        } finally {
-            store.setValue(MavenPreferenceConstants.P_AUTO_UPDATE_CONFIGURATION, true);
-        }
+        BuildScheduler.callWithBuildRule(() -> {
+            if (projectRoot == null || !projectRoot.exists()
+                    || !projectRoot.toPath().resolve("pom.xml").toFile().exists()) {
+                throw new CoreException(Status.error(String.format("No project found at %s", projectRoot)));
+            }
+            var scanner = new LocalProjectScanner(List.of(projectRoot.getAbsolutePath()), false,
+                    MavenPlugin.getMavenModelManager());
+            try {
+                scanner.run(monitor);
+            } catch (InterruptedException e) {
+                BonitaStudioLog.error(e);
+            }
+            var store = M2EUIPluginActivator.getDefault().getPreferenceStore();
+            store.setValue(MavenPreferenceConstants.P_AUTO_UPDATE_CONFIGURATION, false);
+            try {
+                var projectImportConfiguration = new ProjectImportConfiguration();
+                projectImportConfiguration.setProjectNameTemplate("[artifactId]");
+                projectConfigurationManager.importProjects(
+                        flatten(scanner.getProjects()),
+                        projectImportConfiguration, monitor);
+            } finally {
+                store.setValue(MavenPreferenceConstants.P_AUTO_UPDATE_CONFIGURATION, true);
+            }
+            return (Void) null;
+        }, monitor);
     }
 
     private static Collection<MavenProjectInfo> flatten(Collection<MavenProjectInfo> projects) {

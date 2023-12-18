@@ -19,11 +19,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import org.assertj.core.api.Assertions;
 import org.bonitasoft.bpm.model.util.ExpressionConstants;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
-import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
-import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.document.core.repository.DocumentRepositoryStore;
 import org.bonitasoft.studio.expression.editor.operation.OperatorLabelProvider;
-import org.bonitasoft.studio.swtbot.framework.SWTBotTestUtil;
 import org.bonitasoft.studio.swtbot.framework.application.BotApplicationWorkbenchWindow;
 import org.bonitasoft.studio.swtbot.framework.composite.BotOperationComposite;
 import org.bonitasoft.studio.swtbot.framework.conditions.AssertionCondition;
@@ -36,9 +33,12 @@ import org.bonitasoft.studio.swtbot.framework.diagram.general.documents.BotRemov
 import org.bonitasoft.studio.swtbot.framework.diagram.general.operations.BotOperationsPropertySection;
 import org.bonitasoft.studio.swtbot.framework.expression.BotExpressionEditorDialog;
 import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
+import org.bonitasoft.studio.tests.util.ProjectUtil;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
+import org.eclipse.swtbot.swt.finder.SWTBot;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
-import org.junit.Before;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -51,13 +51,12 @@ public class TestDocument {
     @Rule
     public SWTGefBotRule rule = new SWTGefBotRule(bot);
 
-    @Before
-    public void cleanRepo() throws Exception {
-        final DiagramRepositoryStore repositoryStore = RepositoryManager.getInstance()
-                .getRepositoryStore(DiagramRepositoryStore.class);
-        for (final DiagramFileStore fStore : repositoryStore.getChildren()) {
-            fStore.delete();
-        }
+    @BeforeClass
+    @AfterClass
+    public static void cleanRepo() throws Exception {
+    	new SWTBot().sleep(500);
+        ProjectUtil.cleanProject();
+        new SWTBot().sleep(500);
     }
 
     @Test
@@ -260,8 +259,6 @@ public class TestDocument {
 
     @Test
     public void testErrorMessageAndButtonBehaviorForMultipleDocument() throws Exception {
-        SWTBotTestUtil.pressEnter();
-
         final BotDocumentsPropertySection botDocumentsPropertySection = createDiagramAndGoToDocumentSection();
         final BotAddDocumentDialog botAddDocumentDialog = botDocumentsPropertySection.addDocument();
 

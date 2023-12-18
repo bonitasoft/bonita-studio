@@ -18,13 +18,12 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.Properties;
 
-import org.apache.maven.Maven;
 import org.apache.maven.execution.BuildSuccess;
 import org.apache.maven.execution.MavenExecutionResult;
-import org.apache.maven.execution.MavenSession;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.project.ProjectBuilder;
 import org.apache.maven.project.ProjectBuildingException;
+import org.bonitasoft.studio.common.repository.BuildScheduler;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
@@ -32,7 +31,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.m2e.core.MavenPlugin;
 import org.eclipse.m2e.core.embedder.ICallable;
 import org.eclipse.m2e.core.embedder.IMaven;
@@ -54,9 +52,7 @@ public class CreateBonitaProjectModulePlugin {
 
     public IStatus execute(IProgressMonitor monitor) throws CoreException {
         synchronized (lock) {
-            var schedulingRule = ResourcesPlugin.getWorkspace().getRuleFactory().buildRule();
-            Job.getJobManager().beginRule(schedulingRule, monitor);
-            try {
+            return BuildScheduler.callWithBuildRule(() -> {
                 IMaven maven = maven();
                 var mavenProject = getMavenProject();
                 if (mavenProject == null) {
@@ -88,9 +84,7 @@ public class CreateBonitaProjectModulePlugin {
                             "Failed to execute bonita-project-maven-plugin:" + goal,
                             executionResult.hasExceptions() ? executionResult.getExceptions().get(0) : null));
                 }
-            } finally {
-                Job.getJobManager().endRule(schedulingRule);
-            }
+            });
         }
     }
 

@@ -27,6 +27,7 @@ import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelF
 import org.bonitasoft.studio.businessobject.i18n.Messages;
 import org.bonitasoft.studio.common.event.BdmEvents;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.repository.BuildScheduler;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.eclipse.core.resources.IProject;
@@ -96,36 +97,37 @@ public class GenerateBDMOperation implements IRunnableWithProgress {
             eventBroker().send(BdmEvents.BDM_DEPLOYED_TOPIC, data);
         }
     }
-    
+
     private IStatus generateSources(IProject bdmModelProject, IProgressMonitor monitor) throws CoreException {
-        var mavenProject = MavenPlugin.getMavenProjectRegistry().getProject(bdmModelProject);
-        if (mavenProject == null) {
-            return new Status(IStatus.ERROR, getClass(),
-                    "An error occured while generating sources for the bdm model. Cannot resolve the Maven project.");
-        }
-        var ctx = mavenProject.createExecutionContext();
-        var request = ctx.getExecutionRequest();
-        request.setGoals(List.of("generate-sources"));
-        request.setNoSnapshotUpdates(true);
-        request.setPom(mavenProject.getPomFile());
-        var executionResult = MavenPlugin.getMavenProjectRegistry().execute(mavenProject,
-                new ICallable<MavenExecutionResult>() {
+    	return BuildScheduler.callWithBuildRule(() -> {
+    	      var mavenProject = MavenPlugin.getMavenProjectRegistry().getProject(bdmModelProject);
+    	        if (mavenProject == null) {
+    	            return new Status(IStatus.ERROR, getClass(),
+    	                    "An error occured while generating sources for the bdm model. Cannot resolve the Maven project.");
+    	        }
+    	        var ctx = mavenProject.createExecutionContext();
+    	        var request = ctx.getExecutionRequest();
+    	        request.setGoals(List.of("generate-sources"));
+    	        request.setNoSnapshotUpdates(true);
+    	        request.setPom(mavenProject.getPomFile());
+    	        var executionResult = MavenPlugin.getMavenProjectRegistry().execute(mavenProject,
+    	                new ICallable<MavenExecutionResult>() {
 
-                    @Override
-                    public MavenExecutionResult call(IMavenExecutionContext context, IProgressMonitor monitor)
-                            throws CoreException {
-                        return context.execute(request);
-                    }
+    	                    @Override
+    	                    public MavenExecutionResult call(IMavenExecutionContext context, IProgressMonitor monitor)
+    	                            throws CoreException {
+    	                        return context.execute(request);
+    	                    }
 
-                }, monitor);
+    	                }, monitor);
 
-        if (!(executionResult.getBuildSummary(executionResult.getProject()) instanceof BuildSuccess)) {
-            return Status.error("An error occured while installing the bdm artifacts.",
-                    executionResult.getExceptions().get(0));
-        }
-        return Status.OK_STATUS;
+    	        if (!(executionResult.getBuildSummary(executionResult.getProject()) instanceof BuildSuccess)) {
+    	            return Status.error("An error occured while generating the bdm model sources.",
+    	                    executionResult.getExceptions().get(0));
+    	        }
+    	        return Status.OK_STATUS;
+    	}, monitor);
     }
-
 
     protected IEventBroker eventBroker() {
         return PlatformUI.getWorkbench().getService(IEventBroker.class);

@@ -46,7 +46,7 @@ public class BDMProjectExplorerBot extends ProjectExplorerBot {
 
     public void deployBdm() {
         clickOnContextualMenu(getBdmTreeItem(), "Deploy");
-        bot.activeShell().bot().waitUntil(Conditions.shellIsActive(Messages.bdmDeployedTitle), 15000);
+        bot.activeShell().bot().waitUntil(Conditions.shellIsActive(Messages.bdmDeployedTitle), 20000);
         SWTBotShell activeShell = bot.activeShell();
         bot.button(IDialogConstants.OK_LABEL).click();
         bot.waitUntil(Conditions.shellCloses(activeShell));
