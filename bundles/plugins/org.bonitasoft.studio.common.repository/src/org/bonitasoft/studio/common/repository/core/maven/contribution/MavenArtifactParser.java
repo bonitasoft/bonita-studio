@@ -50,6 +50,19 @@ public class MavenArtifactParser {
     }
 
     private String resolveClassifier(final String filename, String artifactVersion) {
+    	////////////////////////////////////////////////////////////////////
+    	// Specific case for SNAPSHOT version being resolved with a timestamp
+    	if(filename.endsWith("-application.zip")) {
+    		return "application";
+    	}
+    	if(filename.endsWith("-sources.jar")) {
+    		return "sources";
+    	}
+    	if(filename.endsWith("-javadoc.jar")) {
+    		return "javadoc";
+    	}
+    	//////////////////////////////////////////////////////////////////////
+    	
         int indexOf = filename.indexOf(artifactVersion);
         if( indexOf != -1) {
             int postVersionIndex = indexOf + artifactVersion.length() + 1;
