@@ -200,8 +200,7 @@ public class ParameterPropertySection extends AbstractBonitaDescriptionSection
         final String[] buttonList = { IDialogConstants.OK_LABEL, IDialogConstants.CANCEL_LABEL };
         final List<Object> selectionList = ((IStructuredSelection) parameterTableViewer.getSelection()).toList();
         final OutlineDialog dialog = new OutlineDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-                removalConfirmationDialogTitle, Display
-                        .getCurrent().getSystemImage(SWT.ICON_WARNING),
+                removalConfirmationDialogTitle,
                 NLS.bind(Messages.areYouSureMessage, sb.toString()), MessageDialog.CONFIRM, buttonList,
                 1, selectionList);
         final int ok = 0;
