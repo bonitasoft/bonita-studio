@@ -46,7 +46,7 @@
 									<groupId>org.bonitasoft.web</groupId>
 									<artifactId>bonita-data-repository</artifactId>
 									<version>${business.data.repository.version}</version>
-									<classifier>macos</classifier>
+									<classifier>macos-x64</classifier>
 									<type>zip</type>
 									<overWrite>true</overWrite>
 									<destFileName>bonita-data-repository.zip</destFileName>
