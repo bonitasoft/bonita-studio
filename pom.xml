@@ -16,7 +16,7 @@
         <branding.version>2022.1-SNAPSHOT</branding.version>
         <bonita-runtime.version>7.14-SNAPSHOT</bonita-runtime.version>
         <ui.designer.version>1.14.22</ui.designer.version>
-        <business.data.repository.version>1.0.0-alpha-01</business.data.repository.version>
+        <business.data.repository.version>1.0.0</business.data.repository.version>
         <platform.version>${project.parent.version}</platform.version>
         <tomcat.version>9.0.52</tomcat.version>
         <image-overlay-plugin.version>1.1.2</image-overlay-plugin.version>
