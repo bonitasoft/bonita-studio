@@ -65,11 +65,14 @@ public class OutlineDialog extends MessageDialog{
     private ListViewer objectListViewer;
     private TreeViewer outline;
 
-    public OutlineDialog(	final Shell parentShell, 		final String dialogTitle,
-            final Image dialogTitleImage, final String dialogMessage,
-            final int dialogImageType,	final String[] dialogButtonLabels,
-            final int defaultIndex,		final List<Object> elementToDisplay) {
-        super(parentShell, dialogTitle, dialogTitleImage, dialogMessage,
+    public OutlineDialog(final Shell parentShell, 		
+    		final String dialogTitle,
+            final String dialogMessage,
+            final int dialogImageType,	
+            final String[] dialogButtonLabels,
+            final int defaultIndex,		
+            final List<Object> elementToDisplay) {
+        super(parentShell, dialogTitle, null, dialogMessage,
                 dialogImageType, dialogButtonLabels, defaultIndex);
         message = dialogMessage;
         this.elementToDisplay = elementToDisplay;
@@ -198,16 +201,9 @@ public class OutlineDialog extends MessageDialog{
         final Composite messageComposite = new Composite(mainComposite,SWT.NONE);
         messageComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
         messageComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-        Image image = getImage();
-        if(image == null) {
-            image = getWarningImage();
-        }
-        if(image != null) {
-            var imageLabel = new Label(messageComposite, SWT.NONE);
-            GridDataFactory.fillDefaults().align(SWT.CENTER, SWT.BEGINNING).applyTo(imageLabel);
-            image.setBackground(imageLabel.getBackground());
-            imageLabel.setImage(image);
-        }
+        final Label imageLabel = new Label(messageComposite,SWT.NULL);
+        imageLabel.setImage(getWarningImage());
+        GridDataFactory.fillDefaults().align(SWT.CENTER, SWT.BEGINNING).applyTo(imageLabel);
         createMessageLabel(messageComposite);
     }
 

@@ -277,8 +277,7 @@ public class DocumentPropertySection extends AbstractBonitaDescriptionSection
         final String[] buttonList = { IDialogConstants.OK_LABEL, IDialogConstants.CANCEL_LABEL };
         final java.util.List<Object> selectionList = ((IStructuredSelection) documentViewer.getSelection()).toList();
         final OutlineDialog dialog = new OutlineDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-                removalConfirmationDialogTitle, Display
-                        .getCurrent().getSystemImage(SWT.ICON_WARNING),
+                removalConfirmationDialogTitle,
                 NLS.bind(Messages.areYouSureMessage, sb.toString()), MessageDialog.CONFIRM, buttonList,
                 1, selectionList);
         return dialog.open();
