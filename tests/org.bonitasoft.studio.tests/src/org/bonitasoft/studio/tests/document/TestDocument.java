@@ -260,8 +260,6 @@ public class TestDocument {
 
     @Test
     public void testErrorMessageAndButtonBehaviorForMultipleDocument() throws Exception {
-        SWTBotTestUtil.pressEnter();
-
         final BotDocumentsPropertySection botDocumentsPropertySection = createDiagramAndGoToDocumentSection();
         final BotAddDocumentDialog botAddDocumentDialog = botDocumentsPropertySection.addDocument();
 
