@@ -151,11 +151,19 @@ public class BotApplicationWorkbenchWindow extends AbstractBotMenu {
     }
 
     public BotExportBOSDialog export() {
+    	bot.waitUntil(Conditions.waitForWidget(WithId.withId(SWTBotConstants.SWTBOT_ID_MAIN_SHELL)), 40000);
+    	bot.shellWithId(SWTBotConstants.SWTBOT_ID_MAIN_SHELL).activate();
+        bot.waitUntil(Conditions.shellIsActive(bot.shellWithId(SWTBotConstants.SWTBOT_ID_MAIN_SHELL).getText()), 40000);
+        bot.waitUntil(Conditions.widgetIsEnabled(bot.menu("File")), 40000);
         bot.menu("File").menu("Export project").click();
         return new BotExportBOSDialog(bot);
     }
 
     public BotImportBOSDialog importBOSArchive() {
+    	bot.waitUntil(Conditions.waitForWidget(WithId.withId(SWTBotConstants.SWTBOT_ID_MAIN_SHELL)), 40000);
+    	bot.shellWithId(SWTBotConstants.SWTBOT_ID_MAIN_SHELL).activate();
+        bot.waitUntil(Conditions.shellIsActive(bot.shellWithId(SWTBotConstants.SWTBOT_ID_MAIN_SHELL).getText()), 40000);
+        bot.waitUntil(Conditions.widgetIsEnabled(bot.menu("File")), 40000);
         bot.menu("File").menu("Import project").click();
         return new BotImportBOSDialog(bot);
     }
