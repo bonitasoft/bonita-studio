@@ -137,6 +137,7 @@ public class ProjectExplorerDiagramIT {
 
     private void openDiagramFromExplorer(String diagramName) {
         bot.editorByTitle(getDiagramEditorTitle(diagramName)).close();
+        bot.sleep(500);
         diagramBot.openDiagram(diagramName, DEFAULT_VERSION);
         projectExplorerBot.waitUntilActiveEditorTitleIs(getDiagramEditorTitle(diagramName), Optional.empty());
     }
