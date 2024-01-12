@@ -6,7 +6,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.bonitasoft.studio</groupId>
     <artifactId>studio</artifactId>
-    <version>10.0.0-SNAPSHOT</version>
+    <version>10.0.0.W2</version>
     <packaging>pom</packaging>
     <name>Bonita Studio</name>
     <properties>
@@ -14,7 +14,7 @@
         <java.version>17</java.version>
         <os-jvm-flags></os-jvm-flags>
         <branding.version>2024.1-SNAPSHOT</branding.version>
-        <bonita-runtime.version>10.0-SNAPSHOT</bonita-runtime.version>
+        <bonita-runtime.version>10.0.0.W2</bonita-runtime.version>
         <ui.designer.version>1.18.2</ui.designer.version>
         <business.data.repository.version>1.0.0</business.data.repository.version>
         <platform.version>${project.parent.version}</platform.version>
