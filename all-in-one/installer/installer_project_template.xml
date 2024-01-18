@@ -2,8 +2,6 @@
     <shortName>@product.short.name@</shortName>
     <fullName>@product.full.name@</fullName>
     <version>@branding.version@</version>
-    <outputDirectory>@bitrock.output@</outputDirectory>
-    <installerFilename>@installer.name@</installerFilename>
     <licenseFile>@license@</licenseFile>
     <licenseFileEncoding>utf-8</licenseFileEncoding>
     <logoImage>@logo@</logoImage>
@@ -15,8 +13,8 @@
     <osxApplicationBundleIcon>@mac.installer.icns@</osxApplicationBundleIcon>
     <osxPlatforms>osx-intel osx-x86_64</osxPlatforms>
     <createOsxBundleZip>1</createOsxBundleZip>
-    <createUninstaller>@enable.uninstaller@</createUninstaller>
     <enableHDPISupport>1</enableHDPISupport>
+    <windowsDPIAware>1</windowsDPIAware>
     <slideShowLoop>1</slideShowLoop>
     <slideShowTiming>8</slideShowTiming>
     <slideShowImageList>
@@ -348,46 +346,12 @@ ${installdir}/@mac.shortcut.name@/Contents/Eclipse/jre/Contents/Home/bin/java
             </desktopShortcutList>
             <folderList>
                 <folder>
-                    <description>Linux Program Files</description>
+                    <description>Bonita Studio Distribution files</description>
                     <destination>${installdir}</destination>
-                    <name>linux_programfiles</name>
-                    <platforms>linux</platforms>
+                    <name>distribution_files</name>
                     <distributionFileList>
                         <distributionDirectory allowWildcards="1">
-                            <origin>@studio.dir@/**</origin>
-                        </distributionDirectory>
-                    </distributionFileList>
-                </folder>
-                <folder>
-                    <description>Linux Program Files x64</description>
-                    <destination>${installdir}</destination>
-                    <name>linux_programfiles_64</name>
-                    <platforms>linux-x64</platforms>
-                    <distributionFileList>
-                        <distributionDirectory allowWildcards="1">
-                            <origin>@studio.dir@/**</origin>
-                        </distributionDirectory>
-                    </distributionFileList>
-                </folder>
-                 <folder>
-                    <description>Windows Program Files</description>
-                    <destination>${installdir}</destination>
-                    <name>win_programfiles</name>
-                    <platforms>windows</platforms>
-                    <distributionFileList>
-                        <distributionDirectory allowWildcards="1">
-                            <origin>@studio.dir@/**</origin>
-                        </distributionDirectory>
-                    </distributionFileList>
-                </folder>
-                <folder>
-                    <description>OSX Program Files</description>
-                    <destination>${installdir}</destination>
-                    <name>osx_programfiles</name>
-                    <platforms>osx</platforms>
-                    <distributionFileList>
-                        <distributionDirectory allowWildcards="1">
-                            <origin>@mac.studio.dir@/**</origin>
+                            <origin>${bonita_studio_distribution_folder}/**</origin>
                         </distributionDirectory>
                     </distributionFileList>
                 </folder>
