@@ -27,6 +27,11 @@
 		<repositoryId>studio-repository</repositoryId>
 		<productId>org.bonitasoft.studio.product</productId>
         <root.dir>${project.build.directory}/${product.short.name}-${branding.version}</root.dir>
+        <jre.url>https://github.com/adoptium/temurin11-binaries/releases/download/jdk-11.0.14%2B9/</jre.url>
+    	<jre.winx86.x64.url>OpenJDK11U-jdk_x64_windows_hotspot_11.0.14_9</jre.winx86.x64.url>
+		<jre.linuxx86.x64.url>OpenJDK11U-jdk_x64_linux_hotspot_11.0.14_9</jre.linuxx86.x64.url>
+		<jre.osx.url>OpenJDK11U-jdk_x64_mac_hotspot_11.0.14_9</jre.osx.url>
+		<jre.folder.name>jdk-11.0.14+9</jre.folder.name>
 	</properties>
 
 	<build>
@@ -272,7 +277,38 @@
 
 	<profiles>
 		<profile>
-			<id>buildInstaller</id>
+			<id>generate-installers-descriptors</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-antrun-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>installer-file</id>
+								<phase>generate-resources</phase>
+								<configuration>
+									<target>
+										<property name="bitrock.install"
+											value="${project.build.directory}/installers" />
+										<property name="os_arch" value="64" />
+										<property file="installer/installer.properties" />
+										<property name="updated.project.file"
+											value="${project.basedir}/installer/installer.xml" />
+										<ant antfile="${project.basedir}/createInstallerProject.xml" />
+									</target>
+								</configuration>
+								<goals>
+									<goal>run</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
+			<id>exec-installbuilder</id>
 			<activation>
 				<property>
 					<name>BITROCK_HOME</name>
@@ -280,11 +316,6 @@
 			</activation>
 			<properties>
 				<if.task>net.sf.antcontrib.logic.IfTask</if.task>
-				<jre.url>https://github.com/adoptium/temurin11-binaries/releases/download/jdk-11.0.14%2B9/</jre.url>
-            	<jre.winx86.x64.url>OpenJDK11U-jdk_x64_windows_hotspot_11.0.14_9</jre.winx86.x64.url>
-				<jre.linuxx86.x64.url>OpenJDK11U-jdk_x64_linux_hotspot_11.0.14_9</jre.linuxx86.x64.url>
-				<jre.osx.url>OpenJDK11U-jdk_x64_mac_hotspot_11.0.14_9</jre.osx.url>
-				<jre.folder.name>jdk-11.0.14+9</jre.folder.name>
 			</properties>
 			<build>
 				<plugins>
@@ -297,11 +328,7 @@
 								<id>linux-x86_64</id>
 								<phase>package</phase>
 								<configuration>
-									<arguments>
-										<argument>build</argument>
-										<argument>${basedir}/installer/installer_project_linux_x86_64.xml</argument>
-										<argument>linux-x64</argument>
-									</arguments>
+									<commandlineArgs>build ${project.basedir}/installer/installer.xml --setvars project.outputDirectory=${project.build.directory}/installers/output/ bonita_studio_distribution_folder=${project.build.directory}/products/${productId}/linux/gtk/x86_64 project.installerFilename=${product.short.name}-${branding.version}-x86_64.run project.createUninstaller=1 bonita_studio_content_folder=${bonita_studio_distribution_folder} architecture=linux-x64</commandlineArgs>
 								</configuration>
 								<goals>
 									<goal>exec</goal>
@@ -311,11 +338,7 @@
 								<id>macosx-x86_64</id>
 								<phase>package</phase>
 								<configuration>
-									<arguments>
-										<argument>build</argument>
-										<argument>${basedir}/installer/installer_project_macosx_x86_64.xml</argument>
-										<argument>osx</argument>
-									</arguments>
+									<commandlineArgs>build ${project.basedir}/installer/installer.xml --setvars project.outputDirectory=${project.build.directory}/installers/output/ bonita_studio_distribution_folder=${project.build.directory}/products/${productId}/macosx/cocoa/x86_64 project.installerFilename=${product.short.name}-${branding.version}.app project.createUninstaller=0 bonita_studio_content_folder=${bonita_studio_distribution_folder}/${product.short.name}-${branding.version}.app/Contents/Eclipse architecture=osx</commandlineArgs>
 								</configuration>
 								<goals>
 									<goal>exec</goal>
@@ -325,11 +348,7 @@
 								<id>win-x86_64</id>
 								<phase>package</phase>
 								<configuration>
-									<arguments>
-										<argument>build</argument>
-										<argument>${basedir}/installer/installer_project_win_x86_64.xml</argument>
-										<argument>windows</argument>
-									</arguments>
+									<commandlineArgs>build ${project.basedir}/installer/installer.xml --setvars project.outputDirectory=${project.build.directory}/installers/output/ bonita_studio_distribution_folder=${project.build.directory}/products/${productId}/win32/win32/x86_64 project.installerFilename=${product.short.name}-${branding.version}-x86_64.exe project.createUninstaller=1 bonita_studio_content_folder=${bonita_studio_distribution_folder} architecture=windows</commandlineArgs>
 								</configuration>
 								<goals>
 									<goal>exec</goal>
@@ -342,82 +361,9 @@
 					</plugin>
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-antrun-plugin</artifactId>
+                        <artifactId>maven-antrun-plugin</artifactId>
 						<executions>
-							<execution>
-								<id>linux x86_64 installer file</id>
-								<phase>generate-resources</phase>
-								<configuration>
-									<target>
-										<property name="studio.dir"
-											value="${project.build.directory}/products/${productId}/linux/gtk/x86_64" />
-										<property name="bitrock.install"
-											value="${project.build.directory}/installers" />
-										<property name="os_arch" value="64" />
-										<property name="enable.uninstaller" value="1" />
-										<property file="installer/installer.properties" />
-										<property name="installer.name"
-											value="${product.short.name}-${branding.version}-x86_64.run" />
-										<property name="updated.project.file"
-											value="${basedir}/installer/installer_project_linux_x86_64.xml" />
-										<property name="jre.folder.name" value="${jre.folder.name}" />
-										<ant antfile="createInstallerProject.xml" />
-									</target>
-								</configuration>
-								<goals>
-									<goal>run</goal>
-								</goals>
-							</execution>
-							<execution>
-								<id>macosx x86_64 installer file</id>
-								<phase>generate-resources</phase>
-								<configuration>
-									<target>
-										<property name="mac.studio.dir"
-											value="${project.build.directory}/products/${productId}/macosx/cocoa/x86_64" />
-										<property name="studio.dir"
-											value="${project.build.directory}/products/${productId}/macosx/cocoa/x86_64/${product.short.name}-${branding.version}.app/Contents/Eclipse" />
-										<property name="enable.uninstaller" value="0" />
-										<property name="bitrock.install"
-											value="${project.build.directory}/installers" />
-										<property name="os_arch" value="64" />
-										<property file="installer/installer.properties" />
-										<property name="installer.name"
-											value="${product.short.name}-${branding.version}.app" />
-										<property name="jre.osx.archive.name" value="${jre.osx.url}.tar.gz" />
-										<property name="updated.project.file"
-											value="${basedir}/installer/installer_project_macosx_x86_64.xml" />
-										<ant antfile="createInstallerProject.xml" />
-									</target>
-								</configuration>
-								<goals>
-									<goal>run</goal>
-								</goals>
-							</execution>
-							<execution>
-								<id>windows x86_64 installer file</id>
-								<phase>generate-resources</phase>
-								<configuration>
-									<target>
-										<property name="studio.dir"
-											value="${project.build.directory}/products/${productId}/win32/win32/x86_64" />
-										<property name="bitrock.install"
-											value="${project.build.directory}/installers" />
-										<property name="os_arch" value="64" />
-										<property name="enable.uninstaller" value="1" />
-										<property file="installer/installer.properties" />
-										<property name="installer.name"
-											value="${product.short.name}-${branding.version}-x86_64.exe" />
-										<property name="updated.project.file"
-											value="${basedir}/installer/installer_project_win_x86_64.xml" />
-										<ant antfile="createInstallerProject.xml" />
-									</target>
-								</configuration>
-								<goals>
-									<goal>run</goal>
-								</goals>
-							</execution>
-							<execution>
+					    	<execution>
 								<id>jre-win-x86-x64</id>
 								<phase>prepare-package</phase>
 								<goals>
