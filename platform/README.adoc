@@ -18,17 +18,32 @@ It is good practice to develop and build against a explicit target definition wh
 
 You can activate and switch the target platform in the Eclipse Preferences. Select Window  Preferences  Plug-in Development  Target Platform. It is also possible to active a target platform via its editor via the Set as Active Target Platform link on the first page.
 
+[NOTE]
+====
+In order to keep an explicit target platform with defined versions, we use the https://github.com/eclipse-cbi/targetplatform-dsl[Target Platform Definition DSL and Generator].
+====
+
+
 == Updating the target platform
 
-The Tycho build uses the `platform.target` file. However, in addition, we use a `remote_platform.target` that keeps the reference to the actual p2 update sites. In order to ensure reliability of our builds, we mirror the required content of those update sites and publish it to `https://update-site.bonitasoft.com/p2/<eclipse_version>/`.
+We use these target platform related files:
 
-During the development phase, you can update the `remote_platform.target` and the `platform.target` to be in sync and pointing to the actual p2 update sites. The mirror is build and published before the RC version.
+* `remote_platform.tpd` file is the one you should manipulate from your IDE. +
+You may use it to define your target platform constraints and use the contextual menus:
+    ** Validate
+    ** Create Target Definition file
+    ** Set as Target Platform
+* `remote_platform.target` file contains the actual resolved versions and is pointing to the actual p2 update sites. +
+You will be using it typically during development phases.
+* `platform.target` file is used by the Tycho build. +
+In order to ensure reliability of our builds, we mirror the required content of update sites and publish it to `https://update-site.bonitasoft.com/p2/<eclipse_version>/`.
+This file points to the mirror which must be built and published before the RC version.
 
-When possible, do not explicitly set the plugins/features version. It eases the update process. Often eclipse update sites are already versioned (eg: __https://download.eclipse.org/releases/2022-06__, __https://download.eclipse.org/technology/swtbot/releases/4.0.0/__...).
+In the `remote_platform.tpd` file, do not explicitly set the plugins/features version unless there is a strict compatiblity requirement. It eases the update process. Often eclipse update sites are already versioned (eg: __https://download.eclipse.org/releases/2022-06__, __https://download.eclipse.org/technology/swtbot/releases/4.0.0/__...).
 
 == Validating the target platform
 
-You may use the `target-platform-validation-plugin` to validate the target platform:
+You may use this command to regenerate the `remote_platform.target` file and validate the target platform:
 
 [source, shell]
 ----
@@ -55,12 +70,20 @@ The result can be found as an archive in `platform/target/studio-target-platform
 
 == Use the mirror
 
-Update the `target.platform` to use the mirror.
+This command updates the `platform.target` to point to the mirror location.
 
 [source, shell]
 ----
 ./mvnw -f platform/pom.xml groovy:execute@generate-mirror-tp -Dmirror.target.filename=platform.target -Dmirror.location=https://update-site.bonitasoft.com/p2/<eclipse_version>/
 ----
-Updates the `platform.target` to point to the mirror location.
 
 NOTE: Do not set `-Dmirror.location` to use the locally generated mirror (in `platform/target/repository`)
+
+== Validating the mirrored target platform
+
+You may use the `target-platform-validation-plugin` to validate once more the mirrored target platform:
+
+[source, shell]
+----
+./mvnw -f platform/pom.xml org.eclipse.tycho.extras:target-platform-validation-plugin:validate-target-platform
+----

@@ -19,6 +19,7 @@ import java.util.zip.ZipFile;
 import org.bonitasoft.studio.assertions.StatusAssert;
 import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
+import org.bonitasoft.studio.common.repository.BuildScheduler;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.maven.ExtensionProjectFileStore;
 import org.bonitasoft.studio.maven.ExtensionRepositoryStore;
@@ -41,7 +42,7 @@ public class ExportRestAPIExtensionProjectIT {
 
     private static final String pageName = "my-rest-api-test-export";
     private static final String pageName2 = "my-rest-api-test-export2";
-    
+
     @Rule
     public TemporaryFolder tmp = new TemporaryFolder();
 
@@ -52,8 +53,10 @@ public class ExportRestAPIExtensionProjectIT {
         createApi(pageName2);
     }
 
-    private static void createApi(String pageName) throws InterruptedException, InvocationTargetException, CoreException {
-        var metadata = RepositoryManager.getInstance().getCurrentProject().orElseThrow().getProjectMetadata(new NullProgressMonitor());
+    private static void createApi(String pageName)
+            throws InterruptedException, InvocationTargetException, CoreException {
+        var metadata = RepositoryManager.getInstance().getCurrentProject().orElseThrow()
+                .getProjectMetadata(new NullProgressMonitor());
         final RestAPIExtensionArchetypeConfiguration configuration = RestAPIExtensionArchetypeConfiguration
                 .defaultArchetypeConfiguration(metadata);
         configuration.setJavaPackage("org.bonitasoft.test");
@@ -67,7 +70,8 @@ public class ExportRestAPIExtensionProjectIT {
 
         PlatformUI.getWorkbench().getProgressService().run(true, false, operation.asWorkspaceModifyOperation());
 
-        Job.getJobManager().join(CreateRestAPIExtensionProjectOperation.class, AbstractRepository.NULL_PROGRESS_MONITOR);
+        Job.getJobManager().join(CreateRestAPIExtensionProjectOperation.class,
+                AbstractRepository.NULL_PROGRESS_MONITOR);
     }
 
     @Test
@@ -100,6 +104,7 @@ public class ExportRestAPIExtensionProjectIT {
         BuildAndExportCustomPageOperation operation = new BuildAndExportCustomPageOperation();
         IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
         operation.run(apiToExport, targetDir, progressService);
+        BuildScheduler.joinOnBuildRule();
 
         StatusAssert.assertThat(operation.getStatus()).isOK();
         assertThat(new File(targetDir + File.separator + pageName + "-0.0.1.zip")).exists();

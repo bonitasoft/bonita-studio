@@ -47,6 +47,7 @@ import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.IProgressService;
 import org.junit.After;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -57,19 +58,25 @@ public class TestParametersRefactoring {
 
     @Rule
     public InitialProjectRule projectRule = InitialProjectRule.INSTANCE;
-    
+
     private final String mainProcessName = "testParametersRefactoring";
 
     private final String newParameterName = "parameter1Refactored";
 
     private final String parameterName = "parameter1";
 
-    private final DiagramRepositoryStore store = RepositoryManager.getInstance()
-            .getRepositoryStore(DiagramRepositoryStore.class);
+    private DiagramRepositoryStore store;
+
+    @Before
+    public void getDiagramStore() {
+        // get repository store after the initial project rule has executed.
+        store = RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
+    }
 
     @Test
     public void testParametersRefactoring()
-            throws IOException, InvocationTargetException, InterruptedException, ExecutionException, ReadFileStoreException {
+            throws IOException, InvocationTargetException, InterruptedException, ExecutionException,
+            ReadFileStoreException {
         final MainProcess mainProcess = importDiagramAndOpen();
         final List<Pool> pools = ModelHelper.getChildrenProcess(mainProcess);
         assertEquals("2 pools should have been imported", 2, pools.size());
@@ -86,7 +93,8 @@ public class TestParametersRefactoring {
         removeParameter(pools, pool1Parameters, pool1Operations);
     }
 
-    public MainProcess importDiagramAndOpen() throws IOException, InvocationTargetException, InterruptedException, ReadFileStoreException {
+    public MainProcess importDiagramAndOpen()
+            throws IOException, InvocationTargetException, InterruptedException, ReadFileStoreException {
         RepositoryAccessor repositoryAccessor = RepositoryManager.getInstance().getAccessor();
         final ImportBosArchiveOperation op = new ImportBosArchiveOperation(repositoryAccessor);
         final URL fileURL1 = FileLocator
@@ -113,7 +121,8 @@ public class TestParametersRefactoring {
     private void refactorParameter(final List<Pool> pools, final List<Parameter> pool1Parameters,
             final List<Parameter> pool2Parameters,
             final List<Operation> pool1Operations,
-            final List<Operation> pool2Operations) throws InvocationTargetException, InterruptedException, ReadFileStoreException {
+            final List<Operation> pool2Operations)
+            throws InvocationTargetException, InterruptedException, ReadFileStoreException {
         final Parameter parameterToRefactor = pool1Parameters.get(0);
         final Parameter parameterWithSameName = pool2Parameters.get(0);
         final String parameterWithSameNameName = parameterWithSameName.getName();
