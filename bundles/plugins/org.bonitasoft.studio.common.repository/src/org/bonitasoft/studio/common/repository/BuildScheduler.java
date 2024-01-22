@@ -21,6 +21,8 @@ import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.OperationCanceledException;
+import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
 
 /**
@@ -128,13 +130,52 @@ public class BuildScheduler {
      */
     public static <V, E extends Exception> V callWithBuildRule(CheckedCallable<V, E> operation,
             IProgressMonitor monitor) throws E {
-        var schedulingRule = ResourcesPlugin.getWorkspace().getRuleFactory().buildRule();
+        ISchedulingRule schedulingRule = getBuildRule();
+        boolean needRule = !schedulingRule.equals(Job.getJobManager().currentRule());
+        if (!needRule) {
+            return operation.call();
+        }
         Job.getJobManager().beginRule(schedulingRule, monitor);
         try {
             return operation.call();
         } finally {
             Job.getJobManager().endRule(schedulingRule);
         }
+    }
+
+    /**
+     * Get the build scheduling rule
+     * 
+     * @return the build rule for schedule
+     */
+    private static ISchedulingRule getBuildRule() {
+        return ResourcesPlugin.getWorkspace().getRuleFactory().buildRule();
+    }
+
+    /**
+     * Wait for all jobs with build rule to end.
+     * 
+     * @throws IllegalStateException if we are already in a build job (to prevent deadlock)
+     * @throws InterruptedException if this thread is interrupted while waiting
+     * @throws OperationCanceledException if the progress monitor is canceled while waiting
+     */
+    public static void joinOnBuildRule()
+            throws IllegalStateException, OperationCanceledException, InterruptedException {
+        if (getBuildRule().equals(Job.getJobManager().currentRule())) {
+            throw new IllegalStateException("Already in a build operation.");
+        }
+        Job.getJobManager().join(ResourcesPlugin.getWorkspace().getRuleFactory().buildRule(),
+                new NullProgressMonitor());
+    }
+
+    /**
+     * Schedule job to run with build rule.
+     * 
+     * @param jobToSchedule the job which must be scheduled to execute later
+     */
+    public static void scheduleJobWithBuildRule(Job jobToSchedule) {
+        jobToSchedule.setRule(getBuildRule());
+        jobToSchedule.schedule();
     }
 
 }

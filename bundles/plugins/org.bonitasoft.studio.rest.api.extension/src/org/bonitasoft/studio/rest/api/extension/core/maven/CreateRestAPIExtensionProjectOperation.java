@@ -30,7 +30,6 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.m2e.core.MavenPlugin;
 import org.eclipse.m2e.core.project.IArchetype;
 import org.eclipse.m2e.core.project.ProjectImportConfiguration;
-import org.eclipse.m2e.core.ui.internal.archetype.ArchetypeGenerator;
 
 public class CreateRestAPIExtensionProjectOperation extends CreateCustomPageProjectOperation {
 
@@ -65,23 +64,24 @@ public class CreateRestAPIExtensionProjectOperation extends CreateCustomPageProj
 
     /* Dirty string replacement to control the location of the dependency in the dependency list */
     private String insertBdmModelDependency(Dependency bdmModelDep, String content) {
-        return content.replace(String.format("    <dependency>%n"
-                + "      <groupId>org.slf4j</groupId>%n"
-                + "      <artifactId>slf4j-api</artifactId>%n"
-                + "      <scope>provided</scope>%n"
-                + "    </dependency>"), String.format(
-                        "        <dependency>%n"
+        return content.replaceFirst(String.format("<dependency>\\R?"
+                + "\\s*<groupId>org\\.slf4j</groupId>\\R?"
+                + "\\s*<artifactId>slf4j-api</artifactId>\\R?"
+                + "\\s*<scope>provided</scope>\\R?"
+                + "\\s*</dependency>"), String.format(
+                        "<dependency>%n"
                                 + "      <groupId>org.slf4j</groupId>%n"
                                 + "      <artifactId>slf4j-api</artifactId>%n"
                                 + "      <scope>provided</scope>%n"
                                 + "    </dependency>%n%n"
                                 + "    <!-- BDM model dependency -->%n"
                                 + "    <dependency>%n"
-                                + "      <groupId>${project.groupId}</groupId>%n"
+                                + "      <groupId>\\${project.groupId}</groupId>%n"
                                 + "      <artifactId>%s</artifactId>%n"
-                                + "      <version>${project.version}</version>%n"
+                                + "      <version>\\${project.version}</version>%n"
                                 + "      <scope>provided</scope>%n"
-                                + "    </dependency>%n",bdmModelDep.getArtifactId()));
+                                + "    </dependency>%n",
+                        bdmModelDep.getArtifactId()));
     }
 
     @Override

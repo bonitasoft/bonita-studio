@@ -14,6 +14,14 @@
  */
 package org.bonitasoft.studio.diagram.custom.editPolicies;
 
+import java.util.List;
+
+import org.bonitasoft.bpm.model.process.Activity;
+import org.bonitasoft.bpm.model.process.Container;
+import org.bonitasoft.bpm.model.process.FlowElement;
+import org.bonitasoft.bpm.model.process.Pool;
+import org.bonitasoft.bpm.model.process.SubProcessEvent;
+import org.bonitasoft.bpm.model.process.TextAnnotation;
 import org.bonitasoft.studio.common.diagram.tools.FiguresHelper;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.diagram.custom.editPolicies.command.OverlapSetBoundsCommand;
@@ -23,12 +31,6 @@ import org.bonitasoft.studio.diagram.custom.parts.CustomPoolCompartmentEditPart;
 import org.bonitasoft.studio.diagram.custom.parts.CustomSubProcessEvent2EditPart;
 import org.bonitasoft.studio.diagram.custom.parts.CustomSubprocessEventCompartmentEditPart;
 import org.bonitasoft.studio.diagram.custom.parts.CustomTextAnnotation2EditPart;
-import org.bonitasoft.bpm.model.process.Activity;
-import org.bonitasoft.bpm.model.process.Container;
-import org.bonitasoft.bpm.model.process.FlowElement;
-import org.bonitasoft.bpm.model.process.Pool;
-import org.bonitasoft.bpm.model.process.SubProcessEvent;
-import org.bonitasoft.bpm.model.process.TextAnnotation;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.LaneLaneCompartmentEditPart;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.SequenceFlowEditPart;
 import org.eclipse.draw2d.ColorConstants;
@@ -92,7 +94,7 @@ public class CustomFeedbackXYLayoutPolicy extends XYLayoutEditPolicy implements 
     protected EditPolicy createChildEditPolicy(final EditPart child) {
         if (child instanceof ShapeEditPart
                 && (((ShapeEditPart) child).resolveSemanticElement() instanceof Activity
-                || ((ShapeEditPart) child).resolveSemanticElement() instanceof SubProcessEvent)) {
+                        || ((ShapeEditPart) child).resolveSemanticElement() instanceof SubProcessEvent)) {
             return new CustomResizableEditPolicyEx();
         } else if (child instanceof ShapeEditPart
                 && (((ShapeEditPart) child).resolveSemanticElement() instanceof FlowElement
@@ -118,8 +120,6 @@ public class CustomFeedbackXYLayoutPolicy extends XYLayoutEditPolicy implements 
                         }
                     }
                 }
-                
-                
 
                 @Override
                 public void addSelectionHandles() {
@@ -154,12 +154,16 @@ public class CustomFeedbackXYLayoutPolicy extends XYLayoutEditPolicy implements 
                         final Rectangle bounds = ((ShapeEditPart) child).getFigure().getBounds();
                         final View childNotationView = ((IGraphicalEditPart) child).getNotationView();
                         final Color background = ColorRegistry.getInstance().getColor(
-                                ((FillStyle) childNotationView.getStyle(NotationPackage.eINSTANCE.getFillStyle())).getFillColor());
+                                ((FillStyle) childNotationView.getStyle(NotationPackage.eINSTANCE.getFillStyle()))
+                                        .getFillColor());
                         final Color foreground = ColorRegistry.getInstance().getColor(
-                                ((LineStyle) childNotationView.getStyle(NotationPackage.eINSTANCE.getLineStyle())).getLineColor());
-                        res = FiguresHelper.getSelectedFigure(((ShapeEditPart) child).resolveSemanticElement().eClass(), bounds.width, bounds.height,
+                                ((LineStyle) childNotationView.getStyle(NotationPackage.eINSTANCE.getLineStyle()))
+                                        .getLineColor());
+                        res = FiguresHelper.getSelectedFigure(((ShapeEditPart) child).resolveSemanticElement().eClass(),
+                                bounds.width, bounds.height,
                                 foreground, background);
-                        res.getSize().performScale(((DiagramRootEditPart) getHost().getRoot()).getZoomManager().getZoom());
+                        res.getSize()
+                                .performScale(((DiagramRootEditPart) getHost().getRoot()).getZoomManager().getZoom());
 
                     }
 
@@ -292,9 +296,12 @@ public class CustomFeedbackXYLayoutPolicy extends XYLayoutEditPolicy implements 
                 req.setEditParts(getHost().getParent());
                 for (final Object ep : request.getEditParts()) {
                     if (ep instanceof IGraphicalEditPart && !(ep instanceof CustomLaneEditPart)) {
-                        final Rectangle bounds = request.getTransformedRectangle(((IGraphicalEditPart) ep).getFigure().getBounds().getCopy()).expand(
-                                new Insets(10, 10, 10, 10));
-                        final Rectangle containerBounds = ((IGraphicalEditPart) getHost()).getFigure().getBounds().getCopy();
+                        final Rectangle bounds = request
+                                .getTransformedRectangle(((IGraphicalEditPart) ep).getFigure().getBounds().getCopy())
+                                .expand(
+                                        new Insets(10, 10, 10, 10));
+                        final Rectangle containerBounds = ((IGraphicalEditPart) getHost()).getFigure().getBounds()
+                                .getCopy();
                         getHostFigure().translateToAbsolute(containerBounds);
                         getHostFigure().translateToAbsolute(bounds);
                         int yDelta = 0;
@@ -325,8 +332,11 @@ public class CustomFeedbackXYLayoutPolicy extends XYLayoutEditPolicy implements 
                 }
                 if (getHost() instanceof CustomLaneCompartmentEditPart && req.getSizeDelta().width > 0) {
                     if (req.getSizeDelta().width > 0 || req.getSizeDelta().height > 0) {
-                        req.getEditParts().remove(getHost().getParent());
-                        req.getEditParts().add(getHost().getParent().getParent().getParent());
+                        List<? extends EditPart> editParts = req.getEditParts();
+                        List<EditPart> newList = List.copyOf(editParts);
+                        newList.remove(getHost().getParent());
+                        newList.add(getHost().getParent().getParent().getParent());
+                        req.setEditParts(newList);
                         resize.add(getHost().getParent().getParent().getParent().getCommand(req));
                     }
                 } else {
@@ -421,7 +431,7 @@ public class CustomFeedbackXYLayoutPolicy extends XYLayoutEditPolicy implements 
                     .get(SnapToGuides.KEY_HORIZONTAL_GUIDE);
             ChangeGuideCommand cgm = null;
             if (guidePos != null) {
-                cgm = new ChangeGuideCommand(editingDomain, view, true);;
+                cgm = new ChangeGuideCommand(editingDomain, view, true);
                 final int hAlignment = ((Integer) request.getExtendedData()
                         .get(SnapToGuides.KEY_HORIZONTAL_ANCHOR)).intValue();
                 cgm.setNewGuide(findGuideAt(guidePos.intValue(), true), hAlignment);

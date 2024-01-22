@@ -46,14 +46,16 @@ import org.bonitasoft.studio.tests.util.ResourceMarkerHelper;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.OperationCanceledException;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.exceptions.WidgetNotFoundException;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
-import org.eclipse.swtbot.swt.finder.keyboard.Keystrokes;
 import org.eclipse.swtbot.swt.finder.waits.Conditions;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotCCombo;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTableItem;
 import org.junit.After;
 import org.junit.Before;
@@ -71,12 +73,13 @@ public class ProjectCompositionIT {
 
     private RepositoryAccessor repositoryAccessor;
 
-
     @Before
     public void setUp() throws Exception {
         repositoryAccessor = RepositoryManager.getInstance().getAccessor();
         ProjectUtil.removeUserExtensions();
         BonitaMarketplace.getInstance().loadDependencies(new NullProgressMonitor());
+        // wait for bonita server to finish startup to avoid bottleneck in progress monitor dialog
+        Job.getJobManager().join(RepositoryManager.class, new NullProgressMonitor());
     }
 
     @After
@@ -85,8 +88,9 @@ public class ProjectCompositionIT {
     }
 
     @Test
-    public void shouldEditProjectMetadata() throws CoreException {
+    public void shouldEditProjectMetadata() throws CoreException, OperationCanceledException, InterruptedException {
         var worbenchBot = new BotApplicationWorkbenchWindow(bot);
+        worbenchBot.waitEndOfBuilds();
 
         var description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.";
         var projectDetailsBot = worbenchBot.openProjectOverview().toExtensionView();
@@ -96,7 +100,8 @@ public class ProjectCompositionIT {
                 .setDescription(description)
                 .modify();
 
-        var metadata = ProjectMetadata.read(repositoryAccessor.getCurrentRepository().orElseThrow().getProject(), new NullProgressMonitor());
+        var metadata = ProjectMetadata.read(repositoryAccessor.getCurrentRepository().orElseThrow().getProject(),
+                new NullProgressMonitor());
         assertThat(metadata.getVersion()).isEqualTo("2.0.0-SNAPSHOT");
         assertThat(metadata.getDescription()).isEqualTo(description);
         assertThat(bot.styledTextWithId(SWTBotConstants.SWTBOT_ID_PROJECT_DETAILS_TITLE).getText())
@@ -106,7 +111,8 @@ public class ProjectCompositionIT {
     }
 
     @Test
-    public void shouldAddAndUpdateExtensionsFromMarketplace() throws CoreException {
+    public void shouldAddAndUpdateExtensionsFromMarketplace()
+            throws CoreException, OperationCanceledException, InterruptedException {
         var connectorDefinitionRegistry = repositoryAccessor.getCurrentRepository()
                 .orElseThrow()
                 .getRepositoryStore(ConnectorDefRepositoryStore.class)
@@ -119,6 +125,7 @@ public class ProjectCompositionIT {
                 .getConnectorDefinitionRegistry();
 
         var worbenchBot = new BotApplicationWorkbenchWindow(bot);
+        worbenchBot.waitEndOfBuilds();
 
         var projectDetailsBot = worbenchBot.openProjectOverview().toExtensionView();
         projectDetailsBot
@@ -149,7 +156,7 @@ public class ProjectCompositionIT {
                 .setArtifactId("bonita-connector-groovy")
                 .setVersion("1.1.2")
                 .finish();
-        
+
         bot.waitUntil(new AssertionCondition() {
 
             @Override
@@ -163,13 +170,17 @@ public class ProjectCompositionIT {
         projectDetailsBot
                 .findExtensionCardByArtifactId("bonita-connector-groovy")
                 .updateToLatest();
+        // 15 s including monitor and builds
+        long limit = System.currentTimeMillis() + 15000;
         bot.waitWhile(Conditions.shellIsActive(JFaceResources.getString("ProgressMonitorDialog.title")), 15000);
+        worbenchBot.waitEndOfBuilds(limit - System.currentTimeMillis());
 
         var project = repositoryAccessor.getCurrentRepository().orElseThrow().getProject();
         var mavenModel = MavenProjectHelper.getMavenModel(project);
         var groovyConnectorDependencies = mavenModel.getDependencies().stream()
                 .filter(d -> d.getArtifactId().equals("bonita-connector-groovy"))
                 .collect(Collectors.toList());
+        worbenchBot.waitEndOfBuilds(3000);
         assertThat(groovyConnectorDependencies)
                 .hasSize(1)
                 .extracting("version").doesNotContain("1.1.2");
@@ -192,7 +203,8 @@ public class ProjectCompositionIT {
     }
 
     @Test
-    public void shouldUpdateEmailConnectorDefinitions() throws IOException {
+    public void shouldUpdateEmailConnectorDefinitions()
+            throws IOException, OperationCanceledException, InterruptedException {
         var connectorDefinitionRegistry = repositoryAccessor.getCurrentRepository()
                 .orElseThrow()
                 .getRepositoryStore(ConnectorDefRepositoryStore.class)
@@ -202,6 +214,7 @@ public class ProjectCompositionIT {
         var worbenchBot = new BotApplicationWorkbenchWindow(bot);
         var botImportBOSDialog = worbenchBot.importBOSArchive()
                 .setArchive(ImportBOSArchiveWizardIT.class.getResource("/EmailConnectorUpdate.bos"));
+        worbenchBot.waitEndOfBuilds();
 
         assertThat(bot.textWithId(SWTBotConstants.SWTBOT_ID_NEW_PROJECT_NAME_TEXT).getText())
                 .isEqualTo("EmailConnectorUpdate");
@@ -219,6 +232,7 @@ public class ProjectCompositionIT {
                 .next()
                 .next()
                 .importArchive();
+        worbenchBot.waitEndOfBuilds();
 
         var localDepStore = repositoryAccessor.getCurrentRepository().orElseThrow().getLocalDependencyStore();
         assertThat(localDepStore
@@ -248,6 +262,7 @@ public class ProjectCompositionIT {
 
         assertThat(connectorDefinitionRegistry.find("email", "1.0.0")).isPresent();
         assertThat(connectorDefinitionRegistry.find("email", "1.2.0")).isEmpty();
+        worbenchBot.waitEndOfBuilds(15000);
 
         projectDetailsBot
                 .findExtensionCardByArtifactId("bonita-connector-email")
@@ -310,6 +325,7 @@ public class ProjectCompositionIT {
                 .next()
                 .next()
                 .importArchive();
+        worbenchBot.waitEndOfBuilds();
 
         IProject project = repositoryAccessor.getCurrentRepository().orElseThrow().getProject();
         bot.waitUntil(new AssertionCondition() {
@@ -328,12 +344,15 @@ public class ProjectCompositionIT {
         var findUsageBot = maximizedCard.findUsage("email", "1.0.0");
         assertThat(findUsageBot.getTree().getAllItems()).isNotEmpty();
         findUsageBot.cancel();
+        worbenchBot.waitEndOfBuilds(5000);
         maximizedCard.minimize();
 
         extensionCardBot.updateToLatest();
         bot.waitUntil(Conditions.shellIsActive(Messages.updateProcessesTitle), 20000);
 
         bot.button(IDialogConstants.IGNORE_LABEL).click();
+        // 10s including condition and end of builds
+        long limit = System.currentTimeMillis() + 10000;
         bot.waitUntil(new AssertionCondition() {
 
             @Override
@@ -345,6 +364,7 @@ public class ProjectCompositionIT {
                                 "email--1.0.0"));
             }
         }, 10000, 100);
+        worbenchBot.waitEndOfBuilds(limit - System.currentTimeMillis());
 
         var importDialogBot = worbenchBot.importBOSArchive()
                 .setArchive(ImportBOSArchiveWizardIT.class.getResource("/EmailConnectorUpdate.bos"))
@@ -357,11 +377,13 @@ public class ProjectCompositionIT {
         SWTBotTableItem tableItem = dependenciesTable.getTableItem(0);
         assertThat(tableItem.getText(3)).isEqualTo(org.bonitasoft.studio.common.repository.Messages.conflicting);
         tableItem.click(3);
-        bot.ccomboBox()
-                .setSelection(String.format(org.bonitasoft.studio.common.repository.Messages.ourVersion, "1.1.0"));
-        bot.ccomboBox().pressShortcut(Keystrokes.CR);
+        SWTBotCCombo combo = bot.ccomboBox();
+        combo.setSelection(String.format(org.bonitasoft.studio.common.repository.Messages.ourVersion, "1.1.0"));
+        // Keystrokes on combo may not always work... Focus elsewhere is safer.
+        bot.activeShell().setFocus();
         importDialogBot.waitUntilFinishIsEnabled();
         importDialogBot.importArchive();
+        worbenchBot.waitEndOfBuilds();
 
         new ProjectExplorerBot(bot).validate();
         bot.waitUntil(Conditions.shellIsActive(org.bonitasoft.studio.validation.i18n.Messages.validationTitle));
@@ -373,13 +395,15 @@ public class ProjectCompositionIT {
                 assertThat(ResourceMarkerHelper.findErrors(project)).isEmpty();
             }
         });
+        worbenchBot.waitEndOfBuilds();
     }
-    
+
     @Test
-    public void shouldDisplayInstalledExtensions() {
+    public void shouldDisplayInstalledExtensions() throws OperationCanceledException, InterruptedException {
         var worbenchBot = new BotApplicationWorkbenchWindow(bot);
+        worbenchBot.waitEndOfBuilds();
         var projectDetailsBot = worbenchBot.openProjectOverview().toExtensionView();
-        
+
         projectDetailsBot
                 .openMarketplace()
                 .selectConnectorExtensionType()
@@ -393,10 +417,10 @@ public class ProjectCompositionIT {
         } catch (WidgetNotFoundException e) {
             // email extension is hidden -> expected behavior
         }
-        
+
         marketplaceBot.displayInstalledExtensions();
         bot.label("Email");
-        
+
         marketplaceBot.cancel();
     }
 

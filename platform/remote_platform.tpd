@@ -1,0 +1,208 @@
+target "platform"
+environment JavaSE-17 
+with source requirements configurePhase
+location SWTBot "https://download.eclipse.org/technology/swtbot/releases/4.1.0/" {
+	org.eclipse.swtbot.eclipse.feature.group
+	org.eclipse.swtbot.eclipse.gef.feature.group
+	org.eclipse.swtbot.eclipse.test.junit.feature.group
+    org.eclipse.swtbot.feature.group
+    org.eclipse.swtbot.forms.feature.group
+}
+location E2023-12 "https://download.eclipse.org/releases/2023-12" {
+	org.eclipse.equinox.sdk.feature.group
+	org.eclipse.egit.feature.group
+    org.eclipse.egit.gitflow.feature.feature.group
+    org.eclipse.emf.compare.egit.feature.group
+    org.eclipse.datatools.connectivity.feature.feature.group
+    org.eclipse.datatools.enablement.feature.feature.group
+    org.eclipse.wst.web_ui.feature.feature.group
+    org.eclipse.wst.ws_ui.feature.feature.group
+    org.eclipse.m2e.feature.feature.group
+    org.eclipse.jst.server_adapters.ext.feature.feature.group
+    org.eclipse.jst.server_adapters.feature.feature.group
+    org.eclipse.wst.server_adapters.feature.feature.group
+    org.eclipse.datatools.enablement.jdbc.feature.feature.group
+    org.eclipse.datatools.enablement.msft.feature.feature.group
+    org.eclipse.datatools.enablement.mysql.feature.feature.group
+    org.eclipse.datatools.enablement.oracle.feature.feature.group
+    org.eclipse.datatools.enablement.postgresql.feature.feature.group
+    org.eclipse.datatools.sqldevtools.sqlbuilder.feature.feature.group
+    org.eclipse.datatools.enablement.apache.derby.feature.feature.group
+    org.eclipse.datatools.enablement.hsqldb.feature.feature.group
+    org.eclipse.datatools.enablement.ibm.feature.feature.group
+    org.eclipse.datatools.enablement.ingres.feature.feature.group
+    org.eclipse.datatools.enablement.oda.designer.feature.feature.group
+    org.eclipse.datatools.enablement.oda.feature.feature.group
+    org.eclipse.datatools.enablement.sap.feature.feature.group
+    org.eclipse.datatools.enablement.sdk.feature.feature.group
+    org.eclipse.datatools.enablement.sqlite.feature.feature.group
+    org.eclipse.datatools.enablement.sybase.feature.feature.group
+    org.eclipse.datatools.sdk.feature.feature.group
+    org.eclipse.emf.compare.diagram.gmf.feature.group
+    org.eclipse.emf.compare.ide.ui.feature.group
+    org.eclipse.emf.compare.feature.group
+    org.eclipse.equinox.p2.sdk.feature.group
+    org.eclipse.sdk.feature.group
+    org.eclipse.emf.edapt.runtime.feature.feature.group
+    org.eclipse.wst.jsdt.feature.feature.group
+    org.eclipse.wst.json_ui.feature.feature.group
+    com.sun.jna.platform
+    org.eclipse.gmf.feature.group
+    org.eclipse.m2e.logback.feature.feature.group
+}
+location Nebula "https://download.eclipse.org/nebula/releases/3.1.0/" {
+	org.eclipse.nebula.widgets.richtext.feature.feature.group
+}
+location AsciiDoctor "https://de-jcup.github.io/update-site-eclipse-asciidoctor-editor/update-site/" {
+	de.jcup.asciidoctoreditor.feature.group [3.1.1,3.2.0)
+}
+location Yaml "https://de-jcup.github.io/update-site-eclipse-yaml-editor/update-site/" {
+	de.jcup.yamleditor.feature.group [1.9.0,1.10.0)
+}
+location PlantUML "https://hallvard.github.io/plantuml/" {
+	net.sourceforge.plantuml.lib.feature.feature.group [1.2021.5,1.2022.0)
+}
+location Babel "https://download.eclipse.org/technology/babel/update-site/R0.20.0/2022-12/" {
+    org.eclipse.babel.nls_eclipse_es.feature.group
+    org.eclipse.babel.nls_eclipse_fr.feature.group
+    org.eclipse.babel.nls_eclipse_ja.feature.group
+    org.eclipse.babel.nls_eclipse_pt_BR.feature.group
+    org.eclipse.babel.nls_technology.egit_es.feature.group
+    org.eclipse.babel.nls_technology.egit_fr.feature.group
+    org.eclipse.babel.nls_technology.egit_ja.feature.group
+    org.eclipse.babel.nls_technology.egit_pt_BR.feature.group
+    org.eclipse.babel.nls_technology.jgit_es.feature.group
+    org.eclipse.babel.nls_technology.jgit_fr.feature.group
+    org.eclipse.babel.nls_technology.jgit_ja.feature.group
+    org.eclipse.babel.nls_technology.jgit_pt_BR.feature.group
+}
+location Groovy "https://groovy.jfrog.io/artifactory/plugins-release/e4.30" {
+	org.codehaus.groovy.compilerless.feature.feature.group
+	org.codehaus.groovy.m2eclipse.feature.feature.group
+	org.codehaus.groovy30.feature.feature.group
+	org.codehaus.groovy.eclipse.feature.feature.group
+}
+location BonitasoftBPM "mvn:org.bonitasoft.bpm:org.bonitasoft.bpm.eclipse-repository:8.0.0:zip" {
+	org.bonitasoft.bonita2bpmn.feature.feature.group
+    org.bonitasoft.bpm.connector.feature.feature.group
+    org.bonitasoft.bpm.definitions.feature.feature.group
+    org.bonitasoft.bpm.model.feature.feature.group
+    org.bonitasoft.bpm.tests.feature.feature.group
+    com.fasterxml.jackson.feature.feature.group
+    // some extra artifact models are included bellow from BonitaArtifactsModels
+    org.bonitasoft.artifacts.model.feature.feature.group
+    org.bonitasoft.bonita2bar.feature.feature.group
+}
+// Workaround https://github.com/eclipse-pde/eclipse.pde/issues/874 since 2.15.0 is the default in 2023-12
+location Orbit2024-03 "https://download.eclipse.org/tools/orbit/simrel/maven-osgi/2024-03/" {
+    org.apache.commons.commons-io [2.15.1,2.16.0)
+}
+maven MavenDependenciesWithInfiniteDepth scope=compile,runtime,system dependencyDepth=infinite missingManifest=generate {
+	dependency {
+		groupId="jakarta.xml.soap"
+		artifactId="jakarta.xml.soap-api"
+		version="1.4.2"
+	}
+// Already included as org.apache.commons.commons-io P2 plugin ; commented out to workaround https://github.com/eclipse-pde/eclipse.pde/issues/874
+//	dependency {
+//        groupId="commons-io"
+//        artifactId="commons-io"
+//        version="2.15.1"
+//	}
+    dependency {
+        groupId="org.assertj"
+        artifactId="assertj-core"
+        version="3.24.2"
+    }
+    dependency {
+        groupId="org.awaitility"
+        artifactId="awaitility"
+        version="4.2.0"
+    }
+    dependency {
+        groupId="org.mockito"
+        artifactId="mockito-junit-jupiter"
+        version="5.8.0"
+    }
+}
+// Already included as org.jdom2 P2 plugin ; commented out to workaround https://github.com/eclipse-pde/eclipse.pde/issues/874
+//maven MavenDependenciesWithNoneDepth scope=compile,runtime,system dependencyDepth=none missingManifest=generate {
+//    dependency {
+//        groupId="org.jdom"
+//        artifactId="jdom2"
+//        version="2.0.6.1"
+//    }
+//}
+maven BonitaProjectReportModel scope=compile,runtime,system dependencyDepth=none missingManifest=generate includeSources {
+    feature {
+        id="org.bonitasoft.project.report.model.feature"
+        name="Bonita Project Report Model Feature"
+        version="1.0.0"
+        vendor="Bonitasoft S.A"
+    }
+    dependency {
+        groupId="org.bonitasoft.maven"
+        artifactId="bonita-project-report-model"
+        version="1.0.0"
+    }
+    // add ossrh-snapshots when temporary using a snapshot maven version.
+    //repository id="ossrh-snapshots" url="https://oss.sonatype.org/content/repositories/snapshots"
+    repository id="maven-central" url="https://repo1.maven.org/maven2"
+}
+maven BonitaArtifactsModels scope=compile,runtime,system dependencyDepth=none missingManifest=generate includeSources {
+    feature {
+        id="org.bonitasoft.artifacts.model.studio.feature.feature.group"
+        name="Extra Bonita Artifacts Models required by Studio but not in BonitasoftBPM"
+        version="1.0.0"
+        vendor="Bonitasoft S.A"
+    }
+    dependency {
+        groupId="com.sun.activation"
+        artifactId="jakarta.activation"
+        version="1.2.2"
+    }
+    dependency {
+        groupId="com.sun.xml.bind"
+        artifactId="jaxb-osgi"
+        version="2.3.8"
+    }
+    dependency {
+        groupId="jakarta.xml.bind"
+        artifactId="jakarta.xml.bind-api"
+        version="2.3.3"
+    }
+    // without the artifacts already in org.bonitasoft.artifacts.model.feature from BonitasoftBPM
+    dependency {
+        groupId="org.bonitasoft.engine"
+        artifactId="bonita-application-model"
+        version="1.0.0"
+    }
+    dependency {
+        groupId="org.bonitasoft.engine"
+        artifactId="bonita-bdm-access-control-model"
+        version="1.0.0"
+    }
+    dependency {
+        groupId="org.bonitasoft.engine"
+        artifactId="bonita-business-object-model"
+        version="1.0.0"
+    }
+    dependency {
+        groupId="org.bonitasoft.engine"
+        artifactId="bonita-organization-model"
+        version="1.0.0"
+    }
+    dependency {
+        groupId="org.bonitasoft.engine"
+        artifactId="bonita-profile-model"
+        version="1.0.0"
+    }
+    dependency {
+        groupId="org.glassfish.hk2"
+        artifactId="osgi-resource-locator"
+        version="2.4.0"
+    }
+    // add ossrh-snapshots when temporary using a snapshot maven version.
+    //repository id="ossrh-snapshots" url="https://oss.sonatype.org/content/repositories/snapshots"
+    repository id="maven-central" url="https://repo1.maven.org/maven2"
+}

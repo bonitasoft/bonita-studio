@@ -94,14 +94,14 @@ Require-Bundle: org.bonitasoft.studio.diagram,
  org.bonitasoft.studio.connectors.model.edit,
  org.bonitasoft.studio.dependencies,
  org.bonitasoft.studio.diagram.custom,
- wrapped.org.jdom.jdom2,
  org.bonitasoft.studio.common.ui,
  org.eclipse.compare,
  org.eclipse.m2e.core.ui,
  ch.qos.logback.classic,
  ch.qos.logback.core,
  org.eclipse.ui.ide.application,
- org.bonitasoft.engine.bonita-client
+ org.bonitasoft.engine.bonita-client,
+ org.jdom2
 Bundle-RequiredExecutionEnvironment: JavaSE-17
 Bundle-ActivationPolicy: lazy
 Automatic-Module-Name: org.bonitasoft.studio.application

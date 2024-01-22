@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.eclipse.datatools.modelbase.sql.query;singleton:=true
-Bundle-Version: 1.4.0.202305310959
+Bundle-Version: 1.4.0.202311071249
 Bundle-ClassPath: org.eclipse.datatools.modelbase.sql.query_1.4.0.202305310959.jar
 Bundle-Activator: org.eclipse.datatools.modelbase.sql.query.util.SQLQueryModelPlugin
 Bundle-Vendor: %providerName

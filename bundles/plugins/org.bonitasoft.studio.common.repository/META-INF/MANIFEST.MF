@@ -80,8 +80,8 @@ Require-Bundle: org.bonitasoft.studio.common,
  org.eclipse.e4.ui.model.workbench,
  org.bonitasoft.studio.common.ui,
  org.eclipse.m2e.core.ui,
- wrapped.org.jdom.jdom2,
- org.bonitasoft.maven.bonita-project-report-model;visibility:=reexport
+ wrapped.org.bonitasoft.maven.bonita-project-report-model;visibility:=reexport,
+ org.jdom2
 Import-Package: javax.annotation;version="1.2.0",
  javax.inject;version="1.0.0",
  javax.xml.bind.annotation.adapters,

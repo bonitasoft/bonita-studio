@@ -19,6 +19,7 @@ import java.lang.reflect.InvocationTargetException;
 import org.bonitasoft.studio.application.maven.handler.TestMavenRepositoriesConnectionHandler;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
+import org.bonitasoft.studio.common.ui.jface.FileActionDialog;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.ui.PlatformUI;
 import org.junit.rules.TestRule;
@@ -35,6 +36,7 @@ public class InitialProjectRule implements TestRule {
 
             @Override
             public void evaluate() throws Throwable {
+                initPreferences();
                 ensureDefaultProjectExists();
                 base.evaluate();
             }
@@ -46,11 +48,15 @@ public class InitialProjectRule implements TestRule {
         var defaultProjectMetadta = ProjectMetadata.defaultMetadata();
         if (repositoryManager.getRepository(defaultProjectMetadta.getArtifactId()) == null
                 || !repositoryManager.getRepository(defaultProjectMetadta.getArtifactId()).exists()) {
-            PlatformUI.getWorkbench().getProgressService().run(true, false, monitor -> {
+            PlatformUI.getWorkbench().getProgressService().run(false, false, monitor -> {
                 Job.getJobManager().join(TestMavenRepositoriesConnectionHandler.TEST_CONNECTION_FAMILY, monitor);
                 repositoryManager.getAccessor().createNewRepository(defaultProjectMetadta, monitor);
             });
         }
+    }
+
+    protected void initPreferences() {
+        FileActionDialog.setDisablePopup(true);
     }
 
 }

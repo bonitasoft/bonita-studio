@@ -388,6 +388,50 @@
         <plugins>
           <plugin>
             <groupId>org.eclipse.tycho.extras</groupId>
+            <artifactId>tycho-eclipserun-plugin</artifactId>
+            <executions>
+              <execution>
+                <phase>validate</phase>
+                <goals>
+                  <goal>eclipse-run</goal>
+                </goals>
+              </execution>
+            </executions>
+            <configuration>
+              <appArgLine>-consoleLog -clean -application org.eclipse.cbi.targetplatform.tpd.converter ${basedir}/remote_platform.tpd</appArgLine>
+              <repositories>
+                <!-- These repositories are used only for building the target platform file.
+                    It does not matter if they do not match the target platform definition versions. -->
+                <repository>
+                  <id>CBI Target Platform Definition DSL</id>
+                  <layout>p2</layout>
+                  <url>https://download.eclipse.org/cbi/updates/tpd/nightly/</url>
+                </repository>
+                <repository>
+                  <id>Eclipse 2023-12 Update site</id>
+                  <layout>p2</layout>
+                  <url>https://download.eclipse.org/releases/2023-12</url>
+                </repository>
+              </repositories>
+              <dependencies>
+                <dependency>
+                  <artifactId>org.eclipse.cbi.targetplatform.feature</artifactId>
+                  <type>eclipse-feature</type>
+                </dependency>
+                <dependency>
+                  <artifactId>org.eclipse.equinox.p2.sdk</artifactId>
+                  <type>eclipse-feature</type>
+                </dependency>
+                <dependency>
+                  <!-- Required to resolve mvn: update site -->
+                  <artifactId>org.eclipse.m2e.feature</artifactId>
+                  <type>eclipse-feature</type>
+                </dependency>
+              </dependencies>
+            </configuration>
+          </plugin>
+          <plugin>
+            <groupId>org.eclipse.tycho.extras</groupId>
             <artifactId>target-platform-validation-plugin</artifactId>
             <version>${tychoVersion}</version>
             <executions>
@@ -399,6 +443,7 @@
                 <configuration>
                   <checkDependencies>true</checkDependencies>
                   <checkProvisioning>true</checkProvisioning>
+                  <targetFiles>${basedir}/remote_platform.target</targetFiles>
                 </configuration>
               </execution>
             </executions>

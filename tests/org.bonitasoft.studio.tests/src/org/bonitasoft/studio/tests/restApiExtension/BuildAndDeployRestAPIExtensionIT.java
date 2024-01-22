@@ -23,6 +23,7 @@ import org.bonitasoft.engine.page.Page;
 import org.bonitasoft.studio.assertions.StatusAssert;
 import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
+import org.bonitasoft.studio.common.repository.BuildScheduler;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.engine.http.HttpClientFactory;
@@ -48,7 +49,7 @@ public class BuildAndDeployRestAPIExtensionIT {
 
     @Rule
     public InitialProjectRule projectRule = InitialProjectRule.INSTANCE;
-    
+
     private static final String ARTIFACT_ID = "myRestApiTestExportRuntime";
     @Rule
     public TemporaryFolder tmp = new TemporaryFolder();
@@ -64,7 +65,8 @@ public class BuildAndDeployRestAPIExtensionIT {
 
     private void newRestAPIExtensionProject(final String artifactId, final String pathTemplate)
             throws CoreException, OperationCanceledException, InterruptedException, InvocationTargetException {
-        var metadata = RepositoryManager.getInstance().getCurrentProject().orElseThrow().getProjectMetadata(new NullProgressMonitor());
+        var metadata = RepositoryManager.getInstance().getCurrentProject().orElseThrow()
+                .getProjectMetadata(new NullProgressMonitor());
         final RestAPIExtensionArchetypeConfiguration defaultArchetypeConfiguration = RestAPIExtensionArchetypeConfiguration
                 .defaultArchetypeConfiguration(metadata);
         defaultArchetypeConfiguration.setPageName(artifactId);
@@ -76,7 +78,7 @@ public class BuildAndDeployRestAPIExtensionIT {
                 new ProjectImportConfiguration(),
                 defaultArchetypeConfiguration);
 
-        PlatformUI.getWorkbench().getProgressService().run(true, false, operation.asWorkspaceModifyOperation());
+        PlatformUI.getWorkbench().getProgressService().run(false, false, operation.asWorkspaceModifyOperation());
         StatusAssert.assertThat(operation.getStatus()).overridingErrorMessage(operation.getStatus().getMessage())
                 .isOK();
 
@@ -92,7 +94,8 @@ public class BuildAndDeployRestAPIExtensionIT {
         final File exportedFile = new File(targetAbsoluteFilePath + File.separator + ARTIFACT_ID + ".zip");
 
         final BuildCustomPageOperation operation = store.getChild(ARTIFACT_ID, true).newBuildOperation();
-        PlatformUI.getWorkbench().getProgressService().run(true, false, operation.asWorkspaceModifyOperation());
+        PlatformUI.getWorkbench().getProgressService().run(false, false, operation.asWorkspaceModifyOperation());
+        BuildScheduler.joinOnBuildRule();
         StatusAssert.assertThat(operation.getStatus()).overridingErrorMessage(operation.getStatus().getMessage())
                 .isOK();
 
@@ -111,16 +114,17 @@ public class BuildAndDeployRestAPIExtensionIT {
         var store = RepositoryManager.getInstance()
                 .getRepositoryStore(ExtensionRepositoryStore.class);
 
-       var fileStore = store.getChild(ARTIFACT_ID, true);
+        var fileStore = store.getChild(ARTIFACT_ID, true);
         BuildCustomPageOperation operation = store.getChild(ARTIFACT_ID, true).newBuildOperation();
-        PlatformUI.getWorkbench().getProgressService().run(true, false, operation.asWorkspaceModifyOperation());
+        PlatformUI.getWorkbench().getProgressService().run(false, false, operation.asWorkspaceModifyOperation());
+        BuildScheduler.joinOnBuildRule();
 
         var sessionOperation = new GetApiSessionOperation();
         try {
             var deployRestAPIExtensionOperation = new DeployCustomPageProjectOperation(
                     BOSEngineManager.getInstance().getPageAPI(sessionOperation.execute()),
                     new HttpClientFactory(), fileStore);
-            PlatformUI.getWorkbench().getProgressService().run(true, false, deployRestAPIExtensionOperation::run);
+            PlatformUI.getWorkbench().getProgressService().run(false, false, deployRestAPIExtensionOperation::run);
             StatusAssert.assertThat(deployRestAPIExtensionOperation.getStatus()).isOK();
             final Page deployedPage = deployRestAPIExtensionOperation.getDeployedPage();
             assertThat(deployedPage).isNotNull();
@@ -135,7 +139,7 @@ public class BuildAndDeployRestAPIExtensionIT {
         content.savePageProperties(pageProperties);
 
         operation = store.getChild(ARTIFACT_ID, true).newBuildOperation();
-        PlatformUI.getWorkbench().getProgressService().run(true, false, operation.asWorkspaceModifyOperation());
+        PlatformUI.getWorkbench().getProgressService().run(false, false, operation.asWorkspaceModifyOperation());
         StatusAssert.assertThat(operation.getStatus()).overridingErrorMessage(operation.getStatus().getMessage())
                 .isOK();
 
@@ -143,7 +147,7 @@ public class BuildAndDeployRestAPIExtensionIT {
             var deployRestAPIExtensionOperation = new DeployCustomPageProjectOperation(
                     BOSEngineManager.getInstance().getPageAPI(sessionOperation.execute()),
                     new HttpClientFactory(), fileStore);
-            PlatformUI.getWorkbench().getProgressService().run(true, false, deployRestAPIExtensionOperation::run);
+            PlatformUI.getWorkbench().getProgressService().run(false, false, deployRestAPIExtensionOperation::run);
             StatusAssert.assertThat(deployRestAPIExtensionOperation.getStatus()).isOK();
             await().untilAsserted(() -> {
                 final Page updatedPage = deployRestAPIExtensionOperation.findCustomPage(fileStore.getPageId());
@@ -163,14 +167,15 @@ public class BuildAndDeployRestAPIExtensionIT {
 
         var fileStore = store.getChild(ARTIFACT_ID, true);
         BuildCustomPageOperation operation = store.getChild(ARTIFACT_ID, true).newBuildOperation();
-        PlatformUI.getWorkbench().getProgressService().run(true, false, operation.asWorkspaceModifyOperation());
+        PlatformUI.getWorkbench().getProgressService().run(false, false, operation.asWorkspaceModifyOperation());
+        BuildScheduler.joinOnBuildRule();
 
         var sessionOperation = new GetApiSessionOperation();
         try {
             var deployRestAPIExtensionOperation = new DeployCustomPageProjectOperation(
                     BOSEngineManager.getInstance().getPageAPI(sessionOperation.execute()),
                     new HttpClientFactory(), fileStore);
-            PlatformUI.getWorkbench().getProgressService().run(true, false, deployRestAPIExtensionOperation::run);
+            PlatformUI.getWorkbench().getProgressService().run(false, false, deployRestAPIExtensionOperation::run);
             StatusAssert.assertThat(deployRestAPIExtensionOperation.getStatus()).isOK();
             final Page deployedPage = deployRestAPIExtensionOperation.getDeployedPage();
             assertThat(deployedPage).isNotNull();
@@ -182,7 +187,7 @@ public class BuildAndDeployRestAPIExtensionIT {
 
         fileStore = store.getChild("anotherRestAPIExtension", true);
         operation = fileStore.newBuildOperation();
-        PlatformUI.getWorkbench().getProgressService().run(true, false, operation.asWorkspaceModifyOperation());
+        PlatformUI.getWorkbench().getProgressService().run(false, false, operation.asWorkspaceModifyOperation());
         assertThat(operation.getStatus()).overridingErrorMessage(operation.getStatus().getMessage())
                 .isOK();
 
@@ -190,7 +195,7 @@ public class BuildAndDeployRestAPIExtensionIT {
             var deployRestAPIExtensionOperation = new DeployCustomPageProjectOperation(
                     BOSEngineManager.getInstance().getPageAPI(sessionOperation.execute()),
                     new HttpClientFactory(), fileStore);
-            PlatformUI.getWorkbench().getProgressService().run(true, false, deployRestAPIExtensionOperation::run);
+            PlatformUI.getWorkbench().getProgressService().run(false, false, deployRestAPIExtensionOperation::run);
             assertThat(deployRestAPIExtensionOperation.getStatus()).isNotOK();
         } finally {
             sessionOperation.logout();

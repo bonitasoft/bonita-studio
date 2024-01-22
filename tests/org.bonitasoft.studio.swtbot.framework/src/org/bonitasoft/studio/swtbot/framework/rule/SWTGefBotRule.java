@@ -19,6 +19,7 @@ import java.lang.reflect.InvocationTargetException;
 import org.bonitasoft.studio.application.actions.coolbar.NormalCoolBarHandler;
 import org.bonitasoft.studio.application.maven.handler.TestMavenRepositoriesConnectionHandler;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.repository.BuildScheduler;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
 import org.bonitasoft.studio.common.ui.jface.FileActionDialog;
@@ -30,6 +31,7 @@ import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.bonitasoft.studio.preferences.pages.BonitaAdvancedPreferencePage;
 import org.bonitasoft.studio.swtbot.framework.conditions.BonitaBPMConditions;
 import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -60,7 +62,7 @@ public class SWTGefBotRule implements TestRule {
     public SWTGefBotRule(final SWTGefBot bot) {
         this(bot, true);
     }
-    
+
     public SWTGefBotRule(final SWTGefBot bot, boolean requireExistingProject) {
         this.bot = bot;
         this.requireExistingProject = requireExistingProject;
@@ -96,7 +98,7 @@ public class SWTGefBotRule implements TestRule {
                     bot.captureScreenshot(String.format("screenshots/%s_%s.jpg", description.getClassName(),
                             description.getMethodName()));
                 } catch (Throwable e) {
-                   BonitaStudioLog.error("Failed to capture screenshot after test failure.", e);
+                    BonitaStudioLog.error("Failed to capture screenshot after test failure.", e);
                 }
             }
 
@@ -104,6 +106,7 @@ public class SWTGefBotRule implements TestRule {
     }
 
     protected void afterStatement(Description description) {
+        waitForBuilds();
         try {
             bot.waitUntil(BonitaBPMConditions.noPopupActive());
         } catch (final TimeoutException e) {
@@ -165,13 +168,28 @@ public class SWTGefBotRule implements TestRule {
     }
 
     protected void beforeStatement() {
-        if(requireExistingProject) {
+        if (requireExistingProject) {
             Display.getDefault().syncExec(SWTGefBotRule::ensureDefaultProjectExists);
         }
         initPreferences();
         bot.saveAllEditors();
         bot.editors(new EditorMatcherExceptOverview()).forEach(SWTBotEditor::close);
-        bot.waitUntil(BonitaBPMConditions.noPopupActive(), 10000);
+        bot.waitUntil(BonitaBPMConditions.noPopupActive(), 15000);
+        waitForBuilds();
+    }
+
+    /**
+     * Wait for active builds to finish
+     */
+    private void waitForBuilds() {
+        try {
+            BuildScheduler.joinOnBuildRule();
+        } catch (IllegalStateException | OperationCanceledException e) {
+            BonitaStudioLog.error("An error occured while waiting end of builds.", e);
+        } catch (InterruptedException e) {
+            BonitaStudioLog.error("An interrupted exception occured while waiting end of builds.", e);
+            Thread.currentThread().interrupt();
+        }
     }
 
     public static void ensureDefaultProjectExists() {
