@@ -35,12 +35,14 @@ public class BotExtensionCard {
     }
 
     public void remove() {
+        bot.activeEditor().setFocus();
         bot.toolbarButtonWithId(SWTBotConstants.removeExtensionFromCard(artifactId)).click();
         bot.waitUntil(shellIsActive(Messages.removeExtensionConfirmationTitle));
         bot.button(IDialogConstants.YES_LABEL).click();
     }
 
     public void updateToLatest() {
+        bot.activeEditor().setFocus();
         bot.toolbarButtonWithId(SWTBotConstants.updateToLatestExtensionFromCard(artifactId)).click();
         bot.waitUntil(shellIsActive(Messages.updateExtensionConfirmationTitle));
         bot.button(IDialogConstants.YES_LABEL).click();

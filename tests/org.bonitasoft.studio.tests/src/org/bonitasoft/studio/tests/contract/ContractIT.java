@@ -31,7 +31,6 @@ import org.bonitasoft.studio.common.repository.BuildScheduler;
 import org.bonitasoft.studio.swtbot.framework.application.BotApplicationWorkbenchWindow;
 import org.bonitasoft.studio.swtbot.framework.conditions.AssertionCondition;
 import org.bonitasoft.studio.swtbot.framework.diagram.BotProcessDiagramPerspective;
-import org.bonitasoft.studio.swtbot.framework.diagram.general.contract.BotContractConstraintRow;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.contract.BotContractConstraintTab;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.contract.BotContractInputRow;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.contract.BotContractInputTab;
@@ -115,10 +114,10 @@ public class ContractIT {
         BuildScheduler.joinOnBuildRule();
 
         final BotContractConstraintTab constraintTab = contractTabBot.selectConstraintTab();
-        final BotContractConstraintRow constraintRow = constraintTab.add();
-        constraintRow.setName("Check empty report");
-        constraintRow.setExpression("expenseReport.expenseLines.size() > 0");
-        constraintRow.setErrorMessages("An expense report must have at lease one expense line");
+        constraintTab.add()
+            .setName("Check empty report")
+            .setExpression("expenseReport.expenseLines.size() > 0")
+            .setErrorMessages("An expense report must have at lease one expense line");
 
         bot.waitUntil(new AssertionCondition() {
 

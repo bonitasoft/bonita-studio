@@ -20,10 +20,10 @@ import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
-import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.SWTBot;
 import org.eclipse.swtbot.swt.finder.keyboard.Keystrokes;
+import org.eclipse.swtbot.swt.finder.waits.Conditions;
 import org.eclipse.swtbot.swt.finder.waits.ICondition;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTable;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTableItem;
@@ -49,10 +49,24 @@ public class BotContractConstraintRow extends BotBase {
         constraintTable = bot.tableWithId(SWTBotConstants.SWTBOT_ID_CONTRACT_CONSTRAINT_TABLE);
         swtBotTableItem = getTableItem(bot.tableWithId(SWTBotConstants.SWTBOT_ID_CONTRACT_CONSTRAINT_TABLE), row);
     }
+    
+    public BotContractConstraintRow nameCell() {
+        constraintTable.click(row, NAME_COLUMN);
+        return this;
+    }
+    
+    public BotContractConstraintRow expressionCell() {
+        constraintTable.click(row, EXPRESSION_COLUMN);
+        return this;
+    }
+    
+    
+    public BotContractConstraintRow errorMessageCell() {
+        constraintTable.click(row, ERROR_MESSAGE_COLUMN);
+        return this;
+    }
 
     public BotContractConstraintRow setName(final String name) {
-        constraintTable.setFocus();
-        constraintTable.click(row, NAME_COLUMN);
         bot.textWithId(SWTBotConstants.SWTBOT_ID_CONSTRAINT_NAME_TEXTEDITOR)
 	        .typeText(name)
 	        .pressShortcut(Keystrokes.CR);
@@ -61,7 +75,6 @@ public class BotContractConstraintRow extends BotBase {
     }
 
     public BotContractConstraintRow setExpression(final String expression) {
-        constraintTable.setFocus();
         constraintTable.click(row, EXPRESSION_COLUMN);
         bot.button("...").click();
         bot.waitUntilWidgetAppears(Conditions.widgetIsEnabled(bot.styledText()));
@@ -71,20 +84,15 @@ public class BotContractConstraintRow extends BotBase {
     }
 
     private SWTBotTableItem getTableItem(final SWTBotTable swtBotTable, final int row) {
-        Display.getDefault().syncExec(new Runnable() {
-
-            @Override
-            public void run() {
-                final Table table = swtBotTable.widget;
-                tableItem = table.getItem(row);
-            }
+        Display.getDefault().syncExec(() -> {
+            final Table table = swtBotTable.widget;
+            tableItem = table.getItem(row);
         });
         return new SWTBotTableItem(tableItem);
 
     }
 
     public BotContractConstraintRow setErrorMessages(final String errorMessage) {
-        constraintTable.setFocus();
         constraintTable.click(row, ERROR_MESSAGE_COLUMN);
         bot.textWithId(SWTBotConstants.SWTBOT_ID_CONSTRAINT_ERROR_MESSAGE_TEXTEDITOR) 
 	        .typeText(errorMessage)

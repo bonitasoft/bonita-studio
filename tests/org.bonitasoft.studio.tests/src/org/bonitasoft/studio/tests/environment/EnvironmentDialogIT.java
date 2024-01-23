@@ -105,7 +105,7 @@ public class EnvironmentDialogIT {
         //Map to a group
         bot.tree().getTreeItem(EMPLOYEE_ACTOR + " -- Not mapped").select();
         bot.button("Groups...").click();
-        bot.table().getTableItem(0).check();
+        bot.tableWithId(SWTBotConstants.SWTBOT_ID_ACTOR_MAPPING_GROUPS_TABLE).getTableItem(0).check();
         bot.button(IDialogConstants.FINISH_LABEL).click();
 
         activeShell.setFocus();

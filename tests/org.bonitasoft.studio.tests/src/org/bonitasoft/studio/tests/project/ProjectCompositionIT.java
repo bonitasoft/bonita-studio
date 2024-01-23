@@ -17,7 +17,6 @@ package org.bonitasoft.studio.tests.project;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.IOException;
-import java.util.stream.Collectors;
 
 import org.apache.maven.model.Dependency;
 import org.assertj.core.api.Assertions;
@@ -179,7 +178,7 @@ public class ProjectCompositionIT {
         var mavenModel = MavenProjectHelper.getMavenModel(project);
         var groovyConnectorDependencies = mavenModel.getDependencies().stream()
                 .filter(d -> d.getArtifactId().equals("bonita-connector-groovy"))
-                .collect(Collectors.toList());
+                .toList();
         worbenchBot.waitEndOfBuilds(3000);
         assertThat(groovyConnectorDependencies)
                 .hasSize(1)

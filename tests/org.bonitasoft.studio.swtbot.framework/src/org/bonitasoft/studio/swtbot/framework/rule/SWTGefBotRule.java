@@ -82,19 +82,16 @@ public class SWTGefBotRule implements TestRule {
                 try {
                     base.evaluate();
                 } catch (Throwable t) {
-                    captureScreenshot(description, t);
+                    BonitaStudioLog.error(t);
+                    captureScreenshot(description);
                     throw t;
                 } finally {
                     afterStatement(description);
                 }
             }
 
-            void captureScreenshot(Description description, Throwable t) {
+            void captureScreenshot(Description description) {
                 try {
-                    String shellText = bot.activeShell().getText();
-                    BonitaStudioLog.error(
-                            String.format("%s failed ! (active shell = %s)", description.getDisplayName(), shellText),
-                            t);
                     bot.captureScreenshot(String.format("screenshots/%s_%s.jpg", description.getClassName(),
                             description.getMethodName()));
                 } catch (Throwable e) {

@@ -321,7 +321,6 @@ public class ProjectOverviewEditorPart extends EditorPart implements EventHandle
 		editLabel.setFont(JFaceResources.getFont(ProjectOverviewEditorPart.BOLD_20_FONT_ID));
 		editLabel.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, BonitaThemeConstants.HEADER_BACKGROUND);
 		editLabel.addMouseListener(new MouseAdapter() {
-
 			@Override
 			public void mouseUp(MouseEvent e) {
 				if (editLabel.equals(e.widget)) {
