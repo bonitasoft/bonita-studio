@@ -52,6 +52,7 @@ public class BotProjectOverviewEditor {
     }
 
     public BotEditProjectMetadataWizard editProjectMetadata() {
+        bot.activeEditor().setFocus();
         bot.labelWithId(SWTBotConstants.SWTBOT_ID_EDIT_PROJECT_METADATA).click();
         return new BotEditProjectMetadataWizard(bot);
     }

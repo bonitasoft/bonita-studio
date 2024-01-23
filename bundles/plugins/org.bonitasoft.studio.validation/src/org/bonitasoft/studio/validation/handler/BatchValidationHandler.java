@@ -26,6 +26,7 @@ import org.bonitasoft.studio.common.repository.core.migration.report.MigrationRe
 import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.ui.IDisplayable;
 import org.bonitasoft.studio.common.ui.jface.ValidationDialog;
+import org.bonitasoft.studio.common.ui.perspectives.ViewIds;
 import org.bonitasoft.studio.designer.core.operation.IndexingUIDOperation;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
@@ -45,12 +46,15 @@ import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.emf.edapt.migration.MigrationException;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.internal.views.markers.MarkersTreeViewer;
+import org.eclipse.ui.internal.views.markers.ProblemsView;
 import org.eclipse.ui.progress.IProgressService;
 
 /**
@@ -186,9 +190,16 @@ public class BatchValidationHandler extends AbstractHandler {
         if (PlatformUI.isWorkbenchRunning() && PlatformUI.getWorkbench().getActiveWorkbenchWindow() != null) {
             final IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
             if (activePage != null) {
-                final IViewPart part = activePage.findView("org.bonitasoft.studio.validation.view");
-                if (part instanceof ValidationViewPart) {
-                    ((ValidationViewPart) part).refreshViewer();
+                var view = activePage.findView("org.bonitasoft.studio.validation.view");
+                if (view instanceof ValidationViewPart validationPart) {
+                    validationPart.refreshViewer();
+                }
+                view = activePage.findView(ViewIds.PROBLEM_VIEW_ID);
+                if (view instanceof ProblemsView problemPart) {
+                    var treeViewer = problemPart.getAdapter(MarkersTreeViewer.class);
+                    if(treeViewer != null) {
+                        treeViewer.refresh();
+                    }
                 }
             }
         }

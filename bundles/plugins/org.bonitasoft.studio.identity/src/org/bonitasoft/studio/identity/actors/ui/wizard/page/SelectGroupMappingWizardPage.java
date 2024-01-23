@@ -26,6 +26,7 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 import org.bonitasoft.bpm.model.actormapping.ActorMapping;
+import org.bonitasoft.studio.common.ui.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.ui.jface.TableColumnSorter;
 import org.bonitasoft.studio.identity.i18n.Messages;
 import org.bonitasoft.studio.identity.organization.model.organization.Group;
@@ -89,6 +90,7 @@ public class SelectGroupMappingWizardPage extends SelectOrganizationWizardPage {
         viewersComposite.setLayout(GridLayoutFactory.swtDefaults().numColumns(1).margins(0, 0).extendedMargins(0, 0, 10, 0).equalWidth(false).create()) ;
 
         availableGroupViewer = CheckboxTableViewer.newCheckList(viewersComposite, SWT.BORDER | SWT.FULL_SELECTION | SWT.V_SCROLL) ;
+        availableGroupViewer.getTable().setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, SWTBotConstants.SWTBOT_ID_ACTOR_MAPPING_GROUPS_TABLE);
         availableGroupViewer.getTable().setLayoutData(GridDataFactory.fillDefaults().grab(true,true).create()) ;
         availableGroupViewer.getTable().setHeaderVisible(true) ;
         availableGroupViewer.setContentProvider(new ArrayContentProvider()) ;
