@@ -66,7 +66,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class BonitaMarketplace {
 
-    private static final String DEFAULT_MARKETPLACE_VERSION = "1.1.3";
+    private static final String DEFAULT_MARKETPLACE_VERSION = "1.1.4";
 
     private static final String MARKETPLACE_VERSION_PROPERTY = "marketplace.version";
 
