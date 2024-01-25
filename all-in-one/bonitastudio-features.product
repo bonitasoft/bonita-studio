@@ -65,6 +65,7 @@ along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
       <feature id="studio-bos-specific-feature"/>
       <feature id="bos-branding-feature"/>
       <feature id="rootfiles-feature"/>
+      <feature id="org.eclipse.justj.openjdk.hotspot.jre.full" installMode="root"/>
    </features>
 
    <configurations>

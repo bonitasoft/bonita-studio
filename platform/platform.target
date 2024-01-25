@@ -4,6 +4,10 @@
 <target name="platform" sequenceNumber="1704724883">
   <locations>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="true" type="InstallableUnit">
+      <unit id="org.eclipse.justj.openjdk.hotspot.jre.full.feature.group" version="17.0.10.v20240120-1143"/>
+      <repository id="JustJ" location="https://download.eclipse.org/justj/jres/17/updates/release/17.0.10/"/>
+    </location>
+    <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="true" type="InstallableUnit">
       <unit id="org.eclipse.swtbot.eclipse.feature.group" version="4.1.0.202306071420"/>
       <unit id="org.eclipse.swtbot.eclipse.gef.feature.group" version="4.1.0.202306071420"/>
       <unit id="org.eclipse.swtbot.eclipse.test.junit.feature.group" version="4.1.0.202306071420"/>

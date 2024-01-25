@@ -121,7 +121,7 @@
         </runProgram>
         <runProgram>
             <program>cmd</program>
-            <programArguments>/C netsh advfirewall firewall add rule name="OpenJDK Platform binary" dir=in action=allow program="${installdir}\jre\bin\javaw.exe"</programArguments>
+            <programArguments>/C netsh advfirewall firewall add rule name="Eclipse JustJ Java binary" dir=in action=allow program="${installdir}\plugins\org.eclipse.justj.openjdk.hotspot.jre.full.win32.x86_64_17.0.10.v20240120-1143\jre\bin\javaw.exe"</programArguments>
             <progressText>Configuring Windows Firewall...</progressText>
             <ruleList>
                 <firewallTest>
@@ -231,42 +231,6 @@
                 </platformTest>
             </conditionRuleList>
         </if>
-        <if>
-            <actionList>
-                <changePermissions permissions="0755" files="${installdir}/jre/bin/java" />
-            </actionList>
-            <conditionRuleList>
-                <platformTest>
-                    <negate>1</negate>
-                    <type>windows</type>
-                </platformTest>
-            </conditionRuleList>
-        </if>
-        <substitute>
-            <encoding>utf-8</encoding>
-            <files>${installdir}/@mac.shortcut.name@/Contents/Eclipse/@product.short.name@.ini</files>
-            <type>exact</type>
-            <substitutionList>
-                <substitution>
-                    <pattern>-startup</pattern>
-                    <value>-vm
-${installdir}/@mac.shortcut.name@/Contents/Eclipse/jre/Contents/Home/bin/java
--startup</value>
-                </substitution>
-            </substitutionList>
-            <ruleList>
-                <platformTest>
-                    <type>osx</type>
-                </platformTest>
-            </ruleList>
-        </substitute>
-        <changePermissions permissions="0755" files="${installdir}/@mac.shortcut.name@/Contents/Eclipse/jre/Contents/Home/{lib/*,bin/*}"> 
-            <ruleList>
-                <platformTest>
-                    <type>osx</type>
-                </platformTest>
-            </ruleList>
-        </changePermissions>
     </postInstallationActionList>
     <finalPageActionList>
         <runProgram>

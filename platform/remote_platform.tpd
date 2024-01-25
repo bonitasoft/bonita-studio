@@ -1,6 +1,9 @@
 target "platform"
 environment JavaSE-17 
 with source requirements configurePhase
+location JustJ "https://download.eclipse.org/justj/jres/17/updates/release/17.0.10/" {
+    org.eclipse.justj.openjdk.hotspot.jre.full.feature.group
+}
 location SWTBot "https://download.eclipse.org/technology/swtbot/releases/4.1.0/" {
 	org.eclipse.swtbot.eclipse.feature.group
 	org.eclipse.swtbot.eclipse.gef.feature.group

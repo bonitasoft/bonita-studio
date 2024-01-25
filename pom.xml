@@ -133,7 +133,7 @@
                     <artifactId>target-platform-configuration</artifactId>
                     <version>${tychoVersion}</version>
                     <configuration>
-                        <executionEnvironment>JavaSE-17</executionEnvironment>
+                        <executionEnvironment>org.eclipse.justj.openjdk.hotspot.jre.full-17</executionEnvironment>
                         <environments>
                             <environment>
                                 <os>linux</os>

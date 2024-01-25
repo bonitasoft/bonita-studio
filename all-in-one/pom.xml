@@ -14,24 +14,11 @@
 	<artifactId>all-in-one</artifactId>
 	<packaging>eclipse-repository</packaging>
 
-	<dependencies>
-		<dependency>
-			<groupId>ant-contrib</groupId>
-			<artifactId>ant-contrib</artifactId>
-			<version>1.0b3</version>
-		</dependency>
-	</dependencies>
-
 	<properties>
 		<product.short.name>BonitaStudioCommunity</product.short.name>
 		<productId>org.bonitasoft.studio.product</productId>
 		<macosx.appName>${product.short.name}-${branding.version}.app</macosx.appName>
         <root.dir>${project.build.directory}/${product.short.name}-${branding.version}</root.dir>
-		<jre.url>https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.9%2B9</jre.url>
-    	<jre.winx86.x64.url>OpenJDK17U-jdk_x64_windows_hotspot_17.0.9_9</jre.winx86.x64.url>
-		<jre.linuxx86.x64.url>OpenJDK17U-jdk_x64_linux_hotspot_17.0.9_9</jre.linuxx86.x64.url>
-		<jre.osx.url>OpenJDK17U-jdk_x64_mac_hotspot_17.0.9_9</jre.osx.url>
-		<jre.folder.name>jdk-17.0.9+9</jre.folder.name>
 	</properties>
 
 	<build>
@@ -168,6 +155,7 @@
 					<products>
 						<product>
 							<id>${productId}</id>
+							<archiveFileName>${product.short.name}-${branding.version}</archiveFileName>
 							<rootFolders>
 								<macosx>${macosx.appName}</macosx>
 							</rootFolders>
@@ -181,6 +169,13 @@
 							<goal>materialize-products</goal>
 						</goals>
 						<phase>process-resources</phase>
+					</execution>
+					<execution>
+						<id>archive-products</id>
+						<phase>package</phase>
+						<goals>
+							<goal>archive-products</goal>
+						</goals>
 					</execution>
 				</executions>
 			</plugin>
@@ -206,19 +201,6 @@
                         </configuration>
                     </execution>
                     <execution>
-                        <id>include-p2-bundles-for-all-in-one</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>execute</goal>
-                        </goals>
-                        <configuration>
-                        	<defaults>
-                               <root.dir>${project.build.directory}/${product.short.name}-${branding.version}</root.dir>
-                            </defaults>
-                            <source>${project.basedir}/all-in-one-p2-packaging.groovy</source>
-                        </configuration>
-                    </execution>
-                    <execution>
                         <id>verify-packaging</id>
                         <phase>prepare-package</phase>
                         <goals>
@@ -233,45 +215,6 @@
                     </execution>
                 </executions>
             </plugin>
-            
-
-			<!-- all-in-one assembly with all platforms -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-assembly-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>make-directory-assembly</id>
-						<phase>prepare-package</phase>
-						<configuration>
-							<descriptors>
-								<descriptor>${basedir}/assembly-descriptor.xml</descriptor>
-							</descriptors>
-							<attach>false</attach>
-							<appendAssemblyId>false</appendAssemblyId>
-							<finalName>${product.short.name}-${branding.version}</finalName>
-						</configuration>
-						<goals>
-							<goal>single</goal>
-						</goals>
-					</execution>
-					<execution>
-						<id>make-zip-assembly</id>
-						<phase>package</phase>
-						<configuration>
-						    <archiveBaseDirectory>${project.build.directory}/${product.short.name}-${branding.version}</archiveBaseDirectory>
-							<appendAssemblyId>false</appendAssemblyId>
-							<descriptors>
-								<descriptor>${basedir}/assembly-zip-descriptor.xml</descriptor>
-							</descriptors>
-							<finalName>${product.short.name}-${branding.version}</finalName>
-						</configuration>
-						<goals>
-							<goal>single</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
 		</plugins>
 	</build>
 
@@ -314,9 +257,6 @@
 					<name>BITROCK_HOME</name>
 				</property>
 			</activation>
-			<properties>
-				<if.task>net.sf.antcontrib.logic.IfTask</if.task>
-			</properties>
 			<build>
 				<plugins>
 					<!-- Build installers for each platform -->
@@ -359,121 +299,6 @@
 							<executable>${BITROCK_HOME}/bin/builder</executable>
 						</configuration>
 					</plugin>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-antrun-plugin</artifactId>
-						<executions>
-					    	<execution>
-								<id>jre-win-x86-x64</id>
-								<phase>prepare-package</phase>
-								<goals>
-									<goal>run</goal>
-								</goals>
-								<configuration>
-									<target>
-										<taskdef name="if" classname="${if.task}"
-											classpathref="maven.runtime.classpath" />
-										<available property="jre.present"
-											file="${user.home}/${jre.winx86.x64.url}" />
-										<if>
-											<not>
-												<isset property="jre.present" />
-											</not>
-											<then>
-												<get src="${jre.url}.1/${jre.winx86.x64.url}.zip"
-													dest="${user.home}" verbose="true" />
-												<unzip
-													src="${user.home}/${jre.winx86.x64.url}.zip"
-													dest="${user.home}/${jre.winx86.x64.url}" />
-												<delete file="${user.home}/${jre.winx86.x64.url}.tar" />
-												<delete
-													file="${user.home}/${jre.winx86.x64.url}.tar.gz" />
-											</then>
-										</if>
-										<copy
-											todir="${project.build.directory}/products/${productId}/win32/win32/x86_64/jre">
-											<fileset
-												dir="${user.home}/${jre.winx86.x64.url}/${jre.folder.name}" />
-										</copy>
-									</target>
-								</configuration>
-							</execution>
-							<execution>
-								<id>jre-linux-x86-64</id>
-								<phase>prepare-package</phase>
-								<goals>
-									<goal>run</goal>
-								</goals>
-								<configuration>
-									<target>
-										<taskdef name="if" classname="${if.task}"
-											classpathref="maven.runtime.classpath" />
-										<available property="jre.present"
-											file="${user.home}/${jre.linuxx86.x64.url}" />
-										<if>
-											<not>
-												<isset property="jre.present" />
-											</not>
-											<then>
-												<get src="${jre.url}/${jre.linuxx86.x64.url}.tar.gz"
-													dest="${user.home}" />
-												<gunzip
-													src="${user.home}/${jre.linuxx86.x64.url}.tar.gz" />
-												<untar src="${user.home}/${jre.linuxx86.x64.url}.tar"
-													dest="${user.home}/${jre.linuxx86.x64.url}" />
-												<delete
-													file="${user.home}/${jre.linuxx86.x64.url}.tar" />
-												<delete
-													file="${user.home}/${jre.linuxx86.x64.url}.tar.gz" />
-											</then>
-										</if>
-										<copy
-											todir="${project.build.directory}/products/${productId}/linux/gtk/x86_64/jre">
-											<fileset
-												dir="${user.home}/${jre.linuxx86.x64.url}/${jre.folder.name}" />
-										</copy>
-									</target>
-								</configuration>
-							</execution>
-							<execution>
-								<id>jre-osx-x86-x64</id>
-								<phase>prepare-package</phase>
-								<goals>
-									<goal>run</goal>
-								</goals>
-								<configuration>
-									<target>
-										<taskdef name="if" classname="${if.task}"
-											classpathref="maven.runtime.classpath" />
-										<available property="jre.present"
-											file="${user.home}/${jre.osx.url}" />
-										<if>
-											<not>
-												<isset property="jre.present" />
-											</not>
-											<then>
-												<get src="${jre.url}/${jre.osx.url}.tar.gz"
-													dest="${user.home}" />
-												<gunzip
-													src="${user.home}/${jre.osx.url}.tar.gz" />
-												<untar src="${user.home}/${jre.osx.url}.tar"
-													dest="${user.home}/${jre.osx.url}" />
-												<delete
-													file="${user.home}/${jre.osx.url}.tar" />
-												<delete
-													file="${user.home}${jre.osx.url}.tar.gz" />
-											</then>
-										</if>
-										<copy
-											todir="${project.build.directory}/products/${productId}/macosx/cocoa/x86_64/${product.short.name}-${branding.version}.app/Contents/Eclipse/jre">
-											<fileset
-												dir="${user.home}/${jre.osx.url}/${jre.folder.name}" />
-										</copy>
-									</target>
-								</configuration>
-							</execution>
-						</executions>
-					</plugin>
 				</plugins>
 			</build>
 		</profile>
@@ -515,49 +340,5 @@
 				</plugins>
 			</build>
 		</profile>
-		<profile>
-            <id>macos-codesign</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>exec-maven-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>sign-osx-app</id>
-                                <phase>process-resources</phase>
-                                <goals>
-                                    <goal>exec</goal>
-                                </goals>
-                                <configuration>
-                                    <executable>./sign-macosx.sh</executable>
-                                    <arguments>
-                                        <argument>${product.short.name}-${branding.version}.app</argument>
-                                        <argument>${macSignServiceURL}</argument>
-                                        <argument>${project.build.directory}/products/${productId}/macosx/cocoa/x86_64/</argument>
-                                    </arguments>
-                                </configuration>
-                            </execution>
-                            <execution>
-                                <id>build-and-sign-osx-dmg</id>
-                                <phase>verify</phase>
-                                <goals>
-                                    <goal>exec</goal>
-                                </goals>
-                                <configuration>
-                                    <executable>./sign.sh</executable>
-                                    <arguments>
-                                        <argument>${product.short.name}-${branding.version}.app.zip</argument>
-                                        <argument>${macBuildAndSignInstallerServiceURL}</argument>
-                                        <argument>${product.short.name}-${branding.version}-macOs.dmg</argument>
-                                        <argument>${project.build.directory}/installers/output/</argument>
-                                    </arguments>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
 	</profiles>
 </project>
