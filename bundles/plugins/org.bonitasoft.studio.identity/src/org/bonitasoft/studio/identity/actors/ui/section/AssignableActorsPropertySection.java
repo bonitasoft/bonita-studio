@@ -16,7 +16,7 @@
  */
 package org.bonitasoft.studio.identity.actors.ui.section;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import org.bonitasoft.bpm.model.process.Actor;
 import org.bonitasoft.bpm.model.process.Assignable;

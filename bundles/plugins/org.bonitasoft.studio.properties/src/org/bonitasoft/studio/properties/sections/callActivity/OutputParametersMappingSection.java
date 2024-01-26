@@ -20,7 +20,7 @@ import static org.bonitasoft.studio.common.ui.jface.databinding.UpdateStrategyFa
 import java.util.List;
 import java.util.Objects;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import org.bonitasoft.bpm.model.process.CallActivity;
 import org.bonitasoft.bpm.model.process.Data;

@@ -14,7 +14,7 @@
  */
 package org.bonitasoft.studio.designer.ui.property.section;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import org.bonitasoft.bpm.model.process.ProcessPackage;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;

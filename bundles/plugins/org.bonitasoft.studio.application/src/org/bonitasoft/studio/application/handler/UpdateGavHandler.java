@@ -21,8 +21,8 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
 
-import javax.inject.Inject;
-import javax.inject.Named;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 
 import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Model;

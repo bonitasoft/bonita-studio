@@ -4,7 +4,7 @@ package org.bonitasoft.studio.team.git;
 import java.lang.reflect.Field;
 import java.util.Objects;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;

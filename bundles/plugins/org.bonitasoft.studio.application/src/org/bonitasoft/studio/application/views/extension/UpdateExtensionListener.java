@@ -18,7 +18,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.List;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import org.apache.maven.model.Dependency;
 import org.bonitasoft.studio.application.handler.ImportExtensionHandler;

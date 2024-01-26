@@ -20,7 +20,7 @@ import static org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory.updateV
 import java.lang.reflect.InvocationTargetException;
 import java.util.Optional;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import org.bonitasoft.bpm.model.process.Pool;
 import org.bonitasoft.bpm.model.process.ProcessPackage;

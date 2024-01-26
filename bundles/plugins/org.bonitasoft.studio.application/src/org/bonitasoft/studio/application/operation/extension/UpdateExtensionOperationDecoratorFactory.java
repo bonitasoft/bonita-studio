@@ -16,7 +16,7 @@ package org.bonitasoft.studio.application.operation.extension;
 
 import java.util.List;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import org.bonitasoft.studio.common.CommandExecutor;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;

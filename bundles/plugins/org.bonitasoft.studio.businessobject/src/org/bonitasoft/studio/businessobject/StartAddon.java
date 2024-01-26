@@ -14,7 +14,7 @@
  */
 package org.bonitasoft.studio.businessobject;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import org.bonitasoft.studio.businessobject.core.operation.DeployBDMJob;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelFileStore;

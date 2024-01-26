@@ -17,7 +17,7 @@ package org.bonitasoft.studio.connectors.expression;
 import java.util.Collections;
 import java.util.Set;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import org.bonitasoft.bpm.connector.model.definition.ConnectorDefinition;
 import org.bonitasoft.bpm.model.expression.Expression;

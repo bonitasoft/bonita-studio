@@ -24,7 +24,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import org.bonitasoft.bpm.connector.model.definition.ConnectorDefinition;
 import org.bonitasoft.bpm.model.process.Connector;

@@ -8,7 +8,7 @@
  *******************************************************************************/
 package org.bonitasoft.studio.application.handler;
 
-import javax.inject.Named;
+import jakarta.inject.Named;
 
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Preferences;
