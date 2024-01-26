@@ -2,7 +2,7 @@
 <feature
       id="rootfiles-feature"
       label="Contribute rootfiles"
-      version="7.15.7.qualifier"
+      version="7.15.8.qualifier"
       provider-name="BonitaSoft S.A.">
 
    <description>
