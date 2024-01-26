@@ -19,7 +19,7 @@ import static org.bonitasoft.studio.ui.wizard.WizardPageBuilder.newPage;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Optional;
 
-import javax.inject.Named;
+import jakarta.inject.Named;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;

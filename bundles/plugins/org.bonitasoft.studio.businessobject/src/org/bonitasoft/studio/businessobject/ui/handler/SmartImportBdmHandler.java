@@ -23,7 +23,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
 import java.util.Optional;
 
-import javax.inject.Named;
+import jakarta.inject.Named;
 import javax.xml.bind.JAXBException;
 
 import org.bonitasoft.studio.businessobject.BusinessObjectPlugin;

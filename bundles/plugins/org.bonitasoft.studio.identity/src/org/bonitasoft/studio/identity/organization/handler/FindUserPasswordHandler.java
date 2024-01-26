@@ -17,7 +17,7 @@ package org.bonitasoft.studio.identity.organization.handler;
 import java.util.Objects;
 import java.util.Optional;
 
-import javax.inject.Named;
+import jakarta.inject.Named;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;

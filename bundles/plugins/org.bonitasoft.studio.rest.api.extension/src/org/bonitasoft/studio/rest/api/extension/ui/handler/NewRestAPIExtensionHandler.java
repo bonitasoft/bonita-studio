@@ -8,7 +8,7 @@
  *******************************************************************************/
 package org.bonitasoft.studio.rest.api.extension.ui.handler;
 
-import javax.inject.Named;
+import jakarta.inject.Named;
 
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelFileStore;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;

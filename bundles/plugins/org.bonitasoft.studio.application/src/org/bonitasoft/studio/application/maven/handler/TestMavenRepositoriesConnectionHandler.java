@@ -17,7 +17,7 @@ package org.bonitasoft.studio.application.maven.handler;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Objects;
 
-import javax.inject.Named;
+import jakarta.inject.Named;
 
 import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.application.maven.BonitaMavenConfigurationManager;

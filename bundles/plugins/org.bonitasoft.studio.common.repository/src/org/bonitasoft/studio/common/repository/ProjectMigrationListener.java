@@ -17,8 +17,8 @@ package org.bonitasoft.studio.common.repository;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Objects;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.PreDestroy;
 
 import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.Strings;

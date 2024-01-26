@@ -22,7 +22,7 @@ import static org.bonitasoft.studio.common.databinding.validator.ValidatorFactor
 import java.lang.reflect.InvocationTargetException;
 import java.util.Iterator;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import org.bonitasoft.bpm.model.expression.Expression;
 import org.bonitasoft.bpm.model.expression.ExpressionPackage;

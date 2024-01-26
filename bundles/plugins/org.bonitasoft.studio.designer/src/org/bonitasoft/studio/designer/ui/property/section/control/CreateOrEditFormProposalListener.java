@@ -16,7 +16,7 @@ package org.bonitasoft.studio.designer.ui.property.section.control;
 
 import java.lang.reflect.InvocationTargetException;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;

@@ -14,7 +14,7 @@
  */
 package org.bonitasoft.studio.businessobject.ui.handler;
 
-import javax.inject.Named;
+import jakarta.inject.Named;
 
 import org.bonitasoft.engine.bdm.model.BusinessObjectModel;
 import org.bonitasoft.studio.businessobject.BusinessObjectPlugin;

@@ -17,7 +17,7 @@ package org.bonitasoft.studio.engine.command;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Optional;
 
-import javax.inject.Named;
+import jakarta.inject.Named;
 
 import org.bonitasoft.engine.api.PageAPI;
 import org.bonitasoft.engine.exception.BonitaHomeNotSetException;

@@ -14,7 +14,7 @@
  */
 package org.bonitasoft.studio.rest.api.extension.extension;
 
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 
 import org.apache.maven.model.Dependency;
 import org.bonitasoft.studio.common.event.BdmEvents;

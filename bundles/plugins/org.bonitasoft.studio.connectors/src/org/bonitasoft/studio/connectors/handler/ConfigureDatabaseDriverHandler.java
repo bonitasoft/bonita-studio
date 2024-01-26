@@ -16,7 +16,7 @@ package org.bonitasoft.studio.connectors.handler;
 
 import static org.bonitasoft.studio.ui.wizard.WizardBuilder.newWizard;
 
-import javax.inject.Named;
+import jakarta.inject.Named;
 
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.connectors.i18n.Messages;

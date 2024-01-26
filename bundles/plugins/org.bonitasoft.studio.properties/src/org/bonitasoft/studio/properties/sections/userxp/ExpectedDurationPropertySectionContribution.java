@@ -18,7 +18,7 @@
 
 package org.bonitasoft.studio.properties.sections.userxp;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import org.bonitasoft.bpm.model.process.ProcessPackage;
 import org.bonitasoft.bpm.model.process.ReceiveTask;

@@ -14,7 +14,7 @@
  */
 package org.bonitasoft.studio.groovy;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.core.maven.model.AppProjectConfiguration;

@@ -50,4 +50,4 @@ Require-Bundle: org.eclipse.core.runtime,
  org.bonitasoft.studio.ui,
  org.bonitasoft.bpm.connector.model.edit
 Bundle-ActivationPolicy: lazy
-Import-Package: javax.inject
+Import-Package: jakarta.inject;version="2.0.1"

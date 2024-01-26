@@ -14,7 +14,7 @@
  */
 package org.bonitasoft.studio.properties.sections.callActivity;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import org.bonitasoft.bpm.model.process.CallActivity;
 import org.bonitasoft.bpm.model.util.ExpressionConstants;

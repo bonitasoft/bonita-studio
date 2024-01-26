@@ -14,7 +14,7 @@
  */
 package org.bonitasoft.studio.designer.ui.contribution;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;

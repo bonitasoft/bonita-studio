@@ -10,7 +10,7 @@ package org.bonitasoft.studio.connectors.extension;
 
 import java.util.Collections;
 
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 
 import org.bonitasoft.studio.common.CommandExecutor;
 import org.bonitasoft.studio.common.repository.extension.ExtensionAction;

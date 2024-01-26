@@ -8,7 +8,7 @@
  *******************************************************************************/
 package org.bonitasoft.studio.businessobject.core;
 
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 
 import org.apache.maven.model.Dependency;
 import org.bonitasoft.studio.common.event.BdmEvents;

@@ -47,7 +47,7 @@ Export-Package: org.bonitasoft.studio.common.extension,
  org.bonitasoft.studio.common.ui.properties,
  org.bonitasoft.studio.common.ui.views,
  org.bonitasoft.studio.common.ui.widgets
-Import-Package: javax.annotation;version="1.2.0",
+Import-Package: jakarta.annotation;version="2.1.1",
  org.bonitasoft.engine.api,
  org.bonitasoft.engine.bpm.bar,
  org.bonitasoft.engine.bpm.connector,

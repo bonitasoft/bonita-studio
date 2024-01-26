@@ -14,7 +14,7 @@
  */
 package org.bonitasoft.studio.common.repository.core.migration.dependencies.operation;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import org.bonitasoft.studio.common.repository.core.maven.ProjectDependenciesResolver;
 import org.bonitasoft.studio.common.repository.core.migration.dependencies.ConfigurationCollector;

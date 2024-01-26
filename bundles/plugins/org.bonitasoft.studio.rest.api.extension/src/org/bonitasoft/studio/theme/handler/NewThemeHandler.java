@@ -8,7 +8,7 @@
  *******************************************************************************/
 package org.bonitasoft.studio.theme.handler;
 
-import javax.inject.Named;
+import jakarta.inject.Named;
 
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
