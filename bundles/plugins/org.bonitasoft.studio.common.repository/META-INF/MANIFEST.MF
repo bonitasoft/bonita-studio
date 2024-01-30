@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Repository Common Plugin
 Bundle-SymbolicName: org.bonitasoft.studio.common.repository;singleton:=true
-Bundle-Version: 9.0.2.qualifier
+Bundle-Version: 9.0.3.qualifier
 Bundle-ClassPath: .,
  lib/maven3-model-jdom-support.jar
 Bundle-Activator: org.bonitasoft.studio.common.repository.CommonRepositoryPlugin
