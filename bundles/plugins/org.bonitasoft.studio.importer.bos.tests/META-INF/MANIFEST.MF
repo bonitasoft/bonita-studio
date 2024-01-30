@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Importer BOS Tests Fragment
 Bundle-SymbolicName: org.bonitasoft.studio.importer.bos.tests
-Bundle-Version: 9.0.2.qualifier
+Bundle-Version: 9.0.3.qualifier
 Bundle-Vendor: Bonitasoft S.A.
 Fragment-Host: org.bonitasoft.studio.importer.bos;bundle-version="7.16.0"
 Import-Package: org.junit.jupiter.api
