@@ -31,6 +31,7 @@ public class TomcatVmArgsBuilder {
     private static final String HEALTH_CHECK_POLLING_INTERVAL = "org.bonitasoft.studio.healthcheck.interval";
     protected static final String STUDIO_HEALTHCHECK_ENDPOINT_PROPERTY = "org.bonitasoft.studio.healthcheck.endpoint";
     protected static final String BONITA_WEB_REGISTER = "bonita.web.register";
+    protected static final String BONITA_WEB_GET_LOGIN_ENABLED = "org.bonitasoft.web.login.get.enabled";
 
     private final RepositoryAccessor repositoryAccessor;
     private IPreferenceStore enginePreference;
@@ -70,6 +71,8 @@ public class TomcatVmArgsBuilder {
         addStudioHealthCheckEndpointProperties(args);
         addSystemProperty(args, "eclipse.product", getProductApplicationId());
         addSystemProperty(args, BONITA_WEB_REGISTER, System.getProperty(BONITA_WEB_REGISTER, "1"));
+        //Enable login with GET method when opening Bonita application (deactivated by default for security reasons)
+        addSystemProperty(args, BONITA_WEB_GET_LOGIN_ENABLED, Boolean.TRUE.toString());
         addSystemProperty(args, DatabaseHandler.DB_LOCATION_PROPERTY,
                 "\"" + getDBLocation().getAbsolutePath() + "\"");
         addSystemProperty(args, "bonita.csrf.cookie.path", "\"/\"");
