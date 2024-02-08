@@ -1,21 +1,13 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde?>
-<!-- generated with https://github.com/eclipse-cbi/targetplatform-dsl -->
-<target name="platform" sequenceNumber="1704724883">
+<?xml version="1.0" encoding="UTF-8"?><target sequenceNumber="1706176764" name="platform">
   <locations>
-    <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="true" type="InstallableUnit">
+    <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+      <repository location="https://update-site.bonitasoft.com/p2/4.30"/>
       <unit id="org.eclipse.justj.openjdk.hotspot.jre.full.feature.group" version="17.0.10.v20240120-1143"/>
-      <repository id="JustJ" location="https://download.eclipse.org/justj/jres/17/updates/release/17.0.10/"/>
-    </location>
-    <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="true" type="InstallableUnit">
       <unit id="org.eclipse.swtbot.eclipse.feature.group" version="4.1.0.202306071420"/>
       <unit id="org.eclipse.swtbot.eclipse.gef.feature.group" version="4.1.0.202306071420"/>
       <unit id="org.eclipse.swtbot.eclipse.test.junit.feature.group" version="4.1.0.202306071420"/>
       <unit id="org.eclipse.swtbot.feature.group" version="4.1.0.202306071420"/>
       <unit id="org.eclipse.swtbot.forms.feature.group" version="4.1.0.202306071420"/>
-      <repository id="SWTBot" location="https://download.eclipse.org/technology/swtbot/releases/4.1.0/"/>
-    </location>
-    <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="true" type="InstallableUnit">
       <unit id="org.eclipse.equinox.sdk.feature.group" version="3.23.1000.v20231114-0937"/>
       <unit id="org.eclipse.egit.feature.group" version="6.8.0.202311291450-r"/>
       <unit id="org.eclipse.egit.gitflow.feature.feature.group" version="6.8.0.202311291450-r"/>
@@ -56,25 +48,10 @@
       <unit id="com.sun.jna.platform" version="5.13.0"/>
       <unit id="org.eclipse.gmf.feature.group" version="1.16.2.202311130907"/>
       <unit id="org.eclipse.m2e.logback.feature.feature.group" version="2.2.1.20231113-2319"/>
-      <repository id="E2023-12" location="https://download.eclipse.org/releases/2023-12"/>
-    </location>
-    <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="true" type="InstallableUnit">
       <unit id="org.eclipse.nebula.widgets.richtext.feature.feature.group" version="1.5.1.202312260654"/>
-      <repository id="Nebula" location="https://download.eclipse.org/nebula/releases/3.1.0/"/>
-    </location>
-    <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="true" type="InstallableUnit">
       <unit id="de.jcup.asciidoctoreditor.feature.group" version="3.1.1"/>
-      <repository id="AsciiDoctor" location="https://de-jcup.github.io/update-site-eclipse-asciidoctor-editor/update-site/"/>
-    </location>
-    <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="true" type="InstallableUnit">
       <unit id="de.jcup.yamleditor.feature.group" version="1.9.0"/>
-      <repository id="Yaml" location="https://de-jcup.github.io/update-site-eclipse-yaml-editor/update-site/"/>
-    </location>
-    <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="true" type="InstallableUnit">
       <unit id="net.sourceforge.plantuml.lib.feature.feature.group" version="1.2021.5"/>
-      <repository id="PlantUML" location="https://hallvard.github.io/plantuml/"/>
-    </location>
-    <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="true" type="InstallableUnit">
       <unit id="org.eclipse.babel.nls_eclipse_es.feature.group" version="4.26.0.v20230220105658"/>
       <unit id="org.eclipse.babel.nls_eclipse_fr.feature.group" version="4.26.0.v20230220105658"/>
       <unit id="org.eclipse.babel.nls_eclipse_ja.feature.group" version="4.26.0.v20230220105658"/>
@@ -87,16 +64,13 @@
       <unit id="org.eclipse.babel.nls_technology.jgit_fr.feature.group" version="4.26.0.v20230220105658"/>
       <unit id="org.eclipse.babel.nls_technology.jgit_ja.feature.group" version="4.26.0.v20230220105658"/>
       <unit id="org.eclipse.babel.nls_technology.jgit_pt_BR.feature.group" version="4.26.0.v20230220105658"/>
-      <repository id="Babel" location="https://download.eclipse.org/technology/babel/update-site/R0.20.0/2022-12/"/>
-    </location>
-    <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="true" type="InstallableUnit">
       <unit id="org.codehaus.groovy.compilerless.feature.feature.group" version="5.2.0.v202312311738-e2312"/>
       <unit id="org.codehaus.groovy.m2eclipse.feature.feature.group" version="5.2.0.v202312311738-e2312"/>
       <unit id="org.codehaus.groovy30.feature.feature.group" version="5.2.0.v202312311738-e2312"/>
       <unit id="org.codehaus.groovy.eclipse.feature.feature.group" version="5.2.0.v202312311738-e2312"/>
-      <repository id="Groovy" location="https://groovy.jfrog.io/artifactory/plugins-release/e4.30"/>
+      <unit id="org.apache.commons.commons-io" version="2.15.1"/>
     </location>
-    <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="true" type="InstallableUnit">
+    <location includeConfigurePhase="true" includeSource="true" includeMode="planner" type="InstallableUnit" includeAllPlatforms="false">
       <unit id="org.bonitasoft.bonita2bpmn.feature.feature.group" version="8.0.0"/>
       <unit id="org.bonitasoft.bpm.connector.feature.feature.group" version="8.0.0"/>
       <unit id="org.bonitasoft.bpm.definitions.feature.feature.group" version="8.0.0"/>
@@ -105,141 +79,137 @@
       <unit id="com.fasterxml.jackson.feature.feature.group" version="2.15.2.qualifier"/>
       <unit id="org.bonitasoft.artifacts.model.feature.feature.group" version="1.0.0"/>
       <unit id="org.bonitasoft.bonita2bar.feature.feature.group" version="8.0.0"/>
-      <repository id="BonitasoftBPM" location="mvn:org.bonitasoft.bpm:org.bonitasoft.bpm.eclipse-repository:8.0.0:zip"/>
+      <repository location="mvn:org.bonitasoft.bpm:org.bonitasoft.bpm.eclipse-repository:8.0.0:zip" id="BonitasoftBPM"/>
     </location>
-    <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="true" type="InstallableUnit">
-      <unit id="org.apache.commons.commons-io" version="2.15.1"/>
-      <repository id="Orbit2024-03" location="https://download.eclipse.org/tools/orbit/simrel/maven-osgi/2024-03/"/>
-    </location>
-    <location includeDependencyDepth="none" includeDependencyScopes="compile,runtime,system" includeSource="true" missingManifest="generate" type="Maven" label="BonitaArtifactsModels">
-    <feature id="org.bonitasoft.artifacts.model.studio.feature.feature.group" label="Extra Bonita Artifacts Models required by Studio but not in BonitasoftBPM" provider-name="Bonitasoft S.A" version="1.0.0">
-    	<description url="http://www.example.com/description">
+    <location missingManifest="generate" includeDependencyScopes="compile,runtime,system" includeSource="true" includeDependencyDepth="none" label="BonitaArtifactsModels" type="Maven">
+      <feature provider-name="Bonitasoft S.A" label="Extra Bonita Artifacts Models required by Studio but not in BonitasoftBPM" id="org.bonitasoft.artifacts.model.studio.feature.feature.group" version="1.0.0">
+        <description url="http://www.example.com/description">
     		[Enter Feature Description here.]
     	</description>
-    	<copyright url="http://www.example.com/copyright">
+        <copyright url="http://www.example.com/copyright">
     		[Enter Copyright Description here.]
     	</copyright>
-    	<license url="http://www.example.com/license">
+        <license url="http://www.example.com/license">
     		[Enter License Description here.]
     	</license>
-    </feature>
-    <dependencies>
-    	<dependency>
-    		<groupId>com.sun.activation</groupId>
-    		<artifactId>jakarta.activation</artifactId>
-    		<version>1.2.2</version>
-    		<type>jar</type>
-    	</dependency>
-    	<dependency>
-    		<groupId>com.sun.xml.bind</groupId>
-    		<artifactId>jaxb-osgi</artifactId>
-    		<version>2.3.8</version>
-    		<type>jar</type>
-    	</dependency>
-    	<dependency>
-    		<groupId>jakarta.xml.bind</groupId>
-    		<artifactId>jakarta.xml.bind-api</artifactId>
-    		<version>2.3.3</version>
-    		<type>jar</type>
-    	</dependency>
-    	<dependency>
-    		<groupId>org.bonitasoft.engine</groupId>
-    		<artifactId>bonita-application-model</artifactId>
-    		<version>1.0.0</version>
-    		<type>jar</type>
-    	</dependency>
-    	<dependency>
-    		<groupId>org.bonitasoft.engine</groupId>
-    		<artifactId>bonita-bdm-access-control-model</artifactId>
-    		<version>1.0.0</version>
-    		<type>jar</type>
-    	</dependency>
-    	<dependency>
-    		<groupId>org.bonitasoft.engine</groupId>
-    		<artifactId>bonita-business-object-model</artifactId>
-    		<version>1.0.0</version>
-    		<type>jar</type>
-    	</dependency>
-    	<dependency>
-    		<groupId>org.bonitasoft.engine</groupId>
-    		<artifactId>bonita-organization-model</artifactId>
-    		<version>1.0.0</version>
-    		<type>jar</type>
-    	</dependency>
-    	<dependency>
-    		<groupId>org.bonitasoft.engine</groupId>
-    		<artifactId>bonita-profile-model</artifactId>
-    		<version>1.0.0</version>
-    		<type>jar</type>
-    	</dependency>
-    	<dependency>
-    		<groupId>org.glassfish.hk2</groupId>
-    		<artifactId>osgi-resource-locator</artifactId>
-    		<version>2.4.0</version>
-    		<type>jar</type>
-    	</dependency>
-    </dependencies>
-    <repositories>
-    	<repository>
-    		<id>maven-central</id>
-    		<url>https://repo1.maven.org/maven2</url>
-    	</repository>
-    </repositories>
+      </feature>
+      <dependencies>
+        <dependency>
+          <groupId>com.sun.activation</groupId>
+          <artifactId>jakarta.activation</artifactId>
+          <version>1.2.2</version>
+          <type>jar</type>
+        </dependency>
+        <dependency>
+          <groupId>com.sun.xml.bind</groupId>
+          <artifactId>jaxb-osgi</artifactId>
+          <version>2.3.8</version>
+          <type>jar</type>
+        </dependency>
+        <dependency>
+          <groupId>jakarta.xml.bind</groupId>
+          <artifactId>jakarta.xml.bind-api</artifactId>
+          <version>2.3.3</version>
+          <type>jar</type>
+        </dependency>
+        <dependency>
+          <groupId>org.bonitasoft.engine</groupId>
+          <artifactId>bonita-application-model</artifactId>
+          <version>1.0.0</version>
+          <type>jar</type>
+        </dependency>
+        <dependency>
+          <groupId>org.bonitasoft.engine</groupId>
+          <artifactId>bonita-bdm-access-control-model</artifactId>
+          <version>1.0.0</version>
+          <type>jar</type>
+        </dependency>
+        <dependency>
+          <groupId>org.bonitasoft.engine</groupId>
+          <artifactId>bonita-business-object-model</artifactId>
+          <version>1.0.0</version>
+          <type>jar</type>
+        </dependency>
+        <dependency>
+          <groupId>org.bonitasoft.engine</groupId>
+          <artifactId>bonita-organization-model</artifactId>
+          <version>1.0.0</version>
+          <type>jar</type>
+        </dependency>
+        <dependency>
+          <groupId>org.bonitasoft.engine</groupId>
+          <artifactId>bonita-profile-model</artifactId>
+          <version>1.0.0</version>
+          <type>jar</type>
+        </dependency>
+        <dependency>
+          <groupId>org.glassfish.hk2</groupId>
+          <artifactId>osgi-resource-locator</artifactId>
+          <version>2.4.0</version>
+          <type>jar</type>
+        </dependency>
+      </dependencies>
+      <repositories>
+        <repository>
+          <id>maven-central</id>
+          <url>https://repo1.maven.org/maven2</url>
+        </repository>
+      </repositories>
     </location>
-    <location includeDependencyDepth="none" includeDependencyScopes="compile,runtime,system" includeSource="true" missingManifest="generate" type="Maven" label="BonitaProjectReportModel">
-    <feature id="org.bonitasoft.project.report.model.feature" label="Bonita Project Report Model Feature" provider-name="Bonitasoft S.A" version="1.0.0">
-    	<description url="http://www.example.com/description">
+    <location missingManifest="generate" includeDependencyScopes="compile,runtime,system" includeSource="true" includeDependencyDepth="none" label="BonitaProjectReportModel" type="Maven">
+      <feature provider-name="Bonitasoft S.A" label="Bonita Project Report Model Feature" id="org.bonitasoft.project.report.model.feature" version="1.0.0">
+        <description url="http://www.example.com/description">
     		[Enter Feature Description here.]
     	</description>
-    	<copyright url="http://www.example.com/copyright">
+        <copyright url="http://www.example.com/copyright">
     		[Enter Copyright Description here.]
     	</copyright>
-    	<license url="http://www.example.com/license">
+        <license url="http://www.example.com/license">
     		[Enter License Description here.]
     	</license>
-    </feature>
-    <dependencies>
-    	<dependency>
-    		<groupId>org.bonitasoft.maven</groupId>
-    		<artifactId>bonita-project-report-model</artifactId>
-    		<version>1.0.0</version>
-    		<type>jar</type>
-    	</dependency>
-    </dependencies>
-    <repositories>
-    	<repository>
-    		<id>maven-central</id>
-    		<url>https://repo1.maven.org/maven2</url>
-    	</repository>
-    </repositories>
+      </feature>
+      <dependencies>
+        <dependency>
+          <groupId>org.bonitasoft.maven</groupId>
+          <artifactId>bonita-project-report-model</artifactId>
+          <version>1.0.0</version>
+          <type>jar</type>
+        </dependency>
+      </dependencies>
+      <repositories>
+        <repository>
+          <id>maven-central</id>
+          <url>https://repo1.maven.org/maven2</url>
+        </repository>
+      </repositories>
     </location>
-    <location includeDependencyDepth="infinite" includeDependencyScopes="compile,runtime,system" includeSource="false" missingManifest="generate" type="Maven" label="MavenDependenciesWithInfiniteDepth">
-    <dependencies>
-    	<dependency>
-    		<groupId>jakarta.xml.soap</groupId>
-    		<artifactId>jakarta.xml.soap-api</artifactId>
-    		<version>1.4.2</version>
-    		<type>jar</type>
-    	</dependency>
-    	<dependency>
-    		<groupId>org.assertj</groupId>
-    		<artifactId>assertj-core</artifactId>
-    		<version>3.24.2</version>
-    		<type>jar</type>
-    	</dependency>
-    	<dependency>
-    		<groupId>org.awaitility</groupId>
-    		<artifactId>awaitility</artifactId>
-    		<version>4.2.0</version>
-    		<type>jar</type>
-    	</dependency>
-    	<dependency>
-    		<groupId>org.mockito</groupId>
-    		<artifactId>mockito-junit-jupiter</artifactId>
-    		<version>5.8.0</version>
-    		<type>jar</type>
-    	</dependency>
-    </dependencies>
+    <location missingManifest="generate" includeDependencyScopes="compile,runtime,system" includeSource="false" includeDependencyDepth="infinite" label="MavenDependenciesWithInfiniteDepth" type="Maven">
+      <dependencies>
+        <dependency>
+          <groupId>jakarta.xml.soap</groupId>
+          <artifactId>jakarta.xml.soap-api</artifactId>
+          <version>1.4.2</version>
+          <type>jar</type>
+        </dependency>
+        <dependency>
+          <groupId>org.assertj</groupId>
+          <artifactId>assertj-core</artifactId>
+          <version>3.24.2</version>
+          <type>jar</type>
+        </dependency>
+        <dependency>
+          <groupId>org.awaitility</groupId>
+          <artifactId>awaitility</artifactId>
+          <version>4.2.0</version>
+          <type>jar</type>
+        </dependency>
+        <dependency>
+          <groupId>org.mockito</groupId>
+          <artifactId>mockito-junit-jupiter</artifactId>
+          <version>5.8.0</version>
+          <type>jar</type>
+        </dependency>
+      </dependencies>
     </location>
   </locations>
   <targetJRE path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-17"/>

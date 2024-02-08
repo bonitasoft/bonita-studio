@@ -69,15 +69,19 @@
             <configuration>
               <source>
                 <repository>
+                  <url>https://download.eclipse.org/justj/jres/17/updates/release/17.0.10/</url>
+                  <layout>p2</layout>
+                </repository>
+                <repository>
                   <url>https://download.eclipse.org/technology/swtbot/releases/4.1.0/</url>
                   <layout>p2</layout>
                 </repository>
                 <repository>
-                  <url>https://download.eclipse.org/releases/2023-09</url>
+                  <url>https://download.eclipse.org/releases/2023-12</url>
                   <layout>p2</layout>
                 </repository>
                 <repository>
-                  <url>https://download.eclipse.org/nebula/releases/3.0.0/</url>
+                  <url>https://download.eclipse.org/nebula/releases/3.1.0/</url>
                   <layout>p2</layout>
                 </repository>
                 <repository>
@@ -97,194 +101,202 @@
                   <layout>p2</layout>
                 </repository>
                 <repository>
-                  <url>https://groovy.jfrog.io/artifactory/plugins-release/e4.29</url>
+                  <url>https://groovy.jfrog.io/artifactory/plugins-release/e4.30</url>
+                  <layout>p2</layout>
+                </repository>
+                <repository>
+                  <url>https://download.eclipse.org/tools/orbit/simrel/maven-osgi/2024-03/</url>
                   <layout>p2</layout>
                 </repository>
               </source>
               <ius>
                 <iu>
+                  <id>org.eclipse.justj.openjdk.hotspot.jre.full.feature.group</id>
+                  <version>17.0.10.v20240120-1143</version>
+                </iu>
+                <iu>
                   <id>org.eclipse.swtbot.eclipse.feature.group</id>
-                  <version>0.0.0</version>
+                  <version>4.1.0.202306071420</version>
                 </iu>
                 <iu>
                   <id>org.eclipse.swtbot.eclipse.gef.feature.group</id>
-                  <version>0.0.0</version>
+                  <version>4.1.0.202306071420</version>
                 </iu>
                 <iu>
                   <id>org.eclipse.swtbot.eclipse.test.junit.feature.group</id>
-                  <version>0.0.0</version>
+                  <version>4.1.0.202306071420</version>
                 </iu>
                 <iu>
                   <id>org.eclipse.swtbot.feature.group</id>
-                  <version>0.0.0</version>
+                  <version>4.1.0.202306071420</version>
                 </iu>
                 <iu>
                   <id>org.eclipse.swtbot.forms.feature.group</id>
-                  <version>0.0.0</version>
+                  <version>4.1.0.202306071420</version>
                 </iu>
                 <iu>
                   <id>org.eclipse.equinox.sdk.feature.group</id>
-                  <version>0.0.0</version>
+                  <version>3.23.1000.v20231114-0937</version>
                 </iu>
                 <iu>
                   <id>org.eclipse.egit.feature.group</id>
-                  <version>0.0.0</version>
+                  <version>6.8.0.202311291450-r</version>
                 </iu>
                 <iu>
                   <id>org.eclipse.egit.gitflow.feature.feature.group</id>
-                  <version>0.0.0</version>
+                  <version>6.8.0.202311291450-r</version>
                 </iu>
                 <iu>
                   <id>org.eclipse.emf.compare.egit.feature.group</id>
-                  <version>0.0.0</version>
+                  <version>3.3.23.202311200811</version>
                 </iu>
                 <iu>
                   <id>org.eclipse.datatools.connectivity.feature.feature.group</id>
-                  <version>0.0.0</version>
+                  <version>1.16.0.202311071345</version>
                 </iu>
                 <iu>
                   <id>org.eclipse.datatools.enablement.feature.feature.group</id>
-                  <version>0.0.0</version>
+                  <version>1.15.0.202311071249</version>
                 </iu>
                 <iu>
                   <id>org.eclipse.wst.web_ui.feature.feature.group</id>
-                  <version>0.0.0</version>
+                  <version>3.31.0.v202309280406</version>
                 </iu>
                 <iu>
                   <id>org.eclipse.wst.ws_ui.feature.feature.group</id>
-                  <version>0.0.0</version>
+                  <version>3.31.0.v202308010326</version>
                 </iu>
                 <iu>
                   <id>org.eclipse.m2e.feature.feature.group</id>
-                  <version>0.0.0</version>
+                  <version>2.4.200.20231119-0901</version>
                 </iu>
                 <iu>
                   <id>org.eclipse.jst.server_adapters.ext.feature.feature.group</id>
-                  <version>0.0.0</version>
+                  <version>3.4.800.v202311130434</version>
                 </iu>
                 <iu>
                   <id>org.eclipse.jst.server_adapters.feature.feature.group</id>
-                  <version>0.0.0</version>
+                  <version>3.32.0.v202311141839</version>
                 </iu>
                 <iu>
                   <id>org.eclipse.wst.server_adapters.feature.feature.group</id>
-                  <version>0.0.0</version>
+                  <version>3.32.0.v202311142254</version>
                 </iu>
                 <iu>
                   <id>org.eclipse.datatools.enablement.jdbc.feature.feature.group</id>
-                  <version>0.0.0</version>
+                  <version>1.15.0.202311071249</version>
                 </iu>
                 <iu>
                   <id>org.eclipse.datatools.enablement.msft.feature.feature.group</id>
-                  <version>0.0.0</version>
+                  <version>1.16.0.202311071307</version>
                 </iu>
                 <iu>
                   <id>org.eclipse.datatools.enablement.mysql.feature.feature.group</id>
-                  <version>0.0.0</version>
+                  <version>1.15.0.202311071249</version>
                 </iu>
                 <iu>
                   <id>org.eclipse.datatools.enablement.oracle.feature.feature.group</id>
-                  <version>0.0.0</version>
+                  <version>1.15.0.202311071249</version>
                 </iu>
                 <iu>
                   <id>org.eclipse.datatools.enablement.postgresql.feature.feature.group</id>
-                  <version>0.0.0</version>
+                  <version>1.15.0.202311071249</version>
                 </iu>
                 <iu>
                   <id>org.eclipse.datatools.sqldevtools.sqlbuilder.feature.feature.group</id>
-                  <version>0.0.0</version>
+                  <version>1.15.0.202311071249</version>
                 </iu>
                 <iu>
                   <id>org.eclipse.datatools.enablement.apache.derby.feature.feature.group</id>
-                  <version>0.0.0</version>
+                  <version>1.15.0.202311071249</version>
                 </iu>
                 <iu>
                   <id>org.eclipse.datatools.enablement.hsqldb.feature.feature.group</id>
-                  <version>0.0.0</version>
+                  <version>1.15.0.202311071249</version>
                 </iu>
                 <iu>
                   <id>org.eclipse.datatools.enablement.ibm.feature.feature.group</id>
-                  <version>0.0.0</version>
+                  <version>1.15.0.202311071249</version>
                 </iu>
                 <iu>
                   <id>org.eclipse.datatools.enablement.ingres.feature.feature.group</id>
-                  <version>0.0.0</version>
+                  <version>1.15.0.202311071249</version>
                 </iu>
                 <iu>
                   <id>org.eclipse.datatools.enablement.oda.designer.feature.feature.group</id>
-                  <version>0.0.0</version>
+                  <version>1.15.0.202311071249</version>
                 </iu>
                 <iu>
                   <id>org.eclipse.datatools.enablement.oda.feature.feature.group</id>
-                  <version>0.0.0</version>
+                  <version>1.15.0.202311071249</version>
                 </iu>
                 <iu>
                   <id>org.eclipse.datatools.enablement.sap.feature.feature.group</id>
-                  <version>0.0.0</version>
+                  <version>1.15.0.202311071249</version>
                 </iu>
                 <iu>
                   <id>org.eclipse.datatools.enablement.sdk.feature.feature.group</id>
-                  <version>0.0.0</version>
+                  <version>1.15.0.202311071249</version>
                 </iu>
                 <iu>
                   <id>org.eclipse.datatools.enablement.sqlite.feature.feature.group</id>
-                  <version>0.0.0</version>
+                  <version>1.15.0.202311071249</version>
                 </iu>
                 <iu>
                   <id>org.eclipse.datatools.enablement.sybase.feature.feature.group</id>
-                  <version>0.0.0</version>
+                  <version>1.15.0.202311071249</version>
                 </iu>
                 <iu>
                   <id>org.eclipse.datatools.sdk.feature.feature.group</id>
-                  <version>0.0.0</version>
+                  <version>1.16.0.202311071345</version>
                 </iu>
                 <iu>
                   <id>org.eclipse.emf.compare.diagram.gmf.feature.group</id>
-                  <version>0.0.0</version>
+                  <version>3.3.23.202311200811</version>
                 </iu>
                 <iu>
                   <id>org.eclipse.emf.compare.ide.ui.feature.group</id>
-                  <version>0.0.0</version>
+                  <version>3.3.23.202311200811</version>
                 </iu>
                 <iu>
                   <id>org.eclipse.emf.compare.feature.group</id>
-                  <version>0.0.0</version>
+                  <version>3.3.23.202311200811</version>
                 </iu>
                 <iu>
                   <id>org.eclipse.equinox.p2.sdk.feature.group</id>
-                  <version>0.0.0</version>
+                  <version>3.11.2200.v20231112-1314</version>
                 </iu>
                 <iu>
                   <id>org.eclipse.sdk.feature.group</id>
-                  <version>0.0.0</version>
+                  <version>4.30.0.v20231201-0512</version>
                 </iu>
                 <iu>
                   <id>org.eclipse.emf.edapt.runtime.feature.feature.group</id>
-                  <version>0.0.0</version>
+                  <version>1.5.0.202201311430</version>
                 </iu>
                 <iu>
                   <id>org.eclipse.wst.jsdt.feature.feature.group</id>
-                  <version>0.0.0</version>
+                  <version>2.4.500.v202307190318</version>
                 </iu>
                 <iu>
                   <id>org.eclipse.wst.json_ui.feature.feature.group</id>
-                  <version>0.0.0</version>
+                  <version>1.1.11.v202308160419</version>
                 </iu>
                 <iu>
                   <id>com.sun.jna.platform</id>
-                  <version>0.0.0</version>
+                  <version>5.13.0</version>
                 </iu>
                 <iu>
                   <id>org.eclipse.gmf.feature.group</id>
-                  <version>0.0.0</version>
+                  <version>1.16.2.202311130907</version>
                 </iu>
                 <iu>
                   <id>org.eclipse.m2e.logback.feature.feature.group</id>
-                  <version>0.0.0</version>
+                  <version>2.2.1.20231113-2319</version>
                 </iu>
                 <iu>
                   <id>org.eclipse.nebula.widgets.richtext.feature.feature.group</id>
-                  <version>0.0.0</version>
+                  <version>1.5.1.202312260654</version>
                 </iu>
                 <iu>
                   <id>de.jcup.asciidoctoreditor.feature.group</id>
@@ -295,68 +307,76 @@
                   <version>1.9.0</version>
                 </iu>
                 <iu>
-                  <id>net.sourceforge.plantuml.feature.feature.group</id>
-                  <version>1.1.30</version>
+                  <id>net.sourceforge.plantuml.lib.feature.feature.group</id>
+                  <version>1.2021.5</version>
                 </iu>
                 <iu>
                   <id>org.eclipse.babel.nls_eclipse_es.feature.group</id>
-                  <version>0.0.0</version>
+                  <version>4.26.0.v20230220105658</version>
                 </iu>
                 <iu>
                   <id>org.eclipse.babel.nls_eclipse_fr.feature.group</id>
-                  <version>0.0.0</version>
+                  <version>4.26.0.v20230220105658</version>
                 </iu>
                 <iu>
                   <id>org.eclipse.babel.nls_eclipse_ja.feature.group</id>
-                  <version>0.0.0</version>
+                  <version>4.26.0.v20230220105658</version>
                 </iu>
                 <iu>
                   <id>org.eclipse.babel.nls_eclipse_pt_BR.feature.group</id>
-                  <version>0.0.0</version>
+                  <version>4.26.0.v20230220105658</version>
                 </iu>
                 <iu>
                   <id>org.eclipse.babel.nls_technology.egit_es.feature.group</id>
-                  <version>0.0.0</version>
+                  <version>4.26.0.v20230220105658</version>
                 </iu>
                 <iu>
                   <id>org.eclipse.babel.nls_technology.egit_fr.feature.group</id>
-                  <version>0.0.0</version>
+                  <version>4.26.0.v20230220105658</version>
                 </iu>
                 <iu>
                   <id>org.eclipse.babel.nls_technology.egit_ja.feature.group</id>
-                  <version>0.0.0</version>
+                  <version>4.26.0.v20230220105658</version>
                 </iu>
                 <iu>
                   <id>org.eclipse.babel.nls_technology.egit_pt_BR.feature.group</id>
-                  <version>0.0.0</version>
+                  <version>4.26.0.v20230220105658</version>
                 </iu>
                 <iu>
                   <id>org.eclipse.babel.nls_technology.jgit_es.feature.group</id>
-                  <version>0.0.0</version>
+                  <version>4.26.0.v20230220105658</version>
                 </iu>
                 <iu>
                   <id>org.eclipse.babel.nls_technology.jgit_fr.feature.group</id>
-                  <version>0.0.0</version>
+                  <version>4.26.0.v20230220105658</version>
                 </iu>
                 <iu>
                   <id>org.eclipse.babel.nls_technology.jgit_ja.feature.group</id>
-                  <version>0.0.0</version>
+                  <version>4.26.0.v20230220105658</version>
                 </iu>
                 <iu>
                   <id>org.eclipse.babel.nls_technology.jgit_pt_BR.feature.group</id>
-                  <version>0.0.0</version>
+                  <version>4.26.0.v20230220105658</version>
                 </iu>
                 <iu>
                   <id>org.codehaus.groovy.compilerless.feature.feature.group</id>
-                  <version>0.0.0</version>
+                  <version>5.2.0.v202312311738-e2312</version>
                 </iu>
                 <iu>
                   <id>org.codehaus.groovy.m2eclipse.feature.feature.group</id>
-                  <version>0.0.0</version>
+                  <version>5.2.0.v202312311738-e2312</version>
                 </iu>
                 <iu>
                   <id>org.codehaus.groovy30.feature.feature.group</id>
-                  <version>0.0.0</version>
+                  <version>5.2.0.v202312311738-e2312</version>
+                </iu>
+                <iu>
+                  <id>org.codehaus.groovy.eclipse.feature.feature.group</id>
+                  <version>5.2.0.v202312311738-e2312</version>
+                </iu>
+                <iu>
+                  <id>org.apache.commons.commons-io</id>
+                  <version>2.15.1</version>
                 </iu>
               </ius>
             </configuration>
