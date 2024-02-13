@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: BDM Plugin Tests Fragment
 Bundle-SymbolicName: org.bonitasoft.studio.businessobject.tests
-Bundle-Version: 10.0.0.qualifier
+Bundle-Version: 10.1.0.qualifier
 Bundle-Vendor: Bonitasoft S.A.
 Fragment-Host: org.bonitasoft.studio.businessobject;bundle-version="7.16.0"
 Automatic-Module-Name: org.bonitasoft.studio.businessobject.tests
