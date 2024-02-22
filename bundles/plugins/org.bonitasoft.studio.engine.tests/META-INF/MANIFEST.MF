@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Engine Tests
 Bundle-SymbolicName: org.bonitasoft.studio.engine.tests
-Bundle-Version: 7.15.8.qualifier
+Bundle-Version: 7.15.9.qualifier
 Bundle-Vendor: Bonitasoft S.A.
 Fragment-Host: org.bonitasoft.studio.engine;bundle-version="7.15.0"
 Automatic-Module-Name: org.bonitasoft.studio.engine.tests
