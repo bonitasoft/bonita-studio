@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Common code for all Bonita UI plugins
 Bundle-SymbolicName: org.bonitasoft.studio.common.ui;singleton:=true
-Bundle-Version: 10.1.0.qualifier
+Bundle-Version: 10.1.0.W8
 Automatic-Module-Name: org.bonitasoft.studio.common.ui
 Bundle-RequiredExecutionEnvironment: JavaSE-17
 Require-Bundle: org.bonitasoft.studio.common;visibility:=reexport,
