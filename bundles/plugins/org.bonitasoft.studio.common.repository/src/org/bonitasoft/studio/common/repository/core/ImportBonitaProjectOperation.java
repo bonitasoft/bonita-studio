@@ -27,6 +27,7 @@ import java.util.function.Predicate;
 import org.bonitasoft.studio.common.FileUtil;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.core.maven.MavenProjectHelper;
+import org.bonitasoft.studio.common.repository.core.maven.model.AppProjectConfiguration;
 import org.bonitasoft.studio.common.repository.core.migration.BonitaProjectMigrator;
 import org.bonitasoft.studio.common.repository.core.migration.report.MigrationReport;
 import org.eclipse.core.resources.IProject;
@@ -70,6 +71,14 @@ public class ImportBonitaProjectOperation implements IWorkspaceRunnable {
         }
         if (!isNewProject) {
             report = new BonitaProjectMigrator(projectRoot.toPath()).run(monitor);
+        }
+        var generatedSourcesFolder = projectRoot.toPath().resolve("app").resolve(AppProjectConfiguration.GENERATED_GROOVY_SOURCES_FODLER);
+        if(!Files.exists(generatedSourcesFolder)) {
+            try {
+                Files.createDirectories(generatedSourcesFolder);
+            } catch (IOException e) {
+                BonitaStudioLog.error(e);
+            }
         }
         var appPomFile = projectRoot.toPath().resolve("app").resolve("pom.xml").toFile();
         var mavenModel = MavenProjectHelper.readModel(appPomFile);
