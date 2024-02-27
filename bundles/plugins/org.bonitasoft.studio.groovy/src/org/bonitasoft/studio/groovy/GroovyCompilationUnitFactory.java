@@ -16,16 +16,27 @@ package org.bonitasoft.studio.groovy;
 
 import jakarta.inject.Inject;
 
+import java.util.List;
+
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.core.maven.model.AppProjectConfiguration;
 import org.bonitasoft.studio.common.repository.model.IJavaContainer;
 import org.bonitasoft.studio.groovy.repository.GroovyFileStore;
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.e4.core.di.annotations.Creatable;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IPackageFragment;
+import org.eclipse.jdt.core.IPackageFragmentRoot;
+import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
+import org.eclipse.jdt.internal.ui.util.CoreUtility;
+import org.eclipse.m2e.core.ui.internal.UpdateMavenProjectJob;
 
 @Creatable
 public class GroovyCompilationUnitFactory {
@@ -41,12 +52,31 @@ public class GroovyCompilationUnitFactory {
             throws JavaModelException {
         final IJavaProject javaProject = javaProject();
         if (javaProject != null) {
-            final IPackageFragment packageFragment = javaProject
+            IPath generatedGroovySourcesFolder = javaProject.getPath()
+                    .append(AppProjectConfiguration.GENERATED_GROOVY_SOURCES_FODLER);
+            IPackageFragmentRoot generatedGroovySourcesRoot = javaProject
                     .findPackageFragmentRoot(
-                            javaProject.getPath().append(AppProjectConfiguration.GENERATED_GROOVY_SOURCES_FODLER))
-                    .getPackageFragment("");//default package
-            return packageFragment.createCompilationUnit(GroovyFileStore.tmpScriptName(), script, true,
-                    monitor);
+                            generatedGroovySourcesFolder);
+            if (generatedGroovySourcesRoot == null) {
+            	IFolder folder = javaProject.getProject().getFolder(AppProjectConfiguration.GENERATED_GROOVY_SOURCES_FODLER);
+    			if (!folder.exists()) {
+    				try {
+						CoreUtility.createFolder(folder, true, true, monitor);
+					} catch (CoreException e) {
+						BonitaStudioLog.error(e);
+						return null;
+					}
+    			}
+    			new UpdateMavenProjectJob(List.of(javaProject.getProject()), false, false,
+    	                true, true, true).run(monitor);
+    			generatedGroovySourcesRoot = JavaCore.create(javaProject.getProject())
+                        .findPackageFragmentRoot(generatedGroovySourcesFolder);
+            }
+            if (generatedGroovySourcesRoot != null) {
+                final IPackageFragment packageFragment = generatedGroovySourcesRoot.getPackageFragment(""); //default package
+                return packageFragment.createCompilationUnit(GroovyFileStore.tmpScriptName(), script, true,
+                        monitor);
+            }
         }
         return null;
     }
