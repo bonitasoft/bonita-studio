@@ -5,7 +5,7 @@ In order to build this repository it is required to build its dependencies. To h
 
 ## Prerequisites
 
-* Java 11
+* Java 17
 
 ## Run build
 
