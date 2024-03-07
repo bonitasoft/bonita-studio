@@ -347,5 +347,15 @@
             contentTypeIdentifier="Organization">
       </parser>
    </extension>
+   <extension
+         point="org.eclipse.core.runtime.adapters">
+     <factory
+           adaptableType="org.bonitasoft.studio.identity.organization.model.organization.Organization"
+           class="org.bonitasoft.studio.identity.organization.ui.internal.DisplayableAdapterFactory">
+        <adapter
+              type="org.bonitasoft.studio.common.ui.IDisplayable">
+        </adapter>
+     </factory>
+   </extension>
 
 </plugin>
