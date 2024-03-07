@@ -82,16 +82,16 @@ public class DeployOrganizationControlSupplier implements ControlSupplier {
         mainComposite.setLayout(GridLayoutFactory.swtDefaults().spacing(LayoutConstants.getSpacing().x, 10).create());
 
         if (!orgaToDeploy.isPresent()) {
-            createOrganizationViewer(mainComposite, fileStoreObservable, ctx);
+            createOrganizationViewer(mainComposite, ctx);
         }
-        createDefaultUserTextWidget(ctx, mainComposite, fileStoreObservable);
+        createDefaultUserTextWidget(ctx, mainComposite);
         initializeOrganizationFileStore();
 
         return mainComposite;
     }
 
     private void initializeOrganizationFileStore() {
-        String orgaName = orgaToDeploy.map( organization -> IDisplayable.toDisplayName(organization).orElse(null))
+        String orgaName = orgaToDeploy.map(organization -> IDisplayable.toDisplayName(organization).orElse(null))
                 .orElse(activeOrganizationprovider.getActiveOrganization());
         organizationRepositoryStore.getChildren().stream()
                 .filter(orga -> {
@@ -102,8 +102,7 @@ public class DeployOrganizationControlSupplier implements ControlSupplier {
                 .ifPresent(fileStoreObservable::setValue);
     }
 
-	private void createDefaultUserTextWidget(DataBindingContext ctx, final Composite mainComposite,
-            IObservableValue<OrganizationFileStore> fileStoreObservable) {
+    private void createDefaultUserTextWidget(DataBindingContext ctx, final Composite mainComposite) {
         SimpleContentProposalProvider proposalProvider = new SimpleContentProposalProvider(usernames());
         proposalProvider.setFiltering(true);
 
@@ -132,11 +131,16 @@ public class DeployOrganizationControlSupplier implements ControlSupplier {
     }
 
     protected void organizationChanged(Organization organization, SimpleContentProposalProvider proposalProvider) {
-        proposalProvider.setProposals(usernames());
+        String[] usernames = usernames();
+        proposalProvider.setProposals(usernames);
+        // change username taken from the active organization when it does not exist in the deployed one.
+        if (Stream.of(usernames).noneMatch(usernameObservable.getValue()::equals)) {
+            Stream.of(usernames).findFirst().ifPresent(usernameObservable::setValue);
+        }
     }
 
     private void createOrganizationViewer(Composite mainComposite,
-            IObservableValue<OrganizationFileStore> fileStoreObservable, DataBindingContext ctx) {
+            DataBindingContext ctx) {
         TableViewer viewer = new TableViewer(mainComposite, SWT.BORDER | SWT.FULL_SELECTION | SWT.SINGLE);
         viewer.getTable()
                 .setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 120).create());
