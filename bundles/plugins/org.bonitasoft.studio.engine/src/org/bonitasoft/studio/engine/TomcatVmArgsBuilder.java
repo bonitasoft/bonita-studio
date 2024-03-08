@@ -78,6 +78,13 @@ public class TomcatVmArgsBuilder {
         addSystemProperty(args, "bonita.csrf.cookie.path", "\"/\"");
         addSystemProperty(args, "bonita.runtime.logger.sysout", "Console");
         var res = args.toString();
+        // Additional jvm args for Hazelcast
+        res = res + " --add-modules java.se";
+        res = res + " --add-exports java.base/jdk.internal.ref=ALL-UNNAMED";
+        res = res + " --add-opens java.base/java.lang=ALL-UNNAMED";
+        res = res + " --add-opens java.base/sun.nio.ch=ALL-UNNAMED";
+        res = res + " --add-opens java.management/sun.management=ALL-UNNAMED";
+        res = res + " --add-opens jdk.management/com.sun.management.internal=ALL-UNNAMED";
         // Additional jvm args for XStream serialization
         res = res + " --add-opens=java.xml/javax.xml.namespace=ALL-UNNAMED";
         res = res + " --add-opens=java.xml/com.sun.org.apache.xerces.internal.dom=ALL-UNNAMED";
