@@ -20,9 +20,12 @@ import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.common.ui.jface.SWTBotConstants;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
+import org.eclipse.swtbot.swt.finder.waits.Conditions;
+import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
 
 public class BotExtensionCard {
 
@@ -36,6 +39,7 @@ public class BotExtensionCard {
 
     public void remove() {
         bot.activeEditor().setFocus();
+        bot.waitUntil(new WidgetEnabled(SWTBotConstants.removeExtensionFromCard(artifactId)));
         bot.toolbarButtonWithId(SWTBotConstants.removeExtensionFromCard(artifactId)).click();
         bot.waitUntil(shellIsActive(Messages.removeExtensionConfirmationTitle));
         bot.button(IDialogConstants.YES_LABEL).click();
@@ -43,6 +47,7 @@ public class BotExtensionCard {
 
     public void updateToLatest() {
         bot.activeEditor().setFocus();
+        bot.waitUntil(new WidgetEnabled(SWTBotConstants.updateToLatestExtensionFromCard(artifactId)));
         bot.toolbarButtonWithId(SWTBotConstants.updateToLatestExtensionFromCard(artifactId)).click();
         bot.waitUntil(shellIsActive(Messages.updateExtensionConfirmationTitle));
         bot.button(IDialogConstants.YES_LABEL).click();
@@ -58,4 +63,27 @@ public class BotExtensionCard {
         return new BotMaximizedExtensionCard(bot);
     }
 
+    /**
+     * The default condition in {@link Conditions#widgetIsEnabled(org.eclipse.swtbot.swt.finder.widgets.AbstractSWTBot)} catch an out
+     * of date widget that is disposed when the extension view composite is refreshed.
+     * Using this condition, we re capture the widget at each try.
+     */
+    static class WidgetEnabled extends DefaultCondition {
+        
+        
+        private String widgetId;
+
+        public WidgetEnabled(String widgetId) {
+            this.widgetId = widgetId;
+        }
+
+        public boolean test() throws Exception {
+            return bot.toolbarButtonWithId(widgetId).isEnabled();
+        }
+
+        public String getFailureMessage() {
+            return String.format( "Remove button with id %s is not enabled.", widgetId);
+        }
+        
+    }
 }
