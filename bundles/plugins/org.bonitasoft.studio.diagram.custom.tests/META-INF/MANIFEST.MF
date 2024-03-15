@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Diagram Custom Tests Fragment
 Bundle-SymbolicName: org.bonitasoft.studio.diagram.custom.tests
-Bundle-Version: 10.1.0.qualifier
+Bundle-Version: 10.1.0.W11
 Bundle-Vendor: Bonitasoft S.A.
 Fragment-Host: org.bonitasoft.studio.diagram.custom;bundle-version="7.16.0"
 Automatic-Module-Name: org.bonitasoft.studio.diagram.custom.tests
