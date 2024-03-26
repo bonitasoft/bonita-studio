@@ -15,7 +15,7 @@
         <os-jvm-flags></os-jvm-flags>
         <branding.version>2024.1-SNAPSHOT</branding.version>
         <bonita-runtime.version>10.0-SNAPSHOT</bonita-runtime.version>
-        <ui.designer.version>1.18.2</ui.designer.version>
+        <ui.designer.version>1.18.3</ui.designer.version>
         <business.data.repository.version>1.0.0</business.data.repository.version>
         <platform.version>${project.parent.version}</platform.version>
         <tomcat.version>9.0.81</tomcat.version>
