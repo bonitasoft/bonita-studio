@@ -1,16 +1,83 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
-    xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-    <modelVersion>4.0.0</modelVersion>
-    <parent>
-        <groupId>org.bonitasoft.studio.bundles</groupId>
-        <artifactId>plugins</artifactId>
-        <version>8.0.7-SNAPSHOT</version>
-    </parent>
-    <groupId>org.bonitasoft.studio.bundles.plugins</groupId>
-    <artifactId>org.bonitasoft.studio.application</artifactId>
-    <packaging>eclipse-plugin</packaging>
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.bonitasoft.studio.bundles</groupId>
+		<artifactId>plugins</artifactId>
+		<version>8.0.7-SNAPSHOT</version>
+	</parent>
+	<groupId>org.bonitasoft.studio.bundles.plugins</groupId>
+	<artifactId>org.bonitasoft.studio.application</artifactId>
+	<packaging>eclipse-plugin</packaging>
+
+	<properties>
+		<marketplace.url>
+			https://github.com/bonitasoft/bonita-marketplace/releases/download/${marketplace.version}/bonita-marketplace-${marketplace.version}.zip</marketplace.url>
+	</properties>
+
+	<build>
+		<resources>
+			<resource>
+				<directory>resources</directory>
+			</resource>
+		</resources>
+		<plugins>
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-compiler-plugin</artifactId>
+				<configuration>
+					<copyResources>false</copyResources>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-packaging-plugin</artifactId>
+				<configuration>
+					<archive>
+						<manifest>
+							<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+							<addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+						</manifest>
+					</archive>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>io.github.download-maven-plugin</groupId>
+				<artifactId>download-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>download-marketplace</id>
+						<phase>generate-resources</phase>
+						<goals>
+							<goal>wget</goal>
+						</goals>
+						<configuration>
+							<url>${marketplace.url}</url>
+							<unpack>false</unpack>
+							<outputDirectory>${project.basedir}/resources</outputDirectory>
+							<outputFileName>bonita-marketplace.zip</outputFileName>
+							<overwrite>true</overwrite>
+							<md5>${marketplace.md5Checksum}</md5>
+							<alwaysVerifyChecksum>true</alwaysVerifyChecksum>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+	
+	<profiles>
+	  <profile>
+		<id>offline-local-repository</id>
+		<properties>
+			<!--Disable download of marketplace from Github when building offline-->
+			<!--Archive should already be present in resources/ folder with online build pass-->
+			<download.plugin.skip>true</download.plugin.skip>
+		</properties>
+	  </profile>
+	</profiles>
 
 </project>

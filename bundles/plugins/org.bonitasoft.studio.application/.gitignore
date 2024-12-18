@@ -1,1 +1,3 @@
 /lib/
+# Marketplace archive is downloaded at build time
+resources/bonita-marketplace.zip
