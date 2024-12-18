@@ -52,7 +52,8 @@ public class ProductVersion {
             ? BRANDING_VERSION_RAW.replaceAll("-.*", "")
             : null;
     public static final String BONITA_RUNTIME_VERSION = BUILD_PROPERTIES.getProperty("bonita-runtime.version");
-
+    public static final String DEFAULT_MARKETPLACE_VERSION = BUILD_PROPERTIES.getProperty("marketplace.version", "1.1.7");
+    
     public static boolean sameVersion(final String version) {
         return CURRENT_VERSION.equals(version);
     }

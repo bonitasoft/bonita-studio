@@ -20,6 +20,8 @@
         <platform.version>${project.parent.version}</platform.version>
         <tomcat.version>9.0.90</tomcat.version>
         <maven3-model-jdom-support.version>1.6</maven3-model-jdom-support.version>
+        <marketplace.version>1.1.7</marketplace.version>
+        <marketplace.md5Checksum>01798d7026f7a00c7ec312653ffdd831</marketplace.md5Checksum>
         <tycho.localArtifacts>ignore</tycho.localArtifacts>
         <!-- Maven plugins -->
         <maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
@@ -37,6 +39,7 @@
         <maven-antrun-plugin.version>3.1.0</maven-antrun-plugin.version>
         <exec-maven-plugin.version>3.3.0</exec-maven-plugin.version>
         <build-helper-maven-plugin.version>3.6.0</build-helper-maven-plugin.version>
+        <download-maven-plugin.version>2.0.0</download-maven-plugin.version>
     </properties>
     <modules>
         <module>platform</module>
@@ -46,6 +49,11 @@
     <build>
         <pluginManagement>
             <plugins>
+            	<plugin>
+                   	<groupId>io.github.download-maven-plugin</groupId>
+				    <artifactId>download-maven-plugin</artifactId>
+                    <version>${download-maven-plugin.version}</version>
+                </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-resources-plugin</artifactId>
