@@ -43,6 +43,7 @@ import java.util.stream.Collectors;
 import org.bonitasoft.studio.application.ApplicationPlugin;
 import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.common.FileUtil;
+import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.RedirectURLBuilder;
 import org.bonitasoft.studio.common.Strings;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
@@ -65,9 +66,6 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class BonitaMarketplace {
-
-
-    private static final String DEFAULT_MARKETPLACE_VERSION = "1.1.7";
 
     private static final String MARKETPLACE_VERSION_PROPERTY = "marketplace.version";
 
@@ -109,7 +107,7 @@ public class BonitaMarketplace {
                 var defaultMarketplace = FileLocator.toFileURL(BonitaMarketplace.class.getResource("/bonita-marketplace.zip"));
                 if(defaultMarketplace != null) {
                     extract(new File(defaultMarketplace.getFile()).toPath(), cacheFolder.toPath());
-                    updateMetadata(DEFAULT_MARKETPLACE_VERSION);
+                    updateMetadata(ProductVersion.DEFAULT_MARKETPLACE_VERSION);
                 }
             } catch (IOException e) {
                BonitaStudioLog.error(e);
