@@ -36,6 +36,14 @@ public interface MigrationStep {
     default boolean requireCleanImport() {
         return false;
     }
+    
+    default StepDescription getDescription() {
+        return new StepDescription("Migration setp", "");
+    }
+    
+    default void checkPrerequisites() throws StepPrerequisiteException {
+        
+    }
 
     default Model loadMavenModel(Path project) throws CoreException {
         var pomFile = project.resolve(POM_FILE_NAME).toFile();
