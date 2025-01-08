@@ -1,0 +1,15 @@
+<div
+ ng-if="!properties.labelHidden"
+ ng-class="{
+    'form-horizontal': properties.labelPosition === 'left' ,
+    'row': properties.labelPosition === 'top'
+    }">
+    <div class="form-group">
+        <label ng-if="properties.allowHTML" class="control-label col-xs-{{ properties.labelWidth }}" ng-bind-html="properties.label | uiTranslate"></label>
+        <label ng-if="!properties.allowHTML" class="control-label col-xs-{{ properties.labelWidth }}" ng-bind="properties.label | uiTranslate"></label>
+		<p ng-if="properties.allowHTML" class="form-control-static col-xs-{{ 12 - (properties.labelPosition === 'left' ? properties.labelWidth : 0) }}" ng-bind-html="properties.text | uiTranslate"></p>
+		<p ng-if="!properties.allowHTML" class="form-control-static col-xs-{{ 12 - (properties.labelPosition === 'left' ? properties.labelWidth : 0) }}" ng-bind="properties.text | uiTranslate"></p>
+    </div>
+</div>
+<p ng-if="properties.labelHidden && properties.allowHTML" class="text-{{ properties.alignment }}" ng-bind-html="properties.text | uiTranslate"></p>
+<p ng-if="properties.labelHidden && !properties.allowHTML" class="text-{{ properties.alignment }}" ng-bind="properties.text | uiTranslate"></p>

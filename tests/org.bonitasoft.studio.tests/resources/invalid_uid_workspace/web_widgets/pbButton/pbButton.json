@@ -1,0 +1,260 @@
+{
+  "id" : "pbButton",
+  "name" : "Button",
+  "type" : "widget",
+  "custom" : false,
+  "modelVersion" : "2.4",
+  "lastUpdate" : 1736240682368,
+  "description" : "Trigger for an action in a page or form",
+  "template" : "@pbButton.tpl.html",
+  "controller" : "@pbButton.ctrl.js",
+  "properties" : [
+    {
+      "label" : "Disabled",
+      "name" : "disabled",
+      "type" : "boolean",
+      "defaultValue" : false,
+      "bond" : "expression"
+    },
+    {
+      "label" : "Interpret HTML",
+      "name" : "allowHTML",
+      "help" : "If you choose 'no', HTML code will be escaped instead of being interpreted. If you choose ‘Yes’, this could potentially lead to HTML injections attacks. Please take into account these risks.",
+      "type" : "boolean",
+      "defaultValue" : false,
+      "bond" : "constant"
+    },
+    {
+      "label" : "Label",
+      "name" : "label",
+      "type" : "text",
+      "defaultValue" : "Submit",
+      "bond" : "interpolation"
+    },
+    {
+      "label" : "Alignment",
+      "name" : "alignment",
+      "type" : "choice",
+      "defaultValue" : "left",
+      "choiceValues" : [
+        "left",
+        "center",
+        "right"
+      ],
+      "bond" : "constant"
+    },
+    {
+      "label" : "Style",
+      "name" : "buttonStyle",
+      "type" : "choice",
+      "defaultValue" : "default",
+      "choiceValues" : [
+        "default",
+        "primary",
+        "success",
+        "info",
+        "warning",
+        "danger",
+        "link"
+      ],
+      "bond" : "constant"
+    },
+    {
+      "label" : "Action",
+      "name" : "action",
+      "type" : "choice",
+      "defaultValue" : "Submit task",
+      "choiceValues" : [
+        {
+          "value" : "Submit task",
+          "label" : "Submit task",
+          "group" : "Bonita BPM"
+        },
+        {
+          "value" : "Start process",
+          "label" : "Start process",
+          "group" : "Bonita BPM"
+        },
+        {
+          "value" : "POST",
+          "label" : "POST",
+          "group" : "HTTP request"
+        },
+        {
+          "value" : "PUT",
+          "label" : "PUT",
+          "group" : "HTTP request"
+        },
+        {
+          "value" : "GET",
+          "label" : "GET",
+          "group" : "HTTP request"
+        },
+        {
+          "value" : "DELETE",
+          "label" : "DELETE",
+          "group" : "HTTP request"
+        },
+        {
+          "value" : "Add to collection",
+          "label" : "Add to collection",
+          "group" : "Collection"
+        },
+        {
+          "value" : "Remove from collection",
+          "label" : "Remove from collection",
+          "group" : "Collection"
+        },
+        {
+          "value" : "Open modal",
+          "label" : "Open modal",
+          "group" : "Modal"
+        },
+        {
+          "value" : "Close modal",
+          "label" : "Close modal",
+          "group" : "Modal"
+        }
+      ],
+      "bond" : "constant"
+    },
+    {
+      "label" : "Assign before Submit",
+      "name" : "assign",
+      "help" : "Automatically assign the Task to the current user before the execution",
+      "showFor" : "['Submit task'].indexOf(properties.action.value) > -1",
+      "type" : "boolean",
+      "defaultValue" : false,
+      "bond" : "expression"
+    },
+    {
+      "label" : "URL to call",
+      "name" : "url",
+      "caption" : "Send data to this URL when the button is clicked",
+      "help" : "URL used to perform the HTTP request when this button is clicked.",
+      "showFor" : "['POST', 'PUT', 'GET', 'DELETE'].indexOf(properties.action.value) > -1",
+      "type" : "text",
+      "bond" : "interpolation"
+    },
+    {
+      "label" : "HTTP status code",
+      "name" : "responseStatusCode",
+      "help" : "Holds the HTTP status code of the response",
+      "showFor" : "['POST', 'PUT', 'GET', 'DELETE', 'Submit task', 'Start process'].indexOf(properties.action.value) > -1",
+      "type" : "text",
+      "bond" : "variable"
+    },
+    {
+      "label" : "Data sent on click",
+      "name" : "dataToSend",
+      "help" : "Can be used to fulfill a contract",
+      "showFor" : "properties.action.value === 'POST' || properties.action.value === 'PUT' || properties.action.value === 'Submit task' || properties.action.value ===  'Start process'",
+      "type" : "text",
+      "bond" : "expression"
+    },
+    {
+      "label" : "Successful response value",
+      "name" : "dataFromSuccess",
+      "help" : "Holds the response when the request is successful",
+      "showFor" : "['POST', 'PUT', 'GET', 'DELETE', 'Submit task', 'Start process'].indexOf(properties.action.value) > -1",
+      "type" : "text",
+      "bond" : "variable"
+    },
+    {
+      "label" : "Close modal on success",
+      "name" : "closeOnSuccess",
+      "help" : "Close modal when the action is successful",
+      "showFor" : "['POST', 'PUT', 'GET', 'DELETE', 'Submit task', 'Start process', 'Remove from collection', 'Add to collection', 'Open modal'].indexOf(properties.action.value) > -1",
+      "type" : "boolean",
+      "defaultValue" : false,
+      "bond" : "expression"
+    },
+    {
+      "label" : "Failed response value",
+      "name" : "dataFromError",
+      "help" : "Holds the response when the request has failed",
+      "showFor" : "['POST', 'PUT', 'GET', 'DELETE', 'Submit task', 'Start process'].indexOf(properties.action.value) > -1",
+      "type" : "text",
+      "bond" : "variable"
+    },
+    {
+      "label" : "Target URL on success",
+      "name" : "targetUrlOnSuccess",
+      "help" : "Next page to display, for applications. In the Portal, it is ignored as navigation is managed automatically",
+      "showFor" : "['POST', 'PUT', 'DELETE', 'Submit task', 'Start process'].indexOf(properties.action.value) > -1",
+      "type" : "text",
+      "bond" : "interpolation"
+    },
+    {
+      "label" : "Collection",
+      "name" : "collectionToModify",
+      "caption" : "Variable of type array",
+      "help" : "Use $collection to act on the collection of a repeated content",
+      "showFor" : "properties.action.value === 'Remove from collection' || properties.action.value === 'Add to collection'",
+      "type" : "collection",
+      "bond" : "variable"
+    },
+    {
+      "label" : "Modal Id",
+      "name" : "modalId",
+      "showFor" : "properties.action.value === 'Open modal'",
+      "type" : "text",
+      "defaultValue" : "",
+      "bond" : "expression"
+    },
+    {
+      "label" : "Add",
+      "name" : "collectionPosition",
+      "showFor" : "properties.action.value === 'Add to collection'",
+      "type" : "choice",
+      "defaultValue" : "Last",
+      "choiceValues" : [
+        "First",
+        "Last"
+      ],
+      "bond" : "constant"
+    },
+    {
+      "label" : "Value to add",
+      "name" : "valueToAdd",
+      "showFor" : "properties.action.value === 'Add to collection'",
+      "type" : "text",
+      "bond" : "expression"
+    },
+    {
+      "label" : "Remove",
+      "name" : "collectionPosition",
+      "showFor" : "properties.action.value === 'Remove from collection'",
+      "type" : "choice",
+      "defaultValue" : "Last",
+      "choiceValues" : [
+        "First",
+        "Item",
+        "Last"
+      ],
+      "bond" : "constant"
+    },
+    {
+      "label" : "Item to remove",
+      "name" : "removeItem",
+      "help" : "Use $item to remove the current item in a repeated collection",
+      "showFor" : "properties.action.value === 'Remove from collection' && properties.collectionPosition.value === 'Item'",
+      "type" : "text",
+      "bond" : "variable"
+    }
+  ],
+  "assets" : [
+    {
+      "id" : "fc0c7ee6-b579-4eb0-8271-5e30e85e6b08",
+      "name" : "style.css",
+      "type" : "css",
+      "order" : 1,
+      "external" : false
+    }
+  ],
+  "requiredModules" : [ ],
+  "webResources" : [ ],
+  "icon" : "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 50 20'><g><path fill='#CBD5E1' d='M47,15.2c0,0.7-1.7,1.8-1.7,1.8S4.8,17,3.7,17c-1.6,0-3.6-1.9-3.6-1.9s0.7,4.8,4,5c2.4,0.1,42.4,0,42.4,0 s3.5-0.2,3.5-3.6c0-1.3,0.1-11.5,0.1-12.4c-0.1-2-4-4-4-4L47,1.8C47,1.8,47,14.5,47,15.2z'/><path fill='#fff' d='M3.9,1h40.3C45.7,1,47,2.2,47,3.6v10.8c0,1.4-1.3,2.6-2.9,2.6H3.9C2.3,17,1,15.8,1,14.4V3.6 C1,2.2,2.3,1,3.9,1z M3,0C1.3,0,0,1.3,0,3v12c0,1.7,1.3,3,3,3h42c1.7,0,3-1.3,3-3V3c0-1.7-1.3-3-3-3H3z'/></g></svg>",
+  "order" : 12,
+  "hasHelp" : true
+}

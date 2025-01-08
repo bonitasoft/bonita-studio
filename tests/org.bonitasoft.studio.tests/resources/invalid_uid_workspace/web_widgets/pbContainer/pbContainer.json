@@ -1,0 +1,26 @@
+{
+  "id" : "pbContainer",
+  "name" : "Container",
+  "type" : "container",
+  "custom" : false,
+  "modelVersion" : "2.4",
+  "lastUpdate" : 1736240682393,
+  "description" : "Group of widgets used to define the arrangement of the page elements. Its content can be repeated over an array",
+  "template" : "@pbContainer.tpl.html",
+  "properties" : [
+    {
+      "label" : "Collection",
+      "name" : "repeatedCollection",
+      "caption" : "Repeat container content. Variable of type array",
+      "help" : "Number of array elements defines the number of times the container structure is repeated. Array data is available to widgets in the container",
+      "type" : "text",
+      "bond" : "variable"
+    }
+  ],
+  "assets" : [ ],
+  "requiredModules" : [ ],
+  "webResources" : [ ],
+  "icon" : "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 50 20\"><path fill=\"#fff\" d=\"M50,6.7V3.8h-1v2.9H50z M50,11.4V8.6h-1v2.9H50z M50,16.2v-2.9h-1v2.9H50z M49,20h1v-1.9h-1v1V20zM44.1,20h2.9v-1h-2.9V20z M39.2,20h2.9v-1h-2.9V20z M34.3,20h2.9v-1h-2.9V20z M29.4,20h2.9v-1h-2.9V20z M24.5,20h2.9v-1h-2.9V20zM19.6,20h2.9v-1h-2.9V20z M14.7,20h2.9v-1h-2.9V20z M9.8,20h2.9v-1H9.8V20z M4.9,20h2.9v-1H4.9V20z M0,18.1V20h2.9v-1H1v-1H0zM0,13.3v2.9h1v-2.9H0z M0,8.6v2.9h1V8.6H0z M0,3.8v2.9h1V3.8H0z M2.9,0H0v1.9h1V1h2V0z M7.8,0H4.9v1h2.9V0z M12.7,0H9.8v1h2.9V0zM17.6,0h-2.9v1h2.9V0z M22.5,0h-2.9v1h2.9V0z M27.5,0h-2.9v1h2.9V0z M32.4,0h-2.9v1h2.9V0z M37.3,0h-2.9v1h2.9V0z M42.2,0h-2.9v1h2.9V0z M47.1,0h-2.9v1h2.9V0z M50,0h-1v1v1h1V0z\"/></svg>",
+  "order" : -3,
+  "hasHelp" : false
+}

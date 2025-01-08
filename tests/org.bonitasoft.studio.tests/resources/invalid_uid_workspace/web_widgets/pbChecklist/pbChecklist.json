@@ -1,0 +1,122 @@
+{
+  "id" : "pbChecklist",
+  "name" : "Checklist",
+  "type" : "widget",
+  "custom" : false,
+  "modelVersion" : "2.4",
+  "lastUpdate" : 1736240682363,
+  "description" : "Set of checkboxes for options. The user selects zero or more",
+  "template" : "@pbChecklist.tpl.html",
+  "controller" : "@pbChecklist.ctrl.js",
+  "properties" : [
+    {
+      "label" : "Disabled",
+      "name" : "disabled",
+      "type" : "boolean",
+      "defaultValue" : false,
+      "bond" : "expression"
+    },
+    {
+      "label" : "Interpret HTML",
+      "name" : "allowHTML",
+      "help" : "If you choose 'no', HTML code will be escaped instead of being interpreted. If you choose ‘Yes’, this could potentially lead to HTML injections attacks. Please take into account these risks.",
+      "type" : "boolean",
+      "defaultValue" : false,
+      "bond" : "constant"
+    },
+    {
+      "label" : "Inline",
+      "name" : "inline",
+      "type" : "boolean",
+      "defaultValue" : false,
+      "bond" : "constant"
+    },
+    {
+      "label" : "Label hidden",
+      "name" : "labelHidden",
+      "type" : "boolean",
+      "defaultValue" : false,
+      "bond" : "constant"
+    },
+    {
+      "label" : "Label",
+      "name" : "label",
+      "showFor" : "properties.labelHidden.value === false",
+      "type" : "text",
+      "defaultValue" : "Default label",
+      "bond" : "interpolation"
+    },
+    {
+      "label" : "Label position",
+      "name" : "labelPosition",
+      "showFor" : "properties.labelHidden.value === false",
+      "type" : "choice",
+      "defaultValue" : "top",
+      "choiceValues" : [
+        "left",
+        "top"
+      ],
+      "bond" : "constant"
+    },
+    {
+      "label" : "Label width",
+      "name" : "labelWidth",
+      "showFor" : "properties.labelHidden.value === false",
+      "type" : "integer",
+      "defaultValue" : 4,
+      "bond" : "constant",
+      "constraints" : {
+        "min" : "1",
+        "max" : "12"
+      }
+    },
+    {
+      "label" : "Available values",
+      "name" : "availableValues",
+      "caption" : "Comma-separated list or bound an array data",
+      "help" : "Can be a list of objects. Use 'Displayed key' to refine options and 'Returned key' to refine selections",
+      "type" : "collection",
+      "defaultValue" : [
+        "green",
+        "red",
+        "blue"
+      ],
+      "bond" : "expression"
+    },
+    {
+      "label" : "Displayed key",
+      "name" : "displayedKey",
+      "help" : "The name of the key to use as label. Can be empty",
+      "type" : "text",
+      "bond" : "expression"
+    },
+    {
+      "label" : "Returned key",
+      "name" : "returnedKey",
+      "caption" : "Value must be unique",
+      "help" : "The name of the key to use as value. Leave it empty for whole object",
+      "type" : "text",
+      "bond" : "expression"
+    },
+    {
+      "label" : "Selected values",
+      "name" : "selectedValues",
+      "type" : "text",
+      "bond" : "variable"
+    }
+  ],
+  "assets" : [
+    {
+      "id" : "030EAB0F7CC04BD1C4411846C79CB2A1",
+      "name" : "checklist.css",
+      "type" : "css",
+      "order" : 1,
+      "external" : false
+    }
+  ],
+  "requiredModules" : [ ],
+  "webResources" : [ ],
+  "icon" : "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 50 20'><path fill='#fff' d='M20 12.9l1.1 1.1-3.3 3-1.8-2 .1-.8 1.6 1.2 2.3-2.5zM14 11h9v8h-9v-8zm1 7h7v-6h-7v6zm6.1-14L20 2.9l-2.3 2.5-1.6-1.2-.1.8 1.7 2 3.4-3zM23 1v8h-9V1h9zm-1 1h-7v6h7V2z'/><path fill='#CBD5E1' d='M33 6h-7V3h7v3zm10-3h-7v3h7V3zm-5 10H26v3h12v-3zm7 0h-4v3h4v-3z'/></svg>",
+  "order" : 7,
+  "hasHelp" : false
+}

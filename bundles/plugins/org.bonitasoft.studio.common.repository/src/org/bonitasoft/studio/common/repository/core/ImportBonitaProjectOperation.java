@@ -16,7 +16,6 @@ package org.bonitasoft.studio.common.repository.core;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -81,7 +80,8 @@ public class ImportBonitaProjectOperation implements IWorkspaceRunnable {
         }
         // Migrate the project to import.
         if (!isNewProject) {
-            report = new BonitaProjectMigrator(projectRoot.toPath()).run(monitor);
+            report = new BonitaProjectMigrator(projectRoot.toPath())
+                    .run(monitor);
         }
         var generatedSourcesFolder = projectRoot.toPath().resolve(BonitaProject.APP_MODULE)
                 .resolve(AppProjectConfiguration.GENERATED_GROOVY_SOURCES_FODLER);
@@ -94,15 +94,12 @@ public class ImportBonitaProjectOperation implements IWorkspaceRunnable {
         }
         // Just in case a migration step changed the project id... check for homonym project again
         projectId = readProjectId();
-        if (!projectId.equals(projectIdBeforeMigr)
+        if (!Objects.equals(projectId, projectIdBeforeMigr)
                 && ResourcesPlugin.getWorkspace().getRoot().getProject(projectId).exists()) {
             throw new CoreException(
                     Status.error(String.format("A project with id %s already exists in the workspace.", projectId)));
         }
 
-        if (!isNewProject) {
-            removeUidProvidedWidgets();
-        }
         var projectInWs = ResourcesPlugin.getWorkspace().getRoot().getLocation().append(projectId).toFile();
         if (!Objects.equals(projectRoot.toPath(), projectInWs.toPath())) {
             try {
@@ -190,27 +187,6 @@ public class ImportBonitaProjectOperation implements IWorkspaceRunnable {
             store.sync();
         } catch (BackingStoreException e) {
             BonitaStudioLog.error(e);
-        }
-    }
-
-    protected void removeUidProvidedWidgets() throws CoreException {
-        var widgetsFolder = projectRoot.toPath().resolve(BonitaProject.APP_MODULE).resolve("web_widgets");
-        if (Files.exists(widgetsFolder)) {
-            try {
-                Files.find(widgetsFolder,
-                        1,
-                        // Provided widget folder matcher
-                        (path, attr) -> path.getFileName().toString().startsWith("pb") && Files.isDirectory(path))
-                        .forEach(widget -> {
-                            try {
-                                FileUtil.deleteDir(widget);
-                            } catch (IOException e) {
-                                throw new UncheckedIOException(e);
-                            }
-                        });
-            } catch (IOException | UncheckedIOException e) {
-                throw new CoreException(Status.error("Failed to delete provided widgets.", e));
-            }
         }
     }
 

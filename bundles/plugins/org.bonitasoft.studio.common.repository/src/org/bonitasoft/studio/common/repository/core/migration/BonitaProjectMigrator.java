@@ -20,6 +20,7 @@ import java.nio.file.Path;
 import java.util.List;
 
 import org.bonitasoft.studio.common.Strings;
+import org.bonitasoft.studio.common.repository.Messages;
 import org.bonitasoft.studio.common.repository.core.migration.dependencies.operation.DependenciesUpdateOperationFactory;
 import org.bonitasoft.studio.common.repository.core.migration.report.MigrationReport;
 import org.bonitasoft.studio.common.repository.core.migration.step.ApplicationModuleConfigurationStep;
@@ -69,11 +70,10 @@ public class BonitaProjectMigrator {
             new RemoveFlattenPluginExecutionStep(),
             new Java17UpdateStep(),
             new ReportingAppUpdateMigrationStep());
-    
 
     private static final List<MigrationStep> POST_STEPS = List.of(
-            new CommunityToEnterpriseMigrationStep()
-       );
+            new CommunityToEnterpriseMigrationStep(),
+            MigrationStep.lookup("UidMigrationStep"));
 
     private Path project;
 
@@ -86,6 +86,7 @@ public class BonitaProjectMigrator {
     }
 
     public MigrationReport run(IProgressMonitor monitor) throws CoreException {
+        monitor.beginTask(Messages.migrating, IProgressMonitor.UNKNOWN);
         var sourceVersion = readBonitaVersion();
         var report = new MigrationReport();
         for (var step : STEPS) {
@@ -93,7 +94,7 @@ public class BonitaProjectMigrator {
                 step.run(project, monitor).merge(report);
             }
         }
-        for(var postMigrationStep : POST_STEPS) {
+        for (var postMigrationStep : POST_STEPS) {
             if (Strings.hasText(sourceVersion) && postMigrationStep.appliesTo(sourceVersion)) {
                 postMigrationStep.run(project, monitor).merge(report);
             }

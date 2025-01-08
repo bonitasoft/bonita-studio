@@ -1,0 +1,66 @@
+{
+  "id" : "pbModalContainer",
+  "name" : "Modal container",
+  "type" : "container",
+  "custom" : false,
+  "modelVersion" : "2.4",
+  "lastUpdate" : 1736240682325,
+  "description" : "Group of widgets used to define the arrangement of the page elements. Its content is display like in modal.",
+  "template" : "@pbModalContainer.tpl.html",
+  "controller" : "@pbModalContainer.ctrl.js",
+  "properties" : [
+    {
+      "label" : "Modal Id",
+      "name" : "modalId",
+      "caption" : "Unique ID of this modal",
+      "help" : "Unique ID of this modal",
+      "type" : "text",
+      "bond" : "constant"
+    },
+    {
+      "label" : "Size",
+      "name" : "size",
+      "type" : "choice",
+      "defaultValue" : "",
+      "choiceValues" : [
+        {
+          "value" : "sm",
+          "label" : "small"
+        },
+        {
+          "value" : "",
+          "label" : "medium"
+        },
+        {
+          "value" : "lg",
+          "label" : "large"
+        }
+      ],
+      "bond" : "constant"
+    },
+    {
+      "label" : "Animation",
+      "name" : "animation",
+      "help" : "Choose true if you want display this modal with an animation, false otherwise",
+      "type" : "boolean",
+      "defaultValue" : true,
+      "bond" : "expression"
+    }
+  ],
+  "assets" : [
+    {
+      "id" : "e88b7fde-d548-4bde-9507-c1320d665879",
+      "name" : "ui-bootstrap-tpls-0.13.0.min.js",
+      "type" : "js",
+      "order" : 1,
+      "external" : false
+    }
+  ],
+  "requiredModules" : [
+    "ui.bootstrap"
+  ],
+  "webResources" : [ ],
+  "icon" : "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"50\" height=\"20\"><rect x=\"-1\" y=\"-1\" width=\"5.1\" height=\"3.2\" fill=\"none\"/><path d=\"m49.5 5.9l0-2.5 -0.9 0 0 2.5 0.9 0zm0 4.1l0-2.4 -0.9 0 0 2.5 0.9 0 0-0.1zm0 4.2l0-2.5 -0.9 0 0 2.5 0.9 0zm-0.9 3.3l0.9 0 0-1.7 -0.9 0 0 0.9 0 0.8zm-4.6 0l2.7 0 0-0.9 -2.7 0 0 0.9zm-4.6 0l2.7 0 0-0.9 -2.7 0 0 0.9zm-4.6 0l2.7 0 0-0.9 -2.7 0 0 0.9zm-4.6 0l2.7 0 0-0.9 -2.7 0 0 0.9zm-4.6 0l2.7 0 0-0.9 -2.7 0 0 0.9zm-4.6 0l2.7 0 0-0.9 -2.7 0 0 0.9zm-4.6 0l2.7 0 0-0.9 -2.7 0 0 0.9zm-4.6 0l2.7 0 0-0.9 -2.7 0 0 0.9zm-4.6 0l2.7 0 0-0.9 -2.7 0 0 0.9zm-4.6-1.7l0 1.7 2.7 0 0-0.9 -1.8 0 0-0.9 -0.9 0 0 0.1zm0-4.2l0 2.5 0.9 0 0-2.5 -0.9 0zm0-4.1l0 2.5 0.9 0 0-2.5 -0.9 0zm0-4.2l0 2.5 0.9 0 0-2.5 -0.9 0zm2.7-3.3l-2.7 0 0 1.7 0.9 0 0-0.8 1.9 0 0-0.9 -0.1 0zm4.6 0l-2.7 0 0 0.9 2.7 0 0-0.9zm4.6 0l-2.7 0 0 0.9 2.7 0 0-0.9zm4.6 0l-2.7 0 0 0.9 2.7 0 0-0.9zm4.6 0l-2.7 0 0 0.9 2.7 0 0-0.9zm4.7 0l-2.7 0 0 0.9 2.7 0 0-0.9zm4.6 0l-2.7 0 0 0.9 2.7 0 0-0.9zm4.6 0l-2.7 0 0 0.9 2.7 0 0-0.9zm4.6 0l-2.7 0 0 0.9 2.7 0 0-0.9zm4.6 0l-2.7 0 0 0.9 2.7 0 0-0.9zm2.7 0l-0.9 0 0 0.9 0 0.9 0.9 0 0-1.7z\" style=\"fill:#fff;stroke:null\"/><rect x=\"0.6\" y=\"3.7\" width=\"0.9\" height=\"15.3\" style=\"fill:#fff;stroke-width:null;stroke:#fff\"/><rect y=\"18.7\" width=\"45\" height=\"1.2\" style=\"fill-opacity:null;fill:#fff;stroke-width:null;stroke:#fff\"/></svg>",
+  "order" : 0,
+  "hasHelp" : true
+}

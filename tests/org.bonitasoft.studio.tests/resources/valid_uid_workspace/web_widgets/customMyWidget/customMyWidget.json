@@ -1,0 +1,47 @@
+{
+  "id" : "customMyWidget",
+  "name" : "MyWidget",
+  "type" : "widget",
+  "custom" : true,
+  "modelVersion" : "2.4",
+  "lastUpdate" : 1736240804649,
+  "template" : "@customMyWidget.tpl.html",
+  "controller" : "@customMyWidget.ctrl.js",
+  "properties" : [
+    {
+      "label" : "Value",
+      "name" : "value",
+      "type" : "text",
+      "defaultValue" : "This is the initial value",
+      "bond" : "expression"
+    },
+    {
+      "label" : "Color",
+      "name" : "color",
+      "type" : "choice",
+      "defaultValue" : "RebeccaPurple",
+      "choiceValues" : [
+        "RebeccaPurple",
+        "Chartreuse",
+        "Tomato",
+        "DeepSkyBlue"
+      ],
+      "bond" : "expression"
+    },
+    {
+      "label" : "Background color on click",
+      "name" : "background",
+      "type" : "choice",
+      "defaultValue" : "Yellow",
+      "choiceValues" : [
+        "Yellow",
+        "LightGray"
+      ],
+      "bond" : "expression"
+    }
+  ],
+  "assets" : [ ],
+  "requiredModules" : [ ],
+  "webResources" : [ ],
+  "hasHelp" : false
+}

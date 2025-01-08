@@ -17,6 +17,7 @@ package org.bonitasoft.studio.common.repository.core.internal;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
 import java.util.List;
 import java.util.Optional;
@@ -121,15 +122,25 @@ public class BonitaProjectImpl implements BonitaProject {
 
     @Override
     public void close(IProgressMonitor monitor) throws CoreException {
+        var gitDir = getGitDir();
+        if (gitDir.exists()) {
+            try {
+                newDiconnectProviderOperation().run(new NullProgressMonitor());
+            } catch (InvocationTargetException | InterruptedException e) {
+                BonitaStudioLog.error(e);
+            }
+        }
         currentRepository().orElseThrow().close(monitor);
-        for (var project : getRelatedProjects()) {
+        List<IProject> relatedProjects = getRelatedProjects();
+        for (var project : relatedProjects) {
             project.close(monitor);
         }
     }
 
     @Override
     public void delete(IProgressMonitor monitor) throws CoreException {
-        for (var project : getRelatedProjects()) {
+        List<IProject> relatedProjects = getRelatedProjects();
+        for (var project : relatedProjects) {
             project.delete(true, true, monitor);
         }
     }
@@ -239,6 +250,15 @@ public class BonitaProjectImpl implements BonitaProject {
             throw new CoreException(Status.error(String.format("%s is not a Git project", id)));
         }
         return gitProject.newConnectProviderOperation();
+    }
+    
+    @Override
+    public IRunnableWithProgress newDiconnectProviderOperation() throws CoreException {
+        var gitProject = getAdapter(GitProject.class);
+        if (gitProject == null) {
+            throw new CoreException(Status.error(String.format("%s is not a Git project", id)));
+        }
+        return gitProject.newDiconnectProviderOperation();
     }
 
     @Override

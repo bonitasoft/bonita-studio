@@ -1,0 +1,119 @@
+{
+  "id" : "pbSelect",
+  "name" : "Select",
+  "type" : "widget",
+  "custom" : false,
+  "modelVersion" : "2.4",
+  "lastUpdate" : 1736240682362,
+  "description" : "Dropdown list of available values. The user selects one value",
+  "template" : "@pbSelect.tpl.html",
+  "controller" : "@pbSelect.ctrl.js",
+  "properties" : [
+    {
+      "label" : "Disabled",
+      "name" : "disabled",
+      "type" : "boolean",
+      "defaultValue" : false,
+      "bond" : "expression"
+    },
+    {
+      "label" : "Required",
+      "name" : "required",
+      "help" : "In the context of a form container, use $form.$invalid as a Boolean to check form validity in a widget property",
+      "type" : "boolean",
+      "defaultValue" : false,
+      "bond" : "expression"
+    },
+    {
+      "label" : "Interpret HTML",
+      "name" : "allowHTML",
+      "help" : "If you choose 'no', HTML code will be escaped instead of being interpreted. If you choose ‘Yes’, this could potentially lead to HTML injections attacks. Please take into account these risks.",
+      "type" : "boolean",
+      "defaultValue" : false,
+      "bond" : "constant"
+    },
+    {
+      "label" : "Label hidden",
+      "name" : "labelHidden",
+      "type" : "boolean",
+      "defaultValue" : false,
+      "bond" : "constant"
+    },
+    {
+      "label" : "Label",
+      "name" : "label",
+      "showFor" : "properties.labelHidden.value === false",
+      "type" : "text",
+      "defaultValue" : "Select",
+      "bond" : "interpolation"
+    },
+    {
+      "label" : "Label position",
+      "name" : "labelPosition",
+      "showFor" : "properties.labelHidden.value === false",
+      "type" : "choice",
+      "defaultValue" : "top",
+      "choiceValues" : [
+        "left",
+        "top"
+      ],
+      "bond" : "constant"
+    },
+    {
+      "label" : "Label width",
+      "name" : "labelWidth",
+      "showFor" : "properties.labelHidden.value === false",
+      "type" : "integer",
+      "defaultValue" : 4,
+      "bond" : "constant",
+      "constraints" : {
+        "min" : "1",
+        "max" : "12"
+      }
+    },
+    {
+      "label" : "Placeholder",
+      "name" : "placeholder",
+      "help" : "Short hint that describes the expected value",
+      "type" : "text",
+      "defaultValue" : "Select an option",
+      "bond" : "interpolation"
+    },
+    {
+      "label" : "Available values",
+      "name" : "availableValues",
+      "help" : "Can be a list of objects. Use 'Displayed key' to refine suggestions and 'Returned key' to refine selection",
+      "type" : "collection",
+      "bond" : "expression"
+    },
+    {
+      "label" : "Displayed key",
+      "name" : "displayedKey",
+      "help" : "Object key to display",
+      "type" : "text",
+      "bond" : "expression"
+    },
+    {
+      "label" : "Returned key",
+      "name" : "returnedKey",
+      "caption" : "Value must be unique",
+      "help" : "The name of the key to use as value. Leave it empty for whole object",
+      "type" : "text",
+      "bond" : "expression"
+    },
+    {
+      "label" : "Value",
+      "name" : "value",
+      "caption" : "Any variable: <i>myData</i> or <i>myData.attribute</i>",
+      "help" : "Read-write binding, initialized or updated by users' input (bi-directional bond)",
+      "type" : "text",
+      "bond" : "variable"
+    }
+  ],
+  "assets" : [ ],
+  "requiredModules" : [ ],
+  "webResources" : [ ],
+  "icon" : "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 50 20'><g><path fill='#fff' d='M36.8,6.6L35.3,8l4.2,4.2l1.4,1.4l1.4-1.4L46.7,8l-1.4-1.4L41,10.8L36.8,6.6z M0,0v20h50V0H0z M1,19V1h31 v18H1z M33,1h16v18H33V1z'/><path fill='#CBD5E1' d='M36.8,6.6L35.3,8l4.2,4.2l1.4,1.4l1.4-1.4L46.7,8l-1.4-1.4L41,10.8L36.8,6.6z M0,0v20h50V0H0z M1,19V1h31 v18H1z M33,1h16v18H33V1z'/></g></svg>",
+  "order" : 5,
+  "hasHelp" : false
+}

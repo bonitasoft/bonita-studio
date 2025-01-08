@@ -1,0 +1,91 @@
+<div ng-class="{
+    'form-horizontal': properties.labelPosition === 'left' && !properties.labelHidden,
+    'row': properties.labelPosition === 'top' && !properties.labelHidden || properties.labelHidden
+    }">
+    <div class="form-group">
+        <label
+            ng-if="!properties.labelHidden && properties.allowHTML"
+            ng-class="{ 'control-label--required': properties.required }"
+            class="control-label col-xs-{{ properties.labelPosition === 'left' ? properties.labelWidth : 12 }}"
+            ng-bind-html="properties.label | uiTranslate">
+        </label>
+        <label
+            ng-if="!properties.labelHidden && !properties.allowHTML"
+            ng-class="{ 'control-label--required': properties.required }"
+            class="control-label col-xs-{{ properties.labelPosition === 'left' ? properties.labelWidth : 12 }}"
+            ng-bind="properties.label | uiTranslate">
+        </label>
+        <div class="col-xs-{{ 12 - (!properties.labelHidden && properties.labelPosition === 'left' ? properties.labelWidth : 0) }}">
+            <div ng-if="!environment">
+                <div text-angular
+                    name="{{ctrl.name}}"
+                    ta-disabled="properties.readOnly"
+                    ng-model="properties.value"
+                    ta-toolbar="{{ctrl.toolbars}}"
+                    ng-required="{{properties.required}}"
+                    ta-min-text="{{ctrl.minText}}"
+                    ta-max-text="{{ctrl.maxText}}">
+                </div>
+                <div ng-messages="$form[ctrl.name].$dirty && $form[ctrl.name].$error" ng-messages-include="forms-generic-errors.html" role="alert"></div>
+                <div ng-messages="$form[ctrl.name].$dirty && $form[ctrl.name].$error" role="alert">
+                    <div ng-message="taMinText" class="text-danger">
+                        {{'This value is too small' | uiTranslate }}
+                    </div>
+                    <div ng-message="taMaxText" class="text-danger">
+                        {{'This value is too large' | uiTranslate }}
+                    </div>
+                </div>
+            </div>
+            <div ng-if="environment">
+                <div class="col-xs-12" style="background-color: #F0F0F0;padding: 10px 10px 5px;margin-left: 0px;border: 1px solid #EEE;">
+                    <div>
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-default " name="h1">H1</button>
+                            <button type="button" class="btn btn-default " name="h2">H2</button>
+                            <button type="button" class="btn btn-default " name="h3">H3</button>
+                            <button type="button" class="btn btn-default " name="h4">H4</button>
+                            <button type="button" class="btn btn-default " name="h5">H5</button>
+                            <button type="button" class="btn btn-default " name="h6">H6</button>
+                            <button type="button" class="btn btn-default " name="p">P</button>
+                            <button type="button" class="btn btn-default " name="ul"><i class="fa fa-list-ul"></i></button>
+                            <button type="button" class="btn btn-default " name="ol"><i class="fa fa-list-ol"></i></button>
+                        </div>
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-default " name="bold"><i class="fa fa-bold"></i></button>
+                            <button type="button" class="btn btn-default " name="italics"><i class="fa fa-italic"></i></button>
+                            <button type="button" class="btn btn-default " name="underline"><i class="fa fa-underline"></i></button>
+                            <button type="button" class="btn btn-default " name="strikeThrough"><i class="fa fa-strikethrough"></i></button>
+                            <button type="button" class="btn btn-default " name="pre">pre</button>
+                            <button type="button" class="btn btn-default " name="quote"><i class="fa fa-quote-right"></i></button>
+                        </div>
+                        <div class="btn-group">
+                          <button type="button" class="btn btn-default " name="justifyLeft"><i class="fa fa-align-left"></i></button>
+                            <button type="button" class="btn btn-default " name="justifyCenter"><i class="fa fa-align-center"></i></button>
+                            <button type="button" class="btn btn-default " name="justifyRight"><i class="fa fa-align-right"></i></button>
+                            <button type="button" class="btn btn-default " name="indent"><i class="fa fa-indent"></i></button>
+                            <button type="button" class="btn btn-default " name="outdent"><i class="fa fa-outdent"></i></button>
+                        </div>
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-default " name="html"><i class="fa fa-code"></i></button>
+                            <button type="button" class="btn btn-default " name="insertImage"><i class="fa fa-picture-o"></i></button>
+                            <button type="button" class="btn btn-default " name="insertLink"><i class="fa fa-link"></i></button>
+                            <button type="button" class="btn btn-default " name="insertVideo"><i class="fa fa-youtube-play"></i></button>
+                            <div style="display:block; min-width:100px;" class="btn btn-default " name="wordcount">
+                              Words: <span>0</span>
+                            </div>
+                            <div style="display:block; min-width:120px;" class="btn btn-default " name="charcount">
+                              Characters: <span>-1</span>
+                            </div>
+                            <button type="button" class="btn btn-default " name="undo"><i class="fa fa-undo"></i></button>
+                            <button type="button" class="btn btn-default " name="redo"><i class="fa fa-repeat"></i></button>
+                            <button type="button" class="btn btn-default " name="clear"><i class="fa fa-ban"></i></button>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <textarea class="form-control" style="resize: none;"></textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -14,50 +14,47 @@
  */
 package org.bonitasoft.studio.designer.core.operation;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UncheckedIOException;
 import java.lang.reflect.InvocationTargetException;
-import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.http.HttpRequest;
 import java.net.http.HttpRequest.BodyPublishers;
 import java.net.http.HttpResponse;
-import java.net.http.HttpResponse.BodyHandlers;
+import java.nio.file.FileVisitResult;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.Duration;
-import java.util.List;
 import java.util.Map;
 
+import org.bonitasoft.studio.common.FileUtil;
 import org.bonitasoft.studio.common.core.IRunnableWithStatus;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.net.HttpClientFactory;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.designer.UIDesignerPlugin;
 import org.bonitasoft.studio.designer.core.PageDesignerURLFactory;
-import org.bonitasoft.studio.designer.core.repository.WebFragmentFileStore;
-import org.bonitasoft.studio.designer.core.repository.WebFragmentRepositoryStore;
-import org.bonitasoft.studio.designer.core.repository.WebPageFileStore;
-import org.bonitasoft.studio.designer.core.repository.WebPageRepositoryStore;
-import org.bonitasoft.studio.designer.core.repository.WebWidgetFileStore;
-import org.bonitasoft.studio.designer.core.repository.WebWidgetRepositoryStore;
+import org.bonitasoft.studio.designer.core.UIDWorkspaceSynchronizer;
+import org.bonitasoft.studio.designer.core.UIDesignerServerManager;
 import org.bonitasoft.studio.designer.i18n.Messages;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
-import org.eclipse.core.databinding.validation.ValidationStatus;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.InstanceScope;
-import org.eclipse.emf.edapt.migration.MigrationException;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class MigrateUIDOperation implements IRunnableWithStatus {
 
-    private PageDesignerURLFactory pageDesignerURLBuilder;
-    private MultiStatus status = new MultiStatus(UIDesignerPlugin.PLUGIN_ID, 0, "", null);
-    private ObjectMapper objectMapper = new ObjectMapper();
+    private PageDesignerURLFactory pageDesignerURLBuilder = new PageDesignerURLFactory(getPreferenceStore());
+    private IStatus status = new MultiStatus(UIDesignerPlugin.PLUGIN_ID, 0, "", null);
+    private Path uidWorkspace;
+    private String logs = "UI Designer logs not found.";
 
     public MigrateUIDOperation(PageDesignerURLFactory pageDesignerURLBuilder) {
         this.pageDesignerURLBuilder = pageDesignerURLBuilder;
@@ -67,164 +64,142 @@ public class MigrateUIDOperation implements IRunnableWithStatus {
 
     }
 
+    /**
+     * When true, a standalone UID instance is started on the given workspace path
+     */
+    public MigrateUIDOperation useStandaloneUIDAt(Path uidWorkspace) {
+        this.uidWorkspace = uidWorkspace;
+        return this;
+    }
+
     @Override
     public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
         monitor.beginTask(Messages.migratingUID, IProgressMonitor.UNKNOWN);
-        PageDesignerURLFactory urlBuilder = pageDesignerURLBuilder == null
-                ? new PageDesignerURLFactory(getPreferenceStore()) : pageDesignerURLBuilder;
-        WebPageRepositoryStore webPageStore = RepositoryManager.getInstance()
-                .getRepositoryStore(WebPageRepositoryStore.class);
-        migrate(monitor, urlBuilder, webPageStore);
-        WebFragmentRepositoryStore fragmentStore = RepositoryManager.getInstance()
-                .getRepositoryStore(WebFragmentRepositoryStore.class);
-        WebWidgetRepositoryStore widgetStore = RepositoryManager.getInstance()
-                .getRepositoryStore(WebWidgetRepositoryStore.class);
-        migrateUnusedFragments(urlBuilder, fragmentStore, monitor);
-        migrateUnusedWidgets(urlBuilder, widgetStore, monitor);
-    }
-
-    private void migrateUnusedWidgets(PageDesignerURLFactory urlBuilder, WebWidgetRepositoryStore widgetStore,
-            IProgressMonitor monitor) throws InvocationTargetException {
-        List<WebWidgetFileStore> children = widgetStore.getChildren();
-        SubMonitor subMonitor = SubMonitor.convert(monitor, Messages.migratingUID, children.size());
-        for (WebWidgetFileStore fileStore : children) {
-            if (fileStore.validate().matches(IStatus.WARNING)) {
-                status.add(migrateWidget(urlBuilder, fileStore, subMonitor));
-            }
-            subMonitor.worked(1);
-        }
-        subMonitor.done();
-    }
-
-    private void migrateUnusedFragments(PageDesignerURLFactory urlBuilder, WebFragmentRepositoryStore repositoryStore,
-            IProgressMonitor monitor) throws InvocationTargetException {
-        List<WebFragmentFileStore> children = repositoryStore.getChildren();
-        SubMonitor subMonitor = SubMonitor.convert(monitor, Messages.migratingUID, children.size());
-        for (WebFragmentFileStore fileStore : children) {
-            if (fileStore.validate().matches(IStatus.WARNING)) {
-                status.add(migrateFragment(urlBuilder, fileStore, subMonitor));
-            }
-            subMonitor.worked(1);
-        }
-        subMonitor.done();
-    }
-
-    private IStatus migrateFragment(PageDesignerURLFactory urlBuilder, WebFragmentFileStore fileStore,
-            IProgressMonitor monitor) throws InvocationTargetException {
-        URI uri = null;
-        String fragmentId = fileStore.getId();
-        monitor.subTask(String.format(Messages.migratingFragment, fragmentId));
-        try {
-            uri = urlBuilder.migrateFragment(fragmentId).toURI();
-        } catch (MalformedURLException | URISyntaxException e1) {
-            throw new InvocationTargetException(new MigrationException(e1));
-        }
-        HttpRequest request = HttpRequest.newBuilder(uri)
-                .timeout(Duration.ofSeconds(10))
-                .PUT(BodyPublishers.noBody()).build();
-        HttpResponse<InputStream> response = retriesUntil(request, 200, 10, 2000);
-        if (response == null) {
-            throw new InvocationTargetException(new IOException("Failed to put on " + uri));
-        }
-        return parseMigrationResponse(fragmentId, response);
-    }
-
-    private HttpResponse<InputStream> retriesUntil(HttpRequest request, int expectedStatus, int nbOfRetries,
-            int delayBetweenRetries) {
-        int retry = nbOfRetries;
-        while (retry >= 0) {
+        UIDWorkspaceSynchronizer.disable();
+        if (uidWorkspace != null) {
             try {
-                HttpResponse<InputStream> httpResponse = HttpClientFactory.INSTANCE.send(request,
-                        BodyHandlers.ofInputStream());
-                if (expectedStatus == httpResponse.statusCode()) {
-                    return httpResponse;
-                } else {
-                    retry--;
-                    Thread.sleep(delayBetweenRetries);
-                }
-
-            } catch (IOException | InterruptedException e) {
-                retry--;
+                removeUidProvidedWidgets();
+            } catch (CoreException e) {
+                throw new InvocationTargetException(e);
+            }
+            Path logFile;
+            try {
+                logFile = Files.createTempFile("uid-migration", ".log");
+                logFile.toFile().deleteOnExit();
+            } catch (IOException e) {
+                status = Status.error("Failed to create temporary folder.", e);
+                throw new InvocationTargetException(e);
+            }
+            try (var uidInstance = UIDesignerServerManager.getInstance().startStandalone(uidWorkspace, logFile.toFile(),
+                    monitor)) {
+                migrateArtifacts(uidInstance.getUrlBuilder(), monitor);
+            } catch (IOException e) {
+                status = Status.error("An error occured during UID artifacts migration.", e);
+                throw new InvocationTargetException(e);
+            } finally {
+                UIDWorkspaceSynchronizer.enable();
                 try {
-                    Thread.sleep(delayBetweenRetries);
-                } catch (InterruptedException e1) {
-                   BonitaStudioLog.error(e1);
+                    logs = Files.readString(logFile);
+                    if(Files.isWritable(logFile)) {
+                        Files.delete(logFile);
+                    }
+                } catch (IOException e) {
+                    BonitaStudioLog.error(e);
                 }
-                BonitaStudioLog.error(e);
+            }
+        } else {
+            try {
+                uidWorkspace = RepositoryManager.getInstance().getCurrentProject().orElseThrow().getAppProject()
+                        .getLocation().toFile().toPath();
+                migrateArtifacts(pageDesignerURLBuilder, monitor);
+            } finally {
+                UIDWorkspaceSynchronizer.enable();
             }
         }
-        return null;
     }
 
-    private IStatus migrateWidget(PageDesignerURLFactory urlBuilder, WebWidgetFileStore fileStore,
+    private void migrateArtifacts(PageDesignerURLFactory urlBuilder, IProgressMonitor monitor)
+            throws InvocationTargetException {
+        migrateWidgets(urlBuilder, monitor);
+        migrateFragments(urlBuilder, monitor);
+        migratePages(monitor, urlBuilder);
+    }
+
+    private void migrateWidgets(PageDesignerURLFactory urlBuilder,
             IProgressMonitor monitor) throws InvocationTargetException {
-        URI uri = null;
-        String widgetId = fileStore.getId();
-        monitor.subTask(String.format(Messages.migratingCustomWidget, widgetId));
+        BonitaStudioLog.info("Migrating UI Designer custom widgets...");
+        Path widgetFolder = uidWorkspace.resolve("web_widgets");
+        var submonitor = SubMonitor.convert(monitor);
+        var widgetVisitor = new WidgetVisitorImpl(widgetFolder, urlBuilder, submonitor);
         try {
-            uri = urlBuilder.migrateWidget(widgetId).toURI();
-        } catch (MalformedURLException | URISyntaxException e1) {
-            throw new InvocationTargetException(new MigrationException(e1));
-        }
-        HttpRequest request = HttpRequest.newBuilder(uri)
-                .timeout(Duration.ofSeconds(10))
-                .PUT(BodyPublishers.noBody()).build();
-        HttpResponse<InputStream> response = retriesUntil(request, 200, 10, 2000);
-        if (response == null) {
-            throw new InvocationTargetException(new IOException("Failed to put on " + uri));
-        }
-        return parseMigrationResponse(widgetId, response);
-    }
-
-    protected void migrate(IProgressMonitor monitor, PageDesignerURLFactory urlBuilder,
-            WebPageRepositoryStore repositoryStore) throws InvocationTargetException {
-        List<WebPageFileStore> children = repositoryStore.getChildren();
-        SubMonitor subMonitor = SubMonitor.convert(monitor, Messages.migratingUID, children.size());
-        for (WebPageFileStore fileStore : children) {
-            status.add(migratePage(urlBuilder, fileStore, subMonitor));
-            subMonitor.worked(1);
-        }
-        subMonitor.done();
-    }
-
-    protected IStatus migratePage(PageDesignerURLFactory urlBuilder, WebPageFileStore fileStore,
-            IProgressMonitor monitor) throws InvocationTargetException {
-        URI uri = null;
-        String pageId = fileStore.getId();
-        monitor.subTask(String.format(Messages.migratingPage, pageId));
-        try {
-            uri = urlBuilder.migratePage(pageId).toURI();
-        } catch (MalformedURLException | URISyntaxException e1) {
-            throw new InvocationTargetException(new MigrationException(e1));
-        }
-        HttpRequest request = HttpRequest.newBuilder(uri)
-                .timeout(Duration.ofMinutes(1))
-                .PUT(BodyPublishers.noBody()).build();
-        HttpResponse<InputStream> response = retriesUntil(request, 200, 10, 2000);
-        if (response == null) {
-            throw new InvocationTargetException(new IOException("Failed to put on " + uri));
-        }
-        return parseMigrationResponse(pageId, response);
-    }
-
-    protected IStatus parseMigrationResponse(String artifactId, HttpResponse<InputStream> response) {
-        try (var is = response.body()) {
-            Map migrationReport = objectMapper.readValue(is, Map.class);
-            switch ((String) migrationReport.get("status")) {
-                case "incompatible":
-                    return ValidationStatus.error(String.format(Messages.migrationNotPossible, artifactId));
-                case "error":
-                    return ValidationStatus.error(String.format(Messages.migrationError, artifactId));
-                case "warning":
-                    return ValidationStatus.warning(String.format(Messages.migrationWarning, artifactId));
-                case "success":
-                case "none:":
-                default:
-                    return ValidationStatus.ok();
-            }
+            Files.walkFileTree(widgetFolder, widgetVisitor);
         } catch (IOException e) {
-            BonitaStudioLog.error(e);
-            return ValidationStatus.error(e.getMessage(), e);
+            throw new InvocationTargetException(e);
+        } finally {
+            submonitor.done();
+        }
+        if (widgetVisitor.getError() != null) {
+            status =  Status.error("An error occured during UID artifacts migration.", widgetVisitor.getError());
+            throw new InvocationTargetException(widgetVisitor.getError());
+        }
+    }
+
+    private void migrateFragments(PageDesignerURLFactory urlBuilder,
+            IProgressMonitor monitor) throws InvocationTargetException {
+        BonitaStudioLog.info("Migrating UI Designer fragments...");
+        Path fragmentFolder = uidWorkspace.resolve("web_fragments");
+        var submonitor = SubMonitor.convert(monitor);
+        var fragmentVisitor = new FragmentVisitorImpl(fragmentFolder, urlBuilder, submonitor);
+        try {
+            Files.walkFileTree(fragmentFolder, fragmentVisitor);
+        } catch (IOException e) {
+            throw new InvocationTargetException(e);
+        } finally {
+            submonitor.done();
+        }
+        if (fragmentVisitor.getError() != null) {
+            status =  Status.error("An error occured during UID artifacts migration.", fragmentVisitor.getError());
+            throw new InvocationTargetException(fragmentVisitor.getError());
+        }
+    }
+
+    protected void migratePages(IProgressMonitor monitor, PageDesignerURLFactory urlBuilder)
+            throws InvocationTargetException {
+        BonitaStudioLog.info("Migrating UI Designer pages...");
+        Path pageFolder = uidWorkspace.resolve("web_page");
+        var submonitor = SubMonitor.convert(monitor);
+        var pageVisitor = new PageVisitorImpl(pageFolder, urlBuilder, submonitor);
+        try {
+            Files.walkFileTree(pageFolder, pageVisitor);
+        } catch (IOException e) {
+            throw new InvocationTargetException(e);
+        } finally {
+            submonitor.done();
+        }
+        if (pageVisitor.getError() != null) {
+            status =  Status.error("An error occured during UID artifacts migration.", pageVisitor.getError());
+            throw new InvocationTargetException(pageVisitor.getError());
+        }
+    }
+
+    protected void removeUidProvidedWidgets() throws CoreException {
+        var widgetsFolder = uidWorkspace.resolve("web_widgets");
+        if (Files.exists(widgetsFolder)) {
+            try {
+                Files.find(widgetsFolder,
+                        1,
+                        // Provided widget folder matcher
+                        (path, attr) -> path.getFileName().toString().startsWith("pb") && Files.isDirectory(path))
+                        .forEach(widget -> {
+                            try {
+                                FileUtil.deleteDir(widget);
+                            } catch (IOException e) {
+                                throw new UncheckedIOException(e);
+                            }
+                        });
+            } catch (IOException | UncheckedIOException e) {
+                throw new CoreException(Status.error("Failed to delete provided widgets.", e));
+            }
         }
     }
 
@@ -235,6 +210,129 @@ public class MigrateUIDOperation implements IRunnableWithStatus {
     @Override
     public IStatus getStatus() {
         return status;
+    }
+
+    public String getLogs() {
+        return logs;
+    }
+
+    class PageVisitorImpl extends UIDArtifactMigrationVisitor {
+
+        public PageVisitorImpl(Path pageFolder, PageDesignerURLFactory urlBuilder, IProgressMonitor monitor) {
+            super(pageFolder, urlBuilder, monitor);
+        }
+
+        @Override
+        protected FileVisitResult migrateArtifact(File file, PageDesignerURLFactory urlBuilder,
+                IProgressMonitor monitor) {
+            try {
+                var page = objectMapper.readValue(file, Map.class);
+                var type = page.get("type");
+                if ("page".equals(type) || "layout".equals(type) || "form".equals(type)) {
+                    URI uri = null;
+                    String pageId = (String) page.get("id");
+                    monitor.subTask(String.format(Messages.migratingPage, pageId));
+                    uri = urlBuilder.migratePage(pageId).toURI();
+                    HttpRequest request = HttpRequest.newBuilder(uri)
+                            .timeout(Duration.ofMinutes(1))
+                            .PUT(BodyPublishers.noBody()).build();
+                    HttpResponse<InputStream> response = retriesUntil(request, 200, 10, 2000);
+                    monitor.worked(1);
+                    if (response == null) {
+                        error = new IOException("Failed to put on " + uri);
+                        return FileVisitResult.TERMINATE;
+                    }
+                    if(status instanceof MultiStatus multiStatus) {
+                        multiStatus.add(parseMigrationResponse(pageId, response));
+                    }
+                }
+            } catch (IOException | URISyntaxException e) {
+                error = e;
+                return FileVisitResult.TERMINATE;
+            }
+            return FileVisitResult.SKIP_SIBLINGS;
+        }
+
+    }
+
+    class FragmentVisitorImpl extends UIDArtifactMigrationVisitor {
+
+        public FragmentVisitorImpl(Path fragmentsFolder, PageDesignerURLFactory urlBuilder, IProgressMonitor monitor) {
+            super(fragmentsFolder, urlBuilder, monitor);
+        }
+
+        @Override
+        protected FileVisitResult migrateArtifact(File file, PageDesignerURLFactory urlBuilder,
+                IProgressMonitor monitor) {
+            try {
+                var fragment = objectMapper.readValue(file, Map.class);
+                var type = fragment.get("type");
+                if ("fragment".equals(type)) {
+                    URI uri = null;
+                    String fragmentId = (String) fragment.get("id");
+                    monitor.subTask(String.format(Messages.migratingFragment, fragmentId));
+                    uri = urlBuilder.migrateFragment(fragmentId).toURI();
+                    HttpRequest request = HttpRequest.newBuilder(uri)
+                            .timeout(Duration.ofMinutes(1))
+                            .PUT(BodyPublishers.noBody()).build();
+                    HttpResponse<InputStream> response = retriesUntil(request, 200, 10, 2000);
+                    monitor.worked(1);
+                    if (response == null) {
+                        error = new IOException("Failed to put on " + uri);
+                        return FileVisitResult.TERMINATE;
+                    }
+                    if(status instanceof MultiStatus multiStatus) {
+                        multiStatus.add(parseMigrationResponse(fragmentId, response));
+                    }
+                    
+                }
+            } catch (IOException | URISyntaxException e) {
+                error = e;
+                return FileVisitResult.TERMINATE;
+            }
+            return FileVisitResult.SKIP_SIBLINGS;
+        }
+
+    }
+
+    class WidgetVisitorImpl extends UIDArtifactMigrationVisitor {
+
+        public WidgetVisitorImpl(Path widgetsFolder, PageDesignerURLFactory urlBuilder, IProgressMonitor monitor) {
+            super(widgetsFolder, urlBuilder, monitor);
+        }
+
+        @Override
+        protected FileVisitResult migrateArtifact(File file, PageDesignerURLFactory urlBuilder,
+                IProgressMonitor monitor) {
+            try {
+                var widget = objectMapper.readValue(file, Map.class);
+                var type = widget.get("type");
+                var custom = (Boolean) widget.get("custom");
+                if ("widget".equals(type) && custom != null && custom) {
+                    URI uri = null;
+                    String widgetId = (String) widget.get("id");
+                    monitor.subTask(String.format(Messages.migratingCustomWidget, widgetId));
+                    uri = urlBuilder.migrateWidget(widgetId).toURI();
+                    HttpRequest request = HttpRequest.newBuilder(uri)
+                            .timeout(Duration.ofMinutes(1))
+                            .PUT(BodyPublishers.noBody()).build();
+                    HttpResponse<InputStream> response = retriesUntil(request, 200, 10, 2000);
+                    monitor.worked(1);
+                    if (response == null) {
+                        error = new IOException("Failed to put on " + uri);
+                        return FileVisitResult.TERMINATE;
+                    }
+                    if(status instanceof MultiStatus multiStatus) {
+                        multiStatus.add(parseMigrationResponse(widgetId, response));
+                    }
+                }
+            } catch (IOException | URISyntaxException e) {
+                error = e;
+                return FileVisitResult.TERMINATE;
+            }
+            return FileVisitResult.SKIP_SIBLINGS;
+        }
+
     }
 
 }

@@ -145,6 +145,7 @@ public final class Messages extends NLS {
     public static String refresh;
     public static String reservedId;
 	public static String installLocalDependencies;
+    public static String prepareProjectForMigration;
 
 
     private Messages() {

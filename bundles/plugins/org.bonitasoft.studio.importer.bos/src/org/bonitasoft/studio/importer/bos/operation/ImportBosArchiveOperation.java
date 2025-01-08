@@ -64,7 +64,6 @@ import org.bonitasoft.studio.common.ui.PlatformUtil;
 import org.bonitasoft.studio.common.ui.jface.FileActionDialog;
 import org.bonitasoft.studio.connectors.repository.ConnectorImplRepositoryStore;
 import org.bonitasoft.studio.dependencies.repository.DependencyFileStore;
-import org.bonitasoft.studio.designer.core.UIDWorkspaceSynchronizer;
 import org.bonitasoft.studio.designer.core.operation.MigrateUIDOperation;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.diagram.custom.repository.ProcessConfigurationRepositoryStore;
@@ -254,7 +253,7 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
                     .filter(DependencyLookup::isSelected)
                     .filter(dl -> dl.getConflictVersion() == null
                             || dl.getConflictVersion().getStatus() == ConflictVersion.Status.KEEP_OURS)
-                    .collect(Collectors.toList());
+                    .toList();
             var dependenciesUpdateOperation = dependenciesUpdateOperationFactory.createDependencyUpdateOperation();
             for (var dl : dependenciesLookupToInstall) {
                 installLocalDependency(dl, localDependencyStore);
@@ -467,7 +466,7 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
                 (int) importArchiveModel.getStores().stream().flatMap(AbstractFolderModel::importableUnits).count());
         importArchiveModel.getStores().stream()
                 .sorted(storeImportOrderComparator())
-                .forEachOrdered(s -> {
+                .forEachOrdered(s -> 
                     s.importableUnits()
                             // Ensure .artifact-descriptor.properties is imported before bom.xml
                             .sorted(Comparator.comparing(ImportableUnit::getName))
@@ -475,8 +474,7 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
                                 monitor.subTask(NLS.bind(Messages.importing, unit.getName()));
                                 importUnit(unit, importArchiveModel.getBosArchive(), statusBuilder, monitor);
                                 monitor.worked(1);
-                            });
-                });
+                            }));
         migrateUID(monitor);
     }
 
@@ -501,7 +499,6 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
 
     protected void migrateUID(IProgressMonitor monitor) {
         try {
-            UIDWorkspaceSynchronizer.disable();
             MigrateUIDOperation migrateUIDOperation = new MigrateUIDOperation();
             migrateUIDOperation.run(monitor);
             Arrays.asList(migrateUIDOperation.getStatus().getChildren()).stream()
@@ -509,8 +506,6 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
                     .forEach(status::add);
         } catch (InvocationTargetException | InterruptedException e) {
             BonitaStudioLog.error(e);
-        } finally {
-            UIDWorkspaceSynchronizer.enable();
         }
     }
 

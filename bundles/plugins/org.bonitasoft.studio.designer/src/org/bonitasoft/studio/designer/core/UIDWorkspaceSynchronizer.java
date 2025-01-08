@@ -182,7 +182,7 @@ public class UIDWorkspaceSynchronizer {
             @Override
             public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
                 var currentRepository = RepositoryManager.getInstance().getCurrentRepository();
-                if (currentRepository.isPresent()) {
+                if (currentRepository.filter(IRepository::isLoaded).isPresent()) {
                     var pageRepositoryStore = currentRepository.orElseThrow()
                             .getRepositoryStore(WebPageRepositoryStore.class);
                     pageRepositoryStore.getResource().refreshLocal(IResource.DEPTH_INFINITE, monitor);

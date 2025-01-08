@@ -1,0 +1,35 @@
+<div ng-class="{
+    'form-horizontal': properties.labelPosition === 'left' && !properties.labelHidden,
+    'row': properties.labelPosition === 'top' && !properties.labelHidden || properties.labelHidden
+    }">
+    <div class="form-group">
+        <label
+            ng-if="!properties.labelHidden && properties.allowHTML"
+            ng-class="{ 'control-label--required': properties.required }"
+            class="control-label col-xs-{{ properties.labelPosition === 'left' ? properties.labelWidth : 12 }}"
+            ng-bind-html="properties.label | uiTranslate">
+        </label>
+        <label
+            ng-if="!properties.labelHidden && !properties.allowHTML"
+            ng-class="{ 'control-label--required': properties.required }"
+            class="control-label col-xs-{{ properties.labelPosition === 'left' ? properties.labelWidth : 12 }}"
+            ng-bind="properties.label | uiTranslate">
+        </label>
+        <div class="col-xs-{{ 12 - (!properties.labelHidden && properties.labelPosition === 'left' ? properties.labelWidth : 0) }}" >
+            <select
+                class="form-control"
+                name="{{ctrl.name}}"
+                ng-model="ctrl.internalValue"
+                ng-change="ctrl.updateValue()"
+                ng-model-options="{ allowInvalid: true }"
+                ng-options="ctrl.getValue(option) as (ctrl.getLabel(option) | uiTranslate) for option in properties.availableValues"
+                ng-required="properties.required"
+                ng-disabled="properties.disabled">
+                <option style="display:none" value="">
+                    {{ properties.placeholder | uiTranslate }}
+                </option>
+            </select>
+            <div ng-messages="$form[ctrl.name].$dirty && $form[ctrl.name].$error " ng-messages-include="forms-generic-errors.html" role="alert"></div>
+        </div>
+    </div>
+</div>

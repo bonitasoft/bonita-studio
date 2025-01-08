@@ -30,6 +30,7 @@ import org.bonitasoft.studio.tests.connectors.TestConnectorOperationIT;
 import org.bonitasoft.studio.tests.connectors.TestWebserviceVersionForBPMNImport;
 import org.bonitasoft.studio.tests.data.DataRefactorIT;
 import org.bonitasoft.studio.tests.deploy.TestDeployCommand;
+import org.bonitasoft.studio.tests.designer.MigrateUIDOperationIT;
 import org.bonitasoft.studio.tests.designer.UIDArtifactCreationIT;
 import org.bonitasoft.studio.tests.document.RefactorDocumentOperationTest;
 import org.bonitasoft.studio.tests.document.TestDocumentRefactoring;
@@ -107,6 +108,7 @@ import org.junit.runners.Suite;
         UIDesignerWorkspaceIntegrationIT.class,
         TestMessageRefactoring.class,
         UIDArtifactCreationIT.class,
+        MigrateUIDOperationIT.class,
         CreateRestAPIExtensionProjectIT.class,
         RestAPIExtensionMarkerResolutionIT.class,
         BuildAndDeployRestAPIExtensionIT.class,

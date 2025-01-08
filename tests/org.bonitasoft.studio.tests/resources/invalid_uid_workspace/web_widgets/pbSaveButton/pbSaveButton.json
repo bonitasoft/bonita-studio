@@ -1,0 +1,71 @@
+{
+  "id" : "pbSaveButton",
+  "name" : "SaveButton",
+  "type" : "widget",
+  "custom" : false,
+  "modelVersion" : "2.4",
+  "lastUpdate" : 1736240682393,
+  "description" : "Save data to / Load data from LocalStorage.",
+  "template" : "@pbSaveButton.tpl.html",
+  "controller" : "@pbSaveButton.ctrl.js",
+  "properties" : [
+    {
+      "label" : "Interpret HTML",
+      "name" : "allowHTML",
+      "help" : "If you choose 'no', HTML code will be escaped instead of being interpreted. If you choose ‘Yes’, this could potentially lead to HTML injections attacks. Please take into account these risks.",
+      "type" : "boolean",
+      "defaultValue" : false,
+      "bond" : "constant"
+    },
+    {
+      "label" : "Label",
+      "name" : "label",
+      "type" : "text",
+      "defaultValue" : "Save draft",
+      "bond" : "interpolation"
+    },
+    {
+      "label" : "Alignment",
+      "name" : "alignment",
+      "type" : "choice",
+      "defaultValue" : "left",
+      "choiceValues" : [
+        "left",
+        "center",
+        "right"
+      ],
+      "bond" : "constant"
+    },
+    {
+      "label" : "Style",
+      "name" : "buttonStyle",
+      "type" : "choice",
+      "defaultValue" : "default",
+      "choiceValues" : [
+        "default",
+        "primary",
+        "success",
+        "info",
+        "warning",
+        "danger",
+        "link"
+      ],
+      "bond" : "constant"
+    },
+    {
+      "label" : "Value",
+      "name" : "formInput",
+      "caption" : "Any variable: myData or myData.attribute.",
+      "help" : "Data saved on click. You might bind it to the variable you use to initialize your form, e.g. 'formInput'",
+      "type" : "text",
+      "defaultValue" : "formInput",
+      "bond" : "variable"
+    }
+  ],
+  "assets" : [ ],
+  "requiredModules" : [ ],
+  "webResources" : [ ],
+  "icon" : "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 50 20'><style>.a{fill:#cbd5e1;}.b{fill:#fff;}</style><style>.a{fill:#fff;}</style><path d='m47 15.2c0 0.7-1.7 1.8-1.7 1.8 0 0-40.5 0-41.6 0-1.6 0-3.6-1.9-3.6-1.9 0 0 0.7 4.8 4 5 2.4 0.1 42.4 0 42.4 0 0 0 3.5-0.2 3.5-3.6 0-1.3 0.1-11.5 0.1-12.4-0.1-2-4-4-4-4L47 1.8c0 0 0 12.7 0 13.4z' class='a'/><path d='M3.9 1 44.2 1C45.7 1 47 2.2 47 3.6l0 10.8C47 15.8 45.7 17 44.1 17L3.9 17C2.3 17 1 15.8 1 14.4L1 3.6C1 2.2 2.3 1 3.9 1ZM3 0C1.3 0 0 1.3 0 3l0 12c0 1.7 1.3 3 3 3l42 0c1.7 0 3-1.3 3-3L48 3C48 1.3 46.7 0 45 0L3 0Z' class='a' /><path d='m16.6 3.2 0 0.5 0 10.1 0 0.5 0.5 0 10.4 0 0.5 0 0-0.5 0-8.1 0-0.2-0.2-0.2-2.1-2-0.2-0.2-0.2 0-8.3 0-0.5 0zm1 1 1.6 0 0 2.5 0 0.5 0.5 0 5.2 0 0.5 0 0-0.5 0-2.3 1.6 1.5 0 7.3-1 0 0-4 0-0.5-0.5 0-6.3 0-0.5 0 0 0.5 0 4-1 0 0-9.1zm2.6 0 2.1 0 0 1 1 0 0-1 1 0 0 2-4.2 0 0-2zm-0.5 5.5 5.2 0 0 3.5-5.2 0 0-3.5z' class='b'/></svg>",
+  "order" : 13,
+  "hasHelp" : true
+}

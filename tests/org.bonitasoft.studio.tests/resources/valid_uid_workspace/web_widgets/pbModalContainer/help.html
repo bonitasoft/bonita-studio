@@ -1,0 +1,52 @@
+<uib-tabset class="tabs-left">
+    <uib-tab heading="{{ 'Usage' | translate }}" index="'usage'">
+        <p translate>Use this container to create a pop-in window which can be opened or closed with a button, and displayed over the page, form, or layout content.</p>
+        <p translate>To control modal containers, the following methods are available in a button: </p>
+        <ul>
+            <li translate>Open Modal</li>
+            <li translate>Close Modal</li>
+        </ul>
+        <p translate>Add a modal ID, as the button will need to open the right modal container. This ID must be unique within a given page, form, or layout.</p>
+        <p translate>A modal container doesn't work when it is embedded in another container.</p>
+        <p translate>In a form, a page, or a layout, we recommend to drop modal containers at the bottom of the editor content.</p>
+        <p translate>To embed a pop-in into another pop-in at runtime, drop the first modal container at the bottom, drop the second modal container below the first one, and drop the button that opens the second pop-in within the first modal container.</p>
+    </uib-tab>
+    <uib-tab heading="{{ 'Control' | translate }}" index="'modal-control'">
+        <p translate>To open a modal window it is enough to input a modal ID in the properties, to create a button,
+            select <em>Open modal</em> in the Action property, and fill in the right modal ID. The button should be
+            located outside of the modal container.</p>
+        <p translate>To close a modal window, put a button inside the modal that you wish to close and select the <em>Close
+            modal</em> action.</p>
+    </uib-tab>
+    <uib-tab heading="{{ 'Style' | translate }}" index="'style'">
+        <p translate>This modal is based on ui-bootstrap implementation. It is possible to change the size or the style
+            of the modal.</p>
+        <h4>Size</h4>
+        <p translate>The modal size can be selected in the container <em>Size</em> properties. Options available are small,
+            medium or large, which will control the width of the modal.</p>
+        <h4>Style</h4>
+        <p translate>The modal style can be improved by using the <em>modal-body</em> specific class into the <em>CSS
+            Classes</em> property field.</p>
+        <p translate>Another possibility would be adding different containers inside the modal and specify any of the
+            following classes:</p>
+        <div class="row modal-help">
+            <div class="row modal-row" >
+                <div class="col-xs-4 col-sm-6">
+                    modal-header
+                </div>
+            </div>
+            <div class="row modal-row">
+                <div class="col-xs-4 col-sm-6">
+                    modal-body
+                </div>
+            </div>
+            <div class="row modal-row">
+                <div class="col-xs-4 col-sm-6">
+                    modal-footer
+                </div>
+            </div>
+        </div>
+        <h4>Animation</h4>
+        <p translate>It is possible to deactivate the animation when the modal appears. The main usage of this option would be to create a wizard, where several modal containers are displayed in a sequence.</p>
+    </uib-tab>
+</uib-tabset>

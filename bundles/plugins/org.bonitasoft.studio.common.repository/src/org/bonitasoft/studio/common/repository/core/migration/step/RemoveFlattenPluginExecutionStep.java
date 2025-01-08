@@ -28,25 +28,27 @@ import org.osgi.framework.Version;
 
 public class RemoveFlattenPluginExecutionStep implements MigrationStep {
 
-	@Override
-	public MigrationReport run(Path project, IProgressMonitor monitor) throws CoreException {
-		var report = new MigrationReport();
-		var bdmModule = project.resolve(BonitaProject.BDM_MODULE);
-		if (Files.exists(bdmModule)) {
-			var model = loadMavenModel(bdmModule);
-			var build = model.getBuild();
-			if(build.getPlugins().removeIf(p -> Objects.equals(p.getArtifactId(), DefaultPluginVersions.FLATTEN_MAVEN_PLUGIN))) {
-			    saveMavenModel(model, bdmModule);
-	            report.removed("The `flatten-maven-plugin` executions have been removed from the Bdm parent module. They are now inherited from the Bonita project parent.");
-			}
-		}
-		return report;
-	}
+    @Override
+    public MigrationReport run(Path project, IProgressMonitor monitor) throws CoreException {
+        var report = new MigrationReport();
+        var bdmModule = project.resolve(BonitaProject.BDM_MODULE);
+        if (Files.exists(bdmModule) && Files.exists(bdmModule.resolve("pom.xml"))) {
+            var model = loadMavenModel(bdmModule);
+            var build = model.getBuild();
+            if (build.getPlugins()
+                    .removeIf(p -> Objects.equals(p.getArtifactId(), DefaultPluginVersions.FLATTEN_MAVEN_PLUGIN))) {
+                saveMavenModel(model, bdmModule);
+                report.removed(
+                        "The `flatten-maven-plugin` executions have been removed from the Bdm parent module. They are now inherited from the Bonita project parent.");
+            }
+        }
+        return report;
+    }
 
-	@Override
-	public boolean appliesTo(String sourceVersion) {
-		return Version.parseVersion(sourceVersion).compareTo(new Version("8.0.0")) >= 0
-				&& Version.parseVersion(sourceVersion).compareTo(new Version("9.0.0")) < 0;
-	}
+    @Override
+    public boolean appliesTo(String sourceVersion) {
+        return Version.parseVersion(sourceVersion).compareTo(new Version("8.0.0")) >= 0
+                && Version.parseVersion(sourceVersion).compareTo(new Version("9.0.0")) < 0;
+    }
 
 }

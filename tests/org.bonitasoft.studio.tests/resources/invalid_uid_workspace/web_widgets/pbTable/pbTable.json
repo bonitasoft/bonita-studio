@@ -1,0 +1,93 @@
+{
+  "id" : "pbTable",
+  "name" : "Table",
+  "type" : "widget",
+  "custom" : false,
+  "modelVersion" : "2.4",
+  "lastUpdate" : 1736240682365,
+  "description" : "Tabular presentation of data from an array",
+  "template" : "@pbTable.tpl.html",
+  "controller" : "@pbTable.ctrl.js",
+  "properties" : [
+    {
+      "label" : "Caption",
+      "name" : "caption",
+      "help" : "Describing the content of a data table. To be accessible the description must be relevant (clear and concise).",
+      "type" : "text",
+      "bond" : "interpolation"
+    },
+    {
+      "label" : "Interpret HTML",
+      "name" : "allowHTML",
+      "help" : "If you choose 'no', HTML code will be escaped instead of being interpreted in row's cells. If you choose ‘Yes’, this could potentially lead to HTML injections attacks. Please take into account these risks.",
+      "type" : "boolean",
+      "defaultValue" : false,
+      "bond" : "constant"
+    },
+    {
+      "label" : "Headers",
+      "name" : "headers",
+      "caption" : "Comma-separated list",
+      "help" : "If you specify an expression, the result must be an array of strings",
+      "type" : "collection",
+      "defaultValue" : [
+        "Id",
+        "Name",
+        "Description",
+        "Date"
+      ],
+      "bond" : "expression"
+    },
+    {
+      "label" : "Content",
+      "name" : "content",
+      "help" : "Array used to populate the table. Can be a list of objects. Use 'Column keys' to refine content",
+      "type" : "collection",
+      "bond" : "expression"
+    },
+    {
+      "label" : "Column keys",
+      "name" : "columnsKey",
+      "caption" : "Use <a href=\"javascript:void(0);\" open-help=\"filters\" editor-mode=\"page\">Filters</a> to format the data (e.g. <span ng-non-bindable>columnKey|uiDate</span>)",
+      "help" : "When 'Content' is a list of objects, specifies the attributes to display in the table columns. These keys must not be a number, or start with a number",
+      "type" : "collection",
+      "bond" : "expression"
+    },
+    {
+      "label" : "Selected Row",
+      "name" : "selectedRow",
+      "type" : "text",
+      "bond" : "variable"
+    },
+    {
+      "label" : "Zebra-striping",
+      "name" : "striped",
+      "help" : "Alternating gray and transparent backgrounds",
+      "type" : "boolean",
+      "defaultValue" : true,
+      "bond" : "constant"
+    },
+    {
+      "label" : "Condensed",
+      "name" : "condensed",
+      "help" : "Condensed table with half padding",
+      "type" : "boolean",
+      "defaultValue" : false,
+      "bond" : "constant"
+    },
+    {
+      "label" : "Bordered",
+      "name" : "bordered",
+      "help" : "Add borders all around the table and between all the columns.",
+      "type" : "boolean",
+      "defaultValue" : false,
+      "bond" : "constant"
+    }
+  ],
+  "assets" : [ ],
+  "requiredModules" : [ ],
+  "webResources" : [ ],
+  "icon" : "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 50 20'><g><path fill='#CBD5E1' d='M36,15v2h11v-2H36z M40,10v2h7v-2H40z M11,10v2h14v-2H11z M3,10v2h3v-2H3z M11,15v2h17v-2H11z M3,15v2h3 v-2H3z'/><path fill='#fff' d='M1,19V1h48v18H1z M0,0v20h50V0H0z'/><path fill='#CBD5E1' d='M1,7v1h7v11h1V8h22v11h1V8h17V7H32V1h-1v6H9V1H8v6H1z'/><path fill='#fff' d='M35,3h12v2H35V3z M11,3h13v2H11V3z M3,3h3v2H3V3z'/></g></svg>",
+  "order" : 17,
+  "hasHelp" : true
+}

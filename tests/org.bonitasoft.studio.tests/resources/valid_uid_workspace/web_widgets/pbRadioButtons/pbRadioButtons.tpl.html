@@ -1,0 +1,54 @@
+<div ng-class="{
+    'form-horizontal': properties.labelPosition === 'left' && !properties.labelHidden,
+    'row': properties.labelPosition === 'top' && !properties.labelHidden || properties.labelHidden
+    }">
+    <div class="form-group">
+        <fieldset>
+            <legend
+                ng-if="!properties.labelHidden && properties.allowHTML"
+                ng-class="{ 'control-label--required': properties.required }"
+                class="control-label col-xs-{{ !properties.labelHidden && properties.labelPosition === 'left' ? properties.labelWidth : 12 }}"
+                ng-bind-html="properties.label | uiTranslate">
+            </legend>
+            <legend
+                ng-if="!properties.labelHidden && !properties.allowHTML"
+                ng-class="{ 'control-label--required': properties.required }"
+                class="control-label col-xs-{{ !properties.labelHidden && properties.labelPosition === 'left' ? properties.labelWidth : 12 }}"
+                ng-bind="properties.label | uiTranslate">
+            </legend>
+            <div
+                class="col-xs-{{ 12 - (!properties.labelHidden && properties.labelPosition === 'left' ? properties.labelWidth : 0) }}">
+                <label ng-if="properties.inline" class="radio-inline"
+                       ng-repeat="option in properties.availableValues track by $index"
+                       for="{{ctrl.inputId}}-{{$index}}">
+                    <input
+                        id="{{ctrl.inputId}}-{{$index}}"
+                        type="radio"
+                        name="{{ctrl.name}}"
+                        ng-model="properties.selectedValue"
+                        ng-value="ctrl.getValue(option)"
+                        ng-required="properties.required"
+                        ng-disabled="properties.disabled">
+                    {{ (ctrl.getLabel(option) || option) | uiTranslate }}
+                </label>
+
+                <div ng-if="!properties.inline" class="radio radio-button-margin"
+                     ng-repeat="option in properties.availableValues track by $index" for="{{ctrl.inputId}}-{{$index}}">
+                    <label>
+                        <input
+                            id="{{ctrl.inputId}}-{{$index}}"
+                            type="radio"
+                            name="{{ctrl.name}}"
+                            ng-model="properties.selectedValue"
+                            ng-value="ctrl.getValue(option)"
+                            ng-required="properties.required"
+                            ng-disabled="properties.disabled">
+                        {{ (ctrl.getLabel(option) || option) | uiTranslate }}
+                    </label>
+                </div>
+            </div>
+            <div ng-messages="$form[ctrl.name].$dirty && $form[ctrl.name].$error "
+                 ng-messages-include="forms-generic-errors.html" role="alert"></div>
+        </fieldset>
+    </div>
+</div>

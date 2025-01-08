@@ -1,0 +1,70 @@
+<div ng-class="{
+    'form-horizontal': properties.labelPosition === 'left' && !properties.labelHidden,
+    'row': properties.labelPosition === 'top' && !properties.labelHidden || properties.labelHidden
+    }">
+    <div class="form-group">
+        <label
+            for="{{ctrl.inputId}}"
+            ng-if="!properties.labelHidden && properties.allowHTML"
+            ng-class="{ 'control-label--required': properties.required }"
+            class="control-label col-xs-{{ properties.labelPosition === 'left' ? properties.labelWidth : 12 }}"
+            ng-bind-html="properties.label | uiTranslate">
+        </label>
+        <label
+            for="{{ctrl.inputId}}"
+            ng-if="!properties.labelHidden && !properties.allowHTML"
+            ng-class="{ 'control-label--required': properties.required }"
+            class="control-label col-xs-{{ properties.labelPosition === 'left' ? properties.labelWidth : 12 }}"
+            ng-bind="properties.label | uiTranslate">
+        </label>
+
+        <div
+            class="col-xs-{{ 12 - (!properties.labelHidden && properties.labelPosition === 'left' ? properties.labelWidth : 0) }}">
+            <p class="input-group">
+                <input class="form-control"
+                       id="{{ctrl.inputId}}"
+                       name="{{ctrl.name}}"
+                       type="text"
+                       placeholder="{{properties.placeholder | uiTranslate}}"
+                       autocomplete="off"
+                       ng-model="properties.value"
+                       ng-readonly="properties.readOnly"
+                       ng-required="properties.required"
+                       bs-datepicker
+                       data-container="body"
+                       data-autoclose="1"
+                       data-timezone="UTC"
+                       date-format="{{properties.dateFormat | uiTranslate}}"
+                       data-trigger="focus"
+                       data-start-week="{{ctrl.firstDayOfWeek}}">
+
+                <span class="input-group-btn">
+                    <button ng-if="properties.showToday"
+                            type="button"
+                            class="btn btn-default today
+                                {{$form[ctrl.name].$dirty && ($form[ctrl.name].$error.date || $form[ctrl.name].$error.parse ||
+                                (properties.required && $form[ctrl.name].$error.required)) ? 'btn-invalid':''}}"
+                            ng-click="ctrl.setDateToToday()"
+                            ng-disabled="properties.readOnly" ui-translate>
+                        {{properties.todayLabel || 'Today' | uiTranslate}}
+                    </button>
+                    <button type="button"
+                            class="btn btn-default calendar
+                               {{$form[ctrl.name].$dirty && ($form[ctrl.name].$error.date || $form[ctrl.name].$error.parse ||
+                               (properties.required && $form[ctrl.name].$error.required)) ? 'btn-invalid':''}}"
+                            ng-click="ctrl.openDatePicker()"
+                            ng-disabled="properties.readOnly"
+                            aria-label="{{'Open calendar' | uiTranslate}}">
+                        <i class="glyphicon glyphicon-calendar"></i>
+                    </button>
+                </span>
+            </p>
+            <div ng-messages="$form[ctrl.name].$dirty && $form[ctrl.name].$error "
+                 ng-messages-include="forms-generic-errors.html" role="alert">
+                <div ng-message="parse" ng-if="!environment || !environment.editor" class="text-danger">
+                    {{ 'This is not a valid date' | uiTranslate }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

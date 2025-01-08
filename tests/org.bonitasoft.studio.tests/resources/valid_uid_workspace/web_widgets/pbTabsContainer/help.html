@@ -1,0 +1,45 @@
+<uib-tabset class="tabs-left">
+    <uib-tab heading="{{ 'Tabs container' | translate }}" index="'tab-container-usage'">
+        <p translate>A TabsContainer is a container that has multiple panes, but shows only one pane at a time.</p>
+        <p translate>Using the Vertical Display property, it is possible to display tabs vertically or horizontally.</p>
+        <p class="alert alert-info" translate>
+            To Display the tab vertically and on the left of the content, you can read this <a
+            href="https://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=712&bos_redirect_product=bos&bos_redirect_major_version=7.10">how
+            to learn more about customization</a>
+        </p>
+        <p translate>The Display Type property allows you to customize the tabs style ('tabs' or 'pills').</p>
+    </uib-tab>
+    <uib-tab heading="{{ 'Tab properties usage' | translate }}" index="'tab-properties-usage'">
+        <p translate>The tab's properties allows you to customize default display and behaviour of tabs based on data and/or JS expressions.</p>
+            <li translate><code>Title</code>: can be calculated dynamically to display and <b>render html</b>.</li>
+            <li translate><code>Selected</code> <em>(Default: first tab is selected)</em>: Whether the tab is selected or not</li>
+            <li translate><code>hidden</code> <em>(Default: no)</em>: Whether tab is hidden or not.</li>
+            <li translate><code>disabled</code> <em>(Default: no)</em>: Whether tab is clickable and can be activated.
+            </li>
+            <li translate><code>cssClasses</code> <em>(Default: none)</em>: Add css classes on tab. This css class will
+                be attached to <strong>tab-heading</strong> html element.
+            </li>
+        </ul>
+        <br/>
+        <p translate>Example of a tab title displaying a badge:</p>
+        <ol>
+            <li translate>Add the following class in style.css asset.</li>
+<pre>
+.badgeCircle {
+    width: 30px;
+    border-radius: 50%;
+    text-align: center;
+    font-size: 12px;
+    border: 1px solid #666;
+    background-color: green;
+    color: white;
+    display:inline;
+}
+</pre>
+            <li translate>In tab title properties add the following value</li>
+                <pre>&lt;span class="badgeCircle"&lt;10&gt;/span&gt; Users</pre>
+
+            <li transalte>Click on preview to show the result</li>
+        </ol>
+    </uib-tab>
+</uib-tabset>

@@ -1,0 +1,48 @@
+<uib-tabset class="tabs-left">
+    <uib-tab heading="{{ 'Usage' | translate }}" index="'usage'">
+        <p>
+            <translate>Use this widget to select a date and a time (e.g., to schedule a meeting).</translate><br/>
+            <translate>To select only a date (e.g., a date of birth), use the <em>Date picker</em> widget instead.</translate>
+        </p>
+        <p translate>Date and time can reflect the user time zone (e.g., a meeting day and time) or be absolute, identical everywhere (e.g., opening hours of a store somewhere).
+            This is controlled by the property <em>Handle time zone</em>.
+        </p>
+        <p translate>This widget can be used to display/update business variable attributes defined in the Business Data Model (BDM) with the following types:</p>
+        <ul>
+            <li translate><em>DATE-TIME (TIME ZONE)</em> (based on <code>java.time.OffsetDateTime</code>): set the property <em>Handle time zone</em> to "Yes"</li>
+            <li translate><em>DATE-TIME (NO TIME ZONE)</em> (based on <code>java.time.LocalDateTime</code>): set the property <em>Handle time zone</em> to "No"</li>
+        </ul>
+    </uib-tab>
+    <uib-tab heading="{{ 'Format' | translate }}" index="'format'">
+        <h4 translate>Value Format</h4>
+        <p translate>The input/output of the widget (its <em>Value</em>) is an <a href="https://en.wikipedia.org/wiki/ISO_8601" target="_blank">ISO 8601</a> formatted String variable.</p>
+        <p>
+            <translate><b>With <em>Handle time zone</em> set to "yes"</b>: the <em>Value</em> of the widget is in UTC (e.g., yyyy-MM-ddTHH:mm:ssZ).</translate><br/>
+            <translate>The display of dates and times relies on the user's browser time zone. Therefore, displayed values are different from stored values (except in the GMT time zone).</translate>
+        </p>
+        <p translate><b>With <em>Handle time zone</em> set to "no"</b>: User time zone is ignored and the value of the widget does not contain any time zone information (e.g., yyyy-MM-ddTHH:mm:ss).
+        </p>
+        <h4 translate>Technical Format</h4>
+        <p translate>The <em>Technical date format</em> and <em>Technical time format</em> properties define the format of the values displayed in the date and time inputs.
+            They should be valid <a href="https://code.angularjs.org/1.3.18/docs/api/ng/filter/date" target="_blank">AngularJS date/time formats</a>.
+        </p>
+    </uib-tab>
+    <uib-tab heading="{{ 'Today & Now' | translate }}" index="'today'">
+        <p translate><b><em>Today</em> button</b> sets the selected date to the current date for the user.
+            It doesn't change the selected time, except when the time is not set.
+            In that case, it's rounded up or down to the closest 5 min value.
+        </p>
+        <p translate><b><em>Now</em> button</b> sets the selected date and time to the current date and time for the user.
+            For the time, it is rounded up or down to the closest 5 min value.
+        </p>
+    </uib-tab>
+    <uib-tab heading="{{ 'Date & time display' | translate }}" index="'display'">
+        <p translate>To display (and not update) a date and a time retrieved from the BDM API (or another API), you can either use this <em>Date time picker</em> widget with <em>Read-only</em> property set to "yes" or use a <em>Text</em>, <em>Title</em> or a <em>Table</em> widget and format the value using the provided <em>uiDate</em> <a href="javascript:void(0);" open-help="filters" editor-mode="page">filter</a>.</p>
+    </uib-tab>
+    <uib-tab heading="{{ 'Localization' | translate }}" index="'localization'">
+        <translate>The content of <em>Label</em>, <em>Technical date formats</em>, <em>Placeholder</em> properties, as well as the labels of buttons <em>Today/Now</em> are localized by default. Localized formats can be edited in the asset <em>localization.json</em>.</translate><br/>
+        <translate>The values of all properties are also used as translation keys. As a result, if you choose not to keep the default values, update the asset <em>localization.json</em> accordingly.</translate><br/>
+        <translate>Make sure the technical format values and their translations are valid <a href="https://code.angularjs.org/1.3.18/docs/api/ng/filter/date" target="_blank">date/time formats</a>.</translate><br/>
+        <translate>For more information, refer to the <a href="javascript:void(0);" open-help="localization" editor-mode="page"><em>localization</em> help section</a>.</translate>
+    </uib-tab>
+</uib-tabset>

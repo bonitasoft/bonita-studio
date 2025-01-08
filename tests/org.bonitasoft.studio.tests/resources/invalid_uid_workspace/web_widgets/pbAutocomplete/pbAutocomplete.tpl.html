@@ -1,0 +1,46 @@
+<div ng-class="{
+    'form-horizontal': properties.labelPosition === 'left' && !properties.labelHidden,
+    'row': properties.labelPosition === 'top' && !properties.labelHidden || properties.labelHidden
+    }">
+    <div class="form-group">
+        <label
+            for="{{ctrl.inputId}}"
+            ng-if="!properties.labelHidden && properties.allowHTML"
+            ng-class="{ 'control-label--required': properties.required }"
+            class="control-label col-xs-{{ properties.labelPosition === 'left' ? properties.labelWidth : 12 }}"
+            ng-bind-html="properties.label | uiTranslate">
+        </label>
+        <label
+            for="{{ctrl.inputId}}"
+            ng-if="!properties.labelHidden && !properties.allowHTML"
+            ng-class="{ 'control-label--required': properties.required }"
+            class="control-label col-xs-{{ properties.labelPosition === 'left' ? properties.labelWidth : 12 }}"
+            ng-bind="properties.label | uiTranslate">
+        </label>
+        <div class="col-xs-{{ 12 - (!properties.labelHidden && properties.labelPosition === 'left' ? properties.labelWidth : 0) }}" >
+            <input
+                id="{{ctrl.inputId}}"
+                type="text"
+                class="form-control"
+                placeholder="{{ properties.placeholder | uiTranslate }}"
+                typeahead-append-to-body="true"
+                typeahead="ctrl.getValue(item) as ctrl.getLabel(item) for item in properties.availableValues | filter:$viewValue"
+                typeahead-template-url="customTypeaheadForInputAutocomplete.html"
+                typeahead-wait-ms="300"
+                typeahead-on-select="ctrl.onSelectedCallback($item, $model, $label)"
+                typeahead-input-formatter="ctrl.formatLabel($model)"
+                ng-model="properties.value"
+                ng-model-options="ctrl.ngModelOptions"
+                name="{{ctrl.name}}"
+                ng-required="properties.required"
+                ng-readonly="properties.readOnly">
+
+            <div ng-messages="$form[ctrl.name].$dirty && $form[ctrl.name].$error " ng-messages-include="forms-generic-errors.html" role="alert"></div>
+
+            <!-- It doesn't work if we put it inside form.html -->
+            <script type="text/ng-template" id="customTypeaheadForInputAutocomplete.html">
+                <a  bind-html-unsafe="match.label | typeaheadHighlight:query"></a>
+            </script>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,34 @@
+<div ng-class="{
+    'form-horizontal': properties.labelPosition === 'left' && !properties.labelHidden,
+    'row': properties.labelPosition === 'top' && !properties.labelHidden || properties.labelHidden
+    }">
+    <div class="form-group">
+        <label
+            for="{{ctrl.inputId}}"
+            ng-if="!properties.labelHidden && properties.allowHTML"
+            ng-class="{ 'control-label--required': properties.required }"
+            class="control-label col-xs-{{ properties.labelPosition === 'left' ? properties.labelWidth : 12 }}"
+            ng-bind-html="properties.label | uiTranslate">
+        </label>
+        <label
+            for="{{ctrl.inputId}}"
+            ng-if="!properties.labelHidden && !properties.allowHTML"
+            ng-class="{ 'control-label--required': properties.required }"
+            class="control-label col-xs-{{ properties.labelPosition === 'left' ? properties.labelWidth : 12 }}"
+            ng-bind="properties.label | uiTranslate">
+        </label>
+        <div class="col-xs-{{ 12 - (!properties.labelHidden && properties.labelPosition === 'left' ? properties.labelWidth : 0) }}">
+            <textarea class="form-control"
+                id="{{ctrl.inputId}}"
+                name="{{ctrl.name}}"
+                ng-model="properties.value"
+                ng-model-options="{ allowInvalid: true }"
+                ng-required="properties.required"
+                ng-minlength="properties.minLength"
+                ng-maxlength="properties.maxLength"
+                ng-readonly="properties.readOnly">
+            </textarea>
+            <div ng-messages="$form[ctrl.name].$dirty && $form[ctrl.name].$error " ng-messages-include="forms-generic-errors.html" role="alert"></div>
+        </div>
+    </div>
+</div>

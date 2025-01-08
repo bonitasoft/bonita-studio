@@ -15,6 +15,8 @@
 package org.bonitasoft.studio.common.repository.core.migration;
 
 import java.nio.file.Path;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 import java.util.function.Predicate;
 
@@ -32,17 +34,17 @@ public interface MigrationStep {
     MigrationReport run(Path projectRoot, IProgressMonitor monitor) throws CoreException;
 
     boolean appliesTo(String sourceVersion);
-    
+
     default boolean requireCleanImport() {
         return false;
     }
-    
+
     default StepDescription getDescription() {
         return new StepDescription("Migration setp", "");
     }
-    
-    default void checkPrerequisites() throws StepPrerequisiteException {
-        
+
+    default void checkPrerequisites(Path projectRoot) throws StepPrerequisiteException {
+
     }
 
     default Model loadMavenModel(Path project) throws CoreException {
@@ -56,7 +58,7 @@ public interface MigrationStep {
     }
 
     default void saveMavenModel(Model model, Path project) throws CoreException {
-         MavenProjectHelper.saveModel(project.resolve(POM_FILE_NAME), model);
+        MavenProjectHelper.saveModel(project.resolve(POM_FILE_NAME), model);
     }
 
     default Predicate<Dependency> has(String groupId, String artifactId) {
@@ -66,5 +68,48 @@ public interface MigrationStep {
 
     default Predicate<Dependency> has(String groupId) {
         return dep -> Objects.equals(dep.getGroupId(), groupId);
+    }
+
+    static MigrationStep lookup(String stepId) {
+        var step = StepRegistry.get(stepId);
+        if(step == null) {
+            // Return a noop step when not found
+            // to avoid inserting null in steps list
+            // (mainly for unit test robustness)
+            return new MigrationStep() {
+                
+                @Override
+                public MigrationReport run(Path projectRoot, IProgressMonitor monitor) throws CoreException {
+                    return MigrationReport.emptyReport();
+                }
+                
+                @Override
+                public boolean appliesTo(String sourceVersion) {
+                    return false;
+                }
+            };
+        }
+        return step;
+    }
+
+    static MigrationStep register(String stepId, MigrationStep migrationStep) {
+        return StepRegistry.put(stepId, migrationStep);
+    }
+
+    class StepRegistry {
+
+        private static final Map<String, MigrationStep> STEPS_REGISTRY = new HashMap<>();
+        
+        private StepRegistry() {
+            
+        }
+
+        static MigrationStep get(String stepId) {
+            return STEPS_REGISTRY.get(stepId);
+        }
+
+        static MigrationStep put(String stepId, MigrationStep migrationStep) {
+            return STEPS_REGISTRY.put(stepId, migrationStep);
+        }
     }
 }

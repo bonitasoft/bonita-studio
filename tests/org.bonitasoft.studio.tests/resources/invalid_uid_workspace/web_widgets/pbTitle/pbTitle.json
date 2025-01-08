@@ -1,0 +1,61 @@
+{
+  "id" : "pbTitle",
+  "name" : "Title",
+  "type" : "widget",
+  "custom" : false,
+  "modelVersion" : "2.4",
+  "lastUpdate" : 1736240682374,
+  "description" : "Text used to structure the page or form content",
+  "template" : "@pbTitle.tpl.html",
+  "properties" : [
+    {
+      "label" : "Interpret HTML",
+      "name" : "allowHTML",
+      "help" : "If you choose 'no', HTML code will be escaped instead of being interpreted. If you choose ‘Yes’, this could potentially lead to HTML injections attacks. Please take into account these risks.",
+      "type" : "boolean",
+      "defaultValue" : false,
+      "bond" : "constant"
+    },
+    {
+      "label" : "Text",
+      "name" : "text",
+      "caption" : "Use <span ng-non-bindable>{{dataVariable}}</span> to access data, and <a href=\"javascript:void(0);\" open-help=\"filters\" editor-mode=\"page\">filters</a> to format it (e.g. <span ng-non-bindable>{{dateVariable|uiDate}}</span>)",
+      "type" : "text",
+      "defaultValue" : "Title",
+      "bond" : "interpolation"
+    },
+    {
+      "label" : "Title level",
+      "name" : "level",
+      "type" : "choice",
+      "defaultValue" : "Level 2",
+      "choiceValues" : [
+        "Level 1",
+        "Level 2",
+        "Level 3",
+        "Level 4",
+        "Level 5",
+        "Level 6"
+      ],
+      "bond" : "constant"
+    },
+    {
+      "label" : "Alignment",
+      "name" : "alignment",
+      "type" : "choice",
+      "defaultValue" : "left",
+      "choiceValues" : [
+        "left",
+        "center",
+        "right"
+      ],
+      "bond" : "constant"
+    }
+  ],
+  "assets" : [ ],
+  "requiredModules" : [ ],
+  "webResources" : [ ],
+  "icon" : "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 50 20'><g><path fill='#fff' d='M29.6,8H33v10h3V4h-2.3c-0.1,0.9-1.4,2-4.1,2l-0.4,0.1L29.6,8z M24,11v7h3V3h-3v6h-6V3h-3v15h3v-7H24z'/></g></svg>",
+  "order" : 20,
+  "hasHelp" : false
+}
