@@ -22,10 +22,12 @@ import java.nio.file.Path;
 import java.util.List;
 
 import org.bonitasoft.studio.common.ProductVersion;
+import org.bonitasoft.studio.common.repository.Messages;
 import org.bonitasoft.studio.common.repository.core.BonitaProject;
 import org.bonitasoft.studio.common.repository.core.ProjectDescriptionBuilder;
 import org.bonitasoft.studio.common.repository.core.migration.BonitaProjectMigrator;
 import org.bonitasoft.studio.common.repository.core.migration.MigrationStep;
+import org.bonitasoft.studio.common.repository.core.migration.StepDescription;
 import org.bonitasoft.studio.common.repository.core.migration.report.MigrationReport;
 import org.eclipse.core.internal.resources.ModelObjectWriter;
 import org.eclipse.core.resources.IProjectDescription;
@@ -35,6 +37,12 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.m2e.core.internal.IMavenConstants;
 
 public class UpdateProjectDescriptionMigrationStep implements MigrationStep {
+
+    @Override
+    public StepDescription getDescription() {
+        return new StepDescription(Messages.updateProjectDescriptionMigrationTitle,
+                Messages.updateProjectDescriptionMigrationDescription);
+    }
 
     @Override
     public MigrationReport run(Path project, IProgressMonitor monitor) throws CoreException {
@@ -51,7 +59,7 @@ public class UpdateProjectDescriptionMigrationStep implements MigrationStep {
                 .havingBuilders(List.of(IMavenConstants.BUILDER_ID))
                 .build(description);
         writeDescriptor(descriptor, newParentDescription);
-        
+
         var appDescriptor = project.resolve(BonitaProject.APP_MODULE)
                 .resolve(IProjectDescription.DESCRIPTION_FILE_NAME);
         if (!Files.exists(appDescriptor)) {
@@ -77,7 +85,7 @@ public class UpdateProjectDescriptionMigrationStep implements MigrationStep {
     }
 
     @Override
-    public boolean appliesTo(String sourceVersion) {
+    public boolean appliesTo(String sourceVersion, Path projectRoot) throws CoreException {
         return ProductVersion.canBeMigrated(sourceVersion);
     }
 

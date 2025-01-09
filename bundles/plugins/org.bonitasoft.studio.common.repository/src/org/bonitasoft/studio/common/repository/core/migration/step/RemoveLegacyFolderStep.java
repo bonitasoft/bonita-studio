@@ -27,160 +27,174 @@ import java.util.stream.Collectors;
 import org.bonitasoft.studio.common.FileUtil;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
+import org.bonitasoft.studio.common.repository.Messages;
 import org.bonitasoft.studio.common.repository.core.migration.MigrationStep;
+import org.bonitasoft.studio.common.repository.core.migration.StepDescription;
 import org.bonitasoft.studio.common.repository.core.migration.report.MigrationReport;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 
 public class RemoveLegacyFolderStep implements MigrationStep {
 
-	private static final Set<FolderBackupHandler> HANDLERS = Set.of(
-			FolderBackupHandler.of(Paths.get("application_resources")),
-			FolderBackupHandler.of(Paths.get("forms")),
-			FolderBackupHandler.of(Paths.get("looknfeels")),
-			FolderBackupHandler.of(Paths.get("validators")),
-			FolderBackupHandler.of(Paths.get("src-validators")), 
-			FolderBackupHandler.of(Paths.get("simulation")),
-			FolderBackupHandler.of(Paths.get("customTypes")), 
-			FolderBackupHandler.of(Paths.get("src-customTypes")),
-			FolderBackupHandler.of(Paths.get("src-connectors")),
-			FolderBackupHandler.of(Paths.get("connectors-def")),
-			FolderBackupHandler.of(Paths.get("connectors-impl")),
-			FolderBackupHandler.of(Paths.get("src-filters"), LegacyConnectorBackupHandler.of()),
-			FolderBackupHandler.of(Paths.get("filters-impl"), LegacyConnectorBackupHandler.of()),
-			FolderBackupHandler.of(Paths.get("filters-def"), LegacyConnectorBackupHandler.of()),
-			FolderBackupHandler.of(Paths.get("app/src-connectors"), LegacyConnectorBackupHandler.of()),
-			FolderBackupHandler.of(Paths.get("app/connectors-def"), LegacyConnectorBackupHandler.of()),
-			FolderBackupHandler.of(Paths.get("app/connectors-impl"), LegacyConnectorBackupHandler.of()),
-			FolderBackupHandler.of(Paths.get("app/src-filters"), LegacyConnectorBackupHandler.of()), 
-			FolderBackupHandler.of(Paths.get("app/filters-impl"), LegacyConnectorBackupHandler.of()),
-			FolderBackupHandler.of(Paths.get("app/filters-def"), LegacyConnectorBackupHandler.of()));
+    private static final Set<FolderBackupHandler> HANDLERS = Set.of(
+            FolderBackupHandler.of(Paths.get("application_resources")),
+            FolderBackupHandler.of(Paths.get("forms")),
+            FolderBackupHandler.of(Paths.get("looknfeels")),
+            FolderBackupHandler.of(Paths.get("validators")),
+            FolderBackupHandler.of(Paths.get("src-validators")),
+            FolderBackupHandler.of(Paths.get("simulation")),
+            FolderBackupHandler.of(Paths.get("customTypes")),
+            FolderBackupHandler.of(Paths.get("src-customTypes")),
+            FolderBackupHandler.of(Paths.get("src-connectors")),
+            FolderBackupHandler.of(Paths.get("connectors-def")),
+            FolderBackupHandler.of(Paths.get("connectors-impl")),
+            FolderBackupHandler.of(Paths.get("src-filters"), LegacyConnectorBackupHandler.of()),
+            FolderBackupHandler.of(Paths.get("filters-impl"), LegacyConnectorBackupHandler.of()),
+            FolderBackupHandler.of(Paths.get("filters-def"), LegacyConnectorBackupHandler.of()),
+            FolderBackupHandler.of(Paths.get("app/src-connectors"), LegacyConnectorBackupHandler.of()),
+            FolderBackupHandler.of(Paths.get("app/connectors-def"), LegacyConnectorBackupHandler.of()),
+            FolderBackupHandler.of(Paths.get("app/connectors-impl"), LegacyConnectorBackupHandler.of()),
+            FolderBackupHandler.of(Paths.get("app/src-filters"), LegacyConnectorBackupHandler.of()),
+            FolderBackupHandler.of(Paths.get("app/filters-impl"), LegacyConnectorBackupHandler.of()),
+            FolderBackupHandler.of(Paths.get("app/filters-def"), LegacyConnectorBackupHandler.of()));
 
-	private static Set<String> legacyRepositoryNames = HANDLERS.stream()
-			.map(FolderBackupHandler::getFolder)
-			.map(folder -> folder.getFileName().toString())
-			.collect(Collectors.toSet());
+    private static Set<String> legacyRepositoryNames = HANDLERS.stream()
+            .map(FolderBackupHandler::getFolder)
+            .map(folder -> folder.getFileName().toString())
+            .collect(Collectors.toSet());
 
-	@Override
-	public MigrationReport run(Path project, IProgressMonitor monitor) throws CoreException {
-		var result = MigrationReport.emptyReport();
-		HANDLERS.stream().map(folderHandler -> folderHandler.backup(project)).forEach(report -> report.merge(result));
-		return result;
-	}
+    @Override
+    public StepDescription getDescription() {
+        return new StepDescription(Messages.removeLegacyFolderMigrationTitle,
+                Messages.removeLegacyFolderMigrationDescription);
+    }
 
-	public static Set<String> legacyRepositories() {
-		return legacyRepositoryNames;
-	}
+    @Override
+    public MigrationReport run(Path project, IProgressMonitor monitor) throws CoreException {
+        var result = MigrationReport.emptyReport();
+        HANDLERS.stream().map(folderHandler -> folderHandler.backup(project)).forEach(report -> report.merge(result));
+        return result;
+    }
 
-	@Override
-	public boolean appliesTo(String sourceVersion) {
-		return true;
-	}
+    public static Set<String> legacyRepositories() {
+        return legacyRepositoryNames;
+    }
 
-	static class FolderBackupHandler {
+    @Override
+    public boolean appliesTo(String sourceVersion, Path projectRoot) throws CoreException {
+        return HANDLERS.stream().anyMatch(handler -> handler.isHandled(projectRoot));
+    }
 
-		private Path folder;
-		private Function<Path, MigrationReport> backupHandler;
+    static class FolderBackupHandler {
 
-		static FolderBackupHandler of(Path folder) {
-			return new FolderBackupHandler(folder, NoBackupHandler.of());
-		}
-		
-		static FolderBackupHandler of(Path folder, Function<Path, MigrationReport> backupHandler) {
-			return new FolderBackupHandler(folder, backupHandler);
-		}
+        private Path folder;
+        private Function<Path, MigrationReport> backupHandler;
 
-		FolderBackupHandler(Path folder, Function<Path, MigrationReport> backupHandler) {
-			this.folder = folder;
-			this.backupHandler = backupHandler;
-		}
+        static FolderBackupHandler of(Path folder) {
+            return new FolderBackupHandler(folder, NoBackupHandler.of());
+        }
 
-		Path getFolder() {
-			return folder;
-		}
+        static FolderBackupHandler of(Path folder, Function<Path, MigrationReport> backupHandler) {
+            return new FolderBackupHandler(folder, backupHandler);
+        }
 
-		MigrationReport backup(Path projectRoot) {
-			return backupHandler.apply(projectRoot.resolve(getFolder()));
-		}
+        FolderBackupHandler(Path folder, Function<Path, MigrationReport> backupHandler) {
+            this.folder = folder;
+            this.backupHandler = backupHandler;
+        }
 
-	}
+        Path getFolder() {
+            return folder;
+        }
 
-	static class NoBackupHandler implements Function<Path, MigrationReport> {
+        MigrationReport backup(Path projectRoot) {
+            return backupHandler.apply(projectRoot.resolve(getFolder()));
+        }
 
-		static NoBackupHandler of() {
-			return new NoBackupHandler();
-		}
+        public boolean isHandled(Path projectRoot) {
+            return Files.exists(projectRoot.resolve(getFolder()));
+        }
 
-		@Override
-		public MigrationReport apply(Path folder) {
-			if (Files.exists(folder)) {
-				try {
-					FileUtil.deleteDir(folder);
-				} catch (IOException e) {
-					BonitaStudioLog.error(
-							String.format("Failed to delete folder %s during migration", folder.getFileName()),
-							CommonRepositoryPlugin.PLUGIN_ID);
-				}
-				BonitaStudioLog.info(String.format("Folder %s has been removed during migration", folder.getFileName()),
-						CommonRepositoryPlugin.PLUGIN_ID);
-			}
-			return MigrationReport.emptyReport();
-		}
-	}
-	
-	static class LegacyConnectorBackupHandler implements Function<Path, MigrationReport> {
+    }
 
-		private static final String BACKUP_FOLDER = "backup";
+    static class NoBackupHandler implements Function<Path, MigrationReport> {
 
-		static LegacyConnectorBackupHandler of() {
-			return new LegacyConnectorBackupHandler();
-		}
-		
-		private static void copyDirectory(String sourceDirectoryLocation, String destinationDirectoryLocation)
-				throws IOException {
-			try (var files = Files.walk(Paths.get(sourceDirectoryLocation))) {
-				files.forEach(source -> {
-					Path destination = Paths.get(destinationDirectoryLocation,
-							source.toString().substring(sourceDirectoryLocation.length()));
-					try {
-						Files.copy(source, destination, StandardCopyOption.REPLACE_EXISTING);
-					} catch (IOException e) {
-						throw new UncheckedIOException(e);
-					}
-				});
-			}
-		}
+        static NoBackupHandler of() {
+            return new NoBackupHandler();
+        }
 
-		@Override
-		public MigrationReport apply(Path folder) {
-			var report = MigrationReport.emptyReport();
-			if (Files.exists(folder)) {
-				var backupFolder = folder.getParent().resolve(BACKUP_FOLDER).resolve(folder.getFileName());
-				try {
-					if(!Files.exists(backupFolder)) {
-						Files.createDirectories(backupFolder);
-					}
-					copyDirectory(folder.toFile().getAbsolutePath(), backupFolder.toFile().getAbsolutePath());
-					BonitaStudioLog.info(String.format("Folder %s has been backup to %s during migration", folder.getFileName(), backupFolder.toString()),
-							CommonRepositoryPlugin.PLUGIN_ID);
-					report.removed(String.format(
-							"Legacy connector and actor filters implementations and definitions have been removed. All related files have been backup in %s folder. Only connectors and actor filters used in the project extensions are supported. Consult the connector and actor filter maven archetype documentation to migrate to the supported format.",
-							backupFolder.getParent()));
-				} catch (IOException e) {
-					throw new UncheckedIOException(e);
-				}
-				try {
-					FileUtil.deleteDir(folder);
-				} catch (IOException e) {
-					BonitaStudioLog.error(
-							String.format("Failed to delete folder %s during migration", folder.getFileName()),
-							CommonRepositoryPlugin.PLUGIN_ID);
-				}
-				BonitaStudioLog.info(String.format("Folder %s has been removed during migration", folder.getFileName()),
-						CommonRepositoryPlugin.PLUGIN_ID);
-			}
-			return report;
-		}
-	}
+        @Override
+        public MigrationReport apply(Path folder) {
+            if (Files.exists(folder)) {
+                try {
+                    FileUtil.deleteDir(folder);
+                } catch (IOException e) {
+                    BonitaStudioLog.error(
+                            String.format("Failed to delete folder %s during migration", folder.getFileName()),
+                            CommonRepositoryPlugin.PLUGIN_ID);
+                }
+                BonitaStudioLog.info(String.format("Folder %s has been removed during migration", folder.getFileName()),
+                        CommonRepositoryPlugin.PLUGIN_ID);
+            }
+            return MigrationReport.emptyReport();
+        }
+    }
+
+    static class LegacyConnectorBackupHandler implements Function<Path, MigrationReport> {
+
+        private static final String BACKUP_FOLDER = "backup";
+
+        static LegacyConnectorBackupHandler of() {
+            return new LegacyConnectorBackupHandler();
+        }
+
+        private static void copyDirectory(String sourceDirectoryLocation, String destinationDirectoryLocation)
+                throws IOException {
+            try (var files = Files.walk(Paths.get(sourceDirectoryLocation))) {
+                files.forEach(source -> {
+                    Path destination = Paths.get(destinationDirectoryLocation,
+                            source.toString().substring(sourceDirectoryLocation.length()));
+                    try {
+                        Files.copy(source, destination, StandardCopyOption.REPLACE_EXISTING);
+                    } catch (IOException e) {
+                        throw new UncheckedIOException(e);
+                    }
+                });
+            }
+        }
+
+        @Override
+        public MigrationReport apply(Path folder) {
+            var report = MigrationReport.emptyReport();
+            if (Files.exists(folder)) {
+                var backupFolder = folder.getParent().resolve(BACKUP_FOLDER).resolve(folder.getFileName());
+                try {
+                    if (!Files.exists(backupFolder)) {
+                        Files.createDirectories(backupFolder);
+                    }
+                    copyDirectory(folder.toFile().getAbsolutePath(), backupFolder.toFile().getAbsolutePath());
+                    BonitaStudioLog.info(
+                            String.format("Folder %s has been backup to %s during migration", folder.getFileName(),
+                                    backupFolder.toString()),
+                            CommonRepositoryPlugin.PLUGIN_ID);
+                    report.removed(String.format(
+                            "Legacy connector and actor filters implementations and definitions have been removed. All related files have been backup in %s folder. Only connectors and actor filters used in the project extensions are supported. Consult the connector and actor filter maven archetype documentation to migrate to the supported format.",
+                            backupFolder.getParent()));
+                } catch (IOException e) {
+                    throw new UncheckedIOException(e);
+                }
+                try {
+                    FileUtil.deleteDir(folder);
+                } catch (IOException e) {
+                    BonitaStudioLog.error(
+                            String.format("Failed to delete folder %s during migration", folder.getFileName()),
+                            CommonRepositoryPlugin.PLUGIN_ID);
+                }
+                BonitaStudioLog.info(String.format("Folder %s has been removed during migration", folder.getFileName()),
+                        CommonRepositoryPlugin.PLUGIN_ID);
+            }
+            return report;
+        }
+    }
 
 }

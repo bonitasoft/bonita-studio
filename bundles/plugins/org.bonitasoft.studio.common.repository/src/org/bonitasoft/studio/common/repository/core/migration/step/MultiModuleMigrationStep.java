@@ -26,12 +26,14 @@ import java.util.function.Consumer;
 import org.apache.maven.model.Model;
 import org.bonitasoft.studio.common.FileUtil;
 import org.bonitasoft.studio.common.ProductVersion;
+import org.bonitasoft.studio.common.repository.Messages;
 import org.bonitasoft.studio.common.repository.core.BonitaProject;
 import org.bonitasoft.studio.common.repository.core.MavenAppModuleModelBuilder;
 import org.bonitasoft.studio.common.repository.core.MavenParentProjectModelBuilder;
 import org.bonitasoft.studio.common.repository.core.maven.MavenProjectHelper;
 import org.bonitasoft.studio.common.repository.core.maven.plugin.CreateBdmModulePlugin;
 import org.bonitasoft.studio.common.repository.core.migration.MigrationStep;
+import org.bonitasoft.studio.common.repository.core.migration.StepDescription;
 import org.bonitasoft.studio.common.repository.core.migration.report.MigrationReport;
 import org.bonitasoft.studio.common.repository.core.migration.report.MigrationReportWriter;
 import org.bonitasoft.studio.common.repository.core.team.GitProject;
@@ -46,18 +48,19 @@ import org.eclipse.jgit.lib.Constants;
 import org.osgi.framework.Version;
 
 public class MultiModuleMigrationStep implements MigrationStep {
-    
+
     @Override
-    public boolean requireCleanImport() {
-        return true;
+    public StepDescription getDescription() {
+        return new StepDescription(Messages.multiModuleMigrationTitle, Messages.multiModuleMigrationDescription);
     }
 
     @Override
     public MigrationReport run(Path project, IProgressMonitor monitor) throws CoreException {
         var report = MigrationReport.emptyReport();
-        report.updated("The project layout has been changed in favor of a multi modules maven project. It means that files location inside the project have changed.  " 
-                       + "It is a technical change and will not impact the design usage in Bonita Studio."
-                       + "New maven modules and their respective `pom.xml` files are *reserved for internal Studio use*.");
+        report.updated(
+                "The project layout has been changed in favor of a multi modules maven project. It means that files location inside the project have changed.  "
+                        + "It is a technical change and will not impact the design usage in Bonita Studio."
+                        + "New maven modules and their respective `pom.xml` files are *reserved for internal Studio use*.");
         var app = project.resolve(BonitaProject.APP_MODULE);
         try {
             if (Files.isDirectory(app)) {
@@ -66,7 +69,7 @@ public class MultiModuleMigrationStep implements MigrationStep {
             Files.createDirectory(app);
             storeFolders().stream()
                     .filter(not(BonitaProject.BDM_MODULE::equals)
-                    		.and(not(BonitaProject.EXTENSIONS_MODULE::equals)))
+                            .and(not(BonitaProject.EXTENSIONS_MODULE::equals)))
                     .filter(folderName -> Files.exists(project.resolve(folderName)))
                     .forEach(moveStoreFolders(project, app));
             var migrationNotes = project.resolve(MigrationReportWriter.DEFAULT_REPORT_FILE_NAME);
@@ -82,7 +85,8 @@ public class MultiModuleMigrationStep implements MigrationStep {
             }
             var descriptor = project.resolve(IProjectDescription.DESCRIPTION_FILE_NAME);
             try (var is = Files.newInputStream(descriptor)) {
-                Files.copy(is, project.resolve(BonitaProject.APP_MODULE).resolve(IProjectDescription.DESCRIPTION_FILE_NAME));
+                Files.copy(is,
+                        project.resolve(BonitaProject.APP_MODULE).resolve(IProjectDescription.DESCRIPTION_FILE_NAME));
             }
 
             var rootModel = loadMavenModel(project);
@@ -98,9 +102,9 @@ public class MultiModuleMigrationStep implements MigrationStep {
                 plugin.execute(new NullProgressMonitor());
                 Files.deleteIfExists(bdmFolder.resolve(".artifact-descriptor.properties"));
                 report.updated("Project's Business Data Model is now build in its own maven module. "
-                             + "While it does not impact the design usage, it can now be built and deployed independently from a Studio.  "
-                             + "The BDM model dependency share the same `version` and `groupId` of the parent project. "
-                             + "It is enforced by the format of the Bonita project and must not be changed.");
+                        + "While it does not impact the design usage, it can now be built and deployed independently from a Studio.  "
+                        + "The BDM model dependency share the same `version` and `groupId` of the parent project. "
+                        + "It is enforced by the format of the Bonita project and must not be changed.");
             }
         } catch (IOException e) {
             throw new CoreException(Status.error("Failed to update project layout to multi-module.", e));
@@ -162,7 +166,7 @@ public class MultiModuleMigrationStep implements MigrationStep {
     }
 
     @Override
-    public boolean appliesTo(String sourceVersion) {
+    public boolean appliesTo(String sourceVersion, Path projectRoot) throws CoreException {
         return Version.parseVersion(sourceVersion).compareTo(new Version("8.0.0")) < 0;
     }
 }

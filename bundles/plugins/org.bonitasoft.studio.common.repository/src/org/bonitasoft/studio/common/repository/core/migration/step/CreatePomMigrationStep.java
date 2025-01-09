@@ -22,11 +22,13 @@ import java.util.Properties;
 import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Model;
 import org.bonitasoft.studio.common.RedirectURLBuilder;
+import org.bonitasoft.studio.common.repository.Messages;
 import org.bonitasoft.studio.common.repository.core.CreateBonitaProjectOperation;
 import org.bonitasoft.studio.common.repository.core.MavenProjectModelBuilder;
 import org.bonitasoft.studio.common.repository.core.maven.MavenProjectHelper;
 import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
 import org.bonitasoft.studio.common.repository.core.migration.MigrationStep;
+import org.bonitasoft.studio.common.repository.core.migration.StepDescription;
 import org.bonitasoft.studio.common.repository.core.migration.report.MigrationReport;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -34,6 +36,11 @@ import org.eclipse.core.runtime.Status;
 import org.osgi.framework.Version;
 
 public class CreatePomMigrationStep implements MigrationStep {
+
+    @Override
+    public StepDescription getDescription() {
+        return new StepDescription(Messages.createPomMigrationTitle, Messages.createPomMigrationDescription);
+    }
 
     @Override
     public MigrationReport run(Path project, IProgressMonitor monitor) throws CoreException {
@@ -91,7 +98,7 @@ public class CreatePomMigrationStep implements MigrationStep {
     }
 
     @Override
-    public boolean appliesTo(String sourceVersion) {
+    public boolean appliesTo(String sourceVersion, Path projectRoot) throws CoreException {
         return Version.parseVersion(sourceVersion).compareTo(new Version("7.13.0")) < 0;
     }
 

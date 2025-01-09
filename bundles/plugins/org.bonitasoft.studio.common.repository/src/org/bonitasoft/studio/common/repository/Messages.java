@@ -146,7 +146,44 @@ public final class Messages extends NLS {
     public static String reservedId;
 	public static String installLocalDependencies;
     public static String prepareProjectForMigration;
-
+    public static String appModuleMigrationTitle;
+    public static String appModuleMigrationDescription;
+    public static String createPomMigrationTitle;
+    public static String createPomMigrationDescription;
+    public static String removeLegacyFolderMigrationTitle;
+    public static String removeLegacyFolderMigrationDescription;
+    public static String splitGroovyAllMigrationTitle;
+    public static String splitGroovyAllMigrationDescription;
+    public static String javaDependenciesMigrationTitle;
+    public static String javaDependenciesMigrationDescription;
+    public static String bdmModelArtifactMigrationTitle;
+    public static String bdmModelArtifactMigrationDescription;
+    public static String multiModuleMigrationTitle;
+    public static String multiModuleMigrationDescription;
+    public static String gitIgnoreMigrationTitle;
+    public static String gitIgnoreMigrationDescription;
+    public static String deleteProjectSettingsMigrationTitle;
+    public static String deleteProjectSettingsMigrationDescription;
+    public static String updateProjectDescriptionMigrationTitle;
+    public static String updateProjectDescriptionMigrationDescription;
+    public static String cleanParentMigrationTitle;
+    public static String cleanParentMigrationDescription;
+    public static String extensionsModuleMigrationTitle;
+    public static String extensionsModuleMigrationDescription;
+    public static String providedGroovyScriptRemovedMigrationTitle;
+    public static String providedGroovyScriptRemovedMigrationDescription;
+    public static String bonitaProjectParentVersionMigrationTitle;
+    public static String bonitaProjectParentVersionMigrationDescription;
+    public static String bdmAssemblyConfigurationMigrationTitle;
+    public static String bdmAssemblyConfigurationMigrationDescription;
+    public static String removeFlattenPluginMigrationTitle;
+    public static String removeFlattenPluginMigrationDescription;
+    public static String java17MigrationTitle;
+    public static String java17MigrationDescription;
+    public static String reportingAppUpdateMigrationTitle;
+    public static String reportingAppUpdateMigrationDescription;
+    public static String communityToEnterpriseMigrationTitle;
+    public static String communityToEnterpriseMigrationtDescription;
 
     private Messages() {
         // Do not instantiate

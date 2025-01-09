@@ -20,7 +20,7 @@ class ProvidedGroovyScriptRemovedStepTest {
 	void appliesToBelow9Version() throws Exception {
 		var step = new ProvidedGroovyScriptRemovedStep();
 		
-		assertThat(step.appliesTo("8.0.0")).isTrue();
-		assertThat(step.appliesTo("9.0.0")).isFalse();
+		assertThat(step.appliesTo("8.0.0", null)).isTrue();
+		assertThat(step.appliesTo("9.0.0", null)).isFalse();
 	}
 }

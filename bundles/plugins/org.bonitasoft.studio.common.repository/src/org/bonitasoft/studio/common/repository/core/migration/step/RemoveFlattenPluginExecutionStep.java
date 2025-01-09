@@ -18,9 +18,11 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Objects;
 
+import org.bonitasoft.studio.common.repository.Messages;
 import org.bonitasoft.studio.common.repository.core.BonitaProject;
 import org.bonitasoft.studio.common.repository.core.maven.model.DefaultPluginVersions;
 import org.bonitasoft.studio.common.repository.core.migration.MigrationStep;
+import org.bonitasoft.studio.common.repository.core.migration.StepDescription;
 import org.bonitasoft.studio.common.repository.core.migration.report.MigrationReport;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -29,10 +31,16 @@ import org.osgi.framework.Version;
 public class RemoveFlattenPluginExecutionStep implements MigrationStep {
 
     @Override
+    public StepDescription getDescription() {
+        return new StepDescription(Messages.removeFlattenPluginMigrationTitle,
+                Messages.removeFlattenPluginMigrationDescription);
+    }
+
+    @Override
     public MigrationReport run(Path project, IProgressMonitor monitor) throws CoreException {
         var report = new MigrationReport();
         var bdmModule = project.resolve(BonitaProject.BDM_MODULE);
-        if (Files.exists(bdmModule) && Files.exists(bdmModule.resolve("pom.xml"))) {
+        if (Files.exists(bdmModule) && Files.exists(bdmModule.resolve(POM_FILE_NAME))) {
             var model = loadMavenModel(bdmModule);
             var build = model.getBuild();
             if (build.getPlugins()
@@ -46,7 +54,7 @@ public class RemoveFlattenPluginExecutionStep implements MigrationStep {
     }
 
     @Override
-    public boolean appliesTo(String sourceVersion) {
+    public boolean appliesTo(String sourceVersion, Path projectRoot) throws CoreException {
         return Version.parseVersion(sourceVersion).compareTo(new Version("8.0.0")) >= 0
                 && Version.parseVersion(sourceVersion).compareTo(new Version("9.0.0")) < 0;
     }

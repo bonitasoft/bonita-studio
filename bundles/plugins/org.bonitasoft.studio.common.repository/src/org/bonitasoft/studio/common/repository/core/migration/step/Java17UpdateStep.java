@@ -16,7 +16,9 @@ package org.bonitasoft.studio.common.repository.core.migration.step;
 
 import java.nio.file.Path;
 
+import org.bonitasoft.studio.common.repository.Messages;
 import org.bonitasoft.studio.common.repository.core.migration.MigrationStep;
+import org.bonitasoft.studio.common.repository.core.migration.StepDescription;
 import org.bonitasoft.studio.common.repository.core.migration.report.MigrationReport;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -24,16 +26,22 @@ import org.osgi.framework.Version;
 
 public class Java17UpdateStep implements MigrationStep {
 
-	@Override
-	public MigrationReport run(Path project, IProgressMonitor monitor) throws CoreException {
-		var report = new MigrationReport();
-		report.updated("Required Java version updated to `17`. Make sure that your third party dependencies are compliant with Java 17.");
-		return report;
-	}
+    @Override
+    public StepDescription getDescription() {
+        return new StepDescription(Messages.java17MigrationTitle, Messages.java17MigrationDescription);
+    }
 
-	@Override
-	public boolean appliesTo(String sourceVersion) {
-		return Version.parseVersion(sourceVersion).compareTo(new Version("10.0.0")) < 0;
-	}
+    @Override
+    public MigrationReport run(Path project, IProgressMonitor monitor) throws CoreException {
+        var report = new MigrationReport();
+        report.updated(
+                "Required Java version updated to `17`. Make sure that your third party dependencies are compliant with Java 17.");
+        return report;
+    }
+
+    @Override
+    public boolean appliesTo(String sourceVersion, Path projectRoot) throws CoreException {
+        return Version.parseVersion(sourceVersion).compareTo(new Version("10.0.0")) < 0;
+    }
 
 }

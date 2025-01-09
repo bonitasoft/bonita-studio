@@ -61,7 +61,7 @@ class UpdateProjectDescriptionMigrationStepTest {
     void stepDoesNotApplyToCurrentVersion() throws Exception {
         var step = new UpdateProjectDescriptionMigrationStep();
 
-        assertThat(step.appliesTo(ProductVersion.CURRENT_VERSION)).isFalse();
+        assertThat(step.appliesTo(ProductVersion.CURRENT_VERSION, null)).isFalse();
     }
 
     @Test
@@ -70,14 +70,14 @@ class UpdateProjectDescriptionMigrationStepTest {
         var current = new Version(ProductVersion.CURRENT_VERSION);
         var nextVersion = new Version(current.getMajor(), current.getMinor(), current.getMicro() + 1);
 
-        assertThat(step.appliesTo(nextVersion.toString())).isFalse();
+        assertThat(step.appliesTo(nextVersion.toString(), null)).isFalse();
     }
 
     @Test
     void stepAppliesToOtherVersion() throws Exception {
         var step = new UpdateProjectDescriptionMigrationStep();
 
-        assertThat(step.appliesTo("7.12.0")).isTrue();
+        assertThat(step.appliesTo("7.12.0", null)).isTrue();
     }
 
     @Test

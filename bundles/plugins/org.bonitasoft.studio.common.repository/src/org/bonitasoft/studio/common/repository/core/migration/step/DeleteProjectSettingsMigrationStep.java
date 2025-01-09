@@ -19,7 +19,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 import org.bonitasoft.studio.common.ProductVersion;
+import org.bonitasoft.studio.common.repository.Messages;
+import org.bonitasoft.studio.common.repository.core.BonitaProject;
 import org.bonitasoft.studio.common.repository.core.migration.MigrationStep;
+import org.bonitasoft.studio.common.repository.core.migration.StepDescription;
 import org.bonitasoft.studio.common.repository.core.migration.report.MigrationReport;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -31,12 +34,18 @@ import org.eclipse.core.runtime.Status;
 public class DeleteProjectSettingsMigrationStep implements MigrationStep {
 
     @Override
+    public StepDescription getDescription() {
+        return new StepDescription(Messages.deleteProjectSettingsMigrationTitle,
+                Messages.deleteProjectSettingsMigrationDescription);
+    }
+
+    @Override
     public MigrationReport run(Path project, IProgressMonitor monitor) throws CoreException {
         var report = MigrationReport.emptyReport();
         try {
-            var groovyPrefs = project.resolve("app").resolve(".settings").resolve("org.eclipse.jdt.groovy.core.prefs");
+            var groovyPrefs = groovyPrefs(project);
             Files.deleteIfExists(groovyPrefs);
-            var jdtPrefs = project.resolve("app").resolve(".settings").resolve("org.eclipse.jdt.core.prefs");
+            var jdtPrefs = jdtPrefs(project);
             Files.deleteIfExists(jdtPrefs);
         } catch (IOException e) {
             throw new CoreException(Status.error("Failed to delete project settings.", e));
@@ -44,8 +53,20 @@ public class DeleteProjectSettingsMigrationStep implements MigrationStep {
         return report;
     }
 
+    private Path jdtPrefs(Path project) {
+        return project.resolve(BonitaProject.APP_MODULE).resolve(".settings").resolve("org.eclipse.jdt.core.prefs");
+    }
+
+    private Path groovyPrefs(Path project) {
+        return project.resolve(BonitaProject.APP_MODULE).resolve(".settings")
+                .resolve("org.eclipse.jdt.groovy.core.prefs");
+    }
+
     @Override
-    public boolean appliesTo(String sourceVersion) {
+    public boolean appliesTo(String sourceVersion, Path projectRoot) throws CoreException {
+        if (!ProductVersion.sameMinorVersion(sourceVersion) && ProductVersion.canBeMigrated(sourceVersion)) {
+            return Files.exists(groovyPrefs(projectRoot)) || Files.exists(jdtPrefs(projectRoot));
+        }
         return !ProductVersion.sameMinorVersion(sourceVersion) && ProductVersion.canBeMigrated(sourceVersion);
     }
 }

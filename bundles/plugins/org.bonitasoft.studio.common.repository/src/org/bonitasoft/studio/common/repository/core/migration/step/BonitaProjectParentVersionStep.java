@@ -19,7 +19,9 @@ import java.util.Objects;
 
 import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
 import org.bonitasoft.studio.common.ProductVersion;
+import org.bonitasoft.studio.common.repository.Messages;
 import org.bonitasoft.studio.common.repository.core.migration.MigrationStep;
+import org.bonitasoft.studio.common.repository.core.migration.StepDescription;
 import org.bonitasoft.studio.common.repository.core.migration.report.MigrationReport;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -28,6 +30,12 @@ import org.eclipse.core.runtime.Status;
 import org.osgi.framework.Version;
 
 public class BonitaProjectParentVersionStep implements MigrationStep {
+
+    @Override
+    public StepDescription getDescription() {
+        return new StepDescription(Messages.bonitaProjectParentVersionMigrationTitle, String.format(
+                Messages.bonitaProjectParentVersionMigrationDescription, ProductVersion.BONITA_RUNTIME_VERSION));
+    }
 
     @Override
     public MigrationReport run(Path project, IProgressMonitor monitor) throws CoreException {
@@ -57,7 +65,7 @@ public class BonitaProjectParentVersionStep implements MigrationStep {
     }
 
     @Override
-    public boolean appliesTo(String sourceVersion) {
+    public boolean appliesTo(String sourceVersion, Path projectRoot) throws CoreException {
         return Version.parseVersion(sourceVersion).compareTo(new Version("9.0.0")) >= 0;
     }
 

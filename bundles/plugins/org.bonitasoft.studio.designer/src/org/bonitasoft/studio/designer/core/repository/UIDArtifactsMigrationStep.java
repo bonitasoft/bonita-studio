@@ -77,7 +77,7 @@ public class UIDArtifactsMigrationStep implements MigrationStep {
     }
 
     @Override
-    public boolean appliesTo(String sourceVersion) {
+    public boolean appliesTo(String sourceVersion, Path projectRoot) throws CoreException {
         // Always executed
         return true;
     }

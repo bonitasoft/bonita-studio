@@ -17,11 +17,13 @@ package org.bonitasoft.studio.common.repository.core.migration.step;
 import java.nio.file.Path;
 
 import org.apache.maven.model.Build;
+import org.bonitasoft.studio.common.repository.Messages;
 import org.bonitasoft.studio.common.repository.core.BonitaProject;
 import org.bonitasoft.studio.common.repository.core.maven.model.AppProjectConfiguration;
 import org.bonitasoft.studio.common.repository.core.maven.model.BonitaAdminAppDependency;
 import org.bonitasoft.studio.common.repository.core.maven.model.MavenPlugin;
 import org.bonitasoft.studio.common.repository.core.migration.MigrationStep;
+import org.bonitasoft.studio.common.repository.core.migration.StepDescription;
 import org.bonitasoft.studio.common.repository.core.migration.report.MigrationReport;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -29,30 +31,35 @@ import org.osgi.framework.Version;
 
 public class ApplicationModuleConfigurationStep implements MigrationStep {
 
-	@Override
-	public MigrationReport run(Path project, IProgressMonitor monitor) throws CoreException {
-		var report = new MigrationReport();
-		var appModule = project.resolve(BonitaProject.APP_MODULE);
-		var model = loadMavenModel(appModule);
+    @Override
+    public StepDescription getDescription() {
+        return new StepDescription(Messages.appModuleMigrationTitle, Messages.appModuleMigrationDescription);
+    }
 
-		var appProjectConfiguration = new AppProjectConfiguration(true);
-		model.getDependencies().add(new BonitaAdminAppDependency().toDependency());
-		var build = new Build();
-		appProjectConfiguration.getPlugins().stream()
-				.filter(plugin -> plugin.hasExecutions() || plugin.hasConfiguration()).map(MavenPlugin::toPlugin)
-				.forEach(build::addPlugin);
-		model.setBuild(build);
-		model.getProfiles().clear();
-		appProjectConfiguration.getProfiles().forEach(model::addProfile);
-		saveMavenModel(model, appModule);
-		report.updated("Application module build configuration has been updated to support Maven build.");
-		report.added("Bonita Admin Application has been added in the project extensions.");
-		return report;
-	}
+    @Override
+    public MigrationReport run(Path project, IProgressMonitor monitor) throws CoreException {
+        var report = new MigrationReport();
+        var appModule = project.resolve(BonitaProject.APP_MODULE);
+        var model = loadMavenModel(appModule);
 
-	@Override
-	public boolean appliesTo(String sourceVersion) {
-		return Version.parseVersion(sourceVersion).compareTo(new Version("9.0.0")) < 0;
-	}
+        var appProjectConfiguration = new AppProjectConfiguration(true);
+        model.getDependencies().add(new BonitaAdminAppDependency().toDependency());
+        var build = new Build();
+        appProjectConfiguration.getPlugins().stream()
+                .filter(plugin -> plugin.hasExecutions() || plugin.hasConfiguration()).map(MavenPlugin::toPlugin)
+                .forEach(build::addPlugin);
+        model.setBuild(build);
+        model.getProfiles().clear();
+        appProjectConfiguration.getProfiles().forEach(model::addProfile);
+        saveMavenModel(model, appModule);
+        report.updated("Application module build configuration has been updated to support Maven build.");
+        report.added("Bonita Admin Application has been added in the project extensions.");
+        return report;
+    }
+
+    @Override
+    public boolean appliesTo(String sourceVersion, Path projectRoot) throws CoreException {
+        return Version.parseVersion(sourceVersion).compareTo(new Version("9.0.0")) < 0;
+    }
 
 }

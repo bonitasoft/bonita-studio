@@ -22,20 +22,20 @@ import org.apache.maven.model.BuildBase;
 import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.PluginExecution;
+import org.bonitasoft.studio.common.repository.Messages;
 import org.bonitasoft.studio.common.repository.core.BonitaProject;
 import org.bonitasoft.studio.common.repository.core.maven.MavenProjectHelper;
 import org.bonitasoft.studio.common.repository.core.maven.model.BonitaCommonDependency;
 import org.bonitasoft.studio.common.repository.core.maven.model.DefaultPluginVersions;
-import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
-import org.bonitasoft.studio.common.repository.core.migration.MavenModelMigration;
 import org.bonitasoft.studio.common.repository.core.migration.MigrationStep;
+import org.bonitasoft.studio.common.repository.core.migration.StepDescription;
 import org.bonitasoft.studio.common.repository.core.migration.report.MigrationReport;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 
 import com.google.common.base.Objects;
 
-public class CommunityToEnterpriseMigrationStep implements MavenModelMigration, MigrationStep {
+public class CommunityToEnterpriseMigrationStep implements MigrationStep {
 
     private static final String DOCKER_BASE_IMAGE_REPOSITORY_PROPERTY = "docker.baseImageRepository";
     private static final String DOCKER_PROFILE_ID = "docker";
@@ -47,7 +47,20 @@ public class CommunityToEnterpriseMigrationStep implements MavenModelMigration, 
     private static final String ADMIN_APP_EE_ARTIFACT_ID = "bonita-admin-application-sp";
 
     @Override
-    public MigrationReport migrate(Model model, ProjectMetadata metadata) {
+    public StepDescription getDescription() {
+        return new StepDescription(Messages.communityToEnterpriseMigrationTitle,
+                Messages.communityToEnterpriseMigrationtDescription);
+    }
+
+    @Override
+    public MigrationReport run(Path project, IProgressMonitor monitor) throws CoreException {
+        var model = loadMavenModel(project.resolve(BonitaProject.APP_MODULE));
+        var report = migrate(model);
+        MavenProjectHelper.saveModel(project.resolve(BonitaProject.APP_MODULE).resolve(POM_FILE_NAME), model);
+        return report;
+    }
+
+    MigrationReport migrate(Model model) {
         MigrationReport report = new MigrationReport();
         BonitaCommonDependency.updgrade(model);
         model.getDependencies().stream()
@@ -67,12 +80,14 @@ public class CommunityToEnterpriseMigrationStep implements MavenModelMigration, 
         model.getProfiles().stream()
                 .filter(p -> BUNDLE_PROFILE_ID.equals(p.getId()))
                 .findFirst()
-                .flatMap(p -> findPluginExecution(p.getBuild(), DefaultPluginVersions.MAVEN_DEPENDENCY_PLUGIN, "prepare-bundle"))
+                .flatMap(p -> findPluginExecution(p.getBuild(), DefaultPluginVersions.MAVEN_DEPENDENCY_PLUGIN,
+                        "prepare-bundle"))
                 .ifPresent(exec -> exec.setId("prepare-bundle-enterprise"));
         model.getProfiles().stream()
                 .filter(p -> BUNDLE_PROFILE_ID.equals(p.getId()))
                 .findFirst()
-                .flatMap(p -> findPluginExecution(p.getBuild(), DefaultPluginVersions.MAVEN_ASSEMBLY_PLUGIN, "bundle-archive"))
+                .flatMap(p -> findPluginExecution(p.getBuild(), DefaultPluginVersions.MAVEN_ASSEMBLY_PLUGIN,
+                        "bundle-archive"))
                 .ifPresent(exec -> exec.setId("bundle-archive-enterprise"));
 
         return report;
@@ -92,27 +107,9 @@ public class CommunityToEnterpriseMigrationStep implements MavenModelMigration, 
     }
 
     @Override
-    public boolean appliesTo(Model model, ProjectMetadata metadata) {
+    public boolean appliesTo(String sourceVersion, Path projectRoot) throws CoreException {
+        var model = loadMavenModel(projectRoot.resolve(BonitaProject.APP_MODULE));
         return BonitaCommonDependency.shouldUpgade(model);
-    }
-
-    @Override
-    public MigrationReport run(Path project, IProgressMonitor monitor) throws CoreException {
-        var pomFile = project.resolve(POM_FILE_NAME).toFile();
-        var metadata = ProjectMetadata.read(pomFile);
-        var model = loadMavenModel(project.resolve(BonitaProject.APP_MODULE));
-        if (appliesTo(model, metadata)) {
-            var report = migrate(model, metadata);
-            MavenProjectHelper.saveModel(project.resolve(BonitaProject.APP_MODULE).resolve(POM_FILE_NAME), model);
-            return report;
-        }
-
-        return MigrationReport.emptyReport();
-    }
-
-    @Override
-    public boolean appliesTo(String sourceVersion) {
-        return true;
     }
 
 }

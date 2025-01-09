@@ -16,6 +16,7 @@ import java.util.stream.Stream;
 
 import org.bonitasoft.studio.common.FileUtil;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.repository.Messages;
 import org.bonitasoft.studio.common.repository.core.FileInputStreamSupplier;
 import org.bonitasoft.studio.common.repository.core.InputStreamSupplier;
 import org.bonitasoft.studio.common.repository.core.maven.DefinitionUsageOperation;
@@ -26,6 +27,7 @@ import org.bonitasoft.studio.common.repository.core.maven.migration.ProjectDepen
 import org.bonitasoft.studio.common.repository.core.maven.migration.model.DependencyLookup;
 import org.bonitasoft.studio.common.repository.core.maven.migration.model.DependencyLookup.Status;
 import org.bonitasoft.studio.common.repository.core.migration.MigrationStep;
+import org.bonitasoft.studio.common.repository.core.migration.StepDescription;
 import org.bonitasoft.studio.common.repository.core.migration.dependencies.operation.DependenciesUpdateOperationFactory;
 import org.bonitasoft.studio.common.repository.core.migration.report.MigrationReport;
 import org.bonitasoft.studio.common.repository.store.LocalDependenciesStore;
@@ -41,6 +43,12 @@ public class JavaDependenciesMigrationStep implements MigrationStep {
 
     public JavaDependenciesMigrationStep(DependenciesUpdateOperationFactory dependenciesUpdateOperationFactory) {
         this.dependenciesUpdateOperationFactory = dependenciesUpdateOperationFactory;
+    }
+
+    @Override
+    public StepDescription getDescription() {
+        return new StepDescription(Messages.javaDependenciesMigrationTitle,
+                Messages.javaDependenciesMigrationDescription);
     }
 
     @Override
@@ -61,7 +69,8 @@ public class JavaDependenciesMigrationStep implements MigrationStep {
                     .filter(DependencyLookup::isSelected)
                     .collect(Collectors.toSet());
 
-            var processConfigurationUpdateOperation = dependenciesUpdateOperationFactory.createDependencyUpdateOperation();
+            var processConfigurationUpdateOperation = dependenciesUpdateOperationFactory
+                    .createDependencyUpdateOperation();
             for (var dl : dependenciesToInstall) {
                 try {
                     localDependencyStore.install(dl);
@@ -93,7 +102,8 @@ public class JavaDependenciesMigrationStep implements MigrationStep {
                     .forEach(processConfigurationUpdateOperation::addJarRemovedChange);
 
             report.addPostMigrationOperation(processConfigurationUpdateOperation);
-            report.addPostMigrationOperation(dependenciesUpdateOperationFactory.createConfigurationSynchronizationOperation());
+            report.addPostMigrationOperation(
+                    dependenciesUpdateOperationFactory.createConfigurationSynchronizationOperation());
 
             var libFolder = project.resolve("lib");
             if (Files.exists(libFolder)) {
@@ -168,7 +178,7 @@ public class JavaDependenciesMigrationStep implements MigrationStep {
     }
 
     private List<InputStreamSupplier> createJarInputStreamSuppliers(Path libFolder) throws CoreException {
-        return  Files.exists(libFolder) ? Stream.of(libFolder.toFile().listFiles())
+        return Files.exists(libFolder) ? Stream.of(libFolder.toFile().listFiles())
                 .filter(File.class::isInstance)
                 .map(File.class::cast)
                 .filter(file -> file.getName().toLowerCase().endsWith(".jar"))
@@ -177,7 +187,7 @@ public class JavaDependenciesMigrationStep implements MigrationStep {
     }
 
     private Set<String> definitionUsageAnalysis(Path project, IProgressMonitor monitor)
-            throws CoreException, InvocationTargetException, InterruptedException {
+            throws InvocationTargetException, InterruptedException {
         var diagrams = project.resolve("diagrams");
         if (!Files.exists(diagrams)) {
             return Set.of();
@@ -194,7 +204,7 @@ public class JavaDependenciesMigrationStep implements MigrationStep {
     }
 
     private Set<String> dependencyUsageAnalysis(Path project, IProgressMonitor monitor)
-            throws CoreException, InvocationTargetException, InterruptedException {
+            throws InvocationTargetException, InterruptedException {
         var diagrams = project.resolve("diagrams");
         var processConfiguration = project.resolve("process_configurations");
         var connectorsImplConfiguration = project.resolve("connectors-impl");
@@ -211,8 +221,7 @@ public class JavaDependenciesMigrationStep implements MigrationStep {
         return dependencyUsageOperation.getUsedDependencies();
     }
 
-    private void collectFileCandidates(Path folder, String fileExtension, List<InputStreamSupplier> candidates)
-            throws CoreException {
+    private void collectFileCandidates(Path folder, String fileExtension, List<InputStreamSupplier> candidates) {
         if (Files.exists(folder)) {
             Stream.of(folder.toFile().listFiles())
                     .filter(File.class::isInstance)
@@ -224,7 +233,7 @@ public class JavaDependenciesMigrationStep implements MigrationStep {
     }
 
     @Override
-    public boolean appliesTo(String sourceVersion) {
+    public boolean appliesTo(String sourceVersion, Path projectRoot) throws CoreException {
         return Version.parseVersion(sourceVersion).compareTo(new Version("7.13.0")) < 0;
     }
 

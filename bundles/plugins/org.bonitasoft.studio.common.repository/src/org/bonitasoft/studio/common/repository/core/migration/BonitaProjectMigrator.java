@@ -90,12 +90,12 @@ public class BonitaProjectMigrator {
         var sourceVersion = readBonitaVersion();
         var report = new MigrationReport();
         for (var step : STEPS) {
-            if (Strings.hasText(sourceVersion) && step.appliesTo(sourceVersion)) {
+            if (Strings.hasText(sourceVersion) && step.appliesTo(sourceVersion, project)) {
                 step.run(project, monitor).merge(report);
             }
         }
         for (var postMigrationStep : POST_STEPS) {
-            if (Strings.hasText(sourceVersion) && postMigrationStep.appliesTo(sourceVersion)) {
+            if (Strings.hasText(sourceVersion) && postMigrationStep.appliesTo(sourceVersion, project)) {
                 postMigrationStep.run(project, monitor).merge(report);
             }
         }
@@ -117,13 +117,6 @@ public class BonitaProjectMigrator {
                     Status.error(String.format("%s is not a valid Bonita Project descriptor.", projectDescriptor)));
         }
         return version;
-    }
-
-    public boolean requireCleanImport() throws CoreException {
-        var sourceVersion = readBonitaVersion();
-        return STEPS.stream()
-                .filter(step -> step.appliesTo(sourceVersion))
-                .anyMatch(MigrationStep::requireCleanImport);
     }
 
     public static IProjectDescription readDescriptor(Path projectDescriptor) throws CoreException {

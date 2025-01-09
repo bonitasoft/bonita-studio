@@ -26,10 +26,12 @@ import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Model;
 import org.bonitasoft.studio.common.FileUtil;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.repository.Messages;
 import org.bonitasoft.studio.common.repository.core.BonitaProject;
 import org.bonitasoft.studio.common.repository.core.maven.MavenProjectHelper;
 import org.bonitasoft.studio.common.repository.core.maven.plugin.CreateExtensionsModulePlugin;
 import org.bonitasoft.studio.common.repository.core.migration.MigrationStep;
+import org.bonitasoft.studio.common.repository.core.migration.StepDescription;
 import org.bonitasoft.studio.common.repository.core.migration.report.MigrationReport;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -40,8 +42,9 @@ import org.osgi.framework.Version;
 public class ExtensionsModuleMigrationStep implements MigrationStep {
 
     @Override
-    public boolean requireCleanImport() {
-        return true;
+    public StepDescription getDescription() {
+        return new StepDescription(Messages.extensionsModuleMigrationTitle,
+                Messages.extensionsModuleMigrationDescription);
     }
 
     @Override
@@ -134,7 +137,7 @@ public class ExtensionsModuleMigrationStep implements MigrationStep {
     }
 
     @Override
-    public boolean appliesTo(String sourceVersion) {
-        return Version.parseVersion(sourceVersion).compareTo(new Version("8.1.0")) < 0;
+    public boolean appliesTo(String sourceVersion, Path projectRoot) throws CoreException {
+        return Version.parseVersion(sourceVersion).compareTo(new Version("9.0.0")) < 0;
     }
 }

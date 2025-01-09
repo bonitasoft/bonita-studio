@@ -33,18 +33,10 @@ public interface MigrationStep {
 
     MigrationReport run(Path projectRoot, IProgressMonitor monitor) throws CoreException;
 
-    boolean appliesTo(String sourceVersion);
-
-    default boolean requireCleanImport() {
-        return false;
-    }
+    boolean appliesTo(String sourceVersion, Path projectRoot) throws CoreException;
 
     default StepDescription getDescription() {
         return new StepDescription("Migration setp", "");
-    }
-
-    default void checkPrerequisites(Path projectRoot) throws StepPrerequisiteException {
-
     }
 
     default Model loadMavenModel(Path project) throws CoreException {
@@ -84,7 +76,7 @@ public interface MigrationStep {
                 }
                 
                 @Override
-                public boolean appliesTo(String sourceVersion) {
+                public boolean appliesTo(String sourceVersion, Path project) throws CoreException {
                     return false;
                 }
             };

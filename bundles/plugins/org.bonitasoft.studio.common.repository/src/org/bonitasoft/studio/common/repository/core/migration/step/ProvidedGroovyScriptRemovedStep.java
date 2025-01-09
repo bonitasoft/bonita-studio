@@ -16,7 +16,9 @@ package org.bonitasoft.studio.common.repository.core.migration.step;
 
 import java.nio.file.Path;
 
+import org.bonitasoft.studio.common.repository.Messages;
 import org.bonitasoft.studio.common.repository.core.migration.MigrationStep;
+import org.bonitasoft.studio.common.repository.core.migration.StepDescription;
 import org.bonitasoft.studio.common.repository.core.migration.report.MigrationReport;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -24,18 +26,23 @@ import org.osgi.framework.Version;
 
 public class ProvidedGroovyScriptRemovedStep implements MigrationStep {
 
+    @Override
+    public StepDescription getDescription() {
+        return new StepDescription(Messages.providedGroovyScriptRemovedMigrationTitle,
+                Messages.providedGroovyScriptRemovedMigrationDescription);
+    }
 
-	@Override
-	public MigrationReport run(Path project, IProgressMonitor monitor) throws CoreException {
-		var result = MigrationReport.emptyReport();
-		result.removed("Deprecated provided groovy classes `BonitaUsers`, `BonitaSql`, `BonitaXML` and `BonitaTypes` have been removed.");
-		return result;
-	}
+    @Override
+    public MigrationReport run(Path project, IProgressMonitor monitor) throws CoreException {
+        var result = MigrationReport.emptyReport();
+        result.removed(
+                "Deprecated provided groovy classes `BonitaUsers`, `BonitaSql`, `BonitaXML` and `BonitaTypes` have been removed.");
+        return result;
+    }
 
-	
-	@Override
-	public boolean appliesTo(String sourceVersion) {
-		return Version.parseVersion(sourceVersion).compareTo(new Version("9.0.0")) < 0;
-	}
+    @Override
+    public boolean appliesTo(String sourceVersion, Path projectRoot) throws CoreException {
+        return Version.parseVersion(sourceVersion).compareTo(new Version("9.0.0")) < 0;
+    }
 
 }

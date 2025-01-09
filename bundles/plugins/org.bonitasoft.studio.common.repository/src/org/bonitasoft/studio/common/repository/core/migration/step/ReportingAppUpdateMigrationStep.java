@@ -20,9 +20,11 @@ import java.util.function.Predicate;
 
 import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Model;
+import org.bonitasoft.studio.common.repository.Messages;
 import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
 import org.bonitasoft.studio.common.repository.core.migration.MavenModelMigration;
 import org.bonitasoft.studio.common.repository.core.migration.MigrationStep;
+import org.bonitasoft.studio.common.repository.core.migration.StepDescription;
 import org.bonitasoft.studio.common.repository.core.migration.report.MigrationReport;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -36,7 +38,13 @@ public class ReportingAppUpdateMigrationStep implements MigrationStep, MavenMode
     public static final String COMPATIBLE_VERSION = "2.0.0";
 
     @Override
-    public boolean appliesTo(String sourceVersion) {
+    public StepDescription getDescription() {
+        return new StepDescription(Messages.reportingAppUpdateMigrationTitle,
+                Messages.reportingAppUpdateMigrationDescription);
+    }
+
+    @Override
+    public boolean appliesTo(String sourceVersion, Path projectRoot) throws CoreException {
         return Version.parseVersion(sourceVersion).compareTo(new Version("10.2.0")) < 0;
     }
 

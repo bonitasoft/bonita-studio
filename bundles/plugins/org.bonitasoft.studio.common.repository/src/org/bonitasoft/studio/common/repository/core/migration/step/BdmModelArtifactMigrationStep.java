@@ -21,11 +21,13 @@ import java.util.function.Predicate;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Model;
+import org.bonitasoft.studio.common.repository.Messages;
 import org.bonitasoft.studio.common.repository.core.maven.MavenProjectHelper;
 import org.bonitasoft.studio.common.repository.core.maven.model.GAV;
 import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
 import org.bonitasoft.studio.common.repository.core.migration.MavenModelMigration;
 import org.bonitasoft.studio.common.repository.core.migration.MigrationStep;
+import org.bonitasoft.studio.common.repository.core.migration.StepDescription;
 import org.bonitasoft.studio.common.repository.core.migration.report.MigrationReport;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -46,6 +48,12 @@ public class BdmModelArtifactMigrationStep implements MavenModelMigration, Migra
 
     public BdmModelArtifactMigrationStep() {
         this(false);
+    }
+
+    @Override
+    public StepDescription getDescription() {
+        return new StepDescription(Messages.bdmModelArtifactMigrationTitle,
+                Messages.bdmModelArtifactMigrationDescription);
     }
 
     @Override
@@ -89,12 +97,12 @@ public class BdmModelArtifactMigrationStep implements MavenModelMigration, Migra
     private VersionResolver versionResolver(Model model) {
         return dependency -> {
             String versionValue = dependency.getVersion();
-            if(versionValue != null 
+            if (versionValue != null
                     && versionValue.startsWith("${")
-                    && versionValue.endsWith("}")){
-                var property = versionValue.substring(2, versionValue.length()-1);
+                    && versionValue.endsWith("}")) {
+                var property = versionValue.substring(2, versionValue.length() - 1);
                 var versionFromProperty = model.getProperties().getProperty(property);
-                if( versionFromProperty != null ) {
+                if (versionFromProperty != null) {
                     return versionFromProperty;
                 }
             }
@@ -179,7 +187,7 @@ public class BdmModelArtifactMigrationStep implements MavenModelMigration, Migra
     }
 
     @Override
-    public boolean appliesTo(String sourceVersion) {
+    public boolean appliesTo(String sourceVersion, Path projectRoot) throws CoreException {
         return Version.parseVersion(sourceVersion).compareTo(new Version("8.0.0")) < 0;
     }
 
@@ -206,11 +214,11 @@ public class BdmModelArtifactMigrationStep implements MavenModelMigration, Migra
         }
 
     }
-    
+
     @FunctionalInterface
     static interface VersionResolver {
-        
+
         String resolve(Dependency dependency);
-        
+
     }
 }

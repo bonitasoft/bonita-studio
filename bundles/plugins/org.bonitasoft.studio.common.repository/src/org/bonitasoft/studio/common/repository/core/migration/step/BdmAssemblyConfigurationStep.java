@@ -22,8 +22,10 @@ import org.apache.maven.artifact.Artifact;
 import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Plugin;
 import org.apache.maven.model.PluginExecution;
+import org.bonitasoft.studio.common.repository.Messages;
 import org.bonitasoft.studio.common.repository.core.BonitaProject;
 import org.bonitasoft.studio.common.repository.core.migration.MigrationStep;
+import org.bonitasoft.studio.common.repository.core.migration.StepDescription;
 import org.bonitasoft.studio.common.repository.core.migration.report.MigrationReport;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -31,53 +33,59 @@ import org.osgi.framework.Version;
 
 public class BdmAssemblyConfigurationStep implements MigrationStep {
 
-	@Override
-	public MigrationReport run(Path project, IProgressMonitor monitor) throws CoreException {
-		var report = new MigrationReport();
-		var bdmModelModule = project.resolve(BonitaProject.BDM_MODULE).resolve("model");
-		if (Files.exists(bdmModelModule)) {
-			var model = loadMavenModel(bdmModelModule);
-			var build = model.getBuild();
-			build.addPlugin(assemblyPlugin());
-			saveMavenModel(model, bdmModelModule);
-			report.updated("Bdm model module build configuration has been updated to support Maven build.");
-		}
-		var bdmDaoClientModule = project.resolve(BonitaProject.BDM_MODULE).resolve("dao-client");
-		if (Files.exists(bdmDaoClientModule)) {
-			var model = loadMavenModel(bdmDaoClientModule);
-			var dependencies = model.getDependencies();
-			var dependency = javaxPersistenceDependency();
-			dependencies.add(dependency);
-			saveMavenModel(model, bdmDaoClientModule);
-			report.added(String.format("`%s:%s` provided dependency has been added to the BDM dao-client module.", 
-					dependency.getGroupId(),
-					dependency.getArtifactId()));
-		}
-		return report;
-	}
+    @Override
+    public StepDescription getDescription() {
+        return new StepDescription(Messages.bdmAssemblyConfigurationMigrationTitle,
+                Messages.bdmAssemblyConfigurationMigrationDescription);
+    }
 
-	private Dependency javaxPersistenceDependency() {
-		var dependency = new Dependency();
-		dependency.setGroupId("javax.persistence");
-		dependency.setArtifactId("javax.persistence-api");
-		dependency.setScope(Artifact.SCOPE_PROVIDED);
-		return dependency;
-	}
+    @Override
+    public MigrationReport run(Path project, IProgressMonitor monitor) throws CoreException {
+        var report = new MigrationReport();
+        var bdmModelModule = project.resolve(BonitaProject.BDM_MODULE).resolve("model");
+        if (Files.exists(bdmModelModule)) {
+            var model = loadMavenModel(bdmModelModule);
+            var build = model.getBuild();
+            build.addPlugin(assemblyPlugin());
+            saveMavenModel(model, bdmModelModule);
+            report.updated("Bdm model module build configuration has been updated to support Maven build.");
+        }
+        var bdmDaoClientModule = project.resolve(BonitaProject.BDM_MODULE).resolve("dao-client");
+        if (Files.exists(bdmDaoClientModule)) {
+            var model = loadMavenModel(bdmDaoClientModule);
+            var dependencies = model.getDependencies();
+            var dependency = javaxPersistenceDependency();
+            dependencies.add(dependency);
+            saveMavenModel(model, bdmDaoClientModule);
+            report.added(String.format("`%s:%s` provided dependency has been added to the BDM dao-client module.",
+                    dependency.getGroupId(),
+                    dependency.getArtifactId()));
+        }
+        return report;
+    }
 
-	private Plugin assemblyPlugin() {
-		var plugin = new Plugin();
-		plugin.setArtifactId("maven-assembly-plugin");
-		var execution = new PluginExecution();
-		execution.setId("bdm-descriptor-archive");
-		execution.setGoals(List.of("single"));
-		plugin.addExecution(execution);
-		return plugin;
-	}
+    private Dependency javaxPersistenceDependency() {
+        var dependency = new Dependency();
+        dependency.setGroupId("javax.persistence");
+        dependency.setArtifactId("javax.persistence-api");
+        dependency.setScope(Artifact.SCOPE_PROVIDED);
+        return dependency;
+    }
 
-	@Override
-	public boolean appliesTo(String sourceVersion) {
-		return Version.parseVersion(sourceVersion).compareTo(new Version("8.0.0")) >= 0
-				&& Version.parseVersion(sourceVersion).compareTo(new Version("9.0.0")) < 0;
-	}
+    private Plugin assemblyPlugin() {
+        var plugin = new Plugin();
+        plugin.setArtifactId("maven-assembly-plugin");
+        var execution = new PluginExecution();
+        execution.setId("bdm-descriptor-archive");
+        execution.setGoals(List.of("single"));
+        plugin.addExecution(execution);
+        return plugin;
+    }
+
+    @Override
+    public boolean appliesTo(String sourceVersion, Path projectRoot) throws CoreException {
+        return Version.parseVersion(sourceVersion).compareTo(new Version("8.0.0")) >= 0
+                && Version.parseVersion(sourceVersion).compareTo(new Version("9.0.0")) < 0;
+    }
 
 }
