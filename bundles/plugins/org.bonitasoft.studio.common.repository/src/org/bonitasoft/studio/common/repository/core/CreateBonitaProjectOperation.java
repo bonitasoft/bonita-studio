@@ -27,6 +27,7 @@ import java.util.Set;
 import org.apache.maven.model.Model;
 import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.Strings;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.BonitaProjectNature;
 import org.bonitasoft.studio.common.repository.core.maven.BonitaProjectBuilder;
 import org.bonitasoft.studio.common.repository.core.maven.MavenProjectHelper;
@@ -167,6 +168,7 @@ public class CreateBonitaProjectOperation implements IWorkspaceRunnable {
         }
         try {
             Files.copy(pomFile, backupFile);
+            BonitaStudioLog.info("Existing pom.xml has been backed up to " + backupFileName);
         } catch (IOException e) {
             throw new CoreException(Status.error("Failed to backup existing pom.xml", e));
         }

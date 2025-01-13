@@ -38,6 +38,7 @@ public class ApplicationModuleConfigurationStep implements MigrationStep {
 
     @Override
     public MigrationReport run(Path project, IProgressMonitor monitor) throws CoreException {
+        monitor.subTask(Messages.appModuleMigrationTitle);
         var report = new MigrationReport();
         var appModule = project.resolve(BonitaProject.APP_MODULE);
         var model = loadMavenModel(appModule);
@@ -58,7 +59,7 @@ public class ApplicationModuleConfigurationStep implements MigrationStep {
     }
 
     @Override
-    public boolean appliesTo(String sourceVersion, Path projectRoot) throws CoreException {
+    public boolean appliesToVersion(String sourceVersion) {
         return Version.parseVersion(sourceVersion).compareTo(new Version("9.0.0")) < 0;
     }
 

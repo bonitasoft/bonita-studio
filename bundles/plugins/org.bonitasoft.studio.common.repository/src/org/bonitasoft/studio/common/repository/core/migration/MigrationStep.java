@@ -33,7 +33,25 @@ public interface MigrationStep {
 
     MigrationReport run(Path projectRoot, IProgressMonitor monitor) throws CoreException;
 
-    boolean appliesTo(String sourceVersion, Path projectRoot) throws CoreException;
+    /**
+     * Wether this {@link MigrationStep} should be executed for a given source version of Bonita
+     * @param sourceVersion The source version of the project to migrate
+     * @return true if this MigrationStep must be executed
+     * @throws IllegalArgumentException When the sourceVersion is invalid
+     */
+    default boolean appliesToVersion(String sourceVersion) throws IllegalArgumentException {
+        return true;
+    }
+    
+    /**
+     *  Wether this {@link MigrationStep} should be executed depending on the project content
+     * @param projectRoot The root path of the project to migrate
+     * @return true if this MigrationStep must be executed
+     * @throws CoreException When a prerequisite to execute this step is not met (e.g: a required file is missing)
+     */
+    default boolean appliesToProject(Path projectRoot) throws CoreException {
+        return true;
+    }
 
     default StepDescription getDescription() {
         return new StepDescription("Migration setp", "");
@@ -74,11 +92,7 @@ public interface MigrationStep {
                 public MigrationReport run(Path projectRoot, IProgressMonitor monitor) throws CoreException {
                     return MigrationReport.emptyReport();
                 }
-                
-                @Override
-                public boolean appliesTo(String sourceVersion, Path project) throws CoreException {
-                    return false;
-                }
+               
             };
         }
         return step;

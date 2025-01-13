@@ -16,6 +16,7 @@ package org.bonitasoft.studio.common.repository.core.migration.step;
 
 import java.nio.file.Path;
 
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.Messages;
 import org.bonitasoft.studio.common.repository.core.maven.model.DefaultPluginVersions;
 import org.bonitasoft.studio.common.repository.core.maven.model.MavenDependency;
@@ -36,6 +37,7 @@ public class SplitGroovyAllIntoModulesStep implements MigrationStep {
 
     @Override
     public MigrationReport run(Path project, IProgressMonitor monitor) throws CoreException {
+        monitor.subTask(Messages.splitGroovyAllMigrationTitle);
         var model = loadMavenModel(project);
 
         if (model.getDependencies().removeIf(has(DefaultPluginVersions.CODEHAUS_GROOVY_GROUPID, "groovy-all"))) {
@@ -46,18 +48,21 @@ public class SplitGroovyAllIntoModulesStep implements MigrationStep {
                     .forEach(model.getDependencies()::add);
 
             saveMavenModel(model, project);
+            BonitaStudioLog.info("groovy-all artifact dependency has been replaced with Groovy module's artifact");
         }
         return MigrationReport.emptyReport();
     }
 
     @Override
-    public boolean appliesTo(String sourceVersion, Path projectRoot) throws CoreException {
-        if (Version.parseVersion(sourceVersion).compareTo(new Version("7.13.0")) >= 0) {
-            var model = loadMavenModel(projectRoot);
-            return model.getDependencies().stream()
-                    .anyMatch(has(DefaultPluginVersions.CODEHAUS_GROOVY_GROUPID, "groovy-all"));
-        }
-        return false;
+    public boolean appliesToVersion(String sourceVersion) {
+        return Version.parseVersion(sourceVersion).compareTo(new Version("7.13.0")) >= 0;
+    }
+
+    @Override
+    public boolean appliesToProject(Path projectRoot) throws CoreException {
+        var model = loadMavenModel(projectRoot);
+        return model.getDependencies().stream()
+                .anyMatch(has(DefaultPluginVersions.CODEHAUS_GROOVY_GROUPID, "groovy-all"));
     }
 
 }

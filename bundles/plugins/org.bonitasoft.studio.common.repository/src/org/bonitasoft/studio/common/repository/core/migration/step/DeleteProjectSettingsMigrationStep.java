@@ -41,6 +41,7 @@ public class DeleteProjectSettingsMigrationStep implements MigrationStep {
 
     @Override
     public MigrationReport run(Path project, IProgressMonitor monitor) throws CoreException {
+        monitor.subTask(Messages.deleteProjectSettingsMigrationTitle);
         var report = MigrationReport.emptyReport();
         try {
             var groovyPrefs = groovyPrefs(project);
@@ -63,10 +64,12 @@ public class DeleteProjectSettingsMigrationStep implements MigrationStep {
     }
 
     @Override
-    public boolean appliesTo(String sourceVersion, Path projectRoot) throws CoreException {
-        if (!ProductVersion.sameMinorVersion(sourceVersion) && ProductVersion.canBeMigrated(sourceVersion)) {
-            return Files.exists(groovyPrefs(projectRoot)) || Files.exists(jdtPrefs(projectRoot));
-        }
+    public boolean appliesToVersion(String sourceVersion) {
         return !ProductVersion.sameMinorVersion(sourceVersion) && ProductVersion.canBeMigrated(sourceVersion);
+    }
+
+    @Override
+    public boolean appliesToProject(Path projectRoot) throws CoreException {
+        return Files.exists(groovyPrefs(projectRoot)) || Files.exists(jdtPrefs(projectRoot));
     }
 }

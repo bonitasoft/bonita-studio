@@ -22,6 +22,7 @@ import java.util.Properties;
 import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Model;
 import org.bonitasoft.studio.common.RedirectURLBuilder;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.Messages;
 import org.bonitasoft.studio.common.repository.core.CreateBonitaProjectOperation;
 import org.bonitasoft.studio.common.repository.core.MavenProjectModelBuilder;
@@ -44,6 +45,7 @@ public class CreatePomMigrationStep implements MigrationStep {
 
     @Override
     public MigrationReport run(Path project, IProgressMonitor monitor) throws CoreException {
+        monitor.subTask(Messages.createPomMigrationTitle);
         var pomFile = project.resolve(POM_FILE_NAME);
         var report = new MigrationReport();
         ProjectMetadata metadata = null;
@@ -57,6 +59,7 @@ public class CreatePomMigrationStep implements MigrationStep {
             metadata.setName(name);
             metadata.setArtifactId(ProjectMetadata.toArtifactId(name));
         }
+        BonitaStudioLog.info(String.format("Creating a pom.xml with coordinates %s", metadata));
         var model = createDefaultPomFile(project, metadata);
         report.updated("Groovy version has been updated from `2.4.x` to `3.0.x`");
         report.updated(
@@ -84,6 +87,7 @@ public class CreatePomMigrationStep implements MigrationStep {
             bdmDependency.setScope("provided");
             model.getDependencies().add(bdmDependency);
             MavenProjectHelper.saveModel(project.resolve(POM_FILE_NAME), model);
+            BonitaStudioLog.info(String.format("BDM dependency %s has been added to pom.xml", bdmDependency));
         }
     }
 
@@ -98,7 +102,7 @@ public class CreatePomMigrationStep implements MigrationStep {
     }
 
     @Override
-    public boolean appliesTo(String sourceVersion, Path projectRoot) throws CoreException {
+    public boolean appliesToVersion(String sourceVersion) {
         return Version.parseVersion(sourceVersion).compareTo(new Version("7.13.0")) < 0;
     }
 

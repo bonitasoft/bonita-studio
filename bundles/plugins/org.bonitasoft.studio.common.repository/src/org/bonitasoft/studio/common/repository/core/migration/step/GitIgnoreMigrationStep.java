@@ -48,6 +48,7 @@ public class GitIgnoreMigrationStep implements MigrationStep {
 
     @Override
     public MigrationReport run(Path project, IProgressMonitor monitor) throws CoreException {
+        monitor.subTask(Messages.gitIgnoreMigrationTitle);
         var report = MigrationReport.emptyReport();
         try {
             var parentEntries = updateGitIgnore(project, report, project.resolve(Constants.GITIGNORE_FILENAME),
@@ -133,8 +134,4 @@ public class GitIgnoreMigrationStep implements MigrationStep {
         }
     }
 
-    @Override
-    public boolean appliesTo(String sourceVersion, Path projectRoot) throws CoreException {
-        return true;
-    }
 }

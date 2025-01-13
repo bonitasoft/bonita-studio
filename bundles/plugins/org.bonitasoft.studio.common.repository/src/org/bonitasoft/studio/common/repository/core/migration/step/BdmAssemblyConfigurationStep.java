@@ -41,6 +41,7 @@ public class BdmAssemblyConfigurationStep implements MigrationStep {
 
     @Override
     public MigrationReport run(Path project, IProgressMonitor monitor) throws CoreException {
+        monitor.subTask(Messages.bdmAssemblyConfigurationMigrationTitle);
         var report = new MigrationReport();
         var bdmModelModule = project.resolve(BonitaProject.BDM_MODULE).resolve("model");
         if (Files.exists(bdmModelModule)) {
@@ -83,7 +84,7 @@ public class BdmAssemblyConfigurationStep implements MigrationStep {
     }
 
     @Override
-    public boolean appliesTo(String sourceVersion, Path projectRoot) throws CoreException {
+    public boolean appliesToVersion(String sourceVersion) {
         return Version.parseVersion(sourceVersion).compareTo(new Version("8.0.0")) >= 0
                 && Version.parseVersion(sourceVersion).compareTo(new Version("9.0.0")) < 0;
     }

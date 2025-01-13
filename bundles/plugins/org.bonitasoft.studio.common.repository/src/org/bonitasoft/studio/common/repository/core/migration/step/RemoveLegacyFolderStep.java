@@ -71,6 +71,7 @@ public class RemoveLegacyFolderStep implements MigrationStep {
 
     @Override
     public MigrationReport run(Path project, IProgressMonitor monitor) throws CoreException {
+        monitor.subTask(Messages.removeLegacyFolderMigrationTitle);
         var result = MigrationReport.emptyReport();
         HANDLERS.stream().map(folderHandler -> folderHandler.backup(project)).forEach(report -> report.merge(result));
         return result;
@@ -81,7 +82,7 @@ public class RemoveLegacyFolderStep implements MigrationStep {
     }
 
     @Override
-    public boolean appliesTo(String sourceVersion, Path projectRoot) throws CoreException {
+    public boolean appliesToProject(Path projectRoot) throws CoreException {
         return HANDLERS.stream().anyMatch(handler -> handler.isHandled(projectRoot));
     }
 

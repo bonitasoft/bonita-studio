@@ -17,9 +17,11 @@ package org.bonitasoft.studio.common.repository.core.migration;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.bonitasoft.studio.common.Strings;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.Messages;
 import org.bonitasoft.studio.common.repository.core.migration.dependencies.operation.DependenciesUpdateOperationFactory;
 import org.bonitasoft.studio.common.repository.core.migration.report.MigrationReport;
@@ -48,9 +50,12 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.SubMonitor;
 
 public class BonitaProjectMigrator {
 
+    // Becareful to keep a relevant step order in the list
+    // Some steps can depends on previous steps execution
     private static final List<MigrationStep> STEPS = List.of(
             new CreatePomMigrationStep(),
             new RemoveLegacyFolderStep(),
@@ -71,6 +76,9 @@ public class BonitaProjectMigrator {
             new Java17UpdateStep(),
             new ReportingAppUpdateMigrationStep());
 
+    // Post migration steps are steps that must be run after
+    // all previous steps from the STEPS list has been executed
+    // to ensure the state of the project layout.
     private static final List<MigrationStep> POST_STEPS = List.of(
             new CommunityToEnterpriseMigrationStep(),
             MigrationStep.lookup("UidMigrationStep"));
@@ -87,19 +95,40 @@ public class BonitaProjectMigrator {
 
     public MigrationReport run(IProgressMonitor monitor) throws CoreException {
         monitor.beginTask(Messages.migrating, IProgressMonitor.UNKNOWN);
+        BonitaStudioLog.info("Starting project migration at " + project);
         var sourceVersion = readBonitaVersion();
+        BonitaStudioLog.info("Migrating project from version " + sourceVersion);
         var report = new MigrationReport();
-        for (var step : STEPS) {
-            if (Strings.hasText(sourceVersion) && step.appliesTo(sourceVersion, project)) {
-                step.run(project, monitor).merge(report);
+        
+        var steps = gatherStepsForSourceVersion(sourceVersion);
+        var subMonitor = SubMonitor.convert(monitor, steps.size());
+        try {
+            for (var step : steps) {
+                if (step.appliesToProject(project)) {
+                    step.run(project, subMonitor).merge(report);
+                }
+                subMonitor.worked(1);
             }
+        } finally {
+            subMonitor.done();
         }
-        for (var postMigrationStep : POST_STEPS) {
-            if (Strings.hasText(sourceVersion) && postMigrationStep.appliesTo(sourceVersion, project)) {
-                postMigrationStep.run(project, monitor).merge(report);
-            }
-        }
+        BonitaStudioLog.info("Project migration successfull.");
         return report;
+    }
+
+    private List<MigrationStep> gatherStepsForSourceVersion(String sourceVersion) {
+        var steps = new ArrayList<MigrationStep>();
+        for (var s : STEPS) {
+            if (Strings.hasText(sourceVersion) && s.appliesToVersion(sourceVersion)) {
+                steps.add(s);
+            }
+        }
+        for (var s : POST_STEPS) {
+            if (Strings.hasText(sourceVersion) && s.appliesToVersion(sourceVersion)) {
+                steps.add(s);
+            }
+        }
+        return steps;
     }
 
     public String readBonitaVersion() throws CoreException {

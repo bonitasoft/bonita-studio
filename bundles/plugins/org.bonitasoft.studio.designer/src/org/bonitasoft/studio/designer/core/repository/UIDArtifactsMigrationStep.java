@@ -41,6 +41,7 @@ public class UIDArtifactsMigrationStep implements MigrationStep {
 
     @Override
     public MigrationReport run(Path projectRoot, IProgressMonitor monitor) throws CoreException {
+        monitor.subTask(Messages.uidArtifactsMigrationTitle);
         var migrateUIDOperation = new MigrateUIDOperation()
                 .useStandaloneUIDAt(projectRoot.resolve(BonitaProject.APP_MODULE));
         try {
@@ -76,11 +77,6 @@ public class UIDArtifactsMigrationStep implements MigrationStep {
         }
     }
 
-    @Override
-    public boolean appliesTo(String sourceVersion, Path projectRoot) throws CoreException {
-        // Always executed
-        return true;
-    }
 
     @PostConstruct
     void registerMigrationStep() {

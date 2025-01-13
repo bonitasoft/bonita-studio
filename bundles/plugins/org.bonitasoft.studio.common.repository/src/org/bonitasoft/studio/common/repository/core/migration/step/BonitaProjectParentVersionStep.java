@@ -39,6 +39,7 @@ public class BonitaProjectParentVersionStep implements MigrationStep {
 
     @Override
     public MigrationReport run(Path project, IProgressMonitor monitor) throws CoreException {
+        monitor.subTask(Messages.bonitaProjectParentVersionMigrationTitle);
         var parentModel = loadParentMavenModel(project);
         if (parentModel.getParent() == null) {
             throw new CoreException(new Status(IStatus.ERROR,
@@ -65,7 +66,7 @@ public class BonitaProjectParentVersionStep implements MigrationStep {
     }
 
     @Override
-    public boolean appliesTo(String sourceVersion, Path projectRoot) throws CoreException {
+    public boolean appliesToVersion(String sourceVersion) {
         return Version.parseVersion(sourceVersion).compareTo(new Version("9.0.0")) >= 0;
     }
 

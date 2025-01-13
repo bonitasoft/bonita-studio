@@ -49,6 +49,7 @@ public class ExtensionsModuleMigrationStep implements MigrationStep {
 
     @Override
     public MigrationReport run(Path project, IProgressMonitor monitor) throws CoreException {
+        monitor.subTask(Messages.extensionsModuleMigrationTitle);
         var report = MigrationReport.emptyReport();
         report.updated(
                 "Rest API Extensions and Themes projects have been moved in the project layout to benefit from the Maven multi module approach. It means that files location inside the project have changed.  "
@@ -89,7 +90,7 @@ public class ExtensionsModuleMigrationStep implements MigrationStep {
             }
             saveMavenModel(appModel, project.resolve(BonitaProject.APP_MODULE));
             MavenProjectHelper.saveModel(extensionsPomFile, extensionsParentModel);
-        } catch (IOException e) {
+        } catch (IOException | RuntimeException e) {
             throw new CoreException(Status.error("Failed to update project layout to multi-module.", e));
         }
         return report;
@@ -137,7 +138,7 @@ public class ExtensionsModuleMigrationStep implements MigrationStep {
     }
 
     @Override
-    public boolean appliesTo(String sourceVersion, Path projectRoot) throws CoreException {
+    public boolean appliesToVersion(String sourceVersion) {
         return Version.parseVersion(sourceVersion).compareTo(new Version("9.0.0")) < 0;
     }
 }

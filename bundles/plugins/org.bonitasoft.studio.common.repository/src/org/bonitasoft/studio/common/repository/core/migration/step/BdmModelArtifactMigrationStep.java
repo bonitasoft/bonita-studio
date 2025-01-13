@@ -174,6 +174,7 @@ public class BdmModelArtifactMigrationStep implements MavenModelMigration, Migra
 
     @Override
     public MigrationReport run(Path project, IProgressMonitor monitor) throws CoreException {
+        monitor.subTask(Messages.bdmModelArtifactMigrationTitle);
         var pomFile = project.resolve(POM_FILE_NAME).toFile();
         var metadata = ProjectMetadata.read(pomFile);
         var model = MavenProjectHelper.readModel(pomFile);
@@ -187,7 +188,7 @@ public class BdmModelArtifactMigrationStep implements MavenModelMigration, Migra
     }
 
     @Override
-    public boolean appliesTo(String sourceVersion, Path projectRoot) throws CoreException {
+    public boolean appliesToVersion(String sourceVersion) {
         return Version.parseVersion(sourceVersion).compareTo(new Version("8.0.0")) < 0;
     }
 

@@ -54,6 +54,7 @@ public class CommunityToEnterpriseMigrationStep implements MigrationStep {
 
     @Override
     public MigrationReport run(Path project, IProgressMonitor monitor) throws CoreException {
+        monitor.subTask(Messages.communityToEnterpriseMigrationTitle);
         var model = loadMavenModel(project.resolve(BonitaProject.APP_MODULE));
         var report = migrate(model);
         MavenProjectHelper.saveModel(project.resolve(BonitaProject.APP_MODULE).resolve(POM_FILE_NAME), model);
@@ -107,7 +108,7 @@ public class CommunityToEnterpriseMigrationStep implements MigrationStep {
     }
 
     @Override
-    public boolean appliesTo(String sourceVersion, Path projectRoot) throws CoreException {
+    public boolean appliesToProject(Path projectRoot) throws CoreException {
         var model = loadMavenModel(projectRoot.resolve(BonitaProject.APP_MODULE));
         return BonitaCommonDependency.shouldUpgade(model);
     }

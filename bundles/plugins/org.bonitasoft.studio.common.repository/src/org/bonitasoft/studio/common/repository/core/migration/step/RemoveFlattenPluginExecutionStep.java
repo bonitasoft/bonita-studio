@@ -18,6 +18,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Objects;
 
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.Messages;
 import org.bonitasoft.studio.common.repository.core.BonitaProject;
 import org.bonitasoft.studio.common.repository.core.maven.model.DefaultPluginVersions;
@@ -38,6 +39,7 @@ public class RemoveFlattenPluginExecutionStep implements MigrationStep {
 
     @Override
     public MigrationReport run(Path project, IProgressMonitor monitor) throws CoreException {
+        monitor.subTask(Messages.removeFlattenPluginMigrationTitle);
         var report = new MigrationReport();
         var bdmModule = project.resolve(BonitaProject.BDM_MODULE);
         if (Files.exists(bdmModule) && Files.exists(bdmModule.resolve(POM_FILE_NAME))) {
@@ -46,6 +48,8 @@ public class RemoveFlattenPluginExecutionStep implements MigrationStep {
             if (build.getPlugins()
                     .removeIf(p -> Objects.equals(p.getArtifactId(), DefaultPluginVersions.FLATTEN_MAVEN_PLUGIN))) {
                 saveMavenModel(model, bdmModule);
+                BonitaStudioLog.info(
+                        "The 'flatten-maven-plugin' executions have been removed from the Bdm parent module. They are now inherited from the Bonita project parent.");
                 report.removed(
                         "The `flatten-maven-plugin` executions have been removed from the Bdm parent module. They are now inherited from the Bonita project parent.");
             }
@@ -54,9 +58,15 @@ public class RemoveFlattenPluginExecutionStep implements MigrationStep {
     }
 
     @Override
-    public boolean appliesTo(String sourceVersion, Path projectRoot) throws CoreException {
+    public boolean appliesToVersion(String sourceVersion) {
         return Version.parseVersion(sourceVersion).compareTo(new Version("8.0.0")) >= 0
                 && Version.parseVersion(sourceVersion).compareTo(new Version("9.0.0")) < 0;
+    }
+
+    @Override
+    public boolean appliesToProject(Path projectRoot) throws CoreException {
+        var bdmModule = projectRoot.resolve(BonitaProject.BDM_MODULE);
+        return Files.exists(bdmModule) && Files.exists(bdmModule.resolve(POM_FILE_NAME));
     }
 
 }

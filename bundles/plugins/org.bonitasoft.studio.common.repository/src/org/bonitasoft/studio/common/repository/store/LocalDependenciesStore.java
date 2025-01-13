@@ -22,6 +22,7 @@ import java.nio.file.StandardCopyOption;
 
 import org.apache.maven.model.Dependency;
 import org.bonitasoft.studio.common.Strings;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.core.maven.migration.model.DependencyLookup;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
@@ -59,8 +60,10 @@ public class LocalDependenciesStore {
                                 dependencyFile.getName())));
             }
             Path dependencyPath = targetFolder.resolve(dependencyFileName(dependency));
+            BonitaStudioLog.info(String.format("Installing %s to project local dependency store %s", dependency, dependencyPath));
             backup(dependency);
             Files.copy(dependencyFile.toPath(), dependencyPath, StandardCopyOption.REPLACE_EXISTING);
+            BonitaStudioLog.info(String.format("Artifact %s installed in local dependency store.", dependency));
         } catch (IOException e) {
             throw new CoreException(new Status(IStatus.ERROR, getClass(),
                     String.format("Cannot install %s dependency.",
