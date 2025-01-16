@@ -49,6 +49,7 @@ public class GitIgnoreMigrationStep implements MigrationStep {
     @Override
     public MigrationReport run(Path project, IProgressMonitor monitor) throws CoreException {
         monitor.subTask(Messages.gitIgnoreMigrationTitle);
+        BonitaStudioLog.info(String.format("Starting %s...", GitIgnoreMigrationStep.class.getName()));
         var report = MigrationReport.emptyReport();
         try {
             var parentEntries = updateGitIgnore(project, report, project.resolve(Constants.GITIGNORE_FILENAME),
@@ -61,6 +62,7 @@ public class GitIgnoreMigrationStep implements MigrationStep {
         } catch (IOException e) {
             throw new CoreException(Status.error("Failed to update .gitignore file.", e));
         }
+        BonitaStudioLog.info(String.format("%s completed.", GitIgnoreMigrationStep.class.getName()));
         return report;
     }
 

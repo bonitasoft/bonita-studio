@@ -40,6 +40,7 @@ public class RemoveFlattenPluginExecutionStep implements MigrationStep {
     @Override
     public MigrationReport run(Path project, IProgressMonitor monitor) throws CoreException {
         monitor.subTask(Messages.removeFlattenPluginMigrationTitle);
+        BonitaStudioLog.info(String.format("Starting %s...", RemoveFlattenPluginExecutionStep.class.getName()));
         var report = new MigrationReport();
         var bdmModule = project.resolve(BonitaProject.BDM_MODULE);
         if (Files.exists(bdmModule) && Files.exists(bdmModule.resolve(POM_FILE_NAME))) {
@@ -54,6 +55,7 @@ public class RemoveFlattenPluginExecutionStep implements MigrationStep {
                         "The `flatten-maven-plugin` executions have been removed from the Bdm parent module. They are now inherited from the Bonita project parent.");
             }
         }
+        BonitaStudioLog.info(String.format("%s completed.", RemoveFlattenPluginExecutionStep.class.getName()));
         return report;
     }
 

@@ -22,6 +22,7 @@ import org.apache.maven.artifact.Artifact;
 import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Plugin;
 import org.apache.maven.model.PluginExecution;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.Messages;
 import org.bonitasoft.studio.common.repository.core.BonitaProject;
 import org.bonitasoft.studio.common.repository.core.migration.MigrationStep;
@@ -42,6 +43,7 @@ public class BdmAssemblyConfigurationStep implements MigrationStep {
     @Override
     public MigrationReport run(Path project, IProgressMonitor monitor) throws CoreException {
         monitor.subTask(Messages.bdmAssemblyConfigurationMigrationTitle);
+        BonitaStudioLog.info(String.format("Starting %s...", BdmAssemblyConfigurationStep.class.getName()));
         var report = new MigrationReport();
         var bdmModelModule = project.resolve(BonitaProject.BDM_MODULE).resolve("model");
         if (Files.exists(bdmModelModule)) {
@@ -62,6 +64,7 @@ public class BdmAssemblyConfigurationStep implements MigrationStep {
                     dependency.getGroupId(),
                     dependency.getArtifactId()));
         }
+        BonitaStudioLog.info(String.format("%s completed.", BdmAssemblyConfigurationStep.class.getName()));
         return report;
     }
 

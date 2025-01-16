@@ -50,6 +50,7 @@ public class ExtensionsModuleMigrationStep implements MigrationStep {
     @Override
     public MigrationReport run(Path project, IProgressMonitor monitor) throws CoreException {
         monitor.subTask(Messages.extensionsModuleMigrationTitle);
+        BonitaStudioLog.info(String.format("Starting %s...", ExtensionsModuleMigrationStep.class.getName()));
         var report = MigrationReport.emptyReport();
         report.updated(
                 "Rest API Extensions and Themes projects have been moved in the project layout to benefit from the Maven multi module approach. It means that files location inside the project have changed.  "
@@ -93,6 +94,7 @@ public class ExtensionsModuleMigrationStep implements MigrationStep {
         } catch (IOException | RuntimeException e) {
             throw new CoreException(Status.error("Failed to update project layout to multi-module.", e));
         }
+        BonitaStudioLog.info(String.format("%s completed.", ExtensionsModuleMigrationStep.class.getName()));
         return report;
     }
 

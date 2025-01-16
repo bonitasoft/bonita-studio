@@ -21,6 +21,7 @@ import java.util.function.Predicate;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Model;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.Messages;
 import org.bonitasoft.studio.common.repository.core.maven.MavenProjectHelper;
 import org.bonitasoft.studio.common.repository.core.maven.model.GAV;
@@ -175,6 +176,7 @@ public class BdmModelArtifactMigrationStep implements MavenModelMigration, Migra
     @Override
     public MigrationReport run(Path project, IProgressMonitor monitor) throws CoreException {
         monitor.subTask(Messages.bdmModelArtifactMigrationTitle);
+        BonitaStudioLog.info(String.format("Starting %s...", BdmModelArtifactMigrationStep.class.getName()));
         var pomFile = project.resolve(POM_FILE_NAME).toFile();
         var metadata = ProjectMetadata.read(pomFile);
         var model = MavenProjectHelper.readModel(pomFile);
@@ -183,7 +185,7 @@ public class BdmModelArtifactMigrationStep implements MavenModelMigration, Migra
             MavenProjectHelper.saveModel(pomFile.toPath(), model);
             return report;
         }
-
+        BonitaStudioLog.info(String.format("%s completed.", BdmModelArtifactMigrationStep.class.getName()));
         return MigrationReport.emptyReport();
     }
 

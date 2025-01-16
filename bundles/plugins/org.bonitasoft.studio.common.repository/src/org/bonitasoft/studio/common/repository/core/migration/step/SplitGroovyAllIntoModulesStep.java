@@ -38,6 +38,7 @@ public class SplitGroovyAllIntoModulesStep implements MigrationStep {
     @Override
     public MigrationReport run(Path project, IProgressMonitor monitor) throws CoreException {
         monitor.subTask(Messages.splitGroovyAllMigrationTitle);
+        BonitaStudioLog.info(String.format("Starting %s...", SplitGroovyAllIntoModulesStep.class.getName()));
         var model = loadMavenModel(project);
 
         if (model.getDependencies().removeIf(has(DefaultPluginVersions.CODEHAUS_GROOVY_GROUPID, "groovy-all"))) {
@@ -50,6 +51,7 @@ public class SplitGroovyAllIntoModulesStep implements MigrationStep {
             saveMavenModel(model, project);
             BonitaStudioLog.info("groovy-all artifact dependency has been replaced with Groovy module's artifact");
         }
+        BonitaStudioLog.info(String.format("%s completed.", SplitGroovyAllIntoModulesStep.class.getName()));
         return MigrationReport.emptyReport();
     }
 

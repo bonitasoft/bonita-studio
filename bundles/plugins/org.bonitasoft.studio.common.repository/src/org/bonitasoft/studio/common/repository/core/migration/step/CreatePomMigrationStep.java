@@ -46,6 +46,7 @@ public class CreatePomMigrationStep implements MigrationStep {
     @Override
     public MigrationReport run(Path project, IProgressMonitor monitor) throws CoreException {
         monitor.subTask(Messages.createPomMigrationTitle);
+        BonitaStudioLog.info(String.format("Starting %s...", CreatePomMigrationStep.class.getName()));
         var pomFile = project.resolve(POM_FILE_NAME);
         var report = new MigrationReport();
         ProjectMetadata metadata = null;
@@ -68,6 +69,7 @@ public class CreatePomMigrationStep implements MigrationStep {
                 "Bonita projects are now Maven projects and rely on the https://maven.apache.org/guides/introduction/introduction-to-dependency-mechanism.html[Maven dependency mechanism] to manage their dependencies. Check the documentation for more information about %s[Project composition].",
                 RedirectURLBuilder.create("727")));
         addBdmDependency(project, model);
+        BonitaStudioLog.info(String.format("%s completed.", CreatePomMigrationStep.class.getName()));
         return report;
     }
 

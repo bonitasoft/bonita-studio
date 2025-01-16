@@ -23,6 +23,7 @@ import org.apache.maven.model.License;
 import org.apache.maven.model.Parent;
 import org.apache.maven.model.Plugin;
 import org.bonitasoft.studio.common.ProductVersion;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.Messages;
 import org.bonitasoft.studio.common.repository.core.maven.model.DefaultPluginVersions;
 import org.bonitasoft.studio.common.repository.core.maven.model.ProjectDefaultConfiguration;
@@ -43,6 +44,7 @@ public class CleanParentStep implements MigrationStep {
     @Override
     public MigrationReport run(Path project, IProgressMonitor monitor) throws CoreException {
         monitor.subTask(Messages.cleanParentMigrationTitle);
+        BonitaStudioLog.info(String.format("Starting %s...", CleanParentStep.class.getName()));
         var report = new MigrationReport();
         var model = loadParentMavenModel(project);
         var defaultConfiguration = new ProjectDefaultConfiguration(ProductVersion.BONITA_RUNTIME_VERSION);
@@ -93,6 +95,7 @@ public class CleanParentStep implements MigrationStep {
         saveMavenModel(model, project);
         report.updated(
                 "This project now depends on the Bonita project parent pom. This parent pom configures all the required plugins and dependencies versions for a given Bonita version.");
+        BonitaStudioLog.info(String.format("%s completed.", CleanParentStep.class.getName()));
         return report;
     }
 

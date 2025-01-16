@@ -16,6 +16,7 @@ package org.bonitasoft.studio.common.repository.core.migration.step;
 
 import java.nio.file.Path;
 
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.Messages;
 import org.bonitasoft.studio.common.repository.core.migration.MigrationStep;
 import org.bonitasoft.studio.common.repository.core.migration.StepDescription;
@@ -34,9 +35,11 @@ public class Java17UpdateStep implements MigrationStep {
     @Override
     public MigrationReport run(Path project, IProgressMonitor monitor) throws CoreException {
         monitor.subTask(Messages.java17MigrationTitle);
+        BonitaStudioLog.info(String.format("Starting %s...", Java17UpdateStep.class.getName()));
         var report = new MigrationReport();
         report.updated(
                 "Required Java version updated to `17`. Make sure that your third party dependencies are compliant with Java 17.");
+        BonitaStudioLog.info(String.format("%s completed.", Java17UpdateStep.class.getName()));
         return report;
     }
 

@@ -19,6 +19,7 @@ import java.util.Objects;
 
 import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
 import org.bonitasoft.studio.common.ProductVersion;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.Messages;
 import org.bonitasoft.studio.common.repository.core.migration.MigrationStep;
 import org.bonitasoft.studio.common.repository.core.migration.StepDescription;
@@ -40,6 +41,7 @@ public class BonitaProjectParentVersionStep implements MigrationStep {
     @Override
     public MigrationReport run(Path project, IProgressMonitor monitor) throws CoreException {
         monitor.subTask(Messages.bonitaProjectParentVersionMigrationTitle);
+        BonitaStudioLog.info(String.format("Starting %s...", BonitaProjectParentVersionStep.class.getName()));
         var parentModel = loadParentMavenModel(project);
         if (parentModel.getParent() == null) {
             throw new CoreException(new Status(IStatus.ERROR,
@@ -57,6 +59,7 @@ public class BonitaProjectParentVersionStep implements MigrationStep {
                     ProductVersion.BONITA_RUNTIME_VERSION));
             return report;
         }
+        BonitaStudioLog.info(String.format("%s completed.", BonitaProjectParentVersionStep.class.getName()));
         return MigrationReport.emptyReport();
     }
 

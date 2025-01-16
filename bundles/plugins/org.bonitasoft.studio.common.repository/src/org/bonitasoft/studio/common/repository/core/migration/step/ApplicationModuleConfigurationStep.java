@@ -17,6 +17,7 @@ package org.bonitasoft.studio.common.repository.core.migration.step;
 import java.nio.file.Path;
 
 import org.apache.maven.model.Build;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.Messages;
 import org.bonitasoft.studio.common.repository.core.BonitaProject;
 import org.bonitasoft.studio.common.repository.core.maven.model.AppProjectConfiguration;
@@ -39,6 +40,7 @@ public class ApplicationModuleConfigurationStep implements MigrationStep {
     @Override
     public MigrationReport run(Path project, IProgressMonitor monitor) throws CoreException {
         monitor.subTask(Messages.appModuleMigrationTitle);
+        BonitaStudioLog.info(String.format("Starting %s...", ApplicationModuleConfigurationStep.class.getName()));
         var report = new MigrationReport();
         var appModule = project.resolve(BonitaProject.APP_MODULE);
         var model = loadMavenModel(appModule);
@@ -55,6 +57,7 @@ public class ApplicationModuleConfigurationStep implements MigrationStep {
         saveMavenModel(model, appModule);
         report.updated("Application module build configuration has been updated to support Maven build.");
         report.added("Bonita Admin Application has been added in the project extensions.");
+        BonitaStudioLog.info(String.format("%s completed.", ApplicationModuleConfigurationStep.class.getName()));
         return report;
     }
 

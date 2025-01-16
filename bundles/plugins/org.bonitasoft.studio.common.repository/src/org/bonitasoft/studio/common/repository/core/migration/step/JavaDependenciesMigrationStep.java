@@ -54,6 +54,7 @@ public class JavaDependenciesMigrationStep implements MigrationStep {
     @Override
     public MigrationReport run(Path project, IProgressMonitor monitor) throws CoreException {
         monitor.subTask(Messages.javaDependenciesMigrationTitle);
+        BonitaStudioLog.info(String.format("Starting %s...", JavaDependenciesMigrationStep.class.getName()));
         MigrationReport report = MigrationReport.emptyReport();
         try {
             Set<DependencyLookup> dependencyLookups = doMigrateToMavenDependencies(project, monitor);
@@ -121,6 +122,7 @@ public class JavaDependenciesMigrationStep implements MigrationStep {
         } catch (IOException e) {
             throw new CoreException(org.eclipse.core.runtime.Status.error("Failed to delete lib folder", e));
         }
+        BonitaStudioLog.info(String.format("%s completed.", JavaDependenciesMigrationStep.class.getName()));
         return report;
     }
 

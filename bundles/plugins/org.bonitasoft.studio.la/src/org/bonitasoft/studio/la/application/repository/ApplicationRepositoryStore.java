@@ -144,12 +144,14 @@ public class ApplicationRepositoryStore extends AbstractRepositoryStore<Applicat
 
     private void doMigrateFileStore(ApplicationFileStore fileStore, MigrationReport report) {
         try {
+            BonitaStudioLog.info(String.format("Migrating %s...", fileStore.getName()));
             migrateNamespace(fileStore, report);
             var applicationNodeContainer = fileStore.getContent();
             // only legacy applications can update theme and layout
             applicationNodeContainer.getApplications().forEach(app -> updateBonitaTheme(app, report));
             applicationNodeContainer.getApplications().forEach(app -> updateBonitaLayout(app, report));
             fileStore.save(applicationNodeContainer);
+            BonitaStudioLog.info(String.format("%s migration completed.", fileStore.getName()));
         } catch (ReadFileStoreException e) {
             BonitaStudioLog.error(e);
         }
@@ -186,6 +188,7 @@ public class ApplicationRepositoryStore extends AbstractRepositoryStore<Applicat
                 StreamResult result = new StreamResult(out);
                 transformer.transform(source, result);
                 resource.refreshLocal(0, new NullProgressMonitor());
+                BonitaStudioLog.info(String.format("%s namespace has been updated to %s", fileStore.getName(), APPLICATION_DESCRIPTOR_NAMESPACE));
             } catch (final IOException | CoreException | TransformerException e) {
                 throw new ReadFileStoreException(e.getMessage(), e);
             }
@@ -216,6 +219,7 @@ public class ApplicationRepositoryStore extends AbstractRepositoryStore<Applicat
         if (Objects.equals(application.getTheme(), "custompage_bonitadefaulttheme")
                 || Objects.equals(application.getTheme(), "custompage_bootstrapdefaulttheme")) {
             application.setTheme("custompage_themeBonita");
+            BonitaStudioLog.info(String.format("%s application theme has been updated to Bonita default theme.", application.getToken()));
             report.updated(String.format("%s application theme has been updated to Bonita default theme.",
                     application.getToken()));
         }
@@ -224,6 +228,7 @@ public class ApplicationRepositoryStore extends AbstractRepositoryStore<Applicat
     private void updateBonitaLayout(ApplicationNode application, MigrationReport report) {
         if (Objects.equals(application.getLayout(), "custompage_defaultlayout")) {
             application.setLayout("custompage_layoutBonita");
+            BonitaStudioLog.info(String.format("%s application layout has been updated to Bonita default layout.", application.getToken()));
             report.updated(String.format("%s application layout has been updated to Bonita default layout.",
                     application.getToken()));
         }

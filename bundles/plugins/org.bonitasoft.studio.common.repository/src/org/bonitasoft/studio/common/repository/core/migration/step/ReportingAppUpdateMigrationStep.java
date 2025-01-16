@@ -77,6 +77,7 @@ public class ReportingAppUpdateMigrationStep implements MigrationStep, MavenMode
     @Override
     public MigrationReport run(Path project, IProgressMonitor monitor) throws CoreException {
         monitor.subTask(Messages.reportingAppUpdateMigrationTitle);
+        BonitaStudioLog.info(String.format("Starting %s...", ReportingAppUpdateMigrationStep.class.getName()));
         var pomFile = project.resolve("app").resolve(POM_FILE_NAME).toFile();
         var metadata = ProjectMetadata.read(pomFile);
         var model = loadMavenModel(project.resolve("app"));
@@ -85,7 +86,7 @@ public class ReportingAppUpdateMigrationStep implements MigrationStep, MavenMode
             saveMavenModel(model, project.resolve("app"));
             return report;
         }
-
+        BonitaStudioLog.info(String.format("%s completed.", ReportingAppUpdateMigrationStep.class.getName()));
         return MigrationReport.emptyReport();
     }
 

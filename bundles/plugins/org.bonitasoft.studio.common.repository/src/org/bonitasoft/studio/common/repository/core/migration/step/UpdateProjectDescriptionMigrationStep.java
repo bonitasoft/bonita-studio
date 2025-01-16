@@ -22,6 +22,7 @@ import java.nio.file.Path;
 import java.util.List;
 
 import org.bonitasoft.studio.common.ProductVersion;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.Messages;
 import org.bonitasoft.studio.common.repository.core.BonitaProject;
 import org.bonitasoft.studio.common.repository.core.ProjectDescriptionBuilder;
@@ -47,6 +48,7 @@ public class UpdateProjectDescriptionMigrationStep implements MigrationStep {
     @Override
     public MigrationReport run(Path project, IProgressMonitor monitor) throws CoreException {
         monitor.subTask(Messages.updateProjectDescriptionMigrationTitle);
+        BonitaStudioLog.info(String.format("Starting %s...", UpdateProjectDescriptionMigrationStep.class.getName()));
         var descriptor = project.resolve(IProjectDescription.DESCRIPTION_FILE_NAME);
         if (!Files.exists(descriptor)) {
             throw new CoreException(Status.error("Project descriptor not found."));
@@ -72,7 +74,7 @@ public class UpdateProjectDescriptionMigrationStep implements MigrationStep {
                 .havingBuilders(BonitaProject.BUILDERS)
                 .build(description);
         writeDescriptor(appDescriptor, newAppDescription);
-
+        BonitaStudioLog.info(String.format("%s completed.", UpdateProjectDescriptionMigrationStep.class.getName()));
         return MigrationReport.emptyReport();
     }
 

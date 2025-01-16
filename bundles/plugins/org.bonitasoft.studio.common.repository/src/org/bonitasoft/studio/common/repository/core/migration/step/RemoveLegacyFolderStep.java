@@ -72,8 +72,10 @@ public class RemoveLegacyFolderStep implements MigrationStep {
     @Override
     public MigrationReport run(Path project, IProgressMonitor monitor) throws CoreException {
         monitor.subTask(Messages.removeLegacyFolderMigrationTitle);
+        BonitaStudioLog.info(String.format("Starting %s...", RemoveLegacyFolderStep.class.getName()));
         var result = MigrationReport.emptyReport();
         HANDLERS.stream().map(folderHandler -> folderHandler.backup(project)).forEach(report -> report.merge(result));
+        BonitaStudioLog.info(String.format("%s completed.", RemoveLegacyFolderStep.class.getName()));
         return result;
     }
 

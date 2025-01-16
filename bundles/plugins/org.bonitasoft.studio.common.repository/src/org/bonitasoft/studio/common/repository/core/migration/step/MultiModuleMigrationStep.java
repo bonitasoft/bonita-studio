@@ -26,6 +26,7 @@ import java.util.function.Consumer;
 import org.apache.maven.model.Model;
 import org.bonitasoft.studio.common.FileUtil;
 import org.bonitasoft.studio.common.ProductVersion;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.Messages;
 import org.bonitasoft.studio.common.repository.core.BonitaProject;
 import org.bonitasoft.studio.common.repository.core.MavenAppModuleModelBuilder;
@@ -57,6 +58,7 @@ public class MultiModuleMigrationStep implements MigrationStep {
     @Override
     public MigrationReport run(Path project, IProgressMonitor monitor) throws CoreException {
         monitor.subTask(Messages.multiModuleMigrationTitle);
+        BonitaStudioLog.info(String.format("Starting %s...", MultiModuleMigrationStep.class.getName()));
         var report = MigrationReport.emptyReport();
         report.updated(
                 "The project layout has been changed in favor of a multi modules maven project. It means that files location inside the project have changed.  "
@@ -110,6 +112,7 @@ public class MultiModuleMigrationStep implements MigrationStep {
         } catch (IOException e) {
             throw new CoreException(Status.error("Failed to update project layout to multi-module.", e));
         }
+        BonitaStudioLog.info(String.format("%s completed.", MultiModuleMigrationStep.class.getName()));
         return report;
     }
 
