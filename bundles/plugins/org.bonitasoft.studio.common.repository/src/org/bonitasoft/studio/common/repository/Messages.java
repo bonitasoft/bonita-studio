@@ -88,6 +88,19 @@ public final class Messages extends NLS {
     public static String createNewProject_invalidCharacter;
     public static String projectAlreadyExist;
 
+    public static String projectMigration;
+    public static String projectMigrationExecuteAllSteps;
+    public static String projectMigrationFailed;
+    public static String projectMigrationInvalidDescriptor;
+    public static String projectMigrationNoDescriptor;
+    public static String projectMigrationCancelled;
+
+    public static String projectMigrationCantReadDescriptor;
+    public static String projectMigrationOpenLog;
+    public static String projectMigrationPrerequisitesFailed;
+    public static String projectMigrationStepCancelled;
+    public static String projectMigrationStepFailed;
+
     public static String rename;
     public static String renameProject;
 
@@ -144,7 +157,7 @@ public final class Messages extends NLS {
     public static String migrating;
     public static String refresh;
     public static String reservedId;
-	public static String installLocalDependencies;
+    public static String installLocalDependencies;
     public static String prepareProjectForMigration;
     public static String appModuleMigrationTitle;
     public static String appModuleMigrationDescription;

@@ -14,11 +14,16 @@
  */
 package org.bonitasoft.studio.common.repository.core.migration;
 
+import static org.bonitasoft.studio.common.repository.core.migration.handler.MigrateProjectHandler.MIGRATE_PROJECT_COMMAND_ID;
+import static org.bonitasoft.studio.common.repository.core.migration.handler.MigrateProjectHandler.MIGRATE_PROJECT_COMMAND_MONITOR_VAR;
+import static org.bonitasoft.studio.common.repository.core.migration.handler.MigrateProjectHandler.MIGRATE_PROJECT_COMMAND_PATH_PARAM;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Stream;
 
 import org.bonitasoft.studio.common.Strings;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
@@ -44,13 +49,23 @@ import org.bonitasoft.studio.common.repository.core.migration.step.RemoveLegacyF
 import org.bonitasoft.studio.common.repository.core.migration.step.ReportingAppUpdateMigrationStep;
 import org.bonitasoft.studio.common.repository.core.migration.step.SplitGroovyAllIntoModulesStep;
 import org.bonitasoft.studio.common.repository.core.migration.step.UpdateProjectDescriptionMigrationStep;
+import org.eclipse.core.commands.Command;
+import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.commands.NotEnabledException;
+import org.eclipse.core.commands.NotHandledException;
+import org.eclipse.core.commands.ParameterizedCommand;
+import org.eclipse.core.commands.common.NotDefinedException;
+import org.eclipse.core.expressions.EvaluationContext;
+import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.SubMonitor;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.commands.ICommandService;
+import org.eclipse.ui.handlers.IHandlerService;;
 
 public class BonitaProjectMigrator {
 
@@ -81,7 +96,11 @@ public class BonitaProjectMigrator {
     // to ensure the state of the project layout.
     private static final List<MigrationStep> POST_STEPS = List.of(
             new CommunityToEnterpriseMigrationStep(),
-            MigrationStep.lookup("UidMigrationStep"));
+            MigrationStep.lookup("UidMigrationStep")); //$NON-NLS-1$
+
+    public static Stream<MigrationStep> getAllSteps() {
+        return Stream.concat(STEPS.stream(), POST_STEPS.stream());
+    }
 
     private Path project;
 
@@ -95,40 +114,25 @@ public class BonitaProjectMigrator {
 
     public MigrationReport run(IProgressMonitor monitor) throws CoreException {
         monitor.beginTask(Messages.migrating, IProgressMonitor.UNKNOWN);
-        BonitaStudioLog.info("Starting project migration at " + project);
-        var sourceVersion = readBonitaVersion();
-        BonitaStudioLog.info("Migrating project from version " + sourceVersion);
-        var report = new MigrationReport();
-        
-        var steps = gatherStepsForSourceVersion(sourceVersion);
-        var subMonitor = SubMonitor.convert(monitor, steps.size());
-        try {
-            for (var step : steps) {
-                if (step.appliesToProject(project)) {
-                    step.run(project, subMonitor).merge(report);
-                }
-                subMonitor.worked(1);
-            }
-        } finally {
-            subMonitor.done();
-        }
-        BonitaStudioLog.info("Project migration successfull.");
-        return report;
-    }
 
-    private List<MigrationStep> gatherStepsForSourceVersion(String sourceVersion) {
-        var steps = new ArrayList<MigrationStep>();
-        for (var s : STEPS) {
-            if (Strings.hasText(sourceVersion) && s.appliesToVersion(sourceVersion)) {
-                steps.add(s);
+        try {
+            ICommandService commandServ = PlatformUI.getWorkbench().getService(ICommandService.class);
+            Command cmd = commandServ.getCommand(MIGRATE_PROJECT_COMMAND_ID);
+            var paramCmd = ParameterizedCommand.generateCommand(cmd,
+                    Map.of(MIGRATE_PROJECT_COMMAND_PATH_PARAM, project.toString()));
+            IHandlerService handlerServ = PlatformUI.getWorkbench().getService(IHandlerService.class);
+            IEvaluationContext parentContext = handlerServ.createContextSnapshot(false);
+            IEvaluationContext ctx = new EvaluationContext(parentContext, parentContext.getDefaultVariable());
+            ctx.addVariable(MIGRATE_PROJECT_COMMAND_MONITOR_VAR, monitor);
+            Object result = handlerServ.executeCommandInContext(paramCmd, null, ctx);
+            if (result instanceof MigrationReport report) {
+                return report;
             }
+        } catch (ExecutionException | NotDefinedException | NotEnabledException | NotHandledException e) {
+            BonitaStudioLog.error(e);
+            throw new CoreException(Status.error(Messages.projectMigrationFailed, e));
         }
-        for (var s : POST_STEPS) {
-            if (Strings.hasText(sourceVersion) && s.appliesToVersion(sourceVersion)) {
-                steps.add(s);
-            }
-        }
-        return steps;
+        return MigrationReport.emptyReport();
     }
 
     public String readBonitaVersion() throws CoreException {
@@ -138,12 +142,12 @@ public class BonitaProjectMigrator {
 
     public static String readBonitaVersion(Path projectDescriptor) throws CoreException {
         if (!Files.exists(projectDescriptor)) {
-            throw new CoreException(Status.error("Project descriptor not found !"));
+            throw new CoreException(Status.error(Messages.projectMigrationNoDescriptor));
         }
         var version = readDescriptor(projectDescriptor).getComment();
         if (Strings.isNullOrEmpty(version)) {
             throw new CoreException(
-                    Status.error(String.format("%s is not a valid Bonita Project descriptor.", projectDescriptor)));
+                    Status.error(String.format(Messages.projectMigrationInvalidDescriptor, projectDescriptor)));
         }
         return version;
     }
@@ -152,7 +156,7 @@ public class BonitaProjectMigrator {
         try (var is = Files.newInputStream(projectDescriptor)) {
             return ResourcesPlugin.getWorkspace().loadProjectDescription(is);
         } catch (IOException e) {
-            throw new CoreException(Status.error("Failed to read project descriptor.", e));
+            throw new CoreException(Status.error(Messages.projectMigrationCantReadDescriptor, e));
         }
     }
 

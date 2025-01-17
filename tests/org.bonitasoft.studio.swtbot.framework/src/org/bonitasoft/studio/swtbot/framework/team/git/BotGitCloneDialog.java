@@ -14,6 +14,7 @@ import org.eclipse.egit.ui.internal.UIText;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.waits.Conditions;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotButton;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 
 public class BotGitCloneDialog extends BotWizardDialog {
@@ -35,13 +36,21 @@ public class BotGitCloneDialog extends BotWizardDialog {
     public BotGitCloneDialog next() {
         return (BotGitCloneDialog) super.next();
     }
-    
+
     public void finishWithMigration() {
         bot.waitUntil(Conditions.widgetIsEnabled(bot.button(IDialogConstants.FINISH_LABEL)), 5000);
         final SWTBotShell activeShell = bot.activeShell();
         bot.button(IDialogConstants.FINISH_LABEL).click();
         bot.waitUntil(Conditions.shellIsActive(Messages.confirmMigratonTitle), 30000);
         bot.button(IDialogConstants.YES_LABEL).click();
+        // Wait for project migration steps dialog & click 'Execute All'
+        bot.waitUntil(Conditions.shellIsActive(org.bonitasoft.studio.common.repository.Messages.projectMigration),
+                30000);
+        SWTBotButton executeAllButton = bot
+                .button(org.bonitasoft.studio.common.repository.Messages.projectMigrationExecuteAllSteps);
+        bot.waitUntil(Conditions.widgetIsEnabled(executeAllButton), 5000);
+        executeAllButton.click();
+
         bot.waitUntil(Conditions.shellCloses(activeShell), 120000);
         bot.waitUntil(Conditions.shellIsActive(Messages.repositoryClonedTitle));
         bot.shell(Messages.repositoryClonedTitle).activate();

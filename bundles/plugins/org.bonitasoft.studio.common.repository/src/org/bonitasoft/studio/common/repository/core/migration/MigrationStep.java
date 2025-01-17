@@ -35,6 +35,7 @@ public interface MigrationStep {
 
     /**
      * Wether this {@link MigrationStep} should be executed for a given source version of Bonita
+     * 
      * @param sourceVersion The source version of the project to migrate
      * @return true if this MigrationStep must be executed
      * @throws IllegalArgumentException When the sourceVersion is invalid
@@ -42,9 +43,10 @@ public interface MigrationStep {
     default boolean appliesToVersion(String sourceVersion) throws IllegalArgumentException {
         return true;
     }
-    
+
     /**
-     *  Wether this {@link MigrationStep} should be executed depending on the project content
+     * Wether this {@link MigrationStep} should be executed depending on the project content
+     * 
      * @param projectRoot The root path of the project to migrate
      * @return true if this MigrationStep must be executed
      * @throws CoreException When a prerequisite to execute this step is not met (e.g: a required file is missing)
@@ -54,7 +56,7 @@ public interface MigrationStep {
     }
 
     default StepDescription getDescription() {
-        return new StepDescription("Migration setp", "");
+        return new StepDescription("Migration step", getClass().getName());
     }
 
     default Model loadMavenModel(Path project) throws CoreException {
@@ -82,17 +84,17 @@ public interface MigrationStep {
 
     static MigrationStep lookup(String stepId) {
         var step = StepRegistry.get(stepId);
-        if(step == null) {
+        if (step == null) {
             // Return a noop step when not found
             // to avoid inserting null in steps list
             // (mainly for unit test robustness)
             return new MigrationStep() {
-                
+
                 @Override
                 public MigrationReport run(Path projectRoot, IProgressMonitor monitor) throws CoreException {
                     return MigrationReport.emptyReport();
                 }
-               
+
             };
         }
         return step;
@@ -105,9 +107,9 @@ public interface MigrationStep {
     class StepRegistry {
 
         private static final Map<String, MigrationStep> STEPS_REGISTRY = new HashMap<>();
-        
+
         private StepRegistry() {
-            
+
         }
 
         static MigrationStep get(String stepId) {
