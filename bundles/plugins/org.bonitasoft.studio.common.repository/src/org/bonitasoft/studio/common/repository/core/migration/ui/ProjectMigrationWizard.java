@@ -15,6 +15,7 @@
 package org.bonitasoft.studio.common.repository.core.migration.ui;
 
 import java.nio.file.Path;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.bonitasoft.studio.common.repository.Messages;
 import org.bonitasoft.studio.common.repository.core.migration.report.MigrationReport;
@@ -30,6 +31,8 @@ public class ProjectMigrationWizard extends Wizard {
 
     private MigrationReport report = new MigrationReport();
     private Path project;
+
+    private AtomicBoolean finishLaunched = new AtomicBoolean(false);
 
     /**
      * Default Constructor.
@@ -70,7 +73,16 @@ public class ProjectMigrationWizard extends Wizard {
     public boolean canFinish() {
         // we do not need every step to be finished, just the current one
         var current = getContainer().getCurrentPage();
-        return current.isPageComplete();
+        return !finishStarted() && current.isPageComplete();
+    }
+
+    /**
+     * Test whether finish operation has started
+     * 
+     * @return true when finish operation has already started
+     */
+    protected boolean finishStarted() {
+        return finishLaunched.get();
     }
 
     /*
@@ -78,7 +90,10 @@ public class ProjectMigrationWizard extends Wizard {
      * @see org.eclipse.jface.wizard.Wizard#performFinish()
      */
     @Override
-    public boolean performFinish() {
+    public synchronized boolean performFinish() {
+        // first disable buttons to avoid concurrent finish operations
+        finishLaunched.set(true);
+        getContainer().updateButtons();
         // execute all the remaining migration steps
         for (IWizardPage page : getPages()) {
             if (!page.isPageComplete() && page instanceof MigrationStepWizardPage step) {

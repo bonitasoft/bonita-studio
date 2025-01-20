@@ -82,6 +82,15 @@ public class MigrationStepWizardPage extends WizardPage {
 
     /*
      * (non-Javadoc)
+     * @see org.eclipse.jface.wizard.WizardPage#canFlipToNextPage()
+     */
+    @Override
+    public boolean canFlipToNextPage() {
+        return super.canFlipToNextPage() && !getWizard().finishStarted();
+    }
+
+    /*
+     * (non-Javadoc)
      * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
      */
     @Override
