@@ -8,7 +8,10 @@
  *******************************************************************************/
 package org.bonitasoft.studio.swtbot.framework.team.git;
 
+import java.text.MessageFormat;
+
 import org.bonitasoft.studio.swtbot.framework.BotWizardDialog;
+import org.bonitasoft.studio.swtbot.framework.conditions.ShellWithRegexIsActive;
 import org.bonitasoft.studio.team.git.i18n.Messages;
 import org.eclipse.egit.ui.internal.UIText;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -44,8 +47,10 @@ public class BotGitCloneDialog extends BotWizardDialog {
         bot.waitUntil(Conditions.shellIsActive(Messages.confirmMigratonTitle), 30000);
         bot.button(IDialogConstants.YES_LABEL).click();
         // Wait for project migration steps dialog & click 'Execute All'
-        bot.waitUntil(Conditions.shellIsActive(org.bonitasoft.studio.common.repository.Messages.projectMigration),
-                30000);
+        var regex = "\\Q"
+                + MessageFormat.format(org.bonitasoft.studio.common.repository.Messages.projectMigration, "\\E\\d+\\Q")
+                + "\\E";
+        bot.waitUntil(new ShellWithRegexIsActive(regex), 30000);
         SWTBotButton executeAllButton = bot
                 .button(org.bonitasoft.studio.common.repository.Messages.projectMigrationExecuteAllSteps);
         bot.waitUntil(Conditions.widgetIsEnabled(executeAllButton), 5000);

@@ -23,7 +23,7 @@ import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
  */
 public class ShellIsActiveWithThreadSTacksOnFailure extends DefaultCondition {
 
-    private final String text;
+    protected final String text;
 
     public ShellIsActiveWithThreadSTacksOnFailure(final String text) {
         Assert.isNotNull(text, "The shell text was null"); //$NON-NLS-1$

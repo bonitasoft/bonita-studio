@@ -20,6 +20,7 @@ import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
 
 import java.nio.file.Path;
+import java.text.MessageFormat;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Supplier;
@@ -32,6 +33,7 @@ import org.bonitasoft.studio.common.repository.core.migration.ui.MigrationStepWi
 import org.bonitasoft.studio.common.repository.core.migration.ui.ProjectMigrationWizard;
 import org.bonitasoft.studio.common.repository.core.migration.ui.ProjectMigrationWizardDialog;
 import org.bonitasoft.studio.swtbot.framework.SWTBotTestUtil;
+import org.bonitasoft.studio.swtbot.framework.conditions.ShellWithRegexIsActive;
 import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -80,7 +82,10 @@ public class ProjectMigrationWizardTest {
             openResult.set(Optional.of(code));
         });
 
-        bot.waitUntil(Conditions.shellIsActive(Messages.projectMigration));
+        var regex = "\\Q"
+                + MessageFormat.format(org.bonitasoft.studio.common.repository.Messages.projectMigration, "\\E\\d+\\Q")
+                + "\\E";
+        bot.waitUntil(new ShellWithRegexIsActive(regex));
         return openResult;
     }
 

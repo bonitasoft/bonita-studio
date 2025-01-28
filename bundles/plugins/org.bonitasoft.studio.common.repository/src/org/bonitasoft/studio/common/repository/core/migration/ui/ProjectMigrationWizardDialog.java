@@ -15,9 +15,11 @@
 package org.bonitasoft.studio.common.repository.core.migration.ui;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.Optional;
 
 import org.bonitasoft.studio.common.repository.Messages;
-import org.eclipse.core.runtime.SubMonitor;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.operation.ModalContext;
@@ -35,11 +37,8 @@ import org.eclipse.swt.widgets.Shell;
  */
 public class ProjectMigrationWizardDialog extends WizardDialog {
 
-    private static final int DEFAULT_WIZARD_WIDTH = 470;
+    private static final int DEFAULT_WIZARD_WIDTH = 540;
     private static final int FINISH_BUTTON_WIDTH = 80;
-    private final int totalNumberOfSteps;
-    /** the sub monitor to split for each step */
-    private SubMonitor submonitor;
 
     /**
      * Default Constructor.
@@ -50,7 +49,6 @@ public class ProjectMigrationWizardDialog extends WizardDialog {
     public ProjectMigrationWizardDialog(Shell parentShell, ProjectMigrationWizard migrationWizard) {
         super(parentShell, migrationWizard);
         setPageSize(DEFAULT_WIZARD_WIDTH, SWT.DEFAULT);
-        totalNumberOfSteps = migrationWizard.getPageCount();
     }
 
     /*
@@ -112,8 +110,6 @@ public class ProjectMigrationWizardDialog extends WizardDialog {
     @Override
     protected Control createDialogArea(Composite parent) {
         var ctrl = super.createDialogArea(parent);
-        // make a submonitor to slit and get a global advancement on each step
-        submonitor = SubMonitor.convert(getProgressMonitor(), Messages.projectMigration, totalNumberOfSteps);
         // make progress monitor part visible as we execute step by step
         ((Control) getProgressMonitor()).setVisible(true);
         return ctrl;
@@ -128,21 +124,16 @@ public class ProjectMigrationWizardDialog extends WizardDialog {
             throws InvocationTargetException, InterruptedException {
         ((Control) getProgressMonitor()).setVisible(true);
 
-        SubMonitor split = submonitor.split(1);
+        IProgressMonitor progressMonitor = Optional.ofNullable(getProgressMonitor())
+                .orElseGet(NullProgressMonitor::new);
         try {
-            ModalContext.run(runnable, fork, split, getShell().getDisplay());
+            ModalContext.run(runnable, fork, progressMonitor, getShell().getDisplay());
         } finally {
             // explicitly invoke done() on our progress monitor so that its
             // label does not spill over to the next invocation, see bug 271530
-            split.done();
+            progressMonitor.setTaskName("");
+            progressMonitor.done();
         }
-    }
-
-    /**
-     * Alert the dialog that one job was skipped, so we update the monitor.
-     */
-    public void oneJobSkipped() {
-        submonitor.split(1).done();
     }
 
 }

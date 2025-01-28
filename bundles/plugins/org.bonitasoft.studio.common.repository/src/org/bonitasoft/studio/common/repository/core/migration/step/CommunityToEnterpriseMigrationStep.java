@@ -49,7 +49,7 @@ public class CommunityToEnterpriseMigrationStep implements MigrationStep {
     @Override
     public StepDescription getDescription() {
         return new StepDescription(Messages.communityToEnterpriseMigrationTitle,
-                Messages.communityToEnterpriseMigrationtDescription);
+                Messages.communityToEnterpriseMigrationDescription);
     }
 
     @Override

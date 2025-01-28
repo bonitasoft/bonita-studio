@@ -196,7 +196,7 @@ public final class Messages extends NLS {
     public static String reportingAppUpdateMigrationTitle;
     public static String reportingAppUpdateMigrationDescription;
     public static String communityToEnterpriseMigrationTitle;
-    public static String communityToEnterpriseMigrationtDescription;
+    public static String communityToEnterpriseMigrationDescription;
 
     private Messages() {
         // Do not instantiate

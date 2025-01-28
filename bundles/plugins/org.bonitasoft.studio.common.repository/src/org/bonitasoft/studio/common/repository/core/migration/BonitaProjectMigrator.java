@@ -130,7 +130,12 @@ public class BonitaProjectMigrator {
             }
         } catch (ExecutionException | NotDefinedException | NotEnabledException | NotHandledException e) {
             BonitaStudioLog.error(e);
-            throw new CoreException(Status.error(Messages.projectMigrationFailed, e));
+            if (e instanceof ExecutionException && e.getCause() instanceof CoreException core) {
+                // unwrap the core exception
+                throw core;
+            } else {
+                throw new CoreException(Status.error(Messages.projectMigrationFailed, e));
+            }
         }
         return MigrationReport.emptyReport();
     }

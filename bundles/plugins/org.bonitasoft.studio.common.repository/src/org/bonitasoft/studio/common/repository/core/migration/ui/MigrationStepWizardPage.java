@@ -21,7 +21,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Path;
 import java.text.MessageFormat;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
 import java.util.regex.Pattern;
 
@@ -40,7 +40,6 @@ import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.SwtCallable;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.FormAttachment;
@@ -59,12 +58,62 @@ import org.eclipse.ui.texteditor.ITextEditor;
  */
 public class MigrationStepWizardPage extends WizardPage {
 
+    private enum ExecutionStatus {
+
+        INITIAL, PREREQUISITE_CHECKED, TRIGGERED, SKIPPED, RUNNING, EXECUTED, ERROR;
+
+        /**
+         * Returns whether step is in progress (triggered or running).
+         * 
+         * @return true when triggered or running, false for stable states
+         */
+        public boolean isInProgress() {
+            switch (this) {
+                case TRIGGERED:
+                case RUNNING:
+                    return true;
+                default:
+                    return false;
+            }
+        }
+
+        /**
+         * Returns whether step is successful (skipped or executed)
+         * 
+         * @return true when skipped of executed, false for waiting, unstable or error states
+         */
+        public boolean isSuccessful() {
+            switch (this) {
+                case SKIPPED:
+                case EXECUTED:
+                    return true;
+                default:
+                    return false;
+            }
+        }
+
+        /**
+         * Returns whether page should be displayed as a new page
+         * 
+         * @return true when prerequisite checked or in error
+         */
+        boolean isToBeDisplayed() {
+            switch (this) {
+                case PREREQUISITE_CHECKED:
+                case ERROR:
+                    return true;
+                default:
+                    return false;
+            }
+        }
+    }
+
     private static final int MARGIN = 10;
 
-    private MigrationStep step;
+    /** Execution status of the migration step */
+    private AtomicReference<ExecutionStatus> status = new AtomicReference<>(ExecutionStatus.INITIAL);
 
-    /** Whether step has been executed once. */
-    private AtomicBoolean executed = new AtomicBoolean(false);
+    private MigrationStep step;
 
     /** Link to open log view */
     private Link logLink;
@@ -176,58 +225,60 @@ public class MigrationStepWizardPage extends WizardPage {
     public void setVisible(boolean visible) {
         super.setVisible(visible);
         if (visible) {
-            triggerPageMigrationStep(false);
+            triggerPageMigrationStep();
         }
     }
 
     /**
-     * Trigger the migration step
+     * Trigger the migration step (if needed)
      * 
-     * @param onFinish whether we are on the wizard's finish where wizard will close if running an asynchronous thread.
-     * @return false when step did not succeed on wizard's finish
+     * @return true when step was successfully (executed or skipped, usually on finish), false when step failed or will execute later
      * @throws InterruptedException manual interruption
      * @throws InvocationTargetException failure exception
      */
     @java.lang.SuppressWarnings("java:S2142")
-    public boolean triggerPageMigrationStep(boolean onFinish) {
-        if (!isPageComplete() && Strings.isNullOrEmpty(getErrorMessage())) {
+    public void triggerPageMigrationStep() {
+        if (status.compareAndSet(ExecutionStatus.PREREQUISITE_CHECKED, ExecutionStatus.TRIGGERED)) {
             // trigger the migration step
             Display display = getShell().getDisplay();
-            SwtCallable<Boolean, RuntimeException> jobOnContainer = () -> display.syncCall(() -> {
+            Runnable jobOnContainer = () -> display.syncExec(() -> {
                 String stepName = step.getDescription().title();
                 try {
                     // this runs synchronously
                     getContainer().run(true, true, this::doMigrationStep);
                     // step succeeded
-                    display.syncExec(() -> setPageComplete(true));
-                    return true;
+                    var msg = MessageFormat.format("Migration step {0} successful.\nProceed to next step.",
+                            stepName);
+                    setMessage(msg, INFORMATION);
+                    setPageComplete(true);
+                    getWizard().oneJobDone();
                 } catch (InvocationTargetException e) {
                     var msg = MessageFormat.format(Messages.projectMigrationStepFailed, stepName, getMessage(e));
                     setErrorMessage(msg);
                     BonitaStudioLog.error(msg, e);
-                    return false;
                 } catch (InterruptedException e) {
                     // wizard was cancelled, set error message even if wizard should be discarded
+                    status.set(ExecutionStatus.ERROR);
                     var msg = MessageFormat.format(Messages.projectMigrationStepCancelled,
                             stepName, getMessage(e));
                     setErrorMessage(msg);
                     BonitaStudioLog.debug(msg, e, getClass());
-                    return false;
                 }
             });
-            if (onFinish) {
-                // do not launch an async thread, use the wizard synchronously to show the progress.
-                return jobOnContainer.call();
-            } else {
-                // launch an async thread to let the wizard open first.
-                new Thread(jobOnContainer::call).start();
-            }
-
+            // launch an async thread to let the wizard open first or the page show.
+            new Thread(jobOnContainer::run).start();
         }
-        return Strings.isNullOrEmpty(getErrorMessage());
+        // else, the task was already triggered, it may be waiting or running
     }
 
-    private Optional<Boolean> displayPage = Optional.empty();
+    /**
+     * Test whether step was successful
+     * 
+     * @return true when step was successfully (executed or skipped), false when step failed or will execute later
+     */
+    public boolean isStepSuccessful() {
+        return status.get().isSuccessful();
+    }
 
     /**
      * Test whether this page should be displayed on project.
@@ -237,31 +288,31 @@ public class MigrationStepWizardPage extends WizardPage {
      */
     public boolean displayPageForProject(Path project) {
         // compute result only once
-        return displayPage.orElseGet(() -> {
-            String stepName = step.getDescription().title();
-            try {
-                boolean valid = step.appliesToProject(project);
-                var msg = MessageFormat.format(
-                        valid ? "Prerequistes OK for migration step {0}." : "Skipped migration step {0}.", stepName);
-                BonitaStudioLog.debug(msg, getClass());
-                displayPage = Optional.of(valid);
-                if (!valid) {
-                    // the skipped job should be considered done.
-                    if (getContainer() instanceof ProjectMigrationWizardDialog d) {
-                        d.oneJobSkipped();
+        return status.updateAndGet(oldStatus -> {
+            if (oldStatus == ExecutionStatus.INITIAL) {
+                String stepName = step.getDescription().title();
+                try {
+                    boolean valid = step.appliesToProject(project);
+                    var msg = MessageFormat.format(
+                            valid ? "Prerequistes OK for migration step {0}." : "Skipped migration step {0}.",
+                            stepName);
+                    BonitaStudioLog.debug(msg, getClass());
+                    if (!valid) {
+                        // the skipped job should be considered done.
+                        getWizard().oneJobDone();
                     }
+                    return valid ? ExecutionStatus.PREREQUISITE_CHECKED : ExecutionStatus.SKIPPED;
+                } catch (CoreException e) {
+                    // page's prerequisites fail. Still display it with error details.
+                    var msg = MessageFormat.format(Messages.projectMigrationPrerequisitesFailed, stepName,
+                            getMessage(e));
+                    BonitaStudioLog.error(msg, e);
+                    setErrorMessage(msg);
+                    return ExecutionStatus.ERROR;
                 }
-                return valid;
-            } catch (CoreException e) {
-                // page's prerequisites fail. Still display it with error details.
-                var msg = MessageFormat.format(Messages.projectMigrationPrerequisitesFailed, stepName,
-                        getMessage(e));
-                BonitaStudioLog.error(msg, e);
-                setErrorMessage(msg);
-                displayPage = Optional.of(true);
-                return true;
             }
-        });
+            return oldStatus;
+        }).isToBeDisplayed();
     }
 
     /**
@@ -289,7 +340,7 @@ public class MigrationStepWizardPage extends WizardPage {
      */
     private void doMigrationStep(IProgressMonitor monitor) throws InvocationTargetException {
         // make sure we don't execute twice
-        if (!executed.getAndSet(true)) {
+        if (status.compareAndSet(ExecutionStatus.TRIGGERED, ExecutionStatus.RUNNING)) {
             String stepName = step.getDescription().title();
             try {
                 monitor.beginTask(stepName, 100);
@@ -297,7 +348,9 @@ public class MigrationStepWizardPage extends WizardPage {
                 var msg = MessageFormat.format("Migration step {0} successful.", stepName);
                 BonitaStudioLog.info(msg);
                 monitor.worked(100);
+                status.set(ExecutionStatus.EXECUTED);
             } catch (CoreException e) {
+                status.set(ExecutionStatus.ERROR);
                 throw new InvocationTargetException(e);
             }
         }
@@ -335,6 +388,17 @@ public class MigrationStepWizardPage extends WizardPage {
             logLink.setVisible(true);
         }
         super.setErrorMessage(newMessage);
+    }
+
+    /**
+     * Make the current thread wait while the step is in progress (triggered or running).
+     */
+    public void waitWhileInProgress() {
+        for (;;) {
+            if (!status.get().isInProgress()) {
+                return;
+            }
+        }
     }
 
 }
