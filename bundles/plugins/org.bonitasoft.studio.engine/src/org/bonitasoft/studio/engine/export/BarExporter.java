@@ -31,10 +31,9 @@ import org.apache.maven.project.MavenProject;
 import org.bonitasoft.bonita2bar.BarBuilderFactory;
 import org.bonitasoft.bonita2bar.BarBuilderFactory.BuildConfig;
 import org.bonitasoft.bonita2bar.BuildBarException;
-import org.bonitasoft.bonita2bar.ClasspathResolver;
 import org.bonitasoft.bonita2bar.ConnectorImplementationRegistry;
+import org.bonitasoft.bonita2bar.ConnectorImplementationRegistry.ArtifactInfo;
 import org.bonitasoft.bonita2bar.ConnectorImplementationRegistry.ConnectorImplementationJar;
-import org.bonitasoft.bonita2bar.SourcePathProvider;
 import org.bonitasoft.bpm.model.configuration.Configuration;
 import org.bonitasoft.bpm.model.configuration.ConfigurationFactory;
 import org.bonitasoft.bpm.model.process.AbstractProcess;
@@ -100,18 +99,16 @@ public class BarExporter {
                     .allowEmptyFormMapping(Platform
                             .getBundle("com.bonitasoft.studio.runtime-bundle") != null)
                     .includeParameters(true)
-                    .classpathResolver(ClasspathResolver.of(buildClasspath(mavenProject)))
+                    .mavenProject(mavenProject)
                     .connectorImplementationRegistry(getConnectorImplementationRegistry(report))
                     .formBuilder(new RestFormBuilder(PageDesignerURLFactory.INSTANCE))
                     .processRegistry(diagramStore)
-                    .sourcePathProvider(
-                            SourcePathProvider.of(project.getAppProject().getLocation().toFile().toPath()))
                     .workingDirectory(workdir).build());
             var result = BuildScheduler.callWithBuildRule(() -> {
                 return barBuilder.build(process, configuration);
             });
             return result.getBusinessArchives().get(0);
-        } catch (IOException | CoreException | DependencyResolutionRequiredException e) {
+        } catch (IOException | CoreException e) {
             throw new BuildBarException(e);
         } finally {
             try {
@@ -134,9 +131,17 @@ public class BarExporter {
     }
 
     private static ConnectorImplementationJar toConnectorImplementationJar(Implementation implementation) {
-        return ConnectorImplementationJar.of(implementation.getImplementationId(),
-                implementation.getImplementationVersion(), new File(implementation.getArtifact().getFile()),
-                implementation.getJarEntry());
+        var artifact = implementation.getArtifact();
+        if (artifact != null) {
+            var artifactInfo = new ArtifactInfo(artifact.getGroupId(), artifact.getArtifactId(),
+                    artifact.getVersion(), artifact.getClassifier(), artifact.getFile());
+            return ConnectorImplementationJar.of(implementation.getImplementationId(),
+                    implementation.getImplementationVersion(), artifactInfo, implementation.getJarEntry());
+        } else {
+            return ConnectorImplementationJar.of(implementation.getImplementationId(),
+                    implementation.getImplementationVersion(), new File(implementation.getArtifact().getFile()),
+                    implementation.getJarEntry());
+        }
     }
 
     private List<String> buildClasspath(MavenProject mavenProject) throws DependencyResolutionRequiredException {

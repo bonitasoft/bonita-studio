@@ -87,7 +87,7 @@ location Groovy "https://groovy.jfrog.io/artifactory/plugins-release/e4.33" {
 	org.codehaus.groovy30.feature.feature.group [5.5.0,5.6.0)
 	org.codehaus.groovy.eclipse.feature.feature.group [5.5.0,5.6.0)
 }
-location BonitasoftBPM "mvn:org.bonitasoft.bpm:org.bonitasoft.bpm.eclipse-repository:8.1.0:zip" {
+location BonitasoftBPM "mvn:org.bonitasoft.bpm:org.bonitasoft.bpm.eclipse-repository:8.2.0-SNAPSHOT:zip" {
 	org.bonitasoft.bonita2bpmn.feature.feature.group
     org.bonitasoft.bpm.connector.feature.feature.group
     org.bonitasoft.bpm.definitions.feature.feature.group
@@ -148,7 +148,7 @@ maven BonitaProjectReportModel scope=compile,runtime,system dependencyDepth=none
     dependency {
         groupId="org.bonitasoft.maven"
         artifactId="bonita-project-report-model"
-        version="1.0.0"
+        version="1.0.4"
     }
     // add ossrh-snapshots when temporary using a snapshot maven version.
     //repository id="ossrh-snapshots" url="https://oss.sonatype.org/content/repositories/snapshots"

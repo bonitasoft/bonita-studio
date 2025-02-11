@@ -1,10 +1,7 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde?>
-<!-- generated with https://github.com/eclipse-cbi/targetplatform-dsl -->
-<target name="platform" sequenceNumber="1732868970">
+<?xml version="1.0" encoding="UTF-8"?><target sequenceNumber="1739185735" name="platform">
   <locations>
-    <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="true" type="InstallableUnit">
-      <repository location="https://update-site.bonitasoft.com/p2/4.33/"/>     
+    <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+      <repository location="https://update-site.bonitasoft.com/p2/4.33/"/>
       <unit id="org.eclipse.justj.openjdk.hotspot.jre.full.feature.group" version="21.0.5.v20241023-1957"/>
       <unit id="org.eclipse.swtbot.eclipse.feature.group" version="4.2.1.202406141605"/>
       <unit id="org.eclipse.swtbot.eclipse.gef.feature.group" version="4.2.1.202406141605"/>
@@ -73,20 +70,19 @@
       <unit id="org.codehaus.groovy.eclipse.feature.feature.group" version="5.5.0.v202409302028-e2409"/>
       <unit id="org.apache.commons.commons-io" version="2.16.1"/>
     </location>
-    <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="true" type="InstallableUnit">
-      <unit id="org.bonitasoft.bonita2bpmn.feature.feature.group" version="8.1.0"/>
-      <unit id="org.bonitasoft.bpm.connector.feature.feature.group" version="8.1.0"/>
-      <unit id="org.bonitasoft.bpm.definitions.feature.feature.group" version="8.1.0"/>
-      <unit id="org.bonitasoft.bpm.model.feature.feature.group" version="8.1.0"/>
-      <unit id="org.bonitasoft.bpm.tests.feature.feature.group" version="8.1.0"/>
+    <location includeConfigurePhase="true" includeSource="true" includeMode="planner" type="InstallableUnit" includeAllPlatforms="false">
+      <unit id="org.bonitasoft.bonita2bpmn.feature.feature.group" version="0.0.0"/>
+      <unit id="org.bonitasoft.bpm.connector.feature.feature.group" version="0.0.0"/>
+      <unit id="org.bonitasoft.bpm.definitions.feature.feature.group" version="0.0.0"/>
+      <unit id="org.bonitasoft.bpm.model.feature.feature.group" version="0.0.0"/>
+      <unit id="org.bonitasoft.bpm.tests.feature.feature.group" version="0.0.0"/>
       <unit id="com.fasterxml.jackson.feature.feature.group" version="2.15.2.qualifier"/>
       <unit id="org.bonitasoft.artifacts.model.feature.feature.group" version="1.1.2"/>
-      <unit id="org.bonitasoft.bonita2bar.feature.feature.group" version="8.1.0"/>
-      <repository id="BonitasoftBPM" location="mvn:org.bonitasoft.bpm:org.bonitasoft.bpm.eclipse-repository:8.1.0:zip"/>
+      <unit id="org.bonitasoft.bonita2bar.feature.feature.group" version="0.0.0"/>
+      <repository location="mvn:org.bonitasoft.bpm:org.bonitasoft.bpm.eclipse-repository:8.2.0-SNAPSHOT:zip" id="BonitasoftBPM"/>
     </location>
-    <location includeDependencyDepth="none" includeDependencyScopes="compile,runtime,system" includeSource="true" missingManifest="generate" type="Maven" label="BonitaArtifactsModels">
-      <feature id="org.bonitasoft.artifacts.model.studio.feature.feature.group" label="Extra Bonita Artifacts Models required by Studio but not in BonitasoftBPM" provider-name="Bonitasoft S.A" version="1.1.2">
-      </feature>
+    <location missingManifest="generate" includeDependencyScopes="compile,runtime,system" includeSource="true" includeDependencyDepth="none" label="BonitaArtifactsModels" type="Maven">
+      <feature provider-name="Bonitasoft S.A" label="Extra Bonita Artifacts Models required by Studio but not in BonitasoftBPM" id="org.bonitasoft.artifacts.model.studio.feature.feature.group" version="1.1.2"/>
       <dependencies>
         <dependency>
           <groupId>com.sun.activation</groupId>
@@ -150,9 +146,8 @@
         </repository>
       </repositories>
     </location>
-    <location includeDependencyDepth="none" includeDependencyScopes="compile,runtime,system" includeSource="true" missingManifest="generate" type="Maven" label="BonitaProjectReportModel">
-      <feature id="org.bonitasoft.project.report.model.feature" label="Bonita Project Report Model Feature" provider-name="Bonitasoft S.A" version="1.0.0">
-      </feature>
+    <location missingManifest="generate" includeDependencyScopes="compile,runtime,system" includeSource="true" includeDependencyDepth="none" label="BonitaProjectReportModel" type="Maven">
+      <feature provider-name="Bonitasoft S.A" label="Bonita Project Report Model Feature" id="org.bonitasoft.project.report.model.feature" version="1.0.4"/>
       <dependencies>
         <dependency>
           <groupId>org.bonitasoft.maven</groupId>
@@ -168,7 +163,7 @@
         </repository>
       </repositories>
     </location>
-    <location includeDependencyDepth="infinite" includeDependencyScopes="compile,runtime,system" includeSource="false" missingManifest="generate" type="Maven" label="MavenDependenciesWithInfiniteDepth">
+    <location missingManifest="generate" includeDependencyScopes="compile,runtime,system" includeSource="false" includeDependencyDepth="infinite" label="MavenDependenciesWithInfiniteDepth" type="Maven">
       <dependencies>
         <dependency>
           <groupId>jakarta.xml.soap</groupId>
@@ -179,13 +174,13 @@
         <dependency>
           <groupId>org.assertj</groupId>
           <artifactId>assertj-core</artifactId>
-          <version>3.24.2</version>
+          <version>3.26.3</version>
           <type>jar</type>
         </dependency>
         <dependency>
           <groupId>org.awaitility</groupId>
           <artifactId>awaitility</artifactId>
-          <version>4.2.0</version>
+          <version>4.2.2</version>
           <type>jar</type>
         </dependency>
         <dependency>

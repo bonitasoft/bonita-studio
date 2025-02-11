@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde?>
 <!-- generated with https://github.com/eclipse-cbi/targetplatform-dsl -->
-<target name="platform" sequenceNumber="1732872693">
+<target name="platform" sequenceNumber="1739185735">
   <locations>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="true" type="InstallableUnit">
       <unit id="org.eclipse.justj.openjdk.hotspot.jre.full.feature.group" version="21.0.5.v20241023-1957"/>
@@ -100,15 +100,15 @@
       <repository id="Groovy" location="https://groovy.jfrog.io/artifactory/plugins-release/e4.33"/>
     </location>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="true" type="InstallableUnit">
-      <unit id="org.bonitasoft.bonita2bpmn.feature.feature.group" version="8.1.0"/>
-      <unit id="org.bonitasoft.bpm.connector.feature.feature.group" version="8.1.0"/>
-      <unit id="org.bonitasoft.bpm.definitions.feature.feature.group" version="8.1.0"/>
-      <unit id="org.bonitasoft.bpm.model.feature.feature.group" version="8.1.0"/>
-      <unit id="org.bonitasoft.bpm.tests.feature.feature.group" version="8.1.0"/>
+      <unit id="org.bonitasoft.bonita2bpmn.feature.feature.group" version="0.0.0"/>
+      <unit id="org.bonitasoft.bpm.connector.feature.feature.group" version="0.0.0"/>
+      <unit id="org.bonitasoft.bpm.definitions.feature.feature.group" version="0.0.0"/>
+      <unit id="org.bonitasoft.bpm.model.feature.feature.group" version="0.0.0"/>
+      <unit id="org.bonitasoft.bpm.tests.feature.feature.group" version="0.0.0"/>
       <unit id="com.fasterxml.jackson.feature.feature.group" version="2.15.2.qualifier"/>
       <unit id="org.bonitasoft.artifacts.model.feature.feature.group" version="1.1.2"/>
-      <unit id="org.bonitasoft.bonita2bar.feature.feature.group" version="8.1.0"/>
-      <repository id="BonitasoftBPM" location="mvn:org.bonitasoft.bpm:org.bonitasoft.bpm.eclipse-repository:8.1.0:zip"/>
+      <unit id="org.bonitasoft.bonita2bar.feature.feature.group" version="0.0.0"/>
+      <repository id="BonitasoftBPM" location="mvn:org.bonitasoft.bpm:org.bonitasoft.bpm.eclipse-repository:8.2.0-SNAPSHOT:zip"/>
     </location>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="true" type="InstallableUnit">
       <unit id="org.apache.commons.commons-io" version="2.16.1"/>
@@ -181,7 +181,7 @@
       </repositories>
     </location>
     <location includeDependencyDepth="none" includeDependencyScopes="compile,runtime,system" includeSource="true" missingManifest="generate" type="Maven" label="BonitaProjectReportModel">
-      <feature id="org.bonitasoft.project.report.model.feature" label="Bonita Project Report Model Feature" provider-name="Bonitasoft S.A" version="1.0.0">
+      <feature id="org.bonitasoft.project.report.model.feature" label="Bonita Project Report Model Feature" provider-name="Bonitasoft S.A" version="1.0.4">
       </feature>
       <dependencies>
         <dependency>
