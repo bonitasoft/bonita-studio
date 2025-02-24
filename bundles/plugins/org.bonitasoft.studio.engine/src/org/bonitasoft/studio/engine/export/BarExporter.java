@@ -16,31 +16,20 @@ package org.bonitasoft.studio.engine.export;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
-import org.apache.maven.artifact.DependencyResolutionRequiredException;
 import org.apache.maven.project.MavenProject;
 import org.bonitasoft.bonita2bar.BarBuilderFactory;
 import org.bonitasoft.bonita2bar.BarBuilderFactory.BuildConfig;
 import org.bonitasoft.bonita2bar.BuildBarException;
-import org.bonitasoft.bonita2bar.ConnectorImplementationRegistry;
-import org.bonitasoft.bonita2bar.ConnectorImplementationRegistry.ArtifactInfo;
-import org.bonitasoft.bonita2bar.ConnectorImplementationRegistry.ConnectorImplementationJar;
 import org.bonitasoft.bpm.model.configuration.Configuration;
 import org.bonitasoft.bpm.model.configuration.ConfigurationFactory;
 import org.bonitasoft.bpm.model.process.AbstractProcess;
 import org.bonitasoft.bpm.model.process.Pool;
 import org.bonitasoft.engine.bpm.bar.BusinessArchive;
-import org.bonitasoft.plugin.analyze.report.model.DependencyReport;
-import org.bonitasoft.plugin.analyze.report.model.Implementation;
 import org.bonitasoft.studio.common.FileUtil;
 import org.bonitasoft.studio.common.ModelVersion;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
@@ -55,6 +44,7 @@ import org.bonitasoft.studio.designer.core.PageDesignerURLFactory;
 import org.bonitasoft.studio.designer.core.bar.RestFormBuilder;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.diagram.custom.repository.ProcessConfigurationRepositoryStore;
+import org.bonitasoft.studio.engine.ConnectorImplementationRegistryHelper;
 import org.bonitasoft.studio.engine.EnginePlugin;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
@@ -89,18 +79,15 @@ public class BarExporter {
         try {
             workdir = Files.createTempDirectory("bar");
             var project = RepositoryManager.getInstance().getCurrentProject().orElseThrow();
-            var reportStore = RepositoryManager.getInstance().getCurrentRepository().orElseThrow()
-                    .getProjectDependenciesStore();
             var diagramStore = RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
-            var report = reportStore.getReport()
-                    .orElseGet(() -> reportStore.analyze(new NullProgressMonitor()).orElseThrow());
             var mavenProject = getMavenProject(project.getAppProject(), new NullProgressMonitor());
             var barBuilder = BarBuilderFactory.create(BuildConfig.builder()
                     .allowEmptyFormMapping(Platform
                             .getBundle("com.bonitasoft.studio.runtime-bundle") != null)
                     .includeParameters(true)
                     .mavenProject(mavenProject)
-                    .connectorImplementationRegistry(getConnectorImplementationRegistry(report))
+                    .connectorImplementationRegistry(
+                            ConnectorImplementationRegistryHelper.getConnectorImplementationRegistry())
                     .formBuilder(new RestFormBuilder(PageDesignerURLFactory.INSTANCE))
                     .processRegistry(diagramStore)
                     .workingDirectory(workdir).build());
@@ -117,39 +104,6 @@ public class BarExporter {
                 BonitaStudioLog.error(e);
             }
         }
-    }
-
-    private ConnectorImplementationRegistry getConnectorImplementationRegistry(DependencyReport dependencyReport) {
-        var implementations = new ArrayList<ConnectorImplementationJar>();
-        dependencyReport.getConnectorImplementations().stream()
-                .map(BarExporter::toConnectorImplementationJar)
-                .forEach(implementations::add);
-        dependencyReport.getFilterImplementations().stream()
-                .map(BarExporter::toConnectorImplementationJar)
-                .forEach(implementations::add);
-        return ConnectorImplementationRegistry.of(implementations);
-    }
-
-    private static ConnectorImplementationJar toConnectorImplementationJar(Implementation implementation) {
-        var artifact = implementation.getArtifact();
-        if (artifact != null) {
-            var artifactInfo = new ArtifactInfo(artifact.getGroupId(), artifact.getArtifactId(),
-                    artifact.getVersion(), artifact.getClassifier(), artifact.getFile());
-            return ConnectorImplementationJar.of(implementation.getImplementationId(),
-                    implementation.getImplementationVersion(), artifactInfo, implementation.getJarEntry());
-        } else {
-            return ConnectorImplementationJar.of(implementation.getImplementationId(),
-                    implementation.getImplementationVersion(), new File(implementation.getArtifact().getFile()),
-                    implementation.getJarEntry());
-        }
-    }
-
-    private List<String> buildClasspath(MavenProject mavenProject) throws DependencyResolutionRequiredException {
-        return Stream
-                .concat(mavenProject.getCompileClasspathElements().stream(),
-                        mavenProject.getRuntimeClasspathElements().stream())
-                .distinct()
-                .collect(Collectors.toList());
     }
 
     private MavenProject getMavenProject(IProject project, IProgressMonitor monitor) throws CoreException {

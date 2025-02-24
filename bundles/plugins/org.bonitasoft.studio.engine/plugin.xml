@@ -103,8 +103,12 @@
               label="%displayTreeDependencies">
            <dynamic
                  class="org.bonitasoft.studio.engine.ui.contributionItem.DisplayMavenDependencyTreeProcessMenuContribution"
-                 id="org.bonitasoft.studio.engine.showMavenDependencyTreeCommand">
+                 id="org.bonitasoft.studio.engine.displayMavenDependencyTreeProcessMenu">
            </dynamic>
+           <dynamic
+            class="org.bonitasoft.studio.engine.ui.contributionItem.DisplayMavenDependencyTreeAllProcessesMenuContribution"
+            id="org.bonitasoft.studio.engine.displayMavenDependencyTreeProjectMenu">
+            </dynamic>
            <visibleWhen
                  checkEnabled="false">
               <with

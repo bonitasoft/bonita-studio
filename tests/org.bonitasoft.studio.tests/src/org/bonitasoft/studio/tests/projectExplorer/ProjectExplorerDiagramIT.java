@@ -101,9 +101,9 @@ public class ProjectExplorerDiagramIT {
         SWTBotTreeItem diagramTreeItem = diagramBot.getDiagramTreeItem(diagramName, DEFAULT_VERSION);
         bot.waitUntil(projectExplorerBot.contextMenuAvailable(diagramTreeItem, action));
         SWTBotMenu contextMenu = diagramTreeItem.contextMenu(action);
-        assertThat(contextMenu.menuItems()).hasSize(1);
-        assertThat(contextMenu.menuItems().get(0)).isEqualTo("All Processes");
-        //TODO Add test for unitary process dependency tree
+        assertThat(contextMenu.menuItems()).hasSize(2);
+        assertThat(contextMenu.menuItems().get(0)).isEqualTo(String.format("%s (%s)", poolName, DEFAULT_VERSION));
+        assertThat(contextMenu.menuItems().get(1)).isEqualTo("All Processes");
     }
 
     private void validateMenuAvailable(String diagramName, String poolName, String action) {

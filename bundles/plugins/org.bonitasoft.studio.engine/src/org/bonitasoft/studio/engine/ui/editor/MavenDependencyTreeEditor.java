@@ -131,4 +131,24 @@ public class MavenDependencyTreeEditor extends MavenPomEditor {
     public boolean isSaveAsAllowed() {
         return false;
     }
+
+    /*
+     * (non-Javadoc)
+     * @see org.eclipse.m2e.editor.pom.MavenPomEditor#close(boolean)
+     */
+    @Override
+    public void close(boolean save) {
+        super.close(save);
+        getEditorInput().notify();
+
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see org.eclipse.ui.part.EditorPart#isSaveOnCloseNeeded()
+     */
+    @Override
+    public boolean isSaveOnCloseNeeded() {
+        return false;
+    }
 }

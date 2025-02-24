@@ -14,42 +14,99 @@
  */
 package org.bonitasoft.studio.engine.ui.contributionItem;
 
+import java.io.File;
+
+import org.apache.maven.model.Model;
+import org.apache.maven.project.MavenProject;
+import org.bonitasoft.bonita2bar.process.pomgen.ProcessPomGenerator;
+import org.bonitasoft.bpm.model.process.AbstractProcess;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.engine.i18n.Messages;
-import org.eclipse.core.commands.Command;
-import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.jface.action.ContributionItem;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Menu;
-import org.eclipse.swt.widgets.MenuItem;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.commands.ICommandService;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.diagram.custom.contributionItem.ListProcessContributionItem;
+import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
+import org.bonitasoft.studio.engine.ConnectorImplementationRegistryHelper;
+import org.bonitasoft.studio.engine.ui.editor.EditorCloseWaiter;
+import org.bonitasoft.studio.engine.ui.editor.MavenDependencyTreeEditor;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.m2e.core.MavenPlugin;
+import org.eclipse.m2e.core.project.IMavenProjectFacade;
+import org.eclipse.swt.widgets.Listener;
+import org.eclipse.ui.part.FileEditorInput;
 
-public class DisplayMavenDependencyTreeProcessMenuContribution extends ContributionItem {
+public class DisplayMavenDependencyTreeProcessMenuContribution extends ListProcessContributionItem {
 
-    private static final String DISPLAY_TREE_COMMAND = "org.bonitasoft.studio.engine.showMavenDependencyTreeCommand";
-
-    public DisplayMavenDependencyTreeProcessMenuContribution() {
-
-    }
-
-    private Command getCommand() {
-        final ICommandService service = PlatformUI.getWorkbench().getService(ICommandService.class);
-        return service.getCommand(DISPLAY_TREE_COMMAND);
-    }
-
+    /*
+     * (non-Javadoc)
+     * @see org.bonitasoft.studio.diagram.custom.contributionItem.ListProcessContributionItem#createSelectionListener(org.bonitasoft.bpm.model.process.
+     * AbstractProcess)
+     */
     @Override
-    public void fill(Menu parent, int index) {
-        var item = new MenuItem(parent, SWT.NONE, index);
-        item.setText(Messages.allProcesses);
-        item.addListener(SWT.Selection, e -> {
+    protected Listener createSelectionListener(AbstractProcess process) {
+        return e -> {
             try {
-                getCommand().executeWithChecks(new ExecutionEvent());
+                var project = RepositoryManager.getInstance().getCurrentProject().orElseThrow();
+                if (project != null && project.exists()) {
+                    displayMavenDependencyTree(project.getAppProject(), process,
+                            new NullProgressMonitor());
+                }
             } catch (Exception ex) {
                 BonitaStudioLog.error(ex);
             }
-        });
-        item.setEnabled(true);
+        };
+    }
+
+    private void displayMavenDependencyTree(IProject project, AbstractProcess process, IProgressMonitor monitor)
+            throws Exception {
+
+        IMavenProjectFacade projectFacade = MavenPlugin.getMavenProjectRegistry().getProject(project);
+        if (projectFacade == null) {
+            throw new CoreException(Status.error("Cannot find Maven project for " + project));
+        }
+
+        var gen = ProcessPomGenerator.create(projectFacade.getMavenProject(monitor),
+                ConnectorImplementationRegistryHelper.getConnectorImplementationRegistry());
+
+        openEditorAndWaitForClose(process, gen);
+
+    }
+
+    private void openEditorAndWaitForClose(AbstractProcess process,
+            ProcessPomGenerator gen) {
+        var diagramRepositoryStore = RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
+
+        new Thread(() -> {
+            try {
+                gen.withGeneratedPom(diagramRepositoryStore.findProcess(process.getName(), process.getVersion()),
+                        pomAccess -> {
+                            Model modelPom = pomAccess.readPom();
+                            MavenProject myPom = new MavenProject(modelPom);
+                            myPom.setFile(modelPom.getPomFile());
+                            FileEditorInput fileEditorInput = new FileEditorInput(getPomFile(myPom.getFile()));
+
+                            // Create an instance of EditorCloseWaiter, enabling or disabling waiting as needed.
+                            EditorCloseWaiter editorWaiter = new EditorCloseWaiter();
+                            editorWaiter.openEditorAndWait(fileEditorInput, MavenDependencyTreeEditor.EDITOR_ID);
+
+                            return null;
+                        });
+            } catch (Exception e) {
+                BonitaStudioLog.error(e);
+            }
+        }).start();
+
+    }
+
+    private IFile getPomFile(File pomJavaFile) {
+        return ResourcesPlugin.getWorkspace()
+                .getRoot()
+                .getFileForLocation(Path.fromOSString(pomJavaFile.getAbsolutePath()));
     }
 
 }
