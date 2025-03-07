@@ -39,7 +39,6 @@ import org.bonitasoft.studio.common.repository.extension.IConfigurationSynchroni
 import org.bonitasoft.studio.configuration.extension.IProcessConfigurationWizardPage;
 import org.bonitasoft.studio.configuration.i18n.Messages;
 import org.bonitasoft.studio.configuration.preferences.ConfigurationPreferenceConstants;
-import org.bonitasoft.studio.configuration.ui.wizard.page.JavaDependenciesConfigurationWizardPage;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -111,7 +110,6 @@ public class ConfigurationSynchronizer implements Synchronizer {
                     BonitaStudioLog.error(e1);
                 }
             }
-            wizardPages.add(new JavaDependenciesConfigurationWizardPage());
         }
     }
 
