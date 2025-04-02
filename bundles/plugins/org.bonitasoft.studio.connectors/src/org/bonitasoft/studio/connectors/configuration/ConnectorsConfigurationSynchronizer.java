@@ -24,8 +24,6 @@ import org.bonitasoft.bpm.model.configuration.Configuration;
 import org.bonitasoft.bpm.model.configuration.ConfigurationFactory;
 import org.bonitasoft.bpm.model.configuration.ConfigurationPackage;
 import org.bonitasoft.bpm.model.configuration.DefinitionMapping;
-import org.bonitasoft.bpm.model.configuration.Fragment;
-import org.bonitasoft.bpm.model.configuration.FragmentContainer;
 import org.bonitasoft.bpm.model.kpi.DatabaseKPIBinding;
 import org.bonitasoft.bpm.model.kpi.KpiPackage;
 import org.bonitasoft.bpm.model.process.AbstractProcess;
@@ -42,9 +40,7 @@ import org.bonitasoft.studio.connector.model.implementation.AbstractConnectorImp
 import org.bonitasoft.studio.connectors.ConnectorPlugin;
 import org.bonitasoft.studio.connectors.repository.ConnectorDefRepositoryStore;
 import org.bonitasoft.studio.connectors.repository.ConnectorImplRepositoryStore;
-import org.bonitasoft.studio.connectors.repository.DatabaseConnectorPropertiesFileStore;
 import org.bonitasoft.studio.connectors.repository.DatabaseConnectorPropertiesRepositoryStore;
-import org.bonitasoft.studio.dependencies.repository.DependencyRepositoryStore;
 import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.edit.command.AddCommand;
 import org.eclipse.emf.edit.domain.EditingDomain;
@@ -114,53 +110,6 @@ public class ConnectorsConfigurationSynchronizer extends AbstractConnectorConfig
                 editingDomain.getCommandStack().execute(AddCommand.create(editingDomain, configuration,
                         ConfigurationPackage.Literals.CONFIGURATION__DEFINITION_MAPPINGS, newAssociation));
                 updateAssociation(configuration, newAssociation, cc, editingDomain);
-            }
-        }
-    }
-
-    @Override
-    protected void updateJarDependencies(FragmentContainer connectorContainer,
-            ConnectorImplementation implementation,
-            EditingDomain editingDomain, CompoundCommand cc, boolean forceDriver) {
-        super.updateJarDependencies(connectorContainer, implementation, editingDomain, cc, forceDriver);
-        store = RepositoryManager.getInstance().getRepositoryStore(DatabaseConnectorPropertiesRepositoryStore.class);
-        final DatabaseConnectorPropertiesFileStore fileStore = store.getChild(
-                implementation.getDefinitionId() + "." + DatabaseConnectorPropertiesRepositoryStore.PROPERTIES_EXT,
-                true);
-
-        if (fileStore != null) {
-            DependencyRepositoryStore depStore = RepositoryManager.getInstance()
-                    .getRepositoryStore(DependencyRepositoryStore.class);
-            final String defaultDriver = fileStore.getDefault();
-            final boolean autoAddDriver = fileStore.getAutoAddDriver() || forceDriver;
-            final Configuration conf = (Configuration) connectorContainer.eContainer().eContainer();
-            FragmentContainer otherDependencies = null;
-            for (final FragmentContainer c : conf.getProcessDependencies()) {
-                if (FragmentTypes.OTHER.equals(c.getId())) {
-                    otherDependencies = c;
-                }
-            }
-            for (final String jar : fileStore.getJarList()) {
-                boolean exists = false;
-                for (final Fragment dep : otherDependencies.getFragments()) {
-                    if (dep.getValue().equals(jar)) {
-                        exists = true;
-                        break;
-                    }
-                }
-                if (!exists) {
-                    if (jar.equals(defaultDriver)
-                            && autoAddDriver
-                            && depStore.findDependencyByName(defaultDriver).isPresent()) {
-                        final Fragment depFragment = ConfigurationFactory.eINSTANCE.createFragment();
-                        depFragment.setExported(true);
-                        depFragment.setKey(jar);
-                        depFragment.setValue(jar);
-                        depFragment.setType(FragmentTypes.JAR);
-                        cc.append(AddCommand.create(editingDomain, otherDependencies,
-                                ConfigurationPackage.Literals.FRAGMENT_CONTAINER__FRAGMENTS, depFragment));
-                    }
-                }
             }
         }
     }

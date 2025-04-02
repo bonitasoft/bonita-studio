@@ -110,6 +110,10 @@ class BonitaStudioApplicationTest {
         job.schedule();
         Job.getJobManager().join(ResourcesPlugin.FAMILY_AUTO_BUILD, null);
 
+        // job cancel is sometimes not immediate...
+        if (job.getResult() == null) {
+            Thread.sleep(1000);
+        }
         assertThat(job.getResult()).isEqualTo(Status.CANCEL_STATUS);
 
         doReturn(true).when(application).isWorkbenchRunning();

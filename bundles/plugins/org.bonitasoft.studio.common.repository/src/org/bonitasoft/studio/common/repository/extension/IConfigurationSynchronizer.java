@@ -24,7 +24,6 @@ import org.eclipse.emf.edit.domain.EditingDomain;
 public interface IConfigurationSynchronizer {
 
     public static final EStructuralFeature PROCESS_DEPENDENCY = ConfigurationPackage.Literals.CONFIGURATION__PROCESS_DEPENDENCIES;
-    public static final EStructuralFeature APPLICATION_DEPENDENCY = ConfigurationPackage.Literals.CONFIGURATION__APPLICATION_DEPENDENCIES;
 
     void synchronize(Configuration configuration, AbstractProcess process, CompoundCommand cc,
             EditingDomain editingDomain);

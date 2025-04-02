@@ -14,7 +14,6 @@
  */
 package org.bonitasoft.studio.application.operation.extension.participant.configuration;
 
-import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 import java.util.HashSet;
@@ -27,11 +26,7 @@ import java.util.stream.Collectors;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.model.Dependency;
 import org.apache.maven.project.MavenProject;
-import org.bonitasoft.bpm.model.configuration.Configuration;
 import org.bonitasoft.studio.application.i18n.Messages;
-import org.bonitasoft.studio.application.operation.extension.participant.configuration.preview.JarAddedChange;
-import org.bonitasoft.studio.application.operation.extension.participant.configuration.preview.JarRemovedChange;
-import org.bonitasoft.studio.application.operation.extension.participant.configuration.preview.JarUpdatedChange;
 import org.bonitasoft.studio.application.operation.extension.participant.preview.PreviewResultImpl;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
@@ -40,7 +35,6 @@ import org.bonitasoft.studio.common.repository.core.migration.dependencies.confi
 import org.bonitasoft.studio.common.repository.core.migration.dependencies.configuration.ProcessConfigurationUpdater;
 import org.bonitasoft.studio.common.repository.extension.update.DependencyUpdate;
 import org.bonitasoft.studio.common.repository.extension.update.participant.ExtensionUpdateParticipant;
-import org.bonitasoft.studio.common.repository.extension.update.preview.ChangePreview;
 import org.bonitasoft.studio.common.repository.extension.update.preview.PreviewMessageProvider;
 import org.bonitasoft.studio.common.repository.extension.update.preview.PreviewResult;
 import org.bonitasoft.studio.common.repository.model.IRepository;
@@ -115,28 +109,6 @@ public class ProcessConfigurationUpdateParticipant implements ExtensionUpdatePar
                     }
                 });
 
-        for (var artifact : currentArtifacts.keySet()) {
-            var key = new ArtifactKey(artifact);
-            updatedArtifacts.stream()
-                    .filter(a -> updateRename.contains(a) || existsInAnotherVersion(new ArtifactKey(a), key))
-                    .findFirst()
-                    .ifPresent(
-                            updatedArtifact -> {
-                                var configurations = configurationCollector
-                                        .findArtifactDependingOn(artifact.getFile().getName());
-                                previewResult
-                                        .addChange(createUpdateChanges(artifact, updatedArtifact, configurations));
-                            });
-            if (updatedArtifacts.stream().noneMatch(a -> updateRename.contains(a)
-                    || existsInSameVersion(new ArtifactKey(a), key)
-                    || existsInAnotherVersion(new ArtifactKey(a), key))) {
-                // Artifact has been removed
-                var configurations = configurationCollector
-                        .findArtifactDependingOn(artifact.getFile().getName());
-                previewResult.addChange(
-                        createRemovedChange(artifact, configurations));
-            }
-        }
         return previewResult;
     }
 
@@ -161,52 +133,6 @@ public class ProcessConfigurationUpdateParticipant implements ExtensionUpdatePar
 
     private boolean isJarDependency(Dependency dependency) {
         return Objects.equals(dependency.getType(), "jar");
-    }
-
-    private JarRemovedChange createRemovedChange(Artifact artifact, Collection<Configuration> configurations) {
-        var change = new JarRemovedChange(artifact.getFile().getName(), configurations);
-        var artifactDependencyTree = currentArtifacts.get(artifact);
-        artifactDependencyTree.stream()
-                .map(Artifact::getFile)
-                .map(File::getName)
-                .map(jarName -> new JarRemovedChange(jarName, change))
-                .forEach(change::addChangeDetail);
-        return change;
-    }
-
-    private ChangePreview createUpdateChanges(Artifact artifact, Artifact updatedArtifact,
-            Collection<Configuration> configurations) {
-        JarUpdatedChange change = new JarUpdatedChange(updatedArtifact, artifact, configurations);
-
-        var artifactDependencyTree = currentArtifacts.get(artifact);
-        var updatedArtifactDependencyTree = transitiveDependencies(updatedArtifact);
-
-        for (var previousArtifactDependency : artifactDependencyTree) {
-            var key = new ArtifactKey(previousArtifactDependency);
-            if (updatedArtifactDependencyTree.stream().noneMatch(a -> existsInSameVersion(new ArtifactKey(a), key)
-                    || existsInAnotherVersion(new ArtifactKey(a), key))) {
-                // Artifact has been removed with the updated
-                change.addChangeDetail(
-                        new JarRemovedChange(previousArtifactDependency.getFile().getName(), change));
-            } else {
-                updatedArtifactDependencyTree.stream()
-                        .filter(a -> existsInAnotherVersion(new ArtifactKey(a), key))
-                        .findFirst()
-                        .ifPresent(a ->
-                        // Artifact has been updated with the updated
-                        change.addChangeDetail(new JarUpdatedChange(a, previousArtifactDependency, null, change)));
-            }
-        }
-        for (var newArtifactDependency : updatedArtifactDependencyTree) {
-            var key = new ArtifactKey(newArtifactDependency);
-            if (artifactDependencyTree.stream().noneMatch(a -> existsInSameVersion(new ArtifactKey(a), key)
-                    || existsInAnotherVersion(new ArtifactKey(a), key))) {
-                // New artifact has been added
-                change.addChangeDetail(new JarAddedChange(newArtifactDependency, change));
-            }
-        }
-
-        return change;
     }
 
     private Artifact toArtifact(MavenProject mavenProject, Dependency currentDependency) {

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde?>
 <!-- generated with https://github.com/eclipse-cbi/targetplatform-dsl -->
-<target name="platform" sequenceNumber="1739185735">
+<target name="platform" sequenceNumber="1743412613">
   <locations>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="true" type="InstallableUnit">
       <unit id="org.eclipse.justj.openjdk.hotspot.jre.full.feature.group" version="21.0.5.v20241023-1957"/>
@@ -100,22 +100,22 @@
       <repository id="Groovy" location="https://groovy.jfrog.io/artifactory/plugins-release/e4.33"/>
     </location>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="true" type="InstallableUnit">
-      <unit id="org.bonitasoft.bonita2bpmn.feature.feature.group" version="0.0.0"/>
-      <unit id="org.bonitasoft.bpm.connector.feature.feature.group" version="0.0.0"/>
-      <unit id="org.bonitasoft.bpm.definitions.feature.feature.group" version="0.0.0"/>
-      <unit id="org.bonitasoft.bpm.model.feature.feature.group" version="0.0.0"/>
-      <unit id="org.bonitasoft.bpm.tests.feature.feature.group" version="0.0.0"/>
-      <unit id="com.fasterxml.jackson.feature.feature.group" version="2.15.2.qualifier"/>
-      <unit id="org.bonitasoft.artifacts.model.feature.feature.group" version="1.1.2"/>
-      <unit id="org.bonitasoft.bonita2bar.feature.feature.group" version="0.0.0"/>
-      <repository id="BonitasoftBPM" location="mvn:org.bonitasoft.bpm:org.bonitasoft.bpm.eclipse-repository:8.2.0-SNAPSHOT:zip"/>
+      <unit id="org.bonitasoft.bonita2bpmn.feature.feature.group" version="9.0.1"/>
+      <unit id="org.bonitasoft.bpm.connector.feature.feature.group" version="9.0.1"/>
+      <unit id="org.bonitasoft.bpm.definitions.feature.feature.group" version="9.0.1"/>
+      <unit id="org.bonitasoft.bpm.model.feature.feature.group" version="9.0.1"/>
+      <unit id="org.bonitasoft.bpm.tests.feature.feature.group" version="9.0.1"/>
+      <unit id="com.fasterxml.jackson.feature.feature.group" version="2.18.3"/>
+      <unit id="org.bonitasoft.artifacts.model.feature.feature.group" version="1.2.0"/>
+      <unit id="org.bonitasoft.bonita2bar.feature.feature.group" version="9.0.1"/>
+      <repository id="BonitasoftBPM" location="mvn:org.bonitasoft.bpm:org.bonitasoft.bpm.eclipse-repository:9.0.1:zip"/>
     </location>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="true" type="InstallableUnit">
       <unit id="org.apache.commons.commons-io" version="2.16.1"/>
       <repository id="Orbit2024-03" location="https://download.eclipse.org/tools/orbit/simrel/maven-osgi/2024-09/"/>
     </location>
     <location includeDependencyDepth="none" includeDependencyScopes="compile,runtime,system" includeSource="true" missingManifest="generate" type="Maven" label="BonitaArtifactsModels">
-      <feature id="org.bonitasoft.artifacts.model.studio.feature.feature.group" label="Extra Bonita Artifacts Models required by Studio but not in BonitasoftBPM" provider-name="Bonitasoft S.A" version="1.1.2">
+      <feature id="org.bonitasoft.artifacts.model.studio.feature.feature.group" label="Extra Bonita Artifacts Models required by Studio but not in BonitasoftBPM" provider-name="Bonitasoft S.A" version="1.2.0">
       </feature>
       <dependencies>
         <dependency>
@@ -139,31 +139,31 @@
         <dependency>
           <groupId>org.bonitasoft.engine</groupId>
           <artifactId>bonita-application-model</artifactId>
-          <version>1.1.2</version>
+          <version>1.2.0</version>
           <type>jar</type>
         </dependency>
         <dependency>
           <groupId>org.bonitasoft.engine</groupId>
           <artifactId>bonita-bdm-access-control-model</artifactId>
-          <version>1.1.2</version>
+          <version>1.2.0</version>
           <type>jar</type>
         </dependency>
         <dependency>
           <groupId>org.bonitasoft.engine</groupId>
           <artifactId>bonita-business-object-model</artifactId>
-          <version>1.1.2</version>
+          <version>1.2.0</version>
           <type>jar</type>
         </dependency>
         <dependency>
           <groupId>org.bonitasoft.engine</groupId>
           <artifactId>bonita-organization-model</artifactId>
-          <version>1.1.2</version>
+          <version>1.2.0</version>
           <type>jar</type>
         </dependency>
         <dependency>
           <groupId>org.bonitasoft.engine</groupId>
           <artifactId>bonita-profile-model</artifactId>
-          <version>1.1.2</version>
+          <version>1.2.0</version>
           <type>jar</type>
         </dependency>
         <dependency>
