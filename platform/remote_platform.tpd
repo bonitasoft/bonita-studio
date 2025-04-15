@@ -87,7 +87,7 @@ location Groovy "https://groovy.jfrog.io/artifactory/plugins-release/e4.33" {
 	org.codehaus.groovy30.feature.feature.group [5.5.0,5.6.0)
 	org.codehaus.groovy.eclipse.feature.feature.group [5.5.0,5.6.0)
 }
-location BonitasoftBPM "mvn:org.bonitasoft.bpm:org.bonitasoft.bpm.eclipse-repository:9.0.1:zip" {
+location BonitasoftBPM "mvn:org.bonitasoft.bpm:org.bonitasoft.bpm.eclipse-repository:9.0.2:zip" {
 	org.bonitasoft.bonita2bpmn.feature.feature.group
     org.bonitasoft.bpm.connector.feature.feature.group
     org.bonitasoft.bpm.definitions.feature.feature.group
@@ -158,7 +158,7 @@ maven BonitaArtifactsModels scope=compile,runtime,system dependencyDepth=none mi
     feature {
         id="org.bonitasoft.artifacts.model.studio.feature.feature.group"
         name="Extra Bonita Artifacts Models required by Studio but not in BonitasoftBPM"
-        version="1.2.0"
+        version="1.2.2"
         vendor="Bonitasoft S.A"
     }
     dependency {
@@ -180,27 +180,27 @@ maven BonitaArtifactsModels scope=compile,runtime,system dependencyDepth=none mi
     dependency {
         groupId="org.bonitasoft.engine"
         artifactId="bonita-application-model"
-        version="1.2.0"
+        version="1.2.2"
     }
     dependency {
         groupId="org.bonitasoft.engine"
         artifactId="bonita-bdm-access-control-model"
-        version="1.2.0"
+        version="1.2.2"
     }
     dependency {
         groupId="org.bonitasoft.engine"
         artifactId="bonita-business-object-model"
-        version="1.2.0"
+        version="1.2.2"
     }
     dependency {
         groupId="org.bonitasoft.engine"
         artifactId="bonita-organization-model"
-        version="1.2.0"
+        version="1.2.2"
     }
     dependency {
         groupId="org.bonitasoft.engine"
         artifactId="bonita-profile-model"
-        version="1.2.0"
+        version="1.2.2"
     }
     dependency {
         groupId="org.glassfish.hk2"
