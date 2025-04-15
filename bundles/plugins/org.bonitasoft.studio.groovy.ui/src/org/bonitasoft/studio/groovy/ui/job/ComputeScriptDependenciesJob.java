@@ -16,12 +16,12 @@ package org.bonitasoft.studio.groovy.ui.job;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
@@ -47,7 +47,7 @@ import org.eclipse.jdt.core.JavaModelException;
  */
 public class ComputeScriptDependenciesJob extends Job {
 
-    private final Map<String, List<EObject>> cache;
+    private final ConcurrentMap<String, List<EObject>> cache;
 
     private List<ScriptVariable> nodes = new ArrayList<ScriptVariable>();
 
@@ -57,7 +57,7 @@ public class ComputeScriptDependenciesJob extends Job {
 
     public ComputeScriptDependenciesJob(final BonitaScriptGroovyCompilationUnit groovyCompilationUnit) {
         super(ComputeScriptDependenciesJob.class.getName());
-        cache = new HashMap<String, List<EObject>>();
+        cache = new ConcurrentHashMap<>();
         this.groovyCompilationUnit = groovyCompilationUnit;
     }
 
@@ -79,16 +79,15 @@ public class ComputeScriptDependenciesJob extends Job {
             return Collections.<EObject> emptyList();
         }
         String expression = groovyCompilationUnit.getSource();
-        computeDependencies(expression);
-        return cache.containsKey(expression) ? cache.get(expression) : Collections.<EObject> emptyList();
+        return computeDependencies(expression);
     }
 
     protected List<EObject> computeDependencies(String expression) {
-        final List<EObject> deps = new ArrayList<EObject>();
-        if (expression != null && cache.get(expression) == null) {
+        List<EObject> dependencies = expression == null ? null : cache.computeIfAbsent(expression, e -> {
             if (groovyCompilationUnit.getModuleNode() != null) {
                 BlockStatement astNode = groovyCompilationUnit.getModuleNode().getStatementBlock();
                 if (astNode != null) {
+                    final List<EObject> deps = new ArrayList<>();
                     final BlockStatement blockStatement = (BlockStatement) astNode;
                     final Set<String> referencedVariable = new HashSet<String>();
                     final Iterator<Variable> referencedClassVariablesIterator = blockStatement.getVariableScope()
@@ -104,13 +103,14 @@ public class ComputeScriptDependenciesJob extends Job {
                     }
 
                     addDependenciesForFoundVariables(referencedVariable, deps);
-                    cache.put(expression, deps);
+                    return deps;
                 }
             }
-        } else if (cache.get(expression) != null) {
-            deps.addAll(cache.get(expression));
-        }
-        return deps;
+            // null value will not be put in cache as per ConcurrentMap contract
+            return null;
+        });
+
+        return dependencies != null ? new ArrayList<>(dependencies) : Collections.emptyList();
     }
 
     protected void addDependenciesForFoundVariables(
@@ -126,12 +126,14 @@ public class ComputeScriptDependenciesJob extends Job {
                 deps.add(EcoreUtil.copy(daoExpression));
                 continue variablesloop;
             }
-            for (final IExpressionProvider provider : ExpressionProviderService.getInstance().getExpressionProviders()) {
+            for (final IExpressionProvider provider : ExpressionProviderService.getInstance()
+                    .getExpressionProviders()) {
                 if (provider.isRelevantFor(context)) {
                     for (final Expression exp : provider.getExpressions(context)) {
                         if (exp.getName().equals(name)) {
                             if (!exp.getReferencedElements().isEmpty()) {
-                                deps.add(ExpressionHelper.createDependencyFromEObject(exp.getReferencedElements().get(0)));
+                                deps.add(ExpressionHelper
+                                        .createDependencyFromEObject(exp.getReferencedElements().get(0)));
                             } else if (ExpressionConstants.MULTIINSTANCE_ITERATOR_TYPE.equals(exp.getType())) {
                                 deps.add(EcoreUtil.copy(exp));
                             }
@@ -159,11 +161,7 @@ public class ComputeScriptDependenciesJob extends Job {
     }
 
     public List<EObject> getDependencies(final String expression) {
-        if (cache.containsKey(expression)) {
-            return cache.get(expression);
-        } else {
-            return computeDependencies(expression);
-        }
+        return computeDependencies(expression);
     }
 
     public List<ScriptVariable> getNodes() {
