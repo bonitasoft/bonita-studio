@@ -6,10 +6,10 @@ Bundle-ClassPath:
  lib/bonita-common.jar
 Bundle-ManifestVersion: 2
 Bundle-Name: Bonita Common Bundle
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Bundle-SymbolicName: org.bonitasoft.engine.bonita-common;singleton:=true
 Bundle-Vendor: Bonitasoft S.A.
-Bundle-Version: 9.0.9.qualifier
+Bundle-Version: 10.0.7.qualifier
 Export-Package: org.bonitasoft.engine,
  org.bonitasoft.engine.api,
  org.bonitasoft.engine.api.impl,
@@ -89,8 +89,8 @@ Require-Bundle: com.fasterxml.jackson.core.jackson-annotations,
  org.bonitasoft.engine.bonita-common-artifacts-model;visibility:=reexport,
  org.bonitasoft.engine.bonita-business-archive;visibility:=reexport,
  org.bonitasoft.engine.bonita-form-mapping-model;visibility:=reexport,
- org.bonitasoft.engine.bonita-business-object-model;visibility:=reexport,
- org.bonitasoft.engine.bonita-profile-model;visibility:=reexport,
- org.bonitasoft.engine.bonita-organization-model;visibility:=reexport,
- org.bonitasoft.engine.bonita-application-model;visibility:=reexport,
+ wrapped.org.bonitasoft.engine.bonita-business-object-model;visibility:=reexport,
+ wrapped.org.bonitasoft.engine.bonita-profile-model;visibility:=reexport,
+ wrapped.org.bonitasoft.engine.bonita-organization-model;visibility:=reexport,
+ wrapped.org.bonitasoft.engine.bonita-application-model;visibility:=reexport,
  org.bonitasoft.engine.bonita-process-definition-model;bundle-version="1.0.0"

@@ -25,7 +25,7 @@ import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.properties.i18n.Messages;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
-import org.eclipse.core.databinding.beans.PojoProperties;
+import org.eclipse.core.databinding.beans.typed.PojoProperties;
 import org.eclipse.core.databinding.conversion.Converter;
 import org.eclipse.core.databinding.conversion.text.NumberToStringConverter;
 import org.eclipse.core.databinding.conversion.text.StringToNumberConverter;
@@ -33,7 +33,7 @@ import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.osgi.util.NLS;
@@ -284,7 +284,7 @@ public class CronEditor extends Composite {
         everyRadio.setLayoutData(GridDataFactory.fillDefaults().align(SWT.BEGINNING, SWT.CENTER).create());
         everyRadio.setText(Messages.every);
 
-        context.bindValue(SWTObservables.observeSelection(everyRadio),
+        context.bindValue(WidgetProperties.buttonSelection().observe(everyRadio),
                 PojoProperties.value("everyYearForYearly").observe(cronExpression));
 
         final Composite everyComposite = new Composite(yearlyContent, SWT.NONE);
@@ -374,7 +374,7 @@ public class CronEditor extends Composite {
 
         });
 
-        context.bindValue(SWTObservables.observeText(monthCombo),
+        context.bindValue(WidgetProperties.text().observe(monthCombo),
                 PojoProperties.value("monthForYearly").observe(cronExpression), monthComboStrategy, monthComboStrategy2);
 
         final Text dayText = new Text(everyComposite, SWT.BORDER | SWT.SINGLE);
@@ -384,7 +384,7 @@ public class CronEditor extends Composite {
         dayTextStrategy.setAfterGetValidator(dotValidator);
         dayTextStrategy.setConverter(StringToNumberConverter.toInteger(true));
         dayTextStrategy.setBeforeSetValidator(new DayInMonthValidator());
-        context.bindValue(SWTObservables.observeText(dayText, SWT.Modify),
+        context.bindValue(WidgetProperties.text(SWT.Modify).observe(dayText),
                 PojoProperties.value("dayOfMonthForYearly").observe(cronExpression), dayTextStrategy, null);
 
         final Button theRadio = new Button(yearlyContent, SWT.RADIO);
@@ -450,7 +450,7 @@ public class CronEditor extends Composite {
 
         });
 
-        context.bindValue(SWTObservables.observeText(rankCombo),
+        context.bindValue(WidgetProperties.text().observe(rankCombo),
                 PojoProperties.value("monthRankForYearly").observe(cronExpression), rankComboStrategy, rankComboStrategy2);
 
         final Combo dayCombo = new Combo(theComposite, SWT.READ_ONLY | SWT.BORDER);
@@ -516,7 +516,7 @@ public class CronEditor extends Composite {
 
         });
 
-        context.bindValue(SWTObservables.observeText(dayCombo),
+        context.bindValue(WidgetProperties.text().observe(dayCombo),
                 PojoProperties.value("dayOfWeekForYearly").observe(cronExpression), dayComboStrategy, dayComboStrategy2);
 
         final Label ofLabel = new Label(theComposite, SWT.NONE);
@@ -606,7 +606,7 @@ public class CronEditor extends Composite {
 
         });
 
-        context.bindValue(SWTObservables.observeText(monthCombo2),
+        context.bindValue(WidgetProperties.text().observe(monthCombo2),
                 PojoProperties.value("monthOfYearForYearly").observe(cronExpression), monthCombo2Strategy,
                 monthCombo2Strategy2);
 
@@ -640,7 +640,7 @@ public class CronEditor extends Composite {
         UpdateValueStrategy hourStrategy2 = new UpdateValueStrategy();
         hourStrategy2.setConverter(NumberToStringConverter.fromInteger(formatter, true));
 
-        context.bindValue(SWTObservables.observeText(hourCombo), hourObservable, hourStrategy, hourStrategy2);
+        context.bindValue(WidgetProperties.text().observe(hourCombo), hourObservable, hourStrategy, hourStrategy2);
 
         final Combo minuteCombo = new Combo(timeComposite, SWT.READ_ONLY | SWT.BORDER);
         minuteCombo.setItems(MINUTES_IN_HOURS);
@@ -648,7 +648,7 @@ public class CronEditor extends Composite {
         minuteStrategy.setConverter(StringToNumberConverter.toInteger(true));
         UpdateValueStrategy minuteStrategy2 = new UpdateValueStrategy();
         minuteStrategy2.setConverter(NumberToStringConverter.fromInteger(formatter, true));
-        context.bindValue(SWTObservables.observeText(minuteCombo), minuteObservable, minuteStrategy, minuteStrategy2);
+        context.bindValue(WidgetProperties.text().observe(minuteCombo), minuteObservable, minuteStrategy, minuteStrategy2);
 
         final Combo secondCombo = new Combo(timeComposite, SWT.READ_ONLY | SWT.BORDER);
         secondCombo.setItems(MINUTES_IN_HOURS);
@@ -656,7 +656,7 @@ public class CronEditor extends Composite {
         secondStrategy.setConverter(StringToNumberConverter.toInteger(true));
         UpdateValueStrategy secondStrategy2 = new UpdateValueStrategy();
         secondStrategy2.setConverter(NumberToStringConverter.fromInteger(formatter, true));
-        context.bindValue(SWTObservables.observeText(secondCombo), secondObservable, secondStrategy, secondStrategy2);
+        context.bindValue(WidgetProperties.text().observe(secondCombo), secondObservable, secondStrategy, secondStrategy2);
 
         return timeComposite;
     }
@@ -673,7 +673,7 @@ public class CronEditor extends Composite {
         dayRadio.setLayoutData(GridDataFactory.fillDefaults().align(SWT.BEGINNING, SWT.CENTER).create());
         dayRadio.setText(Messages.day);
 
-        context.bindValue(SWTObservables.observeSelection(dayRadio),
+        context.bindValue(WidgetProperties.buttonSelection().observe(dayRadio),
                 PojoProperties.value("useDayInMonthForMonthly").observe(cronExpression));
 
         final Composite dayComposite = new Composite(monthlyContent, SWT.NONE);
@@ -687,7 +687,7 @@ public class CronEditor extends Composite {
         dayTextStrategy.setAfterGetValidator(dotValidator);
         dayTextStrategy.setConverter(StringToNumberConverter.toInteger(true));
         dayTextStrategy.setBeforeSetValidator(new DayInMonthValidator());
-        context.bindValue(SWTObservables.observeText(dayText, SWT.Modify),
+        context.bindValue(WidgetProperties.text(SWT.Modify).observe(dayText),
                 PojoProperties.value("dayOfMonthForMonthly").observe(cronExpression), dayTextStrategy, null);
 
         final Label ofEveryLabel = new Label(dayComposite, SWT.NONE);
@@ -701,7 +701,7 @@ public class CronEditor extends Composite {
         everyMonthTextStrategy.setAfterGetValidator(dotValidator);
         everyMonthTextStrategy.setConverter(StringToNumberConverter.toInteger(true));
         everyMonthTextStrategy.setBeforeSetValidator(new MonthInYearValidator());
-        context.bindValue(SWTObservables.observeText(everyMonthText, SWT.Modify),
+        context.bindValue(WidgetProperties.text(SWT.Modify).observe(everyMonthText),
                 PojoProperties.value("monthInYearForMonthly").observe(cronExpression), everyMonthTextStrategy, null);
 
         final Label monthLabel = new Label(dayComposite, SWT.NONE);
@@ -771,7 +771,7 @@ public class CronEditor extends Composite {
 
         });
 
-        context.bindValue(SWTObservables.observeText(rankCombo),
+        context.bindValue(WidgetProperties.text().observe(rankCombo),
                 PojoProperties.value("monthRankForMonthly").observe(cronExpression), rankComboStrategy, rankComboStrategy2);
 
         final Combo dayCombo = new Combo(theComposite, SWT.READ_ONLY | SWT.BORDER);
@@ -837,7 +837,7 @@ public class CronEditor extends Composite {
 
         });
 
-        context.bindValue(SWTObservables.observeText(dayCombo),
+        context.bindValue(WidgetProperties.text().observe(dayCombo),
                 PojoProperties.value("dayOfWeekForMonthly").observe(cronExpression), dayComboStrategy, dayComboStrategy2);
 
         final Label ofEveryLabel2 = new Label(theComposite, SWT.NONE);
@@ -850,7 +850,7 @@ public class CronEditor extends Composite {
         UpdateValueStrategy everyMonthText2Strategy = new UpdateValueStrategy();
         everyMonthText2Strategy.setConverter(StringToNumberConverter.toInteger(true));
         everyMonthText2Strategy.setBeforeSetValidator(new FrequencyValidator());
-        context.bindValue(SWTObservables.observeText(everyMonthText2, SWT.Modify),
+        context.bindValue(WidgetProperties.text(SWT.Modify).observe(everyMonthText2),
                 PojoProperties.value("monthOfYearForMonthly").observe(cronExpression), everyMonthText2Strategy, null);
 
         final Label monthLabel2 = new Label(theComposite, SWT.NONE);
@@ -875,37 +875,37 @@ public class CronEditor extends Composite {
 
         final Button mondayButton = new Button(weeklyContent, SWT.CHECK);
         mondayButton.setText(Messages.monday);
-        context.bindValue(SWTObservables.observeSelection(mondayButton),
+        context.bindValue(WidgetProperties.buttonSelection().observe(mondayButton),
                 PojoProperties.value("onMonday").observe(cronExpression));
 
         final Button tuesdayButton = new Button(weeklyContent, SWT.CHECK);
         tuesdayButton.setText(Messages.tuesday);
-        context.bindValue(SWTObservables.observeSelection(tuesdayButton),
+        context.bindValue(WidgetProperties.buttonSelection().observe(tuesdayButton),
                 PojoProperties.value("onTuesday").observe(cronExpression));
 
         final Button wednesdayButton = new Button(weeklyContent, SWT.CHECK);
         wednesdayButton.setText(Messages.wednesday);
-        context.bindValue(SWTObservables.observeSelection(wednesdayButton),
+        context.bindValue(WidgetProperties.buttonSelection().observe(wednesdayButton),
                 PojoProperties.value("onWednesday").observe(cronExpression));
 
         final Button thursdayButton = new Button(weeklyContent, SWT.CHECK);
         thursdayButton.setText(Messages.thursday);
-        context.bindValue(SWTObservables.observeSelection(thursdayButton),
+        context.bindValue(WidgetProperties.buttonSelection().observe(thursdayButton),
                 PojoProperties.value("onThursday").observe(cronExpression));
 
         final Button fridayButton = new Button(weeklyContent, SWT.CHECK);
         fridayButton.setText(Messages.friday);
-        context.bindValue(SWTObservables.observeSelection(fridayButton),
+        context.bindValue(WidgetProperties.buttonSelection().observe(fridayButton),
                 PojoProperties.value("onFriday").observe(cronExpression));
 
         final Button saturdayButton = new Button(weeklyContent, SWT.CHECK);
         saturdayButton.setText(Messages.saturday);
-        context.bindValue(SWTObservables.observeSelection(saturdayButton),
+        context.bindValue(WidgetProperties.buttonSelection().observe(saturdayButton),
                 PojoProperties.value("onSaturday").observe(cronExpression));
 
         final Button sundayButton = new Button(weeklyContent, SWT.CHECK);
         sundayButton.setText(Messages.sunday);
-        context.bindValue(SWTObservables.observeSelection(sundayButton),
+        context.bindValue(WidgetProperties.buttonSelection().observe(sundayButton),
                 PojoProperties.value("onSunday").observe(cronExpression));
 
         final IObservableValue hourObservable = PojoProperties.value("atHourInWeek").observe(cronExpression);
@@ -929,7 +929,7 @@ public class CronEditor extends Composite {
         everyRadio.setLayoutData(GridDataFactory.fillDefaults().align(SWT.BEGINNING, SWT.CENTER).create());
         everyRadio.setText(Messages.every);
 
-        context.bindValue(SWTObservables.observeSelection(everyRadio),
+        context.bindValue(WidgetProperties.buttonSelection().observe(everyRadio),
                 PojoProperties.value("useEveryDayForDaily").observe(cronExpression));
 
         final Composite everyComposite = new Composite(dailyContent, SWT.NONE);
@@ -943,7 +943,7 @@ public class CronEditor extends Composite {
         dayFrequencyStrategy.setAfterGetValidator(dotValidator);
         dayFrequencyStrategy.setConverter(StringToNumberConverter.toInteger(true));
         dayFrequencyStrategy.setBeforeSetValidator(new FrequencyValidator());
-        context.bindValue(SWTObservables.observeText(dayText, SWT.Modify),
+        context.bindValue(WidgetProperties.text(SWT.Modify).observe(dayText),
                 PojoProperties.value("dayFrequencyForDaily").observe(cronExpression), dayFrequencyStrategy, null);
 
         final Label dayLabel = new Label(everyComposite, SWT.NONE);
@@ -977,7 +977,7 @@ public class CronEditor extends Composite {
         everyRadio.setLayoutData(GridDataFactory.fillDefaults().align(SWT.BEGINNING, SWT.CENTER).create());
         everyRadio.setText(Messages.every);
 
-        context.bindValue(SWTObservables.observeSelection(everyRadio),
+        context.bindValue(WidgetProperties.buttonSelection().observe(everyRadio),
                 PojoProperties.value("useEveryHour").observe(cronExpression));
 
         final Composite everyComposite = new Composite(hourlyContent, SWT.NONE);
@@ -992,7 +992,7 @@ public class CronEditor extends Composite {
         hourFrequencyStrategy.setConverter(StringToNumberConverter.toInteger(true));
         hourFrequencyStrategy.setBeforeSetValidator(new FrequencyValidator());
 
-        context.bindValue(SWTObservables.observeText(minuteText, SWT.Modify),
+        context.bindValue(WidgetProperties.text(SWT.Modify).observe(minuteText),
                 PojoProperties.value("hourFrequencyForHourly").observe(cronExpression), hourFrequencyStrategy, null);
 
         final Label minuteLabel = new Label(everyComposite, SWT.NONE);
@@ -1016,7 +1016,7 @@ public class CronEditor extends Composite {
 
         Format formatter = new DecimalFormat("#00");
         hourStrategy2.setConverter(NumberToStringConverter.fromInteger(formatter, true));
-        context.bindValue(SWTObservables.observeText(hourCombo),
+        context.bindValue(WidgetProperties.text().observe(hourCombo),
                 PojoProperties.value("atHour").observe(cronExpression), hourStrategy, hourStrategy2);
 
         final Combo minuteCombo = new Combo(atComposite, SWT.READ_ONLY | SWT.BORDER);
@@ -1026,7 +1026,7 @@ public class CronEditor extends Composite {
         minuteStrategy.setConverter(StringToNumberConverter.toInteger(true));
         UpdateValueStrategy minuteStrategy2 = new UpdateValueStrategy();
         minuteStrategy2.setConverter(NumberToStringConverter.fromInteger(formatter, true));
-        context.bindValue(SWTObservables.observeText(minuteCombo),
+        context.bindValue(WidgetProperties.text().observe(minuteCombo),
                 PojoProperties.value("atMinute").observe(cronExpression), minuteStrategy, minuteStrategy2);
 
         final Combo secondCombo = new Combo(atComposite, SWT.READ_ONLY | SWT.BORDER);
@@ -1037,7 +1037,7 @@ public class CronEditor extends Composite {
         secondStrategy.setConverter(StringToNumberConverter.toInteger(true));
         UpdateValueStrategy secondStrategy2 = new UpdateValueStrategy();
         secondStrategy2.setConverter(NumberToStringConverter.fromInteger(formatter, true));
-        context.bindValue(SWTObservables.observeText(secondCombo), secondObservable, secondStrategy, secondStrategy2);
+        context.bindValue(WidgetProperties.text().observe(secondCombo), secondObservable, secondStrategy, secondStrategy2);
 
         item.setControl(hourlyContent);
     }
@@ -1060,7 +1060,7 @@ public class CronEditor extends Composite {
         strategy.setAfterGetValidator(dotValidator);
         strategy.setConverter(StringToNumberConverter.toInteger(true));
         strategy.setBeforeSetValidator(new FrequencyValidator());
-        context.bindValue(SWTObservables.observeText(minuteText, SWT.Modify),
+        context.bindValue(WidgetProperties.text(SWT.Modify).observe(minuteText),
                 PojoProperties.value("minuteFrequencyForMinute").observe(cronExpression), strategy, null);
 
         final Label minuteLabel = new Label(minuteContent, SWT.NONE);

@@ -37,7 +37,7 @@ public class CreateCustomWidgetOperation extends CreateUIDArtifactOperation {
             RepositoryAccessor repositoryAccessor) {
         super(pageDesignerURLBuilder, repositoryAccessor);
     }
-
+    
     @Override
     protected void doRun(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
         Map<String, Object> bodyObject = createBody();

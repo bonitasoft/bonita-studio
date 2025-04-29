@@ -53,7 +53,7 @@ public class SQLLogUtil {
      * performance by "guarding" trace calls that do something expensive, such as
      * creating objects.  For example:
      *   if (getPlugin().getLogUtil().isTracing()) {
-     *     getPlugin().getLogUtil().writeTraceEntry( new Object[] {new Integer( intval )} ); 
+     *     getPlugin().getLogUtil().writeTraceEntry( new Object[] {Integer.valueOf( intval )} ); 
      *   } 
      * @return true when tracing is active, otherwise false
      */
@@ -261,7 +261,7 @@ public class SQLLogUtil {
      */
     public boolean writeTraceExit(boolean returnValue) {
         if (getCurrentPlugin() != null && getCurrentPlugin().isDebugging()) {
-            writeTraceExit(new Boolean(returnValue));
+            writeTraceExit(Boolean.valueOf(returnValue));
         }
         return returnValue;
     }
@@ -278,7 +278,7 @@ public class SQLLogUtil {
      */
     public int writeTraceExit(int returnValue) {
         if (getCurrentPlugin() != null && getCurrentPlugin().isDebugging()) {
-            writeTraceExit(new Integer(returnValue));
+            writeTraceExit(Integer.valueOf(returnValue));
         }
         return returnValue;
     }

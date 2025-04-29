@@ -32,6 +32,7 @@ import org.bonitasoft.studio.common.repository.core.migration.step.CreatePomMigr
 import org.bonitasoft.studio.common.repository.core.migration.step.DeleteProjectSettingsMigrationStep;
 import org.bonitasoft.studio.common.repository.core.migration.step.ExtensionsModuleMigrationStep;
 import org.bonitasoft.studio.common.repository.core.migration.step.GitIgnoreMigrationStep;
+import org.bonitasoft.studio.common.repository.core.migration.step.Java17UpdateStep;
 import org.bonitasoft.studio.common.repository.core.migration.step.JavaDependenciesMigrationStep;
 import org.bonitasoft.studio.common.repository.core.migration.step.MultiModuleMigrationStep;
 import org.bonitasoft.studio.common.repository.core.migration.step.ProvidedGroovyScriptRemovedStep;
@@ -64,7 +65,8 @@ public class BonitaProjectMigrator {
             new BonitaProjectParentVersionStep(),
             new ApplicationModuleConfigurationStep(),
             new BdmAssemblyConfigurationStep(),
-            new RemoveFlattenPluginExecutionStep());
+            new RemoveFlattenPluginExecutionStep(),
+            new Java17UpdateStep());
     
 
     private static final List<MigrationStep> POST_STEPS = List.of(

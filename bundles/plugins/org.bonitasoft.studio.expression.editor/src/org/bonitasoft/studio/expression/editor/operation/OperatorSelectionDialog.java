@@ -17,20 +17,20 @@ package org.bonitasoft.studio.expression.editor.operation;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bonitasoft.bpm.model.expression.Expression;
+import org.bonitasoft.bpm.model.expression.ExpressionPackage;
+import org.bonitasoft.bpm.model.expression.Operation;
+import org.bonitasoft.bpm.model.expression.Operator;
 import org.bonitasoft.bpm.model.util.ExpressionConstants;
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.expression.editor.i18n.Messages;
 import org.bonitasoft.studio.expression.editor.provider.IOperatorEditor;
-import org.bonitasoft.bpm.model.expression.Expression;
-import org.bonitasoft.bpm.model.expression.ExpressionPackage;
-import org.bonitasoft.bpm.model.expression.Operation;
-import org.bonitasoft.bpm.model.expression.Operator;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.jface.databinding.viewers.ViewersObservables;
+import org.eclipse.jface.databinding.viewers.typed.ViewerProperties;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -145,7 +145,7 @@ public class OperatorSelectionDialog extends Dialog implements ISelectionChanged
         }
         createOperatorEditorFor(section, operator.getType(), operator, exp);
 
-        context.bindValue(ViewersObservables.observeSingleSelection(operatorViewer),
+        context.bindValue(ViewerProperties.singleSelection().observe(operatorViewer),
                 EMFObservables.observeValue(operator, ExpressionPackage.Literals.OPERATOR__TYPE));
         operatorViewer.addSelectionChangedListener(this);
 

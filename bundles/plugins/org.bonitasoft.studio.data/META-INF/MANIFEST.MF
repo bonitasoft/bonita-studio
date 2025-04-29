@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: BonitaSoft Datas
 Bundle-SymbolicName: org.bonitasoft.studio.data;singleton:=true
-Bundle-Version: 9.0.9.qualifier
+Bundle-Version: 10.0.7.qualifier
 Bundle-Localization: plugin
 Bundle-Activator: org.bonitasoft.studio.data.DataPlugin
 Bundle-Vendor: BonitaSoft S.A.
@@ -43,7 +43,7 @@ Require-Bundle: org.eclipse.ui,
  org.bonitasoft.studio.ui,
  org.bonitasoft.studio.groovy.ui,
  org.bonitasoft.studio.common.ui
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Bundle-ActivationPolicy: lazy
 Export-Package: org.bonitasoft.studio.data.i18n;
   x-friends:="org.bonitasoft.studio.diagram.test,
@@ -54,6 +54,6 @@ Export-Package: org.bonitasoft.studio.data.i18n;
  org.bonitasoft.studio.data.provider,
  org.bonitasoft.studio.data.ui.property.section,
  org.bonitasoft.studio.data.util
-Import-Package: javax.inject;version="1.0.0",
+Import-Package: jakarta.inject;version="2.0.1",
  org.bonitasoft.engine.bpm.bar,
  org.bonitasoft.engine.bpm.document

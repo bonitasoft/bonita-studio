@@ -14,12 +14,16 @@
  */
 package org.bonitasoft.studio.swtbot.framework.application;
 
+import java.text.MessageFormat;
+
+import org.bonitasoft.bpm.model.process.Pool;
 import org.bonitasoft.studio.application.coolbar.PreferenceCoolbarItem;
 import org.bonitasoft.studio.application.views.overview.ProjectOverviewEditorPart;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.repository.BuildScheduler;
 import org.bonitasoft.studio.common.ui.jface.SWTBotConstants;
 import org.bonitasoft.studio.la.i18n.Messages;
-import org.bonitasoft.bpm.model.process.Pool;
 import org.bonitasoft.studio.swtbot.framework.application.editor.BotProjectOverviewEditor;
 import org.bonitasoft.studio.swtbot.framework.application.menu.AbstractBotMenu;
 import org.bonitasoft.studio.swtbot.framework.bdm.BotBdmEditor;
@@ -35,6 +39,7 @@ import org.bonitasoft.studio.swtbot.framework.la.SelectApplicationToDeployWizard
 import org.bonitasoft.studio.swtbot.framework.preferences.BotPreferencesDialog;
 import org.bonitasoft.studio.swtbot.framework.team.git.BotGitCloneDialog;
 import org.bonitasoft.studio.swtbot.framework.team.git.BotGitInitDialog;
+import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
 import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
@@ -45,6 +50,7 @@ import org.eclipse.swtbot.swt.finder.matchers.WithId;
 import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
 import org.eclipse.swtbot.swt.finder.waits.ICondition;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotMenu;
+import org.eclipse.swtbot.swt.finder.widgets.TimeoutException;
 import org.eclipse.ui.IEditorReference;
 
 /**
@@ -103,7 +109,7 @@ public class BotApplicationWorkbenchWindow extends AbstractBotMenu {
         }, 40000);
         return this;
     }
-    
+
     public BotApplicationWorkbenchWindow close() {
         final int nbEditorsBefore = bot.editors().size();
         bot.waitUntil(Conditions.widgetIsEnabled(bot.menu("File")), 40000);
@@ -138,7 +144,7 @@ public class BotApplicationWorkbenchWindow extends AbstractBotMenu {
         final Pool selectedProcess = ModelHelper.getFirstContainerOfType(ep.resolveSemanticElement(), Pool.class);
         return new BotConfigureDialog(bot, selectedProcess.getName() + " (" + selectedProcess.getVersion() + ")");
     }
-    
+
     public BotConfigureDialog configure(String environment) {
         bot.waitUntil(Conditions
                 .widgetIsEnabled(bot.toolbarDropDownButtonWithId(SWTBotConstants.SWTBOT_ID_CONFIGURE_TOOLITEM)));
@@ -147,7 +153,8 @@ public class BotApplicationWorkbenchWindow extends AbstractBotMenu {
         final IGraphicalEditPart ep = (IGraphicalEditPart) editor.getDiagramGraphicalViewer().getSelectedEditParts()
                 .get(0);
         final Pool selectedProcess = ModelHelper.getFirstContainerOfType(ep.resolveSemanticElement(), Pool.class);
-        return new BotConfigureDialog(bot, environment, selectedProcess.getName() + " (" + selectedProcess.getVersion() + ")");
+        return new BotConfigureDialog(bot, environment,
+                selectedProcess.getName() + " (" + selectedProcess.getVersion() + ")");
     }
 
     public BotExportBOSDialog export() {
@@ -253,10 +260,45 @@ public class BotApplicationWorkbenchWindow extends AbstractBotMenu {
         bot.menu("File").menu("Share with Git").click();
         return new BotGitInitDialog(bot);
     }
-    
+
     public BotGitCloneDialog gitClone() {
         bot.menu("File").menu("Clone").click();
         return new BotGitCloneDialog(bot);
+    }
+
+    /**
+     * Wait until the "build" operations are finished, to prevent them from stacking up and triggering timeouts.
+     * 
+     * @throws InterruptedException
+     */
+    public void waitEndOfBuilds() throws TimeoutException, InterruptedException {
+        waitEndOfBuilds(0L);
+    }
+
+    /**
+     * Wait until the "build" operations are finished, to prevent them from stacking up and triggering timeouts.
+     * 
+     * @param timeout the timeout after which a TimeoutException is thrown (0 for no timeout).
+     * @throws InterruptedException
+     */
+    public void waitEndOfBuilds(long timeout) throws TimeoutException, InterruptedException {
+        Runnable join = () -> {
+            try {
+                BuildScheduler.joinOnBuildRule();
+            } catch (IllegalStateException | OperationCanceledException e) {
+                BonitaStudioLog.error(e);
+            } catch (InterruptedException e) {
+                BonitaStudioLog.error(e);
+                Thread.currentThread().interrupt();
+            }
+        };
+        Thread thread = new Thread(join, "Join on Build rule");
+        thread.start();
+        thread.join(timeout);
+        if (thread.isAlive()) {
+            throw new TimeoutException(
+                    MessageFormat.format("Some build jobs were still active after {0} ms.", timeout));
+        }
     }
 
 }

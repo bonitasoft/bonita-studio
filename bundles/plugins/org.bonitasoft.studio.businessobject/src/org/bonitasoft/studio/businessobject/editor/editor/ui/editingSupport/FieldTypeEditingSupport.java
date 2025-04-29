@@ -40,7 +40,7 @@ import org.bonitasoft.studio.common.ui.jface.SWTBotConstants;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.jface.databinding.viewers.ViewersObservables;
+import org.eclipse.jface.databinding.viewers.typed.ViewerProperties;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColumnViewer;
@@ -62,7 +62,7 @@ public class FieldTypeEditingSupport extends EditingSupport {
         super(viewer);
         this.formPage = formPage;
         labelProvider = new TypeLabelProvider(formPage.observeWorkingCopy());
-        selectedFieldObservable = ViewersObservables.observeSingleSelection(viewer);
+        selectedFieldObservable = ViewerProperties.singleSelection(Field.class).observe(viewer);
     }
 
     @Override

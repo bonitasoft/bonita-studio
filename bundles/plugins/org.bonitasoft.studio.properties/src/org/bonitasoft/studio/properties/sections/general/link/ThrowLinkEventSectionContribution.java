@@ -18,12 +18,12 @@ package org.bonitasoft.studio.properties.sections.general.link;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.bonitasoft.studio.common.emf.tools.ModelHelper;
-import org.bonitasoft.studio.common.ui.properties.ExtensibleGridPropertySection;
-import org.bonitasoft.studio.common.ui.properties.IExtensibleGridPropertySectionContribution;
 import org.bonitasoft.bpm.model.process.CatchLinkEvent;
 import org.bonitasoft.bpm.model.process.ProcessPackage;
 import org.bonitasoft.bpm.model.process.ThrowLinkEvent;
+import org.bonitasoft.studio.common.emf.tools.ModelHelper;
+import org.bonitasoft.studio.common.ui.properties.ExtensibleGridPropertySection;
+import org.bonitasoft.studio.common.ui.properties.IExtensibleGridPropertySectionContribution;
 import org.bonitasoft.studio.properties.i18n.Messages;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
@@ -31,7 +31,7 @@ import org.eclipse.emf.databinding.edit.EMFEditObservables;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.jface.databinding.viewers.IViewerObservableValue;
-import org.eclipse.jface.databinding.viewers.ViewersObservables;
+import org.eclipse.jface.databinding.viewers.typed.ViewerProperties;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
@@ -70,7 +70,7 @@ public class ThrowLinkEventSectionContribution implements
             context.dispose();
         }
         context = new DataBindingContext();
-        final IViewerObservableValue comboViewerObservable = ViewersObservables.observeSingleSelection(combo);
+        final IViewerObservableValue comboViewerObservable = ViewerProperties.singleSelection().observe(combo);
         final IObservableValue toObservableValue = EMFEditObservables.observeValue(editingDomain, throwLinkElement,
                 ProcessPackage.Literals.THROW_LINK_EVENT__TO);
         context.bindValue(comboViewerObservable, toObservableValue);

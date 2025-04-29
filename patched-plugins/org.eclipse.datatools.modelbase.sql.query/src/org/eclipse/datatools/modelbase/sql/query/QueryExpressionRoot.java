@@ -7,7 +7,6 @@
 package org.eclipse.datatools.modelbase.sql.query;
 
 import org.eclipse.datatools.modelbase.sql.expressions.QueryExpression;
-
 import org.eclipse.emf.common.util.EList;
 
 /**

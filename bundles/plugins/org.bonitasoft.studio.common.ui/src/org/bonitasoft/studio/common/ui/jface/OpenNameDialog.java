@@ -22,7 +22,7 @@ import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.jface.databinding.fieldassist.ControlDecorationSupport;
-import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -95,8 +95,8 @@ public class OpenNameDialog extends Dialog {
         nameText.setText(srcName);
         nameText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).indent(10, 0).create());
         if (observable != null) {
-            binding = context.bindValue(SWTObservables.observeDelayedValue(400, SWTObservables.observeText(nameText, SWT.Modify)), observable, targetToModel,
-                    modelToTarget);
+            binding = context.bindValue(WidgetProperties.text(SWT.Modify).observeDelayed(400, nameText), observable,
+                    targetToModel, modelToTarget);
             ControlDecorationSupport.create(binding, SWT.LEFT);
         }
         nameText.addModifyListener(new ModifyListener() {
@@ -154,7 +154,8 @@ public class OpenNameDialog extends Dialog {
         this.message = message;
     }
 
-    public void setBinding(final IObservableValue observable, final UpdateValueStrategy targetToModel, final UpdateValueStrategy modelToTarget) {
+    public void setBinding(final IObservableValue observable, final UpdateValueStrategy targetToModel,
+            final UpdateValueStrategy modelToTarget) {
         this.observable = observable;
         this.targetToModel = targetToModel;
         this.modelToTarget = modelToTarget;

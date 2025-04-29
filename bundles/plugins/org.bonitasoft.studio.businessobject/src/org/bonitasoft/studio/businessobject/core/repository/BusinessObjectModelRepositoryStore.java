@@ -42,6 +42,7 @@ import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.model.validator.ModelNamespaceValidator;
 import org.bonitasoft.studio.common.model.validator.XMLModelCompatibilityValidator;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
+import org.bonitasoft.studio.common.repository.BuildScheduler;
 import org.bonitasoft.studio.common.repository.IBonitaProjectListener;
 import org.bonitasoft.studio.common.repository.ImportArchiveData;
 import org.bonitasoft.studio.common.repository.core.BonitaProject;
@@ -69,7 +70,6 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.emf.edapt.migration.MigrationException;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IType;
-import org.eclipse.m2e.core.ui.internal.UpdateMavenProjectJob;
 import org.xml.sax.SAXException;
 
 import com.google.common.io.ByteSource;
@@ -269,32 +269,29 @@ public class BusinessObjectModelRepositoryStore<F extends AbstractBDMFileStore<?
         plugin.execute(new NullProgressMonitor());
         var importBdmModules = new ImportMavenModuleOperation(parentProjectPath.resolve(STORE_NAME).toFile());
         importBdmModules.run(monitor);
-        project.getBdmParentProject().refreshLocal(IResource.DEPTH_INFINITE, monitor);
-        project.getBdmModelProject().build(IncrementalProjectBuilder.INCREMENTAL_BUILD, monitor);
-        new UpdateMavenProjectJob(new IProject[] { project.getAppProject() }, false, false, false, false, true)
-                .run(new NullProgressMonitor());
-        project.getAppProject().build(IncrementalProjectBuilder.INCREMENTAL_BUILD, monitor);
         return createBdmFolderLinkInAppProject(project);
     }
 
     public IFolder createBdmFolderLinkInAppProject(BonitaProject project) {
-        var bdmFolder = project.getParentProject().getFolder(STORE_NAME);
-        var bdmLinkedFolder = project.getAppProject().getFolder(STORE_NAME);
-        try {
-            if (!bdmFolder.exists()) {
-                bdmFolder.create(false, true, new NullProgressMonitor());
+        return BuildScheduler.callWithBuildRule(() -> {
+            var bdmFolder = project.getParentProject().getFolder(STORE_NAME);
+            var bdmLinkedFolder = project.getAppProject().getFolder(STORE_NAME);
+            try {
+                if (!bdmFolder.exists()) {
+                    bdmFolder.create(false, true, new NullProgressMonitor());
+                }
+                if (!bdmLinkedFolder.exists()) {
+                    bdmLinkedFolder.createLink(Path.fromOSString("PARENT-1-PROJECT_LOC/" + STORE_NAME),
+                            IResource.REPLACE | IResource.ALLOW_MISSING_LOCAL,
+                            new NullProgressMonitor());
+                    // Persist workspace state
+                    ResourcesPlugin.getWorkspace().save(false, new NullProgressMonitor());
+                }
+            } catch (CoreException e) {
+                BonitaStudioLog.error(e);
             }
-            if (!bdmLinkedFolder.exists()) {
-                bdmLinkedFolder.createLink(Path.fromOSString("PARENT-1-PROJECT_LOC/" + STORE_NAME),
-                        IResource.REPLACE | IResource.ALLOW_MISSING_LOCAL,
-                        new NullProgressMonitor());
-                // Persist workspace state
-                ResourcesPlugin.getWorkspace().save(false, new NullProgressMonitor());
-            }
-        } catch (CoreException e) {
-            BonitaStudioLog.error(e);
-        }
-        return bdmLinkedFolder;
+            return bdmLinkedFolder;
+        });
     }
 
     // namespace migration (performed by the marshaller, engine side)

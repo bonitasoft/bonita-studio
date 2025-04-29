@@ -68,6 +68,7 @@ import org.eclipse.core.databinding.conversion.Converter;
 import org.eclipse.core.databinding.observable.ChangeEvent;
 import org.eclipse.core.databinding.observable.IChangeListener;
 import org.eclipse.core.databinding.observable.IObservable;
+import org.eclipse.core.databinding.observable.Realm;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.IJobChangeListener;
@@ -79,9 +80,8 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.jdt.core.JavaModelException;
-import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.jface.databinding.viewers.IViewerObservableValue;
-import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.databinding.viewers.typed.ViewerProperties;
 import org.eclipse.jface.dialogs.DialogTray;
 import org.eclipse.jface.fieldassist.ControlDecoration;
@@ -563,15 +563,15 @@ public class GroovyScriptExpressionEditor extends SelectionAwareExpressionEditor
         dropTarget.addDropListener(
                 new DropProposalTargetEffect(sourceViewer.getTextWidget(), getEditor(), scriptExpressionContext));
 
-        dataBindingContext.bindValue(ViewersObservables.observeInput(dependenciesViewer), dependenciesModelObservable);
+        dataBindingContext.bindValue(ViewerProperties.input().observe(Realm.getDefault(), dependenciesViewer), dependenciesModelObservable);
 
         final UpdateValueStrategy opposite = new UpdateValueStrategy();
         opposite.setConverter(new BooleanInverserConverter());
 
-        dataBindingContext.bindValue(SWTObservables.observeSelection(automaticResolutionButton),
+        dataBindingContext.bindValue(WidgetProperties.buttonSelection().observe(automaticResolutionButton),
                 autoDepsModelObservable);
-        dataBindingContext.bindValue(SWTObservables.observeSelection(automaticResolutionButton), SWTObservables
-                .observeEnabled(addDependencyButton), opposite,
+        dataBindingContext.bindValue(WidgetProperties.buttonSelection().observe(automaticResolutionButton), WidgetProperties
+                .enabled().observe(addDependencyButton), opposite,
                 new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER));
         autoDepsModelObservable.addChangeListener(new IChangeListener() {
 
@@ -728,8 +728,8 @@ public class GroovyScriptExpressionEditor extends SelectionAwareExpressionEditor
                 return true;
             }
         });
-        dataBindingContext.bindValue(SWTObservables.observeEnabled(testButton),
-                SWTObservables.observeText(groovyViewer.getSourceViewer().getTextWidget(), SWT.Modify), null,
+        dataBindingContext.bindValue(WidgetProperties.enabled().observe(testButton),
+                WidgetProperties.text(SWT.Modify).observe(groovyViewer.getSourceViewer().getTextWidget()), null,
                 evaluateStrategy);
 
         sourceViewer.getUndoManager().reset();

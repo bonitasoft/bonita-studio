@@ -4,7 +4,7 @@
     <parent>
         <groupId>org.bonitasoft.studio.tests</groupId>
         <artifactId>tests</artifactId>
-        <version>9.0.9-SNAPSHOT</version>
+        <version>10.0.7-SNAPSHOT</version>
     </parent>
     <groupId>org.bonitasoft.studio.tests</groupId>
     <artifactId>org.bonitasoft.studio.test.suite</artifactId>
@@ -82,7 +82,7 @@
                         <include>**/*TestSuite.java</include>
                     </includes>
                     
-                    <argLine>${javaOPTS} ${jacocoAgentArgs} ${additionalArgs}</argLine>
+                    <argLine>${jvm.modules.arg} ${javaOPTS} ${jacocoAgentArgs} ${additionalArgs}</argLine>
                     <appArgLine>-pluginCustomization ${m2eSettingsCustomizationFile} -nl en -clean</appArgLine>
                     <osgiDataDirectory>${target.test.dir}</osgiDataDirectory>
                 </configuration>

@@ -16,7 +16,7 @@ package org.bonitasoft.studio.ui.dialog;
 
 import java.lang.reflect.InvocationTargetException;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 import org.bonitasoft.studio.ui.i18n.Messages;
 import org.eclipse.core.runtime.CoreException;

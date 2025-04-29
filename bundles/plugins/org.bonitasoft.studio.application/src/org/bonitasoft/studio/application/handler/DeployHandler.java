@@ -38,11 +38,9 @@ import org.eclipse.swt.widgets.Display;
 
 public class DeployHandler extends AbstractHandler {
 
-    private FileStoreFinder selectionFinder = new FileStoreFinder();
-
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
-        selectionFinder
+        new FileStoreFinder()
                 .findElementToDeploy(RepositoryManager.getInstance().getCurrentRepository().orElseThrow())
                 .ifPresent(deployable -> {
                     if (deployable instanceof AbstractFileStore && ((AbstractFileStore) deployable).isDirty()) {
@@ -66,20 +64,20 @@ public class DeployHandler extends AbstractHandler {
     @Override
     public boolean isEnabled() {
         if (RepositoryManager.getInstance().getCurrentRepository().filter(IRepository::isLoaded).isPresent()) {
-            Optional<IStructuredSelection> selection = selectionFinder.getCurrentStructuredSelection();
+            Optional<IStructuredSelection> selection =  new FileStoreFinder().getCurrentStructuredSelection();
             if (selection.isPresent()
                     && selection.get().toList().size() == 1
                     && selection.get().getFirstElement() instanceof IAdaptable) {
                 IResource resource = ((IAdaptable) selection.get().getFirstElement()).getAdapter(IResource.class);
                 if (resource != null) {
                     var currentRepository = RepositoryManager.getInstance().getCurrentRepository().orElseThrow();
-                    Optional<IDeployable> elementToDeploy = selectionFinder.findElementToDeploy(resource,
+                    Optional<IDeployable> elementToDeploy =  new FileStoreFinder().findElementToDeploy(resource,
                             currentRepository);
                     boolean resourceMatch = elementToDeploy.isPresent();
                     if (!resourceMatch) {
                         IProject project = resource.getProject();
                         if (project != null) {
-                            elementToDeploy = selectionFinder.findElementToDeploy(project, currentRepository);
+                            elementToDeploy =  new FileStoreFinder().findElementToDeploy(project, currentRepository);
                             resourceMatch = elementToDeploy.isPresent();
                         }
                     }

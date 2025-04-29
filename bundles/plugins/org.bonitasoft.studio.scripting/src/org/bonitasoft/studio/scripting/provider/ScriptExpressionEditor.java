@@ -16,6 +16,8 @@ package org.bonitasoft.studio.scripting.provider;
 
 import static org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory.updateValueStrategy;
 
+import org.bonitasoft.bpm.model.expression.Expression;
+import org.bonitasoft.bpm.model.expression.ExpressionPackage;
 import org.bonitasoft.studio.common.databinding.validator.EmptyInputValidator;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
@@ -26,8 +28,6 @@ import org.bonitasoft.studio.expression.editor.filter.ExpressionReturnTypeFilter
 import org.bonitasoft.studio.expression.editor.provider.IExpressionEditor;
 import org.bonitasoft.studio.expression.editor.provider.SelectionAwareExpressionEditor;
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
-import org.bonitasoft.bpm.model.expression.Expression;
-import org.bonitasoft.bpm.model.expression.ExpressionPackage;
 import org.bonitasoft.studio.scripting.extensions.IScriptLanguageProvider;
 import org.bonitasoft.studio.scripting.extensions.ScriptLanguageService;
 import org.bonitasoft.studio.scripting.i18n.Messages;
@@ -44,8 +44,8 @@ import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.search.IJavaSearchConstants;
 import org.eclipse.jdt.internal.core.search.JavaSearchScope;
 import org.eclipse.jdt.internal.ui.dialogs.FilteredTypesSelectionDialog;
-import org.eclipse.jface.databinding.swt.SWTObservables;
-import org.eclipse.jface.databinding.viewers.ViewersObservables;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
+import org.eclipse.jface.databinding.viewers.typed.ViewerProperties;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.DialogTray;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -233,7 +233,7 @@ public class ScriptExpressionEditor extends SelectionAwareExpressionEditor imple
         final UpdateValueStrategy opposite = new UpdateValueStrategy();
         opposite.setConverter(new BooleanInverserConverter());
 
-        IObservableValue nameTextObservable = SWTObservables.observeText(expressionNameText, SWT.Modify);
+        IObservableValue nameTextObservable = WidgetProperties.text(SWT.Modify).observe(expressionNameText);
 
         final UpdateValueStrategy targetToModel = new UpdateValueStrategy();
         targetToModel.setAfterConvertValidator(new EmptyInputValidator(Messages.name));
@@ -255,8 +255,8 @@ public class ScriptExpressionEditor extends SelectionAwareExpressionEditor imple
                 && shouldChangeReturnType(inputExpression.getReturnType(), defaultReturnType)) {
             returnTypeModelObservable.setValue(defaultReturnType);
         }
-        dataBindingContext.bindValue(ViewersObservables.observeSingleSelection(typeCombo), returnTypeModelObservable);
-        dataBindingContext.bindValue(SWTObservables.observeText(typeCombo.getCombo()), returnTypeModelObservable,
+        dataBindingContext.bindValue(ViewerProperties.singleSelection().observe(typeCombo), returnTypeModelObservable);
+        dataBindingContext.bindValue(WidgetProperties.text().observe(typeCombo.getCombo()), returnTypeModelObservable,
                 updateValueStrategy().withConverter(IConverter.<String, String> create(this::toClassName))
                         .create(),
                 updateValueStrategy().withConverter(IConverter.<String, String> create(this::toDisplayName))

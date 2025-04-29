@@ -17,11 +17,6 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.bonitasoft.bpm.model.util.ExpressionConstants;
-import org.bonitasoft.studio.common.databinding.validator.EmptyInputValidator;
-import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.provider.ExtendedConnectorDefinition;
-import org.bonitasoft.studio.common.ui.jface.BonitaStudioFontRegistry;
 import org.bonitasoft.bpm.connector.model.definition.Array;
 import org.bonitasoft.bpm.connector.model.definition.Checkbox;
 import org.bonitasoft.bpm.connector.model.definition.Group;
@@ -34,14 +29,6 @@ import org.bonitasoft.bpm.connector.model.definition.ScriptEditor;
 import org.bonitasoft.bpm.connector.model.definition.Select;
 import org.bonitasoft.bpm.connector.model.definition.Text;
 import org.bonitasoft.bpm.connector.model.definition.TextArea;
-import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFilter;
-import org.bonitasoft.studio.expression.editor.pattern.PatternExpressionViewer;
-import org.bonitasoft.studio.expression.editor.provider.IExpressionNatureProvider;
-import org.bonitasoft.studio.expression.editor.viewer.CheckBoxExpressionViewer;
-import org.bonitasoft.studio.expression.editor.viewer.ExpressionCollectionViewer;
-import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
-import org.bonitasoft.studio.expression.editor.viewer.GroovyOnlyExpressionViewer;
-import org.bonitasoft.studio.expression.editor.viewer.IExpressionModeListener;
 import org.bonitasoft.bpm.model.connectorconfiguration.ConnectorConfiguration;
 import org.bonitasoft.bpm.model.connectorconfiguration.ConnectorConfigurationPackage;
 import org.bonitasoft.bpm.model.connectorconfiguration.ConnectorParameter;
@@ -50,6 +37,19 @@ import org.bonitasoft.bpm.model.expression.Expression;
 import org.bonitasoft.bpm.model.expression.ExpressionFactory;
 import org.bonitasoft.bpm.model.expression.ExpressionPackage;
 import org.bonitasoft.bpm.model.expression.TableExpression;
+import org.bonitasoft.bpm.model.util.ExpressionConstants;
+import org.bonitasoft.studio.common.databinding.validator.EmptyInputValidator;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.repository.provider.ExtendedConnectorDefinition;
+import org.bonitasoft.studio.common.ui.jface.BonitaStudioFontRegistry;
+import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFilter;
+import org.bonitasoft.studio.expression.editor.pattern.PatternExpressionViewer;
+import org.bonitasoft.studio.expression.editor.provider.IExpressionNatureProvider;
+import org.bonitasoft.studio.expression.editor.viewer.CheckBoxExpressionViewer;
+import org.bonitasoft.studio.expression.editor.viewer.ExpressionCollectionViewer;
+import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
+import org.bonitasoft.studio.expression.editor.viewer.GroovyOnlyExpressionViewer;
+import org.bonitasoft.studio.expression.editor.viewer.IExpressionModeListener;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.preferences.BonitaThemeConstants;
@@ -57,8 +57,8 @@ import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.jface.databinding.swt.SWTObservables;
-import org.eclipse.jface.databinding.viewers.ViewersObservables;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
+import org.eclipse.jface.databinding.viewers.typed.ViewerProperties;
 import org.eclipse.jface.fieldassist.ControlDecoration;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -160,7 +160,7 @@ public class PageComponentSwitchBuilder {
         handleDocumentsOption(object, viewer);
         viewer.setInput(parameter);
         handleDescription(object, viewer);
-        context.bindValue(ViewersObservables.observeSingleSelection(viewer),
+        context.bindValue(ViewerProperties.singleSelection().observe(viewer),
                 EMFObservables.observeValue(parameter,
                         ConnectorConfigurationPackage.Literals.CONNECTOR_PARAMETER__EXPRESSION));
         return viewer;
@@ -421,7 +421,7 @@ public class PageComponentSwitchBuilder {
             if (desc != null && !desc.isEmpty()) {
                 viewer.setMessage(desc);
             }
-            context.bindValue(ViewersObservables.observeSingleSelection(viewer),
+            context.bindValue(ViewerProperties.singleSelection().observe(viewer),
                     EMFObservables.observeValue(parameter,
                             ConnectorConfigurationPackage.Literals.CONNECTOR_PARAMETER__EXPRESSION));
             return viewer;
@@ -614,7 +614,7 @@ public class PageComponentSwitchBuilder {
             if (desc != null && !desc.isEmpty()) {
                 viewer.setMessage(desc);
             }
-            context.bindValue(ViewersObservables.observeSingleSelection(viewer),
+            context.bindValue(ViewerProperties.singleSelection().observe(viewer),
                     EMFObservables.observeValue(parameter,
                             ConnectorConfigurationPackage.Literals.CONNECTOR_PARAMETER__EXPRESSION));
             return viewer;
@@ -636,9 +636,9 @@ public class PageComponentSwitchBuilder {
             for (final String item : object.getItems()) {
                 combo.add(item);
             }
-            context.bindValue(SWTObservables.observeText(combo),
+            context.bindValue(WidgetProperties.text().observe(combo),
                     EMFObservables.observeValue(inputExpression, ExpressionPackage.Literals.EXPRESSION__NAME));
-            context.bindValue(SWTObservables.observeText(combo),
+            context.bindValue(WidgetProperties.text().observe(combo),
                     EMFObservables.observeValue(inputExpression, ExpressionPackage.Literals.EXPRESSION__CONTENT));
 
             if (combo.getText() == null || combo.getText().isEmpty()) {

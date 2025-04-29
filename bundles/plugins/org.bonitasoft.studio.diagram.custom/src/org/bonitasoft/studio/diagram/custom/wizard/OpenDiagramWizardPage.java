@@ -24,8 +24,8 @@ import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.conversion.Converter;
 import org.eclipse.core.databinding.conversion.IConverter;
-import org.eclipse.jface.databinding.swt.SWTObservables;
-import org.eclipse.jface.databinding.viewers.ViewersObservables;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
+import org.eclipse.jface.databinding.viewers.typed.ViewerProperties;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -69,8 +69,8 @@ public class OpenDiagramWizardPage extends AbstractManageDiagramWizardPage {
 
         });
 
-        context.bindValue(SWTObservables.observeEnabled(removeProcessButton),
-                ViewersObservables.observeSingleSelection(getDiagramTree().getViewer()),
+        context.bindValue(WidgetProperties.enabled().observe(removeProcessButton),
+                ViewerProperties.singleSelection().observe(getDiagramTree().getViewer()),
                 neverUpdateValueStrategy().create(),
                 updateValueStrategy().withConverter(convertSelectionToBooleanForRemoveEnablement()).create());
 

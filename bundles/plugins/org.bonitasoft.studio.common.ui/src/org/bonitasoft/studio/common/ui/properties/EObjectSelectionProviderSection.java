@@ -5,12 +5,10 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -19,13 +17,13 @@ package org.bonitasoft.studio.common.ui.properties;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.bpm.model.process.Pool;
-import org.eclipse.core.databinding.beans.PojoObservables;
+import org.bonitasoft.studio.common.emf.tools.ModelHelper;
+import org.eclipse.core.databinding.beans.typed.PojoProperties;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.jface.databinding.viewers.ViewersObservables;
+import org.eclipse.jface.databinding.viewers.typed.ViewerProperties;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
@@ -34,12 +32,11 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.ui.IWorkbenchPart;
 
-
 /**
  * @author Romain Bioteau
- *
  */
-public abstract class EObjectSelectionProviderSection extends AbstractBonitaDescriptionSection implements ISelectionProvider {
+public abstract class EObjectSelectionProviderSection extends AbstractBonitaDescriptionSection
+        implements ISelectionProvider {
 
     private ISelection selection;
     private final List<ISelectionChangedListener> listeners = new ArrayList<ISelectionChangedListener>();
@@ -50,21 +47,21 @@ public abstract class EObjectSelectionProviderSection extends AbstractBonitaDesc
 
     protected IObservableValue getEObjectObservable() {
         if (selectionObservable == null) {
-            selectionObservable = ViewersObservables.observeSingleSelection(this);
+            selectionObservable = ViewerProperties.singleSelection().observe(this);
         }
         return selectionObservable;
     }
 
     protected IObservableValue getPoolObservable() {
         if (containerObservable == null) {
-            containerObservable = PojoObservables.observeValue(this, "poolContainer");
+            containerObservable = PojoProperties.value("poolContainer").observe(this);
         }
         return containerObservable;
     }
 
     protected IObservableValue getEditingDomainObservable() {
         if (editingDomainObservable == null) {
-            editingDomainObservable = PojoObservables.observeValue(this, "EditingDomain");
+            editingDomainObservable = PojoProperties.value("EditingDomain").observe(this);
         }
         return editingDomainObservable;
     }
@@ -104,7 +101,8 @@ public abstract class EObjectSelectionProviderSection extends AbstractBonitaDesc
     @Override
     public void setInput(final IWorkbenchPart part, final ISelection selection) {
         super.setInput(part, selection);
-        final EObject semanticElement = (EObject) ((IAdaptable) ((IStructuredSelection) selection).getFirstElement()).getAdapter(EObject.class);
+        final EObject semanticElement = (EObject) ((IAdaptable) ((IStructuredSelection) selection).getFirstElement())
+                .getAdapter(EObject.class);
         setSelection(new StructuredSelection(adaptEObject(semanticElement)));
         setPoolContainer(ModelHelper.getParentPool(semanticElement));
     }

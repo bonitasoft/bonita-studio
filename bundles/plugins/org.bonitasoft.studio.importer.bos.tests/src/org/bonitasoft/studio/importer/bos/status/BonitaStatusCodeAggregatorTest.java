@@ -9,9 +9,9 @@ import org.bonitasoft.studio.importer.bos.i18n.Messages;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class BonitaStatusCodeAggregatorTest {
+class BonitaStatusCodeAggregatorTest {
 
     private static final String PROCESS_STATUS_1 = "a process status";
     private static final String PROCESS_STATUS_2 = "an other process status";
@@ -20,7 +20,7 @@ public class BonitaStatusCodeAggregatorTest {
     private static final String BONITA_DEPENDENCY_STATUS = "update bonita dependency pls";
 
     @Test
-    public void should_factorize_redundant_rest_api_statuses() {
+    void should_factorize_redundant_rest_api_statuses() {
         BosArchiveImportStatus initialBosArchiveImportStatus = new BosArchiveImportStatus();
 
         initialBosArchiveImportStatus.add(ValidationStatus.warning(PROCESS_STATUS_1));

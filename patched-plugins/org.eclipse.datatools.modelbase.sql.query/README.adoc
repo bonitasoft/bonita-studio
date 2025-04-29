@@ -1,0 +1,10 @@
+This project is a fork of https://github.com/eclipse-datatools/datatools/tree/master/plugins/modelbase/org.eclipse.datatools.modelbase.sql.query
+
+This fork fixes a few issues when used with Bonita.
+The modifications by Bonitasoft are indicated with
+```
+//patch by BonitaSoft
+...
+//end patch by BonitaSoft
+```
+or by the "BonitaSoft" copyright in the header (e.g. BonitaExpressionBinding).

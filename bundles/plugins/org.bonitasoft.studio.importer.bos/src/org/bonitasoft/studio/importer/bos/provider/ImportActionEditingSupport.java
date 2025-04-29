@@ -8,7 +8,7 @@ import org.bonitasoft.studio.common.repository.model.smartImport.SmartImportable
 import org.bonitasoft.studio.importer.bos.model.AbstractFileModel;
 import org.bonitasoft.studio.importer.bos.model.SmartImportFileStoreModel;
 import org.eclipse.jface.databinding.viewers.IViewerObservableValue;
-import org.eclipse.jface.databinding.viewers.ViewersObservables;
+import org.eclipse.jface.databinding.viewers.typed.ViewerProperties;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ComboBoxViewerCellEditor;
@@ -33,7 +33,7 @@ public class ImportActionEditingSupport extends EditingSupport {
         editor.setLabelProvider(new LabelProvider());
         editor.setInput(ImportAction.values());
         editor.getControl().addListener(SWT.Selection, e -> getViewer().getControl().forceFocus());
-        IViewerObservableValue mainSelection = ViewersObservables.observeSingleSelection(viewer);
+        IViewerObservableValue mainSelection = ViewerProperties.singleSelection().observe(viewer);
         editor.getViewer().addFilter(new ViewerFilter() {
 
             @Override

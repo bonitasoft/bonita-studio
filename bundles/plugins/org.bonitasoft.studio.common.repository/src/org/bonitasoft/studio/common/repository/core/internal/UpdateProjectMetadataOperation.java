@@ -22,7 +22,6 @@ import java.util.stream.Stream;
 import org.apache.maven.model.Model;
 import org.bonitasoft.studio.common.RestAPIExtensionNature;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.core.BonitaProject;
 import org.bonitasoft.studio.common.repository.core.maven.MavenModelOperation;
@@ -102,13 +101,14 @@ public class UpdateProjectMetadataOperation implements IWorkspaceRunnable {
         }
 
         MavenProjectHelper.saveModel(appProject, model, new NullProgressMonitor());
-         if (!Objects.equals(projectId, newProjectId)) {
+        if (!Objects.equals(projectId, newProjectId)) {
             updateRestApiExtension(oldMetadata, metadata, new NullProgressMonitor());
             if (currentRepository().closeAllEditors(false)) {
                 renameProjects(projectId, newProjectId, monitor);
             }
-        } else {
-            new UpdateMavenProjectJob(project.getRelatedProjects().toArray(IProject[]::new), false, false, false,
+        } 
+        else {
+            new UpdateMavenProjectJob(project.getRelatedProjects(), false, false, false,
                     false, true)
                             .run(monitor);
         }
@@ -139,12 +139,6 @@ public class UpdateProjectMetadataOperation implements IWorkspaceRunnable {
         }
 
         if (Objects.equals(projectId, newProjectId)) {
-            new UpdateMavenProjectJob(projectToUpdate.toArray(IProject[]::new),
-                    false,
-                    false,
-                    false,
-                    true,
-                    true).run(new NullProgressMonitor());
             MavenModelOperation.scheduleAnalyzeProjectDependenciesJob(RepositoryManager.getInstance().getAccessor());
         }
     }
@@ -187,14 +181,6 @@ public class UpdateProjectMetadataOperation implements IWorkspaceRunnable {
                 .ifPresent(d -> d.setArtifactId(newProjectId + BDM_MODEL_SUFFIX));
 
         MavenProjectHelper.saveModel(bdmDaoClientProject, bdmDaoClientModel, new NullProgressMonitor());
-        if (Objects.equals(projectId, newProjectId)) {
-            new UpdateMavenProjectJob(new IProject[] { bdmParentProject, bdmModelProject, bdmDaoClientProject },
-                    false,
-                    false,
-                    false,
-                    true,
-                    true).run(new NullProgressMonitor());
-        }
     }
 
     private void renameProjects(String oldProjectId, String newProjectId, IProgressMonitor monitor)
@@ -322,7 +308,7 @@ public class UpdateProjectMetadataOperation implements IWorkspaceRunnable {
                                 .ifPresent(d -> {
                                     d.setArtifactId(metadata.getArtifactId() + BDM_DAO_CLIENT_SUFFIX);
                                 });
-                        MavenProjectHelper.saveModel(p, mavenModel, false, monitor);
+                        MavenProjectHelper.saveModel(p, mavenModel, monitor);
                     } catch (CoreException e) {
                         BonitaStudioLog.error(e);
                     }

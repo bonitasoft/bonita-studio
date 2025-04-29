@@ -16,7 +16,7 @@ package org.bonitasoft.studio.rest.api.extension.extension;
 
 import java.util.Collections;
 
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 
 import org.bonitasoft.studio.application.views.extension.card.ExtensionCard;
 import org.bonitasoft.studio.common.CommandExecutor;

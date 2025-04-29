@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.bonitasoft.studio.diagram; singleton:=true
-Bundle-Version: 9.0.9.qualifier
+Bundle-Version: 10.0.7.qualifier
 Bundle-ClassPath: .
 Bundle-Activator: org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditorPlugin
 Bundle-Vendor: %providerName
@@ -32,7 +32,6 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.gmf.runtime.diagram.ui.render,
  org.eclipse.gmf.runtime.diagram.ui.resources.editor,
  org.eclipse.gmf.runtime.diagram.ui.resources.editor.ide,
- org.eclipse.gmf.tooling.runtime;visibility:=reexport,
  org.eclipse.draw2d;visibility:=reexport,
  org.eclipse.gmf.runtime.draw2d.ui;visibility:=reexport,
  org.eclipse.gmf.runtime.lite.svg;visibility:=reexport,
@@ -44,7 +43,8 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.ocl.ecore;visibility:=reexport,
  org.eclipse.emf.validation;visibility:=reexport,
  org.eclipse.gef;visibility:=reexport,
- org.bonitasoft.studio.common.ui
+ org.bonitasoft.studio.common.ui,
+ org.eclipse.gmf.tooling.runtime.lighter;bundle-version="3.2.0";visibility:=reexport
 Bundle-ActivationPolicy: lazy
 Import-Package: org.bonitasoft.studio.common
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

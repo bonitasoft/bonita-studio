@@ -25,13 +25,13 @@ import org.bonitasoft.studio.common.repository.model.IDefinitionRepositoryStore;
 import org.bonitasoft.studio.connectors.ConnectorPlugin;
 import org.bonitasoft.studio.connectors.i18n.Messages;
 import org.eclipse.core.databinding.UpdateValueStrategy;
-import org.eclipse.core.databinding.beans.PojoProperties;
+import org.eclipse.core.databinding.beans.typed.PojoProperties;
 import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
-import org.eclipse.jface.databinding.swt.SWTObservables;
-import org.eclipse.jface.databinding.viewers.ViewersObservables;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
+import org.eclipse.jface.databinding.viewers.typed.ViewerProperties;
 import org.eclipse.jface.databinding.wizard.WizardPageSupport;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -199,16 +199,16 @@ public class ExportConnectorWizardPage extends WizardPage implements ISelectionC
             }
             return Status.OK_STATUS;
         });
-        context.bindValue(ViewersObservables.observeSingleSelection(tableViewer),
+        context.bindValue(ViewerProperties.singleSelection().observe(tableViewer),
                 PojoProperties.value(ExportConnectorWizardPage.class, "selectedImplementation").observe(this),
                 selectionStrategy, null);
-        context.bindValue(SWTObservables.observeSelection(includeSourceCheckbox),
+        context.bindValue(WidgetProperties.buttonSelection().observe(includeSourceCheckbox),
                 PojoProperties.value(ExportConnectorWizardPage.class, "includeSources").observe(this));
-        context.bindValue(SWTObservables.observeSelection(addDependenciesCheckbox),
+        context.bindValue(WidgetProperties.buttonSelection().observe(addDependenciesCheckbox),
                 PojoProperties.value(ExportConnectorWizardPage.class, "addDependencies").observe(this));
-        context.bindValue(SWTObservables.observeText(destDirectoryText, SWT.Modify),
+        context.bindValue(WidgetProperties.text(SWT.Modify).observe(destDirectoryText),
                 PojoProperties.value(ExportConnectorWizardPage.class, "destFilePath").observe(this), pathStrategy, null);
-        context.bindValue(SWTObservables.observeText(destFileNameText, SWT.Modify),
+        context.bindValue(WidgetProperties.text(SWT.Modify).observe(destFileNameText),
                 PojoProperties.value(ExportConnectorWizardPage.class, "destFileName").observe(this), nameStrategy, null);
 
         pageSupport = WizardPageSupport.create(this, context);

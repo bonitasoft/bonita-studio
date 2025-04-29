@@ -16,7 +16,7 @@ package org.bonitasoft.studio.common.log;
 
 import java.util.Optional;
 
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.e4.core.services.log.ILoggerProvider;

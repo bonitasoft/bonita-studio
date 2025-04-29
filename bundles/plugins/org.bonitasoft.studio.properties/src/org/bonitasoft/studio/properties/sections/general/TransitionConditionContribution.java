@@ -16,14 +16,6 @@ package org.bonitasoft.studio.properties.sections.general;
 
 import java.util.List;
 
-import org.bonitasoft.bpm.model.util.ExpressionConstants;
-import org.bonitasoft.studio.common.ui.properties.ExtensibleGridPropertySection;
-import org.bonitasoft.studio.common.ui.properties.IExtensibleGridPropertySectionContribution;
-import org.bonitasoft.studio.decision.ui.DecisionTableWizard;
-import org.bonitasoft.studio.decision.ui.condition.MaximizableWizardDialog;
-import org.bonitasoft.studio.decision.ui.condition.TakeTransitionLabelProvider;
-import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFilter;
-import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
 import org.bonitasoft.bpm.model.expression.Expression;
 import org.bonitasoft.bpm.model.expression.ExpressionFactory;
 import org.bonitasoft.bpm.model.process.ANDGateway;
@@ -39,6 +31,14 @@ import org.bonitasoft.bpm.model.process.decision.DecisionTableAction;
 import org.bonitasoft.bpm.model.process.decision.DecisionTableLine;
 import org.bonitasoft.bpm.model.process.decision.transitions.TakeTransitionAction;
 import org.bonitasoft.bpm.model.process.decision.transitions.TransitionsFactory;
+import org.bonitasoft.bpm.model.util.ExpressionConstants;
+import org.bonitasoft.studio.common.ui.properties.ExtensibleGridPropertySection;
+import org.bonitasoft.studio.common.ui.properties.IExtensibleGridPropertySectionContribution;
+import org.bonitasoft.studio.decision.ui.DecisionTableWizard;
+import org.bonitasoft.studio.decision.ui.condition.MaximizableWizardDialog;
+import org.bonitasoft.studio.decision.ui.condition.TakeTransitionLabelProvider;
+import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFilter;
+import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.properties.i18n.Messages;
@@ -55,8 +55,8 @@ import org.eclipse.emf.databinding.edit.EMFEditProperties;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
-import org.eclipse.jface.databinding.swt.SWTObservables;
-import org.eclipse.jface.databinding.viewers.ViewerProperties;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
+import org.eclipse.jface.databinding.viewers.typed.ViewerProperties;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -403,23 +403,23 @@ public class TransitionConditionContribution implements IExtensibleGridPropertyS
                 }
             });
 
-            dataBindingContext.bindValue(SWTObservables.observeSelection(useExpressionCondition),
+            dataBindingContext.bindValue(WidgetProperties.buttonSelection().observe(useExpressionCondition),
                     typeValue, useExpressionTargetToModel, useExpressionModelToTarget);
-            dataBindingContext.bindValue(SWTObservables.observeSelection(useDecisionTable),
+            dataBindingContext.bindValue(WidgetProperties.buttonSelection().observe(useDecisionTable),
                     typeValue, useDescisionTargetToModel, useDecisionModelToTarget);
 
-            dataBindingContext.bindValue(SWTObservables.observeSelection(defaultCheckBox),
+            dataBindingContext.bindValue(WidgetProperties.buttonSelection().observe(defaultCheckBox),
                     EMFEditObservables.observeValue(editingDomain, transition,
                             ProcessPackage.Literals.SEQUENCE_FLOW__IS_DEFAULT));
 
-            dataBindingContext.bindValue(SWTObservables.observeEnabled(defaultCheckBox),
+            dataBindingContext.bindValue(WidgetProperties.enabled().observe(defaultCheckBox),
                     EMFEditObservables.observeValue(editingDomain, transition,
                             ProcessPackage.Literals.SEQUENCE_FLOW__IS_DEFAULT),
                     new UpdateValueStrategy().setConverter(defaultConverter),
                     new UpdateValueStrategy().setConverter(defaultConverter));
 
             if (conditionViewer != null && !conditionViewer.getControl().isDisposed()) {
-                dataBindingContext.bindValue(SWTObservables.observeEnabled(conditionViewer.getControl()),
+                dataBindingContext.bindValue(WidgetProperties.enabled().observe(conditionViewer.getControl()),
                         EMFEditObservables.observeValue(editingDomain, transition,
                                 ProcessPackage.Literals.SEQUENCE_FLOW__IS_DEFAULT),
                         new UpdateValueStrategy().setConverter(conditionConverter),
@@ -431,24 +431,24 @@ public class TransitionConditionContribution implements IExtensibleGridPropertyS
                                 .observe(transition));
                 conditionViewer.setInput(transition);
 
-                dataBindingContext.bindValue(SWTObservables.observeSelection(useExpressionCondition),
-                        SWTObservables.observeEnabled(conditionViewer.getControl()));
+                dataBindingContext.bindValue(WidgetProperties.buttonSelection().observe(useExpressionCondition),
+                        WidgetProperties.enabled().observe(conditionViewer.getControl()));
             }
 
-            dataBindingContext.bindValue(SWTObservables.observeEnabled(useExpressionCondition),
+            dataBindingContext.bindValue(WidgetProperties.enabled().observe(useExpressionCondition),
                     EMFEditObservables.observeValue(editingDomain, transition,
                             ProcessPackage.Literals.SEQUENCE_FLOW__IS_DEFAULT),
                     new UpdateValueStrategy().setConverter(conditionConverter),
                     new UpdateValueStrategy().setConverter(conditionConverter));
 
-            dataBindingContext.bindValue(SWTObservables.observeEnabled(useDecisionTable),
+            dataBindingContext.bindValue(WidgetProperties.enabled().observe(useDecisionTable),
                     EMFEditObservables.observeValue(editingDomain, transition,
                             ProcessPackage.Literals.SEQUENCE_FLOW__IS_DEFAULT),
                     new UpdateValueStrategy().setConverter(conditionConverter),
                     new UpdateValueStrategy().setConverter(conditionConverter));
 
             if (updateTableButton != null && !updateTableButton.isDisposed()) {
-                dataBindingContext.bindValue(SWTObservables.observeEnabled(updateTableButton),
+                dataBindingContext.bindValue(WidgetProperties.enabled().observe(updateTableButton),
                         EMFEditObservables.observeValue(editingDomain, transition,
                                 ProcessPackage.Literals.SEQUENCE_FLOW__IS_DEFAULT),
                         new UpdateValueStrategy().setConverter(conditionConverter),

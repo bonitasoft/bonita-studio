@@ -11,7 +11,7 @@ def mirroredTargetFile = new File(basedir, mirroredTarget)
 assert sourceTargetFile.exists() : "$sourceTargetFile not found"
 
 def targetPlatform = new XmlSlurper(false,false).parseText(sourceTargetFile.text)
-def mavenLocation = targetPlatform.locations.location.find{ it.'@type' == 'Maven' }
+def mavenLocations = targetPlatform.locations.location.findAll{ it.'@type' == 'Maven' }
 def mavenP2Locations = targetPlatform.locations.location.findAll{
     it.repository.@location.toString().startsWith("mvn:")
 }
@@ -29,7 +29,7 @@ targetPlatform.locations.replaceNode {
             }
         }
         mavenP2Locations.collect { mkp.yield(it) }
-        mkp.yield(mavenLocation)
+        mavenLocations.collect { mkp.yield(it) }
     }
 }
 

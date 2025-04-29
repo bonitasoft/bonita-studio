@@ -16,10 +16,10 @@ package org.bonitasoft.studio.parameters.wizard.page;
 
 import java.util.Set;
 
-import org.bonitasoft.studio.common.databinding.validator.GroovyReferenceValidator;
-import org.bonitasoft.studio.common.databinding.validator.InputLengthValidator;
 import org.bonitasoft.bpm.model.parameter.Parameter;
 import org.bonitasoft.bpm.model.parameter.ParameterPackage;
+import org.bonitasoft.studio.common.databinding.validator.GroovyReferenceValidator;
+import org.bonitasoft.studio.common.databinding.validator.InputLengthValidator;
 import org.bonitasoft.studio.parameters.i18n.Messages;
 import org.bonitasoft.studio.parameters.property.section.editingsupport.ParameterTypeEditingSupport;
 import org.bonitasoft.studio.parameters.property.section.provider.ParameterTypeLabelProvider;
@@ -31,8 +31,8 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.EMFObservables;
-import org.eclipse.jface.databinding.swt.WidgetProperties;
-import org.eclipse.jface.databinding.viewers.ViewersObservables;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
+import org.eclipse.jface.databinding.viewers.typed.ViewerProperties;
 import org.eclipse.jface.databinding.wizard.WizardPageSupport;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -171,7 +171,7 @@ public class ParametersWizardPage extends WizardPage {
         typeCombo.getCombo().setLayoutData(
                 GridDataFactory.fillDefaults().grab(true, false).create());
         typeCombo.setInput(ParameterTypeEditingSupport.types);
-        dataBindingContext.bindValue(ViewersObservables.observeSingleSelection(typeCombo),
+        dataBindingContext.bindValue(ViewerProperties.singleSelection().observe(typeCombo),
                 EMFObservables.observeValue(parameterWorkingCopy, ParameterPackage.Literals.PARAMETER__TYPE_CLASSNAME));
     }
 

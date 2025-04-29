@@ -39,7 +39,7 @@ import org.bonitasoft.studio.groovy.ui.viewer.TestGroovyScriptUtil;
 import org.codehaus.jdt.groovy.model.GroovyCompilationUnit;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
-import org.eclipse.core.databinding.beans.PojoObservables;
+import org.eclipse.core.databinding.beans.typed.PojoProperties;
 import org.eclipse.core.databinding.conversion.text.StringToNumberConverter;
 import org.eclipse.core.internal.databinding.validation.StringToDoubleValidator;
 import org.eclipse.core.internal.databinding.validation.StringToFloatValidator;
@@ -47,7 +47,7 @@ import org.eclipse.core.internal.databinding.validation.StringToIntegerValidator
 import org.eclipse.core.internal.databinding.validation.StringToLongValidator;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jface.databinding.fieldassist.ControlDecorationSupport;
-import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -168,22 +168,22 @@ public class TestGroovyScriptDialog extends Dialog {
                 for (final String f : values) {
                     varValueCombo.add(f);
                 }
-                ControlDecorationSupport.create(dbc.bindValue(SWTObservables.observeText(varValueCombo), PojoObservables.observeValue(propertyValue, "value"),
+                ControlDecorationSupport.create(dbc.bindValue(WidgetProperties.text().observe(varValueCombo), PojoProperties.value("value").observe(propertyValue),
                         updateValueStrategy().withValidator(mandatoryValidator(var.getKey())).create(), null), SWT.LEFT);
             } else if (var.getValue().equals(TestGroovyScriptUtil.BOOLEAN)) {
                 final BooleanRadioGroup booleanRadioGroup = new BooleanRadioGroup(group);
                 booleanRadioGroup.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).indent(10, 0).create());
-                booleanRadioGroup.bindControl(dbc, PojoObservables.observeValue(propertyValue, "value"));
+                booleanRadioGroup.bindControl(dbc, PojoProperties.value("value").observe(propertyValue));
             } else if (var.getValue().equals(TestGroovyScriptUtil.DATE)) {
                 final DateTimeControl dateTimeControl = new DateTimeControl(group);
                 dateTimeControl.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).indent(10, 0).create());
-                dateTimeControl.bindControl(dbc, PojoObservables.observeValue(propertyValue, "value"));
+                dateTimeControl.bindControl(dbc, PojoProperties.value("value").observe(propertyValue));
             } else {
                 final Text varValueText = new Text(group, SWT.BORDER);
                 varValueText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).indent(10, 0).create());
                 final ScriptVariable scriptVaraible = getScriptVariable(var.getKey());
                 ControlDecorationSupport.create(
-                        dbc.bindValue(SWTObservables.observeText(varValueText, SWT.Modify), PojoObservables.observeValue(propertyValue, "value"),
+                        dbc.bindValue(WidgetProperties.text(SWT.Modify).observe(varValueText), PojoProperties.value("value").observe(propertyValue),
                                 variableInputStrategy(var.getKey(), scriptVaraible), null), SWT.LEFT);
                 if (scriptVaraible != null && scriptVaraible.getDefaultValue() != null) {
                     varValueText.setText(scriptVaraible.getDefaultValue());

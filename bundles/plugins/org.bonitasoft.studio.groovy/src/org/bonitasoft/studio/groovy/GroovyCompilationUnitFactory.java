@@ -14,7 +14,9 @@
  */
 package org.bonitasoft.studio.groovy;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
+
+import java.util.List;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
@@ -65,7 +67,7 @@ public class GroovyCompilationUnitFactory {
 						return null;
 					}
     			}
-    			new UpdateMavenProjectJob(new IProject[] {javaProject.getProject() }, false, false,
+    			new UpdateMavenProjectJob(List.of(javaProject.getProject()), false, false,
     	                true, true, true).run(monitor);
     			generatedGroovySourcesRoot = JavaCore.create(javaProject.getProject())
                         .findPackageFragmentRoot(generatedGroovySourcesFolder);

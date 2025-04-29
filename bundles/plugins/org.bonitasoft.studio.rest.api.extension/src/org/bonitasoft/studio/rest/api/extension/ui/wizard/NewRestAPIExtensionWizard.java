@@ -28,14 +28,13 @@ import org.bonitasoft.studio.rest.api.extension.core.repository.RestAPIExtension
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.m2e.core.project.IProjectConfigurationManager;
+import org.eclipse.m2e.core.ui.internal.archetype.ArchetypeGenerator;
 
 public class NewRestAPIExtensionWizard extends Wizard {
 
     private static final String REST_API_EXT_DOC_URL = "http://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=690&bos_redirect_product=bos&bos_redirect_major_version=%s&bos_redirect_minor_version=";
     private final ExtensionRepositoryStore repositoryStore;
     private final RestAPIExtensionArchetypeConfiguration configuration;
-    private final IProjectConfigurationManager projectConfigurationManager;
     private final WidgetFactory widgetFactory;
     private final MavenProjectConfiguration projectConfiguration;
     private final IWorkspace workspace;
@@ -43,7 +42,6 @@ public class NewRestAPIExtensionWizard extends Wizard {
 
     public NewRestAPIExtensionWizard(ProjectMetadata projectMetadata,
             ExtensionRepositoryStore repositoryStore,
-            IProjectConfigurationManager projectConfigurationManager,
             MavenProjectConfiguration projectConfiguration,
             IWorkspace workspace,
             WidgetFactory widgetFactory,
@@ -53,7 +51,6 @@ public class NewRestAPIExtensionWizard extends Wizard {
         this.configuration = RestAPIExtensionArchetypeConfiguration.defaultArchetypeConfiguration(projectMetadata,
                 addBdmDependency);
         this.configuration.setBonitaVersion(repositoryStore.getRepository().getBonitaRuntimeVersion());
-        this.projectConfigurationManager = projectConfigurationManager;
         this.widgetFactory = widgetFactory;
         this.projectConfiguration = projectConfiguration;
         this.workspace = workspace;
@@ -94,7 +91,6 @@ public class NewRestAPIExtensionWizard extends Wizard {
     public boolean performFinish() {
         final CreateRestAPIExtensionProjectOperation operation = new CreateRestAPIExtensionProjectOperation(
                 repositoryStore,
-                projectConfigurationManager,
                 projectConfiguration.toImportConfiguration(),
                 configuration);
         try {

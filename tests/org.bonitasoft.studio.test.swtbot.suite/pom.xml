@@ -4,7 +4,7 @@
     <parent>
         <groupId>org.bonitasoft.studio.tests</groupId>
         <artifactId>tests</artifactId>
-        <version>9.0.9-SNAPSHOT</version>
+        <version>10.0.7-SNAPSHOT</version>
     </parent>
 
     <groupId>org.bonitasoft.studio.tests</groupId>
@@ -56,7 +56,8 @@
                     <includes>
                         <include>**/*TestSuite.java</include>
                     </includes>
-                    <argLine>-Xmx1g ${jacocoAgentArgs} -DLAZYLOAD_ENGINE -Dbonita.studio.skipReleaseNote -Ddisable.notifications -Dbonita.noregister=1 -Declipse.log.level=${tests.log.level}</argLine>
+                    <showEclipseLog>true</showEclipseLog>
+                    <argLine>${jvm.modules.arg} -Xmx1g ${jacocoAgentArgs} -DLAZYLOAD_ENGINE -Dbonita.studio.skipReleaseNote -Ddisable.notifications -Dbonita.noregister=1 -Declipse.log.level=${tests.log.level}</argLine>
                     <appArgLine>-pluginCustomization ${m2eSettingsCustomizationFile} -nl en -clean</appArgLine>
                     <osgiDataDirectory>${target.test.dir}</osgiDataDirectory>
                 </configuration>

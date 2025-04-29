@@ -39,6 +39,7 @@ import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditPart;
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditor;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -47,7 +48,7 @@ import org.junit.runner.RunWith;
 public class ExtractAsSubprocessTest {
 
     private final SWTGefBot bot = new SWTGefBot();
-    
+
     @Rule
     public final SWTGefBotRule rule = new SWTGefBotRule(bot);
 
@@ -88,10 +89,15 @@ public class ExtractAsSubprocessTest {
 
     }
 
-    private final DiagramRepositoryStore store = RepositoryManager.getInstance()
-            .getRepositoryStore(DiagramRepositoryStore.class);
+    private DiagramRepositoryStore store;
 
-        @Test
+    @Before
+    public void getDiagramStore() {
+        // get repository store after the initial project rule has executed.
+        store = RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
+    }
+
+    @Test
     public void testExtractAsSubprocess() throws Exception {
         SWTBotTestUtil.createNewDiagram(bot);
         final SWTBotGefEditor editor1 = bot.gefEditor(bot.activeEditor().getTitle());

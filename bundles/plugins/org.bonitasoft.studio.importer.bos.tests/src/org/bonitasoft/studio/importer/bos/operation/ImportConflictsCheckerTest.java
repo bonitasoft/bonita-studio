@@ -35,7 +35,6 @@ import org.bonitasoft.studio.connectors.repository.DatabaseConnectorPropertiesRe
 import org.bonitasoft.studio.importer.bos.model.AbstractFileModel;
 import org.bonitasoft.studio.importer.bos.model.AbstractFolderModel;
 import org.bonitasoft.studio.importer.bos.model.BosArchive;
-import org.bonitasoft.studio.importer.bos.model.BosArchiveTest;
 import org.bonitasoft.studio.importer.bos.model.DefaultBosArchiveEntryHandler;
 import org.bonitasoft.studio.importer.bos.model.ImportArchiveModel;
 import org.eclipse.core.resources.IFolder;
@@ -44,12 +43,12 @@ import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class ImportConflictsCheckerTest {
+class ImportConflictsCheckerTest {
 
     @Test
-    public void should_perform_conflict_analysis() throws Exception {
+    void should_perform_conflict_analysis() throws Exception {
         final ImportConflictsChecker conflictsChecker = new ImportConflictsChecker(createRepository());
         final BosArchive bosArchive = newBosArchive(loadFile("/customer_support_2.0.bos"));
 
@@ -70,7 +69,7 @@ public class ImportConflictsCheckerTest {
     }
 
     @Test
-    public void should_not_find_conflicts_on_databaseConnectors() throws Exception {
+    void should_not_find_conflicts_on_databaseConnectors() throws Exception {
         final ImportConflictsChecker conflictsChecker = new ImportConflictsChecker(createRepository());
         DatabaseConnectorPropertiesRepositoryStore repositoryStore = createDatabaseConnectorPropertiesRepositoryStore();
         AbstractFolderModel folderModel = createAbstractFolderModelWithDatabaseConnectorProperties();
@@ -204,6 +203,6 @@ public class ImportConflictsCheckerTest {
     }
 
     private File loadFile(String filePath) throws IOException {
-        return new File(URLDecoder.decode(FileLocator.toFileURL(BosArchiveTest.class.getResource(filePath)).getFile(), "UTF-8"));
+        return new File(URLDecoder.decode(FileLocator.toFileURL(ImportConflictsCheckerTest.class.getResource(filePath)).getFile(), "UTF-8"));
     }
 }

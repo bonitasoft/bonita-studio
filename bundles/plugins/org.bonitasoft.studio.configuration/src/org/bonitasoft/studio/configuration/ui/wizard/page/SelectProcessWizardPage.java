@@ -5,14 +5,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.configuration.ui.wizard.page;
 
@@ -21,12 +19,12 @@ import org.bonitasoft.bpm.model.process.MainProcess;
 import org.bonitasoft.studio.configuration.i18n.Messages;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
-import org.eclipse.core.databinding.beans.PojoObservables;
+import org.eclipse.core.databinding.beans.typed.PojoProperties;
 import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.databinding.viewers.ViewersObservables;
+import org.eclipse.jface.databinding.viewers.typed.ViewerProperties;
 import org.eclipse.jface.databinding.wizard.WizardPageSupport;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -40,87 +38,88 @@ import org.eclipse.ui.dialogs.PatternFilter;
 
 /**
  * @author Romain Bioteau
- *
  */
 public class SelectProcessWizardPage extends WizardPage {
 
-	private MainProcess diagram;
-	private Object selection;
-	private DataBindingContext databindingContext;
+    private MainProcess diagram;
+    private Object selection;
+    private DataBindingContext databindingContext;
 
-	public SelectProcessWizardPage(MainProcess diagram) {
-		super(SelectProcessWizardPage.class.getName());
-		setTitle(Messages.selectProcessToConfigureTitle) ;
-		setDescription(Messages.selectProcessToConfigureDesc) ;
-		this.diagram = diagram ; 
-	}
+    public SelectProcessWizardPage(MainProcess diagram) {
+        super(SelectProcessWizardPage.class.getName());
+        setTitle(Messages.selectProcessToConfigureTitle);
+        setDescription(Messages.selectProcessToConfigureDesc);
+        this.diagram = diagram;
+    }
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
-	 */
-	@Override
-	public void createControl(Composite parent) {
-		Composite mainComposite = new Composite(parent, SWT.NONE) ;
-		mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create()) ;
-		mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).create()) ;
-		
-		databindingContext = new DataBindingContext() ;
-		
-		final FilteredTree tree = new FilteredTree(mainComposite, SWT.FULL_SELECTION | SWT.BORDER | SWT.SINGLE,new PatternFilter(), false) ;
-		tree.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create()) ;
-		TreeViewer viewer = tree.getViewer() ;
-		viewer.setContentProvider(new ProcessContentProvider()) ;
-		viewer.setLabelProvider(new ProcessTreeLabelProvider()) ;
+    /*
+     * (non-Javadoc)
+     * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
+     */
+    @Override
+    public void createControl(Composite parent) {
+        Composite mainComposite = new Composite(parent, SWT.NONE);
+        mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+        mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).create());
 
-		UpdateValueStrategy startegy = new UpdateValueStrategy() ;
-		startegy.setBeforeSetValidator(new IValidator() {
-			
-			@Override
-			public IStatus validate(Object value) {
-				if(value  instanceof AbstractProcess && !(value instanceof MainProcess)){
-					return Status.OK_STATUS ;
-				}
-				return ValidationStatus.error(Messages.mustSelectProcessError);
-			}
-		}) ;
-	
-		if(diagram == null){
-			viewer.setInput(new Object[]{ProcessContentProvider.OTHER_PROCESSES}) ;
-		}else{
-			viewer.setInput(new Object[]{diagram,ProcessContentProvider.OTHER_PROCESSES}) ;
-		}
+        databindingContext = new DataBindingContext();
 
-		if(diagram != null){
-			if(((ITreeContentProvider) viewer.getContentProvider()).hasChildren(diagram)){
-				viewer.expandToLevel(diagram, 1) ;
-			}
-		}else{
-			if(((ITreeContentProvider) viewer.getContentProvider()).hasChildren(ProcessContentProvider.OTHER_PROCESSES)){
-				viewer.expandToLevel(ProcessContentProvider.OTHER_PROCESSES, 1) ;
-			}
-		}
-		
-		WizardPageSupport.create(this,databindingContext) ;
-		databindingContext.bindValue(ViewersObservables.observeSingleSelection(viewer), PojoObservables.observeValue(this, "selection"),startegy,null) ;
+        final FilteredTree tree = new FilteredTree(mainComposite, SWT.FULL_SELECTION | SWT.BORDER | SWT.SINGLE,
+                new PatternFilter(), false);
+        tree.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+        TreeViewer viewer = tree.getViewer();
+        viewer.setContentProvider(new ProcessContentProvider());
+        viewer.setLabelProvider(new ProcessTreeLabelProvider());
 
+        UpdateValueStrategy strategy = new UpdateValueStrategy();
+        strategy.setBeforeSetValidator(new IValidator() {
 
-		
-		setControl(mainComposite) ;
-	}
+            @Override
+            public IStatus validate(Object value) {
+                if (value instanceof AbstractProcess && !(value instanceof MainProcess)) {
+                    return Status.OK_STATUS;
+                }
+                return ValidationStatus.error(Messages.mustSelectProcessError);
+            }
+        });
 
-	public Object getSelection() {
-		return selection;
-	}
+        if (diagram == null) {
+            viewer.setInput(new Object[] { ProcessContentProvider.OTHER_PROCESSES });
+        } else {
+            viewer.setInput(new Object[] { diagram, ProcessContentProvider.OTHER_PROCESSES });
+        }
 
-	public void setSelection(Object selection) {
-		this.selection = selection;
-	}
+        if (diagram != null) {
+            if (((ITreeContentProvider) viewer.getContentProvider()).hasChildren(diagram)) {
+                viewer.expandToLevel(diagram, 1);
+            }
+        } else {
+            if (((ITreeContentProvider) viewer.getContentProvider())
+                    .hasChildren(ProcessContentProvider.OTHER_PROCESSES)) {
+                viewer.expandToLevel(ProcessContentProvider.OTHER_PROCESSES, 1);
+            }
+        }
 
-	@Override
-	public void dispose() {
-		super.dispose();
-		if(databindingContext != null){
-			databindingContext.dispose() ;
-		}
-	}
+        WizardPageSupport.create(this, databindingContext);
+        databindingContext.bindValue(ViewerProperties.singleSelection().observe(viewer),
+                PojoProperties.value("selection").observe(this), strategy, null);
+
+        setControl(mainComposite);
+    }
+
+    public Object getSelection() {
+        return selection;
+    }
+
+    public void setSelection(Object selection) {
+        this.selection = selection;
+    }
+
+    @Override
+    public void dispose() {
+        super.dispose();
+        if (databindingContext != null) {
+            databindingContext.dispose();
+        }
+    }
 }

@@ -19,12 +19,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
-import org.bonitasoft.bpm.model.util.ExpressionConstants;
-import org.bonitasoft.studio.common.emf.tools.ModelHelper;
-import org.bonitasoft.studio.common.repository.RepositoryManager;
-import org.bonitasoft.studio.common.ui.properties.AbstractPropertySectionContribution;
-import org.bonitasoft.studio.common.ui.properties.ExtensibleGridPropertySection;
-import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.bpm.model.expression.Expression;
 import org.bonitasoft.bpm.model.process.AbstractProcess;
 import org.bonitasoft.bpm.model.process.CallActivity;
@@ -35,6 +29,12 @@ import org.bonitasoft.bpm.model.process.EndErrorEvent;
 import org.bonitasoft.bpm.model.process.ErrorEvent;
 import org.bonitasoft.bpm.model.process.ProcessPackage;
 import org.bonitasoft.bpm.model.process.SubProcessEvent;
+import org.bonitasoft.bpm.model.util.ExpressionConstants;
+import org.bonitasoft.studio.common.emf.tools.ModelHelper;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.ui.properties.AbstractPropertySectionContribution;
+import org.bonitasoft.studio.common.ui.properties.ExtensibleGridPropertySection;
+import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.properties.i18n.Messages;
@@ -47,7 +47,7 @@ import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.edit.EMFEditObservables;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.jface.fieldassist.ControlDecoration;
 import org.eclipse.jface.fieldassist.FieldDecoration;
 import org.eclipse.jface.fieldassist.FieldDecorationRegistry;
@@ -134,7 +134,7 @@ public class ErrorEventSectionContribution extends AbstractPropertySectionContri
             if (eObject instanceof EndErrorEvent) {
 
                 hint.setDescriptionText(Messages.errorEvent_errorCodeHint);
-                context.bindValue(SWTObservables.observeText(codeCombo),
+                context.bindValue(WidgetProperties.text().observe(codeCombo),
                         EMFEditObservables.observeValue(editingDomain, eObject,
                                 ProcessPackage.Literals.ERROR_EVENT__ERROR_CODE),
                         new UpdateValueStrategy()
@@ -152,7 +152,7 @@ public class ErrorEventSectionContribution extends AbstractPropertySectionContri
             } else {
                 hint.setDescriptionText(Messages.errorEvent_errorCodeCatchHint);
                 controlDecoration.hide();
-                context.bindValue(SWTObservables.observeText(codeCombo), EMFEditObservables.observeValue(editingDomain,
+                context.bindValue(WidgetProperties.text().observe(codeCombo), EMFEditObservables.observeValue(editingDomain,
                         eObject, ProcessPackage.Literals.ERROR_EVENT__ERROR_CODE));
             }
 

@@ -430,7 +430,8 @@ public class DataWizardIT {
 
         //try to add a data myData on step
         diagramPerspective.activeProcessDiagramEditor().selectElement("Step1");
-        addDataDialog = diagramPropertiesPart.selectDataTab().selectLocalDataTab().addData();;
+        bot.sleep(1000);
+        addDataDialog = diagramPropertiesPart.selectDataTab().selectLocalDataTab().addData();
         addDataDialog.setName(dataName);
         assertThat(bot.button(IDialogConstants.FINISH_LABEL).isEnabled()).isFalse();
         addDataDialog.setName(dataName1);
@@ -438,6 +439,7 @@ public class DataWizardIT {
 
         //add a second task and add a data named myData1
         diagramPerspective.activeProcessDiagramEditor().addElement("Step1", "Human", PositionConstants.EAST);
+        bot.sleep(1000);
         addDataDialog = diagramPropertiesPart.selectDataTab().selectLocalDataTab().addData();
         addDataDialog.setName(dataName1);
         addDataDialog.finish();

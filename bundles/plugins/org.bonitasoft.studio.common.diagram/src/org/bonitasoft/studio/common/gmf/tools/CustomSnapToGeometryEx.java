@@ -18,6 +18,7 @@
 
 package org.bonitasoft.studio.common.gmf.tools;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -62,8 +63,7 @@ public class CustomSnapToGeometryEx extends SnapToGeometryEx {
                 }
             }
 
-
-            Set<EditPart> contentList = new HashSet<EditPart>() ;
+            Set<EditPart> contentList = new HashSet<>() ;
             DiagramEditPart dEP = (DiagramEditPart) diagramEditPart ;
             for(Object entry :  dEP.getViewer().getEditPartRegistry().entrySet()){
                 java.util.Map.Entry<View, EditPart> epEntry = (java.util.Map.Entry<View, EditPart>) entry;
@@ -73,16 +73,16 @@ public class CustomSnapToGeometryEx extends SnapToGeometryEx {
                 }
             }
 
-            parts.clear() ;
-            parts.addAll(contentList);
+            var allParts = new ArrayList<EditPart>();
+            allParts.addAll(contentList);
 
-            rows = new Entry[parts.size() * 3];
-            cols = new Entry[parts.size() * 3];
+            rows = new Entry[allParts.size() * 3];
+            cols = new Entry[allParts.size() * 3];
 
 
-            for (int i = 0; i < parts.size(); i++) {
+            for (int i = 0; i < allParts.size(); i++) {
 
-                GraphicalEditPart child = (GraphicalEditPart)parts.get(i);
+                GraphicalEditPart child = (GraphicalEditPart)allParts.get(i);
                 Rectangle bounds = getFigureBounds(child).getCopy();
 
                 //translate the figure's coordinates to absolute, then relative

@@ -24,11 +24,10 @@ import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.jface.databinding.viewers.ViewersObservables;
+import org.eclipse.jface.databinding.viewers.typed.ViewerProperties;
 import org.eclipse.jface.databinding.wizard.WizardPageSupport;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
-import org.eclipse.jface.viewers.AbstractTableViewer;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
@@ -98,7 +97,7 @@ public class SelectCustomPageProjectPage extends WizardPage {
                 }
             }
         });
-        context.bindValue(ViewersObservables.observeSingleSelection(viewer), fileStoreObservable,
+        context.bindValue(ViewerProperties.singleSelection().observe(viewer), fileStoreObservable,
                 updateValueStrategy().withValidator(selectionValidator()).create(), null);
     }
     

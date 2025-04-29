@@ -33,6 +33,7 @@ import org.bonitasoft.studio.identity.actors.ui.section.editingsupport.ActorDesc
 import org.bonitasoft.studio.identity.actors.ui.section.editingsupport.ActorNameEditingSupport;
 import org.bonitasoft.studio.identity.i18n.Messages;
 import org.bonitasoft.studio.pics.Pics;
+import org.eclipse.core.databinding.observable.Realm;
 import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.edit.EMFEditObservables;
@@ -42,7 +43,7 @@ import org.eclipse.emf.edit.command.AddCommand;
 import org.eclipse.emf.edit.command.DeleteCommand;
 import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
-import org.eclipse.jface.databinding.viewers.ViewersObservables;
+import org.eclipse.jface.databinding.viewers.typed.ViewerProperties;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -324,7 +325,7 @@ public class ProcessActorsPropertySection extends AbstractBonitaDescriptionSecti
             context.dispose();
         }
         context = new EMFDataBindingContext();
-        context.bindValue(ViewersObservables.observeInput(actorsViewer), EMFEditObservables.observeValue(getEditingDomain(),
+        context.bindValue(ViewerProperties.input().observe(Realm.getDefault(), actorsViewer), EMFEditObservables.observeValue(getEditingDomain(),
                 getEObject(), ProcessPackage.Literals.ABSTRACT_PROCESS__ACTORS));
     }
 

@@ -943,11 +943,11 @@ public class SQLQuerySourceWriter implements SQLSourceWriter {
                         appendSpace(sb, lastSingleLineCommentStart - currentIndent);
                     }
                     else {
-                        lastSLCommentIndentMap.put(sb, new Integer(currentIndent));
+                        lastSLCommentIndentMap.put(sb, Integer.valueOf(currentIndent));
                     }
                 }
                 else {
-                    lastSLCommentIndentMap.put(sb, new Integer(currentIndent));
+                    lastSLCommentIndentMap.put(sb, Integer.valueOf(currentIndent));
                 }
             }
             
@@ -4370,18 +4370,20 @@ public class SQLQuerySourceWriter implements SQLSourceWriter {
 
             /* Write out the column name. */
             String valExprColName = valExprCol.getName();
-            		 boolean toUpperCase = false;
-			 final char delimiter = getDelimitedIdentifierQuote();
-			 if( delimiter == '"'){ //BS-941, BonitaSoft : Fix issue with postgresql an uppercase column name.
-				 if(valExprColName.equals(valExprColName.toUpperCase())){
-					 valExprColName = valExprColName.toLowerCase();
-					 toUpperCase = true;
-				 }
-			 }
-			 String sqlFormatValExprColName = convertCatalogIdentifierToSQLFormat(valExprColName, delimiter);
-			 if(toUpperCase){
-				 sqlFormatValExprColName = sqlFormatValExprColName.toUpperCase();
-			 }
+            //patch by BonitaSoft
+            boolean toUpperCase = false;
+            final char delimiter = getDelimitedIdentifierQuote();
+            if( delimiter == '"'){ //BS-941, BonitaSoft : Fix issue with postgresql an uppercase column name.
+                if(valExprColName.equals(valExprColName.toUpperCase())){
+                    valExprColName = valExprColName.toLowerCase();
+                    toUpperCase = true;
+                }
+            }
+            String sqlFormatValExprColName = convertCatalogIdentifierToSQLFormat(valExprColName, delimiter);
+            if(toUpperCase){
+                sqlFormatValExprColName = sqlFormatValExprColName.toUpperCase();
+            }
+            //end patch by BonitaSoft
             appendIdentifier(sbExpr, sqlFormatValExprColName);
 
             wrapSQL(valExprCol, sbExpr);
@@ -4638,30 +4640,10 @@ public class SQLQuerySourceWriter implements SQLSourceWriter {
      * @see org.eclipse.datatools.modelbase.sql.query.ValueExpressionSimple#getSQL()
      */
     protected void appendSpecificSQL(ValueExpressionSimple exprSimple, StringBuffer sb) {
-                if (exprSimple != null) {
-            final StringBuffer sbExpr = new StringBuffer();
-            final String exprValStr = exprSimple.getValue();
-
-            String hostVarPrefix = COLON;
-
-            if (exprSimple.getSourceInfo() != null && exprSimple.getSourceInfo().getSqlFormat() != null) {
-                final SQLQuerySourceFormat sf = exprSimple.getSourceInfo().getSqlFormat();
-                hostVarPrefix = String.valueOf(sf.getHostVariablePrefix());
-            }
-
-            if (exprValStr.startsWith("'" + hostVarPrefix) && exprValStr.endsWith("'")) {
-                final String varName = exprValStr.substring(2, exprValStr.length() - 1);
-                if (BonitaExpressionBinding.getExpression(varName) != null) {
-                    //HANDLE BONITA EXPRESSION
-                    sbExpr.append("'");
-                    sbExpr.append(BonitaExpressionBinding.getExpression(varName)); // [bug 221028]
-                    sbExpr.append("'");
-                } else {
-                    appendString(sbExpr, exprValStr);
-                }
-            } else {
-                appendString(sbExpr, exprValStr);
-            }
+        if (exprSimple != null) {
+            StringBuffer sbExpr = new StringBuffer();
+            String exprValStr = exprSimple.getValue();
+            appendString(sbExpr, exprValStr);
 
             wrapSQL(exprSimple, sbExpr);
             appendStringBuffer(sb, sbExpr);

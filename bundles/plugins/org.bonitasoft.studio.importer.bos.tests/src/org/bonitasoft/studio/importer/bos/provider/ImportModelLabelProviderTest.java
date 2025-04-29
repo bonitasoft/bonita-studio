@@ -17,12 +17,12 @@ import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.importer.bos.model.AbstractFileModel;
 import org.bonitasoft.studio.importer.bos.model.ImportFileStoreModel;
 import org.bonitasoft.studio.importer.bos.model.ImportStoreModel;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class ImportModelLabelProviderTest {
+class ImportModelLabelProviderTest {
 
     @Test
-    public void should_display_folder_name() throws Exception {
+    void should_display_folder_name() throws Exception {
         final ImportModelLabelProvider labelProvider = new ImportModelLabelProvider();
 
         final String text = labelProvider.getText(new ImportStoreModel("myRepo", repositoryStore("myRepo")));
@@ -31,13 +31,13 @@ public class ImportModelLabelProviderTest {
     }
 
     @Test
-    public void should_detect_conflicting_status() throws Exception {
+    void should_detect_conflicting_status() throws Exception {
         ImportModelLabelProvider labelProvider = new ImportModelLabelProvider();
         assertThat(labelProvider.hasStatus(conflictingImportFileModel(), ConflictStatus.CONFLICTING)).isTrue();
     }
 
     @Test
-    public void should_detect_same_content_status() throws Exception {
+    void should_detect_same_content_status() throws Exception {
         final ImportModelLabelProvider labelProvider = new ImportModelLabelProvider();
         assertThat(labelProvider.hasStatus(sameContentImportFileModel(), ConflictStatus.SAME_CONTENT)).isTrue();
     }

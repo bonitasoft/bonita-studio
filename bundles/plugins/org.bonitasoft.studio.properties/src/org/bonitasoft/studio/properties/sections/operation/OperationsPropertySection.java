@@ -14,7 +14,7 @@
  */
 package org.bonitasoft.studio.properties.sections.operation;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import org.bonitasoft.bpm.model.util.ExpressionConstants;
 import org.bonitasoft.studio.common.ui.jface.databinding.CustomEMFEditObservables;

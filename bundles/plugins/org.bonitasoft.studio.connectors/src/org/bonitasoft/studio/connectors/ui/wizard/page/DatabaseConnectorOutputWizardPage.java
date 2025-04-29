@@ -44,7 +44,7 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.jface.databinding.viewers.ViewersObservables;
+import org.eclipse.jface.databinding.viewers.typed.ViewerProperties;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
@@ -152,7 +152,7 @@ public class DatabaseConnectorOutputWizardPage extends AbstractConnectorOutputWi
         targetDataExpressionViewer.setContext(getElementContainer());
         targetDataExpressionViewer.setInput(singleModeOuputOperation);
 
-        context.bindValue(ViewersObservables.observeSingleSelection(targetDataExpressionViewer),
+        context.bindValue(ViewerProperties.singleSelection().observe(targetDataExpressionViewer),
                 EMFObservables.observeValue(singleModeOuputOperation, ExpressionPackage.Literals.OPERATION__LEFT_OPERAND));
 
         final Label takeValueOfLabel = new Label(mainComposite, SWT.NONE);
@@ -195,7 +195,7 @@ public class DatabaseConnectorOutputWizardPage extends AbstractConnectorOutputWi
         targetDataExpressionViewer.setContext(getElementContainer());
         targetDataExpressionViewer.setInput(singleModeOuputOperation);
 
-        context.bindValue(ViewersObservables.observeSingleSelection(targetDataExpressionViewer),
+        context.bindValue(ViewerProperties.singleSelection().observe(targetDataExpressionViewer),
                 EMFObservables.observeValue(singleModeOuputOperation, ExpressionPackage.Literals.OPERATION__LEFT_OPERAND));
 
         final Label takeValueOfLabel = new Label(mainComposite, SWT.NONE);
@@ -246,7 +246,7 @@ public class DatabaseConnectorOutputWizardPage extends AbstractConnectorOutputWi
             targetDataExpressionViewer.setContext(getElementContainer());
             targetDataExpressionViewer.setInput(op);
 
-            context.bindValue(ViewersObservables.observeSingleSelection(targetDataExpressionViewer),
+            context.bindValue(ViewerProperties.singleSelection().observe(targetDataExpressionViewer),
                     EMFObservables.observeValue(op, ExpressionPackage.Literals.OPERATION__LEFT_OPERAND));
 
             final Label takeValueOfLabel = new Label(oneRowNColsComposite, SWT.NONE);
@@ -362,7 +362,7 @@ public class DatabaseConnectorOutputWizardPage extends AbstractConnectorOutputWi
         targetDataExpressionViewer.setContext(getElementContainer());
         targetDataExpressionViewer.setInput(singleModeOuputOperation);
 
-        context.bindValue(ViewersObservables.observeSingleSelection(targetDataExpressionViewer),
+        context.bindValue(ViewerProperties.singleSelection().observe(targetDataExpressionViewer),
                 EMFObservables.observeValue(singleModeOuputOperation, ExpressionPackage.Literals.OPERATION__LEFT_OPERAND));
 
         final Label takeValueOfLabel = new Label(mainComposite, SWT.NONE);

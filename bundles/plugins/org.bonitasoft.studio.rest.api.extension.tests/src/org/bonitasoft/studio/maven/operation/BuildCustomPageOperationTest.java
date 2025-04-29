@@ -10,6 +10,7 @@ package org.bonitasoft.studio.maven.operation;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.notNull;
 import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
@@ -24,7 +25,6 @@ import java.util.Optional;
 
 import org.apache.maven.project.MavenProject;
 import org.bonitasoft.studio.assertions.StatusAssert;
-import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.rest.api.extension.core.repository.RestAPIExtensionDescriptor;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IProject;
@@ -80,8 +80,8 @@ public class BuildCustomPageOperationTest {
     public void should_run_maven_install_on_a_rest_api_extension_project() throws Exception {
         final RestAPIExtensionDescriptor descriptor = mock(RestAPIExtensionDescriptor.class);
         when(descriptor.getProject()).thenReturn(mock(IProject.class));
-        final BuildCustomPageOperation operation = spy(new BuildCustomPageOperation(descriptor,
-                launchManager));
+        final BuildCustomPageOperation operation = spy(new BuildCustomPageOperation(descriptor));
+        doReturn(launchManager).when(operation).launchManager();
         final Launch launch = mock(Launch.class);
         when(launch.isTerminated()).thenReturn(true);
 
@@ -92,8 +92,7 @@ public class BuildCustomPageOperationTest {
         when(mavenProject.getArtifactId()).thenReturn("defaultRestAPIExtension");
         when(mavenProject.getVersion()).thenReturn("1.0.0-SNAPSHOT");
         doReturn(Optional.of(mavenProject)).when(descriptor).getMavenProject();
-        doReturn(launch).when(workingCopy).launch(ILaunchManager.RUN_MODE, AbstractRepository.NULL_PROGRESS_MONITOR, true);
-        doReturn("myProfile").when(operation).activeProfiles();
+        doReturn(launch).when(workingCopy).launch(eq(ILaunchManager.RUN_MODE), notNull(IProgressMonitor.class), eq(true));
 
         final File targetFolder = new File(baseDir, "target");
         final File archiveFile = new File(targetFolder, "defaultRestAPIExtension-1.0.0-SNAPSHOT.zip");
@@ -103,7 +102,7 @@ public class BuildCustomPageOperationTest {
 
         operation.run(monitor);
 
-        verify(workingCopy).launch(ILaunchManager.RUN_MODE, AbstractRepository.NULL_PROGRESS_MONITOR, true);
+        verify(workingCopy).launch(eq(ILaunchManager.RUN_MODE), notNull(IProgressMonitor.class), eq(true));
 
         StatusAssert.assertThat(operation.getStatus()).isOK();
 
@@ -114,8 +113,8 @@ public class BuildCustomPageOperationTest {
     public void should_fail_if_maven_install_process_return_error_exit_code() throws Exception {
         final RestAPIExtensionDescriptor descriptor = mock(RestAPIExtensionDescriptor.class);
         when(descriptor.getProject()).thenReturn(mock(IProject.class));
-        final BuildCustomPageOperation operation = spy(new BuildCustomPageOperation(descriptor,
-                launchManager));
+        final BuildCustomPageOperation operation = spy(new BuildCustomPageOperation(descriptor));
+        doReturn(launchManager).when(operation).launchManager();
         final Launch launch = mock(Launch.class);
         when(launch.isTerminated()).thenReturn(true);
 
@@ -125,12 +124,11 @@ public class BuildCustomPageOperationTest {
         when(launch.getProcesses()).thenReturn(new IProcess[] { mavenProcess });
 
         doReturn(Optional.of(mavenProject)).when(descriptor).getMavenProject();
-        doReturn(launch).when(workingCopy).launch(ILaunchManager.RUN_MODE, AbstractRepository.NULL_PROGRESS_MONITOR, true);
-        doReturn("myProfile").when(operation).activeProfiles();
+        doReturn(launch).when(workingCopy).launch(eq(ILaunchManager.RUN_MODE), notNull(IProgressMonitor.class), eq(true));
 
         operation.run(monitor);
 
-        verify(workingCopy).launch(ILaunchManager.RUN_MODE, AbstractRepository.NULL_PROGRESS_MONITOR, true);
+        verify(workingCopy).launch(eq(ILaunchManager.RUN_MODE), Mockito.notNull(IProgressMonitor.class), eq(true));
 
         StatusAssert.assertThat(operation.getStatus()).isNotOK();
 

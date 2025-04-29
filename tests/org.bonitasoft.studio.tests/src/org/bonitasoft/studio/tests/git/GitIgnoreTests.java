@@ -228,5 +228,5 @@ public class GitIgnoreTests {
             }
         }
     }
-
+    
 }

@@ -31,7 +31,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.EMFObservables;
-import org.eclipse.jface.databinding.viewers.ViewersObservables;
+import org.eclipse.jface.databinding.viewers.typed.ViewerProperties;
 import org.eclipse.jface.databinding.wizard.WizardPageSupport;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -187,18 +187,18 @@ public class SelectConnectorDefinitionWizardPage extends WizardPage
             }
         });
 
-        context.bindValue(ViewersObservables.observeSingleSelection(treeViewer),
+        context.bindValue(ViewerProperties.singleSelection().observe(treeViewer),
                 EMFObservables.observeValue(connectorWorkingCopy, ProcessPackage.Literals.CONNECTOR__DEFINITION_ID),
                 idStrategy, null);
-        context.bindValue(ViewersObservables.observeSingleSelection(treeViewer),
+        context.bindValue(ViewerProperties.singleSelection().observe(treeViewer),
                 EMFObservables.observeValue(connectorWorkingCopy,
                         ProcessPackage.Literals.CONNECTOR__DEFINITION_VERSION),
                 versionStrategy, null);
-        context.bindValue(ViewersObservables.observeSingleSelection(treeViewer),
+        context.bindValue(ViewerProperties.singleSelection().observe(treeViewer),
                 EMFObservables.observeValue(connectorWorkingCopy.getConfiguration(),
                         ConnectorConfigurationPackage.Literals.CONNECTOR_CONFIGURATION__DEFINITION_ID),
                 idStrategy, null);
-        context.bindValue(ViewersObservables.observeSingleSelection(treeViewer),
+        context.bindValue(ViewerProperties.singleSelection().observe(treeViewer),
                 EMFObservables.observeValue(connectorWorkingCopy.getConfiguration(),
                         ConnectorConfigurationPackage.Literals.CONNECTOR_CONFIGURATION__VERSION),
                 versionStrategy, null);

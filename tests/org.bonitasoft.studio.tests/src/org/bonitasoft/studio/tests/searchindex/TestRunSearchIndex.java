@@ -31,11 +31,8 @@ public class TestRunSearchIndex {
 
     @Rule
     public InitialProjectRule projectRule = InitialProjectRule.INSTANCE;
-    
-    private APISession session;
 
-    private final DiagramRepositoryStore store = RepositoryManager.getInstance()
-            .getRepositoryStore(DiagramRepositoryStore.class);
+    private APISession session;
 
     RepositoryAccessor repositoryAccessor;
 
@@ -61,6 +58,8 @@ public class TestRunSearchIndex {
         op.setCurrentRepository(repositoryAccessor.getCurrentRepository());
         op.run(AbstractRepository.NULL_PROGRESS_MONITOR);
 
+        // get repository store after the initial project rule and import have executed.
+        var store = RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
         final MainProcess mainProcess = store.getChild("SearchIndex-1.0.proc", true).getContent();
         assertEquals("SearchIndex", mainProcess.getName());
 

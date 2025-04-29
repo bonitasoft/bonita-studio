@@ -21,17 +21,6 @@ package org.bonitasoft.studio.diagram.custom.editPolicies;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.bonitasoft.studio.common.Pair;
-import org.bonitasoft.studio.common.emf.tools.ModelHelper;
-import org.bonitasoft.studio.common.gmf.tools.GMFTools;
-import org.bonitasoft.studio.common.gmf.tools.GMFTools.ElementTypeResolver;
-import org.bonitasoft.studio.common.palette.ProcessPaletteLabelProvider;
-import org.bonitasoft.studio.diagram.custom.Activator;
-import org.bonitasoft.studio.diagram.custom.BonitaNodesElementTypeResolver;
-import org.bonitasoft.studio.diagram.custom.figures.DropDownMenuEventFigure;
-import org.bonitasoft.studio.diagram.custom.figures.DropDownMenuFigure;
-import org.bonitasoft.studio.diagram.custom.figures.SlideMenuBarFigure;
-import org.bonitasoft.studio.diagram.custom.i18n.Messages;
 import org.bonitasoft.bpm.model.process.ANDGateway;
 import org.bonitasoft.bpm.model.process.Activity;
 import org.bonitasoft.bpm.model.process.BoundaryTimerEvent;
@@ -63,6 +52,17 @@ import org.bonitasoft.bpm.model.process.StartTimerEvent;
 import org.bonitasoft.bpm.model.process.Task;
 import org.bonitasoft.bpm.model.process.ThrowLinkEvent;
 import org.bonitasoft.bpm.model.process.XORGateway;
+import org.bonitasoft.studio.common.Pair;
+import org.bonitasoft.studio.common.emf.tools.ModelHelper;
+import org.bonitasoft.studio.common.gmf.tools.GMFTools;
+import org.bonitasoft.studio.common.gmf.tools.GMFTools.ElementTypeResolver;
+import org.bonitasoft.studio.common.palette.ProcessPaletteLabelProvider;
+import org.bonitasoft.studio.diagram.custom.Activator;
+import org.bonitasoft.studio.diagram.custom.BonitaNodesElementTypeResolver;
+import org.bonitasoft.studio.diagram.custom.figures.DropDownMenuEventFigure;
+import org.bonitasoft.studio.diagram.custom.figures.DropDownMenuFigure;
+import org.bonitasoft.studio.diagram.custom.figures.SlideMenuBarFigure;
+import org.bonitasoft.studio.diagram.custom.i18n.Messages;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.MainProcessEditPart;
 import org.bonitasoft.studio.model.process.diagram.providers.ProcessElementTypes;
 import org.bonitasoft.studio.pics.Pics;
@@ -176,7 +176,7 @@ public class ActivitySwitchEditPolicy extends AbstractSingleSelectionEditPolicy 
                     }
                     p.getViewer().select(targetEditPart);
                     p.getViewer().flush() ;
-                    //consume the event in order that the editpart keep the focus
+                    //consume the event in order that tIFigurehe editpart keep the focus
                     me.consume();
                 }
             }
@@ -206,14 +206,12 @@ public class ActivitySwitchEditPolicy extends AbstractSingleSelectionEditPolicy 
     @Override
     @SuppressWarnings("unchecked")
     protected void hideFeedback() {
-        final List<IFigure> figToDelete = new ArrayList<IFigure>();
+        final List<IFigure> figToDelete = new ArrayList<>();
         if(layer != null){
-            final List<Object> children = layer.getChildren();
-            for (final Object fig : children){
+            final List<? extends IFigure> children = layer.getChildren();
+            for (var fig : children){
                 if(figures.contains(fig)){
-                    if(fig instanceof IFigure) {
-                        figToDelete.add((IFigure) fig);
-                    }
+                    figToDelete.add((IFigure) fig);
                 }
             }
             figures.clear();

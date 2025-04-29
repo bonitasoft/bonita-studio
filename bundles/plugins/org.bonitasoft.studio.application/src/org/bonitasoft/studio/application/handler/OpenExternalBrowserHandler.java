@@ -17,7 +17,7 @@ package org.bonitasoft.studio.application.handler;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import javax.inject.Named;
+import jakarta.inject.Named;
 
 import org.bonitasoft.studio.common.RedirectURLBuilder;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;

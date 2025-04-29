@@ -17,7 +17,7 @@ package org.bonitasoft.studio.contract.core.mapping.operation;
 import java.util.Collection;
 import java.util.Objects;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import org.bonitasoft.bpm.model.util.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
