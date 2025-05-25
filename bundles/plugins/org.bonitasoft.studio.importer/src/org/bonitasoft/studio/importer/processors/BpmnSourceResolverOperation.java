@@ -3,6 +3,7 @@ package org.bonitasoft.studio.importer.processors;
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 
+import org.bonitasoft.studio.importer.handler.BpmnSourceSelectionDialog;
 import org.bonitasoft.studio.importer.i18n.Messages;
 import org.bonitasoft.studio.importer.ui.wizard.ImportFileWizard;
 import org.bonitasoft.studio.ui.dialog.SkippableProgressMonitorJobsDialog;
@@ -24,8 +25,7 @@ public class BpmnSourceResolverOperation implements IRunnableWithProgress {
 	@Override
 	public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 		monitor.beginTask(Messages.importProcessProgressDialog, IProgressMonitor.UNKNOWN);
-		//to be replaced with the logic
-		throw new BPMNSourceNotFoundException(monitor, importFileWizard, progressManager);
+		new BpmnSourceSelectionDialog(progressManager.getShell()).open();
 	}
 
 }
