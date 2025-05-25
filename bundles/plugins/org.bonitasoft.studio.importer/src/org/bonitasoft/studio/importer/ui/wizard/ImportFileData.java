@@ -18,6 +18,8 @@ import org.bonitasoft.studio.importer.ImporterFactory;
 
 public class ImportFileData {
 
+	public static final String BPMN_SOURCE_FIELD = "bpmnSource";
+	public static final String BPMN_SOURCE_VERSION_FIELD = "bpmnSourceVersion";
     private String filePath;
     private ImporterFactory importerFactory;
     private String bpmnSource;

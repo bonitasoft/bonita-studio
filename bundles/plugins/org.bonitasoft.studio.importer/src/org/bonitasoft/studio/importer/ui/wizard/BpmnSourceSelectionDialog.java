@@ -16,11 +16,14 @@ import org.eclipse.swt.widgets.*;
 
 public class BpmnSourceSelectionDialog extends Dialog {
 
-    private String[] vendors = { "Camunda", "Activiti", "Flowable", "Bonita", "Other" };
+    private static final String SELECT_SOURCE_BPMN_VENDOR = "Select source BPMN Vendor:";
+	private static final String EXPORTER_VERSION = "Exporter Version:";
+	private static final String[] vendors = { "Camunda", "Activiti", "Flowable", "Other" };
     private String selectedVendor;
     private Combo vendorCombo;
     private Text otherVendorText;
     private ImportFileData importFileData;
+	private Text exporterVersionText;
 
     public BpmnSourceSelectionDialog(Shell parentShell, ImportFileWizard importFileWizard) {
     	this(parentShell);
@@ -38,7 +41,7 @@ public class BpmnSourceSelectionDialog extends Dialog {
         container.setLayout(new GridLayout(2, false));
 
         Label comboLabel = new Label(container, SWT.NONE);
-        comboLabel.setText("Select source BPMN Vendor:");
+        comboLabel.setText(SELECT_SOURCE_BPMN_VENDOR);
 
         vendorCombo = new Combo(container, SWT.DROP_DOWN | SWT.READ_ONLY);
         vendorCombo.setItems(vendors);
@@ -55,12 +58,12 @@ public class BpmnSourceSelectionDialog extends Dialog {
         otherVendorText.setVisible(false);
 
         Label exporterLabel = new Label(container, SWT.NONE);
-        exporterLabel.setText("Exporter Version:");
+        exporterLabel.setText(EXPORTER_VERSION);
 
-        Text exporterVersionText = new Text(container, SWT.BORDER); 
+        exporterVersionText = new Text(container, SWT.BORDER); 
         exporterVersionText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
-        IObservableValue exporterVersionObservable = PojoProperties.value("exporterVersion").observe(importFileData);
+        IObservableValue exporterVersionObservable = PojoProperties.value(ImportFileData.BPMN_SOURCE_VERSION_FIELD).observe(importFileData);
         dbc.bindValue(WidgetProperties.text(SWT.Modify).observe(exporterVersionText), exporterVersionObservable);
 
         
@@ -68,7 +71,7 @@ public class BpmnSourceSelectionDialog extends Dialog {
             @Override
             public void widgetSelected(SelectionEvent e) {
                 String selected = vendorCombo.getText();
-                final IObservableValue filePathObservable = PojoProperties.value("bpmnSource").observe(importFileData);
+                final IObservableValue filePathObservable = PojoProperties.value(ImportFileData.BPMN_SOURCE_FIELD).observe(importFileData);
                 if ("Other".equals(selected)) {
                     otherLabel.setVisible(true);
                     otherVendorText.setVisible(true);
@@ -96,6 +99,8 @@ public class BpmnSourceSelectionDialog extends Dialog {
 
     @Override
     protected void okPressed() {
+    	importFileData.setBpmnSource(otherVendorText.getText() != null ? otherVendorText.getText() : vendorCombo.getText());
+    	importFileData.setBpmnSourceVersion(exporterVersionText.getText());
         super.okPressed();
     }
 
