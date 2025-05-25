@@ -16,11 +16,14 @@ import org.eclipse.swt.widgets.*;
 
 public class BpmnSourceSelectionDialog extends Dialog {
 
-    private String[] vendors = { "Camunda", "Activiti", "Flowable", "Bonita", "Other" };
+    private static final String SELECT_SOURCE_BPMN_VENDOR = "Select source BPMN Vendor:";
+	private static final String EXPORTER_VERSION = "Exporter Version:";
+	private static final String[] vendors = { "Camunda", "Activiti", "Flowable", "Other" };
     private String selectedVendor;
     private Combo vendorCombo;
     private Text otherVendorText;
     private ImportFileData importFileData;
+	private Text exporterVersionText;
 
     public BpmnSourceSelectionDialog(Shell parentShell, ImportFileWizard importFileWizard) {
     	this(parentShell);
@@ -33,12 +36,12 @@ public class BpmnSourceSelectionDialog extends Dialog {
 
     @Override
     protected Control createDialogArea(Composite parent) {
-    	final DataBindingContext dbc = new DataBindingContext();
+        final DataBindingContext dbc = new DataBindingContext();
         Composite container = (Composite) super.createDialogArea(parent);
         container.setLayout(new GridLayout(2, false));
 
         Label comboLabel = new Label(container, SWT.NONE);
-        comboLabel.setText("Select source BPMN Vendor:");
+        comboLabel.setText(SELECT_SOURCE_BPMN_VENDOR);
 
         vendorCombo = new Combo(container, SWT.DROP_DOWN | SWT.READ_ONLY);
         vendorCombo.setItems(vendors);
@@ -53,13 +56,22 @@ public class BpmnSourceSelectionDialog extends Dialog {
         otherVendorText = new Text(container, SWT.BORDER);
         otherVendorText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
         otherVendorText.setVisible(false);
-       
-        // Show/hide "Other" field
+
+        Label exporterLabel = new Label(container, SWT.NONE);
+        exporterLabel.setText(EXPORTER_VERSION);
+
+        exporterVersionText = new Text(container, SWT.BORDER); 
+        exporterVersionText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+
+        IObservableValue exporterVersionObservable = PojoProperties.value(ImportFileData.BPMN_SOURCE_VERSION_FIELD).observe(importFileData);
+        dbc.bindValue(WidgetProperties.text(SWT.Modify).observe(exporterVersionText), exporterVersionObservable);
+
+        
         vendorCombo.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
                 String selected = vendorCombo.getText();
-                final IObservableValue filePathObservable = PojoProperties.value("bpmnSource").observe(importFileData);
+                final IObservableValue filePathObservable = PojoProperties.value(ImportFileData.BPMN_SOURCE_FIELD).observe(importFileData);
                 if ("Other".equals(selected)) {
                     otherLabel.setVisible(true);
                     otherVendorText.setVisible(true);
@@ -70,11 +82,10 @@ public class BpmnSourceSelectionDialog extends Dialog {
                     selectedVendor = selected;
                     dbc.bindValue(WidgetProperties.text(SWT.Modify).observe(vendorCombo), filePathObservable);
                 }
-                container.layout(); // Update layout
+                container.layout();
             }
         });
 
-        // Listen to "Other" text field
         otherVendorText.addModifyListener(new ModifyListener() {
             @Override
             public void modifyText(ModifyEvent e) {
@@ -85,10 +96,11 @@ public class BpmnSourceSelectionDialog extends Dialog {
         return container;
     }
 
+
     @Override
     protected void okPressed() {
-        // You can now use selectedVendor
-        System.out.println("Selected Vendor: " + selectedVendor);
+    	importFileData.setBpmnSource(otherVendorText.getText() != null ? otherVendorText.getText() : vendorCombo.getText());
+    	importFileData.setBpmnSourceVersion(exporterVersionText.getText());
         super.okPressed();
     }
 

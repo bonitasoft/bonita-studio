@@ -11,14 +11,13 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
 import org.bonitasoft.studio.importer.ImporterFactory;
-import org.bonitasoft.studio.importer.ImporterPlugin;
 import org.bonitasoft.studio.importer.i18n.Messages;
 import org.bonitasoft.studio.importer.ui.wizard.BpmnSourceSelectionDialog;
 import org.bonitasoft.studio.importer.ui.wizard.ImportFileWizard;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
 
 public class ImportBpmnFileOperation extends ImportFileOperation{
@@ -28,8 +27,9 @@ public class ImportBpmnFileOperation extends ImportFileOperation{
 	private static final String EXPORTER_VERSION_ATTRIBUTE_NAME = "exporterVersion";
 	private final ImportFileWizard importFileWizard;
 	private final File fileToImport;
-	
-	public ImportBpmnFileOperation(ImporterFactory importerFactory, File fileToImport, ImportFileWizard importFileWizard) {
+
+	public ImportBpmnFileOperation(ImporterFactory importerFactory, File fileToImport,
+			ImportFileWizard importFileWizard) {
 		super(importerFactory, fileToImport);
 		this.importFileWizard = importFileWizard;
 		this.fileToImport = fileToImport;
@@ -37,51 +37,60 @@ public class ImportBpmnFileOperation extends ImportFileOperation{
 
 	@Override
 	public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-		if (!checkSource()
+		var checkSource = false;
+		try {
+			checkSource = checkSource();
+		} catch (IOException | XMLStreamException e) {
+			throw new InvocationTargetException(e, e.getMessage());
+		}
+		if (checkSource
 				|| new BpmnSourceSelectionDialog(importFileWizard.getShell(), importFileWizard).open() == Dialog.OK) {
-			String message = Messages.bind(Messages.importSucessfulWithSourceMessage
-					, new String[] {importFileWizard.getImportFileData().getBpmnSource(), importFileWizard.getImportFileData().getBpmnSourceVersion()});
-				Display.getDefault().asyncExec(new Runnable() {
-		            @Override
-		            public void run() {
-		            	getImportStatusDialogHandler(new Status(IStatus.OK, ImporterPlugin.PLUGIN_ID, message))
-		                		.open(Display.getDefault().getActiveShell());
-		            }
-				});
-				super.run(monitor);
+			String message = Messages.bind(Messages.importSucessfulWithSourceMessage,
+					new String[] { importFileWizard.getImportFileData().getBpmnSource(),
+							importFileWizard.getImportFileData().getBpmnSourceVersion() });
+			Display.getDefault().asyncExec(new Runnable() {
+				@Override
+				public void run() {
+					new MessageDialog(Display.getDefault().getActiveShell(),
+							org.bonitasoft.studio.importer.i18n.Messages.importResultTitle, null, message,
+							MessageDialog.INFORMATION, new String[] { IDialogConstants.OK_LABEL }, 0).open();
+				}
+			});
+			super.run(monitor);
 		}
 	}
-	
 
+	protected boolean checkSource() throws IOException, XMLStreamException {
+		XMLInputFactory factory = XMLInputFactory.newInstance();
+		try (FileInputStream fileInputStream = new FileInputStream(fileToImport)) {
+			XMLStreamReader reader = factory.createXMLStreamReader(fileInputStream);
 
-    protected boolean checkSource() {
-	        XMLInputFactory factory = XMLInputFactory.newInstance();
-	        try (FileInputStream fileInputStream = new FileInputStream(fileToImport)) {
-	            XMLStreamReader reader = factory.createXMLStreamReader(fileInputStream);
-	            
-	            while (reader.hasNext()) {
-	                int event = reader.next();
+			while (reader.hasNext()) {
+				int event = reader.next();
 
-	                if (event == XMLStreamConstants.START_ELEMENT) {
-	                    String tagName = reader.getLocalName();
+				if (event == XMLStreamConstants.START_ELEMENT) {
+					String tagName = reader.getLocalName();
 
-	                    if (DEFINITIONS_TAG_NAME.equals(tagName)) {
-	                    	var exporter = reader.getAttributeValue(null, EXPORTER_ATTRIBUTE_NAME);
-	                    	var exporterVersion = reader.getAttributeValue(null, EXPORTER_VERSION_ATTRIBUTE_NAME);
-	                    	if(exporter == null) {
-	                    		return true;
-	                    	}
-	                    	importFileWizard.getImportFileData().setBpmnSource(exporter);
-	                    	importFileWizard.getImportFileData().setBpmnSourceVersion(exporterVersion);
-	                    	return false;
-	                    }
-	                }
-	            }
-	            reader.close();
-	            return true;
-	        } catch (IOException | XMLStreamException e) {
-				e.printStackTrace();
+					if (DEFINITIONS_TAG_NAME.equals(tagName)) {
+						var exporter = reader.getAttributeValue(null, EXPORTER_ATTRIBUTE_NAME);
+						var exporterVersion = reader.getAttributeValue(null, EXPORTER_VERSION_ATTRIBUTE_NAME);
+						var exporterExists = false;
+						var exporterVersionExists = false;
+						if (exporter != null && !exporter.isEmpty()) {
+							importFileWizard.getImportFileData().setBpmnSource(exporter);
+							exporterExists = true;
+						}
+						if (exporterVersion != null && !exporterVersion.isEmpty()) {
+							importFileWizard.getImportFileData().setBpmnSourceVersion(exporterVersion);
+							exporterVersionExists = true;
+						}
+						reader.close();
+						return exporterExists && exporterVersionExists;
+					}
+				}
 			}
+			reader.close();
+		}
 		return false;
 	}
 
