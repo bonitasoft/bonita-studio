@@ -18,6 +18,9 @@ import static com.google.common.base.Strings.isNullOrEmpty;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
+import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
@@ -26,17 +29,19 @@ import org.bonitasoft.studio.common.ui.jface.BonitaErrorDialog;
 import org.bonitasoft.studio.common.ui.jface.CustomWizardDialog;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
+import org.bonitasoft.studio.importer.ImporterFactory;
 import org.bonitasoft.studio.importer.ImporterPlugin;
 import org.bonitasoft.studio.importer.bpmn.BPMNToProcFactory;
 import org.bonitasoft.studio.importer.i18n.Messages;
 import org.bonitasoft.studio.importer.processors.BPMNSourceNotFoundException;
-import org.bonitasoft.studio.importer.processors.DetectBpmnSourceOperation;
+import org.bonitasoft.studio.importer.processors.BpmnSourceResolverOperation;
 import org.bonitasoft.studio.importer.processors.ImportFileOperation;
 import org.bonitasoft.studio.importer.ui.wizard.ImportFileWizard;
 import org.bonitasoft.studio.ui.dialog.SkippableProgressMonitorJobsDialog;
 import org.eclipse.e4.core.di.annotations.CanExecute;
 import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.swt.widgets.Display;
 
 /**
@@ -52,33 +57,27 @@ public class ImportOtherHandler {
         	final File selectedFile = new File(importFileWizard.getSelectedFilePath());
         	final SkippableProgressMonitorJobsDialog progressManager = new SkippableProgressMonitorJobsDialog(
                     Display.getDefault().getActiveShell());
-        	if(importFileWizard.getSelectedTransfo() instanceof BPMNToProcFactory) {
-        		DetectBpmnSourceOperation op = new DetectBpmnSourceOperation(selectedFile);
+        	Set<IRunnableWithProgress> operations = getImporterOperations(importFileWizard, selectedFile, progressManager);
+        	for(IRunnableWithProgress operation : operations) {
         		try {
-					progressManager.run(false, false, op);
-				} catch (BPMNSourceNotFoundException e) {
-					new BpmnSourceSelectionDialog(Display.getDefault().getActiveShell()).open();
-				} catch (InvocationTargetException | InterruptedException e) {
-					new BonitaErrorDialog(Display.getDefault().getActiveShell(), Messages.errorWhileImporting_title, Messages.errorWhileImporting_message, e)
-                    .open();
-				}
+                    progressManager.run(false, false, operation);
+                } catch (final InvocationTargetException | InterruptedException e) {
+                    final Throwable t = e instanceof InvocationTargetException
+                            ? ((InvocationTargetException) e).getTargetException() : e;
+                    BonitaStudioLog.error("Import has failed for file " + selectedFile.getName(), ImporterPlugin.PLUGIN_ID);
+                    BonitaStudioLog.error(e, ImporterPlugin.PLUGIN_ID);
+                    String message = Messages.errorWhileImporting_message;
+                    if (t != null && !isNullOrEmpty(t.getMessage())) {
+                        message = t.getMessage();
+                    }
+                    new BonitaErrorDialog(Display.getDefault().getActiveShell(), Messages.errorWhileImporting_title, message, e)
+                            .open();
+                    break;
+                }
         	}	
         	
             final ImportFileOperation operation = createImportFileOperation(importFileWizard, selectedFile, progressManager);
-            try {
-                progressManager.run(false, false, operation);
-            } catch (final InvocationTargetException | InterruptedException e) {
-                final Throwable t = e instanceof InvocationTargetException
-                        ? ((InvocationTargetException) e).getTargetException() : e;
-                BonitaStudioLog.error("Import has failed for file " + selectedFile.getName(), ImporterPlugin.PLUGIN_ID);
-                BonitaStudioLog.error(e, ImporterPlugin.PLUGIN_ID);
-                String message = Messages.errorWhileImporting_message;
-                if (t != null && !isNullOrEmpty(t.getMessage())) {
-                    message = t.getMessage();
-                }
-                new BonitaErrorDialog(Display.getDefault().getActiveShell(), Messages.errorWhileImporting_title, message, e)
-                        .open();
-            }
+            
             for (final DiagramFileStore fileStore : operation.getFileStoresToOpen()) {
                 fileStore.open();
             }
@@ -87,7 +86,16 @@ public class ImportOtherHandler {
         }
     }
 
-    private Runnable openStatusDialog(final ImportFileOperation operation) {
+    private Set<IRunnableWithProgress> getImporterOperations(ImportFileWizard importFileWizard, File selectedFile, SkippableProgressMonitorJobsDialog progressManager) {
+		Set<IRunnableWithProgress> operations = new TreeSet<IRunnableWithProgress>();
+    	if(importFileWizard.getSelectedTransfo() instanceof BPMNToProcFactory) {
+    		operations.add(new BpmnSourceResolverOperation(importFileWizard, selectedFile, progressManager));
+		}
+    	operations.add(createImportFileOperation(importFileWizard, selectedFile, progressManager));
+		return operations;
+	}
+
+	private Runnable openStatusDialog(final ImportFileOperation operation) {
         return new Runnable() {
 
             @Override
