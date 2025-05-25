@@ -27,7 +27,10 @@ import org.bonitasoft.studio.common.ui.jface.CustomWizardDialog;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.importer.ImporterPlugin;
+import org.bonitasoft.studio.importer.bpmn.BPMNToProcFactory;
 import org.bonitasoft.studio.importer.i18n.Messages;
+import org.bonitasoft.studio.importer.processors.BPMNSourceNotFoundException;
+import org.bonitasoft.studio.importer.processors.DetectBpmnSourceOperation;
 import org.bonitasoft.studio.importer.processors.ImportFileOperation;
 import org.bonitasoft.studio.importer.ui.wizard.ImportFileWizard;
 import org.bonitasoft.studio.ui.dialog.SkippableProgressMonitorJobsDialog;
@@ -46,9 +49,21 @@ public class ImportOtherHandler {
         final ImportFileWizard importFileWizard = createImportWizard();
         if (new CustomWizardDialog(Display.getDefault().getActiveShell(), importFileWizard, Messages.importButtonLabel)
                 .open() == Dialog.OK) {
-            final File selectedFile = new File(importFileWizard.getSelectedFilePath());
-            final SkippableProgressMonitorJobsDialog progressManager = new SkippableProgressMonitorJobsDialog(
+        	final File selectedFile = new File(importFileWizard.getSelectedFilePath());
+        	final SkippableProgressMonitorJobsDialog progressManager = new SkippableProgressMonitorJobsDialog(
                     Display.getDefault().getActiveShell());
+        	if(importFileWizard.getSelectedTransfo() instanceof BPMNToProcFactory) {
+        		DetectBpmnSourceOperation op = new DetectBpmnSourceOperation(selectedFile);
+        		try {
+					progressManager.run(false, false, op);
+				} catch (BPMNSourceNotFoundException e) {
+					new BpmnSourceSelectionDialog(Display.getDefault().getActiveShell()).open();
+				} catch (InvocationTargetException | InterruptedException e) {
+					new BonitaErrorDialog(Display.getDefault().getActiveShell(), Messages.errorWhileImporting_title, Messages.errorWhileImporting_message, e)
+                    .open();
+				}
+        	}	
+        	
             final ImportFileOperation operation = createImportFileOperation(importFileWizard, selectedFile, progressManager);
             try {
                 progressManager.run(false, false, operation);

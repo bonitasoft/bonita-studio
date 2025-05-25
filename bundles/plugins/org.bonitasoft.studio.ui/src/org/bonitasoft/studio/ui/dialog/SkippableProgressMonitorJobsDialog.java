@@ -69,11 +69,6 @@ public class SkippableProgressMonitorJobsDialog extends ProgressMonitorJobsDialo
     }
 
     @Override
-    protected void updateForSetBlocked(final IStatus reason) {
-
-    }
-
-    @Override
     protected void enableDetails(final boolean enableState) {
         if (skipButton == null) {
             enableDetailsButton = enableState;
