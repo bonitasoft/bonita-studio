@@ -29,6 +29,7 @@ import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.importer.ImporterFactory;
 import org.bonitasoft.studio.importer.ImporterPlugin;
+import org.bonitasoft.studio.importer.bpmn.BPMNToProcFactory;
 import org.bonitasoft.studio.importer.handler.BpmnSourceSelectionDialog;
 import org.bonitasoft.studio.importer.handler.ImportStatusDialogHandler;
 import org.bonitasoft.studio.importer.i18n.Messages;
@@ -36,6 +37,7 @@ import org.bonitasoft.studio.ui.dialog.SkippableProgressMonitorJobsDialog;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 
 /**
@@ -67,29 +69,37 @@ public class ImportFileOperation implements IRunnableWithProgress {
         this.progressDialog = progressDialog;
     }
 
-    @Override
-    public void run(final IProgressMonitor monitor) throws InvocationTargetException,
-            InterruptedException {
-        monitor.beginTask(Messages.importProcessProgressDialog, IProgressMonitor.UNKNOWN);
-        new BpmnSourceSelectionDialog(progressDialog.getShell()).open();
-        processor = importerFactory.createProcessor(fileToImport.getName());
-        processor.setRepository(RepositoryManager.getInstance().getCurrentRepository().orElseThrow().getProjectId());
-        processor.setProgressDialog(progressDialog);
-        try {
-            processor.createDiagram(fileToImport.toURI().toURL(), monitor);
-        } catch (final MalformedURLException e) {
-            status = new Status(IStatus.ERROR, ImporterPlugin.PLUGIN_ID, e.getMessage(), e);
-            throw new InvocationTargetException(e, e.getMessage());
-        } catch (final Exception e) {
-            status = new Status(IStatus.ERROR, ImporterPlugin.PLUGIN_ID, e.getMessage(), e);
-            throw new InvocationTargetException(e, e.getMessage());
-        }
-        //handleErrors(processor);
-        addFileStoresToOpen(processor);
-        status = processor.getStatus();
-    }
+	@Override
+	public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+		monitor.beginTask(Messages.importProcessProgressDialog, IProgressMonitor.UNKNOWN);
+		if (!requiresSourceDetection()
+				|| new BpmnSourceSelectionDialog(progressDialog.getShell()).open() == Dialog.OK) {
+			processor = importerFactory.createProcessor(fileToImport.getName());
+			processor
+					.setRepository(RepositoryManager.getInstance().getCurrentRepository().orElseThrow().getProjectId());
+			processor.setProgressDialog(progressDialog);
+			try {
+				processor.createDiagram(fileToImport.toURI().toURL(), monitor);
+			} catch (final MalformedURLException e) {
+				status = new Status(IStatus.ERROR, ImporterPlugin.PLUGIN_ID, e.getMessage(), e);
+				throw new InvocationTargetException(e, e.getMessage());
+			} catch (final Exception e) {
+				status = new Status(IStatus.ERROR, ImporterPlugin.PLUGIN_ID, e.getMessage(), e);
+				throw new InvocationTargetException(e, e.getMessage());
+			}
+			// handleErrors(processor);
+			addFileStoresToOpen(processor);
+			status = processor.getStatus();
+			return;
+		}
+		status = new Status(IStatus.CANCEL, ImporterPlugin.PLUGIN_ID, "BPMN File Import cancelled");
+	}
 
-    protected void addFileStoresToOpen(final ToProcProcessor processor)
+    protected boolean requiresSourceDetection() {
+		return importerFactory instanceof BPMNToProcFactory;
+	}
+
+	protected void addFileStoresToOpen(final ToProcProcessor processor)
             throws InvocationTargetException {
         for (final IRepositoryFileStore fStore : processor.getDiagramFileStoresToOpen()) {
             if (fStore instanceof DiagramFileStore) {
