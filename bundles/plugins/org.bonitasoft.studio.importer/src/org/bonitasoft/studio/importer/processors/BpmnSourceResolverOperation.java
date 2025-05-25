@@ -7,11 +7,11 @@ import org.bonitasoft.studio.importer.i18n.Messages;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 
-public class DetectBpmnSourceOperation implements IRunnableWithProgress {
+public class BpmnSourceResolverOperation implements IRunnableWithProgress {
 
 	private final File fileToImport;
 	
-	public DetectBpmnSourceOperation(final File fileToImport) {
+	public BpmnSourceResolverOperation(final File fileToImport) {
 		this.fileToImport = fileToImport;
 	}
 	
