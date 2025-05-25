@@ -88,7 +88,7 @@ public class ImportOtherHandler {
 
     protected ImportFileOperation createImportFileOperation(final ImportFileWizard importFileWizard, final File selectedFile,
             final SkippableProgressMonitorJobsDialog progressManager) {
-        return new ImportFileOperation(importFileWizard.getSelectedTransfo(),
+        return new ImportFileOperation(importFileWizard,
                 selectedFile, progressManager);
     }
 

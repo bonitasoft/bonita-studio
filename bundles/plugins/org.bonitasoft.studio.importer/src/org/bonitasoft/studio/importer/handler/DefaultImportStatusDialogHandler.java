@@ -55,6 +55,9 @@ public class DefaultImportStatusDialogHandler implements ImportStatusDialogHandl
                 case IStatus.INFO:
                     return openImportStatus(parentShell, customSuccessMessage
                             .orElse(org.bonitasoft.studio.importer.i18n.Messages.importSucessfulMessage));
+                case IStatus.CANCEL:
+                    return openImportStatus(parentShell, customSuccessMessage
+                            .orElse(org.bonitasoft.studio.importer.i18n.Messages.importCancelledMessage));
                 default:
                     return openImportStatus(parentShell,
                             customErrorMessage.orElse(org.bonitasoft.studio.importer.i18n.Messages.importStatusMsg));

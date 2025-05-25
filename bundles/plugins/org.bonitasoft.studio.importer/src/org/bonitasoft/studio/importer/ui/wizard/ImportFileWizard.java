@@ -36,7 +36,7 @@ public class ImportFileWizard extends Wizard {
         return new ImportFileWizardPage(getImportFileData());
     }
 
-    protected ImportFileData getImportFileData() {
+    public ImportFileData getImportFileData() {
         if (importFileData == null) {
             importFileData = createImportFileData();
         }

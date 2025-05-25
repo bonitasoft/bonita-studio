@@ -20,6 +20,8 @@ public class ImportFileData {
 
     private String filePath;
     private ImporterFactory importerFactory;
+    private String bpmnSource;
+    private String bpmnSourceVersion;
 
     private String selectedRepositoryName;
 
@@ -47,4 +49,19 @@ public class ImportFileData {
         this.filePath = filePath;
     }
 
+	public String getBpmnSource() {
+		return bpmnSource;
+	}
+
+	public void setBpmnSource(String bpmnSource) {
+		this.bpmnSource = bpmnSource;
+	}
+
+	public String getBpmnSourceVersion() {
+		return bpmnSourceVersion;
+	}
+
+	public void setBpmnSourceVersion(String bpmnSourceVersion) {
+		this.bpmnSourceVersion = bpmnSourceVersion;
+	}    
 }
