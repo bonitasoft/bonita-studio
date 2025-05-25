@@ -41,7 +41,7 @@ public class Messages extends NLS {
     public static String ImportProcessButtonLabel;
     public static String importButtonLabel;
     public static String importSucessfulMessage;
-    public static String importCancelledMessage;
+    public static String importSucessfulWithSourceMessage;
     public static String importResultTitle;
     public static String importStatusMsg;
     public static String copyToClipboard;
@@ -55,5 +55,6 @@ public class Messages extends NLS {
     public static String selectRepository;
     public static String verticalBPMMNPoolWarning;
     public static String verticalBPMMNLaneWarning;
+	
 
 }

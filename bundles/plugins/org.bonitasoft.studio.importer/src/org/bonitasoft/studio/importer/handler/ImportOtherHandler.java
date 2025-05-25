@@ -27,7 +27,9 @@ import org.bonitasoft.studio.common.ui.jface.CustomWizardDialog;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.importer.ImporterPlugin;
+import org.bonitasoft.studio.importer.bpmn.BPMNToProcFactory;
 import org.bonitasoft.studio.importer.i18n.Messages;
+import org.bonitasoft.studio.importer.processors.ImportBpmnFileOperation;
 import org.bonitasoft.studio.importer.processors.ImportFileOperation;
 import org.bonitasoft.studio.importer.ui.wizard.ImportFileWizard;
 import org.bonitasoft.studio.ui.dialog.SkippableProgressMonitorJobsDialog;
@@ -88,7 +90,10 @@ public class ImportOtherHandler {
 
     protected ImportFileOperation createImportFileOperation(final ImportFileWizard importFileWizard, final File selectedFile,
             final SkippableProgressMonitorJobsDialog progressManager) {
-        return new ImportFileOperation(importFileWizard,
+    	if(importFileWizard.getSelectedTransfo() instanceof BPMNToProcFactory) {
+    		return new ImportBpmnFileOperation(importFileWizard.getSelectedTransfo(), selectedFile, importFileWizard);
+    	}
+        return new ImportFileOperation(importFileWizard.getSelectedTransfo(),
                 selectedFile, progressManager);
     }
 

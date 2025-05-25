@@ -23,27 +23,18 @@ import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.xml.stream.XMLInputFactory;
-import javax.xml.stream.XMLStreamConstants;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamReader;
-
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.importer.ImporterFactory;
 import org.bonitasoft.studio.importer.ImporterPlugin;
-import org.bonitasoft.studio.importer.bpmn.BPMNToProcFactory;
 import org.bonitasoft.studio.importer.handler.ImportStatusDialogHandler;
 import org.bonitasoft.studio.importer.i18n.Messages;
-import org.bonitasoft.studio.importer.ui.wizard.BpmnSourceSelectionDialog;
-import org.bonitasoft.studio.importer.ui.wizard.ImportFileWizard;
 import org.bonitasoft.studio.ui.dialog.SkippableProgressMonitorJobsDialog;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 
 /**
@@ -54,7 +45,6 @@ public class ImportFileOperation implements IRunnableWithProgress {
     private final ImporterFactory importerFactory;
     private final File fileToImport;
     private final List<DiagramFileStore> fileStoresToOpen;
-    private final ImportFileWizard importFileWizard;
     private IStatus status;
     private ToProcProcessor processor;
     private SkippableProgressMonitorJobsDialog progressDialog;
@@ -63,90 +53,41 @@ public class ImportFileOperation implements IRunnableWithProgress {
         return fileStoresToOpen;
     }
 
-    public ImportFileOperation(final ImportFileWizard importFileWizard,
+    public ImportFileOperation(final ImporterFactory importerFactory,
             final File fileToImport) {
-    	this.importFileWizard = importFileWizard;
-        this.importerFactory = importFileWizard.getSelectedTransfo();
+        this.importerFactory = importerFactory;
         this.fileToImport = fileToImport;
         fileStoresToOpen = new ArrayList<>();
     }
 
-    public ImportFileOperation(final ImportFileWizard importFileWizard,
+    public ImportFileOperation(final ImporterFactory importerFactory,
             final File fileToImport, final SkippableProgressMonitorJobsDialog progressDialog) {
-        this(importFileWizard, fileToImport);
+        this(importerFactory, fileToImport);
         this.progressDialog = progressDialog;
     }
 
-	@Override
-	public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-		monitor.beginTask(Messages.importProcessProgressDialog, IProgressMonitor.UNKNOWN);
-		if (!requiresSourceDetection()
-				|| new BpmnSourceSelectionDialog(progressDialog.getShell(), importFileWizard).open() == Dialog.OK) {
-			
-			processor = importerFactory.createProcessor(fileToImport.getName());
-			processor
-					.setRepository(RepositoryManager.getInstance().getCurrentRepository().orElseThrow().getProjectId());
-			processor.setProgressDialog(progressDialog);
-			try {
-				processor.createDiagram(fileToImport.toURI().toURL(), monitor);
-			} catch (final MalformedURLException e) {
-				status = new Status(IStatus.ERROR, ImporterPlugin.PLUGIN_ID, e.getMessage(), e);
-				throw new InvocationTargetException(e, e.getMessage());
-			} catch (final Exception e) {
-				status = new Status(IStatus.ERROR, ImporterPlugin.PLUGIN_ID, e.getMessage(), e);
-				throw new InvocationTargetException(e, e.getMessage());
-			}
-			// handleErrors(processor);
-			addFileStoresToOpen(processor);
-			status = processor.getStatus();
-			return;
-		}
-		status = new Status(IStatus.CANCEL, ImporterPlugin.PLUGIN_ID, "BPMN File Import cancelled");
-	}
+    @Override
+    public void run(final IProgressMonitor monitor) throws InvocationTargetException,
+            InterruptedException {
+        monitor.beginTask(Messages.importProcessProgressDialog, IProgressMonitor.UNKNOWN);
+        processor = importerFactory.createProcessor(fileToImport.getName());
+        processor.setRepository(RepositoryManager.getInstance().getCurrentRepository().orElseThrow().getProjectId());
+        processor.setProgressDialog(progressDialog);
+        try {
+            processor.createDiagram(fileToImport.toURI().toURL(), monitor);
+        } catch (final MalformedURLException e) {
+            status = new Status(IStatus.ERROR, ImporterPlugin.PLUGIN_ID, e.getMessage(), e);
+            throw new InvocationTargetException(e, e.getMessage());
+        } catch (final Exception e) {
+            status = new Status(IStatus.ERROR, ImporterPlugin.PLUGIN_ID, e.getMessage(), e);
+            throw new InvocationTargetException(e, e.getMessage());
+        }
+        //handleErrors(processor);
+        addFileStoresToOpen(processor);
+        status = processor.getStatus();
+    }
 
-    protected boolean requiresSourceDetection() {
-		if(importerFactory instanceof BPMNToProcFactory) {
-	        String targetTag = "definitions";  // Change to the tag you are looking for
-
-	        XMLInputFactory factory = XMLInputFactory.newInstance();
-	        try (FileInputStream fileInputStream = new FileInputStream(fileToImport)) {
-	            XMLStreamReader reader = factory.createXMLStreamReader(fileInputStream);
-
-	            while (reader.hasNext()) {
-	                int event = reader.next();
-
-	                if (event == XMLStreamConstants.START_ELEMENT) {
-	                    String tagName = reader.getLocalName();
-
-	                    if (tagName.equals(targetTag)) {
-	                    	var exporter = reader.getAttributeValue(null, "exporter");
-	                    	var exporterVersion = reader.getAttributeValue(null, "exporterVersion");
-	                    	if(exporter == null) {
-	                    		return true;
-	                    	}
-	                    	importFileWizard.getImportFileData().setBpmnSource(exporter);
-	                    	importFileWizard.getImportFileData().setBpmnSourceVersion(exporterVersion);
-	                        break;
-	                    }
-	                }
-	            }
-	            reader.close();
-	            return true;
-	        } catch (FileNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (XMLStreamException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		return false;
-	}
-
-	protected void addFileStoresToOpen(final ToProcProcessor processor)
+    protected void addFileStoresToOpen(final ToProcProcessor processor)
             throws InvocationTargetException {
         for (final IRepositoryFileStore fStore : processor.getDiagramFileStoresToOpen()) {
             if (fStore instanceof DiagramFileStore) {
