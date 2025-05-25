@@ -30,6 +30,8 @@ import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.importer.ImporterFactory;
 import org.bonitasoft.studio.importer.ImporterPlugin;
 import org.bonitasoft.studio.importer.handler.ImportStatusDialogHandler;
+import org.bonitasoft.studio.importer.bpmn.BPMNToProc;
+import org.omg.spec.bpmn.model.TDefinitions;
 import org.bonitasoft.studio.importer.i18n.Messages;
 import org.bonitasoft.studio.ui.dialog.SkippableProgressMonitorJobsDialog;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -75,6 +77,9 @@ public class ImportFileOperation implements IRunnableWithProgress {
         processor.setProgressDialog(progressDialog);
         try {
             processor.createDiagram(fileToImport.toURI().toURL(), monitor);
+            
+
+            
         } catch (final MalformedURLException e) {
             status = new Status(IStatus.ERROR, ImporterPlugin.PLUGIN_ID, e.getMessage(), e);
             throw new InvocationTargetException(e, e.getMessage());
@@ -123,12 +128,26 @@ public class ImportFileOperation implements IRunnableWithProgress {
         }
     }
 
+    public ImportStatusDialogHandler getImportStatusDialogHandler(final IStatus status) {
+        return processor.getImportStatusDialogHandler(status);
+    }
+
     public IStatus getStatus() {
         return status;
     }
 
-    public ImportStatusDialogHandler getImportStatusDialogHandler(final IStatus status) {
-        return processor.getImportStatusDialogHandler(status);
+    /**
+     * Gets BPMN definitions if this is a BPMN import.
+     * @return TDefinitions or null if not BPMN import
+     */
+    public TDefinitions getBpmnDefinitions() {
+        // Only handle BPMN imports
+        if (!(processor instanceof BPMNToProc)) {
+            return null;
+        }
+        
+        BPMNToProc bpmnProcessor = (BPMNToProc) processor;
+        return bpmnProcessor.getDefinitions();
     }
 
 }
