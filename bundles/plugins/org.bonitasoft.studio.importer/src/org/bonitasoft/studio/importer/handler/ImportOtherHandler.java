@@ -31,6 +31,8 @@ import org.bonitasoft.studio.importer.bpmn.BPMNToProcFactory;
 import org.bonitasoft.studio.importer.i18n.Messages;
 import org.bonitasoft.studio.importer.processors.ImportBpmnFileOperation;
 import org.bonitasoft.studio.importer.processors.ImportFileOperation;
+import org.bonitasoft.studio.importer.processors.ImportOperation;
+import org.bonitasoft.studio.importer.reporting.ReportingImportOperationDecorator;
 import org.bonitasoft.studio.importer.ui.wizard.ImportFileWizard;
 import org.bonitasoft.studio.ui.dialog.SkippableProgressMonitorJobsDialog;
 import org.eclipse.e4.core.di.annotations.CanExecute;
@@ -51,7 +53,7 @@ public class ImportOtherHandler {
             final File selectedFile = new File(importFileWizard.getSelectedFilePath());
             final SkippableProgressMonitorJobsDialog progressManager = new SkippableProgressMonitorJobsDialog(
                     Display.getDefault().getActiveShell());
-            final ImportFileOperation operation = createImportFileOperation(importFileWizard, selectedFile, progressManager);
+            final ImportOperation operation = createImportFileOperation(importFileWizard, selectedFile, progressManager);
             try {
                 progressManager.run(false, false, operation);
             } catch (final InvocationTargetException | InterruptedException e) {
@@ -74,7 +76,7 @@ public class ImportOtherHandler {
         }
     }
 
-    private Runnable openStatusDialog(final ImportFileOperation operation) {
+    private Runnable openStatusDialog(final ImportOperation operation) {
         return new Runnable() {
 
             @Override
@@ -88,10 +90,11 @@ public class ImportOtherHandler {
         return RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
     }
 
-    protected ImportFileOperation createImportFileOperation(final ImportFileWizard importFileWizard, final File selectedFile,
+    protected ImportOperation createImportFileOperation(final ImportFileWizard importFileWizard, final File selectedFile,
             final SkippableProgressMonitorJobsDialog progressManager) {
     	if(importFileWizard.getSelectedTransfo() instanceof BPMNToProcFactory) {
-    		return new ImportBpmnFileOperation(importFileWizard.getSelectedTransfo(), selectedFile, importFileWizard);
+    		return new ReportingImportOperationDecorator(new ImportBpmnFileOperation(importFileWizard.getSelectedTransfo(),
+    				selectedFile, importFileWizard), importFileWizard);
     	}
         return new ImportFileOperation(importFileWizard.getSelectedTransfo(),
                 selectedFile, progressManager);

@@ -20,7 +20,7 @@ import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
 
-public class ImportBpmnFileOperation extends ImportFileOperation {
+public class ImportBpmnFileOperation extends ImportFileOperation{
 
 	private static final String DEFINITIONS_TAG_NAME = "definitions";
 	private static final String EXPORTER_ATTRIBUTE_NAME = "exporter";
