@@ -10,7 +10,7 @@ import org.bonitasoft.studio.importer.ui.wizard.ImportFileWizard;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 
-public class ReportingImportOperationDecorator implements ImportOperation, MonitoredImportOperation {
+public class ReportingImportOperationDecorator implements MonitoredImportOperation {
 
     private final ImportOperation delegate;
     private final ImportFileWizard wizard;
