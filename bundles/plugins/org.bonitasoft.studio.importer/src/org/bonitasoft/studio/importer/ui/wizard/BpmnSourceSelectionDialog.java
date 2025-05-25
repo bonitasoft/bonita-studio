@@ -33,7 +33,7 @@ public class BpmnSourceSelectionDialog extends Dialog {
 
     @Override
     protected Control createDialogArea(Composite parent) {
-    	final DataBindingContext dbc = new DataBindingContext();
+        final DataBindingContext dbc = new DataBindingContext();
         Composite container = (Composite) super.createDialogArea(parent);
         container.setLayout(new GridLayout(2, false));
 
@@ -53,8 +53,17 @@ public class BpmnSourceSelectionDialog extends Dialog {
         otherVendorText = new Text(container, SWT.BORDER);
         otherVendorText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
         otherVendorText.setVisible(false);
-       
-        // Show/hide "Other" field
+
+        Label exporterLabel = new Label(container, SWT.NONE);
+        exporterLabel.setText("Exporter Version:");
+
+        Text exporterVersionText = new Text(container, SWT.BORDER); 
+        exporterVersionText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+
+        IObservableValue exporterVersionObservable = PojoProperties.value("exporterVersion").observe(importFileData);
+        dbc.bindValue(WidgetProperties.text(SWT.Modify).observe(exporterVersionText), exporterVersionObservable);
+
+        
         vendorCombo.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
@@ -70,11 +79,10 @@ public class BpmnSourceSelectionDialog extends Dialog {
                     selectedVendor = selected;
                     dbc.bindValue(WidgetProperties.text(SWT.Modify).observe(vendorCombo), filePathObservable);
                 }
-                container.layout(); // Update layout
+                container.layout();
             }
         });
 
-        // Listen to "Other" text field
         otherVendorText.addModifyListener(new ModifyListener() {
             @Override
             public void modifyText(ModifyEvent e) {
@@ -85,10 +93,9 @@ public class BpmnSourceSelectionDialog extends Dialog {
         return container;
     }
 
+
     @Override
     protected void okPressed() {
-        // You can now use selectedVendor
-        System.out.println("Selected Vendor: " + selectedVendor);
         super.okPressed();
     }
 
