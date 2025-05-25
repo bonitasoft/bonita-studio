@@ -29,6 +29,7 @@ import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.importer.ImporterFactory;
 import org.bonitasoft.studio.importer.ImporterPlugin;
+import org.bonitasoft.studio.importer.handler.BpmnSourceSelectionDialog;
 import org.bonitasoft.studio.importer.handler.ImportStatusDialogHandler;
 import org.bonitasoft.studio.importer.i18n.Messages;
 import org.bonitasoft.studio.ui.dialog.SkippableProgressMonitorJobsDialog;
@@ -70,6 +71,7 @@ public class ImportFileOperation implements IRunnableWithProgress {
     public void run(final IProgressMonitor monitor) throws InvocationTargetException,
             InterruptedException {
         monitor.beginTask(Messages.importProcessProgressDialog, IProgressMonitor.UNKNOWN);
+        new BpmnSourceSelectionDialog(progressDialog.getShell()).open();
         processor = importerFactory.createProcessor(fileToImport.getName());
         processor.setRepository(RepositoryManager.getInstance().getCurrentRepository().orElseThrow().getProjectId());
         processor.setProgressDialog(progressDialog);

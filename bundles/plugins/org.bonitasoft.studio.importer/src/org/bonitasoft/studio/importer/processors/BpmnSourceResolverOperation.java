@@ -26,6 +26,7 @@ public class BpmnSourceResolverOperation implements IRunnableWithProgress {
 	public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 		monitor.beginTask(Messages.importProcessProgressDialog, IProgressMonitor.UNKNOWN);
 		new BpmnSourceSelectionDialog(progressManager.getShell()).open();
+
 	}
 
 }
