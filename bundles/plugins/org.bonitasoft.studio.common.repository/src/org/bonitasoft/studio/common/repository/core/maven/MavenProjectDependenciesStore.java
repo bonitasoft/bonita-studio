@@ -89,25 +89,25 @@ public class MavenProjectDependenciesStore implements ProjectDependenciesStore {
 
     @Override
     public Optional<DependencyReport> analyze(IProgressMonitor monitor) {
-        ISchedulingRule rule = ResourcesPlugin.getWorkspace().getRoot();
+        ISchedulingRule rule = ResourcesPlugin.getWorkspace().getRuleFactory().buildRule();
         Job.getJobManager().beginRule(rule, monitor);
         LOCK.lock();
         try {
             var appProject = project.getAppProject();
             appProject.deleteMarkers(ANALYZE_PLUGIN_MARKER_TYPE, true, IResource.DEPTH_INFINITE);
             boolean updateMavenProject = false;
-            if(project.getAppProject().getFolder(LocalDependenciesStore.NAME).exists()) {
-            	var installPlugin = new InstallLocalDependenciesPlugin(project);
-            	var result = installPlugin.execute(monitor);
-            	if(!result.isOK()) {
-            	  throw new CoreException(result);
-            	}
-            	updateMavenProject = true;
+            if (project.getAppProject().getFolder(LocalDependenciesStore.NAME).exists()) {
+                var installPlugin = new InstallLocalDependenciesPlugin(project);
+                var result = installPlugin.execute(monitor);
+                if (!result.isOK()) {
+                    throw new CoreException(result);
+                }
+                updateMavenProject = true;
             }
             var bonitaProjectPlugin = new AnalyzeBonitaProjectDependenciesPlugin(project);
             var result = bonitaProjectPlugin.execute(monitor);
             if (!result.isOK()) {
-            	 throw new CoreException(result);
+                throw new CoreException(result);
             }
             String reportPath = bonitaProjectPlugin.getReportPath();
             var path = Paths.get(reportPath);
@@ -123,12 +123,14 @@ public class MavenProjectDependenciesStore implements ProjectDependenciesStore {
                         .map(artifactId -> createMultiStatus(artifactId, dependencyReport.getIssues()))
                         .filter(Objects::nonNull)
                         .forEach(this::addMarker);
+                // log issues so we can analyze test failure with log only.
+                dependencyReport.getIssues().forEach(i -> BonitaStudioLog.info(i.toString(), getClass()));
             }
-           if(updateMavenProject) {
-        	    new UpdateMavenProjectJob(List.of(project.getAppProject()), false, false,
+            if (updateMavenProject) {
+                new UpdateMavenProjectJob(List.of(project.getAppProject()), false, false,
                         false,
                         true, true).schedule();
-           }
+            }
         } catch (IOException e) {
             BonitaStudioLog.error(e);
         } catch (CoreException ce) {
@@ -305,10 +307,10 @@ public class MavenProjectDependenciesStore implements ProjectDependenciesStore {
         }
         return createMultiStatus(toArtifactId(dependency), dependencyReport.getIssues());
     }
-    
+
     @Override
     public Optional<DependencyReport> getReport() {
-    	return Optional.ofNullable(dependencyReport);
+        return Optional.ofNullable(dependencyReport);
     }
 
     private static String toArtifactId(Dependency dependency) {
@@ -319,5 +321,5 @@ public class MavenProjectDependenciesStore implements ProjectDependenciesStore {
         }
         return null;
     }
-    
+
 }

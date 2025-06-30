@@ -23,6 +23,7 @@ import org.assertj.core.api.Assertions;
 import org.bonitasoft.bpm.model.connectorconfiguration.ConnectorParameter;
 import org.bonitasoft.bpm.model.process.Connector;
 import org.bonitasoft.studio.application.i18n.Messages;
+import org.bonitasoft.studio.application.ui.control.model.dependency.ArtifactType;
 import org.bonitasoft.studio.application.ui.control.model.dependency.BonitaMarketplace;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
@@ -34,6 +35,8 @@ import org.bonitasoft.studio.common.ui.jface.SWTBotConstants;
 import org.bonitasoft.studio.connectors.repository.ConnectorDefRepositoryStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.identity.actors.repository.ActorFilterDefRepositoryStore;
+import org.bonitasoft.studio.maven.ExtensionRepositoryStore;
+import org.bonitasoft.studio.rest.api.extension.core.repository.RestAPIExtensionFileStore;
 import org.bonitasoft.studio.swtbot.framework.application.BotApplicationWorkbenchWindow;
 import org.bonitasoft.studio.swtbot.framework.conditions.AssertionCondition;
 import org.bonitasoft.studio.swtbot.framework.conditions.BonitaBPMConditions;
@@ -42,6 +45,7 @@ import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
 import org.bonitasoft.studio.tests.importer.bos.ImportBOSArchiveWizardIT;
 import org.bonitasoft.studio.tests.util.ProjectUtil;
 import org.bonitasoft.studio.tests.util.ResourceMarkerHelper;
+import org.bonitasoft.studio.theme.ThemeFileStore;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -110,6 +114,107 @@ public class ProjectCompositionIT {
     }
 
     @Test
+    public void shouldCreateExtensionProjects()
+            throws CoreException, OperationCanceledException, InterruptedException {
+        var worbenchBot = new BotApplicationWorkbenchWindow(bot);
+        worbenchBot.waitEndOfBuilds();
+
+        var projectDetailsBot = worbenchBot.openProjectOverview().toExtensionView();
+
+        // create each type of extension project
+        // case CONNECTOR:
+        projectDetailsBot.createConnectorExtensionProject(ArtifactType.CONNECTOR)
+                .withProjectName("myOwnConnector")
+                .withPackage("org.mycompany.myconnector")
+                .withClassName("MyConnector")
+                .create();
+        // check that the project is in the repository store
+        worbenchBot.waitEndOfBuilds();
+        bot.waitUntil(new AssertionCondition() {
+
+            @Override
+            protected void makeAssert() throws Exception {
+                var connectorDefinitionRegistry = repositoryAccessor.getCurrentRepository()
+                        .orElseThrow()
+                        .getRepositoryStore(ConnectorDefRepositoryStore.class)
+                        .getResourceProvider()
+                        .getConnectorDefinitionRegistry();
+                assertThat(connectorDefinitionRegistry.getDefinitions().stream()
+                        .map(ExtendedConnectorDefinition::getId))
+                                .anyMatch("myOwnConnector"::equals);
+            }
+        }, 20000, 100);
+        // case ACTOR_FILTER:
+        projectDetailsBot.createConnectorExtensionProject(ArtifactType.ACTOR_FILTER)
+                .withProjectName("myOwnActorFilter")
+                .withPackage("org.mycompany.myfilter")
+                .withClassName("MyActorFilter")
+                .create();
+        // check that the project is in the repository store
+        worbenchBot.waitEndOfBuilds();
+        bot.waitUntil(new AssertionCondition() {
+
+            @Override
+            protected void makeAssert() throws Exception {
+                var actorFilterDefinitionRegistry = repositoryAccessor.getCurrentRepository()
+                        .orElseThrow()
+                        .getRepositoryStore(ActorFilterDefRepositoryStore.class)
+                        .getResourceProvider()
+                        .getConnectorDefinitionRegistry();
+                assertThat(actorFilterDefinitionRegistry.getDefinitions().stream()
+                        .map(ExtendedConnectorDefinition::getId))
+                                .anyMatch("myOwnActorFilter"::equals);
+            }
+        }, 20000, 100);
+        // case REST_API:
+        projectDetailsBot.createRestApiExtensionProject()
+                .withName("My Own REST API")
+                .withProjectName("myOwnRESTAPI")
+                .withPackage("org.mycompany.myapi")
+                .nextPage().withPathTemplate("myRestResource")
+                .create();
+        // check that the project is in the repository store
+        worbenchBot.waitEndOfBuilds();
+        bot.waitUntil(new AssertionCondition() {
+
+            @Override
+            protected void makeAssert() throws Exception {
+                var extensions = repositoryAccessor.getCurrentRepository()
+                        .orElseThrow()
+                        .getRepositoryStore(ExtensionRepositoryStore.class)
+                        .getChildren();
+                assertThat(extensions.stream().filter(RestAPIExtensionFileStore.class::isInstance)
+                        .map(RestAPIExtensionFileStore.class::cast)
+                        .map(RestAPIExtensionFileStore::getPageId))
+                                .anyMatch("custompage_myOwnRESTAPI"::equals);
+            }
+        }, 20000, 100);
+        // case THEME:
+        projectDetailsBot.createConnectorExtensionProject(ArtifactType.THEME)
+                .withName("My Own Theme")
+                .withProjectName("myOwnTheme")
+                .withPackage("org.mycompany.mytheme")
+                .create();
+        // check that the project is in the repository store
+        worbenchBot.waitEndOfBuilds();
+        bot.waitUntil(new AssertionCondition() {
+
+            @Override
+            protected void makeAssert() throws Exception {
+                var extensions = repositoryAccessor.getCurrentRepository()
+                        .orElseThrow()
+                        .getRepositoryStore(ExtensionRepositoryStore.class)
+                        .getChildren();
+                assertThat(extensions.stream().filter(ThemeFileStore.class::isInstance)
+                        .map(ThemeFileStore.class::cast)
+                        .map(ThemeFileStore::getPageId))
+                                .anyMatch("custompage_myOwnTheme"::equals);
+            }
+        }, 20000, 100);
+
+    }
+
+    @Test
     public void shouldAddAndUpdateExtensionsFromMarketplace()
             throws CoreException, OperationCanceledException, InterruptedException {
         var connectorDefinitionRegistry = repositoryAccessor.getCurrentRepository()
@@ -149,7 +254,7 @@ public class ProjectCompositionIT {
         }, 20000, 100);
 
         projectDetailsBot
-                .addConnectorExtension()
+                .importConnectorExtension()
                 .manual()
                 .setGroupId("org.bonitasoft.connectors")
                 .setArtifactId("bonita-connector-groovy")

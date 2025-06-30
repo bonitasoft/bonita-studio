@@ -18,7 +18,7 @@ import org.bonitasoft.studio.engine.http.HttpClientFactory;
 import org.bonitasoft.studio.maven.ExtensionRepositoryStore;
 import org.bonitasoft.studio.maven.i18n.Messages;
 import org.bonitasoft.studio.maven.ui.WidgetFactory;
-import org.bonitasoft.studio.maven.ui.handler.CustomPageProjectSelectionProvider;
+import org.bonitasoft.studio.maven.ui.handler.ExtensionProjectSelectionProvider;
 import org.bonitasoft.studio.maven.ui.wizard.control.SelectRestAPIExtensionControlSupplier;
 import org.bonitasoft.studio.rest.api.extension.core.repository.RestAPIExtensionFileStore;
 import org.bonitasoft.studio.ui.wizard.WizardBuilder;
@@ -36,7 +36,7 @@ public class OpenCustomPageProjectHandler {
             final RepositoryAccessor repositoryAccessor,
             final WidgetFactory widgetFactory,
             final HttpClientFactory httpClientFactory,
-            final CustomPageProjectSelectionProvider selectionProvider)
+            final ExtensionProjectSelectionProvider selectionProvider)
             throws ExecutionException {
         WritableValue fileStoreObservable = new WritableValue(null, RestAPIExtensionFileStore.class);
         Optional<RestAPIExtensionFileStore> fileStore = WizardBuilder.<RestAPIExtensionFileStore> newWizard()

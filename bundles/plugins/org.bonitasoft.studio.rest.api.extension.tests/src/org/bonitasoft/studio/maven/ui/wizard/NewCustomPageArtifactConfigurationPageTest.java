@@ -9,6 +9,7 @@
 package org.bonitasoft.studio.maven.ui.wizard;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
@@ -45,6 +46,7 @@ public class NewCustomPageArtifactConfigurationPageTest {
     @Before
     public void setUp() throws Exception {
         when(workspace.validateName(anyString(), anyInt())).thenReturn(ValidationStatus.ok());
+        when(projectImportConfiguration.validateProjectName(any())).thenReturn(ValidationStatus.ok());
     }
 
     @Test
@@ -52,7 +54,7 @@ public class NewCustomPageArtifactConfigurationPageTest {
         final RestAPIExtensionArchetypeConfiguration configuration = RestAPIExtensionArchetypeConfiguration
                 .defaultArchetypeConfiguration(ProjectMetadata.defaultMetadata());
 
-        final NewCustomPageArtifactConfigurationPage page = new NewCustomPageArtifactConfigurationPage(
+        final NewExtensionProjectArtifactConfigurationPage page = new NewExtensionProjectArtifactConfigurationPage(
                 new WidgetFactory(), configuration,
                 projectImportConfiguration, workspace);
         page.setWizard(displayRule.wizardWithContainer());
@@ -69,7 +71,7 @@ public class NewCustomPageArtifactConfigurationPageTest {
         final RestAPIExtensionArchetypeConfiguration configuration = RestAPIExtensionArchetypeConfiguration
                 .defaultArchetypeConfiguration(ProjectMetadata.defaultMetadata());
 
-        final NewCustomPageArtifactConfigurationPage page = new NewCustomPageArtifactConfigurationPage(
+        final NewExtensionProjectArtifactConfigurationPage page = new NewExtensionProjectArtifactConfigurationPage(
                 new WidgetFactory(), configuration,
                 projectImportConfiguration, workspace);
         page.setWizard(displayRule.wizardWithContainer());
@@ -78,9 +80,9 @@ public class NewCustomPageArtifactConfigurationPageTest {
 
         final Text artifactIdText = widgetFinder.<Text> withLabel(displayRule.getShell(), Messages.projectName);
         assertThat(artifactIdText).isNotNull();
-        assertThat(artifactIdText.getText()).isEqualTo(configuration.getPageName());
+        assertThat(artifactIdText.getText()).isEqualTo(configuration.getProjectName());
         artifactIdText.setText("newArtifactId");
-        assertThat(configuration.getPageName()).isEqualTo("newArtifactId");
+        assertThat(configuration.getProjectName()).isEqualTo("newArtifactId");
     }
 
     @Test
@@ -88,7 +90,7 @@ public class NewCustomPageArtifactConfigurationPageTest {
         final RestAPIExtensionArchetypeConfiguration configuration = RestAPIExtensionArchetypeConfiguration
                 .defaultArchetypeConfiguration(ProjectMetadata.defaultMetadata());
 
-        final NewCustomPageArtifactConfigurationPage page = new NewCustomPageArtifactConfigurationPage(
+        final NewExtensionProjectArtifactConfigurationPage page = new NewExtensionProjectArtifactConfigurationPage(
                 new WidgetFactory(), configuration,
                 projectImportConfiguration, workspace);
         page.setWizard(displayRule.wizardWithContainer());
@@ -107,7 +109,7 @@ public class NewCustomPageArtifactConfigurationPageTest {
         final RestAPIExtensionArchetypeConfiguration configuration = RestAPIExtensionArchetypeConfiguration
                 .defaultArchetypeConfiguration(ProjectMetadata.defaultMetadata());
 
-        final NewCustomPageArtifactConfigurationPage page = new NewCustomPageArtifactConfigurationPage(
+        final NewExtensionProjectArtifactConfigurationPage page = new NewExtensionProjectArtifactConfigurationPage(
                 new WidgetFactory(), configuration,
                 projectImportConfiguration, workspace);
         page.setWizard(displayRule.wizardWithContainer());

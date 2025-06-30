@@ -1,11 +1,11 @@
 package org.bonitasoft.studio.theme;
 
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
-import org.bonitasoft.studio.maven.ExtensionProjectFileStore;
+import org.bonitasoft.studio.maven.CustomPageProjectFileStore;
 import org.bonitasoft.studio.maven.ExtensionRepositoryStore;
 import org.eclipse.core.resources.IProject;
 
-public class ThemeFileStore extends ExtensionProjectFileStore<ThemeExtensionDescriptor> {
+public class ThemeFileStore extends CustomPageProjectFileStore<ThemeExtensionDescriptor> {
 
     public ThemeFileStore(String fileName, ExtensionRepositoryStore parentStore) {
         super(fileName, parentStore);

@@ -184,6 +184,7 @@ public class SWTGefBotRule implements TestRule {
         initPreferences();
         bot.saveAllEditors();
         bot.editors(new EditorMatcherExceptOverview()).forEach(SWTBotEditor::close);
+        waitForBuilds();
         bot.waitUntil(BonitaBPMConditions.noPopupActive(), 15000);
         waitForBuilds();
     }

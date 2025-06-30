@@ -18,9 +18,9 @@ import java.util.Properties;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.extension.properties.PagePropertyConstants;
-import org.bonitasoft.studio.maven.ExtensionProjectDescriptor;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.maven.CustomPageProjectDescriptor;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IPath;
@@ -32,12 +32,13 @@ import org.eclipse.jdt.core.JavaModelException;
 
 import com.google.common.base.Strings;
 
-public class RestAPIExtensionDescriptor extends ExtensionProjectDescriptor {
+public class RestAPIExtensionDescriptor extends CustomPageProjectDescriptor {
 
     protected static final String SRC_PROJECT_PATH = "src/main/groovy/";
+    protected static final String PAGE_PROPERTIES_PATH = "src/main/resources/page.properties";
 
     public RestAPIExtensionDescriptor(final IProject project) {
-        super(project);
+        super(project, PAGE_PROPERTIES_PATH);
     }
 
     @Override

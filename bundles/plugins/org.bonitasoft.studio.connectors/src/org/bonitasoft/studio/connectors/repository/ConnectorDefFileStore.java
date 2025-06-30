@@ -19,11 +19,15 @@ import org.bonitasoft.studio.connector.model.definition.AbstractDefFileStore;
 import org.bonitasoft.studio.connectors.ConnectorPlugin;
 import org.osgi.framework.Bundle;
 
-
 public class ConnectorDefFileStore extends AbstractDefFileStore {
 
     public ConnectorDefFileStore(String fileName, AbstractEMFRepositoryStore<ConnectorDefFileStore> store) {
         super(fileName, store);
+    }
+
+    public ConnectorDefFileStore(String projectName, String entryInOutputDirectory,
+            AbstractEMFRepositoryStore<ConnectorDefFileStore> store) {
+        super(projectName, entryInOutputDirectory, store);
     }
 
     @Override

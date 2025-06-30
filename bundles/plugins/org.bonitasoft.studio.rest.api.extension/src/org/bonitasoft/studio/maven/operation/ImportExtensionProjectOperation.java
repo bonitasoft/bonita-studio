@@ -30,13 +30,13 @@ import org.eclipse.m2e.core.project.IProjectConfigurationManager;
 import org.eclipse.m2e.core.project.ProjectImportConfiguration;
 import org.eclipse.osgi.util.NLS;
 
-public class ImportCustomPageProjectOperation extends AbstractMavenProjectUpdateOperation {
+public class ImportExtensionProjectOperation extends AbstractMavenProjectUpdateOperation {
 
     private final IProjectConfigurationManager projectConfigurationManager;
     private final ExtensionProjectFileStore fileStore;
     private final ProjectImportConfiguration projectImportConfiguration;
 
-    public ImportCustomPageProjectOperation(
+    public ImportExtensionProjectOperation(
             final ExtensionProjectFileStore fileStore,
             final IProjectConfigurationManager projectConfigurationManager,
             final ProjectImportConfiguration projectImportConfiguration) {

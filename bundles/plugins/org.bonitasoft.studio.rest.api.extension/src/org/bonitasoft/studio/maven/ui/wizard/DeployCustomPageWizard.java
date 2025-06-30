@@ -20,16 +20,16 @@ import org.bonitasoft.studio.common.ui.jface.BonitaErrorDialog;
 import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.engine.http.HttpClientFactory;
 import org.bonitasoft.studio.engine.operation.GetApiSessionOperation;
+import org.bonitasoft.studio.maven.CustomPageProjectFileStore;
 import org.bonitasoft.studio.maven.ExtensionProjectFileStore;
 import org.bonitasoft.studio.maven.ExtensionRepositoryStore;
 import org.bonitasoft.studio.maven.i18n.Messages;
 import org.bonitasoft.studio.maven.operation.BuildCustomPageOperation;
 import org.bonitasoft.studio.maven.operation.DeployCustomPageProjectOperation;
 import org.bonitasoft.studio.maven.ui.WidgetFactory;
-import org.bonitasoft.studio.maven.ui.handler.CustomPageProjectSelectionProvider;
+import org.bonitasoft.studio.maven.ui.handler.ExtensionProjectSelectionProvider;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.rest.api.extension.RestAPIExtensionActivator;
-import org.bonitasoft.studio.rest.api.extension.core.repository.RestAPIExtensionFileStore;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.WritableValue;
 import org.eclipse.core.runtime.IStatus;
@@ -41,7 +41,7 @@ public abstract class DeployCustomPageWizard extends Wizard {
 
     private final ExtensionRepositoryStore repositoryStore;
     private final WidgetFactory widgetFactory;
-    private final IObservableValue<ExtensionProjectFileStore> fileStoreObservable;
+    private final IObservableValue<CustomPageProjectFileStore> fileStoreObservable;
     private final BOSEngineManager engineManager;
     private HttpClientFactory httpClientFactory;
 
@@ -50,13 +50,14 @@ public abstract class DeployCustomPageWizard extends Wizard {
             final BOSEngineManager engineManager,
             final WidgetFactory widgetFactory,
             final HttpClientFactory httpClientFactory,
-            final CustomPageProjectSelectionProvider selectionProvider) {
+            final ExtensionProjectSelectionProvider selectionProvider) {
         this.repositoryStore = repositoryStore;
         this.engineManager = engineManager;
         this.httpClientFactory = httpClientFactory;
         this.widgetFactory = widgetFactory;
-        fileStoreObservable = new WritableValue<ExtensionProjectFileStore>(selectionProvider.getSelection(),
-                RestAPIExtensionFileStore.class);
+        fileStoreObservable = new WritableValue<CustomPageProjectFileStore>(
+                selectionProvider.getSelectionAs(CustomPageProjectFileStore.class),
+                CustomPageProjectFileStore.class);
         setDefaultPageImageDescriptor(Pics.getWizban());
         setNeedsProgressMonitor(true);
         setWindowTitle(Messages.deployWizardTitle);
@@ -78,14 +79,14 @@ public abstract class DeployCustomPageWizard extends Wizard {
 
     @Override
     public boolean performFinish() {
-        final ExtensionProjectFileStore fileStore = fileStoreObservable.getValue();
+        final CustomPageProjectFileStore fileStore = fileStoreObservable.getValue();
         if (!fileStore.isReadOnly()) {
             return build(fileStore) && deploy(fileStore);
         }
         return deploy(fileStore);
     }
 
-    protected boolean deploy(final ExtensionProjectFileStore fileStore) {
+    protected boolean deploy(final CustomPageProjectFileStore fileStore) {
         GetApiSessionOperation apiSessionOperation = new GetApiSessionOperation();
         String displayName = IDisplayable.toDisplayName(fileStore).orElse("");
         try {

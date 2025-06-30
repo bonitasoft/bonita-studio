@@ -88,33 +88,6 @@
             point="org.eclipse.ui.menus">
          <menuContribution
                allPopups="false"
-               locationURI="popup:org.bonitasoft.studio.application.project.explorer.new?after=org.bonitasoft.studio.application.placeholder.uidartifact">
-            <dynamic
-                  class="org.bonitasoft.studio.rest.api.extension.menu.NewRestApiExtensionMenuContribution"
-                  id="org.bonitasoft.studio.rest.api.extension.pop.menu.new">
-               <visibleWhen
-                     checkEnabled="false">
-                  <with
-                        variable="activeMenuSelection">
-                     <and>
-                        <count
-                              value="1">
-                        </count>
-                        <iterate>
-                           <instanceof
-                                 value="org.eclipse.core.resources.IProject">
-                           </instanceof>
-                           <test
-                                 property="org.bonitasoft.studio.application.isBonitaProject">
-                           </test>
-                        </iterate>
-                     </and>
-                  </with>
-               </visibleWhen>
-            </dynamic>
-         </menuContribution>
-         <menuContribution
-               allPopups="false"
                locationURI="popup:org.bonitasoft.studio.application.project.explorer.new?after=additions">
             <command
                   commandId="org.bonitasoft.studio.rest.api.extension.newGroovyClass"
@@ -242,7 +215,7 @@
 	                     </count>
 	                     <iterate>
                            <test
-                                 property="org.bonitasoft.studio.rest.api.extension.propertyTester.isRestApiFolder">
+                                 property="org.bonitasoft.studio.rest.api.extension.propertyTester.isExtensionsFolder">
                            </test>
                          </iterate>
 	                  </and>
@@ -309,37 +282,37 @@
             <enablement></enablement>
          </actionProvider>
       </extension>
+      <extension point="org.eclipse.core.expressions.definitions">
+        <definition id="isExtensionsParent">
+            <with variable="activeMenuSelection">
+               <and>
+                  <count value="1"/>
+                  <iterate>
+                     <or>
+                        <!-- on extensions folder or the project itself -->
+                        <test property="org.bonitasoft.studio.rest.api.extension.propertyTester.isExtensionsFolder"/>
+                        <and>
+                           <instanceof value="org.eclipse.core.resources.IProject"/>
+                           <test property="org.bonitasoft.studio.application.isBonitaProject"/>
+                        </and>
+                     </or>
+                  </iterate>
+               </and>
+            </with>
+        </definition>
+      </extension>
       <extension
             point="org.eclipse.core.expressions.propertyTesters">
          <propertyTester
                class="org.bonitasoft.studio.maven.ProjectElementPropertyTester"
                id="org.bonitasoft.studio.rest.api.extension.propertyTester"
                namespace="org.bonitasoft.studio.rest.api.extension.propertyTester"
-               properties="isRestApiElement,isRestApiFolder,isRestApiProject,isNonProjectRestApiFolder,isThemeElement,isThemeFolder,isCustomPageElement"
+               properties="isExtensionsFolder,isRestApiElement,isRestApiFolder,isRestApiProject,isNonProjectRestApiFolder,isThemeElement,isThemeFolder,isCustomPageElement"
                type="org.eclipse.core.runtime.IAdaptable">
          </propertyTester>
       </extension>
       <extension
             point="org.eclipse.ui.handlers">
-         <handler
-               class="org.bonitasoft.studio.rest.api.extension.ui.handler.NewRestAPIExtensionHandler"
-               commandId="org.bonitasoft.studio.application.newWithWizard">
-            <activeWhen>
-                <with
-                  variable="activeMenuSelection">
-               <and>
-                  <count
-                        value="1">
-                  </count>
-                  <iterate>
-                     <test
-                           property="org.bonitasoft.studio.rest.api.extension.propertyTester.isRestApiFolder">
-                     </test>
-                  </iterate>
-               </and>
-               </with>
-            </activeWhen>
-         </handler>
          <handler
                class="org.bonitasoft.studio.rest.api.extension.ui.handler.ConvertToRestAPIExtensionProjectHandler"
                commandId="org.bonitasoft.studio.rest.api.extension.convertToProject">

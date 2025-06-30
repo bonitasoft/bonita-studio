@@ -16,15 +16,12 @@ package org.bonitasoft.studio.application.views;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import jakarta.inject.Inject;
 
 import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.application.views.provider.UIDArtifactFilters;
@@ -79,6 +76,8 @@ import org.eclipse.ui.navigator.CommonViewer;
 import org.eclipse.ui.navigator.ICommonFilterDescriptor;
 import org.eclipse.ui.navigator.NavigatorActionService;
 import org.eclipse.ui.views.properties.IPropertySheetPage;
+
+import jakarta.inject.Inject;
 
 public class BonitaProjectExplorer extends CommonNavigator {
 
@@ -224,13 +223,8 @@ public class BonitaProjectExplorer extends CommonNavigator {
 
     private class PackageExplorerProblemTreeViewer extends ProblemTreeViewer {
 
-        // fix for 64372 Projects showing up in Package Explorer twice [package
-        // explorer]
-        private final List<Object> fPendingRefreshes;
-
         public PackageExplorerProblemTreeViewer(String id, Composite parent, int style) {
             super(id, parent, style);
-            fPendingRefreshes = Collections.synchronizedList(new ArrayList<>());
             initizialize();
         }
 
@@ -261,22 +255,9 @@ public class BonitaProjectExplorer extends CommonNavigator {
         }
 
         @Override
-        public void add(Object parentElement, Object[] childElements) {
-            if (fPendingRefreshes.contains(parentElement)) {
-                return;
-            }
-            super.add(parentElement, childElements);
-        }
-
-        @Override
         protected void internalRefresh(Object element, boolean updateLabels) {
             if (!getTree().isDisposed()) {
-                try {
-                    fPendingRefreshes.add(element);
-                    super.internalRefresh(element, updateLabels);
-                } finally {
-                    fPendingRefreshes.remove(element);
-                }
+                super.internalRefresh(element, updateLabels);
             }
         }
 

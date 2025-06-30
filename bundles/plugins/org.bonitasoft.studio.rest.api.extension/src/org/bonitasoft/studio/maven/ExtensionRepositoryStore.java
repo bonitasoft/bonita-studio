@@ -20,16 +20,18 @@ import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Properties;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.apache.maven.model.Model;
 import org.bonitasoft.plugin.analyze.report.model.CustomPage;
+import org.bonitasoft.studio.common.extension.properties.ExtensionPagePropertiesReader;
+import org.bonitasoft.studio.common.extension.properties.PagePropertyConstants;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.BuildScheduler;
@@ -73,7 +75,6 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.edapt.migration.MigrationException;
-import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.m2e.core.MavenPlugin;
 import org.eclipse.m2e.core.internal.IMavenConstants;
 
@@ -231,7 +232,7 @@ public class ExtensionRepositoryStore
                 var importBdmModules = new ImportMavenModuleOperation(parentFolder);
                 try {
                     importBdmModules.run(new NullProgressMonitor());
-                    if(bonitaProject.getGitDir().exists()) {
+                    if (bonitaProject.getGitDir().exists()) {
                         var connectProviderOperation = bonitaProject.newConnectProviderOperation();
                         connectProviderOperation.run(new NullProgressMonitor());
                     }
@@ -307,13 +308,11 @@ public class ExtensionRepositoryStore
                 artifact.getVersion()) != null;
     }
 
-    public <V extends ExtensionProjectFileStore> List<V> getChildren(Class<V> contenType) {
-        if (RestAPIExtensionFileStore.class.equals(contenType)) {
-            return getChildren().stream()
-                    .filter(fStore -> Objects.equals(fStore.getContentType(), API_EXTENSION_CONTENT_TYPE))
-                    .collect(Collectors.toList());
-        }
-        return Collections.emptyList();
+    public <V extends ExtensionProjectFileStore> List<V> getChildren(Class<V> contentType) {
+        return getChildren().stream()
+                .filter(contentType::isInstance)
+                .map(contentType::cast)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -377,7 +376,7 @@ public class ExtensionRepositoryStore
             boolean hasBeenMigrated = false;
             MigrationReport report = new MigrationReport();
             var metadata = ProjectMetadata.read(getRepository().getProject(), monitor);
-            if (API_EXTENSION_CONTENT_TYPE.equals(fileStore.getContentType())) {
+            if (fileStore instanceof RestAPIExtensionFileStore) {
                 for (MavenModelMigration step : REST_API_EXTENSIONS_MIGRATION_STEPS) {
                     if (step.appliesTo(model, metadata)) {
                         report = step.migrate(model, metadata).merge(report);
@@ -409,8 +408,10 @@ public class ExtensionRepositoryStore
         }
     }
 
-    public Optional<ExtensionProjectFileStore> findByCustomPageId(String pageId) {
+    public Optional<CustomPageProjectFileStore> findByCustomPageId(String pageId) {
         return getChildren().stream()
+                .filter(CustomPageProjectFileStore.class::isInstance)
+                .map(CustomPageProjectFileStore.class::cast)
                 .filter(project -> Objects.equals(project.getPageId(), pageId))
                 .findFirst();
     }
@@ -421,8 +422,8 @@ public class ExtensionRepositoryStore
      */
     public Optional<RestAPIExtensionFileStore> findByRestResource(String resource) {
         return getChildren().stream()
-                .filter(fStore -> Objects.equals(fStore.getContentType(), API_EXTENSION_CONTENT_TYPE))
-                .map(fStore -> new RestAPIExtensionFileStore(fStore.getName(), this))
+                .filter(RestAPIExtensionFileStore.class::isInstance)
+                .map(RestAPIExtensionFileStore.class::cast)
                 .filter(fStore -> matchesRestResource(resource, fStore))
                 .findFirst();
     }
@@ -441,22 +442,48 @@ public class ExtensionRepositoryStore
 
     public Optional<ThemeFileStore> findTheme(String customPageName) {
         return getChildren().stream()
+                .filter(ThemeFileStore.class::isInstance)
+                .map(ThemeFileStore.class::cast)
                 .filter(fStore -> Objects.equals(customPageName, fStore.getPageId()))
-                .filter(fStore -> Objects.equals(fStore.getContentType(), THEME_CONTENT_TYPE))
-                .map(fStore -> new ThemeFileStore(fStore.getName(), this))
                 .findFirst();
     }
 
     @Override
     public ExtensionProjectFileStore<?> createRepositoryFileStore(String fileName) {
-        var fStore = new ExtensionProjectFileStore<>(fileName, this);
-        if (!fileName.contains("/") && Objects.equals(fStore.getContentType(), API_EXTENSION_CONTENT_TYPE)) {
-            return new RestAPIExtensionFileStore(fStore.getName(), this);
+        var projectResource = getResource().getFolder(fileName);
+        var contentType = detectContentType(projectResource);
+
+        if (!fileName.contains("/") && Objects.equals(contentType, API_EXTENSION_CONTENT_TYPE)) {
+            return new RestAPIExtensionFileStore(fileName, this);
+        } else if (!fileName.contains("/") && Objects.equals(contentType, THEME_CONTENT_TYPE)) {
+            return new ThemeFileStore(fileName, this);
+        } else {
+            return new ExtensionProjectFileStore<>(fileName, this);
         }
-        if (!fileName.contains("/") && Objects.equals(fStore.getContentType(), THEME_CONTENT_TYPE)) {
-            return new ThemeFileStore(fStore.getName(), this);
+    }
+
+    /**
+     * Detect the content type of the extension project in an eventual page.properties.
+     * 
+     * @param projectResource the extension project's folder
+     * @return the content type in case of a custom page, null otherwise
+     */
+    static String detectContentType(IFolder projectResource) {
+        var descriptor = projectResource.getFile("src/main/resources/page.properties");
+        if (!descriptor.exists()) {
+            descriptor = projectResource.getFile("page.properties");
         }
-        return fStore;
+        if (descriptor.exists()) {
+            try (var is = descriptor.getContents()) {
+                var properties = new Properties();
+                properties.load(is);
+                return ExtensionPagePropertiesReader.getProperty(properties, PagePropertyConstants.CONTENT_TYPE)
+                        .orElse(null);
+            } catch (IOException | CoreException e1) {
+                return null;
+            }
+        }
+        return null;
     }
 
     public IFolder createExtensionModule(BonitaProject project, IProgressMonitor monitor) throws CoreException {

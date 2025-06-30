@@ -9,17 +9,25 @@
 package org.bonitasoft.studio.maven.model;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertThrows;
 
+import org.bonitasoft.studio.application.ui.control.model.dependency.ArtifactType;
 import org.junit.Test;
 
-public class RestAPIExtensionArchetypeTest {
+public class ExtensionProjectArchetypesTest {
 
     @Test
     public void should_reference_rest_api_extension_archetype() throws Exception {
-        var archetype = RestAPIExtensionArchetype.INSTANCE;
+        var archetype = ExtensionProjectArchetypes.getExtensionArchetype(ArtifactType.REST_API);
 
         assertThat(archetype.getGroupId()).isEqualTo("org.bonitasoft.archetypes");
         assertThat(archetype.getArtifactId()).isEqualTo("bonita-rest-api-extension-archetype");
+    }
+
+    @Test
+    public void should_not_support_application_extension_archetype() throws Exception {
+        assertThrows(IllegalArgumentException.class,
+                () -> ExtensionProjectArchetypes.getExtensionArchetype(ArtifactType.APPLICATION));
     }
 
 }

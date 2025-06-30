@@ -85,10 +85,11 @@ public class MavenProjectHelper {
     public static void saveModel(IFile pomFile, Model model, IProgressMonitor monitor) throws CoreException {
         saveModel(pomFile, model, true, monitor);
     }
-    
-    public static void saveModel(IFile pomFile, Model model, boolean forceRefresh, IProgressMonitor monitor) throws CoreException {
+
+    public static void saveModel(IFile pomFile, Model model, boolean forceRefresh, IProgressMonitor monitor)
+            throws CoreException {
         saveModel(pomFile.getLocation().toFile().toPath(), model);
-        if(forceRefresh) {
+        if (forceRefresh) {
             pomFile.refreshLocal(IResource.DEPTH_ONE, monitor);
         }
     }
@@ -129,6 +130,21 @@ public class MavenProjectHelper {
                 return mavenProjectFacade.getMavenProject(new NullProgressMonitor());
             }
             return mavenProject;
+        }
+        return null;
+    }
+
+    /**
+     * Get output directory where classes and resources of the maven project are compiled.
+     * 
+     * @param project eclipse project
+     * @return classes output directory or null if the project is not a maven project
+     * @throws CoreException exception accessing the maven project properties
+     */
+    public static File getOutputDirectory(IProject project) throws CoreException {
+        IMavenProjectFacade mavenFacade = getMavenProjectFacade(project);
+        if (mavenFacade != null) {
+            return mavenFacade.getOutputLocation().toFile();
         }
         return null;
     }

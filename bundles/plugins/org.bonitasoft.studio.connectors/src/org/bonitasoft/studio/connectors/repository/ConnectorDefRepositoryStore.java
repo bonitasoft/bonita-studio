@@ -14,6 +14,7 @@
  */
 package org.bonitasoft.studio.connectors.repository;
 
+import java.io.File;
 import java.io.InputStream;
 import java.util.Collections;
 import java.util.HashSet;
@@ -21,6 +22,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.bonitasoft.plugin.analyze.report.model.Definition;
 import org.bonitasoft.studio.common.ModelVersion;
 import org.bonitasoft.studio.common.model.validator.ModelNamespaceValidator;
 import org.bonitasoft.studio.common.model.validator.XMLModelCompatibilityValidator;
@@ -59,12 +61,24 @@ public class ConnectorDefRepositoryStore extends AbstractDefinitionRepositorySto
     public List<ConnectorDefFileStore> getChildren() {
         var projectDependenciesStore = getRepository().getProjectDependenciesStore();
         if (projectDependenciesStore != null) {
-           return projectDependenciesStore.getConnectorDefinitions().stream()
-                    .map(def -> new DependencyConnectorDefFileStore(def, this))
+            return projectDependenciesStore.getConnectorDefinitions().stream()
+                    .map(this::createDefinitionFileStore)
                     .collect(Collectors.toList());
         }
 
         return Collections.emptyList();
+    }
+
+    /**
+     * Creates the connector definition file store.
+     * 
+     * @param definition the connector definition pointing to artifact (jar file or project)
+     * @return the connector definition file store
+     */
+    protected ConnectorDefFileStore createDefinitionFileStore(Definition definition) {
+        File file = new File(definition.getArtifact().getFile());
+        return file.isFile() ? new DependencyConnectorDefFileStore(definition, this)
+                : new ConnectorDefFileStore(file.getName(), definition.getJarEntry(), this);
     }
 
     @Override
@@ -99,7 +113,6 @@ public class ConnectorDefRepositoryStore extends AbstractDefinitionRepositorySto
         return extensions;
     }
 
-
     @Override
     protected Bundle getBundle() {
         return ConnectorPlugin.getDefault().getBundle();
@@ -126,10 +139,5 @@ public class ConnectorDefRepositoryStore extends AbstractDefinitionRepositorySto
                                     .validate(inputStream);
         }
         return super.validate(filename, inputStream);
-    }
-
-    @Override
-    public int getImportOrder() {
-        return 5;
     }
 }

@@ -16,8 +16,6 @@ package org.bonitasoft.studio.maven.ui.handler;
 
 import java.lang.reflect.InvocationTargetException;
 
-import jakarta.inject.Named;
-
 import org.bonitasoft.engine.exception.BonitaHomeNotSetException;
 import org.bonitasoft.engine.exception.ServerAPIException;
 import org.bonitasoft.engine.exception.UnknownAPITypeException;
@@ -30,7 +28,7 @@ import org.bonitasoft.studio.common.ui.jface.BonitaErrorDialog;
 import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.engine.http.HttpClientFactory;
 import org.bonitasoft.studio.engine.operation.GetApiSessionOperation;
-import org.bonitasoft.studio.maven.ExtensionProjectFileStore;
+import org.bonitasoft.studio.maven.CustomPageProjectFileStore;
 import org.bonitasoft.studio.maven.ExtensionRepositoryStore;
 import org.bonitasoft.studio.maven.i18n.Messages;
 import org.bonitasoft.studio.maven.operation.DeployCustomPageProjectOperation;
@@ -42,6 +40,8 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
+
+import jakarta.inject.Named;
 
 public class DeployExtensionFromDependencyHandler {
 
@@ -55,10 +55,11 @@ public class DeployExtensionFromDependencyHandler {
         var store = repositoryAccessor.getRepositoryStore(ExtensionRepositoryStore.class);
         GAV gav = new GAV(groupId, artifactId, version, classifier, "zip", null);
         store.findByGAV(gav)
-            .ifPresent(fStore -> deploy(fStore, httpClientFactory));
+                .filter(CustomPageProjectFileStore.class::isInstance).map(CustomPageProjectFileStore.class::cast)
+                .ifPresent(fStore -> deploy(fStore, httpClientFactory));
     }
 
-    protected boolean deploy(ExtensionProjectFileStore fileStore, HttpClientFactory httpClientFactory) {
+    protected boolean deploy(CustomPageProjectFileStore fileStore, HttpClientFactory httpClientFactory) {
         String displayName = IDisplayable.toDisplayName(fileStore).orElse("");
         GetApiSessionOperation apiSessionOperation = new GetApiSessionOperation();
         try {

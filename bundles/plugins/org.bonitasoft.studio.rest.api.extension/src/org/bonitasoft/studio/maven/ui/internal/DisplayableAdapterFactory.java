@@ -20,6 +20,7 @@ import java.util.function.Supplier;
 import org.bonitasoft.plugin.analyze.report.model.CustomPage;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.common.ui.IDisplayable;
+import org.bonitasoft.studio.maven.CustomPageProjectFileStore;
 import org.bonitasoft.studio.maven.ExtensionProjectDescriptor;
 import org.bonitasoft.studio.maven.ExtensionProjectFileStore;
 import org.bonitasoft.studio.maven.ExtensionRepositoryStore;
@@ -101,13 +102,14 @@ public class DisplayableAdapterFactory implements IAdapterFactory {
                     @Override
                     public StyledString getStyledString() {
                         StyledString styledString = new StyledString(store.getName());
-                        var type = store.getContentType() ;
+                        var type = store instanceof CustomPageProjectFileStore cp ? cp.getContentType() : null;
                         if ((store.getProject() == null || !store.getProject().exists()) && store.canBeImported()) {
                             styledString.append("  ");
                             styledString.append(Messages.rightClickToConvert, StyledString.DECORATIONS_STYLER);
-                        }else if(type != null) {
+                        } else if (type != null) {
                             styledString.append("  ");
-                            styledString.append(type.equals(ExtensionRepositoryStore.API_EXTENSION_CONTENT_TYPE) ? "REST API EXTENSION" : type.toUpperCase(), StyledString.QUALIFIER_STYLER);
+                            styledString.append(type.equals(ExtensionRepositoryStore.API_EXTENSION_CONTENT_TYPE)
+                                    ? "REST API EXTENSION" : type.toUpperCase(), StyledString.QUALIFIER_STYLER);
                         }
                         return styledString;
                     }

@@ -39,7 +39,8 @@ Require-Bundle: org.eclipse.swtbot.eclipse.gef.finder,
  org.bonitasoft.studio.team.git,
  org.eclipse.m2e.maven.runtime,
  org.eclipse.m2e.core,
- org.bonitasoft.studio.common.diagram
+ org.bonitasoft.studio.common.diagram,
+ org.bonitasoft.studio.rest.api.extension
 Import-Package: org.bonitasoft.studio.application.i18n,
  org.bonitasoft.studio.configuration.i18n,
  org.bonitasoft.studio.connector.model.i18n,

@@ -18,12 +18,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.bonitasoft.studio.maven.ExtensionProjectDescriptor;
+import org.bonitasoft.studio.maven.CustomPageProjectDescriptor;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.Path;
 
-public class ThemeExtensionDescriptor extends ExtensionProjectDescriptor {
+public class ThemeExtensionDescriptor extends CustomPageProjectDescriptor {
 
     private static final String MAIN_SCSS_PATH = "src/scss/main.scss";
     private static final String BONITA_VARIABLES_SCSS_PATH = "src/scss/_bonita_variables.scss";
@@ -31,7 +31,7 @@ public class ThemeExtensionDescriptor extends ExtensionProjectDescriptor {
     public ThemeExtensionDescriptor() {
         super("page.properties");
     }
-    
+
     public ThemeExtensionDescriptor(IProject project) {
         super(project, "page.properties");
     }

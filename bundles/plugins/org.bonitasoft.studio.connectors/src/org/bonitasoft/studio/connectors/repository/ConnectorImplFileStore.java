@@ -14,71 +14,57 @@
  */
 package org.bonitasoft.studio.connectors.repository;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-
 import org.bonitasoft.bpm.connector.model.implementation.ConnectorImplementation;
 import org.bonitasoft.bpm.connector.model.implementation.ConnectorImplementationFactory;
 import org.bonitasoft.bpm.connector.model.implementation.DocumentRoot;
-import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.filestore.EMFFileStore;
-import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
-import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
+import org.bonitasoft.studio.common.repository.store.AbstractEMFRepositoryStore;
+import org.bonitasoft.studio.connector.model.definition.AbstractFromArtifactFileStore;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.emf.ecore.xmi.XMLResource;
-import org.eclipse.ui.IWorkbenchPart;
 
-public class ConnectorImplFileStore extends EMFFileStore<ConnectorImplementation> {
+public class ConnectorImplFileStore extends AbstractFromArtifactFileStore<ConnectorImplementation> {
 
-	public ConnectorImplFileStore(String fileName, IRepositoryStore<ConnectorImplFileStore> store) {
-		super(fileName, store);
-	}
+    public ConnectorImplFileStore(String fileName, AbstractEMFRepositoryStore<ConnectorImplFileStore> store) {
+        super(fileName, store, ConnectorImplementation.class);
+    }
 
-	@Override
-	protected ConnectorImplementation doGetContent() throws ReadFileStoreException {
-		DocumentRoot root = (DocumentRoot) super.doGetContent();
-		if (root != null) {
-			return root.getConnectorImplementation();
-		}
-		ConnectorImplementation unloadableImpl = ConnectorImplementationFactory.eINSTANCE
-				.createUnloadableConnectorImplementation();
-		unloadableImpl.setImplementationId(getName());
-		unloadableImpl.setImplementationVersion("");
-		unloadableImpl.setImplementationClassname("");
-		return unloadableImpl;
-	}
+    public ConnectorImplFileStore(String projectName, String entryInOutputDirectory,
+            AbstractEMFRepositoryStore<ConnectorImplFileStore> store) {
+        super(projectName, entryInOutputDirectory, store, ConnectorImplementation.class);
+    }
 
-	@Override
-	protected void doSave(Object content) {
-		if (content instanceof ConnectorImplementation) {
-			Resource emfResource = getEMFResource();
-			emfResource.getContents().clear();
-			DocumentRoot root = ConnectorImplementationFactory.eINSTANCE.createDocumentRoot();
-			root.setConnectorImplementation((ConnectorImplementation) EcoreUtil.copy((EObject) content));
-			emfResource.getContents().add(root);
-			try {
-				Map<String, Object> options = new HashMap<>();
-				options.put(XMLResource.OPTION_EXTENDED_META_DATA, Boolean.TRUE);
-				options.put(XMLResource.OPTION_ENCODING, "UTF-8");
-				options.put(XMLResource.OPTION_XML_VERSION, "1.0");
-				emfResource.save(options);
-			} catch (IOException e) {
-				BonitaStudioLog.error(e);
-			}
-		}
+    /*
+     * (non-Javadoc)
+     * @see org.bonitasoft.studio.connector.model.definition.AbstractFromArtifactFileStore#extractRootContent(org.eclipse.emf.ecore.EObject)
+     */
+    @Override
+    protected ConnectorImplementation extractRootContent(EObject documentRoot) {
+        return ((DocumentRoot) documentRoot).getConnectorImplementation();
+    }
 
-	}
+    /*
+     * (non-Javadoc)
+     * @see org.bonitasoft.studio.connector.model.definition.AbstractFromArtifactFileStore#wrapContentWithRoot(org.eclipse.emf.ecore.EObject)
+     */
+    @Override
+    protected EObject wrapContentWithRoot(ConnectorImplementation content) {
+        final DocumentRoot root = ConnectorImplementationFactory.eINSTANCE.createDocumentRoot();
+        root.setConnectorImplementation((ConnectorImplementation) EcoreUtil.copy((EObject) content));
+        return root;
+    }
 
-	@Override
-	protected IWorkbenchPart doOpen() {
-		return null;
-	}
-
-	@Override
-	protected void doDelete() {
-	}
+    /*
+     * (non-Javadoc)
+     * @see org.bonitasoft.studio.connector.model.definition.AbstractFromArtifactFileStore#makeUnloadableContent()
+     */
+    @Override
+    protected ConnectorImplementation makeUnloadableContent() {
+        ConnectorImplementation unloadableImpl = ConnectorImplementationFactory.eINSTANCE
+                .createUnloadableConnectorImplementation();
+        unloadableImpl.setImplementationId(getName());
+        unloadableImpl.setImplementationVersion("");
+        unloadableImpl.setImplementationClassname("");
+        return unloadableImpl;
+    }
 
 }

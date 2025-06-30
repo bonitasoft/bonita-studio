@@ -147,12 +147,12 @@
       </repositories>
     </location>
     <location missingManifest="generate" includeDependencyScopes="compile,runtime,system" includeSource="true" includeDependencyDepth="none" label="BonitaProjectReportModel" type="Maven">
-      <feature provider-name="Bonitasoft S.A" label="Bonita Project Report Model Feature" id="org.bonitasoft.project.report.model.feature" version="1.0.4"/>
+      <feature provider-name="Bonitasoft S.A" label="Bonita Project Report Model Feature" id="org.bonitasoft.project.report.model.feature" version="2.1.1"/>
       <dependencies>
         <dependency>
           <groupId>org.bonitasoft.maven</groupId>
           <artifactId>bonita-project-report-model</artifactId>
-          <version>1.0.4</version>
+          <version>2.1.1</version>
           <type>jar</type>
         </dependency>
       </dependencies>

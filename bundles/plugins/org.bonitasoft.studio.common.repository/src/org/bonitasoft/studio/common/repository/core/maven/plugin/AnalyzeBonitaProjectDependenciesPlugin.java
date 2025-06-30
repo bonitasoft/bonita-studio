@@ -19,6 +19,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 import org.apache.maven.execution.BuildSuccess;
+import org.apache.maven.execution.MavenExecutionRequest;
 import org.apache.maven.execution.MavenExecutionResult;
 import org.apache.maven.model.Plugin;
 import org.bonitasoft.studio.common.repository.BuildScheduler;
@@ -63,6 +64,7 @@ public class AnalyzeBonitaProjectDependenciesPlugin {
                 @Override
                 public MavenExecutionResult call(IMavenExecutionContext context, IProgressMonitor monitor)
                         throws CoreException {
+                    fixSettingsFile(ctx, request);
                     return context.execute(request);
                 }
 
@@ -75,6 +77,22 @@ public class AnalyzeBonitaProjectDependenciesPlugin {
                                 executionResult.hasExceptions() ? executionResult.getExceptions().get(0) : null));
             }
         }, monitor);
+    }
+
+    /**
+     * Fix the settings file if it is not accessible.
+     * 
+     * @param ctx the maven execution context
+     * @param request the maven execution request
+     * @throws CoreException exception with status
+     */
+    private void fixSettingsFile(IMavenExecutionContext ctx, MavenExecutionRequest request) throws CoreException {
+        // settings file may be resolved with a property, which would make the build fail without it
+        var settingsFile = request.getUserSettingsFile();
+        if (settingsFile != null && !settingsFile.exists()) {
+            // just remove user settings
+            request.setUserSettingsFile(null);
+        }
     }
 
     public String getReportPath() throws CoreException {

@@ -89,7 +89,10 @@ public class ImportModelLabelProvider extends ColumnLabelProvider {
     public void update(ViewerCell cell) {
         Object element = cell.getElement();
         cell.setText(getText(element));
-        cell.setImage(getImage(element));
+
+        // workaround https://github.com/eclipse-platform/eclipse.platform.swt/issues/678
+        Image image = getImage(element);
+        cell.getControl().getDisplay().asyncExec(() -> cell.setImage(image));
 
         if (hasStatus(element, ConflictStatus.CONFLICTING)) {
             cell.setForeground(conflictColor);

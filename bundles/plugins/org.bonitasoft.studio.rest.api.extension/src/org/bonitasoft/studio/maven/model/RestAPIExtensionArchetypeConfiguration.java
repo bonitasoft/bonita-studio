@@ -19,32 +19,30 @@ import org.bonitasoft.studio.maven.i18n.Messages;
 
 import com.google.common.base.Joiner;
 
-public class RestAPIExtensionArchetypeConfiguration extends CustomPageArchetypeConfiguration {
+public class RestAPIExtensionArchetypeConfiguration extends ArchetypeConfigurationImpl
+        implements CustomPageArchetypeConfiguration, ArchetypeConfigurationWithLanguage,
+        ArchetypeConfigurationWithBonitaVersion {
 
-    public static final String JAVA_LANGUAGE = "java";
-    public static final String GROOVY_LANGUAGE = "groovy";
+    public static final String PATH_TEMPLATE_ATTRIBUTE = "pathTemplate";
 
-    private String bonitaVersion;
+    public static final String HTTP_VERB_ATTRIBUTE = "httpVerb";
 
-    private String pathTemplate;
+    public static final String BDM_GROUP_ID_ATRIBUTE = "bdmGroupId";
 
-    private String httpVerb;
-
-    private String language;
+    public static final String ENABLE_BDM_DEPENDENCIES_ATRIBUTE = "enableBDMDependencies";
 
     private List<String> permissions = new ArrayList<>();
 
     private List<String> urlParameters = new ArrayList<>();
 
-    private String bdmGroupId;
-
     private boolean enableBDMDependencies;
 
-    public static RestAPIExtensionArchetypeConfiguration defaultArchetypeConfiguration(ProjectMetadata projectMetadata, boolean addBdmDependency) {
+    public static RestAPIExtensionArchetypeConfiguration defaultArchetypeConfiguration(ProjectMetadata projectMetadata,
+            boolean addBdmDependency) {
         final RestAPIExtensionArchetypeConfiguration configuration = new RestAPIExtensionArchetypeConfiguration();
-        configuration.setJavaPackage(projectMetadata.getGroupId()+".rest.api");
+        configuration.setJavaPackage(projectMetadata.getGroupId() + ".rest.api");
         configuration.setBonitaVersion(ProductVersion.BONITA_RUNTIME_VERSION);
-        configuration.setPageName("resourceNameRestAPI");
+        configuration.setProjectName("resourceNameRestAPI");
         configuration.setPathTemplate("resourceName");
         configuration.setPageDisplayName(Messages.defaultAPIDisplayName);
         configuration.setPageDescription(Messages.defaultAPIDisplayDescription);
@@ -59,56 +57,49 @@ public class RestAPIExtensionArchetypeConfiguration extends CustomPageArchetypeC
         return configuration;
     }
 
-    public static RestAPIExtensionArchetypeConfiguration defaultArchetypeConfiguration(ProjectMetadata projectMetadata) {
+    public static RestAPIExtensionArchetypeConfiguration defaultArchetypeConfiguration(
+            ProjectMetadata projectMetadata) {
         return defaultArchetypeConfiguration(projectMetadata, false);
     }
 
-    public void setBonitaVersion(final String bonitaVersion) {
-        this.bonitaVersion = bonitaVersion;
-    }
-
-    public String getBonitaVersion() {
-        return bonitaVersion;
-    }
-
-    public void setHttpVerb(final String httpVerb) {
-        this.httpVerb = httpVerb;
+    public String getPathTemplate() {
+        return getAttribute(PATH_TEMPLATE_ATTRIBUTE);
     }
 
     public void setPathTemplate(final String pathTemplate) {
-        this.pathTemplate = pathTemplate;
-    }
-
-    public void setPermissions(final List<String> permissions) {
-        this.permissions = permissions;
-    }
-
-    public void setUrlParameters(final List<String> urlParameters) {
-        this.urlParameters = urlParameters;
-    }
-
-    public String getPathTemplate() {
-        return pathTemplate;
+        setAttribute(PATH_TEMPLATE_ATTRIBUTE, pathTemplate);
     }
 
     public String getHttpVerb() {
-        return httpVerb;
+        return getAttribute(HTTP_VERB_ATTRIBUTE);
+    }
+
+    public void setHttpVerb(final String httpVerb) {
+        setAttribute(HTTP_VERB_ATTRIBUTE, httpVerb);
     }
 
     public List<String> getPermissions() {
         return permissions;
     }
 
+    public void setPermissions(final List<String> permissions) {
+        this.permissions = permissions;
+    }
+
     public List<String> getUrlParameters() {
         return urlParameters;
     }
 
+    public void setUrlParameters(final List<String> urlParameters) {
+        this.urlParameters = urlParameters;
+    }
+
     public String getBdmGroupId() {
-        return bdmGroupId;
+        return getAttribute(BDM_GROUP_ID_ATRIBUTE);
     }
 
     public void setBdmGroupId(final String bdmGroupId) {
-        this.bdmGroupId = bdmGroupId;
+        setAttribute(BDM_GROUP_ID_ATRIBUTE, bdmGroupId);
     }
 
     public boolean isEnableBDMDependencies() {
@@ -119,25 +110,17 @@ public class RestAPIExtensionArchetypeConfiguration extends CustomPageArchetypeC
         this.enableBDMDependencies = enableBDMDependencies;
     }
 
-    public String getLanguage() {
-        return language;
-    }
-
-    public void setLanguage(String language) {
-        this.language = language;
-    }
-
     @Override
     public Map<String, String> toProperties() {
         final Map<String, String> properties = new HashMap<>();
-        properties.put("bonitaVersion", bonitaVersion);
+        properties.put("bonitaVersion", getBonitaVersion());
         properties.put("sp", "false");
         properties.put("language", getLanguage());
-        properties.put("apiName", getPageName());
+        properties.put("apiName", getProjectName());
         properties.put("apiDisplayName", getPageDisplayName());
         properties.put("apiDesc", getPageDescription());
-        properties.put("httpVerb", httpVerb);
-        properties.put("pathTemplate", pathTemplate);
+        properties.put("httpVerb", getHttpVerb());
+        properties.put("pathTemplate", getPathTemplate());
         properties.put("permissionNames", Joiner.on(",").join(permissions));
         properties.put("urlParameters", urlParameters.isEmpty() ? "!" : Joiner.on(",").join(urlParameters));
         properties.put("wrapper", "false");

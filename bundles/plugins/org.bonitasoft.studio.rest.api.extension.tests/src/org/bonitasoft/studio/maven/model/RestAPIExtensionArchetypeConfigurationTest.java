@@ -23,7 +23,7 @@ public class RestAPIExtensionArchetypeConfigurationTest {
     public void should_create_a_valid_default_configuration_for_rest_api_extension_archetype() throws Exception {
         final RestAPIExtensionArchetypeConfiguration configuration = RestAPIExtensionArchetypeConfiguration.defaultArchetypeConfiguration(ProjectMetadata.defaultMetadata());
 
-        assertThat(configuration.getPageName()).isEqualTo("resourceNameRestAPI");
+        assertThat(configuration.getProjectName()).isEqualTo("resourceNameRestAPI");
         assertThat(configuration.getPageDisplayName()).isEqualTo(Messages.defaultAPIDisplayName);
         assertThat(configuration.getPageDescription()).isEqualTo(Messages.defaultAPIDisplayDescription);
         assertThat(configuration.getHttpVerb()).isEqualTo("GET");

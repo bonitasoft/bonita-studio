@@ -24,10 +24,19 @@ import org.eclipse.core.runtime.IAdaptable;
 public class ProjectElementPropertyTester extends PropertyTester {
 
     public static final String REST_API_ELEMENT_PROPERTY = "isRestApiElement";
+    public static final String EXTENSIONS_FOLDER_PROPERTY = "isExtensionsFolder";
+    /**
+     * @deprecated use {@link #EXTENSIONS_FOLDER_PROPERTY} instead, all extensions are in the same folder
+     */
+    @Deprecated(since = "10.3.0")
     public static final String REST_API_FOLDER_PROPERTY = "isRestApiFolder";
     public static final String REST_API_PROJECT_PROPERTY = "isRestApiProject";
     public static final String NON_PROJECT_REST_API_FOLDER_PROPERTY = "isNonProjectRestApiFolder";
     public static final String THEME_ELEMENT_PROPERTY = "isThemeElement";
+    /**
+     * @deprecated use {@link #EXTENSIONS_FOLDER_PROPERTY} instead, all extensions are in the same folder
+     */
+    @Deprecated(since = "10.3.0")
     public static final String THEME_FOLDER_PROPERTY = "isThemeFolder";
     public static final String CUSTOM_PAGE_ELEMENT_PROPERTY = "isCustomPageElement";
     private static final String JAVA_KIND = "java";
@@ -42,12 +51,10 @@ public class ProjectElementPropertyTester extends PropertyTester {
                 return isCustomPageElement((IAdaptable) receiver, store, args);
             case REST_API_ELEMENT_PROPERTY:
                 return isRestApiElement((IAdaptable) receiver, store, args);
-            case REST_API_FOLDER_PROPERTY:
-                return isRestApiFolder((IAdaptable) receiver, store);
+            case EXTENSIONS_FOLDER_PROPERTY, REST_API_FOLDER_PROPERTY, THEME_FOLDER_PROPERTY:
+                return isExtensionsFolder((IAdaptable) receiver, store);
             case THEME_ELEMENT_PROPERTY:
                 return isThemeElement((IAdaptable) receiver, store);
-            case THEME_FOLDER_PROPERTY:
-                return isThemeFolder((IAdaptable) receiver, store);
             case REST_API_PROJECT_PROPERTY:
                 return isRestApiProject((IAdaptable) receiver, store);
             case NON_PROJECT_REST_API_FOLDER_PROPERTY:
@@ -80,7 +87,7 @@ public class ProjectElementPropertyTester extends PropertyTester {
                         .isPresent();
     }
 
-    private boolean isRestApiFolder(IAdaptable receiver, ExtensionRepositoryStore store) {
+    private boolean isExtensionsFolder(IAdaptable receiver, ExtensionRepositoryStore store) {
         return Objects.equals(receiver.getAdapter(IFolder.class), store.getResource());
     }
 
@@ -106,10 +113,6 @@ public class ProjectElementPropertyTester extends PropertyTester {
             }
         }
         return isRestApiElement;
-    }
-
-    private boolean isThemeFolder(IAdaptable receiver, ExtensionRepositoryStore store) {
-        return Objects.equals(receiver.getAdapter(IFolder.class), store.getResource());
     }
 
     private boolean isThemeElement(IAdaptable receiver, ExtensionRepositoryStore store) {

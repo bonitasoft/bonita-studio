@@ -14,23 +14,16 @@
  */
 package org.bonitasoft.studio.maven;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.Properties;
 
 import org.apache.maven.project.MavenProject;
-import org.bonitasoft.studio.common.extension.properties.ExtensionPagePropertiesReader;
-import org.bonitasoft.studio.common.extension.properties.PagePropertyConstants;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.m2e.core.MavenPlugin;
 import org.eclipse.m2e.core.project.IMavenProjectRegistry;
@@ -38,15 +31,8 @@ import org.eclipse.m2e.core.project.IMavenProjectRegistry;
 public class ExtensionProjectDescriptor {
 
     protected IProject project;
-    private String pagePropertiesPath = "src/main/resources/page.properties";
 
-    public ExtensionProjectDescriptor(String pagePropertiesPath) {
-        this.pagePropertiesPath = pagePropertiesPath;
-    }
-
-    public ExtensionProjectDescriptor(final IProject project, String pagePropertiesPath) {
-        this(project);
-        this.pagePropertiesPath = pagePropertiesPath;
+    public ExtensionProjectDescriptor() {
     }
 
     public ExtensionProjectDescriptor(final IProject project) {
@@ -57,51 +43,12 @@ public class ExtensionProjectDescriptor {
         return MavenPlugin.getMavenProjectRegistry();
     }
 
-    protected String getPagePropertyPath() {
-        return pagePropertiesPath;
-    }
-
     public IProject getProject() {
         return project;
     }
 
     public String getName() {
-        return project != null ? project.getName() : getCustomPageName();
-    }
-
-    public Properties getPageProperties() {
-        final Properties properties = new Properties();
-        if (project != null) {
-            var propertyFile =  getPropertyFile();
-            if (!propertyFile.exists()) {
-                return properties;
-            }
-            try (var is = getPropertyFile().getContents()) {
-                properties.load(is);
-            } catch (IOException | CoreException e) {
-                BonitaStudioLog.error(e);
-            }
-        }
-        return properties;
-    }
-
-    public void savePageProperties(final Properties pageProperties) {
-        if (project != null) {
-            final IFile propertyFile = getPropertyFile();
-            final File file = propertyFile.getLocation().toFile();
-            file.delete();
-            try (final FileWriter fileWriter = new FileWriter(file);) {
-                pageProperties.store(fileWriter, null);
-                propertyFile.refreshLocal(IResource.DEPTH_ONE, AbstractRepository.NULL_PROGRESS_MONITOR);
-            } catch (final CoreException | IOException e) {
-                BonitaStudioLog.error(e);
-            }
-        }
-    }
-
-    public IFile getPropertyFile() {
-        ensureProjectOpen();
-        return project.getFile(getPagePropertyPath());
+        return project != null ? project.getName() : null;
     }
 
     protected void ensureProjectOpen() {
@@ -138,29 +85,33 @@ public class ExtensionProjectDescriptor {
     }
 
     public List<IFile> getFilesToOpen() {
-        return Collections.emptyList();
+        ensureProjectOpen();
+        var main = project.getFolder("src/main");
+        List<IFile> sourceAndPropertiesFiles = new ArrayList<>(2);
+        try {
+            main.accept(resource -> {
+                if (resource instanceof IFile file) {
+                    if (file.getName().endsWith(".groovy") || file.getName().endsWith(".java")) {
+                        sourceAndPropertiesFiles.add(0, file);
+                    } else if (file.getName().endsWith(".properties")) {
+                        sourceAndPropertiesFiles.add(file);
+                    }
+                    return false;
+                }
+                return true;
+            });
+        } catch (CoreException e) {
+            BonitaStudioLog.error(e);
+        }
+        return sourceAndPropertiesFiles;
     }
 
     public String getDescription() {
-        return staticProperty(PagePropertyConstants.DESCRIPTION)
-                .orElse(getMavenProject().map(MavenProject::getDescription).orElse(null));
+        return getMavenProject().map(MavenProject::getDescription).orElse(null);
     }
 
     public String getDisplayName() {
-        return staticProperty(PagePropertyConstants.DISPLAY_NAME)
-                .orElse(getMavenProject().map(MavenProject::getName).orElse(null));
-    }
-
-    public String getContentType() {
-        return staticProperty(PagePropertyConstants.CONTENT_TYPE).orElse(null);
-    }
-
-    public String getCustomPageName() {
-        return staticProperty(PagePropertyConstants.NAME).orElse("custompage_" + getArtifactId());
-    }
-
-    private Optional<String> staticProperty(String property) {
-        return ExtensionPagePropertiesReader.getProperty(getPageProperties(), property);
+        return getMavenProject().map(MavenProject::getName).orElse(null);
     }
 
     public String getGroupId() {

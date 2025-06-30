@@ -31,10 +31,14 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 import javax.imageio.ImageIO;
 
+import org.bonitasoft.bpm.connector.model.definition.Category;
+import org.bonitasoft.bpm.connector.model.definition.ConnectorDefinition;
+import org.bonitasoft.bpm.connector.model.definition.ConnectorDefinitionFactory;
 import org.bonitasoft.studio.common.FileUtil;
 import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
@@ -45,9 +49,6 @@ import org.bonitasoft.studio.common.repository.core.maven.MavenProjectDependenci
 import org.bonitasoft.studio.common.repository.model.IDefinitionRepositoryStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
-import org.bonitasoft.bpm.connector.model.definition.Category;
-import org.bonitasoft.bpm.connector.model.definition.ConnectorDefinition;
-import org.bonitasoft.bpm.connector.model.definition.ConnectorDefinitionFactory;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.core.resources.IFile;
@@ -99,7 +100,7 @@ public class DefinitionResourceProvider implements EventHandler {
     private ConnectorDefinitionRegistry definitionRegistry = new ConnectorDefinitionRegistry();
 
     static {
-        INSTANCES_MAP = new HashMap<>();
+        INSTANCES_MAP = new ConcurrentHashMap<>();
     }
 
     public static DefinitionResourceProvider getInstance(
@@ -548,9 +549,9 @@ public class DefinitionResourceProvider implements EventHandler {
         if (definition == null) {
             return Pics.getImage(PicsConstants.error);
         }
-       return definitionRegistry.find(definition)
-            .map(ExtendedConnectorDefinition::getImage)
-            .orElse(null);
+        return definitionRegistry.find(definition)
+                .map(ExtendedConnectorDefinition::getImage)
+                .orElse(null);
     }
 
     public void removeCategoryLabel(final Properties messages, final Category c) {

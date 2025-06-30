@@ -120,6 +120,14 @@ public class Messages extends NLS {
     public static String defaultThemeDisplayName;
     public static String defaultThemeDescription;
     public static String newThemeTitle;
+    public static String actorFiltersRepositoryName;
+    public static String defaultActorFilterDisplayName;
+    public static String defaultActorFilterDescription;
+    public static String newActorFilterTitle;
+    public static String connectorsRepositoryName;
+    public static String defaultConnectorDisplayName;
+    public static String defaultConnectorDescription;
+    public static String newConnectorTitle;
     public static String invalidContentType;
     public static String deployingCustomPage;
     public static String deployWizardTitle;
@@ -160,4 +168,6 @@ public class Messages extends NLS {
     public static String selectExtensionDescription;
     public static String selectExtensionTitle;
     public static String packageLabel;
+    public static String classNameLabel;
+    public static String classNameMustNotBeQualified;
 }

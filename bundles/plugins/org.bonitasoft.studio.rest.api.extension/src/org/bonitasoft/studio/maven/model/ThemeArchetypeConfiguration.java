@@ -14,11 +14,12 @@ import java.util.Map;
 import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
 import org.bonitasoft.studio.maven.i18n.Messages;
 
-public class ThemeArchetypeConfiguration extends CustomPageArchetypeConfiguration {
+public class ThemeArchetypeConfiguration extends ArchetypeConfigurationImpl
+        implements CustomPageArchetypeConfiguration {
 
     public static ThemeArchetypeConfiguration defaultArchetypeConfiguration(ProjectMetadata projectMetadata) {
         final ThemeArchetypeConfiguration configuration = new ThemeArchetypeConfiguration();
-        configuration.setPageName("myCustomTheme");
+        configuration.setProjectName("myCustomTheme");
         configuration.setPageDisplayName(Messages.defaultThemeDisplayName);
         configuration.setPageDescription(Messages.defaultThemeDescription);
         configuration.setGroupId(projectMetadata.getGroupId());
@@ -29,10 +30,10 @@ public class ThemeArchetypeConfiguration extends CustomPageArchetypeConfiguratio
     @Override
     public Map<String, String> toProperties() {
         final Map<String, String> properties = new HashMap<>();
-        properties.put("name", getPageName());
+        properties.put("name", getProjectName());
         properties.put("displayName", getPageDisplayName());
         properties.put("description", getPageDescription());
-        properties.put("wrapper","false");
+        properties.put("wrapper", "false");
         return properties;
     }
 
@@ -40,5 +41,5 @@ public class ThemeArchetypeConfiguration extends CustomPageArchetypeConfiguratio
     public String getArtifactLabel() {
         return Messages.themesRepositoryName;
     }
-    
+
 }

@@ -31,9 +31,15 @@ import org.bonitasoft.studio.configuration.repository.EnvironmentFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.identity.organization.repository.OrganizationFileStore;
+import org.bonitasoft.studio.maven.ExtensionProjectFileStore;
+import org.bonitasoft.studio.maven.ExtensionRepositoryStore;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.OperationCanceledException;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 
 public class ProjectUtil {
 
@@ -53,9 +59,24 @@ public class ProjectUtil {
         removeUserExtensions();
     }
 
+    public static void waitForProjectOperations() throws CoreException {
+        try {
+            // wait for any ongoing operation on repo manager
+            Job.getJobManager().join(RepositoryManager.class, null);
+            // wait for ongoing build operations
+            Job.getJobManager().join(ResourcesPlugin.FAMILY_AUTO_BUILD, null);
+        } catch (OperationCanceledException | InterruptedException e) {
+            throw new CoreException(Status.error("Error while waiting for project operations", e));
+        }
+    }
+
     public static void removeUserExtensions() throws CoreException {
-        IProject project = RepositoryManager.getInstance().getAccessor().getCurrentRepository().orElseThrow().getProject();
+        waitForProjectOperations();
+
+        IProject project = RepositoryManager.getInstance().getAccessor().getCurrentRepository().orElseThrow()
+                .getProject();
         Model mavenModel = MavenProjectHelper.getMavenModel(project);
+        // remove all extensions registered as dependencies
         var dependenciesToRemove = mavenModel.getDependencies()
                 .stream()
                 .filter(not(AppProjectConfiguration::isInternalDependency))
@@ -63,6 +84,10 @@ public class ProjectUtil {
         if (!dependenciesToRemove.isEmpty()) {
             new RemoveDependencyOperation(dependenciesToRemove).run(new NullProgressMonitor());
         }
+        // remove all extensions as reactor modules
+        var extensionsStore = RepositoryManager.getInstance().getAccessor()
+                .getRepositoryStore(ExtensionRepositoryStore.class);
+        extensionsStore.getChildren().forEach(ExtensionProjectFileStore::delete);
     }
 
     public static DiagramFileStore importProcFile(URL procFileURL) throws IOException {

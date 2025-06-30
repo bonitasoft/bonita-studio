@@ -8,9 +8,6 @@
  *******************************************************************************/
 package org.bonitasoft.studio.maven.ui.handler;
 
-import jakarta.annotation.PostConstruct;
-import jakarta.inject.Inject;
-
 import org.bonitasoft.studio.common.RestAPIExtensionNature;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
@@ -23,8 +20,11 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
 
+import jakarta.annotation.PostConstruct;
+import jakarta.inject.Inject;
+
 @Creatable
-public class CustomPageProjectSelectionProvider {
+public class ExtensionProjectSelectionProvider {
 
     private IWorkbenchPage activePage;
     private RepositoryAccessor repositoryAccessor;
@@ -47,7 +47,25 @@ public class CustomPageProjectSelectionProvider {
                             .orElseThrow()
                             .getFileStore(file.getProject());
                     return (ExtensionProjectFileStore) fileStore;
-                    //return repositoryAccessor.getRepositoryStore(RestAPIExtensionRepositoryStore.class).getChild(file.getProject().getName());
+                }
+            } catch (final CoreException e) {
+                BonitaStudioLog.error(e);
+            }
+        }
+        return null;
+    }
+
+    public <T extends ExtensionProjectFileStore> T getSelectionAs(Class<T> entensionStoreClass) {
+        final IEditorPart activeEditor = activePage.getActiveEditor();
+        if (activeEditor != null) {
+            final IEditorInput editorInput = activeEditor.getEditorInput();
+            final IFile file = (IFile) editorInput.getAdapter(IFile.class);
+            try {
+                if (file != null && file.getProject().hasNature(RestAPIExtensionNature.NATURE_ID)) {
+                    IRepositoryFileStore fileStore = repositoryAccessor.getCurrentRepository()
+                            .orElseThrow()
+                            .getFileStore(file.getProject());
+                    return (T) fileStore;
                 }
             } catch (final CoreException e) {
                 BonitaStudioLog.error(e);

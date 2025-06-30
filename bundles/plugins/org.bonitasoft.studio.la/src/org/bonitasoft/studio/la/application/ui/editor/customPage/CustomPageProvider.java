@@ -22,6 +22,7 @@ import org.bonitasoft.studio.designer.core.repository.WebPageFileStore;
 import org.bonitasoft.studio.designer.core.repository.WebPageRepositoryStore;
 import org.bonitasoft.studio.la.application.core.BonitaPagesRegistry;
 import org.bonitasoft.studio.maven.ExtensionRepositoryStore;
+import org.bonitasoft.studio.theme.ThemeFileStore;
 import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceChangeEvent;
@@ -57,8 +58,8 @@ public class CustomPageProvider implements IResourceChangeListener {
                     .filter(webPageFileStore -> Objects.equals(webPageFileStore.getType(),
                             WebPageFileStore.LAYOUT_TYPE))
                     .map(fileStore -> new CustomPageDescriptor(
-                                CustomPageDescriptor.CUSTOMPAGE_PREFIX + fileStore.getCustomPageName(),
-                                IDisplayable.toDisplayName(fileStore).orElse(""), fileStore.getDescription()))
+                            CustomPageDescriptor.CUSTOMPAGE_PREFIX + fileStore.getCustomPageName(),
+                            IDisplayable.toDisplayName(fileStore).orElse(""), fileStore.getDescription()))
                     .forEach(layouts::add);
         }
         return layouts;
@@ -127,9 +128,8 @@ public class CustomPageProvider implements IResourceChangeListener {
     public synchronized Collection<CustomPageDescriptor> getThemes() {
         if (themes == null) {
             themes = new ArrayList<>();
-            themeStore.getChildren()
+            themeStore.getChildren(ThemeFileStore.class)
                     .stream()
-                    .filter(Objects::nonNull)
                     .filter(fileStore -> fileStore.getPageId() != null)
                     .map(fileStore -> new CustomPageDescriptor(
                             fileStore.getPageId(),

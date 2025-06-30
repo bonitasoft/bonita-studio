@@ -11,8 +11,6 @@ package org.bonitasoft.studio.maven.ui.handler;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Paths;
 
-import jakarta.inject.Named;
-
 import org.bonitasoft.engine.exception.BonitaHomeNotSetException;
 import org.bonitasoft.engine.exception.ServerAPIException;
 import org.bonitasoft.engine.exception.UnknownAPITypeException;
@@ -28,6 +26,7 @@ import org.bonitasoft.studio.common.ui.jface.BonitaErrorDialog;
 import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.engine.http.HttpClientFactory;
 import org.bonitasoft.studio.engine.operation.GetApiSessionOperation;
+import org.bonitasoft.studio.maven.CustomPageProjectFileStore;
 import org.bonitasoft.studio.maven.ExtensionProjectFileStore;
 import org.bonitasoft.studio.maven.ExtensionRepositoryStore;
 import org.bonitasoft.studio.maven.i18n.Messages;
@@ -55,6 +54,8 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
+import jakarta.inject.Named;
+
 public class QuickDeployHandler {
 
     private boolean showInUI;
@@ -71,24 +72,24 @@ public class QuickDeployHandler {
         }
         var apiSessionOperation = new GetApiSessionOperation();
         try {
-            ExtensionProjectFileStore customPageFilseStore = null;
+            CustomPageProjectFileStore customPageFileStore = null;
             if (projectPath != null) {
                 IRepositoryFileStore fStore = repositoryAccessor.getCurrentRepository()
                         .orElseThrow()
                         .getRepositoryStore(ExtensionRepositoryStore.class)
                         .getChild(Paths.get(projectPath).getFileName().toString(), false);
 
-                if (fStore instanceof ExtensionProjectFileStore) {
-                    customPageFilseStore = (ExtensionProjectFileStore) fStore;
+                if (fStore instanceof CustomPageProjectFileStore store) {
+                    customPageFileStore = store;
                 }
             } else {
-                customPageFilseStore = getMavenProjectFileStore(selection, repositoryAccessor);
+                customPageFileStore = getMavenProjectFileStore(selection, repositoryAccessor);
             }
 
-            if (customPageFilseStore != null) {
-                String displayName = IDisplayable.toDisplayName(customPageFilseStore).orElse("");
-                if (!customPageFilseStore.isReadOnly()) {
-                    IStatus buildStatus = build(customPageFilseStore);
+            if (customPageFileStore != null) {
+                String displayName = IDisplayable.toDisplayName(customPageFileStore).orElse("");
+                if (!customPageFileStore.isReadOnly()) {
+                    IStatus buildStatus = build(customPageFileStore);
                     if (!buildStatus.isOK()) {
                         return ValidationStatus
                                 .error(String.format(Messages.buildHasFailed, displayName));
@@ -98,7 +99,7 @@ public class QuickDeployHandler {
                 var deployRestAPIExtensionOperation = new DeployCustomPageProjectOperation(
                         BOSEngineManager.getInstance().getPageAPI(session),
                         httpClientFactory,
-                        customPageFilseStore);
+                        customPageFileStore);
                 if (showInUI) {
                     new ProgressMonitorDialog(Display.getDefault().getActiveShell()).run(true, false,
                             deployRestAPIExtensionOperation::run);
@@ -163,18 +164,18 @@ public class QuickDeployHandler {
                 IStatus.ERROR).open();
     }
 
-    private ExtensionProjectFileStore getMavenProjectFileStore(final ISelection selection,
+    private CustomPageProjectFileStore getMavenProjectFileStore(final ISelection selection,
             RepositoryAccessor repositoryAccessor) {
-        if (selection instanceof IStructuredSelection) {
-            final Object firstSelectedElement = ((IStructuredSelection) selection).getFirstElement();
-            if (firstSelectedElement instanceof IAdaptable) {
+        if (selection instanceof IStructuredSelection s) {
+            final Object firstSelectedElement = s.getFirstElement();
+            if (firstSelectedElement instanceof IAdaptable a) {
                 IDeployable deployable = new FileStoreFinder()
                         .findElementToDeploy(
-                                ((IAdaptable) firstSelectedElement).getAdapter(IResource.class).getProject(),
+                                a.getAdapter(IResource.class).getProject(),
                                 repositoryAccessor.getCurrentRepository().orElseThrow())
                         .orElse(null);
-                if (deployable instanceof ExtensionProjectFileStore) {
-                    return (ExtensionProjectFileStore) deployable;
+                if (deployable instanceof CustomPageProjectFileStore store) {
+                    return store;
                 }
             }
         }

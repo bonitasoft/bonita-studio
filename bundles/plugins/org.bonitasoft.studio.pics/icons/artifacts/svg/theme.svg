@@ -1,0 +1,33 @@
+<svg width="200" height="200" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <mask id="hole">
+      <rect width="100%" height="100%" fill="white"/>
+      <circle cx="100" cy="100" r="40" fill="black"/>
+    </mask>
+    <mask id="hole2">
+      <circle cx="100" cy="100" r="70" fill="white"/>
+      <circle cx="100" cy="100" r="40" fill="black"/>
+    </mask>
+  </defs>
+
+  <g mask="url(#hole)">
+    <path d="M100,100 L100,0 A100,100 0 0,1 170.71,29.29 Z" fill="#e9573f"/>
+    <path d="M100,100 L170.71,29.29 A100,100 0 0,1 200,100 Z" fill="#f6bb42"/>
+    <path d="M100,100 L200,100 A100,100 0 0,1 170.71,170.71 Z" fill="#8cc152"/>
+    <path d="M100,100 L170.71,170.71 A100,100 0 0,1 100,200 Z" fill="#37bc9b"/>
+    <path d="M100,100 L100,200 A100,100 0 0,1 29.29,170.71 Z" fill="#4a89dc"/>
+    <path d="M100,100 L29.29,170.71 A100,100 0 0,1 0,100 Z" fill="#967adc"/>
+    <path d="M100,100 L0,100 A100,100 0 0,1 29.29,29.29 Z" fill="#d770ad"/>
+    <path d="M100,100 L29.29,29.29 A100,100 0 0,1 100,0 Z" fill="#da4453"/>
+  </g>
+  <g mask="url(#hole2)">
+    <path d="M100,100 L100,0 A100,100 0 0,1 170.71,29.29 Z" fill="#FC6E51"/>
+    <path d="M100,100 L170.71,29.29 A100,100 0 0,1 200,100 Z" fill="#FFCE54"/>
+    <path d="M100,100 L200,100 A100,100 0 0,1 170.71,170.71 Z" fill="#A0D468"/>
+    <path d="M100,100 L170.71,170.71 A100,100 0 0,1 100,200 Z" fill="#48CFAD"/>
+    <path d="M100,100 L100,200 A100,100 0 0,1 29.29,170.71 Z" fill="#5D9CEC"/>
+    <path d="M100,100 L29.29,170.71 A100,100 0 0,1 0,100 Z" fill="#AC92EC"/>
+    <path d="M100,100 L0,100 A100,100 0 0,1 29.29,29.29 Z" fill="#EC87C0"/>
+    <path d="M100,100 L29.29,29.29 A100,100 0 0,1 100,0 Z" fill="#ED5565"/>
+  </g>
+</svg>

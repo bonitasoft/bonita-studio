@@ -6,56 +6,37 @@
  * Bonitasoft, 32 rue Gustave Eiffel – 38000 Grenoble
  * or Bonitasoft US, 51 Federal Street, Suite 305, San Francisco, CA 94107
  *******************************************************************************/
-package org.bonitasoft.studio.rest.api.extension.ui.handler;
+package org.bonitasoft.studio.extensions.handler;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.ArgumentMatchers.notNull;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.util.Optional;
-
-import org.bonitasoft.studio.common.repository.RepositoryAccessor;
-import org.bonitasoft.studio.common.repository.core.BonitaProject;
-import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
+import org.bonitasoft.studio.application.ui.control.model.dependency.ArtifactType;
 import org.bonitasoft.studio.maven.i18n.Messages;
-import org.bonitasoft.studio.maven.ui.WidgetFactory;
-import org.bonitasoft.studio.rest.api.extension.core.RestAPIAddressResolver;
 import org.bonitasoft.studio.rest.api.extension.core.repository.RestAPIExtensionFileStore;
 import org.bonitasoft.studio.rest.api.extension.ui.wizard.NewRestAPIExtensionWizard;
-import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.wizard.WizardDialog;
-import org.eclipse.swt.widgets.Shell;
 import org.junit.Test;
 
 public class NewRestAPIExtensionHandlerTest {
 
     @Test
     public void should_open_a_wizard_dialog_with_new_rest_api_wizard() throws Exception {
-        final RepositoryAccessor repositoryAccessor = mock(RepositoryAccessor.class);
-        final NewRestAPIExtensionHandler handler = spy(new NewRestAPIExtensionHandler());
+        final NewExtensionHandler handler = spy(new NewExtensionHandler());
         final NewRestAPIExtensionWizard wizard = mock(NewRestAPIExtensionWizard.class);
-        final WidgetFactory widgetFactory = mock(WidgetFactory.class);
-        final IWorkspace workspace = mock(IWorkspace.class);
-        var metadata = ProjectMetadata.defaultMetadata();
-        var project = mock(BonitaProject.class);
-        when(project.getProjectMetadata(any())).thenReturn(metadata);
-        when(repositoryAccessor.getCurrentProject()).thenReturn(Optional.of(project));
-        doReturn(wizard).when(handler).newWizard(eq(repositoryAccessor),eq(metadata), eq(widgetFactory), eq(workspace),
-                notNull());
+        doReturn(wizard).when(handler).newWizard(eq(ArtifactType.REST_API), any());
         final RestAPIExtensionFileStore fileStore = mock(RestAPIExtensionFileStore.class);
-        when(wizard.getNewFileStore()).thenReturn(fileStore);
+        doReturn(fileStore).when(wizard).getNewFileStore();
         final WizardDialog dialog = mock(WizardDialog.class);
         when(dialog.open()).thenReturn(IDialogConstants.OK_ID);
         doReturn(dialog).when(handler).newWizardDialog(wizard, Messages.create);
-        final RestAPIAddressResolver addressResolver = mock(RestAPIAddressResolver.class);
-        Shell shell = mock(Shell.class);
-        handler.execute(shell, repositoryAccessor, widgetFactory, workspace, addressResolver);
+        handler.execute(ArtifactType.REST_API.name());
 
         verify(dialog).open();
         verify(fileStore).open();

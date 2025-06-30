@@ -24,14 +24,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.Properties;
 
 import org.apache.maven.model.Dependency;
-import org.apache.maven.project.MavenProject;
 import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.studio.application.views.BonitaProjectExplorer;
-import org.bonitasoft.studio.common.extension.properties.ExtensionPagePropertiesReader;
-import org.bonitasoft.studio.common.extension.properties.PagePropertyConstants;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.BuildScheduler;
@@ -52,7 +48,7 @@ import org.bonitasoft.studio.common.ui.PlatformUtil;
 import org.bonitasoft.studio.common.ui.jface.FileActionDialog;
 import org.bonitasoft.studio.common.ui.perspectives.BonitaPerspectivesUtils;
 import org.bonitasoft.studio.maven.operation.BuildCustomPageOperation;
-import org.bonitasoft.studio.maven.operation.ImportCustomPageProjectOperation;
+import org.bonitasoft.studio.maven.operation.ImportExtensionProjectOperation;
 import org.bonitasoft.studio.rest.api.extension.RestAPIExtensionActivator;
 import org.bonitasoft.studio.rest.api.extension.ui.perspective.RestAPIExtensionPerspectiveFactory;
 import org.bonitasoft.studio.ui.i18n.Messages;
@@ -103,15 +99,6 @@ public class ExtensionProjectFileStore<T extends ExtensionProjectDescriptor> ext
         return getParentStore().getResource().getWorkspace().getRoot().getProject(getName());
     }
 
-    public String getPageDisplayName() {
-        try {
-            final ExtensionProjectDescriptor content = getContent();
-            return content.getDisplayName();
-        } catch (final ReadFileStoreException e) {
-            return "";
-        }
-    }
-
     public String getDescription() {
         try {
             final ExtensionProjectDescriptor content = getContent();
@@ -119,24 +106,6 @@ public class ExtensionProjectFileStore<T extends ExtensionProjectDescriptor> ext
         } catch (final ReadFileStoreException e) {
             return "";
         }
-    }
-
-    public String getContentType() {
-        var descriptor = getResource().getFile("src/main/resources/page.properties");
-        if (!descriptor.exists()) {
-            descriptor = getResource().getFile("page.properties");
-        }
-        if (descriptor.exists()) {
-            try (var is = descriptor.getContents()) {
-                var properties = new Properties();
-                properties.load(is);
-                return ExtensionPagePropertiesReader.getProperty(properties, PagePropertyConstants.CONTENT_TYPE)
-                        .orElse(null);
-            } catch (IOException | CoreException e1) {
-                return null;
-            }
-        }
-        return null;
     }
 
     public boolean canBeImported() {
@@ -157,7 +126,7 @@ public class ExtensionProjectFileStore<T extends ExtensionProjectDescriptor> ext
     protected IWorkbenchPart doOpen() {
         final IWorkbenchPage page = getActivePage();
         try {
-            final ExtensionProjectDescriptor raed = getContent();
+            final T raed = getContent();
             AbstractFileStore.refreshExplorerView();
             return openEditors(page, raed);
         } catch (final PartInitException | ReadFileStoreException e) {
@@ -167,7 +136,7 @@ public class ExtensionProjectFileStore<T extends ExtensionProjectDescriptor> ext
         return null;
     }
 
-    protected IWorkbenchPart openEditors(final IWorkbenchPage page, final ExtensionProjectDescriptor descriptor)
+    protected IWorkbenchPart openEditors(final IWorkbenchPage page, final T descriptor)
             throws PartInitException {
         BonitaProjectExplorer explorerView = (BonitaProjectExplorer) getActivePage().findView(BonitaProjectExplorer.ID);
         if (explorerView != null) {
@@ -179,9 +148,6 @@ public class ExtensionProjectFileStore<T extends ExtensionProjectDescriptor> ext
                 IDE.openEditor(page, file);
             }
             editorOpened = true;
-        }
-        if (descriptor.getPropertyFile().exists()) {
-            return IDE.openEditor(page, descriptor.getPropertyFile());
         }
         if (!editorOpened) {
             BonitaPerspectivesUtils
@@ -264,24 +230,26 @@ public class ExtensionProjectFileStore<T extends ExtensionProjectDescriptor> ext
                         activePage.closeEditor(ref.getEditor(false), false);
                     }
                 }
-
-                IProgressMonitor monitor = new NullProgressMonitor();
-                getRepositoryAccessor().getCurrentProject().ifPresent(p -> {
-                    try {
-                        var gav = getGAV();
-                        var dependency = toDependency(gav);
-                        new RemoveDependencyOperation(dependency).run(monitor);
-                        p.removeModule(p.getExtensionsParentProject(), project.getName(), monitor);
-                    } catch (CoreException e) {
-                        BonitaStudioLog.error(e);
-                    }
-
-                });
-
-                project.close(monitor);
-                project.delete(true, true, monitor);
-
             }
+
+            IProgressMonitor monitor = new NullProgressMonitor();
+            var gav = getGAV();
+            // close project before deleting maven module and avoid exception
+            project.close(monitor);
+
+            getRepositoryAccessor().getCurrentProject().ifPresent(p -> {
+                try {
+                    var dependency = toDependency(gav);
+                    new RemoveDependencyOperation(dependency).run(monitor);
+                    p.removeModule(p.getExtensionsParentProject(), project.getName(), monitor);
+                } catch (CoreException e) {
+                    BonitaStudioLog.error(e);
+                }
+
+            });
+
+            project.delete(true, true, monitor);
+
         } catch (CoreException | ReadFileStoreException e) {
             super.doDelete();
         }
@@ -301,31 +269,6 @@ public class ExtensionProjectFileStore<T extends ExtensionProjectDescriptor> ext
         return new BuildCustomPageOperation(getContent());
     }
 
-    public String getPageId() {
-        try {
-            return getContent().getCustomPageName();
-        } catch (final ReadFileStoreException e) {
-            BonitaStudioLog.error(e);
-            return null;
-        }
-    }
-
-    public File getArchiveFile() throws IOException {
-        MavenProject mavenProject;
-        try {
-            mavenProject = getContent().getMavenProject().orElseThrow(
-                    () -> new ReadFileStoreException(String.format("Maven project not found for %s", getName())));
-        } catch (ReadFileStoreException e) {
-            throw new IOException("Failed to retrieve maven project", e);
-        }
-        final File archive = new File(mavenProject.getBasedir(), "target" + File.separatorChar
-                + mavenProject.getArtifactId() + "-" + mavenProject.getVersion() + ".zip");
-        if (!archive.exists()) {
-            throw new FileNotFoundException(archive.getAbsolutePath());
-        }
-        return archive;
-    }
-
     public MavenProjectInfo getMavenProjectInfo() {
         return new MavenProjectInfo(null, getResource().getFile("pom.xml").getLocation().toFile(), null, null);
     }
@@ -337,7 +280,7 @@ public class ExtensionProjectFileStore<T extends ExtensionProjectDescriptor> ext
         }
         final ProjectImportConfiguration projectImportConfiguration = new ProjectImportConfiguration();
         projectImportConfiguration.setProjectNameTemplate("[artifactId]");
-        final ImportCustomPageProjectOperation importRestAPIExtensionProjectOperation = new ImportCustomPageProjectOperation(
+        final ImportExtensionProjectOperation importRestAPIExtensionProjectOperation = new ImportExtensionProjectOperation(
                 this, MavenPlugin.getProjectConfigurationManager(), projectImportConfiguration);
         var job = new WorkspaceJob(String.format("Import %s project", project.getName())) {
 
@@ -446,7 +389,7 @@ public class ExtensionProjectFileStore<T extends ExtensionProjectDescriptor> ext
         try {
             ExtensionProjectDescriptor descriptor = getContent();
             return new GAV(descriptor.getGroupId(), descriptor.getArtifactId(), descriptor.getVersion(),
-                    descriptor.getClassifier(), "zip", null);
+                    descriptor.getClassifier(), null, null);
         } catch (ReadFileStoreException e) {
             BonitaStudioLog.error(e);
             return null;

@@ -35,11 +35,11 @@ import org.osgi.framework.Bundle;
 public abstract class AbstractDefinitionRepositoryStore<T extends EMFFileStore> extends AbstractEMFRepositoryStore<T>
         implements IDefinitionRepositoryStore<T> {
 
-	@Override
-	public void createRepositoryStore(IRepository repository) {
-		this.repository = repository;
-	}
-	
+    @Override
+    public void createRepositoryStore(IRepository repository) {
+        this.repository = repository;
+    }
+
     @Override
     public List<ConnectorDefinition> getDefinitions() {
         return getChildren().stream()
@@ -109,5 +109,10 @@ public abstract class AbstractDefinitionRepositoryStore<T extends EMFFileStore> 
     }
 
     protected abstract Bundle getBundle();
+
+    @Override
+    public int getImportOrder() {
+        return 5;
+    }
 
 }

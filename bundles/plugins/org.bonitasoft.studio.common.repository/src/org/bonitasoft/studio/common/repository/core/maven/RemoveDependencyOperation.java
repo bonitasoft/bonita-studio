@@ -26,42 +26,49 @@ import org.eclipse.core.runtime.IProgressMonitor;
 
 public class RemoveDependencyOperation extends MavenModelOperation {
 
-	private final List<Dependency> dependenciesToRemove;
+    private final List<Dependency> dependenciesToRemove;
 
-	public RemoveDependencyOperation(List<Dependency> dependenciesToRemove) {
-		this.dependenciesToRemove = dependenciesToRemove;
-	}
+    public RemoveDependencyOperation(List<Dependency> dependenciesToRemove) {
+        this.dependenciesToRemove = dependenciesToRemove;
+    }
 
-	public RemoveDependencyOperation(Dependency dependencyToRemove) {
-		this(List.of(dependencyToRemove));
-	}
+    public RemoveDependencyOperation(Dependency dependencyToRemove) {
+        this(List.of(dependencyToRemove));
+    }
 
-	public RemoveDependencyOperation(String groupId, String artifactId, String version, String scope) {
-		this(createDependency(groupId, artifactId, version, scope));
-	}
+    public RemoveDependencyOperation(String groupId, String artifactId, String version, String scope) {
+        this(createDependency(groupId, artifactId, version, scope));
+    }
 
-	@Override
-	public void run(IProgressMonitor monitor) throws CoreException {
-		IProject currentProject = getCurrentProject();
-		var mavenProject = MavenProjectHelper.getMavenProject(currentProject);
-		Model model = readModel(currentProject);
+    @Override
+    public void run(IProgressMonitor monitor) throws CoreException {
+        IProject currentProject = getCurrentProject();
+        var mavenProject = MavenProjectHelper.getMavenProject(currentProject);
+        Model model = readModel(currentProject);
 
-		for (Dependency dep : dependenciesToRemove) {
-			var removed = model.getDependencies()
-					.removeIf(dependency -> new GAV(dependency).isSameAs(new GAV(dep)));
-			if (!removed && Objects.equals(mavenProject.getGroupId(), dep.getGroupId())
-					&& Objects.equals(mavenProject.getVersion(), dep.getVersion())) {
-				var depWithProperties = dep.clone();
-				depWithProperties.setGroupId("${project.groupId}");
-				depWithProperties.setVersion("${project.version}");
-				removed = model.getDependencies()
-						.removeIf(dependency -> Objects.equals(new GAV(dependency), new GAV(depWithProperties)));
-			}
-			getLocalStore().remove(dep);
-			modelUpdated = modelUpdated || removed;
-		}
+        for (Dependency dep : dependenciesToRemove) {
+            var removed = model.getDependencies()
+                    .removeIf(dependency -> new GAV(dependency).isSameAs(new GAV(dep)));
+            if (!removed && Objects.equals(mavenProject.getGroupId(), dep.getGroupId())
+                    && Objects.equals(mavenProject.getVersion(), dep.getVersion())) {
+                var depWithProperties = dep.clone();
+                depWithProperties.setGroupId("${project.groupId}");
+                depWithProperties.setVersion("${project.version}");
+                removed = model.getDependencies()
+                        .removeIf(dependency -> Objects.equals(new GAV(dependency), new GAV(depWithProperties)));
+            }
+            var deleteFromStore = dep.clone();
+            if ("${project.groupId}".equals(deleteFromStore.getGroupId())) {
+                deleteFromStore.setGroupId(mavenProject.getGroupId());
+            }
+            if ("${project.version}".equals(deleteFromStore.getVersion())) {
+                deleteFromStore.setVersion(mavenProject.getVersion());
+            }
+            getLocalStore().remove(deleteFromStore);
+            modelUpdated = modelUpdated || removed;
+        }
 
-		saveModel(currentProject, model, monitor);
-	}
+        saveModel(currentProject, model, monitor);
+    }
 
 }

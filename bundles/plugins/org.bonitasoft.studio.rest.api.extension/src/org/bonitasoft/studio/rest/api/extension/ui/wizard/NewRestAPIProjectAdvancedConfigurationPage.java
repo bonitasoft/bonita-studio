@@ -32,6 +32,7 @@ import org.eclipse.core.databinding.beans.typed.PojoProperties;
 import org.eclipse.core.databinding.conversion.Converter;
 import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.core.databinding.observable.list.IObservableList;
+import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.validation.MultiValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
@@ -99,13 +100,15 @@ public class NewRestAPIProjectAdvancedConfigurationPage extends WizardPage {
 
         final Composite buttonComposite = new Composite(mainComposite, SWT.NONE);
         buttonComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).spacing(3, 3).create());
-        buttonComposite.setLayoutData(GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.FILL).grab(false, true).create());
+        buttonComposite
+                .setLayoutData(GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.FILL).grab(false, true).create());
 
         final Button addButton = widgetFactory.newButton(buttonComposite, Messages.add);
         final Button removeButton = widgetFactory.newButton(buttonComposite, Messages.remove);
 
         final IObservableList input = PojoProperties.list("permissions").observe(configuration);
-        final StringListViewer permissionViewer = new StringListViewer(mainComposite, Messages.permissions, "permission",
+        final StringListViewer permissionViewer = new StringListViewer(mainComposite, Messages.permissions,
+                "permission",
                 widgetFactory);
         permissionViewer.setInput(input);
         context.addValidationStatusProvider(notEmptyPermissionsValidator(input));
@@ -175,8 +178,12 @@ public class NewRestAPIProjectAdvancedConfigurationPage extends WizardPage {
                 GridDataFactory.fillDefaults().grab(true, false).hint(WIDTH_HINT, SWT.DEFAULT).indent(10, 0).create());
 
         final ISWTObservableValue templateTextObservable = WidgetProperties.text(SWT.Modify).observe(pathTemplateText);
+        IObservableValue<String> pathTemplateObservable = PojoProperties
+                .value(RestAPIExtensionArchetypeConfiguration.class,
+                        RestAPIExtensionArchetypeConfiguration.PATH_TEMPLATE_ATTRIBUTE, String.class)
+                .observe(configuration);
         context.bindValue(templateTextObservable,
-                PojoProperties.value("pathTemplate", String.class).observe(configuration),
+                pathTemplateObservable,
                 updateValueStrategy().withValidator(multiValidator()
                         .addValidator(mandatoryValidator(Messages.pathTemplate))
                         .addValidator(forbiddenCharactersValidator(Messages.pathTemplate, '#', '%', '$', ' '))
@@ -193,8 +200,13 @@ public class NewRestAPIProjectAdvancedConfigurationPage extends WizardPage {
         widgetFactory.newLabel(mainComposite, "");
         final Button bdmOptionButton = widgetFactory.newCheckbox(mainComposite, Messages.addBDMDependencies);
         bdmOptionButton.setEnabled(configuration.isEnableBDMDependencies());
-        context.bindValue(org.eclipse.jface.databinding.swt.typed.WidgetProperties.buttonSelection().observe(bdmOptionButton),
-                PojoProperties.value("enableBDMDependencies", Boolean.class).observe(configuration));
+        IObservableValue<Boolean> enableBDMDepObservable = PojoProperties
+                .value(RestAPIExtensionArchetypeConfiguration.class,
+                        RestAPIExtensionArchetypeConfiguration.ENABLE_BDM_DEPENDENCIES_ATRIBUTE, Boolean.class)
+                .observe(configuration);
+        context.bindValue(
+                org.eclipse.jface.databinding.swt.typed.WidgetProperties.buttonSelection().observe(bdmOptionButton),
+                enableBDMDepObservable);
         final ControlDecoration decoration = new ControlDecoration(bdmOptionButton, SWT.RIGHT);
         decoration.setMarginWidth(0);
         decoration.setDescriptionText(Messages.bdmDependenciesHint);

@@ -15,7 +15,7 @@ import org.bonitasoft.studio.maven.ExtensionRepositoryStore;
 import org.bonitasoft.studio.maven.i18n.Messages;
 import org.bonitasoft.studio.maven.operation.BuildAndExportCustomPageOperation;
 import org.bonitasoft.studio.maven.ui.WidgetFactory;
-import org.bonitasoft.studio.maven.ui.handler.CustomPageProjectSelectionProvider;
+import org.bonitasoft.studio.maven.ui.handler.ExtensionProjectSelectionProvider;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.ui.dialog.MultiStatusDialog;
 import org.eclipse.core.databinding.observable.set.IObservableSet;
@@ -27,7 +27,7 @@ import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.wizard.Wizard;
 
-public class BuildCustomPageWizard extends Wizard {
+public class BuildExtensionWizard extends Wizard {
 
     private static final String LAST_TARGET_LOCATION_SETTING = "LAST_TARGET_LOCATION_SETTING";
     private final ExtensionRepositoryStore repositoryStore;
@@ -36,15 +36,15 @@ public class BuildCustomPageWizard extends Wizard {
     private final IObservableValue<String> locationObservable;
     private final DialogSettingsHelper dialogSettingsHelper;
 
-    public BuildCustomPageWizard(ExtensionRepositoryStore repositoryStore,
+    public BuildExtensionWizard(ExtensionRepositoryStore repositoryStore,
             WidgetFactory widgetFactory,
-            CustomPageProjectSelectionProvider selectionProvider) {
+            ExtensionProjectSelectionProvider selectionProvider) {
         this.repositoryStore = repositoryStore;
         this.widgetFactory = widgetFactory;
         selectedFileStoreObservable = new WritableSet<>(Arrays.asList(selectionProvider.getSelection()),
                 ExtensionProjectFileStore.class);
         locationObservable = new WritableValue<>();
-        dialogSettingsHelper = new DialogSettingsHelper(BuildCustomPageWizard.class.getName());
+        dialogSettingsHelper = new DialogSettingsHelper(BuildExtensionWizard.class.getName());
         setDefaultPageImageDescriptor(Pics.getWizban());
         setNeedsProgressMonitor(true);
         setWindowTitle(Messages.buildWizardTitle);

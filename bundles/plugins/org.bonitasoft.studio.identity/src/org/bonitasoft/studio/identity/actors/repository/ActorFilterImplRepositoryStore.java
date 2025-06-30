@@ -14,10 +14,12 @@
  */
 package org.bonitasoft.studio.identity.actors.repository;
 
+import java.io.File;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Set;
 
+import org.bonitasoft.plugin.analyze.report.model.ActorFilterImplementation;
 import org.bonitasoft.studio.common.ModelVersion;
 import org.bonitasoft.studio.common.model.validator.ModelNamespaceValidator;
 import org.bonitasoft.studio.common.model.validator.XMLModelCompatibilityValidator;
@@ -52,10 +54,22 @@ public class ActorFilterImplRepositoryStore extends AbstractConnectorImplReposit
         var projectDependenciesStore = getRepository().getProjectDependenciesStore();
         if (projectDependenciesStore != null) {
             projectDependenciesStore.getActorFilterImplementations().stream()
-                    .map(t -> new DependencyActorFilterImplFileStore(t, this))
+                    .map(this::createImplementationFileStore)
                     .forEach(result::add);
         }
         return result;
+    }
+
+    /**
+     * Creates the actor filter implementation file store.
+     * 
+     * @param implementation the actor filter implementation pointing to artifact (jar file or project)
+     * @return the actor filter implementation file store
+     */
+    protected ActorFilterImplFileStore createImplementationFileStore(ActorFilterImplementation implementation) {
+        File file = new File(implementation.getArtifact().getFile());
+        return file.isFile() ? new DependencyActorFilterImplFileStore(implementation, this)
+                : new ActorFilterImplFileStore(file.getName(), implementation.getJarEntry(), this);
     }
 
     @Override

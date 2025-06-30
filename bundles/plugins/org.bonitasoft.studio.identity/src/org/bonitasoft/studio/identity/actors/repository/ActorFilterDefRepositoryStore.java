@@ -14,12 +14,14 @@
  */
 package org.bonitasoft.studio.identity.actors.repository;
 
+import java.io.File;
 import java.io.InputStream;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.bonitasoft.plugin.analyze.report.model.Definition;
 import org.bonitasoft.studio.common.ModelVersion;
 import org.bonitasoft.studio.common.model.validator.ModelNamespaceValidator;
 import org.bonitasoft.studio.common.model.validator.XMLModelCompatibilityValidator;
@@ -58,6 +60,30 @@ public class ActorFilterDefRepositoryStore extends AbstractDefinitionRepositoryS
     }
 
     @Override
+    public List<ActorFilterDefFileStore> getChildren() {
+        var projectDependenciesStore = getRepository().getProjectDependenciesStore();
+        if (projectDependenciesStore != null) {
+            return projectDependenciesStore.getActorFilterDefinitions().stream()
+                    .map(this::createDefinitionFileStore)
+                    .collect(Collectors.toList());
+        }
+
+        return List.of();
+    }
+
+    /**
+     * Creates the actor filter definition file store.
+     * 
+     * @param definition the actor filter definition pointing to artifact (jar file or project)
+     * @return the actor filter definition file store
+     */
+    protected ActorFilterDefFileStore createDefinitionFileStore(Definition definition) {
+        File file = new File(definition.getArtifact().getFile());
+        return file.isFile() ? new DependencyActorFilterDefFileStore(definition, this)
+                : new ActorFilterDefFileStore(file.getName(), definition.getJarEntry(), this);
+    }
+
+    @Override
     public ActorFilterDefFileStore createRepositoryFileStore(final String fileName) {
         if (fileName.endsWith(DEF_EXT)) {
             return new ActorFilterDefFileStore(fileName, this);
@@ -66,20 +92,17 @@ public class ActorFilterDefRepositoryStore extends AbstractDefinitionRepositoryS
     }
 
     @Override
-    public List<ActorFilterDefFileStore> getChildren() {
-        var projectDependenciesStore = getRepository().getProjectDependenciesStore();
-        if (projectDependenciesStore != null) {
-           return projectDependenciesStore.getActorFilterDefinitions().stream()
-                    .map(t -> new DependencyActorFilterDefFileStore(t, this))
-                    .collect(Collectors.toList());
-        }
-
-        return List.of();
+    public DefinitionResourceProvider getResourceProvider() {
+        return resourceProvider;
     }
 
     @Override
-    public DefinitionResourceProvider getResourceProvider() {
-        return resourceProvider;
+    protected ActorFilterDefFileStore doImportInputStream(final String fileName, final InputStream inputStream) {
+        final ActorFilterDefFileStore definition = super.doImportInputStream(fileName, inputStream);
+        if (definition != null) {
+            resourceProvider.loadDefinitionsCategories(null);
+        }
+        return definition;
     }
 
     @Override
@@ -92,19 +115,9 @@ public class ActorFilterDefRepositoryStore extends AbstractDefinitionRepositoryS
         return extensions;
     }
 
-
     @Override
     protected Bundle getBundle() {
         return IdentityPlugin.getDefault().getBundle();
-    }
-
-    @Override
-    protected ActorFilterDefFileStore doImportInputStream(final String fileName, final InputStream inputStream) {
-        final ActorFilterDefFileStore definition = super.doImportInputStream(fileName, inputStream);
-        if (definition != null) {
-            resourceProvider.loadDefinitionsCategories(null);
-        }
-        return definition;
     }
 
     @Override
@@ -127,11 +140,6 @@ public class ActorFilterDefRepositoryStore extends AbstractDefinitionRepositoryS
                                     filename))).validate(inputStream);
         }
         return super.validate(filename, inputStream);
-    }
-
-    @Override
-    public int getImportOrder() {
-        return 5;
     }
 
 }

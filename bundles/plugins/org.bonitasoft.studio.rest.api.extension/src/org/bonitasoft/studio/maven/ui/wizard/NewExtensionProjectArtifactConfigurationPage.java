@@ -15,11 +15,15 @@ import java.net.URL;
 
 import org.apache.maven.model.Model;
 import org.bonitasoft.studio.common.databinding.validator.EmptyInputValidator;
+import org.bonitasoft.studio.common.databinding.validator.MultiValidatorFactory;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.ui.jface.SWTBotConstants;
 import org.bonitasoft.studio.maven.MavenProjectConfiguration;
 import org.bonitasoft.studio.maven.i18n.Messages;
+import org.bonitasoft.studio.maven.model.ArchetypeConfigurationWithClassName;
+import org.bonitasoft.studio.maven.model.ArchetypeConfigurationWithLanguage;
 import org.bonitasoft.studio.maven.model.CustomPageArchetypeConfiguration;
+import org.bonitasoft.studio.maven.model.ExtensionProjectArchetypeConfiguration;
 import org.bonitasoft.studio.maven.model.RestAPIExtensionArchetypeConfiguration;
 import org.bonitasoft.studio.maven.ui.WidgetFactory;
 import org.bonitasoft.studio.maven.ui.wizard.validator.ArtifactIdValidator;
@@ -28,9 +32,8 @@ import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.beans.typed.PojoProperties;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.SelectObservableValue;
-import org.eclipse.core.databinding.validation.MultiValidator;
 import org.eclipse.core.resources.IWorkspace;
-import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jdt.core.JavaConventions;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
@@ -46,19 +49,27 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Text;
 
-public class NewCustomPageArtifactConfigurationPage extends WizardPage {
+public class NewExtensionProjectArtifactConfigurationPage extends WizardPage {
 
-    private final CustomPageArchetypeConfiguration configuration;
+    /** SWT Bot ID for the class name text field */
+    public static final String SWTBOT_CLASS_NAME_TEXT = "org.bonitasoft.studio.rest.api.extension.ui.wizard.classNameText";
+    /** SWT Bot ID for the package text field */
+    public static final String SWTBOT_PACKAGE_TEXT = "org.bonitasoft.studio.rest.api.extension.ui.wizard.packageText";
+    /** SWT Bot ID for the name text field */
+    public static final String SWTBOT_NAME_TEXT = "org.bonitasoft.studio.rest.api.extension.ui.wizard.nameText";
+    /** SWT Bot ID for the artifact ID text field */
+    public static final String SWTBOT_ARTIFACT_ID_TEXT = "org.bonitasoft.studio.rest.api.extension.ui.wizard.artifactIdText";
+    private final ExtensionProjectArchetypeConfiguration configuration;
     private final WidgetFactory widgetFactory;
     private final MavenProjectConfiguration projectConfiguration;
     private final IWorkspace workspace;
     private String helpLinkURL;
 
-    public NewCustomPageArtifactConfigurationPage(WidgetFactory widgetFactory,
-            CustomPageArchetypeConfiguration configuration,
+    public NewExtensionProjectArtifactConfigurationPage(WidgetFactory widgetFactory,
+            ExtensionProjectArchetypeConfiguration configuration,
             MavenProjectConfiguration projectConfiguration,
             IWorkspace workspace) {
-        super(NewCustomPageArtifactConfigurationPage.class.getName());
+        super(NewExtensionProjectArtifactConfigurationPage.class.getName());
         this.configuration = configuration;
         this.widgetFactory = widgetFactory;
         this.projectConfiguration = projectConfiguration;
@@ -80,7 +91,9 @@ public class NewCustomPageArtifactConfigurationPage extends WizardPage {
             link.addListener(SWT.Selection, event -> openBrowser(helpLinkURL));
         }
 
-        createPortalGroup(mainComposite, context);
+        if (configuration instanceof CustomPageArchetypeConfiguration) {
+            createPortalGroup(mainComposite, context);
+        }
         createMavenGroup(mainComposite, context);
 
         setControl(mainComposite);
@@ -96,30 +109,20 @@ public class NewCustomPageArtifactConfigurationPage extends WizardPage {
 
     protected void createMavenGroup(final Composite mainComposite, final DataBindingContext context) {
         final Group mavenGroup = new Group(mainComposite, SWT.NONE);
-        mavenGroup.setText("Project");
+        mavenGroup.setText(Messages.project);
         mavenGroup.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(10, 10).create());
         mavenGroup.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 
-     
-        var apiNameObservable = createArtifactIdControl(mavenGroup, context);
+        createArtifactIdControl(mavenGroup, context);
         createPackageControl(mavenGroup, context);
-        
-        if(configuration instanceof RestAPIExtensionArchetypeConfiguration) {
+
+        if (configuration instanceof ArchetypeConfigurationWithClassName) {
+            createClassNameControl(mavenGroup, context);
+        }
+
+        if (configuration instanceof ArchetypeConfigurationWithLanguage) {
             createLanguageControl(mavenGroup, context);
         }
-        
-        context.addValidationStatusProvider(new MultiValidator() {
-
-            @Override
-            protected IStatus validate() {
-                final Model model = new Model();
-                model.setArtifactId((String) apiNameObservable.getValue());
-                model.setGroupId(configuration.getGroupId());
-                model.setVersion(configuration.getVersion());
-                return projectConfiguration.validateProjectName(model);
-            }
-
-        });
     }
 
     protected void createPortalGroup(final Composite mainComposite, final DataBindingContext context) {
@@ -145,8 +148,12 @@ public class NewCustomPageArtifactConfigurationPage extends WizardPage {
                 e.doit = true;
             }
         });
+        IObservableValue<String> descriptionObservable = PojoProperties
+                .value(CustomPageArchetypeConfiguration.class,
+                        CustomPageArchetypeConfiguration.PAGE_DESCRIPTION_ATTRIBUTE, String.class)
+                .observe((CustomPageArchetypeConfiguration) configuration);
         context.bindValue(WidgetProperties.text(SWT.Modify).observe(descriptionText),
-                PojoProperties.value("pageDescription").observe(configuration),
+                descriptionObservable,
                 updateValueStrategy().withValidator(new EmptyInputValidator(Messages.description)).create(),
                 null);
     }
@@ -154,63 +161,111 @@ public class NewCustomPageArtifactConfigurationPage extends WizardPage {
     protected void createNameControl(final Composite mainComposite, final DataBindingContext context) {
         widgetFactory.newLabel(mainComposite, Messages.name);
         final Text nameText = widgetFactory.newText(mainComposite);
-        nameText.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY,
-                "org.bonitasoft.studio.rest.api.extension.ui.wizard.nameText");
+        nameText.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, SWTBOT_NAME_TEXT);
+        IObservableValue<String> displayNameObservable = PojoProperties
+                .value(CustomPageArchetypeConfiguration.class,
+                        CustomPageArchetypeConfiguration.PAGE_DISPLAY_NAME_ATTRIBUTE, String.class)
+                .observe((CustomPageArchetypeConfiguration) configuration);
         context.bindValue(WidgetProperties.text(SWT.Modify).observe(nameText),
-                PojoProperties.value("pageDisplayName").observe(configuration),
+                displayNameObservable,
                 updateValueStrategy().withValidator(new EmptyInputValidator(Messages.name)).create(),
                 null);
     }
 
-  
-
-    protected IObservableValue createArtifactIdControl(final Composite mainComposite,
+    protected IObservableValue<String> createArtifactIdControl(final Composite mainComposite,
             final DataBindingContext context) {
         widgetFactory.newLabel(mainComposite, Messages.projectName);
         final Text nameText = widgetFactory.newText(mainComposite);
-        nameText.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY,
-                "org.bonitasoft.studio.rest.api.extension.ui.wizard.artifactIdText");
+        nameText.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, SWTBOT_ARTIFACT_ID_TEXT);
         widgetFactory.createHintDecorator(nameText, SWT.LEFT, Messages.projectNameHint);
 
-        final IObservableValue apiNameObservable = PojoProperties.value("pageName").observe(configuration);
+        final IObservableValue<String> projectNameObservable = PojoProperties
+                .value(ExtensionProjectArchetypeConfiguration.class,
+                        ExtensionProjectArchetypeConfiguration.PROJECT_NAME_ATTRIBUTE, String.class)
+                .observe(configuration);
+        var multivalidator = MultiValidatorFactory.multiValidator()
+                .addValidator(new ArtifactIdValidator(workspace, Messages.projectName))
+                .addValidator(value -> {
+                    final Model model = new Model();
+                    model.setArtifactId(value.toString());
+                    model.setGroupId(configuration.getGroupId());
+                    model.setVersion(configuration.getVersion());
+                    return projectConfiguration.validateProjectName(model);
+                }).create();
         context.bindValue(WidgetProperties.text(SWT.Modify).observe(nameText),
-                apiNameObservable,
-                updateValueStrategy().withValidator(new ArtifactIdValidator(workspace, Messages.projectName)).create(),
+                projectNameObservable,
+                updateValueStrategy().withValidator(multivalidator).create(),
                 null);
-        return apiNameObservable;
+        return projectNameObservable;
     }
 
-    protected IObservableValue createPackageControl(final Composite mainComposite, final DataBindingContext context) {
+    protected IObservableValue<String> createPackageControl(final Composite mainComposite,
+            final DataBindingContext context) {
         widgetFactory.newLabel(mainComposite, Messages.packageLabel);
         final Text groupIdText = widgetFactory.newText(mainComposite);
-        groupIdText.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY,
-                "org.bonitasoft.studio.rest.api.extension.ui.wizard.packageText");
+        groupIdText.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, SWTBOT_PACKAGE_TEXT);
 
-        final IObservableValue packageObservable = PojoProperties.value("javaPackage").observe(configuration);
+        final IObservableValue<String> packageObservable = PojoProperties
+                .value(ExtensionProjectArchetypeConfiguration.class,
+                        ExtensionProjectArchetypeConfiguration.JAVA_PACKAGE_ATTRIBUTE, String.class)
+                .observe(configuration);
         context.bindValue(WidgetProperties.text(SWT.Modify).observe(groupIdText),
                 packageObservable,
-                updateValueStrategy().withValidator(p -> JavaConventions.validatePackageName((String) p, JavaCore.VERSION_17, JavaCore.VERSION_17)).create(),
+                updateValueStrategy().withValidator(
+                        p -> JavaConventions.validatePackageName((String) p, JavaCore.VERSION_17, JavaCore.VERSION_17))
+                        .create(),
                 null);
         return packageObservable;
     }
-    
+
+    protected IObservableValue<String> createClassNameControl(final Composite mainComposite,
+            final DataBindingContext context) {
+        widgetFactory.newLabel(mainComposite, Messages.classNameLabel);
+        final Text groupIdText = widgetFactory.newText(mainComposite);
+        groupIdText.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, SWTBOT_CLASS_NAME_TEXT);
+
+        final IObservableValue<String> packageObservable = PojoProperties
+                .value(ArchetypeConfigurationWithClassName.class,
+                        ArchetypeConfigurationWithClassName.CLASS_NAME_ATTRIBUTE, String.class)
+                .observe((ArchetypeConfigurationWithClassName) configuration);
+        context.bindValue(WidgetProperties.text(SWT.Modify).observe(groupIdText),
+                packageObservable,
+                updateValueStrategy().withValidator(
+                        c -> {
+                            if (((String) c).contains(".")) {
+                                return Status.error(Messages.classNameMustNotBeQualified);
+                            } else {
+                                return JavaConventions.validateJavaTypeName((String) c, JavaCore.VERSION_17,
+                                        JavaCore.VERSION_17, JavaCore.DISABLED);
+                            }
+                        })
+                        .create(),
+                null);
+        return packageObservable;
+    }
+
     private void createLanguageControl(Composite mainComposite, DataBindingContext context) {
         widgetFactory.newLabel(mainComposite, Messages.language);
         final Composite radioGroup = new Composite(mainComposite, SWT.NONE);
         radioGroup.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
         radioGroup.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).indent(10, 0).create());
-        
+
         Button groovyButton = new Button(radioGroup, SWT.RADIO);
         groovyButton.setText(Messages.groovy);
         Button javaButton = new Button(radioGroup, SWT.RADIO);
         javaButton.setText(Messages.java);
-       
-        
+
         SelectObservableValue<String> languageSelectObservable = new SelectObservableValue<>();
-        languageSelectObservable.addOption(RestAPIExtensionArchetypeConfiguration.GROOVY_LANGUAGE, WidgetProperties.buttonSelection().observe(groovyButton));
-        languageSelectObservable.addOption(RestAPIExtensionArchetypeConfiguration.JAVA_LANGUAGE, WidgetProperties.buttonSelection().observe(javaButton));
-       
-        context.bindValue(languageSelectObservable, PojoProperties.value("language", String.class).observe(configuration));
+        languageSelectObservable.addOption(RestAPIExtensionArchetypeConfiguration.GROOVY_LANGUAGE,
+                WidgetProperties.buttonSelection().observe(groovyButton));
+        languageSelectObservable.addOption(RestAPIExtensionArchetypeConfiguration.JAVA_LANGUAGE,
+                WidgetProperties.buttonSelection().observe(javaButton));
+
+        context.bindValue(languageSelectObservable,
+                PojoProperties
+                        .value(ArchetypeConfigurationWithLanguage.class,
+                                ArchetypeConfigurationWithLanguage.LANGUAGE_ATTRIBUTE, String.class)
+                        .observe((ArchetypeConfigurationWithLanguage) configuration));
     }
 
     public void setHelpLinkURL(String helpLinkURL) {
