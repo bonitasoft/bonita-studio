@@ -18,10 +18,16 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.bonitasoft.bpm.model.process.AbstractProcess;
+import org.bonitasoft.bpm.model.process.BusinessObjectData;
+import org.bonitasoft.bpm.model.process.Data;
+import org.bonitasoft.bpm.model.process.DataAware;
+import org.bonitasoft.bpm.model.process.Element;
+import org.bonitasoft.bpm.model.process.Lane;
+import org.bonitasoft.bpm.model.process.ProcessPackage;
 import org.bonitasoft.studio.common.IBonitaVariableContext;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.ui.jface.CustomWizardDialog;
 import org.bonitasoft.studio.common.ui.jface.DataStyledTreeLabelProvider;
 import org.bonitasoft.studio.common.ui.jface.SWTBotConstants;
@@ -33,13 +39,6 @@ import org.bonitasoft.studio.data.i18n.Messages;
 import org.bonitasoft.studio.data.ui.wizard.DataWizard;
 import org.bonitasoft.studio.data.ui.wizard.DataWizardDialog;
 import org.bonitasoft.studio.data.ui.wizard.MoveDataWizard;
-import org.bonitasoft.bpm.model.process.AbstractProcess;
-import org.bonitasoft.bpm.model.process.BusinessObjectData;
-import org.bonitasoft.bpm.model.process.Data;
-import org.bonitasoft.bpm.model.process.DataAware;
-import org.bonitasoft.bpm.model.process.Element;
-import org.bonitasoft.bpm.model.process.Lane;
-import org.bonitasoft.bpm.model.process.ProcessPackage;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.operations.OperationHistoryFactory;
 import org.eclipse.core.databinding.UpdateValueStrategy;
@@ -53,9 +52,9 @@ import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.emf.databinding.edit.EMFEditObservables;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.jface.databinding.viewers.ObservableListContentProvider;
-import org.eclipse.jface.databinding.viewers.ViewersObservables;
+import org.eclipse.jface.databinding.viewers.typed.ViewerProperties;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -362,9 +361,9 @@ public abstract class AbstractDataSection extends AbstractBonitaDescriptionSecti
 
             });
 
-            context.bindValue(SWTObservables.observeEnabled(updateDataButton), ViewersObservables.observeSingleSelection(dataTableViewer),
+            context.bindValue(WidgetProperties.enabled().observe(updateDataButton), ViewerProperties.singleSelection().observe(dataTableViewer),
                     new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER), enableStrategy);
-            context.bindValue(SWTObservables.observeEnabled(removeDataButton), ViewersObservables.observeSingleSelection(dataTableViewer),
+            context.bindValue(WidgetProperties.enabled().observe(removeDataButton), ViewerProperties.singleSelection().observe(dataTableViewer),
                     new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER), enableStrategy);
 
             if (promoteDataButton != null) {
@@ -377,7 +376,7 @@ public abstract class AbstractDataSection extends AbstractBonitaDescriptionSecti
                     }
 
                 });
-                context.bindValue(SWTObservables.observeEnabled(promoteDataButton), ViewersObservables.observeSingleSelection(dataTableViewer),
+                context.bindValue(WidgetProperties.enabled().observe(promoteDataButton), ViewerProperties.singleSelection().observe(dataTableViewer),
                         new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER), enableMoveStrategy);
             }
 

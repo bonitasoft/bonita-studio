@@ -52,6 +52,8 @@ import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.m2e.core.MavenPlugin;
 
+import com.google.common.base.Objects;
+
 public class BonitaProjectImpl implements BonitaProject {
 
     private String id;
@@ -81,7 +83,10 @@ public class BonitaProjectImpl implements BonitaProject {
 
     private Model getMavenModel() throws CoreException {
         var appProject = getAppProject();
-        var mavenFacade = MavenPlugin.getMavenProjectRegistry().create(appProject, new NullProgressMonitor());
+        var mavenFacade = MavenPlugin.getMavenProjectRegistry().getProjects().stream()
+                .filter(facade -> Objects.equal(appProject, facade.getProject()))
+                .findFirst()
+                .orElse(null);
         if (mavenFacade != null && mavenFacade.getMavenProject() != null) {
             return mavenFacade.getMavenProject().getModel();
         }
@@ -173,7 +178,7 @@ public class BonitaProjectImpl implements BonitaProject {
     public void refresh(IProgressMonitor monitor) throws CoreException {
         refresh(false, monitor);
     }
-    
+
     @Override
     public void refresh(boolean updateConfiguration, IProgressMonitor monitor) throws CoreException {
         monitor.beginTask(Messages.refresh, IProgressMonitor.UNKNOWN);
@@ -282,11 +287,11 @@ public class BonitaProjectImpl implements BonitaProject {
         }
         gitProject.commitAll(commitMessage, monitor);
     }
-    
+
     @Override
     public void addModule(IProject parentProject, String module, IProgressMonitor monitor) throws CoreException {
         var parentModel = MavenProjectHelper.getMavenModel(parentProject);
-        if(parentModel != null && parentModel.getModules().stream().noneMatch(module::equals)) {
+        if (parentModel != null && parentModel.getModules().stream().noneMatch(module::equals)) {
             parentModel.getModules().add(module);
             MavenProjectHelper.saveModel(parentProject, parentModel, new NullProgressMonitor());
         }
@@ -302,7 +307,7 @@ public class BonitaProjectImpl implements BonitaProject {
             moduleFolder.delete(true, new NullProgressMonitor());
         }
     }
-    
+
     @Override
     public IScopeContext getScopeContext() {
         return new ProjectScope(getAppProject());

@@ -14,6 +14,8 @@ import java.util.zip.CRC32;
 import java.util.zip.CheckedInputStream;
 import java.util.zip.ZipEntry;
 
+import org.apache.commons.io.input.UnixLineEndingInputStream;
+import org.apache.commons.io.input.WindowsLineEndingInputStream;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.model.ConflictStatus;
 import org.bonitasoft.studio.common.model.ImportAction;
@@ -42,7 +44,7 @@ public class ImportConflictsChecker {
 
     public ImportArchiveModel checkConflicts(BosArchive bosArchive, IProgressMonitor monitor) throws IOException {
         final ImportArchiveModel importModel = bosArchive.toImportModel(repository, monitor);
-        if(repository.getProject() != null) {
+        if (repository.getProject() != null) {
             performAnalysis(bosArchive, importModel, monitor);
         }
         return importModel;
@@ -59,27 +61,30 @@ public class ImportConflictsChecker {
 
     private void compareStore(AbstractFolderModel importedStore, BosArchive bosArchive) {
         repository.getAllStores().stream()
-                .filter(aStoreInCurrentRepo -> Objects.equals(aStoreInCurrentRepo.getName(), importedStore.getFolderName()) || ("extensions".equals(aStoreInCurrentRepo.getName()) && isLegacyApiOrThemeStore(importedStore.getFolderName())))
+                .filter(aStoreInCurrentRepo -> Objects.equals(aStoreInCurrentRepo.getName(),
+                        importedStore.getFolderName())
+                        || ("extensions".equals(aStoreInCurrentRepo.getName())
+                                && isLegacyApiOrThemeStore(importedStore.getFolderName())))
                 .findFirst()
                 .ifPresent(storeInCurrentRepo -> {
                     if (Objects.equals(storeInCurrentRepo.getName(),
                             DatabaseConnectorPropertiesRepositoryStore.STORE_NAME)) {
                         compareDatabaseConnectorProperties(storeInCurrentRepo, importedStore, bosArchive);
-                    } else if(storeInCurrentRepo.getResource() != null) {
+                    } else if (storeInCurrentRepo.getResource() != null) {
                         final File file = storeInCurrentRepo.getResource().getLocation().toFile();
                         File[] files = file.listFiles();
-                        if(files == null) {
+                        if (files == null) {
                             files = new File[0];
                         }
                         compareFolders(bosArchive, files, importedStore.getFolders());
                         compareFiles(bosArchive, files, importedStore.getFiles());
                     }
                 });
-        
-        if(importedStore instanceof SourceFolderStoreModel) {
+
+        if (importedStore instanceof SourceFolderStoreModel) {
             final File file = repository.getProject().getFolder("src").getLocation().toFile();
             File[] files = file.listFiles();
-            if(files == null) {
+            if (files == null) {
                 files = new File[0];
             }
             compareFolders(bosArchive, files, importedStore.getFolders());
@@ -92,13 +97,15 @@ public class ImportConflictsChecker {
     }
 
     // We can't use checksum to compare .properties file because there is always a comment with the creation date at the top of the .properties file -> always conflicting. 
-    protected void compareDatabaseConnectorProperties(IRepositoryStore<? extends IRepositoryFileStore> storeInCurrentRepo,
+    protected void compareDatabaseConnectorProperties(
+            IRepositoryStore<? extends IRepositoryFileStore> storeInCurrentRepo,
             AbstractFolderModel importedStore, BosArchive bosArchive) {
         List<DatabaseConnectorPropertiesFileStore> currentPropertiesFiles = (List<DatabaseConnectorPropertiesFileStore>) storeInCurrentRepo
                 .getChildren();
         importedStore.getFiles().stream()
                 .forEach(importedPropertiesFile -> {
-                    findConflinctingDatabaseConnectorPropertiesInCurrentRepo(importedPropertiesFile, currentPropertiesFiles,
+                    findConflinctingDatabaseConnectorPropertiesInCurrentRepo(importedPropertiesFile,
+                            currentPropertiesFiles,
                             bosArchive).ifPresent(currentPropertiesFile -> {
                                 compareConflinctingDatabaseConnectorPropertiesfiles(bosArchive, importedPropertiesFile,
                                         currentPropertiesFile);
@@ -135,7 +142,7 @@ public class ImportConflictsChecker {
             BonitaStudioLog.error(
                     "An error occured while comparing databaseConnectorProperties during import", e);
             importedPropertiesFile.setStatus(ConflictStatus.CONFLICTING);
-        } ;
+        }
     }
 
     private void compareFolders(BosArchive bosArchive, File[] foldersFromCurrentRepo,
@@ -146,7 +153,7 @@ public class ImportConflictsChecker {
                         .forEach(folderInCurrentRepo -> {
                             if (Objects.equals(folderInCurrentRepo.getName(), folderFromArchive.getFolderName())) {
                                 File[] files = folderInCurrentRepo.listFiles();
-                                if(files == null) {
+                                if (files == null) {
                                     files = new File[0];
                                 }
                                 compareFolders(bosArchive, files, folderFromArchive.getFolders());
@@ -155,7 +162,8 @@ public class ImportConflictsChecker {
                         }));
     }
 
-    private void compareFiles(BosArchive bosArchive, File[] filesFromCurrentRepo, List<AbstractFileModel> filesFromArchive) {
+    private void compareFiles(BosArchive bosArchive, File[] filesFromCurrentRepo,
+            List<AbstractFileModel> filesFromArchive) {
         filesFromArchive.stream().forEach(fileFromArchive -> Stream.of(filesFromCurrentRepo)
                 .filter(File::isFile)
                 .filter(conflictingFileName(fileFromArchive))
@@ -195,12 +203,43 @@ public class ImportConflictsChecker {
 
     private boolean differentChecksum(AbstractFileModel fileFromArchive, File fileInCurrentRepo,
             BosArchive bosArchive) {
-        return bosArchive.getEntry(fileFromArchive.getPath())
-                .getCrc() != computeChecksum(fileInCurrentRepo);
+        var lineEndingToUse = LineEnding.INDIFFERENT;
+        try (var zipStream = bosArchive.getZipFile().getInputStream(bosArchive.getEntry(fileFromArchive.getPath()));) {
+            var nextChar = zipStream.read();
+            var previousChar = -1;
+            while (nextChar != '\n' && nextChar != -1) {
+                previousChar = nextChar;
+                nextChar = zipStream.read();
+            }
+            lineEndingToUse = (previousChar == '\r') ? LineEnding.WINDOWS : LineEnding.UNIX;
+        } catch (IOException e) {
+            // just ignore the line termination subtility
+        }
+        return bosArchive.getEntry(fileFromArchive.getPath()).getCrc() != computeChecksum(fileInCurrentRepo,
+                lineEndingToUse);
     }
 
-    private long computeChecksum(File file) {
-        try (CheckedInputStream contentStream = new CheckedInputStream(new FileInputStream(file), new CRC32())) {
+    private enum LineEnding {
+
+        WINDOWS, UNIX, INDIFFERENT;
+
+        public InputStream arrangeStream(InputStream stream) {
+            switch (this) {
+                case WINDOWS:
+                    return new WindowsLineEndingInputStream(stream, false);
+                case UNIX:
+                    return new UnixLineEndingInputStream(stream, false);
+                case INDIFFERENT:
+                default:
+                    return stream;
+            }
+        }
+    }
+
+    private long computeChecksum(File file, LineEnding lineEndingToUse) {
+        try (CheckedInputStream contentStream = new CheckedInputStream(
+                lineEndingToUse.arrangeStream(new FileInputStream(file)),
+                new CRC32())) {
             final byte[] readBuffer = new byte[128];
             int read = contentStream.read(readBuffer);
             while (read != -1) {

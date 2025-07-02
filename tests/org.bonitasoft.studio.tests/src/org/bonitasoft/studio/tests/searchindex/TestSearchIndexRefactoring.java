@@ -44,6 +44,7 @@ import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.IProgressService;
 import org.junit.After;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -51,19 +52,25 @@ public class TestSearchIndexRefactoring {
 
     @Rule
     public InitialProjectRule projectRule = InitialProjectRule.INSTANCE;
-    
+
     private static final String DIAGRAM_NAME = "searchIndexRefactoringTest-1.0.bos";
     private static final String MAIN_PROCESS_NAME = "searchIndexRefactoringTest";
     private static final String SEARCH_INDEX_1 = "search1";
     private static final String SEARCH_INDEX_2 = "search2";
     private static final String NEW_SEARCH_INDEX_VALUE = "searchRefactored";
 
-    private final DiagramRepositoryStore store = RepositoryManager.getInstance()
-            .getRepositoryStore(DiagramRepositoryStore.class);
+    private DiagramRepositoryStore store;
+
+    @Before
+    public void getDiagramStore() {
+        // get repository store after the initial project rule has executed.
+        store = RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
+    }
 
     @Test
     public void testSearchIndexRefactoring()
-            throws IOException, InvocationTargetException, InterruptedException, ExecutionException, ReadFileStoreException {
+            throws IOException, InvocationTargetException, InterruptedException, ExecutionException,
+            ReadFileStoreException {
         final MainProcess mainProcess = importDiagramAndOpen();
         final Pool pool = getPool(mainProcess);
         final List<SearchIndex> searchIndexes = getSearchIndexes(pool);
@@ -74,7 +81,8 @@ public class TestSearchIndexRefactoring {
 
     }
 
-    private MainProcess importDiagramAndOpen() throws IOException, InvocationTargetException, InterruptedException, ReadFileStoreException {
+    private MainProcess importDiagramAndOpen()
+            throws IOException, InvocationTargetException, InterruptedException, ReadFileStoreException {
         RepositoryAccessor repositoryAccessor = RepositoryManager.getInstance().getAccessor();
         final ImportBosArchiveOperation op = new ImportBosArchiveOperation(repositoryAccessor);
         final URL fileURL1 = FileLocator.toFileURL(TestRunSearchIndex.class.getResource(DIAGRAM_NAME));
@@ -126,11 +134,13 @@ public class TestSearchIndexRefactoring {
         refactorOperation.addItemToRefactor(copy, searchIndexToRefactor);
         refactorOperation.run(AbstractRepository.NULL_PROGRESS_MONITOR);
         final String newLeftOperandValue = operationUsingSearchIndex.getLeftOperand().getContent();
-        assertEquals("refactoring of " + oldName + " was not completed correctly", NEW_SEARCH_INDEX_VALUE, newLeftOperandValue);
+        assertEquals("refactoring of " + oldName + " was not completed correctly", NEW_SEARCH_INDEX_VALUE,
+                newLeftOperandValue);
         assertEquals("the value of " + searchIndex2Name + " should not have changed", searchIndex2Name,
                 searchIndexes.get(1).getName().getName());
         final String leftOperandValueofOperation2 = operations.get(1).getLeftOperand().getContent();
-        assertEquals("the value of " + searchIndex2Name + " should not have changed in operation on step1", searchIndex2Name,
+        assertEquals("the value of " + searchIndex2Name + " should not have changed in operation on step1",
+                searchIndex2Name,
                 leftOperandValueofOperation2);
     }
 
@@ -144,7 +154,8 @@ public class TestSearchIndexRefactoring {
         undoCommand.execute(new ExecutionEvent());
         assertEquals("the undo operation on search index refactoring wasn't executed correctly", SEARCH_INDEX_1,
                 searchIndexRefactoredToUndo.getName().getName());
-        assertEquals("the undo operation on search index references refactoring wasn't executed correctly", SEARCH_INDEX_1,
+        assertEquals("the undo operation on search index references refactoring wasn't executed correctly",
+                SEARCH_INDEX_1,
                 operationUsingSearchIndex
                         .getLeftOperand().getName());
         assertEquals("the undo operation affected other search index", SEARCH_INDEX_2,

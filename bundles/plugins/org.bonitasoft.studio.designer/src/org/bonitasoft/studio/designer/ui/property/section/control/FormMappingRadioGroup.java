@@ -17,15 +17,15 @@ package org.bonitasoft.studio.designer.ui.property.section.control;
 import static org.bonitasoft.studio.common.ui.jface.databinding.UpdateStrategyFactory.neverUpdateValueStrategy;
 import static org.bonitasoft.studio.common.ui.jface.databinding.UpdateStrategyFactory.updateValueStrategy;
 
+import org.bonitasoft.bpm.model.process.FormMappingType;
+import org.bonitasoft.bpm.model.process.ProcessPackage;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.ui.jface.databinding.CustomEMFEditObservables;
 import org.bonitasoft.studio.common.ui.widgets.CustomStackLayout;
 import org.bonitasoft.studio.designer.i18n.Messages;
-import org.bonitasoft.bpm.model.process.FormMappingType;
-import org.bonitasoft.bpm.model.process.ProcessPackage;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.eclipse.core.databinding.DataBindingContext;
-import org.eclipse.core.databinding.beans.PojoObservables;
+import org.eclipse.core.databinding.beans.typed.PojoProperties;
 import org.eclipse.core.databinding.conversion.Converter;
 import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.core.databinding.observable.Realm;
@@ -33,7 +33,7 @@ import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.SelectObservableValue;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
-import org.eclipse.jface.databinding.swt.WidgetProperties;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
@@ -73,9 +73,10 @@ public class FormMappingRadioGroup implements BonitaPreferenceConstants {
         noneRadio.setLayoutData(GridDataFactory.swtDefaults().align(SWT.LEFT, SWT.CENTER).create());
 
         mappingTypeObservable = new SelectObservableValue(FormMappingType.class);
-        mappingTypeObservable.addOption(FormMappingType.NONE, WidgetProperties.selection().observe(noneRadio));
-        mappingTypeObservable.addOption(FormMappingType.INTERNAL, WidgetProperties.selection().observe(uiDesignerRadio));
-        mappingTypeObservable.addOption(FormMappingType.URL, WidgetProperties.selection().observe(externalRadio));
+        mappingTypeObservable.addOption(FormMappingType.NONE, WidgetProperties.buttonSelection().observe(noneRadio));
+        mappingTypeObservable.addOption(FormMappingType.INTERNAL,
+                WidgetProperties.buttonSelection().observe(uiDesignerRadio));
+        mappingTypeObservable.addOption(FormMappingType.URL, WidgetProperties.buttonSelection().observe(externalRadio));
 
         final Composite stackedComposite = widgetFactory.createComposite(mainComposite);
         stackedComposite.setLayoutData(GridDataFactory.swtDefaults().grab(true, false).span(4, 1).create());
@@ -102,7 +103,7 @@ public class FormMappingRadioGroup implements BonitaPreferenceConstants {
     }
 
     public void doBindControl(final DataBindingContext context, final IObservableValue formMappingObservable) {
-        context.bindValue(PojoObservables.observeValue(stackLayout, "topControl"), mappingTypeObservable,
+        context.bindValue(PojoProperties.value("topControl").observe(stackLayout), mappingTypeObservable,
                 neverUpdateValueStrategy().create(),
                 updateValueStrategy()
                         .withConverter(mappingTypeToCompositeConverter()).create());

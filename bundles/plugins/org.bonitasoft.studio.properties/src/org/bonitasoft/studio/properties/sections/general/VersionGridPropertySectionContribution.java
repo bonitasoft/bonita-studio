@@ -16,13 +16,13 @@ package org.bonitasoft.studio.properties.sections.general;
 
 import java.util.Optional;
 
+import org.bonitasoft.bpm.model.process.AbstractProcess;
+import org.bonitasoft.bpm.model.process.Lane;
+import org.bonitasoft.bpm.model.process.ProcessPackage;
 import org.bonitasoft.studio.common.databinding.validator.EAttributeValidatorFactory;
 import org.bonitasoft.studio.common.ui.properties.ExtensibleGridPropertySection;
 import org.bonitasoft.studio.common.ui.properties.IExtensibleGridPropertySectionContribution;
 import org.bonitasoft.studio.common.ui.widgets.GTKStyleHandler;
-import org.bonitasoft.bpm.model.process.AbstractProcess;
-import org.bonitasoft.bpm.model.process.Lane;
-import org.bonitasoft.bpm.model.process.ProcessPackage;
 import org.bonitasoft.studio.properties.i18n.Messages;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.validation.IValidator;
@@ -34,7 +34,7 @@ import org.eclipse.emf.databinding.edit.EMFEditObservables;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.jface.databinding.swt.ISWTObservableValue;
-import org.eclipse.jface.databinding.swt.WidgetProperties;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.SWT;
@@ -60,7 +60,7 @@ public class VersionGridPropertySectionContribution implements IExtensibleGridPr
         }
         text.setEnabled(false);
 
-        ISWTObservableValue observable = WidgetProperties.text(SWT.Modify).observe(text);
+        var observable = WidgetProperties.text(SWT.Modify).observe(text);
         context.bindValue(observable,
                 EMFEditObservables.observeValue(editingDomain, process,
                         ProcessPackage.Literals.ABSTRACT_PROCESS__VERSION));

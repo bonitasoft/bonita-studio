@@ -14,7 +14,7 @@
  */
 package org.bonitasoft.studio.document.handler;
 
-import javax.inject.Named;
+import jakarta.inject.Named;
 
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.document.ui.dialog.ManageResourceDialog;

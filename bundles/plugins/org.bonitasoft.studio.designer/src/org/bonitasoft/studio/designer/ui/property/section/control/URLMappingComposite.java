@@ -14,16 +14,16 @@
  */
 package org.bonitasoft.studio.designer.ui.property.section.control;
 
-import org.bonitasoft.studio.common.ui.jface.databinding.CustomEMFEditObservables;
-import org.bonitasoft.studio.designer.i18n.Messages;
 import org.bonitasoft.bpm.model.process.FormMappingType;
 import org.bonitasoft.bpm.model.process.ProcessPackage;
+import org.bonitasoft.studio.common.ui.jface.databinding.CustomEMFEditObservables;
+import org.bonitasoft.studio.designer.i18n.Messages;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.observable.Realm;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
-import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
@@ -58,15 +58,16 @@ public class URLMappingComposite extends Composite implements BonitaPreferenceCo
     }
 
     public void doBindControl(final DataBindingContext context, final IObservableValue formMappingObservable) {
-        context.bindValue(SWTObservables.observeText(urlText, SWT.Modify), CustomEMFEditObservables.observeDetailValue(Realm.getDefault(),
-                formMappingObservable,
-                ProcessPackage.Literals.FORM_MAPPING__URL));
+        context.bindValue(WidgetProperties.text(SWT.Modify).observe(urlText),
+                CustomEMFEditObservables.observeDetailValue(Realm.getDefault(),
+                        formMappingObservable,
+                        ProcessPackage.Literals.FORM_MAPPING__URL));
         doBindInfo(context, formMappingObservable);
     }
 
     protected void doBindInfo(final DataBindingContext context, final IObservableValue formMappingObservable) {
         final UpdateValueStrategy infoStrategy = new UpdateValueStrategy();
         infoStrategy.setConverter(new InfoMessageConverter(FormMappingType.URL));
-        context.bindValue(SWTObservables.observeText(info), formMappingObservable, null, infoStrategy);
+        context.bindValue(WidgetProperties.text().observe(info), formMappingObservable, null, infoStrategy);
     }
 }

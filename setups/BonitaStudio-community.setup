@@ -10,7 +10,7 @@
     xmlns:setup="http://www.eclipse.org/oomph/setup/1.0"
     xmlns:setup.targlets="http://www.eclipse.org/oomph/setup/targlets/1.0"
     xmlns:setup.workingsets="http://www.eclipse.org/oomph/setup/workingsets/1.0"
-    xsi:schemaLocation="http://www.eclipse.org/oomph/setup/git/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/Git.ecore http://www.eclipse.org/oomph/setup/pde/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/PDE.ecore http://www.eclipse.org/oomph/predicates/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/Predicates.ecore http://www.eclipse.org/oomph/setup/projects/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/Projects.ecore http://www.eclipse.org/oomph/setup/targlets/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/SetupTarglets.ecore http://www.eclipse.org/oomph/setup/workingsets/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/SetupWorkingSets.ecore"
+    xsi:schemaLocation="http://www.eclipse.org/oomph/setup/git/1.0 https://raw.githubusercontent.com/eclipse-oomph/oomph/master/setups/models/Git.ecore http://www.eclipse.org/oomph/setup/pde/1.0 https://raw.githubusercontent.com/eclipse-oomph/oomph/master/setups/models/PDE.ecore http://www.eclipse.org/oomph/predicates/1.0 https://raw.githubusercontent.com/eclipse-oomph/oomph/master/setups/models/Predicates.ecore http://www.eclipse.org/oomph/setup/projects/1.0 https://raw.githubusercontent.com/eclipse-oomph/oomph/master/setups/models/Projects.ecore http://www.eclipse.org/oomph/setup/targlets/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/SetupTarglets.ecore http://www.eclipse.org/oomph/setup/workingsets/1.0 https://raw.githubusercontent.com/eclipse-oomph/oomph/master/setups/models/SetupWorkingSets.ecore"
     name="bonita-studio-community"
     label="BonitaStudio Community">
   <setupTask
@@ -139,7 +139,7 @@
     <setupTask
         xsi:type="setup:VariableTask"
         name="eclipse.target.platform"
-        defaultValue="2022-06"
+        defaultValue="2023-09"
         storageURI="scope://Workspace"/>
     <setupTask
         xsi:type="setup.targlets:TargletTask"
@@ -179,7 +179,7 @@
     <setupTask
         xsi:type="setup:VariableTask"
         name="eclipse.target.platform"
-        defaultValue="2021-12"
+        defaultValue="2022-06"
         storageURI="scope://Workspace"/>
     <setupTask
         xsi:type="setup.targlets:TargletTask"
@@ -229,6 +229,6 @@
       href="index:/org.eclipse.setup#//@projectCatalogs[name='com.github']"/>
   <description>
     Bonita Studio - Development environment.
-    Ready for Eclipse IDE for RCP and RAP Developers - 2022-06.
+    Ready for Eclipse IDE for RCP and RAP Developers - 2023-09.
   </description>
 </setup:Project>

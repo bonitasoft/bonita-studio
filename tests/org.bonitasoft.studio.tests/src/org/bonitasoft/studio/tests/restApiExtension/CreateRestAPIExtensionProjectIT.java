@@ -33,7 +33,6 @@ import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jdt.core.JavaCore;
-import org.eclipse.m2e.core.MavenPlugin;
 import org.eclipse.m2e.core.project.ProjectImportConfiguration;
 import org.eclipse.swt.SWT;
 import org.eclipse.ui.PlatformUI;
@@ -68,7 +67,6 @@ public class CreateRestAPIExtensionProjectIT {
         defaultArchetypeConfiguration.setEnableBDMDependencies(true);
         final CreateRestAPIExtensionProjectOperation operation = new CreateRestAPIExtensionProjectOperation(
                 RepositoryManager.getInstance().getRepositoryStore(ExtensionRepositoryStore.class),
-                MavenPlugin.getProjectConfigurationManager(),
                 new ProjectImportConfiguration(),
                 defaultArchetypeConfiguration);
 

@@ -8,22 +8,12 @@ package org.eclipse.datatools.modelbase.sql.query.impl;
 
 import java.util.Collection;
 
-import org.eclipse.datatools.modelbase.sql.query.PredicateExists;
-import org.eclipse.datatools.modelbase.sql.query.QueryCombined;
-import org.eclipse.datatools.modelbase.sql.query.QueryExpressionRoot;
-import org.eclipse.datatools.modelbase.sql.query.QuerySelect;
 import org.eclipse.datatools.modelbase.sql.query.QueryValues;
 import org.eclipse.datatools.modelbase.sql.query.SQLQueryModelPackage;
-import org.eclipse.datatools.modelbase.sql.query.TableCorrelation;
-import org.eclipse.datatools.modelbase.sql.query.TableJoined;
-import org.eclipse.datatools.modelbase.sql.query.TableNested;
-import org.eclipse.datatools.modelbase.sql.query.UpdateSourceQuery;
 import org.eclipse.datatools.modelbase.sql.query.ValuesRow;
-import org.eclipse.datatools.modelbase.sql.query.WithTableSpecification;
 import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.util.EObjectContainmentWithInverseEList;
 import org.eclipse.emf.ecore.util.InternalEList;

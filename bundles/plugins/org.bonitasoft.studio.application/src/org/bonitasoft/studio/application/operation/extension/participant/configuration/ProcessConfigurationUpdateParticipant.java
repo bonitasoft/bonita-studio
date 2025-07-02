@@ -263,19 +263,19 @@ public class ProcessConfigurationUpdateParticipant implements ExtensionUpdatePar
     }
 
     private boolean sameGAC(ArtifactKey updatedArtifact, ArtifactKey currentArtifact) {
-        return currentArtifact.getGroupId().equals(updatedArtifact.getGroupId())
-                && currentArtifact.getArtifactId().equals(updatedArtifact.getArtifactId())
-                && Objects.equals(currentArtifact.getClassifier(), updatedArtifact.getClassifier());
+        return currentArtifact.groupId().equals(updatedArtifact.groupId())
+                && currentArtifact.artifactId().equals(updatedArtifact.artifactId())
+                && Objects.equals(currentArtifact.classifier(), updatedArtifact.classifier());
     }
 
     private boolean existsInAnotherVersion(ArtifactKey updatedArtifact, ArtifactKey currentArtifact) {
         return sameGAC(updatedArtifact, currentArtifact)
-                && !currentArtifact.getVersion().equals(updatedArtifact.getVersion());
+                && !currentArtifact.version().equals(updatedArtifact.version());
     }
 
     private boolean existsInSameVersion(ArtifactKey updatedArtifact, ArtifactKey currentArtifact) {
         return sameGAC(updatedArtifact, currentArtifact)
-                && currentArtifact.getVersion().equals(updatedArtifact.getVersion());
+                && currentArtifact.version().equals(updatedArtifact.version());
     }
 
     @Override

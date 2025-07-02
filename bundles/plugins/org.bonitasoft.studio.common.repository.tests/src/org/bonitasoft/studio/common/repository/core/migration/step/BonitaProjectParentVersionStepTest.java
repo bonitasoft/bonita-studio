@@ -78,7 +78,7 @@ class BonitaProjectParentVersionStepTest {
 
 	private static Model load(Path project) throws IOException, CoreException {
 		try (var is = Files.newInputStream(project.resolve("pom.xml"))) {
-			return MavenPlugin.getMaven().readModel(is);
+			return MavenPlugin.getMavenModelManager().readMavenModel(is);
 		}
 	}
 

@@ -21,11 +21,11 @@ import org.bonitasoft.studio.businessobject.editor.model.BusinessObject;
 import org.bonitasoft.studio.businessobject.i18n.Messages;
 import org.bonitasoft.studio.ui.widget.TextAreaWidget;
 import org.eclipse.core.databinding.DataBindingContext;
-import org.eclipse.core.databinding.beans.PojoProperties;
+import org.eclipse.core.databinding.beans.typed.PojoProperties;
 import org.eclipse.core.databinding.observable.Realm;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.emf.databinding.EMFObservables;
-import org.eclipse.jface.databinding.swt.WidgetProperties;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.widgets.Composite;
@@ -95,7 +95,7 @@ public class BusinessObjectEditionControl {
     }
 
     public IObservableValue<String> observeSectionTitle() {
-        return PojoProperties.value("text").observe(section);
+        return PojoProperties.value("text", String.class).observe(section);
     }
 
     public IObservableValue<Boolean> observeSectionVisible() {

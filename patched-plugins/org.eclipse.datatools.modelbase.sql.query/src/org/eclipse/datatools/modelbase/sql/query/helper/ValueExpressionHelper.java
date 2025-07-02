@@ -2257,7 +2257,7 @@ private static PredefinedDataType getPredefinedDataTypeForSimpleValue(String val
         // Check for a string datatype by looking for enclosing quotes.
         if (value.startsWith("'") && value.endsWith("'"))
         {
-            Integer len = new Integer(value.length() - 2);
+            Integer len = Integer.valueOf(value.length() - 2);
             lenStr = len.toString();
             datatype = sqlDataTypesFactory.createCharacterStringDataType();
             //TODO: when is it, what about length
@@ -2277,7 +2277,7 @@ private static PredefinedDataType getPredefinedDataTypeForSimpleValue(String val
                         || value.startsWith("N'") || value.startsWith("n'"))
                         && value.endsWith("'"))
         {
-            Integer len = new Integer((value.length() - 3) / 2);
+            Integer len = Integer.valueOf((value.length() - 3) / 2);
             lenStr = len.toString();
             //datatype = DatabaseHelper.getDataType( Types.CHAR, "GRAPHIC",
             // lenStr, scaleStr, aDB );
@@ -2325,7 +2325,7 @@ private static PredefinedDataType getPredefinedDataTypeForSimpleValue(String val
             {
                 try
                 {
-                    Integer intObj = new Integer(ucValue);
+                    Integer intObj = Integer.valueOf(ucValue);
                     int intValue = intObj.intValue();
                     int precision = 10;
                     PrimitiveType primitiveType = PrimitiveType.INTEGER_LITERAL;
@@ -2347,7 +2347,7 @@ private static PredefinedDataType getPredefinedDataTypeForSimpleValue(String val
                 {
                     try
                     {
-                        Long bigInt = new Long(ucValue);
+                        Long bigInt = Long.valueOf(ucValue);
                         int precision = 19;
 
                         // If we reached here we know we have a big integer.
@@ -2401,7 +2401,7 @@ private static PredefinedDataType getPredefinedDataTypeForSimpleValue(String val
             {
                 try
                 {
-                    Double doubleObject = new Double(ucValue);
+                    Double doubleObject = Double.valueOf(ucValue);
                     double doubleValue = doubleObject.doubleValue();
 
                     //float floatMin = Float.MIN_VALUE; //("-3.402E+38");

@@ -17,8 +17,8 @@ package org.bonitasoft.studio.common.repository;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Objects;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.PreDestroy;
 
 import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.Strings;
@@ -268,7 +268,7 @@ public class ProjectMigrationListener implements IResourceChangeListener, IResou
                 && !Objects.equals(project.getName(), "server_configuration")
                 && delta.getResource().exists()
                 // New project layout
-                && (project.getFolder(BonitaProject.APP_MODULE).exists()
+                && ((project.getFolder(BonitaProject.APP_MODULE).exists() && Strings.hasText(project.getDescription().getComment()))
                         // Legacy project layout
                         || (project.hasNature(BonitaProjectNature.NATURE_ID)
                                 && Strings.hasText(project.getDescription().getComment())));

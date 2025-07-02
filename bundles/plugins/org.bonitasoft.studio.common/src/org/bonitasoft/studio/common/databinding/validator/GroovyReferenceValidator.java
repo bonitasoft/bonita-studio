@@ -79,7 +79,7 @@ public class GroovyReferenceValidator implements IValidator<String> {
             return ValidationStatus.error(Messages.reservedKeyword);
         }
 
-        final IStatus javaConventionNameStatus = JavaConventions.validateFieldName(value, JavaCore.VERSION_11, JavaCore.VERSION_11);
+        final IStatus javaConventionNameStatus = JavaConventions.validateFieldName(value, JavaCore.VERSION_17, JavaCore.VERSION_17);
         if (!javaConventionNameStatus.isOK()) {
             return ValidationStatus.error(javaConventionNameStatus.getMessage());
         }

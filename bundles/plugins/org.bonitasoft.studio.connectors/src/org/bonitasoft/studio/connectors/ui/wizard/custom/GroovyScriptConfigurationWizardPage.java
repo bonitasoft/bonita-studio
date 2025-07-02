@@ -32,7 +32,7 @@ import org.bonitasoft.studio.expression.editor.viewer.GroovyOnlyExpressionViewer
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.EMFObservables;
-import org.eclipse.jface.databinding.viewers.ViewersObservables;
+import org.eclipse.jface.databinding.viewers.typed.ViewerProperties;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
@@ -85,7 +85,7 @@ public class GroovyScriptConfigurationWizardPage extends AbstractConnectorConfig
         if (desc != null && !desc.isEmpty()) {
             viewer.setMessage(desc);
         }
-        context.bindValue(ViewersObservables.observeSingleSelection(viewer),
+        context.bindValue(ViewerProperties.singleSelection().observe(viewer),
                 EMFObservables.observeValue(parameter,
                         ConnectorConfigurationPackage.Literals.CONNECTOR_PARAMETER__EXPRESSION));
 

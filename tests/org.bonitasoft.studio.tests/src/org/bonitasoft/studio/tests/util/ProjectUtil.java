@@ -26,7 +26,6 @@ import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.core.maven.MavenProjectHelper;
 import org.bonitasoft.studio.common.repository.core.maven.RemoveDependencyOperation;
 import org.bonitasoft.studio.common.repository.core.maven.model.AppProjectConfiguration;
-import org.bonitasoft.studio.common.repository.core.maven.model.ProjectDefaultConfiguration;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.configuration.repository.EnvironmentFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;

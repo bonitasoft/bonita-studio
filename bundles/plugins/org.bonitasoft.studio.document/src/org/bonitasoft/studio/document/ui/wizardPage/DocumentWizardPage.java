@@ -18,6 +18,10 @@ import static org.bonitasoft.studio.common.ui.jface.databinding.UpdateStrategyFa
 
 import java.util.Iterator;
 
+import org.bonitasoft.bpm.model.process.Document;
+import org.bonitasoft.bpm.model.process.DocumentType;
+import org.bonitasoft.bpm.model.process.Pool;
+import org.bonitasoft.bpm.model.process.ProcessPackage;
 import org.bonitasoft.bpm.model.util.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.ui.IDisplayable;
@@ -33,10 +37,6 @@ import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFil
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
 import org.bonitasoft.studio.expression.editor.viewer.GroovyOnlyExpressionViewer;
 import org.bonitasoft.studio.expression.editor.viewer.ObservableExpressionContentProvider;
-import org.bonitasoft.bpm.model.process.Document;
-import org.bonitasoft.bpm.model.process.DocumentType;
-import org.bonitasoft.bpm.model.process.Pool;
-import org.bonitasoft.bpm.model.process.ProcessPackage;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.core.databinding.Binding;
@@ -56,8 +56,8 @@ import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.databinding.fieldassist.ControlDecorationSupport;
 import org.eclipse.jface.databinding.swt.ISWTObservableValue;
-import org.eclipse.jface.databinding.swt.SWTObservables;
-import org.eclipse.jface.databinding.viewers.ViewerProperties;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
+import org.eclipse.jface.databinding.viewers.typed.ViewerProperties;
 import org.eclipse.jface.databinding.wizard.WizardPageSupport;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.fieldassist.ControlDecoration;
@@ -258,8 +258,8 @@ public class DocumentWizardPage extends WizardPage {
         final Button radioButtonMultiple = createRadioButtonMultiple(radioContainer);
 
         final SelectObservableValue isMultipleObservableValue = new SelectObservableValue(Boolean.class);
-        isMultipleObservableValue.addOption(false, SWTObservables.observeSelection(radioButtonSingle));
-        isMultipleObservableValue.addOption(true, SWTObservables.observeSelection(radioButtonMultiple));
+        isMultipleObservableValue.addOption(false, WidgetProperties.buttonSelection().observe(radioButtonSingle));
+        isMultipleObservableValue.addOption(true,  WidgetProperties.buttonSelection().observe(radioButtonMultiple));
 
         final IObservableValue multipleObserveValue = EMFObservables.observeValue(document,
                 ProcessPackage.Literals.DOCUMENT__MULTIPLE);
@@ -325,11 +325,11 @@ public class DocumentWizardPage extends WizardPage {
         radioButtonScript.setText(Messages.initialValueButtonScript);
 
         final SelectObservableValue documentTypeObservableValue = new SelectObservableValue(DocumentType.class);
-        final ISWTObservableValue scriptObserveSelection = SWTObservables.observeSelection(radioButtonScript);
-        documentTypeObservableValue.addOption(DocumentType.NONE, SWTObservables.observeSelection(radioButtonNone));
+        final ISWTObservableValue scriptObserveSelection =  WidgetProperties.buttonSelection().observe(radioButtonScript);
+        documentTypeObservableValue.addOption(DocumentType.NONE, WidgetProperties.buttonSelection().observe(radioButtonNone));
         documentTypeObservableValue.addOption(DocumentType.INTERNAL, scriptObserveSelection);
         documentTypeObservableValue.addOption(DocumentType.CONTRACT,
-                SWTObservables.observeSelection(radioButtonContract));
+                WidgetProperties.buttonSelection().observe(radioButtonContract));
 
         final IObservableValue documentTypeObservable = EMFObservables.observeValue(document,
                 ProcessPackage.Literals.DOCUMENT__DOCUMENT_TYPE);
@@ -482,7 +482,7 @@ public class DocumentWizardPage extends WizardPage {
         });
 
         ControlDecorationSupport.create(emfDataBindingContext.bindValue(
-                SWTObservables.observeText(documentTextId, SWT.Modify),
+                WidgetProperties.text(SWT.Modify).observe(documentTextId),
                 EMFObservables.observeValue(document,
                         ProcessPackage.Literals.DOCUMENT__DEFAULT_VALUE_ID_OF_DOCUMENT_STORE),
                 uvsInternal, null), SWT.LEFT);
@@ -517,13 +517,13 @@ public class DocumentWizardPage extends WizardPage {
         final Button radioButtonExternal = createRadioButtonExternal(compo);
 
         final SelectObservableValue documentTypeObservableValue = new SelectObservableValue(DocumentType.class);
-        documentTypeObservableValue.addOption(DocumentType.NONE, SWTObservables.observeSelection(radioButtonNone));
+        documentTypeObservableValue.addOption(DocumentType.NONE, WidgetProperties.buttonSelection().observe(radioButtonNone));
         documentTypeObservableValue.addOption(DocumentType.CONTRACT,
-                SWTObservables.observeSelection(radioButtonContract));
+                WidgetProperties.buttonSelection().observe(radioButtonContract));
         documentTypeObservableValue.addOption(DocumentType.EXTERNAL,
-                SWTObservables.observeSelection(radioButtonExternal));
+                WidgetProperties.buttonSelection().observe(radioButtonExternal));
         documentTypeObservableValue.addOption(DocumentType.INTERNAL,
-                SWTObservables.observeSelection(radioButtonInternal));
+                WidgetProperties.buttonSelection().observe(radioButtonInternal));
 
         final IObservableValue documentTypeObservable = EMFObservables.observeValue(document,
                 ProcessPackage.Literals.DOCUMENT__DOCUMENT_TYPE);

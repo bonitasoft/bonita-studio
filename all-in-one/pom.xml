@@ -7,19 +7,19 @@
 	<parent>
 		<groupId>org.bonitasoft.studio</groupId>
 		<artifactId>studio</artifactId>
-		<version>9.0.10-SNAPSHOT</version>
+		<version>10.0.7-SNAPSHOT</version>
 	</parent>
 
   <groupId>org.bonitasoft.studio</groupId>
   <artifactId>all-in-one</artifactId>
   <packaging>eclipse-repository</packaging>
 
-  <properties>
-    <product.short.name>BonitaStudioCommunity</product.short.name>
-    <productId>org.bonitasoft.studio.product</productId>
-    <macosx.appName>${product.short.name}-${branding.version}.app</macosx.appName>
-    <root.dir>${project.build.directory}/${product.short.name}-${branding.version}</root.dir>
-  </properties>
+	<properties>
+		<product.short.name>BonitaStudioCommunity</product.short.name>
+		<productId>org.bonitasoft.studio.product</productId>
+		<macosx.appName>${product.short.name}-${branding.version}.app</macosx.appName>
+        <root.dir>${project.build.directory}/${product.short.name}-${branding.version}</root.dir>
+	</properties>
 
   <build>
     <pluginManagement>
@@ -80,97 +80,105 @@
       </plugins>
     </pluginManagement>
 
-    <plugins>
-      <plugin>
-        <artifactId>maven-clean-plugin</artifactId>
-        <configuration>
-          <filesets>
-            <fileset>
-              <directory>${basedir}/installer/images</directory>
-              <includes>
-                <include>splash.png</include>
-              </includes>
-            </fileset>
-          </filesets>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.bonitasoft.maven</groupId>
-        <artifactId>image-overlay-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>splashVersion</id>
-            <configuration>
-              <baseImgPath>${basedir}/installer/images/splash_without_version.png</baseImgPath>
-              <outputImagePath>${basedir}/installer/images/splash.png</outputImagePath>
-              <outputImageFormat>png</outputImageFormat>
-              <xLocation>213</xLocation>
-              <yLocation>108</yLocation>
-              <fontSize>32</fontSize>
-              <color>#0B4361</color>
-              <versionLabel>${branding.version.short}</versionLabel>
-            </configuration>
-            <goals>
-              <goal>create-image</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <groupId>org.eclipse.tycho</groupId>
-        <artifactId>target-platform-configuration</artifactId>
-        <executions>
-          <execution>
-            <id>target-platform</id>
-            <phase>initialize</phase>
-            <goals>
-              <goal>target-platform</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <groupId>org.eclipse.tycho</groupId>
-        <artifactId>tycho-p2-publisher-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>publish</id>
-            <goals>
-              <goal>publish-products</goal>
-            </goals>
-            <phase>process-resources</phase>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <groupId>org.eclipse.tycho</groupId>
-        <artifactId>tycho-p2-director-plugin</artifactId>
-        <version>${tychoVersion}</version>
-        <configuration>
-          <formats>
-            <macosx>tar.gz</macosx>
-            <linux>tar.gz</linux>
-            <win>zip</win>
-          </formats>
-          <products>
-            <product>
-              <id>${productId}</id>
-              <rootFolders>
-                <macosx>${macosx.appName}</macosx>
-              </rootFolders>
-            </product>
-          </products>
-        </configuration>
-        <executions>
-          <execution>
-            <id>materialize-products</id>
-            <goals>
-              <goal>materialize-products</goal>
-            </goals>
-            <phase>process-resources</phase>
-          </execution>
-        </executions>
-      </plugin>
+		<plugins>
+			<plugin>
+				<artifactId>maven-clean-plugin</artifactId>
+				<configuration>
+					<filesets>
+						<fileset>
+							<directory>${basedir}/installer/images</directory>
+							<includes>
+								<include>splash.png</include>
+							</includes>
+						</fileset>
+					</filesets>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.bonitasoft.maven</groupId>
+				<artifactId>image-overlay-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>splashVersion</id>
+						<configuration>
+							<baseImgPath>${basedir}/installer/images/splash_without_version.png</baseImgPath>
+							<outputImagePath>${basedir}/installer/images/splash.png</outputImagePath>
+							<outputImageFormat>png</outputImageFormat>
+							<xLocation>213</xLocation>
+							<yLocation>108</yLocation>
+							<fontSize>32</fontSize>
+							<color>#0B4361</color>
+							<versionLabel>${branding.version.short}</versionLabel>
+						</configuration>
+						<goals>
+							<goal>create-image</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>target-platform-configuration</artifactId>
+				<executions>
+					<execution>
+						<id>target-platform</id>
+                        <phase>initialize</phase>
+						<goals>
+							<goal>target-platform</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-p2-publisher-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>publish</id>
+						<goals>
+							<goal>publish-products</goal>
+						</goals>
+						<phase>process-resources</phase>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-p2-director-plugin</artifactId>
+				<version>${tychoVersion}</version>
+				<configuration>
+					<formats>
+						<macosx>tar.gz</macosx>
+						<linux>tar.gz</linux>
+						<win>zip</win>
+					</formats>
+					<products>
+						<product>
+							<id>${productId}</id>
+							<archiveFileName>${product.short.name}-${branding.version}</archiveFileName>
+							<rootFolders>
+								<macosx>${macosx.appName}</macosx>
+							</rootFolders>
+						</product>
+					</products>
+				</configuration>
+				<executions>
+					<execution>
+						<id>materialize-products</id>
+						<goals>
+							<goal>materialize-products</goal>
+						</goals>
+						<phase>process-resources</phase>
+					</execution>
+					<execution>
+						<id>archive-products</id>
+						<phase>package</phase>
+						<goals>
+							<goal>archive-products</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 
           <!-- Create a proper bundles.info for all-in-one --> 
             <plugin>
@@ -193,19 +201,6 @@
                         </configuration>
                     </execution>
                     <execution>
-                        <id>include-p2-bundles-for-all-in-one</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>execute</goal>
-                        </goals>
-                        <configuration>
-                          <defaults>
-                               <root.dir>${project.build.directory}/${product.short.name}-${branding.version}</root.dir>
-                            </defaults>
-                            <source>${project.basedir}/all-in-one-p2-packaging.groovy</source>
-                        </configuration>
-                    </execution>
-                    <execution>
                         <id>verify-packaging</id>
                         <phase>prepare-package</phase>
                         <goals>
@@ -220,79 +215,40 @@
                     </execution>
                 </executions>
             </plugin>
-            
+		</plugins>
+	</build>
 
-      <!-- all-in-one assembly with all platforms -->
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-assembly-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>make-directory-assembly</id>
-            <phase>prepare-package</phase>
-            <configuration>
-              <descriptors>
-                <descriptor>${basedir}/assembly-descriptor.xml</descriptor>
-              </descriptors>
-              <attach>false</attach>
-              <appendAssemblyId>false</appendAssemblyId>
-              <finalName>${product.short.name}-${branding.version}</finalName>
-            </configuration>
-            <goals>
-              <goal>single</goal>
-            </goals>
-          </execution>
-          <execution>
-            <id>make-zip-assembly</id>
-            <phase>package</phase>
-            <configuration>
-                <archiveBaseDirectory>${project.build.directory}/${product.short.name}-${branding.version}</archiveBaseDirectory>
-              <appendAssemblyId>false</appendAssemblyId>
-              <descriptors>
-                <descriptor>${basedir}/assembly-zip-descriptor.xml</descriptor>
-              </descriptors>
-              <finalName>${product.short.name}-${branding.version}</finalName>
-            </configuration>
-            <goals>
-              <goal>single</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-    </plugins>
-  </build>
-
-  <profiles>
-    <profile>
-      <id>generate-installers-descriptors</id>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-antrun-plugin</artifactId>
-            <executions>
-              <execution>
-                <id>installer-file</id>
-                <phase>generate-resources</phase>
-                <configuration>
-                  <target>
-                    <property name="bitrock.install"
-                      value="${project.build.directory}/installers" />
-                    <property name="os_arch" value="64" />
-                    <property file="installer/installer.properties" />
-                    <property name="updated.project.file"
-                      value="${project.basedir}/installer/installer.xml" />
-                    <ant antfile="${project.basedir}/createInstallerProject.xml" />
-                  </target>
-                </configuration>
-                <goals>
-                  <goal>run</goal>
-                </goals>
-              </execution>
-            </executions>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-  </profiles>
+	<profiles>
+		<profile>
+			<id>generate-installers-descriptors</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-antrun-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>installer-file</id>
+								<phase>generate-resources</phase>
+								<configuration>
+									<target>
+										<property name="bitrock.install"
+											value="${project.build.directory}/installers" />
+										<property name="os_arch" value="64" />
+										<property file="installer/installer.properties" />
+										<property name="updated.project.file"
+											value="${project.basedir}/installer/installer.xml" />
+										<ant antfile="${project.basedir}/createInstallerProject.xml" />
+									</target>
+								</configuration>
+								<goals>
+									<goal>run</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 </project>

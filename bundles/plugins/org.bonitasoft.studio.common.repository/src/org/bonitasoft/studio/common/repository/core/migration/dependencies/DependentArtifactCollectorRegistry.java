@@ -19,7 +19,7 @@ package org.bonitasoft.studio.common.repository.core.migration.dependencies;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 import org.eclipse.e4.core.di.annotations.Creatable;
 

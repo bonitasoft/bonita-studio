@@ -22,22 +22,22 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.file.Path;
 
 import org.bonitasoft.studio.importer.bos.operation.ImportBosArchiveOperation;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.io.TempDir;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-@RunWith(MockitoJUnitRunner.class)
-public class BosArchiveProcessorTest {
+@ExtendWith(MockitoExtension.class)
+class BosArchiveProcessorTest {
 
     @Mock
     private BosArchiveProcessor bap;
@@ -45,10 +45,7 @@ public class BosArchiveProcessorTest {
     @Mock
     private ImportBosArchiveOperation ibo;
 
-    @Rule
-    public TemporaryFolder tmpFolder = new TemporaryFolder();
-
-    @Before
+    @BeforeEach
     public void init() throws Exception {
         Mockito.doCallRealMethod().when(bap).getStatus();
         Mockito.doCallRealMethod().when(bap).createDiagram(Mockito.any(URL.class), Mockito.any(NullProgressMonitor.class));
@@ -57,37 +54,37 @@ public class BosArchiveProcessorTest {
     }
 
     @Test
-    public void testGetStatusOkBasic() throws MalformedURLException, IOException, Exception {
+    void testGetStatusOkBasic(@TempDir Path tmpFolder) throws MalformedURLException, IOException, Exception {
         mockStatus(IStatus.OK);
-
-        bap.createDiagram(tmpFolder.newFile("test").toURI().toURL(), new NullProgressMonitor());
+        
+        bap.createDiagram(tmpFolder.resolve("test").toFile().toURI().toURL(), new NullProgressMonitor());
 
         assertThat(bap.getStatus().isOK()).isTrue();
     }
 
     @Test
-    public void testGetStatusErrorForValidationOKForRun() throws MalformedURLException, IOException, Exception {
+    void testGetStatusErrorForValidationOKForRun(@TempDir Path tmpFolder) throws MalformedURLException, IOException, Exception {
         mockStatus(IStatus.ERROR);
 
-        bap.createDiagram(tmpFolder.newFile("test").toURI().toURL(), new NullProgressMonitor());
+        bap.createDiagram(tmpFolder.resolve("test").toFile().toURI().toURL(), new NullProgressMonitor());
 
         assertThat(bap.getStatus().isOK()).isFalse();
     }
 
     @Test
-    public void testGetStatusErrorForValidationErrorForRun() throws MalformedURLException, IOException, Exception {
+    void testGetStatusErrorForValidationErrorForRun(@TempDir Path tmpFolder) throws MalformedURLException, IOException, Exception {
         mockStatus(IStatus.ERROR);
 
-        bap.createDiagram(tmpFolder.newFile("test").toURI().toURL(), new NullProgressMonitor());
+        bap.createDiagram(tmpFolder.resolve("test").toFile().toURI().toURL(), new NullProgressMonitor());
 
         assertThat(bap.getStatus().isOK()).isFalse();
     }
 
     @Test
-    public void testGetStatusOkForValidationErrorForRun() throws MalformedURLException, IOException, Exception {
+    void testGetStatusOkForValidationErrorForRun(@TempDir Path tmpFolder) throws MalformedURLException, IOException, Exception {
         mockStatus(IStatus.ERROR);
 
-        bap.createDiagram(tmpFolder.newFile("test").toURI().toURL(), new NullProgressMonitor());
+        bap.createDiagram(tmpFolder.resolve("test").toFile().toURI().toURL(), new NullProgressMonitor());
 
         assertThat(bap.getStatus().isOK()).isFalse();
     }

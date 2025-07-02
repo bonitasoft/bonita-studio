@@ -32,8 +32,20 @@ public class NoPopupCondition extends DefaultCondition {
 
     @Override
     public String getFailureMessage() {
-        return String.format(
-                "Shell with text '%s' has still focus. Was waiting for main shell 'Bonita Studio' to be active.",
-                bot.activeShell().getText());
+        SWTBotShell activeShell;
+        try {
+            activeShell = bot.activeShell();
+        } catch (WidgetNotFoundException e) {
+            activeShell = Stream.of(bot.shells())
+                    .filter(s -> s.getText() != null && s.getText().startsWith("Bonita Studio") && s.isActive())
+                    .findFirst().orElse(null);
+        }
+        if (activeShell == null) {
+            return "Shell (now closed) still had focus. Was waiting for main shell 'Bonita Studio' to be active.";
+        } else {
+            return String.format(
+                    "Shell with text '%s' has still focus. Was waiting for main shell 'Bonita Studio' to be active.",
+                    activeShell.getText());
+        }
     }
 }

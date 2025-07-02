@@ -87,11 +87,10 @@ public class RepositoryManager {
                     BonitaStudioLog.error(e);
                 }
             }
-            String currentRepository = preferenceStore.getString(RepositoryPreferenceConstant.CURRENT_REPOSITORY);
-            if (currentRepository != null && !currentRepository.isEmpty()) {
-                repository = newRepository(currentRepository);
-            }
-
+            /*
+             * Do not set current repository right now,because workbench may be not fully initiated yet.
+             * Assign it lazily instead.
+             */
         }
     }
 
@@ -147,6 +146,13 @@ public class RepositoryManager {
     }
 
     public Optional<IRepository> getCurrentRepository() {
+        if (repository == null) {
+            // try and initiate current repository
+            String currentRepository = preferenceStore.getString(RepositoryPreferenceConstant.CURRENT_REPOSITORY);
+            if (currentRepository != null && !currentRepository.isEmpty()) {
+                repository = newRepository(currentRepository);
+            }
+        }
         return Optional.ofNullable(repository);
     }
 
@@ -184,10 +190,11 @@ public class RepositoryManager {
     }
 
     private IRepository toRepository(BonitaProject project) {
-        if (!Objects.equals(project.getId(), repository.getProjectId())) {
+        var repository = getCurrentRepository();
+        if (repository.isEmpty() || !Objects.equals(project.getId(), repository.get().getProjectId())) {
             return newRepository(project.getId());
         } else {
-            return repository;
+            return repository.orElse(null);
         }
     }
 
@@ -245,7 +252,7 @@ public class RepositoryManager {
     }
 
     public boolean hasActiveRepository() {
-        return repository != null;
+        return getCurrentRepository().isPresent();
     }
 
     public void setCurrentRepository(IRepository repository) {
@@ -316,7 +323,7 @@ public class RepositoryManager {
      */
     public void installRequiredMavenDependencies(IProgressMonitor monitor) throws CoreException {
         // Ensure Bonita artifacts are properly installed in user local repository before creating a project
-        if(!requiredDependenciesInstalled) {
+        if (!requiredDependenciesInstalled) {
             monitor.subTask("");
             monitor.beginTask("Install required artifacts in local repository...", IProgressMonitor.UNKNOWN);
             new InstallBonitaMavenArtifactsOperation(MavenPlugin.getMaven().getLocalRepository()).execute(monitor);

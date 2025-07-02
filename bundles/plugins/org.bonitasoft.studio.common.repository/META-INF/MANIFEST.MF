@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Repository Common Plugin
 Bundle-SymbolicName: org.bonitasoft.studio.common.repository;singleton:=true
-Bundle-Version: 9.0.10.qualifier
+Bundle-Version: 10.0.7.qualifier
 Bundle-ClassPath: .,
  lib/maven3-model-jdom-support.jar
 Bundle-Activator: org.bonitasoft.studio.common.repository.CommonRepositoryPlugin
@@ -80,10 +80,10 @@ Require-Bundle: org.bonitasoft.studio.common,
  org.eclipse.e4.ui.model.workbench,
  org.bonitasoft.studio.common.ui,
  org.eclipse.m2e.core.ui,
- wrapped.org.jdom.jdom2,
- org.bonitasoft.maven.bonita-project-report-model;visibility:=reexport
-Import-Package: javax.annotation;version="1.2.0",
- javax.inject;version="1.0.0",
+ wrapped.org.bonitasoft.maven.bonita-project-report-model;visibility:=reexport,
+ org.jdom2
+Import-Package: jakarta.annotation;version="2.1.1",
+ jakarta.inject;version="2.0.1",
  javax.xml.bind.annotation.adapters,
  org.bonitasoft.engine.connector,
  org.bonitasoft.engine.filter,
@@ -91,4 +91,4 @@ Import-Package: javax.annotation;version="1.2.0",
 Model-Fragment: fragment.e4xmi
 Bundle-ActivationPolicy: lazy
 Automatic-Module-Name: org.bonitasoft.studio.common.repository
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17

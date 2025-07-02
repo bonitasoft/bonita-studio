@@ -14,7 +14,7 @@
  */
 package org.bonitasoft.studio.ui.notification;
 
-import javax.inject.Named;
+import jakarta.inject.Named;
 
 import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.ui.PlatformUI;

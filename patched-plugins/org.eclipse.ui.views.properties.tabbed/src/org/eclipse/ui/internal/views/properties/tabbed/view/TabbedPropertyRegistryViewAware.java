@@ -68,7 +68,7 @@ public class TabbedPropertyRegistryViewAware extends TabbedPropertyRegistry {
     /**
      * Populates the given tab descriptors with section descriptors.
      */
-    protected void populateWithSectionDescriptors(List<?> aTabDescriptors, String viewId) {
+    protected void populateWithSectionDescriptors(List<TabDescriptor> aTabDescriptors, String viewId) {
         ISectionDescriptor[] sections = null;
         if (sectionDescriptorProvider != null) {
             sections = sectionDescriptorProvider.getSectionDescriptors();

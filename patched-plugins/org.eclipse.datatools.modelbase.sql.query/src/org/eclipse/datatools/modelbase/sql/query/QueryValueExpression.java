@@ -8,7 +8,6 @@ package org.eclipse.datatools.modelbase.sql.query;
 
 
 import org.eclipse.datatools.modelbase.sql.datatypes.DataType;
-
 import org.eclipse.datatools.modelbase.sql.expressions.ValueExpression;
 
 /**

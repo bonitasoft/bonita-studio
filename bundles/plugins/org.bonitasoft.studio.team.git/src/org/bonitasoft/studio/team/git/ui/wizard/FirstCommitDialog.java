@@ -13,7 +13,7 @@ import org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory;
 import org.bonitasoft.studio.ui.widget.BulletPointWidget;
 import org.bonitasoft.studio.ui.widget.TextAreaWidget;
 import org.eclipse.core.databinding.DataBindingContext;
-import org.eclipse.core.databinding.beans.PojoProperties;
+import org.eclipse.core.databinding.beans.typed.PojoProperties;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.MessageDialog;

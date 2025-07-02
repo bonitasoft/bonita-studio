@@ -189,7 +189,7 @@ public class NewCustomPageArtifactConfigurationPage extends WizardPage {
         final IObservableValue packageObservable = PojoProperties.value("javaPackage").observe(configuration);
         context.bindValue(WidgetProperties.text(SWT.Modify).observe(groupIdText),
                 packageObservable,
-                updateValueStrategy().withValidator(p -> JavaConventions.validatePackageName((String) p, JavaCore.VERSION_11, JavaCore.VERSION_11)).create(),
+                updateValueStrategy().withValidator(p -> JavaConventions.validatePackageName((String) p, JavaCore.VERSION_17, JavaCore.VERSION_17)).create(),
                 null);
         return packageObservable;
     }

@@ -30,8 +30,8 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import javax.inject.Inject;
-import javax.inject.Named;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 
 import org.bonitasoft.engine.api.result.StatusCode;
 import org.bonitasoft.engine.exception.BonitaHomeNotSetException;

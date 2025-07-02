@@ -30,8 +30,8 @@ import org.bonitasoft.studio.dependencies.ui.dialog.SelectJarsDialog;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.conversion.Converter;
-import org.eclipse.jface.databinding.swt.SWTObservables;
-import org.eclipse.jface.databinding.viewers.ViewersObservables;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
+import org.eclipse.jface.databinding.viewers.typed.ViewerProperties;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ColumnWeightData;
@@ -213,7 +213,7 @@ public class DatabaseConnectorDriversWizardPage extends WizardPage {
             }
 
         });
-        context.bindValue(SWTObservables.observeEnabled(button), ViewersObservables.observeSingleSelection(viewer), null,
+        context.bindValue(WidgetProperties.enabled().observe(button), ViewerProperties.singleSelection().observe(viewer), null,
                 modelToTarget);
     }
 

@@ -16,12 +16,12 @@ package org.bonitasoft.studio.document.ui.control;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
-import org.bonitasoft.studio.document.i18n.Messages;
 import org.bonitasoft.bpm.model.process.Document;
 import org.bonitasoft.bpm.model.process.ProcessPackage;
+import org.bonitasoft.studio.document.i18n.Messages;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.EMFObservables;
-import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
@@ -48,7 +48,7 @@ public class DocumentDescriptionComposite {
     public void bindControl(final Document document, final EMFDataBindingContext emfDataBindingContext) {
         checkArgument(document != null);
         checkArgument(emfDataBindingContext != null);
-        emfDataBindingContext.bindValue(SWTObservables.observeText(getText(), SWT.Modify),
+        emfDataBindingContext.bindValue(WidgetProperties.text(SWT.Modify).observe(getText()),
                 EMFObservables.observeValue(document, ProcessPackage.Literals.ELEMENT__DOCUMENTATION));
     }
 

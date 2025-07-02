@@ -18,7 +18,7 @@ import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 
 import org.bonitasoft.studio.common.event.BdmEvents;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;

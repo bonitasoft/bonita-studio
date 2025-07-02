@@ -171,8 +171,33 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
     public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
         Assert.isNotNull(archive);
         Assert.isNotNull(currentRepository);
-
         ImportBosArchiveStatusBuilder statusBuilder = createStatusBuilder();
+        var repositoryStore = doRun(monitor, statusBuilder);
+        // wait for all scheduled build jobs to end
+        BuildScheduler.joinOnBuildRule();
+        // make sure extension projects are imported before validating...
+        var containerStores = getImportedFileStores().stream().map(IRepositoryFileStore::getParentStore)
+                .filter(IProjectContainer.class::isInstance).distinct();
+        containerStores.forEach(IRepositoryStore::repositoryUpdated);
+        BuildScheduler.joinOnBuildRule();
+        // schedule validation to be executed after projects have been imported...
+        BuildScheduler.callWithBuildRule(() -> {
+            runPostImport(monitor, statusBuilder, repositoryStore);
+            return (Void) null;
+        });
+    }
+
+    /**
+     * Runs the core operations of the import
+     * 
+     * @param monitor progress monitor
+     * @param statusBuilder to build the resulting status
+     * @return the diagram repository store to use as import result
+     * @throws InvocationTargetException
+     * @throws InterruptedException
+     */
+    private DiagramRepositoryStore doRun(final IProgressMonitor monitor, ImportBosArchiveStatusBuilder statusBuilder)
+            throws InvocationTargetException, InterruptedException {
         monitor.beginTask(Messages.retrivingDataToImport, IProgressMonitor.UNKNOWN);
         status = new MultiStatus(CommonRepositoryPlugin.PLUGIN_ID, 0, null, null);
         currentRepository.handleFileStoreEvent(new FileStoreChangeEvent(EventType.PRE_IMPORT, null));
@@ -260,18 +285,21 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
                 var synchOp = dependenciesUpdateOperationFactory.createConfigurationSynchronizationOperation();
                 synchOp.run(monitor);
             }
+            return repositoryStore;
         } finally {
             FileActionDialog.setDisablePopup(disablePopup);
         }
+    }
 
-        // wait for all scheduled build jobs to end
-        BuildScheduler.joinOnBuildRule();
-        // make sure extension projects are imported before validating...
-        var containerStores = getImportedFileStores().stream().map(IRepositoryFileStore::getParentStore)
-                .filter(IProjectContainer.class::isInstance).distinct();
-        containerStores.forEach(IRepositoryStore::repositoryUpdated);
-        BuildScheduler.joinOnBuildRule();
-
+    /**
+     * Run operations after import
+     * 
+     * @param monitor progress monitor
+     * @param statusBuilder to build the status
+     * @param repositoryStore the diagram repository store
+     */
+    private void runPostImport(final IProgressMonitor monitor, ImportBosArchiveStatusBuilder statusBuilder,
+            DiagramRepositoryStore repositoryStore) {
         monitor.subTask("");
         currentRepository.handleFileStoreEvent(new FileStoreChangeEvent(EventType.POST_IMPORT, null));
 
@@ -381,7 +409,7 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
             Model mavenModel = mavenProjectHelper.getMavenModel(currentRepository.getProject());
             dependencies.stream()
                     .forEach(dep -> updateProjectModel(dep, mavenModel, mavenProjectHelper, statusBuilder));
-            mavenProjectHelper.saveModel(currentRepository.getProject(), mavenModel, false, monitor);
+            mavenProjectHelper.saveModel(currentRepository.getProject(), mavenModel, monitor);
             ProjectDependenciesStore projectDependenciesStore = currentRepository.getProjectDependenciesStore();
             if (projectDependenciesStore != null) {
                 currentRepository.getProject().build(IncrementalProjectBuilder.INCREMENTAL_BUILD, monitor);

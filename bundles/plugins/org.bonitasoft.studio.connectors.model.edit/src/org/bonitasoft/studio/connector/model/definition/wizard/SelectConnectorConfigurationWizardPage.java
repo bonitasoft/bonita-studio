@@ -21,15 +21,15 @@ import static org.bonitasoft.studio.common.ui.jface.SWTBotConstants.SELECTION_CO
 import static org.bonitasoft.studio.common.ui.jface.SWTBotConstants.SWTBOT_WIDGET_ID_KEY;
 import static org.bonitasoft.studio.common.ui.jface.databinding.UpdateStrategyFactory.updateValueStrategy;
 
+import org.bonitasoft.bpm.model.connectorconfiguration.ConnectorConfiguration;
+import org.bonitasoft.bpm.model.connectorconfiguration.ConnectorParameter;
 import org.bonitasoft.studio.common.repository.model.IDefinitionRepositoryStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.common.ui.jface.FileActionDialog;
 import org.bonitasoft.studio.connector.model.i18n.Messages;
-import org.bonitasoft.bpm.model.connectorconfiguration.ConnectorConfiguration;
-import org.bonitasoft.bpm.model.connectorconfiguration.ConnectorParameter;
 import org.eclipse.core.databinding.UpdateValueStrategy;
-import org.eclipse.core.databinding.beans.PojoProperties;
+import org.eclipse.core.databinding.beans.typed.PojoProperties;
 import org.eclipse.core.databinding.observable.value.IValueChangeListener;
 import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
 import org.eclipse.core.databinding.validation.IValidator;
@@ -39,7 +39,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.jface.databinding.viewers.IViewerObservableValue;
-import org.eclipse.jface.databinding.viewers.ViewersObservables;
+import org.eclipse.jface.databinding.viewers.typed.ViewerProperties;
 import org.eclipse.jface.databinding.wizard.WizardPageSupport;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -130,7 +130,7 @@ public class SelectConnectorConfigurationWizardPage extends WizardPage {
 
         configurationViewers.setInput(new Object());
 
-        final IViewerObservableValue observeSingleSelection = ViewersObservables.observeSingleSelection(configurationViewers);
+        final IViewerObservableValue observeSingleSelection = ViewerProperties.singleSelection().observe(configurationViewers);
         context.bindValue(observeSingleSelection,
                 PojoProperties.value(SelectConnectorConfigurationWizardPage.class, "selectedConfiguration").observe(this),
                 targetUpdateValueStrategy(), null);
@@ -143,16 +143,7 @@ public class SelectConnectorConfigurationWizardPage extends WizardPage {
             }
         });
 
-
-
-        //        //Avoid bug with filtered tree on linux
-        //        if(configurationsTree.getViewer().getTree().getItemCount() > 0){
-        //        	selectedConfiguration = (ConnectorConfiguration)configurationsTree.getViewer().getTree().getItem(0).getData();
-        //            configurationsTree.getViewer().setSelection(new StructuredSelection(selectedConfiguration));
-        //        }
-
         createRemoveButton(composite);
-
     }
 
 

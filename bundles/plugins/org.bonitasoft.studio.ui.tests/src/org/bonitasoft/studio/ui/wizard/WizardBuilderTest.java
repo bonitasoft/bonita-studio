@@ -28,7 +28,7 @@ import org.bonitasoft.studio.ui.widget.CComboWidget;
 import org.bonitasoft.studio.ui.widget.TextAreaWidget;
 import org.bonitasoft.studio.ui.widget.TextWidget;
 import org.eclipse.core.databinding.DataBindingContext;
-import org.eclipse.core.databinding.beans.PojoObservables;
+import org.eclipse.core.databinding.beans.typed.PojoProperties;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -107,7 +107,7 @@ public class WizardBuilderTest {
                                     .transactionalEdit((a, b) -> System.out
                                             .println(String.format("Old value: %s , New value: %s", a, b)))
                                     //  .withMessage("Example: Jean, Marie ...")
-                                    .bindTo(PojoObservables.observeValue(person, "name"))
+                                    .bindTo(PojoProperties.value("name", String.class).observe(person))
                                     .inContext(ctx)
                                     .withTargetToModelStrategy(
                                             convertUpdateValueStrategy().withValidator(new EmptyInputValidator.Builder()
@@ -122,7 +122,7 @@ public class WizardBuilderTest {
                                     .fill()
                                     .grabHorizontalSpace()
                                     .readOnly()
-                                    .bindTo(PojoObservables.observeValue(person, "title"))
+                                    .bindTo(PojoProperties.value("title", String.class).observe(person))
                                     .inContext(ctx)
                                     .withTargetToModelStrategy(
                                             updateValueStrategy()
@@ -136,7 +136,7 @@ public class WizardBuilderTest {
                                     .fill()
                                     .heightHint(150)
                                     .grabHorizontalSpace()
-                                    .bindTo(PojoObservables.observeValue(person, "description"))
+                                    .bindTo(PojoProperties.value("description", String.class).observe(person))
                                     .inContext(ctx)
                                     .createIn(container);
 
@@ -148,7 +148,7 @@ public class WizardBuilderTest {
                                     .withMessage("Choose the manager of this employee")
                                     .withItems("", "Romain", "Toto")
                                     .withLayoutData(GridDataFactory.fillDefaults().grab(true, false).create())
-                                    .bindTo(PojoObservables.observeValue(person, "manager"))
+                                    .bindTo(PojoProperties.value("manager").observe(person))
                                     .inContext(ctx)
                                     .withTargetToModelStrategy(updateValueStrategy().withValidator(value -> {
                                         return value == null || ((String) value).isEmpty()

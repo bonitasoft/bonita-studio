@@ -6,16 +6,16 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.bonitasoft.studio</groupId>
     <artifactId>studio</artifactId>
-    <version>9.0.10-SNAPSHOT</version>
+    <version>10.0.7-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>Bonita Studio</name>
     <properties>
-        <tychoVersion>2.7.5</tychoVersion>
-        <java.version>11</java.version>
+        <tychoVersion>4.0.5</tychoVersion>
+        <java.version>17</java.version>
         <os-jvm-flags></os-jvm-flags>
-        <branding.version>2023.2-SNAPSHOT</branding.version>
-        <bonita-runtime.version>9.0-SNAPSHOT</bonita-runtime.version>
-        <ui.designer.version>1.17.17</ui.designer.version>
+        <branding.version>2024.1-SNAPSHOT</branding.version>
+        <bonita-runtime.version>10.0-SNAPSHOT</bonita-runtime.version>
+        <ui.designer.version>1.18.5</ui.designer.version>
         <business.data.repository.version>1.0.0</business.data.repository.version>
         <platform.version>${project.parent.version}</platform.version>
         <tomcat.version>9.0.81</tomcat.version>
@@ -26,12 +26,12 @@
         <bonita-project-report-model.version>1.0.4</bonita-project-report-model.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.release>${java.version}</maven.compiler.release>
-        <groovy-maven-plugin.groovy.version>3.0.13</groovy-maven-plugin.groovy.version>
+        <groovy-maven-plugin.groovy.version>3.0.19</groovy-maven-plugin.groovy.version>
         <!-- Must be synched with org.bonitasoft.studio.common.repository.core.maven.model.DefaultPluginVersions.MAVEN_DEPENDENCY_PLUGIN_VERSION -->
-        <maven-dependency-plugin.version>3.6.0</maven-dependency-plugin.version>
+        <maven-dependency-plugin.version>3.6.1</maven-dependency-plugin.version>
         <maven-assembly-plugin.version>3.6.0</maven-assembly-plugin.version>
         <maven3-model-jdom-support.version>1.6</maven3-model-jdom-support.version>
-        <jacocoVersion>0.8.8</jacocoVersion>
+        <jacocoVersion>0.8.11</jacocoVersion>
     </properties>
     <modules>
         <module>platform</module>
@@ -59,12 +59,12 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
-                    <version>3.11.0</version>
+                    <version>3.12.1</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-clean-plugin</artifactId>
-                    <version>3.1.0</version>
+                    <version>3.3.2</version>
                 </plugin>
                 <plugin>
                     <groupId>org.eclipse.tycho</groupId>
@@ -106,7 +106,7 @@
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>exec-maven-plugin</artifactId>
-                    <version>3.1.0</version>
+                    <version>3.1.1</version>
                     <configuration>
                        <inheritIo>true</inheritIo>
                        <useMavenLogger>true</useMavenLogger>
@@ -119,13 +119,13 @@
                     <configuration>
                         <useUIHarness>false</useUIHarness>
                         <showEclipseLog>true</showEclipseLog>
-                        <providerHint>junit58withvintage</providerHint>
+                        <providerHint>junit59withvintage</providerHint>
                     </configuration>
                 </plugin>
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>build-helper-maven-plugin</artifactId>
-                    <version>3.3.0</version>
+                    <version>3.5.0</version>
                 </plugin>
                 <plugin>
                     <groupId>org.eclipse.tycho</groupId>
@@ -141,7 +141,7 @@
                     <artifactId>target-platform-configuration</artifactId>
                     <version>${tychoVersion}</version>
                     <configuration>
-                        <executionEnvironment>JavaSE-11</executionEnvironment>
+                        <executionEnvironment>org.eclipse.justj.openjdk.hotspot.jre.full-17</executionEnvironment>
                         <environments>
                             <environment>
                                 <os>linux</os>
@@ -167,11 +167,6 @@
                             </artifact>
                         </target>
                         <filters>
-                            <filter>
-                                <type>eclipse-plugin</type>
-                                <id>org.eclipse.m2e.editor.lemminx</id>
-                                <removeAll />
-                            </filter>
                             <filter>
                                 <type>eclipse-plugin</type>
                                 <id>org.eclipse.emf.compare.doc</id>

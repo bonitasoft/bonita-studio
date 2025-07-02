@@ -27,16 +27,17 @@ import org.bonitasoft.bpm.model.process.ContractInput;
 import org.bonitasoft.bpm.model.process.ContractInputType;
 import org.bonitasoft.bpm.model.process.assertions.ContractConstraintAssert;
 import org.bonitasoft.bpm.model.process.assertions.ContractInputAssert;
+import org.bonitasoft.studio.common.repository.BuildScheduler;
 import org.bonitasoft.studio.swtbot.framework.application.BotApplicationWorkbenchWindow;
 import org.bonitasoft.studio.swtbot.framework.conditions.AssertionCondition;
 import org.bonitasoft.studio.swtbot.framework.diagram.BotProcessDiagramPerspective;
-import org.bonitasoft.studio.swtbot.framework.diagram.general.contract.BotContractConstraintRow;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.contract.BotContractConstraintTab;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.contract.BotContractInputRow;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.contract.BotContractInputTab;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.contract.BotContractPropertySection;
 import org.bonitasoft.studio.swtbot.framework.draw.BotGefProcessDiagramEditor;
 import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
+import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
@@ -53,7 +54,8 @@ public class ContractIT {
     public SWTGefBotRule botRule = new SWTGefBotRule(bot);
 
     @Test
-    public void create_expense_report_step_contract() {
+    public void create_expense_report_step_contract()
+            throws IllegalStateException, OperationCanceledException, InterruptedException {
         final BotProcessDiagramPerspective botProcessDiagramPerspective = new BotApplicationWorkbenchWindow(bot)
                 .createNewDiagram();
         final ContractContainer contractContainer = (ContractContainer) botProcessDiagramPerspective
@@ -63,7 +65,8 @@ public class ContractIT {
     }
 
     @Test
-    public void create_expense_report_process_contract() {
+    public void create_expense_report_process_contract()
+            throws IllegalStateException, OperationCanceledException, InterruptedException {
         final BotProcessDiagramPerspective botProcessDiagramPerspective = new BotApplicationWorkbenchWindow(bot)
                 .createNewDiagram();
         final BotGefProcessDiagramEditor activeProcessDiagramEditor = botProcessDiagramPerspective
@@ -74,7 +77,8 @@ public class ContractIT {
     }
 
     protected void createExpenseReport(final BotProcessDiagramPerspective botProcessDiagramPerspective,
-            final ContractContainer contractContainer) {
+            final ContractContainer contractContainer)
+            throws IllegalStateException, OperationCanceledException, InterruptedException {
         final BotContractPropertySection contractTabBot = botProcessDiagramPerspective
                 .getDiagramPropertiesPart()
                 .selectExecutionTab()
@@ -82,7 +86,8 @@ public class ContractIT {
         final BotContractInputTab inputTab = contractTabBot.selectInputTab();
         final BotContractInputRow contractInputRow = inputTab.add();
 
-        contractInputRow.setName("expenseReport").setType("COMPLEX - java.util.Map").setDescription("An expense report");
+        contractInputRow.setName("expenseReport").setType("COMPLEX - java.util.Map")
+                .setDescription("An expense report");
 
         BotContractInputRow childRow = contractInputRow.getChildRow(0);
         childRow.setName("expenseLines").setType("COMPLEX - java.util.Map").clickMultiple();
@@ -105,12 +110,14 @@ public class ContractIT {
                 checkContractInput(contractContainer);
             }
         });
+        // make sure no build dialog steals focus
+        BuildScheduler.joinOnBuildRule();
 
         final BotContractConstraintTab constraintTab = contractTabBot.selectConstraintTab();
-        final BotContractConstraintRow constraintRow = constraintTab.add();
-        constraintRow.setName("Check empty report");
-        constraintRow.setExpression("expenseReport.expenseLines.size() > 0");
-        constraintRow.setErrorMessages("An expense report must have at lease one expense line");
+        constraintTab.add()
+            .setName("Check empty report")
+            .setExpression("expenseReport.expenseLines.size() > 0")
+            .setErrorMessages("An expense report must have at lease one expense line");
 
         bot.waitUntil(new AssertionCondition() {
 
@@ -141,7 +148,8 @@ public class ContractIT {
         ContractInputAssert.assertThat(expenseReportInput).hasName("expenseReport").hasDescription("An expense report")
                 .hasType(ContractInputType.COMPLEX);
         assertThat(expenseReportInput.getInputs()).hasSize(1);
-        final ContractInput expenseLineInput = find(expenseReportInput.getInputs(), withContractInputName("expenseLines"));
+        final ContractInput expenseLineInput = find(expenseReportInput.getInputs(),
+                withContractInputName("expenseLines"));
         ContractInputAssert.assertThat(find(expenseReportInput.getInputs(), withContractInputName("expenseLines")))
                 .hasType(ContractInputType.COMPLEX)
                 .isMultiple();

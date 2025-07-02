@@ -16,15 +16,14 @@ In order to build this repository it is required to build its dependencies. To h
 ### Build profiles
 
 * _default_
-* _all-in-one_ : bundle a .zip archive
+* _all-in-one_ : build product .zip archives
 * _it_ : run integration tests
 
 By default active profiles are: _default_ and _all-in-one_
 
 ### Built artifacts
 
-* Windows and Linux all-in-one archive is located here `all-in-one/target/BonitaStudioCommunity-*.zip`
-* MacOs app is located here `all-in-one/target/products/org.bonitasoft.studio.product/macosx/cocoa/x86_64`
+* Products archive are located here `all-in-one/target/products`
 
 ## :earth_africa: Include additional localization 
 

@@ -2,9 +2,9 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: UI Designer linux fragment
 Bundle-SymbolicName: org.bonitasoft.studio.designer.linux
-Bundle-Version: 9.0.10.qualifier
+Bundle-Version: 10.0.7.qualifier
 Bundle-Vendor: Bonitasoft S.A.
 Fragment-Host: org.bonitasoft.studio.designer
 Automatic-Module-Name: org.bonitasoft.studio.designer.linux
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Eclipse-PlatformFilter: (&(osgi.os=linux))

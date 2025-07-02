@@ -16,7 +16,7 @@ package org.bonitasoft.studio.maven.ui.handler;
 
 import java.lang.reflect.InvocationTargetException;
 
-import javax.inject.Named;
+import jakarta.inject.Named;
 
 import org.bonitasoft.engine.exception.BonitaHomeNotSetException;
 import org.bonitasoft.engine.exception.ServerAPIException;

@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.datatools.modelbase.sql.datatypes.DataType;
 import org.eclipse.datatools.modelbase.sql.query.Predicate;
 import org.eclipse.datatools.modelbase.sql.query.PredicateBasic;
 import org.eclipse.datatools.modelbase.sql.query.PredicateComparisonOperator;
@@ -29,7 +30,6 @@ import org.eclipse.datatools.modelbase.sql.query.TableNested;
 import org.eclipse.datatools.modelbase.sql.query.TableReference;
 import org.eclipse.datatools.modelbase.sql.query.ValueExpressionColumn;
 import org.eclipse.datatools.modelbase.sql.query.impl.SQLQueryModelFactoryImpl;
-import org.eclipse.datatools.modelbase.sql.datatypes.DataType;
 
 
 /**

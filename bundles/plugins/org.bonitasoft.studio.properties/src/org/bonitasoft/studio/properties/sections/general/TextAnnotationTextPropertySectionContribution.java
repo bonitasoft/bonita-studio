@@ -17,17 +17,17 @@
  */
 package org.bonitasoft.studio.properties.sections.general;
 
+import org.bonitasoft.bpm.model.process.ProcessPackage;
+import org.bonitasoft.bpm.model.process.TextAnnotation;
 import org.bonitasoft.studio.common.Messages;
 import org.bonitasoft.studio.common.ui.properties.ExtensibleGridPropertySection;
 import org.bonitasoft.studio.common.ui.properties.IExtensibleGridPropertySectionContribution;
 import org.bonitasoft.studio.common.ui.widgets.GTKStyleHandler;
-import org.bonitasoft.bpm.model.process.ProcessPackage;
-import org.bonitasoft.bpm.model.process.TextAnnotation;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.edit.EMFEditObservables;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
-import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.SWT;
@@ -72,7 +72,7 @@ public class TextAnnotationTextPropertySectionContribution implements IExtensibl
 		context.dispose();
 	    }
 	    context = new EMFDataBindingContext();
-	    context.bindValue(SWTObservables.observeText(text, SWT.Modify), EMFEditObservables
+	    context.bindValue(WidgetProperties.text(SWT.Modify).observe(text), EMFEditObservables
 		    .observeValue(editingDomain, textAnnotation, ProcessPackage.Literals.TEXT_ANNOTATION__TEXT));
 	}
     }

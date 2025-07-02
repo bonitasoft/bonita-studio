@@ -8,24 +8,14 @@
  *******************************************************************************/
 package org.bonitasoft.studio.maven.model;
 
-import java.util.Arrays;
-
-import org.apache.maven.archetype.catalog.Archetype;
+import org.eclipse.m2e.core.project.IArchetype;
 
 public class ThemeArchetype {
 
     public static final String ARTIFACT_ID = "bonita-theme-archetype";
     public static final String GROUP_ID = "org.bonitasoft.archetypes";
-    public static String VERSION = "1.0.0";
-    public static final Archetype INSTANCE = new Archetype();
-
-
-    static {
-        INSTANCE.setGroupId(GROUP_ID);
-        INSTANCE.setArtifactId(ARTIFACT_ID);
-        INSTANCE.setVersion(VERSION);
-        INSTANCE.setGoals(Arrays.asList("archetype:generate"));
-    }
+    public static final String VERSION = "1.0.3";
+    public static final IArchetype INSTANCE = new Archetype(GROUP_ID, ARTIFACT_ID, VERSION);
 
     private ThemeArchetype() {
 

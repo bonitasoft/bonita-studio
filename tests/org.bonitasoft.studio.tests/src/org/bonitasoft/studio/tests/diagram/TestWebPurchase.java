@@ -207,8 +207,8 @@ public class TestWebPurchase implements SWTBotConstants {
         bot.editorByTitle(diagramTitle).setFocus();
         SWTBotTestUtil.selectElementInContextualPaletteAndDragIt(gmfEditor, "Sales Review",
                 SWTBotTestUtil.CONTEXTUALPALETTE_STEP, PositionConstants.EAST);
-        bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_GENERAL).show();
-        bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_GENERAL).setFocus();
+        bot.viewById(SWTBotConstants.VIEWS_PROPERTIES_PROCESS_GENERAL).show();
+        bot.viewById(SWTBotConstants.VIEWS_PROPERTIES_PROCESS_GENERAL).setFocus();
         SWTBotTestUtil.selectTabbedPropertyView(bot, "General");
         bot.textWithLabel("Name").setText("Pay");
         bot.sleep(1000);

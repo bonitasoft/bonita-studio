@@ -27,24 +27,22 @@ import org.eclipse.e4.core.commands.ECommandService;
 import org.eclipse.e4.core.commands.EHandlerService;
 import org.eclipse.ui.PlatformUI;
 
-@SuppressWarnings("restriction")
 public class ExportDiagramHandler extends AbstractHandler {
 
     public static final String EXPORT_COMMAND = "org.bonitasoft.studio.exportBosArchive";
     public static final String EXPORT_PARAMETER = "diagram";
 
-    private FileStoreFinder fileStoreFinder;
     private ECommandService eCommandService;
     private EHandlerService eHandlerService;
 
     public ExportDiagramHandler() {
-        fileStoreFinder = new FileStoreFinder();
         eCommandService = PlatformUI.getWorkbench().getService(ECommandService.class);
         eHandlerService = PlatformUI.getWorkbench().getService(EHandlerService.class);
     }
 
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
+        var fileStoreFinder = new FileStoreFinder();
         fileStoreFinder
                 .findSelectedFileStore(RepositoryManager.getInstance().getCurrentRepository().orElseThrow())
                 .ifPresent(fileStore -> {

@@ -10,7 +10,7 @@ package org.bonitasoft.studio.maven.ui.handler;
 
 import java.lang.reflect.InvocationTargetException;
 
-import javax.inject.Named;
+import jakarta.inject.Named;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
@@ -64,7 +64,6 @@ public class QuickBuildHandler {
                 }
             }, false, new NullProgressMonitor(), Display.getDefault());
             final BuildCustomPageOperation operation = selectedExtension.newBuildOperation();
-            operation.setGoals("clean install");
             ModalContext.run(operation.asWorkspaceModifyOperation(), true, new NullProgressMonitor(),
                     Display.getDefault());
             return operation.getStatus();

@@ -35,27 +35,23 @@ import org.bonitasoft.studio.theme.ThemeFileStore;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.m2e.core.project.IProjectConfigurationManager;
 
 public class NewThemeWizard extends Wizard {
     
     private static final String THEME_DOC_URL = "http://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=689&bos_redirect_product=bos&bos_redirect_major_version=%s&bos_redirect_minor_version=";
     private final ExtensionRepositoryStore repositoryStore;
     private final ThemeArchetypeConfiguration configuration;
-    private final IProjectConfigurationManager projectConfigurationManager;
     private final WidgetFactory widgetFactory;
     private final MavenProjectConfiguration projectConfiguration;
     private final IWorkspace workspace;
 
     public NewThemeWizard(ProjectMetadata projectMetadata,
             ExtensionRepositoryStore repositoryStore,
-            IProjectConfigurationManager projectConfigurationManager,
             MavenProjectConfiguration projectConfiguration,
             IWorkspace workspace,
             WidgetFactory widgetFactory) {
         this.repositoryStore = repositoryStore;
         this.configuration = ThemeArchetypeConfiguration.defaultArchetypeConfiguration(projectMetadata);
-        this.projectConfigurationManager = projectConfigurationManager;
         this.widgetFactory = widgetFactory;
         this.projectConfiguration = projectConfiguration;
         this.workspace = workspace;
@@ -80,7 +76,6 @@ public class NewThemeWizard extends Wizard {
     @Override
     public boolean performFinish() {
         final CreateThemeProjectOperation operation = new CreateThemeProjectOperation(repositoryStore,
-                projectConfigurationManager,
                 projectConfiguration.toImportConfiguration(),
                 configuration);
         try {

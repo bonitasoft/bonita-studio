@@ -17,7 +17,7 @@ package org.bonitasoft.studio.la.extension;
 import java.util.Objects;
 import java.util.Optional;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import org.apache.maven.model.Dependency;
 import org.bonitasoft.plugin.analyze.report.model.Artifact;

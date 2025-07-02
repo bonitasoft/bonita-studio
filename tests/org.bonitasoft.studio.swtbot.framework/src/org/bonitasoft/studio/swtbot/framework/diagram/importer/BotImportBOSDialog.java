@@ -81,14 +81,15 @@ public class BotImportBOSDialog extends BotWizardDialog {
     }
 
     public void importArchive() {
-        importArchiveWithTimeout(Duration.ofMinutes(2));
+        importArchiveWithTimeout(Duration.ofMinutes(3));
     }
-    
+
     private void importArchiveWithTimeout(Duration timeout) {
         // Wait extension resolution
         bot.waitUntil(Conditions.widgetIsEnabled(bot.button(Messages.importButtonLabel)), timeout.toMillis());
         bot.button(Messages.importButtonLabel).click();
-        bot.waitUntil(Conditions.shellIsActive(org.bonitasoft.studio.importer.i18n.Messages.importResultTitle), timeout.toMillis());
+        bot.waitUntil(Conditions.shellIsActive(org.bonitasoft.studio.importer.i18n.Messages.importResultTitle),
+                timeout.toMillis());
         bot.shell(org.bonitasoft.studio.importer.i18n.Messages.importResultTitle).activate();
         final SWTBotShell activeShell = bot.activeShell();
         bot.waitUntil(Conditions.widgetIsEnabled(bot.button(IDialogConstants.OK_LABEL)));
@@ -128,7 +129,7 @@ public class BotImportBOSDialog extends BotWizardDialog {
     public void finish() {
         importArchive();
     }
-    
+
     public void finishWithTimeout(Duration timeout) {
         importArchiveWithTimeout(timeout);
     }
@@ -146,7 +147,7 @@ public class BotImportBOSDialog extends BotWizardDialog {
         if (descriptionLabel != null) {
             return new BotImportBOSDependenciesPreviewPage(bot);
         }
-       throw new WidgetNotFoundException("Cannot find etension preview page description label.");
+        throw new WidgetNotFoundException("Cannot find etension preview page description label.");
     }
 
 }

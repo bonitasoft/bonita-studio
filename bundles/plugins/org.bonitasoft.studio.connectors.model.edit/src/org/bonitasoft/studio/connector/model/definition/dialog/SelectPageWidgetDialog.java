@@ -49,8 +49,9 @@ import org.bonitasoft.studio.scripting.extensions.ScriptLanguageService;
 import org.eclipse.core.databinding.Binding;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
-import org.eclipse.core.databinding.beans.PojoProperties;
+import org.eclipse.core.databinding.beans.typed.PojoProperties;
 import org.eclipse.core.databinding.conversion.Converter;
+import org.eclipse.core.databinding.observable.Realm;
 import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
@@ -59,9 +60,9 @@ import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.jface.databinding.fieldassist.ControlDecorationSupport;
 import org.eclipse.jface.databinding.swt.ISWTObservableValue;
-import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.jface.databinding.viewers.IViewerObservableValue;
-import org.eclipse.jface.databinding.viewers.ViewersObservables;
+import org.eclipse.jface.databinding.viewers.typed.ViewerProperties;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -186,7 +187,7 @@ public class SelectPageWidgetDialog extends Dialog {
 
         final Text idText = new Text(mainComposite, SWT.BORDER);
         idText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
-        idTextObservable = SWTObservables.observeText(idText, SWT.Modify);
+        idTextObservable = WidgetProperties.text(SWT.Modify).observe(idText);
         bindComponentId(idText);
 
         final Label widgetTypeLabel = new Label(mainComposite, SWT.NONE);
@@ -224,7 +225,7 @@ public class SelectPageWidgetDialog extends Dialog {
             }
         });
         inputViewer.setInput(inputs);
-        inputSelectionObservable = ViewersObservables.observeSingleSelection(inputViewer);
+        inputSelectionObservable = ViewerProperties.singleSelection().observe(inputViewer);
         bindComponentInput(inputViewer);
 
         final Label displayNameLabel = new Label(mainComposite, SWT.NONE);
@@ -237,7 +238,7 @@ public class SelectPageWidgetDialog extends Dialog {
                 .grab(true, false).create());
 
         context.bindValue(
-                SWTObservables.observeText(displayNameText, SWT.Modify),
+                WidgetProperties.text(SWT.Modify).observe(displayNameText),
                 PojoProperties.value(SelectPageWidgetDialog.class,
                         "displayName").observe(this));
 
@@ -252,9 +253,9 @@ public class SelectPageWidgetDialog extends Dialog {
                 .grab(true, false).hint(SWT.DEFAULT, 60).create());
 
         context.bindValue(
-                SWTObservables.observeText(descriptionText, SWT.Modify),
+                WidgetProperties.text(SWT.Modify).observe(descriptionText),
                 PojoProperties.value(SelectPageWidgetDialog.class,
-                        "description").observe(this));
+                        "description", String.class).observe(this));
 
         section = new Section(parent, Section.NO_TITLE);
         section.setLayoutData(GridDataFactory.fillDefaults().grab(true, true)
@@ -468,11 +469,11 @@ public class SelectPageWidgetDialog extends Dialog {
         showDocumentButton.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 
         if (widget instanceof org.bonitasoft.bpm.connector.model.definition.Text) {
-            context.bindValue(SWTObservables.observeSelection(showDocumentButton),
+            context.bindValue(WidgetProperties.buttonSelection().observe(showDocumentButton),
                     EMFObservables.observeValue(widget,
                             ConnectorDefinitionPackage.Literals.TEXT__SHOW_DOCUMENTS));
         } else if (widget instanceof org.bonitasoft.bpm.connector.model.definition.List) {
-            context.bindValue(SWTObservables.observeSelection(showDocumentButton),
+            context.bindValue(WidgetProperties.buttonSelection().observe(showDocumentButton),
                     EMFObservables.observeValue(widget,
                             ConnectorDefinitionPackage.Literals.LIST__SHOW_DOCUMENTS));
         }
@@ -497,12 +498,12 @@ public class SelectPageWidgetDialog extends Dialog {
         interpreterViewer.getCombo().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         interpreterViewer.setContentProvider(new ArrayContentProvider());
         interpreterViewer.setLabelProvider(new LabelProvider());
-        List<String> interpreters = new ArrayList<String>();
+        List<String> interpreters = new ArrayList<>();
         for (IScriptLanguageProvider provider : ScriptLanguageService.getInstance().getScriptLanguageProviders()) {
             interpreters.add(provider.getLanguageName());
         }
         interpreterViewer.setInput(interpreters);
-        context.bindValue(ViewersObservables.observeSingleSelection(interpreterViewer),
+        context.bindValue(ViewerProperties.singleSelection().observe(interpreterViewer),
                 EMFObservables.observeValue(widget,
                         ConnectorDefinitionPackage.Literals.SCRIPT_EDITOR__INTERPRETER));
 
@@ -524,7 +525,7 @@ public class SelectPageWidgetDialog extends Dialog {
         isCollapsed.setLayoutData(GridDataFactory.fillDefaults().create());
         isCollapsed.setText(Messages.isCollapsed);
 
-        context.bindValue(SWTObservables.observeSelection(isCollapsed),
+        context.bindValue(WidgetProperties.buttonSelection().observe(isCollapsed),
                 EMFObservables.observeValue(widget,
                         ConnectorDefinitionPackage.Literals.GROUP__OPTIONAL));
 
@@ -566,7 +567,7 @@ public class SelectPageWidgetDialog extends Dialog {
                 itemViewer, widget));
         inputNameColumn.setLabelProvider(new ColumnLabelProvider());
 
-        context.bindValue(ViewersObservables.observeInput(itemViewer),
+        context.bindValue(ViewerProperties.input().observe(Realm.getDefault(), itemViewer),
                 EMFObservables.observeValue(widget,
                         ConnectorDefinitionPackage.Literals.SELECT__ITEMS));
 
@@ -696,7 +697,7 @@ public class SelectPageWidgetDialog extends Dialog {
                     }
                 });
 
-        context.bindValue(SWTObservables.observeText(columnCombo),
+        context.bindValue(WidgetProperties.text().observe(columnCombo),
                 EMFObservables.observeValue(widget,
                         ConnectorDefinitionPackage.Literals.ARRAY__COLS),
                 targetToModel, modelToTarget);
@@ -709,7 +710,7 @@ public class SelectPageWidgetDialog extends Dialog {
         fixedColButton.setLayoutData(GridDataFactory.fillDefaults().create());
         fixedColButton.setText(Messages.fixedColumn);
 
-        context.bindValue(SWTObservables.observeSelection(fixedColButton),
+        context.bindValue(WidgetProperties.buttonSelection().observe(fixedColButton),
                 EMFObservables.observeValue(widget,
                         ConnectorDefinitionPackage.Literals.ARRAY__FIXED_COLS));
 
@@ -742,7 +743,7 @@ public class SelectPageWidgetDialog extends Dialog {
         inputNameColumn.setLabelProvider(new ColumnLabelProvider());
 
         context.bindValue(
-                ViewersObservables.observeInput(itemViewer),
+                ViewerProperties.input().observe(Realm.getDefault(), itemViewer),
                 EMFObservables
                         .observeValue(
                                 widget,
@@ -851,11 +852,12 @@ public class SelectPageWidgetDialog extends Dialog {
         orientationCombo.setContentProvider(new ArrayContentProvider());
         orientationCombo.setLabelProvider(new LabelProvider());
         context.bindValue(
-                ViewersObservables.observeInput(orientationCombo),
+                ViewerProperties.input().observe(Realm.getDefault()
+                        ,orientationCombo),
                 PojoProperties.value(SelectPageWidgetDialog.class,
                         "orientations").observe(this));
         context.bindValue(
-                ViewersObservables.observeSingleSelection(orientationCombo),
+                ViewerProperties.singleSelection().observe(orientationCombo),
                 EMFObservables
                         .observeValue(
                                 widget,
@@ -890,7 +892,7 @@ public class SelectPageWidgetDialog extends Dialog {
         inputNameColumn.setLabelProvider(new ColumnLabelProvider());
 
         context.bindValue(
-                ViewersObservables.observeInput(itemViewer),
+                ViewerProperties.input().observe(Realm.getDefault(), itemViewer),
                 EMFObservables
                         .observeValue(
                                 widget,

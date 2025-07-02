@@ -16,8 +16,8 @@ package org.bonitasoft.studio.application.operation.extension.participant.defini
 
 import java.util.List;
 
-import javax.annotation.PostConstruct;
-import javax.inject.Inject;
+import jakarta.annotation.PostConstruct;
+import jakarta.inject.Inject;
 
 import org.bonitasoft.studio.application.operation.extension.participant.definition.actorfilter.ActorFilterArtifactDefinitionProvider;
 import org.bonitasoft.studio.application.operation.extension.participant.definition.actorfilter.ActorFilterConnectorDefinitionProviderFactory;

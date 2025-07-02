@@ -164,6 +164,7 @@ public interface SWTBotConstants {
     public static final String SWTBOT_ID_REFRESH_PROJECT = "SWTBOT_ID_REFRESH_PROJECT";
     public static final String SWTBOT_ID_ENV_NAME = "SWTBOT_ID_ENV_NAME";
     public static final String SWTBOT_ID_ENV_DESC = "SWTBOT_ID_ENV_DESC";
+    public static final String SWTBOT_ID_ACTOR_MAPPING_GROUPS_TABLE = "SWTBOT_ID_ACTOR_MAPPING_GROUPS_TABLE";
 
     public static String extensionCheckboxId(String artifactId) {
         return "SWTBOT_ID_MARKETPLACE_EXTENSION_CHECKBOX_" + artifactId;

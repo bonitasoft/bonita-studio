@@ -23,15 +23,15 @@ import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.importer.bos.model.ImportArchiveModel;
 import org.bonitasoft.studio.importer.bos.status.ImportBosArchiveStatusBuilder;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InOrder;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-@RunWith(MockitoJUnitRunner.class)
-public class ImportBosArchiveOperationTest {
+@ExtendWith(MockitoExtension.class)
+class ImportBosArchiveOperationTest {
 
     private ImportBosArchiveOperation operationUnserTest;
 
@@ -57,7 +57,7 @@ public class ImportBosArchiveOperationTest {
     @Mock
     private DependenciesUpdateOperationFactory dependenciesUpdateOperationFactory;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         when(repositoryAccessor.getCurrentRepository()).thenReturn(Optional.of(repostiory));
         archiveFile = new File(ImportBosArchiveOperationTest.class.getResource("/customer_support_2.0.bos").getFile());
@@ -77,7 +77,7 @@ public class ImportBosArchiveOperationTest {
     }
 
     @Test
-    public void should_compute_processes_at_the_start_of_the_import() throws Exception {
+    void should_compute_processes_at_the_start_of_the_import() throws Exception {
         operationUnserTest.setCurrentRepository(repostiory);
         operationUnserTest.setArchiveFile(archiveFile.getAbsolutePath());
         operationUnserTest.run(monitor);
@@ -87,7 +87,7 @@ public class ImportBosArchiveOperationTest {
     }
 
     @Test
-    public void should_refresh_repository_at_the_end_of_import() throws Exception {
+    void should_refresh_repository_at_the_end_of_import() throws Exception {
         operationUnserTest.setCurrentRepository(repostiory);
         operationUnserTest.setArchiveFile(archiveFile.getAbsolutePath());
         operationUnserTest.run(monitor);
@@ -95,7 +95,7 @@ public class ImportBosArchiveOperationTest {
     }
 
     @Test
-    public void should_validate_all_imported_processes_at_the_end_of_import() throws Exception {
+    void should_validate_all_imported_processes_at_the_end_of_import() throws Exception {
         ImportBosArchiveStatusBuilder importBosArchiveStatusBuilder = new ImportBosArchiveStatusBuilder();
         when(operationUnserTest.createStatusBuilder()).thenReturn(importBosArchiveStatusBuilder);
         operationUnserTest.setCurrentRepository(repostiory);

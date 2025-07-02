@@ -24,7 +24,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.application.views.provider.UIDArtifactFilters;

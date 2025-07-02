@@ -314,22 +314,13 @@ public class WSDLParsingTool {
 		message.getSOAPHeader().detachNode();
 		message.getSOAPBody().addDocument(request);
 		
-		final ByteArrayOutputStream out = new ByteArrayOutputStream();
 		String envelope = "";
-		try{
+		try(var out = new ByteArrayOutputStream()){
 			message.writeTo(out);
 			envelope = new String(out.toByteArray());
 		}catch (Exception e) {
 			BonitaStudioLog.error(e);
-		} finally {
-			if(out != null){
-				try {
-					out.close();
-				} catch (IOException e) {
-					BonitaStudioLog.error(e);
-				}
-			}
-		}
+		} 
 		return envelope;
 	}
 

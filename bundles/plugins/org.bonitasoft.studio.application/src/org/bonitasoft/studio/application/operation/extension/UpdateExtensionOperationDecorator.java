@@ -49,7 +49,9 @@ import org.bonitasoft.studio.ui.dialog.ProblemsDialog;
 import org.bonitasoft.studio.ui.provider.TypedLabelProvider;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -57,6 +59,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.progress.UIJob;
 
 public class UpdateExtensionOperationDecorator {
 
@@ -315,10 +318,17 @@ public class UpdateExtensionOperationDecorator {
 
     public void validateDependenciesConstraints() {
         // Run a minimal process validation that only checks dependency consistency
-        Display.getDefault().asyncExec(() -> commandExecutor.executeCommand(BATCH_VALIDATION_COMMAND_ID, Map.of(
-                "dependencyConstraintsOnly", "true",
-                "checkAllModelVersion", "true",
-                "showReport", "false")));
+        new UIJob(Display.getDefault(), "Validate dependencies...") {
+            
+            @Override
+            public IStatus runInUIThread(IProgressMonitor monitor) {
+                commandExecutor.executeCommand(BATCH_VALIDATION_COMMAND_ID, Map.of(
+                        "dependencyConstraintsOnly", "true",
+                        "checkAllModelVersion", "true",
+                        "showReport", "false"));
+                return Status.OK_STATUS;
+            }
+        }.schedule();
     }
 
 }

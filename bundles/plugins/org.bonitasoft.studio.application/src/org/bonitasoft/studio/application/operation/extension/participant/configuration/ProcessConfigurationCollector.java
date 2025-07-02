@@ -22,8 +22,8 @@ import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 
-import javax.annotation.PostConstruct;
-import javax.inject.Inject;
+import jakarta.annotation.PostConstruct;
+import jakarta.inject.Inject;
 
 import org.bonitasoft.bpm.model.configuration.Configuration;
 import org.bonitasoft.bpm.model.process.AbstractProcess;

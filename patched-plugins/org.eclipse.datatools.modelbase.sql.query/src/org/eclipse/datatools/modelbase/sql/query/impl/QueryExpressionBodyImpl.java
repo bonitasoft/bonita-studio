@@ -14,18 +14,13 @@ import org.eclipse.datatools.modelbase.sql.query.QueryCombined;
 import org.eclipse.datatools.modelbase.sql.query.QueryExpressionBody;
 import org.eclipse.datatools.modelbase.sql.query.QueryExpressionRoot;
 import org.eclipse.datatools.modelbase.sql.query.QueryNested;
-import org.eclipse.datatools.modelbase.sql.query.QuerySelect;
 import org.eclipse.datatools.modelbase.sql.query.SQLQueryModelPackage;
-import org.eclipse.datatools.modelbase.sql.query.TableCorrelation;
-import org.eclipse.datatools.modelbase.sql.query.TableJoined;
-import org.eclipse.datatools.modelbase.sql.query.TableNested;
 import org.eclipse.datatools.modelbase.sql.query.UpdateSourceQuery;
 import org.eclipse.datatools.modelbase.sql.query.WithTableSpecification;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.util.EObjectContainmentWithInverseEList;
@@ -522,7 +517,7 @@ public abstract class QueryExpressionBodyImpl extends TableExpressionImpl implem
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
         switch (featureID) {
             case SQLQueryModelPackage.QUERY_EXPRESSION_BODY__ROW_FETCH_LIMIT:
-                return new Integer(getRowFetchLimit());
+                return Integer.valueOf(getRowFetchLimit());
             case SQLQueryModelPackage.QUERY_EXPRESSION_BODY__QUERY_EXPRESSION:
                 return getQueryExpression();
             case SQLQueryModelPackage.QUERY_EXPRESSION_BODY__COMBINED_LEFT:

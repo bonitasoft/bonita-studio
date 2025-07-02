@@ -25,6 +25,7 @@ import java.util.Map;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionPoint;
+import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
@@ -197,7 +198,7 @@ public class TabbedPropertyRegistry {
 		IStatus status = new Status(IStatus.ERROR, bundle.getSymbolicName(),
 				TabbedPropertyViewStatusCodes.CONTRIBUTOR_ERROR, message,
 				exception);
-		Platform.getLog(bundle).log(status);
+		ILog.of(bundle).log(status);
 	}
 
 	/**
@@ -331,7 +332,6 @@ public class TabbedPropertyRegistry {
 	 */
 	protected ITabDescriptor[] getAllTabDescriptors() {
 		if (tabDescriptors == null) {
-			@SuppressWarnings("unchecked")
 			List<TabDescriptor> temp = readTabDescriptors();
 			populateWithSectionDescriptors(temp);
 			temp = sortTabDescriptorsByCategory(temp);
@@ -345,7 +345,7 @@ public class TabbedPropertyRegistry {
 	 * Reads property tab extensions. Returns all tab descriptors for the
 	 * current contributor id or an empty list if none is found.
 	 */
-	protected List readTabDescriptors() {
+	protected List<TabDescriptor> readTabDescriptors() {
 		List<TabDescriptor> result = new ArrayList<>();
 		IConfigurationElement[] extensions = getConfigurationElements(EXTPT_TABS);
 		for (IConfigurationElement extension : extensions) {
@@ -368,7 +368,7 @@ public class TabbedPropertyRegistry {
 	/**
 	 * Populates the given tab descriptors with section descriptors.
 	 */
-	protected void populateWithSectionDescriptors(List aTabDescriptors) {
+	protected void populateWithSectionDescriptors(List<TabDescriptor> aTabDescriptors) {
 		ISectionDescriptor[] sections = null;
 		if (sectionDescriptorProvider != null) {
 			sections = sectionDescriptorProvider.getSectionDescriptors();
@@ -384,9 +384,8 @@ public class TabbedPropertyRegistry {
 	 * Appends the given section to a tab from the list.
 	 */
 	protected void appendToTabDescriptor(ISectionDescriptor section,
-			List aTabDescriptors) {
-		for (Iterator i = aTabDescriptors.iterator(); i.hasNext();) {
-			TabDescriptor tab = (TabDescriptor) i.next();
+			List<TabDescriptor> aTabDescriptors) {
+		for (TabDescriptor tab : aTabDescriptors) {
 			if (tab.append(section)) {
 				return;
 			}
@@ -396,7 +395,7 @@ public class TabbedPropertyRegistry {
 		Bundle bundle = FrameworkUtil.getBundle(TabbedPropertyRegistry.class);
 		IStatus status = new Status(IStatus.ERROR, bundle.getSymbolicName(),
 				TabbedPropertyViewStatusCodes.NO_TAB_ERROR, message, null);
-		Platform.getLog(bundle).log(status);
+		ILog.of(bundle).log(status);
 	}
 
 	/**
@@ -422,9 +421,8 @@ public class TabbedPropertyRegistry {
 		}
 		List<TabDescriptor> sorted = new ArrayList<>();
 		int categoryIndex = 0;
-		for (int i = 0; i < propertyCategories.size(); i++) {
+		for (String category : propertyCategories) {
 			List<TabDescriptor> categoryList = new ArrayList<>();
-			String category = propertyCategories.get(i);
 			int topOfCategory = categoryIndex;
 			int endOfCategory = categoryIndex;
 			while (endOfCategory < tabs.size() &&
@@ -432,10 +430,11 @@ public class TabbedPropertyRegistry {
 							.equals(category)) {
 				endOfCategory++;
 			}
+			// Patch by BonitaSoft
 		    Map<String, List<TabDescriptor>> mapOfAfterTab = new HashMap<String, List<TabDescriptor>>();
 
             for (int j = topOfCategory; j < endOfCategory; j++) {
-                TabDescriptor tab = (TabDescriptor) tabs.get(j);
+                TabDescriptor tab = tabs.get(j);
                 String afterTab;
                 if ((afterTab = tab.getAfterTab()) == "") { //$NON-NLS-1$
                     afterTab = "no after tab"; //$NON-NLS-1$
@@ -481,6 +480,7 @@ public class TabbedPropertyRegistry {
 			for (int j = 0; j < categoryList.size(); j++) {
 				sorted.add(categoryList.get(j));
 			}
+			// end Patch by BonitaSoft
 			categoryIndex = endOfCategory;
 		}
 		return sorted;
@@ -540,7 +540,7 @@ public class TabbedPropertyRegistry {
 		IStatus status = new Status(IStatus.ERROR, pluginId,
 				TabbedPropertyViewStatusCodes.TAB_ERROR, message, null);
 		Bundle bundle = FrameworkUtil.getBundle(TabbedPropertyRegistry.class);
-		Platform.getLog(bundle).log(status);
+		ILog.of(bundle).log(status);
 	}
 
 	/**

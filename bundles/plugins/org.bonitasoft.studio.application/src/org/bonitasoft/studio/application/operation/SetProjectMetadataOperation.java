@@ -98,7 +98,7 @@ public class SetProjectMetadataOperation implements IRunnableWithProgress {
             IProject project = newRepository.getProject();
             Model model = mavenProjectHelper.getMavenModel(project);
             dependencies.stream().forEach(model.getDependencies()::add);
-            mavenProjectHelper.saveModel(project, model, false, new NullProgressMonitor());
+            mavenProjectHelper.saveModel(project, model, new NullProgressMonitor());
             var projectDependenciesStore = newRepository.getProjectDependenciesStore();
             if (projectDependenciesStore != null) {
                 projectDependenciesStore.analyze(new NullProgressMonitor());

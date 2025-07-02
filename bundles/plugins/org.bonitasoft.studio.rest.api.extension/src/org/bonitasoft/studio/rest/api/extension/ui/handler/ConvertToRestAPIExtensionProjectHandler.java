@@ -33,8 +33,6 @@ import org.eclipse.swt.widgets.Display;
 
 public class ConvertToRestAPIExtensionProjectHandler extends AbstractHandler {
 
-    private FileStoreFinder selectionFinder = new FileStoreFinder();
-
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
         ExtensionProjectFileStore fStore = getSelectedCustomPageProjectFileStore();
@@ -58,6 +56,7 @@ public class ConvertToRestAPIExtensionProjectHandler extends AbstractHandler {
     }
 
     private ExtensionProjectFileStore getSelectedCustomPageProjectFileStore() {
+        var selectionFinder = new FileStoreFinder();
         Optional<IStructuredSelection> currentStructuredSelection = selectionFinder.getCurrentStructuredSelection();
         if (currentStructuredSelection.isPresent()) {
             IStructuredSelection selection = currentStructuredSelection.get();

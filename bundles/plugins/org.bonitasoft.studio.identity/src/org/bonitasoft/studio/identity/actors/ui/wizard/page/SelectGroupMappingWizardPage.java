@@ -26,6 +26,7 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 import org.bonitasoft.bpm.model.actormapping.ActorMapping;
+import org.bonitasoft.studio.common.ui.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.ui.jface.TableColumnSorter;
 import org.bonitasoft.studio.identity.i18n.Messages;
 import org.bonitasoft.studio.identity.organization.model.organization.Group;
@@ -33,12 +34,12 @@ import org.bonitasoft.studio.identity.organization.model.organization.Organizati
 import org.bonitasoft.studio.identity.organization.model.organization.OrganizationFactory;
 import org.bonitasoft.studio.identity.organization.ui.provider.content.GroupContentProvider;
 import org.eclipse.core.databinding.DataBindingContext;
-import org.eclipse.core.databinding.beans.PojoObservables;
+import org.eclipse.core.databinding.beans.typed.PojoProperties;
 import org.eclipse.core.databinding.observable.set.IObservableSet;
 import org.eclipse.core.databinding.validation.MultiValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.jface.databinding.viewers.ViewersObservables;
+import org.eclipse.jface.databinding.viewers.typed.ViewerProperties;
 import org.eclipse.jface.databinding.wizard.WizardPageSupport;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -48,6 +49,7 @@ import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.TableLayout;
 import org.eclipse.jface.viewers.TableViewerColumn;
+import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.TableColumn;
@@ -88,6 +90,7 @@ public class SelectGroupMappingWizardPage extends SelectOrganizationWizardPage {
         viewersComposite.setLayout(GridLayoutFactory.swtDefaults().numColumns(1).margins(0, 0).extendedMargins(0, 0, 10, 0).equalWidth(false).create()) ;
 
         availableGroupViewer = CheckboxTableViewer.newCheckList(viewersComposite, SWT.BORDER | SWT.FULL_SELECTION | SWT.V_SCROLL) ;
+        availableGroupViewer.getTable().setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, SWTBotConstants.SWTBOT_ID_ACTOR_MAPPING_GROUPS_TABLE);
         availableGroupViewer.getTable().setLayoutData(GridDataFactory.fillDefaults().grab(true,true).create()) ;
         availableGroupViewer.getTable().setHeaderVisible(true) ;
         availableGroupViewer.setContentProvider(new ArrayContentProvider()) ;
@@ -107,7 +110,7 @@ public class SelectGroupMappingWizardPage extends SelectOrganizationWizardPage {
         
         context = new DataBindingContext();
 		
-        final IObservableSet checkedElementsObservable =  ViewersObservables.observeCheckedElements(availableGroupViewer, String.class) ;
+        final IObservableSet checkedElementsObservable =  ViewerProperties.checkedElements(String.class).observe((Viewer)availableGroupViewer);
         final MultiValidator notEmptyValidator = new MultiValidator() {
 
         	@Override
@@ -120,7 +123,7 @@ public class SelectGroupMappingWizardPage extends SelectOrganizationWizardPage {
         }  ;
 
         context.addValidationStatusProvider(notEmptyValidator);
-		context.bindSet(checkedElementsObservable, PojoObservables.observeSet(this, "selectedGroups"));
+		context.bindSet(checkedElementsObservable, PojoProperties.set("selectedGroups").observe(this));
 		
 		WizardPageSupport.create(this, context);
 		setControl(mainComposite);

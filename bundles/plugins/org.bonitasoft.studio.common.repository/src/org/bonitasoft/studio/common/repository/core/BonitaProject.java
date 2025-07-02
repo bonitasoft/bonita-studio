@@ -42,6 +42,7 @@ import org.eclipse.core.runtime.preferences.IScopeContext;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.m2e.core.MavenPlugin;
 import org.eclipse.m2e.core.internal.IMavenConstants;
+import org.eclipse.m2e.core.internal.jobs.MavenWorkspaceJob;
 import org.eclipse.m2e.core.internal.project.ProjectConfigurationManager;
 import org.eclipse.m2e.core.project.MavenUpdateRequest;
 
@@ -177,14 +178,14 @@ public interface BonitaProject extends GitProject, IAdaptable {
     }
     
     static WorkspaceJob updateMavenProjectsJob(Collection<IProject> projects, boolean updateConfiguration) {
-       return new WorkspaceJob("Update maven projects") {
+       return new MavenWorkspaceJob("Update maven projects") {
 
             @Override
             public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
                 ProjectConfigurationManager configurationManager = (ProjectConfigurationManager) MavenPlugin
                         .getProjectConfigurationManager();
 
-                MavenUpdateRequest request = new MavenUpdateRequest(projects.toArray(IProject[]::new), false, false);
+                MavenUpdateRequest request = new MavenUpdateRequest(projects, false, false);
                 Map<String, IStatus> updateStatus = configurationManager.updateProjectConfiguration(request,
                         updateConfiguration,
                         true, true, monitor);

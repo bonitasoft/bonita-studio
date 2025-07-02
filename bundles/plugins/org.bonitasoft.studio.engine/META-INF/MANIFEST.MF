@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Bonita Workflow Engine
 Bundle-SymbolicName: org.bonitasoft.studio.engine;singleton:=true
-Bundle-Version: 9.0.10.qualifier
+Bundle-Version: 10.0.7.qualifier
 Bundle-Activator: org.bonitasoft.studio.engine.EnginePlugin
 Bundle-Vendor: BonitaSoft S.A.
 Bundle-Localization: plugin
@@ -62,7 +62,7 @@ Require-Bundle: org.bonitasoft.bpm.model,
  org.bonitasoft.bonita2bar;visibility:=reexport,
  org.eclipse.m2e.maven.runtime,
  org.eclipse.m2e.core
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Bundle-ActivationPolicy: lazy
-Import-Package: javax.annotation;version="1.2.0",
- javax.inject;version="1.0.0"
+Import-Package: jakarta.annotation;version="2.1.1",
+ jakarta.inject;version="2.0.1"

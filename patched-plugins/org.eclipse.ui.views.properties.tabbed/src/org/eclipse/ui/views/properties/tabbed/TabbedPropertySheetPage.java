@@ -78,6 +78,7 @@ public class TabbedPropertySheetPage
 
 	private ITabbedPropertySheetPageContributor contributor;
 
+	// patch by BonitaSoft
 	protected TabbedPropertyRegistry registry;
 
 	private ITabbedPropertySheetPageContributor selectionContributor = null;
@@ -90,10 +91,12 @@ public class TabbedPropertySheetPage
 
 	protected IStructuredContentProvider tabListContentProvider;
 
+	// patch by BonitaSoft
 	protected ISelection currentSelection;
 
 	private boolean activePropertySheet;
 
+	// patch by BonitaSoft
 	protected TabbedPropertyViewer tabbedPropertyViewer;
 
 	private TabContents currentTab;
@@ -102,8 +105,10 @@ public class TabbedPropertySheetPage
 
 	private Map<TabContents, Composite> tabToComposite;
 
+	// patch by BonitaSoft
 	protected List<String> selectionQueue;
 
+	// patch by BonitaSoft
 	protected boolean selectionQueueLocked;
 
 	private List<ITabSelectionListener> tabSelectionListeners;
@@ -206,6 +211,7 @@ public class TabbedPropertySheetPage
 				// but different section depending on the selection
 				tab = descriptorToTab.get(descriptor);
 
+                // patch by BonitaSoft
                 if (!Objects.equals(tab, currentTab)) {
 					hideTab(currentTab);
 				}
@@ -617,7 +623,7 @@ public class TabbedPropertySheetPage
 	 * @param tabs tabs to dispose
 	 * @since 3.6
 	 */
-	protected void disposeTabs(Collection tabs) {
+	protected void disposeTabs(@SuppressWarnings("rawtypes") Collection tabs) {
 		for (Iterator<TabContents> iter = tabs.iterator(); iter.hasNext();) {
 			TabContents tab = iter.next();
 			Composite composite = tabToComposite.remove(tab);
@@ -630,6 +636,7 @@ public class TabbedPropertySheetPage
 
 	/**
 	 * Returns the last known selected tab for the given input.
+	 * Visibility patched by BonitaSoft
 	 */
 	protected int getLastTabSelection(IWorkbenchPart part, ISelection input) {
 		ITabDescriptor[] descriptors = registry.getTabDescriptors(part, input);
@@ -715,6 +722,7 @@ public class TabbedPropertySheetPage
 		return result;
 	}
 
+	// Visibility patched by BonitaSoft
 	protected void setInput(IWorkbenchPart part, ISelection selection) {
 		if (selection.equals(currentSelection)) {
 			return;
@@ -830,6 +838,7 @@ public class TabbedPropertySheetPage
 
 	/**
 	 * Update the title bar of the contributor has a label provider.
+	 * Visibility patched by BonitaSoft
 	 */
 	protected void refreshTitleBar() {
 		if (hasTitleBar) {
@@ -875,6 +884,7 @@ public class TabbedPropertySheetPage
 	 * It is possible for elements in a selection to implement
 	 * ITabbedPropertySheetPageContributor to provide a different contributor id
 	 * and thus a differenent registry.
+	 * Visibility patched by BonitaSoft
 	 *
 	 * @param selection
 	 *            the current selection in the active workbench part.
@@ -980,7 +990,6 @@ public class TabbedPropertySheetPage
 	 * @since 3.5
 	 */
 	public ITabDescriptor[] getActiveTabs() {
-		@SuppressWarnings("unchecked")
 		List<ITabDescriptor> elements = tabbedPropertyViewer.getElements();
 		if (elements != null && elements.size() > 0) {
 			return elements.toArray(new ITabDescriptor[elements.size()]);
@@ -996,7 +1005,6 @@ public class TabbedPropertySheetPage
 	 * @since 3.5
 	 */
 	public void setSelectedTab(String id) {
-		@SuppressWarnings("unchecked")
 		List<ITabDescriptor> elements = tabbedPropertyViewer.getElements();
 		if (elements != null && elements.size() > 0) {
 			for (ITabDescriptor tabDescriptor : elements) {

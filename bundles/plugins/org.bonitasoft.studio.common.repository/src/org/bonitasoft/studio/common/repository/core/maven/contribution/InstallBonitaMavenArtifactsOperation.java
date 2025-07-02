@@ -10,6 +10,7 @@ package org.bonitasoft.studio.common.repository.core.maven.contribution;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.concurrent.locks.ReentrantLock;
 
 import org.apache.maven.artifact.factory.DefaultArtifactFactory;
 import org.apache.maven.artifact.repository.ArtifactRepository;
@@ -28,6 +29,7 @@ import org.eclipse.swt.widgets.Display;
 public class InstallBonitaMavenArtifactsOperation {
 
     private ArtifactRepository targetRepository;
+    private static final ReentrantLock LOCK = new ReentrantLock();
     
     
     public InstallBonitaMavenArtifactsOperation(ArtifactRepository targetRepository) {
@@ -35,6 +37,7 @@ public class InstallBonitaMavenArtifactsOperation {
     }
     
     public void execute(IProgressMonitor monitor) {
+        LOCK.lock();
         try {
             var localRepositoryContributor = newMavenLocalRepositoryContributor(targetRepository);
             if (localRepositoryContributor != null) {
@@ -47,6 +50,8 @@ public class InstallBonitaMavenArtifactsOperation {
                                 Messages.dependenciesInstallationMsg, e).open());
             }
             BonitaStudioLog.error(e);
+        }finally {
+            LOCK.unlock();
         }
     }
     
@@ -61,7 +66,7 @@ public class InstallBonitaMavenArtifactsOperation {
                 new DependencyCatalog(baseDir,
                         new MavenArtifactParser((DefaultArtifactFactory) maven
                                 .lookup(org.apache.maven.artifact.factory.ArtifactFactory.class))),
-                new MavenInstallFileOperation(maven(), bundledRepository, targetRepository));
+                new MavenInstallFileOperation(bundledRepository, targetRepository));
     }
 
     protected IMaven maven() {

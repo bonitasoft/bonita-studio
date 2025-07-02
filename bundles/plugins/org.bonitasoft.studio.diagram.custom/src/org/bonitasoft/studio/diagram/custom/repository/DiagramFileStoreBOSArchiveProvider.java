@@ -17,7 +17,7 @@ package org.bonitasoft.studio.diagram.custom.repository;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;

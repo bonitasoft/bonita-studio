@@ -20,7 +20,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.net.http.HttpResponse.BodyHandlers;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import org.bonitasoft.bonita2bar.form.FormBuilder;
 import org.bonitasoft.studio.common.net.HttpClientFactory;

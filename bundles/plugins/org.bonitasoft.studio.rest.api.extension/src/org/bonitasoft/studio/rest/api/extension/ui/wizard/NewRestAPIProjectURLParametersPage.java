@@ -18,12 +18,12 @@ import org.bonitasoft.studio.maven.ui.WidgetFactory;
 import org.bonitasoft.studio.maven.ui.wizard.control.StringListViewer;
 import org.bonitasoft.studio.maven.ui.wizard.validator.AllJavaIdentifierValidator;
 import org.eclipse.core.databinding.DataBindingContext;
-import org.eclipse.core.databinding.beans.PojoProperties;
+import org.eclipse.core.databinding.beans.typed.PojoProperties;
 import org.eclipse.core.databinding.conversion.Converter;
 import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.core.databinding.observable.list.IObservableList;
-import org.eclipse.jface.databinding.swt.WidgetProperties;
-import org.eclipse.jface.databinding.viewers.ViewersObservables;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
+import org.eclipse.jface.databinding.viewers.typed.ViewerProperties;
 import org.eclipse.jface.databinding.wizard.WizardPageSupport;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -98,7 +98,7 @@ public class NewRestAPIProjectURLParametersPage extends WizardPage {
 
         final TableViewer viewer = urlParametersViewer.getViewer();
         context.bindValue(WidgetProperties.enabled().observe(removeButton), 
-                ViewersObservables.observeSingleSelection(viewer), 
+                ViewerProperties.singleSelection().observe(viewer), 
                 null,
                 updateValueStrategy().withConverter(convertToEnablement()).create());
 

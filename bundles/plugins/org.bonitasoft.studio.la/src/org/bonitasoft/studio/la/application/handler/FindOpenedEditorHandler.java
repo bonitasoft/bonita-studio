@@ -10,7 +10,7 @@ package org.bonitasoft.studio.la.application.handler;
 
 import java.util.Optional;
 
-import javax.inject.Named;
+import jakarta.inject.Named;
 
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.filestore.EditorFinder;

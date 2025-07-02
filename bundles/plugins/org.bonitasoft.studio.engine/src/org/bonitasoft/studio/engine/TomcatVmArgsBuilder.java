@@ -31,6 +31,7 @@ public class TomcatVmArgsBuilder {
     private static final String HEALTH_CHECK_POLLING_INTERVAL = "org.bonitasoft.studio.healthcheck.interval";
     protected static final String STUDIO_HEALTHCHECK_ENDPOINT_PROPERTY = "org.bonitasoft.studio.healthcheck.endpoint";
     protected static final String BONITA_WEB_REGISTER = "bonita.web.register";
+    protected static final String BONITA_WEB_GET_LOGIN_ENABLED = "org.bonitasoft.web.login.get.enabled";
 
     private final RepositoryAccessor repositoryAccessor;
     private IPreferenceStore enginePreference;
@@ -70,11 +71,27 @@ public class TomcatVmArgsBuilder {
         addStudioHealthCheckEndpointProperties(args);
         addSystemProperty(args, "eclipse.product", getProductApplicationId());
         addSystemProperty(args, BONITA_WEB_REGISTER, System.getProperty(BONITA_WEB_REGISTER, "1"));
+        //Enable login with GET method when opening Bonita application (deactivated by default for security reasons)
+        addSystemProperty(args, BONITA_WEB_GET_LOGIN_ENABLED, Boolean.TRUE.toString());
         addSystemProperty(args, DatabaseHandler.DB_LOCATION_PROPERTY,
                 "\"" + getDBLocation().getAbsolutePath() + "\"");
         addSystemProperty(args, "bonita.csrf.cookie.path", "\"/\"");
         addSystemProperty(args, "bonita.runtime.logger.sysout", "Console");
-        final String res = args.toString();
+        var res = args.toString();
+        // Additional jvm args for Hazelcast
+        res = res + " --add-modules java.se";
+        res = res + " --add-exports java.base/jdk.internal.ref=ALL-UNNAMED";
+        res = res + " --add-opens java.base/java.lang=ALL-UNNAMED";
+        res = res + " --add-opens java.base/sun.nio.ch=ALL-UNNAMED";
+        res = res + " --add-opens java.management/sun.management=ALL-UNNAMED";
+        res = res + " --add-opens jdk.management/com.sun.management.internal=ALL-UNNAMED";
+        // Additional jvm args for XStream serialization
+        res = res + " --add-opens=java.xml/javax.xml.namespace=ALL-UNNAMED";
+        res = res + " --add-opens=java.xml/com.sun.org.apache.xerces.internal.dom=ALL-UNNAMED";
+        res = res + " --add-opens=java.xml/com.sun.org.apache.xerces.internal.xni=ALL-UNNAMED";
+        res = res + " --add-opens=java.base/java.time=ALL-UNNAMED";
+        res = res + " --add-opens=java.base/java.time.chrono=ALL-UNNAMED";
+        res = res + " --add-opens=java.base/java.text=ALL-UNNAMED";
         if (System.getProperty("log.tomcat.vm.args") != null) {
             BonitaStudioLog.info(res, EnginePlugin.PLUGIN_ID);
         }

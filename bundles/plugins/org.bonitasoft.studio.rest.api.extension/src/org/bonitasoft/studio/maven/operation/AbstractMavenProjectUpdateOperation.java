@@ -10,6 +10,7 @@ package org.bonitasoft.studio.maven.operation;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
+import java.util.List;
 import java.util.Objects;
 
 import org.eclipse.core.resources.IProject;
@@ -19,7 +20,10 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.debug.internal.ui.DebugUIPlugin;
+import org.eclipse.debug.internal.ui.IInternalDebugUIConstants;
 import org.eclipse.egit.core.op.ConnectProviderOperation;
+import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.m2e.core.ui.internal.UpdateMavenProjectJob;
 import org.eclipse.team.core.RepositoryProvider;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
@@ -27,33 +31,28 @@ import org.eclipse.ui.actions.WorkspaceModifyOperation;
 public abstract class AbstractMavenProjectUpdateOperation implements IWorkspaceRunnable {
 
     protected IStatus status = Status.OK_STATUS;
-    private boolean updateAfter;
 
-    protected AbstractMavenProjectUpdateOperation(boolean updateAfter) {
-        this.updateAfter = updateAfter;
-    }
-   
     @Override
     public void run(final IProgressMonitor monitor) throws CoreException {
-        final IProject project = doRun(monitor);
-        if (project != null) {
-            shareProject(project, monitor);
-            if (updateAfter) {
-                newUpdateMavenProjectJob(project,
-                        false, //offline
-                        false, // force update dependencies
-                        true, // update configuration
-                        true, //clean project
-                        true // refresh from local
-                        ).schedule();
+        // Disable PREF_WAIT_FOR_BUILD to avoid invalid UI thread access
+        var pref = DebugUIPlugin.getDefault().getPreferenceStore();
+        var waitFor = pref.getString(IInternalDebugUIConstants.PREF_WAIT_FOR_BUILD);
+        pref.setValue(IInternalDebugUIConstants.PREF_WAIT_FOR_BUILD, MessageDialogWithToggle.NEVER);
+        try {
+            final IProject project = doRun(monitor);
+            if (project != null) {
+                shareProject(project, monitor);
             }
+        } finally {
+            pref.setValue(IInternalDebugUIConstants.PREF_WAIT_FOR_BUILD, waitFor);
+            monitor.done();
         }
-        monitor.done();
+
     }
 
     protected void shareProject(final IProject project, final IProgressMonitor monitor) throws CoreException {
-       var parentProject = getParentProject(project);
-       if (RepositoryProvider.getProvider(parentProject, "org.eclipse.egit.core.GitProvider") != null) {
+        var parentProject = getParentProject(project);
+        if (RepositoryProvider.getProvider(parentProject, "org.eclipse.egit.core.GitProvider") != null) {
             var connectProviderOperation = new ConnectProviderOperation(project,
                     new File(parentProject.getLocation().toFile(), ".git"));
             connectProviderOperation.execute(monitor);
@@ -73,7 +72,7 @@ public abstract class AbstractMavenProjectUpdateOperation implements IWorkspaceR
             final boolean updateConfiguration,
             final boolean cleanProject,
             final boolean refreshFromLocal) {
-        return new UpdateMavenProjectJob(new IProject[] { project },
+        return new UpdateMavenProjectJob(List.of(project),
                 isOffline,
                 forceUpdateDependencies,
                 updateConfiguration,

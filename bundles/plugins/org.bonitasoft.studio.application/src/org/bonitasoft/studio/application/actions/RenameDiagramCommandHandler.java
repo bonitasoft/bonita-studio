@@ -42,12 +42,6 @@ import org.eclipse.ui.progress.IProgressService;
 
 public class RenameDiagramCommandHandler extends AbstractHandler {
 
-    private FileStoreFinder fileStoreFinder;
-
-    public RenameDiagramCommandHandler() {
-        fileStoreFinder = new FileStoreFinder();
-    }
-
     @Override
     public Object execute(final ExecutionEvent event) throws ExecutionException {
         String diagramToRename = event.getParameter("diagram");
@@ -83,7 +77,7 @@ public class RenameDiagramCommandHandler extends AbstractHandler {
     @Override
     public boolean isEnabled() {
         if (RepositoryManager.getInstance().hasActiveRepository()) {
-            boolean diagramSelected = fileStoreFinder
+            boolean diagramSelected = new FileStoreFinder()
                     .findSelectedFileStore(RepositoryManager.getInstance().getCurrentRepository().orElseThrow())
                     .filter(DiagramFileStore.class::isInstance).isPresent();
             return diagramSelected || getMainProcess() != null;
@@ -99,7 +93,7 @@ public class RenameDiagramCommandHandler extends AbstractHandler {
                 final EObject mainElement = processDiagramEditor.getDiagramEditPart().resolveSemanticElement();
                 return ModelHelper.getMainProcess(mainElement);
             }
-            return fileStoreFinder
+            return new FileStoreFinder()
                     .findSelectedFileStore(RepositoryManager.getInstance().getCurrentRepository().orElseThrow())
                     .filter(DiagramFileStore.class::isInstance)
                     .map(DiagramFileStore.class::cast)

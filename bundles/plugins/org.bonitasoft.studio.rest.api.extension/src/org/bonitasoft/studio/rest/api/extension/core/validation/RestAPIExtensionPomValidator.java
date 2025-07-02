@@ -30,6 +30,7 @@ import org.apache.maven.project.MavenProject;
 import org.apache.maven.project.ProjectBuildingRequest;
 import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.repository.BuildScheduler;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.core.BonitaProject;
 import org.bonitasoft.studio.maven.i18n.Messages;
@@ -38,14 +39,11 @@ import org.bonitasoft.studio.rest.api.extension.core.repository.RestAPIExtension
 import org.eclipse.aether.artifact.Artifact;
 import org.eclipse.aether.graph.Dependency;
 import org.eclipse.core.databinding.validation.ValidationStatus;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.m2e.core.MavenPlugin;
 import org.eclipse.m2e.core.embedder.ICallable;
 import org.eclipse.m2e.core.embedder.IMaven;
@@ -156,31 +154,25 @@ public class RestAPIExtensionPomValidator {
     }
 
     protected MavenExecutionResult build(RestAPIExtensionFileStore restApiFileStore) throws CoreException {
-        try {
-            Job.getJobManager().join(ResourcesPlugin.FAMILY_AUTO_BUILD, new NullProgressMonitor());
-        } catch (OperationCanceledException | InterruptedException e) {
-            BonitaStudioLog.error(e);
-        }
-        IMaven maven = MavenPlugin.getMaven();
-        MavenProjectInfo info = restApiFileStore.getMavenProjectInfo();
-        var projectFacade = MavenPlugin.getMavenProjectRegistry().getProject(restApiFileStore.getProject());
-        if(projectFacade == null) {
-            return null;
-        }
-        MavenProject project = projectFacade.getMavenProject(new NullProgressMonitor());
-        IMavenExecutionContext createExecutionContext = maven.createExecutionContext();
-        return createExecutionContext.execute(new ICallable<MavenExecutionResult>() {
-
-            @Override
-            public MavenExecutionResult call(IMavenExecutionContext context, IProgressMonitor monitor)
-                    throws CoreException {
-                ProjectBuildingRequest newProjectBuildingRequest = context.newProjectBuildingRequest();
-                newProjectBuildingRequest.setProject(project);
-                newProjectBuildingRequest.setResolveDependencies(true);
-                newProjectBuildingRequest.setProcessPlugins(true);
-                return maven.readMavenProject(info.getPomFile(), newProjectBuildingRequest);
+        return BuildScheduler.callWithBuildRule(() -> {
+            IMaven maven = MavenPlugin.getMaven();
+            MavenProjectInfo info = restApiFileStore.getMavenProjectInfo();
+            var projectFacade = MavenPlugin.getMavenProjectRegistry().getProject(restApiFileStore.getProject());
+            if(projectFacade == null) {
+                return null;
             }
-        }, new NullProgressMonitor());
+            return projectFacade.createExecutionContext().execute(new ICallable<MavenExecutionResult>() {
+
+                @Override
+                public MavenExecutionResult call(IMavenExecutionContext context, IProgressMonitor monitor)
+                        throws CoreException {
+                    ProjectBuildingRequest newProjectBuildingRequest = context.newProjectBuildingRequest();
+                    newProjectBuildingRequest.setResolveDependencies(true);
+                    newProjectBuildingRequest.setProcessPlugins(true);
+                    return maven.readMavenProject(info.getPomFile(), newProjectBuildingRequest);
+                }
+            }, new NullProgressMonitor());
+        });
     }
 
     boolean isBonitaWebExtensionsDependency(Dependency dependency) {
@@ -198,7 +190,6 @@ public class RestAPIExtensionPomValidator {
     BonitaProject getBonitaProject() {
         return RepositoryManager.getInstance().getCurrentProject().orElseThrow();
     }
-
 
     private boolean artifactMatch(Artifact artifact, String groupId, String artifactId) {
         return Objects.equals(artifact.getArtifactId(), artifactId) && Objects.equals(artifact.getGroupId(), groupId);

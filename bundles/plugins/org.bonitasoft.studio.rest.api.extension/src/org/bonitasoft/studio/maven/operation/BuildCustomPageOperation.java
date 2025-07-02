@@ -16,11 +16,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import org.apache.maven.project.MavenProject;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
@@ -33,47 +28,34 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfigurationType;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.debug.core.ILaunchManager;
-import org.eclipse.debug.core.IStreamListener;
-import org.eclipse.debug.core.RefreshUtil;
 import org.eclipse.debug.core.model.IProcess;
-import org.eclipse.debug.core.model.IStreamMonitor;
+import org.eclipse.debug.internal.ui.DebugUIPlugin;
+import org.eclipse.debug.internal.ui.IInternalDebugUIConstants;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.launching.IJavaLaunchConfigurationConstants;
 import org.eclipse.jdt.launching.JavaRuntime;
+import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.m2e.actions.MavenLaunchConstants;
-import org.eclipse.m2e.core.MavenPlugin;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 
 import com.google.common.base.Predicate;
-
 public class BuildCustomPageOperation implements IWorkspaceRunnable {
 
-    private final ILaunchManager launchManager;
     private IStatus status = Status.OK_STATUS;
     private final ExtensionProjectDescriptor fileStoreDescriptor;
-    private String mavenGoals;
-    private boolean logToSysout = false;
-    private final Set<String> activatedProfiles = new HashSet<>();
 
-    public BuildCustomPageOperation(final ExtensionProjectDescriptor fileStoreDescriptor,
-            final ILaunchManager launchManager) {
-        this(fileStoreDescriptor, launchManager, "clean verify");
-    }
-
-    public BuildCustomPageOperation(final ExtensionProjectDescriptor fileStoreDescriptor,
-            final ILaunchManager launchManager, final String mavenGoals) {
+    public BuildCustomPageOperation(final ExtensionProjectDescriptor fileStoreDescriptor) {
         this.fileStoreDescriptor = fileStoreDescriptor;
-        this.launchManager = launchManager;
-        this.mavenGoals = mavenGoals;
     }
 
     @Override
@@ -81,26 +63,20 @@ public class BuildCustomPageOperation implements IWorkspaceRunnable {
         final String taskName = NLS.bind(Messages.building,
                 String.format("%s (%s)", fileStoreDescriptor.getArtifactId(), fileStoreDescriptor.getVersion()));
         monitor.subTask(taskName);
-        final ILaunchConfigurationType launchConfigurationType = launchManager
-                .getLaunchConfigurationType(MavenLaunchConstants.LAUNCH_CONFIGURATION_TYPE_ID);
+        var pref = DebugUIPlugin.getDefault().getPreferenceStore();
+        var waitFor = pref.getString(IInternalDebugUIConstants.PREF_WAIT_FOR_BUILD);
+        pref.setValue(IInternalDebugUIConstants.PREF_WAIT_FOR_BUILD, MessageDialogWithToggle.NEVER);
         ILaunchConfigurationWorkingCopy workingCopy = null;
         try {
+            final ILaunchConfigurationType launchConfigurationType = launchManager()
+                    .getLaunchConfigurationType(MavenLaunchConstants.LAUNCH_CONFIGURATION_TYPE_ID);
             workingCopy = launchConfigurationType.newInstance(null, taskName);
             configureLaunchConfiguration(workingCopy);
-            final ILaunch launch = workingCopy.launch(ILaunchManager.RUN_MODE, AbstractRepository.NULL_PROGRESS_MONITOR,
+            final ILaunch launch = workingCopy.launch(ILaunchManager.RUN_MODE, new NullProgressMonitor(),
                     true);
             final IProcess process = launch.getProcesses()[0];
             final StringBuilder output = new StringBuilder();
-            process.getStreamsProxy().getOutputStreamMonitor().addListener(new IStreamListener() {
-
-                @Override
-                public void streamAppended(final String text, final IStreamMonitor monitor) {
-                    if (logToSysout) {
-                        System.out.print(text);
-                    }
-                    output.append(text);
-                }
-            });
+            process.getStreamsProxy().getOutputStreamMonitor().addListener((text, monitor1) -> output.append(text));
             waitForBuildProcessTermination(launch);
             String statusMessage = process.getExitValue() == 0
                     ? String.format(Messages.customPageBuildSuccess, fileStoreDescriptor.getCustomPageName())
@@ -108,6 +84,7 @@ public class BuildCustomPageOperation implements IWorkspaceRunnable {
             status = new Status(process.getExitValue() == 0 ? IStatus.OK : IStatus.ERROR,
                     RestAPIExtensionActivator.PLUGIN_ID, statusMessage);
         } finally {
+            pref.setValue(IInternalDebugUIConstants.PREF_WAIT_FOR_BUILD, waitFor);
             if (workingCopy != null) {
                 try {
                     workingCopy.delete();
@@ -120,10 +97,15 @@ public class BuildCustomPageOperation implements IWorkspaceRunnable {
         }
     }
 
+    ILaunchManager launchManager() {
+        return  DebugPlugin.getDefault().getLaunchManager();
+    }
+
+
     protected void waitForBuildProcessTermination(final ILaunch launch) {
         while (!launch.isTerminated()) {
             try {
-                Thread.sleep(1000);
+                Thread.sleep(500);
             } catch (final InterruptedException e) {
             }
         }
@@ -131,33 +113,21 @@ public class BuildCustomPageOperation implements IWorkspaceRunnable {
 
     protected void configureLaunchConfiguration(final ILaunchConfigurationWorkingCopy workingCopy)
             throws CoreException {
-        workingCopy.setAttribute(MavenLaunchConstants.ATTR_POM_DIR,
-                fileStoreDescriptor.getMavenProject()
-                        .map(MavenProject::getBasedir)
-                        .map(File::getAbsolutePath)
-                        .orElseThrow(() -> new CoreException(new Status(IStatus.ERROR,
-                                RestAPIExtensionActivator.PLUGIN_ID,
-                                String.format("No maven project found for %s", fileStoreDescriptor.getName())))));
-        workingCopy.setAttribute(MavenLaunchConstants.ATTR_GOALS, mavenGoals);
-        workingCopy.setAttribute(MavenLaunchConstants.ATTR_PROFILES,
-                activeProfiles());
+        var baseDir = fileStoreDescriptor.getMavenProject()
+                .map(MavenProject::getBasedir)
+                .orElseThrow(() -> new CoreException(new Status(IStatus.ERROR,
+                        RestAPIExtensionActivator.PLUGIN_ID,
+                        String.format("No maven project found for %s", fileStoreDescriptor.getName()))));
+        workingCopy.setAttribute(MavenLaunchConstants.ATTR_POM_DIR, baseDir.getParentFile().getParentFile().getAbsolutePath());
+        workingCopy.setAttribute(MavenLaunchConstants.ATTR_GOALS,  String.format("-am -pl extensions/%s clean verify", baseDir.getName()));
         workingCopy.setAttribute(ILaunchManager.ATTR_PRIVATE, true);
-        workingCopy.setAttribute(RefreshUtil.ATTR_REFRESH_SCOPE, "${project}");
-        workingCopy.setAttribute(RefreshUtil.ATTR_REFRESH_RECURSIVE, true);
-        workingCopy.setAttribute(DebugPlugin.ATTR_CAPTURE_OUTPUT, true);
+        workingCopy.setAttribute(MavenLaunchConstants.ATTR_BATCH, true);
         workingCopy.setAttribute(DebugPlugin.ATTR_CONSOLE_ENCODING, "UTF-8");
         final IPath path = getJREContainerPath(fileStoreDescriptor.getProject());
         if (path != null) {
             workingCopy.setAttribute(IJavaLaunchConfigurationConstants.ATTR_JRE_CONTAINER_PATH,
                     path.toPortableString());
         }
-    }
-
-    protected String activeProfiles() {
-        final List<String> activeProfileList = MavenPlugin.getProjectConfigurationManager()
-                .getResolverConfiguration(fileStoreDescriptor.getProject()).getActiveProfileList();
-        return Stream.concat(activeProfileList.stream(), activatedProfiles.stream()).distinct()
-                .collect(Collectors.joining(","));
     }
 
     private IPath getJREContainerPath(final IProject project) throws CoreException {
@@ -206,18 +176,6 @@ public class BuildCustomPageOperation implements IWorkspaceRunnable {
                 BuildCustomPageOperation.this.run(monitor);
             }
         };
-    }
-
-    public void setLogToSysout(final boolean logToSysout) {
-        this.logToSysout = logToSysout;
-    }
-
-    public void setGoals(String mavenGoals) {
-        this.mavenGoals = mavenGoals;
-    }
-
-    public void activateProfile(String profileId) {
-        this.activatedProfiles.add(profileId);
     }
 
 }

@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import javax.inject.Named;
+import jakarta.inject.Named;
 
 import org.bonitasoft.bpm.model.process.Pool;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;

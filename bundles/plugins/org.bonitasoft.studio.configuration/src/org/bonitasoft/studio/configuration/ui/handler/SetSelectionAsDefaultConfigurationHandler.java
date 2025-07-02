@@ -20,16 +20,10 @@ import org.eclipse.e4.core.di.annotations.Execute;
 
 public class SetSelectionAsDefaultConfigurationHandler {
 
-    private FileStoreFinder fileStoreFinder;
-
-    public SetSelectionAsDefaultConfigurationHandler() {
-        fileStoreFinder = new FileStoreFinder();
-    }
-
     @Execute
     public void execute(RepositoryAccessor repositoryAccessor) {
         repositoryAccessor.getCurrentRepository().ifPresent(repo -> {
-            fileStoreFinder.findSelectedFileStore(repo)
+            new FileStoreFinder().findSelectedFileStore(repo)
                     .filter(EnvironmentFileStore.class::isInstance)
                     .flatMap(IDisplayable::toDisplayName)
                     .ifPresent(displayName -> {
@@ -43,7 +37,7 @@ public class SetSelectionAsDefaultConfigurationHandler {
     @CanExecute
     public boolean canExecute(RepositoryAccessor repositoryAccessor) {
         return repositoryAccessor.getCurrentRepository().isPresent()
-                && fileStoreFinder.findSelectedFileStore(repositoryAccessor.getCurrentRepository().orElse(null))
+                &&  new FileStoreFinder().findSelectedFileStore(repositoryAccessor.getCurrentRepository().orElse(null))
                         .filter(EnvironmentFileStore.class::isInstance)
                         .isPresent();
     }

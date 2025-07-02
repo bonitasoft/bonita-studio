@@ -3,11 +3,11 @@ Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.bonitasoft.studio.connectors.model.edit;singleton:=true
 Automatic-Module-Name: org.bonitasoft.studio.connectors.model.edit
-Bundle-Version: 9.0.10.qualifier
+Bundle-Version: 10.0.7.qualifier
 Bundle-ClassPath: .
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Export-Package: org.bonitasoft.studio.connector.model.definition,
  org.bonitasoft.studio.connector.model.definition.dialog,
  org.bonitasoft.studio.connector.model.definition.migration,
@@ -50,4 +50,4 @@ Require-Bundle: org.eclipse.core.runtime,
  org.bonitasoft.studio.ui,
  org.bonitasoft.bpm.connector.model.edit
 Bundle-ActivationPolicy: lazy
-Import-Package: javax.inject
+Import-Package: jakarta.inject;version="2.0.1"
