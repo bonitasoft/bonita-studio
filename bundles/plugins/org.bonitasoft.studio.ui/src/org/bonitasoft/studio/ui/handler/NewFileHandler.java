@@ -16,9 +16,6 @@ package org.bonitasoft.studio.ui.handler;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-
-import jakarta.inject.Named;
 
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
@@ -35,6 +32,8 @@ import org.eclipse.e4.ui.services.IServiceConstants;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
+import jakarta.inject.Named;
+
 public abstract class NewFileHandler extends AbstractHandler {
 
     @Execute
@@ -43,7 +42,7 @@ public abstract class NewFileHandler extends AbstractHandler {
         openHelpDialog(activeShell);
         List<String> existingFileNameList = getRepositoryStore(repositoryAccessor).getChildren().stream()
                 .map(IDisplayable::toDisplayName).filter(Optional::isPresent).map(Optional::get)
-                .collect(Collectors.toList());
+                .toList();
         createFileStore(repositoryAccessor,
                 StringIncrementer.getNextIncrement(getDefaultFileName(), existingFileNameList)).open();
     }
@@ -63,11 +62,9 @@ public abstract class NewFileHandler extends AbstractHandler {
         return null;
     }
 
+    @Override
     @CanExecute
     public boolean isEnabled() {
-        if (RepositoryManager.getInstance().hasActiveRepository()) {
-            return true;
-        }
-        return false;
+        return RepositoryManager.getInstance().hasActiveRepository();
     }
 }

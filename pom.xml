@@ -6,19 +6,19 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.bonitasoft.studio</groupId>
     <artifactId>studio</artifactId>
-    <version>10.0.7-SNAPSHOT</version>
+    <version>10.1.6-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>Bonita Studio</name>
     <properties>
         <tychoVersion>4.0.5</tychoVersion>
         <java.version>17</java.version>
         <os-jvm-flags></os-jvm-flags>
-        <branding.version>2024.1-SNAPSHOT</branding.version>
-        <bonita-runtime.version>10.0-SNAPSHOT</bonita-runtime.version>
-        <ui.designer.version>1.18.5</ui.designer.version>
+        <branding.version>2024.2-SNAPSHOT</branding.version>
+        <bonita-runtime.version>10.1-SNAPSHOT</bonita-runtime.version>
+        <ui.designer.version>1.19.1</ui.designer.version>
         <business.data.repository.version>1.0.0</business.data.repository.version>
         <platform.version>${project.parent.version}</platform.version>
-        <tomcat.version>9.0.81</tomcat.version>
+        <tomcat.version>9.0.86</tomcat.version>
         <marketplace.version>1.1.7</marketplace.version>
         <marketplace.md5Checksum>01798d7026f7a00c7ec312653ffdd831</marketplace.md5Checksum>
         <tycho.localArtifacts>ignore</tycho.localArtifacts>
@@ -29,7 +29,7 @@
         <groovy-maven-plugin.groovy.version>3.0.19</groovy-maven-plugin.groovy.version>
         <!-- Must be synched with org.bonitasoft.studio.common.repository.core.maven.model.DefaultPluginVersions.MAVEN_DEPENDENCY_PLUGIN_VERSION -->
         <maven-dependency-plugin.version>3.6.1</maven-dependency-plugin.version>
-        <maven-assembly-plugin.version>3.6.0</maven-assembly-plugin.version>
+        <maven-assembly-plugin.version>3.7.1</maven-assembly-plugin.version>
         <maven3-model-jdom-support.version>1.6</maven3-model-jdom-support.version>
         <jacocoVersion>0.8.11</jacocoVersion>
     </properties>

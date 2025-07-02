@@ -422,7 +422,7 @@
     <repository
         url="https://projectlombok.org/p2"/>
     <repository
-        url="https://groovy.jfrog.io/artifactory/plugins-release/e4.29"/>
+        url="https://groovy.jfrog.io/artifactory/plugins-release/e4.31"/>
     <repository
         url="https://de-jcup.github.io/update-site-eclipse-asciidoctor-editor/update-site"/>
     <repository
@@ -430,7 +430,7 @@
     <repository
         url="https://eclipse-uc.sonarlint.org"/>
     <repository
-        url="https://download.eclipse.org/cbi/updates/tpd/nightly/N202305061445"/>
+        url="https://download.eclipse.org/cbi/updates/tpd/nightly/latest"/>
     <description>Install the tools needed in the IDE to work with the source code for ${scope.project.label}</description>
   </setupTask>
   <setupTask
@@ -682,5 +682,5 @@
       </repositoryList>
     </targlet>
   </setupTask>
-  <description>Bonita Studio - Development environment - Common configuration.\r\nReady for Eclipse IDE for RCP and RAP Developers - 2023-09.</description>
+  <description>Bonita Studio - Development environment - Common configuration.\r\nReady for Eclipse IDE for RCP and RAP Developers - 2024-03.</description>
 </setup:CompoundTask>

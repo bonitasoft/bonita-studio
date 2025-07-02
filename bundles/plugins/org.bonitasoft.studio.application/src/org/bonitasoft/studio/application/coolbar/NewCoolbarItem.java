@@ -78,7 +78,7 @@ public class NewCoolbarItem extends ContributionItem implements IBonitaContribut
 
         public boolean add(String commandId, String label, Image icon) {
             Command command = commandService.getCommand(commandId);
-            if (command != null && command.isDefined() && command.isHandled()) {
+            if (command != null && command.isDefined() && command.isHandled() && command.isEnabled()) {
                 final MenuItem menuItem = new MenuItem(menu, SWT.PUSH);
                 try {
                     menuItem.setText(label != null ? label : command.getName());

@@ -31,51 +31,51 @@ public interface DefaultPluginVersions {
     static final String MAVEN_INSTALL_PLUGIN_VERSION = "3.1.1";
     
     static final String MAVEN_COMPILER_PLUGIN = "maven-compiler-plugin";
-    static final String MAVEN_COMPILER_PLUGIN_VERSION = "3.11.0";
+    static final String MAVEN_COMPILER_PLUGIN_VERSION = "3.13.0";
     
     static final String MAVEN_ASSEMBLY_PLUGIN = "maven-assembly-plugin";
-    static final String MAVEN_ASSEMBLY_PLUGIN_VERSION = "3.6.0";
+    static final String MAVEN_ASSEMBLY_PLUGIN_VERSION = "3.7.1";
     
     static final String MAVEN_SUREFIRE_PLUGIN = "maven-surefire-plugin";
-    static final String MAVEN_SUREFIRE_PLUGIN_VERSION = "3.2.1";
+    static final String MAVEN_SUREFIRE_PLUGIN_VERSION = "3.2.5";
     
     static final String GROOVY_MAVEN_PLUGIN_GROUP_ID = "org.codehaus.gmavenplus";
     static final String GROOVY_MAVEN_PLUGIN_ARTIFACT_ID = "gmavenplus-plugin";
     static final String GROOVY_MAVEN_PLUGIN_VERSION = "3.0.2";
     
     static final String MAVEN_FAILSAFE_PLUGIN = "maven-failsafe-plugin";
-    static final String MAVEN_FAILSAFE_PLUGIN_VERSION = "3.2.1";
+    static final String MAVEN_FAILSAFE_PLUGIN_VERSION = "3.2.5";
     
     static final String MAVEN_SHADE_PLUGIN = "maven-shade-plugin";
-    static final String MAVEN_SHADE_PLUGIN_VERSION = "3.5.1";
+    static final String MAVEN_SHADE_PLUGIN_VERSION = "3.5.3";
     
     static final String MAVEN_SOURCE_PLUGIN = "maven-source-plugin";
-    static final String MAVEN_SOURCE_PLUGIN_VERSION = "3.3.0";
+    static final String MAVEN_SOURCE_PLUGIN_VERSION = "3.3.1";
     
     static final String MAVEN_JAVADOC_PLUGIN = "maven-javadoc-plugin";
-    static final String MAVEN_JAVADOC_PLUGIN_VERSION = "3.6.0";
+    static final String MAVEN_JAVADOC_PLUGIN_VERSION = "3.6.3";
     
     static final String MAVEN_DEPLOY_PLUGIN = "maven-deploy-plugin";
-    static final String MAVEN_DEPLOY_PLUGIN_VERSION = "3.1.1";
+    static final String MAVEN_DEPLOY_PLUGIN_VERSION = "3.1.2";
     
     static final String MAVEN_CLEAN_PLUGIN = "maven-clean-plugin";
-    static final String MAVEN_CLEAN_PLUGIN_VERSION = "3.2.1";
+    static final String MAVEN_CLEAN_PLUGIN_VERSION = "3.3.2";
     
     static final String MAVEN_RESOURCES_PLUGIN = "maven-resources-plugin";
     static final String MAVEN_RESOURCES_PLUGIN_VERSION = "3.3.1";
     
     static final String MAVEN_JAR_PLUGIN = "maven-jar-plugin";
-    static final String MAVEN_JAR_PLUGIN_VERSION = "3.3.0";
+    static final String MAVEN_JAR_PLUGIN_VERSION = "3.4.1";
     
     static final String FLATTEN_MAVEN_PLUGIN = "flatten-maven-plugin";
-    static final String FLATTEN_MAVEN_PLUGIN_VERSION = "1.5.0";
+    static final String FLATTEN_MAVEN_PLUGIN_VERSION = "1.6.0";
     
     static final String BONITA_PROJECT_MAVEN_PLUGIN_ARTIFACT_ID = "bonita-project-maven-plugin";
 
     static final String BONITA_PROJECT_MAVEN_PLUGIN_DEFAULT_VERSION = "1.0.4";
 
     static final String BUILD_HELPER_MAVEN_PLUGIN = "build-helper-maven-plugin";
-    static final String BUILD_HELPER_MAVEN_PLUGIN_VERSION = "3.4.0";
+    static final String BUILD_HELPER_MAVEN_PLUGIN_VERSION = "3.6.0";
     
     static final String MAVEN_DEPENDENCY_PLUGIN = "maven-dependency-plugin";
     static final String MAVEN_DEPENDENCY_PLUGIN_VERSION = "3.6.1";

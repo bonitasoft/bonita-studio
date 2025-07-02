@@ -229,6 +229,6 @@
       href="index:/org.eclipse.setup#//@projectCatalogs[name='com.github']"/>
   <description>
     Bonita Studio - Development environment.
-    Ready for Eclipse IDE for RCP and RAP Developers - 2023-09.
+    Ready for Eclipse IDE for RCP and RAP Developers - 2024-03.
   </description>
 </setup:Project>
