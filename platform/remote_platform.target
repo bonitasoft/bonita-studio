@@ -57,7 +57,7 @@
         </location>
        <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
             <repository location="http://download.eclipse.org/modeling/gmp/gmf-tooling/updates/releases-3.2.1"/>
-            <unit id="org.eclipse.gmf.tooling.runtime" version="0.0.0"/> 
+            <unit id="org.eclipse.gmf.tooling.runtime" version="0.0.0"/>
         </location>
         <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
             <repository location="https://download.eclipse.org/nebula/releases/2.6.0/"/>
@@ -159,12 +159,12 @@
    it under the terms of the GNU General Public License as published by
    the Free Software Foundation, either version 2.0 of the License, or
    (at your option) any later version.
-   
+
    This program is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
    GNU General Public License for more details.
-   
+
    You should have received a copy of the GNU General Public License
    along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
    </license>
@@ -179,8 +179,8 @@
                 </dependencies>
                  <repositories>
                     <repository>
-                        <id>ossrh-snapshots</id>
-                        <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+                        <id>maven-central-snapshots</id>
+                        <url>https://central.sonatype.com/repository/maven-snapshots</url>
                     </repository>
                 </repositories>
                 <instructions><![CDATA[
@@ -207,20 +207,20 @@ DynamicImport-Package: *
    it under the terms of the GNU General Public License as published by
    the Free Software Foundation, either version 2.0 of the License, or
    (at your option) any later version.
-   
+
    This program is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
    GNU General Public License for more details.
-   
+
    You should have received a copy of the GNU General Public License
    along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
    </license>
 		        </feature>
 		          <repositories>
 			        <repository>
-				        <id>ossrh-snapshots</id>
-				        <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+				        <id>maven-central-snapshots</id>
+                        <url>https://central.sonatype.com/repository/maven-snapshots</url>
 			        </repository>
 		        </repositories>
 		        <dependencies>

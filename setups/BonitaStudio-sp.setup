@@ -94,8 +94,8 @@
         					&lt;snapshots>
         						&lt;enabled>true&lt;/enabled>
         					&lt;/snapshots>
-                            &lt;id>ossrh-snapshots&lt;/id>
-                            &lt;url>https://oss.sonatype.org/content/repositories/snapshots&lt;/url>
+                            &lt;id>maven-central-snapshots&lt;/id>
+                            &lt;url>https://central.sonatype.com/repository/maven-snapshots&lt;/url>
                         &lt;/repository>
                     &lt;/repositories>
                     &lt;pluginRepositories>
@@ -125,8 +125,8 @@
         					&lt;snapshots>
         						&lt;enabled>true&lt;/enabled>
         					&lt;/snapshots>
-                            &lt;id>ossrh-snapshots&lt;/id>
-                            &lt;url>https://oss.sonatype.org/content/repositories/snapshots&lt;/url>
+                            &lt;id>maven-central-snapshots&lt;/id>
+                            &lt;url>https://central.sonatype.com/repository/maven-snapshots&lt;/url>
                         &lt;/pluginRepository>
                     &lt;/pluginRepositories>
                 &lt;/profile>
