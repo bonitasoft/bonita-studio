@@ -35,7 +35,7 @@ public class MavenParentProjectModelBuilder implements MavenModelBuilder{
     private String bonitaVersion;
     private boolean useSnapshotRepository;
     private boolean includeAdminApp;
-    
+
     public MavenParentProjectModelBuilder() {
         this(false);
     }
@@ -91,7 +91,7 @@ public class MavenParentProjectModelBuilder implements MavenModelBuilder{
     public void setBonitaVersion(String bonitaVersion) {
         this.bonitaVersion = bonitaVersion;
     }
-    
+
     @Override
     public void setIncludeAdminApp(boolean includeAdminApp) {
       this.includeAdminApp = includeAdminApp;
@@ -112,17 +112,17 @@ public class MavenParentProjectModelBuilder implements MavenModelBuilder{
         bonitaProjectParent.setGroupId(DefaultPluginVersions.BONITA_PROJECT_GROUP_ID);
         bonitaProjectParent.setArtifactId(DefaultPluginVersions.BONITA_PROJECT_ARTIFACT_ID);
         bonitaProjectParent.setVersion(bonitaRuntimeVersion);
-        model.setParent(bonitaProjectParent); 
-        
+        model.setParent(bonitaProjectParent);
+
         // Set an empty license to avoid inheriting the parent GPLv2 license.
         model.setLicenses(List.of(new License()));
-        
+
         model.getModules().add(APP_MODULE_NAME);
 
         if(useSnapshotRepository) {
             var pluginRepository = new Repository();
-            pluginRepository.setId("ossrh-snapshots");
-            pluginRepository.setUrl("https://oss.sonatype.org/content/repositories/snapshots");
+            pluginRepository.setId("maven-central-snapshots");
+            pluginRepository.setUrl("https://central.sonatype.com/repository/maven-snapshots/");
             var disableRelease = new RepositoryPolicy();
             disableRelease.setEnabled(false);
             pluginRepository.setReleases(disableRelease);
