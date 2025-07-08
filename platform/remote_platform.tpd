@@ -150,8 +150,8 @@ maven BonitaProjectReportModel scope=compile,runtime,system dependencyDepth=none
         artifactId="bonita-project-report-model"
         version="2.1.1"
     }
-    // add ossrh-snapshots when temporary using a snapshot maven version.
-    //repository id="ossrh-snapshots" url="https://oss.sonatype.org/content/repositories/snapshots"
+    // add maven-central-snapshots when temporary using a snapshot maven version.
+    //repository id="maven-central-snapshots" url="https://central.sonatype.com/repository/maven-snapshots"
     repository id="maven-central" url="https://repo1.maven.org/maven2"
 }
 maven BonitaArtifactsModels scope=compile,runtime,system dependencyDepth=none missingManifest=generate includeSources {
@@ -207,7 +207,7 @@ maven BonitaArtifactsModels scope=compile,runtime,system dependencyDepth=none mi
         artifactId="osgi-resource-locator"
         version="2.4.0"
     }
-    // add ossrh-snapshots when temporary using a snapshot maven version.
-    //repository id="ossrh-snapshots" url="https://oss.sonatype.org/content/repositories/snapshots"
+    // add maven-central-snapshots when temporary using a snapshot maven version.
+    //repository id="maven-central-snapshots" url="https://central.sonatype.com/repository/maven-snapshots"
     repository id="maven-central" url="https://repo1.maven.org/maven2"
 }
