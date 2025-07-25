@@ -18,6 +18,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -218,39 +219,84 @@ public class ExtensionProjectFileStore<T extends ExtensionProjectDescriptor> ext
 
     @Override
     protected void doDelete() {
+        IProgressMonitor monitor = new NullProgressMonitor();
+        Optional<IProject> projectOpt;
         try {
-            IProject project = getContent().getProject();
-            // Close opened resources from this project
-            IWorkbenchWindow activeWorkbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-            if (activeWorkbenchWindow != null) {
-                IWorkbenchPage activePage = activeWorkbenchWindow.getActivePage();
-                for (IEditorReference ref : activePage.getEditorReferences()) {
-                    IResource resource = ref.getEditorInput().getAdapter(IResource.class);
-                    if (resource != null && Objects.equals(resource.getProject(), project)) {
-                        activePage.closeEditor(ref.getEditor(false), false);
+            projectOpt = Optional.ofNullable(getContent().getProject());
+        } catch (ReadFileStoreException e) {
+            BonitaStudioLog.error(e);
+            projectOpt = Optional.empty();
+        }
+        var gav = Optional.ofNullable(getGAV()).orElseGet(() -> {
+            // rely on projectInfo when the project is not available
+            var projectInfo = getMavenProjectInfo();
+            try {
+                var model = MavenProjectHelper.readModel(projectInfo.getPomFile());
+                if (model.getArtifactId() != null) {
+                    var g = Optional.ofNullable(model.getGroupId()).orElse("${project.groupId}");
+                    var v = Optional.ofNullable(model.getVersion()).orElse("${project.version}");
+                    return new GAV(g, model.getArtifactId(), v);
+                }
+            } catch (CoreException e) {
+                BonitaStudioLog.error(e);
+            }
+            return null;
+        });
+
+        if (projectOpt.isPresent()) {
+            try {
+                // Close opened resources from this project
+                IWorkbenchWindow activeWorkbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+                if (activeWorkbenchWindow != null) {
+                    IWorkbenchPage activePage = activeWorkbenchWindow.getActivePage();
+                    for (IEditorReference ref : activePage.getEditorReferences()) {
+                        IResource resource = ref.getEditorInput().getAdapter(IResource.class);
+                        if (resource != null && Objects.equals(resource.getProject(), projectOpt.get())) {
+                            activePage.closeEditor(ref.getEditor(false), false);
+                        }
                     }
                 }
+
+                // close project before deleting maven module and avoid exception
+                projectOpt.get().close(monitor);
+            } catch (CoreException e) {
+                BonitaStudioLog.error(e);
             }
-
-            IProgressMonitor monitor = new NullProgressMonitor();
-            var gav = getGAV();
-            // close project before deleting maven module and avoid exception
-            project.close(monitor);
-
-            getRepositoryAccessor().getCurrentProject().ifPresent(p -> {
-                try {
+        }
+        // make sure the module is removed from extensions parent pom (even when previous step failed)
+        getRepositoryAccessor().getCurrentProject().ifPresent(p -> {
+            try {
+                if (gav != null) {
                     var dependency = toDependency(gav);
                     new RemoveDependencyOperation(dependency).run(monitor);
-                    p.removeModule(p.getExtensionsParentProject(), project.getName(), monitor);
-                } catch (CoreException e) {
-                    BonitaStudioLog.error(e);
                 }
+                IProject extensionsParentProject = p.getExtensionsParentProject();
+                if (extensionsParentProject != null && extensionsParentProject.exists()) {
+                    p.removeModule(extensionsParentProject, ExtensionProjectFileStore.this.getName(), monitor);
+                } else {
+                    // sometimes, only the Eclipse project is missing...
+                    var extensionsParentPom = p.getParentProject().getLocation().toPath()
+                            .resolve(ExtensionRepositoryStore.STORE_NAME).resolve("pom.xml");
+                    if (Files.exists(extensionsParentPom)) {
+                        var model = MavenProjectHelper.readModel(extensionsParentPom.toFile());
+                        model.getModules().remove(ExtensionProjectFileStore.this.getName());
+                        MavenProjectHelper.saveModel(extensionsParentPom, model);
+                    }
+                }
+            } catch (CoreException e) {
+                BonitaStudioLog.error(e);
+            }
 
-            });
-
-            project.delete(true, true, monitor);
-
-        } catch (CoreException | ReadFileStoreException e) {
+        });
+        // try and delete whatever occurred beforehand
+        if (projectOpt.isPresent()) {
+            try {
+                projectOpt.get().delete(true, true, monitor);
+            } catch (CoreException e) {
+                BonitaStudioLog.error(e);
+                super.doDelete();
+            }
+        } else {
             super.doDelete();
         }
     }

@@ -78,7 +78,7 @@ public class UpdateProjectDescriptionMigrationStep implements MigrationStep {
         return MigrationReport.emptyReport();
     }
 
-    private void writeDescriptor(Path descriptor, IProjectDescription description) throws CoreException {
+    public static void writeDescriptor(Path descriptor, IProjectDescription description) throws CoreException {
         var objectWriter = new ModelObjectWriter();
         try (var out = Files.newOutputStream(descriptor)) {
             objectWriter.write(description, out, getLineSeparator(descriptor));

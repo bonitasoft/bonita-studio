@@ -24,13 +24,19 @@ import java.util.stream.Collectors;
 
 import org.bonitasoft.plugin.analyze.report.model.Definition;
 import org.bonitasoft.studio.common.ModelVersion;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.model.validator.ModelNamespaceValidator;
 import org.bonitasoft.studio.common.model.validator.XMLModelCompatibilityValidator;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.core.migration.report.MigrationReport;
+import org.bonitasoft.studio.common.repository.core.migration.step.ConnectorsModuleMigrationStep;
 import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.provider.DefinitionResourceProvider;
 import org.bonitasoft.studio.connector.model.definition.AbstractDefinitionRepositoryStore;
 import org.bonitasoft.studio.connectors.ConnectorPlugin;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -96,11 +102,34 @@ public class ConnectorDefRepositoryStore extends AbstractDefinitionRepositorySto
 
     @Override
     protected ConnectorDefFileStore doImportInputStream(final String fileName, final InputStream inputStream) {
-        final ConnectorDefFileStore definition = super.doImportInputStream(fileName, inputStream);
-        if (definition != null) {
-            resourceProvider.loadDefinitionsCategories(null);
+        /*
+         * Import it in the legacy folder
+         * in order to migrate it with the ConnectorsModuleMigrationStep afterward
+         * (and do not worry about modules creation here)
+         */
+        IFolder legacyFolder = getRepository().getProject().getFolder(getName());
+        try {
+            final IFile file = legacyFolder.getFile(fileName);
+            final File f = file.getLocation().toFile();
+            if (!f.getParentFile().exists()) {
+                f.getParentFile().mkdirs();
+                legacyFolder.refreshLocal(IResource.DEPTH_INFINITE, AbstractRepository.NULL_PROGRESS_MONITOR);
+            }
+            file.create(inputStream, true, AbstractRepository.NULL_PROGRESS_MONITOR);
+        } catch (CoreException e) {
+            BonitaStudioLog.error(e);
         }
-        return definition;
+        var result = createRepositoryFileStore(fileName);
+        var shouldMigrate = false;
+        if (shouldMigrate) {
+            try {
+                var report = migrate(AbstractRepository.NULL_PROGRESS_MONITOR);
+                report.merge(result.getMigrationReport());
+            } catch (CoreException | MigrationException e) {
+                BonitaStudioLog.error(e);
+            }
+        }
+        return result;
     }
 
     @Override
@@ -121,11 +150,17 @@ public class ConnectorDefRepositoryStore extends AbstractDefinitionRepositorySto
     @Override
     public MigrationReport migrate(IProgressMonitor monitor)
             throws CoreException, MigrationException {
-        var report = super.migrate(monitor);
-        if (PlatformUI.isWorkbenchRunning()) {
-            getResourceProvider().loadDefinitionsCategories(null);
+        if (getRepository().getProject().getFolder(getName()).exists()) {
+            // rely on ConnectorsModuleMigrationStep which already does the hard job
+            var report = new ConnectorsModuleMigrationStep().run(repository.getProject().getLocation().toPath(),
+                    monitor);
+            if (PlatformUI.isWorkbenchRunning()) {
+                getResourceProvider().loadDefinitionsCategories(null);
+            }
+            return report;
+        } else {
+            return super.migrate(monitor);
         }
-        return report;
     }
 
     @Override

@@ -43,8 +43,6 @@ import org.eclipse.m2e.core.internal.IMavenConstants;
 import org.eclipse.m2e.core.project.IArchetype;
 import org.eclipse.m2e.core.project.IMavenProjectImportResult;
 import org.eclipse.m2e.core.project.ProjectImportConfiguration;
-import org.eclipse.m2e.core.ui.internal.M2EUIPluginActivator;
-import org.eclipse.m2e.core.ui.internal.archetype.ArchetypeGenerator;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.navigator.CommonViewer;
@@ -79,14 +77,9 @@ public abstract class CreateExtensionProjectOperation extends AbstractMavenProje
     protected IProject doRun(final IProgressMonitor monitor) throws CoreException {
         monitor.beginTask(Messages.creatingRestAPIExtensionProject, IProgressMonitor.UNKNOWN);
         var location = prepareProjectLocation(monitor);
-        var mavenProjects = archetypeGenerator().createArchetypeProjects(location,
+        var mavenProjects = ArchetypeGenerator.getInstance().createArchetypeProjects(location,
                 getArchetype(),
-                archetypeConfiguration.getGroupId(),
-                archetypeConfiguration.getProjectName(),
-                archetypeConfiguration.getVersion(),
-                archetypeConfiguration.getJavaPackage(),
-                archetypeConfiguration.toProperties(),
-                false,
+                archetypeConfiguration,
                 monitor);
         projects = MavenPlugin.getProjectConfigurationManager()
                 .importProjects(mavenProjects, projectImportConfiguration, project -> {
@@ -103,10 +96,6 @@ public abstract class CreateExtensionProjectOperation extends AbstractMavenProje
         var project = projects.get(0);
         repositoryStore.getResource().getProject().refreshLocal(IResource.DEPTH_INFINITE, monitor);
         return project;
-    }
-
-    ArchetypeGenerator archetypeGenerator() {
-        return M2EUIPluginActivator.getDefault().getArchetypePlugin().getGenerator();
     }
 
     IPath prepareProjectLocation(final IProgressMonitor monitor) throws CoreException {

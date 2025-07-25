@@ -181,6 +181,12 @@ public final class Messages extends NLS {
     public static String updateProjectDescriptionMigrationDescription;
     public static String cleanParentMigrationTitle;
     public static String cleanParentMigrationDescription;
+    public static String connectorsModuleMigrationTitle;
+    public static String connectorsModuleMigrationDescription;
+    public static String connectorsModuleMigrationTaskLoad;
+    public static String connectorsModuleMigrationTaskConnectors;
+    public static String connectorsModuleMigrationTaskActorFilters;
+    public static String connectorsModuleMigrationTaskDependencies;
     public static String extensionsModuleMigrationTitle;
     public static String extensionsModuleMigrationDescription;
     public static String providedGroovyScriptRemovedMigrationTitle;

@@ -15,12 +15,16 @@
 package org.bonitasoft.studio.swtbot.framework.application.editor.project;
 
 import java.util.Objects;
+import java.util.Optional;
+import java.util.function.Supplier;
 
 import org.bonitasoft.studio.application.views.overview.ProjectOverviewEditorPart;
 import org.bonitasoft.studio.maven.i18n.Messages;
 import org.bonitasoft.studio.maven.ui.wizard.NewExtensionProjectArtifactConfigurationPage;
 import org.bonitasoft.studio.swtbot.framework.BotWizardDialog;
 import org.bonitasoft.studio.swtbot.framework.ConditionBuilder;
+import org.eclipse.swtbot.eclipse.finder.matchers.WithPartId;
+import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotEditor;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.exceptions.WidgetNotFoundException;
 import org.eclipse.swtbot.swt.finder.waits.Conditions;
@@ -78,7 +82,20 @@ public class BotCreateExtensionProjectWizard extends BotWizardDialog {
                 .create();
         // can be long due to maven repository search
         bot.waitUntil(condition, 60000);
-        // go back to Overview
+        // go back to Overview, closing other editors by the way
+        Supplier<Optional<SWTBotEditor>> activeEditorSupplier = () -> {
+            try {
+                return Optional.ofNullable(bot.activeEditor());
+            } catch (WidgetNotFoundException e) {
+                return Optional.empty();
+            }
+        };
+        var activeEditor = activeEditorSupplier.get();
+        while (activeEditor.filter(e -> !WithPartId.withPartId(ProjectOverviewEditorPart.ID).matches(e.getReference()))
+                .isPresent()) {
+            activeEditor.ifPresent(SWTBotEditor::close);
+            activeEditor = activeEditorSupplier.get();
+        }
         bot.editorById(ProjectOverviewEditorPart.ID).show();
     }
 

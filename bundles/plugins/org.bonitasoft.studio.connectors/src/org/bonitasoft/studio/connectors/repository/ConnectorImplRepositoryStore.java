@@ -24,6 +24,7 @@ import org.bonitasoft.plugin.analyze.report.model.ConnectorImplementation;
 import org.bonitasoft.studio.common.ModelVersion;
 import org.bonitasoft.studio.common.model.validator.ModelNamespaceValidator;
 import org.bonitasoft.studio.common.model.validator.XMLModelCompatibilityValidator;
+import org.bonitasoft.studio.common.repository.core.migration.step.ConnectorsModuleMigrationStep;
 import org.bonitasoft.studio.connector.model.implementation.AbstractConnectorImplRepositoryStore;
 import org.eclipse.core.runtime.IStatus;
 
@@ -32,6 +33,8 @@ public class ConnectorImplRepositoryStore extends AbstractConnectorImplRepositor
     public static final String CONNECTOR_IMPL_EXT = "impl";
 
     public static final String STORE_NAME = "connectors-impl";
+
+    private static final String LEGACY_SOURCE_FOLDER_NAME = ConnectorsModuleMigrationStep.CONNECTORS_SRC_FOLDER;
     private static final Set<String> extensions = Set.of(CONNECTOR_IMPL_EXT);
 
     @Override
@@ -88,6 +91,15 @@ public class ConnectorImplRepositoryStore extends AbstractConnectorImplRepositor
     @Override
     public int getImportOrder() {
         return 5;
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see org.bonitasoft.studio.connector.model.implementation.AbstractConnectorImplRepositoryStore#getLegacySourceFolderName()
+     */
+    @Override
+    protected String getLegacySourceFolderName() {
+        return LEGACY_SOURCE_FOLDER_NAME;
     }
 
 }

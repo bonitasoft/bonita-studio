@@ -36,6 +36,7 @@ import org.bonitasoft.studio.common.repository.core.migration.step.BdmModelArtif
 import org.bonitasoft.studio.common.repository.core.migration.step.BonitaProjectParentVersionStep;
 import org.bonitasoft.studio.common.repository.core.migration.step.CleanParentStep;
 import org.bonitasoft.studio.common.repository.core.migration.step.CommunityToEnterpriseMigrationStep;
+import org.bonitasoft.studio.common.repository.core.migration.step.ConnectorsModuleMigrationStep;
 import org.bonitasoft.studio.common.repository.core.migration.step.CreatePomMigrationStep;
 import org.bonitasoft.studio.common.repository.core.migration.step.DeleteProjectSettingsMigrationStep;
 import org.bonitasoft.studio.common.repository.core.migration.step.ExtensionsModuleMigrationStep;
@@ -83,6 +84,7 @@ public class BonitaProjectMigrator {
             new UpdateProjectDescriptionMigrationStep(),
             new CleanParentStep(),
             new ExtensionsModuleMigrationStep(),
+            new ConnectorsModuleMigrationStep(),
             new ProvidedGroovyScriptRemovedStep(),
             new BonitaProjectParentVersionStep(),
             new ApplicationModuleConfigurationStep(),

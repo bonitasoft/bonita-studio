@@ -44,19 +44,9 @@ public class RemoveLegacyFolderStep implements MigrationStep {
             FolderBackupHandler.of(Paths.get("src-validators")),
             FolderBackupHandler.of(Paths.get("simulation")),
             FolderBackupHandler.of(Paths.get("customTypes")),
-            FolderBackupHandler.of(Paths.get("src-customTypes")),
-            FolderBackupHandler.of(Paths.get("src-connectors")),
-            FolderBackupHandler.of(Paths.get("connectors-def")),
-            FolderBackupHandler.of(Paths.get("connectors-impl")),
-            FolderBackupHandler.of(Paths.get("src-filters"), LegacyConnectorBackupHandler.of()),
-            FolderBackupHandler.of(Paths.get("filters-impl"), LegacyConnectorBackupHandler.of()),
-            FolderBackupHandler.of(Paths.get("filters-def"), LegacyConnectorBackupHandler.of()),
-            FolderBackupHandler.of(Paths.get("app/src-connectors"), LegacyConnectorBackupHandler.of()),
-            FolderBackupHandler.of(Paths.get("app/connectors-def"), LegacyConnectorBackupHandler.of()),
-            FolderBackupHandler.of(Paths.get("app/connectors-impl"), LegacyConnectorBackupHandler.of()),
-            FolderBackupHandler.of(Paths.get("app/src-filters"), LegacyConnectorBackupHandler.of()),
-            FolderBackupHandler.of(Paths.get("app/filters-impl"), LegacyConnectorBackupHandler.of()),
-            FolderBackupHandler.of(Paths.get("app/filters-def"), LegacyConnectorBackupHandler.of()));
+            FolderBackupHandler.of(Paths.get("src-customTypes"))
+    // filters and connectors folders are no longer deleted, but migrated to a new extension submodule
+    );
 
     private static Set<String> legacyRepositoryNames = HANDLERS.stream()
             .map(FolderBackupHandler::getFolder)
@@ -181,7 +171,7 @@ public class RemoveLegacyFolderStep implements MigrationStep {
                                     backupFolder.toString()),
                             CommonRepositoryPlugin.PLUGIN_ID);
                     report.removed(String.format(
-                            "Legacy connector and actor filters implementations and definitions have been removed. All related files have been backup in %s folder. Only connectors and actor filters used in the project extensions are supported. Consult the connector and actor filter maven archetype documentation to migrate to the supported format.",
+                            "Legacy folders have been removed. All related files have been backup in %s folder.",
                             backupFolder.getParent()));
                 } catch (IOException e) {
                     throw new UncheckedIOException(e);

@@ -30,13 +30,16 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.repository.core.migration.step.ConnectorsModuleMigrationStep;
 import org.bonitasoft.studio.common.repository.core.migration.step.RemoveLegacyFolderStep;
 import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.common.repository.model.smartImport.ISmartImportable;
+import org.bonitasoft.studio.connectors.repository.ConnectorImplRepositoryStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramLegacyFormsValidator;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
+import org.bonitasoft.studio.identity.actors.repository.ActorFilterImplRepositoryStore;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
@@ -79,6 +82,8 @@ public class DefaultBosArchiveEntryHandler implements BosArchiveEntryHandler {
                 || isLegacyFormRepo(segment)
                 || isLegacyRestAPIRepo(segment)
                 || isLegacyThemeRepo(segment)
+                || isLegacyConnectorSrc(segment)
+                || isLegacyActorFilterSrc(segment)
                 || isReadme(segment)
                 || isSrc(segment);
     }
@@ -93,6 +98,14 @@ public class DefaultBosArchiveEntryHandler implements BosArchiveEntryHandler {
 
     private boolean isSrc(String segment) {
         return "src".equals(segment);
+    }
+
+    private boolean isLegacyConnectorSrc(String segment) {
+        return ConnectorsModuleMigrationStep.CONNECTORS_SRC_FOLDER.equals(segment);
+    }
+
+    private boolean isLegacyActorFilterSrc(String segment) {
+        return ConnectorsModuleMigrationStep.FILTERS_SRC_FOLDER.equals(segment);
     }
 
     private boolean isReadme(String segment) {
@@ -112,21 +125,26 @@ public class DefaultBosArchiveEntryHandler implements BosArchiveEntryHandler {
         int storeDepth = getStoreDepth(segments);
         final List<String> parentSegments = segments.subList(0, storeDepth);
         Optional<IRepositoryStore<? extends IRepositoryFileStore>> repositoryStoreByName;
-        if(isLegacyThemeRepo(segment) || isLegacyRestAPIRepo(segment)) {
+        if (isLegacyThemeRepo(segment) || isLegacyRestAPIRepo(segment)) {
             repositoryStoreByName = repository.getRepositoryStoreByName("extensions");
-        }else {
+        } else if (isLegacyConnectorSrc(segment)) {
+            repositoryStoreByName = repository.getRepositoryStoreByName(ConnectorImplRepositoryStore.STORE_NAME);
+        } else if (isLegacyActorFilterSrc(segment)) {
+            repositoryStoreByName = repository.getRepositoryStoreByName(ActorFilterImplRepositoryStore.STORE_NAME);
+        } else {
             repositoryStoreByName = repository.getRepositoryStoreByName(segment);
         }
         if (repositoryStoreByName.isPresent()) {
             var store = new ImportStoreModel(toEntryPath(parentSegments),
                     (IRepositoryStore<IRepositoryFileStore>) repositoryStoreByName.get());
-            if(isLegacyThemeRepo(segment)) {
-                store = new LegacyThemesImportStoreModel(toEntryPath(parentSegments), (IRepositoryStore<IRepositoryFileStore>) repositoryStoreByName.get());
+            if (isLegacyThemeRepo(segment)) {
+                store = new LegacyThemesImportStoreModel(toEntryPath(parentSegments),
+                        (IRepositoryStore<IRepositoryFileStore>) repositoryStoreByName.get());
             }
-            if(isLegacyRestAPIRepo(segment)) {
-                store = new LegacyRestAPIExtensionsImportStoreModel(toEntryPath(parentSegments), (IRepositoryStore<IRepositoryFileStore>) repositoryStoreByName.get());
+            if (isLegacyRestAPIRepo(segment)) {
+                store = new LegacyRestAPIExtensionsImportStoreModel(toEntryPath(parentSegments),
+                        (IRepositoryStore<IRepositoryFileStore>) repositoryStoreByName.get());
             }
-           
 
             parseFolder(archiveModel.addStore(store), segments.subList(storeDepth, segments.size()), parentSegments,
                     resourcesToOpen,

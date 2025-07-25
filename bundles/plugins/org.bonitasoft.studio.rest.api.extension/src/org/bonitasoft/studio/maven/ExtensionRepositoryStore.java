@@ -201,7 +201,12 @@ public class ExtensionRepositoryStore
                     try {
                         project.delete(true, false, new NullProgressMonitor());
                     } catch (CoreException e) {
-                        BonitaStudioLog.error(e);
+                        try {
+                            project.delete(false, false, new NullProgressMonitor());
+                            BonitaStudioLog.error(e);
+                        } catch (CoreException e1) {
+                            BonitaStudioLog.error(e1);
+                        }
                     }
                 });
 

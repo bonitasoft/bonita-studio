@@ -23,6 +23,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
@@ -210,11 +211,13 @@ public interface BonitaProject extends GitProject, IAdaptable {
         return new BonitaProjectImpl(projectId);
     }
 
-    static WorkspaceJob updateMavenProjectsJob(Collection<IProject> projects, boolean updateConfiguration) {
+    static WorkspaceJob updateMavenProjectsJob(Supplier<Collection<IProject>> projectsSupplier,
+            boolean updateConfiguration) {
         return new MavenWorkspaceJob("Update maven projects") {
 
             @Override
             public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
+                var projects = projectsSupplier.get();
                 ProjectConfigurationManager configurationManager = (ProjectConfigurationManager) MavenPlugin
                         .getProjectConfigurationManager();
 
@@ -240,6 +243,10 @@ public interface BonitaProject extends GitProject, IAdaptable {
                 }
             }
         };
+    }
+
+    static WorkspaceJob updateMavenProjectsJob(Collection<IProject> projects, boolean updateConfiguration) {
+        return updateMavenProjectsJob(() -> projects, updateConfiguration);
     }
 
 }

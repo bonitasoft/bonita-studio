@@ -25,8 +25,10 @@ import org.apache.maven.model.Plugin;
 import org.bonitasoft.studio.common.repository.BuildScheduler;
 import org.bonitasoft.studio.common.repository.Messages;
 import org.bonitasoft.studio.common.repository.core.BonitaProject;
+import org.bonitasoft.studio.common.repository.core.maven.MavenProjectHelper;
 import org.bonitasoft.studio.common.repository.core.maven.model.DefaultPluginVersions;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -49,10 +51,16 @@ public class AnalyzeBonitaProjectDependenciesPlugin {
     public IStatus execute(IProgressMonitor monitor) throws CoreException {
         monitor.beginTask(Messages.analyzeProjectDependencies, IProgressMonitor.UNKNOWN);
         return BuildScheduler.callWithBuildRule(() -> {
-            var mavenProject = MavenPlugin.getMavenProjectRegistry().getProject(project.getParentProject());
+            IProject parentProject = project.getParentProject();
+            var mavenProject = MavenPlugin.getMavenProjectRegistry().getProject(parentProject);
             if (mavenProject == null) {
-                return new Status(IStatus.ERROR, getClass(),
-                        "An error occured while executing bonita project plugin. Cannot resolve the Maven project.");
+                // try initialization with MavenProjectHelper
+                MavenProjectHelper.getMavenProject(parentProject);
+                mavenProject = MavenPlugin.getMavenProjectRegistry().getProject(parentProject);
+                if (mavenProject == null) {
+                    return new Status(IStatus.ERROR, getClass(),
+                            "An error occured while executing bonita project plugin. Cannot resolve the Maven project.");
+                }
             }
             var ctx = mavenProject.createExecutionContext();
             var request = ctx.getExecutionRequest();

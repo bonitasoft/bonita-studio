@@ -23,6 +23,7 @@ import org.bonitasoft.plugin.analyze.report.model.ActorFilterImplementation;
 import org.bonitasoft.studio.common.ModelVersion;
 import org.bonitasoft.studio.common.model.validator.ModelNamespaceValidator;
 import org.bonitasoft.studio.common.model.validator.XMLModelCompatibilityValidator;
+import org.bonitasoft.studio.common.repository.core.migration.step.ConnectorsModuleMigrationStep;
 import org.bonitasoft.studio.connector.model.implementation.AbstractConnectorImplRepositoryStore;
 import org.eclipse.core.runtime.IStatus;
 
@@ -31,6 +32,8 @@ public class ActorFilterImplRepositoryStore extends AbstractConnectorImplReposit
     public static final String IMPL_EXT = "impl";
 
     public static final String STORE_NAME = "filters-impl";
+
+    private static final String LEGACY_SOURCE_FOLDER_NAME = ConnectorsModuleMigrationStep.FILTERS_SRC_FOLDER;
     private static final Set<String> extensions = Set.of(IMPL_EXT);
 
     @Override
@@ -87,6 +90,15 @@ public class ActorFilterImplRepositoryStore extends AbstractConnectorImplReposit
     @Override
     public int getImportOrder() {
         return 5;
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see org.bonitasoft.studio.connector.model.implementation.AbstractConnectorImplRepositoryStore#getLegacySourceFolderName()
+     */
+    @Override
+    protected String getLegacySourceFolderName() {
+        return LEGACY_SOURCE_FOLDER_NAME;
     }
 
 }

@@ -44,9 +44,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.core.runtime.preferences.IScopeContext;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
@@ -108,7 +106,7 @@ public class BonitaProjectImpl implements BonitaProject {
     @Override
     public void open(IProgressMonitor monitor) throws CoreException {
         for (var project : getRelatedProjects()) {
-            if(project.getLocation() != null
+            if (project.getLocation() != null
                     && Files.exists(project.getLocation().toFile().toPath().resolve(".project"))) {
                 project.open(monitor);
             }
@@ -193,7 +191,7 @@ public class BonitaProjectImpl implements BonitaProject {
     @Override
     public void refresh(boolean updateConfiguration, IProgressMonitor monitor) throws CoreException {
         monitor.beginTask(Messages.refresh, IProgressMonitor.UNKNOWN);
-        // schedule the 3 jobs immediately with the same rule to ensure sequencing
+        // schedule the 3 jobs immediately with the same rule to ensure correct sequencing and that no other job can run in between
         var refreshJob = new Job("Refresh resources") {
 
             @Override
@@ -220,20 +218,10 @@ public class BonitaProjectImpl implements BonitaProject {
                 return Status.OK_STATUS;
             }
         };
-        refreshJob.addJobChangeListener(new JobChangeAdapter() {
-            @Override
-            public void done(IJobChangeEvent event) {
-                var updateJob = BonitaProject.updateMavenProjectsJob(getRelatedProjects(), updateConfiguration);
-                updateJob.addJobChangeListener(new JobChangeAdapter() {
-                    @Override
-                    public void done(IJobChangeEvent event) {
-                        BuildScheduler.scheduleJobWithBuildRule(analyzeJob);
-                    }
-                });
-                BuildScheduler.scheduleJobWithBuildRule(updateJob);
-            }
-        });
+        var updateJob = BonitaProject.updateMavenProjectsJob(() -> getRelatedProjects(), updateConfiguration);
         BuildScheduler.scheduleJobWithBuildRule(refreshJob);
+        BuildScheduler.scheduleJobWithBuildRule(updateJob);
+        BuildScheduler.scheduleJobWithBuildRule(analyzeJob);
     }
 
     @Override
@@ -251,7 +239,7 @@ public class BonitaProjectImpl implements BonitaProject {
         }
         return gitProject.newConnectProviderOperation();
     }
-    
+
     @Override
     public IRunnableWithProgress newDiconnectProviderOperation() throws CoreException {
         var gitProject = getAdapter(GitProject.class);

@@ -19,11 +19,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.nio.file.Files;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.maven.model.Dependency;
 import org.bonitasoft.studio.assertions.StatusAssert;
 import org.bonitasoft.studio.common.model.ImportAction;
+import org.bonitasoft.studio.common.repository.BuildScheduler;
+import org.bonitasoft.studio.common.repository.BuildScheduler.CheckedCallable;
 import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
@@ -39,14 +43,19 @@ import org.bonitasoft.studio.importer.bos.model.ImportArchiveModel;
 import org.bonitasoft.studio.importer.bos.operation.ImportBosArchiveOperation;
 import org.bonitasoft.studio.importer.bos.operation.ImportConflictsChecker;
 import org.bonitasoft.studio.tests.util.InitialProjectRule;
+import org.bonitasoft.studio.tests.util.ProjectUtil;
 import org.bonitasoft.studio.ui.dialog.SkippableProgressMonitorJobsDialog;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.e4.core.contexts.ContextInjectionFactory;
 import org.eclipse.e4.core.contexts.EclipseContextFactory;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -55,7 +64,7 @@ public class ImportBOSArchiveIT {
 
     @Rule
     public InitialProjectRule projectRule = InitialProjectRule.INSTANCE;
-    
+
     RepositoryAccessor repositoryAccessor;
     private DependenciesUpdateOperationFactory dependenciesUpdateOperationFactory;
 
@@ -69,6 +78,11 @@ public class ImportBOSArchiveIT {
                 .orElseThrow()
                 .getRepositoryStore(DiagramRepositoryStore.class);
         repositoryStore.getChildren().stream().forEach(IRepositoryFileStore::delete);
+    }
+
+    @After
+    public void cleanUp() throws CoreException {
+        ProjectUtil.removeUserExtensions();
     }
 
     @Test
@@ -166,10 +180,11 @@ public class ImportBOSArchiveIT {
         var model = mavenProjectHelper.getMavenModel(project);
 
         // Provided dependencies
-        if(PlatformUtil.isACommunityBonitaProduct()) {
+        if (PlatformUtil.isACommunityBonitaProduct()) {
             assertThat(mavenProjectHelper.findDependency(model, "org.bonitasoft.engine", "bonita-common")).isPresent();
-        }else {
-            assertThat(mavenProjectHelper.findDependency(model, "com.bonitasoft.engine", "bonita-common-sp")).isPresent();
+        } else {
+            assertThat(mavenProjectHelper.findDependency(model, "com.bonitasoft.engine", "bonita-common-sp"))
+                    .isPresent();
         }
         assertThat(mavenProjectHelper.findDependency(model, "org.codehaus.groovy", "groovy")).isPresent();
         assertThat(mavenProjectHelper.findDependency(model, "org.codehaus.groovy", "groovy-dateutil")).isPresent();
@@ -210,20 +225,42 @@ public class ImportBOSArchiveIT {
 
     @Test
     public void testImportBOSArchiveDemoProcess() throws Exception {
+        // given
         final ImportBosArchiveOperation operation = new ImportBosArchiveOperation(repositoryAccessor);
         final File file = new File(
                 FileLocator.toFileURL(ImportBOSArchiveIT.class.getResource("FillDBForDemo_1_0.bos")).getFile());
         operation.setArchiveFile(file.getAbsolutePath());
         operation.setCurrentRepository(repositoryAccessor.getCurrentRepository());
+        // when
         operation.run(new NullProgressMonitor());
         assertThat(operation.getStatus()).isNotNull();
 
-        final boolean javaFileExists = BonitaProject.create(CommonRepositoryPlugin.getCurrentRepository())
-                .getAppProject()
+        // then
+        BonitaProject project = BonitaProject.create(CommonRepositoryPlugin.getCurrentRepository());
+        // java file no longer exists at original location (although refresh may not be effective immediately)
+        IFile originalLocation = project.getAppProject()
                 .getFolder("src-connectors").getFolder("org").getFolder("bonitasoft").getFolder("connector")
+                .getFolder("demo").getFile("FillDBImpl.java");
+        project.getAppProject().refreshLocal(IProject.DEPTH_INFINITE, new NullProgressMonitor());
+        CheckedCallable<Boolean, RuntimeException> checkFileExists = () -> originalLocation.exists()
+                && Files.exists(originalLocation.getLocation().toPath());
+        boolean javaFileExistsAtOriginalLocation = BuildScheduler.callWithBuildRule(checkFileExists);
+        int retryCount = 0;
+        while (javaFileExistsAtOriginalLocation && retryCount < 10) {
+            TimeUnit.SECONDS.sleep(3);
+            javaFileExistsAtOriginalLocation = BuildScheduler.callWithBuildRule(checkFileExists);
+            retryCount++;
+        }
+        assertThat(javaFileExistsAtOriginalLocation).isFalse();
+        // but has been moved to the connectors extension module
+        IProject connectorProject = ResourcesPlugin.getWorkspace().getRoot().getProject("fill-db-for-demo");
+        assertThat(connectorProject).isNotNull().satisfies(IProject::exists);
+        final boolean javaFileExistsAtNewLocation = connectorProject
+                .getFolder("src").getFolder("main").getFolder("java").getFolder("org").getFolder("bonitasoft")
+                .getFolder("connector")
                 .getFolder("demo").getFile("FillDBImpl.java")
                 .exists();
-        assertThat(javaFileExists).isFalse();
+        assertThat(javaFileExistsAtNewLocation).isTrue();
     }
 
     private File loadArchiveFile(String filePath) throws IOException {

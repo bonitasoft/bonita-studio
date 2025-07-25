@@ -14,6 +14,9 @@
  */
 package org.bonitasoft.studio.connector.model.implementation;
 
+import java.io.File;
+import java.io.InputStream;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -22,23 +25,32 @@ import java.util.stream.Collectors;
 import org.bonitasoft.bpm.connector.model.implementation.ConnectorImplementation;
 import org.bonitasoft.bpm.connector.model.implementation.util.ConnectorImplementationAdapterFactory;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
+import org.bonitasoft.studio.common.repository.ImportArchiveData;
 import org.bonitasoft.studio.common.repository.filestore.EMFFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.common.repository.store.AbstractEMFRepositoryStore;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.emf.edapt.migration.MigrationException;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
-
 
 public abstract class AbstractConnectorImplRepositoryStore<T extends EMFFileStore> extends AbstractEMFRepositoryStore<T>
         implements IImplementationRepositoryStore {
 
-	
-	@Override
-	public void createRepositoryStore(IRepository repository) {
-		this.repository = repository;
-	}
-	
+    /** For import of legacy bos. True when import is in the source folder. */
+    private boolean useSourceFolderAsParent;
+
+    @Override
+    public void createRepositoryStore(IRepository repository) {
+        this.repository = repository;
+    }
+
     @Override
     protected void addAdapterFactory(final ComposedAdapterFactory adapterFactory) {
         adapterFactory.addAdapterFactory(new ConnectorImplementationAdapterFactory());
@@ -90,6 +102,65 @@ public abstract class AbstractConnectorImplRepositoryStore<T extends EMFFileStor
 
         }
         return null;
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see org.bonitasoft.studio.common.repository.store.AbstractRepositoryStore#doImportArchiveData(org.bonitasoft.studio.common.repository.ImportArchiveData,
+     * org.eclipse.core.runtime.IProgressMonitor)
+     */
+    @Override
+    protected T doImportArchiveData(ImportArchiveData importArchiveData, IProgressMonitor monitor)
+            throws CoreException {
+        // We may encounter have both implementations and source folders here...
+        var folderSegment = Path.of(importArchiveData.getEntry().getName()).subpath(1, 2).toString();
+        this.useSourceFolderAsParent = (!getName().equals(folderSegment)
+                && folderSegment.equals(getLegacySourceFolderName()));
+        return super.doImportArchiveData(importArchiveData, monitor);
+    }
+
+    /**
+     * @return the name of the legacy source folder
+     */
+    protected abstract String getLegacySourceFolderName();
+
+    @Override
+    protected T doImportInputStream(final String fileName, final InputStream inputStream) {
+        /*
+         * Import it in the legacy folder
+         * in order to migrate it with the ConnectorsModuleMigrationStep afterward
+         * (and do not worry about modules creation here)
+         */
+        IFolder legacyFolder = getRepository().getProject()
+                .getFolder(useSourceFolderAsParent ? getLegacySourceFolderName() : getName());
+        try {
+            final IFile file = legacyFolder.getFile(fileName);
+            final File f = file.getLocation().toFile();
+            if (!f.getParentFile().exists()) {
+                f.getParentFile().mkdirs();
+                legacyFolder.refreshLocal(IResource.DEPTH_INFINITE, AbstractRepository.NULL_PROGRESS_MONITOR);
+            }
+            if (file.exists()) {
+                // overwrite the file if it already exists
+                file.setContents(inputStream, true, true, AbstractRepository.NULL_PROGRESS_MONITOR);
+            } else {
+                // create the file if it does not exist
+                file.create(inputStream, true, AbstractRepository.NULL_PROGRESS_MONITOR);
+            }
+        } catch (CoreException e) {
+            BonitaStudioLog.error(e);
+        }
+        var result = createRepositoryFileStore(fileName);
+        var shouldMigrate = false;
+        if (shouldMigrate) {
+            try {
+                var report = migrate(AbstractRepository.NULL_PROGRESS_MONITOR);
+                report.merge(result.getMigrationReport());
+            } catch (CoreException | MigrationException e) {
+                BonitaStudioLog.error(e);
+            }
+        }
+        return result;
     }
 
 }
