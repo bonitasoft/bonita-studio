@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.bonitasoft.studio</groupId>
         <artifactId>studio</artifactId>
-        <version>9.0.10-SNAPSHOT</version>
+        <version>9.0.11-SNAPSHOT</version>
     </parent>
 
     <groupId>org.bonitasoft.studio</groupId>
