@@ -141,7 +141,12 @@ public class ConnectorsModuleMigrationStep implements MigrationStep {
                 "Connector and Actor filter projects have been moved in the project layout to benefit from the Maven multi module approach. It means that files location inside the project have changed.  "
                         + "It is a technical change and will not impact the design usage in Bonita Studio."
                         + "New maven modules and their respective `pom.xml` files are *reserved for internal Studio use*.");
+        // initialize state in case step instance is reused
+        createdConnectorModules.clear();
+        createdActorFilterModules.clear();
+        useJava = false;
         extensions = project.resolve(BonitaProject.EXTENSIONS_MODULE);
+
         try {
             var extensionsPomFile = extensions.resolve(POM_FILE_NAME);
             // extensions module should already have been created by ExtensionsModuleMigrationStep

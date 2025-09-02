@@ -135,7 +135,8 @@ public class ArchetypesRegistration {
         var extStore = RepositoryManager.getInstance().getRepositoryStore(ExtensionRepositoryStore.class);
         var fileStore = extStore.getChild(projectName, true);
         try {
-            if (!fileStore.getProject().exists()) {
+            // the project does not exist when we are running a git migration on temp folder
+            if (fileStore != null && !fileStore.getProject().exists()) {
                 fileStore.importProject();
             }
         } catch (final ImportProjectException e) {
