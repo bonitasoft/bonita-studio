@@ -23,7 +23,7 @@
   <setupTask
       xsi:type="setup:VariableTask"
       name="eclipse.target.platform"
-      defaultValue="2023-12"
+      defaultValue="2024-09"
       storageURI="scope://Workspace"/>
   <setupTask
       xsi:type="setup:CompoundTask"
@@ -310,6 +310,26 @@
     </setupTask>
     <setupTask
         xsi:type="setup:CompoundTask"
+        name="org.eclipse.lsp4e">
+      <setupTask
+          xsi:type="setup:PreferenceTask"
+          key="/instance/org.eclipse.lsp4e//org.eclipse.wildwebdeveloper.xml/org.eclipse.core.runtime.xml"
+          value="false"/>
+      <setupTask
+          xsi:type="setup:PreferenceTask"
+          key="/instance/org.eclipse.lsp4e//org.eclipse.wildwebdeveloper.xml/org.eclipse.wildwebdeveloper.dtd"
+          value="false"/>
+      <setupTask
+          xsi:type="setup:PreferenceTask"
+          key="/instance/org.eclipse.lsp4e//org.eclipse.wildwebdeveloper.xml/org.eclipse.wildwebdeveloper.xsd"
+          value="false"/>
+      <setupTask
+          xsi:type="setup:PreferenceTask"
+          key="/instance/org.eclipse.lsp4e//org.eclipse.wildwebdeveloper.xml/org.eclipse.wildwebdeveloper.xsl"
+          value="false"/>
+    </setupTask>
+    <setupTask
+        xsi:type="setup:CompoundTask"
         name="org.eclipse.pde">
       <setupTask
           xsi:type="setup:PreferenceTask"
@@ -338,6 +358,14 @@
     </setupTask>
     <setupTask
         xsi:type="setup:CompoundTask"
+        name="org.eclipse.oomph.setup.ui">
+      <setupTask
+          xsi:type="setup:PreferenceTask"
+          key="/instance/org.eclipse.oomph.setup.ui/p2.startup.tasks"
+          value="PROMPT"/>
+    </setupTask>
+    <setupTask
+        xsi:type="setup:CompoundTask"
         name="org.eclipse.ui.workbench">
       <setupTask
           xsi:type="setup:PreferenceTask"
@@ -354,11 +382,15 @@
     </setupTask>
     <setupTask
         xsi:type="setup:CompoundTask"
-        name="org.eclipse.oomph.setup.ui">
+        name="org.eclipse.ui.editors">
       <setupTask
           xsi:type="setup:PreferenceTask"
-          key="/instance/org.eclipse.oomph.setup.ui/p2.startup.tasks"
-          value="PROMPT"/>
+          key="/instance/org.eclipse.ui.editors/removeSpacesAsTabs"
+          value="true"/>
+      <setupTask
+          xsi:type="setup:PreferenceTask"
+          key="/instance/org.eclipse.ui.editors/spacesForTabs"
+          value="true"/>
     </setupTask>
   </setupTask>
   <setupTask
@@ -419,10 +451,12 @@
         name="org.sonarlint.eclipse.feature.feature.group"/>
     <requirement
         name="org.eclipse.cbi.targetplatform.feature.feature.group"/>
+    <requirement
+        name="com.microsoft.copilot.eclipse.feature.feature.group"/>
     <repository
         url="https://projectlombok.org/p2"/>
     <repository
-        url="https://groovy.jfrog.io/artifactory/plugins-release/e4.33"/>
+        url="https://groovy.jfrog.io/artifactory/plugins-release/e4.36"/>
     <repository
         url="https://de-jcup.github.io/update-site-eclipse-asciidoctor-editor/update-site"/>
     <repository
@@ -431,6 +465,8 @@
         url="https://eclipse-uc.sonarlint.org"/>
     <repository
         url="https://download.eclipse.org/cbi/updates/tpd/nightly/latest"/>
+    <repository
+        url="https://azuredownloads-g3ahgwb5b8bkbxhd.b01.azurefd.net/github-copilot"/>
     <description>Install the tools needed in the IDE to work with the source code for ${scope.project.label}</description>
   </setupTask>
   <setupTask
@@ -682,5 +718,5 @@
       </repositoryList>
     </targlet>
   </setupTask>
-  <description>Bonita Studio - Development environment - Common configuration.\r\nReady for Eclipse IDE for RCP and RAP Developers - 2024-09.</description>
+  <description>Bonita Studio - Development environment - Common configuration.\r\nReady for Eclipse IDE for RCP and RAP Developers - 2025-09.</description>
 </setup:CompoundTask>

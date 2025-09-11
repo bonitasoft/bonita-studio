@@ -1,0 +1,4 @@
+######################
+# Keep the launch configurations stored here in version control to help new developers.
+######################
+!*.launch
