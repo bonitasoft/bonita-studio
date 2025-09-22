@@ -23,12 +23,14 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import org.bonitasoft.studio.common.Strings;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.Messages;
 import org.bonitasoft.studio.common.repository.core.migration.dependencies.operation.DependenciesUpdateOperationFactory;
+import org.bonitasoft.studio.common.repository.core.migration.handler.MigrateProjectHandler;
 import org.bonitasoft.studio.common.repository.core.migration.report.MigrationReport;
 import org.bonitasoft.studio.common.repository.core.migration.step.ApplicationModuleConfigurationStep;
 import org.bonitasoft.studio.common.repository.core.migration.step.BdmAssemblyConfigurationStep;
@@ -64,11 +66,16 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.handlers.IHandlerService;;
 
 public class BonitaProjectMigrator {
+
+    /** The display to use when there is no workbench (eg: during workspace migration on startup) */
+    private static Display noWorkbenchActiveDisplay;
 
     // Becareful to keep a relevant step order in the list
     // Some steps can depends on previous steps execution
@@ -118,6 +125,22 @@ public class BonitaProjectMigrator {
         monitor.beginTask(Messages.migrating, IProgressMonitor.UNKNOWN);
 
         try {
+
+            if (!PlatformUI.isWorkbenchRunning()) {
+                // The application model and DI context are not yet initialized
+                // call the handler manually
+                Display display = Optional.ofNullable(noWorkbenchActiveDisplay).orElseGet(Display::getDefault);
+                Shell activeShell = display.syncCall(() -> {
+                    Shell active = display.getActiveShell();
+                    if (active != null) {
+                        return active;
+                    } else {
+                        return display.getShells().length > 0 ? display.getShells()[0] : new Shell(display);
+                    }
+                });
+                return new MigrateProjectHandler().execute(activeShell, null, project.toString());
+            }
+            //else, use the command framework properly
             ICommandService commandServ = PlatformUI.getWorkbench().getService(ICommandService.class);
             Command cmd = commandServ.getCommand(MIGRATE_PROJECT_COMMAND_ID);
             var paramCmd = ParameterizedCommand.generateCommand(cmd,
@@ -165,6 +188,15 @@ public class BonitaProjectMigrator {
         } catch (IOException e) {
             throw new CoreException(Status.error(Messages.projectMigrationCantReadDescriptor, e));
         }
+    }
+
+    /**
+     * Set the display to use when there is no workbench (eg: during workspace migration on startup)
+     * 
+     * @param display the display to use when there is no workbench
+     */
+    public static void setNoWorkbenchActiveDisplay(Display display) {
+        noWorkbenchActiveDisplay = display;
     }
 
 }

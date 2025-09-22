@@ -35,12 +35,15 @@ public abstract class AbstractFolderRepositoryStore<T extends IRepositoryFileSto
     @Override
     public T getChild(final String folderName, boolean force) {
         if (folderName != null) {
-            final IFolder folder = getResource().getFolder(folderName);
-            if(force) {
-            	refresh(folder);
-            }
-            if (folder.exists()) {
-                return createRepositoryFileStore(folderName);
+            final IFolder folderParent = getResource();
+            if (folderParent != null) {
+                final IFolder folder = folderParent.getFolder(folderName);
+                if (force) {
+                    refresh(folder);
+                }
+                if (folder.exists()) {
+                    return createRepositoryFileStore(folderName);
+                }
             }
         }
         return null;
