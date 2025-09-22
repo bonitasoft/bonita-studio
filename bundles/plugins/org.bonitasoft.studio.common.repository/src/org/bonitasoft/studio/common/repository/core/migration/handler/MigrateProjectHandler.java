@@ -1,3 +1,4 @@
+
 /**
  * Copyright (C) 2025 BonitaSoft S.A.
  * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
@@ -38,6 +39,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 
+import jakarta.annotation.Nullable;
 import jakarta.inject.Named;
 
 /**
@@ -57,7 +59,7 @@ public class MigrateProjectHandler {
     protected Path project;
 
     @Execute
-    public MigrationReport execute(@Named(IServiceConstants.ACTIVE_SHELL) Shell activeShell,
+    public MigrationReport execute(@Named(IServiceConstants.ACTIVE_SHELL) @Nullable Shell activeShell,
             IEvaluationContext evalContext, @Named(MIGRATE_PROJECT_COMMAND_PATH_PARAM) String path)
             throws ExecutionException {
         // we don't really need evalContext and the monitor
@@ -72,7 +74,18 @@ public class MigrateProjectHandler {
         }
         BonitaStudioLog.info("Migrating project from version " + sourceVersion);
 
-        var wiz = new ProjectMigrationWizard(project);
+        var shell = Optional.ofNullable(activeShell).filter(s -> !s.isDisposed())
+                .orElseGet(() -> Display.getDefault()
+                        .syncCall(() -> {
+                            if (PlatformUI.isWorkbenchRunning()) {
+                                return PlatformUI.getWorkbench().getModalDialogShellProvider().getShell();
+                            } else {
+                                return new Shell(Display.getDefault());
+                            }
+                        }));
+
+        // Wizard class may have not been initialized yet, and should be initialized in the UI thread if never called before
+        var wiz = shell.getDisplay().syncCall(() -> new ProjectMigrationWizard(project));
 
         var allSteps = BonitaProjectMigrator.getAllSteps().toList();
         for (var step : allSteps) {
@@ -80,10 +93,6 @@ public class MigrateProjectHandler {
                 wiz.addPage(new MigrationStepWizardPage(step));
             }
         }
-
-        var shell = Optional.ofNullable(activeShell).filter(s -> !s.isDisposed())
-                .orElseGet(() -> Display.getDefault()
-                        .syncCall(() -> PlatformUI.getWorkbench().getModalDialogShellProvider().getShell()));
         var open = shell.getDisplay().syncCall(() -> new ProjectMigrationWizardDialog(shell, wiz).open());
         if (open == IDialogConstants.OK_ID) {
             return wiz.getReport();

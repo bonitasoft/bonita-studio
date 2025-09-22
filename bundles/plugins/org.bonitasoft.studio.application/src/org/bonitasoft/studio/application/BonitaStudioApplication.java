@@ -758,6 +758,8 @@ public class BonitaStudioApplication extends IDEApplication implements IApplicat
 
                     // Disable engine start during workspace migration
                     System.setProperty(EnginePreferenceConstants.LAZYLOAD_ENGINE, Boolean.TRUE.toString());
+                    // inform the project migrator which display to use
+                    BonitaProjectMigrator.setNoWorkbenchActiveDisplay(shell.getDisplay());
 
                     // do the migrations steps (closed projects first, to keep active one opened
                     projectRootsAndOpen.forEach((projectRoot, wasOpened) -> {
