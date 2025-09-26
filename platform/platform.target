@@ -72,7 +72,7 @@
             <unit id="org.codehaus.groovy30.feature.feature.group" version="0.0.0"/>
         </location>
         <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-            <repository location="mvn:org.bonitasoft.bpm:org.bonitasoft.bpm.eclipse-repository:8.0.1:zip"/>
+            <repository location="mvn:org.bonitasoft.bpm:org.bonitasoft.bpm.eclipse-repository:8.0.2:zip"/>
             <unit id="org.bonitasoft.bonita2bpmn.feature.feature.group" version="0.0.0"/>
             <unit id="org.bonitasoft.bpm.connector.feature.feature.group" version="0.0.0"/>
             <unit id="org.bonitasoft.bpm.definitions.feature.feature.group" version="0.0.0"/>

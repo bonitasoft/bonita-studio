@@ -97,7 +97,7 @@
             <unit id="org.codehaus.groovy30.feature.feature.group" version="0.0.0"/>
         </location>
         <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-            <repository location="mvn:org.bonitasoft.bpm:org.bonitasoft.bpm.eclipse-repository:8.0.1:zip"/>
+            <repository location="mvn:org.bonitasoft.bpm:org.bonitasoft.bpm.eclipse-repository:8.0.2:zip"/>
             <unit id="org.bonitasoft.bonita2bpmn.feature.feature.group" version="0.0.0"/>
             <unit id="org.bonitasoft.bpm.connector.feature.feature.group" version="0.0.0"/>
             <unit id="org.bonitasoft.bpm.definitions.feature.feature.group" version="0.0.0"/>
@@ -107,54 +107,54 @@
             <unit id="org.bonitasoft.artifacts.model.feature.feature.group" version="0.0.0"/>
             <unit id="org.bonitasoft.bonita2bar.feature.feature.group" version="0.0.0"/>
         </location>
-        <location includeDependencyDepth="infinite" includeDependencyScopes="compile,runtime,system" includeSource="false" missingManifest="generate" type="Maven">
-            <dependencies>
-                <dependency>
-                    <groupId>jakarta.xml.soap</groupId>
-                    <artifactId>jakarta.xml.soap-api</artifactId>
-                    <version>1.4.2</version>
-                    <type>jar</type>
-                </dependency>
-                <dependency>
-                    <groupId>org.assertj</groupId>
-                    <artifactId>assertj-core</artifactId>
-                    <version>3.24.2</version>
-                    <type>jar</type>
-                </dependency>
-                <dependency>
-                    <groupId>org.mockito</groupId>
-                    <artifactId>mockito-core</artifactId>
-                    <version>4.6.1</version>
-                    <type>jar</type>
-                </dependency>
-                <dependency>
-                    <groupId>org.mockito</groupId>
-                    <artifactId>mockito-junit-jupiter</artifactId>
-                    <version>4.6.1</version>
-                    <type>jar</type>
-                </dependency>
-            </dependencies>
-        </location>
-        <location includeDependencyDepth="none" includeDependencyScopes="compile,runtime,system" includeSource="false" missingManifest="generate" type="Maven">
-            <dependencies>
-                <dependency>
-                    <groupId>org.jdom</groupId>
-                    <artifactId>jdom2</artifactId>
-                    <version>2.0.6.1</version>
-                    <type>jar</type>
-                </dependency>
-            </dependencies>
-        </location>
-  <location includeDependencyDepth="none" includeDependencyScopes="compile,runtime,system" includeSource="true" missingManifest="generate" type="Maven">
-                <feature id="org.bonitasoft.project.report.model.feature" label="Bonita Project Report Model Feature" provider-name="Bonitasoft S.A" version="1.0.0">
-                    <description url="https://github.com/bonitasoft/bonita-project-maven-plugin">
+	        <location includeDependencyDepth="infinite" includeDependencyScopes="compile,runtime,system" missingManifest="generate" type="Maven">
+		        <dependencies>
+			        <dependency>
+				        <groupId>jakarta.xml.soap</groupId>
+				        <artifactId>jakarta.xml.soap-api</artifactId>
+				        <version>1.4.2</version>
+				        <type>jar</type>
+			        </dependency>
+			        <dependency>
+				        <groupId>org.assertj</groupId>
+				        <artifactId>assertj-core</artifactId>
+				        <version>3.24.2</version>
+				        <type>jar</type>
+			        </dependency>
+			        <dependency>
+				        <groupId>org.mockito</groupId>
+				        <artifactId>mockito-core</artifactId>
+				        <version>4.6.1</version>
+				        <type>jar</type>
+			        </dependency>
+			        <dependency>
+				        <groupId>org.mockito</groupId>
+				        <artifactId>mockito-junit-jupiter</artifactId>
+				        <version>4.6.1</version>
+				        <type>jar</type>
+			        </dependency>
+		        </dependencies>
+	        </location>
+	        <location includeDependencyDepth="none" includeDependencyScopes="compile,runtime,system" missingManifest="generate" type="Maven">
+		        <dependencies>
+			        <dependency>
+				        <groupId>org.jdom</groupId>
+				        <artifactId>jdom2</artifactId>
+				        <version>2.0.6.1</version>
+				        <type>jar</type>
+			        </dependency>
+		        </dependencies>
+	        </location>
+	        <location includeDependencyDepth="none" includeDependencyScopes="compile,runtime,system" includeSource="true" missingManifest="generate" type="Maven">
+		        <feature id="org.bonitasoft.project.report.model.feature" label="Bonita Project Report Model Feature" provider-name="Bonitasoft S.A" version="1.0.0">
+			        <description url="https://github.com/bonitasoft/bonita-project-maven-plugin">
       Bonita Project Report Model Feature
    </description>
-                    <copyright url="https://www.bonitasoft.com/">
+			        <copyright url="https://www.bonitasoft.com/">
       Copyright (C) 2023 BonitaSoft S.A.
    BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
    </copyright>
-                    <license url="http://www.gnu.org/licenses/gpl-2.0.html">
+			        <license url="http://www.gnu.org/licenses/gpl-2.0.html">
       This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
    the Free Software Foundation, either version 2.0 of the License, or
@@ -168,22 +168,22 @@
    You should have received a copy of the GNU General Public License
    along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
    </license>
-                </feature>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.bonitasoft.maven</groupId>
-                        <artifactId>bonita-project-report-model</artifactId>
-                        <version>1.0.3</version>
-                        <type>jar</type>
-                    </dependency>
-                </dependencies>
-                 <repositories>
-                    <repository>
-                        <id>maven-central-snapshots</id>
-                        <url>https://central.sonatype.com/repository/maven-snapshots</url>
-                    </repository>
-                </repositories>
-                <instructions><![CDATA[
+		        </feature>
+		        <dependencies>
+			        <dependency>
+				        <groupId>org.bonitasoft.maven</groupId>
+				        <artifactId>bonita-project-report-model</artifactId>
+				        <version>1.0.3</version>
+				        <type>jar</type>
+			        </dependency>
+		        </dependencies>
+		        <repositories>
+			        <repository>
+				        <id>maven-central-snapshots</id>
+				        <url>https://central.sonatype.com/repository/maven-snapshots</url>
+			        </repository>
+		        </repositories>
+		        <instructions><![CDATA[
 Bundle-Name:           ${mvnGroupId}:${mvnArtifactId}:${mvnVersion}
 version:               ${version_cleanup;${mvnVersion}}
 Bundle-SymbolicName:   ${mvnGroupId}.${mvnArtifactId}
@@ -192,8 +192,8 @@ Import-Package:        *;resolution:=optional
 Export-Package:        *;version="${version}";-noimport:=true
 DynamicImport-Package: *
 ]]></instructions>
-            </location>
-        <location includeDependencyDepth="none" includeDependencyScopes="compile,runtime,system" includeSource="true" missingManifest="generate" type="Maven">
+	        </location>
+	        <location includeDependencyDepth="none" includeDependencyScopes="compile,runtime,system" includeSource="true" missingManifest="generate" type="Maven">
 		        <feature id="org.bonitasoft.artifacts.model.feature" label="Bonita Artifacts Models Feature" provider-name="Bonitasoft S.A" version="1.0.1">
 			        <description url="https://github.com/bonitasoft/bonita-artifacts-model">
       Bonita Artifacts Model Feature
@@ -217,12 +217,6 @@ DynamicImport-Package: *
    along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
    </license>
 		        </feature>
-		          <repositories>
-			        <repository>
-				        <id>maven-central-snapshots</id>
-                        <url>https://central.sonatype.com/repository/maven-snapshots</url>
-			        </repository>
-		        </repositories>
 		        <dependencies>
 			        <dependency>
 				        <groupId>com.sun.activation</groupId>
@@ -244,7 +238,25 @@ DynamicImport-Package: *
 			        </dependency>
 			        <dependency>
 				        <groupId>org.bonitasoft.engine</groupId>
+				        <artifactId>bonita-application-model</artifactId>
+				        <version>1.0.1</version>
+				        <type>jar</type>
+			        </dependency>
+			        <dependency>
+				        <groupId>org.bonitasoft.engine</groupId>
+				        <artifactId>bonita-bdm-access-control-model</artifactId>
+				        <version>1.0.1</version>
+				        <type>jar</type>
+			        </dependency>
+			        <dependency>
+				        <groupId>org.bonitasoft.engine</groupId>
 				        <artifactId>bonita-business-archive</artifactId>
+				        <version>1.0.1</version>
+				        <type>jar</type>
+			        </dependency>
+			        <dependency>
+				        <groupId>org.bonitasoft.engine</groupId>
+				        <artifactId>bonita-business-object-model</artifactId>
 				        <version>1.0.1</version>
 				        <type>jar</type>
 			        </dependency>
@@ -262,19 +274,13 @@ DynamicImport-Package: *
 			        </dependency>
 			        <dependency>
 				        <groupId>org.bonitasoft.engine</groupId>
+				        <artifactId>bonita-organization-model</artifactId>
+				        <version>1.0.1</version>
+				        <type>jar</type>
+			        </dependency>
+			        <dependency>
+				        <groupId>org.bonitasoft.engine</groupId>
 				        <artifactId>bonita-process-definition-model</artifactId>
-				        <version>1.0.1</version>
-				        <type>jar</type>
-			        </dependency>
-			        <dependency>
-				        <groupId>org.bonitasoft.engine</groupId>
-				        <artifactId>bonita-business-object-model</artifactId>
-				        <version>1.0.1</version>
-				        <type>jar</type>
-			        </dependency>
-			        <dependency>
-				        <groupId>org.bonitasoft.engine</groupId>
-				        <artifactId>bonita-bdm-access-control-model</artifactId>
 				        <version>1.0.1</version>
 				        <type>jar</type>
 			        </dependency>
@@ -285,25 +291,19 @@ DynamicImport-Package: *
 				        <type>jar</type>
 			        </dependency>
 			        <dependency>
-				        <groupId>org.bonitasoft.engine</groupId>
-				        <artifactId>bonita-organization-model</artifactId>
-				        <version>1.0.1</version>
-				        <type>jar</type>
-			        </dependency>
-			        <dependency>
-				        <groupId>org.bonitasoft.engine</groupId>
-				        <artifactId>bonita-application-model</artifactId>
-				        <version>1.0.1</version>
-				        <type>jar</type>
-			        </dependency>
-			        <dependency>
 				        <groupId>org.glassfish.hk2</groupId>
 				        <artifactId>osgi-resource-locator</artifactId>
 				        <version>2.4.0</version>
 				        <type>jar</type>
 			        </dependency>
 		        </dependencies>
-		        		        <instructions><![CDATA[
+		        <repositories>
+			        <repository>
+				        <id>maven-central-snapshots</id>
+				        <url>https://central.sonatype.com/repository/maven-snapshots</url>
+			        </repository>
+		        </repositories>
+		        <instructions><![CDATA[
 Bundle-Name:           ${mvnGroupId}:${mvnArtifactId}:${mvnVersion}
 version:               ${version_cleanup;${mvnVersion}}
 Bundle-SymbolicName:   ${mvnGroupId}.${mvnArtifactId}
@@ -313,5 +313,5 @@ Export-Package:        *;version="${version}";-noimport:=true
 DynamicImport-Package: *
 ]]></instructions>
 	        </location>
-    </locations>
+        </locations>
 </target>
