@@ -1,7 +1,7 @@
-<?xml version="1.0" encoding="UTF-8"?><target sequenceNumber="1732634931" name="platform">
+<?xml version="1.0" encoding="UTF-8"?><target sequenceNumber="1759147909" name="platform">
   <locations>
     <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-      <repository location="https://update-site.bonitasoft.com/p2/4.30"/>
+      <repository location="https://update-site.bonitasoft.com/p2/4.30/"/>
       <unit id="org.eclipse.justj.openjdk.hotspot.jre.full.feature.group" version="17.0.10.v20240120-1143"/>
       <unit id="org.eclipse.swtbot.eclipse.feature.group" version="4.1.0.202306071420"/>
       <unit id="org.eclipse.swtbot.eclipse.gef.feature.group" version="4.1.0.202306071420"/>
@@ -71,15 +71,15 @@
       <unit id="org.apache.commons.commons-io" version="2.15.1"/>
     </location>
     <location includeConfigurePhase="true" includeSource="true" includeMode="planner" type="InstallableUnit" includeAllPlatforms="false">
-      <unit id="org.bonitasoft.bonita2bpmn.feature.feature.group" version="8.0.1"/>
-      <unit id="org.bonitasoft.bpm.connector.feature.feature.group" version="8.0.1"/>
-      <unit id="org.bonitasoft.bpm.definitions.feature.feature.group" version="8.0.1"/>
-      <unit id="org.bonitasoft.bpm.model.feature.feature.group" version="8.0.1"/>
-      <unit id="org.bonitasoft.bpm.tests.feature.feature.group" version="8.0.1"/>
+      <unit id="org.bonitasoft.bonita2bpmn.feature.feature.group" version="8.0.2"/>
+      <unit id="org.bonitasoft.bpm.connector.feature.feature.group" version="8.0.2"/>
+      <unit id="org.bonitasoft.bpm.definitions.feature.feature.group" version="8.0.2"/>
+      <unit id="org.bonitasoft.bpm.model.feature.feature.group" version="8.0.2"/>
+      <unit id="org.bonitasoft.bpm.tests.feature.feature.group" version="8.0.2"/>
       <unit id="com.fasterxml.jackson.feature.feature.group" version="2.15.2.qualifier"/>
       <unit id="org.bonitasoft.artifacts.model.feature.feature.group" version="1.0.1"/>
-      <unit id="org.bonitasoft.bonita2bar.feature.feature.group" version="8.0.1"/>
-      <repository location="mvn:org.bonitasoft.bpm:org.bonitasoft.bpm.eclipse-repository:8.0.1:zip" id="BonitasoftBPM"/>
+      <unit id="org.bonitasoft.bonita2bar.feature.feature.group" version="8.0.2"/>
+      <repository location="mvn:org.bonitasoft.bpm:org.bonitasoft.bpm.eclipse-repository:8.0.2:zip" id="BonitasoftBPM"/>
     </location>
     <location missingManifest="generate" includeDependencyScopes="compile,runtime,system" includeSource="true" includeDependencyDepth="none" label="BonitaArtifactsModels" type="Maven">
       <feature provider-name="Bonitasoft S.A" label="Extra Bonita Artifacts Models required by Studio but not in BonitasoftBPM" id="org.bonitasoft.artifacts.model.studio.feature.feature.group" version="1.0.1"/>
