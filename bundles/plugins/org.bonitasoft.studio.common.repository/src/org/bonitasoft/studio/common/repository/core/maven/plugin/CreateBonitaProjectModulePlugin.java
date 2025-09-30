@@ -53,6 +53,7 @@ public class CreateBonitaProjectModulePlugin {
                 var properties = new Properties();
                 properties.setProperty("bonitaProjectId", projectId);
                 request.setUserProperties(properties);
+                request.setBaseDirectory(project.toFile());
                 request.setPom(project.resolve("pom.xml").toFile());
                 var executionResult = ctx.execute(new ICallable<MavenExecutionResult>() {
 
