@@ -17,6 +17,7 @@ package org.bonitasoft.studio.common.repository.filestore;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collections;
+import java.util.Optional;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
@@ -49,7 +50,7 @@ public abstract class EMFFileStore<T extends EObject> extends AbstractFileStore<
         try {
             final EditingDomain editingDomain = getParentStore().getEditingDomain(uri);
             final ResourceSet resourceSet = editingDomain.getResourceSet();
-            if (getResource().exists()) {
+            if (Optional.ofNullable(getResource()).filter(IFile::exists).isPresent()) {
                 return resourceSet.getResource(uri, true);
             } else {
                 return resourceSet.createResource(uri);
@@ -61,7 +62,7 @@ public abstract class EMFFileStore<T extends EObject> extends AbstractFileStore<
     }
 
     protected URI getResourceURI() {
-        return URI.createFileURI(getFileStorePath());
+        return Optional.ofNullable(getFileStorePath()).map(URI::createFileURI).orElseGet(() -> URI.createURI(""));
     }
 
     protected String getFileStorePath() {
@@ -143,7 +144,7 @@ public abstract class EMFFileStore<T extends EObject> extends AbstractFileStore<
 
     @Override
     public IFile getResource() {
-    	return (IFile) super.getResource();
+        return (IFile) super.getResource();
     }
 
 }

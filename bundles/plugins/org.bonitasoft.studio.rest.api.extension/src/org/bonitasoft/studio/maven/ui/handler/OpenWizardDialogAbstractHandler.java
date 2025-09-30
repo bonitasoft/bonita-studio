@@ -27,7 +27,7 @@ public abstract class OpenWizardDialogAbstractHandler {
     @Execute
     public void execute(final RepositoryAccessor repositoryAccessor, final WidgetFactory widgetFactory,
             final HttpClientFactory httpClientFactory,
-            final CustomPageProjectSelectionProvider selectionProvider)
+            final ExtensionProjectSelectionProvider selectionProvider)
             throws ExecutionException {
         final IWizard wizard = newWizard(repositoryAccessor, widgetFactory, httpClientFactory, selectionProvider);
         newWizardDialog(wizard, getFinishLabel()).open();
@@ -47,7 +47,7 @@ public abstract class OpenWizardDialogAbstractHandler {
 
     protected abstract IWizard newWizard(RepositoryAccessor repositoryAccessor, WidgetFactory widgetFactory,
             final HttpClientFactory httpClientFactory,
-            CustomPageProjectSelectionProvider selectionProvider);
+            ExtensionProjectSelectionProvider selectionProvider);
 
     protected WizardDialog newWizardDialog(final IWizard wizard, final String finishLabel) {
         return new CustomWizardDialog(Display.getDefault().getActiveShell(), wizard, finishLabel);

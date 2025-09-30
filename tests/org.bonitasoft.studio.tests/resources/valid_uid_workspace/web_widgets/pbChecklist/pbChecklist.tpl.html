@@ -1,0 +1,48 @@
+<div class="row form-group"
+     ng-class="{ 'form-horizontal':  !properties.labelHidden && properties.labelPosition === 'left' }">
+    <fieldset>
+    <legend
+        ng-if="!properties.labelHidden && properties.allowHTML"
+        class="control-label col-xs-{{ properties.labelPosition === 'left' ? properties.labelWidth : 12 }}"
+        ng-bind-html="properties.label | uiTranslate">
+    </legend>
+    <legend
+        ng-if="!properties.labelHidden && !properties.allowHTML"
+        class="control-label col-xs-{{ properties.labelPosition === 'left' ? properties.labelWidth : 12 }}"
+        ng-bind="properties.label | uiTranslate">
+    </legend>
+
+    <div ng-if="properties.inline"
+         class="col-xs-{{ 12 - (!properties.labelHidden && properties.labelPosition === 'left' ? properties.labelWidth : 0) }}">
+            <label class="checkbox-inline" ng-repeat="choice in properties.availableValues track by $index"
+                   for="{{ctrl.inputId}}-{{$index}}">
+                <input
+                    id="{{ctrl.inputId}}-{{$index}}"
+                    type="checkbox"
+                    name="{{ctrl.name}}"
+                    ng-model="ctrl.selectedItems[$index]"
+                    ng-change="ctrl.updateValues()"
+                    ng-disabled="properties.disabled">
+                {{ (ctrl.getLabel(choice) || choice) | uiTranslate }}
+            </label>
+
+    </div>
+
+    <div ng-if="!properties.inline"
+         class="col-xs-{{ 12 - (!properties.labelHidden && properties.labelPosition === 'left' ? properties.labelWidth : 0) }}">
+            <div ng-if="!properties.inline" class="checkbox checklist-margin"
+                 ng-repeat="choice in properties.availableValues track by $index">
+                <label for="{{ctrl.inputId}}-{{$index}}">
+                    <input
+                        id="{{ctrl.inputId}}-{{$index}}"
+                        type="checkbox"
+                        name="{{ctrl.name}}"
+                        ng-model="ctrl.selectedItems[$index]"
+                        ng-change="ctrl.updateValues()"
+                        ng-disabled="properties.disabled">
+                    {{ (ctrl.getLabel(choice) || choice) | uiTranslate }}
+                </label>
+            </div>
+    </div>
+    </fieldset>
+</div>

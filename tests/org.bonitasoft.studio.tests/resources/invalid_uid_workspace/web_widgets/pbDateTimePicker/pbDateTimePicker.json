@@ -1,0 +1,220 @@
+{
+  "id" : "pbDateTimePicker",
+  "name" : "Date Time Picker",
+  "type" : "widget",
+  "custom" : false,
+  "modelVersion" : "2.4",
+  "lastUpdate" : 1736240682375,
+  "description" : "Calendar for selecting a date and time",
+  "template" : "@pbDateTimePicker.tpl.html",
+  "controller" : "@pbDateTimePicker.ctrl.js",
+  "properties" : [
+    {
+      "label" : "Read-only",
+      "name" : "readOnly",
+      "type" : "boolean",
+      "defaultValue" : false,
+      "bond" : "expression"
+    },
+    {
+      "label" : "Required",
+      "name" : "required",
+      "help" : "In the context of a form container, use $form.$invalid as a Boolean to check form validity in a widget property",
+      "type" : "boolean",
+      "defaultValue" : false,
+      "bond" : "expression"
+    },
+    {
+      "label" : "Interpret HTML",
+      "name" : "allowHTML",
+      "help" : "For 'Label' property only. If you choose 'no', HTML code will be escaped instead of being interpreted. If you choose ‘Yes’, this could potentially lead to HTML injections attacks. Please take into account these risks.",
+      "type" : "boolean",
+      "defaultValue" : false,
+      "bond" : "constant"
+    },
+    {
+      "label" : "Label hidden",
+      "name" : "labelHidden",
+      "type" : "boolean",
+      "defaultValue" : false,
+      "bond" : "constant"
+    },
+    {
+      "label" : "Inline",
+      "name" : "inlineInput",
+      "help" : "Set the input time on the same line as the input date",
+      "type" : "boolean",
+      "defaultValue" : true,
+      "bond" : "constant"
+    },
+    {
+      "label" : "Label",
+      "name" : "label",
+      "showFor" : "properties.labelHidden.value === false",
+      "type" : "text",
+      "defaultValue" : "Date and time",
+      "bond" : "interpolation"
+    },
+    {
+      "label" : "Label position",
+      "name" : "labelPosition",
+      "showFor" : "properties.labelHidden.value === false",
+      "type" : "choice",
+      "defaultValue" : "top",
+      "choiceValues" : [
+        "left",
+        "top"
+      ],
+      "bond" : "constant"
+    },
+    {
+      "label" : "Label width",
+      "name" : "labelWidth",
+      "showFor" : "properties.labelHidden.value === false",
+      "type" : "integer",
+      "defaultValue" : 4,
+      "bond" : "constant",
+      "constraints" : {
+        "min" : "1",
+        "max" : "12"
+      }
+    },
+    {
+      "label" : "Handle time zone",
+      "name" : "withTimeZone",
+      "caption" : "No: user time zone is ignored. <br>Yes: display/input reflects the user time zone and may be different from value",
+      "type" : "choice",
+      "defaultValue" : true,
+      "choiceValues" : [
+        {
+          "value" : false,
+          "label" : "No"
+        },
+        {
+          "value" : true,
+          "label" : "Yes"
+        }
+      ],
+      "bond" : "constant"
+    },
+    {
+      "label" : "Value",
+      "name" : "value",
+      "caption" : "A <a href='https://en.wikipedia.org/wiki/ISO_8601' target='_blank'>ISO 8601</a> formatted String variable yyyy-MM-ddTHH:mm:ss(Z)",
+      "help" : "Should contain time zone information only when 'Handle time zone' is set to 'yes'",
+      "type" : "text",
+      "bond" : "variable"
+    },
+    {
+      "label" : "Technical date format",
+      "name" : "dateFormat",
+      "caption" : "Use the characters: M (month), d (day), y (year)",
+      "help" : "Format used to display the date",
+      "type" : "text",
+      "defaultValue" : "MM/dd/yyyy",
+      "bond" : "expression"
+    },
+    {
+      "label" : "Date Placeholder",
+      "name" : "placeholder",
+      "caption" : "Includes the localized version of the Technical date format property, to guide the user",
+      "help" : "Short hint that describes the expected input format for the date",
+      "showFor" : "properties.readOnly.value === false",
+      "type" : "text",
+      "defaultValue" : "Enter a date (mm/dd/yyyy)",
+      "bond" : "interpolation"
+    },
+    {
+      "label" : "Technical time format",
+      "name" : "timeFormat",
+      "caption" : "Use the characters: H (hour), h (hour in AM/PM), m (minutes) and optionally s (seconds), a (AM/PM)",
+      "help" : "Format used to display the time",
+      "type" : "text",
+      "defaultValue" : "h:mm:ss a",
+      "bond" : "expression"
+    },
+    {
+      "label" : "Time Placeholder",
+      "name" : "timePlaceholder",
+      "caption" : "Includes the localized version of the Technical time format property, to guide the user",
+      "help" : "Short hint that describes the expected input format for the time",
+      "showFor" : "properties.readOnly.value === false",
+      "type" : "text",
+      "defaultValue" : "Enter a time (h:mm:ss a)",
+      "bond" : "interpolation"
+    },
+    {
+      "label" : "Show Today button",
+      "name" : "showToday",
+      "help" : "Display or hide the shortcut button to current day",
+      "type" : "boolean",
+      "defaultValue" : true,
+      "bond" : "constant"
+    },
+    {
+      "label" : "Today button label",
+      "name" : "todayLabel",
+      "help" : "Can be translated using the asset localization.json",
+      "showFor" : "properties.showToday.value === true",
+      "type" : "text",
+      "defaultValue" : "Today",
+      "bond" : "interpolation"
+    },
+    {
+      "label" : "Show Now button",
+      "name" : "showNow",
+      "help" : "Display or hide the shortcut button to set date and time to now",
+      "type" : "boolean",
+      "defaultValue" : true,
+      "bond" : "constant"
+    },
+    {
+      "label" : "Now button label",
+      "name" : "nowLabel",
+      "help" : "Can be translated using the asset localization.json",
+      "showFor" : "properties.showNow.value === true",
+      "type" : "text",
+      "defaultValue" : "Now",
+      "bond" : "interpolation"
+    }
+  ],
+  "assets" : [
+    {
+      "id" : "d045b840-67b0-4828-a21b-e3e538763d7f",
+      "name" : "moment-2.11.2.min.js",
+      "type" : "js",
+      "order" : 3,
+      "external" : false
+    },
+    {
+      "id" : "1fe74b77-2e44-4479-8eb1-841126888139",
+      "name" : "angular-strap-2.3.9-patched-dateTimePicker-setValidity.compat.min.js",
+      "type" : "js",
+      "order" : 1,
+      "external" : false
+    },
+    {
+      "id" : "07c3d209-086d-4806-ba9f-6e04680ae9ba",
+      "name" : "angular-strap-2.3.9-patched-dateTimePicker-setValidity.tpl.min.js",
+      "type" : "js",
+      "order" : 2,
+      "external" : false
+    },
+    {
+      "id" : "655cef3c-86c1-44ec-a8b3-053836274f6e",
+      "name" : "angular-moment-0.10.3.min.js",
+      "type" : "js",
+      "order" : 4,
+      "external" : false
+    }
+  ],
+  "requiredModules" : [
+    "mgcrea.ngStrap.datepicker",
+    "angularMoment",
+    "mgcrea.ngStrap.timepicker"
+  ],
+  "webResources" : [ ],
+  "icon" : "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0.000000 0.061756 50.000000 20.000000\"><path fill=\"none\" d=\"M0 .062h50v20H0z\"/><path d=\"M0 .062v20h50v-20zm49 19H1v-18h48z\" fill=\"#fff\"/><g transform=\"matrix(.0028 0 0 -.00278 17.178 -16.718)\" fill=\"#fff\"><path d=\"M425.38-6544.234c-157.49-72.054-30-400.683-304.51-303.653-270.042 52.718-500.046-169.906-463.642-442.045.357-1230.782-.087-2462.232 3.153-3693.302 72.09-287.63 412.983-302.982 653.887-282.906 424.696-3.697 849.41-1.475 1274.114-2.094-33.592 167.412 27.7 423.62-228.143 340.934-445.948.362-892.23-10.033-1337.856 12.066-6.98 943.315-7.333 1886.68-1 2830 680.188 34.98 1361.91 7.982 2042.755 17 573.75.023 1147.497-.022 1721.246 0 28.93-193.538-62.753-492.3 56.314-617.756 134.395 8.986 374.836-81.445 303.35 140.913-1.126 480.616-2.682 961.23-4.663 1441.843-63.354 221.464-303.598 270.85-501.92 270.42-175.94-.858-164.303-2.374-169.827 158.466-19.953 217.197-407.422 212.29-379.88-18.378 37.958-173.467-129.394-155.383-240.617-150.508H730.38c29.495 181.683-92.142 417.315-305 299z\"/><path d=\"M1062.38-8295.234l-97-4c1.146-141.34 2.813-282.673 5-424 135.285-1.223 270.62-5.897 405.878-1.19 18.273 2.08 50.49-3.363 47.795 24.33 8.556 90.693 5.53 181.942 6.696 272.925l.63 128.936c-83.93-.587-167.85 1.165-251.716 4.29-39.096.504-78.208.093-117.283-1.29zM1739.38-8295.234l-62-4c-4.963-45.34-8.207-90.84-7.706-136.485-.206-95.175-.475-190.454 4.707-285.514 31.73-5.596 64.687-3.537 96.92-4.858 119.703-1.417 239.39 1.623 359.08 2.858 2.18 141.66 3.852 283.327 5 425-99.962-.118-199.98-.51-299.83 4.903-32.063.516-64.153-.1-96.17-1.904zM2407.38-8296.234l-32-3c1.146-141.34 2.813-282.673 5-424 151.328-2.188 302.662-3.854 454-5 3.194 95.91 6.022 191.892 2.145 287.834-1.873 48.73-4.11 97.444-6.144 146.166-139.546.36-279.15 2.88-418.648-1.637zM3089.38-8303.234c-4.48-52.768-1.895-106.01-2.416-158.965.516-87.018 2.286-174.022 3.417-261.034 130.156-1.87 260.52-7.998 390.535.733l64.466 6.266v418c-140.967 3.356-282.15 7.458-423.063.3-10.878-1.432-22.92-.4-32.936-5.3zM263.38-9058.234c-3.077-102.547-1.63-205.19 3.983-307.622 1.197-6.997-.943-17.518 2.29-22.367 150.248 1.14 300.49 2.81 450.728 4.99v430c-150.66 2.187-301.327 3.853-452 5l-5-110zM969.38-8961.234c-5.178-123.114-1.097-246.36.233-369.522l.768-52.478c150.66-2.188 301.33-3.855 452-5 7.36 83.403 12.633 167.123 9.272 250.878-1.704 63.102-6.198 126.08-9.27 189.122-138.707-.936-277.53 2.533-416.14-3.518-12.17-1.476-27.065-1.733-36.86-9.482zM1677.38-8960.234c-6.032-44.467-4.657-89.77-6.293-134.61-.894-92.692-3.16-185.553 2.247-278.143 4.888-20.633 39.583-7.584 57.048-12.36 133.332-2.975 266.67.782 400 2.113 2.178 144.994 3.85 289.994 5 435-127.325-.488-254.68 1.333-381.976-1.827-24.64-1.767-50.344-.272-73.914-8.556zM2382.38-8955.234c-5.432-20.96-4.08-43.243-5.5-64.796-1.26-59.988-2.617-120.14 1.49-180.042.893-18.366 21.137 6.852 29.754 9.1 75.47 50.947 149.33 104.317 226.762 152.31 45.43 29.516 93.992 53.972 138.68 84.64-4.797 7.108-30.145 3.064-42.635 4.94-106.915 1.62-213.91 1.026-320.76-3.187-9.246-.785-18.836-.418-27.79-2.964zM3680.38-8999.234c-800.144-70.934-1553.822-647.62-1750.012-1439.846-187.925-699.86 106.206-1482.373 685.25-1909.93 725.718-564.3 1821.155-571.836 2554.01-16.373 554.66 399.027 862.48 1119.374 733.597 1794.758-106.4 650.996-598.388 1194.726-1204.282 1432.817-321.043 127.114-675.327 170.628-1018.562 138.574zm360-409c648.612-41.417 1261.48-512.34 1410-1155 101.445-436.986-14.176-919.447-321.415-1250.205-330.483-391.74-856.343-589.135-1363.2-545.315-693.296 44.31-1348.495 587.507-1434.9 1291.675-57.732 424.328 91.743 864.485 391.972 1168.905 335 352.488 834.37 534.974 1317.544 489.94z\"/><path d=\"M3800.38-9807.234c-94.068-19.872-172.58-108.152-163.642-207.088-6.085-316.014-5.986-632.25-1.482-948.287-6.544-110.753 64.498-217.4 168.978-254.735 296.39-108.253 594.002-213.688 891.608-318.74 99.714-42.587 232.433-47.332 310.54 39.335 79.977 85.963 77.814 235.07-17.66 309.2-110.54 68.854-240.002 99.393-360.63 146.402-166.593 60.857-335.535 115.808-500.242 181.476-48.844 55.07-16.966 149.977-27.126 221.205-1.093 218.372 5.867 437.122-6.343 655.233-16.026 103.268-111.798 178.64-214.637 180.12-26.418 2.202-53.493 2.42-79.362-4.12zM263.38-9665.234c-.083-121.564-.318-243.13 1.956-364.68 3.618-20.546 36.296-11.97 52.574-15.93 115.864-3.768 231.912-3.282 347.752 1.16 17.865 4.296 51.24-7.227 53.36 18.825 7.63 62.6 4.29 125.93 4.53 188.855-.98 74.592-2.124 149.18-3.17 223.77-151.662 2.197-303.33 3.86-455 5-.668-19-1.335-38-2-57zM972.38-9615.234c-6.085-34.647-4.43-70.446-6.017-105.59-.995-93.39-2.4-186.868.944-280.216-1.39-21.187 6.75-47.763 33.124-43.454 142.28-4.88 284.646-.253 426.95 1.26 1.977 123.652 9.78 247.522-.586 371.004l-4.413 63.996c-138.25-.613-276.562 1.934-414.747-3.31-11.725-.966-23.918-.422-35.252-3.69zM1672.38-9625.234c-6.28-49.147-4-98.975-4.43-148.423 1.253-83.148 1.976-166.488 9.95-249.315-2.638-21.003 24.625-31.766 39.26-18.37 29.642 23.82 45.184 60.092 62.63 92.89 54.293 105.89 116.354 207.947 187.3 303.53 6.47 11.433 31.467 35.662 3.096 32.78-79.8 5.382-159.905 4.275-239.826 2.873-18.504-2.06-40.486 1.58-55.7-10.927l-1.362-2.374zM264.38-10290.234c-3.277-135.975-3.12-271.997-4-408h465c-1.14 141.672-2.803 283.34-5 425-151.66 2.196-303.328 3.858-455 5l-1-22zM965.38-10483.234v-215h465c.798 128.675 4.654 257.398.477 386.044.01 15.013-4.49 29.387-7.476 43.956h-458v-215z\"/><ellipse transform=\"scale(1 -1)\" ry=\"285.507\" rx=\"302.429\" cy=\"7488.171\" cx=\"555.711\"/></g></svg>",
+  "order" : 11,
+  "hasHelp" : true
+}

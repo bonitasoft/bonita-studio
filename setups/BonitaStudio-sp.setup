@@ -278,7 +278,7 @@
     <setupTask
         xsi:type="setup:VariableTask"
         name="eclipse.target.platform"
-        defaultValue="2023-09"
+        defaultValue="2023-12"
         storageURI="scope://Workspace"/>
     <setupTask
         xsi:type="setup.targlets:TargletTask"
@@ -318,7 +318,7 @@
     <setupTask
         xsi:type="setup:VariableTask"
         name="eclipse.target.platform"
-        defaultValue="2022-06"
+        defaultValue="2023-12"
         storageURI="scope://Workspace"/>
     <setupTask
         xsi:type="setup.targlets:TargletTask"
@@ -368,6 +368,6 @@
       href="index:/org.eclipse.setup#//@projectCatalogs[name='com.github']"/>
   <description>
     Bonita Studio - Development environment.
-    Ready for Eclipse IDE for RCP and RAP Developers - 2024-03.
+    Ready for Eclipse IDE for RCP and RAP Developers - 2024-09.
   </description>
 </setup:Project>

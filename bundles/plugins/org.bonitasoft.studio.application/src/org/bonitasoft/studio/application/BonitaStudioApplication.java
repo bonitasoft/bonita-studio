@@ -28,6 +28,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Path;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -117,7 +118,7 @@ import org.osgi.service.prefs.BackingStoreException;
  */
 public class BonitaStudioApplication extends IDEApplication implements IApplication, IJobChangeListener {
 
-    private static final String REQUIRED_JAVA_VERSION = "17"; //$NON-NLS-1$
+    private static final int MINIMUM_JAVA_VERSION = 17;
 
     private Display display;
     /** A map indicating whether the workspace at given URL needs migration and what's its original version was (before IDE erases the version.ini file) */
@@ -271,7 +272,7 @@ public class BonitaStudioApplication extends IDEApplication implements IApplicat
 
     protected boolean isJavaVersionSupported(final Display display) {
         final String javaVersion = getJavaVersion();
-        if (!javaVersion.startsWith(REQUIRED_JAVA_VERSION)) {
+        if (Version.parseVersion(javaVersion).getMajor() < MINIMUM_JAVA_VERSION) {
             openErrorDialog(display, javaVersion);
             return false;
         }
@@ -287,7 +288,7 @@ public class BonitaStudioApplication extends IDEApplication implements IApplicat
                             Messages.incompatibleJavaVersionMessage,
                             javaVersion,
                             org.bonitasoft.studio.common.Messages.bonitaStudioModuleName,
-                            REQUIRED_JAVA_VERSION),
+                            MINIMUM_JAVA_VERSION),
                     MessageDialog.ERROR,
                     new String[] { IDialogConstants.OK_LABEL },
                     0,
@@ -992,7 +993,8 @@ public class BonitaStudioApplication extends IDEApplication implements IApplicat
              * Check whether metadata folder is empty.
              */
             File metaDir = new File(url.getPath(), METADATA_FOLDER);
-            if (!metaDir.exists() || metaDir.list().length == 0) {
+            if (!metaDir.exists() || metaDir.list().length == 0
+                    || Arrays.equals(metaDir.list(), new String[] { ".log" })) {
                 // brand new directory that is just starting to be used as a workspace
                 return VersionsComparison.COMPATIBLE_SAME_MAINTENANCE;
             } else {

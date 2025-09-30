@@ -27,6 +27,7 @@ import org.apache.maven.model.Exclusion;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.Plugin;
 import org.apache.maven.model.PluginManagement;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
 import org.bonitasoft.studio.common.repository.core.migration.MavenModelMigration;
 import org.bonitasoft.studio.common.repository.core.migration.report.MigrationReport;
@@ -46,6 +47,7 @@ public class Groovy3MigrationStep implements MavenModelMigration {
     @Override
     public MigrationReport migrate(Model model, ProjectMetadata metadata) {
         MigrationReport report = new MigrationReport();
+        BonitaStudioLog.info(String.format("Starting %s on %s...", Groovy3MigrationStep.class.getName(), metadata.getArtifactId()));
         Properties properties = model.getProperties();
 
         properties.setProperty(GROOVY_ALL_VERSION_PROPERTY, GROOVY_VERSION);
@@ -135,7 +137,8 @@ public class Groovy3MigrationStep implements MavenModelMigration {
             report.removed(
                     "`bintray` plugin repository has been removed. All required plugins are now available on maven central.");
         }
-
+        
+        BonitaStudioLog.info(String.format("%s completed for %s.", Groovy3MigrationStep.class.getName(), metadata.getArtifactId()));
         return report;
     }
 

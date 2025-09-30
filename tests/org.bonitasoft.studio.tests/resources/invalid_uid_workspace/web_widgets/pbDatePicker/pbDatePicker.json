@@ -1,0 +1,139 @@
+{
+  "id" : "pbDatePicker",
+  "name" : "Date Picker",
+  "type" : "widget",
+  "custom" : false,
+  "modelVersion" : "2.4",
+  "lastUpdate" : 1736240682359,
+  "description" : "Calendar for selecting a date (only)",
+  "template" : "@pbDatePicker.tpl.html",
+  "controller" : "@pbDatePicker.ctrl.js",
+  "properties" : [
+    {
+      "label" : "Read-only",
+      "name" : "readOnly",
+      "type" : "boolean",
+      "defaultValue" : false,
+      "bond" : "expression"
+    },
+    {
+      "label" : "Required",
+      "name" : "required",
+      "help" : "In the context of a form container, use $form.$invalid as a Boolean to check form validity in a widget property",
+      "type" : "boolean",
+      "defaultValue" : false,
+      "bond" : "expression"
+    },
+    {
+      "label" : "Interpret HTML",
+      "name" : "allowHTML",
+      "help" : "For 'Label' property only. If you choose 'no', HTML code will be escaped instead of being interpreted. If you choose ‘Yes’, this could potentially lead to HTML injections attacks. Please take into account these risks.",
+      "type" : "boolean",
+      "defaultValue" : false,
+      "bond" : "constant"
+    },
+    {
+      "label" : "Label hidden",
+      "name" : "labelHidden",
+      "type" : "boolean",
+      "defaultValue" : false,
+      "bond" : "constant"
+    },
+    {
+      "label" : "Label",
+      "name" : "label",
+      "showFor" : "properties.labelHidden.value === false",
+      "type" : "text",
+      "defaultValue" : "Date",
+      "bond" : "interpolation"
+    },
+    {
+      "label" : "Label position",
+      "name" : "labelPosition",
+      "showFor" : "properties.labelHidden.value === false",
+      "type" : "choice",
+      "defaultValue" : "top",
+      "choiceValues" : [
+        "left",
+        "top"
+      ],
+      "bond" : "constant"
+    },
+    {
+      "label" : "Label width",
+      "name" : "labelWidth",
+      "showFor" : "properties.labelHidden.value === false",
+      "type" : "integer",
+      "defaultValue" : 4,
+      "bond" : "constant",
+      "constraints" : {
+        "min" : "1",
+        "max" : "12"
+      }
+    },
+    {
+      "label" : "Value",
+      "name" : "value",
+      "caption" : "Input: <a href='https://en.wikipedia.org/wiki/ISO_8601' target='_blank'>ISO 8601</a> formatted String (yyyy-MM-dd), Date object or Long number <br>Output: Date object (see widget help)",
+      "type" : "text",
+      "bond" : "variable"
+    },
+    {
+      "label" : "Technical date format",
+      "name" : "dateFormat",
+      "caption" : "Use the characters: M (month), d (day), y (year)",
+      "type" : "text",
+      "defaultValue" : "MM/dd/yyyy",
+      "bond" : "expression"
+    },
+    {
+      "label" : "Date Placeholder",
+      "name" : "placeholder",
+      "caption" : "Includes the localized version of the Technical date format property, to guide the user",
+      "help" : "Short hint that describes the expected input format for the date",
+      "type" : "text",
+      "defaultValue" : "Enter a date (mm/dd/yyyy)",
+      "bond" : "interpolation"
+    },
+    {
+      "label" : "Show Today button",
+      "name" : "showToday",
+      "help" : "Display or hide the shortcut button to current day",
+      "type" : "boolean",
+      "defaultValue" : true,
+      "bond" : "constant"
+    },
+    {
+      "label" : "Today button label",
+      "name" : "todayLabel",
+      "help" : "Can be translated using the asset localization.json",
+      "showFor" : "properties.showToday.value === true",
+      "type" : "text",
+      "defaultValue" : "Today",
+      "bond" : "interpolation"
+    }
+  ],
+  "assets" : [
+    {
+      "id" : "fc1d2832-3f1c-4e8d-b2a4-e6841bccbe14",
+      "name" : "angular-strap-2.3.9-patched-dateTimePicker-setValidity.tpl.min.js",
+      "type" : "js",
+      "order" : 2,
+      "external" : false
+    },
+    {
+      "id" : "80a1ea34-c90d-4ed8-a139-b5527202f135",
+      "name" : "angular-strap-2.3.9-patched-dateTimePicker-setValidity.compat.min.js",
+      "type" : "js",
+      "order" : 1,
+      "external" : false
+    }
+  ],
+  "requiredModules" : [
+    "mgcrea.ngStrap.datepicker"
+  ],
+  "webResources" : [ ],
+  "icon" : "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0.000000 0.061756 50.000000 20.000000\"><path fill=\"none\" d=\"M0 .062h50v20H0z\"/><path d=\"M0 .062v20h50v-20zm49 19H1v-18h48z\" fill=\"#fff\"/><g fill=\"#fff\"><path d=\"M20.152 1.864c-.246.143-.308.28-.328.69l-.016.354-.672.02c-.67.018-.67.018-.87.126-.35.193-.538.482-.604.94-.023.164-.032 2.29-.026 6.804l.01 6.564.075.202c.152.395.522.688.964.762.13.02 2.545.03 6.446.024l6.24-.01.19-.08c.23-.102.477-.308.608-.51.21-.322.2-.08.197-5.346 0-2.63-.014-5.638-.026-6.686l-.02-1.902-.095-.206c-.122-.262-.285-.437-.53-.566-.188-.098-.207-.098-.866-.12l-.672-.016-.016-.37c-.017-.335-.024-.38-.11-.496-.283-.402-.91-.346-1.13.098-.027.063-.057.237-.067.436l-.02.332h-7.663l-.017-.367c-.01-.2-.035-.397-.056-.435-.164-.31-.616-.43-.927-.24zm10.955 10.313v4.975l-6.12.01c-4.47.004-6.132-.002-6.15-.03-.022-.046-.032-9.79-.008-9.888.015-.056.33-.06 6.146-.052l6.13.01z\"/><path d=\"M21.842 7.557l-.317.014.01.74.01.74.716.012c.48.003.732-.004.754-.028.024-.025.036-.293.036-.754v-.713h-.252c-.138 0-.337-.007-.442-.01-.105-.007-.338-.007-.514 0zM24.06 7.557l-.203.014-.017.182c-.016.137-.01 1.083.01 1.292 0 .014.337.02.75.018l.743-.01.01-.744.01-.74h-.354c-.198 0-.447-.008-.55-.015-.106-.007-.286-.003-.394.004zM26.247 7.56l-.104.01.01.74.01.74.742.012.744.007.01-.35c.008-.19 0-.53-.01-.758l-.018-.408-.638-.004c-.35 0-.688.004-.747.01zM28.48 7.585c-.01.02-.01.36-.01.75l.01.716.51.012c.277.007.615 0 .746-.01l.235-.025v-1.46l-.136-.003c-.672-.02-1.346-.01-1.356.02zM19.226 10.22c-.01.21-.01.56 0 .77l.016.383.74-.007.74-.01V9.853l-.74-.01-.74-.007zM21.538 9.882c-.01.025-.01.367-.01.758l.01.715.74.01.74.008.023-.314c.015-.176.015-.52 0-.77l-.022-.453h-.734c-.563 0-.736.01-.75.045zM23.876 10.22c-.01.21-.01.56 0 .77l.017.383.74-.007.74-.01V9.853l-.74-.01-.74-.007zM26.19 9.882c-.01.025-.01.367-.01.758l.01.715.74.01.74.008.022-.314c.014-.176.014-.52 0-.77l-.023-.453h-.735c-.563 0-.737.01-.75.045zM28.46 10.22c-.008.21-.008.56 0 .77l.018.383.74-.007.74-.01V9.853l-.74-.01-.74-.007zM19.226 12.34v.726c0 .286.01.545.01.566 0 .035.163.045.713.045.39 0 .73-.014.752-.028.03-.025.04-.2.033-.762l-.01-.73-.743-.01-.747-.007zM21.548 12.165c-.014.01-.024.35-.024.748 0 .726 0 .73.076.747.04.01.38.014.753.01l.684-.01.01-.454c.01-.252.01-.59-.01-.76l-.02-.305h-.726c-.4 0-.736.012-.746.025zM23.876 12.34v.726c0 .286.01.545.01.566 0 .035.164.045.714.045.39 0 .73-.014.753-.028.03-.025.04-.2.033-.762l-.01-.73-.743-.01-.747-.007zM26.198 12.165c-.013.01-.023.35-.023.748 0 .726 0 .73.075.747.04.01.38.014.754.01l.684-.01.01-.454c.01-.252.01-.59-.01-.76l-.02-.305h-.726c-.4 0-.737.012-.747.025zM28.46 12.34v.726c0 .286.01.545.01.566 0 .035.165.045.715.045.39 0 .73-.014.753-.028.03-.025.04-.2.033-.762l-.008-.73-.744-.01-.747-.007zM19.23 14.522c0 .045-.01.384-.01.754v.67h1.522l-.01-.743-.01-.74-.743-.01-.747-.008zM21.525 15.196v.75H23.048l.01-.656c0-.36 0-.695-.01-.75l-.02-.095h-1.5zM23.88 14.522c0 .045-.01.384-.01.754v.67H25.393l-.01-.743-.01-.74-.743-.01-.747-.008zM26.175 15.196v.75H27.698l.01-.656c0-.36 0-.695-.01-.75l-.02-.095h-1.5zM28.465 14.522c0 .045-.01.384-.01.754v.67H29.978l-.01-.743-.01-.74-.743-.01-.747-.008z\"/></g></svg>",
+  "order" : 10,
+  "hasHelp" : true
+}

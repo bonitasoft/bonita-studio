@@ -27,8 +27,11 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.repository.Messages;
 import org.bonitasoft.studio.common.repository.core.BonitaProject;
 import org.bonitasoft.studio.common.repository.core.migration.MigrationStep;
+import org.bonitasoft.studio.common.repository.core.migration.StepDescription;
 import org.bonitasoft.studio.common.repository.core.migration.report.MigrationReport;
 import org.bonitasoft.studio.common.repository.core.team.GitProject;
 import org.eclipse.core.runtime.CoreException;
@@ -39,7 +42,14 @@ import org.eclipse.jgit.lib.Constants;
 public class GitIgnoreMigrationStep implements MigrationStep {
 
     @Override
+    public StepDescription getDescription() {
+        return new StepDescription(Messages.gitIgnoreMigrationTitle, Messages.gitIgnoreMigrationDescription);
+    }
+
+    @Override
     public MigrationReport run(Path project, IProgressMonitor monitor) throws CoreException {
+        monitor.subTask(Messages.gitIgnoreMigrationTitle);
+        BonitaStudioLog.info(String.format("Starting %s...", GitIgnoreMigrationStep.class.getName()));
         var report = MigrationReport.emptyReport();
         try {
             var parentEntries = updateGitIgnore(project, report, project.resolve(Constants.GITIGNORE_FILENAME),
@@ -52,6 +62,7 @@ public class GitIgnoreMigrationStep implements MigrationStep {
         } catch (IOException e) {
             throw new CoreException(Status.error("Failed to update .gitignore file.", e));
         }
+        BonitaStudioLog.info(String.format("%s completed.", GitIgnoreMigrationStep.class.getName()));
         return report;
     }
 
@@ -64,17 +75,21 @@ public class GitIgnoreMigrationStep implements MigrationStep {
                 var entriesToAdd = retrieveEntriesToAdd(existingEntries, gitIgnoreTemplate);
                 if (!entriesToAdd.isEmpty()) {
                     existingEntries.add(System.lineSeparator());
+                    BonitaStudioLog
+                            .info(String.format("Adding following entries to %s", project.relativize(gitIgnore)));
                     existingEntries.addAll(entriesToAdd);
                 }
                 var entriesRemoved = existingEntries.removeIf(entry -> !entry.startsWith("/")
                         && !entry.isBlank()
                         && parentEntries.contains(entry));
                 entriesRemoved = existingEntries.removeIf(entry -> !entry.isBlank()
-                            && entry.startsWith("/lib/") || entry.equals("/template")) || entriesRemoved;
+                        && entry.startsWith("/lib/") || entry.equals("/template")) || entriesRemoved;
                 if (entriesRemoved || !entriesToAdd.isEmpty()) {
                     String newContent = existingEntries.stream().reduce("",
                             (s1, s2) -> s1 + System.lineSeparator() + s2);
                     Files.writeString(gitIgnore, newContent, StandardCharsets.UTF_8);
+                    BonitaStudioLog.info(String.format("`%s` file has been updated with the following content:%n%s",
+                            project.relativize(gitIgnore), newContent));
                     report.updated(String.format("`%s` file has been updated.", project.relativize(gitIgnore)));
                 }
             } catch (IOException e) {
@@ -121,8 +136,4 @@ public class GitIgnoreMigrationStep implements MigrationStep {
         }
     }
 
-    @Override
-    public boolean appliesTo(String sourceVersion) {
-        return true;
-    }
 }

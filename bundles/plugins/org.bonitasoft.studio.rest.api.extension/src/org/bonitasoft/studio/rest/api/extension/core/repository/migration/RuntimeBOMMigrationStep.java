@@ -23,6 +23,7 @@ import java.util.function.Predicate;
 import org.apache.maven.model.Dependency;
 import org.apache.maven.model.DependencyManagement;
 import org.apache.maven.model.Model;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.core.maven.model.ProjectDefaultConfiguration;
 import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
 import org.bonitasoft.studio.common.repository.core.migration.MavenModelMigration;
@@ -37,6 +38,7 @@ public class RuntimeBOMMigrationStep implements MavenModelMigration {
     @Override
     public MigrationReport migrate(Model model, ProjectMetadata metadata) {
         MigrationReport report = new MigrationReport();
+        BonitaStudioLog.info(String.format("Starting %s on %s...", RuntimeBOMMigrationStep.class.getName(), metadata.getArtifactId()));
         Properties properties = model.getProperties();
 
         properties.remove(GROOVY_ALL_VERSION_PROPERTY);
@@ -97,6 +99,7 @@ public class RuntimeBOMMigrationStep implements MavenModelMigration {
         findDependency(model.getDependencies(), "com.fasterxml.jackson.datatype", "jackson-datatype-jsr310")
                 .ifPresent(dependency -> dependency.setVersion(null));
 
+        BonitaStudioLog.info(String.format("%s completed for %s.", RuntimeBOMMigrationStep.class.getName(), metadata.getArtifactId()));
         return report;
     }
 

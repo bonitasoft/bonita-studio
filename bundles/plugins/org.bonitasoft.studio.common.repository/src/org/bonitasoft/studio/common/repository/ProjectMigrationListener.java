@@ -14,18 +14,20 @@
  */
 package org.bonitasoft.studio.common.repository;
 
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.nio.file.Files;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicBoolean;
 
-import jakarta.annotation.PostConstruct;
-import jakarta.annotation.PreDestroy;
-
+import org.bonitasoft.studio.common.FileUtil;
 import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.Strings;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.core.BonitaProject;
 import org.bonitasoft.studio.common.repository.core.ImportBonitaProjectOperation;
 import org.bonitasoft.studio.common.repository.core.migration.BonitaProjectMigrator;
+import org.bonitasoft.studio.common.repository.core.migration.report.MigrationReportWriter;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IResourceChangeEvent;
@@ -55,7 +57,13 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.team.core.RepositoryProvider;
+import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.ide.IDE;
+import org.eclipse.ui.statushandlers.StatusManager;
+
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.PreDestroy;
 
 /**
  * Listen to project descriptor (.project) Bonita version changes.
@@ -65,7 +73,7 @@ import org.eclipse.ui.PlatformUI;
  */
 public class ProjectMigrationListener implements IResourceChangeListener, IResourceDeltaVisitor {
 
-    public boolean migrationDialogOpened = false;
+    private AtomicBoolean migrationInProgess = new AtomicBoolean(false);
 
     @PostConstruct
     public void subscribe() {
@@ -118,6 +126,9 @@ public class ProjectMigrationListener implements IResourceChangeListener, IResou
     }
 
     protected void openMigrationDialog(IProject project) {
+        if (migrationInProgess.getAndSet(true)) {
+            return;
+        }
         if (RepositoryProvider.getProvider(project, GitProvider.ID) != null) {
             openGitMigrationDialog(project);
         } else {
@@ -139,7 +150,7 @@ public class ProjectMigrationListener implements IResourceChangeListener, IResou
         return PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
     }
 
-    private void runMigrationInDialog(Shell shell, IProject project) {
+    private boolean runMigrationInDialog(Shell shell, IProject project) {
         try {
             new ProgressMonitorDialog(shell)
                     .run(true, false, monitor -> {
@@ -149,107 +160,162 @@ public class ProjectMigrationListener implements IResourceChangeListener, IResou
                             throw new InvocationTargetException(e);
                         }
                     });
-        } catch (InvocationTargetException | InterruptedException e) {
-            CommonRepositoryPlugin.getDefault().openErrorDialog(
+            return true;
+        } catch (InvocationTargetException e) {
+            if (e.getTargetException() != null) {
+                var exception = e.getTargetException();
+                if (exception instanceof CoreException ce) {
+                    var ex = ce.getStatus().getException();
+                    Display.getDefault().asyncExec(() -> CommonRepositoryPlugin.getDefault().openErrorDialog(
+                            Display.getDefault().getActiveShell(),
+                            ce.getStatus().getMessage(), ex != null ? ex : ce));
+                } else {
+                    Display.getDefault().asyncExec(() -> CommonRepositoryPlugin.getDefault().openErrorDialog(
+                            Display.getDefault().getActiveShell(),
+                            Messages.migrationFailedMessage, e.getTargetException()));
+                }
+            } else {
+                Display.getDefault().asyncExec(() -> CommonRepositoryPlugin.getDefault().openErrorDialog(
+                        Display.getDefault().getActiveShell(),
+                        Messages.migrationFailedMessage, e));
+
+            }
+            return false;
+        } catch (InterruptedException e) {
+            Display.getDefault().asyncExec(() -> CommonRepositoryPlugin.getDefault().openErrorDialog(
                     Display.getDefault().getActiveShell(),
-                    Messages.migrationFailedMessage, e);
+                    Messages.migrationFailedMessage, e));
+            return false;
         }
     }
 
     private void migrateProject(IProject project, IProgressMonitor monitor)
             throws CoreException, MigrationException {
         monitor.beginTask(Messages.migrating, IProgressMonitor.UNKNOWN);
+        monitor.subTask(Messages.prepareProjectForMigration);
         var projectRoot = project.getLocation().toFile();
-        var migrator = new BonitaProjectMigrator(projectRoot.toPath());
-        if (migrator.requireCleanImport()) {
-            var repository = RepositoryManager.getInstance().getCurrentRepository().orElse(null);
-            if (repository != null) {
-                repository.close(new NullProgressMonitor());
-            }
-            RepositoryManager.getInstance().setCurrentRepository(null);
-            // Close legacy extensions project if any opened
-            for(var p : project.getWorkspace().getRoot().getProjects()) {
-            	if(!project.equals(p) &&  project.getLocation().isPrefixOf(p.getLocation())){
-            	    p.delete(false, true, new NullProgressMonitor());
-            	}
-            }
-         	BonitaProject.getRelatedProjects(projectRoot.getName()).stream()
-            .forEach(p -> {
-                try {
-                    p.delete(false, true, new NullProgressMonitor());
-                } catch (CoreException e) {
-                    BonitaStudioLog.error(e);
+        var bonitaProject = RepositoryManager.getInstance().getCurrentProject().orElse(null);
+        if (bonitaProject != null) {
+            // First close the project to avoid file locking
+            // on windows when copying project to tmp folder
+            bonitaProject.close(monitor);
+
+            java.nio.file.Path tmpProjectFolder = null;
+            try {
+                tmpProjectFolder = Files.createTempDirectory(project.getName() + "-migration-tmp");
+                Files.deleteIfExists(tmpProjectFolder);
+                FileUtil.copyDirectory(projectRoot.toPath(), tmpProjectFolder);
+
+                // Migrate first
+                var migrator = new BonitaProjectMigrator(tmpProjectFolder);
+                migrator.run(monitor);
+
+                // If migration is successful, remove existing project in
+                // workspace and import the migrated version from tmp folder
+                bonitaProject.delete(monitor);
+
+                var op = new ImportBonitaProjectOperation(tmpProjectFolder.toFile());
+                op.run(monitor);
+                var report = op.getReport();
+                bonitaProject = op.getBonitaProject();
+                bonitaProject.open(monitor);
+                var currentRepo = RepositoryManager.getInstance().getCurrentRepository().orElse(null);
+                if (currentRepo != null) {
+                    currentRepo.migrate(report, SubMonitor.convert(monitor));
                 }
-            });
-            var op = new ImportBonitaProjectOperation(projectRoot);
-            op.run(new NullProgressMonitor());
-            var report = op.getReport();
-            var bonitaProject = op.getBonitaProject();
-            var currentRepo = RepositoryManager.getInstance().switchToRepository(
-                    bonitaProject.getId(),
-                    new NullProgressMonitor());
-            currentRepo.migrate(report, SubMonitor.convert(monitor));
-        } else {
-            var repository = RepositoryManager.getInstance().getCurrentRepository().orElse(null);
-            var report = migrator.run(new NullProgressMonitor());
-            if (repository != null) {
-                repository.migrate(report, SubMonitor.convert(monitor));
+            } catch (IOException e) {
+                throw new CoreException(Status.error("Failed to backup current branch state.", e));
+            } finally {
+                if (tmpProjectFolder != null) {
+                    try {
+                        FileUtil.deleteDir(tmpProjectFolder);
+                    } catch (IOException e) {
+                        BonitaStudioLog.error(e);
+                    }
+                }
+                // In case of error during migration
+                // Make sure the project is reopened
+                var currentRepository = RepositoryManager.getInstance().getCurrentRepository().orElse(null);
+                if (currentRepository != null && !currentRepository.isLoaded()) {
+                    bonitaProject.open(monitor);
+                }
             }
         }
     }
 
-    @SuppressWarnings("restriction")
     private void openGitMigrationDialog(IProject project) {
         Display.getDefault().asyncExec(() -> {
-            if (!migrationDialogOpened) {
-                migrationDialogOpened = true;
-                var shell = newShell();
-                boolean migrate = MessageDialog.open(MessageDialog.INFORMATION,
-                        shell,
-                        Messages.migrationTitle,
-                        String.format(Messages.mustMigrationMsg,
-                                ProductVersion.CURRENT_VERSION),
-                        SWT.NONE, Messages.migrate, Messages.switchIntoNewbranch) == 0; // default index is 0 -> migrate
-                migrationDialogOpened = false;
-                if (migrate) {
-                    runMigrationInDialog(shell, project);
+            var shell = newShell();
+            boolean migrate = MessageDialog.open(MessageDialog.INFORMATION,
+                    shell,
+                    Messages.migrationTitle,
+                    String.format(Messages.mustMigrationMsg,
+                            ProductVersion.CURRENT_VERSION),
+                    SWT.NONE, Messages.migrate, Messages.switchIntoNewbranch) == 0; // default index is 0 -> migrate
+            if (migrate) {
+                var success = runMigrationInDialog(shell, project);
+                migrationInProgess.set(false);
+                if (success) {
                     // Commit migration changes
                     var bonitaProject = Adapters.adapt(
-                            RepositoryManager.getInstance().getCurrentRepository().orElseThrow(), BonitaProject.class);
+                            RepositoryManager.getInstance().getCurrentRepository().orElseThrow(),
+                            BonitaProject.class);
                     try {
                         bonitaProject.commitAll(String.format("Bonita '%s' automated migration",
                                 ProductVersion.CURRENT_VERSION), new NullProgressMonitor());
                     } catch (CoreException e) {
-                        BonitaStudioLog.error(e);
+                        StatusManager.getManager().handle(e, CommonRepositoryPlugin.PLUGIN_ID);
+                    }
+                    var currentRepository = RepositoryManager.getInstance().getCurrentRepository().orElse(null);
+                    if (currentRepository != null) {
+                        var reportFile = currentRepository.getProject()
+                                .getFile(MigrationReportWriter.DEFAULT_REPORT_FILE_NAME);
+                        if (reportFile.exists()) {
+                            try {
+                                IDE.openEditor(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage(),
+                                        reportFile);
+                            } catch (PartInitException e) {
+                                BonitaStudioLog.error(e);
+                            }
+                        }
                     }
                 } else {
-                    // open switch branch dialog
-                    // if user leaves or click cancel, then re open migration dialog
-                    var gitRepository = ResourceUtil.getRepository(project);
-                    CheckoutDialog checkoutDialog = new CheckoutDialog(shell,
-                            gitRepository);
-                    if (checkoutDialog.open() == CheckoutDialog.OK) {
-                        try {
-                            PlatformUI.getWorkbench().getProgressService().run(true, false, monitor -> {
-                                try {
-                                    gitReset(gitRepository);
-                                } catch (CoreException e) {
-                                    BonitaStudioLog.error(e);
-                                }
-                            });
-                        } catch (InvocationTargetException | InterruptedException e) {
-                            BonitaStudioLog.error(e);
-                        }
-
-                        BranchOperationUI
-                                .checkout(gitRepository, checkoutDialog.getRefName())
-                                .start();
-                    } else {
-                        openGitMigrationDialog(project);
-                    }
+                    openCheckoutBranchDialog(project, shell);
                 }
+            } else {
+                migrationInProgess.set(false);
+                openCheckoutBranchDialog(project, shell);
             }
         });
+    }
+
+    private void openCheckoutBranchDialog(IProject project, Shell shell) {
+        // open switch branch dialog
+        // if user leaves or click cancel, then re open migration dialog
+        var gitRepository = ResourceUtil.getRepository(project);
+        CheckoutDialog checkoutDialog = new CheckoutDialog(shell,
+                gitRepository);
+        if (checkoutDialog.open() == CheckoutDialog.OK) {
+            migrationInProgess.set(true);
+            try {
+                PlatformUI.getWorkbench().getProgressService().run(true, false, monitor -> {
+                    try {
+                        gitReset(gitRepository);
+                    } catch (CoreException e) {
+                        BonitaStudioLog.error(e);
+                    }
+                });
+            } catch (InvocationTargetException | InterruptedException e) {
+                BonitaStudioLog.error(e);
+            }
+
+            BranchOperationUI
+                    .checkout(gitRepository, checkoutDialog.getRefName())
+                    .start();
+            migrationInProgess.set(false);
+        } else {
+            openGitMigrationDialog(project);
+        }
     }
 
     private void gitReset(Repository repository) throws CoreException {
@@ -268,7 +334,8 @@ public class ProjectMigrationListener implements IResourceChangeListener, IResou
                 && !Objects.equals(project.getName(), "server_configuration")
                 && delta.getResource().exists()
                 // New project layout
-                && ((project.getFolder(BonitaProject.APP_MODULE).exists() && Strings.hasText(project.getDescription().getComment()))
+                && ((project.getFolder(BonitaProject.APP_MODULE).exists()
+                        && Strings.hasText(project.getDescription().getComment()))
                         // Legacy project layout
                         || (project.hasNature(BonitaProjectNature.NATURE_ID)
                                 && Strings.hasText(project.getDescription().getComment())));

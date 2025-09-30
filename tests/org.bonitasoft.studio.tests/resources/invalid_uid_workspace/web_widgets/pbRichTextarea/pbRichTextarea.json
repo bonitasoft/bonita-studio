@@ -1,0 +1,233 @@
+{
+  "id" : "pbRichTextarea",
+  "name" : "Rich text area",
+  "type" : "widget",
+  "custom" : false,
+  "modelVersion" : "2.4",
+  "lastUpdate" : 1736240682343,
+  "description" : "Expendable text input field with HTML formatting, including style, image, links... This widget is based on textAngular.",
+  "template" : "@pbRichTextarea.tpl.html",
+  "controller" : "@pbRichTextarea.ctrl.js",
+  "properties" : [
+    {
+      "label" : "Read-only",
+      "name" : "readOnly",
+      "type" : "boolean",
+      "defaultValue" : false,
+      "bond" : "expression"
+    },
+    {
+      "label" : "Required",
+      "name" : "required",
+      "help" : "In the context of a form container, use $form.$invalid as a Boolean to check form validity in a widget property",
+      "type" : "boolean",
+      "defaultValue" : false,
+      "bond" : "expression"
+    },
+    {
+      "label" : "Interpret HTML",
+      "name" : "allowHTML",
+      "help" : "If you choose 'no', HTML code will be escaped instead of being interpreted. If you choose ‘Yes’, this could potentially lead to HTML injections attacks. Please take into account these risks.",
+      "type" : "boolean",
+      "defaultValue" : false,
+      "bond" : "constant"
+    },
+    {
+      "label" : "Value min length",
+      "name" : "minLength",
+      "help" : "In the context of a form container, use $form.$invalid as a Boolean to check form validity in a widget property",
+      "type" : "integer",
+      "defaultValue" : "",
+      "bond" : "expression",
+      "constraints" : {
+        "min" : "1"
+      }
+    },
+    {
+      "label" : "Value max length",
+      "name" : "maxLength",
+      "help" : "In the context of a form container, use $form.$invalid as a Boolean to check form validity in a widget property",
+      "type" : "integer",
+      "defaultValue" : "",
+      "bond" : "expression",
+      "constraints" : {
+        "min" : "1"
+      }
+    },
+    {
+      "label" : "Label hidden",
+      "name" : "labelHidden",
+      "type" : "boolean",
+      "defaultValue" : false,
+      "bond" : "constant"
+    },
+    {
+      "label" : "Label",
+      "name" : "label",
+      "showFor" : "properties.labelHidden.value === false",
+      "type" : "text",
+      "defaultValue" : "Default label",
+      "bond" : "interpolation"
+    },
+    {
+      "label" : "Label position",
+      "name" : "labelPosition",
+      "showFor" : "properties.labelHidden.value === false",
+      "type" : "choice",
+      "defaultValue" : "top",
+      "choiceValues" : [
+        "left",
+        "top"
+      ],
+      "bond" : "constant"
+    },
+    {
+      "label" : "Label width",
+      "name" : "labelWidth",
+      "showFor" : "properties.labelHidden.value === false",
+      "type" : "integer",
+      "defaultValue" : 4,
+      "bond" : "constant",
+      "constraints" : {
+        "min" : "1",
+        "max" : "12"
+      }
+    },
+    {
+      "label" : "Value",
+      "name" : "value",
+      "caption" : "Variable content formatted in HTML",
+      "help" : "To pre-fill with a template, bind an HTML formatted variable",
+      "type" : "text",
+      "bond" : "variable"
+    },
+    {
+      "label" : "Style toolbar",
+      "name" : "toolbarsGrp1",
+      "caption" : "Available values: <i>h1, h2, h3, h4, h5, h6, p, ul, ol</i>",
+      "help" : "Subgroup of toolbar buttons to structure the text",
+      "type" : "collection",
+      "defaultValue" : [
+        "h1",
+        "h2",
+        "h3",
+        "h4",
+        "h5",
+        "h6",
+        "p",
+        "ul",
+        "ol"
+      ],
+      "bond" : "expression"
+    },
+    {
+      "label" : "Formatting toolbar",
+      "name" : "toolbarsGrp2",
+      "caption" : "Available values: <i>bold, italics, underline, strikeThrough, pre, quote</i>",
+      "help" : "Subgroup of toolbar buttons to set how the text looks",
+      "type" : "collection",
+      "defaultValue" : [
+        "bold",
+        "italics",
+        "underline",
+        "strikeThrough",
+        "pre",
+        "quote"
+      ],
+      "bond" : "expression"
+    },
+    {
+      "label" : "Alignment toolbar",
+      "name" : "toolbarsGrp3",
+      "caption" : "Available values: <i>justifyLeft, justifyCenter, justifyRight, indent, outdent</i>",
+      "help" : "Subgroup of toolbar buttons to arrange the text layout",
+      "type" : "collection",
+      "defaultValue" : [
+        "justifyLeft",
+        "justifyCenter",
+        "justifyRight",
+        "indent",
+        "outdent"
+      ],
+      "bond" : "expression"
+    },
+    {
+      "label" : "Miscellaneous toolbar",
+      "name" : "toolbarsGrp4",
+      "caption" : "Available values: <i>html, insertImage, insertLink, insertVideo, wordcount, charcount, undo, redo, clear</i>",
+      "help" : "Subgroup of toolbar buttons for extra options",
+      "type" : "collection",
+      "defaultValue" : [
+        "html",
+        "insertImage",
+        "insertLink",
+        "insertVideo",
+        "wordcount",
+        "charcount",
+        "undo",
+        "redo",
+        "clear"
+      ],
+      "bond" : "expression"
+    }
+  ],
+  "assets" : [
+    {
+      "id" : "8c99fed5-977a-4f9d-b0d9-b4a18b98efd8",
+      "name" : "textAngular-sanitize-1.4.6.min.js",
+      "type" : "js",
+      "order" : 3,
+      "external" : false
+    },
+    {
+      "id" : "2f1e4386-ff5c-4469-9e46-4e4142623b41",
+      "name" : "textAngular.i18n.config.js",
+      "type" : "js",
+      "order" : 5,
+      "external" : false
+    },
+    {
+      "id" : "f6f678df-48b0-4c64-b1b1-f442bff56287",
+      "name" : "rangy-core.js",
+      "type" : "js",
+      "order" : 1,
+      "external" : false
+    },
+    {
+      "id" : "8ed3ff76-227b-4e8d-a964-aa41fd1a07bb",
+      "name" : "rangy-selectionsaverestore.js",
+      "type" : "js",
+      "order" : 2,
+      "external" : false
+    },
+    {
+      "id" : "0ba23a81-6c73-4787-8ffd-9fef280fe6f9",
+      "name" : "font-awesome-4.5.0.css",
+      "type" : "css",
+      "order" : 0,
+      "external" : false
+    },
+    {
+      "id" : "11088bf4-1f2d-40a5-93f6-7c1e6196d07b",
+      "name" : "textAngular-1.4.6.css",
+      "type" : "css",
+      "order" : 0,
+      "external" : false
+    },
+    {
+      "id" : "8e69eb96-0c4c-4b56-968a-962b4a3d4eee",
+      "name" : "textAngular-1.4.6.min.js",
+      "type" : "js",
+      "order" : 4,
+      "external" : false
+    }
+  ],
+  "requiredModules" : [
+    "textAngular",
+    "textAngular-i18n"
+  ],
+  "webResources" : [ ],
+  "icon" : "<?xml version='1.0' standalone='no'?><!DOCTYPE svg PUBLIC '-//W3C//DTD SVG 1.1//EN' 'http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd'><svg width='50px' height='20px' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' xml:space='preserve' style='fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:1.41421;'><g><path id='Box' d='M49.976,19.978l-49.952,0l0,-19.956l49.952,0c0,6.652 0,13.304 0,19.956ZM1.024,1.022l0,17.956l47.952,0l0,-17.956c-15.984,0 -31.968,0 -47.952,0Z' style='fill:#ebebeb;fill-rule:nonzero;'/><rect id='Line 2' x='23.876' y='9' width='19.974' height='2' style='fill:#ebebeb;'/><rect id='Line 3' x='23.876' y='14.19' width='9.36' height='2' style='fill:#ebebeb;'/><rect id='Line 1' x='23.876' y='3.88' width='21.827' height='2' style='fill:#ebebeb;'/><g id='Image'><path d='M21.268,15.723l-16.612,0l0,-11.446l16.612,0c0,3.815 0,7.631 0,11.446ZM5.486,5.106l0,9.788l14.953,0l0,-9.788c-4.984,0 -9.969,0 -14.953,0Z' style='fill:#ebebeb;fill-rule:nonzero;'/><circle cx='8.92' cy='8.397' r='1.327' style='fill:#ebebeb;'/><path d='M11.374,9.724l3.101,3.42l-6.203,0l3.102,-3.42Z' style='fill:#ebebeb;'/><path d='M14.813,8.496l4.215,4.648l-8.43,0l4.215,-4.648Z' style='fill:#ebebeb;'/></g><rect id='Cursor 2' x='35.44' y='12.34' width='1' height='5.197' style='fill:#ebebeb;'/></g></svg>",
+  "order" : 3,
+  "hasHelp" : false
+}

@@ -14,13 +14,16 @@
  */
 package org.bonitasoft.studio.identity.actors.repository;
 
+import java.io.File;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Set;
 
+import org.bonitasoft.plugin.analyze.report.model.ActorFilterImplementation;
 import org.bonitasoft.studio.common.ModelVersion;
 import org.bonitasoft.studio.common.model.validator.ModelNamespaceValidator;
 import org.bonitasoft.studio.common.model.validator.XMLModelCompatibilityValidator;
+import org.bonitasoft.studio.common.repository.core.migration.step.ConnectorsModuleMigrationStep;
 import org.bonitasoft.studio.connector.model.implementation.AbstractConnectorImplRepositoryStore;
 import org.eclipse.core.runtime.IStatus;
 
@@ -29,6 +32,8 @@ public class ActorFilterImplRepositoryStore extends AbstractConnectorImplReposit
     public static final String IMPL_EXT = "impl";
 
     public static final String STORE_NAME = "filters-impl";
+
+    private static final String LEGACY_SOURCE_FOLDER_NAME = ConnectorsModuleMigrationStep.FILTERS_SRC_FOLDER;
     private static final Set<String> extensions = Set.of(IMPL_EXT);
 
     @Override
@@ -52,10 +57,22 @@ public class ActorFilterImplRepositoryStore extends AbstractConnectorImplReposit
         var projectDependenciesStore = getRepository().getProjectDependenciesStore();
         if (projectDependenciesStore != null) {
             projectDependenciesStore.getActorFilterImplementations().stream()
-                    .map(t -> new DependencyActorFilterImplFileStore(t, this))
+                    .map(this::createImplementationFileStore)
                     .forEach(result::add);
         }
         return result;
+    }
+
+    /**
+     * Creates the actor filter implementation file store.
+     * 
+     * @param implementation the actor filter implementation pointing to artifact (jar file or project)
+     * @return the actor filter implementation file store
+     */
+    protected ActorFilterImplFileStore createImplementationFileStore(ActorFilterImplementation implementation) {
+        File file = new File(implementation.getArtifact().getFile());
+        return file.isFile() ? new DependencyActorFilterImplFileStore(implementation, this)
+                : new ActorFilterImplFileStore(file.getName(), implementation.getJarEntry(), this);
     }
 
     @Override
@@ -73,6 +90,15 @@ public class ActorFilterImplRepositoryStore extends AbstractConnectorImplReposit
     @Override
     public int getImportOrder() {
         return 5;
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see org.bonitasoft.studio.connector.model.implementation.AbstractConnectorImplRepositoryStore#getLegacySourceFolderName()
+     */
+    @Override
+    protected String getLegacySourceFolderName() {
+        return LEGACY_SOURCE_FOLDER_NAME;
     }
 
 }

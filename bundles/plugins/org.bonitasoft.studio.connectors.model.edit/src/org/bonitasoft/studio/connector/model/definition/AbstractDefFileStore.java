@@ -14,19 +14,12 @@
  */
 package org.bonitasoft.studio.connector.model.definition;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-
 import org.bonitasoft.bpm.connector.model.definition.ConnectorDefinition;
 import org.bonitasoft.bpm.connector.model.definition.ConnectorDefinitionFactory;
 import org.bonitasoft.bpm.connector.model.definition.DocumentRoot;
 import org.bonitasoft.bpm.connector.model.definition.UnloadableConnectorDefinition;
-import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.filestore.EMFFileStore;
 import org.bonitasoft.studio.common.repository.model.IDefinitionRepositoryStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
-import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.common.repository.provider.BundleDefinitionImageResourceLoader;
 import org.bonitasoft.studio.common.repository.provider.BundleResourceLoader;
 import org.bonitasoft.studio.common.repository.provider.DefinitionImageResourceLoader;
@@ -34,66 +27,63 @@ import org.bonitasoft.studio.common.repository.provider.DefinitionResourceLoader
 import org.bonitasoft.studio.common.repository.provider.OSGIBundleResourceLoader;
 import org.bonitasoft.studio.common.repository.store.AbstractEMFRepositoryStore;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.emf.ecore.xmi.XMLResource;
-import org.eclipse.ui.IWorkbenchPart;
 import org.osgi.framework.Bundle;
 
-public abstract class AbstractDefFileStore extends EMFFileStore<ConnectorDefinition>
+public abstract class AbstractDefFileStore extends AbstractFromArtifactFileStore<ConnectorDefinition>
         implements DefinitionResourceLoaderProvider {
 
     protected AbstractDefFileStore(final String fileName,
             final AbstractEMFRepositoryStore<? extends AbstractDefFileStore> store) {
-        super(fileName, store);
+        super(fileName, store, ConnectorDefinition.class);
     }
 
-    @Override
-    protected ConnectorDefinition doGetContent() throws ReadFileStoreException {
-        try {
-            final DocumentRoot root = (DocumentRoot) super.doGetContent();
-            if (root == null) {
-                return null;
-            }
-            return root.getConnectorDefinition();
-        } catch (final Exception e) {
-            BonitaStudioLog.error(e);
-            final UnloadableConnectorDefinition connectorDefinition = ConnectorDefinitionFactory.eINSTANCE
-                    .createUnloadableConnectorDefinition();
-            connectorDefinition.setId(getName());
-            connectorDefinition.setVersion("");
-            return connectorDefinition;
-        }
+    protected AbstractDefFileStore(final String projectName, final String entryInOutputDirectory,
+            final AbstractEMFRepositoryStore<? extends AbstractDefFileStore> store) {
+        super(projectName, entryInOutputDirectory, store, ConnectorDefinition.class);
     }
 
+    /*
+     * (non-Javadoc)
+     * @see org.bonitasoft.studio.connector.model.definition.AbstractFromArtifactFileStore#extractRootContent(org.eclipse.emf.ecore.EObject)
+     */
     @Override
-    protected void doSave(final Object content) {
-        if (content instanceof ConnectorDefinition) {
-            final Resource emfResource = getEMFResource();
-            emfResource.getContents().clear();
-            final DocumentRoot root = ConnectorDefinitionFactory.eINSTANCE.createDocumentRoot();
-            root.setConnectorDefinition((ConnectorDefinition) EcoreUtil.copy((EObject) content));
-            emfResource.getContents().add(root);
-            try {
-                final Map<String, Object> options = new HashMap<>();
-                options.put(XMLResource.OPTION_EXTENDED_META_DATA, Boolean.TRUE);
-                options.put(XMLResource.OPTION_ENCODING, "UTF-8");
-                emfResource.save(options);
-            } catch (final IOException e) {
-                BonitaStudioLog.error(e);
-            }
-            rebuildConnectorRegistry();
-        }
+    protected ConnectorDefinition extractRootContent(EObject documentRoot) {
+        return ((DocumentRoot) documentRoot).getConnectorDefinition();
     }
 
+    /*
+     * (non-Javadoc)
+     * @see org.bonitasoft.studio.connector.model.definition.AbstractFromArtifactFileStore#wrapContentWithRoot(org.eclipse.emf.ecore.EObject)
+     */
     @Override
-    protected IWorkbenchPart doOpen() {
-    	return null;
+    protected EObject wrapContentWithRoot(ConnectorDefinition content) {
+        final DocumentRoot root = ConnectorDefinitionFactory.eINSTANCE.createDocumentRoot();
+        root.setConnectorDefinition(EcoreUtil.copy(content));
+        return root;
     }
 
+    /*
+     * (non-Javadoc)
+     * @see org.bonitasoft.studio.connector.model.definition.AbstractFromArtifactFileStore#makeContentTemplate()
+     */
     @Override
-    public void delete() {
-    	
+    protected ConnectorDefinition makeUnloadableContent() {
+        final UnloadableConnectorDefinition connectorDefinition = ConnectorDefinitionFactory.eINSTANCE
+                .createUnloadableConnectorDefinition();
+        connectorDefinition.setId(getName());
+        connectorDefinition.setVersion("");
+        return connectorDefinition;
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see org.bonitasoft.studio.connector.model.definition.AbstractFromArtifactFileStore#doSave(java.lang.Object)
+     */
+    @Override
+    protected void doSave(Object content) {
+        super.doSave(content);
+        rebuildConnectorRegistry();
     }
 
     private void rebuildConnectorRegistry() {
@@ -112,6 +102,5 @@ public abstract class AbstractDefFileStore extends EMFFileStore<ConnectorDefinit
     }
 
     protected abstract Bundle getBundle();
-
 
 }

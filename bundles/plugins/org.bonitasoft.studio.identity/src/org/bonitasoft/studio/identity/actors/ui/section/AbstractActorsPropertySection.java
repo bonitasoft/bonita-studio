@@ -22,8 +22,6 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import jakarta.inject.Inject;
-
 import org.bonitasoft.bpm.connector.model.definition.ConnectorDefinition;
 import org.bonitasoft.bpm.model.process.AbstractProcess;
 import org.bonitasoft.bpm.model.process.Actor;
@@ -91,6 +89,8 @@ import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
+
+import jakarta.inject.Inject;
 
 /**
  * @author Romain Bioteau
@@ -362,6 +362,16 @@ public abstract class AbstractActorsPropertySection extends AbstractBonitaDescri
 
             @Override
             public void widgetSelected(final SelectionEvent event) {
+                // make sure the workspace init is finished (including analysis which updates the registry)
+                try {
+                    PlatformUI.getWorkbench().getProgressService().busyCursorWhile(monitor -> {
+                        monitor.beginTask(org.bonitasoft.studio.common.repository.Messages.analyzeProjectDependencies,
+                                IProgressMonitor.UNKNOWN);
+                        Job.getJobManager().join(RepositoryManager.class, new NullProgressMonitor());
+                    });
+                } catch (InvocationTargetException | InterruptedException e) {
+                    BonitaStudioLog.error(e);
+                }
 
                 var registry = repositoryAccessor.getRepositoryStore(ActorFilterDefRepositoryStore.class)
                         .getResourceProvider().getConnectorDefinitionRegistry();

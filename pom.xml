@@ -6,15 +6,15 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.bonitasoft.studio</groupId>
     <artifactId>studio</artifactId>
-    <version>10.2.5-SNAPSHOT</version>
+    <version>10.3.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>Bonita Studio</name>
     <properties>
-        <tycho.version>4.0.8</tycho.version>
+        <tycho.version>4.0.10</tycho.version>
         <java.version>17</java.version>
         <os-jvm-flags></os-jvm-flags>
-        <branding.version>2024.3-SNAPSHOT</branding.version>
-        <bonita-runtime.version>10.2-SNAPSHOT</bonita-runtime.version>
+        <branding.version>2025.1-SNAPSHOT</branding.version>
+        <bonita-runtime.version>10.3-SNAPSHOT</bonita-runtime.version>
         <ui.designer.version>1.19.1</ui.designer.version>
         <business.data.repository.version>1.0.0</business.data.repository.version>
         <platform.version>${project.parent.version}</platform.version>
@@ -26,7 +26,7 @@
         <!-- Maven plugins -->
         <maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
         <image-overlay-plugin.version>1.1.3</image-overlay-plugin.version>
-        <bonita-project-report-model.version>1.0.4</bonita-project-report-model.version>
+        <bonita-project-report-model.version>2.1.1</bonita-project-report-model.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.release>${java.version}</maven.compiler.release>
         <groovy-maven-plugin.groovy.version>3.0.19</groovy-maven-plugin.groovy.version>
@@ -58,6 +58,9 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-resources-plugin</artifactId>
                     <version>${maven-resources-plugin.version}</version>
+                    <configuration>
+                        <propertiesEncoding>UTF-8</propertiesEncoding>
+                    </configuration>
                 </plugin>
                 <plugin>
                     <groupId>org.bonitasoft.maven</groupId>
@@ -149,7 +152,7 @@
                     <artifactId>target-platform-configuration</artifactId>
                     <version>${tycho.version}</version>
                     <configuration>
-                        <executionEnvironment>org.eclipse.justj.openjdk.hotspot.jre.full-17</executionEnvironment>
+                        <executionEnvironment>org.eclipse.justj.openjdk.hotspot.jre.full-21</executionEnvironment>
                         <environments>
                             <environment>
                                 <os>linux</os>

@@ -1,0 +1,57 @@
+{
+  "id" : "pbCheckbox",
+  "name" : "Checkbox",
+  "type" : "widget",
+  "custom" : false,
+  "modelVersion" : "2.4",
+  "lastUpdate" : 1736240682372,
+  "description" : "Unique checkbox for an option. The user checks it or not",
+  "template" : "@pbCheckbox.tpl.html",
+  "controller" : "@pbCheckbox.ctrl.js",
+  "properties" : [
+    {
+      "label" : "Read-only",
+      "name" : "disabled",
+      "type" : "boolean",
+      "defaultValue" : false,
+      "bond" : "expression"
+    },
+    {
+      "label" : "Required",
+      "name" : "required",
+      "help" : "In the context of a form container, use $form.$invalid as a Boolean to check form validity in a widget property",
+      "type" : "boolean",
+      "defaultValue" : false,
+      "bond" : "expression"
+    },
+    {
+      "label" : "Interpret HTML",
+      "name" : "allowHTML",
+      "help" : "If you choose 'no', HTML code will be escaped instead of being interpreted. If you choose ‘Yes’, this could potentially lead to HTML injections attacks. Please take into account these risks.",
+      "type" : "boolean",
+      "defaultValue" : false,
+      "bond" : "constant"
+    },
+    {
+      "label" : "Label",
+      "name" : "label",
+      "type" : "text",
+      "defaultValue" : "Default label",
+      "bond" : "interpolation"
+    },
+    {
+      "label" : "Value",
+      "name" : "value",
+      "caption" : "Any boolean variable: <i>myData</i> or <i>myData.attribute</i>",
+      "help" : "Read-write binding, initialized or updated by users' input (bi-directional bond)",
+      "type" : "text",
+      "bond" : "variable"
+    }
+  ],
+  "assets" : [ ],
+  "requiredModules" : [ ],
+  "webResources" : [ ],
+  "icon" : "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 50 20'><g><path fill='#fff' d='M17,18V2h16v16H17z M16,1v18h18V1H16z M19,11l4,4l8-7l-1.7-1.7l-6.5,6.2l-2.8-2.8L19,11z'/></g></svg>",
+  "order" : 6,
+  "hasHelp" : false
+}

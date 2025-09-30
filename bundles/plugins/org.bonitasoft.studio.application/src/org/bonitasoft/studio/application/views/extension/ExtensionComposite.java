@@ -132,21 +132,46 @@ public class ExtensionComposite extends Composite {
 
     private void createToolbar(Composite parent) {
         var toolbarComposite = createComposite(parent, SWT.NONE);
-        toolbarComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
+        toolbarComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(3).create());
         toolbarComposite
                 .setLayoutData(GridDataFactory.fillDefaults().grab(true, false).align(SWT.FILL, SWT.CENTER).create());
 
         createMarketplaceButton(toolbarComposite);
         createImportButton(toolbarComposite);
+        createNewExtensionButton(toolbarComposite);
+    }
+
+    private void createNewExtensionButton(Composite parent) {
+        new DropdownDynamicButtonWidget.Builder()
+                .withLabel(Messages.createExtensionButtonLabel)
+                .withId(SWTBotConstants.SWTBOT_ID_CREATE_EXTENSION_DROPDOWN)
+                .withTooltipText(Messages.createExtension)
+                .withImage(Pics.getImage(PicsConstants.add_item_32))
+                .withHotImage(Pics.getImage(PicsConstants.add_item_32_hot))
+                .withCssclass(BonitaThemeConstants.EXTENSION_VIEW_BACKGROUND)
+                .addDropdownItem(Messages.addConnector, null,
+                        e -> commandExecutor.executeCommand(ProjectOverviewEditorPart.CREATE_EXTENSION_COMMAND,
+                                Map.of(ImportExtensionHandler.EXTENSION_TYPE_PARAMETER, ArtifactType.CONNECTOR.name())))
+                .addDropdownItem(Messages.addActorFilter, null,
+                        e -> commandExecutor.executeCommand(ProjectOverviewEditorPart.CREATE_EXTENSION_COMMAND,
+                                Map.of(ImportExtensionHandler.EXTENSION_TYPE_PARAMETER,
+                                        ArtifactType.ACTOR_FILTER.name())))
+                .addDropdownItem(Messages.addTheme, null,
+                        e -> commandExecutor.executeCommand(ProjectOverviewEditorPart.CREATE_EXTENSION_COMMAND,
+                                Map.of(ImportExtensionHandler.EXTENSION_TYPE_PARAMETER, ArtifactType.THEME.name())))
+                .addDropdownItem(Messages.addRestApiExtension, null,
+                        e -> commandExecutor.executeCommand(ProjectOverviewEditorPart.CREATE_EXTENSION_COMMAND,
+                                Map.of(ImportExtensionHandler.EXTENSION_TYPE_PARAMETER, ArtifactType.REST_API.name())))
+                .createIn(parent);
     }
 
     private void createImportButton(Composite parent) {
         new DropdownDynamicButtonWidget.Builder()
                 .withLabel(Messages.importExtensionButtonLabel)
-                .withId(SWTBotConstants.SWTBOT_ID_ADD_EXTENSION_DROPDOWN)
+                .withId(SWTBotConstants.SWTBOT_ID_IMPORT_EXTENSION_DROPDOWN)
                 .withTooltipText(Messages.importExtension)
-                .withImage(Pics.getImage(PicsConstants.add_item_32))
-                .withHotImage(Pics.getImage(PicsConstants.add_item_32_hot))
+                .withImage(Pics.getImage(PicsConstants.import32))
+                .withHotImage(Pics.getImage(PicsConstants.import32Hot))
                 .withCssclass(BonitaThemeConstants.EXTENSION_VIEW_BACKGROUND)
                 .addDropdownItem(Messages.addConnector, null,
                         e -> commandExecutor.executeCommand(ProjectOverviewEditorPart.IMPORT_EXTENSION_COMMAND,

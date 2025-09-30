@@ -14,7 +14,7 @@ import org.bonitasoft.studio.engine.http.HttpClientFactory;
 import org.bonitasoft.studio.maven.ExtensionRepositoryStore;
 import org.bonitasoft.studio.maven.i18n.Messages;
 import org.bonitasoft.studio.maven.ui.WidgetFactory;
-import org.bonitasoft.studio.maven.ui.handler.CustomPageProjectSelectionProvider;
+import org.bonitasoft.studio.maven.ui.handler.ExtensionProjectSelectionProvider;
 import org.bonitasoft.studio.maven.ui.handler.OpenWizardDialogAbstractHandler;
 import org.bonitasoft.studio.maven.ui.wizard.DeployCustomPageWizard;
 import org.eclipse.jface.wizard.IWizard;
@@ -29,7 +29,7 @@ public class DeployThemeHandler extends OpenWizardDialogAbstractHandler {
     @Override
     protected IWizard newWizard(final RepositoryAccessor repositoryAccessor, final WidgetFactory widgetFactory,
             final HttpClientFactory httpClientFactory,
-            final CustomPageProjectSelectionProvider selectionProvider) {
+            final ExtensionProjectSelectionProvider selectionProvider) {
         return new DeployThemeWizard(getStore(repositoryAccessor),
                 BOSEngineManager.getInstance(), widgetFactory, httpClientFactory, selectionProvider);
     }
@@ -44,7 +44,7 @@ public class DeployThemeHandler extends OpenWizardDialogAbstractHandler {
         public DeployThemeWizard(
                 ExtensionRepositoryStore repositoryStore,
                 BOSEngineManager engineManager, WidgetFactory widgetFactory, HttpClientFactory httpClientFactory,
-                CustomPageProjectSelectionProvider selectionProvider) {
+                ExtensionProjectSelectionProvider selectionProvider) {
             super(repositoryStore, engineManager, widgetFactory, httpClientFactory, selectionProvider);
         }
 

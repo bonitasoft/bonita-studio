@@ -32,6 +32,10 @@
              id="org.bonitasoft.studio.commandParameterType.abstractProcess"
              type="org.bonitasoft.bpm.model.process.AbstractProcess">
        </commandParameterType>
+       <command
+             id="org.bonitasoft.studio.engine.showMavenDependencyTreeCommand"
+             name="%displayTreeDependencies">
+       </command>
   </extension>
   <extension
         point="org.bonitasoft.studio.common.ui.coolbarContributionItem">
@@ -94,6 +98,34 @@
                </with>
             </visibleWhen>
         </menu>
+        <menu
+              id="org.bonitasoft.studio.engine.displayTreeDependencies"
+              label="%displayTreeDependencies">
+           <dynamic
+                 class="org.bonitasoft.studio.engine.ui.contributionItem.DisplayMavenDependencyTreeProcessMenuContribution"
+                 id="org.bonitasoft.studio.engine.displayMavenDependencyTreeProcessMenu">
+           </dynamic>
+           <dynamic
+            class="org.bonitasoft.studio.engine.ui.contributionItem.DisplayMavenDependencyTreeAllProcessesMenuContribution"
+            id="org.bonitasoft.studio.engine.displayMavenDependencyTreeProjectMenu">
+            </dynamic>
+           <visibleWhen
+                 checkEnabled="false">
+              <with
+                    variable="activeMenuSelection">
+                 <and>
+                    <count
+                          value="1">
+                    </count>
+                    <iterate>
+                       <test
+                             property="org.bonitasoft.studio.diagram.isDiagramFile">
+                       </test>
+                    </iterate>
+                 </and>
+              </with>
+           </visibleWhen>
+        </menu>
      </menuContribution>
      <menuContribution
            allPopups="false"
@@ -118,6 +150,28 @@
               </with>
            </visibleWhen>
         </command>
+      <dynamic
+            class="org.bonitasoft.studio.engine.ui.contributionItem.DisplayMavenDependencyTreeProjectMenuContribution"
+            id="org.bonitasoft.studio.engine.showMavenDependencyTreeCommand">
+                        <visibleWhen
+                  checkEnabled="false">
+               <with
+                     variable="activeMenuSelection">
+                  <and>
+                     <count
+                           value="1">
+                     </count>
+                     <or>
+                        <iterate>
+                           <test
+                                 property="org.bonitasoft.studio.diagram.isDiagramFolder">
+                           </test>
+                        </iterate>
+                     </or>
+                  </and>
+               </with>
+            </visibleWhen>
+      </dynamic>        
      </menuContribution>
   </extension>
   <extension
@@ -130,6 +184,10 @@
            class="org.bonitasoft.studio.engine.command.RunProcessCommand"
            commandId="org.bonitasoft.studio.engine.runCommand">
      </handler>
+   <handler
+         class="org.bonitasoft.studio.engine.command.ShowMavenDependencyTreeHandler"
+         commandId="org.bonitasoft.studio.engine.showMavenDependencyTreeCommand">
+   </handler>     
   </extension>
   <extension
          id="org.bonitasoft.studio.engine.fragment"
@@ -161,5 +219,14 @@
            commandId="org.bonitasoft.studio.engine.exportAsBarCommand"
            icon="icons/export.png">
      </image>
+  </extension>
+  <extension
+        point="org.eclipse.ui.editors">
+              <editor
+            class="org.bonitasoft.studio.engine.ui.editor.MavenDependencyTreeEditor"
+            default="false"
+            id="org.bonitasoft.studio.engine.ui.editor.MavenDependencyTreeEditor"
+            name="Maven Dependencies Tree Editor">
+      </editor>
   </extension>
 </plugin>

@@ -15,6 +15,8 @@
 package org.bonitasoft.studio.common.repository.core.migration;
 
 import java.nio.file.Path;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 import java.util.function.Predicate;
 
@@ -31,10 +33,30 @@ public interface MigrationStep {
 
     MigrationReport run(Path projectRoot, IProgressMonitor monitor) throws CoreException;
 
-    boolean appliesTo(String sourceVersion);
-    
-    default boolean requireCleanImport() {
-        return false;
+    /**
+     * Wether this {@link MigrationStep} should be executed for a given source version of Bonita
+     * 
+     * @param sourceVersion The source version of the project to migrate
+     * @return true if this MigrationStep must be executed
+     * @throws IllegalArgumentException When the sourceVersion is invalid
+     */
+    default boolean appliesToVersion(String sourceVersion) throws IllegalArgumentException {
+        return true;
+    }
+
+    /**
+     * Wether this {@link MigrationStep} should be executed depending on the project content
+     * 
+     * @param projectRoot The root path of the project to migrate
+     * @return true if this MigrationStep must be executed
+     * @throws CoreException When a prerequisite to execute this step is not met (e.g: a required file is missing)
+     */
+    default boolean appliesToProject(Path projectRoot) throws CoreException {
+        return true;
+    }
+
+    default StepDescription getDescription() {
+        return new StepDescription("Migration step", getClass().getName());
     }
 
     default Model loadMavenModel(Path project) throws CoreException {
@@ -48,7 +70,7 @@ public interface MigrationStep {
     }
 
     default void saveMavenModel(Model model, Path project) throws CoreException {
-         MavenProjectHelper.saveModel(project.resolve(POM_FILE_NAME), model);
+        MavenProjectHelper.saveModel(project.resolve(POM_FILE_NAME), model);
     }
 
     default Predicate<Dependency> has(String groupId, String artifactId) {
@@ -58,5 +80,44 @@ public interface MigrationStep {
 
     default Predicate<Dependency> has(String groupId) {
         return dep -> Objects.equals(dep.getGroupId(), groupId);
+    }
+
+    static MigrationStep lookup(String stepId) {
+        var step = StepRegistry.get(stepId);
+        if (step == null) {
+            // Return a noop step when not found
+            // to avoid inserting null in steps list
+            // (mainly for unit test robustness)
+            return new MigrationStep() {
+
+                @Override
+                public MigrationReport run(Path projectRoot, IProgressMonitor monitor) throws CoreException {
+                    return MigrationReport.emptyReport();
+                }
+
+            };
+        }
+        return step;
+    }
+
+    static MigrationStep register(String stepId, MigrationStep migrationStep) {
+        return StepRegistry.put(stepId, migrationStep);
+    }
+
+    class StepRegistry {
+
+        private static final Map<String, MigrationStep> STEPS_REGISTRY = new HashMap<>();
+
+        private StepRegistry() {
+
+        }
+
+        static MigrationStep get(String stepId) {
+            return STEPS_REGISTRY.get(stepId);
+        }
+
+        static MigrationStep put(String stepId, MigrationStep migrationStep) {
+            return STEPS_REGISTRY.put(stepId, migrationStep);
+        }
     }
 }

@@ -1,0 +1,17 @@
+{
+  "id" : "pbFormContainer",
+  "name" : "Form container",
+  "type" : "container",
+  "custom" : false,
+  "modelVersion" : "2.4",
+  "lastUpdate" : 1736240682370,
+  "description" : "Container used for a form. Eases validation",
+  "template" : "@pbFormContainer.tpl.html",
+  "properties" : [ ],
+  "assets" : [ ],
+  "requiredModules" : [ ],
+  "webResources" : [ ],
+  "icon" : "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 50 20\"><path fill=\"#fff\" d=\"M5 19h3v1H5v-1zm5-18h3V0h-3v1zM5 1h3V0H5v1zm5 19h3v-1h-3v1zm5 0h3v-1h-3v1zm5 0h3v-1h-3v1zM15 1h3V0h-3v1zM1 9H0v2h1V9zM0 2h1V1h2V0H0v2zm23-2h-3v1h3V0zM1 4H0v3h1V4zm0 14H0v2h3v-1H1v-1zm0-5H0v3h1v-3zM27 0h-2v1h2V0zm22 19v1h1v-1.9h-1v.9zm-24 1h2v-1h-2v1zM44 1h3V0h-3v1zm5 15h1v-3h-1v3zm0-16v2h1V0h-1zm0 7h1V4h-1v3zm0 4h1V9h-1v2zm-5 9h3v-1h-3v1zM39 1h3V0h-3v1zM29 1h3V0h-3v1zm0 19h3v-1h-3v1zm5 0h3v-1h-3v1zm0-19h3V0h-3v1zm5 19h3v-1h-3v1zm-9-6H18v4h12v-4z\"/><path fill=\"#CBD5E1\" d=\"M45 2v4H18V2h27zM18 12h27V8H18v4zm4 5h4v-2h-4v2zM7 5h9V3H7v2zm-2 6h7V9H5v2zm8 0h3V9h-3v2z\"/></svg>",
+  "order" : -1,
+  "hasHelp" : false
+}

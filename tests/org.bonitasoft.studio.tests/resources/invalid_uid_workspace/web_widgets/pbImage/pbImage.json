@@ -1,0 +1,50 @@
+{
+  "id" : "pbImage",
+  "name" : "Image",
+  "type" : "widget",
+  "custom" : false,
+  "modelVersion" : "2.4",
+  "lastUpdate" : 1736240682358,
+  "description" : "Display an image from assets or from a URL",
+  "template" : "@pbImage.tpl.html",
+  "properties" : [
+    {
+      "label" : "Source Type",
+      "name" : "srcType",
+      "type" : "choice",
+      "defaultValue" : "URL",
+      "choiceValues" : [
+        "URL",
+        "Asset"
+      ],
+      "bond" : "constant"
+    },
+    {
+      "label" : "URL",
+      "name" : "url",
+      "showFor" : "properties.srcType.value === 'URL'",
+      "type" : "text",
+      "bond" : "expression"
+    },
+    {
+      "label" : "Asset Name",
+      "name" : "assetName",
+      "showFor" : "properties.srcType.value === 'Asset'",
+      "type" : "text",
+      "bond" : "expression"
+    },
+    {
+      "label" : "Alternate text",
+      "name" : "alt",
+      "help" : "Specifies an alternate text for an image. The text should describe the image if the image contains information or should be left empty if the image is only for decoration",
+      "type" : "text",
+      "bond" : "interpolation"
+    }
+  ],
+  "assets" : [ ],
+  "requiredModules" : [ ],
+  "webResources" : [ ],
+  "icon" : "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 50 20'><path fill='#fff' d='M10 1v18h30V1H10zm29 17H11V2h28v16zM20 9.1l3 3 5-7L36 16H14l6-6.9zM18 6c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2z'/></svg>",
+  "order" : 15,
+  "hasHelp" : false
+}

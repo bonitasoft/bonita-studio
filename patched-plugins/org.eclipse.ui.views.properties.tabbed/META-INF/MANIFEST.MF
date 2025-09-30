@@ -1,11 +1,11 @@
 Manifest-Version: 1.0
-Created-By: Maven Archiver 3.6.0
+Created-By: Maven Archiver 3.6.1
 Build-Jdk-Spec: 17
 Bundle-ManifestVersion: 2
 Bundle-Name: %Plugin.name
 Bundle-SymbolicName: org.eclipse.ui.views.properties.tabbed;singleton:=t
  rue
-Bundle-Version: 3.10.100.v20230727-0604
+Bundle-Version: 3.10.300.v20240424-0956
 Bundle-Vendor: %Plugin.providerName
 Bundle-Localization: plugin
 Export-Package: org.eclipse.ui.internal.views.properties.tabbed;x-intern

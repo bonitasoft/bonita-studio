@@ -18,6 +18,7 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -38,6 +39,7 @@ import org.eclipse.egit.core.RepositoryUtil;
 import org.eclipse.egit.core.internal.util.ResourceUtil;
 import org.eclipse.egit.core.op.CommitOperation;
 import org.eclipse.egit.core.op.ConnectProviderOperation;
+import org.eclipse.egit.core.op.DisconnectProviderOperation;
 import org.eclipse.egit.ui.internal.commit.CommitHelper;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jgit.api.Git;
@@ -85,6 +87,26 @@ public class GitProjectImpl implements GitProject {
                     }
                 } catch (CoreException | IOException ce) {
                     throw new InvocationTargetException(ce);
+                }
+            }
+        };
+    }
+
+    @Override
+    public IRunnableWithProgress newDiconnectProviderOperation() throws CoreException {
+        return new IRunnableWithProgress() {
+
+            @Override
+            public void run(final IProgressMonitor monitor)
+                    throws InvocationTargetException {
+                var projects = new ArrayList<IProject>();
+                projects.add(project);
+                findEmbeddedProjects(project).forEach(projects::add);
+                var op = new DisconnectProviderOperation(projects);
+                try {
+                    op.execute(monitor);
+                } catch (CoreException e) {
+                    throw new InvocationTargetException(e);
                 }
             }
         };

@@ -22,11 +22,13 @@ import static org.eclipse.swtbot.swt.finder.matchers.WidgetMatcherFactory.withSt
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.bonitasoft.studio.application.i18n.Messages;
+import org.bonitasoft.studio.application.ui.control.model.dependency.ArtifactType;
 import org.bonitasoft.studio.application.views.overview.ProjectOverviewEditorPart;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelFileStore;
 import org.bonitasoft.studio.common.repository.core.ActiveOrganizationProvider;
 import org.bonitasoft.studio.common.ui.jface.SWTBotConstants;
 import org.bonitasoft.studio.swtbot.framework.ConditionBuilder;
+import org.bonitasoft.studio.swtbot.framework.application.editor.project.BotCreateExtensionProjectWizard;
 import org.bonitasoft.studio.swtbot.framework.application.editor.project.BotEditProjectMetadataWizard;
 import org.bonitasoft.studio.swtbot.framework.application.editor.project.BotExtensionCard;
 import org.bonitasoft.studio.swtbot.framework.application.editor.project.BotExtensionWizard;
@@ -35,6 +37,7 @@ import org.bonitasoft.studio.swtbot.framework.bdm.BotBdmEditor;
 import org.bonitasoft.studio.swtbot.framework.diagram.BotProcessDiagramPerspective;
 import org.bonitasoft.studio.swtbot.framework.la.BotApplicationEditor;
 import org.bonitasoft.studio.swtbot.framework.organization.BotOrganizationEditor;
+import org.bonitasoft.studio.swtbot.framework.restApi.RestAPIExtensionCreationWizardBot;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
@@ -78,17 +81,18 @@ public class BotProjectOverviewEditor {
         return new BotMarketplaceWizard(bot);
     }
 
-    public BotExtensionWizard addConnectorExtension() {
+    public BotExtensionWizard importConnectorExtension() {
         bot.waitUntilWidgetAppears(Conditions.waitForWidget(allOf(widgetOfType(ToolItem.class),
-                withId(SWTBotConstants.SWTBOT_ID_ADD_EXTENSION_DROPDOWN), withStyle(SWT.DROP_DOWN, "SWT.DROP_DOWN"))));
-       var menu = new AtomicReference<SWTBotMenu>();
+                withId(SWTBotConstants.SWTBOT_ID_IMPORT_EXTENSION_DROPDOWN),
+                withStyle(SWT.DROP_DOWN, "SWT.DROP_DOWN"))));
+        var menu = new AtomicReference<SWTBotMenu>();
         bot.waitUntil(new DefaultCondition() {
 
             @Override
             public boolean test() throws Exception {
-                var connectorMenu =  bot.toolbarDropDownButtonWithId(SWTBotConstants.SWTBOT_ID_ADD_EXTENSION_DROPDOWN)
+                var connectorMenu = bot.toolbarDropDownButtonWithId(SWTBotConstants.SWTBOT_ID_IMPORT_EXTENSION_DROPDOWN)
                         .menuItem(Messages.addConnector);
-                if(connectorMenu != null) {
+                if (connectorMenu != null) {
                     menu.set(connectorMenu);
                 }
                 return connectorMenu != null;
@@ -102,6 +106,67 @@ public class BotProjectOverviewEditor {
         menu.get().click();
         return new BotExtensionWizard(bot, String.format(Messages.importExtensionTitle,
                 org.bonitasoft.studio.common.repository.Messages.connector));
+    }
+
+    public RestAPIExtensionCreationWizardBot createRestApiExtensionProject() {
+        return (RestAPIExtensionCreationWizardBot) createConnectorExtensionProject(ArtifactType.REST_API);
+    }
+
+    public BotCreateExtensionProjectWizard createConnectorExtensionProject(ArtifactType extensionType) {
+        bot.waitUntilWidgetAppears(Conditions.waitForWidget(allOf(widgetOfType(ToolItem.class),
+                withId(SWTBotConstants.SWTBOT_ID_CREATE_EXTENSION_DROPDOWN),
+                withStyle(SWT.DROP_DOWN, "SWT.DROP_DOWN"))));
+        var menu = new AtomicReference<SWTBotMenu>();
+        bot.waitUntil(new DefaultCondition() {
+
+            @Override
+            public boolean test() throws Exception {
+                String itemMessage;
+                switch (extensionType) {
+                    case CONNECTOR:
+                        itemMessage = Messages.addConnector;
+                        break;
+                    case ACTOR_FILTER:
+                        itemMessage = Messages.addActorFilter;
+                        break;
+                    case REST_API:
+                        itemMessage = Messages.addRestApiExtension;
+                        break;
+                    case THEME:
+                        itemMessage = Messages.addTheme;
+                        break;
+                    default:
+                        throw new IllegalArgumentException("Unsupported extension type: " + extensionType);
+                }
+                var connectorMenu = bot.toolbarDropDownButtonWithId(SWTBotConstants.SWTBOT_ID_CREATE_EXTENSION_DROPDOWN)
+                        .menuItem(itemMessage);
+                if (connectorMenu != null) {
+                    menu.set(connectorMenu);
+                }
+                return connectorMenu != null;
+            }
+
+            @Override
+            public String getFailureMessage() {
+                return "Failed to open add connector menu";
+            }
+        }, 5000, 200);
+        menu.get().click();
+        switch (extensionType) {
+            case CONNECTOR:
+                return new BotCreateExtensionProjectWizard(bot,
+                        org.bonitasoft.studio.maven.i18n.Messages.newConnectorTitle, true);
+            case ACTOR_FILTER:
+                return new BotCreateExtensionProjectWizard(bot,
+                        org.bonitasoft.studio.maven.i18n.Messages.newActorFilterTitle, true);
+            case REST_API:
+                return new RestAPIExtensionCreationWizardBot(bot);
+            case THEME:
+                return new BotCreateExtensionProjectWizard(bot,
+                        org.bonitasoft.studio.maven.i18n.Messages.newThemeTitle, false);
+            default:
+                throw new IllegalArgumentException("Unsupported extension type: " + extensionType);
+        }
     }
 
     public BotExtensionCard findExtensionCardByArtifactId(String artifactId) {

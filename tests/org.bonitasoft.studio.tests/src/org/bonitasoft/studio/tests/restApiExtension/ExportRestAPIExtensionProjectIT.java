@@ -62,7 +62,7 @@ public class ExportRestAPIExtensionProjectIT {
         configuration.setJavaPackage("org.bonitasoft.test");
         configuration.setBonitaVersion(ProductVersion.BONITA_RUNTIME_VERSION);
         configuration.setLanguage(RestAPIExtensionArchetypeConfiguration.GROOVY_LANGUAGE);
-        configuration.setPageName(pageName);
+        configuration.setProjectName(pageName);
         final CreateRestAPIExtensionProjectOperation operation = new CreateRestAPIExtensionProjectOperation(
                 RepositoryManager.getInstance().getRepositoryStore(ExtensionRepositoryStore.class),
                 new ProjectImportConfiguration(),

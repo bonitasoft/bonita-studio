@@ -26,10 +26,12 @@ import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Model;
 import org.bonitasoft.studio.common.FileUtil;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.repository.Messages;
 import org.bonitasoft.studio.common.repository.core.BonitaProject;
 import org.bonitasoft.studio.common.repository.core.maven.MavenProjectHelper;
 import org.bonitasoft.studio.common.repository.core.maven.plugin.CreateExtensionsModulePlugin;
 import org.bonitasoft.studio.common.repository.core.migration.MigrationStep;
+import org.bonitasoft.studio.common.repository.core.migration.StepDescription;
 import org.bonitasoft.studio.common.repository.core.migration.report.MigrationReport;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -40,12 +42,15 @@ import org.osgi.framework.Version;
 public class ExtensionsModuleMigrationStep implements MigrationStep {
 
     @Override
-    public boolean requireCleanImport() {
-        return true;
+    public StepDescription getDescription() {
+        return new StepDescription(Messages.extensionsModuleMigrationTitle,
+                Messages.extensionsModuleMigrationDescription);
     }
 
     @Override
     public MigrationReport run(Path project, IProgressMonitor monitor) throws CoreException {
+        monitor.subTask(Messages.extensionsModuleMigrationTitle);
+        BonitaStudioLog.info(String.format("Starting %s...", ExtensionsModuleMigrationStep.class.getName()));
         var report = MigrationReport.emptyReport();
         report.updated(
                 "Rest API Extensions and Themes projects have been moved in the project layout to benefit from the Maven multi module approach. It means that files location inside the project have changed.  "
@@ -86,9 +91,10 @@ public class ExtensionsModuleMigrationStep implements MigrationStep {
             }
             saveMavenModel(appModel, project.resolve(BonitaProject.APP_MODULE));
             MavenProjectHelper.saveModel(extensionsPomFile, extensionsParentModel);
-        } catch (IOException e) {
+        } catch (IOException | RuntimeException e) {
             throw new CoreException(Status.error("Failed to update project layout to multi-module.", e));
         }
+        BonitaStudioLog.info(String.format("%s completed.", ExtensionsModuleMigrationStep.class.getName()));
         return report;
     }
 
@@ -134,7 +140,7 @@ public class ExtensionsModuleMigrationStep implements MigrationStep {
     }
 
     @Override
-    public boolean appliesTo(String sourceVersion) {
-        return Version.parseVersion(sourceVersion).compareTo(new Version("8.1.0")) < 0;
+    public boolean appliesToVersion(String sourceVersion) {
+        return Version.parseVersion(sourceVersion).compareTo(new Version("9.0.0")) < 0;
     }
 }

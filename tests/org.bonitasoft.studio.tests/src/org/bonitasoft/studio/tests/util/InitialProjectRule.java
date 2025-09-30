@@ -15,16 +15,19 @@
 package org.bonitasoft.studio.tests.util;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.Map;
 
 import org.bonitasoft.studio.application.maven.handler.TestMavenRepositoriesConnectionHandler;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
 import org.bonitasoft.studio.common.ui.jface.FileActionDialog;
+import org.bonitasoft.studio.maven.model.migration.ArchetypesRegistration;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.ui.PlatformUI;
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
+import org.osgi.service.event.Event;
 
 public class InitialProjectRule implements TestRule {
 
@@ -37,10 +40,25 @@ public class InitialProjectRule implements TestRule {
             @Override
             public void evaluate() throws Throwable {
                 initPreferences();
+                ensureArchetypesRegistration();
                 ensureDefaultProjectExists();
-                base.evaluate();
+                ProjectUtil.cleanProject();
+                try {
+                    base.evaluate();
+                } finally {
+                    // Ensure project cleaned up after the test
+                    ProjectUtil.cleanProject();
+                }
             }
         };
+    }
+
+    /**
+     * Ensure that the archetypes registration is done, even during test and not an actual product startup.
+     */
+    protected void ensureArchetypesRegistration() {
+        Event e = new Event("org/eclipse/e4/ui/LifeCycle/appStartupComplete", Map.of());
+        new ArchetypesRegistration().applicationStarted(e);
     }
 
     public static void ensureDefaultProjectExists() throws InvocationTargetException, InterruptedException {

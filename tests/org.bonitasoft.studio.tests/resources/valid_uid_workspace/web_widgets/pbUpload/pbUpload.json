@@ -1,0 +1,121 @@
+{
+  "id" : "pbUpload",
+  "name" : "Upload",
+  "type" : "widget",
+  "custom" : false,
+  "modelVersion" : "2.4",
+  "lastUpdate" : 1736240682313,
+  "description" : "File chooser for uploading a document to a form",
+  "template" : "@pbUpload.tpl.html",
+  "controller" : "@pbUpload.ctrl.js",
+  "properties" : [
+    {
+      "label" : "Required",
+      "name" : "required",
+      "help" : "In the context of a form container, use $form.$invalid as a Boolean to check form validity in a widget property",
+      "type" : "boolean",
+      "defaultValue" : false,
+      "bond" : "expression"
+    },
+    {
+      "label" : "Interpret HTML",
+      "name" : "allowHTML",
+      "help" : "If you choose 'no', HTML code will be escaped instead of being interpreted. If you choose ‘Yes’, this could potentially lead to HTML injections attacks. Please take into account these risks.",
+      "type" : "boolean",
+      "defaultValue" : false,
+      "bond" : "constant"
+    },
+    {
+      "label" : "Label hidden",
+      "name" : "labelHidden",
+      "type" : "boolean",
+      "defaultValue" : false,
+      "bond" : "constant"
+    },
+    {
+      "label" : "Label",
+      "name" : "label",
+      "showFor" : "properties.labelHidden.value === false",
+      "type" : "text",
+      "defaultValue" : "Default label",
+      "bond" : "interpolation"
+    },
+    {
+      "label" : "Label position",
+      "name" : "labelPosition",
+      "showFor" : "properties.labelHidden.value === false",
+      "type" : "choice",
+      "defaultValue" : "top",
+      "choiceValues" : [
+        "left",
+        "top"
+      ],
+      "bond" : "constant"
+    },
+    {
+      "label" : "Label width",
+      "name" : "labelWidth",
+      "showFor" : "properties.labelHidden.value === false",
+      "type" : "integer",
+      "defaultValue" : 4,
+      "bond" : "constant",
+      "constraints" : {
+        "min" : "1",
+        "max" : "12"
+      }
+    },
+    {
+      "label" : "Placeholder",
+      "name" : "placeholder",
+      "help" : "Short hint that describes the expected value",
+      "type" : "text",
+      "bond" : "interpolation"
+    },
+    {
+      "label" : "URL",
+      "name" : "url",
+      "help" : "Defines endpoint URL where the file will be uploaded",
+      "type" : "text",
+      "defaultValue" : "../API/formFileUpload",
+      "bond" : "expression"
+    },
+    {
+      "label" : "Value",
+      "name" : "value",
+      "caption" : "Any variable: <i>myData</i> or <i>myData.attribute</i>",
+      "help" : "Holds the response from the upload endpoint. That value can be used to fulfill a contract",
+      "type" : "text",
+      "bond" : "variable"
+    },
+    {
+      "label" : "Error on upload holder",
+      "name" : "errorContent",
+      "help" : "Holds the response content from the upload error endpoint. That value can be used to guidance purpose",
+      "type" : "text",
+      "bond" : "variable"
+    }
+  ],
+  "assets" : [
+    {
+      "id" : "95e9addb-6415-4d81-8f47-a9e9bcecafda",
+      "name" : "file-upload.css",
+      "type" : "css",
+      "order" : 1,
+      "external" : false
+    },
+    {
+      "id" : "b6093067-8e54-4f97-92f7-0b3977db83fd",
+      "name" : "ng-upload-0.5.19-patched.min.js",
+      "type" : "js",
+      "order" : 1,
+      "external" : false
+    }
+  ],
+  "requiredModules" : [
+    "ngUpload"
+  ],
+  "webResources" : [ ],
+  "icon" : "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 50 20'><path fill='none' stroke='#fff' stroke-miterlimit='10' d='M0 0v20h50V0H0zm1 19V1h31v18H1zM33 1h16v18H33V1zm8.2 14.1l5.2-5.2c1.3-1.3.9-3.6.1-4.4-1.2-1.2-3.7-1-5 .4-1.9 1.9-5 5.1-5 5.1s-2.5 2.5-.8 4.2c1.4 1.4 4.1-1.2 4.1-1.2L45 8.7s1-1.3.2-2c-.9-.8-2.3.3-2.3.3l-3.3 3.3'/></svg>",
+  "order" : 9,
+  "hasHelp" : false
+}

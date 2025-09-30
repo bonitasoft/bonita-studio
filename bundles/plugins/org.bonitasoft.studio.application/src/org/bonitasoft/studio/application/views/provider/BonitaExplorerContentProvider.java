@@ -26,6 +26,8 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.jdt.core.IJavaModel;
+import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.internal.ui.navigator.JavaNavigatorContentProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
@@ -50,7 +52,7 @@ public class BonitaExplorerContentProvider extends JavaNavigatorContentProvider 
         if (parentElement instanceof IFolder && isEnvironmentsFolder((IFolder) parentElement)) {
             return addLocalEnvironment(parentElement);
         }
-        
+
         Object[] children = super.getChildren(parentElement);
         if (parentElement instanceof IProject && children.length == 0) {
             IProject project = (IProject) parentElement;
@@ -90,15 +92,22 @@ public class BonitaExplorerContentProvider extends JavaNavigatorContentProvider 
         super.postAdd(parent, element, runnables);
         var currentRepository = RepositoryManager.getInstance()
                 .getCurrentRepository().orElse(null);
-        if (currentRepository != null 
+
+        // project may have been unmapped globally with postRemove and would disappear from the explorer
+        boolean javaProjectBeingRefreshed = currentRepository != null
+                && parent instanceof IJavaModel
+                && element instanceof IJavaProject p && !p.equals(currentRepository.getJavaProject())
+                && viewer.testFindItem(p.getResource()) != null;
+        //Force refresh to update parent visibility in Project Explorer
+        boolean withInvisibleParent = currentRepository != null
                 && viewer.testFindItem(parent) == null
                 && currentRepository.isLoaded()
                 && currentRepository
                         .getAllStores()
                         .stream()
                         .map(IRepositoryStore::getResource)
-                        .anyMatch(parent::equals)) {
-            //Force refresh to update parent visibility in Project Explorer
+                        .anyMatch(parent::equals);
+        if (javaProjectBeingRefreshed || withInvisibleParent) {
             runnables.add(() -> viewer.refresh(true));
         }
     }

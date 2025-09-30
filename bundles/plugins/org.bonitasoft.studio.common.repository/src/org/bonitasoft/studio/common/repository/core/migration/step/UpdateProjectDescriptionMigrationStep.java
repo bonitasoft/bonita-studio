@@ -22,10 +22,13 @@ import java.nio.file.Path;
 import java.util.List;
 
 import org.bonitasoft.studio.common.ProductVersion;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.repository.Messages;
 import org.bonitasoft.studio.common.repository.core.BonitaProject;
 import org.bonitasoft.studio.common.repository.core.ProjectDescriptionBuilder;
 import org.bonitasoft.studio.common.repository.core.migration.BonitaProjectMigrator;
 import org.bonitasoft.studio.common.repository.core.migration.MigrationStep;
+import org.bonitasoft.studio.common.repository.core.migration.StepDescription;
 import org.bonitasoft.studio.common.repository.core.migration.report.MigrationReport;
 import org.eclipse.core.internal.resources.ModelObjectWriter;
 import org.eclipse.core.resources.IProjectDescription;
@@ -37,7 +40,15 @@ import org.eclipse.m2e.core.internal.IMavenConstants;
 public class UpdateProjectDescriptionMigrationStep implements MigrationStep {
 
     @Override
+    public StepDescription getDescription() {
+        return new StepDescription(Messages.updateProjectDescriptionMigrationTitle,
+                Messages.updateProjectDescriptionMigrationDescription);
+    }
+
+    @Override
     public MigrationReport run(Path project, IProgressMonitor monitor) throws CoreException {
+        monitor.subTask(Messages.updateProjectDescriptionMigrationTitle);
+        BonitaStudioLog.info(String.format("Starting %s...", UpdateProjectDescriptionMigrationStep.class.getName()));
         var descriptor = project.resolve(IProjectDescription.DESCRIPTION_FILE_NAME);
         if (!Files.exists(descriptor)) {
             throw new CoreException(Status.error("Project descriptor not found."));
@@ -51,7 +62,7 @@ public class UpdateProjectDescriptionMigrationStep implements MigrationStep {
                 .havingBuilders(List.of(IMavenConstants.BUILDER_ID))
                 .build(description);
         writeDescriptor(descriptor, newParentDescription);
-        
+
         var appDescriptor = project.resolve(BonitaProject.APP_MODULE)
                 .resolve(IProjectDescription.DESCRIPTION_FILE_NAME);
         if (!Files.exists(appDescriptor)) {
@@ -63,11 +74,11 @@ public class UpdateProjectDescriptionMigrationStep implements MigrationStep {
                 .havingBuilders(BonitaProject.BUILDERS)
                 .build(description);
         writeDescriptor(appDescriptor, newAppDescription);
-
+        BonitaStudioLog.info(String.format("%s completed.", UpdateProjectDescriptionMigrationStep.class.getName()));
         return MigrationReport.emptyReport();
     }
 
-    private void writeDescriptor(Path descriptor, IProjectDescription description) throws CoreException {
+    public static void writeDescriptor(Path descriptor, IProjectDescription description) throws CoreException {
         var objectWriter = new ModelObjectWriter();
         try (var out = Files.newOutputStream(descriptor)) {
             objectWriter.write(description, out, getLineSeparator(descriptor));
@@ -77,7 +88,7 @@ public class UpdateProjectDescriptionMigrationStep implements MigrationStep {
     }
 
     @Override
-    public boolean appliesTo(String sourceVersion) {
+    public boolean appliesToVersion(String sourceVersion) {
         return ProductVersion.canBeMigrated(sourceVersion);
     }
 

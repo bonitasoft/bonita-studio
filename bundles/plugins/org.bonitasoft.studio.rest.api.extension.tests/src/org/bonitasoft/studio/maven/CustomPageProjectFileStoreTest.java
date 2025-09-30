@@ -5,12 +5,10 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -65,22 +63,25 @@ public class CustomPageProjectFileStoreTest {
         when(restApiProject.getFile(Path.fromOSString("src/main/groovy/Index.groovy"))).thenReturn(indexGroovy);
         final IFile propertyFile = mock(IFile.class);
         when(restApiProject.getFile("src/main/resources/page.properties")).thenReturn(propertyFile);
-        when(parentStore.getResource().getWorkspace().getRoot().getProject(restApiProject.getName())).thenReturn(restApiProject);
+        when(parentStore.getResource().getWorkspace().getRoot().getProject(restApiProject.getName()))
+                .thenReturn(restApiProject);
 
-        final RestAPIExtensionFileStore fileStore = spy(new RestAPIExtensionFileStore(restApiProject.getName(), parentStore));
+        final RestAPIExtensionFileStore fileStore = spy(
+                new RestAPIExtensionFileStore(restApiProject.getName(), parentStore));
         final RestAPIExtensionDescriptor descriptor = spy(new RestAPIExtensionDescriptor(restApiProject));
         final Properties pageProperties = new Properties();
         pageProperties.put("apiExtensions", "myApi");
         pageProperties.put("myApi.classFileName", "Index.groovy");
         doReturn(pageProperties).when(descriptor).getPageProperties();
         doReturn(descriptor).when(fileStore).getContent();
-        doReturn(null).when(fileStore).openEditors(any(IWorkbenchPage.class), any(ExtensionProjectDescriptor.class));
+        doReturn(null).when(fileStore).openEditors(any(IWorkbenchPage.class), any(RestAPIExtensionDescriptor.class));
         final IWorkbenchPage page = mock(IWorkbenchPage.class);
         doReturn(page).when(fileStore).getActivePage();
 
         fileStore.doOpen();
 
-        final ArgumentCaptor<RestAPIExtensionDescriptor> argumentCaptor = ArgumentCaptor.forClass(RestAPIExtensionDescriptor.class);
+        final ArgumentCaptor<RestAPIExtensionDescriptor> argumentCaptor = ArgumentCaptor
+                .forClass(RestAPIExtensionDescriptor.class);
         verify(fileStore).openEditors(eq(page), argumentCaptor.capture());
         final RestAPIExtensionDescriptor restAPIExtensionDescriptor = argumentCaptor.getValue();
         assertThat(restAPIExtensionDescriptor.getFilesToOpen()).contains(indexGroovy);
@@ -131,5 +132,5 @@ public class CustomPageProjectFileStoreTest {
 
         assertThat(resourcesToExport).containsOnly(resourceOK);
     }
-    
+
 }

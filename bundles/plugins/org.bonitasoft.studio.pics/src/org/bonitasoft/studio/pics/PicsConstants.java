@@ -513,6 +513,7 @@ public class PicsConstants {
     public static String restApi = "artifacts/rest-api.png";
     public static String restore = "restore.png";
     public static String switchIcon = "switch.png";
+    public static String theme = "artifacts/theme.png";
 
     public static String maven = "preferences/maven.png";
 

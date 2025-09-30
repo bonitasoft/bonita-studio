@@ -5,14 +5,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.tests.connectors;
 
@@ -38,6 +36,7 @@ import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.connectors.operation.TestConnectorOperation;
 import org.bonitasoft.studio.connectors.repository.ConnectorImplRepositoryStore;
 import org.bonitasoft.studio.tests.util.InitialProjectRule;
+import org.bonitasoft.studio.tests.util.ProjectUtil;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.junit.Assert;
 import org.junit.Before;
@@ -48,16 +47,18 @@ public class TestConnectorOperationIT {
 
     @Rule
     public InitialProjectRule projectRule = InitialProjectRule.INSTANCE;
-    
+
     private static final String GROOVY_DEF_VERSION = "1.0.1";
     private static final String GROOVY_DEF_ID = "scripting-groovy-script";
 
     @Before
     public void init() throws Exception {
-        AddDependencyOperation addDependencyOperation = new AddDependencyOperation("org.bonitasoft.connectors", "bonita-connector-groovy", "1.1.4");
+        AddDependencyOperation addDependencyOperation = new AddDependencyOperation("org.bonitasoft.connectors",
+                "bonita-connector-groovy", "1.1.4");
         addDependencyOperation.run(AbstractRepository.NULL_PROGRESS_MONITOR);
+        ProjectUtil.waitForProjectOperations();
     }
-    
+
     @Test
     public void testBasicGroovyScript() throws Exception {
         TestConnectorOperation testConnectorOperation = createOperation();
@@ -83,7 +84,8 @@ public class TestConnectorOperationIT {
     }
 
     private ConnectorImplementation createConnectorImplementation() throws ReadFileStoreException {
-        ConnectorImplRepositoryStore c = RepositoryManager.getInstance().getRepositoryStore(ConnectorImplRepositoryStore.class);
+        ConnectorImplRepositoryStore c = RepositoryManager.getInstance()
+                .getRepositoryStore(ConnectorImplRepositoryStore.class);
         return c.getImplementations(GROOVY_DEF_ID, GROOVY_DEF_VERSION).stream().findFirst().orElse(null);
     }
 

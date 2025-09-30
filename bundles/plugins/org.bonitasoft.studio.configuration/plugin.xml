@@ -34,12 +34,6 @@
       </initializer>
    </extension>
    <extension
-         point="org.bonitasoft.studio.configuration.exportConfigurationAction">
-      <exportConfigurationAction
-            class="org.bonitasoft.studio.configuration.action.ExportProcessDependenciesAction">
-      </exportConfigurationAction>
-   </extension>
-   <extension
          point="org.eclipse.ui.menus">
       <menuContribution
             allPopups="false"

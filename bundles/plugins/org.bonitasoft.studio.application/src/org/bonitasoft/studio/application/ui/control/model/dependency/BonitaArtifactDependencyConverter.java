@@ -14,6 +14,7 @@
  */
 package org.bonitasoft.studio.application.ui.control.model.dependency;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Paths;
@@ -44,6 +45,7 @@ import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.m2e.core.MavenPlugin;
 import org.eclipse.swt.graphics.Image;
@@ -54,7 +56,7 @@ public class BonitaArtifactDependencyConverter {
     private LocalDependenciesStore localDependenciesStore;
     private Map<ArtifactType, Image> defaultIconsMap;
     private Object matchingArtifact;
-	private BonitaProject bonitaProject;
+    private BonitaProject bonitaProject;
 
     public BonitaArtifactDependencyConverter(ProjectDependenciesStore dependenciesStore,
             LocalDependenciesStore localDependenciesStore,
@@ -82,15 +84,16 @@ public class BonitaArtifactDependencyConverter {
         ArtifactType type = findType(dep);
         bonitaDep.setArtifactType(type);
         bonitaDep.setStatus(dependenciesStore.getStatus(dep));
-        
+
         try {
-			var metadata = bonitaProject.getProjectMetadata(new NullProgressMonitor());
-			bonitaDep.setProjectExtension(Objects.equals(dep.getGroupId(), metadata.getGroupId()) 
-					&& Objects.equals(dep.getVersion(), metadata.getVersion()) 
-					&& bonitaProject.getExtensionsProjects().stream().anyMatch(p -> Objects.equals(artifactId(p), dep.getArtifactId())));
-		} catch (CoreException e) {
-			BonitaStudioLog.error(e);
-		}
+            var metadata = bonitaProject.getProjectMetadata(new NullProgressMonitor());
+            bonitaDep.setProjectExtension(Objects.equals(dep.getGroupId(), metadata.getGroupId())
+                    && Objects.equals(dep.getVersion(), metadata.getVersion())
+                    && bonitaProject.getExtensionsProjects().stream()
+                            .anyMatch(p -> Objects.equals(artifactId(p), dep.getArtifactId())));
+        } catch (CoreException e) {
+            BonitaStudioLog.error(e);
+        }
         if (Objects.equals(type, ArtifactType.OTHER)) {
             return bonitaDep;
         }
@@ -112,29 +115,34 @@ public class BonitaArtifactDependencyConverter {
     }
 
     private String artifactId(IProject p) {
-		try {
-			var model = MavenProjectHelper.getMavenModel(p);
-			return model.getArtifactId();
-		} catch (CoreException e) {
-			BonitaStudioLog.error(e);
-			return null;
-		}
-	}
+        try {
+            var model = MavenProjectHelper.getMavenModel(p);
+            if (model != null) {
+                return model.getArtifactId();
+            }
+        } catch (CoreException e) {
+            BonitaStudioLog.error(e);
+        }
+        return null;
+    }
 
-	private void fillConnector(Dependency dep, BonitaArtifactDependency bonitaDep) {
-        var file = matchingArtifact instanceof Definition
+    private void fillConnector(Dependency dep, BonitaArtifactDependency bonitaDep) {
+        var filePath = matchingArtifact instanceof Definition
                 ? ((Definition) matchingArtifact).getArtifact().getFile()
                 : ((Implementation) matchingArtifact).getArtifact().getFile();
-        if (Paths.get(file).toFile().exists()) {
-            setDepInfoFromMavenMetaInf(dep, bonitaDep, file);
+        File file = Paths.get(filePath).toFile();
+        if (file.exists() && file.isFile()) {
+            setDepInfoFromMavenMetaInfInZip(dep, bonitaDep, filePath);
+        } else if (file.exists() && file.isDirectory()) {
+            setDepInfoFromMavenMetaInfInProject(dep, bonitaDep, filePath);
         }
         if (Strings.isNullOrEmpty(bonitaDep.getName())) {
             bonitaDep.setName(String.format("%s:%s", dep.getGroupId(), dep.getArtifactId()));
         }
     }
 
-    private void setDepInfoFromMavenMetaInf(Dependency dep, BonitaArtifactDependency bonitaDep, String file) {
-        try (ZipFile archiveFile = new ZipFile(file)) {
+    private void setDepInfoFromMavenMetaInfInZip(Dependency dep, BonitaArtifactDependency bonitaDep, String zipFile) {
+        try (ZipFile archiveFile = new ZipFile(zipFile)) {
             archiveFile.stream()
                     .filter(entry -> entry.getName()
                             .matches(String.format("META-INF/maven/%s/%s/pom.xml", dep.getGroupId(),
@@ -158,6 +166,26 @@ public class BonitaArtifactDependencyConverter {
         }
     }
 
+    private void setDepInfoFromMavenMetaInfInProject(Dependency dep, BonitaArtifactDependency bonitaDep,
+            String projectFile) {
+        var project = bonitaProject.getExtensionsProjects().stream()
+                .filter(p -> p.getLocation().equals(IPath.fromOSString(projectFile))).findFirst();
+        project.ifPresent(p -> {
+            try {
+                Model model = MavenProjectHelper.getMavenModel(p);
+                if (model != null) {
+                    bonitaDep.setName(model.getName());
+                    bonitaDep.setDescription(model.getDescription());
+                    if (model.getScm() != null && Strings.hasText(model.getScm().getUrl())) {
+                        bonitaDep.setSCMUrl(resolve(model.getScm().getUrl(), model));
+                    }
+                }
+            } catch (CoreException e) {
+                BonitaStudioLog.error(e);
+            }
+        });
+    }
+
     /**
      * Replace properties used in the url
      * This is not a proper maven resolution.
@@ -169,7 +197,7 @@ public class BonitaArtifactDependencyConverter {
             String property = m.group(1);
             if (model.getProperties().containsKey(property)) {
                 var propertyValue = model.getProperties().getProperty(property);
-                replacements.put(property,  resolve(propertyValue, model));
+                replacements.put(property, resolve(propertyValue, model));
             } else if ("project.artifactId".equals(property)) {
                 replacements.put(property, model.getArtifactId());
             } else if ("project.version".equals(property)) {
@@ -183,9 +211,6 @@ public class BonitaArtifactDependencyConverter {
         }
         return value;
     }
-    
-    
-    
 
     private void fillCustomPage(Dependency dep, BonitaArtifactDependency bonitaDep) {
         CustomPage bonitaArtifact = (CustomPage) matchingArtifact;
@@ -197,7 +222,7 @@ public class BonitaArtifactDependencyConverter {
         bonitaDep.setArtifactId(bonitaArtifact.getArtifact().getArtifactId());
         bonitaDep.setGroupId(bonitaArtifact.getArtifact().getGroupId());
         if (file != null && Paths.get(file).toFile().exists()) {
-            setDepInfoFromMavenMetaInf(dep, bonitaDep, file);
+            setDepInfoFromMavenMetaInfInZip(dep, bonitaDep, file);
         }
 
     }

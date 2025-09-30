@@ -1,0 +1,152 @@
+{
+  "id" : "pbAutocomplete",
+  "name" : "Autocomplete",
+  "type" : "widget",
+  "custom" : false,
+  "modelVersion" : "2.4",
+  "lastUpdate" : 1736240682382,
+  "description" : "Input field with content completion from a given list",
+  "template" : "@pbAutocomplete.tpl.html",
+  "controller" : "@pbAutocomplete.ctrl.js",
+  "properties" : [
+    {
+      "label" : "Read-only",
+      "name" : "readOnly",
+      "type" : "boolean",
+      "defaultValue" : false,
+      "bond" : "expression"
+    },
+    {
+      "label" : "Required",
+      "name" : "required",
+      "help" : "In the context of a form container, use $form.$invalid as a Boolean to check form validity in a widget property",
+      "type" : "boolean",
+      "defaultValue" : false,
+      "bond" : "expression"
+    },
+    {
+      "label" : "Interpret HTML",
+      "name" : "allowHTML",
+      "help" : "If you choose 'no', HTML code will be escaped instead of being interpreted. If you choose ‘Yes’, this could potentially lead to HTML injections attacks. Please take into account these risks.",
+      "type" : "boolean",
+      "defaultValue" : false,
+      "bond" : "constant"
+    },
+    {
+      "label" : "Label hidden",
+      "name" : "labelHidden",
+      "type" : "boolean",
+      "defaultValue" : false,
+      "bond" : "constant"
+    },
+    {
+      "label" : "Label",
+      "name" : "label",
+      "showFor" : "properties.labelHidden.value === false",
+      "type" : "text",
+      "defaultValue" : "Default name",
+      "bond" : "interpolation"
+    },
+    {
+      "label" : "Label position",
+      "name" : "labelPosition",
+      "showFor" : "properties.labelHidden.value === false",
+      "type" : "choice",
+      "defaultValue" : "top",
+      "choiceValues" : [
+        "left",
+        "top"
+      ],
+      "bond" : "constant"
+    },
+    {
+      "label" : "Label width",
+      "name" : "labelWidth",
+      "showFor" : "properties.labelHidden.value === false",
+      "type" : "integer",
+      "defaultValue" : 4,
+      "bond" : "constant",
+      "constraints" : {
+        "min" : "1",
+        "max" : "12"
+      }
+    },
+    {
+      "label" : "Placeholder",
+      "name" : "placeholder",
+      "help" : "Short hint that describes the expected value",
+      "type" : "text",
+      "bond" : "interpolation"
+    },
+    {
+      "label" : "Available values",
+      "name" : "availableValues",
+      "help" : "Can be a list of objects. Use 'Displayed key' to refine suggestions and 'Returned key' to refine selection",
+      "type" : "collection",
+      "defaultValue" : [
+        "London",
+        "Paris",
+        "San Francisco"
+      ],
+      "bond" : "expression"
+    },
+    {
+      "label" : "Displayed key",
+      "name" : "displayedKey",
+      "help" : "Object key to display. Leave it empty for whole object",
+      "type" : "text",
+      "bond" : "expression"
+    },
+    {
+      "label" : "Returned key",
+      "name" : "returnedKey",
+      "help" : "The name of the key to use as value. Leave it empty for whole object",
+      "type" : "text",
+      "bond" : "expression"
+    },
+    {
+      "label" : "Value",
+      "name" : "value",
+      "caption" : "Any variable: <i>myData</i> or <i>myData.attribute</i>",
+      "help" : "Read-write binding, initialized or updated by users' input (bi-directional bond)",
+      "type" : "text",
+      "bond" : "variable"
+    },
+    {
+      "label" : "Debounce",
+      "name" : "debounce",
+      "help" : "Integer value which contains the debounce model update value in milliseconds. A value of 0 triggers an immediate update. Debounce value cannot be changed once initialized.",
+      "type" : "integer",
+      "defaultValue" : 0,
+      "bond" : "expression",
+      "constraints" : {
+        "min" : "0",
+        "step" : 100
+      }
+    }
+  ],
+  "assets" : [
+    {
+      "id" : "f39f2b54-b282-4a63-9b0a-eabfc340caa3",
+      "name" : "ui-bootstrap-tpls-0.13.0.min.js",
+      "type" : "js",
+      "order" : 1,
+      "external" : false
+    },
+    {
+      "id" : "bc7af0534a60c8db2e89d0838bff20cc1424675f",
+      "name" : "style.css",
+      "type" : "css",
+      "order" : 0,
+      "external" : false
+    }
+  ],
+  "requiredModules" : [
+    "ui.bootstrap.typeahead",
+    "ui.bootstrap.tpls"
+  ],
+  "webResources" : [ ],
+  "icon" : "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 50 20'><g><path fill='#fff' d='M0,0v20h50V0H0z M49,19H1V1h48V19z M14.9,2h-1v1h1V2z M13.9,3h-1v14h1V3z M11.9,2v1h1V2H11.9z M12.9,17h-1v1h1V17z M14.9,18v-1h-1v1H14.9z M6.7,16.6c1.7,0,2.7-1,3.2-1.8h0l0.1,1.6h1.6c-0.1-0.8-0.1-1.6-0.1-2.6v-7H9.7v5.9c0,0.3-0.1,0.6-0.2,0.9c-0.3,0.8-1.1,1.6-2.3,1.6c-1.6,0-2.2-1.2-2.2-3.1V6.7H3.3v5.7C3.3,15.7,5.2,16.6,6.7,16.6z'/><path fill='#CBD5E1' d='M27.4,6.4c-2.8,0-4.5,2.3-4.5,5.2c0,2.9,1.8,4.9,4.8,4.9c1.5,0,2.6-0.3,3.2-0.6l-0.3-1.3c-0.7,0.3-1.4,0.5-2.7,0.5c-1.8,0-3.3-1-3.3-3.4h6.8c0-0.2,0.1-0.5,0.1-0.8C31.4,9.2,30.5,6.4,27.4,6.4z M24.5,10.6c0.1-1.2,0.9-2.9,2.7-2.9c2,0,2.5,1.7,2.4,2.9H24.5z M38.3,6.5v1.7c-0.2,0-0.4-0.1-0.6-0.1c-1.2,0-2.1,0.9-2.4,2.3c0,0.2-0.1,0.5-0.1,0.8v5.2h-1.7V9.7c0-1.1,0-2.1-0.1-3H35l0.1,1.9h0.1c0.4-1.3,1.5-2.1,2.7-2.1C38,6.4,38.2,6.5,38.3,6.5z M21.3,13.6c0,1.7-1.3,2.9-3.6,2.9c-1.1,0-2-0.3-2.7-0.7l0.4-1.3c0.5,0.3,1.4,0.7,2.3,0.7c1.3,0,1.9-0.6,1.9-1.4c0-0.8-0.5-1.3-1.8-1.8c-1.7-0.6-2.6-1.6-2.6-2.7c0-1.6,1.3-2.8,3.3-2.8c1,0,1.8,0.3,2.4,0.6l-0.4,1.3c-0.4-0.2-1.1-0.6-2-0.6c-1,0-1.6,0.6-1.6,1.3c0,0.8,0.6,1.2,1.8,1.6C20.4,11.4,21.3,12.2,21.3,13.6z'/></g></svg>",
+  "order" : 4,
+  "hasHelp" : false
+}

@@ -1,0 +1,11 @@
+<div class="checkbox">
+    <label ng-if="properties.allowHTML" for="{{ctrl.inputId}}">
+        <input type="checkbox" id="{{ctrl.inputId}}" name="{{ctrl.name}}" ng-model="properties.value" ng-required="properties.required" ng-disabled="properties.disabled">
+        <ng-bind-html ng-bind-html="properties.label | uiTranslate"/>
+    </label>
+    <label ng-if="!properties.allowHTML" for="{{ctrl.inputId}}">
+        <input type="checkbox" id="{{ctrl.inputId}}" name="{{ctrl.name}}" ng-model="properties.value" ng-required="properties.required" ng-disabled="properties.disabled">
+        <ng-bind ng-bind="properties.label | uiTranslate"/>
+    </label>
+    <div ng-messages="$form[ctrl.name].$dirty && $form[ctrl.name].$error " ng-messages-include="forms-generic-errors.html" role="alert"></div>
+</div>

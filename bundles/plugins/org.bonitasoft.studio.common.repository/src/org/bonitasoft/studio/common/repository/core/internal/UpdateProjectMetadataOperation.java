@@ -64,7 +64,7 @@ public class UpdateProjectMetadataOperation implements IWorkspaceRunnable {
     }
 
     @Override
-    public void run(IProgressMonitor monitor) throws CoreException {
+    public synchronized void run(IProgressMonitor monitor) throws CoreException {
         var appProject = project.getAppProject();
         var oldMetadata = project.getProjectMetadata(new NullProgressMonitor());
         var projectId = project.getId();
@@ -106,8 +106,7 @@ public class UpdateProjectMetadataOperation implements IWorkspaceRunnable {
             if (currentRepository().closeAllEditors(false)) {
                 renameProjects(projectId, newProjectId, monitor);
             }
-        } 
-        else {
+        } else {
             new UpdateMavenProjectJob(project.getRelatedProjects(), false, false, false,
                     false, true)
                             .run(monitor);
@@ -253,7 +252,7 @@ public class UpdateProjectMetadataOperation implements IWorkspaceRunnable {
             bdmFolder.createLink(Path.fromOSString("PARENT-1-PROJECT_LOC/" + BonitaProject.BDM_MODULE),
                     IResource.REPLACE | IResource.ALLOW_MISSING_LOCAL, new NullProgressMonitor());
         }
-        
+
         // Re-import extensions parent modules
         var extensionsParentModule = newParentProject.getFolder(BonitaProject.EXTENSIONS_MODULE);
         if (extensionsParentModule.getFile("pom.xml").exists()) {
@@ -275,8 +274,7 @@ public class UpdateProjectMetadataOperation implements IWorkspaceRunnable {
             extensionsFolder.createLink(Path.fromOSString("PARENT-1-PROJECT_LOC/" + BonitaProject.EXTENSIONS_MODULE),
                     IResource.REPLACE | IResource.ALLOW_MISSING_LOCAL, new NullProgressMonitor());
         }
-        
-        
+
         var repository = RepositoryManager.getInstance().getRepository(newProjectId);
         repository.open(monitor);
     }
@@ -297,13 +295,15 @@ public class UpdateProjectMetadataOperation implements IWorkspaceRunnable {
                     try {
                         var mavenModel = MavenProjectHelper.getMavenModel(p);
                         mavenModel.getDependencies().stream()
-                                .filter(d -> Objects.equals(oldMetadata.getArtifactId() + BDM_MODEL_SUFFIX, d.getArtifactId()))
+                                .filter(d -> Objects.equals(oldMetadata.getArtifactId() + BDM_MODEL_SUFFIX,
+                                        d.getArtifactId()))
                                 .findFirst()
                                 .ifPresent(d -> {
                                     d.setArtifactId(metadata.getArtifactId() + BDM_MODEL_SUFFIX);
                                 });
                         mavenModel.getDependencies().stream()
-                                .filter(d -> Objects.equals(oldMetadata.getArtifactId() + BDM_DAO_CLIENT_SUFFIX, d.getArtifactId()))
+                                .filter(d -> Objects.equals(oldMetadata.getArtifactId() + BDM_DAO_CLIENT_SUFFIX,
+                                        d.getArtifactId()))
                                 .findFirst()
                                 .ifPresent(d -> {
                                     d.setArtifactId(metadata.getArtifactId() + BDM_DAO_CLIENT_SUFFIX);

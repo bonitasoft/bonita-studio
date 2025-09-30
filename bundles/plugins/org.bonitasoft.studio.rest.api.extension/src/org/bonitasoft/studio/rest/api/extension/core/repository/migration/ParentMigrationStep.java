@@ -22,6 +22,7 @@ import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.Parent;
 import org.apache.maven.model.Plugin;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.core.maven.model.DefaultPluginVersions;
 import org.bonitasoft.studio.common.repository.core.maven.model.MavenPlugin;
 import org.bonitasoft.studio.common.repository.core.maven.model.ProjectDefaultConfiguration;
@@ -34,6 +35,7 @@ public class ParentMigrationStep implements MavenModelMigration {
     @Override
     public MigrationReport migrate(Model model, ProjectMetadata metadata) {
         MigrationReport report = new MigrationReport();
+        BonitaStudioLog.info(String.format("Starting %s on %s...", ParentMigrationStep.class.getName(), metadata.getArtifactId()));
         var reportUpdateMessage = new StringBuilder(
                 "This project is now a Maven module, a parent artifact is now defined:");
         reportUpdateMessage.append(System.lineSeparator());
@@ -123,6 +125,8 @@ public class ParentMigrationStep implements MavenModelMigration {
         }
 
         report.updated(reportUpdateMessage.toString());
+        
+        BonitaStudioLog.info(String.format("%s completed for %s.", ParentMigrationStep.class.getName(), metadata.getArtifactId()));
         return report;
     }
 

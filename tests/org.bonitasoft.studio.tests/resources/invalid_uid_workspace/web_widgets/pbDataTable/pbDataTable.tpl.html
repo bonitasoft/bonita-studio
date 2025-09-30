@@ -1,0 +1,62 @@
+<div class="table-responsive">
+    <table bonitable
+           sort-options="ctrl.sortOptions"
+           on-sort="ctrl.sortHandler()"
+           class="table" ng-class="{'table-hover': ctrl.isSelectable(),'table-striped': properties.striped, 'table-condensed': properties.condensed, 'table-bordered': properties.bordered}">
+        <caption ng-if="properties.caption">{{properties.caption}}</caption>
+        <thead>
+            <tr>
+                <th ng-repeat="header in properties.headers">
+                    <div ng-if="ctrl.isColumnSortable($index)" bo-sorter="{{ctrl.getSorter($index)}}">
+                  		 <span ng-if="properties.allowHTML" ng-bind-html="header | uiTranslate"></span>
+                  		 <span ng-if="!properties.allowHTML">{{ header | uiTranslate }}</span>
+                    </div>
+                    <div ng-if="!ctrl.isColumnSortable($index)">
+                        <span ng-if="properties.allowHTML" ng-bind-html="header | uiTranslate"></span>
+                  		<span ng-if="!properties.allowHTML">{{ header | uiTranslate }}</span>
+                    </div>
+                </th>
+            </tr>
+        </thead>
+        <tbody ng-if="ctrl.hasMultiColumns()">
+        <tr ng-repeat="row in ctrl.results" ng-click="ctrl.selectRowHandler(row)"
+            ng-class="{'info': row === properties.selectedRow}">
+            <td ng-if="properties.allowHTML" ng-repeat="column in properties.columnsKey track by $index">
+                <div ng-if="properties.allowHTML" ng-bind-html="$eval(column, row) | uiTranslate"></div>
+            </td>
+            <td ng-if="!properties.allowHTML" ng-repeat="column in properties.columnsKey track by $index">
+                 {{ $eval(column, row) | uiTranslate }}
+            </td>
+        </tr>
+        </tbody>
+        <tbody ng-if="!ctrl.hasMultiColumns()">
+        <tr ng-repeat="row in ctrl.results" ng-click="ctrl.selectRowHandler(row)"
+            ng-class="{'info': row === properties.selectedRow}">
+            <td ng-if="!properties.allowHTML"> {{ row | uiTranslate }}</td>
+            <td ng-if="properties.allowHTML" ng-bind-html="row | uiTranslate"> </td>
+        </tr>
+        </tbody>
+    </table>
+    <div class="hidden-xs"
+         ng-repeat="options in [{'maxSize': 5, 'rotate': false}]"
+         ng-include="'/dataTable/pagination.html'" >
+    </div>
+    <div class="visible-xs text-center"
+         ng-repeat="options in [{'maxSize': 3, 'rotate': true}]"
+         ng-include="'/dataTable/pagination.html'" >
+    </div>
+
+    <script type="text/ng-template" id="/dataTable/pagination.html">
+        <pagination ng-if="ctrl.pagination.total > properties.pageSize"
+                    total-items="ctrl.pagination.total"
+                    items-per-page="properties.pageSize"
+                    direction-links="true"
+                    boundary-links="true"
+                    previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"
+                    rotate="{{options.rotate}}"
+                    max-size="{{options.maxSize}}"
+                    ng-model="ctrl.pagination.currentPage"
+                    ng-change="ctrl.paginationHandler()">
+        </pagination>
+    </script>
+</div>

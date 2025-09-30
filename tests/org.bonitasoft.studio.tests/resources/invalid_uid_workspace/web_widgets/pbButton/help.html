@@ -1,0 +1,66 @@
+<uib-tabset class="tabs-left">
+    <uib-tab heading="{{ 'Usage' | translate }}" index="'usage'">
+        <p translate>Use this widget to: </p>
+        <ul>
+            <li translate>Start a process</li>
+            <li translate>Submit a task</li>
+            <li translate>Add/Remove an Object to/from a collection</li>
+            <li translate>Perform an HTTP request</li>
+        </ul>
+        <p translate>For HTTP requests, the following methods are supported: </p>
+        <ul>
+            <li translate>GET</li>
+            <li translate>POST</li>
+            <li translate>PUT</li>
+            <li translate>DELETE</li>
+        </ul>
+        <p translate>To control modal containers, the following methods are supported: </p>
+        <ul>
+            <li translate>Open modal</li>
+            <li translate>Close modal</li>
+        </ul>
+    </uib-tab>
+    <uib-tab heading="{{ 'Request' | translate }}" index="'request'">
+        <p translate>The <em>data sent on click</em> for POST and PUT requests must be a JavaScript Object (JSON can be used). This data will be sent in the body of the request.</p>
+        <p translate>For <em>Start process</em> and <em>Submit task</em> actions the format of the data must meet the process/task contract specifications.</p>
+    </uib-tab>
+    <uib-tab heading="{{ 'Response' | translate }}" index="'response'">
+        <p translate>For HTTP requests and Start process / Submit task actions, you can store the response of the request in a variable using the properties: </p>
+        <ul>
+            <li translate><em>Successful response value</em>: the variable will be set if the request is successful (code 2XX)</li>
+            <li translate><em>Failed response value</em>: the variable will be set if the request is unsuccessful (code 4XX)</li>
+        </ul>
+        <p translate>In addition to the <em>Successful response value</em> variable, for the <em>POST</em>,<em>PUT</em>,<em>DELETE</em>, <em>Start process</em> and <em>Submit task</em> requests you also have the possibility to define a <em>Target URL on success</em> that will be used to set the current window (frame) location when the request is successful.</p>
+        <p translate>However, such a redirection of the current window (frame) won't be performed in Bonita portal nor in an application iframe with id <em>bonitaframe</em> (as in the default application layout). This is due to the fact that Bonita Portal and the default application layout handle the successful response by themselves.</p>
+        <p translate>If the page is displayed inside an iframe, a JavaScript postMessage will be sent to the <b>parent</b> frame with the status of the response and the properties values of the button widget. Bonita portal, tasklist or the default application layout handle this message differently: </p>
+        <ul>
+            <li translate>The portal and tasklist will redirect to the process list (<em>Start process</em> action) or refresh the task list (<em>Submit task</em> action).</li>
+            <li translate>The default application layout will retrieve the <em>Target URL on success</em> that was sent in the message and set its window location with it.</li>
+        </ul>
+    </uib-tab>
+    <uib-tab heading="{{ 'Message' | translate }}" index="'message'">
+        <p translate>The following documentation applies if you need to handle the behavior on success yourself (e.g. if you build your own tasklist or any page with an iframe to display forms).</p>
+        <p><translate>Here is the format of the message posted to the parent frame in JSON (in the parent frame you will need to call <code>JSON.parse</code> as it is stringified before being sent):</translate>
+        <pre>
+            {
+              message: 'success',
+              status: 200,
+              dataFromSuccess: 'response body'
+              targetUrlOnSuccess: 'myTasks'
+              ...
+            }
+        </pre>
+        <p><translate>For an error response, the message value is 'error' and the property <em>dataFromSuccess</em> is replaced by a property <em>dataFromError</em></translate>
+        </p>
+        <p translate>For an example of JavaScript code to handle the message, you can have a look at the asset <em>layout.js</em> in the default application layout (you can retrieve it in the resources section of Bonita Portal Administrator profile).</p>
+    </uib-tab>
+    <uib-tab heading="{{ 'Collections' | translate }}" index="'collections'">
+        <p translate><em>Add to collection</em> or <em>Remove from collection</em> actions can be used to prepare the data before sending it to the server (e.g. if you have a process/task contract with an input that is multiple). No request will be sent to the server. The button will just update the <em>Collection</em> data which must be a variable of type array (<code>[]</code> in JSON).</p>
+        <p translate>The property <em>Value to add</em> can either be a JavaScript Object or a String depending on the format expected for the collection you are building.</p>
+    </uib-tab>
+    <uib-tab heading="{{ 'Modals' | translate }}" index="'modal-control'">
+        <p translate>The <em>Open modal</em> action can be used to open any modal container on the page. To point towards the right one, specify the ID in the button's "Modal ID" property.</p>
+        <p translate>The <em>Close modal</em> action will close the modal container that contains the button when it is pressed.</p>
+        <p translate>Any button can close a modal container that contains it when a success happens after any button action.</p>
+    </uib-tab>
+</uib-tabset>

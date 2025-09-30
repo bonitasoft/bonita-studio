@@ -1,0 +1,204 @@
+{
+  "id" : "pbLink",
+  "name" : "Link",
+  "type" : "widget",
+  "custom" : false,
+  "modelVersion" : "2.4",
+  "lastUpdate" : 1736240682384,
+  "description" : "Navigation link to another page or form",
+  "template" : "@pbLink.tpl.html",
+  "controller" : "@pbLink.ctrl.js",
+  "properties" : [
+    {
+      "label" : "Interpret HTML",
+      "name" : "allowHTML",
+      "help" : "If you choose 'no', HTML code will be escaped instead of being interpreted. If you choose ‘Yes’, this could potentially lead to HTML injections attacks. Please take into account these risks.",
+      "type" : "boolean",
+      "defaultValue" : false,
+      "bond" : "constant"
+    },
+    {
+      "label" : "Text",
+      "name" : "text",
+      "type" : "text",
+      "defaultValue" : "Link",
+      "bond" : "interpolation"
+    },
+    {
+      "label" : "Type",
+      "name" : "type",
+      "help" : "Specifies the type of link to create",
+      "type" : "choice",
+      "defaultValue" : "URL",
+      "choiceValues" : [
+        {
+          "value" : "page",
+          "label" : "Application page"
+        },
+        {
+          "value" : "task",
+          "label" : "Human task form"
+        },
+        {
+          "value" : "process",
+          "label" : "Process instantiation form"
+        },
+        {
+          "value" : "overview",
+          "label" : "Case overview"
+        },
+        {
+          "value" : "URL",
+          "label" : "Custom URL"
+        }
+      ],
+      "bond" : "constant"
+    },
+    {
+      "label" : "URL",
+      "name" : "targetUrl",
+      "showFor" : "properties.type.value === 'URL'",
+      "type" : "text",
+      "defaultValue" : "http://",
+      "bond" : "expression"
+    },
+    {
+      "label" : "Page token",
+      "name" : "pageToken",
+      "help" : "As used in the URL after the application token",
+      "showFor" : "properties.type.value === 'page'",
+      "type" : "text",
+      "bond" : "expression"
+    },
+    {
+      "label" : "Process name",
+      "name" : "processName",
+      "help" : "Specifies the process name",
+      "showFor" : "properties.type.value === 'process'",
+      "type" : "text",
+      "bond" : "expression"
+    },
+    {
+      "label" : "Process version",
+      "name" : "processVersion",
+      "help" : "Specifies the process version",
+      "showFor" : "properties.type.value === 'process'",
+      "type" : "text",
+      "bond" : "expression"
+    },
+    {
+      "label" : "Task Id",
+      "name" : "taskId",
+      "help" : "Specifies the task instance Id",
+      "showFor" : "properties.type.value === 'task'",
+      "type" : "text",
+      "bond" : "expression"
+    },
+    {
+      "label" : "Case Id",
+      "name" : "caseId",
+      "help" : "Specifies the case (process instance) Id",
+      "showFor" : "properties.type.value === 'overview'",
+      "type" : "text",
+      "bond" : "expression"
+    },
+    {
+      "label" : "Frame",
+      "name" : "target",
+      "help" : "Specifies where to open the linked document",
+      "showFor" : "properties.type.value !== 'page'",
+      "type" : "choice",
+      "defaultValue" : "_self",
+      "choiceValues" : [
+        {
+          "value" : "_self",
+          "label" : "Current frame (_self)"
+        },
+        {
+          "value" : "_parent",
+          "label" : "Parent frame (_parent)"
+        },
+        {
+          "value" : "_top",
+          "label" : "Top frame (_top)"
+        },
+        {
+          "value" : "_blank",
+          "label" : "New window (_blank)"
+        }
+      ],
+      "bond" : "constant"
+    },
+    {
+      "label" : "Application URL token",
+      "name" : "appToken",
+      "caption" : "Will be retrieved from the URL if not set ('app' parameter). You can pass it in the query string of the preview URL for tests.",
+      "help" : "Determines the application theme that will be used by the target page. It is recommended not to hard code it.",
+      "showFor" : "properties.type.value !== 'URL' && properties.type.value !== 'page'",
+      "type" : "text",
+      "bond" : "expression"
+    },
+    {
+      "label" : "Application URL token",
+      "name" : "appToken",
+      "caption" : "Will be retrieved from the URL if not set ('app' parameter). You can pass it in the query string of the preview URL for tests.",
+      "help" : "Determines target application. It is recommended not to hard code it.",
+      "showFor" : "properties.type.value === 'page'",
+      "type" : "text",
+      "bond" : "expression"
+    },
+    {
+      "label" : "URL parameters",
+      "name" : "urlParams",
+      "caption" : "A JSON object",
+      "help" : "Additional request parameters added to the query string",
+      "showFor" : "properties.type.value !== 'URL'",
+      "type" : "text",
+      "bond" : "expression"
+    },
+    {
+      "label" : "Alignment",
+      "name" : "alignment",
+      "type" : "choice",
+      "defaultValue" : "left",
+      "choiceValues" : [
+        "left",
+        "center",
+        "right"
+      ],
+      "bond" : "constant"
+    },
+    {
+      "label" : "Style",
+      "name" : "buttonStyle",
+      "type" : "choice",
+      "defaultValue" : "link",
+      "choiceValues" : [
+        "link",
+        "default",
+        "primary",
+        "success",
+        "info",
+        "warning",
+        "danger"
+      ],
+      "bond" : "expression"
+    }
+  ],
+  "assets" : [
+    {
+      "id" : "828a0fdd-65e0-4140-9437-51901853759e",
+      "name" : "http-param-serializer.service.js",
+      "type" : "js",
+      "order" : 1,
+      "external" : false
+    }
+  ],
+  "requiredModules" : [
+    "bonitasoft.ui.services"
+  ],
+  "webResources" : [ ],
+  "icon" : "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 50 20'><g><path fill='#CBD5E1' d='M46.8,3h-1.9l-3.8,11.9H43L46.8,3z M42.8,3h-1.9l-3.8,11.9H39L42.8,3z M36.9,13.1H35v1.9h1.9V13.1z M36.9,7 H35v1.9h1.9V7z M25.8,10.6c0-1.4,0.4-2.8,2.1-2.8c1.6,0,2.1,1.3,2.1,2.6c0,1-0.4,2.6-2,2.6C26.4,13.1,25.8,11.9,25.8,10.6z M25.8,6 H24v11.8h1.9v-4.3h0c0.3,0.5,0.9,1.3,2.7,1.3c2.4,0,3.3-2.3,3.3-4.7c0-2.9-1.4-4.3-3.2-4.3c-1.7,0-2.4,0.8-2.8,1.4h0V6z M20.9,3.6 H19v2.3h-1.2v1.9H19V13c0,1.1,0.3,1.8,1.9,1.8h0.3c0.4,0,0.7,0,1.1,0v-1.7c-0.2,0-0.3,0-0.5,0c-0.9,0-0.9-0.2-0.9-0.7V7.8h1.4V5.9 h-1.4V3.6z M15.9,3.6H14v2.3h-1.2v1.9H14V13c0,1.1,0.3,1.8,1.9,1.8h0.3c0.4,0,0.7,0,1.1,0v-1.7c-0.2,0-0.3,0-0.5,0 c-0.9,0-0.9-0.2-0.9-0.7V7.8h1.4V5.9h-1.4V3.6z M11.9,8.8c0-1.9-1.1-2.9-2.8-2.9c-1.6,0-2.8,0.6-3.2,1.3h0V3H4v11.9h1.9v-5 c0-1.3,1-2,2.3-2C10,7.8,10,8.9,10,9.6v5.3h1.9V8.8z'/></g></svg>",
+  "order" : 14,
+  "hasHelp" : false
+}

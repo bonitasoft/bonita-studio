@@ -52,12 +52,6 @@ public class UIDesignerWorkspaceIntegrationIT {
     
     private IFile newPageResource;
 
-    @Before
-    @After
-    public void clean() throws Exception {
-        ProjectUtil.cleanProject();
-    }
-
     @Test
     public void create_a_new_page_should_trigger_a_refresh_on_a_page_filestore() throws Exception {
         waitForServer();

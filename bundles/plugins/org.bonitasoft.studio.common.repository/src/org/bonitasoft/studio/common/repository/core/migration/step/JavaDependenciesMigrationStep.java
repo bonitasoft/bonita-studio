@@ -16,6 +16,7 @@ import java.util.stream.Stream;
 
 import org.bonitasoft.studio.common.FileUtil;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.repository.Messages;
 import org.bonitasoft.studio.common.repository.core.FileInputStreamSupplier;
 import org.bonitasoft.studio.common.repository.core.InputStreamSupplier;
 import org.bonitasoft.studio.common.repository.core.maven.DefinitionUsageOperation;
@@ -26,6 +27,7 @@ import org.bonitasoft.studio.common.repository.core.maven.migration.ProjectDepen
 import org.bonitasoft.studio.common.repository.core.maven.migration.model.DependencyLookup;
 import org.bonitasoft.studio.common.repository.core.maven.migration.model.DependencyLookup.Status;
 import org.bonitasoft.studio.common.repository.core.migration.MigrationStep;
+import org.bonitasoft.studio.common.repository.core.migration.StepDescription;
 import org.bonitasoft.studio.common.repository.core.migration.dependencies.operation.DependenciesUpdateOperationFactory;
 import org.bonitasoft.studio.common.repository.core.migration.report.MigrationReport;
 import org.bonitasoft.studio.common.repository.store.LocalDependenciesStore;
@@ -44,7 +46,15 @@ public class JavaDependenciesMigrationStep implements MigrationStep {
     }
 
     @Override
+    public StepDescription getDescription() {
+        return new StepDescription(Messages.javaDependenciesMigrationTitle,
+                Messages.javaDependenciesMigrationDescription);
+    }
+
+    @Override
     public MigrationReport run(Path project, IProgressMonitor monitor) throws CoreException {
+        monitor.subTask(Messages.javaDependenciesMigrationTitle);
+        BonitaStudioLog.info(String.format("Starting %s...", JavaDependenciesMigrationStep.class.getName()));
         MigrationReport report = MigrationReport.emptyReport();
         try {
             Set<DependencyLookup> dependencyLookups = doMigrateToMavenDependencies(project, monitor);
@@ -61,7 +71,8 @@ public class JavaDependenciesMigrationStep implements MigrationStep {
                     .filter(DependencyLookup::isSelected)
                     .collect(Collectors.toSet());
 
-            var processConfigurationUpdateOperation = dependenciesUpdateOperationFactory.createDependencyUpdateOperation();
+            var processConfigurationUpdateOperation = dependenciesUpdateOperationFactory
+                    .createDependencyUpdateOperation();
             for (var dl : dependenciesToInstall) {
                 try {
                     localDependencyStore.install(dl);
@@ -93,11 +104,14 @@ public class JavaDependenciesMigrationStep implements MigrationStep {
                     .forEach(processConfigurationUpdateOperation::addJarRemovedChange);
 
             report.addPostMigrationOperation(processConfigurationUpdateOperation);
-            report.addPostMigrationOperation(dependenciesUpdateOperationFactory.createConfigurationSynchronizationOperation());
+            report.addPostMigrationOperation(
+                    dependenciesUpdateOperationFactory.createConfigurationSynchronizationOperation());
 
             var libFolder = project.resolve("lib");
             if (Files.exists(libFolder)) {
+                BonitaStudioLog.info("Removing lib folder...");
                 FileUtil.deleteDir(libFolder);
+                BonitaStudioLog.info("lib folder removed.");
                 report.removed("`lib` folder and its content has been removed.");
             }
         } catch (InvocationTargetException e) {
@@ -108,27 +122,39 @@ public class JavaDependenciesMigrationStep implements MigrationStep {
         } catch (IOException e) {
             throw new CoreException(org.eclipse.core.runtime.Status.error("Failed to delete lib folder", e));
         }
+        BonitaStudioLog.info(String.format("%s completed.", JavaDependenciesMigrationStep.class.getName()));
         return report;
     }
 
     private void selectDependencyLookup(StringBuilder dependenciesUpdatesReport, DependencyLookup dl) {
         String fileName = dl.getFileName();
         if (!dl.isUsed()) {
+            BonitaStudioLog.info(String.format(
+                    "'%s' file has been removed from the project as it was not used in any process configuration or implementation.",
+                    fileName));
             dependenciesUpdatesReport.append(String.format(
                     "** `%s` file has been removed from the project as it was not used in any process configuration or implementation.%n",
                     fileName));
         } else {
             if (fileName != null) {
                 if (dl.getStatus() == Status.FOUND) {
+                    BonitaStudioLog.info(String.format(
+                            "'%s' file has been replaced by a remote Maven dependency with the following coordinates: '%s'",
+                            fileName, dl.getGAV()));
                     dependenciesUpdatesReport.append(String.format(
                             "** `%s` file has been replaced by a remote Maven dependency with the following coordinates: `%s`%n",
                             fileName, dl.getGAV()));
                 } else if (dl.getStatus() == Status.LOCAL) {
+                    BonitaStudioLog.info(String.format(
+                            "'%s' file has been replaced by a local Maven dependency with the following coordinates: '%s''",
+                            fileName, dl.getGAV()));
                     dependenciesUpdatesReport.append(String.format(
                             "`%s` file has been replaced by a local Maven dependency with the following coordinates: `%s`%n",
                             fileName, dl.getGAV()));
                 }
             } else {
+                BonitaStudioLog
+                        .info(String.format("'%s' remote Maven dependency has been added to the project", dl.getGAV()));
                 dependenciesUpdatesReport.append(String.format(
                         "** `%s` remote Maven dependency has been added to the project.%n",
                         dl.getGAV()));
@@ -168,7 +194,7 @@ public class JavaDependenciesMigrationStep implements MigrationStep {
     }
 
     private List<InputStreamSupplier> createJarInputStreamSuppliers(Path libFolder) throws CoreException {
-        return  Files.exists(libFolder) ? Stream.of(libFolder.toFile().listFiles())
+        return Files.exists(libFolder) ? Stream.of(libFolder.toFile().listFiles())
                 .filter(File.class::isInstance)
                 .map(File.class::cast)
                 .filter(file -> file.getName().toLowerCase().endsWith(".jar"))
@@ -177,7 +203,7 @@ public class JavaDependenciesMigrationStep implements MigrationStep {
     }
 
     private Set<String> definitionUsageAnalysis(Path project, IProgressMonitor monitor)
-            throws CoreException, InvocationTargetException, InterruptedException {
+            throws InvocationTargetException, InterruptedException {
         var diagrams = project.resolve("diagrams");
         if (!Files.exists(diagrams)) {
             return Set.of();
@@ -194,7 +220,7 @@ public class JavaDependenciesMigrationStep implements MigrationStep {
     }
 
     private Set<String> dependencyUsageAnalysis(Path project, IProgressMonitor monitor)
-            throws CoreException, InvocationTargetException, InterruptedException {
+            throws InvocationTargetException, InterruptedException {
         var diagrams = project.resolve("diagrams");
         var processConfiguration = project.resolve("process_configurations");
         var connectorsImplConfiguration = project.resolve("connectors-impl");
@@ -211,8 +237,7 @@ public class JavaDependenciesMigrationStep implements MigrationStep {
         return dependencyUsageOperation.getUsedDependencies();
     }
 
-    private void collectFileCandidates(Path folder, String fileExtension, List<InputStreamSupplier> candidates)
-            throws CoreException {
+    private void collectFileCandidates(Path folder, String fileExtension, List<InputStreamSupplier> candidates) {
         if (Files.exists(folder)) {
             Stream.of(folder.toFile().listFiles())
                     .filter(File.class::isInstance)
@@ -224,7 +249,7 @@ public class JavaDependenciesMigrationStep implements MigrationStep {
     }
 
     @Override
-    public boolean appliesTo(String sourceVersion) {
+    public boolean appliesToVersion(String sourceVersion) {
         return Version.parseVersion(sourceVersion).compareTo(new Version("7.13.0")) < 0;
     }
 

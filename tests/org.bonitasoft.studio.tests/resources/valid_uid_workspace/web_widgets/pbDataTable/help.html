@@ -1,0 +1,80 @@
+<uib-tabset class="tabs-left">
+    <uib-tab heading="{{ 'Data-Table' | translate }}" index="'data-table-usage'">
+        <p translate>An extended table widget that provides column sorting, filtering, and paging in addition to the
+            standard table widget capabilities.
+        <p translate>Set the Data source to Bonita API to populate the data table with records from a Bonita REST
+            API.</p>
+        <p class="alert alert-warning" translate>
+            You do not need to specify paging parameters (such as ?p=0&c=10), because the data table handles paging automatically when you use a Bonita API data source.
+        </p>
+        <p translate>You can use the <code>API request parameters</code> property to pass additional parameters to the
+            request. Supported parameters are described in the REST API Overview documentation page and in the REST API documentation for the relevant resources.</p>
+        <p translate>Alternatively, you can set the Data source to Variable and use a variable definition to point to
+            the table content.</p>
+    </uib-tab>
+    <uib-tab heading="{{ 'Sort' | translate }}" index="'sort-properties-usage'">
+        <p translate>The <code>Sortable columns</code> property enables to list the columns which allow a sorted search.
+        </p>
+        <p translate>Each element of this property has to match an element of the Columns key property to figure out
+            which table column can be sorted upon.</p>
+        <p translate>The sort is backend when datasource is Bonita API. It is frontend, otherwise.</p>
+    </uib-tab>
+    <uib-tab heading="{{ 'Filter' | translate }}" index="'filter-properties-usage'">
+        <p translate>You can provide a filter for users to update the displayed table to show only the rows that match
+            the filter. To do this :</p>
+        <ol>
+            <li translate>Add a widget to the page where the user will specify the filter. This can be an Input widget
+                for free-form text, or a Select widget to choose from a preset list.
+            </li>
+            <li translate>Create a filter variable in the variable panel. If you are using an Input widget, this
+                variable has no value.
+            </li>
+            <li translate>Bind the filter variable to the widget.</li>
+            <li translate>Bind the filter variable to the Data table widget Filter property.</li>
+        </ol>
+        <p class="alert alert-info" translate>
+            When the table is displayed, each time the user updates the filter, the table display is
+            updated accordingly. The filter is applied to the table rows that are currently displayed.
+        </p>
+    </uib-tab>
+    <uib-tab heading="{{ 'Custom style' | translate }}" index="'style-properties-usage'">
+        <p translate>Customize the default look and feel as follows:</p>
+        <ul>
+            <li translate><code>Zebra-striping</code><em>(Defaults: yes)</em>: Apply a Zebra style (this style set a different background color on even and odd lines).</li>
+            <li translate><code>Condensed</code><em>(Defaults: no)</em>: Display cells without spacing.</li>
+            <li translate><code>Bordered</code><em>(Defaults: no)</em>: Display cells with border.</li>
+        </ul>
+    </uib-tab>
+    <uib-tab heading="{{ 'How to customize Zebra-striping' | translate }}" index="'zebra-custom-usage'">
+        <p translate>Styling zebra-striping can be done in the theme.css file to customize all data-tables.</p>
+        <p translate> You need to use this following css selector in your theme.css file:</p>
+        <pre>
+.table-striped > tbody
+  > tr:nth-of-type(odd) {
+    background-color: chartreuse;
+}
+
+.table-striped > tbody
+  > tr:nth-of-type(even) {
+    background-color: black;
+}
+ </pre>
+        <p translate>In some case, you want to override your theme to display <b>one</b> data-table with specific line color, to do this:</p>
+        <ol>
+            <li translate>In 'CSS Classes' property add the following class <code>zebra-custom</code></li>
+            <li translate>Add the following class in style.css asset.</li>
+            <pre>
+.zebra-custom .table-striped
+ > tbody > tr:nth-of-type(odd){
+    background-color: #8FB2DD;
+}
+
+.zebra-custom .table-striped
+ > tbody > tr:nth-of-type(even) {
+    background-color:#994B42;
+}
+</pre>
+            <li transalte>Click on preview, select an app with a theme and check the result</li>
+        </ol>
+    </uib-tab>
+</uib-tabset>

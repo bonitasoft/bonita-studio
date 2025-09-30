@@ -121,7 +121,7 @@
         </runProgram>
         <runProgram>
             <program>cmd</program>
-            <programArguments>/C netsh advfirewall firewall add rule name="Eclipse JustJ Java binary" dir=in action=allow program="${installdir}\plugins\org.eclipse.justj.openjdk.hotspot.jre.full.win32.x86_64_17.0.10.v20240120-1143\jre\bin\javaw.exe"</programArguments>
+            <programArguments>/C netsh advfirewall firewall add rule name="Eclipse JustJ Java binary" dir=in action=allow program="${installdir}\plugins\org.eclipse.justj.openjdk.hotspot.jre.full.win32.x86_64_21.0.5.v20241023-1957\jre\bin\javaw.exe"</programArguments>
             <progressText>Configuring Windows Firewall...</progressText>
             <ruleList>
                 <firewallTest>

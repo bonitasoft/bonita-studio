@@ -46,6 +46,7 @@ import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourceAttributes;
 import org.eclipse.core.runtime.CoreException;
@@ -357,7 +358,11 @@ public abstract class AbstractFileStore<T>
         try {
             final IResource r = getResource();
             if (r != null && r.exists()) {
-                r.delete(true, AbstractRepository.NULL_PROGRESS_MONITOR);
+                if (r instanceof IProject p) {
+                    p.delete(true, true, AbstractRepository.NULL_PROGRESS_MONITOR);
+                } else {
+                    r.delete(true, AbstractRepository.NULL_PROGRESS_MONITOR);
+                }
             }
         } catch (final CoreException e) {
             BonitaStudioLog.error(e);

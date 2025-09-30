@@ -24,12 +24,12 @@ import org.bonitasoft.studio.tests.businessobject.DeployBDMOperationIT;
 import org.bonitasoft.studio.tests.businessobject.ImportLegacyBDMIT;
 import org.bonitasoft.studio.tests.conditions.TestConditions;
 import org.bonitasoft.studio.tests.configuration.TestConfigurationSynhronizer;
-import org.bonitasoft.studio.tests.connectors.DatabaseDriverConfigurationIT;
 import org.bonitasoft.studio.tests.connectors.GroovyConnectorIT;
 import org.bonitasoft.studio.tests.connectors.TestConnectorOperationIT;
 import org.bonitasoft.studio.tests.connectors.TestWebserviceVersionForBPMNImport;
 import org.bonitasoft.studio.tests.data.DataRefactorIT;
 import org.bonitasoft.studio.tests.deploy.TestDeployCommand;
+import org.bonitasoft.studio.tests.designer.MigrateUIDOperationIT;
 import org.bonitasoft.studio.tests.designer.UIDArtifactCreationIT;
 import org.bonitasoft.studio.tests.document.RefactorDocumentOperationTest;
 import org.bonitasoft.studio.tests.document.TestDocumentRefactoring;
@@ -84,7 +84,6 @@ import org.junit.runners.Suite;
         TestImportRepository.class,
         TestImportBPMN2.class,
         TestSubprocessEventExport.class,
-        DatabaseDriverConfigurationIT.class,
         ImportBOSArchiveIT.class,
         TestExportProcessBar.class,
         BPMNImportExportTest.class,
@@ -107,6 +106,7 @@ import org.junit.runners.Suite;
         UIDesignerWorkspaceIntegrationIT.class,
         TestMessageRefactoring.class,
         UIDArtifactCreationIT.class,
+        MigrateUIDOperationIT.class,
         CreateRestAPIExtensionProjectIT.class,
         RestAPIExtensionMarkerResolutionIT.class,
         BuildAndDeployRestAPIExtensionIT.class,

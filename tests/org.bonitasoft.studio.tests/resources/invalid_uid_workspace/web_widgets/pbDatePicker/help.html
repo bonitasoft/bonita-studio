@@ -1,0 +1,38 @@
+<uib-tabset class="tabs-left">
+    <uib-tab heading="{{ 'Usage' | translate }}" index="'usage'">
+        <p>
+            <translate>Use this widget to select a date (e.g., a date of birth).</translate><br/>
+            <translate>To select a date and a time (e.g., to schedule a meeting), use the <em>Date time picker</em> widget instead.</translate>
+        </p>
+        <p translate>This widget can be used to display/update business variable attributes defined in the Business Data Model (BDM) with the following types:</p>
+        <ul>
+            <li translate><em>DATE ONLY</em> (based on <code>java.time.LocalDate</code>)</li>
+            <li translate><em>DATE (NOT RECOMMENDED)</em> (based on <code>java.util.Date</code>)</li>
+        </ul>
+    </uib-tab>
+    <uib-tab heading="{{ 'Format' | translate }}" index="'format'">
+        <h4 translate>Value Format</h4>
+        <p translate>This widget supports the following types for its <em>Value</em> property as input:</p>
+        <ul>
+            <li translate><a href="https://en.wikipedia.org/wiki/ISO_8601" target="_blank">ISO 8601</a> String variables (with or without time information)</li>
+            <li translate>Date objects</li>
+            <li translate>Long number values (Milliseconds since epoch)</li>
+        </ul>
+        <p><translate>However, <b>the output of the widget is always a Javascript Date object</b>. So it will change the type of the variable bound to the widget <em>Value</em> to a Date object when the user selects a date. This is required in order to ensure backward compatibility for pages designed with older UI Designer versions.</translate><br/>
+        <translate>When sent in the JSON body of a request, it is serialized into an ISO 8601 formatted String variable with the time set to midnight UTC (e.g., 2016-12-31T00:00:00.000Z).</translate>
+        </p>
+        <h4 translate>Technical Format</h4>
+        <p translate>The <em>Technical date format</em> property define the format of the values displayed in the date input.
+        It should be a valid <a href="https://code.angularjs.org/1.3.18/docs/api/ng/filter/date" target="_blank">AngularJS date format</a>.
+        </p>
+    </uib-tab>
+    <uib-tab heading="{{ 'Date display' | translate }}" index="'display'">
+        <p translate>To display (and not update) a date retrieved from the BDM API (or another API), you can either use this <em>Date picker</em> widget with <em>Read-only</em> property set to "yes" or use a <em>Text</em>, <em>Title</em> or a <em>Table</em> widget and format the value using the provided <em>uiDate</em> <a href="javascript:void(0);" open-help="filters" editor-mode="page">filter</a>.</p>
+    </uib-tab>
+    <uib-tab heading="{{ 'Localization' | translate }}" index="'localization'">
+        <translate>The content of <em>Label</em>, <em>Technical date format</em>, <em>Placeholder</em> properties, as well as the label of button <em>Today</em> are localized by default. Localized format can be edited in the asset <em>localization.json</em>.</translate><br/>
+        <translate>The values of all properties are also used as translation keys. As a result, if you choose not to keep the default values, update the asset <em>localization.json</em> accordingly.</translate><br/>
+        <translate>Make sure the technical format value and its translations is a valid <a href="https://code.angularjs.org/1.3.18/docs/api/ng/filter/date" target="_blank">date format</a>.</translate><br/>
+        <translate>For more information, refer to the <a href="javascript:void(0);" open-help="localization" editor-mode="page"><em>localization</em> help section</a>.</translate>
+    </uib-tab>
+</uib-tabset>

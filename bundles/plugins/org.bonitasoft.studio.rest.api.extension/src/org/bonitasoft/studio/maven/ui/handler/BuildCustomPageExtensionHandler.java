@@ -13,7 +13,7 @@ import org.bonitasoft.studio.engine.http.HttpClientFactory;
 import org.bonitasoft.studio.maven.ExtensionRepositoryStore;
 import org.bonitasoft.studio.maven.i18n.Messages;
 import org.bonitasoft.studio.maven.ui.WidgetFactory;
-import org.bonitasoft.studio.maven.ui.wizard.BuildCustomPageWizard;
+import org.bonitasoft.studio.maven.ui.wizard.BuildExtensionWizard;
 
 public class BuildCustomPageExtensionHandler extends OpenWizardDialogAbstractHandler {
 
@@ -23,11 +23,11 @@ public class BuildCustomPageExtensionHandler extends OpenWizardDialogAbstractHan
     }
 
     @Override
-    protected BuildCustomPageWizard newWizard(final RepositoryAccessor repositoryAccessor,
+    protected BuildExtensionWizard newWizard(final RepositoryAccessor repositoryAccessor,
             final WidgetFactory widgetFactory,
             final HttpClientFactory httpClientFactory,
-            final CustomPageProjectSelectionProvider selectionProvider) {
-        return new BuildCustomPageWizard(getStore(repositoryAccessor), widgetFactory, selectionProvider);
+            final ExtensionProjectSelectionProvider selectionProvider) {
+        return new BuildExtensionWizard(getStore(repositoryAccessor), widgetFactory, selectionProvider);
     }
 
     @Override

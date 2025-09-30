@@ -1,0 +1,50 @@
+{
+  "id" : "MyFragment",
+  "name" : "MyFragment",
+  "type" : "fragment",
+  "modelVersion" : "2.4",
+  "lastUpdate" : 1736240831754,
+  "rows" : [
+    [
+      {
+        "type" : "component",
+        "dimension" : {
+          "xs" : 12,
+          "sm" : 12,
+          "md" : 12,
+          "lg" : 12
+        },
+        "propertyValues" : {
+          "cssClasses" : {
+            "type" : "constant",
+            "value" : ""
+          },
+          "hidden" : {
+            "type" : "constant",
+            "value" : false
+          },
+          "value" : {
+            "type" : "constant",
+            "value" : "This is the initial value"
+          },
+          "color" : {
+            "type" : "constant",
+            "value" : "RebeccaPurple"
+          },
+          "background" : {
+            "type" : "constant",
+            "value" : "Yellow"
+          }
+        },
+        "reference" : "11458ce5-1338-4ec8-b50a-c104f36c6a24",
+        "hasValidationError" : false,
+        "id" : "customMyWidget"
+      }
+    ]
+  ],
+  "variables" : { },
+  "assets" : [ ],
+  "inactiveAssets" : [ ],
+  "webResources" : [ ],
+  "hasValidationError" : false
+}

@@ -82,7 +82,7 @@ public abstract class AbstractRepositoryStore<T extends IRepositoryFileStore<?>>
         REPO_STORE_ORDER.put("web_widgets", 13);
         REPO_STORE_ORDER.put("web_fragments", 14);
         REPO_STORE_ORDER.put("extensions", 15);
-        // Keep legacy stor names for old bos import
+        // Keep legacy store names for old bos import
         REPO_STORE_ORDER.put("restAPIExtensions", 16);
         REPO_STORE_ORDER.put("themes", 17);
         REPO_STORE_ORDER.put("connectors-def", 17);

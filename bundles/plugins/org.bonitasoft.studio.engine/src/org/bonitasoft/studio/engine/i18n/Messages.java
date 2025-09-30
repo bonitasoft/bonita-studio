@@ -200,6 +200,8 @@ public class Messages extends NLS {
     public static String invalidPageContentType;
     public static String selectAll;
     public static String clearSelected;
+    public static String displayTreeDependencies;
+    public static String allProcesses;
 
     static {
         NLS.initializeMessages("messages", Messages.class); //$NON-NLS-1$

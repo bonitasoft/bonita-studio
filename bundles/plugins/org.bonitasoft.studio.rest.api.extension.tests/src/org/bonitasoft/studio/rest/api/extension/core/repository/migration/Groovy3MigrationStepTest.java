@@ -38,7 +38,7 @@ public class Groovy3MigrationStepTest {
 
     private MavenXpp3Reader modelReader = new MavenXpp3Reader();
     private Groovy3MigrationStep migrationStep;
-    private ProjectMetadata metadata;
+    private ProjectMetadata metadata = ProjectMetadata.defaultMetadata();
 
     @Before
     public void createFixture() throws Exception {
@@ -283,7 +283,6 @@ public class Groovy3MigrationStepTest {
         var model = loadModel("pom_from_1_0_5.xml");
         var model2 = loadModel("pom_from_1_1_1.xml");
         var model3 = loadModel("pom_from_1_3_1.xml");
-        metadata = ProjectMetadata.defaultMetadata();
 
         // Expect
         assertThat(migrationStep.appliesTo(model, metadata)).isTrue();

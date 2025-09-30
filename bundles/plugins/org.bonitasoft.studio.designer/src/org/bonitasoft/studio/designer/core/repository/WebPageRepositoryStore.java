@@ -26,18 +26,10 @@ import java.util.stream.Stream;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
-import org.bonitasoft.studio.common.repository.core.migration.report.MigrationReport;
-import org.bonitasoft.studio.designer.core.UIDWorkspaceSynchronizer;
 import org.bonitasoft.studio.designer.core.UIDesignerServerManager;
 import org.bonitasoft.studio.designer.core.operation.IndexingUIDOperation;
-import org.bonitasoft.studio.designer.core.operation.MigrateUIDOperation;
-import org.bonitasoft.studio.designer.i18n.Messages;
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.emf.edapt.migration.MigrationException;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -133,26 +125,6 @@ public class WebPageRepositoryStore extends WebArtifactRepositoryStore<WebPageFi
                     .orElse("");
         }
         return null;
-    }
-
-    @Override
-    public MigrationReport migrate(IProgressMonitor monitor)
-            throws CoreException, MigrationException {
-        if (UIDesignerServerManager.getInstance().isStarted()) {
-            try {
-                UIDWorkspaceSynchronizer.disable();
-                MigrateUIDOperation migrateUIDOperation = new MigrateUIDOperation();
-                migrateUIDOperation.run(monitor);
-                if (Objects.equals(migrateUIDOperation.getStatus().getSeverity(), IStatus.ERROR)) {
-                    throw new MigrationException(Messages.UIDMigrationFailedMessage, new Exception());
-                }
-            } catch (InvocationTargetException | InterruptedException e) {
-                throw new MigrationException(e);
-            } finally {
-                UIDWorkspaceSynchronizer.enable();
-            }
-        }
-        return MigrationReport.emptyReport();
     }
 
 }

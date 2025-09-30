@@ -14,17 +14,21 @@
  */
 package org.bonitasoft.studio.application.coolbar;
 
+import java.util.Map;
+
+import org.bonitasoft.studio.application.handler.ImportExtensionHandler;
 import org.bonitasoft.studio.application.i18n.Messages;
+import org.bonitasoft.studio.application.ui.control.model.dependency.ArtifactType;
+import org.bonitasoft.studio.application.views.overview.ProjectOverviewEditorPart;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelFileStore;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
+import org.bonitasoft.studio.common.CommandExecutor;
 import org.bonitasoft.studio.common.extension.IBonitaContributionItem;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.ui.jface.SWTBotConstants;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
-import org.eclipse.core.commands.Command;
-import org.eclipse.core.commands.common.NotDefinedException;
 import org.eclipse.jface.action.ContributionItem;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -37,21 +41,16 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.commands.ICommandService;
-import org.eclipse.ui.handlers.IHandlerService;
 
 public class NewCoolbarItem extends ContributionItem implements IBonitaContributionItem {
 
     protected static final String NEW_DIAGRAM_CMD_ID = "org.bonitasoft.studio.diagram.command.newDiagram";
-    private ICommandService commandService;
-    private IHandlerService handlerService;
+    private CommandExecutor commandExecutor;
     private Label label;
     private ToolItem item;
 
     public NewCoolbarItem() {
-        commandService = PlatformUI.getWorkbench().getService(ICommandService.class);
-        handlerService = PlatformUI.getWorkbench().getService(IHandlerService.class);
+        commandExecutor = new CommandExecutor();
     }
 
     @Override
@@ -76,24 +75,19 @@ public class NewCoolbarItem extends ContributionItem implements IBonitaContribut
             menu.setVisible(true);
         }
 
-        public boolean add(String commandId, String label, Image icon) {
-            Command command = commandService.getCommand(commandId);
-            if (command != null && command.isDefined() && command.isHandled() && command.isEnabled()) {
+        public boolean add(String commandId, Map<String, Object> parameters, String label, Image icon) {
+            if (commandExecutor.canExecute(commandId, parameters)) {
                 final MenuItem menuItem = new MenuItem(menu, SWT.PUSH);
-                try {
-                    menuItem.setText(label != null ? label : command.getName());
-                    menuItem.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, command.getName());
-                    menuItem.setImage(icon);
-                } catch (NotDefinedException e1) {
-                    BonitaStudioLog.error(e1);
-                    menuItem.setText("unknown command: " + commandId);
-                }
+                String commandName = commandExecutor.getCommandName(commandId);
+                menuItem.setText(label != null ? label : commandName);
+                menuItem.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, commandName);
+                menuItem.setImage(icon);
                 menuItem.addSelectionListener(new SelectionAdapter() {
 
                     @Override
                     public void widgetSelected(final SelectionEvent event) {
                         try {
-                            handlerService.executeCommand(command.getId(), null);
+                            commandExecutor.executeCommand(commandId, parameters);
                         } catch (final Exception e) {
                             BonitaStudioLog.error(e);
                         }
@@ -105,9 +99,14 @@ public class NewCoolbarItem extends ContributionItem implements IBonitaContribut
             return false;
         }
 
+        public boolean add(String commandId, String label, Image icon) {
+            return add(commandId, null, label, icon);
+        }
+
         public void addSeparator() {
             new MenuItem(menu, SWT.SEPARATOR | SWT.HORIZONTAL);
         }
+
     }
 
     @Override
@@ -135,7 +134,7 @@ public class NewCoolbarItem extends ContributionItem implements IBonitaContribut
                     final DropdownSelectionListener listener = new DropdownSelectionListener(item);
                     listener.add(NEW_DIAGRAM_CMD_ID, Messages.processDiagram, Pics.getImage(PicsConstants.diagram));
                     listener.addSeparator();
-                    
+
                     boolean hasNewBDM = RepositoryManager.getInstance()
                             .getRepositoryStore(BusinessObjectModelRepositoryStore.class)
                             .getChild(BusinessObjectModelFileStore.BOM_FILENAME, true) == null;
@@ -144,11 +143,11 @@ public class NewCoolbarItem extends ContributionItem implements IBonitaContribut
                                 Messages.businessDataModel, Pics.getImage(PicsConstants.bdm));
                     }
                     listener.addSeparator();
-                    
+
                     listener.add("org.bonitasoft.studio.identity.organization.create.command", Messages.organization,
                             Pics.getImage(PicsConstants.organization));
                     listener.addSeparator();
-                    
+
                     listener.add("org.bonitasoft.studio.designer.command.create.page", Messages.applicationPage,
                             Pics.getImage(PicsConstants.page));
                     listener.add("org.bonitasoft.studio.designer.command.create.layout", Messages.layout,
@@ -156,20 +155,32 @@ public class NewCoolbarItem extends ContributionItem implements IBonitaContribut
                     listener.add("org.bonitasoft.studio.designer.command.create.fragment", Messages.fragment,
                             Pics.getImage(PicsConstants.fragment));
                     listener.add("org.bonitasoft.studio.designer.command.create.widget", Messages.customWidget,
-                            Pics.getImage(PicsConstants.widget));                 
+                            Pics.getImage(PicsConstants.widget));
                     listener.addSeparator();
-                    
-                    listener.add("org.bonitasoft.studio.rest.api.extension.newCommand", Messages.restAPIExtension,
-                            Pics.getImage(PicsConstants.restApi));
+
+                    listener.add(ProjectOverviewEditorPart.CREATE_EXTENSION_COMMAND,
+                            Map.of(ImportExtensionHandler.EXTENSION_TYPE_PARAMETER, ArtifactType.CONNECTOR.name()),
+                            Messages.connector, Pics.getImage(PicsConstants.connectorDef));
+                    listener.add(ProjectOverviewEditorPart.CREATE_EXTENSION_COMMAND,
+                            Map.of(ImportExtensionHandler.EXTENSION_TYPE_PARAMETER, ArtifactType.ACTOR_FILTER.name()),
+                            Messages.actorFilter, Pics.getImage(PicsConstants.filterDef));
+                    listener.add(ProjectOverviewEditorPart.CREATE_EXTENSION_COMMAND,
+                            Map.of(ImportExtensionHandler.EXTENSION_TYPE_PARAMETER, ArtifactType.REST_API.name()),
+                            Messages.restAPIExtension, Pics.getImage(PicsConstants.restApi));
+                    listener.add(ProjectOverviewEditorPart.CREATE_EXTENSION_COMMAND,
+                            Map.of(ImportExtensionHandler.EXTENSION_TYPE_PARAMETER, ArtifactType.THEME.name()),
+                            Messages.theme, Pics.getImage(PicsConstants.theme));
+
                     listener.addSeparator();
-                    
+
                     listener.add("org.bonitasoft.studio.la.new.command", Messages.applicationDescriptor,
                             Pics.getImage(PicsConstants.application));
                     listener.addSeparator();
-                    
-                    boolean hadAddedProfile = listener.add("org.bonitasoft.studio.customProfile.newFile.command", Messages.profile,
+
+                    boolean hadAddedProfile = listener.add("org.bonitasoft.studio.customProfile.newFile.command",
+                            Messages.profile,
                             Pics.getImage(PicsConstants.profile));
-                    
+
                     boolean hasNewBDMAccess = RepositoryManager.getInstance()
                             .getRepositoryStore(BusinessObjectModelRepositoryStore.class)
                             .getChild("bdm_access_control.xml", true) == null;
@@ -192,7 +203,7 @@ public class NewCoolbarItem extends ContributionItem implements IBonitaContribut
         });
 
     }
-    
+
     @Override
     public void setLabelControl(Label label) {
         this.label = label;
@@ -200,14 +211,14 @@ public class NewCoolbarItem extends ContributionItem implements IBonitaContribut
 
     @Override
     public void setEnabled(boolean enabled) {
-        if(item != null && !item.isDisposed()) {
+        if (item != null && !item.isDisposed()) {
             item.setEnabled(enabled);
         }
-        if(label != null && !label.isDisposed()) {
+        if (label != null && !label.isDisposed()) {
             label.setEnabled(enabled);
         }
     }
-    
+
     @Override
     public boolean isEnabled() {
         return RepositoryManager.getInstance().hasActiveRepository();

@@ -1,0 +1,169 @@
+{
+  "id" : "pbInput",
+  "name" : "Input",
+  "type" : "widget",
+  "custom" : false,
+  "modelVersion" : "2.4",
+  "lastUpdate" : 1736240682337,
+  "description" : "Field where the user can enter information",
+  "template" : "@pbInput.tpl.html",
+  "controller" : "@pbInput.ctrl.js",
+  "properties" : [
+    {
+      "label" : "Required",
+      "name" : "required",
+      "help" : "In the context of a form container, use $form.$invalid as a Boolean to check form validity in a widget property",
+      "type" : "boolean",
+      "defaultValue" : false,
+      "bond" : "expression"
+    },
+    {
+      "label" : "Interpret HTML",
+      "name" : "allowHTML",
+      "help" : "If you choose 'no', HTML code will be escaped instead of being interpreted. If you choose ‘Yes’, this could potentially lead to HTML injections attacks. Please take into account these risks.",
+      "type" : "boolean",
+      "defaultValue" : false,
+      "bond" : "constant"
+    },
+    {
+      "label" : "Value min length",
+      "name" : "minLength",
+      "help" : "In the context of a form container, use $form.$invalid as a Boolean to check form validity in a widget property",
+      "type" : "integer",
+      "defaultValue" : "",
+      "bond" : "expression",
+      "constraints" : {
+        "min" : "0"
+      }
+    },
+    {
+      "label" : "Value max length",
+      "name" : "maxLength",
+      "help" : "In the context of a form container, use $form.$invalid as a Boolean to check form validity in a widget property",
+      "type" : "integer",
+      "defaultValue" : "",
+      "bond" : "expression",
+      "constraints" : {
+        "min" : "1"
+      }
+    },
+    {
+      "label" : "Read-only",
+      "name" : "readOnly",
+      "type" : "boolean",
+      "defaultValue" : false,
+      "bond" : "expression"
+    },
+    {
+      "label" : "Label hidden",
+      "name" : "labelHidden",
+      "type" : "boolean",
+      "defaultValue" : false,
+      "bond" : "constant"
+    },
+    {
+      "label" : "Label",
+      "name" : "label",
+      "showFor" : "properties.labelHidden.value === false",
+      "type" : "text",
+      "defaultValue" : "Default label",
+      "bond" : "interpolation"
+    },
+    {
+      "label" : "Label position",
+      "name" : "labelPosition",
+      "showFor" : "properties.labelHidden.value === false",
+      "type" : "choice",
+      "defaultValue" : "top",
+      "choiceValues" : [
+        "left",
+        "top"
+      ],
+      "bond" : "constant"
+    },
+    {
+      "label" : "Label width",
+      "name" : "labelWidth",
+      "showFor" : "properties.labelHidden.value === false",
+      "type" : "integer",
+      "defaultValue" : 4,
+      "bond" : "constant",
+      "constraints" : {
+        "min" : "1",
+        "max" : "12"
+      }
+    },
+    {
+      "label" : "Placeholder",
+      "name" : "placeholder",
+      "help" : "Short hint that describes the expected value",
+      "type" : "text",
+      "bond" : "interpolation"
+    },
+    {
+      "label" : "Value",
+      "name" : "value",
+      "caption" : "Any variable: <i>myData</i> or <i>myData.attribute</i>",
+      "help" : "Read-write binding, initialized or updated by users' input (bi-directional bond)",
+      "type" : "text",
+      "bond" : "variable"
+    },
+    {
+      "label" : "Debounce",
+      "name" : "debounce",
+      "help" : "Integer value which contains the debounce model update value in milliseconds. A value of 0 triggers an immediate update. Debounce value cannot be changed once initialized.",
+      "type" : "integer",
+      "defaultValue" : 0,
+      "bond" : "expression",
+      "constraints" : {
+        "min" : "0",
+        "step" : 100
+      }
+    },
+    {
+      "label" : "Type",
+      "name" : "type",
+      "help" : "In the context of a form container, use $form.$invalid as a Boolean to check form validity in a widget property",
+      "type" : "choice",
+      "defaultValue" : "text",
+      "choiceValues" : [
+        "text",
+        "number",
+        "email",
+        "password"
+      ],
+      "bond" : "constant"
+    },
+    {
+      "label" : "Min value",
+      "name" : "min",
+      "help" : "In the context of a form container, use $form.$invalid as a Boolean to check form validity in a widget property",
+      "showFor" : "properties.type.value === 'number'",
+      "type" : "integer",
+      "bond" : "expression"
+    },
+    {
+      "label" : "Max value",
+      "name" : "max",
+      "help" : "In the context of a form container, use $form.$invalid as a Boolean to check form validity in a widget property",
+      "showFor" : "properties.type.value === 'number'",
+      "type" : "integer",
+      "bond" : "expression"
+    },
+    {
+      "label" : "Step",
+      "name" : "step",
+      "help" : "Specifies the legal number intervals between values",
+      "showFor" : "properties.type.value === 'number'",
+      "type" : "integer",
+      "defaultValue" : 1,
+      "bond" : "expression"
+    }
+  ],
+  "assets" : [ ],
+  "requiredModules" : [ ],
+  "webResources" : [ ],
+  "icon" : "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 50 20'><g><path fill='#fff' d='M1,19V1h48v18H1z M0,0v20h50V0H0z M6,18v-1H5v1H6z M8,17H7v1h1V17z M7,2v1h1V2H7z M5,3h1V2H5V3z M6,3v14h1 V3H6z '/></g></svg>",
+  "order" : 1,
+  "hasHelp" : false
+}

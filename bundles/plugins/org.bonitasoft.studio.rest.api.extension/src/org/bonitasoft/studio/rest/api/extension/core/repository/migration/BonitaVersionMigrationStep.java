@@ -20,6 +20,7 @@ import java.util.Properties;
 import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
 import org.apache.maven.model.Model;
 import org.bonitasoft.studio.common.ProductVersion;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
 import org.bonitasoft.studio.common.repository.core.migration.MavenModelMigration;
 import org.bonitasoft.studio.common.repository.core.migration.report.MigrationReport;
@@ -32,9 +33,11 @@ public class BonitaVersionMigrationStep implements MavenModelMigration {
     @Override
     public MigrationReport migrate(Model model, ProjectMetadata metadata) {
         var report = new MigrationReport();
+        BonitaStudioLog.info(String.format("Starting %s on %s...", BonitaVersionMigrationStep.class.getName(), metadata.getArtifactId()));
         var properties = model.getProperties();
         updateProperty(BONITA_VERSION_PROPERTY, report, properties);
         updateProperty(BONITA_RUNTIME_VERSION_PROPERTY, report, properties);
+        BonitaStudioLog.info(String.format("%s completed for %s.", BonitaVersionMigrationStep.class.getName(), metadata.getArtifactId()));
         return report;
     }
 

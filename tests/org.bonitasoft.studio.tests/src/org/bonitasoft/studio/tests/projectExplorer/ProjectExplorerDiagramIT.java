@@ -82,6 +82,7 @@ public class ProjectExplorerDiagramIT {
         deployDiagramFromExplorer(newName, newPoolName);
         validateBuildMenuAvailable(newName, newPoolName);
         validateRunMenuAvailable(newName, newPoolName);
+        validateShowDependencyTreeMenuAvailable(newName, newPoolName);
     }
 
     private void validateRunMenuAvailable(String diagramName, String poolName) {
@@ -90,6 +91,19 @@ public class ProjectExplorerDiagramIT {
 
     private void validateBuildMenuAvailable(String diagramName, String poolName) {
         validateMenuAvailable(diagramName, poolName, "Build");
+    }
+
+    private void validateShowDependencyTreeMenuAvailable(String diagramName, String poolName) {
+        validateShowDependencyTreeSubMenuAvailable(diagramName, poolName, "Display dependency tree");
+    }
+
+    private void validateShowDependencyTreeSubMenuAvailable(String diagramName, String poolName, String action) {
+        SWTBotTreeItem diagramTreeItem = diagramBot.getDiagramTreeItem(diagramName, DEFAULT_VERSION);
+        bot.waitUntil(projectExplorerBot.contextMenuAvailable(diagramTreeItem, action));
+        SWTBotMenu contextMenu = diagramTreeItem.contextMenu(action);
+        assertThat(contextMenu.menuItems()).hasSize(2);
+        assertThat(contextMenu.menuItems().get(0)).isEqualTo(String.format("%s (%s)", poolName, DEFAULT_VERSION));
+        assertThat(contextMenu.menuItems().get(1)).isEqualTo("All Processes");
     }
 
     private void validateMenuAvailable(String diagramName, String poolName, String action) {
@@ -162,13 +176,14 @@ public class ProjectExplorerDiagramIT {
     }
 
     private String getNewDiagramName() {
-        List<String> existingDiagrams = repositoryAccessor.getRepositoryStore(DiagramRepositoryStore.class).getChildren()
+        List<String> existingDiagrams = repositoryAccessor.getRepositoryStore(DiagramRepositoryStore.class)
+                .getChildren()
                 .stream()
                 .map(t -> {
                     try {
                         return t.getContent();
                     } catch (ReadFileStoreException e) {
-                       return null;
+                        return null;
                     }
                 })
                 .filter(diagram -> Objects.equals(diagram.getVersion(), DEFAULT_VERSION))

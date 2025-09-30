@@ -13,11 +13,12 @@ import java.nio.file.Files;
 import java.util.Set;
 
 import org.apache.maven.model.Dependency;
+import org.bonitasoft.studio.application.ui.control.model.dependency.ArtifactType;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelFileStore;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.maven.ExtensionRepositoryStore;
-import org.bonitasoft.studio.maven.model.RestAPIExtensionArchetype;
+import org.bonitasoft.studio.maven.model.ExtensionProjectArchetypes;
 import org.bonitasoft.studio.maven.model.RestAPIExtensionArchetypeConfiguration;
 import org.bonitasoft.studio.maven.operation.CreateCustomPageProjectOperation;
 import org.bonitasoft.studio.rest.api.extension.core.builder.RestAPIBuilder;
@@ -33,15 +34,35 @@ import org.eclipse.m2e.core.project.ProjectImportConfiguration;
 
 public class CreateRestAPIExtensionProjectOperation extends CreateCustomPageProjectOperation {
 
+    private static final String PAGE_PROPERTY_PATH = "src/main/resources/page.properties";
+
     public CreateRestAPIExtensionProjectOperation(ExtensionRepositoryStore repositoryStore,
             ProjectImportConfiguration projectImportConfiguration,
             RestAPIExtensionArchetypeConfiguration archetypeConfiguration) {
         super(repositoryStore, projectImportConfiguration, archetypeConfiguration);
     }
 
+    /*
+     * (non-Javadoc)
+     * @see org.bonitasoft.studio.maven.operation.CreateCustomPageProjectOperation#getArchetypeConfiguration()
+     */
+    @Override
+    protected RestAPIExtensionArchetypeConfiguration getArchetypeConfiguration() {
+        return (RestAPIExtensionArchetypeConfiguration) super.getArchetypeConfiguration();
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see org.bonitasoft.studio.maven.operation.CreateCustomPageProjectOperation#getPagePropertyPath()
+     */
+    @Override
+    protected String getPagePropertyPath() {
+        return PAGE_PROPERTY_PATH;
+    }
+
     @Override
     protected void projectCreated(IProject project) throws CoreException {
-        RestAPIExtensionArchetypeConfiguration archetypeConfiguration = (RestAPIExtensionArchetypeConfiguration) getArchetypeConfiguration();
+        RestAPIExtensionArchetypeConfiguration archetypeConfiguration = getArchetypeConfiguration();
         if (archetypeConfiguration.isEnableBDMDependencies()) {
             var bdmStore = RepositoryManager.getInstance().getAccessor()
                     .getRepositoryStore(BusinessObjectModelRepositoryStore.class);
@@ -93,7 +114,7 @@ public class CreateRestAPIExtensionProjectOperation extends CreateCustomPageProj
 
     @Override
     protected IArchetype getArchetype() {
-        return RestAPIExtensionArchetype.INSTANCE;
+        return ExtensionProjectArchetypes.getExtensionArchetype(ArtifactType.REST_API);
     }
 
 }

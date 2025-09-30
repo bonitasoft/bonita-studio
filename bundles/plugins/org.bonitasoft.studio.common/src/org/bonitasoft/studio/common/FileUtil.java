@@ -47,6 +47,8 @@ import org.bonitasoft.studio.common.log.BonitaStudioLog;
 
 import com.thebuzzmedia.imgscalr.Scalr;
 
+import jakarta.annotation.Nullable;
+
 /**
  * This class contains a set of util methods to manipulate {@link File}, {@link InputStream} and so on
  * 
@@ -367,12 +369,30 @@ public class FileUtil {
             throws IOException {
         Files.walk(sourceDirectory)
                 .forEach(source -> {
-                    Path destination = destinationDirectory.resolve(destinationDirectory).resolve(sourceDirectory.relativize(source));
+                    Path destination = destinationDirectory.resolve(destinationDirectory)
+                            .resolve(sourceDirectory.relativize(source));
                     try {
                         Files.copy(source, destination);
                     } catch (IOException e) {
                         throw new UncheckedIOException(e);
                     }
                 });
+    }
+
+    /**
+     * Try and delete the given file in a robust and lenient way.
+     * 
+     * @param file file to try and delete
+     */
+    public static void tryAndDeleteFile(@Nullable File file) {
+        if (file != null && file.isFile()) {
+            try {
+                Files.deleteIfExists(file.toPath());
+            } catch (IOException e) {
+                // may occur if there is still a process using the file (e.g. failed migration)
+                BonitaStudioLog.debug(e.getMessage(), e, BonitaStudioLog.class);
+                file.deleteOnExit();
+            }
+        }
     }
 }

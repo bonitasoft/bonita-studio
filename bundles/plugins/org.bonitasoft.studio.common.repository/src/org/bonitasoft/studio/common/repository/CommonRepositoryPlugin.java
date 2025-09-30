@@ -8,6 +8,7 @@ import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.common.repository.preferences.RepositoryPreferenceConstant;
 import org.bonitasoft.studio.common.repository.ui.wizard.ExportRepositoryWizard;
+import org.bonitasoft.studio.common.ui.jface.BonitaErrorDialog;
 import org.bonitasoft.studio.common.ui.jface.CustomWizardDialog;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
@@ -110,14 +111,14 @@ public class CommonRepositoryPlugin extends AbstractUIPlugin {
     public void openErrorDialog(Shell shell, String errorMessage, Throwable t) {
         final Status status = createErrorStatus(t);
         Platform.getLog(Platform.getBundle(PLUGIN_ID)).log(status);
-        new ErrorDialog(shell, Messages.errorTitle, errorMessage,
+        new BonitaErrorDialog(shell, Messages.errorTitle, errorMessage,
                 status, IStatus.ERROR).open();
     }
 
     private Status createErrorStatus(Throwable t) {
         Throwable exception = InvocationTargetException.class.isInstance(t)
                 ? ((InvocationTargetException) t).getTargetException() : t;
-        return new Status(IStatus.ERROR, PLUGIN_ID, exception.getMessage(), exception);
+        return new Status(IStatus.ERROR, PLUGIN_ID, exception != null ? exception.getMessage() : t.getMessage(), exception != null ? exception : t);
     }
 
 

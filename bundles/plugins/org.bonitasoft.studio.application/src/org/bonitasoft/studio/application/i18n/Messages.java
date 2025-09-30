@@ -77,8 +77,10 @@ public class Messages extends NLS {
     public static String customWidget;
     public static String fragment;
     public static String restAPIExtension;
+    public static String connector;
     public static String connectorDef;
     public static String connectorImpl;
+    public static String actorFilter;
     public static String actorFilterDef;
     public static String actorFilterImpl;
     public static String newGroovy;
@@ -168,6 +170,8 @@ public class Messages extends NLS {
     public static String importExtensionTitle;
     public static String importExtension;
     public static String importExtensionButtonLabel;
+    public static String createExtension;
+    public static String createExtensionButtonLabel;
     public static String unknownExtensionsTitle;
     public static String deleteUnknownTooltip;
     public static String delete;
@@ -179,6 +183,7 @@ public class Messages extends NLS {
     public static String browse;
     public static String file;
     public static String importFromFileTip;
+    public static String createInReactorTip;
     public static String resolvedDependency;
     public static String cannotResolveDependencyInstalledLocally;
     public static String editProjectMetadata;
@@ -450,10 +455,10 @@ public class Messages extends NLS {
     public static String noAuthenticationForBar;
     public static String invalidBarCredentials;
     public static String saveWorkspaceBackupArchive;
-	public static String addProjectExtension;
-	public static String importProjectExtensionTitle;
-	public static String importProjectExtensionDesc;
-	public static String selectProjectExtensionsFromList;
+    public static String addProjectExtension;
+    public static String importProjectExtensionTitle;
+    public static String importProjectExtensionDesc;
+    public static String selectProjectExtensionsFromList;
     public static String enterpriseOnly;
     public static String configureBARTooltip;
     public static String dataCollectionTitle;

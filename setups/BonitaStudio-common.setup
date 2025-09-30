@@ -23,7 +23,7 @@
   <setupTask
       xsi:type="setup:VariableTask"
       name="eclipse.target.platform"
-      defaultValue="2023-09"
+      defaultValue="2023-12"
       storageURI="scope://Workspace"/>
   <setupTask
       xsi:type="setup:CompoundTask"
@@ -422,7 +422,7 @@
     <repository
         url="https://projectlombok.org/p2"/>
     <repository
-        url="https://groovy.jfrog.io/artifactory/plugins-release/e4.31"/>
+        url="https://groovy.jfrog.io/artifactory/plugins-release/e4.33"/>
     <repository
         url="https://de-jcup.github.io/update-site-eclipse-asciidoctor-editor/update-site"/>
     <repository
@@ -682,5 +682,5 @@
       </repositoryList>
     </targlet>
   </setupTask>
-  <description>Bonita Studio - Development environment - Common configuration.\r\nReady for Eclipse IDE for RCP and RAP Developers - 2024-03.</description>
+  <description>Bonita Studio - Development environment - Common configuration.\r\nReady for Eclipse IDE for RCP and RAP Developers - 2024-09.</description>
 </setup:CompoundTask>

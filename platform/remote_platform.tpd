@@ -1,17 +1,17 @@
 target "platform"
-environment JavaSE-17 
+environment JavaSE-17
 with source requirements configurePhase
-location JustJ "https://download.eclipse.org/justj/jres/17/updates/release/17.0.10/" {
+location JustJ "https://download.eclipse.org/justj/jres/21/updates/release/21.0.5/" {
     org.eclipse.justj.openjdk.hotspot.jre.full.feature.group
 }
-location SWTBot "https://download.eclipse.org/technology/swtbot/releases/4.1.0/" {
+location SWTBot "https://download.eclipse.org/technology/swtbot/releases/4.2.1/" {
 	org.eclipse.swtbot.eclipse.feature.group
 	org.eclipse.swtbot.eclipse.gef.feature.group
 	org.eclipse.swtbot.eclipse.test.junit.feature.group
     org.eclipse.swtbot.feature.group
     org.eclipse.swtbot.forms.feature.group
 }
-location E2023-12 "https://download.eclipse.org/releases/2023-12" {
+location E2024-09 "https://download.eclipse.org/releases/2024-09" {
 	org.eclipse.equinox.sdk.feature.group
 	org.eclipse.egit.feature.group
     org.eclipse.egit.gitflow.feature.feature.group
@@ -46,14 +46,16 @@ location E2023-12 "https://download.eclipse.org/releases/2023-12" {
     org.eclipse.emf.compare.feature.group
     org.eclipse.equinox.p2.sdk.feature.group
     org.eclipse.sdk.feature.group
-    org.eclipse.emf.edapt.runtime.feature.feature.group
     org.eclipse.wst.jsdt.feature.feature.group
     org.eclipse.wst.json_ui.feature.feature.group
     com.sun.jna.platform
     org.eclipse.gmf.feature.group
     org.eclipse.m2e.logback.feature.feature.group
 }
-location Nebula "https://download.eclipse.org/nebula/releases/3.1.0/" {
+location Edapt "http://download.eclipse.org/edapt/releases/15x/150" {
+	    org.eclipse.emf.edapt.runtime.feature.feature.group
+}
+location Nebula "https://download.eclipse.org/nebula/updates/release/" {
 	org.eclipse.nebula.widgets.richtext.feature.feature.group
 }
 location AsciiDoctor "https://de-jcup.github.io/update-site-eclipse-asciidoctor-editor/update-site/" {
@@ -79,13 +81,13 @@ location Babel "https://download.eclipse.org/technology/babel/update-site/R0.20.
     org.eclipse.babel.nls_technology.jgit_ja.feature.group
     org.eclipse.babel.nls_technology.jgit_pt_BR.feature.group
 }
-location Groovy "https://groovy.jfrog.io/artifactory/plugins-release/e4.30" {
-	org.codehaus.groovy.compilerless.feature.feature.group [5.2.0,5.3.0)
-	org.codehaus.groovy.m2eclipse.feature.feature.group [5.2.0,5.3.0)
-	org.codehaus.groovy30.feature.feature.group [5.2.0,5.3.0)
-	org.codehaus.groovy.eclipse.feature.feature.group [5.2.0,5.3.0)
+location Groovy "https://groovy.jfrog.io/artifactory/plugins-release/e4.33" {
+	org.codehaus.groovy.compilerless.feature.feature.group [5.5.0,5.6.0)
+	org.codehaus.groovy.m2eclipse.feature.feature.group [5.5.0,5.6.0)
+	org.codehaus.groovy30.feature.feature.group [5.5.0,5.6.0)
+	org.codehaus.groovy.eclipse.feature.feature.group [5.5.0,5.6.0)
 }
-location BonitasoftBPM "mvn:org.bonitasoft.bpm:org.bonitasoft.bpm.eclipse-repository:8.1.1:zip" {
+location BonitasoftBPM "mvn:org.bonitasoft.bpm:org.bonitasoft.bpm.eclipse-repository:9.0.3:zip" {
 	org.bonitasoft.bonita2bpmn.feature.feature.group
     org.bonitasoft.bpm.connector.feature.feature.group
     org.bonitasoft.bpm.definitions.feature.feature.group
@@ -96,9 +98,9 @@ location BonitasoftBPM "mvn:org.bonitasoft.bpm:org.bonitasoft.bpm.eclipse-reposi
     org.bonitasoft.artifacts.model.feature.feature.group
     org.bonitasoft.bonita2bar.feature.feature.group
 }
-// Workaround https://github.com/eclipse-pde/eclipse.pde/issues/874 since 2.15.0 is the default in 2023-12
-location Orbit2024-03 "https://download.eclipse.org/tools/orbit/simrel/maven-osgi/2024-03/" {
-    org.apache.commons.commons-io [2.15.1,2.16.0)
+// Workaround https://github.com/eclipse-pde/eclipse.pde/issues/874 since 2.16.1 is the default in 2023-12
+location Orbit2024-03 "https://download.eclipse.org/tools/orbit/simrel/maven-osgi/2024-09/" {
+    org.apache.commons.commons-io [2.16.0,2.17.0)
 }
 maven MavenDependenciesWithInfiniteDepth scope=compile,runtime,system dependencyDepth=infinite missingManifest=generate {
 	dependency {
@@ -110,17 +112,17 @@ maven MavenDependenciesWithInfiniteDepth scope=compile,runtime,system dependency
 //	dependency {
 //        groupId="commons-io"
 //        artifactId="commons-io"
-//        version="2.15.1"
+//        version="2.16.1"
 //	}
     dependency {
         groupId="org.assertj"
         artifactId="assertj-core"
-        version="3.24.2"
+        version="3.26.3"
     }
     dependency {
         groupId="org.awaitility"
         artifactId="awaitility"
-        version="4.2.0"
+        version="4.2.2"
     }
     dependency {
         groupId="org.mockito"
@@ -140,13 +142,13 @@ maven BonitaProjectReportModel scope=compile,runtime,system dependencyDepth=none
     feature {
         id="org.bonitasoft.project.report.model.feature"
         name="Bonita Project Report Model Feature"
-        version="1.0.0"
+        version="2.1.1"
         vendor="Bonitasoft S.A"
     }
     dependency {
         groupId="org.bonitasoft.maven"
         artifactId="bonita-project-report-model"
-        version="1.0.4"
+        version="2.1.1"
     }
     // add maven-central-snapshots when temporary using a snapshot maven version.
     //repository id="maven-central-snapshots" url="https://central.sonatype.com/repository/maven-snapshots"
@@ -156,7 +158,7 @@ maven BonitaArtifactsModels scope=compile,runtime,system dependencyDepth=none mi
     feature {
         id="org.bonitasoft.artifacts.model.studio.feature.feature.group"
         name="Extra Bonita Artifacts Models required by Studio but not in BonitasoftBPM"
-        version="1.1.2"
+        version="1.2.2"
         vendor="Bonitasoft S.A"
     }
     dependency {
@@ -178,27 +180,27 @@ maven BonitaArtifactsModels scope=compile,runtime,system dependencyDepth=none mi
     dependency {
         groupId="org.bonitasoft.engine"
         artifactId="bonita-application-model"
-        version="1.1.2"
+        version="1.2.2"
     }
     dependency {
         groupId="org.bonitasoft.engine"
         artifactId="bonita-bdm-access-control-model"
-        version="1.1.2"
+        version="1.2.2"
     }
     dependency {
         groupId="org.bonitasoft.engine"
         artifactId="bonita-business-object-model"
-        version="1.1.2"
+        version="1.2.2"
     }
     dependency {
         groupId="org.bonitasoft.engine"
         artifactId="bonita-organization-model"
-        version="1.1.2"
+        version="1.2.2"
     }
     dependency {
         groupId="org.bonitasoft.engine"
         artifactId="bonita-profile-model"
-        version="1.1.2"
+        version="1.2.2"
     }
     dependency {
         groupId="org.glassfish.hk2"

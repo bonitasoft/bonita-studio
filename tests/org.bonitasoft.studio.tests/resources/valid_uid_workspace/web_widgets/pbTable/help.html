@@ -1,0 +1,72 @@
+<uib-tabset class="tabs-left">
+    <uib-tab heading="{{ 'Table' | translate }}" index="'table-usage'">
+        <p translate>With this widget, you can display data from an array in tabular presentation.</p>
+        <p translate>To display the data, define the header properties with a comma-separated list of column headings,
+            bind the content to an array of JavaScript objects.</p>
+        <p translate>Then, provide a comma-separated list for the columns keys indicating the attribute to display in each column.</p>
+        <p translate>To get the data from a selected row, bind selected row to a variable.</p>
+    </uib-tab>
+    <uib-tab heading="{{ 'Custom style' | translate }}" index="'style-properties-usage'">
+        <p translate>Customize the default look and feel as follows:</p>
+        <ul>
+            <li translate><code>Zebra-striping</code><em>(Default: yes)</em>: Apply a Zebra style
+                (this style set a different background color on even and odd lines).</li>
+            <li translate><code>Condensed</code><em>(Default: no)</em>: Display cells without spacing.</li>
+            <li translate><code>Bordered</code><em>(Default: no)</em>: Display cells with border.</li>
+        </ul>
+
+    </uib-tab>
+    <uib-tab heading="{{ 'How to customize Zebra-striping' | translate }}" index="'zebra-custom-usage'">
+        <p translate>Styling zebra-striping can be done in the theme.css file to customize <b>all</b> the tables.</p>
+        <p translate>You need to use this following css selector in your theme.css file:</p>
+ <pre>
+.table-striped > tbody
+  > tr:nth-of-type(odd) {
+	background-color: chartreuse;
+}
+
+.table-striped > tbody
+  > tr:nth-of-type(even) {
+	background-color: black;
+}
+ </pre>
+        <p translate>In some case, you want override your theme to display <b>one specific table</b>, to do this:</p>
+        <ol>
+            <li translate>In 'CSS Classes' property add the <code>zebra-custom</code> class</li>
+            <li translate>Add the following class in style.css asset.</li>
+            <pre>
+.zebra-custom .table-striped
+ > tbody > tr:nth-of-type(odd){
+    background-color: #8FB2DD;
+}
+
+.zebra-custom .table-striped
+ > tbody > tr:nth-of-type(even) {
+    background-color:#994B42;
+}
+</pre>
+            <li transalte>Click on preview, select an app with a theme and check the result</li>
+        </ol>
+    </uib-tab>
+    <uib-tab heading="{{ 'How to customize border' | translate }}" index="'border-custom-usage'">
+        <p translate>Example of border table:</p>
+        <ol>
+            <li translate>Set <code>Bordered</code> property at true.</li>
+            <li translate>In 'Classes CSS' property add the following value</li>
+            <pre>border-custom</pre>
+            <li translate>Add the following class in style.css asset.</li>
+<pre>
+/** First selector is for header
+ *  Second for each row
+ **/
+.border-custom >  pb-table >
+   .table-responsive > .table-bordered
+   > * > tr > th,
+.border-custom .table-bordered td {
+    border: 2px solid #8FB2DD;
+}
+</pre>
+            <li transalte>Click on preview to check the result</li>
+        </ol>
+    </uib-tab>
+</uib-tabset>

@@ -36,6 +36,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.BiFunction;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -140,7 +141,9 @@ public class UIDesignerServerManager implements IBonitaProjectListener {
                         dataRepositoryPort);
             } else {
                 try {
-                    start(repository.getProject().getLocation().toFile().toPath());
+                    process = start(repository.getProject().getLocation().toFile().toPath(),
+                            new PageDesignerURLFactory(getPreferenceStore()),
+                            getLogFile());
                 } catch (IOException e) {
                     BonitaStudioLog.error(e);
                 }
@@ -155,18 +158,20 @@ public class UIDesignerServerManager implements IBonitaProjectListener {
         final ILaunchManager manager = getLaunchManager();
         final ILaunchConfigurationType ltype = manager
                 .getLaunchConfigurationType(IExternalToolConstants.ID_PROGRAM_LAUNCH_CONFIGURATION_TYPE);
+        pageDesignerURLBuilder = new PageDesignerURLFactory(getPreferenceStore());
         try {
             final ILaunchConfigurationWorkingCopy workingCopy = ltype.newInstance(null, "Standalone UI Designer");
             workingCopy.setAttribute(IExternalToolConstants.ATTR_LOCATION, javaBinaryLocation());
             workingCopy.setAttribute(IExternalToolConstants.ATTR_TOOL_ARGUMENTS,
-                    buildCommand(repository.getProject().getLocation().toFile().toPath(), healthCheckServerPort,
+                    buildCommand(repository.getProject().getLocation().toFile().toPath(), 
+                            pageDesignerURLBuilder.getUidPort(),
+                            healthCheckServerPort,
                             dataRepositoryPort, true).stream()
                                     .collect(Collectors.joining(" ")));
             Map<String, String> env = new HashMap<>();
             env.put("JAVA_TOOL_OPTIONS", "-Dfile.encoding=UTF-8");
             workingCopy.setAttribute(ILaunchManager.ATTR_ENVIRONMENT_VARIABLES, env);
             launch = workingCopy.launch(ILaunchManager.RUN_MODE, AbstractRepository.NULL_PROGRESS_MONITOR);
-            pageDesignerURLBuilder = new PageDesignerURLFactory(getPreferenceStore());
             if (waitForUID(pageDesignerURLBuilder)) {
                 schedule(healthCheckServerPort,
                         dataRepositoryPort,
@@ -202,23 +207,28 @@ public class UIDesignerServerManager implements IBonitaProjectListener {
      * This is used when migrating a workspace
      * 
      * @param projectPath
+     * @param logFile
+     * @return 
      * @throws IOException
      */
-    private void start(Path projectPath) throws IOException {
+    private Process start(Path projectPath, PageDesignerURLFactory pageDesignerURLBuilder, File logFile) throws IOException {
+        if(pageDesignerURLBuilder == null) {
+            pageDesignerURLBuilder = new PageDesignerURLFactory(getPreferenceStore());
+        }
         var java = javaBinaryLocation();
         var command = new ArrayList<String>();
         command.add(java);
-        command.addAll(buildCommand(projectPath, -1, -1, false));
-        process = new ProcessBuilder()
+        command.addAll(buildCommand(projectPath,pageDesignerURLBuilder.getUidPort(),-1, -1, false));
+        var uidProcess = new ProcessBuilder()
                 .command(command)
-                .inheritIO()
+                .redirectErrorStream(true)
+                .redirectOutput(logFile)
                 .start();
-        pageDesignerURLBuilder = new PageDesignerURLFactory(getPreferenceStore());
         if (waitForUID(pageDesignerURLBuilder)) {
-            started = true;
+            return uidProcess;
         } else {
-            if (process != null) {
-                process.destroyForcibly();
+            if (uidProcess != null) {
+                uidProcess.destroyForcibly();
             }
             throw new IOException("Failed to start UID.");
         }
@@ -291,7 +301,7 @@ public class UIDesignerServerManager implements IBonitaProjectListener {
                     BonitaStudioLog.error(e);
                 }
                 BonitaStudioLog.debug(String.format("Failed to reach UI Designer (%s). Number of retries = %s",
-                        e.getMessage(), retry), UIDesignerPlugin.PLUGIN_ID);
+                        request.uri(), retry), UIDesignerPlugin.PLUGIN_ID);
             }
         }
         BonitaStudioLog.error(
@@ -349,13 +359,15 @@ public class UIDesignerServerManager implements IBonitaProjectListener {
     }
 
     protected List<String> buildCommand(Path projectPath,
+            int uidPort,
             int workspaceResourceServerPort,
             int dataRepositoryPort, boolean quotePath) throws IOException {
         final WorkspaceSystemProperties workspaceSystemProperties = new WorkspaceSystemProperties(projectPath);
-        port = getPreferenceStore().getInt(BonitaPreferenceConstants.UID_PORT, UID_DEFAULT_PORT);
-        if (isPortInUse(port)) {
+        if (isPortInUse(uidPort)) {
             port = PortSelector.findFreePort();
             getPreferenceStore().putInt(BonitaPreferenceConstants.UID_PORT, port);
+        }else {
+            port = uidPort;
         }
         var commandList = new ArrayList<String>();
         commandList.add(getPreferenceStore().get(BonitaPreferenceConstants.UID_JVM_OPTS, "-Xmx256m"));
@@ -439,6 +451,41 @@ public class UIDesignerServerManager implements IBonitaProjectListener {
     @Override
     public void projectClosed(IRepository repository, IProgressMonitor monitor) {
         stop();
+    }
+
+    public UIDStandaloneInstance startStandalone(Path uidWorkspace, 
+            File logFile,
+            IProgressMonitor monitor) throws IOException {
+        monitor.subTask(Messages.startingUIDesigner);
+        int freePort = PortSelector.findFreePort();
+        var urlBuilder = new PageDesignerURLFactory(freePort);
+        var uidProcess = start(uidWorkspace, urlBuilder, logFile);
+        return new UIDStandaloneInstance(uidProcess, urlBuilder);
+    }
+    
+    public class UIDStandaloneInstance implements AutoCloseable{
+
+        private Process uidProcess;
+        private PageDesignerURLFactory urlBuilder;
+
+        public UIDStandaloneInstance(Process uidProcess, PageDesignerURLFactory urlBuilder) {
+            this.uidProcess = uidProcess;
+            this.urlBuilder = urlBuilder;
+        }
+        
+        public <T> void onExit(BiFunction<Process,Throwable,? extends T> exitHandler) {
+            uidProcess.onExit().handleAsync(exitHandler);
+        }
+
+        @Override
+        public void close(){
+            uidProcess.destroy();
+        }
+        
+        public PageDesignerURLFactory getUrlBuilder() {
+            return urlBuilder;
+        }
+        
     }
 
 }

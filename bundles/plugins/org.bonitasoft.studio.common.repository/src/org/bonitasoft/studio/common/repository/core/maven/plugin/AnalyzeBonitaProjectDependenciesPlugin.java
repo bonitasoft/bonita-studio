@@ -19,13 +19,16 @@ import java.util.Objects;
 import java.util.Optional;
 
 import org.apache.maven.execution.BuildSuccess;
+import org.apache.maven.execution.MavenExecutionRequest;
 import org.apache.maven.execution.MavenExecutionResult;
 import org.apache.maven.model.Plugin;
 import org.bonitasoft.studio.common.repository.BuildScheduler;
 import org.bonitasoft.studio.common.repository.Messages;
 import org.bonitasoft.studio.common.repository.core.BonitaProject;
+import org.bonitasoft.studio.common.repository.core.maven.MavenProjectHelper;
 import org.bonitasoft.studio.common.repository.core.maven.model.DefaultPluginVersions;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -48,10 +51,16 @@ public class AnalyzeBonitaProjectDependenciesPlugin {
     public IStatus execute(IProgressMonitor monitor) throws CoreException {
         monitor.beginTask(Messages.analyzeProjectDependencies, IProgressMonitor.UNKNOWN);
         return BuildScheduler.callWithBuildRule(() -> {
-            var mavenProject = MavenPlugin.getMavenProjectRegistry().getProject(project.getParentProject());
+            IProject parentProject = project.getParentProject();
+            var mavenProject = MavenPlugin.getMavenProjectRegistry().getProject(parentProject);
             if (mavenProject == null) {
-                return new Status(IStatus.ERROR, getClass(),
-                        "An error occured while executing bonita project plugin. Cannot resolve the Maven project.");
+                // try initialization with MavenProjectHelper
+                MavenProjectHelper.getMavenProject(parentProject);
+                mavenProject = MavenPlugin.getMavenProjectRegistry().getProject(parentProject);
+                if (mavenProject == null) {
+                    return new Status(IStatus.ERROR, getClass(),
+                            "An error occured while executing bonita project plugin. Cannot resolve the Maven project.");
+                }
             }
             var ctx = mavenProject.createExecutionContext();
             var request = ctx.getExecutionRequest();
@@ -63,6 +72,7 @@ public class AnalyzeBonitaProjectDependenciesPlugin {
                 @Override
                 public MavenExecutionResult call(IMavenExecutionContext context, IProgressMonitor monitor)
                         throws CoreException {
+                    fixSettingsFile(ctx, request);
                     return context.execute(request);
                 }
 
@@ -75,6 +85,22 @@ public class AnalyzeBonitaProjectDependenciesPlugin {
                                 executionResult.hasExceptions() ? executionResult.getExceptions().get(0) : null));
             }
         }, monitor);
+    }
+
+    /**
+     * Fix the settings file if it is not accessible.
+     * 
+     * @param ctx the maven execution context
+     * @param request the maven execution request
+     * @throws CoreException exception with status
+     */
+    private void fixSettingsFile(IMavenExecutionContext ctx, MavenExecutionRequest request) throws CoreException {
+        // settings file may be resolved with a property, which would make the build fail without it
+        var settingsFile = request.getUserSettingsFile();
+        if (settingsFile != null && !settingsFile.exists()) {
+            // just remove user settings
+            request.setUserSettingsFile(null);
+        }
     }
 
     public String getReportPath() throws CoreException {

@@ -18,6 +18,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
 import org.bonitasoft.studio.swtbot.framework.application.BotApplicationWorkbenchWindow;
+import org.bonitasoft.studio.swtbot.framework.conditions.AssertionCondition;
 import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditPart;
@@ -49,21 +50,36 @@ public class DeleteCommandTest {
         SWTBotGefEditPart part = editor1.getEditPart("Step1").parent();
         part.select();
         editor1.clickContextMenu("Delete");
-        SWTBotGefEditPart step = editor1.getEditPart("Step1");
-        assertNull("Step1 should have been deleted", step);
+        bot.waitUntil(new AssertionCondition() {
+
+            @Override
+            protected void makeAssert() throws Exception {
+                assertNull("Step1 should have been deleted", editor1.getEditPart("Step1"));
+            }
+        });
 
         part = editor1.getEditPart("Fin1").parent();
         part.select();
         editor1.clickContextMenu("Delete");
-        step = editor1.getEditPart("Fin1");
-        assertNull("Fin1 should have been deleted", step);
+        bot.waitUntil(new AssertionCondition() {
+
+            @Override
+            protected void makeAssert() throws Exception {
+                assertNull("Fin1 should have been deleted", editor1.getEditPart("Fin1"));
+            }
+        });
 
         // remove lane with elements inside
         part = editor1.getEditPart("Lane1").parent();
         part.select();
         editor1.clickContextMenu("Delete");
-        step = editor1.getEditPart("Lane1");
-        assertNull("Lane1 should have been deleted", step);
+        bot.waitUntil(new AssertionCondition() {
+
+            @Override
+            protected void makeAssert() throws Exception {
+                assertNull("Lane1 should have been deleted", editor1.getEditPart("Lane1"));
+            }
+        });
 
         // check the elements from the Lane1 are gone in the Lane2 after Lane1 deleted
         part = editor1.getEditPart("Message2").parent();
@@ -73,8 +89,13 @@ public class DeleteCommandTest {
         part = editor1.getEditPart("Lane2").parent();
         part.select();
         editor1.clickContextMenu("Delete");
-        step = editor1.getEditPart("Lane2");
-        assertNull("Lane2 should have been deleted", step);
+        bot.waitUntil(new AssertionCondition() {
+
+            @Override
+            protected void makeAssert() throws Exception {
+                assertNull("Lane2 should have been deleted", editor1.getEditPart("Lane2"));
+            }
+        });
 
         // check the elements from the Lane2 are still in the diagram
         part = editor1.getEditPart("Message2").parent();
@@ -86,8 +107,14 @@ public class DeleteCommandTest {
         editor1.clickContextMenu("Delete");
         bot.waitUntil(Conditions.widgetIsEnabled(bot.button("Yes")));
         bot.button("Yes").click();
-        step = editor1.getEditPart("Pool2Delete");
-        assertNull("Pool2Delete should have been deleted", step);
+        bot.waitUntil(new AssertionCondition() {
+
+            @Override
+            protected void makeAssert() throws Exception {
+                assertNull("Pool2Delete should have been deleted", editor1.getEditPart("Pool2Delete"));
+            }
+        });
+
     }
 
 }

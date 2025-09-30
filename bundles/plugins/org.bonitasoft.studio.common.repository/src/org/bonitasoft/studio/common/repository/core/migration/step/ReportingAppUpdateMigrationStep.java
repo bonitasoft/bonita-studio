@@ -20,9 +20,12 @@ import java.util.function.Predicate;
 
 import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Model;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.repository.Messages;
 import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
 import org.bonitasoft.studio.common.repository.core.migration.MavenModelMigration;
 import org.bonitasoft.studio.common.repository.core.migration.MigrationStep;
+import org.bonitasoft.studio.common.repository.core.migration.StepDescription;
 import org.bonitasoft.studio.common.repository.core.migration.report.MigrationReport;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -36,7 +39,13 @@ public class ReportingAppUpdateMigrationStep implements MigrationStep, MavenMode
     public static final String COMPATIBLE_VERSION = "2.0.0";
 
     @Override
-    public boolean appliesTo(String sourceVersion) {
+    public StepDescription getDescription() {
+        return new StepDescription(Messages.reportingAppUpdateMigrationTitle,
+                Messages.reportingAppUpdateMigrationDescription);
+    }
+
+    @Override
+    public boolean appliesToVersion(String sourceVersion) {
         return Version.parseVersion(sourceVersion).compareTo(new Version("10.2.0")) < 0;
     }
 
@@ -46,6 +55,8 @@ public class ReportingAppUpdateMigrationStep implements MigrationStep, MavenMode
         if (appliesTo(model, metadata)) {
             model.getDependencies().stream().filter(matchingReportingApp())
                     .forEach(dep -> dep.setVersion(COMPATIBLE_VERSION));
+            BonitaStudioLog.info(
+                    "Bonita Reporting Application version updated to '2.0.0'. This is the minimal compatible version with Bonita 2024.3 and above.");
             report.updated(
                     "Bonita Reporting Application version updated to `2.0.0`. This is the minimal compatible version with Bonita 2024.3 and above.");
         }
@@ -65,6 +76,8 @@ public class ReportingAppUpdateMigrationStep implements MigrationStep, MavenMode
 
     @Override
     public MigrationReport run(Path project, IProgressMonitor monitor) throws CoreException {
+        monitor.subTask(Messages.reportingAppUpdateMigrationTitle);
+        BonitaStudioLog.info(String.format("Starting %s...", ReportingAppUpdateMigrationStep.class.getName()));
         var pomFile = project.resolve("app").resolve(POM_FILE_NAME).toFile();
         var metadata = ProjectMetadata.read(pomFile);
         var model = loadMavenModel(project.resolve("app"));
@@ -73,7 +86,7 @@ public class ReportingAppUpdateMigrationStep implements MigrationStep, MavenMode
             saveMavenModel(model, project.resolve("app"));
             return report;
         }
-
+        BonitaStudioLog.info(String.format("%s completed.", ReportingAppUpdateMigrationStep.class.getName()));
         return MigrationReport.emptyReport();
     }
 

@@ -18,7 +18,9 @@ import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 
 import org.apache.maven.project.MavenProject;
-import org.bonitasoft.studio.common.repository.AbstractRepository;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.model.IRepository;
+import org.bonitasoft.studio.maven.CustomPageProjectDescriptor;
 import org.bonitasoft.studio.maven.ExtensionProjectDescriptor;
 import org.bonitasoft.studio.maven.i18n.Messages;
 import org.bonitasoft.studio.rest.api.extension.RestAPIExtensionActivator;
@@ -28,6 +30,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.debug.core.DebugPlugin;
@@ -49,6 +52,7 @@ import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 
 import com.google.common.base.Predicate;
+
 public class BuildCustomPageOperation implements IWorkspaceRunnable {
 
     private IStatus status = Status.OK_STATUS;
@@ -78,9 +82,15 @@ public class BuildCustomPageOperation implements IWorkspaceRunnable {
             final StringBuilder output = new StringBuilder();
             process.getStreamsProxy().getOutputStreamMonitor().addListener((text, monitor1) -> output.append(text));
             waitForBuildProcessTermination(launch);
+
+            // extension has been built, actor filter and connector definitions and implementations have probably changed...
+            handleDefinitionsAndImplementationsChange(monitor);
+
+            String name = fileStoreDescriptor instanceof CustomPageProjectDescriptor c ? c.getCustomPageName()
+                    : fileStoreDescriptor.getDisplayName();
             String statusMessage = process.getExitValue() == 0
-                    ? String.format(Messages.customPageBuildSuccess, fileStoreDescriptor.getCustomPageName())
-                    : String.format(Messages.customPageBuildFailure, fileStoreDescriptor.getCustomPageName());
+                    ? String.format(Messages.customPageBuildSuccess, name)
+                    : String.format(Messages.customPageBuildFailure, name);
             status = new Status(process.getExitValue() == 0 ? IStatus.OK : IStatus.ERROR,
                     RestAPIExtensionActivator.PLUGIN_ID, statusMessage);
         } finally {
@@ -97,10 +107,23 @@ public class BuildCustomPageOperation implements IWorkspaceRunnable {
         }
     }
 
-    ILaunchManager launchManager() {
-        return  DebugPlugin.getDefault().getLaunchManager();
+    /**
+     * Handle the change of (actor filter or connector) definitions after a build operation.
+     * 
+     * @param monitor progress monitor
+     */
+    private void handleDefinitionsAndImplementationsChange(IProgressMonitor monitor) {
+        if (!(fileStoreDescriptor instanceof CustomPageProjectDescriptor)) {
+            // trigger a new analysis of the project dependencies, which will in turn update definitions
+            RepositoryManager.getInstance().getCurrentRepository().map(IRepository::getProjectDependenciesStore)
+                    .ifPresent(depStore -> depStore.analyze(new NullProgressMonitor()));
+        }
+        // else, custom pages are not using definitions, so no need to update them
     }
 
+    ILaunchManager launchManager() {
+        return DebugPlugin.getDefault().getLaunchManager();
+    }
 
     protected void waitForBuildProcessTermination(final ILaunch launch) {
         while (!launch.isTerminated()) {
@@ -118,8 +141,10 @@ public class BuildCustomPageOperation implements IWorkspaceRunnable {
                 .orElseThrow(() -> new CoreException(new Status(IStatus.ERROR,
                         RestAPIExtensionActivator.PLUGIN_ID,
                         String.format("No maven project found for %s", fileStoreDescriptor.getName()))));
-        workingCopy.setAttribute(MavenLaunchConstants.ATTR_POM_DIR, baseDir.getParentFile().getParentFile().getAbsolutePath());
-        workingCopy.setAttribute(MavenLaunchConstants.ATTR_GOALS,  String.format("-am -pl extensions/%s clean verify", baseDir.getName()));
+        workingCopy.setAttribute(MavenLaunchConstants.ATTR_POM_DIR,
+                baseDir.getParentFile().getParentFile().getAbsolutePath());
+        workingCopy.setAttribute(MavenLaunchConstants.ATTR_GOALS,
+                String.format("-am -pl extensions/%s clean verify", baseDir.getName()));
         workingCopy.setAttribute(ILaunchManager.ATTR_PRIVATE, true);
         workingCopy.setAttribute(MavenLaunchConstants.ATTR_BATCH, true);
         workingCopy.setAttribute(DebugPlugin.ATTR_CONSOLE_ENCODING, "UTF-8");
@@ -155,7 +180,8 @@ public class BuildCustomPageOperation implements IWorkspaceRunnable {
                 .orElseThrow(() -> new CoreException(new Status(IStatus.ERROR,
                         RestAPIExtensionActivator.PLUGIN_ID,
                         String.format("No maven project found for %s", fileStoreDescriptor.getName()))));
-        return mavenProject.getArtifactId() + "-" + mavenProject.getVersion() + ".zip";
+        String implSuffix = fileStoreDescriptor instanceof CustomPageProjectDescriptor ? "" : "-impl";
+        return mavenProject.getArtifactId() + "-" + mavenProject.getVersion() + implSuffix + ".zip";
     }
 
     public InputStream getArchiveContent() throws CoreException, FileNotFoundException {

@@ -14,7 +14,6 @@
  */
 package org.bonitasoft.studio.connectors.operation;
 
-import java.io.File;
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -25,7 +24,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
@@ -34,10 +32,7 @@ import org.bonitasoft.bonita2bar.process.expression.EngineExpressionUtil;
 import org.bonitasoft.bpm.connector.model.implementation.ConnectorImplementation;
 import org.bonitasoft.bpm.model.configuration.Configuration;
 import org.bonitasoft.bpm.model.configuration.ConfigurationFactory;
-import org.bonitasoft.bpm.model.configuration.ConfigurationPackage;
 import org.bonitasoft.bpm.model.configuration.DefinitionMapping;
-import org.bonitasoft.bpm.model.configuration.Fragment;
-import org.bonitasoft.bpm.model.configuration.FragmentContainer;
 import org.bonitasoft.bpm.model.configuration.util.ConfigurationAdapterFactory;
 import org.bonitasoft.bpm.model.configuration.util.ConfigurationResourceFactoryImpl;
 import org.bonitasoft.bpm.model.connectorconfiguration.ConnectorConfiguration;
@@ -78,7 +73,6 @@ import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
-import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.configuration.ConfigurationSynchronizer;
 import org.bonitasoft.studio.connectors.ConnectorPlugin;
 import org.bonitasoft.studio.connectors.configuration.ConnectorsConfigurationSynchronizer;
@@ -98,7 +92,6 @@ import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.emf.edit.command.AddCommand;
 import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.provider.ReflectiveItemProviderAdapterFactory;
@@ -119,7 +112,6 @@ public class TestConnectorOperation implements IRunnableWithProgress {
     private final Map<String, Map<String, Serializable>> inputValues = new HashMap<String, Map<String, Serializable>>();
     private final Map<String, Serializable> outputValues = new HashMap<String, Serializable>();
     private static final ConnectorsConfigurationSynchronizer CONNECTORS_CONFIGURATION_SYNCHRONIZER = new ConnectorsConfigurationSynchronizer();
-    private Set<DependencyFileStore> additionalJars = new HashSet<>();
     private final List<org.bonitasoft.engine.operation.Operation> outputOperations = new ArrayList<org.bonitasoft.engine.operation.Operation>();
     private final Map<String, org.bonitasoft.bpm.model.expression.Expression> invalidExpressionForTest = new HashMap<String, org.bonitasoft.bpm.model.expression.Expression>();
     private IStatus status;
@@ -195,13 +187,6 @@ public class TestConnectorOperation implements IRunnableWithProgress {
         }
     }
 
-    private boolean shouldAddJarToClasspath(File jar) {
-        return implementation.getJarDependencies() != null
-                && implementation.getJarDependencies().getJarDependency().contains(jar.getName())
-                || additionalJars.stream()
-                        .map(IRepositoryFileStore::getName).anyMatch(jarName -> Objects.equals(jarName, jar.getName()));
-    }
-
     private void configureProcess(final Configuration configuration, final ConnectorImplementation implem) {
         final DatabaseConnectorPropertiesRepositoryStore dbStore = RepositoryManager.getInstance().getRepositoryStore(
                 DatabaseConnectorPropertiesRepositoryStore.class);
@@ -239,36 +224,6 @@ public class TestConnectorOperation implements IRunnableWithProgress {
                 }
             }
         }
-        //Add jars from managed jars to dependency list of the process used to test the connector
-        if (!additionalJars.isEmpty()) {
-            for (final FragmentContainer fc : configuration.getProcessDependencies()) {
-                if (FragmentTypes.OTHER.equals(fc.getId())) {
-                    for (final DependencyFileStore f : additionalJars) {
-                        final Fragment fragment = createJarFragment(f.getFile());
-                        final AdapterFactoryEditingDomain domain = createEditingDomain();
-                        domain.getCommandStack().execute(
-                                AddCommand.create(domain, fc,
-                                        ConfigurationPackage.Literals.FRAGMENT_CONTAINER__FRAGMENTS,
-                                        fragment));
-                        f.getTransitiveDependencies().stream()
-                                .map(TestConnectorOperation::createJarFragment)
-                                .forEach(frag -> domain.getCommandStack().execute(
-                                        AddCommand.create(domain, fc,
-                                                ConfigurationPackage.Literals.FRAGMENT_CONTAINER__FRAGMENTS,
-                                                frag)));
-                    }
-                }
-            }
-        }
-    }
-
-    private static Fragment createJarFragment(File f) {
-        final Fragment fragment = ConfigurationFactory.eINSTANCE.createFragment();
-        fragment.setExported(true);
-        fragment.setKey(f.getName());
-        fragment.setValue(f.getName());
-        fragment.setType(FragmentTypes.JAR);
-        return fragment;
     }
 
     private AdapterFactoryEditingDomain createEditingDomain() {
@@ -291,7 +246,7 @@ public class TestConnectorOperation implements IRunnableWithProgress {
     }
 
     private Pool createProcess(final ConnectorImplementation implemen) {
-    	Pool proc = ProcessFactory.eINSTANCE.createPool();
+        Pool proc = ProcessFactory.eINSTANCE.createPool();
         proc.setName(TEST_CONNECTOR_POOL);
         proc.setVersion("1.0");
         final Connector connector = ProcessFactory.eINSTANCE.createConnector();
@@ -323,7 +278,8 @@ public class TestConnectorOperation implements IRunnableWithProgress {
         }
     }
 
-    protected void addInputParameters(final String inputName, final AbstractExpression expression) throws InvalidExpressionException {
+    protected void addInputParameters(final String inputName, final AbstractExpression expression)
+            throws InvalidExpressionException {
         final Expression exp = EngineExpressionUtil.createExpression(expression);
         if (exp != null) {
             inputParameters.put(inputName, exp);
@@ -392,7 +348,8 @@ public class TestConnectorOperation implements IRunnableWithProgress {
         }
     }
 
-    public void setConnectorConfiguration(final ConnectorConfiguration configuration) throws InvalidExpressionException {
+    public void setConnectorConfiguration(final ConnectorConfiguration configuration)
+            throws InvalidExpressionException {
         final GroovyConnectorConfigurationConverter groovyConnectorConfigurationConverter = new GroovyConnectorConfigurationConverter();
         connectorConfiguration = configuration;
         ConnectorConfiguration convertedConfiguration = configuration;
@@ -433,14 +390,6 @@ public class TestConnectorOperation implements IRunnableWithProgress {
                 }
             }
         }
-    }
-
-    public Set<DependencyFileStore> getAdditionalJars() {
-        return additionalJars;
-    }
-
-    public void setAdditionalJars(final Set<DependencyFileStore> additionalJars) {
-        this.additionalJars = additionalJars;
     }
 
     public IStatus getStatus() {

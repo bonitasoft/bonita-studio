@@ -63,7 +63,7 @@ public class DiagramProjectExplorerBot extends ProjectExplorerBot {
         SWTBotShell activeShell = bot.activeShell();
         activeShell.setFocus();
         bot.textWithId("org.bonitasoft.studio.common.diagram.dialog.name.text").setText(newDiagramName);
-        if(newPoolName != null) {
+        if (newPoolName != null) {
             bot.textWithId("org.bonitasoft.studio.common.diagram.dialog.poolName.text").setText(newPoolName);
         }
         bot.button(IDialogConstants.OK_LABEL).click();
@@ -76,13 +76,14 @@ public class DiagramProjectExplorerBot extends ProjectExplorerBot {
 
     public void deploy(String diagramName, String version) {
         clickOnContextualMenu(getDiagramTreeItem(diagramName, version), "Deploy");
-        bot.waitUntil(Conditions.shellIsActive(org.bonitasoft.studio.engine.i18n.Messages.deployDoneTitle));
+        // the project is built before deploying, so this may take a bit longer
+        bot.waitUntil(Conditions.shellIsActive(org.bonitasoft.studio.engine.i18n.Messages.deployDoneTitle), 10000);
         SWTBotShell activeShell = bot.activeShell();
         activeShell.setFocus();
         bot.button(IDialogConstants.OK_LABEL).click();
         bot.waitUntil(Conditions.shellCloses(activeShell));
     }
-    
+
     public void build() {
         clickOnContextualMenu(getDiagramFolderTreeItem(), "Build...");
     }

@@ -91,7 +91,11 @@ public class CustomSnapFeedbackPolicy extends GraphicalEditPolicy {
 		 */
 		public Color getLocalBackgroundColor() {
 			/* get the correct color */
-			Color temp = FigureUtilities.mixColors(super.getLocalBackgroundColor(), getParent().getBackgroundColor(),
+			IFigure parent = getParent();
+			if(parent == null) {
+			    return super.getLocalBackgroundColor();
+			}
+            Color temp = FigureUtilities.mixColors(super.getLocalBackgroundColor(), parent.getBackgroundColor(),
 					(double) opacity / FRAMES);
 
 			if (localBgColor != null && !localBgColor.isDisposed() && temp.equals(localBgColor)) {

@@ -90,8 +90,6 @@ public class BOSEngineManager {
 
 	private static final String ENGINESERVERMANAGER_EXTENSION_D = "org.bonitasoft.studio.engine.bonitaEngineManager";
 
-	private static final long DEFAULT_TENANT_ID = 1;
-
 	public static final String SECURITY_CONFIG_PROPERTIES = "security-config.properties";
 
 	private static final String FIND_USER_PASSWORD_COMMAND = "org.bonitasoft.studio.actors.command.userPassword";
@@ -413,7 +411,7 @@ public class BOSEngineManager {
 		try {
 			loginPlatform = loginPlatform(null);
 			final PlatformAPI platformAPI = getPlatformAPI(loginPlatform);
-			platformAPI.updateClientTenantConfigurationFile(DEFAULT_TENANT_ID, resourceName, content);
+			platformAPI.updateClientTenantConfigurationFile(resourceName, content);
 		} finally {
 			if (loginPlatform != null) {
 				logoutPlatform(loginPlatform);

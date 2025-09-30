@@ -1,0 +1,129 @@
+<div ng-class="{
+    'form-horizontal': properties.labelPosition === 'left' && !properties.labelHidden,
+    'row': properties.labelPosition === 'top' && !properties.labelHidden || properties.labelHidden
+    }">
+    <div class="form-group">
+        <label
+            for="{{ctrl.inputId}}"
+            ng-if="!properties.labelHidden && properties.allowHTML"
+            ng-class="{ 'control-label--required': properties.required }"
+            class="control-label col-xs-{{ properties.labelPosition === 'left' ? properties.labelWidth : 12 }}"
+            ng-bind-html="properties.label | uiTranslate">
+        </label>
+        <label
+            for="{{ctrl.inputId}}"
+            ng-if="!properties.labelHidden && !properties.allowHTML"
+            ng-class="{ 'control-label--required': properties.required }"
+            class="control-label col-xs-{{ properties.labelPosition === 'left' ? properties.labelWidth : 12 }}"
+            ng-bind="properties.label | uiTranslate">
+        </label>
+        <div ng-if="environment && environment.editor && properties.value" class="col-xs-12">
+            <i class="fa fa-link"/></i>
+            {{properties.value}}
+        </div>
+        <div
+            class="col-xs-{{ 12 - (!properties.labelHidden && properties.labelPosition === 'left' ? properties.labelWidth : 0) }}
+            {{properties.inlineInput ? 'form-horizontal' : ''}}">
+
+            <p ng-class="{'col-xs-12 col-sm-6': properties.inlineInput}"
+               class="input-group"
+               ng-style="properties.inlineInput ? {'float': 'left'} : {}">
+                <input class="form-control"
+                       id="{{ctrl.inputId}}"
+                       name="{{ctrl.name}}date"
+                       type="text"
+                       data-date-type="{{properties.withTimeZone ? 'iso' : 'string'}}"
+                       data-model-date-format="{{properties.withTimeZone ? null : 'yyyy-MM-ddTHH:mm:ss'}}"
+                       placeholder="{{properties.placeholder | uiTranslate}}"
+                       autocomplete="off"
+                       ng-model="properties.dateValue"
+                       ng-change="updateDateValue()"
+                       ng-readonly="properties.readOnly"
+                       ng-required="properties.required"
+                       bs-datepicker
+                       data-container="body"
+                       data-autoclose="1"
+                       data-date-format="{{properties.dateFormat | uiTranslate}}"
+                       data-trigger="focus"
+                       data-start-week="{{ctrl.firstDayOfWeek}}">
+
+                <span class="input-group-btn">
+                <button ng-if="properties.showToday" type="button"
+                        class="btn btn-default today
+                               {{$form[ctrl.name+'date'].$dirty && (($form[ctrl.name+'date'].$error.date || $form[ctrl.name+'date'].$error.parse) ||
+                               (properties.required && $form[ctrl.name+'date'].$error.required)) ? 'btn-invalid':''}}"
+                        ng-click="ctrl.setDateToToday()"
+                        ng-disabled="properties.readOnly" ui-translate>
+                           {{properties.todayLabel || 'Today' | uiTranslate}}
+                </button>
+                <button type="button"
+                        class="btn btn-default calendar
+                               {{$form[ctrl.name+'date'].$dirty && (($form[ctrl.name+'date'].$error.date || $form[ctrl.name+'date'].$error.parse) ||
+                               (properties.required && $form[ctrl.name+'date'].$error.required)) ? 'btn-invalid':''}}"
+                        ng-click="ctrl.openDatePicker()"
+                        ng-disabled="properties.readOnly"
+                        aria-label="{{'Open calendar' | uiTranslate}}">
+                    <i class="glyphicon glyphicon-calendar"></i>
+                </button>
+                </span>
+            </p>
+            <p ng-class="{'col-xs-12 col-sm-6': properties.inlineInput}"
+               class="input-group"
+               ng-style="properties.inlineInput ? {'float': 'left'} : {}">
+                <input class="form-control"
+                       aria-labelledby="{{ctrl.inputId}}"
+                       name="{{ctrl.name}}time"
+                       type="text"
+                       data-time-type="{{properties.withTimeZone ? 'iso' : 'string'}}"
+                       data-model-time-format="{{properties.withTimeZone ? null : 'yyyy-MM-ddTHH:mm:ss'}}"
+                       placeholder="{{properties.timePlaceholder | uiTranslate}}"
+                       autocomplete="off"
+                       ng-model="properties.timeValue"
+                       ng-change="updateTimeValue()"
+                       ng-readonly="properties.readOnly"
+                       ng-required="properties.required"
+                       bs-timepicker
+                       data-container="body"
+                       data-autoclose="0"
+                       data-time-format="{{properties.timeFormat | uiTranslate}}"
+                       data-length="1"
+                       data-minute-step="5"
+                       data-second-step="5"
+                       data-round-display="true"
+                       data-arrow-behavior="picker"
+                       data-trigger="focus">
+
+                <span class="input-group-btn">
+                      <button ng-if="properties.showNow" type="button"
+                              class="btn btn-default now
+                               {{$form[ctrl.name+'time'].$dirty && (($form[ctrl.name+'time'].$error.date || $form[ctrl.name+'time'].$error.parse) ||
+                               (properties.required && $form[ctrl.name+'time'].$error.required)) ? 'btn-invalid':''}}"
+                              ng-disabled="properties.readOnly"
+                              ng-click="ctrl.setDateAndTimeToNow()" ui-translate>
+                          {{properties.nowLabel || 'Now' | uiTranslate}}
+                      </button>
+                      <button type="button"
+                              class="btn btn-default timepicker
+                                {{$form[ctrl.name+'time'].$dirty && (($form[ctrl.name+'time'].$error.date || $form[ctrl.name+'time'].$error.parse) ||
+                                (properties.required && $form[ctrl.name+'time'].$error.required)) ? 'btn-invalid':''}}"
+                              ng-click="ctrl.openTimePicker()"
+                              ng-disabled="properties.readOnly"
+                              aria-label="{{'Open clock' | uiTranslate}}">
+                        <i class="glyphicon glyphicon-time"></i>
+                      </button>
+                  </span>
+            </p>
+
+            <div ng-messages="($form[ctrl.name+'time'].$dirty && $form[ctrl.name+'time'].$error) ||
+                                      ($form[ctrl.name+'date'].$dirty && $form[ctrl.name +'date'].$error)"
+                 ng-messages-include="forms-generic-errors.html" role="alert">
+                <div ng-message="date" ng-if="!environment || !environment.editor" class="text-danger">
+                    {{ 'This is not a valid date or time' | uiTranslate }}
+                </div>
+                <div ng-message="parse" ng-if="!environment || !environment.editor" class="text-danger">
+                    {{ 'This is not a valid date or time' | uiTranslate }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -18,9 +18,12 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Objects;
 
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.repository.Messages;
 import org.bonitasoft.studio.common.repository.core.BonitaProject;
 import org.bonitasoft.studio.common.repository.core.maven.model.DefaultPluginVersions;
 import org.bonitasoft.studio.common.repository.core.migration.MigrationStep;
+import org.bonitasoft.studio.common.repository.core.migration.StepDescription;
 import org.bonitasoft.studio.common.repository.core.migration.report.MigrationReport;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -28,25 +31,44 @@ import org.osgi.framework.Version;
 
 public class RemoveFlattenPluginExecutionStep implements MigrationStep {
 
-	@Override
-	public MigrationReport run(Path project, IProgressMonitor monitor) throws CoreException {
-		var report = new MigrationReport();
-		var bdmModule = project.resolve(BonitaProject.BDM_MODULE);
-		if (Files.exists(bdmModule)) {
-			var model = loadMavenModel(bdmModule);
-			var build = model.getBuild();
-			if(build.getPlugins().removeIf(p -> Objects.equals(p.getArtifactId(), DefaultPluginVersions.FLATTEN_MAVEN_PLUGIN))) {
-			    saveMavenModel(model, bdmModule);
-	            report.removed("The `flatten-maven-plugin` executions have been removed from the Bdm parent module. They are now inherited from the Bonita project parent.");
-			}
-		}
-		return report;
-	}
+    @Override
+    public StepDescription getDescription() {
+        return new StepDescription(Messages.removeFlattenPluginMigrationTitle,
+                Messages.removeFlattenPluginMigrationDescription);
+    }
 
-	@Override
-	public boolean appliesTo(String sourceVersion) {
-		return Version.parseVersion(sourceVersion).compareTo(new Version("8.0.0")) >= 0
-				&& Version.parseVersion(sourceVersion).compareTo(new Version("9.0.0")) < 0;
-	}
+    @Override
+    public MigrationReport run(Path project, IProgressMonitor monitor) throws CoreException {
+        monitor.subTask(Messages.removeFlattenPluginMigrationTitle);
+        BonitaStudioLog.info(String.format("Starting %s...", RemoveFlattenPluginExecutionStep.class.getName()));
+        var report = new MigrationReport();
+        var bdmModule = project.resolve(BonitaProject.BDM_MODULE);
+        if (Files.exists(bdmModule) && Files.exists(bdmModule.resolve(POM_FILE_NAME))) {
+            var model = loadMavenModel(bdmModule);
+            var build = model.getBuild();
+            if (build.getPlugins()
+                    .removeIf(p -> Objects.equals(p.getArtifactId(), DefaultPluginVersions.FLATTEN_MAVEN_PLUGIN))) {
+                saveMavenModel(model, bdmModule);
+                BonitaStudioLog.info(
+                        "The 'flatten-maven-plugin' executions have been removed from the Bdm parent module. They are now inherited from the Bonita project parent.");
+                report.removed(
+                        "The `flatten-maven-plugin` executions have been removed from the Bdm parent module. They are now inherited from the Bonita project parent.");
+            }
+        }
+        BonitaStudioLog.info(String.format("%s completed.", RemoveFlattenPluginExecutionStep.class.getName()));
+        return report;
+    }
+
+    @Override
+    public boolean appliesToVersion(String sourceVersion) {
+        return Version.parseVersion(sourceVersion).compareTo(new Version("8.0.0")) >= 0
+                && Version.parseVersion(sourceVersion).compareTo(new Version("9.0.0")) < 0;
+    }
+
+    @Override
+    public boolean appliesToProject(Path projectRoot) throws CoreException {
+        var bdmModule = projectRoot.resolve(BonitaProject.BDM_MODULE);
+        return Files.exists(bdmModule) && Files.exists(bdmModule.resolve(POM_FILE_NAME));
+    }
 
 }

@@ -1,7 +1,15 @@
 <?xml version="1.0" encoding="ASCII"?>
-<fragment:ModelFragments xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:application="http://www.eclipse.org/ui/2010/UIModel/application" xmlns:fragment="http://www.eclipse.org/ui/2010/UIModel/fragment" xmi:id="_OSiqoPtzEeyY18ej93AIXg">
+<fragment:ModelFragments xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:application="http://www.eclipse.org/ui/2010/UIModel/application" xmlns:commands="http://www.eclipse.org/ui/2010/UIModel/application/commands" xmlns:fragment="http://www.eclipse.org/ui/2010/UIModel/fragment" xmi:id="_OSiqoPtzEeyY18ej93AIXg">
   <fragments xsi:type="fragment:StringModelFragment" xmi:id="_UMKwcPtzEeyY18ej93AIXg" featurename="addons" parentElementId="org.eclipse.e4.legacy.ide.application">
     <elements xsi:type="application:Addon" xmi:id="_W4HZUPtzEeyY18ej93AIXg" elementId="org.bonitasoft.studio.repository.accessor.addon" contributionURI="bundleclass://org.bonitasoft.studio.common.repository/org.bonitasoft.studio.common.repository.RepositoryAccessor"/>
     <elements xsi:type="application:Addon" xmi:id="_2wt3UHU9Ee2RIuP_3QFCgg" elementId="org.bonitasoft.studio.common.repository.project.version.addon" contributionURI="bundleclass://org.bonitasoft.studio.common.repository/org.bonitasoft.studio.common.repository.ProjectMigrationListener"/>
+  </fragments>
+  <fragments xsi:type="fragment:StringModelFragment" xmi:id="_SpoUUMm1Ee-3Ja_CB0Z1lQ" featurename="commands" parentElementId="org.eclipse.e4.legacy.ide.application">
+    <elements xsi:type="commands:Command" xmi:id="_MSogkMm2Ee-3Ja_CB0Z1lQ" elementId="org.bonitasoft.studio.common.repository.migrateProjectCommand" commandName="Migrate Project">
+      <parameters xmi:id="_ZxLJUMm2Ee-3Ja_CB0Z1lQ" elementId="org.bonitasoft.studio.common.repository.migrateProjectCommand.path" name="Project Path" optional="false"/>
+    </elements>
+  </fragments>
+  <fragments xsi:type="fragment:StringModelFragment" xmi:id="_6LMaEMm1Ee-3Ja_CB0Z1lQ" featurename="handlers" parentElementId="org.eclipse.e4.legacy.ide.application">
+    <elements xsi:type="commands:Handler" xmi:id="_Mnum0Mm2Ee-3Ja_CB0Z1lQ" elementId="org.bonitasoft.studio.common.repository.migrateProjectHandler" contributionURI="bundleclass://org.bonitasoft.studio.common.repository/org.bonitasoft.studio.common.repository.core.migration.handler.MigrateProjectHandler" command="_MSogkMm2Ee-3Ja_CB0Z1lQ"/>
   </fragments>
 </fragment:ModelFragments>

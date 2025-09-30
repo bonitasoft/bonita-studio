@@ -20,7 +20,6 @@ import org.bonitasoft.studio.common.repository.model.IRenamable;
 import org.bonitasoft.studio.common.repository.store.AbstractEMFRepositoryStore;
 import org.bonitasoft.studio.connector.model.definition.AbstractDefFileStore;
 import org.bonitasoft.studio.identity.IdentityPlugin;
-import org.eclipse.ui.IWorkbenchPart;
 import org.osgi.framework.Bundle;
 
 /**
@@ -33,14 +32,14 @@ public class ActorFilterDefFileStore extends AbstractDefFileStore implements IRe
         super(fileName, store);
     }
 
-    @Override
-    protected Bundle getBundle() {
-        return IdentityPlugin.getDefault().getBundle();
+    public ActorFilterDefFileStore(String projectName, String entryInOutputDirectory,
+            AbstractEMFRepositoryStore<ActorFilterDefFileStore> store) {
+        super(projectName, entryInOutputDirectory, store);
     }
 
     @Override
-    protected IWorkbenchPart doOpen() {
-        return null;
+    protected Bundle getBundle() {
+        return IdentityPlugin.getDefault().getBundle();
     }
 
     @Override

@@ -14,7 +14,6 @@
  */
 package org.bonitasoft.studio.groovy.ui.viewer;
 
-import java.io.File;
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
@@ -25,12 +24,9 @@ import java.util.Set;
 import org.bonitasoft.bonita2bar.process.expression.EngineExpressionUtil;
 import org.bonitasoft.bpm.model.configuration.Configuration;
 import org.bonitasoft.bpm.model.configuration.ConfigurationFactory;
-import org.bonitasoft.bpm.model.configuration.Fragment;
-import org.bonitasoft.bpm.model.configuration.FragmentContainer;
 import org.bonitasoft.bpm.model.process.AbstractProcess;
 import org.bonitasoft.bpm.model.process.Pool;
 import org.bonitasoft.bpm.model.process.ProcessFactory;
-import org.bonitasoft.bpm.model.util.FragmentTypes;
 import org.bonitasoft.engine.api.ProcessAPI;
 import org.bonitasoft.engine.bpm.bar.BusinessArchive;
 import org.bonitasoft.engine.bpm.process.IllegalProcessStateException;
@@ -43,14 +39,10 @@ import org.bonitasoft.engine.exception.DeletionException;
 import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.engine.session.InvalidSessionException;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.RepositoryManager;
-import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.configuration.ConfigurationSynchronizer;
 import org.bonitasoft.studio.dependencies.repository.DependencyFileStore;
 import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.engine.export.BarExporter;
-import org.bonitasoft.studio.groovy.repository.GroovyFileStore;
-import org.bonitasoft.studio.groovy.repository.GroovyRepositoryStore;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
@@ -86,31 +78,6 @@ public class TestExpressionOperation implements IRunnableWithProgress {
             final Configuration configuration = ConfigurationFactory.eINSTANCE.createConfiguration();
             configuration.setName("TestExpressionConfiguration");
             new ConfigurationSynchronizer(process, configuration).synchronize();
-            for (final FragmentContainer fc : configuration.getProcessDependencies()) {
-                if (additionalJars != null && FragmentTypes.OTHER.equals(fc.getId())) {
-                    for (final DependencyFileStore f : additionalJars) {
-                        final Fragment fragment = createJarFragment(f.getFile());
-                        fc.getFragments().add(fragment);
-                        f.getTransitiveDependencies().stream()
-                                .map(TestExpressionOperation::createJarFragment)
-                                .forEach(frag ->  fc.getFragments().add(frag));
-                    }
-                }
-                if (FragmentTypes.GROOVY_SCRIPT.equals(fc.getId())) {
-                    final GroovyRepositoryStore store = RepositoryManager.getInstance()
-                            .getRepositoryStore(GroovyRepositoryStore.class);
-                    final List<GroovyFileStore> fileStores = store.getChildren();
-                    for (final IRepositoryFileStore fileStore : fileStores) {
-                        final String name = fileStore.getName();
-                        final Fragment newFragment = ConfigurationFactory.eINSTANCE.createFragment();
-                        newFragment.setType(FragmentTypes.GROOVY_SCRIPT);
-                        newFragment.setKey(name);
-                        newFragment.setValue(name);
-                        newFragment.setExported(true);
-                        fc.getFragments().add(newFragment);
-                    }
-                }
-            }
 
             final BusinessArchive businessArchive = BarExporter.getInstance().createBusinessArchive(process,
                     configuration);
@@ -137,15 +104,6 @@ public class TestExpressionOperation implements IRunnableWithProgress {
                 BOSEngineManager.getInstance().logoutDefaultTenant(session);
             }
         }
-    }
-
-    private static Fragment createJarFragment(File file) {
-        final Fragment fragment = ConfigurationFactory.eINSTANCE.createFragment();
-        fragment.setExported(true);
-        fragment.setKey(file.getName());
-        fragment.setValue(file.getName());
-        fragment.setType(FragmentTypes.JAR);
-        return fragment;
     }
 
     private Pool createProcess() {

@@ -1,0 +1,105 @@
+{
+  "id" : "pbTextarea",
+  "name" : "Text Area",
+  "type" : "widget",
+  "custom" : false,
+  "modelVersion" : "2.4",
+  "lastUpdate" : 1736240682366,
+  "description" : "Multi-line, expandable, text input field",
+  "template" : "@pbTextarea.tpl.html",
+  "controller" : "@pbTextarea.ctrl.js",
+  "properties" : [
+    {
+      "label" : "Read-only",
+      "name" : "readOnly",
+      "type" : "boolean",
+      "defaultValue" : false,
+      "bond" : "expression"
+    },
+    {
+      "label" : "Required",
+      "name" : "required",
+      "help" : "In the context of a form container, use $form.$invalid as a Boolean to check form validity in a widget property",
+      "type" : "boolean",
+      "defaultValue" : false,
+      "bond" : "expression"
+    },
+    {
+      "label" : "Interpret HTML",
+      "name" : "allowHTML",
+      "help" : "If you choose 'no', HTML code will be escaped instead of being interpreted. If you choose ‘Yes’, this could potentially lead to HTML injections attacks. Please take into account these risks.",
+      "type" : "boolean",
+      "defaultValue" : false,
+      "bond" : "constant"
+    },
+    {
+      "label" : "Value min length",
+      "name" : "minLength",
+      "help" : "In the context of a form container, use $form.$invalid as a Boolean to check form validity in a widget property",
+      "type" : "integer",
+      "defaultValue" : "",
+      "bond" : "expression"
+    },
+    {
+      "label" : "Value max length",
+      "name" : "maxLength",
+      "help" : "In the context of a form container, use $form.$invalid as a Boolean to check form validity in a widget property",
+      "type" : "integer",
+      "defaultValue" : "",
+      "bond" : "expression"
+    },
+    {
+      "label" : "Label hidden",
+      "name" : "labelHidden",
+      "type" : "boolean",
+      "defaultValue" : false,
+      "bond" : "constant"
+    },
+    {
+      "label" : "Label",
+      "name" : "label",
+      "showFor" : "properties.labelHidden.value === false",
+      "type" : "text",
+      "defaultValue" : "Default label",
+      "bond" : "interpolation"
+    },
+    {
+      "label" : "Label position",
+      "name" : "labelPosition",
+      "showFor" : "properties.labelHidden.value === false",
+      "type" : "choice",
+      "defaultValue" : "top",
+      "choiceValues" : [
+        "left",
+        "top"
+      ],
+      "bond" : "constant"
+    },
+    {
+      "label" : "Label width",
+      "name" : "labelWidth",
+      "showFor" : "properties.labelHidden.value === false",
+      "type" : "integer",
+      "defaultValue" : 4,
+      "bond" : "constant",
+      "constraints" : {
+        "min" : "1",
+        "max" : "12"
+      }
+    },
+    {
+      "label" : "Value",
+      "name" : "value",
+      "caption" : "Any variable: <i>myData</i> or <i>myData.attribute</i>",
+      "help" : "Read-write binding, initialized or updated by users' input (bi-directional bond)",
+      "type" : "text",
+      "bond" : "variable"
+    }
+  ],
+  "assets" : [ ],
+  "requiredModules" : [ ],
+  "webResources" : [ ],
+  "icon" : "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 50 20'><g fill='#fff'><path d='M1 19V1h48v18H1zM0 0v20h50V0H0z'/><path d='M47 17h1v1h-1zM47 14h1v1h-1zM46 15h1v1h-1zM45 16h1v1h-1zM44 17h1v1h-1zM42 16h1v1h-1zM41 17h1v1h-1zM43 15h1v1h-1zM44 14h1v1h-1zM45 13h1v1h-1zM46 12h1v1h-1zM47 11h1v1h-1zM3 17h1v1H3zM5 17h1v1H5zM5 2h1v1H5zM3 2h1v1H3zM4 3h1v14H4z'/></g></svg>",
+  "order" : 2,
+  "hasHelp" : false
+}

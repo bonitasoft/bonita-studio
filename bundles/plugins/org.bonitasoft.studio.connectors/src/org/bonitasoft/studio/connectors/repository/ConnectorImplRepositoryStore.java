@@ -14,14 +14,17 @@
  */
 package org.bonitasoft.studio.connectors.repository;
 
+import java.io.File;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.bonitasoft.plugin.analyze.report.model.ConnectorImplementation;
 import org.bonitasoft.studio.common.ModelVersion;
 import org.bonitasoft.studio.common.model.validator.ModelNamespaceValidator;
 import org.bonitasoft.studio.common.model.validator.XMLModelCompatibilityValidator;
+import org.bonitasoft.studio.common.repository.core.migration.step.ConnectorsModuleMigrationStep;
 import org.bonitasoft.studio.connector.model.implementation.AbstractConnectorImplRepositoryStore;
 import org.eclipse.core.runtime.IStatus;
 
@@ -30,6 +33,8 @@ public class ConnectorImplRepositoryStore extends AbstractConnectorImplRepositor
     public static final String CONNECTOR_IMPL_EXT = "impl";
 
     public static final String STORE_NAME = "connectors-impl";
+
+    private static final String LEGACY_SOURCE_FOLDER_NAME = ConnectorsModuleMigrationStep.CONNECTORS_SRC_FOLDER;
     private static final Set<String> extensions = Set.of(CONNECTOR_IMPL_EXT);
 
     @Override
@@ -51,13 +56,24 @@ public class ConnectorImplRepositoryStore extends AbstractConnectorImplRepositor
     public List<ConnectorImplFileStore> getChildren() {
         var projectDependenciesStore = getRepository().getProjectDependenciesStore();
         if (projectDependenciesStore != null) {
-           return projectDependenciesStore.getConnectorImplementations().stream()
-                    .map(impl -> new DependencyConnectorImplFileStore(impl, this))
+            return projectDependenciesStore.getConnectorImplementations().stream()
+                    .map(this::createImplementationFileStore)
                     .collect(Collectors.toList());
         }
         return List.of();
     }
 
+    /**
+     * Creates the connector implementation file store.
+     * 
+     * @param implementation the connector implementation pointing to artifact (jar file or project)
+     * @return the connector implementation file store
+     */
+    protected ConnectorImplFileStore createImplementationFileStore(ConnectorImplementation implementation) {
+        File file = new File(implementation.getArtifact().getFile());
+        return file.isFile() ? new DependencyConnectorImplFileStore(implementation, this)
+                : new ConnectorImplFileStore(file.getName(), implementation.getJarEntry(), this);
+    }
 
     @Override
     public IStatus validate(String filename, InputStream inputStream) {
@@ -75,6 +91,15 @@ public class ConnectorImplRepositoryStore extends AbstractConnectorImplRepositor
     @Override
     public int getImportOrder() {
         return 5;
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see org.bonitasoft.studio.connector.model.implementation.AbstractConnectorImplRepositoryStore#getLegacySourceFolderName()
+     */
+    @Override
+    protected String getLegacySourceFolderName() {
+        return LEGACY_SOURCE_FOLDER_NAME;
     }
 
 }

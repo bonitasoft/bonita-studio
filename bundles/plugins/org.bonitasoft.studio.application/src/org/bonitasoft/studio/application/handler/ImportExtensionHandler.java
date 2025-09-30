@@ -30,6 +30,7 @@ import org.bonitasoft.studio.application.ui.control.ExtensionTypeHandler;
 import org.bonitasoft.studio.application.ui.control.ImportExtensionPage;
 import org.bonitasoft.studio.application.ui.control.ImportExtensionPage.ImportMode;
 import org.bonitasoft.studio.application.ui.control.model.dependency.ArtifactType;
+import org.bonitasoft.studio.application.views.overview.ProjectOverviewEditorPart;
 import org.bonitasoft.studio.common.CommandExecutor;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
@@ -62,7 +63,7 @@ import jakarta.inject.Named;
 
 public class ImportExtensionHandler {
 
-    public static final String EXTENSION_TYPE_PARAMETER = "extensionType";
+    public static final String EXTENSION_TYPE_PARAMETER = ProjectOverviewEditorPart.EXTENSION_TYPE_PARAMETER;
     protected MavenProjectHelper mavenProjectHelper;
     protected RepositoryAccessor repositoryAccessor;
     protected MavenRepositoryRegistry mavenRepositoryRegistry;

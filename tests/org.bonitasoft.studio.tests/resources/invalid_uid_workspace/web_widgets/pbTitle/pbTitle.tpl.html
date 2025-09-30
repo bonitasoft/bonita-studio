@@ -1,0 +1,13 @@
+<h1 ng-if="'Level 1' === properties.level && properties.allowHTML" class="text-{{ properties.alignment }}" ng-bind-html="properties.text | uiTranslate"/>
+<h2 ng-if="'Level 2' === properties.level && properties.allowHTML" class="text-{{ properties.alignment }}" ng-bind-html="properties.text | uiTranslate"/>
+<h3 ng-if="'Level 3' === properties.level && properties.allowHTML" class="text-{{ properties.alignment }}" ng-bind-html="properties.text | uiTranslate"/>
+<h4 ng-if="'Level 4' === properties.level && properties.allowHTML" class="text-{{ properties.alignment }}" ng-bind-html="properties.text | uiTranslate"/>
+<h5 ng-if="'Level 5' === properties.level && properties.allowHTML" class="text-{{ properties.alignment }}" ng-bind-html="properties.text | uiTranslate"/>
+<h6 ng-if="'Level 6' === properties.level && properties.allowHTML" class="text-{{ properties.alignment }}" ng-bind-html="properties.text | uiTranslate"/>
+
+<h1 ng-if="'Level 1' === properties.level && !properties.allowHTML" class="text-{{ properties.alignment }}" ng-bind="properties.text | uiTranslate"/>
+<h2 ng-if="'Level 2' === properties.level && !properties.allowHTML" class="text-{{ properties.alignment }}" ng-bind="properties.text | uiTranslate"/>
+<h3 ng-if="'Level 3' === properties.level && !properties.allowHTML" class="text-{{ properties.alignment }}" ng-bind="properties.text | uiTranslate"/>
+<h4 ng-if="'Level 4' === properties.level && !properties.allowHTML" class="text-{{ properties.alignment }}" ng-bind="properties.text | uiTranslate"/>
+<h5 ng-if="'Level 5' === properties.level && !properties.allowHTML" class="text-{{ properties.alignment }}" ng-bind="properties.text | uiTranslate"/>
+<h6 ng-if="'Level 6' === properties.level && !properties.allowHTML" class="text-{{ properties.alignment }}" ng-bind="properties.text | uiTranslate"/>

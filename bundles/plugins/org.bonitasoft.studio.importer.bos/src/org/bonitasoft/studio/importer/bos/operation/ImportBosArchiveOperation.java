@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.zip.ZipFile;
@@ -54,20 +55,24 @@ import org.bonitasoft.studio.common.repository.core.maven.migration.model.Confli
 import org.bonitasoft.studio.common.repository.core.maven.migration.model.DependencyLookup;
 import org.bonitasoft.studio.common.repository.core.maven.model.AppProjectConfiguration;
 import org.bonitasoft.studio.common.repository.core.migration.dependencies.operation.DependenciesUpdateOperationFactory;
+import org.bonitasoft.studio.common.repository.core.migration.step.ConnectorsModuleMigrationStep;
 import org.bonitasoft.studio.common.repository.core.migration.step.ReportingAppUpdateMigrationStep;
 import org.bonitasoft.studio.common.repository.filestore.FileStoreChangeEvent;
 import org.bonitasoft.studio.common.repository.filestore.FileStoreChangeEvent.EventType;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
+import org.bonitasoft.studio.common.repository.store.AbstractEMFRepositoryStore;
+import org.bonitasoft.studio.common.repository.store.AbstractRepositoryStore;
 import org.bonitasoft.studio.common.repository.store.LocalDependenciesStore;
 import org.bonitasoft.studio.common.ui.PlatformUtil;
 import org.bonitasoft.studio.common.ui.jface.FileActionDialog;
+import org.bonitasoft.studio.connectors.repository.ConnectorDefRepositoryStore;
 import org.bonitasoft.studio.connectors.repository.ConnectorImplRepositoryStore;
 import org.bonitasoft.studio.dependencies.repository.DependencyFileStore;
-import org.bonitasoft.studio.designer.core.UIDWorkspaceSynchronizer;
 import org.bonitasoft.studio.designer.core.operation.MigrateUIDOperation;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.diagram.custom.repository.ProcessConfigurationRepositoryStore;
+import org.bonitasoft.studio.identity.actors.repository.ActorFilterDefRepositoryStore;
 import org.bonitasoft.studio.identity.actors.repository.ActorFilterImplRepositoryStore;
 import org.bonitasoft.studio.importer.bos.BosArchiveImporterPlugin;
 import org.bonitasoft.studio.importer.bos.i18n.Messages;
@@ -76,6 +81,7 @@ import org.bonitasoft.studio.importer.bos.model.ArchiveInputStreamSupplier;
 import org.bonitasoft.studio.importer.bos.model.BosArchive;
 import org.bonitasoft.studio.importer.bos.model.ImportArchiveModel;
 import org.bonitasoft.studio.importer.bos.model.ImportFileStoreModel;
+import org.bonitasoft.studio.importer.bos.model.ImportStoreModel;
 import org.bonitasoft.studio.importer.bos.model.ImportableUnit;
 import org.bonitasoft.studio.importer.bos.status.ImportBosArchiveStatusBuilder;
 import org.bonitasoft.studio.importer.bos.validator.BosImporterStatusProvider;
@@ -254,7 +260,7 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
                     .filter(DependencyLookup::isSelected)
                     .filter(dl -> dl.getConflictVersion() == null
                             || dl.getConflictVersion().getStatus() == ConflictVersion.Status.KEEP_OURS)
-                    .collect(Collectors.toList());
+                    .toList();
             var dependenciesUpdateOperation = dependenciesUpdateOperationFactory.createDependencyUpdateOperation();
             for (var dl : dependenciesLookupToInstall) {
                 installLocalDependency(dl, localDependencyStore);
@@ -387,9 +393,7 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
 
     private static boolean selectStore(String folderName) {
         return DiagramRepositoryStore.STORE_NAME.equals(folderName)
-                || ProcessConfigurationRepositoryStore.STORE_NAME.equals(folderName)
-                || ConnectorImplRepositoryStore.STORE_NAME.equals(folderName)
-                || ActorFilterImplRepositoryStore.STORE_NAME.equals(folderName);
+                || ProcessConfigurationRepositoryStore.STORE_NAME.equals(folderName);
     }
 
     private DependencyLookup installLocalDependency(DependencyLookup dependencyLookup,
@@ -449,9 +453,9 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
     }
 
     private void updateReportingApplicationVersion(Dependency dep) {
-        if(Objects.equals(dep.getGroupId(), ReportingAppUpdateMigrationStep.GROUP_ID) 
-                && Objects.equals(dep.getArtifactId(), ReportingAppUpdateMigrationStep.ARTIFACT_ID) 
-                && Objects.equals(dep.getVersion(), ReportingAppUpdateMigrationStep.VERSION)){
+        if (Objects.equals(dep.getGroupId(), ReportingAppUpdateMigrationStep.GROUP_ID)
+                && Objects.equals(dep.getArtifactId(), ReportingAppUpdateMigrationStep.ARTIFACT_ID)
+                && Objects.equals(dep.getVersion(), ReportingAppUpdateMigrationStep.VERSION)) {
             dep.setVersion(ReportingAppUpdateMigrationStep.COMPATIBLE_VERSION);
         }
     }
@@ -467,41 +471,89 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
                 (int) importArchiveModel.getStores().stream().flatMap(AbstractFolderModel::importableUnits).count());
         importArchiveModel.getStores().stream()
                 .sorted(storeImportOrderComparator())
-                .forEachOrdered(s -> {
-                    s.importableUnits()
-                            // Ensure .artifact-descriptor.properties is imported before bom.xml
-                            .sorted(Comparator.comparing(ImportableUnit::getName))
-                            .forEachOrdered(unit -> {
-                                monitor.subTask(NLS.bind(Messages.importing, unit.getName()));
-                                importUnit(unit, importArchiveModel.getBosArchive(), statusBuilder, monitor);
-                                monitor.worked(1);
-                            });
-                });
+                .forEachOrdered(s -> s.importableUnits()
+                        // Ensure .artifact-descriptor.properties is imported before bom.xml
+                        .sorted(Comparator.comparing(ImportableUnit::getName))
+                        .forEachOrdered(unit -> {
+                            monitor.subTask(NLS.bind(Messages.importing, unit.getName()));
+                            importUnit(unit, importArchiveModel.getBosArchive(), statusBuilder, monitor);
+                            monitor.worked(1);
+                        }));
+        migrateConnectorModules(importArchiveModel, statusBuilder, monitor);
         migrateUID(monitor);
     }
 
     private Comparator<? super AbstractFolderModel> storeImportOrderComparator() {
-        return (f1, f2) -> {
-            if (f1.getFolderName().startsWith("src")) {
-                return -1;
-            }
-            if (f2.getFolderName().startsWith("src")) {
+        return Comparator.comparing(AbstractFolderModel::getFolderName, (f1, f2) -> {
+            // src-connectors and src-filters are special cases which must be imported after definitions and implementations
+            Predicate<String> isSrcFolder = s -> s.startsWith("src")
+                    && !ConnectorsModuleMigrationStep.CONNECTORS_SRC_FOLDER.equals(s)
+                    && !ConnectorsModuleMigrationStep.FILTERS_SRC_FOLDER.equals(s);
+            /*
+             * src- folders come first.
+             * Diagrams always last.
+             * Others can respect AbstractRepositoryStore.REPO_STORE_ORDER oder or alphabetical by default.
+             */
+            if (isSrcFolder.test(f1)) {
+                return isSrcFolder.test(f2) ? f1.compareTo(f2) : -1;
+            } else if (isSrcFolder.test(f2)) {
                 return 1;
-            }
-            // Diagrams always last
-            if (f1.getFolderName().equals("diagrams")) {
-                return 1;
-            }
-            if (f2.getFolderName().equals("diagrams")) {
+            } else if ("diagrams".equals(f1)) {
+                return "diagrams".equals(f2) ? 0 : 1;
+            } else if ("diagrams".equals(f2)) {
                 return -1;
+            } else if (AbstractRepositoryStore.REPO_STORE_ORDER.containsKey(f1)) {
+                return AbstractRepositoryStore.REPO_STORE_ORDER.containsKey(f2)
+                        ? AbstractRepositoryStore.REPO_STORE_ORDER.get(f1)
+                                .compareTo(AbstractRepositoryStore.REPO_STORE_ORDER.get(f2))
+                        : -1;
+            } else if (AbstractRepositoryStore.REPO_STORE_ORDER.containsKey(f2)) {
+                return 1;
+            } else {
+                return f1.compareTo(f2);
             }
-            return f1.getFolderName().compareTo(f2.getFolderName());
-        };
+        });
+    }
+
+    private void migrateConnectorModules(ImportArchiveModel importArchiveModel,
+            ImportBosArchiveStatusBuilder statusBuilder, IProgressMonitor monitor) {
+        // Migrate connector and actor filter modules
+        List<Class<? extends AbstractEMFRepositoryStore<?>>> repoStoresWithConnectors = List.of(
+                ConnectorDefRepositoryStore.class,
+                ActorFilterDefRepositoryStore.class,
+                ConnectorImplRepositoryStore.class,
+                ActorFilterImplRepositoryStore.class);
+        var hasConnectorModules = importArchiveModel.getStores().stream().anyMatch(store -> {
+            if (store instanceof ImportStoreModel m) {
+                var repoStore = m.getRepositoryStore();
+                return repoStoresWithConnectors.stream().anyMatch(c -> c.isInstance(repoStore));
+            }
+            return false;
+        });
+        if (hasConnectorModules) {
+            // use the ConnectorsModuleMigrationStep which already does the hard job
+            try {
+                var report = new ConnectorsModuleMigrationStep()
+                        .run(currentRepository.getProject().getLocation().toPath().getParent(), monitor);
+
+                report.additions().stream()
+                        .map(ValidationStatus::info)
+                        .forEach(statusBuilder::addStatus);
+                report.updates().stream()
+                        .map(ValidationStatus::info)
+                        .forEach(statusBuilder::addStatus);
+                report.removals().stream()
+                        .map(ValidationStatus::info)
+                        .forEach(statusBuilder::addStatus);
+            } catch (CoreException e) {
+                BonitaStudioLog.error(e);
+                statusBuilder.addStatus(e.getStatus());
+            }
+        }
     }
 
     protected void migrateUID(IProgressMonitor monitor) {
         try {
-            UIDWorkspaceSynchronizer.disable();
             MigrateUIDOperation migrateUIDOperation = new MigrateUIDOperation();
             migrateUIDOperation.run(monitor);
             Arrays.asList(migrateUIDOperation.getStatus().getChildren()).stream()
@@ -509,8 +561,6 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
                     .forEach(status::add);
         } catch (InvocationTargetException | InterruptedException e) {
             BonitaStudioLog.error(e);
-        } finally {
-            UIDWorkspaceSynchronizer.enable();
         }
     }
 

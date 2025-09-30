@@ -1,0 +1,49 @@
+<div ng-class="{
+    'form-horizontal': properties.labelPosition === 'left' && !properties.labelHidden,
+    'row': properties.labelPosition === 'top' && !properties.labelHidden || properties.labelHidden
+    }">
+    <div class="form-group">
+        <label
+            for="{{ctrl.inputId}}-label"
+            ng-if="!properties.labelHidden && properties.allowHTML"
+            ng-class="{ 'control-label--required': properties.required }"
+            class="control-label col-xs-{{ properties.labelPosition === 'left' ? properties.labelWidth : 12 }}"
+            ng-bind-html="properties.label | uiTranslate">
+        </label>
+        <label
+            for="{{ctrl.inputId}}-label"
+            ng-if="!properties.labelHidden && !properties.allowHTML"
+            ng-class="{ 'control-label--required': properties.required }"
+            class="control-label col-xs-{{ properties.labelPosition === 'left' ? properties.labelWidth : 12 }}"
+            ng-bind="properties.label | uiTranslate">
+        </label>
+        <div class="col-xs-{{ 12 - (!properties.labelHidden && properties.labelPosition === 'left' ? properties.labelWidth : 0) }}">
+           <form action="{{ctrl.url}}"
+                 ng-upload="ctrl.uploadComplete(content)"
+                 ng-upload-loading="ctrl.startUploading()"
+                 error-catcher="ctrl.uploadError(error)"
+                 upload-options-enable-csrf
+                 upload-options-csrf-param="CSRFToken">
+                <div class="input-group file-upload">
+                    <input aria-labelledby="{{ctrl.inputId}}-label" title="{{ctrl.name}}-text" type="text" ng-focus="ctrl.preventFocus($event)" placeholder="{{properties.placeholder | uiTranslate}}" value="{{ctrl.filename}}" class="form-control">
+                    <button type="button" ng-if="ctrl.filemodel" ng-click="ctrl.clear()" class="file-upload-clear">
+                        <i class="glyphicon glyphicon-remove-circle"></i>
+                        <span class="hide" translate>Close</span>
+                    </button>
+                    <span class="input-group-btn">
+                        <span class="btn" ng-class="{'btn-default disabled':$isUploading, 'btn-primary':!$isUploading}">
+                            <input class="file-upload-input"
+                                   id="{{ctrl.inputId}}-label"
+                                   ng-class="{'file-upload-input--disabled':$isUploading}"
+                                   name="{{ctrl.name}}" type="file"
+                                   ng-required="properties.required"
+                                   ng-model="ctrl.filemodel" />
+                            <i class="glyphicon" ng-class="{'glyphicon-cloud-upload':$isUploading, 'glyphicon-paperclip':!$isUploading}"></i>
+                        </span>
+                    </span>
+                </div>
+            </form>
+            <div ng-messages="$form[ctrl.name].$dirty && $form[ctrl.name].$error " ng-messages-include="forms-generic-errors.html" role="alert"></div>
+        </div>
+    </div>
+</div>

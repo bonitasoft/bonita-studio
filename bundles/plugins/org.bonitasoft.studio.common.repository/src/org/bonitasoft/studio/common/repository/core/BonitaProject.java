@@ -14,12 +14,16 @@
  */
 package org.bonitasoft.studio.common.repository.core;
 
+import java.io.File;
 import java.io.IOException;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
@@ -29,6 +33,8 @@ import org.bonitasoft.studio.common.repository.core.internal.BonitaProjectImpl;
 import org.bonitasoft.studio.common.repository.core.maven.BonitaProjectBuilder;
 import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
 import org.bonitasoft.studio.common.repository.core.team.GitProject;
+import org.eclipse.core.filesystem.EFS;
+import org.eclipse.core.filesystem.IFileStore;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.resources.WorkspaceJob;
@@ -37,7 +43,6 @@ import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.preferences.IScopeContext;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.m2e.core.MavenPlugin;
@@ -98,35 +103,64 @@ public interface BonitaProject extends GitProject, IAdaptable {
     void refresh(boolean updateConfiguration, IProgressMonitor monitor) throws CoreException;
 
     boolean exists();
-    
+
     static List<IProject> getRelatedProjects(String id) {
-        var relatedProjects = new ArrayList<IProject>();
-        var bdmParentProject = getBdmParentProject(id);
-        if (bdmParentProject.exists()) {
-            relatedProjects.add(bdmParentProject);
-        }
-        var bdmModelProject = getBdmModelProject(id);
-        if (bdmModelProject.exists()) {
-            relatedProjects.add(bdmModelProject);
-        }
-        var bdmDaoClientProject = getBdmDaoClientProject(id);
-        if (bdmDaoClientProject.exists()) {
-            relatedProjects.add(bdmDaoClientProject);
-        }
-        var appProject = getAppProject(id);
-        if (appProject.exists()) {
-            relatedProjects.add(appProject);
-        }
-        var extensionsParentProject = getExtensionsParentProject(id);
-        if (extensionsParentProject.exists()) {
-            relatedProjects.add(extensionsParentProject);
-            relatedProjects.addAll(getExtensionsProjects(id));
-        }
+        var projectPaths = getMavenProjects();
         var parentProject = getParentProject(id);
+
+        List<IProject> relatedProjects = new ArrayList<>();
         if (parentProject.exists()) {
+            collectRelatedProjects(parentProject, projectPaths, relatedProjects);
             relatedProjects.add(parentProject);
         }
         return relatedProjects;
+    }
+
+    private static void collectRelatedProjects(IProject parentProject, TreeMap<String, IProject> projectPaths,
+            List<IProject> relatedProjects) {
+        String elePath = getElePath(parentProject);
+        String prevPath = null;
+        for (String path : projectPaths.keySet()) {
+            if (elePath != null && path.length() != elePath.length() && path.startsWith(elePath)) {
+                if (prevPath == null || !path.startsWith(prevPath)) {
+                    prevPath = path;
+                    IProject project = projectPaths.get(path);
+                    relatedProjects.add(project);
+                    collectRelatedProjects(project, projectPaths, relatedProjects);
+                }
+            }
+        }
+    }
+
+    private static TreeMap<String, IProject> getMavenProjects() {
+        var projectPaths = new TreeMap<String, IProject>();
+        for (IProject project : ResourcesPlugin.getWorkspace().getRoot().getProjects()) {
+            if (project.getLocationURI() != null) {
+                String path = getElePath(project);
+                if (path != null) {
+                    projectPaths.put(path, project);
+                }
+            }
+        }
+        return projectPaths;
+    }
+
+    private static String getElePath(Object element) {
+        if (element instanceof IProject project) {
+            URI locationURI = project.getLocationURI();
+
+            try {
+                IFileStore store = EFS.getStore(locationURI);
+                File file = store.toLocalFile(0, null);
+                if (file == null) {
+                    file = store.toLocalFile(EFS.CACHE, null);
+                }
+                return file.toString() + System.getProperty("file.separator");
+            } catch (CoreException ex) {
+                BonitaStudioLog.error(ex);
+            }
+        }
+        return null;
     }
 
     static List<IProject> getExtensionsProjects(String id) {
@@ -176,12 +210,14 @@ public interface BonitaProject extends GitProject, IAdaptable {
     static BonitaProject create(String projectId) {
         return new BonitaProjectImpl(projectId);
     }
-    
-    static WorkspaceJob updateMavenProjectsJob(Collection<IProject> projects, boolean updateConfiguration) {
-       return new MavenWorkspaceJob("Update maven projects") {
+
+    static WorkspaceJob updateMavenProjectsJob(Supplier<Collection<IProject>> projectsSupplier,
+            boolean updateConfiguration) {
+        return new MavenWorkspaceJob("Update maven projects") {
 
             @Override
             public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
+                var projects = projectsSupplier.get();
                 ProjectConfigurationManager configurationManager = (ProjectConfigurationManager) MavenPlugin
                         .getProjectConfigurationManager();
 
@@ -198,20 +234,19 @@ public interface BonitaProject extends GitProject, IAdaptable {
                         errorMap.put(entry.getKey(), new CoreException(entry.getValue()));
                     }
                 }
-                IStatus status = Status.OK_STATUS;
                 if (errors.size() == 1) {
-                    status = errors.get(0);
+                    return errors.get(0);
                 } else {
-                    status = new MultiStatus(CommonRepositoryPlugin.PLUGIN_ID, -1,
+                    return new MultiStatus(CommonRepositoryPlugin.PLUGIN_ID, -1,
                             errors.toArray(new IStatus[errors.size()]),
                             "Error occured when updating maven projects", null);
                 }
-
-                return status;
             }
         };
     }
 
-
+    static WorkspaceJob updateMavenProjectsJob(Collection<IProject> projects, boolean updateConfiguration) {
+        return updateMavenProjectsJob(() -> projects, updateConfiguration);
+    }
 
 }

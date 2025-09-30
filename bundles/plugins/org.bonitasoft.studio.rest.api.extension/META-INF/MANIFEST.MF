@@ -1,15 +1,17 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Localization: plugin
 Bundle-Name: Rest API Extension Plug-in
 Bundle-SymbolicName: org.bonitasoft.studio.rest.api.extension;singleton:=true
-Bundle-Version: 10.2.5.qualifier
+Bundle-Version: 10.3.0.qualifier
 Bundle-Activator: org.bonitasoft.studio.rest.api.extension.RestAPIExtensionActivator
 Bundle-Vendor: Bonitasoft S.A.
+Bundle-Localization: plugin
 Export-Package: org.bonitasoft.studio.maven,
  org.bonitasoft.studio.maven.i18n,
  org.bonitasoft.studio.maven.model,
+ org.bonitasoft.studio.maven.model.migration,
  org.bonitasoft.studio.maven.operation,
+ org.bonitasoft.studio.maven.ui.wizard,
  org.bonitasoft.studio.rest.api.extension,
  org.bonitasoft.studio.rest.api.extension.core.maven,
  org.bonitasoft.studio.rest.api.extension.core.repository,
@@ -80,6 +82,6 @@ Require-Bundle: org.eclipse.ui,
  org.bonitasoft.studio.designer,
  org.bonitasoft.engine.bonita-client
 Bundle-RequiredExecutionEnvironment: JavaSE-17
-Import-Package: jakarta.annotation;version="2.1.1",
- jakarta.inject;version="2.0.1"
 Bundle-ActivationPolicy: lazy
+Import-Package: jakarta.annotation;version="2.1.1",
+ jakarta.inject;version="[2.0.0,3.0.0)"

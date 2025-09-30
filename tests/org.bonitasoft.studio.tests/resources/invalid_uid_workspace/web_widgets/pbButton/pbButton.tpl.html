@@ -1,0 +1,14 @@
+<div class="text-{{ properties.alignment }}">
+    <button
+        ng-if="properties.allowHTML"
+        ng-class="'btn btn-' + properties.buttonStyle"
+        ng-click="ctrl.busy=true;ctrl.action()"
+        type="button"
+        ng-disabled="properties.disabled || ctrl.busy" ng-bind-html="properties.label | uiTranslate"></button>
+    <button
+        ng-if="!properties.allowHTML"
+        ng-class="'btn btn-' + properties.buttonStyle"
+        ng-click="ctrl.action()"
+        type="button"
+        ng-disabled="properties.disabled || ctrl.busy" ng-bind="properties.label | uiTranslate"></button>
+</div>

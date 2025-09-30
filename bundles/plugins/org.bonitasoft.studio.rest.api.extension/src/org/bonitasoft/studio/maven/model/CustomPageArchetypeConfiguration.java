@@ -5,94 +5,50 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.maven.model;
 
-import java.util.Map;
-import java.util.Properties;
+/**
+ * Configuration for a maven archetype that creates a custom page project (Theme or REST API).
+ */
+public interface CustomPageArchetypeConfiguration extends ExtensionProjectArchetypeConfiguration {
 
-import org.apache.maven.model.Model;
+    /** pageDisplayName attribute key, for internal use */
+    static final String PAGE_DISPLAY_NAME_ATTRIBUTE = "pageDisplayName";
 
-public abstract class CustomPageArchetypeConfiguration {
+    /** pageDescription attribute key, for internal use */
+    static final String PAGE_DESCRIPTION_ATTRIBUTE = "pageDescription";
 
-    private String pageName;
-
-    private String pageDisplayName;
-
-    private String pageDescription;
-    
-    private String groupId;
-    
-    private String version;
-    
-    private String javaPackage;
-    
-    public String getPageDescription() {
-        return pageDescription;
+    /**
+     * Get the page name.
+     * 
+     * @return page name
+     */
+    default String getPageName() {
+        // same as project name
+        return getProjectName();
     }
 
-    public void setPageDescription(String pageDescription) {
-        this.pageDescription = pageDescription;
+    default String getPageDisplayName() {
+        return getAttribute(PAGE_DISPLAY_NAME_ATTRIBUTE);
     }
 
-    public String getPageName() {
-        return pageName;
+    default void setPageDisplayName(String pageDisplayName) {
+        setAttribute(PAGE_DISPLAY_NAME_ATTRIBUTE, pageDisplayName);
     }
 
-    public void setPageName(String pageName) {
-        this.pageName = pageName;
+    default String getPageDescription() {
+        return getAttribute(PAGE_DESCRIPTION_ATTRIBUTE);
     }
 
-    public String getPageDisplayName() {
-        return pageDisplayName;
-    }
-
-    public void setPageDisplayName(String pageDisplayName) {
-        this.pageDisplayName = pageDisplayName;
-    }
-
-    public String getGroupId() {
-        return groupId;
-    }
-
-    public void setGroupId(String groupId) {
-        this.groupId = groupId;
-    }
-
-    public String getVersion() {
-        return version;
-    }
-
-    public void setVersion(String version) {
-        this.version = version;
-    }
-
-    public Model toModel() {
-        final Model model = new Model();
-        model.setArtifactId(getPageName());
-        model.setGroupId(getGroupId());
-        model.setVersion(getVersion());
-        return model;
-    }
-
-    public abstract Map<String, String> toProperties();
-    
-    public abstract String getArtifactLabel() ;
-
-    public String getJavaPackage() {
-        return javaPackage;
-    }
-
-    public void setJavaPackage(String javaPackage) {
-        this.javaPackage = javaPackage;
+    default void setPageDescription(String pageDescription) {
+        setAttribute(PAGE_DESCRIPTION_ATTRIBUTE, pageDescription);
     }
 
 }

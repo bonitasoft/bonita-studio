@@ -31,6 +31,8 @@ public interface GitProject extends IAdaptable {
     static final String GITIGNORE_TEMPLATE = ".gitignore.template";
     
     IRunnableWithProgress newConnectProviderOperation() throws CoreException;
+    
+    IRunnableWithProgress newDiconnectProviderOperation() throws CoreException;
 
     void createDefaultIgnoreFile() throws CoreException;
     

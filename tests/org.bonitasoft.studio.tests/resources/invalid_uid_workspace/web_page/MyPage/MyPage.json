@@ -1,0 +1,56 @@
+{
+  "id" : "MyPage",
+  "name" : "MyPage",
+  "type" : "page",
+  "uuid" : "4de6fb9e-0857-498d-81d8-315a1a288894",
+  "modelVersion" : "2.4",
+  "lastUpdate" : 1736240839084,
+  "description" : "Page generated with Bonita UI designer",
+  "rows" : [
+    [
+      {
+        "type" : "fragment",
+        "dimension" : {
+          "xs" : 12,
+          "sm" : 12,
+          "md" : 12,
+          "lg" : 12
+        },
+        "propertyValues" : {
+          "cssClasses" : {
+            "type" : "constant",
+            "value" : ""
+          },
+          "hidden" : {
+            "type" : "constant",
+            "value" : false
+          }
+        },
+        "reference" : "002cc3f3-ef6b-4341-b062-2a90a6242da4",
+        "hasValidationError" : false,
+        "id" : "MyFragment",
+        "binding" : { }
+      }
+    ]
+  ],
+  "variables" : { },
+  "assets" : [
+    {
+      "id" : "24322fe9-ad86-4856-87ce-0928ff94bcd2",
+      "name" : "style.css",
+      "type" : "css",
+      "order" : 0,
+      "external" : false
+    },
+    {
+      "id" : "04ca2c9e-b428-4e79-874c-3369913b4751",
+      "name" : "localization.json",
+      "type" : "json",
+      "order" : 0,
+      "external" : false
+    }
+  ],
+  "inactiveAssets" : [ ],
+  "webResources" : [ ],
+  "hasValidationError" : false
+}

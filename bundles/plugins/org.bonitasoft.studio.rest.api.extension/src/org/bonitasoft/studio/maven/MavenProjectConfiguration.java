@@ -14,6 +14,7 @@
  */
 package org.bonitasoft.studio.maven;
 
+import java.util.Optional;
 import java.util.regex.Matcher;
 
 import org.apache.maven.model.Model;
@@ -72,11 +73,11 @@ public class MavenProjectConfiguration {
 
     public String getProjectName(Model model) {
         // XXX should use resolved MavenProject or Model
+        String artifactId = Optional.ofNullable(model.getArtifactId()).orElse(""); //$NON-NLS-1$
         if (projectNameTemplate.length() == 0) {
-            return cleanProjectNameComponent(model.getArtifactId(), false);
+            return cleanProjectNameComponent(artifactId, false);
         }
 
-        String artifactId = model.getArtifactId();
         String groupId = model.getGroupId();
         if (groupId == null && model.getParent() != null) {
             groupId = model.getParent().getGroupId();

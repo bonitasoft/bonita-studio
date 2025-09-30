@@ -33,7 +33,6 @@ import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotEditor;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditPart;
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditor;
-import org.eclipse.swtbot.swt.finder.exceptions.WidgetNotFoundException;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.waits.Conditions;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
@@ -77,7 +76,7 @@ public class ConfigurationDialogIT {
         });
         Assert.assertFalse(runnableEPs.isEmpty());
         gmfEditor.select(runnableEPs.get(0));
-      //  gmfEditor.save();
+        //  gmfEditor.save();
     }
 
     @Test
@@ -100,33 +99,6 @@ public class ConfigurationDialogIT {
         new BotApplicationWorkbenchWindow(bot).configure();
         bot.table().getTableItem("Parameters").select();
         bot.table().getTableItem("Actor mapping").select();
-        bot.button(IDialogConstants.FINISH_LABEL).click();
-    }
-
-    @Test
-    public void testAdvancedCheckbox() {
-        new BotApplicationWorkbenchWindow(bot).configure();
-        if (bot.checkBox().isChecked()) {
-            bot.checkBox().click();
-        }
-        boolean notFound = false;
-        try {
-            bot.table().getTableItem("Java dependencies").select();
-        } catch (final WidgetNotFoundException e) {
-            notFound = true;
-        }
-        assertTrue("Java dependencies menu should not be visible", notFound);
-
-        if (!bot.checkBox().isChecked()) {
-            bot.checkBox().click();
-        }
-        bot.table().getTableItem("Java dependencies").select();
-
-        bot.button(IDialogConstants.FINISH_LABEL).click();
-
-        //VALIDATE CHECKBOX STATE RESTORED
-        new BotApplicationWorkbenchWindow(bot).configure();
-        assertTrue("Advanced checbox should be ckecked", bot.checkBox().isChecked());
         bot.button(IDialogConstants.FINISH_LABEL).click();
     }
 
@@ -205,6 +177,5 @@ public class ConfigurationDialogIT {
 
         bot.button(IDialogConstants.FINISH_LABEL).click();
     }
-
 
 }

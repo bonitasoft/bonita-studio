@@ -49,6 +49,11 @@ public class PageDesignerURLFactory implements BonitaPreferenceConstants {
     public PageDesignerURLFactory(int uidPort) {
         this.uidPort = uidPort;
     }
+    
+    
+    public int getUidPort() {
+        return Integer.valueOf(port());
+    }
 
     public URL openPageDesignerHome() throws MalformedURLException {
         return new URL(baseURL() + "/#/" + locale() + "/home");
@@ -102,7 +107,7 @@ public class PageDesignerURLFactory implements BonitaPreferenceConstants {
     public URL migratePage(final String pageId) throws MalformedURLException {
         return new URL(baseURL() + "/rest/migration/page/" + pageId);
     }
-    
+
     public URL migrateFragment(String fragmentId) throws MalformedURLException {
         return new URL(baseURL() + "/rest/migration/fragment/" + fragmentId);
     }
@@ -128,7 +133,9 @@ public class PageDesignerURLFactory implements BonitaPreferenceConstants {
     }
 
     private String locale() {
-        final String locale = preferenceStore.get(CURRENT_STUDIO_LOCALE, LocaleUtil.DEFAULT_LOCALE.getLanguage());
+        final String locale = preferenceStore != null
+                ? preferenceStore.get(CURRENT_STUDIO_LOCALE, LocaleUtil.DEFAULT_LOCALE.getLanguage())
+                : LocaleUtil.DEFAULT_LOCALE.getLanguage();
         return Objects.requireNonNull(locale);
     }
 
@@ -148,6 +155,4 @@ public class PageDesignerURLFactory implements BonitaPreferenceConstants {
         return new URL(baseURL() + "/rest/fragments/");
     }
 
-
-   
 }

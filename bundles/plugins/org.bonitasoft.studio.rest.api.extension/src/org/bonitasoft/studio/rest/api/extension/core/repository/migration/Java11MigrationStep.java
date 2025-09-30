@@ -18,11 +18,11 @@ import java.util.Collection;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Properties;
-import java.util.concurrent.atomic.AtomicReference;
 
 import org.apache.maven.model.Build;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.Plugin;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
 import org.bonitasoft.studio.common.repository.core.migration.MavenModelMigration;
 import org.bonitasoft.studio.common.repository.core.migration.report.MigrationReport;
@@ -35,6 +35,7 @@ public class Java11MigrationStep implements MavenModelMigration {
     @Override
     public MigrationReport migrate(Model model, ProjectMetadata metadata) {
         MigrationReport report = new MigrationReport();
+        BonitaStudioLog.info(String.format("Starting %s on %s...", Java11MigrationStep.class.getName(), metadata.getArtifactId()));
         Properties properties = model.getProperties();
 
         // Remove properties defined in Bonita project parent
@@ -55,6 +56,7 @@ public class Java11MigrationStep implements MavenModelMigration {
                     });
         }
 
+        BonitaStudioLog.info(String.format("%s completed for %s.", Java11MigrationStep.class.getName(), metadata.getArtifactId()));
         return report;
     }
 

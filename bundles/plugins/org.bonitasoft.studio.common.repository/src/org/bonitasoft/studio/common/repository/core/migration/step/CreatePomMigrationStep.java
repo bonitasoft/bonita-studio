@@ -22,11 +22,14 @@ import java.util.Properties;
 import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Model;
 import org.bonitasoft.studio.common.RedirectURLBuilder;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.repository.Messages;
 import org.bonitasoft.studio.common.repository.core.CreateBonitaProjectOperation;
 import org.bonitasoft.studio.common.repository.core.MavenProjectModelBuilder;
 import org.bonitasoft.studio.common.repository.core.maven.MavenProjectHelper;
 import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
 import org.bonitasoft.studio.common.repository.core.migration.MigrationStep;
+import org.bonitasoft.studio.common.repository.core.migration.StepDescription;
 import org.bonitasoft.studio.common.repository.core.migration.report.MigrationReport;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -36,7 +39,14 @@ import org.osgi.framework.Version;
 public class CreatePomMigrationStep implements MigrationStep {
 
     @Override
+    public StepDescription getDescription() {
+        return new StepDescription(Messages.createPomMigrationTitle, Messages.createPomMigrationDescription);
+    }
+
+    @Override
     public MigrationReport run(Path project, IProgressMonitor monitor) throws CoreException {
+        monitor.subTask(Messages.createPomMigrationTitle);
+        BonitaStudioLog.info(String.format("Starting %s...", CreatePomMigrationStep.class.getName()));
         var pomFile = project.resolve(POM_FILE_NAME);
         var report = new MigrationReport();
         ProjectMetadata metadata = null;
@@ -50,6 +60,7 @@ public class CreatePomMigrationStep implements MigrationStep {
             metadata.setName(name);
             metadata.setArtifactId(ProjectMetadata.toArtifactId(name));
         }
+        BonitaStudioLog.info(String.format("Creating a pom.xml with coordinates %s", metadata));
         var model = createDefaultPomFile(project, metadata);
         report.updated("Groovy version has been updated from `2.4.x` to `3.0.x`");
         report.updated(
@@ -58,6 +69,7 @@ public class CreatePomMigrationStep implements MigrationStep {
                 "Bonita projects are now Maven projects and rely on the https://maven.apache.org/guides/introduction/introduction-to-dependency-mechanism.html[Maven dependency mechanism] to manage their dependencies. Check the documentation for more information about %s[Project composition].",
                 RedirectURLBuilder.create("727")));
         addBdmDependency(project, model);
+        BonitaStudioLog.info(String.format("%s completed.", CreatePomMigrationStep.class.getName()));
         return report;
     }
 
@@ -77,6 +89,7 @@ public class CreatePomMigrationStep implements MigrationStep {
             bdmDependency.setScope("provided");
             model.getDependencies().add(bdmDependency);
             MavenProjectHelper.saveModel(project.resolve(POM_FILE_NAME), model);
+            BonitaStudioLog.info(String.format("BDM dependency %s has been added to pom.xml", bdmDependency));
         }
     }
 
@@ -91,7 +104,7 @@ public class CreatePomMigrationStep implements MigrationStep {
     }
 
     @Override
-    public boolean appliesTo(String sourceVersion) {
+    public boolean appliesToVersion(String sourceVersion) {
         return Version.parseVersion(sourceVersion).compareTo(new Version("7.13.0")) < 0;
     }
 

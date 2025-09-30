@@ -1,0 +1,128 @@
+{
+  "id" : "pbRadioButtons",
+  "name" : "Radio Buttons",
+  "type" : "widget",
+  "custom" : false,
+  "modelVersion" : "2.4",
+  "lastUpdate" : 1736240682388,
+  "description" : "Set of buttons for mutually exclusive options. The user selects one option",
+  "template" : "@pbRadioButtons.tpl.html",
+  "controller" : "@pbRadioButtons.ctrl.js",
+  "properties" : [
+    {
+      "label" : "Read-only",
+      "name" : "disabled",
+      "type" : "boolean",
+      "defaultValue" : false,
+      "bond" : "expression"
+    },
+    {
+      "label" : "Required",
+      "name" : "required",
+      "help" : "In the context of a form container, use $form.$invalid as a Boolean to check form validity in a widget property",
+      "type" : "boolean",
+      "defaultValue" : false,
+      "bond" : "expression"
+    },
+    {
+      "label" : "Interpret HTML",
+      "name" : "allowHTML",
+      "help" : "If you choose 'no', HTML code will be escaped instead of being interpreted. If you choose ‘Yes’, this could potentially lead to HTML injections attacks. Please take into account these risks.",
+      "type" : "boolean",
+      "defaultValue" : false,
+      "bond" : "constant"
+    },
+    {
+      "label" : "Label hidden",
+      "name" : "labelHidden",
+      "type" : "boolean",
+      "defaultValue" : false,
+      "bond" : "constant"
+    },
+    {
+      "label" : "Label",
+      "name" : "label",
+      "showFor" : "properties.labelHidden.value === false",
+      "type" : "text",
+      "defaultValue" : "Default label",
+      "bond" : "interpolation"
+    },
+    {
+      "label" : "Label position",
+      "name" : "labelPosition",
+      "showFor" : "properties.labelHidden.value === false",
+      "type" : "choice",
+      "defaultValue" : "top",
+      "choiceValues" : [
+        "left",
+        "top"
+      ],
+      "bond" : "constant"
+    },
+    {
+      "label" : "Label width",
+      "name" : "labelWidth",
+      "showFor" : "properties.labelHidden.value === false",
+      "type" : "integer",
+      "defaultValue" : 4,
+      "bond" : "constant",
+      "constraints" : {
+        "min" : "1",
+        "max" : "12"
+      }
+    },
+    {
+      "label" : "Inline",
+      "name" : "inline",
+      "type" : "boolean",
+      "defaultValue" : false,
+      "bond" : "constant"
+    },
+    {
+      "label" : "Available values",
+      "name" : "availableValues",
+      "caption" : "Comma-separated list or bound an array data",
+      "type" : "collection",
+      "defaultValue" : [
+        "yes",
+        "no"
+      ],
+      "bond" : "expression"
+    },
+    {
+      "label" : "Displayed key",
+      "name" : "displayedKey",
+      "help" : "The name of the key to use as label. Can be empty",
+      "type" : "text",
+      "bond" : "expression"
+    },
+    {
+      "label" : "Returned key",
+      "name" : "returnedKey",
+      "caption" : "Value must be unique",
+      "help" : "The name of the key to use as value. Leave it empty for whole object",
+      "type" : "text",
+      "bond" : "expression"
+    },
+    {
+      "label" : "Selected Value",
+      "name" : "selectedValue",
+      "type" : "text",
+      "bond" : "variable"
+    }
+  ],
+  "assets" : [
+    {
+      "id" : "59AE32FFD97CCE2E9DD0A2B67C2F5361",
+      "name" : "radio-buttons.css",
+      "type" : "css",
+      "order" : 1,
+      "external" : false
+    }
+  ],
+  "requiredModules" : [ ],
+  "webResources" : [ ],
+  "icon" : "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 50 20'><g><path fill='#fff' d='M18,10.7C17.1,1.6,31,0.2,32,9.3C32.9,18.4,19,19.8,18,10.7z M16,10c0,5,4,9,9,9s9-4,9-9s-4-9-9-9 S16,5,16,10z M21,10c0,2.2,1.8,4,4,4s4-1.8,4-4s-1.8-4-4-4S21,7.8,21,10z'/></g></svg>",
+  "order" : 8,
+  "hasHelp" : false
+}

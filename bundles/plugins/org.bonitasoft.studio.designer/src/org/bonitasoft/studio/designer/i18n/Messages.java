@@ -97,6 +97,8 @@ public class Messages extends NLS {
     public static String uidStartupFailedTitle;
     public static String uidStartupFailedMsg;
     public static String openLogFile;
+    public static String uidArtifactsMigrationTitle;
+    public static String uidArtifactsMigrationDescription;
 
     static {
         NLS.initializeMessages("messages", Messages.class);

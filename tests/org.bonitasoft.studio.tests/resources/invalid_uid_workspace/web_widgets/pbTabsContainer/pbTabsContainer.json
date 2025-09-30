@@ -1,0 +1,47 @@
+{
+  "id" : "pbTabsContainer",
+  "name" : "Tabs container",
+  "type" : "container",
+  "custom" : false,
+  "modelVersion" : "2.4",
+  "lastUpdate" : 1736240682386,
+  "description" : "Multiple groups of widgets, each group in a tab",
+  "template" : "@pbTabsContainer.tpl.html",
+  "properties" : [
+    {
+      "label" : "Vertical display",
+      "name" : "vertical",
+      "type" : "boolean",
+      "defaultValue" : false,
+      "bond" : "constant"
+    },
+    {
+      "label" : "Display type",
+      "name" : "type",
+      "type" : "choice",
+      "defaultValue" : "tabs",
+      "choiceValues" : [
+        "tabs",
+        "pills"
+      ],
+      "bond" : "constant"
+    }
+  ],
+  "assets" : [
+    {
+      "id" : "43021f86-b43e-43dd-840b-641c906bec69",
+      "name" : "ui-bootstrap-tpls-0.13.0.min.js",
+      "type" : "js",
+      "order" : 1,
+      "external" : false
+    }
+  ],
+  "requiredModules" : [
+    "ui.bootstrap.tabs",
+    "ui.bootstrap.tpls"
+  ],
+  "webResources" : [ ],
+  "icon" : "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 50 20\"><path fill=\"#fff\" d=\"M50,11.4V8.6h-1v2.9H50z M50,16.2v-2.9h-1v2.9H50z M49,20h1v-1.9h-1v1V20z M44.1,20h2.9v-1h-2.9V20zM39.2,20h2.9v-1h-2.9V20z M34.3,20h2.9v-1h-2.9V20z M29.4,20h2.9v-1h-2.9V20z M24.5,20h2.9v-1h-2.9V20z M19.6,20h2.9v-1h-2.9V20zM14.7,20h2.9v-1h-2.9V20z M9.8,20h2.9v-1H9.8V20z M4.9,20h2.9v-1H4.9V20z M0,18.1V20h2.9v-1H1v-1H0z M0,13.3v2.9h1v-2.9H0zM0,8.6v2.9h1V8.6H0z M0,1v5.7h1V1H0z M15.7,0H1v1h14.7V0z M16.7,1h-1v4.8h2v-1h-1V1z M22.5,4.8h-2.9v1h2.9V4.8z M27.5,4.8h-2.9v1h2.9V4.8z M32.4,4.8h-2.9v1h2.9V4.8z M37.3,4.8h-2.9v1h2.9V4.8z M42.2,4.8h-2.9v1h2.9V4.8z M47.1,4.8h-2.9v1h2.9V4.8z M50,4.8h-1v1v1h1V4.8z\"/><path fill=\"#CBD5E1\" d=\"M34.3,1h-1v3.8h1V1z M18.6,1h14.7V0H18.6V1z M18.6,4.8V1h-1v3.8H18.6z\"/></svg>",
+  "order" : -2,
+  "hasHelp" : true
+}

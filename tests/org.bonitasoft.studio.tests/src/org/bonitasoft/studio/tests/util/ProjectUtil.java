@@ -19,21 +19,34 @@ import static java.util.function.Predicate.not;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Files;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.apache.maven.model.Model;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.repository.BuildScheduler;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.core.BonitaProject;
+import org.bonitasoft.studio.common.repository.core.ProjectDependenciesStore;
 import org.bonitasoft.studio.common.repository.core.maven.MavenProjectHelper;
 import org.bonitasoft.studio.common.repository.core.maven.RemoveDependencyOperation;
 import org.bonitasoft.studio.common.repository.core.maven.model.AppProjectConfiguration;
+import org.bonitasoft.studio.common.repository.core.maven.plugin.ImportMavenModuleOperation;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.configuration.repository.EnvironmentFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.identity.organization.repository.OrganizationFileStore;
+import org.bonitasoft.studio.maven.ExtensionProjectFileStore;
+import org.bonitasoft.studio.maven.ExtensionRepositoryStore;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.OperationCanceledException;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 
 public class ProjectUtil {
 
@@ -53,16 +66,81 @@ public class ProjectUtil {
         removeUserExtensions();
     }
 
-    public static void removeUserExtensions() throws CoreException {
-        IProject project = RepositoryManager.getInstance().getAccessor().getCurrentRepository().orElseThrow().getProject();
-        Model mavenModel = MavenProjectHelper.getMavenModel(project);
-        var dependenciesToRemove = mavenModel.getDependencies()
-                .stream()
-                .filter(not(AppProjectConfiguration::isInternalDependency))
-                .collect(Collectors.toList());
-        if (!dependenciesToRemove.isEmpty()) {
-            new RemoveDependencyOperation(dependenciesToRemove).run(new NullProgressMonitor());
+    public static void waitForProjectOperations() throws CoreException {
+        try {
+            // wait for any initial build operation
+            Job.getJobManager().join(ResourcesPlugin.getWorkspace().getRuleFactory().buildRule(), null);
+            // wait for any ongoing operation on repo manager
+            Job.getJobManager().join(RepositoryManager.class, null);
+            // wait for any ongoing analysis of project dependencies
+            Job.getJobManager().join(ProjectDependenciesStore.ANALYZE_PPROJECT_DEPENDENCIES_FAMILY, null);
+            // wait for ongoing auto build operations
+            Job.getJobManager().join(ResourcesPlugin.FAMILY_AUTO_BUILD, null);
+            // and any post build operation added again in the process
+            Job.getJobManager().join(ResourcesPlugin.getWorkspace().getRuleFactory().buildRule(), null);
+        } catch (OperationCanceledException | InterruptedException e) {
+            throw new CoreException(Status.error("Error while waiting for project operations", e));
         }
+    }
+
+    public static void removeUserExtensions() throws CoreException {
+        waitForProjectOperations();
+
+        BuildScheduler.callWithBuildRule(() -> {
+            ensureExtensionsParentProjectIsImported();
+            IProject project = RepositoryManager.getInstance().getAccessor().getCurrentRepository().orElseThrow()
+                    .getProject();
+            Model mavenModel = MavenProjectHelper.getMavenModel(project);
+            // remove all extensions registered as dependencies
+            var dependenciesToRemove = mavenModel.getDependencies()
+                    .stream()
+                    .filter(not(AppProjectConfiguration::isInternalDependency))
+                    .collect(Collectors.toList());
+            if (!dependenciesToRemove.isEmpty()) {
+                new RemoveDependencyOperation(dependenciesToRemove).run(new NullProgressMonitor());
+            }
+            // remove all extensions as reactor modules
+            var extensionsStore = RepositoryManager.getInstance().getAccessor()
+                    .getRepositoryStore(ExtensionRepositoryStore.class);
+            extensionsStore.getChildren().forEach(ExtensionProjectFileStore::delete);
+            // and clean the extensions parent project
+            var extensionsProject = RepositoryManager.getInstance().getAccessor().getCurrentProject()
+                    .map(BonitaProject::getExtensionsParentProject).filter(Objects::nonNull);
+            if (extensionsProject.isPresent() && extensionsProject.get().exists()) {
+                var pom = extensionsProject.get().getLocation().toPath().resolve("pom.xml");
+                if (!Files.exists(pom)) {
+                    extensionsProject.get().delete(true, true, new NullProgressMonitor());
+                } else {
+                    var extensionsMavenModel = MavenProjectHelper.getMavenModel(extensionsProject.get());
+                    extensionsMavenModel.getModules().clear();
+                    MavenProjectHelper.saveModel(extensionsProject.get(), extensionsMavenModel,
+                            new NullProgressMonitor());
+                }
+            }
+            return true;
+        });
+
+        waitForProjectOperations();
+    }
+
+    /**
+     * Make sure that the extensions parent project, if present, is imported as an Eclipse project.
+     */
+    private static void ensureExtensionsParentProjectIsImported() {
+        var bonitaProj = RepositoryManager.getInstance().getAccessor().getCurrentProject();
+        bonitaProj.ifPresent(p -> {
+            var parent = p.getExtensionsParentProject();
+            if (!parent.exists()) {
+                var parentLoc = p.getParentProject().getLocation().toPath().resolve(BonitaProject.EXTENSIONS_MODULE);
+                if (Files.exists(parentLoc) && Files.exists(parentLoc.resolve("pom.xml"))) {
+                    try {
+                        new ImportMavenModuleOperation(parentLoc.toFile()).run(new NullProgressMonitor());
+                    } catch (CoreException e) {
+                        BonitaStudioLog.error(e);
+                    }
+                }
+            }
+        });
     }
 
     public static DiagramFileStore importProcFile(URL procFileURL) throws IOException {
