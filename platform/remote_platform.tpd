@@ -87,7 +87,7 @@ location Groovy "https://groovy.jfrog.io/artifactory/plugins-release/e4.33" {
 	org.codehaus.groovy30.feature.feature.group [5.5.0,5.6.0)
 	org.codehaus.groovy.eclipse.feature.feature.group [5.5.0,5.6.0)
 }
-location BonitasoftBPM "mvn:org.bonitasoft.bpm:org.bonitasoft.bpm.eclipse-repository:9.0.2:zip" {
+location BonitasoftBPM "mvn:org.bonitasoft.bpm:org.bonitasoft.bpm.eclipse-repository:9.0.3:zip" {
 	org.bonitasoft.bonita2bpmn.feature.feature.group
     org.bonitasoft.bpm.connector.feature.feature.group
     org.bonitasoft.bpm.definitions.feature.feature.group
@@ -142,7 +142,7 @@ maven BonitaProjectReportModel scope=compile,runtime,system dependencyDepth=none
     feature {
         id="org.bonitasoft.project.report.model.feature"
         name="Bonita Project Report Model Feature"
-        version="1.0.4"
+        version="2.1.1"
         vendor="Bonitasoft S.A"
     }
     dependency {
