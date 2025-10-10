@@ -22,4 +22,6 @@ public class Messages extends NLS {
     public static String onPremise;
     public static String cloud;
     public static String platformTypeLabel;
+    public static String cloudAuthTokenLabel;
+    public static String cloudAuthClientCredentialsLabel;
 }
