@@ -51,32 +51,32 @@ import org.eclipse.swt.widgets.Label;
 
 public class UiPathAuthenticationWizardPage extends GeneratedConnectorWizardPage {
 
-    private static final String CLOUD_INPUT = "cloud";
-    private static final String CLOUD_ID = "cloudWidget";
+	protected static final String CLOUD_INPUT = "cloud";
+	protected static final String CLOUD_ID = "cloudWidget";
 
     // on-premise fields
-    private static final String URL_INPUT = "url";
-    private static final String URL_ID = "urlWidget";
-    private static final String TENANT_INPUT = "tenant";
-    private static final String TENANT_ID = "tenantWidget";
-    private static final String USER_INPUT = "user";
-    private static final String USER_ID = "userWidget";
-    private static final String PASSWORD_INPUT = "password";
-    private static final String PASSWORD_ID = "passwordWidget";
+	protected static final String URL_INPUT = "url";
+	protected static final String URL_ID = "urlWidget";
+	protected static final String TENANT_INPUT = "tenant";
+	protected static final String TENANT_ID = "tenantWidget";
+	protected static final String USER_INPUT = "user";
+	protected static final String USER_ID = "userWidget";
+	protected static final String PASSWORD_INPUT = "password";
+	protected static final String PASSWORD_ID = "passwordWidget";
 
     // cloud fields
-    private static final String ACCOUNT_LOGICAL_NAME_INPUT = "accountLogicalName";
-    private static final String ACCOUNT_LOGICAL_NAME_ID = "accountLogicalNameWidget";
-    private static final String TENANT_LOGICAL_NAME_INPUT = "tenantLogicalName";
-    private static final String TENANT_LOGICAL_NAME_ID = "tenantLogicalNameWidget";
-    private static final String USER_KEY_INPUT = "userKey";
-    private static final String USER_KEY_ID = "userKeyWidget";
-    private static final String CLIENT_ID_INPUT = "clientId";
-    private static final String CLIENT_ID_ID = "clientIdWidget";
-    private static final String ORGANIZATION_UNIT_ID_INPUT = "organizationUnitId";
-    private static final String ORGANIZATION_UNIT_WIDGET_ID = "organizationUnitIdWidget";
+	protected static final String ACCOUNT_LOGICAL_NAME_INPUT = "accountLogicalName";
+	protected static final String ACCOUNT_LOGICAL_NAME_ID = "accountLogicalNameWidget";
+	protected static final String TENANT_LOGICAL_NAME_INPUT = "tenantLogicalName";
+	protected static final String TENANT_LOGICAL_NAME_ID = "tenantLogicalNameWidget";
+	protected static final String USER_KEY_INPUT = "userKey";
+	protected static final String USER_KEY_ID = "userKeyWidget";
+	protected static final String CLIENT_ID_INPUT = "clientId";
+	protected static final String CLIENT_ID_ID = "clientIdWidget";
+	protected static final String ORGANIZATION_UNIT_ID_INPUT = "organizationUnitId";
+	protected static final String ORGANIZATION_UNIT_WIDGET_ID = "organizationUnitIdWidget";
 
-    private SelectObservableValue modeObservable;
+	protected SelectObservableValue modeObservable;
 
     public UiPathAuthenticationWizardPage(String pageName) {
         super(pageName);
@@ -116,7 +116,7 @@ public class UiPathAuthenticationWizardPage extends GeneratedConnectorWizardPage
         return super.doCreateControl(parent, context);
     }
 
-    private void addValidators(UIPathPageComponentSwitchBuilder builder) {
+    protected void addValidators(UIPathPageComponentSwitchBuilder builder) {
         builder.addCustomMandatoryValidator(ACCOUNT_LOGICAL_NAME_ID,
                 new MandatoryValidator(Mode.CLOUD, modeObservable, builder.getLabel(ACCOUNT_LOGICAL_NAME_ID)));
         builder.addCustomMandatoryValidator(TENANT_LOGICAL_NAME_ID,
@@ -136,14 +136,14 @@ public class UiPathAuthenticationWizardPage extends GeneratedConnectorWizardPage
                 new MandatoryValidator(Mode.PREMISE, modeObservable, builder.getLabel(PASSWORD_ID)));
     }
 
-    private void createStackComposite(Composite parent, PageComponentSwitchBuilder builder, EMFDataBindingContext ctx) {
+    protected void createStackComposite(Composite parent, PageComponentSwitchBuilder builder, EMFDataBindingContext ctx) {
         Composite stackComposite = new Composite(parent, SWT.NONE);
         stackComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         CustomStackLayout stackLayout = new CustomStackLayout(stackComposite);
         stackComposite.setLayout(stackLayout);
 
         Composite onPremiseComposite = createOnPremiseComposite(stackComposite, builder);
-        Composite cloudComposite = createCloudComposite(stackComposite, builder);
+        Composite cloudComposite = createCloudComposite(stackComposite, builder, ctx);
 
         ctx.bindValue(PojoProperties.value("topControl").observe(stackLayout), modeObservable,
                 UpdateStrategyFactory.neverUpdateValueStrategy().create(),
@@ -152,7 +152,7 @@ public class UiPathAuthenticationWizardPage extends GeneratedConnectorWizardPage
                         .create());
     }
 
-    protected Composite createCloudComposite(Composite parent, PageComponentSwitchBuilder builder) {
+    protected Composite createCloudComposite(Composite parent, PageComponentSwitchBuilder builder, EMFDataBindingContext ctx) {
         Composite composite = new Composite(parent, SWT.NONE);
         composite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(10, 10).create());
         composite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
@@ -179,7 +179,7 @@ public class UiPathAuthenticationWizardPage extends GeneratedConnectorWizardPage
         return composite;
     }
 
-    private void createRadioButtons(Composite parent, EMFDataBindingContext context) {
+    protected void createRadioButtons(Composite parent, EMFDataBindingContext context) {
         Checkbox cloudCheckbox = ConnectorDefinitionFactory.eINSTANCE.createCheckbox();
         cloudCheckbox.setInputName(CLOUD_INPUT);
         cloudCheckbox.setId(CLOUD_ID);
