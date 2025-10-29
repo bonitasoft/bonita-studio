@@ -15,10 +15,7 @@
 package org.bonitasoft.studio.common;
 
 import java.util.Map;
-
-import jakarta.annotation.PostConstruct;
-import jakarta.inject.Inject;
-import jakarta.inject.Singleton;
+import java.util.concurrent.Executors;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.eclipse.core.commands.ParameterizedCommand;
@@ -26,6 +23,10 @@ import org.eclipse.core.commands.common.NotDefinedException;
 import org.eclipse.e4.core.commands.ECommandService;
 import org.eclipse.e4.core.commands.EHandlerService;
 import org.eclipse.e4.core.di.annotations.Creatable;
+
+import jakarta.annotation.PostConstruct;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 @Creatable
 public class CommandExecutor {
@@ -58,6 +59,10 @@ public class CommandExecutor {
         @PostConstruct
         private void exposeSingleton() {
             instance = this;
+            synchronized (ServicesAccess.class) {
+                // notify threads waiting for access ready
+                ServicesAccess.class.notifyAll();
+            }
         }
 
         /**
@@ -122,6 +127,39 @@ public class CommandExecutor {
             }
         }
         return null;
+    }
+
+    /**
+     * Test whether this executor is ready and has access to services.
+     * 
+     * @return false when services are not available yet, true once services have been exposed.
+     */
+    public boolean isReady() {
+        return ServicesAccess.getInstance() != null;
+    }
+
+    /**
+     * Run the given operation asynchronously when the command executor is ready.
+     * If the executor is already ready, the operation is run asynchronously immediately.
+     * 
+     * @param operation the operation to run when ready
+     * @see #isReady()
+     */
+    public void runWhenReady(Runnable operation) {
+        var executor = Executors.newSingleThreadExecutor();
+        executor.submit(() -> {
+            synchronized (ServicesAccess.class) {
+                if (!isReady()) {
+                    try {
+                        ServicesAccess.class.wait();
+                    } catch (InterruptedException e) {
+                        BonitaStudioLog.error(e);
+                        Thread.currentThread().interrupt();
+                    }
+                }
+            }
+            operation.run();
+        });
     }
 
 }

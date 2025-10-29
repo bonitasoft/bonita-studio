@@ -51,7 +51,7 @@ public class UIDArtifactCreationIT {
 
     @Test
     public void should_create_application_page() throws Exception {
-        var createPageOperation = new CreatePageOperation(PageDesignerURLFactory.INSTANCE,
+        var createPageOperation = new CreatePageOperation(PageDesignerURLFactory.getInstance(),
                 repositoryAccessor).disableOpenBrowser();
         String newName = getPageNewName("page", CreateUIDArtifactOperation.DEFAULT_PAGE_NAME);
         createPageOperation.run(new NullProgressMonitor());
@@ -61,7 +61,7 @@ public class UIDArtifactCreationIT {
 
     @Test
     public void should_create_layout() throws Exception {
-        var createLayoutOperation = new CreateLayoutOperation(PageDesignerURLFactory.INSTANCE,
+        var createLayoutOperation = new CreateLayoutOperation(PageDesignerURLFactory.getInstance(),
                 repositoryAccessor).disableOpenBrowser();
         String newName = getPageNewName("layout", CreateUIDArtifactOperation.DEFAULT_LAYOUT_NAME);
         createLayoutOperation.run(new NullProgressMonitor());
@@ -72,7 +72,7 @@ public class UIDArtifactCreationIT {
     @Test
     public void should_create_custom_widget() throws Exception {
         var createCustomWidgetOperation = new CreateCustomWidgetOperation(
-                PageDesignerURLFactory.INSTANCE, repositoryAccessor)
+                PageDesignerURLFactory.getInstance(), repositoryAccessor)
                 .disableOpenBrowser();
         String newName = getCustomWidgetNewName();
         createCustomWidgetOperation.run(new NullProgressMonitor());
@@ -85,7 +85,7 @@ public class UIDArtifactCreationIT {
     @Test
     public void should_create_fragment() throws Exception {
         var createFragmentOperation = new CreateFragmentOperation(
-                PageDesignerURLFactory.INSTANCE, repositoryAccessor).disableOpenBrowser();
+                PageDesignerURLFactory.getInstance(), repositoryAccessor).disableOpenBrowser();
         String newName = getFragmentNewName();
         createFragmentOperation.run(new NullProgressMonitor());
         assertThat(repositoryAccessor.getRepositoryStore(WebFragmentRepositoryStore.class).getChild(newName, true))

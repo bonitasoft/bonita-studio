@@ -110,7 +110,6 @@ public class BOSWebServerManager implements IBonitaProjectListener {
     private static final String BONITA_CLIENT_HOST_DEFAULT = "bonita.client.host.default";
     private static final String BONITA_CLIENT_PORT_DEFAULT = "bonita.client.port.default";
 
-
     protected final String tomcatInstanceLocation = new File(new File(ResourcesPlugin
             .getWorkspace().getRoot().getLocation().toFile(), "tomcat"), "server")
                     .getAbsolutePath();
@@ -183,12 +182,14 @@ public class BOSWebServerManager implements IBonitaProjectListener {
                     UIDesignerServerManager uidManager = UIDesignerServerManager.getInstance();
                     if (uidManager.getPortalPort() != portConfigurator.getHttpPort()) {
                         uidManager.setPortalPort(portConfigurator.getHttpPort());
-                        uidManager.stop();
-                        uidManager.start(repository, monitor);
+                        if (uidManager.shouldRestartAfterConfigurationChange(repository)) {
+                            uidManager.stop();
+                            uidManager.start(repository, monitor);
+                        }
                     }
 
                     startResult = null;
-                  
+
                     tomcat.start(ILaunchManager.RUN_MODE, result -> startResult = result);
                     waitServerRunning();
                 } catch (final CoreException e) {
@@ -223,7 +224,7 @@ public class BOSWebServerManager implements IBonitaProjectListener {
             var type = ServerCore.findRuntimeType(TOMCAT_RUNTIME_TYPE);
             var runtime = createServerRuntime(type, new NullProgressMonitor());
             var confProject = createServerConfigurationProject(new NullProgressMonitor());
-         
+
             tomcat = createServer(monitor, confProject, runtime);
             createLaunchConfiguration(tomcat, new NullProgressMonitor());
             confProject.build(IncrementalProjectBuilder.INCREMENTAL_BUILD, new NullProgressMonitor());
@@ -475,11 +476,11 @@ public class BOSWebServerManager implements IBonitaProjectListener {
         return tomcat != null
                 && (tomcat.getServerState() == IServer.STATE_STARTED);
     }
-    
+
     public void resetServer(boolean cleanConfiguration, IProgressMonitor monitor) {
         boolean notifying = notifyRestartServer();
         stopServer(monitor);
-        if(cleanConfiguration) {
+        if (cleanConfiguration) {
             try {
                 tomcat.delete();
             } catch (CoreException e) {
@@ -540,7 +541,7 @@ public class BOSWebServerManager implements IBonitaProjectListener {
     public String generateLoginURL(final String username, final String password) {
         return generateUrlBase() + LOGINSERVICE_PATH + "?username=" + username + "&password=" + password;
     }
-    
+
     public String generateLoginURL() {
         return generateUrlBase() + LOGINSERVICE_PATH;
     }
@@ -599,13 +600,14 @@ public class BOSWebServerManager implements IBonitaProjectListener {
     private static Bundle getTomcatBundle() {
         return EnginePlugin.getDefault().getBundle();
     }
-    
+
     private static synchronized void configureBonitaClient() {
         try {
             final String host = System.getProperty(BONITA_CLIENT_HOST_DEFAULT, "localhost");
             final int serverPort = Integer
                     .parseInt(System.getProperty(BONITA_CLIENT_PORT_DEFAULT, "8080"));
-            BonitaStudioLog.debug("Configuring bonita client on host " + host + ":" + serverPort + " with API_TYPE=" + HTTP,
+            BonitaStudioLog.debug(
+                    "Configuring bonita client on host " + host + ":" + serverPort + " with API_TYPE=" + HTTP,
                     Activator.PLUGIN_ID);
             final Map<String, String> parameters = new HashMap<>();
             parameters.put(SERVER_URL, "http://" + host + ":" + serverPort);

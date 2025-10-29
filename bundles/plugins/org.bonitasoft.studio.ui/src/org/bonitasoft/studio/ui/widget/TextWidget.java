@@ -41,8 +41,6 @@ import org.eclipse.jface.databinding.swt.ISWTObservableValue;
 import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.fieldassist.ContentProposalAdapter;
-import org.eclipse.jface.fieldassist.ControlDecoration;
-import org.eclipse.jface.fieldassist.FieldDecorationRegistry;
 import org.eclipse.jface.fieldassist.IContentProposalProvider;
 import org.eclipse.jface.fieldassist.TextContentAdapter;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -79,7 +77,6 @@ public class TextWidget extends EditableControlWidget {
         private BiConsumer<String, String> onEdit;
         private Supplier<IStatus> canEdit;
         protected Optional<IContentProposalProvider> proposalProvider = Optional.empty();
-        private Optional<String> tooltip = Optional.empty();
         protected Optional<ComputedValue<Boolean>> editableStrategy = Optional.empty();
         protected int style = SWT.NONE;
         protected boolean editable = true;
@@ -94,11 +91,6 @@ public class TextWidget extends EditableControlWidget {
          */
         public Builder withPlaceholder(String placeholder) {
             this.placeholder = Optional.ofNullable(placeholder);
-            return this;
-        }
-
-        public Builder withTootltip(String tooltip) {
-            this.tooltip = Optional.ofNullable(tooltip);
             return this;
         }
 
@@ -285,20 +277,6 @@ public class TextWidget extends EditableControlWidget {
 
     public void setPlaceholder(String placeholder) {
         text.setMessage(placeholder);
-    }
-
-    public void setTooltip(String tooltip) {
-        ControlDecoration controlDecoration = null;
-        if (label.isPresent()) {
-            controlDecoration = new ControlDecoration(label.get(), SWT.RIGHT, this);
-        } else {
-            controlDecoration = new ControlDecoration(text, SWT.TOP | SWT.LEFT, this);
-        }
-        controlDecoration.setMarginWidth(labelAbove ? 5 : 2);
-        controlDecoration.setShowOnlyOnFocus(false);
-        controlDecoration.setImage(FieldDecorationRegistry.getDefault()
-                .getFieldDecoration(FieldDecorationRegistry.DEC_INFORMATION).getImage());
-        controlDecoration.setDescriptionText(tooltip);
     }
 
     public void onClickButton(Listener listener) {
@@ -619,6 +597,15 @@ public class TextWidget extends EditableControlWidget {
 
     public IObservableValue<Boolean> observeEnable() {
         return WidgetProperties.enabled().observe(text);
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see org.bonitasoft.studio.ui.widget.ControlWidget#getMainControl()
+     */
+    @Override
+    protected Control getMainControl() {
+        return getTextControl();
     }
 
 }

@@ -33,6 +33,9 @@ public class Messages extends NLS {
     public static String HelpButtonLabel;
     public static String WelcomeButtonLabel;
 
+    public static String uiDesignerAutostart;
+    public static String uiDesignerAutostartTooltip;
+
     public static String unableTofindLogTitle;
     public static String unableTofindLogMessage;
 
@@ -382,7 +385,9 @@ public class Messages extends NLS {
     public static String returnToElementsView;
     public static String returnToExtensionView;
     public static String addExtensionMenuLabel;
+    public static String projectId;
     public static String projectIdTootltip;
+    public static String groupId;
     public static String groupIdTootltip;
     public static String projectElements;
     public static String bonitaExtensions;

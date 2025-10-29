@@ -60,7 +60,7 @@ public class DeployPageHandler {
             if (fStore.isPresent()) {
                 DeployPageRunnable operation = new DeployPageRunnable(pageAPI,
                         new HttpClientFactory(),
-                        new RestFormBuilder(PageDesignerURLFactory.INSTANCE),
+                        new RestFormBuilder(PageDesignerURLFactory.getInstance()),
                         fStore.get());
                 if (disablePopup == null || !Boolean.valueOf(disablePopup)) {
                     PlatformUI.getWorkbench().getProgressService().run(true, false, operation::run);

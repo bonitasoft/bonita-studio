@@ -535,6 +535,7 @@ public class SelectArtifactToDeployPage implements ControlSupplier {
         if (!environmentProvider.getEnvironment().isEmpty()) {
             environmentComboWidget = new ComboWidget.Builder()
                     .withLabel(Messages.environment)
+                    .withTooltip(Messages.environmentTootltip)
                     .labelAbove()
                     .widthHint(400)
                     .useNativeRender()
@@ -543,14 +544,6 @@ public class SelectArtifactToDeployPage implements ControlSupplier {
                     .bindTo(PojoProperties.value("environment").observe(this))
                     .inContext(ctx)
                     .createIn(deployOptionGroup);
-
-            ControlDecoration controlDecoration = new ControlDecoration(
-                    environmentComboWidget.getControl().getParent().getChildren()[0], SWT.RIGHT);
-            controlDecoration.setDescriptionText(Messages.environmentTootltip);
-            controlDecoration.setMarginWidth(5);
-            controlDecoration.setImage(FieldDecorationRegistry.getDefault()
-                    .getFieldDecoration(FieldDecorationRegistry.DEC_INFORMATION).getImage());
-            controlDecoration.show();
         }
 
         createDefaultUserTextWidget(ctx, deployOptionGroup);
@@ -596,7 +589,7 @@ public class SelectArtifactToDeployPage implements ControlSupplier {
                 .labelAbove()
                 .widthHint(530)
                 .withLabel(org.bonitasoft.studio.identity.i18n.Messages.defaultUser)
-                .withTootltip(org.bonitasoft.studio.identity.i18n.Messages.defaultUserTooltip)
+                .withTooltip(org.bonitasoft.studio.identity.i18n.Messages.defaultUserTooltip)
                 .bindTo(usernameObservable)
                 .withProposalProvider(usernameProposalProvider)
                 .withValidator(defaultUserValidator().create())
@@ -622,7 +615,7 @@ public class SelectArtifactToDeployPage implements ControlSupplier {
             if (proposals != null && proposals.length > 0) {
                 ActiveOrganizationProvider activeOrganizationProvider = new ActiveOrganizationProvider();
                 if (Objects.equals(activeOrganizationProvider.getActiveOrganization(),
-                		IDisplayable.toDisplayName(selectedOrganization).orElse(null))) {
+                        IDisplayable.toDisplayName(selectedOrganization).orElse(null))) {
                     usernameObservable.setValue(activeOrganizationProvider.getDefaultUser());
                 } else {
                     usernameObservable.setValue(proposals[0]);
@@ -649,7 +642,7 @@ public class SelectArtifactToDeployPage implements ControlSupplier {
         }
         if (selectedOrganization != null) {
             IStatus status = new EmptyInputValidator(org.bonitasoft.studio.identity.i18n.Messages.defaultUser)
-                    .validate((String)user);
+                    .validate((String) user);
             if (!status.isOK()) {
                 return status;
             }

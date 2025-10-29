@@ -161,14 +161,17 @@ public class WizardBuilder<T> {
             @Override
             protected Point getInitialSize() {
                 final Point initialSize = super.getInitialSize();
-                if (!fixedInitialSize && initialSize.x > width) {
-                    width = initialSize.x;
+                final Point advisedSize = getContents().computeSize(SWT.DEFAULT, SWT.DEFAULT);
+                final Point minSize = new Point(Math.max(initialSize.x, advisedSize.x),
+                        Math.max(initialSize.y, advisedSize.y));
+                if (!fixedInitialSize && minSize.x > width) {
+                    width = minSize.x;
                 }
-                if (!fixedInitialSize && initialSize.y > height) {
-                    height = initialSize.y;
+                if (!fixedInitialSize && minSize.y > height) {
+                    height = minSize.y;
                 }
-                final Point size = new Point(width == SWT.DEFAULT ? initialSize.x : width,
-                        height == SWT.DEFAULT ? initialSize.y : height);
+                final Point size = new Point(width == SWT.DEFAULT ? minSize.x : width,
+                        height == SWT.DEFAULT ? minSize.y : height);
                 size.y = size.y + convertHeightInCharsToPixels(nbLine);
                 return size;
             }
@@ -177,7 +180,7 @@ public class WizardBuilder<T> {
         dialog.addPageChangedListener(
                 event -> updateNextAndBackButtonLabel((IWizardPage) event.getSelectedPage(), dialog));
         int result = dialog.open();
-        if(IDialogConstants.CANCEL_ID == result) {
+        if (IDialogConstants.CANCEL_ID == result) {
             return Optional.empty();
         }
         return finishResult;
@@ -190,7 +193,8 @@ public class WizardBuilder<T> {
                 .ifPresent(p -> {
                     Button nextButton = dialog.getNextButton();
                     if (nextButton != null) {
-                        nextButton.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, String.valueOf(IDialogConstants.NEXT_ID));
+                        nextButton.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY,
+                                String.valueOf(IDialogConstants.NEXT_ID));
                         if (p.getNextPageButtonLabel() != null) {
                             nextButton.setText(p.getNextPageButtonLabel() + " >");
                         } else {
@@ -199,7 +203,8 @@ public class WizardBuilder<T> {
                     }
                     Button backButton = dialog.getBackButton();
                     if (backButton != null) {
-                        backButton.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, String.valueOf(IDialogConstants.BACK_ID));
+                        backButton.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY,
+                                String.valueOf(IDialogConstants.BACK_ID));
                         if (p.getBackPageButtonLabel() != null) {
                             backButton.setText("< " + p.getBackPageButtonLabel());
                         } else {

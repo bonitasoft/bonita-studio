@@ -21,11 +21,17 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.WeakHashMap;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.apache.maven.project.MavenProject;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.core.BonitaProject;
+import org.bonitasoft.studio.common.repository.core.internal.BonitaProjectImpl;
 import org.bonitasoft.studio.common.repository.core.team.GitProject;
+import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -51,10 +57,20 @@ import org.eclipse.m2e.core.MavenPlugin;
 
 public class GitProjectImpl implements GitProject {
 
+    private static WeakHashMap<IProject, GitProjectImpl> _instances = new WeakHashMap<>();
+
     private IProject project;
 
-    public GitProjectImpl(IProject project) {
+    private List<Consumer<GitProject>> listeners = new ArrayList<>(1);
+
+    private GitProjectImpl(IProject project) {
         this.project = project;
+    }
+
+    public static GitProject getInstance(IProject project) {
+        synchronized (_instances) {
+            return _instances.computeIfAbsent(project, GitProjectImpl::new);
+        }
     }
 
     @Override
@@ -158,6 +174,18 @@ public class GitProjectImpl implements GitProject {
         } catch (IOException e) {
             throw new CoreException(Status.error("Failed create project .gitignore file.", e));
         }
+        // call listeners:
+        listeners.forEach(l -> l.accept(this));
+    }
+
+    @Override
+    public void addGitIgnoreCreatedListener(Consumer<GitProject> listener) {
+        listeners.add(listener);
+    }
+
+    @Override
+    public void removeGitIgnoreCreatedListener(Consumer<GitProject> listener) {
+        listeners.remove(listener);
     }
 
     @Override
@@ -199,6 +227,11 @@ public class GitProjectImpl implements GitProject {
     public <T> T getAdapter(Class<T> adapter) {
         if (Repository.class.equals(adapter)) {
             return (T) ResourceUtil.getRepository(project);
+        } else if (BonitaProject.class.isAssignableFrom(adapter)) {
+            return (T) BonitaProjectImpl.getInstance(project.getName());
+        } else if (IRepository.class.isAssignableFrom(adapter)) {
+            return (T) RepositoryManager.getInstance().getRepository(((IProject) project).getName());
+
         }
         return null;
     }

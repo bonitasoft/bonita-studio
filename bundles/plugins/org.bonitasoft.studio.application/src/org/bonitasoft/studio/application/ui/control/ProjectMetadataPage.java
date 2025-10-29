@@ -26,11 +26,14 @@ import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.ProjectIdValidator;
 import org.bonitasoft.studio.common.repository.core.maven.BonitaProjectBuilder.BonitaRuntimeVersionValidator;
 import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
+import org.bonitasoft.studio.common.repository.core.maven.model.UiToolsPreferences;
+import org.bonitasoft.studio.common.repository.core.maven.model.UiToolsPreferences.UidPreferences;
 import org.bonitasoft.studio.common.repository.core.maven.repository.MavenRepositories;
 import org.bonitasoft.studio.common.repository.ui.validator.MavenIdValidator;
 import org.bonitasoft.studio.engine.BOSWebServerManager;
 import org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory;
 import org.bonitasoft.studio.ui.validator.MultiValidator;
+import org.bonitasoft.studio.ui.widget.ButtonWidget;
 import org.bonitasoft.studio.ui.widget.ComboWidget;
 import org.bonitasoft.studio.ui.widget.TextAreaWidget;
 import org.bonitasoft.studio.ui.widget.TextWidget;
@@ -38,6 +41,7 @@ import org.bonitasoft.studio.ui.wizard.ControlSupplier;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.beans.typed.PojoProperties;
 import org.eclipse.core.databinding.conversion.IConverter;
+import org.eclipse.core.databinding.observable.value.ComputedValue;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.WritableValue;
 import org.eclipse.core.databinding.validation.IValidator;
@@ -54,30 +58,30 @@ import org.eclipse.swt.widgets.Link;
 
 public class ProjectMetadataPage implements ControlSupplier {
 
-    private static final String STUDIO_MAINTENANCE_UPDATE_REDIRECT_ID = "735";
-    private IObservableValue<ProjectMetadata> metadataObservale;
+    private static final String STUDIO_MAINTENANCE_UPDATE_REDIRECT_ID = "735"; //$NON-NLS-1$
+    protected IObservableValue<ProjectMetadata> metadataObservable;
     private boolean createProject;
 
     public ProjectMetadataPage(ProjectMetadata metadata, boolean createProject) {
         this.createProject = createProject;
-        this.metadataObservale = new WritableValue<>(metadata, ProjectMetadata.class);
+        this.metadataObservable = new WritableValue<>(metadata, ProjectMetadata.class);
     }
 
     @Override
     public Control createControl(Composite parent, IWizardContainer wizardContainer, DataBindingContext ctx) {
         Composite composite = new Composite(parent, SWT.None);
-        composite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2)
+        composite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).equalWidth(true)
                 .margins(10, 10)
                 .spacing(20, 10)
                 .extendedMargins(0, 0, 0, 20).create());
         composite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 
-        var nameObservable = PojoProperties.value("name", String.class)
-                .observeDetail(metadataObservale);
-        var artifactIdObservable = PojoProperties.value("artifactId", String.class).observeDetail(metadataObservale);
+        var nameObservable = PojoProperties.value("name", String.class) //$NON-NLS-1$
+                .observeDetail(metadataObservable);
+        var artifactIdObservable = PojoProperties.value("artifactId", String.class).observeDetail(metadataObservable); //$NON-NLS-1$
         var originalId = artifactIdObservable.getValue();
         new TextWidget.Builder()
-                .withLabel(Messages.name + " *")
+                .withLabel(Messages.name + " *") //$NON-NLS-1$
                 .labelAbove()
                 .grabHorizontalSpace()
                 .fill()
@@ -89,17 +93,17 @@ public class ProjectMetadataPage implements ControlSupplier {
                 .createIn(composite);
 
         var projectIdWidget = new TextWidget.Builder()
-                .withLabel("Project ID")
-                .withTootltip(Messages.projectIdTootltip)
+                .withLabel(Messages.projectId)
+                .withTooltip(Messages.projectIdTootltip)
                 .labelAbove()
                 .grabHorizontalSpace()
                 .widthHint(130)
                 .fill()
                 .bindTo(artifactIdObservable)
                 .withValidator(new MultiValidator.Builder()
-                        .havingValidators(new MavenIdValidator("Project ID", false),
+                        .havingValidators(new MavenIdValidator(Messages.projectId, false),
                                 new ProjectIdValidator(() -> nameObservable.getValue(),
-                                       null, () -> createProject),
+                                        null, () -> createProject),
                                 engineRestartWarning(() -> nameObservable.getValue(), originalId))
                         .create())
                 .inContext(ctx)
@@ -107,24 +111,24 @@ public class ProjectMetadataPage implements ControlSupplier {
                 .createIn(composite);
 
         new TextWidget.Builder()
-                .withLabel(Messages.version + " *")
+                .withLabel(Messages.version + " *") //$NON-NLS-1$
                 .labelAbove()
                 .grabHorizontalSpace()
                 .fill()
-                .bindTo(PojoProperties.value("version").observeDetail(metadataObservale))
+                .bindTo(PojoProperties.value("version").observeDetail(metadataObservable)) //$NON-NLS-1$
                 .withValidator(new EmptyInputValidator(Messages.version))
                 .inContext(ctx)
                 .useNativeRender()
                 .createIn(composite);
 
         new TextWidget.Builder()
-                .withLabel("Group ID *")
-                .withTootltip(Messages.groupIdTootltip)
+                .withLabel(Messages.groupId + " *")
+                .withTooltip(Messages.groupIdTootltip)
                 .labelAbove()
                 .grabHorizontalSpace()
                 .fill()
-                .bindTo(PojoProperties.value("groupId").observeDetail(metadataObservale))
-                .withValidator(new MavenIdValidator("Group ID"))
+                .bindTo(PojoProperties.value("groupId").observeDetail(metadataObservable)) //$NON-NLS-1$
+                .withValidator(new MavenIdValidator(Messages.groupId))
                 .inContext(ctx)
                 .useNativeRender()
                 .createIn(composite);
@@ -136,9 +140,9 @@ public class ProjectMetadataPage implements ControlSupplier {
                 UpdateStrategyFactory.updateValueStrategy()
                         .withConverter(IConverter.<String, String> create(ProjectMetadata::toArtifactId))
                         .create());
-        
-       var projectIdValidator = new org.eclipse.core.databinding.validation.MultiValidator() {
-            
+
+        var projectIdValidator = new org.eclipse.core.databinding.validation.MultiValidator() {
+
             @Override
             protected IStatus validate() {
                 var validator = new MultiValidator.Builder()
@@ -157,7 +161,7 @@ public class ProjectMetadataPage implements ControlSupplier {
                 .addValueChangeListener(e -> projectIdWidget.statusChanged(e.diff.getNewValue()));
 
         new ComboWidget.Builder()
-                .withLabel(Messages.targetRuntimeVersion + " *")
+                .withLabel(Messages.targetRuntimeVersion + " *") //$NON-NLS-1$
                 .labelAbove()
                 .horizontalSpan(2)
                 .grabHorizontalSpace()
@@ -168,7 +172,7 @@ public class ProjectMetadataPage implements ControlSupplier {
                         .havingValidators(new EmptyInputValidator(Messages.targetRuntimeVersion),
                                 new BonitaRuntimeVersionValidator())
                         .create())
-                .bindTo(PojoProperties.value("bonitaRuntimeVersion", String.class).observeDetail(metadataObservale))
+                .bindTo(PojoProperties.value("bonitaRuntimeVersion", String.class).observeDetail(metadataObservable)) //$NON-NLS-1$
                 .inContext(ctx)
                 .useNativeRender()
                 .createIn(composite);
@@ -194,7 +198,7 @@ public class ProjectMetadataPage implements ControlSupplier {
                 .grabVerticalSpace()
                 .grabHorizontalSpace()
                 .fill()
-                .bindTo(PojoProperties.value("description").observeDetail(metadataObservale))
+                .bindTo(PojoProperties.value("description").observeDetail(metadataObservable)) //$NON-NLS-1$
                 .inContext(ctx)
                 .horizontalSpan(2)
                 .useNativeRender()
@@ -207,7 +211,37 @@ public class ProjectMetadataPage implements ControlSupplier {
             }
         });
 
+        createUIToolsControl(ctx, composite);
+
         return composite;
+    }
+
+    /**
+     * Create controls for UI tools preferences.
+     * 
+     * @param ctx the data binding context
+     * @param composite the parent composite to add the controls to
+     */
+    protected void createUIToolsControl(DataBindingContext ctx, Composite composite) {
+        var prefsObservable = PojoProperties.value("uiToolsPreferences", UiToolsPreferences.class) //$NON-NLS-1$
+                .observeDetail(metadataObservable);
+        var uidPrefsObservable = new ComputedValue<UidPreferences>() {
+
+            @Override
+            protected UidPreferences calculate() {
+                return prefsObservable.getValue().getToolPreferences(UidPreferences.class);
+            }
+
+        };
+
+        new ButtonWidget.Builder().withStyle(SWT.CHECK)
+                .withLabel(Messages.uiDesignerAutostart)
+                .withTooltip(Messages.uiDesignerAutostartTooltip)
+                .withLayoutData(GridDataFactory.swtDefaults().align(SWT.LEFT, SWT.TOP).span(2, 1).create())
+                .bindTo(PojoProperties.value(UidPreferences.AUTOSTART_FIELD_NAME, Boolean.class)
+                        .observeDetail(uidPrefsObservable))
+                .inContext(ctx)
+                .createIn(composite);
     }
 
     private String[] availableCompatibleVersions() {
@@ -239,6 +273,6 @@ public class ProjectMetadataPage implements ControlSupplier {
     }
 
     public ProjectMetadata getMetadata() {
-        return metadataObservale.getValue();
+        return metadataObservable.getValue();
     }
 }

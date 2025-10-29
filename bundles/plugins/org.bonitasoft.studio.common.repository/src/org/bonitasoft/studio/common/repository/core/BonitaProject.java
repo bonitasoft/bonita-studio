@@ -208,7 +208,7 @@ public interface BonitaProject extends GitProject, IAdaptable {
     }
 
     static BonitaProject create(String projectId) {
-        return new BonitaProjectImpl(projectId);
+        return BonitaProjectImpl.getInstance(projectId);
     }
 
     static WorkspaceJob updateMavenProjectsJob(Supplier<Collection<IProject>> projectsSupplier,

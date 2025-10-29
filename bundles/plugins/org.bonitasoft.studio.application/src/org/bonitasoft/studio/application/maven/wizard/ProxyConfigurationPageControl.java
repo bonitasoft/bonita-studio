@@ -100,7 +100,7 @@ public class ProxyConfigurationPageControl implements ControlSupplier {
         new TextWidget.Builder()
                 .withLabel(Messages.nonProxyHost)
                 .labelAbove()
-                .withTootltip(Messages.nonProxyHostsTootltip)
+                .withTooltip(Messages.nonProxyHostsTootltip)
                 .fill()
                 .horizontalSpan(2)
                 .grabHorizontalSpace()

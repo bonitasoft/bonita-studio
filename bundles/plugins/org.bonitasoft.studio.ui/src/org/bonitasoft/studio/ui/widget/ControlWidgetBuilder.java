@@ -22,7 +22,10 @@ import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.layout.RowData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 
@@ -36,6 +39,7 @@ public abstract class ControlWidgetBuilder<T, W extends ControlWidget> {
     protected boolean labelAbove = false;
 
     protected String label;
+    protected Optional<String> tooltip = Optional.empty();
     protected UpdateValueStrategy modelToTargetStrategy;
     protected UpdateValueStrategy targetToModelStrategy;
     protected Object layoutData;
@@ -58,6 +62,11 @@ public abstract class ControlWidgetBuilder<T, W extends ControlWidget> {
 
     public T withId(String id) {
         this.id = id;
+        return (T) this;
+    }
+
+    public T withTooltip(String tooltip) {
+        this.tooltip = Optional.ofNullable(tooltip);
         return (T) this;
     }
 
@@ -267,7 +276,7 @@ public abstract class ControlWidgetBuilder<T, W extends ControlWidget> {
         this.modelToTargetStrategy = modelToTargetStrategyFactory.create();
         return (T) this;
     }
-    
+
     public T withDelay(int delay) {
         this.delay = Optional.of(delay);
         return (T) this;

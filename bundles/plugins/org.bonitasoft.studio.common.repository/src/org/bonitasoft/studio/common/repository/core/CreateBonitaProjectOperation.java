@@ -22,6 +22,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 
 import org.apache.maven.model.Model;
@@ -32,6 +33,7 @@ import org.bonitasoft.studio.common.repository.BonitaProjectNature;
 import org.bonitasoft.studio.common.repository.core.maven.BonitaProjectBuilder;
 import org.bonitasoft.studio.common.repository.core.maven.MavenProjectHelper;
 import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
+import org.bonitasoft.studio.common.repository.core.maven.model.UiToolsPreferences;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRunnable;
@@ -99,6 +101,9 @@ public class CreateBonitaProjectOperation implements IWorkspaceRunnable {
                 .havingNatures(appProjectNatures())
                 .havingBuilders(appProjectBuilders())
                 .build(), monitor);
+
+        var prefMan = UiToolsPreferences.Manager.forProject(appProject);
+        Optional.ofNullable(metadata.getUiToolsPreferences()).ifPresent(prefMan::savePreferenceValues);
     }
 
     private Collection<String> appProjectNatures() {

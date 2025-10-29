@@ -112,7 +112,7 @@ public class DeployOrganizationControlSupplier implements ControlSupplier {
                 .fill()
                 .labelAbove()
                 .withProposalProvider(proposalProvider)
-                .withTootltip(Messages.defaultUserTooltip)
+                .withTooltip(Messages.defaultUserTooltip)
                 .bindTo(usernameObservable)
                 .withTargetToModelStrategy(UpdateStrategyFactory.updateValueStrategy()
                         .withValidator(defaultUserValidator()))

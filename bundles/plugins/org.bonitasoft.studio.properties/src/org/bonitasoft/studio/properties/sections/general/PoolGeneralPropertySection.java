@@ -110,7 +110,7 @@ public class PoolGeneralPropertySection extends AbstractBonitaDescriptionSection
                                 "Failed to remane pool", e); //$NON-NLS-1$
                     }
                 })
-                .withTootltip(Messages.technicalNameTooltip)
+                .withTooltip(Messages.technicalNameTooltip)
                 .withTargetToModelStrategy(convertUpdateValueStrategy()
                         .withValidator(getEAttributeValidator(ProcessPackage.Literals.ELEMENT__NAME))
                         .create())
@@ -164,7 +164,7 @@ public class PoolGeneralPropertySection extends AbstractBonitaDescriptionSection
                 .labelAbove()
                 .alignTop()
                 .widthHint(300)
-                .withTootltip(Messages.displayNameTooltip)
+                .withTooltip(Messages.displayNameTooltip)
                 .withMessage(Messages.displayNameCaption)
                 .withTargetToModelStrategy(updateValueStrategy().withValidator(new MultiValidator.Builder()
                         .havingValidators(new LengthValidator.Builder().maxLength(MAX_DISPLAYNAME_LENGTH)

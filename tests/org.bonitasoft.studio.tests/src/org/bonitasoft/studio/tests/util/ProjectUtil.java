@@ -35,6 +35,7 @@ import org.bonitasoft.studio.common.repository.core.maven.model.AppProjectConfig
 import org.bonitasoft.studio.common.repository.core.maven.plugin.ImportMavenModuleOperation;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.configuration.repository.EnvironmentFileStore;
+import org.bonitasoft.studio.designer.core.UIDesignerServerManager;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.identity.organization.repository.OrganizationFileStore;
@@ -66,7 +67,7 @@ public class ProjectUtil {
         removeUserExtensions();
     }
 
-    public static void waitForProjectOperations() throws CoreException {
+    public static void waitForProjectOperations(boolean includingUITools) throws CoreException {
         try {
             // wait for any initial build operation
             Job.getJobManager().join(ResourcesPlugin.getWorkspace().getRuleFactory().buildRule(), null);
@@ -78,9 +79,17 @@ public class ProjectUtil {
             Job.getJobManager().join(ResourcesPlugin.FAMILY_AUTO_BUILD, null);
             // and any post build operation added again in the process
             Job.getJobManager().join(ResourcesPlugin.getWorkspace().getRuleFactory().buildRule(), null);
+            if (includingUITools) {
+                // wait for UI Designer launch
+                Job.getJobManager().join(UIDesignerServerManager.class, null);
+            }
         } catch (OperationCanceledException | InterruptedException e) {
             throw new CoreException(Status.error("Error while waiting for project operations", e));
         }
+    }
+
+    public static void waitForProjectOperations() throws CoreException {
+        waitForProjectOperations(false);
     }
 
     public static void removeUserExtensions() throws CoreException {

@@ -14,22 +14,18 @@
  */
 package org.bonitasoft.studio.common.repository.core.internal;
 
-import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.core.BonitaProject;
-import org.bonitasoft.studio.common.repository.core.maven.MavenProjectHelper;
 import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdapterFactory;
-import org.eclipse.m2e.core.internal.IMavenConstants;
 
 public class BonitaProjectAdapterFactory implements IAdapterFactory {
 
     @SuppressWarnings("unchecked")
     @Override
     public <T> T getAdapter(Object adaptableObject, Class<T> adapterType) {
-        if (adapterType.equals(BonitaProject.class)) {
+        if (adapterType.isAssignableFrom(BonitaProject.class)) {
             if (adaptableObject instanceof IRepository) {
                 var repository = (IRepository) adaptableObject;
                 IProject project = repository.getProject();

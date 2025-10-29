@@ -97,7 +97,7 @@ public class BarExporter {
                     .mavenProject(mavenProject)
                     .connectorImplementationRegistry(
                             ConnectorImplementationRegistryHelper.getConnectorImplementationRegistry())
-                    .formBuilder(new RestFormBuilder(PageDesignerURLFactory.INSTANCE))
+                    .formBuilder(new RestFormBuilder(PageDesignerURLFactory.getInstance()))
                     .processRegistry(diagramStore)
                     .workingDirectory(workdir).build());
             var result = BuildScheduler.callWithBuildRule(() -> {

@@ -37,11 +37,12 @@ public class SearchWidget extends TextWidget {
         public SearchWidget createIn(Composite container) {
             final SearchWidget control = new SearchWidget(container, id, labelAbove, horizontalLabelAlignment,
                     verticalLabelAlignment, labelWidth, readOnly, label, message, useCompositeMessageDecorator,
-                    labelButton, imageButton, tooltipButton, toolkit, proposalProvider, editableStrategy, 
+                    labelButton, imageButton, tooltipButton, toolkit, proposalProvider, editableStrategy,
                     Optional.ofNullable(ctx), style);
             control.init();
             control.setLayoutData(layoutData != null ? layoutData : gridData);
             placeholder.ifPresent(control::setPlaceholder);
+            tooltip.ifPresent(control::setTooltip);
             if (ctx != null && modelObservable != null) {
                 control.bindControl(ctx,
                         delay.map(time -> control.observeText(time, SWT.Modify))

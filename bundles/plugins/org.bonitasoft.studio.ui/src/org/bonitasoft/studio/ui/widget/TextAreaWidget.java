@@ -42,15 +42,18 @@ public class TextAreaWidget extends TextWidget {
             final TextAreaWidget control = useNativeRender
                     ? new NativeTextAreaWidget(container, id, labelAbove, horizontalLabelAlignment,
                             verticalLabelAlignment, labelWidth, readOnly, label, message, useCompositeMessageDecorator,
-                            labelButton, imageButton, tooltipButton, toolkit, editableStrategy, Optional.ofNullable(ctx), 
+                            labelButton, imageButton, tooltipButton, toolkit, editableStrategy,
+                            Optional.ofNullable(ctx),
                             style, editable)
                     : new TextAreaWidget(container, id, labelAbove, horizontalLabelAlignment,
                             verticalLabelAlignment, labelWidth, readOnly, label, message, useCompositeMessageDecorator,
-                            labelButton, imageButton, tooltipButton, toolkit, editableStrategy, Optional.ofNullable(ctx), 
+                            labelButton, imageButton, tooltipButton, toolkit, editableStrategy,
+                            Optional.ofNullable(ctx),
                             style, editable);
             control.init();
             control.setLayoutData(layoutData != null ? layoutData : gridData);
             placeholder.ifPresent(control::setPlaceholder);
+            tooltip.ifPresent(control::setTooltip);
             if (ctx != null && modelObservable != null) {
                 control.bindControl(ctx,
                         delay.map(time -> control.observeText(time, SWT.Modify))

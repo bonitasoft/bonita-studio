@@ -51,7 +51,7 @@ public class MasterPasswordComposite extends Composite {
         var textWidget = new TextWidget.Builder()
                 .withLabel(Messages.encryptionMasterPassword)
                 .labelAbove()
-                .withTootltip(Messages.updateMasterPasswordWarning)
+                .withTooltip(Messages.updateMasterPasswordWarning)
                 .fill()
                 .grabHorizontalSpace()
                 .transactionalEdit((oldValue, newValue) -> passwordManager.updateMasterPassword(newValue))

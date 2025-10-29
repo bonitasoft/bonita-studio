@@ -29,7 +29,7 @@ public class BonitaAdvancedPreferencePage extends AbstractBonitaPreferencePage {
 
     public static final String HIDE_CONNECTOR_DEFINITION_CHANGE_WARNING = "HIDE_CONNECTOR_DEFINITION_CHANGE_WARNING";
 
-    private static final String ADVANCED_CONTRIBUTOR_ID = "Advanced";
+    public static final String ADVANCED_CONTRIBUTOR_ID = "Advanced";
 
     public BonitaAdvancedPreferencePage() {
         super(GRID);
@@ -44,14 +44,16 @@ public class BonitaAdvancedPreferencePage extends AbstractBonitaPreferencePage {
     @Override
     public void createFieldEditors() {
 
-        createTitleBar(Messages.BonitaPreferenceDialog_Advanced, Pics.getImage(PicsConstants.preferenceAdvanced), false);
+        createTitleBar(Messages.BonitaPreferenceDialog_Advanced, Pics.getImage(PicsConstants.preferenceAdvanced),
+                false);
 
         var showConnectorEditionConfirmation = new BooleanFieldEditor(
                 HIDE_CONNECTOR_DEFINITION_CHANGE_WARNING,
                 Messages.doNotDisplayConnectorDefConfirmationMessage, getFieldEditorParent());
         addField(showConnectorEditionConfirmation);
 
-        var notifyBdmDeploymentRequired = new BooleanFieldEditor(BonitaPreferenceConstants.NOTIFY_BDM_DEPLOYMENT_REQUIRED,
+        var notifyBdmDeploymentRequired = new BooleanFieldEditor(
+                BonitaPreferenceConstants.NOTIFY_BDM_DEPLOYMENT_REQUIRED,
                 Messages.notifyBdmDeploymentRequiredMessage, getFieldEditorParent());
         addField(notifyBdmDeploymentRequired);
 

@@ -21,8 +21,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-
-import jakarta.inject.Named;
+import java.util.function.BiFunction;
 
 import org.bonitasoft.studio.application.operation.SetProjectMetadataOperation;
 import org.bonitasoft.studio.application.ui.control.ProjectMetadataPage;
@@ -44,6 +43,8 @@ import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
+
+import jakarta.inject.Named;
 
 public abstract class AbstractProjectMetadataHandler {
 
@@ -85,9 +86,21 @@ public abstract class AbstractProjectMetadataHandler {
                         exceptionDialogHandler));
     }
 
+    private static BiFunction<ProjectMetadata, Boolean, ? extends ProjectMetadataPage> projectMetadataPageConstructor = ProjectMetadataPage::new;
+
+    /**
+     * Override the constructor used to create the project metadata page.
+     * 
+     * @param constructor the new constructor to use
+     */
+    public static void overrideProjectMetadataPageConstructor(
+            BiFunction<ProjectMetadata, Boolean, ? extends ProjectMetadataPage> constructor) {
+        projectMetadataPageConstructor = constructor;
+    }
+
     protected List<WizardPageBuilder> createPages(RepositoryAccessor repositoryAccessor, ProjectMetadata metadata) {
         List<WizardPageBuilder> pages = new ArrayList<>();
-        var projectMetadataPage = new ProjectMetadataPage(metadata, isNewProject());
+        var projectMetadataPage = projectMetadataPageConstructor.apply(metadata, isNewProject());
         pages.add(createProjectMetadataPage(projectMetadataPage));
         return pages;
 

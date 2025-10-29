@@ -16,6 +16,8 @@ package org.bonitasoft.studio.ui.widget;
 
 import java.util.Optional;
 
+import org.eclipse.jface.fieldassist.ControlDecoration;
+import org.eclipse.jface.fieldassist.FieldDecorationRegistry;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.layout.LayoutConstants;
@@ -52,7 +54,8 @@ public abstract class ControlWidget extends Composite {
             int labelHint,
             String labelValue,
             String message) {
-        this(parent, id, labelAbove, horizontalLabelAlignment, verticalLabelAlignment, labelHint, false, labelValue, message,
+        this(parent, id, labelAbove, horizontalLabelAlignment, verticalLabelAlignment, labelHint, false, labelValue,
+                message,
                 Optional.empty(), Optional.empty());
     }
 
@@ -130,4 +133,42 @@ public abstract class ControlWidget extends Composite {
     }
 
     protected abstract Control createControl();
+
+    /**
+     * Get the control that is the most important in this widget. Typically, the one that should receive focus events.
+     * 
+     * @return the control that is the most important in this widget
+     */
+    protected Control getMainControl() {
+        return control;
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see org.eclipse.swt.widgets.Composite#setFocus()
+     */
+    @Override
+    public boolean setFocus() {
+        var main = getMainControl();
+        if (main == null || main == this || main.isDisposed()) {
+            // avoid infinite loop or NPE or "Widget is disposed"
+            return super.setFocus();
+        }
+        return main.setFocus();
+    }
+
+    public void setTooltip(String tooltip) {
+        ControlDecoration controlDecoration = null;
+        if (label.isPresent()) {
+            controlDecoration = new ControlDecoration(label.get(), SWT.RIGHT, this);
+        } else {
+            controlDecoration = new ControlDecoration(getMainControl(), SWT.TOP | SWT.LEFT, this);
+        }
+        controlDecoration.setMarginWidth(labelAbove ? 5 : 2);
+        controlDecoration.setShowOnlyOnFocus(false);
+        controlDecoration.setImage(FieldDecorationRegistry.getDefault()
+                .getFieldDecoration(FieldDecorationRegistry.DEC_INFORMATION).getImage());
+        controlDecoration.setDescriptionText(tooltip);
+    }
+
 }

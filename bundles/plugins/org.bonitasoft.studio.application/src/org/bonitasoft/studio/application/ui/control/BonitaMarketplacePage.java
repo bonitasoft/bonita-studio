@@ -171,7 +171,7 @@ public class BonitaMarketplacePage implements ControlSupplier {
     public void pageChanged(PageChangedEvent event) {
         Object selectedPage = event.getSelectedPage();
         if (selectedPage instanceof IWizardPage
-                && Objects.equals(((IWizardPage) selectedPage).getControl(), mainComposite)
+                && Objects.equals(((IWizardPage) selectedPage).getControl(), mainComposite.getParent())
                 && dependencies == null) {
             Display.getDefault().asyncExec(() -> {
                 try {
@@ -388,15 +388,15 @@ public class BonitaMarketplacePage implements ControlSupplier {
                         .map(BonitaArtifactDependencyVersion::getVersion)
                         .orElse(""));
 
-        
-        Button addButton = latestCompatibleVersion.isPresent() && !marketItem.isInstalled() && marketItem.isInstallable()
-                ? createAddButton(marketItem, heading)
-                : null;
+        Button addButton = latestCompatibleVersion.isPresent() && !marketItem.isInstalled()
+                && marketItem.isInstallable()
+                        ? createAddButton(marketItem, heading)
+                        : null;
 
         if (addButton == null) {
-            if(marketItem.isInstalled()) {
+            if (marketItem.isInstalled()) {
                 createInstalledLabel(heading);
-            }else if(!marketItem.isInstallable()) {
+            } else if (!marketItem.isInstallable()) {
                 createEnterpriseLabel(heading);
             }
         }
@@ -405,7 +405,7 @@ public class BonitaMarketplacePage implements ControlSupplier {
         version.setLayoutData(
                 GridDataFactory.fillDefaults().grab(true, false).span(2, 1).create());
         // Some dependency versions are managed by the bonita-project
-        if(versionToDisplay != null && !versionToDisplay.isBlank()) {
+        if (versionToDisplay != null && !versionToDisplay.isBlank()) {
             version.setText(String.format("%s: %s", Messages.version, versionToDisplay));
         }
         version.setFont(JFaceResources.getFontRegistry().getItalic(JFaceResources.DEFAULT_FONT));
@@ -452,11 +452,11 @@ public class BonitaMarketplacePage implements ControlSupplier {
         enterpriseOnly.setLayoutData(GridDataFactory.fillDefaults().align(SWT.END, SWT.CENTER).create());
         enterpriseOnly.setText(Messages.enterpriseOnly);
         enterpriseOnly.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME, BonitaThemeConstants.GAV_TEXT_COLOR);
-        if(!PlatformUtil.isACommunityBonitaProduct()) { // BAR not accessible but using Studio SP
+        if (!PlatformUtil.isACommunityBonitaProduct()) { // BAR not accessible but using Studio SP
             enterpriseOnly.setToolTipText(Messages.configureBARTooltip);
         }
     }
-    
+
     private void addHoverListener(List<Control> controls) {
         controls.forEach(control -> control.addMouseTrackListener(new MouseTrackAdapter() {
 
@@ -583,7 +583,8 @@ public class BonitaMarketplacePage implements ControlSupplier {
                                             existingVersionEqualsOrGreater(matchingDependency.getVersion(), version));
                                 });
                     });
-            marketPlaceItem.setInstallable(!dep.isEnterprise() || (dep.isEnterprise() && !PlatformUtil.isACommunityBonitaProduct() && barAccessible));
+            marketPlaceItem.setInstallable(!dep.isEnterprise()
+                    || (dep.isEnterprise() && !PlatformUtil.isACommunityBonitaProduct() && barAccessible));
             marketPlaceItems.add(marketPlaceItem);
         }
     }

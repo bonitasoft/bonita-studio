@@ -21,6 +21,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
 import java.util.List;
 import java.util.Optional;
+import java.util.WeakHashMap;
+import java.util.function.Consumer;
 
 import org.apache.maven.model.Model;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
@@ -55,10 +57,18 @@ import com.google.common.base.Objects;
 
 public class BonitaProjectImpl implements BonitaProject {
 
+    private static WeakHashMap<String, BonitaProjectImpl> _instances = new WeakHashMap<>();
+
     private String id;
 
-    public BonitaProjectImpl(String id) {
+    private BonitaProjectImpl(String id) {
         this.id = id;
+    }
+
+    public static BonitaProject getInstance(String id) {
+        synchronized (_instances) {
+            return _instances.computeIfAbsent(id, BonitaProjectImpl::new);
+        }
     }
 
     @Override
@@ -265,7 +275,7 @@ public class BonitaProjectImpl implements BonitaProject {
         if (IProject.class.equals(adapter)) {
             return (T) appProject;
         } else if (GitProject.class.equals(adapter)) {
-            return (T) new GitProjectImpl(getParentProject());
+            return (T) GitProjectImpl.getInstance(getParentProject());
         } else if (RepositoryAccessor.class.equals(adapter)) {
             return (T) RepositoryManager.getInstance().getAccessor();
         } else if (IJavaProject.class.equals(adapter)) {
@@ -343,6 +353,22 @@ public class BonitaProjectImpl implements BonitaProject {
             }
         }
         return null;
+    }
+
+    @Override
+    public void addGitIgnoreCreatedListener(Consumer<GitProject> listener) {
+        var gitProject = getAdapter(GitProject.class);
+        if (gitProject != null) {
+            gitProject.addGitIgnoreCreatedListener(listener);
+        }
+    }
+
+    @Override
+    public void removeGitIgnoreCreatedListener(Consumer<GitProject> listener) {
+        var gitProject = getAdapter(GitProject.class);
+        if (gitProject != null) {
+            gitProject.removeGitIgnoreCreatedListener(listener);
+        }
     }
 
 }

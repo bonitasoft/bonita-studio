@@ -49,6 +49,7 @@ public class CComboWidget extends EditableControlWidget {
             if (items != null) {
                 control.setItems(items);
             }
+            tooltip.ifPresent(control::setTooltip);
             if (ctx != null && modelObservable != null) {
                 control.bindControl(ctx, control.observeComboText(), modelObservable, targetToModelStrategy,
                         modelToTargetStrategy);
@@ -123,5 +124,14 @@ public class CComboWidget extends EditableControlWidget {
 
     public CCombo getCombo() {
         return combo;
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see org.bonitasoft.studio.ui.widget.ControlWidget#getMainControl()
+     */
+    @Override
+    protected Control getMainControl() {
+        return getCombo();
     }
 }

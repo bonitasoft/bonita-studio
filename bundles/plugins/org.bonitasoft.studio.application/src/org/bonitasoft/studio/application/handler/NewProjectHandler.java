@@ -38,32 +38,32 @@ public class NewProjectHandler extends AbstractProjectMetadataHandler {
 
     @Override
     protected List<WizardPageBuilder> createPages(RepositoryAccessor repositoryAccessor, ProjectMetadata metadata) {
-          List<WizardPageBuilder> pages = super.createPages(repositoryAccessor, metadata);
-          
-          bonitaMarketplacePage = new BonitaMarketplacePage(BonitaMarketplacePage.CONNECTOR_TYPE);
-          pages.add(newPage()
-                  .withTitle(Messages.addExtensionPageTitle)
-                  .withDescription(Messages.addExtensionPageDescription)
-                  .withControl(bonitaMarketplacePage));
-          
-          return pages;
+        List<WizardPageBuilder> pages = super.createPages(repositoryAccessor, metadata);
+
+        bonitaMarketplacePage = new BonitaMarketplacePage(BonitaMarketplacePage.CONNECTOR_TYPE);
+        pages.add(newPage()
+                .withTitle(Messages.addExtensionPageTitle)
+                .withDescription(Messages.addExtensionPageDescription)
+                .withControl(bonitaMarketplacePage));
+
+        return pages;
     }
-    
+
     @Override
     protected WizardPageBuilder createProjectMetadataPage(ProjectMetadataPage projectMetadataPage) {
         return super.createProjectMetadataPage(projectMetadataPage)
                 .withNextPageButtonLabel(Messages.extensions);
     }
-    
+
     @Override
     protected WizardBuilder<IStatus> createWizard(RepositoryAccessor repositoryAccessor,
             MavenProjectHelper mavenProjectHelper, ExceptionDialogHandler exceptionDialogHandler,
             ProjectMetadata metadata, List<WizardPageBuilder> pages) {
         return super.createWizard(repositoryAccessor, mavenProjectHelper, exceptionDialogHandler, metadata, pages)
-                .withSize(750, 700)
+                .withSize(1000, 950)
                 .withFixedInitialSize();
     }
-    
+
     protected String getWizardDescription() {
         return Messages.newProjectWizardDescription;
     }
@@ -86,7 +86,7 @@ public class NewProjectHandler extends AbstractProjectMetadataHandler {
     protected boolean isNewProject() {
         return true;
     }
-    
+
     @Override
     protected ProjectMetadata initialMetadata(RepositoryAccessor repositoryAccessor) {
         ProjectMetadata metadata = ProjectMetadata.defaultMetadata();
@@ -94,11 +94,10 @@ public class NewProjectHandler extends AbstractProjectMetadataHandler {
         metadata.setArtifactId("");
         return metadata;
     }
-    
+
     @Override
     public String getFinishLabel() {
         return Messages.create;
     }
-
 
 }

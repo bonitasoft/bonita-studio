@@ -18,26 +18,39 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Objects;
 
-import jakarta.inject.Inject;
-import jakarta.inject.Singleton;
-
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.bonitasoft.studio.preferences.LocaleUtil;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.e4.core.di.annotations.Creatable;
 import org.eclipse.e4.core.di.extensions.Preference;
 
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
+
 @Creatable
 @Singleton
 public class PageDesignerURLFactory implements BonitaPreferenceConstants {
 
-    public static PageDesignerURLFactory INSTANCE;
+    private static PageDesignerURLFactory INSTANCE;
 
     private static final String WAR_CONTEXT_NAME = "bonita";
 
     private IEclipsePreferences preferenceStore;
 
     private int uidPort = -1;
+
+    /**
+     * Get the singleton instance, starting UI Designer if necessary.
+     * 
+     * @return the instance
+     */
+    public static PageDesignerURLFactory getInstance() {
+        if (INSTANCE == null) {
+            // we must eventually start the server before to initialize the factory
+            UIDesignerServerManager.getInstance().ensureStarted();
+        }
+        return INSTANCE;
+    }
 
     @Inject
     public PageDesignerURLFactory(
@@ -49,8 +62,7 @@ public class PageDesignerURLFactory implements BonitaPreferenceConstants {
     public PageDesignerURLFactory(int uidPort) {
         this.uidPort = uidPort;
     }
-    
-    
+
     public int getUidPort() {
         return Integer.valueOf(port());
     }

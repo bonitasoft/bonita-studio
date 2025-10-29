@@ -19,6 +19,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Optional;
 import java.util.Properties;
 
 import org.bonitasoft.engine.exception.BonitaHomeNotSetException;
@@ -32,6 +33,7 @@ import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.net.PortSelector;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.ui.jface.BonitaErrorDialog;
 import org.bonitasoft.studio.designer.core.UIDesignerServerManager;
 import org.bonitasoft.studio.engine.BOSEngineManager;
@@ -158,10 +160,13 @@ public class ServerPreferencePage extends AbstractBonitaPreferencePage implement
             return false;
         }
         if (newPort != -1) {
-            final String informationMessage = NLS.bind(Messages.updatePortWarningMessage,
-                    org.bonitasoft.studio.common.Messages.uiDesignerModuleName);
-            if (!MessageDialog.openConfirm(getShell(), Messages.updatePortWarningTitle, informationMessage)) {
-                return false;
+            // warn user to save any unfinished work in UI Designer, unless of course UI Designer is not running
+            if (UIDesignerServerManager.getInstance().isStarted()) {
+                final String informationMessage = NLS.bind(Messages.updatePortWarningMessage,
+                        org.bonitasoft.studio.common.Messages.uiDesignerModuleName);
+                if (!MessageDialog.openConfirm(getShell(), Messages.updatePortWarningTitle, informationMessage)) {
+                    return false;
+                }
             }
         }
 
@@ -205,7 +210,7 @@ public class ServerPreferencePage extends AbstractBonitaPreferencePage implement
         }
 
         if (newuidExtraParams != null && RepositoryManager.getInstance().getCurrentRepository().isPresent()) {
-            if (MessageDialog.openConfirm(getShell(), Messages.restartServer, Messages.restartServerConfirmationMsg)) {
+            if (shouldRestartUIDesignerServer()) {
                 new Job(Messages.restartingWebServer) {
 
                     @Override
@@ -228,6 +233,21 @@ public class ServerPreferencePage extends AbstractBonitaPreferencePage implement
             }
         }
         return ok;
+    }
+
+    /**
+     * Test whether UI Designer server should be restarted.
+     * 
+     * @return true when restart is needed, false otherwise.
+     */
+    private boolean shouldRestartUIDesignerServer() {
+        Optional<IRepository> repository = RepositoryManager.getInstance().getCurrentRepository();
+        if (repository.isPresent()
+                && UIDesignerServerManager.getInstance().shouldRestartAfterConfigurationChange(repository.get())) {
+            // ask user confirmation to restart the server
+            return MessageDialog.openConfirm(getShell(), Messages.restartServer, Messages.restartServerConfirmationMsg);
+        }
+        return false;
     }
 
     private void updateConsoleConfig(Properties properties) {

@@ -10,6 +10,8 @@ package org.bonitasoft.studio.ui.widget;
 
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
+import org.eclipse.jface.fieldassist.ControlDecoration;
+import org.eclipse.jface.fieldassist.FieldDecorationRegistry;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Button;
@@ -17,6 +19,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+
+import com.google.common.base.Strings;
 
 /**
  * API to create and parameterize a button
@@ -54,13 +58,14 @@ public class ButtonWidget extends ControlWidget {
             if (this.label != null) {
                 control.setText(label);
             }
+            tooltip.ifPresent(control::setTooltip);
             if (listener != null) {
                 control.onClick(listener);
             }
             if (ctx != null && modelObservable != null) {
                 ctx.bindValue(control.observeSelection(),
-                        modelObservable, 
-                        targetToModelStrategy, 
+                        modelObservable,
+                        targetToModelStrategy,
                         modelToTargetStrategy);
             }
             return control;
@@ -109,11 +114,12 @@ public class ButtonWidget extends ControlWidget {
     public IObservableValue<Boolean> observeSelection() {
         return WidgetProperties.buttonSelection().observe(button);
     }
-    
+
     @Override
     protected Control createControl() {
         button = new Button(this, style);
         button.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+        button.setAlignment((style & SWT.CHECK) > 0 ? SWT.LEFT : SWT.CENTER);
         return this;
     }
 
@@ -126,4 +132,35 @@ public class ButtonWidget extends ControlWidget {
     public Button getButton() {
         return button;
     }
+
+    /*
+     * (non-Javadoc)
+     * @see org.bonitasoft.studio.ui.widget.ControlWidget#getMainControl()
+     */
+    @Override
+    protected Control getMainControl() {
+        return getButton();
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see org.bonitasoft.studio.ui.widget.ControlWidget#setTooltip(java.lang.String)
+     */
+    @Override
+    public void setTooltip(String tooltip) {
+        int position;
+        if ((style & SWT.CHECK) > 0 && !Strings.isNullOrEmpty(button.getText())) {
+            // button text acts as a label
+            position = SWT.RIGHT;
+        } else {
+            position = SWT.TOP | SWT.LEFT;
+        }
+        ControlDecoration controlDecoration = new ControlDecoration(this, position, this.getParent());
+        controlDecoration.setMarginWidth(2);
+        controlDecoration.setShowOnlyOnFocus(false);
+        controlDecoration.setImage(FieldDecorationRegistry.getDefault()
+                .getFieldDecoration(FieldDecorationRegistry.DEC_INFORMATION).getImage());
+        controlDecoration.setDescriptionText(tooltip);
+    }
+
 }

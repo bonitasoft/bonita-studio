@@ -17,6 +17,7 @@ package org.bonitasoft.studio.common.repository.core.team;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.function.Consumer;
 
 import org.bonitasoft.studio.common.repository.core.internal.team.GitProjectImpl;
 import org.eclipse.core.runtime.CoreException;
@@ -29,17 +30,31 @@ public interface GitProject extends IAdaptable {
 
     static final String PARENT_GITIGNORE_TEMPLATE = ".gitignore.parent.template";
     static final String GITIGNORE_TEMPLATE = ".gitignore.template";
-    
+
     IRunnableWithProgress newConnectProviderOperation() throws CoreException;
-    
+
     IRunnableWithProgress newDiconnectProviderOperation() throws CoreException;
 
     void createDefaultIgnoreFile() throws CoreException;
-    
+
     File getGitDir();
-    
+
+    /**
+     * Registers a listener that will be called once the .gitignore file has been created.
+     * 
+     * @param listener the listener to register, that will receive the current GitProject as parameter.
+     */
+    void addGitIgnoreCreatedListener(Consumer<GitProject> listener);
+
+    /**
+     * Unregisters a listener previously registered with {@link #addGitIgnoreCreatedListener(Consumer)}.
+     * 
+     * @param listener the listener to unregister
+     */
+    void removeGitIgnoreCreatedListener(Consumer<GitProject> listener);
+
     void commitAll(String commitMessage, IProgressMonitor monitor) throws CoreException;
-    
+
     public static URL getGitignoreTemplateFileURL() throws IOException {
         return FileLocator.toFileURL(GitProjectImpl.class.getResource(GITIGNORE_TEMPLATE));
     }

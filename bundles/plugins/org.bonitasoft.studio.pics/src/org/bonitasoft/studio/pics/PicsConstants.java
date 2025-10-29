@@ -319,6 +319,11 @@ public class PicsConstants {
     public static String coolbar_uid_24 = "coolbar/24/uid.png";
     public static String coolbar_uid_hot_24 = "coolbar/24/uid_hot.png";
 
+    public static String coolbar_uib_32 = "coolbar/32/uib.png";
+    public static String coolbar_uib_hot_32 = "coolbar/32/uib_hot.png";
+    public static String coolbar_uib_24 = "coolbar/24/uib.png";
+    public static String coolbar_uib_hot_24 = "coolbar/24/uib_hot.png";
+
     public static String coolbar_overview_32 = "coolbar/32/overview.png";
     public static String coolbar_overview_hot_32 = "coolbar/32/overview_hot.png";
     public static String coolbar_overview_24 = "coolbar/24/overview.png";

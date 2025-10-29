@@ -21,7 +21,10 @@ import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.jface.dialogs.IPageChangedListener;
 import org.eclipse.jface.dialogs.PageChangedEvent;
 import org.eclipse.jface.wizard.WizardPage;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 
 public class WizardPageBuilder {
 
@@ -100,7 +103,15 @@ public class WizardPageBuilder {
             final DataBindingContext ctx = context.orElse(new DataBindingContext());
             NoMessageWizardPageSupport.create(this, ctx);
             controlSupplier.loadSettings(getDialogSettings());
-            setControl(controlSupplier.createControl(parent, getWizard().getContainer(), ctx));
+            // insert here a scrolled composite so we do not have truncated pages
+            var scrolledComposite = new ScrolledComposite(parent, SWT.V_SCROLL | SWT.H_SCROLL);
+            final Control content = controlSupplier.createControl(scrolledComposite, getWizard().getContainer(), ctx);
+            scrolledComposite.setContent(content);
+            scrolledComposite.setExpandHorizontal(true);
+            scrolledComposite.setExpandVertical(true);
+            scrolledComposite.setAlwaysShowScrollBars(false);
+            scrolledComposite.setMinSize(content.computeSize(SWT.DEFAULT, SWT.DEFAULT));
+            setControl(scrolledComposite);
         }
 
         @Override
@@ -113,20 +124,20 @@ public class WizardPageBuilder {
         this.nextPageButtonLabel = nextPageButtonLabel;
         return this;
     }
-    
+
     public WizardPageBuilder withBackPageButtonLabel(String backPageButtonLabel) {
         this.backPageButtonLabel = backPageButtonLabel;
         return this;
     }
-    
+
     public String getNextPageButtonLabel() {
         return nextPageButtonLabel;
     }
-    
+
     public String getBackPageButtonLabel() {
         return backPageButtonLabel;
     }
-    
+
     public String getTitle() {
         return title;
     }

@@ -42,6 +42,7 @@ public class ComboWidget extends EditableControlWidget {
             if (items != null) {
                 control.setItems(items);
             }
+            tooltip.ifPresent(control::setTooltip);
             if (ctx != null && modelObservable != null) {
                 control.bindControl(ctx,
                         delay.map(control::observeComboText)
@@ -124,5 +125,14 @@ public class ComboWidget extends EditableControlWidget {
 
     public IObservableValue<Boolean> observeEnable() {
         return WidgetProperties.enabled().observe(combo);
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see org.bonitasoft.studio.ui.widget.ControlWidget#getMainControl()
+     */
+    @Override
+    protected Control getMainControl() {
+        return getCombo();
     }
 }

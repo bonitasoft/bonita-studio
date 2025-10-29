@@ -117,6 +117,9 @@
           <adapter
                 type="org.bonitasoft.studio.common.repository.core.BonitaProject">
           </adapter>
+          <adapter
+                type="org.bonitasoft.studio.common.repository.core.team.GitProject">
+          </adapter>
        </factory>
        <factory
              adaptableType="org.eclipse.core.resources.IProject"
@@ -124,6 +127,7 @@
           <adapter
                 type="org.bonitasoft.studio.common.repository.core.BonitaProject">
           </adapter>
+          <adapter type="org.bonitasoft.studio.common.repository.core.team.GitProject" />
        </factory>
     </extension>
     <extension

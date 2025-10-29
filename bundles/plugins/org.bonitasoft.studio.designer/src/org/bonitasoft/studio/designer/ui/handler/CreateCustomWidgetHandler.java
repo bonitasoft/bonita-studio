@@ -59,7 +59,7 @@ public class CreateCustomWidgetHandler extends AbstractHandler {
 
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
-        create(Display.getDefault().getActiveShell(), PageDesignerURLFactory.INSTANCE, RepositoryManager.getInstance().getAccessor());
+        create(Display.getDefault().getActiveShell(), PageDesignerURLFactory.getInstance(), RepositoryManager.getInstance().getAccessor());
         return null;
     }
 }

@@ -556,7 +556,7 @@ public class ImportExtensionPage implements ControlSupplier {
             List<IValidator> validators) {
         return new TextWidget.Builder()
                 .withLabel(label + (mandatory ? " *" : ""))
-                .withTootltip(tooltip)
+                .withTooltip(tooltip)
                 .labelAbove()
                 .grabHorizontalSpace()
                 .bindTo(binding)

@@ -85,7 +85,7 @@ public abstract class CreateUIDArtifactOperation implements IRunnableWithProgres
         checkArgument(pageDesignerURLBuilder != null);
         this.pageDesignerURLBuilder = pageDesignerURLBuilder;
     }
-    
+
     public CreateUIDArtifactOperation disableOpenBrowser() {
         this.disableOpenBrowser = true;
         return this;
@@ -95,6 +95,7 @@ public abstract class CreateUIDArtifactOperation implements IRunnableWithProgres
     public final void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
         monitor.beginTask(getTaskName(), IProgressMonitor.UNKNOWN);
         if (!UIDesignerServerManager.getInstance().isStarted()) {
+            // no need to check autostart preference for UI Designer, we must start it anyway to create artifacts.
             monitor.subTask(NLS.bind(Messages.waitingForUIDesigner,
                     org.bonitasoft.studio.common.Messages.uiDesignerModuleName));
             UIDesignerServerManager.getInstance().start(repositoryAccessor.getCurrentRepository().orElseThrow(),
@@ -116,8 +117,8 @@ public abstract class CreateUIDArtifactOperation implements IRunnableWithProgres
         try {
             HttpResponse<InputStream> response = HttpClientFactory.INSTANCE.send(
                     HttpRequest.newBuilder(url.toURI())
-                    .header("Content-Type", "application/json")
-                    .POST(BodyPublishers.ofString(entity)).build(),
+                            .header("Content-Type", "application/json")
+                            .POST(BodyPublishers.ofString(entity)).build(),
                     BodyHandlers.ofInputStream());
             try (var is = response.body()) {
                 return objectMapper.readValue(is, new TypeReference<Map<String, Object>>() {
@@ -148,9 +149,9 @@ public abstract class CreateUIDArtifactOperation implements IRunnableWithProgres
     }
 
     protected void openArtifact(String artifactId) throws InvocationTargetException {
-        if(disableOpenBrowser) {
+        if (disableOpenBrowser) {
             BonitaStudioLog.debug("Open browser disabled.", CreateUIDArtifactOperation.class);
-            return ;
+            return;
         }
         try {
             switch (getArtifactType()) {

@@ -36,6 +36,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -45,21 +47,29 @@ import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.net.PortSelector;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.IBonitaProjectListener;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.core.maven.model.UiToolsPreferences;
+import org.bonitasoft.studio.common.repository.core.maven.model.UiToolsPreferences.Manager;
+import org.bonitasoft.studio.common.repository.core.maven.model.UiToolsPreferences.UidPreferences;
 import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.designer.UIDesignerPlugin;
 import org.bonitasoft.studio.designer.i18n.Messages;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.eclipse.core.externaltools.internal.IExternalToolConstants;
+import org.eclipse.core.internal.resources.ProjectPreferences;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences.IPreferenceChangeListener;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences.PreferenceChangeEvent;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.DebugPlugin;
@@ -78,7 +88,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 import org.osgi.framework.Bundle;
 
-public class UIDesignerServerManager implements IBonitaProjectListener {
+public class UIDesignerServerManager implements IBonitaProjectListener, IPreferenceChangeListener {
 
     private static final String UI_DESIGNER_JAR = "ui-designer-backend-webapp.jar";
     private static final String UID_SERVER_PORT = "server.port";
@@ -163,7 +173,7 @@ public class UIDesignerServerManager implements IBonitaProjectListener {
             final ILaunchConfigurationWorkingCopy workingCopy = ltype.newInstance(null, "Standalone UI Designer");
             workingCopy.setAttribute(IExternalToolConstants.ATTR_LOCATION, javaBinaryLocation());
             workingCopy.setAttribute(IExternalToolConstants.ATTR_TOOL_ARGUMENTS,
-                    buildCommand(repository.getProject().getLocation().toFile().toPath(), 
+                    buildCommand(repository.getProject().getLocation().toFile().toPath(),
                             pageDesignerURLBuilder.getUidPort(),
                             healthCheckServerPort,
                             dataRepositoryPort, true).stream()
@@ -208,17 +218,18 @@ public class UIDesignerServerManager implements IBonitaProjectListener {
      * 
      * @param projectPath
      * @param logFile
-     * @return 
+     * @return
      * @throws IOException
      */
-    private Process start(Path projectPath, PageDesignerURLFactory pageDesignerURLBuilder, File logFile) throws IOException {
-        if(pageDesignerURLBuilder == null) {
+    private Process start(Path projectPath, PageDesignerURLFactory pageDesignerURLBuilder, File logFile)
+            throws IOException {
+        if (pageDesignerURLBuilder == null) {
             pageDesignerURLBuilder = new PageDesignerURLFactory(getPreferenceStore());
         }
         var java = javaBinaryLocation();
         var command = new ArrayList<String>();
         command.add(java);
-        command.addAll(buildCommand(projectPath,pageDesignerURLBuilder.getUidPort(),-1, -1, false));
+        command.addAll(buildCommand(projectPath, pageDesignerURLBuilder.getUidPort(), -1, -1, false));
         var uidProcess = new ProcessBuilder()
                 .command(command)
                 .redirectErrorStream(true)
@@ -249,6 +260,11 @@ public class UIDesignerServerManager implements IBonitaProjectListener {
                 }
                 return Status.OK_STATUS;
             }
+
+            public boolean belongsTo(Object family) {
+                return UIDesignerServerManager.class.equals(family);
+            }
+
         }.schedule();
     }
 
@@ -366,7 +382,7 @@ public class UIDesignerServerManager implements IBonitaProjectListener {
         if (isPortInUse(uidPort)) {
             port = PortSelector.findFreePort();
             getPreferenceStore().putInt(BonitaPreferenceConstants.UID_PORT, port);
-        }else {
+        } else {
             port = uidPort;
         }
         var commandList = new ArrayList<String>();
@@ -376,7 +392,7 @@ public class UIDesignerServerManager implements IBonitaProjectListener {
         commandList.add(aSystemProperty(UID_TMP_FOLDER, tmpFolder(quotePath)));
         commandList.add(aSystemProperty(UID_SERVER_PORT, String.valueOf(port)));
         commandList.add(aSystemProperty(UID_LOGGING_FILE,
-                quotePath ?  "\"" +  getLogFile().getAbsolutePath() + "\"" : getLogFile().getAbsolutePath()));
+                quotePath ? "\"" + getLogFile().getAbsolutePath() + "\"" : getLogFile().getAbsolutePath()));
         if (workspaceResourceServerPort > 0) {
             commandList.add(workspaceSystemProperties.getRestAPIURL(workspaceResourceServerPort));
         }
@@ -405,6 +421,15 @@ public class UIDesignerServerManager implements IBonitaProjectListener {
         return port;
     }
 
+    /**
+     * Ensure that the UID server is started.
+     */
+    public void ensureStarted() {
+        if (!isStarted()) {
+            start(RepositoryManager.getInstance().getCurrentRepository().orElseThrow(), new NullProgressMonitor());
+        }
+    }
+
     protected String locateUIDjar() throws IOException {
         Bundle uiDesignerBundle = Platform.getBundle(UIDesignerPlugin.PLUGIN_ID);
         IPath stateLocation = Platform.getStateLocation(uiDesignerBundle);
@@ -423,12 +448,12 @@ public class UIDesignerServerManager implements IBonitaProjectListener {
         }
         return uiDesignerJar.toFile().getCanonicalFile().getAbsolutePath();
     }
-    
+
     protected String tmpFolder(boolean quotePath) throws IOException {
         Bundle uiDesignerBundle = Platform.getBundle(UIDesignerPlugin.PLUGIN_ID);
         IPath stateLocation = Platform.getStateLocation(uiDesignerBundle);
         var tmpFolder = stateLocation.append("uid-tmp-workspace").toFile();
-        return quotePath ? "\"" +  tmpFolder.toURI() + "\"" : tmpFolder.toURI().toString();
+        return quotePath ? "\"" + tmpFolder.toURI() + "\"" : tmpFolder.toURI().toString();
     }
 
     protected ILaunchManager getLaunchManager() {
@@ -445,15 +470,65 @@ public class UIDesignerServerManager implements IBonitaProjectListener {
 
     @Override
     public void projectOpened(IRepository repository, IProgressMonitor monitor) {
-        start(repository, monitor);
+        if (shouldRestartAfterConfigurationChange(repository)) {
+            start(repository, monitor);
+        }
+        getProjectPreferenceManager(repository).addPreferenceListener(this);
     }
 
     @Override
     public void projectClosed(IRepository repository, IProgressMonitor monitor) {
+        getProjectPreferenceManager(repository).removePreferenceListener(this);
         stop();
     }
 
-    public UIDStandaloneInstance startStandalone(Path uidWorkspace, 
+    @Override
+    public void preferenceChange(PreferenceChangeEvent event) {
+        if (!isStarted() && UidPreferences.isEventForField(UidPreferences.AUTOSTART_FIELD_NAME, event)) {
+            Optional<Boolean> newValue = Optional.ofNullable(event.getNewValue()).map(Objects::toString)
+                    .map(Boolean::parseBoolean);
+            if (newValue.orElse(false)) {
+                final Optional<IRepository> currentRepository = RepositoryManager.getInstance().getCurrentRepository();
+                boolean pathsMatch;
+                if (event.getSource() instanceof ProjectPreferences prefs) {
+                    // check that the current repository is the same as the one in the preferences scope
+                    var currentRepoPath = currentRepository.map(r -> r.getProject().getFullPath().toPortableString())
+                            .orElse("//");
+                    pathsMatch = prefs.absolutePath().startsWith("/project" + currentRepoPath + "/");
+                } else {
+                    // no check
+                    pathsMatch = true;
+                }
+                if (pathsMatch) {
+                    // Autostart is now enabled, start the UID server
+                    new Job(Messages.startingUIDesigner) {
+
+                        @Override
+                        protected IStatus run(IProgressMonitor monitor) {
+                            start(currentRepository.orElseThrow(), monitor);
+                            return Status.OK_STATUS;
+                        }
+
+                        /*
+                         * (non-Javadoc)
+                         * @see org.eclipse.core.runtime.jobs.Job#belongsTo(java.lang.Object)
+                         */
+                        @Override
+                        public boolean belongsTo(Object family) {
+                            return UIDesignerServerManager.class.equals(family);
+                        }
+                    }.schedule();
+                }
+                /*
+                 * Else, we are most probably switching to another repository
+                 * or creating a new repository.
+                 * Project opening will take care of UID startup.
+                 */
+            }
+        }
+    }
+
+    public UIDStandaloneInstance startStandalone(Path uidWorkspace,
             File logFile,
             IProgressMonitor monitor) throws IOException {
         monitor.subTask(Messages.startingUIDesigner);
@@ -462,8 +537,8 @@ public class UIDesignerServerManager implements IBonitaProjectListener {
         var uidProcess = start(uidWorkspace, urlBuilder, logFile);
         return new UIDStandaloneInstance(uidProcess, urlBuilder);
     }
-    
-    public class UIDStandaloneInstance implements AutoCloseable{
+
+    public class UIDStandaloneInstance implements AutoCloseable {
 
         private Process uidProcess;
         private PageDesignerURLFactory urlBuilder;
@@ -472,20 +547,52 @@ public class UIDesignerServerManager implements IBonitaProjectListener {
             this.uidProcess = uidProcess;
             this.urlBuilder = urlBuilder;
         }
-        
-        public <T> void onExit(BiFunction<Process,Throwable,? extends T> exitHandler) {
+
+        public <T> void onExit(BiFunction<Process, Throwable, ? extends T> exitHandler) {
             uidProcess.onExit().handleAsync(exitHandler);
         }
 
         @Override
-        public void close(){
+        public void close() {
             uidProcess.destroy();
         }
-        
+
         public PageDesignerURLFactory getUrlBuilder() {
             return urlBuilder;
         }
-        
+
+    }
+
+    /**
+     * Test whether UI Designer server should be restarted after a configuration change.<br/>
+     * There is no need to restart the server if it is not started and the autostart preference for UI Designer is false.
+     * 
+     * @param repository the current repository
+     * @return true when restart is needed, false otherwise.
+     */
+    public boolean shouldRestartAfterConfigurationChange(IRepository repository) {
+        if (!UIDesignerServerManager.getInstance().isStarted()) {
+            // There is no server running. Check autostart preference for UI Designer on current project.
+            var man = getProjectPreferenceManager(repository);
+            var projectPrefs = man.getPreferenceValues();
+            if (!projectPrefs.getToolPreferences(UidPreferences.class).isAutostart()) {
+                // no need to restart
+                return false;
+            }
+        }
+        // a restart is needed to take the new configuration into account
+        return true;
+    }
+
+    /**
+     * Get the project preference manager for the current repository.
+     * 
+     * @param repository the current repository
+     * @return preference manager (or empty)
+     */
+    private Manager getProjectPreferenceManager(IRepository repository) {
+        var appProject = repository.getProject();
+        return UiToolsPreferences.Manager.forProject(appProject);
     }
 
 }

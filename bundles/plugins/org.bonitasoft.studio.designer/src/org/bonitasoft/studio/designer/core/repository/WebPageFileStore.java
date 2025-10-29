@@ -76,7 +76,7 @@ public class WebPageFileStore extends InFolderJSONFileStore
 
     public WebPageFileStore(final String fileName, final IRepositoryStore<? extends IRepositoryFileStore> parentStore) {
         super(fileName, parentStore);
-        formBuilder = new RestFormBuilder(PageDesignerURLFactory.INSTANCE);
+        formBuilder = new RestFormBuilder(PageDesignerURLFactory.getInstance());
     }
 
     @Override
@@ -188,7 +188,7 @@ public class WebPageFileStore extends InFolderJSONFileStore
     public Collection<String> getPageResources() {
         try {
             HttpResponse<InputStream> response = HttpClientFactory.INSTANCE
-                    .send(HttpRequest.newBuilder(PageDesignerURLFactory.INSTANCE.resources(getId()).toURI())
+                    .send(HttpRequest.newBuilder(PageDesignerURLFactory.getInstance().resources(getId()).toURI())
                             .GET().build(), BodyHandlers.ofInputStream());
             return response != null ? parseExtensionResources(response) : Collections.emptyList();
         } catch (URISyntaxException | IOException | InterruptedException e) {
