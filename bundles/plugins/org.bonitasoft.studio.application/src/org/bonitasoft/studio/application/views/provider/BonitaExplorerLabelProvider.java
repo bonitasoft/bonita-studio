@@ -44,6 +44,12 @@ import org.eclipse.ui.navigator.ICommonContentExtensionSite;
 
 public class BonitaExplorerLabelProvider extends JavaNavigatorLabelProvider {
 
+    /** The relative path of the web applications folder in the project. */
+    private static final String WEB_APPLICATIONS_FOLDER = "web_applications";
+
+    /** The display label for the web applications folder. */
+    private static final String WEB_APPLICATIONS_LABEL = "Web applications";
+
     private PackageExplorerProblemsDecorator packageExplorerProblemsDecorator;
     private FileStoreFinder fileStoreFinder;
     private GroovyNavigatorLabelProvider groovyNavigatorLabelProvider;
@@ -101,6 +107,9 @@ public class BonitaExplorerLabelProvider extends JavaNavigatorLabelProvider {
                 }
             }
         }
+        if (isFolder(element, WEB_APPLICATIONS_FOLDER)) {
+            return packageExplorerProblemsDecorator.decorateImage(Pics.getImage(PicsConstants.webApplications), element);
+        }
         if (!(element instanceof PackageFragment)) {
             Optional<IRepositoryStore<? extends IRepositoryFileStore>> repositoryStore = repositoryManager
                     .getRepositoryStore(element);
@@ -126,6 +135,10 @@ public class BonitaExplorerLabelProvider extends JavaNavigatorLabelProvider {
                 .filter(currentProject -> Objects.equals(currentProject, element))
                 .isPresent()) {
             return Adapters.adapt(repositoryManager.getCurrentRepository().get(), IDisplayable.class).getStyledString();
+        }
+
+        if (isFolder(element, WEB_APPLICATIONS_FOLDER)) {
+            return new StyledString(WEB_APPLICATIONS_LABEL);
         }
 
         if (!(element instanceof IPackageFragment)) {

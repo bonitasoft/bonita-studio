@@ -503,6 +503,7 @@ public class PicsConstants {
     public static String profile32 = "artifacts/profile32.png";
     public static String application = "artifacts/application.png";
     public static String application32 = "artifacts/application32.png";
+    public static String webApplications = "artifacts/uib.png";
     public static String documentation = "artifacts/documentation.png";
     public static String documentation32 = "artifacts/documentation32.png";
     public static String page = "artifacts/page.png";
