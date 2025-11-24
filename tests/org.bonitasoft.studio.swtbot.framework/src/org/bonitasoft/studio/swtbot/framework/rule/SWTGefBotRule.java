@@ -152,6 +152,24 @@ public class SWTGefBotRule implements TestRule {
                     // not in a dialog
                 }
                 try {
+                    bot.button(IDialogConstants.ABORT_LABEL).click();
+                    break;
+                } catch (Throwable t) {
+                    // not in a dialog
+                }
+                try {
+                    bot.button(IDialogConstants.IGNORE_LABEL).click();
+                    break;
+                } catch (Throwable t) {
+                    // not in a dialog
+                }
+                try {
+                    bot.button(IDialogConstants.OK_LABEL).click();
+                    break;
+                } catch (Throwable t) {
+                    // not in a dialog
+                }
+                try {
                     shell.close();
                 } catch (TimeoutException e1) {
                     System.out.println(String.format("Failed to close shell %s: %s", shell.getText(), e1));

@@ -250,7 +250,7 @@ public class ProjectCompositionIT {
                 String.format(org.bonitasoft.studio.connector.model.i18n.Messages.definitionUpdateChangeDescription,
                         "email",
                         "1.0.0",
-                        "1.2.0",
+                        "1.3.0",
                         1));
         updateConnectorItem.expand();
         assertThat(updateConnectorItem.getNodes())
@@ -261,7 +261,7 @@ public class ProjectCompositionIT {
         bot.waitWhile(Conditions.shellIsActive(JFaceResources.getString("ProgressMonitorDialog.title")), 15000);
 
         assertThat(connectorDefinitionRegistry.find("email", "1.0.0")).isPresent();
-        assertThat(connectorDefinitionRegistry.find("email", "1.2.0")).isEmpty();
+        assertThat(connectorDefinitionRegistry.find("email", "1.3.0")).isEmpty();
         worbenchBot.waitEndOfBuilds(15000);
 
         projectDetailsBot
@@ -277,7 +277,7 @@ public class ProjectCompositionIT {
             @Override
             protected void makeAssert() throws Exception {
                 assertThat(connectorDefinitionRegistry.find("email", "1.0.0")).isEmpty();
-                assertThat(connectorDefinitionRegistry.find("email", "1.2.0")).isPresent();
+                assertThat(connectorDefinitionRegistry.find("email", "1.3.0")).isPresent();
                 var diagramStore = repositoryAccessor.getRepositoryStore(DiagramRepositoryStore.class);
                 var process = diagramStore.findProcess("EmailConnectorUpdate", "1.0");
                 assertThat(process).isNotNull();
@@ -287,7 +287,7 @@ public class ProjectCompositionIT {
                 assertThat(emailConnector.getDefinitionId())
                         .isEqualTo("email");
                 assertThat(emailConnector.getDefinitionVersion())
-                        .isEqualTo("1.2.0");
+                        .isEqualTo("1.3.0");
                 assertThat(emailConnector.getConfiguration().getParameters())
                         .extracting(ConnectorParameter::getKey)
                         .contains("returnPath", "trustCertificate");
@@ -303,7 +303,7 @@ public class ProjectCompositionIT {
         assertThat(removeConnectorItem.getText()).isEqualTo(
                 String.format(Messages.definitionRemovedDescription,
                         "email",
-                        "1.2.0",
+                        "1.3.0",
                         1));
         bot.button(IDialogConstants.PROCEED_LABEL).click();
         bot.waitWhile(Conditions.shellIsActive(JFaceResources.getString("ProgressMonitorDialog.title")), 15000);
