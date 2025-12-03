@@ -19,11 +19,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.List;
-import java.util.Objects;
 
-import org.apache.maven.execution.BuildSuccess;
-import org.apache.maven.execution.MavenExecutionResult;
 import org.apache.maven.project.MavenProject;
 import org.bonitasoft.bonita2bar.BarBuilderFactory;
 import org.bonitasoft.bonita2bar.BarBuilderFactory.BuildConfig;
@@ -32,22 +28,22 @@ import org.bonitasoft.bpm.model.configuration.Configuration;
 import org.bonitasoft.bpm.model.configuration.ConfigurationFactory;
 import org.bonitasoft.bpm.model.process.AbstractProcess;
 import org.bonitasoft.bpm.model.process.Pool;
-import org.bonitasoft.engine.bpm.bar.BusinessArchive;
-import org.bonitasoft.studio.common.FileUtil;
 import org.bonitasoft.studio.common.ModelVersion;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
-import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.BuildScheduler;
-import org.bonitasoft.studio.common.repository.RepositoryManager;
-import org.bonitasoft.studio.common.repository.core.BonitaProject;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.configuration.ConfigurationPlugin;
 import org.bonitasoft.studio.configuration.ConfigurationSynchronizer;
 import org.bonitasoft.studio.configuration.preferences.ConfigurationPreferenceConstants;
+import org.bonitasoft.studio.diagram.custom.repository.ProcessConfigurationRepositoryStore;
+import org.bonitasoft.engine.bpm.bar.BusinessArchive;
+import org.bonitasoft.studio.common.FileUtil;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.repository.BuildScheduler;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.core.BonitaProject;
 import org.bonitasoft.studio.designer.core.PageDesignerURLFactory;
 import org.bonitasoft.studio.designer.core.bar.RestFormBuilder;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
-import org.bonitasoft.studio.diagram.custom.repository.ProcessConfigurationRepositoryStore;
 import org.bonitasoft.studio.engine.ConnectorImplementationRegistryHelper;
 import org.bonitasoft.studio.engine.EnginePlugin;
 import org.eclipse.core.resources.IProject;
@@ -55,12 +51,9 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.m2e.core.MavenPlugin;
-import org.eclipse.m2e.core.embedder.ICallable;
-import org.eclipse.m2e.core.embedder.IMavenExecutionContext;
 import org.eclipse.m2e.core.project.IMavenProjectFacade;
 
 public class BarExporter {
@@ -68,7 +61,6 @@ public class BarExporter {
     private static BarExporter INSTANCE;
 
     protected BarExporter() {
-
     }
 
     public static BarExporter getInstance() {
@@ -78,6 +70,37 @@ public class BarExporter {
         return INSTANCE;
     }
 
+    /**
+     * Creates a Business Archive (BAR) for the given process and configuration.
+     * <p>
+     * <b>Important:</b> This method reads the compiled Maven artifacts from the target directory.
+     * Therefore, you <b>MUST</b> call {@link MavenProjectBuilder#cleanInstall()} or
+     * {@link MavenProjectBuilder#cleanInstall(org.bonitasoft.studio.common.repository.core.BonitaProject)}
+     * <b>BEFORE</b> calling this method to ensure the artifacts are up-to-date and properly compiled.
+     * </p>
+     * <p>
+     * Example usage:
+     * <pre>
+     * // 1. Build the Maven project FIRST
+     * MavenProjectBuilder mavenBuilder = new MavenProjectBuilder();
+     * IStatus buildStatus = mavenBuilder.cleanInstall(project, monitor);
+     * if (!buildStatus.isOK()) {
+     *     throw new BuildBarException("Maven build failed");
+     * }
+     *
+     * // 2. THEN create the BAR
+     * BarExporter exporter = BarExporter.getInstance();
+     * BusinessArchive bar = exporter.createBusinessArchive(process, configuration);
+     * </pre>
+     * </p>
+     *
+     * @param process the process to export as a BAR, must not be null
+     * @param configuration the configuration to use for the export, must not be null
+     * @return the created Business Archive
+     * @throws BuildBarException if the BAR creation fails
+     * @see MavenProjectBuilder#cleanInstall()
+     * @see MavenProjectBuilder#cleanInstall(org.bonitasoft.studio.common.repository.core.BonitaProject)
+     */
     public BusinessArchive createBusinessArchive(final Pool process, final Configuration configuration)
             throws BuildBarException {
         checkArgument(configuration != null);
@@ -87,7 +110,6 @@ public class BarExporter {
         try {
             workdir = Files.createTempDirectory("bar");
             var project = RepositoryManager.getInstance().getCurrentProject().orElseThrow();
-            ensureRootProjectInstalled(project);
             var diagramStore = RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
             var mavenProject = getMavenProject(project.getAppProject(), new NullProgressMonitor());
             var barBuilder = BarBuilderFactory.create(BuildConfig.builder()
@@ -115,56 +137,6 @@ public class BarExporter {
         }
     }
 
-    /**
-     * Ensures the root project is built and installed first, so we'll be able to resolve maven dependencies.
-     * 
-     * @param project bonita project
-     * @throws CoreException eclipse exception
-     * @throws BuildBarException exception while building
-     */
-    private void ensureRootProjectInstalled(BonitaProject project) throws CoreException, BuildBarException {
-        BonitaStudioLog.info("Building project " + project.getDisplayName() + " before building bar...",
-                EnginePlugin.PLUGIN_ID);
-
-        var result = BuildScheduler.callWithBuildRule(() -> {
-            var mavenRootProject = MavenPlugin.getMavenProjectRegistry().getProject(project.getParentProject());
-            if (mavenRootProject == null) {
-                return new Status(IStatus.ERROR, getClass(),
-                        "An error occurred while executing bonita project plugin. Cannot resolve the Maven project.");
-            }
-            var ctx = mavenRootProject.createExecutionContext();
-            var request = ctx.getExecutionRequest();
-            request.setGoals(
-                    List.of("clean", "install"));
-            request.setPom(mavenRootProject.getPomFile());
-            MavenExecutionResult executionResult = MavenPlugin.getMavenProjectRegistry().execute(mavenRootProject,
-                    new ICallable<MavenExecutionResult>() {
-
-                        @Override
-                        public MavenExecutionResult call(IMavenExecutionContext context, IProgressMonitor monitor)
-                                throws CoreException {
-                            return context.execute(request);
-                        }
-
-                    }, new NullProgressMonitor());
-            if (executionResult.getBuildSummary(executionResult.getProject()) instanceof BuildSuccess) {
-                return Status.OK_STATUS;
-            } else {
-                throw new CoreException(
-                        new Status(IStatus.ERROR, getClass(), "Failed to build bonita project",
-                                executionResult.hasExceptions() ? executionResult.getExceptions().get(0) : null));
-            }
-        }, new NullProgressMonitor());
-        if (!result.isOK()) {
-            throw new CoreException(result);
-        }
-        try {
-            BuildScheduler.joinOnBuildRule();
-        } catch (IllegalStateException | OperationCanceledException | InterruptedException e) {
-            throw new BuildBarException(e);
-        }
-    }
-
     private MavenProject getMavenProject(IProject project, IProgressMonitor monitor) throws CoreException {
         IMavenProjectFacade projectFacade = MavenPlugin.getMavenProjectRegistry().getProject(project);
         if (projectFacade == null) {
@@ -173,6 +145,27 @@ public class BarExporter {
         return projectFacade.getMavenProject(monitor);
     }
 
+    /**
+     * Creates a Business Archive (BAR) for the given process and configuration ID.
+     * <p>
+     * This is a convenience method that resolves the configuration by ID and delegates to
+     * {@link #createBusinessArchive(Pool, Configuration)}.
+     * </p>
+     * <p>
+     * <b>Important:</b> This method reads the compiled Maven artifacts from the target directory.
+     * Therefore, you <b>MUST</b> call {@link MavenProjectBuilder#cleanInstall()} or
+     * {@link MavenProjectBuilder#cleanInstall(org.bonitasoft.studio.common.repository.core.BonitaProject)}
+     * <b>BEFORE</b> calling this method to ensure the artifacts are up-to-date and properly compiled.
+     * </p>
+     *
+     * @param process the process to export as a BAR, must not be null
+     * @param configurationId the configuration ID to use for the export
+     * @return the created Business Archive
+     * @throws BuildBarException if the BAR creation fails
+     * @see #createBusinessArchive(Pool, Configuration)
+     * @see MavenProjectBuilder#cleanInstall()
+     * @see MavenProjectBuilder#cleanInstall(org.bonitasoft.studio.common.repository.core.BonitaProject)
+     */
     public BusinessArchive createBusinessArchive(final Pool process, final String configurationId)
             throws BuildBarException {
         return createBusinessArchive(process, getConfiguration(process, configurationId));
@@ -181,11 +174,13 @@ public class BarExporter {
     public Configuration getConfiguration(final AbstractProcess process, String configurationId) {
         Configuration configuration = null;
         final ProcessConfigurationRepositoryStore processConfStore = getProcessConfigurationRepositoryStore();
+
         if (configurationId == null) {
             configurationId = ConfigurationPlugin.getDefault().getPreferenceStore()
                     .getString(ConfigurationPreferenceConstants.DEFAULT_CONFIGURATION);
         }
-        if (configurationId.equals(ConfigurationPreferenceConstants.LOCAL_CONFIGURATION)) {
+
+        if (ConfigurationPreferenceConstants.LOCAL_CONFIGURATION.equals(configurationId)) {
             final String id = ModelHelper.getEObjectID(process);
             var file = processConfStore.getChild(id + ".conf", true);
             if (file == null) {
@@ -200,7 +195,7 @@ public class BarExporter {
             } catch (final ReadFileStoreException e) {
                 BonitaStudioLog.error("Failed to read process configuration", e);
             }
-        } else if (Objects.equals(configurationId, ConfigurationPreferenceConstants.NONE_CONFIGURATION)) {
+        } else if (java.util.Objects.equals(configurationId, ConfigurationPreferenceConstants.NONE_CONFIGURATION)) {
             configuration = createEmptyConfiguration(configurationId);
         } else {
             for (final Configuration conf : process.getConfigurations()) {
@@ -209,11 +204,13 @@ public class BarExporter {
                 }
             }
         }
+
         // TODO Remove configuration sync when all bar artifacts will be live update
         // friendly (connectors, dependencies, parameters...) ?
         if (configuration == null) {
             configuration = createEmptyConfiguration(configurationId);
         }
+
         synchronizeConfiguration(process, configuration);
         return configuration;
     }
@@ -235,3 +232,4 @@ public class BarExporter {
     }
 
 }
+
