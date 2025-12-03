@@ -127,6 +127,8 @@ public class Messages extends NLS {
     public static String pagesAndLayouts;
     public static String deploySuccessButNoAppToOpenMsg;
     public static String deploying;
+    public static String deployingProject;
+    public static String buildingMavenProject;
     public static String deployStatusWithUnresolvedProcessesMessage;
     public static String validateHint;
     public static String deployAborted;
