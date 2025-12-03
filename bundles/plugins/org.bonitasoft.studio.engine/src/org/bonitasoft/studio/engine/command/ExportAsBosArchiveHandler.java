@@ -40,11 +40,13 @@ import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.diagram.custom.repository.ProcessConfigurationRepositoryStore;
 import org.bonitasoft.studio.engine.EnginePlugin;
 import org.bonitasoft.studio.engine.export.BarExporter;
+import org.bonitasoft.studio.engine.export.MavenProjectBuilder;
 import org.bonitasoft.studio.engine.i18n.Messages;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
@@ -68,6 +70,7 @@ public class ExportAsBosArchiveHandler extends AbstractHandler {
 
     private IRepositoryStore<? extends IRepositoryFileStore> processConfStore;
     private IRepositoryStore<? extends IRepositoryFileStore> diagramStore;
+    private final MavenProjectBuilder mavenBuilder = new MavenProjectBuilder();
 
     /**
      * @return a List<File> of the all the created bar or proc
@@ -130,6 +133,13 @@ public class ExportAsBosArchiveHandler extends AbstractHandler {
         } catch (IOException e1) {
             throw new ExecutionException(e1.getMessage());
         }
+
+        // Build Maven project once before generating all BARs
+        IStatus buildStatus = mavenBuilder.cleanInstall();
+        if (!buildStatus.isOK()) {
+            throw new ExecutionException(buildStatus.getMessage(), buildStatus.getException());
+        }
+
         for (var process : diagramFile.getProcesses(true)) {
             try {
                 String processUUID = ModelHelper.getEObjectID(process);

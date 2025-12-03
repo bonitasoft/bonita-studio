@@ -41,6 +41,7 @@ import org.bonitasoft.studio.diagram.custom.repository.ProcessConfigurationFileS
 import org.bonitasoft.studio.diagram.custom.repository.ProcessConfigurationRepositoryStore;
 import org.bonitasoft.studio.engine.EnginePlugin;
 import org.bonitasoft.studio.engine.export.BarExporter;
+import org.bonitasoft.studio.engine.export.MavenProjectBuilder;
 import org.bonitasoft.studio.engine.i18n.Messages;
 import org.bonitasoft.studio.ui.util.StatusCollectors;
 import org.eclipse.core.runtime.Assert;
@@ -57,6 +58,7 @@ public class ExportBarOperation implements IRunnableWithProgress {
     protected String configurationId;
     private String targetFolderPath;
     public IStatus status = Status.OK_STATUS;
+    private final MavenProjectBuilder mavenBuilder = new MavenProjectBuilder();
 
     public void addProcessToDeploy(final Pool process) {
         if (!processes.contains(process)) {
@@ -104,7 +106,14 @@ public class ExportBarOperation implements IRunnableWithProgress {
                 return;
             }
         }
-        
+
+        // Build Maven project once before generating all BARs
+        IStatus buildStatus = mavenBuilder.cleanInstall();
+        if (!buildStatus.isOK()) {
+            status = buildStatus;
+            return;
+        }
+
         for (final Pool process : processes) {
             final File targetFolder = new File(targetFolderPath);
             if (!targetFolder.exists()) {
