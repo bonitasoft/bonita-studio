@@ -48,6 +48,7 @@ import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.engine.EnginePlugin;
 import org.bonitasoft.studio.engine.export.BarExporter;
+import org.bonitasoft.studio.engine.export.MavenProjectBuilder;
 import org.bonitasoft.studio.engine.i18n.Messages;
 import org.bonitasoft.studio.engine.ui.dialog.ProcessEnablementProblemsDialog;
 import org.bonitasoft.studio.ui.util.StatusCollectors;
@@ -81,6 +82,8 @@ public class DeployProcessOperation {
 	private boolean disablePopup;
 
 	private MultiStatus status = new MultiStatus(EnginePlugin.PLUGIN_ID, -1, null, null);
+
+	private final MavenProjectBuilder mavenBuilder = new MavenProjectBuilder();
 
 	public void addProcessToDeploy(final Pool process) {
 		Assert.isTrue(!(process instanceof MainProcess), "process can't be a MainProcess");
@@ -151,6 +154,13 @@ public class DeployProcessOperation {
 
 	protected IStatus deploy(final IProgressMonitor monitor) {
 		MultiStatus multiStatus = new MultiStatus(EnginePlugin.PLUGIN_ID, -1, null, null);
+
+		// Build Maven project once before generating all BARs
+		IStatus buildStatus = mavenBuilder.cleanInstall();
+		if (!buildStatus.isOK()) {
+			return buildStatus;
+		}
+
 		try {
 			for (var process : processes) {
 				multiStatus.add(deployProcess(process, monitor));
@@ -309,6 +319,13 @@ public class DeployProcessOperation {
 		IStatus status = openProcessEnablementProblemsDialog(process, processResolutionProblems);
 		if (status.isOK()) {
 			undeploy(Collections.singletonList(process), monitor);
+
+			// Rebuild Maven project in case user fixed issues that require recompilation
+			IStatus buildStatus = mavenBuilder.cleanInstall();
+			if (!buildStatus.isOK()) {
+				return buildStatus;
+			}
+
 			status = deployProcess(process, monitor);
 			if (status.getSeverity() != IStatus.OK) {
 				return status;
