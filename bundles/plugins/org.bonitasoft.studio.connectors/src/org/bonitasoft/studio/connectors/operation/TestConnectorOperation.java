@@ -83,6 +83,7 @@ import org.bonitasoft.studio.dependencies.repository.DependencyFileStore;
 import org.bonitasoft.studio.dependencies.repository.DependencyRepositoryStore;
 import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.engine.export.BarExporter;
+import org.bonitasoft.studio.engine.export.MavenProjectBuilder;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -115,6 +116,7 @@ public class TestConnectorOperation implements IRunnableWithProgress {
     private final List<org.bonitasoft.engine.operation.Operation> outputOperations = new ArrayList<org.bonitasoft.engine.operation.Operation>();
     private final Map<String, org.bonitasoft.bpm.model.expression.Expression> invalidExpressionForTest = new HashMap<String, org.bonitasoft.bpm.model.expression.Expression>();
     private IStatus status;
+    private final MavenProjectBuilder mavenBuilder = new MavenProjectBuilder();
 
     /*
      * (non-Javadoc)
@@ -157,6 +159,14 @@ public class TestConnectorOperation implements IRunnableWithProgress {
             configuration.setName("TestConnectorConfiguration");
             new ConfigurationSynchronizer(proc, configuration).synchronize();
             configureProcess(configuration, implementation);
+
+            // Build Maven project in case connector has dependencies
+            IStatus buildStatus = mavenBuilder.cleanInstall();
+            if (!buildStatus.isOK()) {
+                status = buildStatus;
+                throw new InvocationTargetException(new Exception(buildStatus.getMessage()));
+            }
+
             final BusinessArchive businessArchive = BarExporter.getInstance().createBusinessArchive(proc,
                     configuration);
 
