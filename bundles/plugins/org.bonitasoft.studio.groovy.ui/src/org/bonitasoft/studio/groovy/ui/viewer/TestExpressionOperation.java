@@ -43,7 +43,9 @@ import org.bonitasoft.studio.configuration.ConfigurationSynchronizer;
 import org.bonitasoft.studio.dependencies.repository.DependencyFileStore;
 import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.engine.export.BarExporter;
+import org.bonitasoft.studio.engine.export.MavenProjectBuilder;
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 
@@ -78,6 +80,14 @@ public class TestExpressionOperation implements IRunnableWithProgress {
             final Configuration configuration = ConfigurationFactory.eINSTANCE.createConfiguration();
             configuration.setName("TestExpressionConfiguration");
             new ConfigurationSynchronizer(process, configuration).synchronize();
+
+            // Build Maven project before creating BAR
+            MavenProjectBuilder mavenBuilder = new MavenProjectBuilder();
+            IStatus buildStatus = mavenBuilder.cleanInstall();
+            if (!buildStatus.isOK()) {
+                throw new InvocationTargetException(
+                    new Exception("Maven build failed: " + buildStatus.getMessage()));
+            }
 
             final BusinessArchive businessArchive = BarExporter.getInstance().createBusinessArchive(process,
                     configuration);
