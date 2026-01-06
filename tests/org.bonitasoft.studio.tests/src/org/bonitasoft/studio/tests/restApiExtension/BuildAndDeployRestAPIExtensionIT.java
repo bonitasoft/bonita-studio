@@ -100,7 +100,9 @@ public class BuildAndDeployRestAPIExtensionIT {
         StatusAssert.assertThat(operation.getStatus()).overridingErrorMessage(operation.getStatus().getMessage())
                 .isOK();
 
-        Files.copy(operation.getArchiveContent(), exportedFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+        try (var archiveContent = operation.getArchiveContent()) {
+            Files.copy(archiveContent, exportedFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+        }
 
         assertThat(exportedFile).exists();
         try (final ZipFile zipFile = new ZipFile(exportedFile);) {
