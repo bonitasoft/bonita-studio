@@ -405,11 +405,13 @@ public class ExtensionProjectFileStore<T extends ExtensionProjectDescriptor> ext
             if (!Objects.equals(buildOperation.getStatus().getSeverity(), IStatus.ERROR)) {
                 String archiveName = buildOperation.getArchiveName();
                 IFile file = restApiFolder.getFile(archiveName);
-                file.create(buildOperation.getArchiveContent(), true, new NullProgressMonitor());
+                try (var archiveContent = buildOperation.getArchiveContent()) {
+                    file.create(archiveContent, true, new NullProgressMonitor());
+                }
             } else {
                 return buildOperation.getStatus();
             }
-        } catch (ReadFileStoreException | FileNotFoundException e) {
+        } catch (ReadFileStoreException | IOException e) {
             return ValidationStatus
                     .error(String.format("An error occured while building REST API extension %s", getName()), e);
         } catch (CoreException e) {

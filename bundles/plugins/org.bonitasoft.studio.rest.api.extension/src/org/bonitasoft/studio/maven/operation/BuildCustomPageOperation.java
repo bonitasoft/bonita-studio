@@ -144,7 +144,7 @@ public class BuildCustomPageOperation implements IWorkspaceRunnable {
         workingCopy.setAttribute(MavenLaunchConstants.ATTR_POM_DIR,
                 baseDir.getParentFile().getParentFile().getAbsolutePath());
         workingCopy.setAttribute(MavenLaunchConstants.ATTR_GOALS,
-                String.format("-am -pl extensions/%s clean verify", baseDir.getName()));
+                String.format("-am -pl extensions/%s verify", baseDir.getName()));
         workingCopy.setAttribute(ILaunchManager.ATTR_PRIVATE, true);
         workingCopy.setAttribute(MavenLaunchConstants.ATTR_BATCH, true);
         workingCopy.setAttribute(DebugPlugin.ATTR_CONSOLE_ENCODING, "UTF-8");
