@@ -34,6 +34,7 @@ import org.bonitasoft.studio.common.ui.jface.BonitaErrorDialog;
 import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.engine.BOSWebServerManager;
 import org.bonitasoft.studio.engine.EnginePlugin;
+import org.bonitasoft.studio.engine.export.MavenProjectBuilder;
 import org.bonitasoft.studio.engine.i18n.Messages;
 import org.bonitasoft.studio.engine.preferences.EnginePreferenceConstants;
 import org.bonitasoft.bpm.model.process.Actor;
@@ -78,6 +79,13 @@ public class RunProcessOperation implements IRunnableWithProgress, Runnable {
     @Override
     public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
         monitor.beginTask(Messages.running, IProgressMonitor.UNKNOWN);
+
+        // Build Maven project before deployment
+        final MavenProjectBuilder mavenBuilder = new MavenProjectBuilder();
+        status = mavenBuilder.cleanInstall();
+        if (!status.isOK()) {
+            return;
+        }
 
         final DeployProcessOperation deployOperation = createDeployProcessOperation();
         final String configurationId = executionContext.getConfigurationId();
