@@ -155,12 +155,6 @@ public class DeployProcessOperation {
 	protected IStatus deploy(final IProgressMonitor monitor) {
 		MultiStatus multiStatus = new MultiStatus(EnginePlugin.PLUGIN_ID, -1, null, null);
 
-		// Build Maven project once before generating all BARs
-		IStatus buildStatus = mavenBuilder.cleanInstall();
-		if (!buildStatus.isOK()) {
-			return buildStatus;
-		}
-
 		try {
 			for (var process : processes) {
 				multiStatus.add(deployProcess(process, monitor));

@@ -30,6 +30,7 @@ import org.bonitasoft.studio.configuration.preferences.ConfigurationPreferenceCo
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.engine.EnginePlugin;
+import org.bonitasoft.studio.engine.export.MavenProjectBuilder;
 import org.bonitasoft.studio.engine.i18n.Messages;
 import org.bonitasoft.studio.engine.operation.DeployProcessOperation;
 import org.bonitasoft.studio.ui.dialog.MultiStatusDialog;
@@ -92,6 +93,7 @@ public class DeployDiagramHandler {
             if (!shouldDisablePopup) {
                 runInJob(diagramFileStore, deployOperation, diagamStore, resetComputedProcesses);
             } else {
+
                 repositoryAccessor.getCurrentRepository()
                         .orElseThrow()
                         .build(AbstractRepository.NULL_PROGRESS_MONITOR);
@@ -111,6 +113,13 @@ public class DeployDiagramHandler {
 
             @Override
             protected IStatus run(IProgressMonitor monitor) {
+                // Build Maven project before deployment
+                final MavenProjectBuilder mavenBuilder = new MavenProjectBuilder();
+                IStatus buildStatus = mavenBuilder.cleanInstall();
+                if (!buildStatus.isOK()) {
+                    return buildStatus;
+                }
+
                 diagramFileStore.getRepository().build(monitor);
                 return deployOperation.run(monitor);
             }
