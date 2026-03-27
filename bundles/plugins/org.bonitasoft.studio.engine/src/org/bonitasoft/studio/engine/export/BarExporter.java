@@ -19,44 +19,50 @@ import static com.google.common.base.Preconditions.checkArgument;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import org.apache.maven.project.MavenProject;
+import org.bonitasoft.bpm.model.util.FragmentTypes;
 import org.bonitasoft.bonita2bar.BarBuilderFactory;
 import org.bonitasoft.bonita2bar.BarBuilderFactory.BuildConfig;
 import org.bonitasoft.bonita2bar.BuildBarException;
 import org.bonitasoft.bpm.model.configuration.Configuration;
 import org.bonitasoft.bpm.model.configuration.ConfigurationFactory;
+import org.bonitasoft.bpm.model.configuration.Fragment;
 import org.bonitasoft.bpm.model.process.AbstractProcess;
 import org.bonitasoft.bpm.model.process.Pool;
+import org.bonitasoft.engine.bpm.bar.BusinessArchive;
+import org.bonitasoft.studio.common.FileUtil;
 import org.bonitasoft.studio.common.ModelVersion;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.repository.BuildScheduler;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.configuration.ConfigurationPlugin;
 import org.bonitasoft.studio.configuration.ConfigurationSynchronizer;
 import org.bonitasoft.studio.configuration.preferences.ConfigurationPreferenceConstants;
-import org.bonitasoft.studio.diagram.custom.repository.ProcessConfigurationRepositoryStore;
-import org.bonitasoft.engine.bpm.bar.BusinessArchive;
-import org.bonitasoft.studio.common.FileUtil;
-import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.BuildScheduler;
-import org.bonitasoft.studio.common.repository.RepositoryManager;
-import org.bonitasoft.studio.common.repository.core.BonitaProject;
 import org.bonitasoft.studio.designer.core.PageDesignerURLFactory;
 import org.bonitasoft.studio.designer.core.bar.RestFormBuilder;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
+import org.bonitasoft.studio.diagram.custom.repository.ProcessConfigurationRepositoryStore;
 import org.bonitasoft.studio.engine.ConnectorImplementationRegistryHelper;
 import org.bonitasoft.studio.engine.EnginePlugin;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.m2e.core.MavenPlugin;
 import org.eclipse.m2e.core.project.IMavenProjectFacade;
 
 public class BarExporter {
+
 
     private static BarExporter INSTANCE;
 
@@ -80,6 +86,7 @@ public class BarExporter {
      * </p>
      * <p>
      * Example usage:
+     * 
      * <pre>
      * // 1. Build the Maven project FIRST
      * MavenProjectBuilder mavenBuilder = new MavenProjectBuilder();
@@ -92,6 +99,7 @@ public class BarExporter {
      * BarExporter exporter = BarExporter.getInstance();
      * BusinessArchive bar = exporter.createBusinessArchive(process, configuration);
      * </pre>
+     * 
      * </p>
      *
      * @param process the process to export as a BAR, must not be null
@@ -106,6 +114,15 @@ public class BarExporter {
         checkArgument(configuration != null);
         BonitaStudioLog.info("Building bar for process " + process.getName() + " (" + process.getVersion() + " )...",
                 EnginePlugin.PLUGIN_ID);
+
+        // Clone configuration to avoid modifying the original when flattening fragments
+        // This ensures the UI continues to show the hierarchical structure
+        Configuration clonedConfiguration = cloneConfiguration(configuration);
+
+        // Flatten fragments from children containers to OTHER for bonita2bar compatibility
+        // bonita2bar only reads fragments from direct containers, not from children
+        flattenFragmentsToOther(clonedConfiguration);
+
         Path workdir = null;
         try {
             workdir = Files.createTempDirectory("bar");
@@ -123,7 +140,7 @@ public class BarExporter {
                     .processRegistry(diagramStore)
                     .workingDirectory(workdir).build());
             var result = BuildScheduler.callWithBuildRule(() -> {
-                return barBuilder.build(process, configuration);
+                return barBuilder.build(process, clonedConfiguration);
             });
             return result.getBusinessArchives().get(0);
         } catch (IOException | CoreException e) {
@@ -231,5 +248,94 @@ public class BarExporter {
         return configuration;
     }
 
-}
+    /**
+     * Creates a deep clone of the configuration.
+     * <p>
+     * This method uses EMF's EcoreUtil.copy() to create a complete deep copy
+     * of the configuration, including all contained objects (FragmentContainers,
+     * Fragments, DefinitionMappings, etc.).
+     * </p>
+     *
+     * @param configuration the configuration to clone, must not be null
+     * @return a deep copy of the configuration
+     * @throws IllegalArgumentException if configuration is null
+     * @throws BuildBarException if the cloning operation fails
+     */
+    public Configuration cloneConfiguration(Configuration configuration) throws BuildBarException {
+        checkArgument(configuration != null, "Configuration cannot be null");
+        try {
+            return EcoreUtil.copy(configuration);
+        } catch (RuntimeException e) {
+            BonitaStudioLog.error("Failed to clone configuration for BAR export", e);
+            throw new BuildBarException("Failed to clone configuration for export", e);
+        }
+    }
 
+    /**
+     * Flattens fragments from children containers to the OTHER container.
+     * <p>
+     * bonita2bar (ProcessPomGenerator) only reads fragments from the direct containers,
+     * not from children containers. This method copies all fragments from children
+     * containers (e.g., CONNECTOR children like "scripting-groovy-script-impl-1.1.4")
+     * to the OTHER container so that bonita2bar can see them and respect their
+     * exported flag.
+     * </p>
+     *
+     * <p>
+     * <b>Note:</b> When the same JAR appears in multiple children containers, the last child's
+     * metadata (key, type) wins. The exported flag from the existing OTHER fragment is preserved.
+     * </p>
+     *
+     * <b>Warning:</b> This method mutates the given configuration. Always pass a cloned copy.
+     *
+     * @param configuration the configuration to flatten (must be a clone, will be mutated)
+     * @throws BuildBarException
+     */
+    public void flattenFragmentsToOther(Configuration configuration) throws BuildBarException {
+        // Find the OTHER container
+        var otherContainer = configuration.getProcessDependencies().stream()
+                .filter(c -> FragmentTypes.OTHER.equals(c.getId()))
+                .findFirst()
+                .orElse(null);
+
+        // Should never happen. Defensive code.
+        if (otherContainer == null) {
+            var errMsg = "'%s' fragments container not found while flattening the jars.".formatted(FragmentTypes.OTHER);
+            BonitaStudioLog.error(errMsg, getClass());
+            throw new BuildBarException(errMsg);
+        }
+
+        // Index existing OTHER fragments by value for O(1) lookup
+        Map<String, Fragment> existingByValue = otherContainer.getFragments().stream()
+                .collect(Collectors.toMap(
+                        Fragment::getValue, Function.identity(),
+                        (a, b) -> a, LinkedHashMap::new));
+
+        // Merge children fragments using flatMap instead of nested loops
+        configuration.getProcessDependencies().stream()
+                .flatMap(c -> c.getChildren().stream())
+                .flatMap(child -> child.getFragments().stream())
+                .forEach(f -> {
+                    var existing = existingByValue.get(f.getValue());
+                    if (existing != null) {
+                        // Update existing fragment with connector/actor-filter metadata
+                        // Preserve the exported flag from the existing fragment (user's choice)
+                        existing.setKey(f.getKey());
+                        existing.setType(f.getType());
+                    } else {
+                        // Create a copy and add to OTHER container
+                        var copy = EcoreUtil.copy(f);
+                        otherContainer.getFragments().add(copy);
+                        existingByValue.put(copy.getValue(), copy);
+                    }
+                });
+
+        // Normalize fragments with null type to "JAR" type
+        // bonita2bar filters out fragments with null type, so we need to set a default type
+        otherContainer.getFragments().stream()
+                .filter(f -> f.getType() == null)
+                .forEach(f -> f.setType(FragmentTypes.JAR));
+    }
+
+
+}

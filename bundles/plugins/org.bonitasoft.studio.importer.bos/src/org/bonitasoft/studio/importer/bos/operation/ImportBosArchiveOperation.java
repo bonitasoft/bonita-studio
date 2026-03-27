@@ -36,6 +36,8 @@ import java.util.zip.ZipFile;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Model;
+import org.bonitasoft.bpm.model.configuration.Fragment;
+import org.bonitasoft.bpm.model.configuration.FragmentContainer;
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.BuildScheduler;
@@ -69,6 +71,7 @@ import org.bonitasoft.studio.common.ui.jface.FileActionDialog;
 import org.bonitasoft.studio.connectors.repository.ConnectorDefRepositoryStore;
 import org.bonitasoft.studio.connectors.repository.ConnectorImplRepositoryStore;
 import org.bonitasoft.studio.dependencies.repository.DependencyFileStore;
+import org.bonitasoft.studio.dependencies.repository.DependencyRepositoryStore;
 import org.bonitasoft.studio.designer.core.operation.MigrateUIDOperation;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.diagram.custom.repository.ProcessConfigurationRepositoryStore;
@@ -96,8 +99,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.e4.core.contexts.ContextInjectionFactory;
-import org.eclipse.e4.core.contexts.EclipseContextFactory;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.m2e.core.repository.IRepository;
 import org.eclipse.osgi.util.NLS;
@@ -154,9 +155,7 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
         this.launchValidationafterImport = true;
         this.repositoryAccessor = repositoryAccessor;
         currentRepository = repositoryAccessor.getCurrentRepository().orElseThrow();
-        var eclipseContext = EclipseContextFactory.create();
-        dependenciesUpdateOperationFactory = ContextInjectionFactory
-                .make(DependenciesUpdateOperationFactory.class, eclipseContext);
+        dependenciesUpdateOperationFactory = DependenciesUpdateOperationFactory.get();
     }
 
     public ImportBosArchiveOperation manualDependencyResolution() {
@@ -480,6 +479,7 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
                             monitor.worked(1);
                         }));
         migrateConnectorModules(importArchiveModel, statusBuilder, monitor);
+        migrateFragmentJarVersions(monitor);
         migrateUID(monitor);
     }
 
@@ -550,6 +550,50 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
                 statusBuilder.addStatus(e.getStatus());
             }
         }
+    }
+
+    void migrateFragmentJarVersions(IProgressMonitor monitor) {
+        var dependencyStore = repositoryAccessor.getRepositoryStore(DependencyRepositoryStore.class);
+        var configStore = repositoryAccessor.getRepositoryStore(ProcessConfigurationRepositoryStore.class);
+        for (var configFileStore : configStore.getChildren()) {
+            try {
+                var configuration = configFileStore.getContent();
+                if (configuration == null) {
+                    continue;
+                }
+                boolean modified = false;
+                for (var container : configuration.getProcessDependencies()) {
+                    modified |= migrateFragmentsInContainer(container, dependencyStore);
+                }
+                if (modified) {
+                    configFileStore.save(configuration);
+                }
+            } catch (Exception e) {
+                BonitaStudioLog.error(
+                        "Failed to migrate fragment jar versions for configuration " + configFileStore.getName(), e);
+                status.add(new Status(IStatus.WARNING, BosArchiveImporterPlugin.PLUGIN_ID,
+                        "Failed to migrate fragment jar versions for " + configFileStore.getName(), e));
+            }
+        }
+    }
+
+    private boolean migrateFragmentsInContainer(FragmentContainer container, DependencyRepositoryStore dependencyStore) {
+        boolean modified = false;
+        for (Fragment fragment : container.getFragments()) {
+            String value = fragment.getValue();
+            if (value == null || !value.endsWith(".jar")) {
+                continue;
+            }
+            var resolved = dependencyStore.getChild(value, true);
+            if (resolved != null && !Objects.equals(value, resolved.getName())) {
+                fragment.setValue(resolved.getName());
+                modified = true;
+            }
+        }
+        for (var child : container.getChildren()) {
+            modified |= migrateFragmentsInContainer(child, dependencyStore);
+        }
+        return modified;
     }
 
     protected void migrateUID(IProgressMonitor monitor) {

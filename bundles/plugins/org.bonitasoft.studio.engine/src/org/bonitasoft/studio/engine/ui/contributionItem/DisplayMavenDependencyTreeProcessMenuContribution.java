@@ -19,12 +19,14 @@ import java.io.File;
 import org.apache.maven.model.Model;
 import org.apache.maven.project.MavenProject;
 import org.bonitasoft.bonita2bar.process.pomgen.ProcessPomGenerator;
+import org.bonitasoft.bpm.model.configuration.Configuration;
 import org.bonitasoft.bpm.model.process.AbstractProcess;
+import org.bonitasoft.bpm.model.process.Pool;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.diagram.custom.contributionItem.ListProcessContributionItem;
-import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.engine.ConnectorImplementationRegistryHelper;
+import org.bonitasoft.studio.engine.export.BarExporter;
 import org.bonitasoft.studio.engine.ui.editor.EditorCloseWaiter;
 import org.bonitasoft.studio.engine.ui.editor.MavenDependencyTreeEditor;
 import org.eclipse.core.resources.IFile;
@@ -79,11 +81,19 @@ public class DisplayMavenDependencyTreeProcessMenuContribution extends ListProce
 
     private void openEditorAndWaitForClose(AbstractProcess process,
             ProcessPomGenerator gen) {
-        var diagramRepositoryStore = RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
-
         new Thread(() -> {
             try {
-                gen.withGeneratedPom(diagramRepositoryStore.findProcess(process.getName(), process.getVersion()),
+                if (!(process instanceof Pool pool)) {
+                    BonitaStudioLog.warning("Expected Pool but got " + process.getClass().getSimpleName(),
+                            DisplayMavenDependencyTreeProcessMenuContribution.class);
+                    return;
+                }
+                var barExporter = BarExporter.getInstance();
+                Configuration configuration = barExporter.getConfiguration(pool, null);
+                Configuration clonedConfig = barExporter.cloneConfiguration(configuration);
+                barExporter.flattenFragmentsToOther(clonedConfig);
+
+                gen.withGeneratedPom(pool, clonedConfig,
                         pomAccess -> {
                             Model modelPom = pomAccess.readPom();
                             MavenProject myPom = new MavenProject(modelPom);
