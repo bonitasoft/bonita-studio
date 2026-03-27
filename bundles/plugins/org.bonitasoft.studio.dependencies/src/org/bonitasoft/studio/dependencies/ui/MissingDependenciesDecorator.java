@@ -14,6 +14,8 @@
  */
 package org.bonitasoft.studio.dependencies.ui;
 
+import java.util.Map;
+
 import org.bonitasoft.studio.dependencies.i18n.Messages;
 import org.bonitasoft.studio.dependencies.repository.DependencyFileStore;
 import org.bonitasoft.studio.dependencies.repository.DependencyRepositoryStore;
@@ -35,10 +37,6 @@ public class MissingDependenciesDecorator implements ILabelDecorator {
     private Image errorIcon;
     private Image warningIcon;
     private DependencyRepositoryStore store;
-    private Image warningDecoratorImage = FieldDecorationRegistry.getDefault()
-            .getFieldDecoration(FieldDecorationRegistry.DEC_WARNING).getImage();
-    private Image errorDecoratorImage = FieldDecorationRegistry.getDefault()
-            .getFieldDecoration(FieldDecorationRegistry.DEC_ERROR).getImage();
 
     public MissingDependenciesDecorator(DependencyRepositoryStore store) {
         this.store = store;
@@ -99,11 +97,12 @@ public class MissingDependenciesDecorator implements ILabelDecorator {
             Fragment fragment = (Fragment) element;
             String lib = fragment.getValue();
             if (lib.endsWith(DependencyRepositoryStore.JAR_EXT)) {
-                if (isDependencyMissing(lib, fragment)) {
+                DependencyFileStore resolvedDep = store.getChild(lib, true);
+                if (isDependencyMissing(resolvedDep, lib, fragment)) {
                     return getErrorDecoratedImage(image);
-                } else if (isInRuntimeContainer(lib, fragment)) {
+                } else if (isInRuntimeContainer(resolvedDep, lib)) {
                     return getWarningDecoratedImage(image);
-                } else if (isInRuntimeContainerWithAnotherVersion(lib, fragment)) {
+                } else if (isInRuntimeContainerWithAnotherVersion(resolvedDep, lib)) {
                     return getWarningDecoratedImage(image);
                 } else {
                     return image;
@@ -115,6 +114,8 @@ public class MissingDependenciesDecorator implements ILabelDecorator {
 
     protected Image getErrorDecoratedImage(Image image) {
         if (errorIcon == null) {
+            Image errorDecoratorImage = FieldDecorationRegistry.getDefault()
+                    .getFieldDecoration(FieldDecorationRegistry.DEC_ERROR).getImage();
             errorIcon = new DecorationOverlayIcon(image, ImageDescriptor.createFromImage(errorDecoratorImage),
                     IDecoration.BOTTOM_RIGHT).createImage();
         }
@@ -123,43 +124,49 @@ public class MissingDependenciesDecorator implements ILabelDecorator {
 
     protected Image getWarningDecoratedImage(Image image) {
         if (warningIcon == null) {
+            Image warningDecoratorImage = FieldDecorationRegistry.getDefault()
+                    .getFieldDecoration(FieldDecorationRegistry.DEC_WARNING).getImage();
             warningIcon = new DecorationOverlayIcon(image, ImageDescriptor.createFromImage(warningDecoratorImage),
                     IDecoration.BOTTOM_RIGHT).createImage();
         }
         return warningIcon;
     }
 
-    protected boolean isInRuntimeContainerWithAnotherVersion(String lib, Fragment fragment) {
-        DependencyFileStore fileStore = store.getChild(lib, true);
-        if (fileStore != null) {
-            return fileStore.existsInRuntimeContainerWithAnotherVersion();
-        }
-        return false;
-    }
-
-    protected boolean isInRuntimeContainer(String lib, Fragment fragment) {
-        DependencyFileStore fileStore = store.getChild(lib, true);
-        if (fileStore != null) {
-            return fileStore.existsInRuntimeContainer();
-        }
-        return false;
-    }
-
-    protected boolean isDependencyMissing(String libName, Fragment fragment) {
-        DependencyFileStore file = store.getChild(libName, true);
-        if (file == null && isGeneratedJar(libName, fragment)) {//Check in custom connector
+    protected boolean isInRuntimeContainerWithAnotherVersion(DependencyFileStore resolvedDep, String lib) {
+        if (resolvedDep == null) {
             return false;
         }
-        return file == null;
+        Map<String, String> runtimeDependencies = store.getRuntimeDependencies();
+        String libName = store.getLibName(lib);
+        String libVersion = store.getLibVersion(lib);
+        return runtimeDependencies.containsKey(libName)
+                && !runtimeDependencies.get(libName).equals(libVersion);
+    }
+
+    protected boolean isInRuntimeContainer(DependencyFileStore resolvedDep, String lib) {
+        if (resolvedDep == null) {
+            return false;
+        }
+        Map<String, String> runtimeDependencies = store.getRuntimeDependencies();
+        String libName = store.getLibName(lib);
+        String libVersion = store.getLibVersion(lib);
+        return runtimeDependencies.containsKey(libName)
+                && runtimeDependencies.get(libName).equals(libVersion);
+    }
+
+    protected boolean isDependencyMissing(DependencyFileStore resolvedDep, String libName, Fragment fragment) {
+        if (resolvedDep == null && isGeneratedJar(libName, fragment)) {//Check in custom connector
+            return false;
+        }
+        return resolvedDep == null;
     }
 
     protected boolean isGeneratedJar(String lib, Fragment fragment) {
-        FragmentContainer container = (FragmentContainer) fragment.eContainer();
-        String id = container.getId();
-        if (lib.equals(id + ".jar")) {
-            return true;
+        if (!(fragment.eContainer() instanceof FragmentContainer container)) {
+            return false;
         }
-        return false;
+        String id = container.getId();
+        return lib.equals(id + ".jar");
     }
 
     /*
@@ -172,11 +179,12 @@ public class MissingDependenciesDecorator implements ILabelDecorator {
             Fragment fragment = (Fragment) element;
             String lib = fragment.getValue();
             if (lib.endsWith(DependencyRepositoryStore.JAR_EXT)) {
-                if (isDependencyMissing(lib, fragment)) {
+                DependencyFileStore resolvedDep = store.getChild(lib, true);
+                if (isDependencyMissing(resolvedDep, lib, fragment)) {
                     return text + " (" + Messages.missingDependenciesInRepository + ")";
-                } else if (isInRuntimeContainer(lib, fragment)) {
+                } else if (isInRuntimeContainer(resolvedDep, lib)) {
                     return text + " (" + Messages.dependencyExistsInRuntimeContainer + ")";
-                } else if (isInRuntimeContainerWithAnotherVersion(lib, fragment)) {
+                } else if (isInRuntimeContainerWithAnotherVersion(resolvedDep, lib)) {
                     return text + " (" + Messages.dependencyExistsInRuntimeContainerWithAnotherVersion + ")";
                 } else {
                     return text;

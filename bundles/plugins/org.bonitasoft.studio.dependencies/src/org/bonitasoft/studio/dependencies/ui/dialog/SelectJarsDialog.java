@@ -19,6 +19,7 @@ package org.bonitasoft.studio.dependencies.ui.dialog;
 
 
 import java.util.List;
+import java.util.Set;
 
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.ui.jface.databinding.DialogSupport;
@@ -31,6 +32,8 @@ import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.databinding.viewers.typed.ViewerProperties;
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
@@ -43,14 +46,33 @@ public class SelectJarsDialog extends ManageJarDialog {
 
     private List<DependencyFileStore> selectedJars;
     private DependencyFileStore selectedJar;
+    private final Set<String> excludedJarNames;
 
     public SelectJarsDialog(Shell parentShell) {
+        this(parentShell, Set.of());
+    }
+
+    public SelectJarsDialog(Shell parentShell, Set<String> excludedJarNames) {
         super(parentShell);
+        this.excludedJarNames = excludedJarNames;
     }
 
     @Override
     protected Control createDialogArea(Composite parent) {
         Control control = super.createDialogArea(parent);
+
+        if (!excludedJarNames.isEmpty()) {
+            tableViewer.addFilter(new ViewerFilter() {
+
+                @Override
+                public boolean select(Viewer viewer, Object parentElement, Object element) {
+                    if (element instanceof DependencyFileStore) {
+                        return !excludedJarNames.contains(((DependencyFileStore) element).getName());
+                    }
+                    return true;
+                }
+            });
+        }
 
         UpdateValueStrategy selectionStartegy = new UpdateValueStrategy() ;
         selectionStartegy.setAfterGetValidator(new IValidator() {

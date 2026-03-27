@@ -117,8 +117,17 @@ public class DependencyRepositoryStore extends AbstractRepositoryStore<Dependenc
         DependencyFileStore fileStore = super.getChild(fileName, force);
         if (fileStore == null) {
             try {
+                var monitor = AbstractRepository.NULL_PROGRESS_MONITOR;
+                // Exact match on Maven compile dependencies
+                var exactMatch = projectDependenciesResolver
+                        .findCompileDependency(fileName, monitor)
+                        .map(artifact -> new MavenDependencyFileStore(artifact, DependencyRepositoryStore.this));
+                if (exactMatch.isPresent()) {
+                    return exactMatch.get();
+                }
+                // Fallback: match by library name (ignoring version)
                 return projectDependenciesResolver
-                        .findCompileDependency(fileName, AbstractRepository.NULL_PROGRESS_MONITOR)
+                        .findCompileDependencyByLibName(fileName, monitor)
                         .map(artifact -> new MavenDependencyFileStore(artifact, DependencyRepositoryStore.this))
                         .orElse(null);
             } catch (CoreException e) {
@@ -167,7 +176,7 @@ public class DependencyRepositoryStore extends AbstractRepositoryStore<Dependenc
         return runtimeDependencies;
     }
 
-    protected String getLibVersion(String jarName) {
+    public String getLibVersion(String jarName) {
         if (jarName.endsWith(".jar")) {
             jarName = jarName.replace(".jar", "");
         }
@@ -186,20 +195,8 @@ public class DependencyRepositoryStore extends AbstractRepositoryStore<Dependenc
         return libVersion;
     }
 
-    protected String getLibName(String jarName) {
-        if (jarName.endsWith(".jar")) {
-            jarName = jarName.replace(".jar", "");
-        }
-        String libName = "";
-        if (jarName.indexOf(SNAPSHOT_SUFFIX) != -1) {
-            jarName = jarName.substring(0, jarName.lastIndexOf(SNAPSHOT_SUFFIX));
-        }
-        if (jarName.indexOf("-") != -1 && Character.isDigit(jarName.charAt(jarName.lastIndexOf("-") + 1))) {
-            libName = jarName.substring(0, jarName.lastIndexOf("-"));
-        } else {
-            libName = jarName;
-        }
-        return libName;
+    public String getLibName(String jarName) {
+        return ProjectDependenciesResolver.extractLibName(jarName);
     }
 
     protected File getTomcatRootFile() {
@@ -210,6 +207,29 @@ public class DependencyRepositoryStore extends AbstractRepositoryStore<Dependenc
     @Override
     public MigrationReport migrate(IProgressMonitor monitor) throws CoreException, MigrationException {
         return MigrationReport.emptyReport();
+    }
+
+    /**
+     * Checks whether a JAR (regardless of version) is already present in the runtime container (Tomcat).
+     * <p>
+     * This method is <b>version-agnostic</b>: it only matches by library name. For example, if the runtime
+     * contains {@code slf4j-api-1.7.36}, then {@code slf4j-api-2.0.0.jar} will also return {@code true}.
+     * This is intentional — the configuration wizard uses this to prevent users from exporting any version
+     * of a library that is already provided by the runtime, avoiding classpath conflicts.
+     * <p>
+     * For version-sensitive checks (exact match or version mismatch detection), see
+     * {@link org.bonitasoft.studio.dependencies.ui.MissingDependenciesDecorator#isInRuntimeContainer}.
+     */
+    public boolean isInRuntimeContainer(String jarValue) {
+        var runtime = getRuntimeDependencies();
+        if (runtime == null || runtime.isEmpty() || jarValue == null) {
+            return false;
+        }
+        if (!jarValue.endsWith("." + JAR_EXT)) {
+            return false;
+        }
+        String libName = getLibName(jarValue);
+        return runtime.containsKey(libName);
     }
 
     public Optional<DependencyFileStore> findDependencyByName(String jarName) {

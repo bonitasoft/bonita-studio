@@ -36,6 +36,7 @@ import org.bonitasoft.studio.configuration.ConfigurationSynchronizer;
 import org.bonitasoft.studio.configuration.extension.IProcessConfigurationWizardPage;
 import org.bonitasoft.studio.configuration.i18n.Messages;
 import org.bonitasoft.studio.configuration.preferences.ConfigurationPreferenceConstants;
+import org.bonitasoft.studio.configuration.ui.wizard.page.JavaDependenciesConfigurationWizardPage;
 import org.bonitasoft.studio.configuration.ui.wizard.page.RunConfigurationWizardPage;
 import org.bonitasoft.studio.diagram.custom.repository.ProcessConfigurationFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.ProcessConfigurationRepositoryStore;
@@ -104,6 +105,7 @@ public class ConfigurationWizard extends Wizard {
                 BonitaStudioLog.error(e1);
             }
         }
+        addPage(new JavaDependenciesConfigurationWizardPage());
         addPage(new RunConfigurationWizardPage());
     }
 
