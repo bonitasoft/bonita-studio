@@ -19,18 +19,28 @@ package org.bonitasoft.studio.configuration.ui.wizard.page;
 import org.bonitasoft.bpm.model.configuration.Fragment;
 import org.bonitasoft.bpm.model.configuration.FragmentContainer;
 import org.bonitasoft.studio.configuration.ConfigurationPlugin;
+import org.bonitasoft.studio.dependencies.repository.DependencyRepositoryStore;
 import org.bonitasoft.studio.pics.Pics;
+import org.eclipse.jface.viewers.IColorProvider;
 import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Display;
 
 
 /**
  * @author Romain Bioteau
  *
  */
-public class DependenciesTreeLabelProvider extends LabelProvider {
+public class DependenciesTreeLabelProvider extends LabelProvider implements IColorProvider {
 
     private final FragmentTypeLabelProvider fragmentTypeLabelProvider = new FragmentTypeLabelProvider() ;
+    private DependencyRepositoryStore dependencyStore;
+
+    public void setDependencyStore(DependencyRepositoryStore dependencyStore) {
+        this.dependencyStore = dependencyStore;
+    }
 
     @Override
     public String getText(Object element) {
@@ -53,6 +63,23 @@ public class DependenciesTreeLabelProvider extends LabelProvider {
         }
 
         return super.getImage(element);
+    }
+
+    @Override
+    public Color getForeground(Object element) {
+        if (element instanceof Fragment && isInRuntimeContainer((Fragment) element)) {
+            return Display.getDefault().getSystemColor(SWT.COLOR_GRAY);
+        }
+        return null;
+    }
+
+    @Override
+    public Color getBackground(Object element) {
+        return null;
+    }
+
+    private boolean isInRuntimeContainer(Fragment fragment) {
+        return dependencyStore != null && dependencyStore.isInRuntimeContainer(fragment.getValue());
     }
 
 }

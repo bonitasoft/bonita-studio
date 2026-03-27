@@ -20,6 +20,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import jakarta.inject.Inject;
@@ -41,7 +43,9 @@ import org.eclipse.m2e.core.project.IMavenProjectFacade;
 
 @Creatable
 public class ProjectDependenciesResolver {
-    
+
+    private static final Pattern ARTIFACT_BASE_PATTERN = Pattern.compile("^(.+)-(\\d[\\d.]*)(?:[.-](?!\\d).*?)?\\.jar$");
+
     private RepositoryAccessor repositoryAccessor;
 
     @Inject
@@ -88,9 +92,44 @@ public class ProjectDependenciesResolver {
         }
         return mavenProject.getArtifacts().stream()
                 .filter(artifact -> Artifact.SCOPE_COMPILE.equals(artifact.getScope()) || Artifact.SCOPE_RUNTIME.equals(artifact.getScope()))
-                .filter(artifact ->  resolveFile(artifact) != null &&  resolveFile(artifact).exists())
-                .filter(artifact -> Objects.equals(fileName, resolveFile(artifact).getName()))
+                .filter(artifact -> {
+                    File file = resolveFile(artifact);
+                    return file != null && file.exists() && Objects.equals(fileName, file.getName());
+                })
                 .findFirst();
+    }
+
+    public Optional<Artifact> findCompileDependencyByLibName(String fileName, IProgressMonitor monitor)
+            throws CoreException {
+        var project = repositoryAccessor.getCurrentRepository().map(IRepository::getProject).orElse(null);
+        if (project == null) {
+            return Optional.empty();
+        }
+        MavenProject mavenProject = getMavenProject(project, monitor);
+        if (mavenProject == null) {
+            return Optional.empty();
+        }
+        String searchLibName = extractLibName(fileName);
+        return mavenProject.getArtifacts().stream()
+                .filter(artifact -> Artifact.SCOPE_COMPILE.equals(artifact.getScope())
+                        || Artifact.SCOPE_RUNTIME.equals(artifact.getScope()))
+                .filter(artifact -> {
+                    File file = resolveFile(artifact);
+                    return file != null && file.exists()
+                            && Objects.equals(searchLibName, extractLibName(file.getName()));
+                })
+                .findFirst();
+    }
+
+    public static String extractLibName(String jarName) {
+        if (jarName == null) {
+            return null;
+        }
+        Matcher m = ARTIFACT_BASE_PATTERN.matcher(jarName);
+        if (m.matches()) {
+            return m.group(1);
+        }
+        return jarName.endsWith(".jar") ? jarName.substring(0, jarName.length() - 4) : jarName;
     }
 
     public List<Artifact> getTransitiveDependencies(Artifact artifact, IProgressMonitor monitor)
