@@ -299,7 +299,7 @@ public abstract class AbstractDependenciesConfigurationWizardPage extends Wizard
                 if (fc.getFragments().stream()
                         .noneMatch(f -> Objects.equals(jarName, f.getValue()))) {
                     final Fragment f = ConfigurationFactory.eINSTANCE.createFragment();
-                    f.setExported(true);
+                    f.setExported(!getDependencyRepositoryStore().isInRuntimeContainer(jarName));
                     f.setValue(jarName);
                     f.setKey(jarName);
                     f.setType(FragmentTypes.JAR);
