@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Rest API Extension Plug-in
 Bundle-SymbolicName: org.bonitasoft.studio.rest.api.extension;singleton:=true
-Bundle-Version: 10.3.6.qualifier
+Bundle-Version: 10.3.8.qualifier
 Bundle-Activator: org.bonitasoft.studio.rest.api.extension.RestAPIExtensionActivator
 Bundle-Vendor: Bonitasoft S.A.
 Bundle-Localization: plugin
