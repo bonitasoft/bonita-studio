@@ -148,7 +148,7 @@ maven BonitaProjectReportModel scope=compile,runtime,system dependencyDepth=none
     dependency {
         groupId="org.bonitasoft.maven"
         artifactId="bonita-project-report-model"
-        version="2.1.2"
+        version="2.1.3"
     }
     // add maven-central-snapshots when temporary using a snapshot maven version.
     //repository id="maven-central-snapshots" url="https://central.sonatype.com/repository/maven-snapshots"
