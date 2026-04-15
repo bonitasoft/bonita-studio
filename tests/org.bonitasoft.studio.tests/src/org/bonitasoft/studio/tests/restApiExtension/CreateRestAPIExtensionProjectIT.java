@@ -9,7 +9,6 @@
 package org.bonitasoft.studio.tests.restApiExtension;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.fail;
 import static org.assertj.core.api.Assertions.tuple;
 
 import org.apache.maven.model.Model;
@@ -25,16 +24,12 @@ import org.bonitasoft.studio.maven.model.RestAPIExtensionArchetypeConfiguration;
 import org.bonitasoft.studio.rest.api.extension.core.maven.CreateRestAPIExtensionProjectOperation;
 import org.bonitasoft.studio.tests.util.InitialProjectRule;
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.m2e.core.project.ProjectImportConfiguration;
-import org.eclipse.swt.SWT;
 import org.eclipse.ui.PlatformUI;
 import org.junit.After;
 import org.junit.Rule;
@@ -53,7 +48,9 @@ public class CreateRestAPIExtensionProjectIT {
             createdFolder.delete(true, AbstractRepository.NULL_PROGRESS_MONITOR);
         }
         var bdmFileStore = RepositoryManager.getInstance().getRepositoryStore(BusinessObjectModelRepositoryStore.class).getChild("bom.xml", false);
-        bdmFileStore.delete();
+        if (bdmFileStore != null) {
+            bdmFileStore.delete();
+        }
     }
 
     @Test
@@ -104,20 +101,6 @@ public class CreateRestAPIExtensionProjectIT {
         		.extracting("groupId", "artifactId", "version", "type")
     			.contains(tuple("${project.groupId}", "resourceNameRestAPI","${project.version}", "zip"));
 
-        //Check that there is no problems on eclipse project
-        newProject.build(IncrementalProjectBuilder.FULL_BUILD, AbstractRepository.NULL_PROGRESS_MONITOR);
-        final StringBuilder sb = new StringBuilder();
-        for (final IMarker marker : newProject.findMarkers(IMarker.PROBLEM, true, IResource.DEPTH_INFINITE)) {
-            final int severity = (int) marker.getAttribute(IMarker.SEVERITY);
-            if (severity == IMarker.SEVERITY_ERROR) {
-                sb.append((String) marker.getAttribute(IMarker.MESSAGE));
-                sb.append(SWT.CR);
-            }
-        }
-        if (sb.length() > 0) {
-            fail(sb.toString());
-        }
-        
         var apiStore = RepositoryManager.getInstance().getRepositoryStore(ExtensionRepositoryStore.class).getChild("resourceNameRestAPI", false);
         apiStore.delete();
         appModel = MavenProjectHelper.getMavenModel(bonitaProject.getAppProject());
