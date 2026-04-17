@@ -15,6 +15,7 @@
 package org.bonitasoft.studio.common.repository.core.maven.plugin;
 
 import java.nio.file.Path;
+import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
 
@@ -60,6 +61,12 @@ public class CreateBonitaProjectModulePlugin {
                     @Override
                     public MavenExecutionResult call(IMavenExecutionContext context, IProgressMonitor monitor)
                             throws CoreException {
+                        // bonita-project-maven-plugin 2.1.3+ eagerly loads ReactorReader,
+                        // which NPEs on session.getProjects() when projects list is null.
+                        var session = context.getSession();
+                        if (session != null && session.getProjects() == null) {
+                            session.setProjects(Collections.emptyList());
+                        }
                         return context.execute(request);
                     }
 
