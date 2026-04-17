@@ -49,7 +49,6 @@ public class ResourceMarkerHelper {
                             }
                         })
                         .filter(Objects::nonNull)
-                        .filter(msg -> !msg.contains("outside of a scoping block"))
                         .collect(Collectors.toList());
             }
         } catch (CoreException e) {
