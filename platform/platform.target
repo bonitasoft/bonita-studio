@@ -71,15 +71,15 @@
       <unit id="org.apache.commons.commons-io" version="2.16.1"/>
     </location>
     <location includeConfigurePhase="true" includeSource="true" includeMode="planner" type="InstallableUnit" includeAllPlatforms="false">
-      <unit id="org.bonitasoft.bonita2bpmn.feature.feature.group" version="9.0.8"/>
-      <unit id="org.bonitasoft.bpm.connector.feature.feature.group" version="9.0.8"/>
-      <unit id="org.bonitasoft.bpm.definitions.feature.feature.group" version="9.0.8"/>
-      <unit id="org.bonitasoft.bpm.model.feature.feature.group" version="9.0.8"/>
-      <unit id="org.bonitasoft.bpm.tests.feature.feature.group" version="9.0.8"/>
+      <unit id="org.bonitasoft.bonita2bpmn.feature.feature.group" version="9.0.9"/>
+      <unit id="org.bonitasoft.bpm.connector.feature.feature.group" version="9.0.9"/>
+      <unit id="org.bonitasoft.bpm.definitions.feature.feature.group" version="9.0.9"/>
+      <unit id="org.bonitasoft.bpm.model.feature.feature.group" version="9.0.9"/>
+      <unit id="org.bonitasoft.bpm.tests.feature.feature.group" version="9.0.9"/>
       <unit id="com.fasterxml.jackson.feature.feature.group" version="2.18.3"/>
       <unit id="org.bonitasoft.artifacts.model.feature.feature.group" version="1.2.2"/>
-      <unit id="org.bonitasoft.bonita2bar.feature.feature.group" version="9.0.8"/>
-      <repository location="mvn:org.bonitasoft.bpm:org.bonitasoft.bpm.eclipse-repository:9.0.8:zip" id="BonitasoftBPM"/>
+      <unit id="org.bonitasoft.bonita2bar.feature.feature.group" version="9.0.9"/>
+      <repository location="mvn:org.bonitasoft.bpm:org.bonitasoft.bpm.eclipse-repository:9.0.9:zip" id="BonitasoftBPM"/>
     </location>
     <location missingManifest="generate" includeDependencyScopes="compile,runtime,system" includeSource="true" includeDependencyDepth="none" label="BonitaArtifactsModels" type="Maven">
       <feature provider-name="Bonitasoft S.A" label="Extra Bonita Artifacts Models required by Studio but not in BonitasoftBPM" id="org.bonitasoft.artifacts.model.studio.feature.feature.group" version="1.2.2"/>

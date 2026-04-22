@@ -100,15 +100,15 @@
       <repository id="Groovy" location="https://groovy.jfrog.io/artifactory/plugins-release/e4.33"/>
     </location>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="true" type="InstallableUnit">
-      <unit id="org.bonitasoft.bonita2bpmn.feature.feature.group" version="9.0.8"/>
-      <unit id="org.bonitasoft.bpm.connector.feature.feature.group" version="9.0.8"/>
-      <unit id="org.bonitasoft.bpm.definitions.feature.feature.group" version="9.0.8"/>
-      <unit id="org.bonitasoft.bpm.model.feature.feature.group" version="9.0.8"/>
-      <unit id="org.bonitasoft.bpm.tests.feature.feature.group" version="9.0.8"/>
+      <unit id="org.bonitasoft.bonita2bpmn.feature.feature.group" version="9.0.9"/>
+      <unit id="org.bonitasoft.bpm.connector.feature.feature.group" version="9.0.9"/>
+      <unit id="org.bonitasoft.bpm.definitions.feature.feature.group" version="9.0.9"/>
+      <unit id="org.bonitasoft.bpm.model.feature.feature.group" version="9.0.9"/>
+      <unit id="org.bonitasoft.bpm.tests.feature.feature.group" version="9.0.9"/>
       <unit id="com.fasterxml.jackson.feature.feature.group" version="2.18.3"/>
       <unit id="org.bonitasoft.artifacts.model.feature.feature.group" version="1.2.2"/>
-      <unit id="org.bonitasoft.bonita2bar.feature.feature.group" version="9.0.8"/>
-      <repository id="BonitasoftBPM" location="mvn:org.bonitasoft.bpm:org.bonitasoft.bpm.eclipse-repository:9.0.8:zip"/>
+      <unit id="org.bonitasoft.bonita2bar.feature.feature.group" version="9.0.9"/>
+      <repository id="BonitasoftBPM" location="mvn:org.bonitasoft.bpm:org.bonitasoft.bpm.eclipse-repository:9.0.9:zip"/>
     </location>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="true" type="InstallableUnit">
       <unit id="org.apache.commons.commons-io" version="2.16.1"/>
