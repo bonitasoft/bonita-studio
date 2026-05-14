@@ -25,7 +25,7 @@ import org.bonitasoft.studio.common.log.BonitaStudioLog;
 
 public class RedirectURLBuilder {
 
-    private static final String BASE_URL = "https://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=";
+    private static final String BASE_URL = "https://www.ofelia.com/bos_redirect.php?bos_redirect_id=";
     private static final String LOCATION_HEADER = "Location";
     
     public static String create(String redirectId) {
