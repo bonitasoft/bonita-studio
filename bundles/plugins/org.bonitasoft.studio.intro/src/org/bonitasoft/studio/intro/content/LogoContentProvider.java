@@ -57,7 +57,7 @@ public class LogoContentProvider implements DOMContentProvider {
                 "http://org.eclipse.ui.intro/runAction?pluginId=org.bonitasoft.studio.intro&class=%s&url=%s",
                 OpenInExternalBrowserIntroAction.class.getName(),
                 URLEncoder.encode(String.format(
-                        "http://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=%s&&bos_redirect_product=bos&bos_redirect_major_version=%s&currentVersion&bos_redirect_minor_version=0",
+                        "http://www.ofelia.com/bos_redirect.php?bos_redirect_id=%s&&bos_redirect_product=bos&bos_redirect_major_version=%s&currentVersion&bos_redirect_minor_version=0",
                         id, currentVersion), "UTF-8"));
     }
 
