@@ -46,7 +46,7 @@ public class ShowHelpCommand extends AbstractHandler {
             if (globalProperties != null) {
                 url = globalProperties.getProperty(HELP_URL_PROPERTY);
             } else {
-                url = "http://www.ofelia.com/bos_redirect.php?bos_redirect_id=74";
+                url = "http://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=74";
             }
             url = url.concat("&").concat(majorVersion());
             IWebBrowser browser = PlatformUI.getWorkbench().getBrowserSupport()

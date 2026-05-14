@@ -164,7 +164,7 @@ public class IntroContentProvider implements IIntroXHTMLContentProvider {
 
     public static String redirectUrl(String redirectId, String product, boolean includeSEOParams) {
         return String.format(
-                "https://www.ofelia.com/bos_redirect.php?bos_redirect_id=%s&bos_redirect_product=%s&bos_redirect_major_version=%s&bos_redirect_minor_version=%s%s",
+                "https://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=%s&bos_redirect_product=%s&bos_redirect_major_version=%s&bos_redirect_minor_version=%s%s",
                 redirectId,
                 product,
                 ProductVersion.minorVersion(),

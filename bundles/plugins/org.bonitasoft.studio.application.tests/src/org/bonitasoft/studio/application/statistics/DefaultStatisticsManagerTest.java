@@ -69,7 +69,7 @@ class DefaultStatisticsManagerTest {
         var request = requestCaptor.getValue();
         assertThat(request.uri())
                 .hasToString(String.format(
-                        "https://www.ofelia.com/bos_redirect.php?bos_redirect_id=765&bos_redirect_major_version=%s&bos_redirect_minor_version=%s&bos_redirect_product=bos&groupId=g&artifactId=a&version=v&extensionType=connector",
+                        "https://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=765&bos_redirect_major_version=%s&bos_redirect_minor_version=%s&bos_redirect_product=bos&groupId=g&artifactId=a&version=v&extensionType=connector",
                         ProductVersion.minorVersion(),
                         ProductVersion.maintenanceVersion()));
     }

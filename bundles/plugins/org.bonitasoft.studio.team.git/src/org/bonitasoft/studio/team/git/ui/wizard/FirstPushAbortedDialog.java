@@ -24,7 +24,7 @@ import org.eclipse.swt.widgets.Shell;
 
 public class FirstPushAbortedDialog extends MessageDialog {
 
-    private static final String DOCUMENTATION_GIT_URL = "http://www.ofelia.com/bos_redirect.php?bos_redirect_id=672&bos_redirect_product=bos&bos_redirect_major_version=%s";
+    private static final String DOCUMENTATION_GIT_URL = "http://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=672&bos_redirect_product=bos&bos_redirect_major_version=%s";
 
     public FirstPushAbortedDialog(Shell parentShell) {
         super(parentShell, Messages.shareRepositoryProgressTitle, null, null, 0,

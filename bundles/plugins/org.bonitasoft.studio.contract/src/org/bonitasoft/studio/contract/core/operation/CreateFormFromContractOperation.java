@@ -58,7 +58,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 public class CreateFormFromContractOperation extends CreateUIDArtifactOperation {
 
     private static final String FORM_GENERATION_DOCUMENTATION_LINK = String.format(
-            "https://www.ofelia.com/bos_redirect.php?bos_redirect_id=685&bos_redirect_product=bos&bos_redirect_major_version=%s&bos_redirect_minor_version=0",
+            "https://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=685&bos_redirect_product=bos&bos_redirect_major_version=%s&bos_redirect_minor_version=0",
             ProductVersion.minorVersion());
 
     private Contract contract;

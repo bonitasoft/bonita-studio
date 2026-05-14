@@ -154,7 +154,7 @@ public class CreateContractInputFromBusinessObjectWizardPage extends WizardPage 
     private void openBrowser(String redirectId) {
         try {
             new OpenBrowserOperation(new URL(String.format(
-                    "http://www.ofelia.com/bos_redirect.php?bos_redirect_id=%s&bos_redirect_product=bos&bos_redirect_major_version=%s",
+                    "http://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=%s&bos_redirect_product=bos&bos_redirect_major_version=%s",
                     redirectId,
                     ProductVersion.minorVersion()))).execute();
         } catch (MalformedURLException e) {

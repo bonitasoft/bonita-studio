@@ -173,7 +173,7 @@ public class CronEditor extends Composite {
     };
 
     private static final String CRON_DOCUMENTATION_URL = String.format(
-            "http://www.ofelia.com/bos_redirect.php?bos_redirect_id=669&bos_redirect_product=bos&bos_redirect_major_version=%s",
+            "http://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=669&bos_redirect_product=bos&bos_redirect_major_version=%s",
             ProductVersion.minorVersion());
 
     private CronExpression cronExpression;

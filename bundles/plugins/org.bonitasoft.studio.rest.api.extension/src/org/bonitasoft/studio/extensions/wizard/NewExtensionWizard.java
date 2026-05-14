@@ -40,7 +40,7 @@ import org.eclipse.jface.wizard.Wizard;
  */
 public class NewExtensionWizard extends Wizard {
 
-    private static final String DOC_URL_TEMPLATE = "http://www.ofelia.com/bos_redirect.php?bos_redirect_id=%1$s&bos_redirect_product=bos&bos_redirect_major_version=%2$s&bos_redirect_minor_version=";
+    private static final String DOC_URL_TEMPLATE = "http://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=%1$s&bos_redirect_product=bos&bos_redirect_major_version=%2$s&bos_redirect_minor_version=";
 
     private final ArtifactType artifactType;
     private final ExtensionRepositoryStore repositoryStore;
