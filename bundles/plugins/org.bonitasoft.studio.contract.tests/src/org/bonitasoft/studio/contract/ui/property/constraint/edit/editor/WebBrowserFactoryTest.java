@@ -61,7 +61,7 @@ public class WebBrowserFactoryTest {
 
     @Test
     public void should_openExteranlBrowser_open_url_on_external_browser() throws Exception {
-        final String urlAsString = "http://www.bonitasoft.com";
+        final String urlAsString = "http://www.ofelia.com";
         factory.openExteranlBrowser(urlAsString);
         verify(browser).openURL(new URL(urlAsString));
     }

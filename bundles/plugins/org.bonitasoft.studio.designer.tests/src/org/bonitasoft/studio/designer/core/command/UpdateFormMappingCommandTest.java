@@ -63,11 +63,11 @@ public class UpdateFormMappingCommandTest implements ProcessPackage.Literals {
         final FormMapping formMapping = aFormMapping().build();
 
         //when
-        final UpdateFormMappingCommand updateFormMappingCommand = new UpdateFormMappingCommand(editingDomain, formMapping, "http://www.bonitasoft.com");
+        final UpdateFormMappingCommand updateFormMappingCommand = new UpdateFormMappingCommand(editingDomain, formMapping, "http://www.ofelia.com");
 
         //then
         assertThat(updateFormMappingCommand.getCommandList()).extracting("label", "feature", "value").contains(
                 tuple("Set", FORM_MAPPING__TYPE, FormMappingType.URL),
-                tuple("Set", FORM_MAPPING__URL, "http://www.bonitasoft.com"));
+                tuple("Set", FORM_MAPPING__URL, "http://www.ofelia.com"));
     }
 }

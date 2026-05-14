@@ -36,7 +36,7 @@ public class DocumentInitialContentValidatorTest {
 
     @Test
     public void test_Document_URL_length_OK() {
-        final DocumentInitialContentValidator validator = new DocumentInitialContentValidator(aDocumentWithURL("http://www.bonitasoft.com"), MAX_LENGTH);
+        final DocumentInitialContentValidator validator = new DocumentInitialContentValidator(aDocumentWithURL("http://www.ofelia.com"), MAX_LENGTH);
 
         final IStatus status = validator.validate(null);
 
@@ -47,7 +47,7 @@ public class DocumentInitialContentValidatorTest {
     @Test
     public void test_Document_URL_Length_NOK() {
         final DocumentInitialContentValidator validator = new DocumentInitialContentValidator(
-                aDocumentWithURL("http://www.bonitasoft.com"), 5);
+                aDocumentWithURL("http://www.ofelia.com"), 5);
 
         final IStatus status = validator.validate(null);
 

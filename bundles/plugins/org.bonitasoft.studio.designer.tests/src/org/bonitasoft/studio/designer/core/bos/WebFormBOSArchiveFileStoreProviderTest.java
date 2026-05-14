@@ -115,7 +115,7 @@ public class WebFormBOSArchiveFileStoreProviderTest {
 
     private AbstractProcess aProcessWithFormMappings() {
         return aPool().withName("Pool1").withVersion("1.0")
-                .havingOverviewFormMapping(aFormMapping().withType(FormMappingType.URL).withURL("http://www.bonitasoft.com"))
+                .havingOverviewFormMapping(aFormMapping().withType(FormMappingType.URL).withURL("http://www.ofelia.com"))
                 .havingFormMapping(aFormMapping().havingTargetForm(anExpression().withName("processForm").withContent("process-form-id")))
                 .havingElements(
                         aTask().withName("Step1").havingFormMapping(
