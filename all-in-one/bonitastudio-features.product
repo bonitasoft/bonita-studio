@@ -23,9 +23,9 @@
       startupMessageRect="223,190,250,25"
       startupForegroundColor="FFFCFC" />
    <launcher name="BonitaStudioCommunity">
-      <macosx icon="icons/bonitasoft-icon-128-128-transparent.icns"/>
+      <macosx icon="icons/ofelia-icon-128-128-transparent.icns"/>
       <win useIco="true">
-         <ico path="icons/bonitasoft.ico"/>
+         <ico path="icons/ofelia.ico"/>
          <bmp/>
       </win>
    </launcher>

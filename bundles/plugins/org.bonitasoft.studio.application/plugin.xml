@@ -150,7 +150,7 @@
             <command
                   commandId="org.bonitasoft.studio.application.openIntroCommand"
                   hoverIcon="icons/menuIcons/bonita_hover.png"
-                  icon="icons/bonitasoft-icon-16-16-transparent.png"
+                  icon="icons/ofelia-icon-16-16-transparent.png"
                   id="org.bonitasoft.studio.helpMenu.welcomeMenu"
                   label="%openWelcomePage_label"
                   style="push">
@@ -167,7 +167,7 @@
                label="%selectProfile">
             <command
                   commandId="org.bonitasoft.studio.application.switchToAnalyst"
-                  icon="icons/bonitasoft-icon-16-16-transparent.png"
+                  icon="icons/ofelia-icon-16-16-transparent.png"
                   label="%analystMode">
             </command>
             <command
@@ -801,7 +801,7 @@
       <view
             category="org.bonitasoft.studio.application.bonita"
             class="org.bonitasoft.studio.application.views.BonitaProjectExplorer"
-            icon="icons/bonitasoft-icon-16-16-transparent.png"
+            icon="icons/ofelia-icon-16-16-transparent.png"
             id="org.bonitasoft.studio.application.project.explorer"
             inject="true"
             name="%projectExplorer"

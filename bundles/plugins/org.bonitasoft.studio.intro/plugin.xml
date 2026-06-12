@@ -5,7 +5,7 @@
          point="org.eclipse.ui.intro">
       <intro
             class="org.eclipse.ui.intro.config.CustomizableIntroPart"
-            icon="icons/bonitasoft-icon-16-16-transparent.png"
+            icon="icons/ofelia-icon-16-16-transparent.png"
             id="org.bonitasoft.studio.application.intro"
             label="%openWelcomePage_label">
       </intro>

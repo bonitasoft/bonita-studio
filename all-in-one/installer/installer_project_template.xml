@@ -216,7 +216,7 @@
                         GenericName=@product.short.name@-${product_version}
                         Comment=@shortcut.comment@
                         Exec=${installdir}/@linux.shortcut.name@
-                        Icon=${installdir}/bonitasoft-icon-128-128-transparent.png
+                        Icon=${installdir}/ofelia-icon-128-128-transparent.png
                         Terminal=false
                         Type=Application
                     </text>
