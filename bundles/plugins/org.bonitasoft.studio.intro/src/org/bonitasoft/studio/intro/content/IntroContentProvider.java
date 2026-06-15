@@ -74,7 +74,7 @@ public class IntroContentProvider implements IIntroXHTMLContentProvider {
         try {
             CONTENT_PROVIDERS.add(new ExecuteCommandContentProvider("user-application-link",
                     "org.bonitasoft.studio.importer.bos.command", Messages.importUserApplication,
-                    buildImportParameters("713", null)));
+                    buildImportParameters("713", productId(), null)));
         } catch (IOException e) {
             BonitaStudioLog.error(e);
         }
