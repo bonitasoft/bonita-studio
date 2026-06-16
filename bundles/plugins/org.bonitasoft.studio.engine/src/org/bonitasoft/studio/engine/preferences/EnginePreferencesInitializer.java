@@ -44,7 +44,7 @@ public class EnginePreferencesInitializer extends AbstractPreferenceInitializer 
         store.setDefault(EnginePreferenceConstants.LAZYLOAD_ENGINE, false);
         store.setDefault(EnginePreferenceConstants.TOMCAT_XMX_OPTION, 1024);
         store.setDefault(EnginePreferenceConstants.TOMCAT_EXTRA_PARAMS, getDefaultOr(EnginePreferenceConstants.TOMCAT_EXTRA_PARAMS,"-DnoCacheCustomPage=true -Dbonita.platform.persistence.use_second_level_cache=false"));
-        store.setDefault(EnginePreferenceConstants.USER_APP_TOKEN, EnginePreferenceConstants.DEFAULT_USER_APP_TOKEN);
+        store.setDefault(EnginePreferenceConstants.USER_APP_TOKEN, EnginePreferenceConstants.getDefaultUserAppToken());
         
         if (PlatformUI.isWorkbenchRunning()) {
             DebugUITools.getPreferenceStore().setValue(

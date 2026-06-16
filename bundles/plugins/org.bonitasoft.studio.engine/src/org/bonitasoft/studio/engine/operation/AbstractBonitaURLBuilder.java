@@ -70,7 +70,7 @@ public abstract class AbstractBonitaURLBuilder {
 
     protected String userAppToken() {
         if(EnginePlugin.getDefault() == null) {
-            return EnginePreferenceConstants.DEFAULT_USER_APP_TOKEN;
+            return EnginePreferenceConstants.getDefaultUserAppToken();
         }
         return EnginePlugin.getDefault().getPreferenceStore().getString(EnginePreferenceConstants.USER_APP_TOKEN);
     }

@@ -19,6 +19,7 @@
 package org.bonitasoft.studio.engine.preferences;
 
 import org.bonitasoft.studio.common.BonitaConstants;
+import org.bonitasoft.studio.common.ui.PlatformUtil;
 
 
 public class EnginePreferenceConstants {
@@ -48,4 +49,16 @@ public class EnginePreferenceConstants {
     public static final String TOMCAT_EXTRA_PARAMS = "tomcat.extra.params";
     public static final String USER_APP_TOKEN = "userAppToken";
     public static final String DEFAULT_USER_APP_TOKEN = "userAppBonita";
+    public static final String DEFAULT_USER_APP_TOKEN_SP = "userAppEEBonita";
+
+    /**
+     * The default user application token depends on the edition: the Subscription Studio deploys
+     * the {@code userAppEEBonita} application, whereas the Community Studio deploys
+     * {@code userAppBonita}.
+     */
+    public static String getDefaultUserAppToken() {
+        return PlatformUtil.isASubscriptionBonitaProduct()
+                ? DEFAULT_USER_APP_TOKEN_SP
+                : DEFAULT_USER_APP_TOKEN;
+    }
 }

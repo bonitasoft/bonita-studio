@@ -44,6 +44,7 @@ import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.core.ActiveOrganizationProvider;
 import org.bonitasoft.studio.common.ui.PlatformUtil;
 import org.bonitasoft.studio.engine.operation.ApplicationURLBuilder;
+import org.bonitasoft.studio.engine.preferences.EnginePreferenceConstants;
 import org.eclipse.core.runtime.IStatus;
 
 public class DeployedAppContentProvider {
@@ -53,9 +54,9 @@ public class DeployedAppContentProvider {
     private static Set<String> BONITA_APPS_TOKENS;
     static {
         if (PlatformUtil.isACommunityBonitaProduct()) {
-            BONITA_APPS_TOKENS = Set.of("adminAppBonita", "userAppBonita");
+            BONITA_APPS_TOKENS = Set.of("adminAppBonita", EnginePreferenceConstants.DEFAULT_USER_APP_TOKEN);
         } else {
-            BONITA_APPS_TOKENS = Set.of("adminAppEEBonita", "userAppBonita");
+            BONITA_APPS_TOKENS = Set.of("adminAppEEBonita", EnginePreferenceConstants.DEFAULT_USER_APP_TOKEN_SP);
         }
     }
 

@@ -487,6 +487,18 @@ public class PlatformUtil {
         return false;
     }
 
+    /**
+     * Returns true only when running the Subscription Studio product.
+     * Unlike !isACommunityBonitaProduct(), this is false when no product is set
+     * (e.g. headless tests), so it never misclassifies a no-product runtime as Subscription.
+     */
+    public static boolean isASubscriptionBonitaProduct() {
+        if (Platform.getProduct() != null) {
+            return Platform.getProduct().getId().equals("org.bonitasoft.studioEx.product");
+        }
+        return false;
+    }
+
     public static boolean isIntroOpen() {
         final IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
         if (window != null) {
