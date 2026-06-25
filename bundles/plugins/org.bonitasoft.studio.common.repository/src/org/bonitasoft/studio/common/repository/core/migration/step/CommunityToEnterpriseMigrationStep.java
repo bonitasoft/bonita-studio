@@ -45,6 +45,10 @@ public class CommunityToEnterpriseMigrationStep implements MigrationStep {
     private static final String ADMIN_APP_ARTIFACT_ID = "bonita-admin-application";
     private static final String ADMIN_APP_EE_GROUP_ID = "com.bonitasoft.web.application";
     private static final String ADMIN_APP_EE_ARTIFACT_ID = "bonita-admin-application-sp";
+    private static final String USER_APP_GROUP_ID = "org.bonitasoft.web.application";
+    private static final String USER_APP_ARTIFACT_ID = "bonita-user-application";
+    private static final String USER_APP_EE_GROUP_ID = "com.bonitasoft.web.application";
+    private static final String USER_APP_EE_ARTIFACT_ID = "bonita-user-application-sp";
 
     @Override
     public StepDescription getDescription() {
@@ -72,6 +76,14 @@ public class CommunityToEnterpriseMigrationStep implements MigrationStep {
                     d.setArtifactId(ADMIN_APP_EE_ARTIFACT_ID);
                     report.updated("Bonita Admin Application has been upgraded to Enterprise edition.");
                 });
+        model.getDependencies().stream()
+                .filter(isUserApp())
+                .findFirst()
+                .ifPresent(d -> {
+                    d.setGroupId(USER_APP_EE_GROUP_ID);
+                    d.setArtifactId(USER_APP_EE_ARTIFACT_ID);
+                    report.updated("Bonita User Application has been upgraded to Enterprise edition.");
+                });
         model.getProfiles().stream()
                 .filter(p -> DOCKER_PROFILE_ID.equals(p.getId()))
                 .findFirst()
@@ -97,6 +109,11 @@ public class CommunityToEnterpriseMigrationStep implements MigrationStep {
     private Predicate<Dependency> isAdminApp() {
         return d -> ADMIN_APP_GROUP_ID.equals(d.getGroupId())
                 && ADMIN_APP_ARTIFACT_ID.equals(d.getArtifactId());
+    }
+
+    private Predicate<Dependency> isUserApp() {
+        return d -> USER_APP_GROUP_ID.equals(d.getGroupId())
+                && USER_APP_ARTIFACT_ID.equals(d.getArtifactId());
     }
 
     private Optional<PluginExecution> findPluginExecution(BuildBase build, String artifactId, String executionId) {
