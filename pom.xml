@@ -20,8 +20,8 @@
         <platform.version>${project.parent.version}</platform.version>
         <tomcat.version>9.0.90</tomcat.version>
         <maven3-model-jdom-support.version>1.6</maven3-model-jdom-support.version>
-        <marketplace.version>1.1.25</marketplace.version>
-        <marketplace.md5Checksum>26bc4569cd07a3a86f53145c2256cc0a</marketplace.md5Checksum>
+        <marketplace.version>1.1.29</marketplace.version>
+        <marketplace.md5Checksum>0644e9d9a7bc52fd3bee6a5a5e47f479</marketplace.md5Checksum>
         <tycho.localArtifacts>ignore</tycho.localArtifacts>
         <!-- Maven plugins -->
         <maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
