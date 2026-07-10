@@ -115,15 +115,12 @@ public class TestConnectorUtil {
                 wd.run(true, false, operation);
                 if (operation.getStatus().isOK()) {
                     result = operation.getResult();
-                } else {
-                    if (operation.getStatus().getSeverity() == IStatus.WARNING) {
-                        MessageDialog.openWarning(Display.getDefault().getActiveShell(), Messages.testConnectorTitle,
-                                operation.getStatus().getMessage());
-                    } else {
-                        MessageDialog.openError(Display.getDefault().getActiveShell(), Messages.testConnectorTitle,
-                                operation.getStatus().getMessage());
-                    }
-
+                } else if (operation.getStatus().getSeverity() == IStatus.WARNING) {
+                    MessageDialog.openWarning(Display.getDefault().getActiveShell(), Messages.testConnectorTitle,
+                            operation.getStatus().getMessage());
+                } else if (operation.getStatus().getSeverity() != IStatus.CANCEL) {
+                    MessageDialog.openError(Display.getDefault().getActiveShell(), Messages.testConnectorTitle,
+                            operation.getStatus().getMessage());
                 }
             } catch (InvocationTargetException e) {
                 result = e;
