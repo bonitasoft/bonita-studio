@@ -161,7 +161,11 @@ public class TestConnectorOperation implements IRunnableWithProgress {
             configureProcess(configuration, implementation);
 
             // Build Maven project in case connector has dependencies
-            IStatus buildStatus = mavenBuilder.cleanInstall();
+            IStatus buildStatus = mavenBuilder.installWithCleanFallback();
+            if (buildStatus.getSeverity() == IStatus.CANCEL) {
+                status = buildStatus;
+                return;
+            }
             if (!buildStatus.isOK()) {
                 status = buildStatus;
                 throw new InvocationTargetException(new Exception(buildStatus.getMessage()));
