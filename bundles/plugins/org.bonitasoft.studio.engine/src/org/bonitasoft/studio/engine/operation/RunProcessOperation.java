@@ -82,7 +82,8 @@ public class RunProcessOperation implements IRunnableWithProgress, Runnable {
 
         // Build Maven project before deployment
         final MavenProjectBuilder mavenBuilder = new MavenProjectBuilder();
-        status = mavenBuilder.cleanInstall();
+        // No dedicated CANCEL guard needed: a canceled build is not OK and the status propagates to a cancel-aware consumer
+        status = mavenBuilder.installWithCleanFallback();
         if (!status.isOK()) {
             return;
         }

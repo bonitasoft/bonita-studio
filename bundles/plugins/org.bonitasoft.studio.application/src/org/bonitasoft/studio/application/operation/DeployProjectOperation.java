@@ -78,7 +78,8 @@ public class DeployProjectOperation implements IRunnableWithStatus {
 
     private void buildMavenProject(IProgressMonitor monitor) {
         monitor.setTaskName(Messages.buildingMavenProject);
-        status = mavenBuilder.cleanInstall();
+        // No dedicated CANCEL guard needed: a canceled build is not OK and the status propagates to a cancel-aware consumer
+        status = mavenBuilder.installWithCleanFallback();
         monitor.worked(MAVEN_BUILD_WORK_UNIT);
     }
 
