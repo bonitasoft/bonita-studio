@@ -115,7 +115,8 @@ public class DeployDiagramHandler {
             protected IStatus run(IProgressMonitor monitor) {
                 // Build Maven project before deployment
                 final MavenProjectBuilder mavenBuilder = new MavenProjectBuilder();
-                IStatus buildStatus = mavenBuilder.cleanInstall();
+                // No dedicated CANCEL guard needed: a canceled build is not OK and the status propagates to a cancel-aware consumer
+                IStatus buildStatus = mavenBuilder.installWithCleanFallback();
                 if (!buildStatus.isOK()) {
                     return buildStatus;
                 }

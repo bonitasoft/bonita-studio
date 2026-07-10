@@ -83,7 +83,11 @@ public class TestExpressionOperation implements IRunnableWithProgress {
 
             // Build Maven project before creating BAR
             MavenProjectBuilder mavenBuilder = new MavenProjectBuilder();
-            IStatus buildStatus = mavenBuilder.cleanInstall();
+            IStatus buildStatus = mavenBuilder.installWithCleanFallback();
+            if (buildStatus.getSeverity() == IStatus.CANCEL) {
+                // Build canceled by user: abort quietly, the finally block releases the session
+                return;
+            }
             if (!buildStatus.isOK()) {
                 throw new InvocationTargetException(
                     new Exception("Maven build failed: " + buildStatus.getMessage()));

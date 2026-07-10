@@ -108,7 +108,8 @@ public class ExportBarOperation implements IRunnableWithProgress {
         }
 
         // Build Maven project once before generating all BARs
-        IStatus buildStatus = mavenBuilder.cleanInstall();
+        // No dedicated CANCEL guard needed: a canceled build is not OK and the status propagates to a cancel-aware consumer
+        IStatus buildStatus = mavenBuilder.installWithCleanFallback();
         if (!buildStatus.isOK()) {
             status = buildStatus;
             return;

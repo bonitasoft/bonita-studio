@@ -172,6 +172,12 @@ public class ScriptExpressionContext {
     }
 
     private static Category createBusinessObjectDaoCategory(ScriptVariable variable, BusinessObjectModel bdm) {
+        IJavaProject javaProject = RepositoryManager.getInstance().getCurrentRepository().orElseThrow().getJavaProject();
+        return createBusinessObjectDaoCategory(variable, bdm, javaProject);
+    }
+
+    static Category createBusinessObjectDaoCategory(ScriptVariable variable, BusinessObjectModel bdm,
+            IJavaProject javaProject) {
         String catName = NamingUtils.getSimpleName(variable.getType());
         if (catName.endsWith("DAO")) {
             catName = catName.substring(0, catName.length() - 3);
@@ -180,9 +186,14 @@ public class ScriptExpressionContext {
                 Pics.getImage("BusinessObjectData.gif", Activator.getDefault()));
         findBusinessObjectFromDAO(variable.getType(), bdm)
                 .ifPresent(bo -> cat.setDescription(bo.getDescription()));
-        IJavaProject javaProject = RepositoryManager.getInstance().getCurrentRepository().orElseThrow().getJavaProject();
         try {
             IType type = javaProject.findType(variable.getType());
+            if (type == null) {
+                BonitaStudioLog.warning(String.format(
+                        "Cannot resolve DAO type %s in project classpath. Business query proposals are unavailable.",
+                        variable.getType()), ScriptExpressionContext.class);
+                return cat;
+            }
             Stream.of(type.getMethods())
                     .filter(method -> {
                         try {
