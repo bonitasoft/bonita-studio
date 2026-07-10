@@ -68,10 +68,14 @@ public class MavenProjectBuilder {
      *
      * @param project the Bonita project to build, must not be null
      * @param goals the Maven goals to execute (e.g., "clean", "install"), must not be null or empty
-     * @return {@link IStatus#OK_STATUS} if build succeeds, error status otherwise
-     * @throws IllegalArgumentException if project or goals are null
+     * @return {@link IStatus#OK_STATUS} if build succeeds, {@link Status#CANCEL_STATUS} if the build
+     *         is canceled or interrupted, error status otherwise (including when project is null)
      */
     public IStatus buildProject(BonitaProject project, List<String> goals) {
+        return buildProject(project, goals, false);
+    }
+
+    private IStatus buildProject(BonitaProject project, List<String> goals, boolean failureTriggersRetry) {
         if (!isProjectValid(project)) {
             return createErrorStatus("Cannot build Maven project: No active Bonita project found");
         }
@@ -79,14 +83,16 @@ public class MavenProjectBuilder {
         logBuildStart(project, goals);
 
         try {
-            IStatus buildResult = executeMavenBuild(project, goals);
+            IStatus buildResult = executeMavenBuild(project, goals, failureTriggersRetry);
             if (!buildResult.isOK()) {
                 return buildResult;
             }
 
             return waitForBuildCompletion(project);
+        } catch (OperationCanceledException e) {
+            return canceled(project);
         } catch (Exception e) {
-            return handleUnexpectedError(project, e);
+            return handleUnexpectedError(project, e, failureTriggersRetry);
         }
     }
 
@@ -101,6 +107,72 @@ public class MavenProjectBuilder {
      */
     public IStatus cleanInstall() {
         BonitaProject project = RepositoryManager.getInstance().getCurrentProject().orElse(null);
+        return cleanInstall(project);
+    }
+
+    /**
+     * Executes an incremental Maven install ({@code mvn install}, without the {@code clean} goal),
+     * optionally demoting a build failure log to a warning when a clean install retry is known to
+     * follow.
+     * <p>
+     * The {@code clean} goal must be avoided in recurring flows (deploy, run, export): on Windows,
+     * the Studio process can hold a file lock on a previously built jar (e.g. the BDM model jar).
+     * {@code mvn clean} then deletes the module compiled output before failing on the locked jar,
+     * leaving the workspace build output in a broken state.
+     * </p>
+     *
+     * @param project the Bonita project to build, must not be null
+     * @param failureTriggersRetry true when the caller retries with a full clean install on failure
+     * @return {@link IStatus#OK_STATUS} if build succeeds, {@link Status#CANCEL_STATUS} if the build
+     *         is canceled or interrupted, error status otherwise
+     */
+    IStatus install(BonitaProject project, boolean failureTriggersRetry) {
+        return buildProject(project, List.of("install"), failureTriggersRetry);
+    }
+
+    /**
+     * Executes an incremental Maven install on the current active project, falling back to a full
+     * {@code clean install} if the incremental build fails.
+     * <p>
+     * Automatically retrieves the current project from {@link RepositoryManager}.
+     * </p>
+     *
+     * @return {@link IStatus#OK_STATUS} if build succeeds, {@link Status#CANCEL_STATUS} if the build
+     *         is canceled or interrupted, error status if no active project or build fails
+     * @see #installWithCleanFallback(BonitaProject)
+     */
+    public IStatus installWithCleanFallback() {
+        BonitaProject project = RepositoryManager.getInstance().getCurrentProject().orElse(null);
+        return installWithCleanFallback(project);
+    }
+
+    /**
+     * Executes an incremental Maven install on a specific project, falling back to a full
+     * {@code clean install} if the incremental build fails.
+     * <p>
+     * This is the preferred build entry point for recurring flows (deploy, run, export, test):
+     * the incremental build avoids the destructive {@code clean} goal that can wipe the BDM build
+     * output when a jar file is locked by the Studio process on Windows, while the
+     * fallback still recovers from stale build states that require a full rebuild.
+     * </p>
+     * <p>
+     * Note that the fallback itself runs the destructive {@code clean} goal: if a jar is locked
+     * while the incremental build fails for another reason, the clean can still wipe the module
+     * build output. This method narrows the failure window but does not eliminate it on its own.
+     * </p>
+     *
+     * @param project the Bonita project to build, must not be null
+     * @return {@link IStatus#OK_STATUS} if build succeeds, {@link Status#CANCEL_STATUS} if the build
+     *         is canceled or interrupted, error status otherwise
+     */
+    public IStatus installWithCleanFallback(BonitaProject project) {
+        if (!isProjectValid(project)) {
+            return createErrorStatus("Cannot build Maven project: No active Bonita project found");
+        }
+        IStatus status = install(project, true);
+        if (status.isOK() || status.getSeverity() == IStatus.CANCEL) {
+            return status;
+        }
         return cleanInstall(project);
     }
 
@@ -136,14 +208,21 @@ public class MavenProjectBuilder {
                 PLUGIN_ID);
     }
 
-    private IStatus executeMavenBuild(BonitaProject project, List<String> goals) throws CoreException {
+    private IStatus executeMavenBuild(BonitaProject project, List<String> goals, boolean failureTriggersRetry)
+            throws CoreException {
         return BuildScheduler.callWithBuildRule(() -> {
             IMavenProjectFacade mavenProject = resolveMavenProject(project);
             if (mavenProject == null) {
-                return createErrorStatus("Cannot resolve Maven project for " + project.getDisplayName());
+                String errorMsg = "Cannot resolve Maven project for " + project.getDisplayName();
+                if (failureTriggersRetry) {
+                    // A clean install retry follows: do not report the recoverable failure as an error
+                    BonitaStudioLog.warning(errorMsg + ". A clean install retry will follow.", PLUGIN_ID);
+                    return new Status(IStatus.ERROR, PLUGIN_ID, errorMsg);
+                }
+                return createErrorStatus(errorMsg);
             }
 
-            return runMavenGoals(mavenProject, goals, project.getDisplayName());
+            return runMavenGoals(mavenProject, goals, project.getDisplayName(), failureTriggersRetry);
         }, new NullProgressMonitor());
     }
 
@@ -151,8 +230,8 @@ public class MavenProjectBuilder {
         return MavenPlugin.getMavenProjectRegistry().getProject(project.getParentProject());
     }
 
-    private IStatus runMavenGoals(IMavenProjectFacade mavenProject, List<String> goals, String projectName)
-            throws CoreException {
+    private IStatus runMavenGoals(IMavenProjectFacade mavenProject, List<String> goals, String projectName,
+            boolean failureTriggersRetry) throws CoreException {
         var ctx = mavenProject.createExecutionContext();
         var request = ctx.getExecutionRequest();
         request.setGoals(goals);
@@ -163,17 +242,23 @@ public class MavenProjectBuilder {
                 new MavenExecutor(request),
                 new NullProgressMonitor());
 
-        return evaluateResult(result, projectName);
+        return evaluateResult(result, projectName, failureTriggersRetry);
     }
 
-    private IStatus evaluateResult(MavenExecutionResult result, String projectName) {
+    private IStatus evaluateResult(MavenExecutionResult result, String projectName, boolean failureTriggersRetry) {
         if (result.getBuildSummary(result.getProject()) instanceof BuildSuccess) {
             BonitaStudioLog.info("Maven build successful for " + projectName, PLUGIN_ID);
             return Status.OK_STATUS;
         } else {
             String errorMsg = "Maven build failed for project " + projectName;
             Throwable cause = result.hasExceptions() ? result.getExceptions().get(0) : null;
-            BonitaStudioLog.error(errorMsg, cause);
+            if (failureTriggersRetry) {
+                // A clean install retry follows: do not report the recoverable failure as an error
+                BonitaStudioLog.warning(String.format("%s (%s). A clean install retry will follow.",
+                        errorMsg, describeCause(cause)), PLUGIN_ID);
+            } else {
+                BonitaStudioLog.error(errorMsg, cause);
+            }
             return new Status(IStatus.ERROR, PLUGIN_ID, errorMsg, cause);
         }
     }
@@ -182,17 +267,42 @@ public class MavenProjectBuilder {
         try {
             BuildScheduler.joinOnBuildRule();
             return Status.OK_STATUS;
-        } catch (IllegalStateException | OperationCanceledException | InterruptedException e) {
+        } catch (InterruptedException e) {
+            // Catching InterruptedException clears the thread interrupt flag: restore it so
+            // callers up the stack (e.g. the Jobs framework) can still observe the interruption
+            Thread.currentThread().interrupt();
+            return canceled(project);
+        } catch (OperationCanceledException e) {
+            return canceled(project);
+        } catch (IllegalStateException e) {
             String errorMsg = "Maven build interrupted for " + project.getDisplayName();
             BonitaStudioLog.error(errorMsg, e);
             return new Status(IStatus.ERROR, PLUGIN_ID, errorMsg, e);
         }
     }
 
-    private IStatus handleUnexpectedError(BonitaProject project, Exception e) {
+    private IStatus handleUnexpectedError(BonitaProject project, Exception e, boolean failureTriggersRetry) {
         String errorMsg = "Unexpected error during Maven build for " + project.getDisplayName();
-        BonitaStudioLog.error(errorMsg, e);
+        if (failureTriggersRetry) {
+            // A clean install retry follows: do not report the recoverable failure as an error
+            BonitaStudioLog.warning(String.format("%s (%s). A clean install retry will follow.",
+                    errorMsg, describeCause(e)), PLUGIN_ID);
+        } else {
+            BonitaStudioLog.error(errorMsg, e);
+        }
         return new Status(IStatus.ERROR, PLUGIN_ID, errorMsg, e);
+    }
+
+    private IStatus canceled(BonitaProject project) {
+        BonitaStudioLog.info("Maven build canceled for " + project.getDisplayName(), PLUGIN_ID);
+        return Status.CANCEL_STATUS;
+    }
+
+    private static String describeCause(Throwable cause) {
+        if (cause == null) {
+            return "no cause";
+        }
+        return cause.getMessage() != null ? cause.getMessage() : cause.toString();
     }
 
     private IStatus createErrorStatus(String message) {

@@ -135,7 +135,10 @@ public class ExportAsBosArchiveHandler extends AbstractHandler {
         }
 
         // Build Maven project once before generating all BARs
-        IStatus buildStatus = mavenBuilder.cleanInstall();
+        IStatus buildStatus = mavenBuilder.installWithCleanFallback();
+        if (buildStatus.getSeverity() == IStatus.CANCEL) {
+            return null;
+        }
         if (!buildStatus.isOK()) {
             throw new ExecutionException(buildStatus.getMessage(), buildStatus.getException());
         }

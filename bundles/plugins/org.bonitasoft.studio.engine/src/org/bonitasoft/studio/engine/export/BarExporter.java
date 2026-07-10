@@ -80,17 +80,18 @@ public class BarExporter {
      * Creates a Business Archive (BAR) for the given process and configuration.
      * <p>
      * <b>Important:</b> This method reads the compiled Maven artifacts from the target directory.
-     * Therefore, you <b>MUST</b> call {@link MavenProjectBuilder#cleanInstall()} or
-     * {@link MavenProjectBuilder#cleanInstall(org.bonitasoft.studio.common.repository.core.BonitaProject)}
+     * Therefore, you <b>MUST</b> call {@link MavenProjectBuilder#installWithCleanFallback()} or
+     * {@link MavenProjectBuilder#installWithCleanFallback(org.bonitasoft.studio.common.repository.core.BonitaProject)}
      * <b>BEFORE</b> calling this method to ensure the artifacts are up-to-date and properly compiled.
+     * Do not use {@code cleanInstall()} on recurring flows: it is reserved for explicit full rebuilds.
      * </p>
      * <p>
      * Example usage:
-     * 
+     *
      * <pre>
      * // 1. Build the Maven project FIRST
      * MavenProjectBuilder mavenBuilder = new MavenProjectBuilder();
-     * IStatus buildStatus = mavenBuilder.cleanInstall(project, monitor);
+     * IStatus buildStatus = mavenBuilder.installWithCleanFallback();
      * if (!buildStatus.isOK()) {
      *     throw new BuildBarException("Maven build failed");
      * }
@@ -99,15 +100,15 @@ public class BarExporter {
      * BarExporter exporter = BarExporter.getInstance();
      * BusinessArchive bar = exporter.createBusinessArchive(process, configuration);
      * </pre>
-     * 
+     *
      * </p>
      *
      * @param process the process to export as a BAR, must not be null
      * @param configuration the configuration to use for the export, must not be null
      * @return the created Business Archive
      * @throws BuildBarException if the BAR creation fails
-     * @see MavenProjectBuilder#cleanInstall()
-     * @see MavenProjectBuilder#cleanInstall(org.bonitasoft.studio.common.repository.core.BonitaProject)
+     * @see MavenProjectBuilder#installWithCleanFallback()
+     * @see MavenProjectBuilder#installWithCleanFallback(org.bonitasoft.studio.common.repository.core.BonitaProject)
      */
     public BusinessArchive createBusinessArchive(final Pool process, final Configuration configuration)
             throws BuildBarException {
@@ -170,8 +171,8 @@ public class BarExporter {
      * </p>
      * <p>
      * <b>Important:</b> This method reads the compiled Maven artifacts from the target directory.
-     * Therefore, you <b>MUST</b> call {@link MavenProjectBuilder#cleanInstall()} or
-     * {@link MavenProjectBuilder#cleanInstall(org.bonitasoft.studio.common.repository.core.BonitaProject)}
+     * Therefore, you <b>MUST</b> call {@link MavenProjectBuilder#installWithCleanFallback()} or
+     * {@link MavenProjectBuilder#installWithCleanFallback(org.bonitasoft.studio.common.repository.core.BonitaProject)}
      * <b>BEFORE</b> calling this method to ensure the artifacts are up-to-date and properly compiled.
      * </p>
      *
@@ -180,8 +181,8 @@ public class BarExporter {
      * @return the created Business Archive
      * @throws BuildBarException if the BAR creation fails
      * @see #createBusinessArchive(Pool, Configuration)
-     * @see MavenProjectBuilder#cleanInstall()
-     * @see MavenProjectBuilder#cleanInstall(org.bonitasoft.studio.common.repository.core.BonitaProject)
+     * @see MavenProjectBuilder#installWithCleanFallback()
+     * @see MavenProjectBuilder#installWithCleanFallback(org.bonitasoft.studio.common.repository.core.BonitaProject)
      */
     public BusinessArchive createBusinessArchive(final Pool process, final String configurationId)
             throws BuildBarException {
