@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><target sequenceNumber="1759218557" name="platform">
+<?xml version="1.0" encoding="UTF-8"?><target sequenceNumber="1785231739" name="platform">
   <locations>
     <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
       <repository location="https://update-site.bonitasoft.com/p2/4.33/"/>
@@ -147,7 +147,7 @@
       </repositories>
     </location>
     <location missingManifest="generate" includeDependencyScopes="compile,runtime,system" includeSource="true" includeDependencyDepth="none" label="BonitaProjectReportModel" type="Maven">
-      <feature provider-name="Bonitasoft S.A" label="Bonita Project Report Model Feature" id="org.bonitasoft.project.report.model.feature" version="2.1.1"/>
+      <feature provider-name="Bonitasoft S.A" label="Bonita Project Report Model Feature" id="org.bonitasoft.project.report.model.feature" version="2.1.4"/>
       <dependencies>
         <dependency>
           <groupId>org.bonitasoft.maven</groupId>
