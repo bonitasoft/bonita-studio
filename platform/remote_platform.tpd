@@ -142,7 +142,7 @@ maven BonitaProjectReportModel scope=compile,runtime,system dependencyDepth=none
     feature {
         id="org.bonitasoft.project.report.model.feature"
         name="Bonita Project Report Model Feature"
-        version="2.1.1"
+        version="2.1.4"
         vendor="Bonitasoft S.A"
     }
     dependency {
