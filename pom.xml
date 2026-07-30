@@ -13,7 +13,7 @@
         <tycho.version>4.0.10</tycho.version>
         <java.version>17</java.version>
         <os-jvm-flags></os-jvm-flags>
-        <branding.version>2027.1-SNAPSHOT</branding.version>
+        <branding.version>2026.3-SNAPSHOT</branding.version>
         <bonita-runtime.version>11.2-SNAPSHOT</bonita-runtime.version>
         <ui.designer.version>1.20.1</ui.designer.version>
         <business.data.repository.version>1.0.0</business.data.repository.version>
