@@ -99,68 +99,87 @@
             <classifier>sources</classifier>
         </dependency>
         <dependency>
-            <groupId>org.codehaus.groovy</groupId>
+            <groupId>org.apache.groovy</groupId>
             <artifactId>groovy</artifactId>
+            <!-- TODO(BPA-761): version pin to remove once the bonita-project parent manages org.apache.groovy -->
+            <version>4.0.32</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>org.codehaus.groovy</groupId>
+            <groupId>org.apache.groovy</groupId>
             <artifactId>groovy-ant</artifactId>
+            <!-- TODO(BPA-761): version pin to remove once the bonita-project parent manages org.apache.groovy -->
+            <version>4.0.32</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>org.codehaus.groovy</groupId>
+            <groupId>org.apache.groovy</groupId>
             <artifactId>groovy-json</artifactId>
+            <!-- TODO(BPA-761): version pin to remove once the bonita-project parent manages org.apache.groovy -->
+            <version>4.0.32</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>org.codehaus.groovy</groupId>
+            <groupId>org.apache.groovy</groupId>
             <artifactId>groovy-xml</artifactId>
+            <!-- TODO(BPA-761): version pin to remove once the bonita-project parent manages org.apache.groovy -->
+            <version>4.0.32</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>org.codehaus.groovy</groupId>
+            <groupId>org.apache.groovy</groupId>
             <artifactId>groovy-nio</artifactId>
+            <!-- TODO(BPA-761): version pin to remove once the bonita-project parent manages org.apache.groovy -->
+            <version>4.0.32</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>org.codehaus.groovy</groupId>
+            <groupId>org.apache.groovy</groupId>
             <artifactId>groovy-datetime</artifactId>
+            <!-- TODO(BPA-761): version pin to remove once the bonita-project parent manages org.apache.groovy -->
+            <version>4.0.32</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>org.codehaus.groovy</groupId>
+            <groupId>org.apache.groovy</groupId>
             <artifactId>groovy-dateutil</artifactId>
+            <!-- TODO(BPA-761): version pin to remove once the bonita-project parent manages org.apache.groovy -->
+            <version>4.0.32</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>org.codehaus.groovy</groupId>
+            <groupId>org.apache.groovy</groupId>
             <artifactId>groovy-sql</artifactId>
+            <!-- TODO(BPA-761): version pin to remove once the bonita-project parent manages org.apache.groovy -->
+            <version>4.0.32</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>org.codehaus.groovy</groupId>
+            <groupId>org.apache.groovy</groupId>
             <artifactId>groovy-templates</artifactId>
+            <!-- TODO(BPA-761): version pin to remove once the bonita-project parent manages org.apache.groovy -->
+            <version>4.0.32</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>org.codehaus.groovy</groupId>
+            <groupId>org.apache.groovy</groupId>
             <artifactId>groovy-jsr223</artifactId>
+            <!-- TODO(BPA-761): version pin to remove once the bonita-project parent manages org.apache.groovy -->
+            <version>4.0.32</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>org.codehaus.groovy</groupId>
+            <groupId>org.apache.groovy</groupId>
             <artifactId>groovy-jmx</artifactId>
+            <!-- TODO(BPA-761): version pin to remove once the bonita-project parent manages org.apache.groovy -->
+            <version>4.0.32</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>org.codehaus.groovy</groupId>
+            <groupId>org.apache.groovy</groupId>
             <artifactId>groovy-yaml</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.codehaus.groovy</groupId>
-            <artifactId>groovy-servlet</artifactId>
+            <!-- TODO(BPA-761): version pin to remove once the bonita-project parent manages org.apache.groovy -->
+            <version>4.0.32</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
