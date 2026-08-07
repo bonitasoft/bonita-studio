@@ -39,8 +39,7 @@ Require-Bundle: org.bonitasoft.studio.common.repository,
  org.eclipse.m2e.maven.runtime,
  org.bonitasoft.engine.bonita-client
 Bundle-RequiredExecutionEnvironment: JavaSE-17
-Import-Package: javax.activation;version="1.1.0",
- jakarta.annotation;version="2.1.1",
+Import-Package: jakarta.annotation;version="2.1.1",
  jakarta.inject;version="2.0.1",
  javax.xml.bind;version="2.2.0",
  org.bonitasoft.plugin.analyze.report.model,

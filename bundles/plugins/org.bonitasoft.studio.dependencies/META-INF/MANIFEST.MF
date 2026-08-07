@@ -34,5 +34,4 @@ Export-Package: org.bonitasoft.studio.dependencies,
  org.bonitasoft.studio.dependencies.repository,
  org.bonitasoft.studio.dependencies.ui,
  org.bonitasoft.studio.dependencies.ui.dialog
-Import-Package: javax.annotation;version="1.3.5",
- org.bonitasoft.engine.bpm.bar
+Import-Package: org.bonitasoft.engine.bpm.bar
