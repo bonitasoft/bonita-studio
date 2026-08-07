@@ -68,7 +68,7 @@ Require-Bundle: org.eclipse.ui,
  org.bonitasoft.studio.common.ui,
  org.bonitasoft.engine.bonita-client,
  org.bonitasoft.bonita2bar,
- com.sun.activation.jakarta.activation;bundle-version="1.2.2"
+ com.sun.activation.jakarta.activation;bundle-version="2.0.1"
 Import-Package: jakarta.annotation;version="2.1.1",
  jakarta.inject;version="2.0.1",
  org.bonitasoft.engine.operation;version="1.0.0",
