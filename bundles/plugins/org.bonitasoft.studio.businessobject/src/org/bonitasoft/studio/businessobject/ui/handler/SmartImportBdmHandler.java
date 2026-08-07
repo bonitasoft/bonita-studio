@@ -24,7 +24,7 @@ import java.nio.file.Files;
 import java.util.Optional;
 
 import jakarta.inject.Named;
-import javax.xml.bind.JAXBException;
+import jakarta.xml.bind.JAXBException;
 
 import org.bonitasoft.studio.businessobject.BusinessObjectPlugin;
 import org.bonitasoft.studio.businessobject.core.operation.SmartImportBDMOperation;

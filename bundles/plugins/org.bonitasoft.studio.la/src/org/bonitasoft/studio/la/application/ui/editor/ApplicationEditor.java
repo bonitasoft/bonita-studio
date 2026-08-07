@@ -18,8 +18,8 @@ import java.io.IOException;
 import java.util.Objects;
 import java.util.Optional;
 
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.UnmarshalException;
+import jakarta.xml.bind.JAXBException;
+import jakarta.xml.bind.UnmarshalException;
 
 import org.bonitasoft.engine.business.application.exporter.ApplicationNodeContainerConverter;
 import org.bonitasoft.engine.business.application.xml.ApplicationNodeContainer;

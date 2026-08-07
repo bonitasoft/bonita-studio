@@ -41,7 +41,7 @@ Require-Bundle: org.bonitasoft.studio.common.repository,
 Bundle-RequiredExecutionEnvironment: JavaSE-17
 Import-Package: jakarta.annotation;version="2.1.1",
  jakarta.inject;version="2.0.1",
- javax.xml.bind;version="2.2.0",
+ jakarta.xml.bind;version="3.0.0",
  org.bonitasoft.plugin.analyze.report.model,
  org.eclipse.ui.forms.editor
 Bundle-ActivationPolicy: lazy

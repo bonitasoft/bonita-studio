@@ -106,7 +106,7 @@ maven MavenDependenciesWithInfiniteDepth scope=compile,runtime,system dependency
 	dependency {
 		groupId="jakarta.xml.soap"
 		artifactId="jakarta.xml.soap-api"
-		version="1.4.2"
+		version="2.0.1"
 	}
 // Already included as org.apache.commons.commons-io P2 plugin ; commented out to workaround https://github.com/eclipse-pde/eclipse.pde/issues/874
 //	dependency {
@@ -158,49 +158,49 @@ maven BonitaArtifactsModels scope=compile,runtime,system dependencyDepth=none mi
     feature {
         id="org.bonitasoft.artifacts.model.studio.feature.feature.group"
         name="Extra Bonita Artifacts Models required by Studio but not in BonitasoftBPM"
-        version="1.2.2"
+        version="2.0.0"
         vendor="Bonitasoft S.A"
     }
     dependency {
         groupId="com.sun.activation"
         artifactId="jakarta.activation"
-        version="1.2.2"
+        version="2.0.1"
     }
     dependency {
         groupId="com.sun.xml.bind"
         artifactId="jaxb-osgi"
-        version="2.3.8"
+        version="3.0.2"
     }
     dependency {
         groupId="jakarta.xml.bind"
         artifactId="jakarta.xml.bind-api"
-        version="2.3.3"
+        version="3.0.1"
     }
     // without the artifacts already in org.bonitasoft.artifacts.model.feature from BonitasoftBPM
     dependency {
         groupId="org.bonitasoft.engine"
         artifactId="bonita-application-model"
-        version="1.2.2"
+        version="2.0.0"
     }
     dependency {
         groupId="org.bonitasoft.engine"
         artifactId="bonita-bdm-access-control-model"
-        version="1.2.2"
+        version="2.0.0"
     }
     dependency {
         groupId="org.bonitasoft.engine"
         artifactId="bonita-business-object-model"
-        version="1.2.2"
+        version="2.0.0"
     }
     dependency {
         groupId="org.bonitasoft.engine"
         artifactId="bonita-organization-model"
-        version="1.2.2"
+        version="2.0.0"
     }
     dependency {
         groupId="org.bonitasoft.engine"
         artifactId="bonita-profile-model"
-        version="1.2.2"
+        version="2.0.0"
     }
     dependency {
         groupId="org.glassfish.hk2"

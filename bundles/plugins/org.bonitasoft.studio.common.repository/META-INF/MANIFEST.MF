@@ -88,7 +88,7 @@ Require-Bundle: org.bonitasoft.studio.common,
  org.eclipse.jface.text
 Import-Package: jakarta.annotation;version="2.1.1",
  jakarta.inject;version="2.0.1",
- javax.xml.bind.annotation.adapters,
+ jakarta.xml.bind.annotation.adapters;version="3.0.0",
  org.bonitasoft.engine.connector,
  org.bonitasoft.engine.filter,
  org.bonitasoft.engine.session

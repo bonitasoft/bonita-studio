@@ -29,7 +29,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.zip.ZipFile;
 
-import javax.xml.bind.JAXBException;
+import jakarta.xml.bind.JAXBException;
 
 import org.bonitasoft.engine.bdm.BusinessObjectModelConverter;
 import org.bonitasoft.engine.bdm.model.BusinessObject;

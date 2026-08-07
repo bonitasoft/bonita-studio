@@ -21,7 +21,7 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-import javax.xml.bind.JAXBException;
+import jakarta.xml.bind.JAXBException;
 
 import org.bonitasoft.studio.la.application.repository.ApplicationRepositoryStore;
 import org.bonitasoft.studio.la.i18n.Messages;

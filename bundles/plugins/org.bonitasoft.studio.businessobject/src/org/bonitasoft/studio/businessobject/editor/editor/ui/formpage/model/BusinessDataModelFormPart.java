@@ -20,7 +20,7 @@ import static org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory.updateV
 import java.io.IOException;
 import java.util.function.Consumer;
 
-import javax.xml.bind.JAXBException;
+import jakarta.xml.bind.JAXBException;
 
 import org.apache.maven.model.Dependency;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelFileStore;
