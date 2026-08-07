@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde?>
 <!-- generated with https://github.com/eclipse-cbi/targetplatform-dsl -->
-<target name="platform" sequenceNumber="1785231739">
+<target name="platform" sequenceNumber="1785836386">
   <locations>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="true" type="InstallableUnit">
       <unit id="org.eclipse.justj.openjdk.hotspot.jre.full.feature.group" version="21.0.5.v20241023-1957"/>
@@ -62,11 +62,11 @@
       <repository id="Edapt" location="http://download.eclipse.org/edapt/releases/15x/150"/>
     </location>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="true" type="InstallableUnit">
-      <unit id="org.eclipse.nebula.widgets.richtext.feature.feature.group" version="1.5.1.202402011804"/>
+      <unit id="org.eclipse.nebula.widgets.richtext.feature.feature.group" version="1.7.0.202606141240"/>
       <repository id="Nebula" location="https://download.eclipse.org/nebula/updates/release/"/>
     </location>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="true" type="InstallableUnit">
-      <unit id="de.jcup.asciidoctoreditor.feature.group" version="3.1.1"/>
+      <unit id="de.jcup.asciidoctoreditor.feature.group" version="3.1.2"/>
       <repository id="AsciiDoctor" location="https://de-jcup.github.io/update-site-eclipse-asciidoctor-editor/update-site/"/>
     </location>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="true" type="InstallableUnit">
@@ -93,10 +93,10 @@
       <repository id="Babel" location="https://download.eclipse.org/technology/babel/update-site/R0.20.0/2022-12/"/>
     </location>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="true" type="InstallableUnit">
-      <unit id="org.codehaus.groovy.compilerless.feature.feature.group" version="5.5.0.v202409302028-e2409"/>
-      <unit id="org.codehaus.groovy.m2eclipse.feature.feature.group" version="5.5.0.v202409302028-e2409"/>
-      <unit id="org.codehaus.groovy30.feature.feature.group" version="5.5.0.v202409302028-e2409"/>
-      <unit id="org.codehaus.groovy.eclipse.feature.feature.group" version="5.5.0.v202409302028-e2409"/>
+      <unit id="org.codehaus.groovy.compilerless.feature.feature.group" version="5.9.0.v202509301436-e2409"/>
+      <unit id="org.codehaus.groovy.m2eclipse.feature.feature.group" version="5.9.0.v202509301436-e2409"/>
+      <unit id="org.codehaus.groovy40.feature.feature.group" version="5.9.0.v202509301436-e2409"/>
+      <unit id="org.codehaus.groovy.eclipse.feature.feature.group" version="5.9.0.v202509301436-e2409"/>
       <repository id="Groovy" location="https://groovy.jfrog.io/artifactory/plugins-release/e4.33"/>
     </location>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="true" type="InstallableUnit">

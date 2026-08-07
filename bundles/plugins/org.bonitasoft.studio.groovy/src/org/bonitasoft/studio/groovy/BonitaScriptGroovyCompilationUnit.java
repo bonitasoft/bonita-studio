@@ -17,8 +17,9 @@ package org.bonitasoft.studio.groovy;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import java.lang.reflect.Modifier;
+
 import org.codehaus.groovy.ast.ClassNode;
-import org.codehaus.groovy.ast.FieldNode;
 import org.codehaus.jdt.groovy.model.GroovyCompilationUnit;
 import org.codehaus.jdt.groovy.model.ModuleNodeMapper.ModuleNodeInfo;
 import org.eclipse.jdt.core.WorkingCopyOwner;
@@ -57,7 +58,9 @@ public class BonitaScriptGroovyCompilationUnit extends GroovyCompilationUnit {
                 ClassNode resolvedType = resolvedTypes.computeIfAbsent(typeName,
                         t -> moduleInfo.resolver.resolve(t));
                 scriptClassDummy.addField(var.getName(),
-                        FieldNode.ACC_PUBLIC | FieldNode.ACC_FINAL,
+                        // Groovy 4 AST nodes no longer expose the ASM ACC_* constants;
+                        // java.lang.reflect.Modifier values match the JVM access flags
+                        Modifier.PUBLIC | Modifier.FINAL,
                         resolvedType,
                         null);
             }
