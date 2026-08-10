@@ -15,7 +15,7 @@
         <os-jvm-flags></os-jvm-flags>
         <branding.version>2027.1-SNAPSHOT</branding.version>
         <bonita-runtime.version>12.0-SNAPSHOT</bonita-runtime.version>
-        <ui.designer.version>1.20.1</ui.designer.version>
+        <ui.designer.version>2.0.0</ui.designer.version>
         <business.data.repository.version>1.0.0</business.data.repository.version>
         <platform.version>${project.parent.version}</platform.version>
         <tomcat.version>9.0.90</tomcat.version>
@@ -26,7 +26,7 @@
         <!-- Maven plugins -->
         <maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
         <image-overlay-plugin.version>1.1.3</image-overlay-plugin.version>
-        <bonita-project-report-model.version>2.1.4</bonita-project-report-model.version>
+        <bonita-project-report-model.version>3.0.0</bonita-project-report-model.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.release>${java.version}</maven.compiler.release>
         <groovy-maven-plugin.groovy.version>3.0.19</groovy-maven-plugin.groovy.version>

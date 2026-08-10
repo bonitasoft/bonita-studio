@@ -15,8 +15,14 @@
 package org.bonitasoft.studio.common.repository.core.maven.model;
 
 /**
- * List of the Maven plugins and their version used in the Bonita project
- * Please make sure to keep it consistent with the declared versions in org.bonitasoft.studio.local.repository/src/main/resources/pom.xml
+ * List of the Maven plugins and their version used in the Bonita project.
+ * <p>
+ * These versions must stay consistent with the ones declared by the
+ * {@code org.bonitasoft:bonita-project} parent POM, which is resolved through the
+ * {@code bonita-runtime.version} property. The template POMs in
+ * {@code org.bonitasoft.studio.local.repository[.sp]/src/template/pom.xml} declare those
+ * plugins without a version and inherit them from that parent, so a value declared here
+ * that diverges from the parent silently overrides it in generated user projects.
  */
 public interface DefaultPluginVersions {
 
@@ -71,7 +77,7 @@ public interface DefaultPluginVersions {
 
     static final String BONITA_PROJECT_MAVEN_PLUGIN_ARTIFACT_ID = "bonita-project-maven-plugin";
 
-    static final String BONITA_PROJECT_MAVEN_PLUGIN_DEFAULT_VERSION = "2.1.4";
+    static final String BONITA_PROJECT_MAVEN_PLUGIN_DEFAULT_VERSION = "3.0.0";
 
     static final String BUILD_HELPER_MAVEN_PLUGIN = "build-helper-maven-plugin";
     static final String BUILD_HELPER_MAVEN_PLUGIN_VERSION = "3.6.0";
