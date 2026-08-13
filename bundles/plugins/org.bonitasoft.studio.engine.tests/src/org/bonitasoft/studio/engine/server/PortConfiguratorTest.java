@@ -30,7 +30,7 @@ import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.jst.server.tomcat.core.internal.Tomcat85Configuration;
+import org.eclipse.jst.server.tomcat.core.internal.TomcatConfiguration;
 import org.eclipse.jst.server.tomcat.core.internal.TomcatServer;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.IServerWorkingCopy;
@@ -62,7 +62,7 @@ public class PortConfiguratorTest {
     @Mock
     private IServerWorkingCopy serverWC;
     @Mock
-    private Tomcat85Configuration tomcatConfiguration;
+    private TomcatConfiguration tomcatConfiguration;
 
     /**
      * @throws java.lang.Exception

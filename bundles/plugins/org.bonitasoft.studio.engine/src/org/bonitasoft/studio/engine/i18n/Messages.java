@@ -164,6 +164,17 @@ public class Messages extends NLS {
     public static String deployingPage;
     public static String deployFailedTitle;
     public static String tomcatXmxOption;
+    public static String tomcatAdapterMissing;
+    public static String wtpServerCreationFailed;
+    public static String tomcatRuntimeValidationFailed;
+    public static String staleTomcatBundleDeletionFailed;
+    public static String staleTomcatServerDeletionFailed;
+    public static String staleTomcatRuntimeDeletionFailed;
+    public static String tomcatBundleExtractionFailed;
+    public static String tomcatInstallDamaged;
+    public static String shippedTomcatBundleMismatch;
+    public static String staleServerConfigurationDeletionFailed;
+    public static String preparingWebServer;
     public static String restartServer;
     public static String restartServerConfirmationMsg;
     public static String tomcatExtraParams;
