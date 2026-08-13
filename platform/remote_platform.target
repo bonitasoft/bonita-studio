@@ -55,6 +55,7 @@
       <unit id="com.sun.jna.platform" version="5.14.0"/>
       <unit id="org.eclipse.gmf.feature.group" version="1.16.4.202405171447"/>
       <unit id="org.eclipse.m2e.logback.feature.feature.group" version="2.6.1.20240411-1743"/>
+      <unit id="org.hamcrest" version="2.2.0"/>
       <repository id="E2024-09" location="https://download.eclipse.org/releases/2024-09"/>
     </location>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="true" type="InstallableUnit">
