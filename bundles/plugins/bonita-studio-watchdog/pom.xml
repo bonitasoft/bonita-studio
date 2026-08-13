@@ -16,16 +16,26 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven-war-plugin.version>3.3.1</maven-war-plugin.version>
-        <javax.servlet-api.version>4.0.1</javax.servlet-api.version>
-        <slf4j-api.version> 1.7.30</slf4j-api.version>
+        <maven-surefire-plugin.version>3.2.5</maven-surefire-plugin.version>
+        <jakarta.servlet-api.version>6.0.0</jakarta.servlet-api.version>
+        <!-- matches slf4j-api in the engine bundle's server/lib/ext (log4j-slf4j-impl binding) -->
+        <slf4j-api.version>2.0.18</slf4j-api.version>
+        <!-- the test-scope binding, pinned separately: it has no reason to track the runtime api
+             above, and an api bump to a version slf4j-simple is not published for would otherwise
+             break this build for an unrelated reason -->
+        <slf4j-simple.version>2.0.18</slf4j-simple.version>
+        <!-- standalone surefire, not the Tycho junit59withvintage provider: this module is a plain war -->
+        <junit-jupiter.version>5.10.2</junit-jupiter.version>
+        <!-- Aligned with the AssertJ pinned in the target platform for the tycho test fragments -->
+        <assertj-core.version>3.26.3</assertj-core.version>
         <tycho.mode>maven</tycho.mode>
     </properties>
 
     <dependencies>
         <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>javax.servlet-api</artifactId>
-             <version>${javax.servlet-api.version}</version>
+            <groupId>jakarta.servlet</groupId>
+            <artifactId>jakarta.servlet-api</artifactId>
+            <version>${jakarta.servlet-api.version}</version>
             <scope>provided</scope>
         </dependency>
         <!-- To get Tomcat Server class in order to find Tomcat shutdown 
@@ -35,6 +45,15 @@
             <artifactId>tomcat-catalina</artifactId>
             <version>${tomcat.version}</version>
             <scope>provided</scope>
+            <exclusions>
+                <exclusion>
+                    <!-- it drags in tomcat-servlet-api, so the Servlet classes on the compile
+                        classpath would come from whichever coordinate Maven ordered first: the
+                        jakarta.servlet-api pin above stays the one that decides -->
+                    <groupId>org.apache.tomcat</groupId>
+                    <artifactId>tomcat-servlet-api</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <!-- To get better login options -->
         <dependency>
@@ -43,10 +62,35 @@
             <version>${slf4j-api.version}</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <!-- a binding at test scope: without one slf4j 2 falls back to NOP and no log
+                 statement in this module is ever executed by the suite -->
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>${slf4j-simple.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>${junit-jupiter.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <version>${assertj-core.version}</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${maven-surefire-plugin.version}</version>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>

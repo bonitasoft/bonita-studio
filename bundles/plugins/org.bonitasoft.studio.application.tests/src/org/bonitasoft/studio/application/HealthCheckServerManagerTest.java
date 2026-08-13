@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.URI;
 import java.net.http.HttpRequest;
@@ -12,6 +13,8 @@ import java.net.http.HttpResponse.BodyHandlers;
 import java.time.Duration;
 
 import org.bonitasoft.studio.common.net.HttpClientFactory;
+import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
+import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.eclipse.jdt.launching.SocketUtil;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -85,6 +88,47 @@ class HealthCheckServerManagerTest {
     @Test
     void should_runningPort_return_server_port() throws Exception {
         assertThat(workspaceResourceServerManager.runningPort()).isEqualTo(port);
+    }
+
+    @Test
+    void should_hold_the_port_preference_only_while_running() throws Exception {
+        // the Tomcat runtime builds its watchdog endpoint from this preference: a non-zero value
+        // left behind by a stopped or failed server arms the watchdog against a port nothing
+        // listens on, and three strikes later it shuts a healthy runtime down
+        assertThat(healthCheckPortPreference()).isEqualTo(port);
+
+        workspaceResourceServerManager.stop();
+
+        assertThat(healthCheckPortPreference()).isZero();
+    }
+
+    @Test
+    void should_clear_the_port_preference_when_the_server_cannot_bind() throws Exception {
+        // the branch that protects a user, and the one that runs in production: postStartup logs
+        // and continues when the bind fails, so anything left in this preference arms the runtime
+        // watchdog against a port nothing listens on
+        workspaceResourceServerManager.stop();
+        // a sentinel, because stop() zeroes the preference too: without it the value is already 0
+        // when the failing start() runs and the assertion below cannot see the pre-emptive reset.
+        // The production shape is exactly this - a non-zero port persisted by the last session
+        var previousPort = healthCheckPortPreference();
+        BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore()
+                .setValue(BonitaPreferenceConstants.HEALTHCHECK_SERVER_PORT, 4242);
+        // restored in a finally: the store is instance-scoped and PERSISTED, so a failing assertion
+        // below would otherwise leave the sentinel behind for the rest of the Tycho JVM
+        try (var occupied = new ServerSocket(0, 1, InetAddress.getLoopbackAddress())) {
+            assertThrows(IOException.class, () -> workspaceResourceServerManager.start(occupied.getLocalPort()));
+
+            assertThat(healthCheckPortPreference()).isZero();
+        } finally {
+            BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore()
+                    .setValue(BonitaPreferenceConstants.HEALTHCHECK_SERVER_PORT, previousPort);
+        }
+    }
+
+    private int healthCheckPortPreference() {
+        return BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore()
+                .getInt(BonitaPreferenceConstants.HEALTHCHECK_SERVER_PORT);
     }
 
     

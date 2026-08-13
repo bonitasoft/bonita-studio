@@ -20,6 +20,18 @@ def libExtDir = new File(tomcatBundleDir, 'server/lib/ext')
 // defective bundle
 assert libExtDir.isDirectory() && libExtDir.listFiles().any { it.name.endsWith('.jar') } \
         : 'Tomcat bundle server/lib/ext contains no jar (log4j must be on the launch classpath)'
+assert libExtDir.listFiles().any { it.name.startsWith('slf4j-api-') && it.name.endsWith('.jar') } \
+        : 'Tomcat bundle server/lib/ext ships no slf4j-api jar: the studio-watchdog listener cannot load and no watchdog would run'
+// An slf4j-api jar alone is not enough: slf4j 2 resolves its binding through the ServiceLoader, so a
+// bundle pairing slf4j-api 2.x with the 1.7 log4j-slf4j-impl (StaticLoggerBinder only) finds no
+// provider and silently NO-OPs every webapp log line - an armed but completely silent watchdog, which
+// is what the bundle shipped until log4j-slf4j2-impl was added. Asserted by provider presence rather
+// than by jar name, because the name is not the contract: any jar declaring the service satisfies it
+assert libExtDir.listFiles().any { jar ->
+    jar.name.endsWith('.jar') && new ZipFile(jar).withCloseable { zip ->
+        zip.getEntry('META-INF/services/org.slf4j.spi.SLF4JServiceProvider') != null
+    }
+} : 'Tomcat bundle server/lib/ext declares no org.slf4j.spi.SLF4JServiceProvider: slf4j 2 would find no binding and every watchdog log line would be silently discarded'
 
 // Must match BOSWebServerManager.TOMCAT_MAJOR_MINOR (org.bonitasoft.studio.engine): the WTP
 // adapter validates the installed Tomcat version, so a bundle Tomcat bump must fail here first.

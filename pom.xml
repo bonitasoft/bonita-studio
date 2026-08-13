@@ -17,14 +17,16 @@
         <bonita-runtime.version>12.0-SNAPSHOT</bonita-runtime.version>
         <!-- Must match BOSWebServerManager.TOMCAT_MAJOR_MINOR; asserted against the engine
              bundle-tomcat content by the runtime-bundle configure-bundle.groovy scripts -->
-        <tomcat.expected.version.prefix>Apache Tomcat/10.1.</tomcat.expected.version.prefix>
+        <tomcat.expected.version.prefix>Apache Tomcat/${tomcat.major.minor}.</tomcat.expected.version.prefix>
         <ui.designer.version>2.0.0</ui.designer.version>
         <business.data.repository.version>1.0.0</business.data.repository.version>
         <platform.version>${project.parent.version}</platform.version>
-        <!-- watchdog WAR only (its provided tomcat-catalina): still the 9.0 line because the
-             WAR compiles against the javax servlet stack. Unified with the expected version
-             prefix above by the stacked watchdog port - do not raise one without the other -->
-        <tomcat.version>9.0.90</tomcat.version>
+        <!-- Single source for the Tomcat minor line shipped by the engine bundle-tomcat
+             distribution: configure-bundle.groovy asserts it against the bundle content at build
+             time. The patch of tomcat.version is unchecked (the Catalina API surface used by the
+             watchdog is stable across patches). -->
+        <tomcat.major.minor>10.1</tomcat.major.minor>
+        <tomcat.version>${tomcat.major.minor}.57</tomcat.version>
         <maven3-model-jdom-support.version>1.6</maven3-model-jdom-support.version>
         <marketplace.version>1.1.29</marketplace.version>
         <marketplace.md5Checksum>0644e9d9a7bc52fd3bee6a5a5e47f479</marketplace.md5Checksum>

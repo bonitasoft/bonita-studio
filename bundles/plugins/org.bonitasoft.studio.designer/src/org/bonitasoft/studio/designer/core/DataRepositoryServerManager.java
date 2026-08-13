@@ -221,7 +221,7 @@ public class DataRepositoryServerManager {
     protected List<String> buildCommand(int workspaceResourcePort) throws IOException {
         return Arrays.asList(
                 withArgument(PORT_ARG, String.valueOf(port)),
-                withArgument(HEALTH_CHECK_URL_ARG, "/api/workspace/status/"),
+                withArgument(HEALTH_CHECK_URL_ARG, BonitaPreferenceConstants.HEALTHCHECK_ENDPOINT_PATH),
                 withArgument(HEALTH_CHECK_PORT_ARG, String.valueOf(workspaceResourcePort)),
                 withArgument(LOG_FILE_ARG, String.format("\"%s\"", logLocation())));
     }
