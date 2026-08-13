@@ -1110,14 +1110,6 @@
         <setEntry value="org.eclipse.pde.ua.ui.nl_fr@default:default"/>
         <setEntry value="org.eclipse.pde.ua.ui.nl_ja@default:default"/>
         <setEntry value="org.eclipse.pde.ua.ui.nl_pt_BR@default:default"/>
-        <setEntry value="org.eclipse.pde.ui.nl_es@default:default"/>
-        <setEntry value="org.eclipse.pde.ui.nl_fr@default:default"/>
-        <setEntry value="org.eclipse.pde.ui.nl_ja@default:default"/>
-        <setEntry value="org.eclipse.pde.ui.nl_pt_BR@default:default"/>
-        <setEntry value="org.eclipse.pde.ui.templates.nl_es@default:default"/>
-        <setEntry value="org.eclipse.pde.ui.templates.nl_fr@default:default"/>
-        <setEntry value="org.eclipse.pde.ui.templates.nl_ja@default:default"/>
-        <setEntry value="org.eclipse.pde.ui.templates.nl_pt_BR@default:default"/>
         <setEntry value="org.eclipse.platform.doc.isv.nl_es@default:default"/>
         <setEntry value="org.eclipse.platform.doc.isv.nl_fr@default:default"/>
         <setEntry value="org.eclipse.platform.doc.isv.nl_ja@default:default"/>

@@ -171,6 +171,11 @@ maven BonitaArtifactsModels scope=compile,runtime,system dependencyDepth=none mi
         artifactId="jaxb-osgi"
         version="3.0.2"
     }
+    // 3.x stack only: bind-api 4.0.2 also lives in the p2 mirror for org.eclipse.sdk but must
+    // never reach a Studio runtime - do not let a bundle require org.eclipse.pde.* (anything
+    // transitively reaching pde.bnd.ui pulls the 4.x chain) or the jakarta.activation/xml.bind
+    // class spaces split again. Keep 'A Studio JUnit plugin test (template).launch' in sync
+    // when bumping this version: it pins the same version for IDE launches
     dependency {
         groupId="jakarta.xml.bind"
         artifactId="jakarta.xml.bind-api"
