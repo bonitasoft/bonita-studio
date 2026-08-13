@@ -40,24 +40,30 @@ public class AppProjectConfiguration implements DefaultPluginVersions {
     public static final String GENERATED_GROOVY_SOURCES_FODLER = "target/" + GENERATED_GROOVY_SOURCES;
    
 
-    public static final List<MavenDependency> PROVIDED_DEPENDENCIES = List.of(new BonitaCommonDependency(),
-            new MavenDependency(CODEHAUS_GROOVY_GROUPID, "groovy", null),
-            new MavenDependency(CODEHAUS_GROOVY_GROUPID, "groovy-json", null),
-            new MavenDependency(CODEHAUS_GROOVY_GROUPID, "groovy-xml", null),
-            new MavenDependency(CODEHAUS_GROOVY_GROUPID, "groovy-nio", null),
-            new MavenDependency(CODEHAUS_GROOVY_GROUPID, "groovy-datetime", null),
-            new MavenDependency(CODEHAUS_GROOVY_GROUPID, "groovy-dateutil", null),
-            new MavenDependency(CODEHAUS_GROOVY_GROUPID, "groovy-sql", null),
-            new MavenDependency(CODEHAUS_GROOVY_GROUPID, "groovy-templates", null),
-            new MavenDependency(CODEHAUS_GROOVY_GROUPID, "groovy-jsr223", null),
-            new MavenDependency(CODEHAUS_GROOVY_GROUPID, "groovy-jmx", null),
-            new MavenDependency(CODEHAUS_GROOVY_GROUPID, "groovy-yaml", null),
-            new MavenDependency(CODEHAUS_GROOVY_GROUPID, "groovy-servlet", null));
-
-
     private List<MavenPlugin> plugins = new ArrayList<>();
     private List<MavenDependency> dependencies = new ArrayList<>();
     private List<Profile> profiles = new ArrayList<>();
+
+    /**
+     * Computed per call, not cached: BonitaCommonDependency reads the running product (see the
+     * providedDependencies() javadoc for the latch hazard). Both engine coordinates are added
+     * unconditionally below, so this method is product-insensitive - staying uncached keeps it
+     * aligned with the generation call sites, at a cost that is negligible next to the pom parse
+     * at every call site.
+     */
+    private static List<GAV> internalDependencyGavs() {
+        var internalDependencies = new ArrayList<>(DefaultPluginVersions.providedDependencies());
+        // legacy internal dependency
+        internalDependencies.add(new MavenDependency("com.bonitasoft.engine", "bonita-common-sp", null, "jar", null, Artifact.SCOPE_PROVIDED));
+        internalDependencies.add(new MavenDependency("org.bonitasoft.engine", "bonita-common", null, "jar", null, Artifact.SCOPE_PROVIDED));
+        internalDependencies.add(new MavenDependency(CODEHAUS_GROOVY_GROUPID, LEGACY_GROOVY_ALL_ARTIFACT_ID, null,
+                "pom", null, Artifact.SCOPE_PROVIDED));
+        // legacy Groovy 3 module dependencies, migrated to org.apache.groovy on project open but
+        // still present in projects created with an older Studio and not reopened yet
+        LEGACY_GROOVY_MODULES.forEach(
+                module -> internalDependencies.add(new MavenDependency(CODEHAUS_GROOVY_GROUPID, module, null)));
+        return internalDependencies.stream().map(MavenDependency::toGAV).toList();
+    }
 
     public AppProjectConfiguration(boolean includeAdminApp) {
         var groovyMavenPlugin = new MavenPlugin(GROOVY_MAVEN_PLUGIN_GROUP_ID,
@@ -85,7 +91,7 @@ public class AppProjectConfiguration implements DefaultPluginVersions {
         assemblyPlugin.addExecution(pluginExecution("application-classpath", null, List.of("single"), null));
         addPlugin(assemblyPlugin);
 
-        PROVIDED_DEPENDENCIES.stream().forEach(this::addDependency);
+        DefaultPluginVersions.providedDependencies().forEach(this::addDependency);
         if(includeAdminApp) {
             addDependency(new BonitaAdminAppDependency());
         }
@@ -222,12 +228,7 @@ public class AppProjectConfiguration implements DefaultPluginVersions {
     }
 
     public static boolean isInternalDependency(Dependency dependency) {
-        var internalDependencies = new ArrayList<>(PROVIDED_DEPENDENCIES);
-        // legacy internal dependency 
-        internalDependencies.add(new MavenDependency("com.bonitasoft.engine", "bonita-common-sp", null, "jar", null, Artifact.SCOPE_PROVIDED));
-        internalDependencies.add(new MavenDependency("org.bonitasoft.engine", "bonita-common", null, "jar", null, Artifact.SCOPE_PROVIDED));
-        internalDependencies.add(new MavenDependency(CODEHAUS_GROOVY_GROUPID, "groovy-all", null, "pom", null, Artifact.SCOPE_PROVIDED));
-        return internalDependencies.stream().map(MavenDependency::toGAV).anyMatch(new GAV(dependency)::isSameAs);
+        return internalDependencyGavs().stream().anyMatch(new GAV(dependency)::isSameAs);
     }
 
     public static String getBonitaRuntimeVersion(Model model) {

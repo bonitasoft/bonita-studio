@@ -27,6 +27,10 @@
                         <application>org.eclipse.ui.ide.workbench</application>
                         <useUIHarness>true</useUIHarness>
                         <useUIThread>true</useUIThread>
+                        <systemProperties>
+                            <!-- lets tests locate source-tree fixtures (template poms) deterministically -->
+                            <bonita.tests.basedir>${project.basedir}</bonita.tests.basedir>
+                        </systemProperties>
                     </configuration>
                 </plugin>
         </plugins>

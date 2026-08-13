@@ -165,8 +165,8 @@ public final class Messages extends NLS {
     public static String createPomMigrationDescription;
     public static String removeLegacyFolderMigrationTitle;
     public static String removeLegacyFolderMigrationDescription;
-    public static String splitGroovyAllMigrationTitle;
-    public static String splitGroovyAllMigrationDescription;
+    public static String groovyCoordinatesMigrationTitle;
+    public static String groovyCoordinatesMigrationDescription;
     public static String javaDependenciesMigrationTitle;
     public static String javaDependenciesMigrationDescription;
     public static String bdmModelArtifactMigrationTitle;

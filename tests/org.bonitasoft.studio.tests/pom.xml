@@ -11,16 +11,44 @@
 	<groupId>org.bonitasoft.studio.tests</groupId>
 	<artifactId>org.bonitasoft.studio.tests</artifactId>
 	<packaging>eclipse-plugin</packaging>
-	
+
+    <properties>
+        <!-- Must stay aligned with the Groovy version shipped by the Bonita runtime bundle,
+             i.e. the groovy-bom imported by the org.bonitasoft:bonita-project parent pom
+             (generated user projects inherit it from there and declare no version). This is
+             the last hardcoded Groovy version on a user-project path; namespaced so a future
+             parent or plugin introducing a bare groovy.version cannot silently override it -->
+        <bonita-runtime.groovy.version>4.0.32</bonita-runtime.groovy.version>
+    </properties>
+
     <dependencies>
       <dependency>
-        <!-- Needed so that IT can compile connector plugins with Groovy lib -->
-        <groupId>org.codehaus.groovy</groupId>
+        <!-- Primes the local Maven repository for the extension-project creation ITs (BPM-444):
+             the connector/actor filter/REST API wizards generate projects with Groovy sources
+             that the ITs then build with Maven -->
+        <groupId>org.apache.groovy</groupId>
         <artifactId>groovy</artifactId>
-        <version>3.0.19</version>
+        <version>${bonita-runtime.groovy.version}</version>
         <scope>test</scope>
       </dependency>
     </dependencies>
 
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.eclipse.tycho</groupId>
+                <artifactId>target-platform-configuration</artifactId>
+                <configuration>
+                    <!-- the dependency above only primes the local Maven repository for the IT
+                         connector builds. Tycho 4 defaults pomDependencies to 'consider' (lazy
+                         resolution), which would inject the org.apache.groovy bundle into this
+                         module's target platform as a second groovy.lang exporter next to the
+                         org.codehaus.groovy bundle from Groovy-Eclipse - the split-class-space
+                         shape the jakarta stack just eliminated -->
+                    <pomDependencies>ignore</pomDependencies>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>

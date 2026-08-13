@@ -43,6 +43,7 @@ import org.bonitasoft.studio.common.repository.core.migration.step.CreatePomMigr
 import org.bonitasoft.studio.common.repository.core.migration.step.DeleteProjectSettingsMigrationStep;
 import org.bonitasoft.studio.common.repository.core.migration.step.ExtensionsModuleMigrationStep;
 import org.bonitasoft.studio.common.repository.core.migration.step.GitIgnoreMigrationStep;
+import org.bonitasoft.studio.common.repository.core.migration.step.GroovyCoordinatesMigrationStep;
 import org.bonitasoft.studio.common.repository.core.migration.step.Java17UpdateStep;
 import org.bonitasoft.studio.common.repository.core.migration.step.JavaDependenciesMigrationStep;
 import org.bonitasoft.studio.common.repository.core.migration.step.MultiModuleMigrationStep;
@@ -50,7 +51,6 @@ import org.bonitasoft.studio.common.repository.core.migration.step.ProvidedGroov
 import org.bonitasoft.studio.common.repository.core.migration.step.RemoveFlattenPluginExecutionStep;
 import org.bonitasoft.studio.common.repository.core.migration.step.RemoveLegacyFolderStep;
 import org.bonitasoft.studio.common.repository.core.migration.step.ReportingAppUpdateMigrationStep;
-import org.bonitasoft.studio.common.repository.core.migration.step.SplitGroovyAllIntoModulesStep;
 import org.bonitasoft.studio.common.repository.core.migration.step.UpdateProjectDescriptionMigrationStep;
 import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.ExecutionException;
@@ -82,7 +82,7 @@ public class BonitaProjectMigrator {
     private static final List<MigrationStep> STEPS = List.of(
             new CreatePomMigrationStep(),
             new RemoveLegacyFolderStep(),
-            new SplitGroovyAllIntoModulesStep(),
+            new GroovyCoordinatesMigrationStep(),
             new JavaDependenciesMigrationStep(DependenciesUpdateOperationFactory.get()),
             new BdmModelArtifactMigrationStep(true),
             new MultiModuleMigrationStep(),
