@@ -83,12 +83,31 @@ public class RuntimeBOMMigrationStepTest {
     }
 
     @Test
-    public void should_add_javax_servlet_api_dependency() throws Exception {
+    public void should_add_jakarta_servlet_api_dependency() throws Exception {
         // Given
         Model model = loadModel("pom_from_1_0_5.xml");
 
         // When
-        migrationStep.migrate(model, metadata);
+        migrationStep.migrate(model, metadataForRuntime("12.0.0"));
+
+        // Then
+        assertThat(model.getDependencies()).extracting("groupId",
+                "artifactId",
+                "version",
+                "scope")
+                .contains(tuple("jakarta.servlet",
+                        "jakarta.servlet-api",
+                        null,
+                        "provided"));
+    }
+
+    @Test
+    public void should_add_javax_servlet_api_dependency_when_targeting_a_pre_jakarta_runtime() throws Exception {
+        // Given
+        Model model = loadModel("pom_from_1_0_5.xml");
+
+        // When
+        migrationStep.migrate(model, metadataForRuntime("10.2.0"));
 
         // Then
         assertThat(model.getDependencies()).extracting("groupId",
@@ -98,7 +117,17 @@ public class RuntimeBOMMigrationStepTest {
                 .contains(tuple("javax.servlet",
                         "javax.servlet-api",
                         null,
+                        "provided"))
+                .doesNotContain(tuple("jakarta.servlet",
+                        "jakarta.servlet-api",
+                        null,
                         "provided"));
+    }
+
+    private ProjectMetadata metadataForRuntime(String bonitaRuntimeVersion) {
+        var projectMetadata = ProjectMetadata.defaultMetadata();
+        projectMetadata.setBonitaRuntimeVersion(bonitaRuntimeVersion);
+        return projectMetadata;
     }
 
     private Model loadModel(String resourceName) throws IOException, XmlPullParserException {

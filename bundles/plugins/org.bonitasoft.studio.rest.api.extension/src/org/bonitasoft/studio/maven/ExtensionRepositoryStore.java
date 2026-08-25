@@ -58,6 +58,7 @@ import org.bonitasoft.studio.rest.api.extension.core.repository.RestAPIExtension
 import org.bonitasoft.studio.rest.api.extension.core.repository.migration.BonitaVersionMigrationStep;
 import org.bonitasoft.studio.rest.api.extension.core.repository.migration.Groovy3MigrationStep;
 import org.bonitasoft.studio.rest.api.extension.core.repository.migration.GroovyCompilerPluginStep;
+import org.bonitasoft.studio.rest.api.extension.core.repository.migration.JakartaServletMigrationStep;
 import org.bonitasoft.studio.rest.api.extension.core.repository.migration.Java11MigrationStep;
 import org.bonitasoft.studio.rest.api.extension.core.repository.migration.ParentMigrationStep;
 import org.bonitasoft.studio.rest.api.extension.core.repository.migration.RuntimeBOMMigrationStep;
@@ -91,6 +92,8 @@ public class ExtensionRepositoryStore
             new Groovy3MigrationStep(),
             new Java11MigrationStep(),
             new BonitaVersionMigrationStep(),
+            // must run before RuntimeBOMMigrationStep, which declares the servlet API of the target runtime
+            new JakartaServletMigrationStep(),
             new RuntimeBOMMigrationStep(),
             new BdmModelArtifactMigrationStep(),
             new GroovyCompilerPluginStep());

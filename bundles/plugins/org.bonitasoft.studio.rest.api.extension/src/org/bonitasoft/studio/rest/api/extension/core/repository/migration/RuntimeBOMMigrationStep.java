@@ -72,14 +72,16 @@ public class RuntimeBOMMigrationStep implements MavenModelMigration {
                             "Use the managed version provided by the runtime BOM for `com.bonitasoft.web:bonita-web-extensions-sp`");
                 });
 
-        findDependency(model.getDependencies(), "javax.servlet", "javax.servlet-api")
+        var servletApi = ServletApi.forRuntime(metadata);
+        findDependency(model.getDependencies(), servletApi.groupId(), servletApi.artifactId())
                 .ifPresentOrElse(dependency -> {
                     dependency.setVersion(null);
-                    report.updated(
-                            "Use the managed version provided by the runtime BOM for `javax.servlet:javax.servlet-api`");
+                    report.updated(String.format(
+                            "Use the managed version provided by the runtime BOM for `%s`", servletApi.ga()));
                 }, () -> {
-                    model.getDependencies().add(newDependency("javax.servlet", "javax.servlet-api", null, "provided"));
-                    report.added("Declare `javax.servlet:javax.servlet-api` provided dependency.");
+                    model.getDependencies()
+                            .add(newDependency(servletApi.groupId(), servletApi.artifactId(), null, "provided"));
+                    report.added(String.format("Declare `%s` provided dependency.", servletApi.ga()));
                 });
 
         findDependency(model.getDependencies(), "org.slf4j", "slf4j-api")
