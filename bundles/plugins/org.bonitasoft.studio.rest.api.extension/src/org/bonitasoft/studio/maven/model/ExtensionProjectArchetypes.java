@@ -51,7 +51,7 @@ public class ExtensionProjectArchetypes {
             case ACTOR_FILTER:
                 return new Archetype(GROUP_ID, "bonita-actorfilter-archetype", "1.2.0");
             case REST_API:
-                return new Archetype(GROUP_ID, "bonita-rest-api-extension-archetype", "1.7.2");
+                return new Archetype(GROUP_ID, "bonita-rest-api-extension-archetype", "2.0.0");
             case THEME:
                 return new Archetype(GROUP_ID, "bonita-theme-archetype", "1.0.3");
             default:

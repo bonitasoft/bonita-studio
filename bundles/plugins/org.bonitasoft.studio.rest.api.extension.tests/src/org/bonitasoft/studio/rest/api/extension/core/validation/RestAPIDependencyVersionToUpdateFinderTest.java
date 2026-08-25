@@ -66,6 +66,50 @@ public class RestAPIDependencyVersionToUpdateFinderTest {
     }
 
     @Test
+    public void should_not_consider_an_absent_version_too_old() {
+        RestAPIDependencyVersionToUpdateFinder finder = new RestAPIDependencyVersionToUpdateFinder();
+
+        // a dependency without a version pins nothing, so "is the pinned version too old" has no answer.
+        // Before this guard the comparison dereferenced the null and the whole validation blew up
+        assertThat(finder.artifactVersionToOld(null, "3.0.19")).isFalse();
+    }
+
+    @Test
+    public void should_not_report_a_dependency_whose_version_is_managed_elsewhere() {
+        // the shape every Bonita 12 extension has: dependencies declared without a version, inherited from
+        // the runtime BOM. Importing such a project ran this validator and killed the import with an NPE
+        RestAPIDependencyVersionToUpdateFinder validator = spy(new RestAPIDependencyVersionToUpdateFinder());
+        doReturn(Optional.of(new Location(0, 0, 0))).when(validator).findLocation(any(), any());
+
+        Optional<DependencyToUpdate> dependencyToUpdate = validateDependency(validator,
+                RestAPIDependencyVersionToUpdateFinder.GROOVY_GROUP_ID,
+                RestAPIDependencyVersionToUpdateFinder.GROOVY_ALL_ARTIFACT_ID,
+                null,
+                RestAPIDependencyVersionToUpdateFinder.GROOVY_ALL_MIN_VERSION,
+                BonitaStatusCodeAggregator.REST_API_JAVA_11_GROOVY_ALL_STATUS_CODE);
+
+        assertThat(dependencyToUpdate).isNotPresent();
+    }
+
+    @Test
+    public void should_not_report_a_plugin_whose_version_is_managed_elsewhere() {
+        // same exposure through the plugin path: a plugin version can come from pluginManagement
+        RestAPIDependencyVersionToUpdateFinder validator = spy(new RestAPIDependencyVersionToUpdateFinder());
+        doReturn(Optional.of(new Location(0, 0, 0))).when(validator).findLocation(any(), any());
+
+        Optional<DependencyToUpdate> pluginToUpdate = validatePlugin(validator,
+                RestAPIDependencyVersionToUpdateFinder.APPACHE_MAVEN_PLUGIN_GROUP_ID,
+                RestAPIDependencyVersionToUpdateFinder.MAVEN_COMPILER_PLUGIN_ARTIFACT_ID,
+                null,
+                RestAPIDependencyVersionToUpdateFinder.MAVEN_COMPILER_PLUGIN_MIN_VERSION,
+                "some status message",
+                BonitaStatusCodeAggregator.REST_API_JAVA_11_MAVEN_COMPILER_STATUS_CODE,
+                RestAPIDependencyVersionToUpdateFinder.MAVEN_COMPILER_PLUGIN_RECOMMENDED_VERSION);
+
+        assertThat(pluginToUpdate).isNotPresent();
+    }
+
+    @Test
     public void should_detect_groovy_all_dependency_to_update() {
         validateDependencyToUpdateDetection(RestAPIDependencyVersionToUpdateFinder.GROOVY_GROUP_ID,
                 RestAPIDependencyVersionToUpdateFinder.GROOVY_ALL_ARTIFACT_ID, "2.4.4",
