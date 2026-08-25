@@ -127,13 +127,12 @@ public class TomcatInstallTest {
         install(bundleDir).deleteStaleBundle();
 
         assertThat(bundleDir).doesNotExist();
-        // pins which of the two readings is true today: FileUtil.deleteDir recurses through
-        // isDirectory() and list(), which follow the link, so the reset crosses out of the workspace
-        // and empties the relocated tree - only the link itself is unlinked. The warning says so.
-        // When the FileUtil symlink guard lands this assertion flips to isDirectory() on the child,
-        // and it is the test that will tell us, which is the point of asserting either way
+        // the guard in FileUtil.deleteDir stops at the link: the reset unlinks <ws>/tomcat and leaves
+        // the relocated tree intact on the other disk, orphaned rather than emptied. Asserting the
+        // deepest fixture node rather than its parent: it proves no recursion happened at all, not
+        // just that the first level survived
         assertThat(target).isDirectory();
-        assertThat(new File(target, "server")).doesNotExist();
+        assertThat(target.toPath().resolve("server").resolve("lib")).isDirectory();
     }
 
     @Test
@@ -166,13 +165,14 @@ public class TomcatInstallTest {
 
     @Test
     public void should_raise_the_recovery_instruction_when_the_deletion_throws() throws Exception {
-        // FileUtil.deleteDir NPEs when File.list() returns null (a directory that exists but
-        // cannot be enumerated - the locked-tree case): the recovery dialog only catches
-        // CoreException, so a raw runtime exception must be wrapped at the seam
+        // FileUtil.deleteDir raises IllegalStateException for a directory that exists but cannot be
+        // enumerated - the locked-tree case: the recovery dialog only catches CoreException, so a
+        // runtime exception must be wrapped at the seam
         var bundleDir = temporaryFolder.newFolder("tomcat");
         var throwingDeletion = spy(install(bundleDir));
-        doThrow(new NullPointerException("File.list() returned null")).when(throwingDeletion)
-                .deleteDirectory(any());
+        doThrow(new IllegalStateException(
+                String.format("Cannot enumerate %s to delete it", bundleDir.getAbsolutePath())))
+                        .when(throwingDeletion).deleteDirectory(any());
 
         assertThatExceptionOfType(CoreException.class)
                 .isThrownBy(throwingDeletion::deleteStaleBundle)

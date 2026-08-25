@@ -239,10 +239,10 @@ class TomcatInstall {
     }
 
     /**
-     * Names the link target, because the reset does not stop at the link: FileUtil.deleteDir recurses
-     * through isDirectory() and list(), which both follow links, so the relocated tree's CONTENTS are
-     * deleted and only the link itself is unlinked. The fresh install then goes to the workspace, so
-     * the moved location stops being used - a user who relocated the install needs both halves.
+     * Names the link target, because the reset stops at the link: FileUtil.deleteDir removes a linked
+     * directory AS A LINK, so the relocated tree survives untouched while the fresh install goes to
+     * the workspace. A user who relocated the install needs both halves - the moved location stops
+     * being used, and nothing cleans it up.
      */
     private static void warnIfRelocated(File bundleDir) {
         var path = bundleDir.toPath();
@@ -257,9 +257,10 @@ class TomcatInstall {
             BonitaStudioLog.debug(e.getMessage(), EnginePlugin.PLUGIN_ID);
         }
         BonitaStudioLog.warning(String.format(
-                "%s is a symbolic link to %s: resetting the Tomcat install deletes the contents of that"
-                        + " location as well, and the fresh install is extracted in the workspace, so the link"
-                        + " target is no longer used by the Studio - check it after the reset.",
+                "%s is a symbolic link to %s: resetting the Tomcat install removes the link, not the"
+                        + " install it points at. The fresh install is extracted in the workspace, so the"
+                        + " relocated one stays behind at the link target, unused by the Studio - delete it"
+                        + " manually to reclaim the space.",
                 bundleDir, target), EnginePlugin.PLUGIN_ID);
     }
 
