@@ -86,8 +86,13 @@ public class GroovyCoordinatesMigrationStep implements MigrationStep {
         // extensions/pom.xml unconditionally, and a permanently-on warning trains users to skip
         // the section
         if (hasExtensionModules(project)) {
+            // says "other than REST API extensions" rather than naming connectors and actor filters,
+            // because hasExtensionModules cannot tell those apart: its legacy branch looks only at
+            // restAPIExtensions/ and themes/, and its aggregator branch counts modules of any type. Naming
+            // the two would tell a project whose extensions are all REST API extensions to review poms it
+            // does not have, one sentence after being told its poms were migrated
             report.updated(
-                    "Action required: the extension module poms are migrated separately and may still use Groovy 3 dependencies - review them against the Groovy version provided by the Bonita runtime.");
+                    "Action required: extension modules other than REST API extensions are not migrated automatically and may still use Groovy 3 dependencies - review them against the Groovy version provided by the Bonita runtime. The REST API extension poms are migrated by their own step, which reports in each extension's MIGRATION_NOTES.adoc.");
         }
         BonitaStudioLog.info(String.format("%s completed.", GroovyCoordinatesMigrationStep.class.getName()));
         return report;
@@ -224,6 +229,7 @@ public class GroovyCoordinatesMigrationStep implements MigrationStep {
         classpathDependencies(model)
                 .filter(has(DefaultPluginVersions.APACHE_GROOVY_GROUPID))
                 .filter(GroovyCoordinatesMigrationStep::explicitProvidedScope)
+                .filter(GroovyCoordinatesMigrationStep::isNamed)
                 .filter(dependency -> !DefaultPluginVersions.GROOVY_MODULES.contains(dependency.getArtifactId()))
                 .forEach(dependency -> report.updated(String.format(
                         "Action required: the org.apache.groovy:%s dependency is declared with the provided scope but is not provided by the Bonita runtime - it will fail at execution unless its scope is changed or it is removed.",
@@ -290,6 +296,16 @@ public class GroovyCoordinatesMigrationStep implements MigrationStep {
     }
 
     /**
+     * Guards the artifactId before any membership test, because those are backed by {@link List#of} and throw
+     * on null rather than answering false. A dependency with no artifactId is invalid Maven, but this model is
+     * read raw and never validated, so one hand-edited line would otherwise abort the migration of the whole
+     * project. {@code Groovy4MigrationStep.hasCodehausGroupId} guards the same way for the same reason.
+     */
+    private static boolean isNamed(Dependency dependency) {
+        return dependency.getArtifactId() != null;
+    }
+
+    /**
      * The dependencies that reach a classpath: plain plus profile-scoped. Narrower than
      * {@link #allDeclaredDependencies(Model)} - dependencyManagement contributes nothing to a
      * classpath by itself, so a net whose message promises an execution failure must skip it.
@@ -319,7 +335,7 @@ public class GroovyCoordinatesMigrationStep implements MigrationStep {
         var message = String.format(
                 "Action required: the %s:%s dependency was left unchanged - it still uses the legacy org.codehaus.groovy coordinates, please review it manually.",
                 dependency.getGroupId(), dependency.getArtifactId());
-        if (DefaultPluginVersions.GROOVY_MODULES.contains(dependency.getArtifactId())) {
+        if (isNamed(dependency) && DefaultPluginVersions.GROOVY_MODULES.contains(dependency.getArtifactId())) {
             message += " It may conflict with the org.apache.groovy module of the same name provided by the Bonita runtime.";
         }
         return message;
@@ -342,7 +358,8 @@ public class GroovyCoordinatesMigrationStep implements MigrationStep {
         }
         // unlike AppProjectConfiguration.isInternalDependency, a null scope is accepted here:
         // Studio wrote the provided scope, but a hand-stripped scope still marks a Studio-written entry
-        return dependency.getVersion() == null
+        return isNamed(dependency)
+                && dependency.getVersion() == null
                 && (dependency.getScope() == null || Artifact.SCOPE_PROVIDED.equals(dependency.getScope()))
                 && DefaultPluginVersions.LEGACY_GROOVY_MODULES.contains(dependency.getArtifactId());
     }
@@ -382,6 +399,7 @@ public class GroovyCoordinatesMigrationStep implements MigrationStep {
 
     private static boolean isVersionPinnedProvidedModule(Dependency dependency) {
         return DefaultPluginVersions.APACHE_GROOVY_GROUPID.equals(dependency.getGroupId())
+                && isNamed(dependency)
                 && DefaultPluginVersions.GROOVY_MODULES.contains(dependency.getArtifactId())
                 && explicitProvidedScope(dependency)
                 && dependency.getVersion() != null;

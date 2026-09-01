@@ -39,24 +39,46 @@ public interface DefaultPluginVersions {
      * migration removes provided-scoped occurrences.
      */
     static final String GROOVY_ANT_ARTIFACT_ID = "groovy-ant";
+    static final String GROOVY_DATEUTIL_ARTIFACT_ID = "groovy-dateutil";
+    /**
+     * The Groovy compiler tooling, which kept its codehaus coordinates when the modules moved. Named in three
+     * steps that must agree about the spelling: one lists it as a coordinate that never moved, one looks it up
+     * among the compiler plugin's dependencies, one writes it as the maven-compiler-plugin compilerId. The
+     * compiler id and the artifactId are the same string by the plugin's own convention, so one constant
+     * serves both - splitting them would invite exactly the drift this constant exists to prevent.
+     */
+    static final String GROOVY_ECLIPSE_COMPILER_ARTIFACT_ID = "groovy-eclipse-compiler";
+    static final String GROOVY_ECLIPSE_BATCH_ARTIFACT_ID = "groovy-eclipse-batch";
     static final String APACHE_GROOVY_GROUPID = "org.apache.groovy";
     /**
+     * The version properties Studio wrote into extension poms. Shared rather than spelled out per step because
+     * one step deletes properties by these names while another reads one of them: a typo in a private copy
+     * would not fail, it would quietly stop matching.
+     */
+    static final String GROOVY_VERSION_PROPERTY = "groovy.version";
+    static final String GROOVY_ALL_VERSION_PROPERTY = "groovy-all.version";
+    /**
      * Groovy modules provided by the Bonita runtime, versions managed by the bonita-project parent.
+     * <p>
+     * This list is the definition of those names, so most are spelled here and nowhere else. A module gets a
+     * constant of its own only when something outside the list has to name it - {@code groovy-dateutil}
+     * because a migration step writes it, {@code groovy-ant} because an advisory mentions it. Extracting the
+     * rest would add eleven constants referenced once each, inside their own definition.
      * Must stay consistent with the local.repository template poms, and every module listed here
      * MUST be shipped by the runtime bundle: a provided dependency the runtime does not ship
      * compiles and then fails with NoClassDefFoundError at execution.
      */
     static final List<String> GROOVY_MODULES = List.of("groovy", "groovy-json", "groovy-xml",
-            "groovy-nio", "groovy-datetime", "groovy-dateutil", "groovy-sql", "groovy-templates", "groovy-jsr223",
-            "groovy-jmx", "groovy-yaml");
+            "groovy-nio", "groovy-datetime", GROOVY_DATEUTIL_ARTIFACT_ID, "groovy-sql", "groovy-templates",
+            "groovy-jsr223", "groovy-jmx", "groovy-yaml");
     /**
      * Frozen historical set: the org.codehaus.groovy modules Studio wrote into user poms up to
      * Bonita 11.x (groovy-ant never was: it only existed in the offline template poms). Only used
      * to detect and migrate legacy dependencies - never edit it when GROOVY_MODULES evolves.
      */
     static final List<String> LEGACY_GROOVY_MODULES = List.of("groovy", "groovy-json", "groovy-xml",
-            "groovy-nio", "groovy-datetime", "groovy-dateutil", "groovy-sql", "groovy-templates", "groovy-jsr223",
-            "groovy-jmx", "groovy-yaml", "groovy-servlet");
+            "groovy-nio", "groovy-datetime", GROOVY_DATEUTIL_ARTIFACT_ID, "groovy-sql", "groovy-templates",
+            "groovy-jsr223", "groovy-jmx", "groovy-yaml", "groovy-servlet");
 
     /**
      * Dependencies provided by the Bonita runtime, declared without version in generated poms.

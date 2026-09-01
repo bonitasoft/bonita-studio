@@ -342,7 +342,7 @@ class GroovyCoordinatesMigrationStepTest {
 
         assertThat(report.updates())
                 .anyMatch(message -> message.contains("Action required")
-                        && message.contains("extension module poms are migrated separately"));
+                        && message.contains("extension modules other than REST API extensions are not migrated automatically"));
     }
 
     @Test
@@ -355,7 +355,7 @@ class GroovyCoordinatesMigrationStepTest {
         var report = step.run(project, new NullProgressMonitor());
 
         assertThat(report.updates())
-                .anyMatch(message -> message.contains("extension module poms are migrated separately"));
+                .anyMatch(message -> message.contains("extension modules other than REST API extensions are not migrated automatically"));
     }
 
     @Test
@@ -368,7 +368,7 @@ class GroovyCoordinatesMigrationStepTest {
         var report = step.run(project, new NullProgressMonitor());
 
         assertThat(report.updates())
-                .noneMatch(message -> message.contains("extension module poms are migrated separately"));
+                .noneMatch(message -> message.contains("extension modules other than REST API extensions are not migrated automatically"));
     }
 
     private void writeExtensionsAggregator(String modules) throws Exception {
@@ -390,7 +390,7 @@ class GroovyCoordinatesMigrationStepTest {
         var report = step.run(project, new NullProgressMonitor());
 
         assertThat(report.updates())
-                .anyMatch(message -> message.contains("extension module poms are migrated separately"));
+                .anyMatch(message -> message.contains("extension modules other than REST API extensions are not migrated automatically"));
     }
 
     @Test
@@ -405,7 +405,7 @@ class GroovyCoordinatesMigrationStepTest {
         var report = step.run(project, new NullProgressMonitor());
 
         assertThat(report.updates())
-                .anyMatch(message -> message.contains("extension module poms are migrated separately"));
+                .anyMatch(message -> message.contains("extension modules other than REST API extensions are not migrated automatically"));
     }
 
     @Test
@@ -421,7 +421,7 @@ class GroovyCoordinatesMigrationStepTest {
         assertMigratedToApacheGroovyModules();
         assertThat(report.updates()).isNotEmpty();
         assertThat(report.updates())
-                .noneMatch(message -> message.contains("extension module poms are migrated separately"));
+                .noneMatch(message -> message.contains("extension modules other than REST API extensions are not migrated automatically"));
     }
 
     @Test
@@ -761,6 +761,50 @@ class GroovyCoordinatesMigrationStepTest {
                       <scope>provided</scope>
                     </dependency>
                 """.formatted(artifactId, type);
+    }
+
+    @Test
+    void surviveACodehausDependencyDeclaringNoArtifactId() throws Exception {
+        // invalid Maven, but the model is read raw and never validated. Every filter on this path checks the
+        // groupId alone, so a null artifactId reached the List.of membership tests - and those throw instead
+        // of answering false, turning one hand-edited line into a failed migration for the whole project
+        writePom(namelessDependency("org.codehaus.groovy", "provided"));
+
+        var report = step.run(project, new NullProgressMonitor());
+
+        assertThat(report).isNotNull();
+        assertThat(Files.readString(project.resolve("pom.xml"))).contains("org.codehaus.groovy");
+    }
+
+    @Test
+    void surviveAProvidedApacheDependencyDeclaringNoArtifactId() throws Exception {
+        // the apache-side net reports provided modules the runtime does not ship, and reaches the membership
+        // test through a groupId filter and a scope filter only
+        writePom(namelessDependency("org.apache.groovy", "provided"));
+
+        var report = step.run(project, new NullProgressMonitor());
+
+        assertThat(report).isNotNull();
+    }
+
+    @Test
+    void surviveACompileScopedApacheDependencyDeclaringNoArtifactId() throws Exception {
+        // a separate entry point: isVersionPinnedProvidedModule tests membership before it tests the scope,
+        // so a nameless apache module reaches it whatever scope it carries
+        writePom(namelessDependency("org.apache.groovy", "compile"));
+
+        var report = step.run(project, new NullProgressMonitor());
+
+        assertThat(report).isNotNull();
+    }
+
+    private String namelessDependency(String groupId, String scope) {
+        return """
+                    <dependency>
+                      <groupId>%s</groupId>
+                      <scope>%s</scope>
+                    </dependency>
+                """.formatted(groupId, scope);
     }
 
     private String scopedCodehausDependency(String artifactId, String scope) {

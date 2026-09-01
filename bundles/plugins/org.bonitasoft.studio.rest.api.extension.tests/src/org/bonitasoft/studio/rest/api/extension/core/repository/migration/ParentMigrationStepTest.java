@@ -25,6 +25,7 @@ import java.util.Objects;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.io.DefaultModelReader;
 import org.apache.maven.model.io.ModelReader;
+import org.bonitasoft.studio.common.repository.core.maven.model.DefaultPluginVersions;
 import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 import org.junit.Before;
@@ -77,7 +78,12 @@ public class ParentMigrationStepTest {
         migrationStep.migrate(model, metadata);
 
         // Then
-        assertThat(model.getProperties()).isEmpty();
+        // groovy.version stays: this pom's groovy-eclipse-batch plugin dependency resolves through it, and
+        // nothing supplies the property once the parent is attached - unlike java.version and the compiler
+        // properties, which the parent declares and which are therefore safe to drop while still referenced.
+        // In the pipeline GroovyCompilerPluginStep removes that plugin first, so nothing names the property by
+        // the time this step runs and it does go - asserted end to end in ExtensionRepositoryStoreMigrationStepsTest
+        assertThat(model.getProperties()).containsOnlyKeys(DefaultPluginVersions.GROOVY_VERSION_PROPERTY);
     }
     
     @Test

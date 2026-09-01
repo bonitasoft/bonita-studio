@@ -28,6 +28,7 @@ import org.apache.maven.model.Model;
 import org.apache.maven.model.Plugin;
 import org.apache.maven.model.PluginManagement;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.repository.core.maven.model.DefaultPluginVersions;
 import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
 import org.bonitasoft.studio.common.repository.core.migration.MavenModelMigration;
 import org.bonitasoft.studio.common.repository.core.migration.report.MigrationReport;
@@ -35,11 +36,20 @@ import org.codehaus.plexus.util.xml.Xpp3Dom;
 
 public class Groovy3MigrationStep implements MavenModelMigration {
 
+    /** Derived, so the reference this step writes cannot drift from the property another step deletes. */
+    private static final String GROOVY_ALL_VERSION_REFERENCE = "${" + DefaultPluginVersions.GROOVY_ALL_VERSION_PROPERTY
+            + "}";
+
     private static final String GROOVY_COMPILER_VERSION = "groovy-eclipse-batch.version";
-    private static final String GROOVY_VERSION_PROPERTY = "groovy.version";
-    private static final String GROOVY_ALL_VERSION_PROPERTY = "groovy-all.version";;
     private static final String MAVEN_SUREFIRE_PLUGIN_VERSION = "2.22.2";
     private static final String GROOVY_VERSION = "3.0.8";
+    /**
+     * The Spock variant built for Groovy 3, which is what the pom this step produces needs - and what a Groovy 4
+     * runtime cannot run. Spock publishes one artifact per Groovy major, and the {@code -groovy-3.0} one pulls
+     * Groovy 3 onto the test classpath transitively, so moving the Groovy coordinates without moving this pin
+     * leaves a pom that compiles against Groovy 4 and fails its specifications at execution - a shape no build
+     * log shows.
+     */
     private static final String SPOCK_VERSION = "2.0-groovy-3.0";
 
     private static final ComparableVersion _3_0_0 = new ComparableVersion("3.0.0");
@@ -50,34 +60,36 @@ public class Groovy3MigrationStep implements MavenModelMigration {
         BonitaStudioLog.info(String.format("Starting %s on %s...", Groovy3MigrationStep.class.getName(), metadata.getArtifactId()));
         Properties properties = model.getProperties();
 
-        properties.setProperty(GROOVY_ALL_VERSION_PROPERTY, GROOVY_VERSION);
+        properties.setProperty(DefaultPluginVersions.GROOVY_ALL_VERSION_PROPERTY, GROOVY_VERSION);
         properties.setProperty("maven-compiler-plugin.version", "3.8.1");
         properties.setProperty("maven-surefire-plugin.version", MAVEN_SUREFIRE_PLUGIN_VERSION);
         properties.setProperty("groovy-eclipse-compiler.version", "3.7.0");
         properties.setProperty(GROOVY_COMPILER_VERSION, "3.0.8-01");
         properties.setProperty("spock.version", SPOCK_VERSION);
 
-        var existingGroovyVersion = properties.getOrDefault(GROOVY_VERSION_PROPERTY, "2.4.x");
-        properties.remove(GROOVY_VERSION_PROPERTY);
+        // read now, because the end of this method either removes this property or rewrites it: the
+        // decision has to see the model this step leaves behind rather than the one it was given
+        var existingGroovyVersion = properties.getOrDefault(DefaultPluginVersions.GROOVY_VERSION_PROPERTY, "2.4.x");
 
         report.updated(String.format(
                 "Groovy version has been updated from `%s` to `%s`. Check the https://groovy-lang.org/releasenotes/groovy-3.0.html[release note] for more information about the breaking changes.",
                 existingGroovyVersion, GROOVY_VERSION));
 
-        findDependency(model.getDependencies(), "org.codehaus.groovy", "groovy-all")
+        findDependency(model.getDependencies(), DefaultPluginVersions.CODEHAUS_GROOVY_GROUPID,
+                DefaultPluginVersions.LEGACY_GROOVY_ALL_ARTIFACT_ID)
                 .ifPresent(dependency -> {
-                    dependency.setVersion("${groovy-all.version}");
+                    dependency.setVersion(GROOVY_ALL_VERSION_REFERENCE);
                     dependency.setType("pom");
                     dependency.setScope(Artifact.SCOPE_PROVIDED);
                     var testNGExclusion = new Exclusion();
-                    testNGExclusion.setGroupId("org.codehaus.groovy");
+                    testNGExclusion.setGroupId(DefaultPluginVersions.CODEHAUS_GROOVY_GROUPID);
                     testNGExclusion.setArtifactId("groovy-testng");
                     dependency.getExclusions().add(testNGExclusion);
                 });
 
-        model.getDependencies().add(newDependency("org.codehaus.groovy",
-                "groovy-dateutil",
-                "${groovy-all.version}",
+        model.getDependencies().add(newDependency(DefaultPluginVersions.CODEHAUS_GROOVY_GROUPID,
+                DefaultPluginVersions.GROOVY_DATEUTIL_ARTIFACT_ID,
+                GROOVY_ALL_VERSION_REFERENCE,
                 Artifact.SCOPE_PROVIDED));
 
         findDependency(model.getDependencies(), "org.spockframework", "spock-core")
@@ -102,9 +114,11 @@ public class Groovy3MigrationStep implements MavenModelMigration {
             findPlugin(model.getBuild().getPlugins(), "org.apache.maven.plugins", "maven-compiler-plugin")
                     .ifPresent(p -> {
                         p.setVersion("${maven-compiler-plugin.version}");
-                        findDependency(p.getDependencies(), "org.codehaus.groovy", "groovy-eclipse-compiler")
+                        findDependency(p.getDependencies(), DefaultPluginVersions.CODEHAUS_GROOVY_GROUPID,
+                                DefaultPluginVersions.GROOVY_ECLIPSE_COMPILER_ARTIFACT_ID)
                                 .ifPresent(d -> d.setVersion("${groovy-eclipse-compiler.version}"));
-                        findDependency(p.getDependencies(), "org.codehaus.groovy", "groovy-eclipse-batch")
+                        findDependency(p.getDependencies(), DefaultPluginVersions.CODEHAUS_GROOVY_GROUPID,
+                                DefaultPluginVersions.GROOVY_ECLIPSE_BATCH_ARTIFACT_ID)
                                 .ifPresent(d -> d.setVersion("${groovy-eclipse-batch.version}"));
                     });
 
@@ -138,6 +152,24 @@ public class Groovy3MigrationStep implements MavenModelMigration {
                     "`bintray` plugin repository has been removed. All required plugins are now available on maven central.");
         }
         
+        // last, and only when nothing still names it. This step rewrites some ${groovy.version} references
+        // itself - groovy-eclipse-batch moves onto ${groovy-eclipse-batch.version} above - so a check made
+        // before those rewrites would keep a property that is dead by the time the step returns. What can
+        // survive is a reference this step does not own: a user pin such as org.codehaus.groovy:groovy-testng,
+        // which Groovy4MigrationStep also declines to rewrite because the runtime does not provide it.
+        // Removing the property under one of those leaves a version that resolves to nothing, which fails the
+        // build rather than merely leaving a dead property behind
+        if (!PomDeclarations.namesProperty(model, DefaultPluginVersions.GROOVY_VERSION_PROPERTY)) {
+            properties.remove(DefaultPluginVersions.GROOVY_VERSION_PROPERTY);
+        } else if (!PomDeclarations.namesPropertyOutsideDependencyVersions(model,
+                DefaultPluginVersions.GROOVY_VERSION_PROPERTY)) {
+            // every surviving reference is a dependency version, so the property holds a Groovy version and is
+            // out of date - left as found it resolves the Groovy this pom was written against, under the line
+            // reported above saying otherwise. replace rather than setProperty: a pom that only reads the
+            // property takes its value from elsewhere, and defining one here would shadow that
+            properties.replace(DefaultPluginVersions.GROOVY_VERSION_PROPERTY, GROOVY_VERSION);
+        }
+
         BonitaStudioLog.info(String.format("%s completed for %s.", Groovy3MigrationStep.class.getName(), metadata.getArtifactId()));
         return report;
     }
@@ -177,8 +209,9 @@ public class Groovy3MigrationStep implements MavenModelMigration {
     @Override
     public boolean appliesTo(Model model, ProjectMetadata metadata) {
         if (model.getBuild() != null) {
-            String groovyVersion = model.getProperties().getProperty(GROOVY_VERSION_PROPERTY);
-            String groovyAllVersion = model.getProperties().getProperty(GROOVY_ALL_VERSION_PROPERTY);
+            String groovyVersion = model.getProperties().getProperty(DefaultPluginVersions.GROOVY_VERSION_PROPERTY);
+            String groovyAllVersion = model.getProperties()
+                    .getProperty(DefaultPluginVersions.GROOVY_ALL_VERSION_PROPERTY);
             String groovyCompilerVersion = model.getProperties().getProperty(GROOVY_COMPILER_VERSION);
 
             // Already using Groovy 3
@@ -202,7 +235,7 @@ public class Groovy3MigrationStep implements MavenModelMigration {
                     .map(configuration -> configuration.getChild("compilerId"))
                     .filter(Objects::nonNull)
                     .map(Xpp3Dom::getValue)
-                    .map("groovy-eclipse-compiler"::equals)
+                    .map(DefaultPluginVersions.GROOVY_ECLIPSE_COMPILER_ARTIFACT_ID::equals)
                     .orElse(false);
         }
         return false;

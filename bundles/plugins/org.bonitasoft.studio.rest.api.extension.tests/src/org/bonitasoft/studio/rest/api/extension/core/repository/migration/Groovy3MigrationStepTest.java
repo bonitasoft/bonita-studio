@@ -28,6 +28,7 @@ import java.util.stream.Collectors;
 import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.Plugin;
+import org.apache.maven.model.PluginManagement;
 import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
 import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
@@ -141,6 +142,62 @@ public class Groovy3MigrationStepTest {
         // Given
         Model model = loadModel("pom_from_1_0_5.xml");
         assertThat(model.getProperties()).containsKey("groovy.version");
+
+        // When
+        migrationStep.migrate(model, metadata);
+
+        // Then
+        assertThat(model.getProperties()).doesNotContainKey("groovy.version");
+    }
+
+    @Test
+    public void should_update_a_groovy_version_property_it_has_to_keep() throws Exception {
+        // Given: a pin this step does not own, so the property has to survive the removal at the end of
+        // migrate() - but at the version this run announces, not the one it was found with
+        Model model = loadModel("pom_from_1_0_5.xml");
+        model.getDependencies().add(userPinnedGroovyTestng());
+
+        // When
+        migrationStep.migrate(model, metadata);
+
+        // Then
+        assertThat(model.getProperties()).contains(entry("groovy.version", "3.0.8"));
+    }
+
+    @Test
+    public void should_not_rewrite_a_groovy_version_a_compiler_plugin_dependency_names() throws Exception {
+        // Given: the groovy-eclipse batch compiler in pluginManagement, which neither this step (it rewrites
+        // the copy under build/plugins) nor GroovyCompilerPluginStep (it removes that same copy) touches. Its
+        // versions are published as 3.0.8-01, so rewriting the property to a plain Groovy version would leave
+        // a reference to an artifact that does not exist - a build that stopped working, not a stale one
+        Model model = loadModel("pom_from_1_0_5.xml");
+        var batch = new Dependency();
+        batch.setGroupId("org.codehaus.groovy");
+        batch.setArtifactId("groovy-eclipse-batch");
+        batch.setVersion("${groovy.version}");
+        var managedCompiler = new Plugin();
+        managedCompiler.setGroupId("org.apache.maven.plugins");
+        managedCompiler.setArtifactId("maven-compiler-plugin");
+        managedCompiler.addDependency(batch);
+        var pluginManagement = new PluginManagement();
+        pluginManagement.addPlugin(managedCompiler);
+        model.getBuild().setPluginManagement(pluginManagement);
+
+        // When
+        migrationStep.migrate(model, metadata);
+
+        // Then
+        assertThat(model.getProperties()).contains(entry("groovy.version", "2.4.3-01"));
+    }
+
+    @Test
+    public void should_not_define_a_groovy_version_property_the_pom_does_not_declare() throws Exception {
+        // Given: a pom that reads ${groovy.version} without declaring it, so the value comes from elsewhere.
+        // Guard on the rewrite using replace rather than setProperty - green before the rewrite existed, so it
+        // pins the choice rather than demonstrating a defect
+        Model model = loadModel("pom_from_1_0_5.xml");
+        model.getProperties().remove("groovy.version");
+        model.getDependencies().add(userPinnedGroovyTestng());
 
         // When
         migrationStep.migrate(model, metadata);
@@ -323,4 +380,13 @@ public class Groovy3MigrationStepTest {
                 .collect(Collectors.toList());
     }
 
+    /** A codehaus module the runtime does not provide, pinned through the property this step decides about. */
+    private Dependency userPinnedGroovyTestng() {
+        var userPinned = new Dependency();
+        userPinned.setGroupId("org.codehaus.groovy");
+        userPinned.setArtifactId("groovy-testng");
+        userPinned.setVersion("${groovy.version}");
+        userPinned.setScope("provided");
+        return userPinned;
+    }
 }

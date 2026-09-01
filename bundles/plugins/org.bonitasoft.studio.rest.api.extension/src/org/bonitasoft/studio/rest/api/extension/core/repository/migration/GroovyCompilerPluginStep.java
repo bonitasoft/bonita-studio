@@ -22,6 +22,7 @@ import org.apache.maven.model.Build;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.Plugin;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.repository.core.maven.model.DefaultPluginVersions;
 import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
 import org.bonitasoft.studio.common.repository.core.migration.MavenModelMigration;
 import org.bonitasoft.studio.common.repository.core.migration.report.MigrationReport;
@@ -38,7 +39,8 @@ public class GroovyCompilerPluginStep implements MavenModelMigration {
         BonitaStudioLog.info(String.format("Starting %s on %s...", GroovyCompilerPluginStep.class.getName(), metadata.getArtifactId()));
         Properties properties = model.getProperties();
 
-        properties.setProperty(MAVEN_COMPILER_ID_PROPERTY, "groovy-eclipse-compiler");
+        properties.setProperty(MAVEN_COMPILER_ID_PROPERTY,
+                DefaultPluginVersions.GROOVY_ECLIPSE_COMPILER_ARTIFACT_ID);
         properties.remove(GROOVY_COMPILER_VERSION_PROPERTY);
         properties.remove(GROOVY_ECLIPSE_COMPILER_PROPERTY);
 

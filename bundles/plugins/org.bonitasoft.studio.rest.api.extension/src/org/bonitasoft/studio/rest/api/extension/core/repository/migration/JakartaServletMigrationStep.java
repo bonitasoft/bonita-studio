@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2026 BonitaSoft S.A.
+ * Copyright (C) 2026 Bonitasoft S.A.
  * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,11 +17,9 @@ package org.bonitasoft.studio.rest.api.extension.core.repository.migration;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Stream;
 
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.model.Dependency;
-import org.apache.maven.model.DependencyManagement;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.Profile;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
@@ -72,7 +70,7 @@ public class JakartaServletMigrationStep implements MavenModelMigration {
     @Override
     public boolean appliesTo(Model model, ProjectMetadata metadata) {
         return ServletApi.forRuntime(metadata) == ServletApi.JAKARTA
-                && allDeclarations(model).anyMatch(ServletApi.JAVAX::matches);
+                && PomDeclarations.all(model).anyMatch(ServletApi.JAVAX::matches);
     }
 
     private void migrateDeclaredServletApi(List<Dependency> dependencies, MigrationReport report) {
@@ -116,7 +114,7 @@ public class JakartaServletMigrationStep implements MavenModelMigration {
      */
     private void reportServletApiDeclaredByProfiles(Model model, MigrationReport report) {
         for (Profile profile : model.getProfiles()) {
-            if (declarationsOf(profile.getDependencies(), profile.getDependencyManagement())
+            if (PomDeclarations.of(profile.getDependencies(), profile.getDependencyManagement())
                     .anyMatch(ServletApi.JAVAX::matches)) {
                 report.updated(String.format(
                         "Action required: the `%s` profile of this pom still declares `%s`, which the runtime no longer provides. Replace it with `%s` yourself if that profile targets a 12.0 runtime: a profile can hold the configuration of an older runtime, so this migration leaves it untouched.",
@@ -152,24 +150,6 @@ public class JakartaServletMigrationStep implements MavenModelMigration {
     /** @return every declaration of the given servlet API, in the order the pom declares them */
     private List<Dependency> servletApiDeclarations(Collection<Dependency> dependencies, ServletApi servletApi) {
         return dependencies.stream().filter(servletApi::matches).toList();
-    }
-
-    /** @return every dependency the pom declares or manages, including the ones nested in a {@code <profile>} */
-    private Stream<Dependency> allDeclarations(Model model) {
-        return Stream.concat(
-                declarationsOf(model.getDependencies(), model.getDependencyManagement()),
-                model.getProfiles().stream()
-                        .flatMap(profile -> declarationsOf(profile.getDependencies(),
-                                profile.getDependencyManagement())));
-    }
-
-    private Stream<Dependency> declarationsOf(List<Dependency> dependencies,
-            DependencyManagement dependencyManagement) {
-        return Stream.concat(dependencies.stream(), managedDependencies(dependencyManagement).stream());
-    }
-
-    private List<Dependency> managedDependencies(DependencyManagement dependencyManagement) {
-        return dependencyManagement != null ? dependencyManagement.getDependencies() : List.of();
     }
 
 }
