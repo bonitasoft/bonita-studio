@@ -49,7 +49,7 @@ public class ExtensionProjectArchetypes {
             case CONNECTOR:
                 return new Archetype(GROUP_ID, "bonita-connector-archetype", "1.3.0");
             case ACTOR_FILTER:
-                return new Archetype(GROUP_ID, "bonita-actorfilter-archetype", "1.2.0");
+                return new Archetype(GROUP_ID, "bonita-actorfilter-archetype", "2.0.0");
             case REST_API:
                 return new Archetype(GROUP_ID, "bonita-rest-api-extension-archetype", "2.0.0");
             case THEME:
