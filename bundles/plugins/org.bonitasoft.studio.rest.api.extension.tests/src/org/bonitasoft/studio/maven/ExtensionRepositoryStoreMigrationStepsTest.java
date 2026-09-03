@@ -22,7 +22,9 @@ import java.util.List;
 import org.apache.maven.model.Build;
 import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Model;
+import org.apache.maven.model.Parent;
 import org.apache.maven.model.Plugin;
+import org.bonitasoft.studio.common.repository.core.maven.model.DefaultPluginVersions;
 import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
 import org.bonitasoft.studio.common.repository.core.migration.MavenModelMigration;
 import org.bonitasoft.studio.rest.api.extension.core.repository.RestAPIExtensionFileStore;
@@ -42,6 +44,8 @@ import org.junit.Test;
  */
 public class ExtensionRepositoryStoreMigrationStepsTest {
 
+    /** Named the way the parent pom names it: one property per managed plugin, keyed on its artifactId. */
+    private static final String SUREFIRE_VERSION_PROPERTY = DefaultPluginVersions.MAVEN_SUREFIRE_PLUGIN + ".version";
     private static final String GROOVY_4_RUNTIME_VERSION = "12.0.0";
     private static final String GROOVY_3_VERSION = "3.0.19";
 
@@ -173,6 +177,77 @@ public class ExtensionRepositoryStoreMigrationStepsTest {
     }
 
     /** A 7.13-era extension pom: Groovy 3 has not been applied yet, and the groovy-eclipse compiler is in use. */
+    @Test
+    public void should_leave_a_migrated_extension_taking_surefire_from_its_parent() {
+        // Groovy3MigrationStep pins a surefire of its own, and Groovy4MigrationStep moves spock-core onto a
+        // variant built against a far newer JUnit Platform - a pairing that pin could not run. What saves it is
+        // ParentMigrationStep, last in this list: the parent pom manages that plugin, so the pin and its
+        // property both go and the module takes the parent's. Nothing asserted the pairing the chain produces,
+        // and the step that resolves it is in the other list, where a search for surefire does not reach
+        var metadata = metadataForRuntime(GROOVY_4_RUNTIME_VERSION);
+        var midChain = spockExtensionPom();
+        new Groovy3MigrationStep().migrate(midChain, metadata);
+        assertThat(midChain.getProperties()).containsKey(SUREFIRE_VERSION_PROPERTY);
+
+        var model = spockExtensionPom();
+        runPipeline(model, metadata);
+
+        assertThat(model.getProperties()).doesNotContainKey(SUREFIRE_VERSION_PROPERTY);
+        assertThat(managedPlugins(model))
+                .noneMatch(plugin -> DefaultPluginVersions.MAVEN_SUREFIRE_PLUGIN.equals(plugin.getArtifactId()));
+        assertThat(model.getDependencies())
+                .filteredOn(dependency -> "spock-core".equals(dependency.getArtifactId()))
+                .extracting(Dependency::getVersion)
+                .containsExactly("2.4-groovy-4.0");
+    }
+
+    @Test
+    public void should_leave_a_parented_extension_the_surefire_it_was_given() {
+        // the other side of the test above, and the one the version this step writes is chosen for:
+        // ParentMigrationStep declines a module that already declares a parent, so the pin it would otherwise
+        // remove stays in the pom. It has to be a surefire that can run the Spock the Groovy 4 step writes,
+        // which is why the value comes from the same place the parent takes it
+        var model = spockExtensionPom();
+        var parent = new Parent();
+        parent.setGroupId("com.company");
+        parent.setArtifactId("my-project-extensions");
+        parent.setVersion("1.0.0");
+        model.setParent(parent);
+
+        runPipeline(model, metadataForRuntime(GROOVY_4_RUNTIME_VERSION));
+
+        assertThat(model.getParent()).isSameAs(parent);
+        assertThat(model.getProperties())
+                .containsEntry(SUREFIRE_VERSION_PROPERTY, DefaultPluginVersions.MAVEN_SUREFIRE_PLUGIN_VERSION);
+        assertThat(managedPlugins(model))
+                .anyMatch(plugin -> DefaultPluginVersions.MAVEN_SUREFIRE_PLUGIN.equals(plugin.getArtifactId()));
+    }
+
+    /** The 7.x shape both Spock steps read: Groovy-Eclipse selected, a Groovy 2 pin, and a Spock 1 pin. */
+    private Model spockExtensionPom() {
+        var model = groovyEclipseExtensionPom("2.4.3-01");
+        var groovyAll = new Dependency();
+        groovyAll.setGroupId("org.codehaus.groovy");
+        groovyAll.setArtifactId("groovy-all");
+        groovyAll.setVersion("${groovy.version}");
+        groovyAll.setScope("provided");
+        model.getDependencies().add(groovyAll);
+        var spock = new Dependency();
+        spock.setGroupId("org.spockframework");
+        spock.setArtifactId("spock-core");
+        spock.setVersion("1.0-groovy-2.4");
+        spock.setScope("test");
+        model.getDependencies().add(spock);
+        return model;
+    }
+
+    private List<Plugin> managedPlugins(Model model) {
+        if (model.getBuild() == null || model.getBuild().getPluginManagement() == null) {
+            return List.of();
+        }
+        return model.getBuild().getPluginManagement().getPlugins();
+    }
+
     private Model groovyEclipseExtensionPom(String groovyVersion) {
         var model = extensionPom();
         model.getProperties().setProperty("groovy.version", groovyVersion);

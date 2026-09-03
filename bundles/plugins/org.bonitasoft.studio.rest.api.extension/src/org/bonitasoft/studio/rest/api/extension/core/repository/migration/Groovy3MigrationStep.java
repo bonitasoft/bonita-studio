@@ -41,7 +41,16 @@ public class Groovy3MigrationStep implements MavenModelMigration {
             + "}";
 
     private static final String GROOVY_COMPILER_VERSION = "groovy-eclipse-batch.version";
-    private static final String MAVEN_SUREFIRE_PLUGIN_VERSION = "2.22.2";
+    /**
+     * Named the way the parent pom names it: one property per managed plugin, keyed on its artifactId. The value
+     * is the parent's too, since a module that already has a parent keeps this pin - ParentMigrationStep only
+     * drops it where it attaches one - and a surefire below 3 cannot run the Spock variant Groovy4MigrationStep
+     * writes.
+     */
+    private static final String MAVEN_SUREFIRE_PLUGIN_VERSION_PROPERTY = DefaultPluginVersions.MAVEN_SUREFIRE_PLUGIN
+            + ".version";
+    private static final String MAVEN_SUREFIRE_PLUGIN_VERSION_REFERENCE = "${" + MAVEN_SUREFIRE_PLUGIN_VERSION_PROPERTY
+            + "}";
     private static final String GROOVY_VERSION = "3.0.8";
     /**
      * The Spock variant built for Groovy 3, which is what the pom this step produces needs - and what a Groovy 4
@@ -49,8 +58,24 @@ public class Groovy3MigrationStep implements MavenModelMigration {
      * Groovy 3 onto the test classpath transitively, so moving the Groovy coordinates without moving this pin
      * leaves a pom that compiles against Groovy 4 and fails its specifications at execution - a shape no build
      * log shows.
+     * <p>
+     * Package-private on purpose: Groovy4MigrationStep lists this among the pins it corrects, and a bump here
+     * that did not reach that list would turn its correction into an Action required line asking the user to
+     * fix a value this step had just written. The property it is stored under is shared for the same reason.
      */
-    private static final String SPOCK_VERSION = "2.0-groovy-3.0";
+    static final String SPOCK_VERSION = "2.0-groovy-3.0";
+
+    /** The property this step writes {@link #SPOCK_VERSION} under, and Groovy4MigrationStep later removes. */
+    static final String SPOCK_VERSION_PROPERTY = "spock.version";
+    /** Derived like {@link #GROOVY_ALL_VERSION_REFERENCE}, for the same reason. */
+    private static final String SPOCK_VERSION_REFERENCE = "${" + SPOCK_VERSION_PROPERTY + "}";
+    /**
+     * The coordinates this step pins, shared with Groovy4MigrationStep for the reason {@link #SPOCK_VERSION} gives.
+     */
+    static final String SPOCK_GROUP_ID = "org.spockframework";
+    static final String SPOCK_CORE_ARTIFACT_ID = "spock-core";
+    static final String SPOCK_REPORTS_GROUP_ID = "com.athaydes";
+    static final String SPOCK_REPORTS_ARTIFACT_ID = "spock-reports";
 
     private static final ComparableVersion _3_0_0 = new ComparableVersion("3.0.0");
 
@@ -62,10 +87,11 @@ public class Groovy3MigrationStep implements MavenModelMigration {
 
         properties.setProperty(DefaultPluginVersions.GROOVY_ALL_VERSION_PROPERTY, GROOVY_VERSION);
         properties.setProperty("maven-compiler-plugin.version", "3.8.1");
-        properties.setProperty("maven-surefire-plugin.version", MAVEN_SUREFIRE_PLUGIN_VERSION);
+        properties.setProperty(MAVEN_SUREFIRE_PLUGIN_VERSION_PROPERTY,
+                DefaultPluginVersions.MAVEN_SUREFIRE_PLUGIN_VERSION);
         properties.setProperty("groovy-eclipse-compiler.version", "3.7.0");
         properties.setProperty(GROOVY_COMPILER_VERSION, "3.0.8-01");
-        properties.setProperty("spock.version", SPOCK_VERSION);
+        properties.setProperty(SPOCK_VERSION_PROPERTY, SPOCK_VERSION);
 
         // read now, because the end of this method either removes this property or rewrites it: the
         // decision has to see the model this step leaves behind rather than the one it was given
@@ -92,19 +118,19 @@ public class Groovy3MigrationStep implements MavenModelMigration {
                 GROOVY_ALL_VERSION_REFERENCE,
                 Artifact.SCOPE_PROVIDED));
 
-        findDependency(model.getDependencies(), "org.spockframework", "spock-core")
+        findDependency(model.getDependencies(), SPOCK_GROUP_ID, SPOCK_CORE_ARTIFACT_ID)
                 .ifPresent(dependency -> {
                     var existingSpockVersion = dependency.getVersion();
-                    dependency.setVersion("${spock.version}");
+                    dependency.setVersion(SPOCK_VERSION_REFERENCE);
                     report.updated(String.format(
                             "`spock-core` version has been updated from `%s` to `%s`. For more information check the https://spockframework.org/spock/docs/2.0/migration_guide.html#_migration_guide_2_0[migration guide].",
                             existingSpockVersion, SPOCK_VERSION));
                 });
 
-        findDependency(model.getDependencies(), "com.athaydes", "spock-reports")
+        findDependency(model.getDependencies(), SPOCK_REPORTS_GROUP_ID, SPOCK_REPORTS_ARTIFACT_ID)
                 .ifPresent(dependency -> {
                     var existingSpockReportsVersion = dependency.getVersion();
-                    dependency.setVersion("${spock.version}");
+                    dependency.setVersion(SPOCK_VERSION_REFERENCE);
                     report.updated(String.format("`spock-reports` version has been updated from `%s` to `%s`.",
                             existingSpockReportsVersion, SPOCK_VERSION));
                 });
@@ -124,24 +150,28 @@ public class Groovy3MigrationStep implements MavenModelMigration {
 
             PluginManagement pluginManagement = Optional.ofNullable(build.getPluginManagement())
                     .orElseGet(PluginManagement::new);
-            findPlugin(pluginManagement.getPlugins(), "org.apache.maven.plugins",
-                    "maven-surefire-plugin")
+            findPlugin(pluginManagement.getPlugins(), DefaultPluginVersions.APACHE_MAVEN_PLUGIN_GROUP_ID,
+                    DefaultPluginVersions.MAVEN_SUREFIRE_PLUGIN)
                             .ifPresentOrElse(
                                     surefirePlugin -> {
                                         var existingVersion = surefirePlugin.getVersion();
-                                        surefirePlugin.setVersion("${maven-surefire-plugin.version}");
-                                        if (!Objects.equals(existingVersion, MAVEN_SUREFIRE_PLUGIN_VERSION)) {
+                                        surefirePlugin.setVersion(MAVEN_SUREFIRE_PLUGIN_VERSION_REFERENCE);
+                                        if (!Objects.equals(existingVersion,
+                                                DefaultPluginVersions.MAVEN_SUREFIRE_PLUGIN_VERSION)) {
                                             report.updated(String.format(
                                                     "`maven-surefire-plugin` plugin has been updated from %s to %s",
-                                                    existingVersion, MAVEN_SUREFIRE_PLUGIN_VERSION));
+                                                    existingVersion,
+                                                    DefaultPluginVersions.MAVEN_SUREFIRE_PLUGIN_VERSION));
                                         }
                                     },
                                     () -> {
-                                        pluginManagement.addPlugin(newPlugin("org.apache.maven.plugins",
-                                                "maven-surefire-plugin", "${maven-surefire-plugin.version}"));
+                                        pluginManagement.addPlugin(
+                                                newPlugin(DefaultPluginVersions.APACHE_MAVEN_PLUGIN_GROUP_ID,
+                                                        DefaultPluginVersions.MAVEN_SUREFIRE_PLUGIN,
+                                                        MAVEN_SUREFIRE_PLUGIN_VERSION_REFERENCE));
                                         report.updated(String.format(
                                                 "`maven-surefire-plugin` plugin version has been fixed to `%s`",
-                                                MAVEN_SUREFIRE_PLUGIN_VERSION));
+                                                DefaultPluginVersions.MAVEN_SUREFIRE_PLUGIN_VERSION));
                                     });
 
             build.setPluginManagement(pluginManagement);

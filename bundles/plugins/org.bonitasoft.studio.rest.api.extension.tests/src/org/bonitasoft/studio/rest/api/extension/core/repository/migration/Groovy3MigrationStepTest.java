@@ -30,6 +30,7 @@ import org.apache.maven.model.Model;
 import org.apache.maven.model.Plugin;
 import org.apache.maven.model.PluginManagement;
 import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
+import org.bonitasoft.studio.common.repository.core.maven.model.DefaultPluginVersions;
 import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 import org.junit.Before;
@@ -331,7 +332,10 @@ public class Groovy3MigrationStepTest {
         migrationStep.migrate(model, metadata);
 
         // Then
-        assertThat(model.getProperties()).contains(entry("maven-surefire-plugin.version", "2.22.2"));
+        // the version the parent pom manages, not one of this step's own: the pom keeps this pin wherever
+        // ParentMigrationStep declines, and a surefire below 3 cannot run the Spock the Groovy 4 step writes
+        assertThat(model.getProperties()).contains(entry("maven-surefire-plugin.version",
+                DefaultPluginVersions.MAVEN_SUREFIRE_PLUGIN_VERSION));
     }
 
     @Test
