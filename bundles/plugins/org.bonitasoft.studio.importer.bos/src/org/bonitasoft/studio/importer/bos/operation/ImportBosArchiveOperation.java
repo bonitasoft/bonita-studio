@@ -245,7 +245,8 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
                         .forEach(dependencies::add);
                 importedMavenModel.getDependencies().stream()
                         .filter(dep -> Objects.equals("${project.groupId}", dep.getGroupId())
-                                && Objects.equals("${project.version}", dep.getVersion()))
+                                && Objects.equals("${project.version}", dep.getVersion())
+                                && !AppProjectConfiguration.isBdmDependency(dep))
                         .forEach(dependencies::add);
                 importedMavenModel.getDependencies().stream()
                         .filter(dep -> (dep.getVersion() == null
