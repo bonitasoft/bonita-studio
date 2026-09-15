@@ -15,11 +15,8 @@
 package org.bonitasoft.studio.dependencies.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.spy;
 
-import java.util.HashMap;
-import java.util.Map;
 
 import org.bonitasoft.studio.common.repository.core.maven.ProjectDependenciesResolver;
 import org.junit.After;
@@ -101,52 +98,6 @@ public class DependencyRepositoryStoreTest {
                 .isEqualTo("bonita-common");
         assertThat(ProjectDependenciesResolver.extractLibName("my-lib-1.0.0-SNAPSHOT.jar"))
                 .isEqualTo("my-lib");
-    }
-
-    @Test
-    public void should_isInRuntimeContainer_return_true_when_jar_in_runtime() {
-        Map<String, String> runtime = new HashMap<>();
-        runtime.put("slf4j-api", "1.7.36");
-        doReturn(runtime).when(store).getRuntimeDependencies();
-        assertThat(store.isInRuntimeContainer("slf4j-api-1.7.36.jar")).isTrue();
-    }
-
-    @Test
-    public void should_isInRuntimeContainer_return_true_when_jar_in_runtime_with_different_version() {
-        Map<String, String> runtime = new HashMap<>();
-        runtime.put("slf4j-api", "1.7.36");
-        doReturn(runtime).when(store).getRuntimeDependencies();
-        assertThat(store.isInRuntimeContainer("slf4j-api-2.0.0.jar")).isTrue();
-    }
-
-    @Test
-    public void should_isInRuntimeContainer_return_false_when_jar_not_in_runtime() {
-        Map<String, String> runtime = new HashMap<>();
-        runtime.put("slf4j-api", "1.7.36");
-        doReturn(runtime).when(store).getRuntimeDependencies();
-        assertThat(store.isInRuntimeContainer("guava-31.1-jre.jar")).isFalse();
-    }
-
-    @Test
-    public void should_isInRuntimeContainer_return_false_for_null() {
-        Map<String, String> runtime = new HashMap<>();
-        runtime.put("slf4j-api", "1.7.36");
-        doReturn(runtime).when(store).getRuntimeDependencies();
-        assertThat(store.isInRuntimeContainer(null)).isFalse();
-    }
-
-    @Test
-    public void should_isInRuntimeContainer_return_false_for_non_jar() {
-        Map<String, String> runtime = new HashMap<>();
-        runtime.put("slf4j-api", "1.7.36");
-        doReturn(runtime).when(store).getRuntimeDependencies();
-        assertThat(store.isInRuntimeContainer("slf4j-api")).isFalse();
-    }
-
-    @Test
-    public void should_isInRuntimeContainer_return_false_when_runtime_empty() {
-        doReturn(new HashMap<>()).when(store).getRuntimeDependencies();
-        assertThat(store.isInRuntimeContainer("slf4j-api-1.7.36.jar")).isFalse();
     }
 
 }

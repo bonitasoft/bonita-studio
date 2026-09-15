@@ -20,6 +20,7 @@ import static org.mockito.Mockito.when;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import org.bonitasoft.bpm.model.configuration.ConfigurationFactory;
 import org.bonitasoft.bpm.model.configuration.Fragment;
@@ -170,6 +171,72 @@ public class MissingDependenciesDecoratorTest {
     // --- decorateText ---
 
     @Test
+    public void should_isSelectedInSeveralVersions_return_true_when_two_versions_are_selected() {
+        decorator.setSelectedVersionsByBase(Map.of("xmlbeans", Set.of("5.0.3", "5.4.0")));
+
+        Fragment fragment = createSelectedFragment("xmlbeans-5.4.0.jar");
+        assertThat(decorator.isSelectedInSeveralVersions(fragment)).isTrue();
+    }
+
+    @Test
+    public void should_isSelectedInSeveralVersions_return_false_when_fragment_is_not_selected() {
+        decorator.setSelectedVersionsByBase(Map.of("xmlbeans", Set.of("5.0.3", "5.4.0")));
+
+        Fragment fragment = createUnselectedFragment("xmlbeans-5.4.0.jar");
+        assertThat(decorator.isSelectedInSeveralVersions(fragment)).isFalse();
+    }
+
+    @Test
+    public void should_isSelectedInSeveralVersions_return_false_when_the_jar_holds_no_version() {
+        // the generated connector jar shares its base with the versioned ones
+        decorator.setSelectedVersionsByBase(Map.of("email", Set.of("1.0", "2.0")));
+
+        Fragment fragment = createSelectedFragment("email.jar");
+        assertThat(decorator.isSelectedInSeveralVersions(fragment)).isFalse();
+    }
+
+    @Test
+    public void should_isSelectedInSeveralVersions_return_false_when_its_own_version_is_not_selected() {
+        // exported here, but excluded elsewhere: the index left it out
+        decorator.setSelectedVersionsByBase(Map.of("xmlbeans", Set.of("5.0.3", "5.4.0")));
+
+        Fragment fragment = createSelectedFragment("xmlbeans-5.1.0.jar");
+        assertThat(decorator.isSelectedInSeveralVersions(fragment)).isFalse();
+    }
+
+    @Test
+    public void should_isShadowedByAnotherVersion_return_true_when_another_version_is_selected() {
+        decorator.setSelectedVersionsByBase(Map.of("xmlbeans", Set.of("5.4.0")));
+
+        Fragment fragment = createUnselectedFragment("xmlbeans-5.0.3.jar");
+        assertThat(decorator.isShadowedByAnotherVersion(fragment)).isTrue();
+    }
+
+    @Test
+    public void should_isShadowedByAnotherVersion_return_false_when_the_selected_version_is_its_own() {
+        decorator.setSelectedVersionsByBase(Map.of("xmlbeans", Set.of("5.0.3")));
+
+        Fragment fragment = createUnselectedFragment("xmlbeans-5.0.3.jar");
+        assertThat(decorator.isShadowedByAnotherVersion(fragment)).isFalse();
+    }
+
+    @Test
+    public void should_isShadowedByAnotherVersion_return_false_when_the_jar_holds_no_version() {
+        decorator.setSelectedVersionsByBase(Map.of("email", Set.of("1.0")));
+
+        Fragment fragment = createUnselectedFragment("email.jar");
+        assertThat(decorator.isShadowedByAnotherVersion(fragment)).isFalse();
+    }
+
+    @Test
+    public void should_isShadowedByAnotherVersion_return_false_when_fragment_is_selected() {
+        decorator.setSelectedVersionsByBase(Map.of("xmlbeans", Set.of("5.0.3", "5.4.0")));
+
+        Fragment fragment = createSelectedFragment("xmlbeans-5.4.0.jar");
+        assertThat(decorator.isShadowedByAnotherVersion(fragment)).isFalse();
+    }
+
+    @Test
     public void should_decorateText_return_null_for_non_fragment() {
         assertThat(decorator.decorateText("text", "not a fragment")).isNull();
     }
@@ -195,6 +262,19 @@ public class MissingDependenciesDecoratorTest {
     private Fragment createFragment(String value) {
         Fragment fragment = ConfigurationFactory.eINSTANCE.createFragment();
         fragment.setValue(value);
+        return fragment;
+    }
+
+    private Fragment createSelectedFragment(String value) {
+        Fragment fragment = createFragment(value);
+        fragment.setExported(true);
+        return fragment;
+    }
+
+    /** {@code exported} defaults to {@code true} in the model, so an unselected fragment has to say so. */
+    private Fragment createUnselectedFragment(String value) {
+        Fragment fragment = createFragment(value);
+        fragment.setExported(false);
         return fragment;
     }
 }
