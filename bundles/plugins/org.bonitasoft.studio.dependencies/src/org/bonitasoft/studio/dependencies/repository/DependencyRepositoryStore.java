@@ -209,29 +209,6 @@ public class DependencyRepositoryStore extends AbstractRepositoryStore<Dependenc
         return MigrationReport.emptyReport();
     }
 
-    /**
-     * Checks whether a JAR (regardless of version) is already present in the runtime container (Tomcat).
-     * <p>
-     * This method is <b>version-agnostic</b>: it only matches by library name. For example, if the runtime
-     * contains {@code slf4j-api-1.7.36}, then {@code slf4j-api-2.0.0.jar} will also return {@code true}.
-     * This is intentional — the configuration wizard uses this to prevent users from exporting any version
-     * of a library that is already provided by the runtime, avoiding classpath conflicts.
-     * <p>
-     * For version-sensitive checks (exact match or version mismatch detection), see
-     * {@link org.bonitasoft.studio.dependencies.ui.MissingDependenciesDecorator#isInRuntimeContainer}.
-     */
-    public boolean isInRuntimeContainer(String jarValue) {
-        var runtime = getRuntimeDependencies();
-        if (runtime == null || runtime.isEmpty() || jarValue == null) {
-            return false;
-        }
-        if (!jarValue.endsWith("." + JAR_EXT)) {
-            return false;
-        }
-        String libName = getLibName(jarValue);
-        return runtime.containsKey(libName);
-    }
-
     public Optional<DependencyFileStore> findDependencyByName(String jarName) {
         return getChildren().stream()
                 .filter(dep -> Objects.equals(jarName, dep.getName()))
