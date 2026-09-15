@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -35,6 +36,7 @@ import org.bonitasoft.bpm.model.configuration.Fragment;
 import org.bonitasoft.bpm.model.configuration.FragmentContainer;
 import org.bonitasoft.bpm.model.process.Pool;
 import org.bonitasoft.bpm.model.util.FragmentTypes;
+import org.bonitasoft.bpm.model.util.FragmentUtils;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.core.ProjectDependenciesStore;
@@ -58,7 +60,6 @@ import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.DecoratingLabelProvider;
 import org.eclipse.jface.viewers.ICheckStateListener;
 import org.eclipse.jface.viewers.ICheckStateProvider;
-import org.eclipse.jface.viewers.ILabelDecorator;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
@@ -68,6 +69,8 @@ import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.window.Window;
+import org.eclipse.osgi.util.NLS;
+import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -90,13 +93,16 @@ public abstract class AbstractDependenciesConfigurationWizardPage extends Wizard
         implements IProcessConfigurationWizardPage, ICheckStateListener,
         ICheckStateProvider {
 
+    /** Beyond that, the page message lists a count instead of every library name. */
+    private static final int MAX_LISTED_CONFLICTS = 3;
+
     private CheckboxTreeViewer treeViewer;
-    private Configuration configuration;
+    protected Configuration configuration;
     private Button removeJarButton;
     private Button addJarButton;
     private TableViewer rawViewer;
     private DependenciesTreeLabelProvider treeLabelProvider;
-
+    private MissingDependenciesDecorator missingDependenciesDecorator;
     public AbstractDependenciesConfigurationWizardPage(final String pageId) {
         super(pageId);
     }
@@ -279,7 +285,8 @@ public abstract class AbstractDependenciesConfigurationWizardPage extends Wizard
                                     .map(File::getName)
                                     .forEach(fileName -> addJarFragment(fc, fileName));
                         }
-                        treeViewer.refresh();
+                        // added jars come in selected, so they can collide with a version already there
+                        refreshVersionConflicts();
                     }
 
                 }
@@ -299,7 +306,7 @@ public abstract class AbstractDependenciesConfigurationWizardPage extends Wizard
                 if (fc.getFragments().stream()
                         .noneMatch(f -> Objects.equals(jarName, f.getValue()))) {
                     final Fragment f = ConfigurationFactory.eINSTANCE.createFragment();
-                    f.setExported(!getDependencyRepositoryStore().isInRuntimeContainer(jarName));
+                    f.setExported(true);
                     f.setValue(jarName);
                     f.setKey(jarName);
                     f.setType(FragmentTypes.JAR);
@@ -321,17 +328,16 @@ public abstract class AbstractDependenciesConfigurationWizardPage extends Wizard
                 }
                 final FragmentContainer fc = (FragmentContainer) selection.eContainer();
                 fc.getFragments().remove(selection);
-                treeViewer.refresh();
+                // removing the selected version may leave the ones it shadowed free to be picked again
+                refreshVersionConflicts();
             }
         });
 
         treeViewer = new CheckboxTreeViewer(mainComposite, SWT.BORDER | SWT.FULL_SELECTION);
         treeViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-        final ILabelDecorator missingDependenciesDecorator = new MissingDependenciesDecorator(
-                getDependencyRepositoryStore());
+        missingDependenciesDecorator = new MissingDependenciesDecorator(getDependencyRepositoryStore());
         treeViewer.getTree().setLinesVisible(true);
         treeLabelProvider = new DependenciesTreeLabelProvider();
-        treeLabelProvider.setDependencyStore(getDependencyRepositoryStore());
         treeViewer.setLabelProvider(
                 new DecoratingLabelProvider(treeLabelProvider, missingDependenciesDecorator));
         treeViewer.setCheckStateProvider(this);
@@ -373,10 +379,6 @@ public abstract class AbstractDependenciesConfigurationWizardPage extends Wizard
         return RepositoryManager.getInstance().getRepositoryStore(DependencyRepositoryStore.class);
     }
 
-    protected boolean isInRuntimeContainer(Fragment fragment) {
-        return getDependencyRepositoryStore().isInRuntimeContainer(fragment.getValue());
-    }
-
     /*
      * (non-Javadoc)
      * @see org.bonitasoft.studio.configuration.extension.IProcessConfigurationWizardPage#updatePage(org.bonitasoft.bpm.model.process.AbstractProcess,
@@ -386,9 +388,8 @@ public abstract class AbstractDependenciesConfigurationWizardPage extends Wizard
     public void updatePage(final Pool process, final Configuration configuration) {
         if (process != null && configuration != null && treeViewer != null && !treeViewer.getTree().isDisposed()) {
             this.configuration = configuration;
-            // Force exported=false for JARs already in the runtime container
-            forceExcludeRuntimeDependencies(configuration);
-
+            // before the viewers are populated: the decorator is asked for every row they paint
+            refreshVersionConflicts();
             treeViewer.setContentProvider(new TreeDependenciesContentProvider());
             treeViewer.setInput(getViewerInput(configuration));
             treeViewer.expandAll();
@@ -401,15 +402,75 @@ public abstract class AbstractDependenciesConfigurationWizardPage extends Wizard
         }
     }
 
-    private void forceExcludeRuntimeDependencies(Configuration configuration) {
-        for (EObject eObj : ModelHelper.getAllItemsOfType(configuration, ConfigurationPackage.Literals.FRAGMENT)) {
-            if (eObj instanceof Fragment) {
-                Fragment fragment = (Fragment) eObj;
-                if (isInRuntimeContainer(fragment) && fragment.isExported()) {
-                    fragment.setExported(false);
-                }
-            }
+    /**
+     * Recompute the selected versions, dim the ones that step aside and report the leftover conflicts.
+     * <p>
+     * The grouping comes from {@code FragmentUtils}, the very same one the pom generation uses to decide
+     * whether it can pin a version, so the warning cannot drift from the actual behaviour. Unlike the
+     * version mismatch and the ambiguous group id, this conflict is readable from the configuration
+     * alone, without resolving anything, which is why it belongs here rather than in the build log.
+     * </p>
+     * <p>
+     * No attempt is made to announce which version would win: that depends on Maven arbitration, which
+     * is unknown until the dependencies are resolved. Naming a winner here and being wrong would be
+     * worse than staying silent about it.
+     * </p>
+     */
+    protected void refreshVersionConflicts() {
+        refreshVersionConflicts(List.of());
+    }
+
+    /**
+     * @param justUnselected the jars this very click dropped, reported once so the automatic unselection
+     *        is not silent, never {@code null}
+     * @see #refreshVersionConflicts()
+     */
+    protected void refreshVersionConflicts(List<String> justUnselected) {
+        if (missingDependenciesDecorator == null) {
+            return;
         }
+        // one walk for both: conflictingArtifactBases would redo this very index
+        var selectedVersionsByBase = FragmentUtils.selectedVersionsByArtifactBase(configuration);
+        missingDependenciesDecorator.setSelectedVersionsByBase(selectedVersionsByBase);
+        var conflictingBases = selectedVersionsByBase.entrySet().stream()
+                .filter(entry -> entry.getValue().size() > 1)
+                .map(Entry::getKey)
+                .toList();
+        if (treeViewer != null && !treeViewer.getTree().isDisposed()) {
+            treeViewer.refresh();
+        }
+        if (rawViewer != null && !rawViewer.getTable().isDisposed()) {
+            rawViewer.refresh();
+        }
+        if (!conflictingBases.isEmpty()) {
+            setMessage(versionConflictMessage(conflictingBases), IMessageProvider.WARNING);
+        } else if (!justUnselected.isEmpty()) {
+            setMessage(NLS.bind(Messages.versionAutomaticallyUnselected,
+                    String.join(", ", justUnselected)), IMessageProvider.INFORMATION);
+        } else {
+            setMessage(null);
+        }
+        // updatePage runs while the page may not be shown yet, so the container has to be told
+        if (getContainer() != null && getContainer().getCurrentPage() != null) {
+            getContainer().updateMessage();
+        }
+    }
+
+    /**
+     * Build a single warning listing the conflicting libraries, truncated so that the page message stays
+     * readable when many of them collide.
+     */
+    private String versionConflictMessage(Collection<String> conflictingBases) {
+        var names = new ArrayList<>(conflictingBases);
+        String listed;
+        if (names.size() <= MAX_LISTED_CONFLICTS) {
+            listed = String.join(", ", names);
+        } else {
+            listed = NLS.bind(Messages.severalVersionsSelectedAndMore,
+                    String.join(", ", names.subList(0, MAX_LISTED_CONFLICTS)),
+                    names.size() - MAX_LISTED_CONFLICTS);
+        }
+        return NLS.bind(Messages.severalVersionsSelected, listed);
     }
 
     protected abstract Object getViewerInput(Configuration configuration);
@@ -417,22 +478,98 @@ public abstract class AbstractDependenciesConfigurationWizardPage extends Wizard
     @Override
     public void checkStateChanged(final CheckStateChangedEvent event) {
         final Object element = event.getElement();
-        // Block state change for runtime dependencies
-        if (element instanceof Fragment && isInRuntimeContainer((Fragment) element)) {
-            treeViewer.setChecked(element, false);
-            treeViewer.setGrayed(element, true);
-            updateParentSate(element);
-            return;
-        }
-        if (element instanceof Fragment) {
-            ((Fragment) element).setExported(event.getChecked());
+        List<String> justUnselected = List.of();
+        if (element instanceof Fragment fragment) {
+            fragment.setExported(event.getChecked());
+            if (event.getChecked()) {
+                justUnselected = unselectOtherVersions(fragment);
+            }
         }
         if (element instanceof FragmentContainer) {
             updateChildrenState((FragmentContainer) element, event.getChecked());
         }
         updateParentSate(element);
 
-        getContainer().updateMessage();
+        refreshVersionConflicts(justUnselected);
+    }
+
+    /**
+     * Drop the other versions of the library that was just selected.
+     * <p>
+     * Two versions of the same library cannot both be embedded: a {@code dependencyManagement} entry is
+     * indexed by {@code groupId:artifactId}, so the pom generation abstains and Maven arbitration
+     * decides. Rather than let the user build a selection that cannot be honoured, the last picked
+     * version wins and the others step aside -- one click to change one's mind, where refusing the click
+     * would have meant hunting down the version in place first.
+     * </p>
+     * <p>
+     * Checking a whole container still selects everything it holds, conflicts included: there is no
+     * telling which version the user meant, so that case keeps the warning instead.
+     * </p>
+     * <p>
+     * The candidates are read through {@code FragmentUtils.selectedJarNames}, the same precedence the
+     * archive is filtered with: a jar the user excluded in one place is not embedded because another
+     * fragment still exports it, so flipping that fragment would change nothing and announcing it would
+     * describe a decision that was never taken.
+     * </p>
+     * <p>
+     * That precedence is read on the picked jar too: when the same file name is excluded in another
+     * container, checking this one embeds nothing, so nothing steps aside. Otherwise the archive would
+     * end up without any version of the library, against a selection the user just made.
+     * </p>
+     *
+     * @return the jars that were unselected, in configuration order, never {@code null}
+     */
+    protected List<String> unselectOtherVersions(Fragment selected) {
+        String lib = selected.getValue();
+        if (lib == null || configuration == null) {
+            return List.of();
+        }
+        String version = FragmentUtils.extractArtifactVersion(lib).orElse(null);
+        if (version == null) {
+            // no version in the file name: nothing to arbitrate, and nothing the pom could pin either
+            return List.of();
+        }
+        String base = FragmentUtils.extractArtifactBase(lib);
+        List<Fragment> allFragments = configuration.getProcessDependencies().stream()
+                .flatMap(FragmentUtils::walkAllFragments)
+                .collect(Collectors.toList());
+        Set<String> selectedJars = FragmentUtils.selectedJarNames(allFragments);
+        if (!selectedJars.contains(lib)) {
+            // the same jar is excluded in another container, and that exclusion wins: checking this one
+            // embeds nothing. Dropping the version in place would leave the archive without any version
+            // of the library, and announce a swap that did not happen.
+            return List.of();
+        }
+        var unselected = allFragments.stream()
+                .filter(fragment -> fragment != selected)
+                // selectedJarNames already drops what is unselected, excluded elsewhere, or unnamed
+                .filter(fragment -> selectedJars.contains(fragment.getValue())
+                        && base.equals(FragmentUtils.extractArtifactBase(fragment.getValue()))
+                        && isOtherVersionOf(version, fragment.getValue()))
+                .collect(Collectors.toList());
+        unselected.forEach(fragment -> fragment.setExported(false));
+        return unselected.stream()
+                .map(Fragment::getValue)
+                .distinct()
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * Whether {@code lib} carries a readable version of the same library other than {@code version}.
+     * <p>
+     * A jar whose file name holds no readable version shares its base with every version of the same
+     * library -- {@code myConnector.jar}, the generated connector jar, shares it with
+     * {@code myConnector-1.0.jar} -- yet it is no conflict: the pom pins nothing for it, and dropping it
+     * would break the connector it belongs to. Mirrors
+     * {@code MissingDependenciesDecorator.isShadowedByAnotherVersion}, so no row is unselected that was
+     * not dimmed beforehand.
+     * </p>
+     */
+    private boolean isOtherVersionOf(String version, String lib) {
+        return FragmentUtils.extractArtifactVersion(lib)
+                .map(other -> !version.equals(other))
+                .orElse(Boolean.FALSE);
     }
 
     private void updateChildrenState(final FragmentContainer element, final boolean isChecked) {
@@ -469,13 +606,6 @@ public abstract class AbstractDependenciesConfigurationWizardPage extends Wizard
             treeViewer.setChecked(element, false);
         } else {
             for (final Object child : children) {
-                if (child instanceof Fragment && isInRuntimeContainer((Fragment) child)) {
-                    // Runtime dependencies stay unchecked and grayed
-                    ((Fragment) child).setExported(false);
-                    treeViewer.setChecked(child, false);
-                    treeViewer.setGrayed(child, true);
-                    continue;
-                }
                 if (child instanceof Fragment) {
                     ((Fragment) child).setExported(checked);
                 }
@@ -488,9 +618,6 @@ public abstract class AbstractDependenciesConfigurationWizardPage extends Wizard
     @Override
     public boolean isChecked(final Object element) {
         if (element instanceof Fragment) {
-            if (isInRuntimeContainer((Fragment) element)) {
-                return false;
-            }
             return ((Fragment) element).isExported();
         } else if (element instanceof FragmentContainer) {
             final Set<Object> result = new HashSet<Object>();
@@ -510,7 +637,7 @@ public abstract class AbstractDependenciesConfigurationWizardPage extends Wizard
     @Override
     public boolean isGrayed(final Object element) {
         if (element instanceof Fragment) {
-            return isInRuntimeContainer((Fragment) element);
+            return false;
         } else if (element instanceof FragmentContainer) {
             final Set<Object> result = new HashSet<Object>();
             getAllChildren((FragmentContainer) element, result);
