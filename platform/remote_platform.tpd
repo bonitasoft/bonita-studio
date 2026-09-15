@@ -101,7 +101,7 @@ location Groovy "https://groovy.jfrog.io/artifactory/plugins-release/e4.33" {
 	org.codehaus.groovy40.feature.feature.group [5.9.0,5.10.0)
 	org.codehaus.groovy.eclipse.feature.feature.group [5.9.0,5.10.0)
 }
-location BonitasoftBPM "mvn:org.bonitasoft.bpm:org.bonitasoft.bpm.eclipse-repository:10.0.1:zip" {
+location BonitasoftBPM "mvn:org.bonitasoft.bpm:org.bonitasoft.bpm.eclipse-repository:10.0.2:zip" {
 	org.bonitasoft.bonita2bpmn.feature.feature.group
     org.bonitasoft.bpm.connector.feature.feature.group
     org.bonitasoft.bpm.definitions.feature.feature.group
