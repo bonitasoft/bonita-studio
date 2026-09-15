@@ -31,6 +31,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.IPageChangedListener;
 import org.eclipse.jface.dialogs.PageChangedEvent;
@@ -163,16 +164,27 @@ public class ConfigurationWizardDialog extends WizardDialog implements ISelectio
         getShell().setBounds(getConstrainedShellBounds(new Rectangle(location.x, location.y, size.x, size.y)));
     }
 
+    /**
+     * The banner shows what the page validation reports, else what the page itself set, else the page
+     * description.
+     * <p>
+     * Falling straight back to the description used to erase whatever a page had set through
+     * {@code setMessage}, so a page had no way of saying anything of its own here.
+     * </p>
+     */
     @Override
     public void updateMessage() {
         super.updateMessage();
-        if (getCurrentPage() instanceof IProcessConfigurationWizardPage) {
-            String errorMessage = ((IProcessConfigurationWizardPage) getCurrentPage())
-                    .isConfigurationPageValid(getConfiguration());
+        var currentPage = getCurrentPage();
+        if (currentPage instanceof IProcessConfigurationWizardPage configurationPage) {
+            String errorMessage = configurationPage.isConfigurationPageValid(getConfiguration());
+            IMessageProvider pageMessage = ownMessage(currentPage);
             if (errorMessage != null) {
                 setMessage(errorMessage, IMessage.WARNING);
+            } else if (pageMessage != null) {
+                setMessage(pageMessage.getMessage(), pageMessage.getMessageType());
             } else {
-                setMessage(getCurrentPage().getDescription());
+                setMessage(currentPage.getDescription());
             }
         }
 
@@ -405,10 +417,27 @@ public class ConfigurationWizardDialog extends WizardDialog implements ISelectio
         group.setText(page.getTitle());
         String processName = getProcess().getName() + " (" + getProcess().getVersion() + ")";
         setTitle(Messages.bind(Messages.configurationWizardTitle, processName));
-        if (((IProcessConfigurationWizardPage) page).isConfigurationPageValid(getConfiguration()) == null) {
+        if (page instanceof IProcessConfigurationWizardPage configurationPage
+                && configurationPage.isConfigurationPageValid(getConfiguration()) == null
+                && ownMessage(page) == null) {
             setMessage(Messages.bind(Messages.configurationWizardDesc, processName));
         }
 
+    }
+
+    /**
+     * What the page put in the banner of its own, a version conflict typically.
+     * <p>
+     * Both the banner update and the page display used to fall back to a text of the wizard's, erasing
+     * it, so a warning raised while the page was being built only reached the user after the first click
+     * on that page. Read here once so the two cannot disagree on what counts as a message.
+     * </p>
+     *
+     * @param page the page being read
+     * @return the page as a message provider when it set a message, else {@code null}
+     */
+    private static IMessageProvider ownMessage(IWizardPage page) {
+        return page instanceof IMessageProvider provider && provider.getMessage() != null ? provider : null;
     }
 
     @Override

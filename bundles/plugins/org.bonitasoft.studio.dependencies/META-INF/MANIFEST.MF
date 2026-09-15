@@ -26,7 +26,8 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.e4.core.di,
  org.bonitasoft.bpm.connector.model,
  org.eclipse.ui.ide,
- org.bonitasoft.studio.common.ui
+ org.bonitasoft.studio.common.ui,
+ org.bonitasoft.studio.ui
 Bundle-RequiredExecutionEnvironment: JavaSE-17
 Bundle-ActivationPolicy: lazy
 Export-Package: org.bonitasoft.studio.dependencies,
