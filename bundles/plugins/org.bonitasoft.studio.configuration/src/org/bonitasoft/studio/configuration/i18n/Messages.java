@@ -63,6 +63,9 @@ public class Messages extends NLS {
     public static String hiearachicalViewDesc;
     public static String rawViewDesc;
     public static String jarName;
+    public static String severalVersionsSelected;
+    public static String severalVersionsSelectedAndMore;
+    public static String versionAutomaticallyUnselected;
     public static String inculdedBy;
     public static String applicationDependencies;
     public static String applicationDependenciesConfigurationDescription;
