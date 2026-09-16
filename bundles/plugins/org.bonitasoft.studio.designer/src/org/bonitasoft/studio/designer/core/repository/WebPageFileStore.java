@@ -76,7 +76,13 @@ public class WebPageFileStore extends InFolderJSONFileStore
 
     public WebPageFileStore(final String fileName, final IRepositoryStore<? extends IRepositoryFileStore> parentStore) {
         super(fileName, parentStore);
-        formBuilder = new RestFormBuilder(PageDesignerURLFactory.getInstance());
+    }
+
+    private FormBuilder getFormBuilder() {
+        if (formBuilder == null) {
+            formBuilder = new RestFormBuilder(PageDesignerURLFactory.getInstance());
+        }
+        return formBuilder;
     }
 
     @Override
@@ -146,7 +152,7 @@ public class WebPageFileStore extends InFolderJSONFileStore
             }
         }
         monitor.subTask(String.format(Messages.buildingWebPage, getName()));
-        try (InputStream inputStream = ByteSource.wrap(formBuilder.export(getId()))
+        try (InputStream inputStream = ByteSource.wrap(getFormBuilder().export(getId()))
                 .openBufferedStream();) {
             IFile zipFile = webPageFolder.getFile(String.format("custompage_%s.zip", getCustomPageName()));
             zipFile.create(inputStream, true, new NullProgressMonitor());
