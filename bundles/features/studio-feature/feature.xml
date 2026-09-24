@@ -261,7 +261,7 @@ along with this program. If not, see &lt;http://www.gnu.org/licenses/&gt;.
       <import feature="org.bonitasoft.bpm.definitions.feature" version="8.0.0" match="greaterOrEqual"/>
       <import feature="org.bonitasoft.bonita2bpmn.feature" version="8.0.0" match="greaterOrEqual"/>
       <import feature="org.bonitasoft.project.report.model.feature" version="1.0.0" match="greaterOrEqual"/>
-      <import feature="com.fasterxml.jackson.feature" version="2.15.2.qualifier"/>
+      <import feature="com.fasterxml.jackson.feature" version="2.22.3.qualifier"/>
       <import feature="org.bonitasoft.bonita2bar.feature" version="8.0.0" match="greaterOrEqual"/>
       <import feature="org.bonitasoft.artifacts.model.studio.feature.feature.group" version="1.0.0" match="greaterOrEqual"/>
    </requires>
