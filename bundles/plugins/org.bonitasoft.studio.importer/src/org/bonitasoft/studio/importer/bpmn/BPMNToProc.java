@@ -306,6 +306,8 @@ public class BPMNToProc extends ToProcProcessor {
 
             updateXMLNamespaceIfNeeded(docRoot);
             importFromBPMN(docRootDefinitions);
+            
+
 
             builder.done();
             return result;
@@ -2913,4 +2915,21 @@ public class BPMNToProc extends ToProcProcessor {
     public void setBuilder(final IProcBuilder builder) {
         this.builder = builder;
     }
+
+
+    
+
+    
+    /**
+     * Returns the BPMN definitions for access by higher-level components.
+     * 
+     * @return the TDefinitions object or null if not available
+     */
+    public TDefinitions getDefinitions() {
+        return definitions;
+    }
+
+
+
+
 }
