@@ -7,4 +7,38 @@
    <!-- Avoid reusing our internal mirror during tests that might generate false positives -->
   <localRepository>${user.home}/.m2/studio_tests_repository</localRepository>
 
+  <!-- Only the snapshot repositories are declared: Bonita SNAPSHOTs (bonita-project, bonita-runtime-bom)
+       are not on Maven Central releases. They are the same snapshot repositories as the build's own settings.xml
+       (bonitasoft/maven-settings-action). Credentials come from the CI job environment, never from this file:
+       that action exports JFROG_USER and JFROG_TOKEN, and fails the job when they are not set. -->
+  <servers>
+    <server>
+      <id>snapshots</id>
+      <username>${env.JFROG_USER}</username>
+      <password>${env.JFROG_TOKEN}</password>
+    </server>
+  </servers>
+  <profiles>
+    <profile>
+      <id>bonita-snapshots</id>
+      <repositories>
+        <repository>
+          <id>snapshots</id>
+          <url>https://bonitasoft.jfrog.io/artifactory/snapshots</url>
+          <releases><enabled>false</enabled></releases>
+          <snapshots><enabled>true</enabled></snapshots>
+        </repository>
+        <repository>
+          <id>central-portal-snapshots</id>
+          <url>https://central.sonatype.com/repository/maven-snapshots/</url>
+          <releases><enabled>false</enabled></releases>
+          <snapshots><enabled>true</enabled></snapshots>
+        </repository>
+      </repositories>
+    </profile>
+  </profiles>
+  <activeProfiles>
+    <activeProfile>bonita-snapshots</activeProfile>
+  </activeProfiles>
+
 </settings>
