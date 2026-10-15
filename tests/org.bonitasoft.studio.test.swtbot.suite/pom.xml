@@ -161,5 +161,32 @@
                 </plugins>
             </build>
         </profile>
+        <profile>
+            <!-- On CI only, give the tests their own Maven settings (tests-settings.xml, isolated local repository).
+                 src-resources is also a source folder (build.properties), so the compiler copies the raw
+                 pref_settings_customization.ini over the filtered one; excluding it keeps the filtered file.
+                 Locally the raw file still wins and the tests keep using the developer's Maven settings;
+                 -Pci-test-maven-settings reproduces the CI behaviour (needs JFROG_USER and JFROG_TOKEN). -->
+            <id>ci-test-maven-settings</id>
+            <activation>
+                <property>
+                    <name>env.GITHUB_ACTIONS</name>
+                    <value>true</value>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.eclipse.tycho</groupId>
+                        <artifactId>tycho-compiler-plugin</artifactId>
+                        <configuration>
+                            <excludeResources>
+                                <excludeResource>pref_settings_customization.ini</excludeResource>
+                            </excludeResources>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
     </profiles>
 </project>
