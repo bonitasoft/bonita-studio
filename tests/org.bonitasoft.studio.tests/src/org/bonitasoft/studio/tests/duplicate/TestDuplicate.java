@@ -25,6 +25,7 @@ import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.swtbot.framework.SWTBotTestUtil;
 import org.bonitasoft.studio.swtbot.framework.application.BotApplicationWorkbenchWindow;
+import org.bonitasoft.studio.swtbot.framework.projectExplorer.DiagramProjectExplorerBot;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.SWTBot;
@@ -43,6 +44,11 @@ public class TestDuplicate {
     public void testDuplicateWithSeveralPool() throws Exception {
         SWTBotTestUtil.createNewDiagram(bot);
         final int nbEditorBefore = bot.editors().size();
+        final String editorTitle = bot.activeEditor().getTitle();
+        // The duplicate command acts on the Project Explorer selection, not on the active editor
+        new DiagramProjectExplorerBot(bot).getDiagramTreeItem(
+                editorTitle.substring(0, editorTitle.lastIndexOf("(") - 1),
+                editorTitle.substring(editorTitle.lastIndexOf("(") + 1, editorTitle.lastIndexOf(")"))).select();
         bot.getDisplay().asyncExec(() -> new CommandExecutor().executeCommand("org.bonitasoft.studio.diagram.custom.command.duplicate", null));
         bot.waitUntil(Conditions.shellIsActive(Messages.openNameAndVersionDialogTitle));
         bot.textWithLabel("Name").setText("DuplicatedTestDuplicateWithSeveralPool");
@@ -98,6 +104,8 @@ public class TestDuplicate {
                 .finish();
 
         final int nbEditorBefore = bot.editors().size();
+        // The duplicate command acts on the Project Explorer selection, not on the imported diagram
+        new DiagramProjectExplorerBot(bot).getDiagramTreeItem("Test confirmation template", "1.0").select();
         bot.getDisplay().asyncExec(() -> new CommandExecutor().executeCommand("org.bonitasoft.studio.diagram.custom.command.duplicate", null));
         bot.waitUntil(Conditions.shellIsActive(Messages.openNameAndVersionDialogTitle));
         bot.textWithLabel("Version", 0).setText("2.0");
