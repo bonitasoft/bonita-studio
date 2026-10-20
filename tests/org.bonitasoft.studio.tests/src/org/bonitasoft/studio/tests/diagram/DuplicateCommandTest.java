@@ -32,6 +32,7 @@ import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.diagram.custom.repository.ProcessConfigurationFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.ProcessConfigurationRepositoryStore;
 import org.bonitasoft.studio.swtbot.framework.SWTBotTestUtil;
+import org.bonitasoft.studio.swtbot.framework.projectExplorer.DiagramProjectExplorerBot;
 import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
@@ -74,14 +75,16 @@ public class DuplicateCommandTest {
         final int nbProcessesBefore = drs.getAllProcesses().size();
 
         final String processName = botEditor.getTitle().substring(0, botEditor.getTitle().lastIndexOf("(") - 1);
-        final String processVersion = botEditor.getTitle().substring(botEditor.getTitle().lastIndexOf("(") + 1,
-                botEditor.getTitle().lastIndexOf(")"))
-                + " duplicated";
+        final String sourceVersion = botEditor.getTitle().substring(botEditor.getTitle().lastIndexOf("(") + 1,
+                botEditor.getTitle().lastIndexOf(")"));
+        final String processVersion = sourceVersion + " duplicated";
 
         if (sourceDirty) {
             alterDiagram(botEditor);
         }
 
+        // The duplicate command acts on the Project Explorer selection, not on the active editor
+        new DiagramProjectExplorerBot(bot).getDiagramTreeItem(processName, sourceVersion).select();
         bot.getDisplay().asyncExec(() -> new CommandExecutor().executeCommand("org.bonitasoft.studio.diagram.custom.command.duplicate", null));
         bot.waitUntil(Conditions.shellIsActive(org.bonitasoft.studio.common.Messages.openNameAndVersionDialogTitle));
         bot.shell(org.bonitasoft.studio.common.Messages.openNameAndVersionDialogTitle).activate();
