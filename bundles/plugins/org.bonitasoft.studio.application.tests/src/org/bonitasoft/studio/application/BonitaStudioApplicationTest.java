@@ -23,10 +23,14 @@ import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 import java.util.Collections;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
 
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -34,6 +38,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.equinox.app.IApplication;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
@@ -48,6 +53,8 @@ import org.mockito.quality.Strictness;
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
 class BonitaStudioApplicationTest {
+
+    private static final long JOB_DONE_TIMEOUT_SECONDS = 30;
 
     private BonitaStudioApplication application;
 
@@ -107,17 +114,25 @@ class BonitaStudioApplicationTest {
             }
         };
 
-        job.schedule();
-        Job.getJobManager().join(ResourcesPlugin.FAMILY_AUTO_BUILD, null);
+        // Job listeners are notified asynchronously and join(family) can return before they are done,
+        // so wait for the done event of this job instead of reading job.getResult() after join(family)
+        final BlockingQueue<IStatus> results = new LinkedBlockingQueue<>();
+        job.addJobChangeListener(new JobChangeAdapter() {
 
-        assertThat(job.getResult()).isEqualTo(Status.CANCEL_STATUS);
+            @Override
+            public void done(final IJobChangeEvent event) {
+                results.add(event.getResult());
+            }
+        });
+
+        job.schedule();
+        assertThat(results.poll(JOB_DONE_TIMEOUT_SECONDS, TimeUnit.SECONDS)).isEqualTo(Status.CANCEL_STATUS);
 
         doReturn(true).when(application).isWorkbenchRunning();
         job.schedule();
-        Job.getJobManager().join(ResourcesPlugin.FAMILY_AUTO_BUILD, null);
+        assertThat(results.poll(JOB_DONE_TIMEOUT_SECONDS, TimeUnit.SECONDS)).isEqualTo(Status.OK_STATUS);
 
-        assertThat(job.getResult()).isEqualTo(Status.OK_STATUS);
-
-        verify(application, times(2)).cancelAutoBuildJobDuringStartup(any(IJobChangeEvent.class));
+        verify(application, timeout(TimeUnit.SECONDS.toMillis(JOB_DONE_TIMEOUT_SECONDS)).times(2))
+                .cancelAutoBuildJobDuringStartup(any(IJobChangeEvent.class));
     }
 }
