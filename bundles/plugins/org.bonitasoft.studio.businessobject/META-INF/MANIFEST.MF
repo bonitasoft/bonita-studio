@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Business Object Plugin
 Bundle-SymbolicName: org.bonitasoft.studio.businessobject;singleton:=true
-Bundle-Version: 11.2.0.qualifier
+Bundle-Version: 12.0.0.qualifier
 Bundle-ClassPath: .,
  lib/h2.jar
 Bundle-Activator: org.bonitasoft.studio.businessobject.BusinessObjectPlugin
@@ -72,7 +72,6 @@ Require-Bundle: org.bonitasoft.bpm.model,
  org.eclipse.e4.ui.services,
  org.eclipse.jface.text,
  org.eclipse.wst.sse.core,
- org.eclipse.pde.ui,
  org.eclipse.search,
  org.eclipse.jdt.ui,
  org.eclipse.core.resources,
@@ -92,4 +91,4 @@ Bundle-RequiredExecutionEnvironment: JavaSE-17
 Bundle-ActivationPolicy: lazy
 Import-Package: jakarta.annotation;version="2.1.1",
  jakarta.inject;version="2.0.1",
- javax.xml.bind;version="2.2.0"
+ jakarta.xml.bind;version="3.0.0"

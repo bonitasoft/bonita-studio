@@ -653,7 +653,20 @@ public class BonitaStudioApplication extends IDEApplication implements IApplicat
         // Remove the tomcat folder. It will be reconstructed automatically.
         File tomcatDir = new File(url.getFile(), "tomcat"); //$NON-NLS-1$
         if (tomcatDir.exists()) {
-            FileUtil.deleteDir(tomcatDir);
+            try {
+                FileUtil.deleteDir(tomcatDir);
+            } catch (RuntimeException e) {
+                // startup must survive an install that cannot be removed - a locked or unreadable
+                // tree. Letting it out would skip the server_configuration deletion and the WST
+                // preference reset below, leaving exactly the half-migrated state the engine start
+                // then has to recover from; and the engine start DOES recover, because it detects a
+                // stale install and purges it with a message that names the directory. Broad on
+                // purpose: nothing about this cleanup is worth failing a launch over
+                BonitaStudioLog.error(String.format(
+                        "Could not remove the Tomcat install at %s during the workspace migration:"
+                                + " continuing, the engine start will purge and re-extract it.",
+                        tomcatDir), e);
+            }
         }
 
         var automaticallyUpdateConfiguration = MavenPlugin.getMavenConfiguration().isAutomaticallyUpdateConfiguration();

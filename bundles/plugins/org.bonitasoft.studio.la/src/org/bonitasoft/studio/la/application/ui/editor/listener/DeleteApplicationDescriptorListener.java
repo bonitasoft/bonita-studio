@@ -17,7 +17,7 @@ package org.bonitasoft.studio.la.application.ui.editor.listener;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 
-import javax.xml.bind.JAXBException;
+import jakarta.xml.bind.JAXBException;
 
 import org.bonitasoft.engine.api.ApplicationAPI;
 import org.bonitasoft.engine.business.application.exporter.ApplicationNodeContainerConverter;

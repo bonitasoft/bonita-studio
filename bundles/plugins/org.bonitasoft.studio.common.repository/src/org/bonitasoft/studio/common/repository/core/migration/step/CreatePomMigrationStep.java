@@ -62,7 +62,7 @@ public class CreatePomMigrationStep implements MigrationStep {
         }
         BonitaStudioLog.info(String.format("Creating a pom.xml with coordinates %s", metadata));
         var model = createDefaultPomFile(project, metadata);
-        report.updated("Groovy version has been updated from `2.4.x` to `3.0.x`");
+        report.updated("Groovy version has been updated to the version provided by the Bonita runtime");
         report.updated(
                 "Only Java `11` version is now supported. This might impact your existing project if you were still using Java 8. Some dependencies in your project might be incompatible with the _Java Platform Module System_ introduced in Java 9.");
         report.added(String.format(

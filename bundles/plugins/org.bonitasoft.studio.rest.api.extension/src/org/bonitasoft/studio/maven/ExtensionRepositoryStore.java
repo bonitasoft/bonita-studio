@@ -57,7 +57,9 @@ import org.bonitasoft.studio.rest.api.extension.core.repository.PathTemplate;
 import org.bonitasoft.studio.rest.api.extension.core.repository.RestAPIExtensionFileStore;
 import org.bonitasoft.studio.rest.api.extension.core.repository.migration.BonitaVersionMigrationStep;
 import org.bonitasoft.studio.rest.api.extension.core.repository.migration.Groovy3MigrationStep;
+import org.bonitasoft.studio.rest.api.extension.core.repository.migration.Groovy4MigrationStep;
 import org.bonitasoft.studio.rest.api.extension.core.repository.migration.GroovyCompilerPluginStep;
+import org.bonitasoft.studio.rest.api.extension.core.repository.migration.JakartaServletMigrationStep;
 import org.bonitasoft.studio.rest.api.extension.core.repository.migration.Java11MigrationStep;
 import org.bonitasoft.studio.rest.api.extension.core.repository.migration.ParentMigrationStep;
 import org.bonitasoft.studio.rest.api.extension.core.repository.migration.RuntimeBOMMigrationStep;
@@ -91,12 +93,31 @@ public class ExtensionRepositoryStore
             new Groovy3MigrationStep(),
             new Java11MigrationStep(),
             new BonitaVersionMigrationStep(),
+            new JakartaServletMigrationStep(),
+            new Groovy4MigrationStep(),
             new RuntimeBOMMigrationStep(),
             new BdmModelArtifactMigrationStep(),
             new GroovyCompilerPluginStep());
 
     private static final List<MavenModelMigration> MIGRATION_STEPS = List.of(
             new ParentMigrationStep());
+
+    /**
+     * The steps a pom is put through, in order. Extracted so the order itself can be asserted rather than left
+     * to comments on the list literals: none of the constraints below is expressible in the lists.
+     * <p>
+     * {@link JakartaServletMigrationStep} runs before {@link RuntimeBOMMigrationStep}, which declares the servlet
+     * API of the target runtime. {@link Groovy4MigrationStep} runs after {@link Groovy3MigrationStep}, which
+     * normalizes a 7.x pom into the Groovy 3 shape it reads, and before {@link RuntimeBOMMigrationStep}, which
+     * would otherwise keep managing the legacy coordinates.
+     */
+    private static final List<MavenModelMigration> REST_API_EXTENSION_STEPS_IN_ORDER = Stream
+            .concat(REST_API_EXTENSIONS_MIGRATION_STEPS.stream(), MIGRATION_STEPS.stream())
+            .toList();
+
+    static List<MavenModelMigration> migrationStepsFor(IRepositoryFileStore<?> fileStore) {
+        return fileStore instanceof RestAPIExtensionFileStore ? REST_API_EXTENSION_STEPS_IN_ORDER : MIGRATION_STEPS;
+    }
 
     private AsciidocMigrationReportWriter asciidocMigrationReportWriter = new AsciidocMigrationReportWriter();
 
@@ -381,15 +402,7 @@ public class ExtensionRepositoryStore
             boolean hasBeenMigrated = false;
             MigrationReport report = new MigrationReport();
             var metadata = ProjectMetadata.read(getRepository().getProject(), monitor);
-            if (fileStore instanceof RestAPIExtensionFileStore) {
-                for (MavenModelMigration step : REST_API_EXTENSIONS_MIGRATION_STEPS) {
-                    if (step.appliesTo(model, metadata)) {
-                        report = step.migrate(model, metadata).merge(report);
-                        hasBeenMigrated = true;
-                    }
-                }
-            }
-            for (MavenModelMigration step : MIGRATION_STEPS) {
+            for (MavenModelMigration step : migrationStepsFor(fileStore)) {
                 if (step.appliesTo(model, metadata)) {
                     report = step.migrate(model, metadata).merge(report);
                     hasBeenMigrated = true;

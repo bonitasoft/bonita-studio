@@ -29,21 +29,6 @@ public class ProjectDefaultConfiguration implements DefaultPluginVersions {
     private static final String ENCODING_CHARSET = "UTF-8";
     private static final String JAVA_VERSION = "11";
 
-    public static final List<MavenDependency> PROVIDED_DEPENDENCIES = List.of(
-            new BonitaCommonDependency(),
-            new MavenDependency(CODEHAUS_GROOVY_GROUPID, "groovy", null),
-            new MavenDependency(CODEHAUS_GROOVY_GROUPID, "groovy-json", null),
-            new MavenDependency(CODEHAUS_GROOVY_GROUPID, "groovy-xml", null),
-            new MavenDependency(CODEHAUS_GROOVY_GROUPID, "groovy-nio", null),
-            new MavenDependency(CODEHAUS_GROOVY_GROUPID, "groovy-datetime", null),
-            new MavenDependency(CODEHAUS_GROOVY_GROUPID, "groovy-dateutil", null),
-            new MavenDependency(CODEHAUS_GROOVY_GROUPID, "groovy-sql", null),
-            new MavenDependency(CODEHAUS_GROOVY_GROUPID, "groovy-templates", null),
-            new MavenDependency(CODEHAUS_GROOVY_GROUPID, "groovy-jsr223", null),
-            new MavenDependency(CODEHAUS_GROOVY_GROUPID, "groovy-jmx", null),
-            new MavenDependency(CODEHAUS_GROOVY_GROUPID, "groovy-yaml", null),
-            new MavenDependency(CODEHAUS_GROOVY_GROUPID, "groovy-servlet", null));
-    
 
     private Properties properties = new Properties();
     private List<MavenPlugin> plugins = new ArrayList<>();
@@ -83,7 +68,7 @@ public class ProjectDefaultConfiguration implements DefaultPluginVersions {
       
         addPlugin(buildHelperPlugin);
 
-        PROVIDED_DEPENDENCIES.stream().forEach(this::addDependency);
+        DefaultPluginVersions.providedDependencies().forEach(this::addDependency);
 
         properties.setProperty(ProjectMetadata.BONITA_RUNTIME_VERSION, bonitaRuntimeVersion);
         properties.setProperty("java.version", JAVA_VERSION);

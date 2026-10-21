@@ -87,12 +87,42 @@ public class FileUtil {
 
     }
 
-    // Deletes all files and subdirectories under dir.
-    // Returns true if all deletions were successful.
-    // If a deletion fails, the method stops attempting to delete and returns false.
+    /**
+     * Deletes all files and subdirectories under {@code dir}, stopping at the first failure.
+     * <p>
+     * A symbolic link is removed AS A LINK: {@link File#isDirectory()} resolves the target, so
+     * recursing into a linked directory would delete the contents of whatever it points at - outside
+     * the tree the caller named. Only the last path component is tested, so a tree reached THROUGH a
+     * linked parent (a workspace relocated to another disk) is still deleted normally.
+     * <p>
+     * Consequence for callers: one that relocated a directory of its own tree through a link gets the
+     * link removed and the content left behind at the target, rather than emptied.
+     * <p>
+     * Windows junctions are OUT OF SCOPE. {@link Files#isSymbolicLink(java.nio.file.Path)} is true only
+     * for a symlink reparse tag, while a junction still reports as a directory - so the recursion, and
+     * the data loss, remain for junctions. That matters because {@code mklink /J} needs no privilege
+     * where {@code mklink /D} does, making junctions the likelier way a directory gets relocated on
+     * Windows. Closing it needs a detection mechanism validated on Windows, which this change cannot
+     * do; it is tracked separately rather than guessed at here.
+     *
+     * @param dir the directory to delete, which may be a link
+     * @return true when everything was deleted, false as soon as one deletion fails
+     * @throws IllegalStateException when a directory exists but cannot be enumerated. Deliberately an
+     *         exception rather than a false return: nearly every caller discards the boolean, so a
+     *         false here would read as a completed deletion that silently did nothing
+     */
     public static boolean deleteDir(File dir) {
-        if (dir.isDirectory()) {
+        if (dir.isDirectory() && !Files.isSymbolicLink(dir.toPath())) {
             final String[] children = dir.list();
+            if (children == null) {
+                // exists but cannot be enumerated - a locked tree, or a permission problem. Loud on
+                // purpose, and NOT a false return: almost every caller discards the boolean, so
+                // returning false here would turn a visible failure into a deletion that silently
+                // did not happen, in the middle of a migration or a cache reset. Previously this
+                // dereferenced null and threw a bare NPE naming nothing
+                throw new IllegalStateException(
+                        String.format("Cannot enumerate %s to delete it", dir.getAbsolutePath()));
+            }
             for (int i = 0; i < children.length; i++) {
                 final boolean success = deleteDir(new File(dir, children[i]));
                 if (!success) {
@@ -105,6 +135,25 @@ public class FileUtil {
         return dir.delete();
     }
 
+    /**
+     * The {@link Path} variant, which was already link-safe: {@link Files#walk} reads the start node
+     * with NOFOLLOW_LINKS, so a link is visited as a link and never descended.
+     * <p>
+     * Differences from {@link #deleteDir(File)}, none of them obvious:
+     * <ul>
+     * <li>{@link Files#exists} FOLLOWS links, so a dangling link is left in place here where the File
+     * variant removes it.</li>
+     * <li>A failed deletion is NOT reported at all: the per-file delete discards its boolean, so a
+     * locked jar or an open Windows handle leaves this method returning normally having deleted
+     * nothing. The File variant returns false and, for an unenumerable directory, throws. Making this
+     * one loud would change propagation for callers that currently cannot fail, so it is deliberately
+     * left alone here rather than changed inside a symlink fix.</li>
+     * <li>The declared {@link IOException} is not the only way out: a directory that becomes
+     * unreadable mid-walk surfaces as an {@link java.io.UncheckedIOException} from
+     * {@link Files#walk}'s lazy traversal.</li>
+     * </ul>
+     * Windows junctions are out of scope for the same reason as the File variant.
+     */
     public static void deleteDir(Path dir) throws IOException {
         if (Files.exists(dir)) {
             try (var files = Files.walk(dir)) {

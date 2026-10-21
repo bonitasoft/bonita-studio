@@ -82,6 +82,13 @@ public abstract class DependencyVersionToUpdateFinder implements IDependencyVali
     }
 
     public boolean artifactVersionToOld(String artifactVersion, String minVersion) {
+        if (artifactVersion == null) {
+            // the declaration pins nothing and inherits its version from a BOM or from
+            // dependencyManagement, which is the shape of every Bonita 12 extension: "older than the
+            // minimum" has no answer. Reporting nothing loses no diagnostic either, since the marker
+            // needs a <version> element to attach to and there is none
+            return false;
+        }
         ComparableVersion artifactVersionComparable = new ComparableVersion(artifactVersion);
         ComparableVersion minVersionComparable = new ComparableVersion(minVersion);
         if (artifactVersion.startsWith("[") || artifactVersion.startsWith("(")) {

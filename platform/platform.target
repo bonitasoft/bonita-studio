@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><target sequenceNumber="1785231739" name="platform">
+<?xml version="1.0" encoding="UTF-8"?><target sequenceNumber="1786104446" name="platform">
   <locations>
     <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
       <repository location="https://update-site.bonitasoft.com/p2/4.33/"/>
@@ -47,6 +47,7 @@
       <unit id="com.sun.jna.platform" version="5.14.0"/>
       <unit id="org.eclipse.gmf.feature.group" version="1.16.4.202405171447"/>
       <unit id="org.eclipse.m2e.logback.feature.feature.group" version="2.6.1.20240411-1743"/>
+      <unit id="org.hamcrest" version="2.2.0"/>
       <unit id="org.eclipse.emf.edapt.runtime.feature.feature.group" version="1.5.0.202201311430"/>
       <unit id="org.eclipse.nebula.widgets.richtext.feature.feature.group" version="1.5.1.202402011804"/>
       <unit id="de.jcup.asciidoctoreditor.feature.group" version="3.1.1"/>
@@ -71,65 +72,65 @@
       <unit id="org.apache.commons.commons-io" version="2.16.1"/>
     </location>
     <location includeConfigurePhase="true" includeSource="true" includeMode="planner" type="InstallableUnit" includeAllPlatforms="false">
-      <unit id="org.bonitasoft.bonita2bpmn.feature.feature.group" version="9.0.11"/>
-      <unit id="org.bonitasoft.bpm.connector.feature.feature.group" version="9.0.11"/>
-      <unit id="org.bonitasoft.bpm.definitions.feature.feature.group" version="9.0.11"/>
-      <unit id="org.bonitasoft.bpm.model.feature.feature.group" version="9.0.11"/>
-      <unit id="org.bonitasoft.bpm.tests.feature.feature.group" version="9.0.11"/>
+      <unit id="org.bonitasoft.bonita2bpmn.feature.feature.group" version="10.0.3"/>
+      <unit id="org.bonitasoft.bpm.connector.feature.feature.group" version="10.0.3"/>
+      <unit id="org.bonitasoft.bpm.definitions.feature.feature.group" version="10.0.3"/>
+      <unit id="org.bonitasoft.bpm.model.feature.feature.group" version="10.0.3"/>
+      <unit id="org.bonitasoft.bpm.tests.feature.feature.group" version="10.0.3"/>
       <unit id="com.fasterxml.jackson.feature.feature.group" version="2.22.3"/>
-      <unit id="org.bonitasoft.artifacts.model.feature.feature.group" version="1.2.2"/>
-      <unit id="org.bonitasoft.bonita2bar.feature.feature.group" version="9.0.11"/>
-      <repository location="mvn:org.bonitasoft.bpm:org.bonitasoft.bpm.eclipse-repository:9.0.11:zip" id="BonitasoftBPM"/>
+      <unit id="org.bonitasoft.artifacts.model.feature.feature.group" version="2.0.1"/>
+      <unit id="org.bonitasoft.bonita2bar.feature.feature.group" version="10.0.3"/>
+      <repository location="mvn:org.bonitasoft.bpm:org.bonitasoft.bpm.eclipse-repository:10.0.3:zip" id="BonitasoftBPM"/>
     </location>
     <location missingManifest="generate" includeDependencyScopes="compile,runtime,system" includeSource="true" includeDependencyDepth="none" label="BonitaArtifactsModels" type="Maven">
-      <feature provider-name="Bonitasoft S.A" label="Extra Bonita Artifacts Models required by Studio but not in BonitasoftBPM" id="org.bonitasoft.artifacts.model.studio.feature.feature.group" version="1.2.2"/>
+      <feature provider-name="Bonitasoft S.A" label="Extra Bonita Artifacts Models required by Studio but not in BonitasoftBPM" id="org.bonitasoft.artifacts.model.studio.feature.feature.group" version="2.0.1"/>
       <dependencies>
         <dependency>
           <groupId>com.sun.activation</groupId>
           <artifactId>jakarta.activation</artifactId>
-          <version>1.2.2</version>
+          <version>2.0.1</version>
           <type>jar</type>
         </dependency>
         <dependency>
           <groupId>com.sun.xml.bind</groupId>
           <artifactId>jaxb-osgi</artifactId>
-          <version>2.3.8</version>
+          <version>3.0.2</version>
           <type>jar</type>
         </dependency>
         <dependency>
           <groupId>jakarta.xml.bind</groupId>
           <artifactId>jakarta.xml.bind-api</artifactId>
-          <version>2.3.3</version>
+          <version>3.0.1</version>
           <type>jar</type>
         </dependency>
         <dependency>
           <groupId>org.bonitasoft.engine</groupId>
           <artifactId>bonita-application-model</artifactId>
-          <version>1.2.2</version>
+          <version>2.0.1</version>
           <type>jar</type>
         </dependency>
         <dependency>
           <groupId>org.bonitasoft.engine</groupId>
           <artifactId>bonita-bdm-access-control-model</artifactId>
-          <version>1.2.2</version>
+          <version>2.0.1</version>
           <type>jar</type>
         </dependency>
         <dependency>
           <groupId>org.bonitasoft.engine</groupId>
           <artifactId>bonita-business-object-model</artifactId>
-          <version>1.2.2</version>
+          <version>2.0.1</version>
           <type>jar</type>
         </dependency>
         <dependency>
           <groupId>org.bonitasoft.engine</groupId>
           <artifactId>bonita-organization-model</artifactId>
-          <version>1.2.2</version>
+          <version>2.0.1</version>
           <type>jar</type>
         </dependency>
         <dependency>
           <groupId>org.bonitasoft.engine</groupId>
           <artifactId>bonita-profile-model</artifactId>
-          <version>1.2.2</version>
+          <version>2.0.1</version>
           <type>jar</type>
         </dependency>
         <dependency>
@@ -147,12 +148,12 @@
       </repositories>
     </location>
     <location missingManifest="generate" includeDependencyScopes="compile,runtime,system" includeSource="true" includeDependencyDepth="none" label="BonitaProjectReportModel" type="Maven">
-      <feature provider-name="Bonitasoft S.A" label="Bonita Project Report Model Feature" id="org.bonitasoft.project.report.model.feature" version="2.1.4"/>
+      <feature provider-name="Bonitasoft S.A" label="Bonita Project Report Model Feature" id="org.bonitasoft.project.report.model.feature" version="3.0.0"/>
       <dependencies>
         <dependency>
           <groupId>org.bonitasoft.maven</groupId>
           <artifactId>bonita-project-report-model</artifactId>
-          <version>2.1.4</version>
+          <version>3.0.0</version>
           <type>jar</type>
         </dependency>
       </dependencies>
@@ -168,7 +169,7 @@
         <dependency>
           <groupId>jakarta.xml.soap</groupId>
           <artifactId>jakarta.xml.soap-api</artifactId>
-          <version>1.4.2</version>
+          <version>2.0.1</version>
           <type>jar</type>
         </dependency>
         <dependency>

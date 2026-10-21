@@ -24,6 +24,7 @@ import org.apache.maven.model.Dependency;
 import org.apache.maven.model.DependencyManagement;
 import org.apache.maven.model.Model;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.repository.core.maven.model.DefaultPluginVersions;
 import org.bonitasoft.studio.common.repository.core.maven.model.ProjectDefaultConfiguration;
 import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
 import org.bonitasoft.studio.common.repository.core.migration.MavenModelMigration;
@@ -32,7 +33,6 @@ import org.bonitasoft.studio.common.repository.core.migration.report.MigrationRe
 public class RuntimeBOMMigrationStep implements MavenModelMigration {
 
     private static final String JACKSON_VERSION_PROPERTY = "jackson.version";
-    private static final String GROOVY_ALL_VERSION_PROPERTY = "groovy-all.version";
     private static final String SLF4J_API_VERSION_PROPERTY = "slf4j-api.version";
 
     @Override
@@ -41,7 +41,6 @@ public class RuntimeBOMMigrationStep implements MavenModelMigration {
         BonitaStudioLog.info(String.format("Starting %s on %s...", RuntimeBOMMigrationStep.class.getName(), metadata.getArtifactId()));
         Properties properties = model.getProperties();
 
-        properties.remove(GROOVY_ALL_VERSION_PROPERTY);
         if (properties.remove(SLF4J_API_VERSION_PROPERTY) != null) {
             report.removed(
                     String.format("Remove `%s` property and use the managed version provided by the runtime BOM.",
@@ -72,14 +71,16 @@ public class RuntimeBOMMigrationStep implements MavenModelMigration {
                             "Use the managed version provided by the runtime BOM for `com.bonitasoft.web:bonita-web-extensions-sp`");
                 });
 
-        findDependency(model.getDependencies(), "javax.servlet", "javax.servlet-api")
+        var servletApi = ServletApi.forRuntime(metadata);
+        findDependency(model.getDependencies(), servletApi.groupId(), servletApi.artifactId())
                 .ifPresentOrElse(dependency -> {
                     dependency.setVersion(null);
-                    report.updated(
-                            "Use the managed version provided by the runtime BOM for `javax.servlet:javax.servlet-api`");
+                    report.updated(String.format(
+                            "Use the managed version provided by the runtime BOM for `%s`", servletApi.ga()));
                 }, () -> {
-                    model.getDependencies().add(newDependency("javax.servlet", "javax.servlet-api", null, "provided"));
-                    report.added("Declare `javax.servlet:javax.servlet-api` provided dependency.");
+                    model.getDependencies()
+                            .add(newDependency(servletApi.groupId(), servletApi.artifactId(), null, "provided"));
+                    report.added(String.format("Declare `%s` provided dependency.", servletApi.ga()));
                 });
 
         findDependency(model.getDependencies(), "org.slf4j", "slf4j-api")
@@ -88,13 +89,27 @@ public class RuntimeBOMMigrationStep implements MavenModelMigration {
                     report.updated("Use the managed version provided by the runtime BOM for `org.slf4j:slf4j-api`");
                 });
 
-        findDependency(model.getDependencies(), "org.codehaus.groovy", "groovy-all")
-                .ifPresent(dependency -> {
-                    dependency.setVersion(null);
-                });
+        // only for a pre-12 runtime, whose BOM still manages the codehaus coordinates. From 12.0 the BOM
+        // manages org.apache.groovy alone, so stripping the version off a codehaus module leaves a
+        // dependency nothing can resolve - and Groovy4MigrationStep has already dealt with the ones it
+        // can move, deliberately leaving a literal version alone as user intent. Nulling it here would
+        // undo that promise and break the build the report says was preserved
+        if (!TargetRuntime.targetsBonita12OrLater(metadata)) {
+            findDependency(model.getDependencies(), DefaultPluginVersions.CODEHAUS_GROOVY_GROUPID,
+                    DefaultPluginVersions.LEGACY_GROOVY_ALL_ARTIFACT_ID)
+                            .ifPresent(dependency -> dependency.setVersion(null));
 
-        findDependency(model.getDependencies(), "org.codehaus.groovy", "groovy-dateutil")
-                .ifPresent(dependency -> dependency.setVersion(null));
+            findDependency(model.getDependencies(), DefaultPluginVersions.CODEHAUS_GROOVY_GROUPID,
+                    DefaultPluginVersions.GROOVY_DATEUTIL_ARTIFACT_ID)
+                            .ifPresent(dependency -> dependency.setVersion(null));
+
+            // after the versions above, and only if nothing still names it: this branch nulls groovy-all
+            // and groovy-dateutil alone, so a pom pinning another module at ${groovy-all.version} keeps a
+            // live reference that dropping the property would leave resolving to nothing
+            if (!PomDeclarations.namesProperty(model, DefaultPluginVersions.GROOVY_ALL_VERSION_PROPERTY)) {
+                properties.remove(DefaultPluginVersions.GROOVY_ALL_VERSION_PROPERTY);
+            }
+        }
 
         findDependency(model.getDependencies(), "com.fasterxml.jackson.datatype", "jackson-datatype-jsr310")
                 .ifPresent(dependency -> dependency.setVersion(null));

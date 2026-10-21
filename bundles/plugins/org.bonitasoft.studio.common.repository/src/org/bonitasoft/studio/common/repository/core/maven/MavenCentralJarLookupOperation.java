@@ -35,7 +35,7 @@ import java.util.Optional;
 import java.util.Properties;
 import java.util.concurrent.Executors;
 
-import javax.xml.bind.annotation.adapters.HexBinaryAdapter;
+import jakarta.xml.bind.annotation.adapters.HexBinaryAdapter;
 
 import org.apache.maven.artifact.Artifact;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;

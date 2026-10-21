@@ -3,7 +3,7 @@
   <parent>
     <groupId>org.bonitasoft.studio</groupId>
     <artifactId>studio</artifactId>
-    <version>11.2.0-SNAPSHOT</version>
+    <version>12.0.0-SNAPSHOT</version>
   </parent>
   <groupId>org.bonitasoft.studio</groupId>
   <artifactId>platform</artifactId>
@@ -113,6 +113,10 @@
                   <layout>p2</layout>
                 </repository>
               </source>
+              <!-- the org.hamcrest 2.2.0 entry below is the explicit unit pin keeping a single
+                   provider across mirror rebuilds; this comment lives OUTSIDE the ius
+                   node because configure-mirror-plugin.groovy rebuilds that node wholesale and
+                   drops anything inside it -->
               <ius>
                 <iu>
                   <id>org.eclipse.justj.openjdk.hotspot.jre.full.feature.group</id>
@@ -293,6 +297,10 @@
                 <iu>
                   <id>org.eclipse.m2e.logback.feature.feature.group</id>
                   <version>2.6.1.20240411-1743</version>
+                </iu>
+                <iu>
+                  <id>org.hamcrest</id>
+                  <version>2.2.0</version>
                 </iu>
                 <iu>
                   <id>org.eclipse.emf.edapt.runtime.feature.feature.group</id>

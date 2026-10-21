@@ -70,10 +70,18 @@ public class ParentMigrationStep implements MavenModelMigration {
                 "java.version",
                 reportUpdateMessage, 
                 "** `java.version` property has been removed. The `maven-compiler-plugin` java version is now configured in the parent pom.");
-        removeProperty(properties,
-                "groovy.version",
-                reportUpdateMessage, 
-                "** `groovy.version` property has been removed. The `groovy.verison` property can now be inherited from the parent pom if needed.");
+        // guarded where the properties above are not, because it is the one with no supplier once the parent is
+        // attached: the parent declares java.version and the compiler properties, so dropping those while a
+        // declaration still names them is safe - the parent provides them. Nothing declares groovy.version, and
+        // an imported BOM contributes dependencyManagement rather than properties, so removing it while a
+        // dependency still resolves through it leaves a reference that resolves to nothing. Groovy4MigrationStep
+        // keeps it alive for exactly that case
+        if (!PomDeclarations.namesProperty(model, DefaultPluginVersions.GROOVY_VERSION_PROPERTY)) {
+            removeProperty(properties,
+                    DefaultPluginVersions.GROOVY_VERSION_PROPERTY,
+                    reportUpdateMessage,
+                    "** `groovy.version` property has been removed. The Groovy modules take their version from the Bonita runtime BOM, which manages them directly.");
+        }
 
         // Remove obsolete bonita versions properties
         removeProperty(properties,

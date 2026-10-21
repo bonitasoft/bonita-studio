@@ -186,8 +186,11 @@ public class ImportBOSArchiveIT {
             assertThat(mavenProjectHelper.findDependency(model, "com.bonitasoft.engine", "bonita-common-sp"))
                     .isPresent();
         }
-        assertThat(mavenProjectHelper.findDependency(model, "org.codehaus.groovy", "groovy")).isPresent();
-        assertThat(mavenProjectHelper.findDependency(model, "org.codehaus.groovy", "groovy-dateutil")).isPresent();
+        assertThat(mavenProjectHelper.findDependency(model, "org.apache.groovy", "groovy")).isPresent();
+        assertThat(mavenProjectHelper.findDependency(model, "org.apache.groovy", "groovy-dateutil")).isPresent();
+        // no longer provided by the Bonita runtime
+        assertThat(mavenProjectHelper.findDependency(model, "org.apache.groovy", "groovy-servlet")).isEmpty();
+        assertThat(mavenProjectHelper.findDependency(model, "org.apache.groovy", "groovy-ant")).isEmpty();
         // Dependencies migrated from custom impl should not be added.
         assertThat(mavenProjectHelper.findDependency(model, dependency("org.apache.commons", "commons-exec", "1.1")))
                 .isEmpty();

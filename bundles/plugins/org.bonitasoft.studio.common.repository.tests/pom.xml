@@ -7,7 +7,7 @@
 	<parent>
 		<groupId>org.bonitasoft.studio.bundles</groupId>
 		<artifactId>plugins</artifactId>
-		<version>11.2.0-SNAPSHOT</version>
+		<version>12.0.0-SNAPSHOT</version>
 	</parent>
 	<groupId>org.bonitasoft.studio.bundles.plugins</groupId>
 	<artifactId>org.bonitasoft.studio.common.repository.tests</artifactId>
@@ -27,6 +27,10 @@
                         <application>org.eclipse.ui.ide.workbench</application>
                         <useUIHarness>true</useUIHarness>
                         <useUIThread>true</useUIThread>
+                        <systemProperties>
+                            <!-- lets tests locate source-tree fixtures (template poms) deterministically -->
+                            <bonita.tests.basedir>${project.basedir}</bonita.tests.basedir>
+                        </systemProperties>
                     </configuration>
                 </plugin>
         </plugins>

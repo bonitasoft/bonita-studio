@@ -15,6 +15,7 @@
 package org.bonitasoft.studio.engine;
 
 import java.io.File;
+import java.net.Inet6Address;
 import java.net.InetAddress;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
@@ -28,6 +29,10 @@ import org.eclipse.jface.preference.IPreferenceStore;
 
 public class TomcatVmArgsBuilder {
 
+    // Keep both literals in sync with StudioWatchdogListener (bonita-studio-watchdog): the WAR
+    // is a separate build world and cannot share the constants. A rename here would not fail
+    // loudly - the watchdog would disarm with only a catalina.log line and every runtime would
+    // outlive a Studio death. TomcatVmArgsBuilderTest pins the two -D literals for that reason.
     private static final String HEALTH_CHECK_POLLING_INTERVAL = "org.bonitasoft.studio.healthcheck.interval";
     protected static final String STUDIO_HEALTHCHECK_ENDPOINT_PROPERTY = "org.bonitasoft.studio.healthcheck.endpoint";
     protected static final String BONITA_WEB_REGISTER = "bonita.web.register";
@@ -68,6 +73,9 @@ public class TomcatVmArgsBuilder {
         }
         addSystemProperty(args, "com.arjuna.ats.arjuna.common.propertiesFile", "\"" + tomcatInstanceLocation + File.separatorChar + "conf" + File.separatorChar + "jbossts-properties.xml\"");
         addSystemProperty(args, "file.encoding", "UTF-8");
+        // AFTER tomcatExtraParams on purpose: the last -D wins, so a user-supplied endpoint or
+        // interval in TOMCAT_EXTRA_PARAMS cannot redirect the watchdog probe. Keep this call
+        // below the extra params if this method is ever reordered
         addStudioHealthCheckEndpointProperties(args);
         addSystemProperty(args, "eclipse.product", getProductApplicationId());
         addSystemProperty(args, BONITA_WEB_REGISTER, System.getProperty(BONITA_WEB_REGISTER, "1"));
@@ -110,10 +118,39 @@ public class TomcatVmArgsBuilder {
     }
 
     public void addStudioHealthCheckEndpointProperties(final StringBuilder args) {
-        addSystemProperty(args, STUDIO_HEALTHCHECK_ENDPOINT_PROPERTY, String.format("http://%s:%s/api/workspace/status/",
-                InetAddress.getLoopbackAddress().getHostAddress(), 
-                BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().getInt(BonitaPreferenceConstants.HEALTHCHECK_SERVER_PORT)));
+        // null-guarded like HealthCheckServerManager.updatePreference, and falling back to the
+        // port the branch below reports: no preferences bundle means a disarmed watchdog, never
+        // an endpoint built from a value nobody validated
+        var preferences = BonitaStudioPreferencesPlugin.getDefault();
+        int healthCheckPort = preferences == null ? 0
+                : preferences.getPreferenceStore().getInt(BonitaPreferenceConstants.HEALTHCHECK_SERVER_PORT);
+        if (healthCheckPort <= 0) {
+            // 0 means the healthcheck server is not running. The watchdog disarms on its side, but
+            // only into catalina.log - surface it where a user looks.
+            //
+            // The property is still EMITTED, unlike UIDesignerServerManager which omits its URL on
+            // the same preference: these -D come after TOMCAT_EXTRA_PARAMS so a user-supplied
+            // endpoint can never win, and omitting ours would hand a spoofed one the last word.
+            // Port 0 is a value parseEndpoint rejects, so emitting it disarms just as firmly
+            BonitaStudioLog.error(String.format(
+                    "Studio healthcheck port preference is %s: the watchdog in the Tomcat runtime"
+                            + " will be disarmed and an orphaned runtime may survive a Studio crash.",
+                    healthCheckPort), EnginePlugin.PLUGIN_ID);
+        }
+        addSystemProperty(args, STUDIO_HEALTHCHECK_ENDPOINT_PROPERTY, String.format("http://%s:%s" + BonitaPreferenceConstants.HEALTHCHECK_ENDPOINT_PATH,
+                healthCheckEndpointHost(InetAddress.getLoopbackAddress()),
+                healthCheckPort));
         addSystemProperty(args, HEALTH_CHECK_POLLING_INTERVAL, System.getProperty(HEALTH_CHECK_POLLING_INTERVAL, "20000"));
+    }
+
+    /**
+     * Loopback literal for the healthcheck URL, bracketed when it is IPv6: an unbracketed IPv6
+     * literal makes the authority non server-based, and the watchdog then disarms because the
+     * URL it is given has no parseable host.
+     */
+    static String healthCheckEndpointHost(InetAddress loopback) {
+        return loopback instanceof Inet6Address ? "[" + loopback.getHostAddress() + "]"
+                : loopback.getHostAddress();
     }
 
     protected void addMemoryOptions(final StringBuilder args) {

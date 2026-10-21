@@ -167,6 +167,13 @@ public interface BonitaPreferenceConstants {
     public static final String HIDE_BDM_REFACTOR_PREVIEW = "hideBdmRefactorPreview";
     public static final String NOTIFY_BDM_DEPLOYMENT_REQUIRED = "NOTIFY_BDM_DEPLOYMENT_REQUIRED";
     public static final String HEALTHCHECK_SERVER_PORT = "studio.healthcheck.server.port";
+    /**
+     * The path the Studio healthcheck server answers on. Shared by the server that registers the
+     * context, the launch args that point the runtime watchdog at it and the UI Designer arguments: a
+     * typo in any of them disarms the watchdog with no build failure and no runtime signal. The
+     * watchdog WAR is a separate build world and keeps its own copy.
+     */
+    public static final String HEALTHCHECK_ENDPOINT_PATH = "/api/workspace/status/";
     
     public static final String REMEMBER_AGREEMENT_KEY = "REMEMBER_AGREEMENT";
     public static final String ENABLE_USER_DATA_COLLECTION_KEY = "ENABLE_USER_DATA_COLLECTION";
