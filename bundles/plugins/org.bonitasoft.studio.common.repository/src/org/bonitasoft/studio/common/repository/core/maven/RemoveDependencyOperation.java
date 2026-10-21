@@ -19,10 +19,12 @@ import java.util.Objects;
 
 import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Model;
+import org.bonitasoft.studio.common.repository.BuildScheduler;
 import org.bonitasoft.studio.common.repository.core.maven.model.GAV;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.Status;
 
 public class RemoveDependencyOperation extends MavenModelOperation {
 
@@ -42,8 +44,23 @@ public class RemoveDependencyOperation extends MavenModelOperation {
 
     @Override
     public void run(IProgressMonitor monitor) throws CoreException {
+        // BPA-834: serialize against the "build" job rule so this never reads the project's MavenProject
+        // while a concurrent business-archive/analyze execution (which now resolves dependencies in-process,
+        // sharing m2e's embedded Maven session since bonita-project-maven-plugin 2.1.6) is mutating it.
+        BuildScheduler.<Void, CoreException>callWithBuildRule(() -> {
+            doRun(monitor);
+            return null;
+        }, monitor);
+    }
+
+    private void doRun(IProgressMonitor monitor) throws CoreException {
         IProject currentProject = getCurrentProject();
         var mavenProject = MavenProjectHelper.getMavenProject(currentProject);
+        if (mavenProject == null) {
+            throw new CoreException(Status.error(String.format(
+                    "Cannot remove dependencies from project %s: its Maven model could not be resolved by m2e.",
+                    currentProject.getName())));
+        }
         Model model = readModel(currentProject);
 
         for (Dependency dep : dependenciesToRemove) {
