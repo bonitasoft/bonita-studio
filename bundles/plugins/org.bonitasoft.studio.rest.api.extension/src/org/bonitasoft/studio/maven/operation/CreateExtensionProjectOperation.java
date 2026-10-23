@@ -31,6 +31,7 @@ import org.eclipse.core.resources.ICommand;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -84,15 +85,33 @@ public abstract class CreateExtensionProjectOperation extends AbstractMavenProje
         projects = MavenPlugin.getProjectConfigurationManager()
                 .importProjects(mavenProjects, projectImportConfiguration, project -> {
                     try {
-                        // configure project before adding to app, so it can build correctly for triggered analysis
                         configure(project, monitor);
-                        projectCreated(project);
                     } catch (CoreException e) {
                         BonitaStudioLog.error(e);
                     }
                 }, monitor)
                 .stream().filter(r -> r.getProject() != null && r.getProject().exists())
                 .map(IMavenProjectImportResult::getProject).toList();
+        // The creation callback above runs before m2e configures the Java project (source folders,
+        // classpath), so nothing can be compiled there. Adding the extension to the app triggers the
+        // dependency analysis, which loads the implementation classes: compile them first instead of
+        // racing the auto-build.
+        for (var createdProject : projects) {
+            try {
+                createdProject.build(IncrementalProjectBuilder.INCREMENTAL_BUILD, monitor);
+            } catch (CoreException e) {
+                // still add the extension to the app: the analysis may then miss its classes until the next build,
+                // which is better than a project the app does not depend on
+                BonitaStudioLog.error(String.format(
+                        "Failed to build the new extension project '%s' before adding it to the app.",
+                        createdProject.getName()), e);
+            }
+            try {
+                projectCreated(createdProject);
+            } catch (CoreException e) {
+                BonitaStudioLog.error(e);
+            }
+        }
         var project = projects.get(0);
         repositoryStore.getResource().getProject().refreshLocal(IResource.DEPTH_INFINITE, monitor);
         return project;

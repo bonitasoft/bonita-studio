@@ -47,7 +47,7 @@ public class ExtensionProjectArchetypes {
     private static IArchetype doGetArchetype(ArtifactType extensionType) {
         switch (extensionType) {
             case CONNECTOR:
-                return new Archetype(GROUP_ID, "bonita-connector-archetype", "1.3.0");
+                return new Archetype(GROUP_ID, "bonita-connector-archetype", "2.0.0");
             case ACTOR_FILTER:
                 return new Archetype(GROUP_ID, "bonita-actorfilter-archetype", "2.0.0");
             case REST_API:

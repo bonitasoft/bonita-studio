@@ -11,6 +11,7 @@ package org.bonitasoft.studio.maven.model;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
 import org.bonitasoft.studio.maven.i18n.Messages;
 
@@ -21,6 +22,7 @@ public class ConnectorArchetypeConfiguration extends ArchetypeConfigurationImpl
     public static ConnectorArchetypeConfiguration defaultArchetypeConfiguration(ProjectMetadata projectMetadata) {
         final ConnectorArchetypeConfiguration configuration = new ConnectorArchetypeConfiguration();
         configuration.setProjectName("myCustomConnector");
+        configuration.setBonitaVersion(ProductVersion.BONITA_RUNTIME_VERSION);
         configuration.setGroupId(projectMetadata.getGroupId());
         configuration.setVersion(projectMetadata.getVersion());
         configuration.setLanguage(GROOVY_LANGUAGE);
