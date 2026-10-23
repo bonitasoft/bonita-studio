@@ -86,13 +86,13 @@
         <setEntry value="org.apache.felix.scr@2:true"/>
         <setEntry value="org.apache.httpcomponents.httpclient@default:default"/>
         <setEntry value="org.apache.xerces@default:default"/>
-        <setEntry value="org.apache.xml.resolver*1.2.0.v20220401-1849@default:default"/>
+        <setEntry value="org.apache.xml.resolver*1.2.0.v20230928-1222@default:default"/>
         <setEntry value="org.apache.xml.serializer@default:default"/>
         <setEntry value="org.apache.xmlgraphics@default:default"/>
         <setEntry value="org.apiguardian@default:default"/>
         <setEntry value="org.bouncycastle.bcpg@default:default"/>
         <setEntry value="org.bouncycastle.bcprov@default:default"/>
-        <setEntry value="org.codehaus.groovy*3.0.11.v202206301445-e2206-RELEASE@default:default"/>
+        <setEntry value="org.codehaus.groovy*4.0.28.v202509301436-e2409@default:default"/>
         <setEntry value="org.codehaus.groovy.eclipse.ant@default:default"/>
         <setEntry value="org.codehaus.groovy.eclipse.astviews@default:default"/>
         <setEntry value="org.codehaus.groovy.eclipse.codeassist@default:default"/>
@@ -812,8 +812,8 @@
         <setEntry value="org.eclipse.help.webapp.nl_ja@default:default"/>
         <setEntry value="org.eclipse.help.webapp.nl_pt_BR@default:default"/>
         <setEntry value="org.eclipse.help@default:default"/>
-        <setEntry value="org.eclipse.jdt.annotation*1.2.0.v20210519-0438@default:default"/>
-        <setEntry value="org.eclipse.jdt.annotation*2.2.600.v20200408-1511@default:default"/>
+        <setEntry value="org.eclipse.jdt.annotation*1.2.100.v20240212-1051@default:default"/>
+        <setEntry value="org.eclipse.jdt.annotation*2.3.0.v20240111-2306@default:default"/>
         <setEntry value="org.eclipse.jdt.annotation.nl_es@default:default"/>
         <setEntry value="org.eclipse.jdt.annotation.nl_fr@default:default"/>
         <setEntry value="org.eclipse.jdt.annotation.nl_ja@default:default"/>
@@ -1337,7 +1337,7 @@
         <setEntry value="org.junit@default:default"/>
         <setEntry value="org.mozilla.javascript@default:default"/>
         <setEntry value="org.objectweb.asm@default:default"/>
-        <setEntry value="org.opentest4j*1.2.0.v20211018-1956@default:default"/>
+        <setEntry value="org.opentest4j*1.3.0@default:default"/>
         <setEntry value="org.osgi.service.prefs@default:default"/>
         <setEntry value="org.osgi.util.function@default:default"/>
         <setEntry value="org.osgi.util.measurement@default:default"/>

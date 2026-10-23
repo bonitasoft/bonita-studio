@@ -114,9 +114,8 @@
                 </repository>
               </source>
               <!-- the org.hamcrest 2.2.0 entry below is the explicit unit pin keeping a single
-                   provider across mirror rebuilds; this comment lives OUTSIDE the ius
-                   node because configure-mirror-plugin.groovy rebuilds that node wholesale and
-                   drops anything inside it -->
+                   provider across mirror rebuilds. configure-mirror-plugin.groovy re-serializes
+                   the whole pom and drops every XML comment: restore this one after running it -->
               <ius>
                 <iu>
                   <id>org.eclipse.justj.openjdk.hotspot.jre.full.feature.group</id>
@@ -299,10 +298,6 @@
                   <version>2.6.1.20240411-1743</version>
                 </iu>
                 <iu>
-                  <id>org.hamcrest</id>
-                  <version>2.2.0</version>
-                </iu>
-                <iu>
                   <id>org.eclipse.emf.edapt.runtime.feature.feature.group</id>
                   <version>1.5.0.202201311430</version>
                 </iu>
@@ -312,7 +307,7 @@
                 </iu>
                 <iu>
                   <id>de.jcup.asciidoctoreditor.feature.group</id>
-                  <version>3.1.1</version>
+                  <version>3.1.2</version>
                 </iu>
                 <iu>
                   <id>de.jcup.yamleditor.feature.group</id>
@@ -372,23 +367,27 @@
                 </iu>
                 <iu>
                   <id>org.codehaus.groovy.compilerless.feature.feature.group</id>
-                  <version>5.5.0.v202409302028-e2409</version>
+                  <version>5.9.0.v202509301436-e2409</version>
                 </iu>
                 <iu>
                   <id>org.codehaus.groovy.m2eclipse.feature.feature.group</id>
-                  <version>5.5.0.v202409302028-e2409</version>
+                  <version>5.9.0.v202509301436-e2409</version>
                 </iu>
                 <iu>
-                  <id>org.codehaus.groovy30.feature.feature.group</id>
-                  <version>5.5.0.v202409302028-e2409</version>
+                  <id>org.codehaus.groovy40.feature.feature.group</id>
+                  <version>5.9.0.v202509301436-e2409</version>
                 </iu>
                 <iu>
                   <id>org.codehaus.groovy.eclipse.feature.feature.group</id>
-                  <version>5.5.0.v202409302028-e2409</version>
+                  <version>5.9.0.v202509301436-e2409</version>
                 </iu>
                 <iu>
                   <id>org.apache.commons.commons-io</id>
                   <version>2.16.1</version>
+                </iu>
+                <iu>
+                  <id>org.hamcrest</id>
+                  <version>2.2.0</version>
                 </iu>
               </ius>
             </configuration>

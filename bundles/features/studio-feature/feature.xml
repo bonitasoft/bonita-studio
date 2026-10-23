@@ -233,8 +233,8 @@ along with this program. If not, see &lt;http://www.gnu.org/licenses/&gt;.
          id="org.eclipse.wst.json_ui.feature"
          version="0.0.0"/>
 
-   <plugin
-         id="org.codehaus.groovy"
+   <includes
+         id="org.codehaus.groovy40.feature"
          version="0.0.0"/>
 
    <includes

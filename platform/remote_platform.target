@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde?>
 <!-- generated with https://github.com/eclipse-cbi/targetplatform-dsl -->
-<target name="platform" sequenceNumber="1786104446">
+<target name="platform" sequenceNumber="1791189022">
   <locations>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="true" type="InstallableUnit">
       <unit id="org.eclipse.justj.openjdk.hotspot.jre.full.feature.group" version="21.0.5.v20241023-1957"/>
@@ -55,7 +55,6 @@
       <unit id="com.sun.jna.platform" version="5.14.0"/>
       <unit id="org.eclipse.gmf.feature.group" version="1.16.4.202405171447"/>
       <unit id="org.eclipse.m2e.logback.feature.feature.group" version="2.6.1.20240411-1743"/>
-      <unit id="org.hamcrest" version="2.2.0"/>
       <repository id="E2024-09" location="https://download.eclipse.org/releases/2024-09"/>
     </location>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="true" type="InstallableUnit">
@@ -63,7 +62,7 @@
       <repository id="Edapt" location="http://download.eclipse.org/edapt/releases/15x/150"/>
     </location>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="true" type="InstallableUnit">
-      <unit id="org.eclipse.nebula.widgets.richtext.feature.feature.group" version="1.7.0.202606141240"/>
+      <unit id="org.eclipse.nebula.widgets.richtext.feature.feature.group" version="1.5.1.202402011804"/>
       <repository id="Nebula" location="https://download.eclipse.org/nebula/updates/release/"/>
     </location>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="true" type="InstallableUnit">
@@ -113,6 +112,7 @@
     </location>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="true" type="InstallableUnit">
       <unit id="org.apache.commons.commons-io" version="2.16.1"/>
+      <unit id="org.hamcrest" version="2.2.0"/>
       <repository id="Orbit2024-03" location="https://download.eclipse.org/tools/orbit/simrel/maven-osgi/2024-09/"/>
     </location>
     <location includeDependencyDepth="none" includeDependencyScopes="compile,runtime,system" includeSource="true" missingManifest="generate" type="Maven" label="BonitaArtifactsModels">

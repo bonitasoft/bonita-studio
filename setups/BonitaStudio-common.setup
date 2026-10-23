@@ -435,7 +435,7 @@
     <requirement
         name="org.codehaus.groovy.m2eclipse.feature.feature.group"/>
     <requirement
-        name="org.codehaus.groovy30.feature.feature.group"/>
+        name="org.codehaus.groovy40.feature.feature.group"/>
     <requirement
         name="org.eclipse.emf.ecoretools.design.feature.group"/>
     <requirement
@@ -640,7 +640,7 @@
       <requirement
           name="org.codehaus.groovy.m2eclipse.feature.feature.group"/>
       <requirement
-          name="org.codehaus.groovy30.feature.feature.group"/>
+          name="org.codehaus.groovy40.feature.feature.group"/>
       <requirement
           name="org.eclipse.mylyn.commons.ui"/>
       <requirement
